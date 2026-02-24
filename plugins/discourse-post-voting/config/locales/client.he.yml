@@ -131,6 +131,3 @@ he:
     review:
       transcript:
         view: "הצגת תמליל ההודעות הקודמות"
-      types:
-        reviewable_post_voting_comment:
-          title: "הערה על הצבעת פוסט מסומן"

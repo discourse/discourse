@@ -512,6 +512,7 @@ class UploadCreator
         end
         use_el.remove_attribute("xlink:href")
       end
+
     File.write(@file.path, doc.to_s)
     @file.rewind
   end

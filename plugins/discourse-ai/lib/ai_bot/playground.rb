@@ -388,7 +388,7 @@ module DiscourseAi
           )
         end
 
-        reset_time = e.allocation&.relative_reset_time || ""
+        reset_time = e.allocation&.formatted_reset_time || ""
         locale_key = message.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
         error_message =
           I18n.t("discourse_ai.llm_credit_allocation.#{locale_key}", reset_time: reset_time)
@@ -638,7 +638,7 @@ module DiscourseAi
 
         reply_post
       rescue LlmCreditAllocation::CreditLimitExceeded => e
-        reset_time = e.allocation&.relative_reset_time || ""
+        reset_time = e.allocation&.formatted_reset_time || ""
         locale_key = post.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
         error_message =
           I18n.t("discourse_ai.llm_credit_allocation.#{locale_key}", reset_time: reset_time)

@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "套用"
-      insert_modal:
-        insert: "插入"

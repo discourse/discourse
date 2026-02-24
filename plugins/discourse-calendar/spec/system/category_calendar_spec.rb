@@ -97,7 +97,7 @@ describe "Category calendar", type: :system do
     end
   end
 
-  context "with color mapping" do
+  context "with color mapping", time: Time.utc(2026, 6, 2, 19, 00) do
     before do
       SiteSetting.calendar_enabled = true
       SiteSetting.discourse_post_event_enabled = true
@@ -118,12 +118,13 @@ describe "Category calendar", type: :system do
         create_post(
           user: admin,
           topic: Fabricate(:topic, category: category, tags: [tag]),
-          raw: "[event start=\"#{Time.now.iso8601}\"]\n[/event]",
+          raw: "[event start=\"2026-06-03 10:00\" end=\"2026-06-03 11:00\"]\n[/event]",
         )
 
         category_page.visit(category)
 
-        expect(category_page).to have_css(".fc-daygrid-event-dot")
+        expect(category_page).to have_selector("#category-events-calendar .fc")
+        expect(category_page).to have_css(".fc-daygrid-event")
         expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq(
           "rgb(231, 76, 60)",
         )
@@ -144,12 +145,13 @@ describe "Category calendar", type: :system do
         create_post(
           user: admin,
           category: category_for_color,
-          raw: "[event start=\"#{Time.now.iso8601}\"]\n[/event]",
+          raw: "[event start=\"2026-06-03 10:00\" end=\"2026-06-03 11:00\"]\n[/event]",
         )
 
         category_page.visit(category_for_color)
 
-        expect(category_page).to have_css(".fc-daygrid-event-dot")
+        expect(category_page).to have_selector("#category-events-calendar .fc")
+        expect(category_page).to have_css(".fc-daygrid-event")
         expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq(
           "rgb(46, 204, 113)",
         )

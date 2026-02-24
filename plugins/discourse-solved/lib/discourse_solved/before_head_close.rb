@@ -19,8 +19,7 @@ class DiscourseSolved::BeforeHeadClose
 
     return "" if SiteSetting.solved_add_schema_markup == "never"
 
-    allowed =
-      controller.guardian.allow_accepted_answers?(topic.category_id, topic.tags.pluck(:name))
+    allowed = controller.guardian.allow_accepted_answers?(topic)
     return "" if !allowed
 
     first_post = topic_view.posts&.first

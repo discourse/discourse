@@ -19,7 +19,7 @@ export default class TagDropHeader extends ComboBoxSelectBoxHeaderComponent {
         />
       {{/let}}
 
-      {{icon this.caretIcon class="caret-icon"}}
+      {{icon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

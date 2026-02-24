@@ -470,10 +470,6 @@
       color: var(--primary);
     }
   }
-
-  &.back-button {
-    margin-bottom: 1em;
-  }
 }
 
 @mixin btn-colors($btn-type) {
@@ -537,6 +533,13 @@
   &.btn-success,
   &.--success {
     @include btn-colors("success");
+  }
+
+  &.back-button {
+    --d-button-transparent-text-color: var(--tertiary);
+    --d-button-transparent-icon-color: var(--tertiary);
+    margin-bottom: 1em;
+    padding-left: 0;
   }
 }
 

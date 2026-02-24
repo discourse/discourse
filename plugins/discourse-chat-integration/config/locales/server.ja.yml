@@ -51,8 +51,6 @@ ja:
     chat_integration_flowdock_excerpt_length: "Flowdock 投稿の抜粋の長さ"
     chat_integration_groupme_enabled: "Groupme チャット統合プロバイダーを有効にする"
     chat_integration_groupme_excerpt_length: "Groupme 投稿の抜粋の長さ"
-    chat_integration_groupme_bot_ids: "*必須*のボット ID。複数ある場合は「,」で区切ります"
-    chat_integration_groupme_instance_names: " *必須*の GroupMe チャットの名前。複数ある場合は「,」で区切ります（ボット ID と同じ順序）。"
     chat_integration_teams_enabled: "Microsoft Teams チャット統合プロバイダーを有効にする"
     chat_integration_teams_excerpt_length: "Microsoft Teams 投稿の抜粋の長さ"
     chat_integration_powerautomate_enabled: "Microsoft Power Automate 統合プロバイダーを有効にする"
@@ -93,10 +91,8 @@ ja:
         create:
           created: "ルールを正常に作成しました"
           updated: "ルールを正常に更新しました"
-          error: "申し訳ありませんが、ルールの作成中にエラーが発生しました。"
         delete:
           success: "ルールを正常に削除しました"
-          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。`/discourse status` でルールの一覧を確認できます。"
         not_found:
           tag: "*%{name}* タグが見つかりません。"
           category: "*%{name}* カテゴリが見つかりません。使用可能なカテゴリ: *%{list}*"
@@ -158,10 +154,8 @@ ja:
         create:
           created: "ルールを正常に作成しました"
           updated: "ルールを正常に更新しました"
-          error: "申し訳ありませんが、ルールの作成中にエラーが発生しました。"
         delete:
           success: "ルールを正常に削除しました"
-          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。<code>/status</code> でルールの一覧を確認できます。"
         not_found:
           tag: "<b>%{name}</b> タグが見つかりません。"
           category: "<b>%{name}</b> カテゴリが見つかりません。使用可能なカテゴリ: <b>%{list}</b>"
@@ -192,10 +186,8 @@ ja:
         create:
           created: "ルールを正常に作成しました"
           updated: "ルールを正常に更新しました"
-          error: "申し訳ありませんが、ルールの作成中にエラーが発生しました。"
         delete:
           success: "ルールを正常に削除しました"
-          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。`/discourse status` でルールの一覧を確認できます。"
         not_found:
           tag: "*%{name}* タグが見つかりません。"
           category: "*%{name}* カテゴリが見つかりません。使用可能なカテゴリ: *%{list}*"

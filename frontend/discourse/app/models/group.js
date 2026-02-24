@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { equal } from "@ember/object/computed";

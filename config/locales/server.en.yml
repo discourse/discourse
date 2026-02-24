@@ -9,17 +9,17 @@ en:
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       long: "%B %-d, %Y, %l:%M%P"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       no_day: "%B %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -70,8 +70,8 @@ en:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
-    too_many_urls: "Can't inline onebox more than 10 URLs in a single request."
-    concurrency_not_allowed: "Concurrent inline-oneboxing requests are not allowed. Please send one request at a time."
+    too_many_urls: "Can't convert more than 10 URLs to inline oneboxes in a single request."
+    concurrency_not_allowed: "Concurrent requests to convert URLs to inline oneboxes are not allowed. Please send one request at a time."
   components:
     enabled_filter: "Enabled"
     disabled_filter: "Disabled"
@@ -373,7 +373,7 @@ en:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
-      x_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
+      x_summary_large_image_no_svg: "X summary images used for twitter:image metadata cannot be an .svg image."
       tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "This setting requires the 'allow anonymous mode' setting to be enabled first."
 
@@ -1711,6 +1711,7 @@ en:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
+      qq_mail_smtp: "Your SMTP server (%{smtp_address}) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>."
       bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
       poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
       poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
@@ -1825,7 +1826,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
-    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not recommended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
@@ -1918,7 +1919,6 @@ en:
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
-    content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
@@ -2016,7 +2016,7 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
-    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
+    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and GitHub are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "The unique client ID provided by your Google application, used for the authentication process."
@@ -2297,8 +2297,8 @@ en:
     num_hours_to_close_topic: "Number of hours to pause a topic for intervention."
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
-    min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
-    fast_typing_threshold: "Minimum amount of time in milliseconds a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
+    min_first_post_typing_time: "Minimum amount of time a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
+    fast_typing_threshold: "Minimum amount of time a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
@@ -2319,7 +2319,7 @@ en:
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
     strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
-    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
+    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable outgoing emails for all users. Select 'non-staff' to disable emails for non-staff users only."
     allow_email_invites: "When disabled, users won't be able to send invite emails via Discourse"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Define the maximum length, in bytes, for an email to be classified as 'short' for image suppression. If an email's size does not exceed this setting, any images (such as avatars and emojis) within the email will be stripped out."
@@ -2438,9 +2438,9 @@ en:
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
-    hide_silencing_reasons: "Don't display silencing reasons publically on user profiles."
+    hide_silencing_reasons: "Don't display silencing reasons publicly on user profiles."
 
-    hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
+    hide_suspension_reasons: "Don't display suspension reasons publicly on user profiles."
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
@@ -2467,7 +2467,7 @@ en:
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
 
-    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recepient has not been seen more than n months ago."
+    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recipient has not been seen more than n months ago."
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
@@ -2538,8 +2538,6 @@ en:
 
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
-
-    bootstrap_mode_min_users: 'Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours). See <a target="_blank" href="https://meta.discourse.org/t/-/322876">the bootstrap mode topic on Meta</a> for details.'
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in personal messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
@@ -2696,7 +2694,7 @@ en:
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
 
-    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. This will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
+    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
     gravatar_base_url: "Specify the URL for accessing the Gravatar provider's API. This setting is critical for converting email addresses into Gravatar URLs where avatar images are stored."
     gravatar_login_url: "URL relative to `gravatar_base_url`, which provides the user with the login to the Gravatar service."
@@ -2712,6 +2710,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
+    enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
@@ -2719,15 +2718,16 @@ en:
     welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the active theme controls the color."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
+    splash_screen_image: "An SVG image to display on the splash screen while the site loads. Animated SVGs should only use CSS transform or opacity animations. Use unique names for CSS classes and keyframes. You can use var(--primary), var(--secondary), and var(--tertiary) to reference theme colors."
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
+    enable_form_templates: "Enable the form templates feature. With it, you can enforce a structured form with data validation as part of the topic creation flow."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
-    experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
-    experimental_impersonation: "Impersonate a user without having to log out of your admin account."
+    enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    impersonate_without_logout: "Allow admins to impersonate a user without having to log out of their admin account."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -2752,8 +2752,12 @@ en:
     enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
-    experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
+    rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
+    experimental_tag_settings_page: "Enable a dedicated settings page for tags at /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
+    enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
+    modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
+    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2762,6 +2766,8 @@ en:
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
+      invalid_svg: "The SVG image is invalid. It must contain an SVG element and no scripts or event handlers."
+      invalid_upload: "The upload is invalid or does not exist."
       invalid_topic: "There's no topic with that ID."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
@@ -2799,12 +2805,12 @@ en:
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
-      min_group_name_length_exists: "You cannot set the minimum username length above the shortest group name (%{group_name})."
-      min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
-      max_group_name_length_exists: "You cannot set the maximum username length below the longest group name (%{group_name})."
-      max_username_length_range: "You cannot set the maximum below the minimum."
+      min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
+      min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
+      min_username_length_range: "You cannot set 'min username length' above 'max username length'."
+      max_username_length_exists: "You cannot set 'max username length' below the longest username (%{username})."
+      max_group_name_length_exists: "You cannot set 'max username length' below the longest group name (%{group_name})."
+      max_username_length_range: "You cannot set the 'max username length' below 'min username length'."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
       empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
       category_search_priority:
@@ -2871,7 +2877,6 @@ en:
       exclude_tag: "Exclude topics with a specific tag"
       exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
       exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
-      tags_alias: "Alias for 'tag:' filter"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
@@ -3084,6 +3089,8 @@ en:
       csrf_detected: "Sorry, the authorization timed out, or you have switched browsers. Please try again."
       request_error: "Sorry, an error occurred when starting the authorization. Please try again."
       invalid_iat: "Sorry, we are unable to verify the authorization token due to server clock differences. Please try again."
+      unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
+
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
     omniauth_confirm_title: "Log in using %{provider}"
     omniauth_confirm_button: "Continue"
@@ -5554,7 +5561,7 @@ en:
   dev_mode:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
-    enter: "Enter"
+    enter: "Enter Developer Mode"
   wizard:
     title: "Discourse Setup"
     step:
@@ -5858,10 +5865,6 @@ en:
       # New separated post actions
       post_actions:
         bundle_title: "What do you want to do with the post?"
-      no_action_post:
-        title: "No action"
-        description: "Take no action on the post"
-        complete: "No action taken on post"
       delete_post:
         title: "Delete post"
         description: "Delete this post"
@@ -5882,17 +5885,8 @@ en:
         title: "Edit post"
         description: "Edit this post content"
         complete: "Post edited"
-      convert_to_pm:
-        title: "Convert to PM"
-        description: "Convert this post to a personal message"
-        complete: "Post converted to personal message"
-      # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"
-      no_action_user:
-        title: "No action"
-        description: "Take no action against the user"
-        complete: "No action taken against user"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting"

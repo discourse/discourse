@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";

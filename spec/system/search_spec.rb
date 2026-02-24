@@ -260,7 +260,7 @@ describe "Search", type: :system do
       expect(topic_bulk_actions_modal).to be_open
       tag_selector = PageObjects::Components::SelectKit.new(".tag-chooser")
       tag_selector.search(tag1.name)
-      tag_selector.select_row_by_value(tag1.name)
+      tag_selector.select_row_by_name(tag1.name)
       tag_selector.collapse
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(

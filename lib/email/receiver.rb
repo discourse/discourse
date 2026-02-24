@@ -210,6 +210,22 @@ module Email
         return
       end
 
+      if post = find_related_post(force: true)
+        # the email is a reply to *something*
+        if category = post.topic&.category
+          # it's a topic in a category
+          if category.mailinglist_mirror?
+            # replies to categories that are mailing mirrors should work,
+            # even if reply_by_email is not otherwise enabled
+          elsif !SiteSetting.reply_by_email_enabled
+            # an edge case where reply by email is disabled but the user has replied to the category email
+            # without this, the category email would be looked up and found and then the new post associated
+            # with the existing topic, bypassing the reply_by_email_enabled setting
+            raise ReplyNotAllowedError
+          end
+        end
+      end
+
       if post = find_related_post
         # Most of the time, it is impossible to **reply** without a reply key, so exit early
         if user.blank?
@@ -685,7 +701,7 @@ module Email
       elsif mail.bounced?
         # "Final-Recipient" has a specific format (<name> ; <address>)
         # cf. https://www.ietf.org/rfc/rfc2298.html#section-3.2.4
-        address_type, generic_address = mail.final_recipient.to_s.split(";").map { _1.to_s.strip }
+        address_type, generic_address = mail.final_recipient.to_s.split(";").map { it.to_s.strip }
         return generic_address, nil if generic_address.include?("@") && address_type == "rfc822"
       end
 
@@ -735,7 +751,7 @@ module Email
       return if list_address.blank?
 
       # the CC header often includes the name of the sender
-      address_to_name = mail[:cc]&.element&.addresses&.to_h { [_1.address, _1.name] } || {}
+      address_to_name = mail[:cc]&.element&.addresses.to_h { [it.address, it.name] }
 
       %i[from reply_to x_mailfrom x_original_from].each do |header|
         next if mail[header].blank?
@@ -844,7 +860,7 @@ module Email
         return group if group
 
         category = Category.find_by_email(address)
-        return category if category && SiteSetting.reply_by_email_enabled?
+        return category if category
       end
 
       # reply

@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Виноски дискурсу"
   js:
     footnote:
+      title: "Виноски"
       add: "Додати виноску"

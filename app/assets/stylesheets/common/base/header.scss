@@ -146,7 +146,7 @@
 .header-dropdown-toggle,
 .drop-down,
 .panel-body {
-  .flagged-posts,
+  .flags,
   .reviewables {
     background: var(--danger);
     min-width: 6px;
@@ -178,7 +178,7 @@
     }
 
     .discourse-no-touch &:hover,
-    .discourse-no-touch &:focus {
+    .discourse-no-touch &:focus-visible {
       background-color: var(--d-hover);
     }
   }
@@ -304,7 +304,7 @@
     height: 2.2857em;
     padding: 0.2143em;
 
-    &:focus,
+    &:focus-visible,
     .discourse-no-touch & {
       &:hover {
         background-color: var(--primary-low);
@@ -515,18 +515,6 @@ $mobile-avatar-height: 1.532em;
 }
 
 .d-header-mode {
-  .bootstrap-mode {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-    margin-left: 1em;
-    padding: 0.15em 0.5em;
-
-    &:focus {
-      background-color: var(--primary-medium);
-      color: var(--secondary);
-    }
-  }
-
   .fk-d-button-tooltip .fk-d-tooltip__trigger {
     color: var(--header_primary-high);
     background: transparent;

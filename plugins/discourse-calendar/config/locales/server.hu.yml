@@ -46,7 +46,7 @@ hu:
       ongoing_event_reminder: "A(z) %{title} folyamatban van."
     errors:
       bulk_invite:
-        max_invitees: "Az első %{max_invittes} meghívott lett létrehozva. Próbálja meg a fájlt kisebb részekre osztani."
+        max_invitees: "Az első %{max_invitees} meghívott lett létrehozva. Próbálja meg a fájlt kisebb részekre osztani."
         error: "Hiba történt a fájl feltöltése során. Próbálja újra később."
       models:
         event:

@@ -16,6 +16,9 @@
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
 #                         in the UI.
+# disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
+#                         These groups cannot be selected and will be stripped if set via API.
+#                         Only applies to group_list type settings.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
 #                         Only valid value here is "simple" which will display a confirmation dialog when the setting
 #                         is changed.
@@ -25,6 +28,12 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
+#                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
+#                            to only "Everyone" and "No One", removing group-based options.
+# depends_on            - One or more boolean settings that must be true for this setting to take effect.
+# depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
+#                         to hide the setting if the dependent setting is false. If left blank, no special behavior
+#                         is applied and the setting is shown as normal.
 #
 #
 #
@@ -85,6 +94,7 @@ required:
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
+    area: "email"
   site_contact_username:
     default: ""
     type: username
@@ -442,6 +452,7 @@ basic:
     default: ""
     allow_any: false
     refresh: true
+    disallowed_groups: "0"
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
@@ -1711,10 +1722,23 @@ posting:
     min: 5
     max: 255
     area: "posts_and_topics"
+    depends_on:
+      - "enable_form_templates"
+    depends_behavior: "hidden"
   max_form_template_content_length:
     default: 5000
     max: 150000
     area: "posts_and_topics"
+    depends_on:
+      - "enable_form_templates"
+    depends_behavior: "hidden"
+  show_preview_for_form_templates:
+    client: true
+    default: true
+    area: "posts_and_topics"
+    depends_on:
+      - "enable_form_templates"
+    depends_behavior: "hidden"
   group_pm_user_limit:
     default: 1000
     type: integer
@@ -2083,6 +2107,7 @@ email:
     default: true
     client: true
     area: "email"
+    hidden: true
   view_raw_email_allowed_groups:
     type: group_list
     list_type: compact
@@ -2731,9 +2756,6 @@ security:
     default: true
   content_security_policy_report_only:
     default: false
-  content_security_policy_collect_reports:
-    default: false
-    hidden: true
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -3151,6 +3173,9 @@ navigation:
     area: "navigation"
 
 embedding:
+  embed_full_app:
+    default: false
+    hidden: true
   embed_by_username:
     default: ""
     type: username
@@ -3604,17 +3629,6 @@ uncategorized:
     hidden: true
     client: true
 
-  bootstrap_mode_min_users:
-    default: 50
-    client: true
-    max: 5000
-    area: "site_admin"
-
-  bootstrap_mode_enabled:
-    default: false
-    client: true
-    hidden: true
-
   automatically_unpin_topics:
     default: true
     client: true
@@ -3740,6 +3754,26 @@ uncategorized:
     default: true
     area: "interface"
 
+  enable_custom_splash_screen:
+    default: false
+    client: true
+    hidden: true
+    area: "interface"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/395100"
+
+  splash_screen_image:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+    depends_on:
+      - "enable_custom_splash_screen"
+    depends_behavior: "hidden"
+    validator: "UploadSettingValidator"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
@@ -3753,6 +3787,12 @@ uncategorized:
     client: true
     default: true
     area: "posts_and_topics"
+
+  enable_site_owner_onboarding:
+    client: true
+    default: false
+    hidden: true
+    area: "site_admin"
 
   enable_welcome_banner:
     client: true
@@ -3780,6 +3820,16 @@ uncategorized:
     enum: "WelcomeBannerPageVisibility"
     default: "top_menu_pages"
     area: "interface"
+
+  modernize_foundation_theme:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
 
 user_preferences:
   default_email_digest_frequency:
@@ -4155,11 +4205,24 @@ dashboard:
     client: true
 
 experimental:
-  experimental_auto_grid_images:
+  reporting_improvements:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/395768"
+  enable_auto_grid_images:
     default: false
     client: true
     area: "experimental"
-  experimental_rename_faq_to_guidelines:
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/394784"
+  rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
@@ -4167,26 +4230,31 @@ experimental:
     upcoming_change:
       impact: "feature,all_members"
       status: "experimental"
-  experimental_hashtag_search_result_limit:
-    default: 20
-    client: true
-    hidden: true
-    area: "experimental"
-  experimental_form_templates:
-    client: true
+      learn_more_url: "https://meta.discourse.org/t/-/395099"
+  experimental_tag_settings_page:
     default: false
+    client: true
     area: "experimental"
-  experimental_impersonation:
+  enable_form_templates:
+    client: true
     default: false
     hidden: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/278631"
+  impersonate_without_logout:
+    default: false
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
-    area: "experimental"
-  show_preview_for_form_templates:
-    client: true
-    default: true
     area: "experimental"
   experimental_new_new_view_groups:
     client: true
@@ -4206,16 +4274,6 @@ experimental:
     list_type: compact
     area: "group_permissions|experimental"
     hidden: true
-  reviewable_ui_refresh:
-    client: true
-    type: group_list
-    default: ""
-    area: "experimental"
-    hidden: true
-  force_old_reviewable_ui:
-    client: true
-    default: false
-    hidden: true
   reviewable_old_moderator_actions:
     default: true
     hidden: true
@@ -4231,10 +4289,12 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/387322"
   enable_simplified_category_creation:
     default: false
     hidden: true
     client: true
     upcoming_change:
-      status: "conceptual"
+      status: "experimental"
       impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/394971"

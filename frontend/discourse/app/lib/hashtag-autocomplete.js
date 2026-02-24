@@ -43,8 +43,8 @@ export function setupHashtagAutocomplete(
   );
 }
 
-export async function hashtagTriggerRule({ inCodeBlock }) {
-  return !(await inCodeBlock());
+export async function hashtagTriggerRule({ inCodeBlock, inLink }) {
+  return !(await inCodeBlock()) && !(await inLink?.());
 }
 
 export function hashtagAutocompleteOptions(

@@ -322,7 +322,16 @@ module ApplicationHelper
 
     generate_twitter_card_metadata(result, opts)
 
-    result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
+    if opts[:image].present?
+      result << tag(:meta, property: "og:image", content: opts[:image])
+      if opts[:image_width].present? && opts[:image_height].present?
+        result << tag(:meta, property: "og:image:width", content: opts[:image_width])
+        result << tag(:meta, property: "og:image:height", content: opts[:image_height])
+      end
+      if opts[:image_type].present?
+        result << tag(:meta, property: "og:image:type", content: opts[:image_type])
+      end
+    end
 
     %i[url title description].each do |property|
       if opts[property].present?
@@ -493,6 +502,67 @@ module ApplicationHelper
     # A bit basic for now but will be expanded later
     SiteSetting.splash_screen
   end
+
+  def custom_splash_screen_enabled?
+    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
+
+    @custom_splash_screen_enabled =
+      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
+        SiteSetting.splash_screen_image.is_a?(Upload)
+  end
+
+  def splash_screen_image_animated?
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg.present? && @splash_screen_image_svg.match?(/@keyframes\s/)
+  end
+
+  def splash_screen_inline_svg
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg&.html_safe
+  end
+
+  def splash_screen_image_data_uri(dark: false)
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    return nil if @splash_screen_image_svg.blank?
+
+    # Replace CSS variable references with actual theme colors
+    svg_with_colors = @splash_screen_image_svg.dup
+
+    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
+    primary = "##{public_send(color_method, "primary")}"
+    secondary = "##{public_send(color_method, "secondary")}"
+    tertiary = "##{public_send(color_method, "tertiary")}"
+
+    svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
+    svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
+    svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
+
+    # Use base64 encoding for better compatibility with complex SVGs
+    "data:image/svg+xml;base64,#{Base64.strict_encode64(svg_with_colors)}"
+  end
+
+  private
+
+  def build_splash_screen_image
+    @splash_screen_image_svg = nil
+
+    upload = SiteSetting.splash_screen_image
+    return unless upload.is_a?(Upload)
+
+    @splash_screen_image_svg =
+      Discourse
+        .cache
+        .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
+          begin
+            upload.content.presence
+          rescue StandardError => e
+            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+            nil
+          end
+        end
+  end
+
+  public
 
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]

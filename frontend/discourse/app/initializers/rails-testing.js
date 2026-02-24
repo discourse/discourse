@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { DEBUG } from "@glimmer/env";
 import $ from "jquery";
 import { isRailsTesting } from "discourse/lib/environment";

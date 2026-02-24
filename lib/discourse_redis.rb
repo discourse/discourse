@@ -53,6 +53,7 @@ class DiscourseRedis
     expireat
     get
     getbit
+    getdel
     getrange
     getset
     hdel

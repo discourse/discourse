@@ -7,6 +7,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
     let(:options) { OpenStruct.new(max_page_size: Chat::MessagesQuery::MAX_PAGE_SIZE) }
 
     it { is_expected.to validate_presence_of(:thread_id) }
+    it { is_expected.to validate_presence_of(:channel_id) }
     it { is_expected.to allow_values(1, options.max_page_size, nil).for(:page_size) }
     it { is_expected.not_to allow_values(0).for(:page_size) }
     it do
@@ -90,7 +91,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
     let(:guardian) { user.guardian }
     let(:thread_id) { thread.id }
     let(:optional_params) { {} }
-    let(:params) { { thread_id:, **optional_params } }
+    let(:params) { { thread_id:, channel_id: thread.channel_id, **optional_params } }
     let(:dependencies) { { guardian: } }
 
     before { thread.channel.add(user) }
@@ -105,6 +106,20 @@ RSpec.describe Chat::ListChannelThreadMessages do
       let(:thread_id) { -1 }
 
       it { is_expected.to fail_to_find_a_model(:thread) }
+    end
+
+    context "when thread exists but belongs to a different channel" do
+      fab!(:other_thread, :chat_thread)
+
+      let(:thread_id) { other_thread.id }
+
+      it { is_expected.to fail_to_find_a_model(:thread) }
+    end
+
+    context "when threading is not enabled for the channel" do
+      before { thread.channel.update!(threading_enabled: false) }
+
+      it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
     end
 
     context "when user cannot view the thread" do

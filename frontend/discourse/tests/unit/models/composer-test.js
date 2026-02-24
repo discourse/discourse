@@ -511,4 +511,49 @@ module("Unit | Model | composer", function (hooks) {
     );
     assert.strictEqual(composer.composerVersion, 1);
   });
+
+  test("serialize normalizes tags to names and keeps original_tags as objects", function (assert) {
+    const composer = createComposer.call(this, {
+      tags: [
+        { id: 1, name: "bug", slug: "bug" },
+        { id: 2, name: "feature", slug: "feature" },
+      ],
+      originalTags: [
+        { id: 1, name: "bug", slug: "bug" },
+        { id: 3, name: "support", slug: "support" },
+      ],
+    });
+
+    const serialized = composer.serialize({
+      tags: "tags",
+      original_tags: "originalTags",
+    });
+
+    assert.deepEqual(
+      serialized.tags,
+      ["bug", "feature"],
+      "tags are normalized to string names"
+    );
+    assert.deepEqual(
+      serialized.original_tags,
+      [
+        { id: 1, name: "bug", slug: "bug" },
+        { id: 3, name: "support", slug: "support" },
+      ],
+      "original_tags are kept as objects for backend to extract IDs"
+    );
+  });
+
+  test("showCategoryChooser with lazy loaded categories", function (assert) {
+    const site = getOwner(this).lookup("service:site");
+    site.set("lazy_load_categories", true);
+    site.set("categories", []);
+
+    const composer = createComposer.call(this, { action: CREATE_TOPIC });
+
+    assert.true(
+      composer.showCategoryChooser,
+      "shows category chooser when lazy_load_categories is enabled even with no categories loaded"
+    );
+  });
 });

@@ -13,6 +13,10 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
     };
   }
 
+  onChange(tags) {
+    return tags.map((tag) => tag.name);
+  }
+
   <template>
     <TagChooser
       @tags={{this.value}}

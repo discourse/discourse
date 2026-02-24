@@ -230,6 +230,8 @@ export default class AdminFilterControls extends Component {
   }
 
   <template>
+    {{yield to="aboveFilters"}}
+
     {{#if this.showFilters}}
       <div
         class={{concatClass

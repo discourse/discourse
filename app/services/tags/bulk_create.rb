@@ -67,7 +67,9 @@ class Tags::BulkCreate
     raw_tag_names.each do |raw_name|
       next if raw_name.blank?
 
-      normalized_input = raw_name.strip.downcase.gsub(/[[:space:]]+/, "-")
+      normalized_input = raw_name.strip
+      normalized_input = normalized_input.downcase if SiteSetting.force_lowercase_tags
+      normalized_input = normalized_input.gsub(/[[:space:]]+/, "-")
 
       if normalized_input.length > SiteSetting.max_tag_length
         results[:failed][raw_name] = I18n.t(

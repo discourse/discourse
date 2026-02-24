@@ -51,8 +51,6 @@ ar:
     chat_integration_flowdock_excerpt_length: "طول المقتطف من منشور Flowdock"
     chat_integration_groupme_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Groupme"
     chat_integration_groupme_excerpt_length: "طول المقتطف من منشور Groupme"
-    chat_integration_groupme_bot_ids: "*مطلوب* مُعرِّفات برامج الروبوت، مفصولة بالرمز \",\" إذا كانت عديدة"
-    chat_integration_groupme_instance_names: " * مطلوب * أسماء دردشات GroupMe، مفصولة بالرمز \",\" إذا كانت عديدة (بنفس ترتيب مُعرِّفات برامج الروبوت)"
     chat_integration_teams_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Microsoft Teams"
     chat_integration_teams_excerpt_length: "طول المقتطف من منشور Microsoft Teams"
     chat_integration_powerautomate_enabled: "تفعيل مقدِّم خدمة تكامل Microsoft Power Automate"
@@ -93,10 +91,8 @@ ar:
         create:
           created: "تم إنشاء القاعدة بنجاح"
           updated: "تم تحديث القاعدة بنجاح"
-          error: "عذرًا، حدث خطأ في أثناء إنشاء هذه القاعدة."
         delete:
           success: "تم حذف القاعدة بنجاح"
-          error: "عذرًا، حدث خطأ في أثناء حذف هذه القاعدة. شغِّل `/discourse status` للحصول على قائمة بالقواعد."
         not_found:
           tag: "يتعذَّر العثور على الوسم *%{name}*."
           category: "يتعذَّر العثور على الفئة *%{name}*. الفئات المتوفرة: *%{list}*"
@@ -158,10 +154,8 @@ ar:
         create:
           created: "تم إنشاء القاعدة بنجاح"
           updated: "تم تحديث القاعدة بنجاح"
-          error: "عذرًا، حدث خطأ في أثناء إنشاء هذه القاعدة."
         delete:
           success: "تم حذف القاعدة بنجاح"
-          error: "عذرًا، حدث خطأ في أثناء حذف هذه القاعدة. شغِّل <code>/status</code> للحصول على قائمة بالقواعد."
         not_found:
           tag: "يتعذَّر العثور على الوسم <b>%{name}</b>."
           category: "يتعذَّر العثور على الفئة <b>%{name}</b>. الفئات المتوفرة: <b>%{list}</b>"
@@ -192,10 +186,8 @@ ar:
         create:
           created: "تم إنشاء القاعدة بنجاح"
           updated: "تم تحديث القاعدة بنجاح"
-          error: "عذرًا، حدث خطأ في أثناء إنشاء هذه القاعدة."
         delete:
           success: "تم حذف القاعدة بنجاح"
-          error: "عذرًا، حدث خطأ في أثناء حذف هذه القاعدة. شغِّل `/discourse status` للحصول على قائمة بالقواعد."
         not_found:
           tag: "يتعذَّر العثور على الوسم *%{name}*."
           category: "يتعذَّر العثور على الفئة *%{name}*. الفئات المتوفرة: *%{list}*"

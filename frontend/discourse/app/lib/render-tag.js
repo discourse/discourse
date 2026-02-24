@@ -15,19 +15,25 @@ export function defaultRenderTag(tag, params) {
   let siteSettings = helperContext().siteSettings;
 
   params = params || {};
-  const visibleName = escapeExpression(tag);
-  tag = visibleName.toLowerCase();
+  const tagName = typeof tag === "string" ? tag : tag.name;
+  const visibleName = escapeExpression(tagName);
+  const tagNameLower = visibleName.toLowerCase();
+
   const classes = ["discourse-tag"];
-  const tagName = params.tagName || "a";
+  const htmlTag = params.tagName || "a";
+
   let path;
-  if (tagName === "a" && !params.noHref) {
+  if (htmlTag === "a" && !params.noHref) {
     if ((params.isPrivateMessage || params.pmOnly) && User.current()) {
       const username = params.tagsForUser
         ? params.tagsForUser
         : User.current().username;
-      path = `/u/${username}/messages/tags/${tag}`;
+      path = `/u/${username}/messages/tags/${tagNameLower}`;
+    } else if (typeof tag === "object" && tag.id) {
+      const slugForUrl = tag.slug || `${tag.id}-tag`;
+      path = `/tag/${slugForUrl}/${tag.id}`;
     } else {
-      path = `/tag/${tag}`;
+      path = `/tag/${tagNameLower}`;
     }
   }
   const href = path ? ` href='${getURL(path)}' ` : "";
@@ -48,17 +54,17 @@ export function defaultRenderTag(tag, params) {
 
   let val =
     "<" +
-    tagName +
+    htmlTag +
     href +
     " data-tag-name=" +
-    tag +
+    tagNameLower +
     (params.description ? ' title="' + escape(hoverDescription) + '" ' : "") +
     " class='" +
     classes.join(" ") +
     "'>" +
     (params.displayName ? escape(params.displayName) : visibleName) +
     "</" +
-    tagName +
+    htmlTag +
     ">";
 
   if (params.count) {

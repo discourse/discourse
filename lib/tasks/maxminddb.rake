@@ -38,8 +38,6 @@ def copy_maxmind(from_path, to_path)
   end
 end
 
-maxmind_thread = nil
-
 task "maxminddb:refresh": "environment" do
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
   next if refresh_days.to_i <= 0

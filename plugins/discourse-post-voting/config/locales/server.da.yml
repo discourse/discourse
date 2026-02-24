@@ -10,8 +10,6 @@ da:
       actions:
         no_action_comment:
           title: "Ingen handling"
-        ignore:
-          title: "Ignorer flag"
   post_action_types:
     vote:
       title: "Stemmeafgivelse"
@@ -23,8 +21,6 @@ da:
             title: "Suspendér Bruger"
           agree_and_silence:
             title: "Ignorer bruger"
-          ignore:
-            title: "Ignorer flag"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

@@ -19,10 +19,17 @@ acceptance("Email Disabled Banner", function (needs) {
 
   test("when enabled", async function (assert) {
     this.siteSettings.disable_emails = "yes";
+
     await visit("/latest");
     assert
       .dom(".alert-emails-disabled")
-      .exists("alert is displayed when email disabled");
+      .doesNotExist("alert is not displayed on non-admin routes");
+
+    updateCurrentUser({ admin: true });
+    await visit("/admin");
+    assert
+      .dom(".alert-emails-disabled")
+      .exists("alert is displayed on admin routes when email disabled");
     assert
       .dom(".alert-emails-disabled .text")
       .hasText(i18n("emails_are_disabled"), "alert uses the correct text");
@@ -30,22 +37,19 @@ acceptance("Email Disabled Banner", function (needs) {
 
   test("when non-staff", async function (assert) {
     this.siteSettings.disable_emails = "non-staff";
-    await visit("/");
-    assert
-      .dom(".alert-emails-disabled")
-      .exists("alert is displayed when email disabled for non-staff");
-    assert
-      .dom(".alert-emails-disabled .text")
-      .hasText(
-        i18n("emails_are_disabled_non_staff"),
-        "alert uses the correct text"
-      );
 
-    updateCurrentUser({ moderator: true });
-    await visit("/");
+    await visit("/latest");
     assert
       .dom(".alert-emails-disabled")
-      .exists("alert is displayed to staff when email disabled for non-staff");
+      .doesNotExist("alert is not displayed on non-admin routes");
+
+    updateCurrentUser({ admin: true });
+    await visit("/admin");
+    assert
+      .dom(".alert-emails-disabled")
+      .exists(
+        "alert is displayed on admin routes when email disabled for non-staff"
+      );
     assert
       .dom(".alert-emails-disabled .text")
       .hasText(

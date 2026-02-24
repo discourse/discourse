@@ -150,8 +150,12 @@ class InlineUploads
     markdown
   end
 
+  URL_REGEX = /(?:[^\s()"']|\((?:[^\s()]*|\([^\s()]*\))*\))+/
+  TITLE_PART_REGEX = /"[^"]*"|'[^']*'/
+  private_constant :URL_REGEX, :TITLE_PART_REGEX
+
   def self.match_md_inline_img(markdown, external_src: false)
-    markdown.scan(/(!?\[([^\[\]]*)\]\(([^\s\)]+)([ ]*['"]{1}[^\)]*['"]{1}[ ]*)?\))/) do |match|
+    markdown.scan(/(!?\[([^\[\]]*)\]\((#{URL_REGEX})([ ]*#{TITLE_PART_REGEX}[ ]*)?\))/) do |match|
       if (external_src || matched_uploads(match[2]).present?) && block_given?
         yield(
           match[0],
@@ -164,7 +168,9 @@ class InlineUploads
   end
 
   def self.match_bbcode_img(markdown, external_src: false)
-    markdown.scan(%r{(\[img\]\s*([^\[\]\s]+)\s*\[/img\])}i) do |match|
+    # matches [img=WxH]url[/img] and [img width=W height=H]url[/img]
+    # in addition to [img]url[/img]
+    markdown.scan(%r{(\[img\b[^\]]*\]\s*([^\[\]\s]+)\s*\[/img\])}i) do |match|
       if (external_src || (matched_uploads(match[1]).present?)) && block_given?
         yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0])
       end

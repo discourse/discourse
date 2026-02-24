@@ -141,7 +141,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.smtp_ssl_modes
-    @visibility_levels = Enum.new(none: 0, ssl_tls: 1, starttls: 2)
+    @smtp_ssl_modes = Enum.new(none: 0, ssl_tls: 1, starttls: 2)
   end
 
   def self.auto_groups_between(lower, upper)
@@ -434,6 +434,7 @@ class Group < ActiveRecord::Base
         .includes(:user, :topic, topic: :category)
         .references(:posts, :topics, :category)
         .where.not(topics: { archetype: Archetype.private_message })
+        .where("topics.visible")
         .where(post_type: Post.types[:regular])
         .where("group_mentions.group_id = ?", self.id)
 

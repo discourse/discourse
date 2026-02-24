@@ -5,11 +5,6 @@
 # https://translate.discourse.org/
 
 pt:
-  discourse_post_voting:
-    reviewables:
-      actions:
-        agree_and_silence:
-          title: "Silenciar utilizador"
   post_action_types:
     vote:
       title: "Votar"

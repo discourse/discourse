@@ -1634,6 +1634,8 @@ th:
         change_tags: "แทนที่แท็ก"
         choose_new_tags: "เลือกแท็กใหม่เพื่อกระทู้เหล่านี้:"
         changed_tags: "แท็กของกระทู้เหล่านี้ถูกเปลี่ยนแปลง"
+        error_topic_count:
+          other: "%{count}กระทู้"
       none:
         unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"
         new: "คุณไม่มีกระทู้ใหม่"
@@ -2074,6 +2076,8 @@ th:
       create_long: "สร้างหมวดหมู่ใหม่"
       creation_error: มีข้อผิดพลาดขณะสร้างหมวดหมู่
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
+      validations:
+        icon_required: "เลือกไอคอน."
       description: "รายละเอียด"
       icon: "ไอคอน"
       emoji: "Emoji"
@@ -2104,7 +2108,6 @@ th:
       minimum_required_tags: "จำนวนแท็กขั้นต่ำในกระทู้:"
       none_subcategory_text: "ไม่มี"
       visibility:
-        title: "การเข้าถึง"
         public: "สาธารณะ"
         group_restricted: "ส่วนตัว"
       notifications:
@@ -2750,6 +2753,7 @@ th:
         save: "บันทึก"
         cancel: "ยกเลิก"
         continue: "ดำเนินการต่อ"
+        copy_key: "คัดลอก"
         revoke: "เอาออก"
       api:
         user: "ผู้ใช้"

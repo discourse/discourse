@@ -1,30 +1,32 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-@classNames("row")
+@tagName("")
 export default class AdminFormRow extends Component {
   <template>
-    <div class="form-element label-area">
-      {{#if this.label}}
-        <label
-          class={{concatClass (if (eq @type "checkbox") "checkbox-label")}}
-        >{{i18n this.label}}</label>
-      {{else}}
-        &nbsp;
-      {{/if}}
-    </div>
-    <div class="form-element input-area">
-      {{#if this.wrapLabel}}
-        <label
-          class={{concatClass (if (eq @type "checkbox") "checkbox-label")}}
-        >{{yield}}</label>
-      {{else}}
-        {{yield}}
-      {{/if}}
+    <div class="row" ...attributes>
+      <div class="form-element label-area">
+        {{#if this.label}}
+          <label
+            class={{concatClass (if (eq @type "checkbox") "checkbox-label")}}
+          >{{i18n this.label}}</label>
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </div>
+      <div class="form-element input-area">
+        {{#if this.wrapLabel}}
+          <label
+            class={{concatClass (if (eq @type "checkbox") "checkbox-label")}}
+          >{{yield}}</label>
+        {{else}}
+          {{yield}}
+        {{/if}}
+      </div>
     </div>
   </template>
 }

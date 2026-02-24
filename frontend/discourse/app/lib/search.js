@@ -221,9 +221,12 @@ export function getSearchKey(args) {
   );
 }
 
-// Patterns that indicate a valid search even without a traditional search term
-const SEARCH_SYNTAX_PATTERNS =
-  /^(l|r|t)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
+// Patterns that bypass minimum search term length because they
+// produce meaningful results on their own. Note: 't' (in:title) is
+// intentionally excluded - it modifies where to search but still
+// requires actual search terms.
+const MIN_LENGTH_BYPASS_PATTERN =
+  /^(l|r)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
 
 export function isValidSearchTerm(searchTerm, siteSettings) {
   if (!searchTerm) {
@@ -232,12 +235,10 @@ export function isValidSearchTerm(searchTerm, siteSettings) {
 
   const trimmed = searchTerm.trim();
 
-  // If the search contains filter syntax, it's valid regardless of length
-  if (SEARCH_SYNTAX_PATTERNS.test(trimmed)) {
+  if (MIN_LENGTH_BYPASS_PATTERN.test(trimmed)) {
     return true;
   }
 
-  // Otherwise, apply minimum length requirement
   return trimmed.length >= siteSettings.min_search_term_length;
 }
 

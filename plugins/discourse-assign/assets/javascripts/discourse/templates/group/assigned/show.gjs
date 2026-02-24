@@ -44,6 +44,7 @@ export default <template>
       @reassign={{@controller.reassign}}
       @onScroll={{@controller.saveScrollPosition}}
       @scrollOnLoad={{true}}
+      @listContext="assigned"
     />
 
     <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />

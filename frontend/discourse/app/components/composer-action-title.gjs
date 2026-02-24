@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import PostLanguageSelector from "discourse/components/post-language-selector";
 import discourseComputed from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
@@ -29,7 +29,7 @@ const TITLES = {
   [ADD_TRANSLATION]: "composer.translations.title",
 };
 
-@classNames("composer-action-title")
+@tagName("")
 export default class ComposerActionTitle extends Component {
   @service currentUser;
   @service siteSettings;
@@ -70,17 +70,14 @@ export default class ComposerActionTitle extends Component {
     }
   }
 
-  get showPostLanguageSelector() {
+  @discourseComputed("action")
+  showPostLanguageSelector(action) {
     const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
-    if (
+    return (
       this.currentUser &&
       this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(this.model.action)
-    ) {
-      return true;
-    }
-
-    return false;
+      allowedActions.includes(action)
+    );
   }
 
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
@@ -117,29 +114,31 @@ export default class ComposerActionTitle extends Component {
   }
 
   <template>
-    <ComposerActions
-      @composerModel={{this.model}}
-      @replyOptions={{this.model.replyOptions}}
-      @canWhisper={{this.canWhisper}}
-      @canUnlistTopic={{this.canUnlistTopic}}
-      @action={{this.model.action}}
-      @tabindex={{this.tabindex}}
-      @topic={{this.model.topic}}
-      @post={{this.model.post}}
-      @whisper={{this.model.whisper}}
-      @noBump={{this.model.noBump}}
-      @options={{hash mobilePlacementStrategy="fixed"}}
-    />
-
-    <span class="action-title" role="heading" aria-level="1">
-      {{this.actionTitle}}
-    </span>
-
-    {{#if this.showPostLanguageSelector}}
-      <PostLanguageSelector
+    <div class="composer-action-title" ...attributes>
+      <ComposerActions
         @composerModel={{this.model}}
-        @selectedLanguage={{this.model.locale}}
+        @replyOptions={{this.model.replyOptions}}
+        @canWhisper={{this.canWhisper}}
+        @canUnlistTopic={{this.canUnlistTopic}}
+        @action={{this.model.action}}
+        @tabindex={{this.tabindex}}
+        @topic={{this.model.topic}}
+        @post={{this.model.post}}
+        @whisper={{this.model.whisper}}
+        @noBump={{this.model.noBump}}
+        @options={{hash mobilePlacementStrategy="fixed"}}
       />
-    {{/if}}
+
+      <span class="action-title" role="heading" aria-level="1">
+        {{this.actionTitle}}
+      </span>
+
+      {{#if this.showPostLanguageSelector}}
+        <PostLanguageSelector
+          @composerModel={{this.model}}
+          @selectedLanguage={{this.model.locale}}
+        />
+      {{/if}}
+    </div>
   </template>
 }

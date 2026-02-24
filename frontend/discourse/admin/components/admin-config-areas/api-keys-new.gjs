@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, hash } from "@ember/helper";
+import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
@@ -9,9 +9,11 @@ import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { clipboardCopy } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -19,12 +21,14 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigAreasApiKeysNew extends Component {
   @service modal;
   @service store;
+  @service toasts;
 
   @tracked username;
   @tracked loadingScopes = false;
   @tracked scopes = null;
 
   @tracked generatedApiKey = null;
+  @tracked createdKeyData = null;
 
   userModes = [
     { id: "all", name: i18n("admin.api.all_users") },
@@ -98,9 +102,30 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     try {
       const result = await this.store.createRecord("api-key").save(payload);
       this.generatedApiKey = result.payload.key;
+      this.createdKeyData = {
+        description: data.description,
+        scopeMode: data.scope_mode,
+        scopes:
+          data.scope_mode === "granular"
+            ? this.#selectedScopes(data.scopes)
+            : null,
+      };
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  get scopeModeLabel() {
+    return i18n(`admin.api.scopes.${this.createdKeyData.scopeMode}`);
+  }
+
+  @action
+  async copyApiKey() {
+    await clipboardCopy(this.generatedApiKey);
+    this.toasts.success({
+      data: { message: i18n("admin.api_keys.key_copied_to_clipboard") },
+      duration: "short",
+    });
   }
 
   #selectedScopes(scopes) {
@@ -180,13 +205,68 @@ export default class AdminConfigAreasApiKeysNew extends Component {
       <div class="admin-config-area__primary-content">
         <div class="admin-config-area-card">
           {{#if this.generatedApiKey}}
-            <div>{{i18n "admin.api.not_shown_again"}}</div>
-            <div class="generated-api-key">{{this.generatedApiKey}}</div>
-            <DButton
-              @route="adminApiKeys.index"
-              @label="admin.api_keys.continue"
-              class="continue btn-danger"
-            />
+            <div class="generated-api-key-container">
+              <div class="alert alert-warning">
+                {{icon "triangle-exclamation"}}
+                <span>{{i18n "admin.api.not_shown_again"}}</span>
+              </div>
+
+              {{#if this.createdKeyData}}
+                <div class="generated-api-key__details">
+                  {{#if this.createdKeyData.description}}
+                    <div class="generated-api-key__detail-row">
+                      <span class="generated-api-key__label">{{i18n
+                          "admin.api.description"
+                        }}</span>
+                      <span>{{this.createdKeyData.description}}</span>
+                    </div>
+                  {{/if}}
+                  <div class="generated-api-key__detail-row">
+                    <span class="generated-api-key__label">{{i18n
+                        "admin.api.scope_mode"
+                      }}</span>
+                    <span>{{this.scopeModeLabel}}</span>
+                  </div>
+                  {{#if this.createdKeyData.scopes}}
+                    <div class="generated-api-key__detail-row">
+                      <span class="generated-api-key__label">{{i18n
+                          "admin.api.scopes.title"
+                        }}</span>
+                      <span class="generated-api-key__scope-badges">
+                        {{#each this.createdKeyData.scopes as |scope|}}
+                          <span class="generated-api-key__scope-badge">
+                            {{scope.scope_id}}
+                            {{#each scope.params as |paramName|}}
+                              {{#if (get scope paramName)}}
+                                <span
+                                  class="generated-api-key__scope-param"
+                                >({{paramName}}: {{get scope paramName}})</span>
+                              {{/if}}
+                            {{/each}}
+                          </span>
+                        {{/each}}
+                      </span>
+                    </div>
+                  {{/if}}
+                </div>
+              {{/if}}
+
+              <div class="generated-api-key__key-row">
+                <code class="generated-api-key">{{this.generatedApiKey}}</code>
+                <DButton
+                  @action={{this.copyApiKey}}
+                  @icon="copy"
+                  @label="admin.api_keys.copy_key"
+                  class="btn-default generated-api-key__copy-btn"
+                />
+              </div>
+
+              <DButton
+                @route="adminApiKeys.index"
+                @label="admin.api_keys.continue"
+                class="continue btn-default"
+              />
+            </div>
           {{else}}
             <ConditionalLoadingSection @isLoading={{this.loadingScopes}}>
               <Form

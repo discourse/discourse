@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 lv:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Pielietot"
-      insert_modal:
-        insert: "Ievietot"

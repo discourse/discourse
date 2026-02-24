@@ -5,13 +5,6 @@
 # https://translate.discourse.org/
 
 bg:
-  discourse_post_voting:
-    reviewables:
-      actions:
-        agree_and_suspend:
-          title: "Спиране на потребителя"
-        agree_and_silence:
-          title: "Заглушаване на потребителя"
   post_action_types:
     vote:
       title: "Глас"

@@ -23,6 +23,12 @@ ko:
             chat_channel_delete: "채팅 채널 삭제됨"
             chat_auto_remove_membership: "채널에서 자동으로 제거된 멤버십"
     chat:
+      edit_category:
+        tab_title: "채팅"
+        channel: "채널"
+        description: "내용"
+        actions: "작업"
+        settings: "설정"
       deleted_chat_username: 삭제되었습니다
       dates:
         yesterday: "어제"
@@ -305,8 +311,6 @@ ko:
       retention_reminders:
         short:
           other: "%{count}일"
-        long:
-          other: "채팅 설정이 채널 메시지를 %{count} 일 동안 보관하도록 설정되어 있습니다."
       flagging:
         action: "신고 메시지"
       emoji_picker:

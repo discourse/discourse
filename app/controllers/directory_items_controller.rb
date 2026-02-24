@@ -2,6 +2,8 @@
 
 class DirectoryItemsController < ApplicationController
   PAGE_SIZE = 50
+  PAGE_LIMIT = 10
+
   before_action :set_groups_exclusion, if: -> { params[:exclude_groups].present? }
 
   def index
@@ -58,7 +60,7 @@ class DirectoryItemsController < ApplicationController
     end
 
     result = result.includes(:user_stat) if period_type == DirectoryItem.period_types[:all]
-    page = fetch_int_from_params(:page, default: 0)
+    page = fetch_int_from_params(:page, default: 0, max: PAGE_LIMIT)
 
     user_ids = nil
     if params[:name].present?

@@ -94,6 +94,12 @@ export default class Topic extends RestModel {
     }
 
     const data = { ...props };
+
+    // SHOULD NOT normalize tags to names - backend expects string array
+    if (Array.isArray(data.tags)) {
+      data.tags = data.tags.map((t) => (typeof t === "string" ? t : t.name));
+    }
+
     if (opts.fastEdit) {
       data.keep_existing_draft = true;
     }
@@ -452,7 +458,8 @@ export default class Topic extends RestModel {
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (!title.includes(tag.toLowerCase())) {
+      const tagName = typeof tag === "string" ? tag : tag.name;
+      if (!title.includes(tagName.toLowerCase())) {
         newTags.push(tag);
       }
     });
@@ -952,13 +959,9 @@ export default class Topic extends RestModel {
   }
 
   updateTags(tags) {
-    if (!tags || tags.length === 0) {
-      tags = [""];
-    }
-
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
-      data: { tags },
+      data: { tags: tags || [] },
     });
   }
 }

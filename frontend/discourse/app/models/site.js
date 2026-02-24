@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -99,6 +100,13 @@ export default class Site extends RestModel {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
+  }
+
+  get groupsById() {
+    const map = {};
+    Object.values(AUTO_GROUPS).forEach((g) => (map[g.id] = g));
+    this.groups?.forEach((g) => (map[g.id] = g));
+    return map;
   }
 
   @dependentKeyCompat
@@ -251,6 +259,21 @@ export default class Site extends RestModel {
     return this.get("topicFlagByIdLookup.action" + id);
   }
 
+  #transformTags(tags) {
+    if (!tags) {
+      return [];
+    }
+    return tags.map((tag) => this.store.createRecord("tag", tag));
+  }
+
+  get topTags() {
+    return this.#transformTags(this.top_tags);
+  }
+
+  get categoryTopTags() {
+    return this.#transformTags(this.category_top_tags);
+  }
+
   removeCategory(id) {
     const categories = this.categories;
     const existingCategory = categories.find((c) => c.id === id);
@@ -270,16 +293,18 @@ export default class Site extends RestModel {
     const categoryId = get(newCategory, "id");
     const existingCategory = categories.find((c) => c.id === categoryId);
 
-    // Don't update null permissions
     if (newCategory.permission === null) {
       delete newCategory.permission;
+    }
+
+    if (newCategory.has_children == null) {
+      delete newCategory.has_children;
     }
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
       return existingCategory;
     } else {
-      // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.push(newCategory);
       return newCategory;

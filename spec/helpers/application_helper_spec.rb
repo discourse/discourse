@@ -666,6 +666,33 @@ RSpec.describe ApplicationHelper do
       end
     end
 
+    context "with opengraph image dimensions" do
+      it "includes og:image:width and og:image:height when provided" do
+        result =
+          helper.crawlable_meta_data(image: "some-image.png", image_width: 1024, image_height: 768)
+        expect(result).to include('<meta property="og:image:width" content="1024" />')
+        expect(result).to include('<meta property="og:image:height" content="768" />')
+      end
+
+      it "does not include og:image dimensions when not provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png")
+        expect(result).not_to include("og:image:width")
+        expect(result).not_to include("og:image:height")
+      end
+    end
+
+    context "with opengraph image type" do
+      it "includes og:image:type when provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png", image_type: "image/png")
+        expect(result).to include('<meta property="og:image:type" content="image/png" />')
+      end
+
+      it "does not include og:image:type when not provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png")
+        expect(result).not_to include("og:image:type")
+      end
+    end
+
     context "with breadcrumbs" do
       subject(:metadata) { helper.crawlable_meta_data(breadcrumbs: breadcrumbs) }
 

@@ -16,7 +16,6 @@ tr_TR:
       settings: "Ayarlar"
       no_providers: "Eklenti ayarlarında bazı sağlayıcıları etkinleştirmeniz gerekiyor"
       channels_with_errors: "Bu sağlayıcı için bazı kanallar en son mesaj gönderildiğinde başarısız oldu. Daha fazla bilgi edinmek için hata simgelerine tıklayın."
-      channel_exception: "Bu kanala en son mesaj gönderildiğinde bilinmeyen bir hata oluştu."
       group_mention_template: "Şu kullanıcıdan bahsedildi: @%{name}"
       group_message_template: "Şu kullanıcıya mesaj gönderildi: @%{name}"
       choose_group: "(bir grup seçin)"
@@ -33,7 +32,6 @@ tr_TR:
         topic: "Konu"
         send: "Test Mesajı gönderin"
         close: "Kapat"
-        error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerine bakın."
         success: "Mesaj başarıyla gönderildi"
       type:
         normal: Normal

@@ -1,0 +1,105 @@
+@use "lib/viewport";
+@import "common/foundation/mixins";
+
+.admin-onboarding-banner {
+  margin-bottom: 1em;
+  color: var(--secondary);
+
+  @include viewport.until(sm) {
+    display: none;
+  }
+
+  &__wrap {
+    box-sizing: border-box;
+    position: relative;
+    padding: var(--space-5) var(--space-8);
+    border-radius: var(--d-border-radius-large);
+    background: var(--accent-color, var(--tertiary-low));
+    color: var(--accent-text-color, var(--primary));
+
+    @include viewport.until(md) {
+      padding: var(--space-4) var(--space-5);
+      margin-top: var(--space-2);
+    }
+
+    @include viewport.until(sm) {
+      display: block;
+      padding: var(--space-2);
+      margin-top: 0;
+    }
+
+    .btn-close {
+      position: absolute;
+      top: var(--space-1);
+      right: var(--space-1);
+
+      .d-icon {
+        color: var(--accent-text-color, var(--primary));
+      }
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space);
+
+    @include viewport.until(md) {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  &__content {
+    text-align: center;
+
+    @include viewport.until(md) {
+      margin-top: var(--space-3);
+    }
+  }
+
+  &__steps {
+    margin-bottom: var(--space-2);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2) var(--space-12);
+    text-wrap: pretty;
+
+    @include viewport.until(md) {
+      font-size: var(--font-down-1);
+    }
+
+    .onboarding-step {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 3;
+      justify-content: start;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      gap: var(--space-2);
+
+      &__checkbox {
+        gap: var(--space-2);
+        display: flex;
+        align-items: baseline;
+        font-weight: bold;
+
+        .d-icon {
+          position: relative;
+          top: var(--space-half);
+        }
+      }
+
+      &__text {
+        max-width: 16em;
+      }
+
+      button {
+        margin-top: var(--space-2);
+      }
+    }
+  }
+}

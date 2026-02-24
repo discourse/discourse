@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";

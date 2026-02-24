@@ -217,7 +217,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       context "when current user is silenced" do
         before { UserSilencer.new(user).silence }
 
-        it "raises invalid acces" do
+        it "raises invalid access" do
           post "/chat/#{chat_channel.id}.json", params: { message: message }
           expect(response.status).to eq(403)
         end
@@ -406,7 +406,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           UserSilencer.new(user1).silence
         end
 
-        it "raises invalid acces" do
+        it "raises invalid access" do
           post "/chat/#{direct_message_channel.id}.json", params: { message: message }
           expect(response.status).to eq(403)
         end

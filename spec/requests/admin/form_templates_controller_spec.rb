@@ -5,7 +5,7 @@ RSpec.describe Admin::FormTemplatesController do
   fab!(:user)
   fab!(:form_template)
 
-  before { SiteSetting.experimental_form_templates = true }
+  before { SiteSetting.enable_form_templates = true }
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -33,7 +33,7 @@ RSpec.describe Admin::FormTemplatesController do
     context "when experimental form templates is disabled" do
       before do
         sign_in(admin)
-        SiteSetting.experimental_form_templates = false
+        SiteSetting.enable_form_templates = false
       end
 
       it "should not work if you are an admin" do
@@ -204,7 +204,11 @@ RSpec.describe Admin::FormTemplatesController do
         expect(response.status).to eq(200)
         processed_tag_group =
           YAML.safe_load(response.parsed_body["form_template"]["template"]).first
-        expect(processed_tag_group["choices"]).to eq([tag1.name, tag2.name, tag3.name].sort)
+        expect(processed_tag_group["choices"]).to contain_exactly(
+          { "id" => tag1.id, "name" => tag1.name },
+          { "id" => tag2.id, "name" => tag2.name },
+          { "id" => tag3.id, "name" => tag3.name },
+        )
       end
 
       it "rejects invalid templates" do

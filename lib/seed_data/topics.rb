@@ -90,12 +90,12 @@ module SeedData
       # FAQ/Guidelines
       topics << {
         site_setting_name: "guidelines_topic_id",
-        # NOTE: experimental_rename_faq_to_guidelines is an upcoming change,
+        # NOTE: rename_faq_to_guidelines is an upcoming change,
         # but we are setting this seed data on site creation, so not really
         # any point being user-specific here.
         title:
           (
-            if SiteSetting.experimental_rename_faq_to_guidelines
+            if SiteSetting.rename_faq_to_guidelines
               I18n.t("guidelines_topic.guidelines_title")
             else
               I18n.t("guidelines_topic.title")

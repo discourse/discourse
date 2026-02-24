@@ -405,6 +405,10 @@ es:
       title: "Temas nuevos y no leídos"
       pill: "Sugeridos"
       pm_title: "Mensajes sugeridos"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Copiar enlace"
+        copied_to_clipboard: "Enlace copiado en el portapapeles!"
     about:
       edit: "Editar esta página"
       simple_title: "Acerca de"
@@ -1580,9 +1584,6 @@ es:
         flags_given:
           one: '<span class="%{className}">%{count}</span> denuncia útil'
           other: '<span class="%{className}">%{count}</span> denuncias útiles'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> publicación denunciada'
-          other: '<span class="%{className}">%{count}</span> publicaciones denunciadas'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> publicación eliminada'
           other: '<span class="%{className}">%{count}</span> publicaciones eliminadas'
@@ -2295,7 +2296,6 @@ es:
     form_kit:
       reset: Restablecer
       optional: opcional
-      errors_summary_title: "Este formulario contiene errores:"
       dirty_form: "¡No has enviado tus cambios! ¿Seguro que quieres salir?"
       errors:
         starts_with: "Debe comenzar con %{prefix}"
@@ -3300,6 +3300,9 @@ es:
         notify: "Notificar a los usuarios afectados por el cambio."
         performing: "Realizando operaciones en bloque, espera…"
         completed: "¡Operaciones en bloque completadas con éxito!"
+        error_topic_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
       none:
         unread: "No tienes temas sin leer."
         unseen: "Has visto todos los temas."
@@ -3814,7 +3817,7 @@ es:
       quote_edit: "Editar"
       quote_edit_shortcut: "Editar (o pulsa e)"
       quote_copy: "Copiar cita"
-      quote_copied_to_clibboard: "Cita copiada en el portapapeles"
+      quote_copied_to_clipboard: "Cita copiada en el portapapeles"
       quote_share: "Compartir"
       edit_reason: "Motivo: "
       post_number: "publicación %{number}"
@@ -4152,6 +4155,8 @@ es:
       save_error: Se produjo un error al guardar la categoría
       errors:
         self_lockout: "Estás a punto de cambiar los permisos de la categoría de una forma que perderías tu propio acceso. ¿De verdad quieres continuar?"
+      validations:
+        icon_required: "Selecciona un icono."
       name: "Nombre de la categoría"
       untitled: "Categoría sin nombre"
       description: "Descripción"
@@ -4196,11 +4201,8 @@ es:
         reply: "Responder"
         create: "Crear"
         no_groups_selected: "Ningún grupo tiene acceso. Esta categoría solo será visible por el personal."
-        everyone_has_access: 'Esta categoría es pública. Todo el mundo puede ver, responder y crear temas. Para restringir permisos, quita uno o varios permisos del grupo «todos».'
         toggle_reply: "Alternar el permiso para responder"
         toggle_full: "Alternar el permiso para crear temas"
-        inherited: 'Este permiso está heredado de «todos»'
-      special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no se pueden editar. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y no puede tener ajustes de seguridad."
       uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
       pending_permission_change_alert: "No has añadido a %{group} a esta categoría. Haz clic en este botón para añadirlos."
@@ -4235,7 +4237,7 @@ es:
       default_slow_mode: 'Activar el "modo lento" en los nuevos temas de esta categoría.'
       none_subcategory_text: "Ninguna"
       visibility:
-        title: "Acceso"
+        title: "Visibilidad"
         public: "Público"
         all_members: "Todos los miembros"
         group_restricted: "Privado"
@@ -5311,7 +5313,6 @@ es:
           search_placeholder: "Filtrar por nombre, descripción o plugin..."
           no_results: "No hay cambios próximos que coincidan con tu filtro"
           all: "Todo"
-          enabled_all: "Activado o desactivado"
           enabled: "Activado"
           disabled: "Desactivado"
           impact_type_all: "Todos los tipos de impacto"
@@ -5955,6 +5956,7 @@ es:
         save: "Guardar"
         cancel: "Cancelar"
         continue: "Continuar"
+        copy_key: "Copiar"
         back: "Volver a Claves API"
         revoke: "Revocar"
         undo_revoke: "Deshacer la revocación"
@@ -6587,8 +6589,6 @@ es:
         delete: "Eliminar"
         delete_confirm: '¿Seguro que quieres eliminar «%{theme_name}»?'
         bulk_delete: "¿Estás seguro/a?"
-        bulk_themes_delete_confirm: "Esto desinstalará los siguientes temas, que ya no podrán ser utilizados por ningún usuario de tu sitio:"
-        bulk_components_delete_confirm: "Esto desinstalará los siguientes componentes, que ya no podrán ser utilizados por ningún usuario de tu sitio:"
         color: "Color"
         opacity: "Opacidad"
         copy: "Duplicar"

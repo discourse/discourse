@@ -25,6 +25,12 @@
   }
 
   .content-list {
+    .admin-filter-controls {
+      border: 1px solid var(--content-border-color);
+      border-bottom: none;
+      padding: 0.5em;
+    }
+
     .admin-badge-list {
       height: 70vh;
       overflow-y: scroll;

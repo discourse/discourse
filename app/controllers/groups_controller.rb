@@ -12,6 +12,11 @@ class GroupsController < ApplicationController
                    search
                    new
                    test_email_settings
+                   add_members
+                   add_owners
+                   remove_member
+                   handle_membership_request
+                   edit
                  ]
 
   skip_before_action :preload_json, :check_xhr, only: %i[posts_feed mentions_feed]
@@ -329,7 +334,7 @@ class GroupsController < ApplicationController
     elsif include_custom_fields && params[:order] == "custom_field" &&
           allowed_fields.include?(params[:order_field])
       order =
-        "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = '#{params[:order_field]}') #{dir} NULLS LAST"
+        "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = #{ActiveRecord::Base.connection.quote(params[:order_field])}) #{dir} NULLS LAST"
     end
 
     users = group.users.human_users
@@ -736,8 +741,8 @@ class GroupsController < ApplicationController
 
         settings.delete(:ssl_mode)
 
-        if params[:ssl_mode].blank? || !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
-          raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
+        if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
+          raise Discourse::InvalidParameters.new("SSL mode must be valid")
         end
 
         final_settings =
@@ -883,7 +888,7 @@ class GroupsController < ApplicationController
 
     if should_clear_smtp
       attributes[:smtp_server] = nil
-      attributes[:smtp_ssl_mode] = false
+      attributes[:smtp_ssl_mode] = Group.smtp_ssl_modes[:none]
       attributes[:smtp_port] = nil
       attributes[:email_username] = nil
       attributes[:email_password] = nil

@@ -8,10 +8,9 @@ RSpec.describe BookmarksBulkAction do
 
   describe "#delete" do
     describe "when user is not the bookmark owner" do
-      it "does NOT delete the bookmarks" do
+      it "raises an error and does not delete the bookmarks" do
         bba = BookmarksBulkAction.new(user_2, [bookmark_1.id, bookmark_2.id], type: "delete")
-        expect { bba.perform! }.to raise_error Discourse::InvalidAccess
-
+        expect { bba.perform! }.to raise_error(Discourse::InvalidAccess)
         expect(Bookmark.exists?(bookmark_1.id)).to eq(true)
         expect(Bookmark.exists?(bookmark_2.id)).to eq(true)
       end

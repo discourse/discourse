@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 ro:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Aplică"
-      insert_modal:
-        insert: "Introdu"

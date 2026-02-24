@@ -67,7 +67,6 @@ pt_BR:
         description: A automatização será ativada quando as etiquetas forem alteradas.
       topic:
         title: Tópico
-        description: O script associado será usado apenas no tópico especificado, isso é útil para scripts fazendo validação, por exemplo
       after_post_cook:
         title: Depois da falsificação da postagem
         description: Quando o conteúdo de uma postagem for falsificado, a automação será acionada

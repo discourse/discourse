@@ -13,6 +13,9 @@ de:
       editing:
         one: "bearbeitet"
         other: "bearbeiten"
+      translating:
+        one: "übersetzt"
+        other: "übersetzen"
       replying_to_topic:
         one: "antwortet"
         other: "antworten"

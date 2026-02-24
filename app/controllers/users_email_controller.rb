@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersEmailController < ApplicationController
-  requires_login only: %i[index update]
+  requires_login only: %i[index update create]
 
   skip_before_action :check_xhr, only: %i[show_confirm_old_email show_confirm_new_email]
 

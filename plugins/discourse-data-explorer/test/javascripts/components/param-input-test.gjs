@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";

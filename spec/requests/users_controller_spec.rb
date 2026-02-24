@@ -138,34 +138,6 @@ RSpec.describe UsersController do
         end
       end
 
-      context "when bootstrap mode is enabled" do
-        before { SiteSetting.bootstrap_mode_enabled = true }
-
-        it "adds the user to the user directory" do
-          token = Fabricate(:email_token, user: inactive_user)
-
-          expect do put "/u/activate-account/#{token.token}" end.to change {
-            DirectoryItem.where(user_id: inactive_user.id).count
-          }.by(DirectoryItem.period_types.count)
-
-          expect(response.status).to eq(200)
-        end
-      end
-
-      context "when bootstrap mode is disabled" do
-        before { SiteSetting.bootstrap_mode_enabled = false }
-
-        it "adds the user to the user directory" do
-          token = Fabricate(:email_token, user: inactive_user)
-
-          expect do put "/u/activate-account/#{token.token}" end.not_to change {
-            DirectoryItem.where(user_id: inactive_user.id).count
-          }
-
-          expect(response.status).to eq(200)
-        end
-      end
-
       context "when user is already logged in" do
         it "returns 404" do
           sign_in(user1)
@@ -804,6 +776,12 @@ RSpec.describe UsersController do
   end
 
   describe "#toggle_anon" do
+    it "requires login" do
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
     it "allows you to toggle anon if enabled" do
       SiteSetting.allow_anonymous_mode = true
 
@@ -4546,7 +4524,7 @@ RSpec.describe UsersController do
 
         links = response.parsed_body["user_summary"]["links"]
 
-        expect(links.map { _1["url"] }).to contain_exactly(
+        expect(links.map { it["url"] }).to contain_exactly(
           "https://visible-link.com",
           "https://another-visible-link.com",
         )
@@ -8029,7 +8007,7 @@ RSpec.describe UsersController do
 
         %i[
           number_of_deleted_posts
-          number_of_flagged_posts
+          number_of_flags
           number_of_flags_given
           number_of_silencings
           number_of_suspensions

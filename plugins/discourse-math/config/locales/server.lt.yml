@@ -5,10 +5,3 @@
 # https://translate.discourse.org/
 
 lt:
-  site_settings:
-    discourse_math_enable_latex_delimiters: "Įjungti LaTeX stiliaus skirtukus: \\(...\\) įterptiesiems skaičiavimams ir \\[...\\] blokiniams skaičiavimams"
-    discourse_math_mathjax_output: "„MathJax“ išvesties formatas (tik „MathJax“)"
-    discourse_math_enable_menu: "Įjungti kontekstinį meniu (tik „MathJax“)"
-    discourse_math_enable_accessibility: "Įjungti pritaikymo neįgaliesiems funkcijas (tik „MathJax“ su meniu)"
-    discourse_math_zoom_on_click: "Padidinti 175 % spustelėjus Alt klavišą (tik „MathJax“ su meniu)"
-    discourse_math_enable_asciimath: "Įjungti „asciimath“ (pridės specialų apdorojimą % atskirtoms įvestims; palaikoma tik su „MathJax“)"

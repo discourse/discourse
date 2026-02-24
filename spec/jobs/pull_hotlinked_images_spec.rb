@@ -259,7 +259,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     context "when secure uploads enabled for an upload that has already been downloaded and exists" do
-      it "doesnt redownload the secure upload" do
+      it "doesn't redownload the secure upload" do
         setup_s3
         SiteSetting.secure_uploads = true
 

@@ -82,6 +82,61 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect(file_upload_reference.reload).to be_present
     end
 
+    it "does not remove uploads from flagged posts that are hidden and deleted but still pending review" do
+      flagged_hidden_deleted_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          raw: raw,
+          hidden: true,
+          hidden_at: 1.month.ago,
+          deleted_at: 1.month.ago,
+        )
+      Fabricate(:upload_reference, upload: upload, target: flagged_hidden_deleted_post)
+
+      Fabricate(
+        :reviewable_flagged_post,
+        topic: topic,
+        target: flagged_hidden_deleted_post,
+        status: Reviewable.statuses[:pending],
+      )
+
+      expect {
+        automation.trigger!
+        flagged_hidden_deleted_post.reload
+      }.to_not change { flagged_hidden_deleted_post.raw }
+
+      expect(flagged_hidden_deleted_post.custom_fields["uploads_removed_at"]).to be_nil
+    end
+
+    it "removes uploads from deleted posts after reviewable is resolved" do
+      deleted_post_with_resolved_reviewable =
+        Fabricate(:post, topic: topic, raw: raw, deleted_at: 1.month.ago)
+      Fabricate(:upload_reference, upload: upload, target: deleted_post_with_resolved_reviewable)
+      Fabricate(
+        :upload_reference,
+        upload: nameless_upload,
+        target: deleted_post_with_resolved_reviewable,
+      )
+      Fabricate(
+        :upload_reference,
+        upload: file_upload,
+        target: deleted_post_with_resolved_reviewable,
+      )
+
+      Fabricate(
+        :reviewable_flagged_post,
+        topic: topic,
+        target: deleted_post_with_resolved_reviewable,
+        status: Reviewable.statuses[:approved],
+      )
+
+      expect {
+        automation.trigger!
+        deleted_post_with_resolved_reviewable.reload
+      }.to change { deleted_post_with_resolved_reviewable.raw }.from(raw).to(expected_raw)
+    end
+
     it "adds a timestamp to the custom field uploads_removed_at" do
       expect {
         automation.trigger!

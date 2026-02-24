@@ -6,9 +6,7 @@ export default class FAQSectionLink extends BaseSectionLink {
   @service siteSettings;
 
   get renameToGuidelines() {
-    return (
-      this.siteSettings.experimental_rename_faq_to_guidelines && !this.href
-    );
+    return this.siteSettings.rename_faq_to_guidelines && !this.href;
   }
 
   get name() {

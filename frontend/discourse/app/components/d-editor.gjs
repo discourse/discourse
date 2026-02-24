@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
@@ -196,13 +196,13 @@ export default class DEditor extends Component {
       keymap[sc] = () => {
         const customAction = shortcuts[sc].shortcutAction;
 
+        const toolbarEvent = this.newToolbarEvent();
         if (customAction) {
-          const toolbarEvent = this.newToolbarEvent();
           if (!button.condition || button.condition(toolbarEvent)) {
             customAction(toolbarEvent);
           }
         } else {
-          button.action(button);
+          button.action(toolbarEvent);
         }
         return false;
       };

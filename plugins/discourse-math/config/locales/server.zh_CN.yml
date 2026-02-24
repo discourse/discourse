@@ -8,9 +8,3 @@ zh_CN:
   site_settings:
     discourse_math_enabled: "启用 Discourse Math 插件（将对 $ 和 $$ 进行特殊处理）"
     discourse_math_provider: "默认数学呈现提供程序"
-    discourse_math_enable_latex_delimiters: "启用 LaTex 风格的分隔符：\\ (...\\) 用于行内数学，\\ [...\\] 用于分组数学"
-    discourse_math_mathjax_output: "MathJax 输出格式（仅限 MathJax）"
-    discourse_math_enable_menu: "启用上下文菜单（仅限 MathJax）"
-    discourse_math_enable_accessibility: "启用无障碍功能（仅限带菜单的 MathJax）"
-    discourse_math_zoom_on_click: "按住 Alt 键点击可缩放 175%（仅限带菜单的 MathJax）"
-    discourse_math_enable_asciimath: "启用 asciimath（将对以 % 分隔的输入进行特殊处理；仅 MathJax 支持）"

@@ -75,8 +75,6 @@ ja:
           invalid: "無効です"
           no_such_category: "そのようなカテゴリはありません"
           no_such_group: "そのようなグループはありません"
-          invalid_date: "%{date} は無効な日付です"
-          invalid_time: "%{time} は無効な時刻です"
     group:
       reports: "レポート"
     admin:

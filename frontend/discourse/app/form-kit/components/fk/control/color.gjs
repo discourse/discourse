@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
@@ -11,6 +12,7 @@ import {
   normalizeHex,
   resolveColor,
 } from "discourse/lib/color-transformations";
+import getUrl from "discourse/lib/get-url";
 import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -61,6 +63,8 @@ function colorLuminanceClass(color) {
 export default class FKControlColor extends Component {
   static controlType = "color";
 
+  @service currentUser;
+
   get showPrefix() {
     return !this.args.allowNamedColors;
   }
@@ -69,12 +73,32 @@ export default class FKControlColor extends Component {
     return this.args.allowNamedColors ? null : 6;
   }
 
+  get unusedColors() {
+    if (!this.args.usedColors) {
+      return this.args.colors;
+    }
+
+    return this.args.colors.filter(
+      (color) => !isColorUsed(this.args.usedColors, color)
+    );
+  }
+
+  get usedColorsFromPalette() {
+    if (!this.args.usedColors) {
+      return [];
+    }
+
+    return this.args.colors.filter((color) =>
+      isColorUsed(this.args.usedColors, color)
+    );
+  }
+
   get sortedColors() {
     if (!this.args.usedColors) {
       return this.args.colors;
     }
 
-    return this.args.colors.sort((a) =>
+    return this.args.colors.toSorted((a) =>
       isColorUsed(this.args.usedColors, a) ? 1 : -1
     );
   }
@@ -180,29 +204,56 @@ export default class FKControlColor extends Component {
           >
             <:content as |args|>
               <div class="form-kit__control-color-swatches" role="group">
-                {{#each this.sortedColors as |color|}}
+                <div class="form-kit__control-color-swatches-label">
+                  {{i18n "form_kit.color.available_presets"}}
+                  {{#if this.currentUser.admin}}
+                    <a
+                      href={{getUrl
+                        "/admin/site_settings/category/all_results?filter=category_colors"
+                      }}
+                      class="form-kit__control-color-edit-presets"
+                      title={{i18n "form_kit.color.edit_presets"}}
+                    >
+                      {{i18n "edit"}}
+                    </a>
+                  {{/if}}
+                </div>
+                {{#each this.unusedColors as |color|}}
                   <button
                     type="button"
                     style={{colorStyle color}}
-                    class={{concatClass
-                      "form-kit__control-color-swatch"
-                      (if (isColorUsed @usedColors color) "is-used")
-                      (colorLuminanceClass color)
-                    }}
-                    title={{if
-                      (isColorUsed @usedColors color)
-                      (i18n "category.already_used")
-                    }}
+                    class="form-kit__control-color-swatch"
                     aria-label={{colorLabel @usedColors color}}
                     data-color={{color}}
                     {{on "click" (fn this.selectColor color args.close)}}
-                  >
-                    {{#if (isColorUsed @usedColors color)}}
-                      {{icon "check"}}
-                    {{/if}}
-                  </button>
+                  ></button>
                 {{/each}}
               </div>
+              {{#if this.usedColorsFromPalette.length}}
+                <div
+                  class="form-kit__control-color-swatches --used"
+                  role="group"
+                >
+                  <div class="form-kit__control-color-swatches-label">
+                    {{i18n "form_kit.color.already_used"}}
+                  </div>
+                  {{#each this.usedColorsFromPalette as |color|}}
+                    <button
+                      type="button"
+                      style={{colorStyle color}}
+                      class={{concatClass
+                        "form-kit__control-color-swatch"
+                        "is-used"
+                      }}
+                      title={{i18n "category.already_used"}}
+                      aria-label={{colorLabel @usedColors color}}
+                      data-color={{color}}
+                      {{on "click" (fn this.selectColor color args.close)}}
+                    >
+                    </button>
+                  {{/each}}
+                </div>
+              {{/if}}
             </:content>
           </DMenu>
         {{/if}}

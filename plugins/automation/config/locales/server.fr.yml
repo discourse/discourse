@@ -67,7 +67,6 @@ fr:
         description: Lorsque les balises d'un sujet sont modifiées, l'automatisation est déclenchée
       topic:
         title: Sujet
-        description: Le script associé ne sera utilisé que sur le sujet spécifié, cela est utile, par exemple, pour les scripts utilisant la validation
       after_post_cook:
         title: Après la préparation de la publication
         description: Lorsqu'un contenu de publication est préparé, l'automatisation est déclenchée

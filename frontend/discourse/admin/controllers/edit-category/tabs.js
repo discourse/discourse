@@ -4,7 +4,6 @@ import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
@@ -47,27 +46,9 @@ const FIELD_LIST = [
   "email_in",
   "email_in_allow_strangers",
   "mailinglist_mirror",
+  "allowed_tag_groups",
+  "allowed_tags",
 ];
-
-const PREVIEW_FIELD_MAP = {
-  name: "previewName",
-  color: "previewColor",
-  text_color: "previewTextColor",
-  style_type: "previewStyleType",
-  emoji: "previewEmoji",
-  icon: "previewIcon",
-  parent_category_id: "previewParentCategoryId",
-};
-
-const PREVIEW_DEFAULTS = {
-  previewName: "",
-  previewColor: "",
-  previewTextColor: "",
-  previewStyleType: "",
-  previewEmoji: "",
-  previewIcon: "",
-  previewParentCategoryId: null,
-};
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 
@@ -83,7 +64,6 @@ export default class EditCategoryTabsController extends Controller {
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked selectedTab = "general";
-  @tracked previewData = new TrackedObject(PREVIEW_DEFAULTS);
   @trackedArray panels = [];
   saving = false;
   deleting = false;
@@ -136,22 +116,6 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  updatePreview(data) {
-    Object.entries(PREVIEW_FIELD_MAP).forEach(([key, previewField]) => {
-      if (data[key] !== undefined) {
-        this.previewData[previewField] = data[key];
-      }
-    });
-  }
-
-  @action
-  resetPreview() {
-    Object.entries(PREVIEW_DEFAULTS).forEach(([key, value]) => {
-      this.previewData[key] = value;
-    });
-  }
-
-  @action
   setSelectedTab(tab) {
     this.selectedTab = tab;
     this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
@@ -166,19 +130,27 @@ export default class EditCategoryTabsController extends Controller {
     let hasGeneralTabErrors = false;
 
     if (!data.name) {
+      hasGeneralTabErrors = true;
       addError("name", {
         title: i18n("category.name"),
         message: i18n("form_kit.errors.required"),
       });
-      hasGeneralTabErrors = true;
     }
 
     if (data.style_type === "emoji" && !data.emoji) {
+      hasGeneralTabErrors = true;
       addError("emoji", {
         title: i18n("category.emoji"),
         message: i18n("category.validations.emoji_required"),
       });
+    }
+
+    if (data.style_type === "icon" && !data.icon) {
       hasGeneralTabErrors = true;
+      addError("icon", {
+        title: i18n("category.icon"),
+        message: i18n("category.validations.icon_required"),
+      });
     }
 
     if (hasGeneralTabErrors) {

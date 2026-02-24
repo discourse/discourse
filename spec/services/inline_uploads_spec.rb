@@ -177,6 +177,22 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should correct bbcode img URLs with non-standard dimension syntax" do
+        md = <<~MD
+        [img=100x200]#{upload.url}[/img]
+        [IMG=640x480]#{upload2.url}[/IMG]
+        [img width=100 height=200]#{upload3.url}[/img]
+        [img width="50"]#{upload.url}[/img]
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        ![](#{upload.short_url})
+        ![](#{upload2.short_url})
+        ![](#{upload3.short_url})
+        ![](#{upload.short_url})
+        MD
+      end
+
       it "should correct markdown references" do
         md = <<~MD
         [link3][3]
@@ -710,6 +726,15 @@ RSpec.describe InlineUploads do
       InlineUploads.match_md_inline_img(md, external_src: true) { |_match, src| url = src }
 
       expect(url).to eq("https://some-site.com/a_test?q=1&b=hello%20there")
+    end
+
+    it "matches URLs with parentheses" do
+      md = "![|444x444](https://example.com/filters:strip_icc()/pic.jpg)"
+
+      url = nil
+      InlineUploads.match_md_inline_img(md, external_src: true) { |_match, src| url = src }
+
+      expect(url).to eq("https://example.com/filters:strip_icc()/pic.jpg")
     end
   end
 

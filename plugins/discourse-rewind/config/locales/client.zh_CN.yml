@@ -105,8 +105,8 @@ zh_CN:
         chat_usage:
           title: 聊天活动
           total_messages: 总消息数
-          dm_messages: DM 消息
-          unique_dm_channels: DM 对话
+          dm_messages: 直接消息
+          unique_dm_channels: 直接消息对话
           reactions_received: 收到的回应
           avg_message_length: 平均消息长度
           favorite_channels: 最喜欢的频道

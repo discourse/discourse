@@ -2448,7 +2448,7 @@ RSpec.describe Guardian do
       end
     end
 
-    context "when ignorer is not in requred trust level group" do
+    context "when ignorer is not in required trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)

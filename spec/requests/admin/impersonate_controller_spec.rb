@@ -63,7 +63,7 @@ RSpec.describe Admin::ImpersonateController do
 
       context "when using experimental impersonation feature" do
         it "raises an invalid access error if admin is already impersonating someone" do
-          SiteSetting.experimental_impersonation = true
+          SiteSetting.impersonate_without_logout = true
           User.any_instance.stubs(:is_impersonating).returns(true)
 
           post "/admin/impersonate.json", params: { username_or_email: user.username }
@@ -122,8 +122,21 @@ RSpec.describe Admin::ImpersonateController do
   describe "#destroy" do
     before { sign_in(admin) }
 
+    it "checks if experimental impersonation is allowed for the acting user" do
+      SiteSetting.impersonate_without_logout = true
+      SiteSettingGroup.create!(name: "impersonate_without_logout", group_ids: "1|2")
+      SiteSetting.refresh!
+
+      post "/admin/impersonate.json", params: { username_or_email: user.username }
+
+      delete "/admin/impersonate.json"
+
+      expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to eq(admin.id)
+    end
+
     it "raises a not found error when experimental impersonation is disabled" do
-      SiteSetting.experimental_impersonation = false
+      SiteSetting.impersonate_without_logout = false
 
       delete "/admin/impersonate.json"
 
@@ -131,8 +144,7 @@ RSpec.describe Admin::ImpersonateController do
     end
 
     it "does not pass routing constraint when current user is not impersonating" do
-      SiteSetting.experimental_impersonation = true
-      User.any_instance.stubs(:is_impersonating).returns(false)
+      SiteSetting.impersonate_without_logout = true
 
       delete "/admin/impersonate.json"
 
@@ -140,12 +152,13 @@ RSpec.describe Admin::ImpersonateController do
     end
 
     it "stops impersonating" do
-      SiteSetting.experimental_impersonation = true
-      User.any_instance.stubs(:is_impersonating).returns(true)
+      SiteSetting.impersonate_without_logout = true
 
+      post "/admin/impersonate.json", params: { username_or_email: user.username }
       delete "/admin/impersonate.json"
 
       expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to eq(admin.id)
     end
   end
 end

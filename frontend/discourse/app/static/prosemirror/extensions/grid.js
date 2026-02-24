@@ -1,20 +1,13 @@
 import GridNodeView from "../components/grid-node-view";
-import GlimmerNodeView from "../lib/glimmer-node-view";
-
-const createGridNodeView =
-  ({ getContext }) =>
-  (node, view, getPos) =>
-    new GlimmerNodeView({
-      node,
-      view,
-      getPos,
-      getContext,
-      component: GridNodeView,
-      name: "grid",
-      hasContent: true,
-    });
 
 const extension = {
+  nodeViews: {
+    grid: {
+      component: GridNodeView,
+      hasContent: true,
+    },
+  },
+
   nodeSpec: {
     grid: {
       content: "block+",
@@ -52,10 +45,6 @@ const extension = {
         ];
       },
     },
-  },
-
-  nodeViews: {
-    grid: createGridNodeView,
   },
 
   parse: {

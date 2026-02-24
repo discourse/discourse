@@ -26,7 +26,7 @@ module PageObjects
         dropdown = PageObjects::Components::SelectKit.new(".admin-embedding-host-form__tags")
         dropdown.expand
         dropdown.search(tag.name)
-        dropdown.select_row_by_value(tag.name)
+        dropdown.select_row_by_name(tag.name)
         dropdown.collapse
         self
       end
