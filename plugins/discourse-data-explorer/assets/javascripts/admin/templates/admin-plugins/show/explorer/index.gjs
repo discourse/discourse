@@ -11,7 +11,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ShareReport from "../../../../components/share-report";
+import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
 
 export default <template>
   <div class="admin-detail">
