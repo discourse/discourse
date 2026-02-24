@@ -1,3 +1,4 @@
+import { dasherize } from "@ember/string";
 import EmbroiderRouter from "@embroider/router";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
@@ -6,6 +7,11 @@ import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 
 class BareRouter extends EmbroiderRouter {
   location = isTesting() ? "none" : "history";
+
+  lazyRoute(routeName) {
+    routeName = dasherize(routeName);
+    return super.lazyRoute(routeName);
+  }
 
   setupRouter() {
     const didSetup = super.setupRouter(...arguments);

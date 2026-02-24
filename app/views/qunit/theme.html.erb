@@ -8,20 +8,19 @@
     <%- if @has_test_bundle && !@suggested_themes %>
       <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+      <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
       <%= theme_translations_lookup %>
 
-      <%= preload_script "vendor" %>
-      <%= preload_script "test-support" %>
-      <%= preload_script "discourse" %>
-      <%= preload_script "test" %>
-      <%= render "layouts/plugin_js", 
+      <%= preload_script "@embroider/virtual/test-support", from_vite: true %>
+
+      <%= render "layouts/plugin_js",
         opts: {
           include_disabled: true,
           include_admin_asset: true,
           only: @required_plugins
         }
       %>
-      <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
+
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
 
@@ -68,8 +67,7 @@
         <%- end %>
       <%- end %>
     <% else %>
-      <%= preload_script "scripts/discourse-test-listen-boot" %>
-      <%= preload_script "scripts/discourse-boot" %>
+      <%= preload_script "tests/test-entrypoint", type_module: true, from_vite: true %>
     <%- end %>
 
     <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>AppTemplate</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{content-for "head"}}
+
+    <link integrity="" rel="stylesheet" href="/@embroider/virtual/vendor.css">
+    <link integrity="" rel="stylesheet" href="/assets/v2-app.css">
+
+    {{content-for "head-footer"}}
+  </head>
+  <body>
+    {{content-for "body"}}
+
+    <script src="/@embroider/virtual/vendor.js"></script>
+    <script type="module" src="/app/app.js"></script>
+
+    <div id="main"></div>
+    {{content-for "body-footer"}}
+  </body>
+</html>

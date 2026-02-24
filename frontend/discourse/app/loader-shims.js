@@ -48,6 +48,9 @@ loaderShim("@ember/render-modifiers/modifiers/did-insert", () =>
 loaderShim("@ember/render-modifiers/modifiers/did-update", () =>
   importSync("@ember/render-modifiers/modifiers/did-update")
 );
+loaderShim("@ember/render-modifiers/modifiers/will-destroy", () =>
+  importSync("@ember/render-modifiers/modifiers/will-destroy")
+);
 loaderShim("@ember/routing", () => importSync("@ember/routing"));
 loaderShim("@ember/routing/route", () => importSync("@ember/routing/route"));
 loaderShim("@ember/runloop", () => importSync("@ember/runloop"));
@@ -83,36 +86,54 @@ loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
-loaderShim("truth-helpers", () => importSync("truth-helpers"));
+loaderShim("discourse/truth-helpers", () =>
+  importSync("discourse/truth-helpers")
+);
+loaderShim("truth-helpers", () => importSync("discourse/truth-helpers"));
 loaderShim("truth-helpers/helpers/and", () =>
-  importSync("truth-helpers/helpers/and")
+  importSync("discourse/truth-helpers/helpers/and")
 );
 loaderShim("truth-helpers/helpers/eq", () =>
-  importSync("truth-helpers/helpers/eq")
+  importSync("discourse/truth-helpers/helpers/eq")
 );
 loaderShim("truth-helpers/helpers/gt", () =>
-  importSync("truth-helpers/helpers/gt")
+  importSync("discourse/truth-helpers/helpers/gt")
 );
 loaderShim("truth-helpers/helpers/gte", () =>
-  importSync("truth-helpers/helpers/gte")
+  importSync("discourse/truth-helpers/helpers/gte")
 );
 loaderShim("truth-helpers/helpers/includes", () =>
-  importSync("truth-helpers/helpers/includes")
+  importSync("discourse/truth-helpers/helpers/includes")
 );
 loaderShim("truth-helpers/helpers/lt", () =>
-  importSync("truth-helpers/helpers/lt")
+  importSync("discourse/truth-helpers/helpers/lt")
 );
 loaderShim("truth-helpers/helpers/lte", () =>
-  importSync("truth-helpers/helpers/lte")
+  importSync("discourse/truth-helpers/helpers/lte")
 );
 loaderShim("truth-helpers/helpers/not-eq", () =>
-  importSync("truth-helpers/helpers/not-eq")
+  importSync("discourse/truth-helpers/helpers/not-eq")
 );
 loaderShim("truth-helpers/helpers/not", () =>
-  importSync("truth-helpers/helpers/not")
+  importSync("discourse/truth-helpers/helpers/not")
 );
 loaderShim("truth-helpers/helpers/or", () =>
-  importSync("truth-helpers/helpers/or")
+  importSync("discourse/truth-helpers/helpers/or")
 );
 loaderShim("virtual-dom", () => importSync("discourse/widgets/virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
+loaderShim("ember-this-fallback/deprecations-helper", () =>
+  importSync("./lib/ember-this-fallback-deprecation-helper")
+);
+loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
+loaderShim("pretty-text/guid", () => importSync("pretty-text/guid"));
+loaderShim("pretty-text/emoji", () => importSync("pretty-text/emoji"));
+loaderShim("pretty-text/emoji/data", () =>
+  importSync("pretty-text/emoji/data")
+);
+loaderShim("@ember-decorators/component", () =>
+  importSync("@ember-decorators/component")
+);
+loaderShim("@ember-decorators/object", () =>
+  importSync("@ember-decorators/object")
+);

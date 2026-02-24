@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'rollup' && ' (rollup)' || '' }} # Update fetch-job-id step if changing this
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -62,6 +62,7 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
+      ROLLUP_PLUGIN_COMPILER: 1
 
     strategy:
       fail-fast: false
@@ -293,7 +294,7 @@ jobs:
 
       - name: Ember Build
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        run: script/assemble_ember_build.rb
+        run: bin/rake assets:precompile:build_plugins && script/assemble_ember_build.rb
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'

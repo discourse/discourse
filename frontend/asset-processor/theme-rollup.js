@@ -13,11 +13,10 @@ import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
 import { precompile } from "./node_modules/ember-source/dist/ember-template-compiler";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
-import discourseExtensionSearch from "./rollup-plugins/discourse-extension-search";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
+import discourseFileSearch from "./rollup-plugins/discourse-file-search";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
-import discourseIndexSearch from "./rollup-plugins/discourse-index-search";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
@@ -25,28 +24,39 @@ import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 let lastRollupResult;
 let lastRollupError;
 globalThis.rollup = function (modules, opts) {
-  const themeBase = `theme-${opts.themeId}/`;
+  let basePath = opts.pluginName
+    ? `discourse/plugins/${opts.pluginName}/`
+    : `theme-${opts.themeId}/`;
 
-  const { vol } = memfs(modules, themeBase);
+  const inputConfig = {};
+
+  for (const key of Object.keys(opts.entrypoints)) {
+    inputConfig[key] = `virtual:entrypoint:${key}`;
+  }
+
+  const { vol } = memfs(modules, basePath);
 
   const resultPromise = rollup({
-    input: "virtual:entrypoint:main",
+    input: inputConfig,
     logLevel: "info",
     fs: vol.promises,
     onLog(level, message) {
+      if (String(message).startsWith("Circular dependency")) {
+        return;
+      }
       // eslint-disable-next-line no-console
       console.info(level, message);
     },
     plugins: [
-      discourseExtensionSearch(),
-      discourseIndexSearch(),
+      discourseFileSearch(),
       discourseVirtualLoader({
-        themeBase,
-        modules,
+        isTheme: !!opts.themeId,
+        basePath,
+        entrypoints: opts.entrypoints,
         opts,
       }),
-      discourseExternalLoader(),
-      discourseColocation({ themeBase }),
+      discourseExternalLoader({ basePath }),
+      discourseColocation({ basePath }),
       getBabelOutputPlugin({
         plugins: [BabelReplaceImports],
         compact: false,
@@ -57,8 +67,8 @@ globalThis.rollup = function (modules, opts) {
         compact: false,
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
+          opts.themeId ? AddThemeGlobals : null,
           babelTransformModuleRenames,
-          AddThemeGlobals,
           colocatedBabelPlugin,
           [
             HTMLBarsInlinePrecompile,
@@ -79,7 +89,7 @@ globalThis.rollup = function (modules, opts) {
               ],
             },
           ],
-        ],
+        ].filter(Boolean),
         presets: [
           [
             BabelPresetEnv,
@@ -101,13 +111,23 @@ globalThis.rollup = function (modules, opts) {
       return bundle.generate({
         format: "es",
         sourcemap: "hidden",
+        chunkFileNames: "chunk.[hash:6].js",
       });
     })
     .then(({ output }) => {
-      lastRollupResult = {
-        code: output[0].code,
-        map: JSON.stringify(output[0].map),
-      };
+      lastRollupResult = Object.fromEntries(
+        output
+          .filter((c) => c.code)
+          .map((chunk) => {
+            return [
+              chunk.fileName,
+              {
+                code: chunk.code,
+                map: JSON.stringify(chunk.map),
+              },
+            ];
+          })
+      );
     })
     .catch((error) => {
       lastRollupError = error;

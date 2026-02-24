@@ -10,7 +10,6 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
-import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
@@ -519,7 +518,7 @@ export function exists(selector) {
 export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
 
-  const promises = MessageBus.callbacks
+  const promises = window.MessageBus.callbacks
     .filter((callback) => callback.channel === channelPath)
     .map((callback) => callback.func(...args));
 

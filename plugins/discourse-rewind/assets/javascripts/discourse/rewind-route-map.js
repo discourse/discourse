@@ -1,4 +1,3 @@
-/* eslint-disable ember/route-path-style */
 export default function () {
   this.route(
     "user",

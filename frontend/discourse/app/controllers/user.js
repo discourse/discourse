@@ -1,4 +1,4 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
@@ -17,8 +17,6 @@ export default class UserController extends Controller {
   @service router;
   @service dialog;
   @optionalService adminTools;
-
-  @controller("user-notifications") userNotifications;
 
   @setting("moderators_view_emails") canModeratorsViewEmails;
 

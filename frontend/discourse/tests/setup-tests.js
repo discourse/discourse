@@ -1,5 +1,5 @@
 /* eslint-disable simple-import-sort/imports */
-import Application from "../app";
+import Application from "discourse/app";
 import "./loader-shims";
 import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
@@ -12,18 +12,26 @@ import {
   setResolver,
 } from "@ember/test-helpers";
 import $ from "jquery";
-import MessageBus from "message-bus-client";
+import "message-bus-client";
+const MessageBus = window.MessageBus; // TODO
+import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
-import PreloadStore from "discourse/lib/preload-store";
-import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
 } from "discourse/components/load-more";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { setLoadedFaker } from "discourse/lib/load-faker";
+import PreloadStore from "discourse/lib/preload-store";
+import { loadSprites } from "discourse/lib/svg-sprite-loader";
+import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
+import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import { resetCategoryCache } from "discourse/models/category";
+import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
+import { buildResolver } from "discourse/resolver";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -42,13 +50,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setDefaultOwner } from "discourse/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse/lib/get-url";
-import { buildResolver } from "discourse/resolver";
-import { loadSprites } from "../lib/svg-sprite-loader";
-import * as FakerModule from "@faker-js/faker";
-import { setLoadedFaker } from "discourse/lib/load-faker";
 
 const REPORT_MEMORY = false;
 let cancelled = false;
@@ -387,10 +388,7 @@ export default function setupTests(config) {
     `script[data-discourse-plugin="${CSS.escape(target)}"][data-preinstalled="true"]`
   );
 
-  if (
-    window.EmberENV.RAISE_ON_DEPRECATION ??
-    (isCoreTest || isPreinstalledPluginTest)
-  ) {
+  if (config.RAISE_ON_DEPRECATION ?? (isCoreTest || isPreinstalledPluginTest)) {
     configureRaiseOnDeprecation();
   }
 }

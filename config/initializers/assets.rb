@@ -12,10 +12,11 @@ Rails.application.config.assets.version = "2-#{GlobalSetting.asset_url_salt}"
 Rails.application.config.assets.paths.push(
   "#{Rails.root}/public/javascripts",
   "#{Rails.root}/frontend/discourse/dist/assets",
+  "#{Rails.root}/frontend/discourse/dist/@embroider/virtual",
 )
 
 Rails.application.config.assets.paths.push(
-  *Discourse.plugins.map { |p| "#{Rails.root}/app/assets/generated/#{p.directory_name}" },
+  *Discourse.plugins.map { |p| "#{Rails.root}/app/assets/generated/#{p.directory_name}/" },
 )
 
 # These paths are added automatically by propshaft, but we don't want them

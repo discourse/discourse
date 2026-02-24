@@ -4,9 +4,6 @@
   "description": "An addon providing a broccoli tree for each Discourse plugin",
   "author": "Discourse",
   "license": "GPL-2.0-only",
-  "keywords": [
-    "ember-addon"
-  ],
   "dependencies": {
     "@babel/core": "^7.28.5",
     "deprecation-silencer": "workspace:1.0.0",
@@ -24,8 +21,5 @@
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^10"
-  },
-  "ember": {
-    "edition": "default"
   }
 }

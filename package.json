@@ -18,6 +18,7 @@
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.25.11",
     "eslint": "9.39.2",
+    "execa": "^9.6.0",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.1.0",
     "licensee": "^11.1.1",
@@ -27,6 +28,7 @@
     "playwright": "1.57.0",
     "prettier": "3.8.1",
     "puppeteer-core": "^24.34.0",
+    "strip-ansi": "^7.1.0",
     "stylelint": "17.1.0",
     "terser": "^5.44.1",
     "typescript": "^5.9.3"
@@ -48,6 +50,7 @@
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
     "ember": "pnpm --dir=frontend/discourse ember",
+    "vite": "pnpm --dir=frontend/discourse vite",
     "playwright-install": "playwright install --no-shell chromium"
   },
   "engines": {
@@ -64,7 +67,10 @@
       "licensee@11.1.1": "patches/licensee@11.1.1.patch",
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
       "ember-source@6.6.0": "patches/ember-source@6.6.0.patch",
-      "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
+      "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch",
+      "message-bus-client": "patches/message-bus-client.patch",
+      "ember-buffered-proxy": "patches/ember-buffered-proxy.patch",
+      "pikaday": "patches/pikaday.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {
@@ -73,13 +79,15 @@
         "lint-to-the-future-ember-template>ember-template-lint": "*",
         "ember-this-fallback>ember-source": "*",
         "ember-this-fallback>ember-cli-htmlbars": "*",
-        "@fullcalendar/moment-timezone>moment-timezone": "*"
+        "@fullcalendar/moment-timezone>moment-timezone": "*",
+        "@vitejs/plugin-basic-ssl>vite": ">8.0.0-beta.0"
       },
       "ignoreMissing": [
         "webpack"
       ]
     },
     "overrides": {
+      "broccoli-babel-transpiler@8.0.0": "^8.0.2",
       "@ember/test-waiters": "4.1.1"
     }
   }

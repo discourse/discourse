@@ -1,30 +1,76 @@
+performance.mark("discourse-init");
+const initEvent = new CustomEvent("discourse-init");
+document.dispatchEvent(initEvent);
+
+import "./global-compat";
 import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./module-shims";
 import "./discourse-common-loader-shims";
-import "./global-compat";
-import dialogHolderCompatModules from "discourse/dialog-holder/dialog-holder-compat-modules";
-import floatKitCompatModules from "discourse/float-kit/float-kit-compat-modules";
-import selectKitCompatModules from "discourse/select-kit/select-kit-compat-modules";
-import truthHelperCompatModules from "discourse/truth-helpers/truth-helpers-compat-modules";
-defineModules("select-kit", selectKitCompatModules);
-defineModules("float-kit", floatKitCompatModules);
-defineModules("truth-helpers", truthHelperCompatModules);
-defineModules("dialog-holder", dialogHolderCompatModules);
-
+import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { defineModules } from "./lib/loader-shim";
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
 
+import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
-import require from "require";
+import "discourse/lib/theme-settings-store";
+import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
+// import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import PreloadStore from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
+
+function populatePreloadStore() {
+  let setupData;
+  const setupDataElement = document.getElementById("data-discourse-setup");
+  if (setupDataElement) {
+    setupData = setupDataElement.dataset;
+  }
+
+  let preloaded;
+  const preloadedDataElement = document.getElementById("data-preloaded");
+  if (preloadedDataElement) {
+    preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+  }
+
+  const keys = preloaded ? Object.keys(preloaded) : [];
+  if (keys.length === 0 && !isTesting()) {
+    throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
+  }
+
+  keys.forEach(function (key) {
+    PreloadStore.store(key, JSON.parse(preloaded[key]));
+
+    if (setupData.debugPreloadedAppData === "true") {
+      // eslint-disable-next-line no-console
+      console.log(key, PreloadStore.get(key));
+    }
+  });
+}
+
+populatePreloadStore();
+
+defineModules(null, embroiderCompatModules);
+
+import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
+
+defineModules("discourse/dialog-holder", dialogHolderCompatModules);
+
+import floatKitCompatModules from "discourse/float-kit/compat-modules";
+
+defineModules("discourse/float-kit", floatKitCompatModules);
+
+import selectKitCompatModules from "discourse/select-kit/compat-modules";
+
+defineModules("discourse/select-kit", selectKitCompatModules);
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -38,8 +84,7 @@ window.moduleBroker = {
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
+    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
     for (const [key, mod] of Object.entries(compatModules)) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
@@ -53,25 +98,58 @@ async function loadThemeFromModulePreload(link) {
   }
 }
 
-export async function loadThemes() {
-  const promises = [
-    ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
-  ].map(loadThemeFromModulePreload);
-  await Promise.all(promises);
+let dialogContent;
+
+async function loadPluginFromModulePreload(link) {
+  const pluginName = link.dataset.pluginName;
+  try {
+    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/plugins/${pluginName}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      error
+    );
+
+    if (DEBUG) {
+      if (!dialogContent) {
+        const dialog = document.createElement("dialog");
+        dialog.style = "background: black; color: red; border-radius: 30px;";
+
+        dialogContent = document.createElement("div");
+        dialog.append(dialogContent);
+
+        document.body.append(dialog);
+        dialog.showModal();
+      }
+
+      dialogContent.innerText += `Failed to load plugin ${link.dataset.pluginName} from ${link.href}\n${error.message}\n\n`;
+    }
+  }
 }
 
-function defineModules(name, compatModules) {
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/${name}/${key.slice(2)}`, () => mod);
-  }
+export async function loadThemes() {
+  const promises = [
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+    ].map(loadThemeFromModulePreload),
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
+    ].map(loadPluginFromModulePreload),
+  ];
+
+  await Promise.all(promises);
 }
 
 export async function loadAdmin() {
   defineModules(
-    "admin",
+    "discourse/admin",
     (
       await import(
-        /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
+        /* webpackChunkName: "admin" */ "discourse/admin/compat-modules"
       )
     ).default
   );
@@ -80,6 +158,8 @@ export async function loadAdmin() {
 class Discourse extends Application {
   modulePrefix = "discourse";
   rootElement = "#main";
+
+  inspector = setupInspector(this);
 
   customEvents = {
     paste: "paste",

@@ -475,11 +475,12 @@ class QunitRunner
 
   def run_ember_build
     if @dry_run
-      puts "[dry-run] skipping ember build for themes"
+      puts "[dry-run] skipping ember build"
       return
     end
 
-    system("pnpm", "ember", "build", chdir: frontend_dir, exception: true)
+    system("pnpm", "vite", "build", "--mode", "development", chdir: frontend_dir, exception: true)
+    system("bin/rake assets:precompile:build_plugins", exception: true)
   end
 
   def build_theme_test_pages(query)

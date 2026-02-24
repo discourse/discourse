@@ -19,7 +19,7 @@ export default {
         }
       },
       title: "topic.share.help",
-      action() {
+      async action() {
         owner.lookup("service:modal").show(ShareTopicModal, {
           model: {
             category: this.topic.category,

@@ -134,7 +134,7 @@ ensure
   FileUtils.rm_f(DOWNLOAD_TEMP_FILE) if File.exist?(DOWNLOAD_TEMP_FILE)
 end
 
-build_cmd = %w[pnpm ember build]
+build_cmd = %w[pnpm vite build]
 build_env = { "CI" => "1" }
 
 if Etc.nprocessors > 2
@@ -149,30 +149,41 @@ if low_memory_environment?
   build_env["JOBS"] = "1"
 end
 
-build_cmd << "-prod" if resolved_ember_env == "production"
+build_cmd << "--mode=development" if resolved_ember_env != "production"
 
 core_build_reusable =
   existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
 
-if core_build_reusable && ENV["LOAD_PLUGINS"] == "0"
-  log "Reusing existing core ember build. Plugins not loaded. All done."
-elsif core_build_reusable
-  log "Reusing existing core ember build. Only building plugins..."
-  build_env["SKIP_CORE_BUILD"] = "1"
-  build_cmd << "-o" << "dist/_plugin_only_build"
-  begin
+if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+  if core_build_reusable
+    log "Reusing existing core ember build. All done."
+  else
+    log "Running full core build..."
     system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
-    FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/assets/plugins")
-    FileUtils.mv(
-      "#{EMBER_APP_DIR}/dist/_plugin_only_build/assets/plugins",
-      "#{EMBER_APP_DIR}/dist/assets/plugins",
-    )
-  ensure
-    FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/_plugin_only_build")
+    File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
   end
-  log "Plugin build successfully integrated into dist"
 else
-  log "Running full core build..."
-  system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
-  File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
+  if core_build_reusable && ENV["LOAD_PLUGINS"] == "0"
+    log "Reusing existing core ember build. Plugins not loaded. All done."
+  elsif core_build_reusable
+    log "Reusing existing core ember build. Only building plugins..."
+    build_env["SKIP_CORE_BUILD"] = "1"
+    build_cmd << "-o" << "dist/_plugin_only_build"
+    begin
+      system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
+      FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/assets/plugins")
+      FileUtils.mv(
+        "#{EMBER_APP_DIR}/dist/_plugin_only_build/assets/plugins",
+        "#{EMBER_APP_DIR}/dist/assets/plugins",
+      )
+    ensure
+      FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/_plugin_only_build")
+    end
+
+    log "Plugin build successfully integrated into dist"
+  else
+    log "Running full core build..."
+    system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
+    File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
+  end
 end

@@ -90,8 +90,26 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
   end
 
+  def generate_import_map(plugin_assets)
+    imports =
+      plugin_assets
+        .filter { it[:importmap_name] }
+        .map { [it[:importmap_name], script_asset_path(it[:name])] }
+        .to_h
+
+    JSON.pretty_generate({ imports: }).html_safe
+  end
+
   def script_asset_path(script)
-    path = ActionController::Base.helpers.asset_path("#{script}.js")
+    logical_path = "#{script}.js"
+
+    if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+      if digested_logical_path = Plugin::JsManager.digested_logical_path_for(script)
+        logical_path = digested_logical_path
+      end
+    end
+
+    path = ActionController::Base.helpers.asset_path(logical_path)
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       resolved_s3_asset_cdn_url =
@@ -130,8 +148,18 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script)
+  def preload_script(script, type_module: false, from_vite: false)
     scripts = []
+
+    if from_vite && ENV["USE_VITE_ASSETS"]
+      return(
+        preload_script_url(
+          "http://localhost:4200/#{script}.js",
+          type_module: true,
+          entrypoint: script,
+        )
+      )
+    end
 
     if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
@@ -142,7 +170,7 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script)
+        preload_script_url(path, entrypoint: script, type_module:)
       end
       .join("\n")
       .html_safe
@@ -903,6 +931,22 @@ module ApplicationHelper
       .to_json
   end
 
+  def preload_modules
+    # puts params[:controller]
+    ember_route_name =
+      if params[:controller] == "list"
+        "discovery"
+      elsif params[:controller] == "topics"
+        "topic"
+      end
+
+    modules_to_preload = EmberCli.route_bundles[ember_route_name]
+
+    modules_to_preload&.map { |module_name| <<~HTML }&.join("\n")&.html_safe
+        <link rel="modulepreload" href="#{script_asset_path(module_name)}" />
+      HTML
+  end
+
   def client_side_setup_data
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
@@ -918,7 +962,8 @@ module ApplicationHelper
       svg_sprite_path: SvgSprite.path(theme_id),
       media_optimization_bundle:
         script_asset_path(
-          EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
+          EmberCli.script_chunks["media-optimization-bundle"]&.first ||
+            "/media-optimization-bundle.js",
         ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,

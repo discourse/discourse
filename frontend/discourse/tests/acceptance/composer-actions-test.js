@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
@@ -396,6 +396,7 @@ acceptance(`Composer Actions With New Topic Draft`, function (needs) {
 
     await visit("/");
     await click("button.topic-drafts-menu-trigger");
+    await waitFor(".topic-drafts-menu-content");
     await click(
       ".topic-drafts-menu-content .topic-drafts-item:first-child button"
     );

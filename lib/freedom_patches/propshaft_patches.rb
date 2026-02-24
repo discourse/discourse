@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-Propshaft::Asset.prepend(
-  Module.new do
-    def already_digested?
-      logical_path.to_s.start_with?("chunk.") || super
-    end
-  end,
-)
-
 Propshaft::Helper.prepend(
   Module.new do
     def compute_asset_path(path, options = {})

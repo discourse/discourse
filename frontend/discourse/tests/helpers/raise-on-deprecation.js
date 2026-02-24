@@ -1,6 +1,7 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import { isEmpty } from "@ember/utils";
 import QUnit from "qunit";
+import config from "discourse/config/environment";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
@@ -13,7 +14,7 @@ let disabledQUnitResult = false;
  * This ensures core and preinstalled plugins remain deprecation-free.
  */
 export function configureRaiseOnDeprecation() {
-  if (window.EmberENV.RAISE_ON_DEPRECATION !== undefined) {
+  if (config.RAISE_ON_DEPRECATION !== undefined) {
     return;
   }
 
