@@ -17,6 +17,27 @@ RSpec.describe PostActionCreator do
 
       expect { PostActionCreator.like(user, post) }.to raise_error(RateLimiter::LimitExceeded)
     end
+
+    it "does not count notify_moderators PM against personal message rate limit" do
+      SiteSetting.max_personal_messages_per_day = 1
+      SiteSetting.max_topics_per_day = 0
+      SiteSetting.max_topics_in_first_day = 0
+      SiteSetting.rate_limit_create_topic = 0
+      SiteSetting.rate_limit_create_post = 0
+      SiteSetting.rate_limit_new_user_create_post = 0
+
+      archetype = Archetype.private_message
+
+      create_post(user:, archetype:, target_usernames: [admin.username])
+
+      expect { create_post(user:, archetype:, target_usernames: [admin.username]) }.to raise_error(
+        RateLimiter::LimitExceeded,
+      )
+
+      reason = "This is a 'something else' flag."
+      result = PostActionCreator.notify_moderators(user, post, reason)
+      expect(result).to be_success
+    end
   end
 
   describe "messaging" do
