@@ -5903,9 +5903,16 @@ en:
 
       reports:
         title: "List of available reports"
-        meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
         back: "Back to all reports"
+        group_engagement: "Engagement"
+        group_traffic: "Traffic"
+        group_members: "Members"
+        group_content: "Content & Health"
+        group_moderation: "Moderation"
+        group_security: "Security"
+        group_other: "Other"
+        legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
       config_sections:
         account:
@@ -6256,7 +6263,7 @@ en:
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
           sub_pages:
             settings:
-              title: "Dashboard settings"
+              title: "Settings"
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
