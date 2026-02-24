@@ -2,6 +2,7 @@ en:
   reports:
     currently_away:
       title: Users currently away
+      description: "Users who are currently on holiday or leave, which can be filtered by group."
       labels:
         username: Username
 
