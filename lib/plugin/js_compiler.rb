@@ -11,11 +11,7 @@ class Plugin::JsCompiler
   def compile!
     AssetProcessor.new.rollup(
       @tree,
-      {
-        pluginName: @plugin_name,
-        minify: @minify && !@@terser_disabled,
-        entrypoints: @entrypoints,
-      },
+      { pluginName: @plugin_name, minify: @minify, entrypoints: @entrypoints },
     )
   rescue AssetProcessor::TranspileError => e
     message = "[PLUGIN #{@plugin_name}] Compile error: #{e.message}"
