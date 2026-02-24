@@ -8,6 +8,7 @@ import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { bind } from "discourse/lib/decorators";
+import { isDevelopment } from "discourse/lib/environment";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
@@ -171,7 +172,7 @@ export default class GlobalNotice extends Component {
           id: "alert-emails-disabled",
         })
       );
-    } else if (!this.site.email_configured) {
+    } else if (!this.site.email_configured && !isDevelopment()) {
       notices.push(
         Notice.create({
           text: i18n("emails_are_disabled_no_smtp"),
