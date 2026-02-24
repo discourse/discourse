@@ -1,9 +1,10 @@
-/* eslint-disable ember/no-private-routing-service */
+/* eslint-disable ember/no-jquery, ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
@@ -210,6 +211,23 @@ class DiscourseURL extends EmberObject {
       return;
     }
 
+    // In embed mode, open all navigation in new tabs except same-topic navigation
+    if (EmbedMode.enabled) {
+      const currentTopicMatch = TOPIC_URL_REGEXP.exec(window.location.pathname);
+      const currentTopicId = currentTopicMatch ? currentTopicMatch[2] : null;
+      const newTopicMatch = TOPIC_URL_REGEXP.exec(path);
+      const newTopicId = newTopicMatch ? newTopicMatch[2] : null;
+
+      // Allow same-topic navigation (scrolling to different posts)
+      if (currentTopicId && newTopicId && currentTopicId === newTopicId) {
+        // Continue with normal routing for same-topic navigation
+      } else {
+        // Open in new tab for all other navigation
+        window.open(getURL(path), "_blank");
+        return;
+      }
+    }
+
     if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
       return this.redirectTo(path);
     }
@@ -220,7 +238,10 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const serverSide = SERVER_SIDE_ONLY.some((r) => pathname.match(r));
+    const pathnameWithoutPrefix = withoutPrefix(pathname);
+    const serverSide = SERVER_SIDE_ONLY.some((r) =>
+      pathnameWithoutPrefix.match(r)
+    );
     if (serverSide) {
       this.redirectTo(path);
       return;
@@ -515,7 +536,7 @@ export function prefixProtocol(url) {
   return `https://${url}`;
 }
 
-export function getCategoryAndTagUrl(category, subcategories, tagName) {
+export function getCategoryAndTagUrl(category, subcategories, tag) {
   let url;
 
   if (category) {
@@ -531,10 +552,18 @@ export function getCategoryAndTagUrl(category, subcategories, tagName) {
     }
   }
 
-  if (tagName) {
-    url = url
-      ? "/tags" + url + "/" + tagName.toLowerCase()
-      : "/tag/" + tagName.toLowerCase();
+  if (tag) {
+    // tag can be string "none" (special filter) or object with {id, name, slug}
+    if (typeof tag === "string") {
+      // special case: "none" filter
+      url = url ? "/tags" + url + "/" + tag : "/tag/" + tag;
+    } else {
+      if (url) {
+        url = "/tags" + url + "/" + tag.slug + "/" + tag.id;
+      } else {
+        url = "/tag/" + tag.slug + "/" + tag.id;
+      }
+    }
   }
 
   return getURL(url || "/");

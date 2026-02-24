@@ -46,6 +46,13 @@ he:
           many: "%{formatted_number} הודעות צ׳אט"
           other: "%{formatted_number} הודעות צ׳אט"
     chat:
+      edit_category:
+        tab_title: "צ׳אט"
+        channel: "ערוץ"
+        description: "תיאור"
+        actions: "פעולות"
+        settings: "הגדרות"
+        no_channels: "אין ערוצי צ׳אט המשויכים לקטגוריה הזאת"
       text_copied: טקסט הועתק ללוח הגזירים
       link_copied: קישור הועתק ללוח הגזירים
       back_to_forum: "פורום"
@@ -631,17 +638,11 @@ he:
           other: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
       retention_reminders:
         indefinitely_short: "ללא הגבלת זמן"
-        indefinitely_long: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ לעד."
         short:
           one: "יום"
           two: "יומיים"
           many: "%{count} יום"
           other: "%{count} ימים"
-        long:
-          one: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך יום."
-          two: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך יומיים."
-          many: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך %{count} יום."
-          other: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך %{count} ימים."
       flags:
         off_topic: "הודעה זו לא תואמת לדיון הנוכחי כפי שהוגדר בכותרת הערוץ וכנראה שצריך להעביר אותה."
         inappropriate: "הודעה זו מכילה תוכן שאדם מן השורה עשוי להחשיב כפוגעני, נצלני או מפר את <a href=\"%{basePath}/guidelines\">הכללים המנחים את הקהילה שלנו</a>."
@@ -779,7 +780,6 @@ he:
           composer_bold: "%{shortcut} מודגש (עורך בלבד)"
           composer_italic: "%{shortcut} נטוי (עורך בלבד)"
           composer_code: "%{shortcut} קוד (עורך בלבד)"
-          drawer_open: "%{shortcut} פתיחת מגירת הצ׳אט"
           drawer_close: "%{shortcut} סגירת מגירת הצ׳אט"
           mark_all_channels_read: "%{shortcut} סימון כל הערוצים כנקראו"
     topic_statuses:

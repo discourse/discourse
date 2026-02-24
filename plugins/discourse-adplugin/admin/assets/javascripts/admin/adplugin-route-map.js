@@ -1,9 +1,8 @@
 export default {
-  resource: "admin.adminPlugins",
+  resource: "admin.adminPlugins.show",
   path: "/plugins",
   map() {
-    this.route("houseAds", { path: "/pluginad/house_creatives" }, function () {
-      this.route("index", { path: "/" });
+    this.route("houseAds", { path: "house-ads" }, function () {
       this.route("show", { path: "/:id" });
     });
   },

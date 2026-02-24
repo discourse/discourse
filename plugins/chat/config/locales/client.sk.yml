@@ -46,6 +46,12 @@ sk:
           many: "%{formatted_number} správ v chate"
           other: "%{formatted_number} správy v chate"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanál"
+        description: "Popis"
+        actions: "Akcie"
+        settings: "Nastavení"
       text_copied: Text bol skopírovaný do schránky
       link_copied: Odkaz bol skopírovaný do schránky
       back_to_forum: "fórum"
@@ -639,17 +645,11 @@ sk:
           other: "%{commaSeparatedUsernames} a %{count} ďalší píšu"
       retention_reminders:
         indefinitely_short: "na dobu neurčitú"
-        indefinitely_long: "Nastavenia chatu boli nastavené tak, aby uchovávali správy kanálov na neurčito."
         short:
           one: "%{count} deň"
           few: "%{count} dni"
           many: "%{count} dní"
           other: "%{count} dní"
-        long:
-          one: "Nastavenia četu boli nastavené tak, aby sa správy kanála uchovávali %{count} deň."
-          few: "Nastavenia chatu boli nastavené tak, aby sa správy z kanálov uchovávali na %{count} dni."
-          many: "Nastavenia četu boli nastavené tak, aby sa správy kanála uchovávali %{count} dní."
-          other: "Nastavenia četu boli nastavené tak, aby sa správy kanála uchovávali %{count} dní."
       flags:
         off_topic: "Táto správa nie je relevantná pre aktuálnu diskusiu definovanú názvom kanála a mala by byť pravdepodobne presunutá inam."
         inappropriate: "Táto správa obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, urážlivý alebo za porušenie <a href=\"%{basePath}/guidelines\">našich pokynov pre komunitu</a>."
@@ -786,7 +786,6 @@ sk:
           composer_bold: "%{shortcut} Tučné (iba skladateľ)"
           composer_italic: "%{shortcut} Kurzíva (iba skladateľ)"
           composer_code: "%{shortcut} Kód (iba skladateľ)"
-          drawer_open: "%{shortcut} Otvoriť zásuvku chatu"
           drawer_close: "%{shortcut} Zatvoriť zásuvku chatu"
           mark_all_channels_read: "%{shortcut} Označiť všetky kanály ako prečítané"
     topic_statuses:

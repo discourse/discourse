@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import CopyButton from "discourse/components/copy-button";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -18,6 +19,7 @@ import Sharing from "discourse/lib/sharing";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ShareTopicModal extends Component {
   @service modal;
 

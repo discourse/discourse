@@ -16,8 +16,8 @@ module DiscourseSolved
 
     def can_have_answer
       return true if SiteSetting.allow_solved_on_all_topics
-      return false if object.closed || object.archived
-      scope.allow_accepted_answers?(object.category_id, object.tags.map(&:name))
+      return false if !object.private_message? && (object.closed || object.archived)
+      scope.allow_accepted_answers?(object)
     end
 
     def include_can_have_answer?

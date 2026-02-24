@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe SystemThemesManager do
+  # This is necessary since the theme settings migrations happen
+  # when `SystemThemesManager.sync!` is called as part of app boot,
+  # and we want to ensure that any previous migration records for the core themes are cleared to properly test idempotency.
+  before { ThemeSettingsMigration.where(theme_id: Theme::CORE_THEMES.values).delete_all }
+
   it "is idempotent" do
     Theme.delete_all
     expect { SystemThemesManager.sync! }.to change { Theme.system.count }.by(2)

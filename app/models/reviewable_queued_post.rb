@@ -38,8 +38,7 @@ class ReviewableQueuedPost < Reviewable
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
-  # TODO (reviewable-refresh): Remove this method once new UI is fully deployed
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?
         build_action(actions, :approve_post_closed, icon: "check", confirm: true)
@@ -64,27 +63,6 @@ class ReviewableQueuedPost < Reviewable
     build_action(actions, :delete) if guardian.can_delete?(self)
   end
 
-  def build_new_separated_actions
-    # Because a queued post isn't a real post, we need to create our own post actions bundle
-    post_actions_bundle = build_post_actions_bundle
-
-    unless approved?
-      if topic&.closed?
-        build_action(actions, :approve_post, bundle: post_actions_bundle, confirm: true)
-      elsif target_created_by.present?
-        build_action(actions, :approve_post, bundle: post_actions_bundle)
-      end
-    end
-
-    if pending?
-      build_action(actions, :reject_post, bundle: post_actions_bundle)
-      build_action(actions, :revise_and_reject_post, bundle: post_actions_bundle)
-    end
-
-    # User actions bundle
-    build_user_actions_bundle if pending?
-  end
-
   def build_editable_fields(fields, guardian, args)
     if pending?
       # We can edit category / title if it's a new topic
@@ -107,6 +85,9 @@ class ReviewableQueuedPost < Reviewable
     result[:cooking_options].symbolize_keys! if result[:cooking_options]
     result[:topic_id] = topic_id if topic_id
     result[:category] = category_id if category_id
+    if result[:tags].is_a?(Array)
+      result[:tags] = result[:tags].map { |t| t.is_a?(Hash) ? t["name"] : t }
+    end
     result
   end
 

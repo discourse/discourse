@@ -27,14 +27,16 @@ class Search
     %w[topic category user private_messages tags all_topics exclude_topics]
   end
 
-  # Patterns that indicate a valid search even without meeting minimum term length
-  # Includes shortcuts (l, r, t) and advanced filter syntax
-  VALID_SEARCH_SHORTCUT_PATTERN =
-    /\A[lrt]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+  # Patterns that bypass minimum search term length because they
+  # produce meaningful results on their own. Note: 't' (in:title) is
+  # intentionally excluded - it modifies where to search but still
+  # requires actual search terms.
+  MIN_LENGTH_BYPASS_PATTERN =
+    /\A[lr]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
 
-  def self.valid_search_shortcut?(term)
+  def self.min_length_bypass?(term)
     return false if term.blank?
-    VALID_SEARCH_SHORTCUT_PATTERN.match?(term)
+    MIN_LENGTH_BYPASS_PATTERN.match?(term)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -606,8 +608,8 @@ class Search
           categories c
       JOIN
           unnest(ARRAY[:matches]) AS term ON
-          c.slug ILIKE term OR
-          c.name ILIKE term OR
+          #{Category.normalize_sql("c.slug")} ILIKE #{Category.normalize_sql("term")} OR
+          #{Category.normalize_sql("c.name")} ILIKE #{Category.normalize_sql("term")} OR
           (term ~ '^[0-9]{1,10}$' AND c.id = term::int)
       SQL
 
@@ -643,15 +645,24 @@ class Search
     category_id =
       if subcategory_slug
         Category
-          .where("lower(slug) = ?", subcategory_slug.downcase)
+          .where(
+            "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
+            subcategory_slug,
+          )
           .where(
             parent_category_id:
-              Category.where("lower(slug) = ?", category_slug.downcase).select(:id),
+              Category.where(
+                "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
+                category_slug,
+              ).select(:id),
           )
           .pick(:id)
       else
         Category
-          .where("lower(slug) = ?", category_slug.downcase)
+          .where(
+            "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
+            category_slug,
+          )
           .order("case when parent_category_id is null then 0 else 1 end")
           .pick(:id)
       end
@@ -664,7 +675,8 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where_name(category_slug).pick(:id)
+      tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
+      tag_id = target_tag_id || tag_id
       if (tag_id)
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -926,7 +938,7 @@ class Search
     modifier = positive ? "" : "NOT"
 
     if match.include?("+")
-      tags = match.split("+")
+      tags = resolve_tag_synonyms(match.split("+"))
 
       posts.where(
         "topics.id #{modifier} IN (
@@ -939,7 +951,7 @@ class Search
         Search.unaccent(tags.join("&")),
       )
     else
-      tags = match.split(",")
+      tags = resolve_tag_synonyms(match.split(","))
 
       posts.where(
         "topics.id #{modifier} IN (
@@ -950,6 +962,19 @@ class Search
         tags,
       )
     end
+  end
+
+  def resolve_tag_synonyms(tag_names)
+    synonym_map =
+      Tag
+        .where_name(tag_names)
+        .where.not(target_tag_id: nil)
+        .includes(:target_tag)
+        .to_h { |synonym| [synonym.name.downcase, synonym.target_tag.name.downcase] }
+
+    return tag_names if synonym_map.empty?
+
+    tag_names.map { |name| synonym_map[name] || name }
   end
 
   def process_advanced_search!(term)
@@ -1114,7 +1139,7 @@ class Search
   def user_search
     return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
 
-    # Exlude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
+    # Exclude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
     query = ts_query("simple", weight_filter: SiteSetting.enable_names ? nil : "AC")
 
     users =

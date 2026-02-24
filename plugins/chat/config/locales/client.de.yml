@@ -44,6 +44,12 @@ de:
           one: "%{formatted_number} Chat-Nachricht"
           other: "%{formatted_number} Chat-Nachrichten"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanal"
+        description: "Beschreibung"
+        actions: "Aktionen"
+        settings: "Einstellungen"
       text_copied: Text in die Zwischenablage kopiert
       link_copied: Link in die Zwischenablage kopiert
       back_to_forum: "Forum"
@@ -600,14 +606,11 @@ de:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
+        chat_settings: "Chat-Einstellungen"
         indefinitely_short: "unbestimmt"
-        indefinitely_long: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten auf unbestimmte Zeit gespeichert werden."
         short:
           one: "%{count} Tag"
           other: "%{count} Tage"
-        long:
-          one: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
-          other: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tage aufbewahrt werden."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."
@@ -739,7 +742,7 @@ de:
           composer_bold: "%{shortcut} Fett (nur Composer)"
           composer_italic: "%{shortcut} Kursiv (nur Composer)"
           composer_code: "%{shortcut} Code (nur Composer)"
-          drawer_open: "%{shortcut} Chat-Bereich öffnen"
+          drawer_toggle: "%{shortcut} Chat-Bereich öffnen/schließen"
           drawer_close: "%{shortcut} Chat-Bereich schließen"
           mark_all_channels_read: "%{shortcut} Alle Kanäle als gelesen markieren"
     topic_statuses:

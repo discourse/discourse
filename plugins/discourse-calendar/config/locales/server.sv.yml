@@ -62,7 +62,7 @@ sv:
       ongoing_event_reminder: "%{title} pågår."
     errors:
       bulk_invite:
-        max_invitees: "De första %{max_invittes} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
+        max_invitees: "De första %{max_invitees} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
         error: "Det uppstod ett problem när filen skulle laddas upp. Vi ber dig försöka igen senare."
       models:
         event:

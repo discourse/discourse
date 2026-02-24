@@ -144,6 +144,10 @@ html.composer-open:not(.has-full-page-chat) {
     flex-direction: row;
     justify-content: space-between;
 
+    .grippie {
+      display: none;
+    }
+
     .composer-controls {
       display: flex;
       gap: 8px;
@@ -177,6 +181,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.saving .saving-text {
     display: flex;
+    align-items: center;
   }
 
   .reply-to {
@@ -196,9 +201,16 @@ html.composer-open:not(.has-full-page-chat) {
       align-items: center;
       min-width: 0;
       white-space: nowrap;
+      gap: var(--space-2);
 
-      .d-icon {
-        color: var(--primary-medium);
+      .composer-actions {
+        .select-kit-header {
+          border-color: var(--primary-low-mid);
+        }
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
       }
 
       @include viewport.until(sm) {
@@ -289,14 +301,10 @@ html.composer-open:not(.has-full-page-chat) {
 
   .display-edit-reason {
     display: inline-flex;
+    margin-left: auto;
 
     a {
       display: inline-flex;
-    }
-
-    .d-icon {
-      padding: 0.3em 0.5em;
-      color: var(--tertiary);
     }
   }
 

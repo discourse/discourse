@@ -81,8 +81,14 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       json = serializer.as_json
 
       expect(json[:sidebar_tags]).to contain_exactly(
-        { name: tag.name, pm_only: false, description: tag.description },
-        { name: pm_tag.name, pm_only: true, description: nil },
+        {
+          id: tag.id,
+          name: tag.name,
+          slug: tag.slug,
+          pm_only: false,
+          description: tag.description,
+        },
+        { id: pm_tag.id, name: pm_tag.name, slug: pm_tag.slug, pm_only: true, description: nil },
       )
 
       user.update!(admin: true)
@@ -90,9 +96,21 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       json = serializer.as_json
 
       expect(json[:sidebar_tags]).to contain_exactly(
-        { name: tag.name, pm_only: false, description: tag.description },
-        { name: pm_tag.name, pm_only: true, description: nil },
-        { name: hidden_tag.name, pm_only: false, description: nil },
+        {
+          id: tag.id,
+          name: tag.name,
+          slug: tag.slug,
+          pm_only: false,
+          description: tag.description,
+        },
+        { id: pm_tag.id, name: pm_tag.name, slug: pm_tag.slug, pm_only: true, description: nil },
+        {
+          id: hidden_tag.id,
+          name: hidden_tag.name,
+          slug: hidden_tag.slug,
+          pm_only: false,
+          description: nil,
+        },
       )
     end
   end

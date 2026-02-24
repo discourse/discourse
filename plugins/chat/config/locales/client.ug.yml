@@ -44,6 +44,12 @@ ug:
           one: "%{formatted_number} سۆھبەت ئۇچۇرى"
           other: "%{formatted_number} سۆھبەت ئۇچۇرى"
     chat:
+      edit_category:
+        tab_title: "سۆھبەت"
+        channel: "قانال"
+        description: "چۈشەندۈرۈش"
+        actions: "مەشغۇلات"
+        settings: "تەڭشەك"
       text_copied: تېكىست چاپلاش تاختىسىغا كۆچۈرۈلدى
       link_copied: ئۇلانما چاپلاش تاختىسىغا كۆچۈرۈلدى
       back_to_forum: "مۇنبەر"
@@ -582,13 +588,9 @@ ug:
           other: "%{commaSeparatedUsernames} ۋە باشقا %{count} كىشى يېزىۋاتىدۇ"
       retention_reminders:
         indefinitely_short: "مۇددەتسىز"
-        indefinitely_long: "سۆھبەت تەڭشەكلىرى قانال ئۇچۇرلىرىنى مۇددەتسىز ساقلاپ قېلىشقا تەڭشەلدى."
         short:
           one: "%{count} كۈن"
           other: "%{count} كۈن"
-        long:
-          one: "سۆھبەت تەڭشەكلىرى قانال ئۇچۇرلىرىنى %{count} كۈن ساقلاپ قېلىشقا تەڭشەلدى."
-          other: "سۆھبەت تەڭشەكلىرى قانال ئۇچۇرلىرىنى %{count} كۈن ساقلاپ قېلىشقا تەڭشەلدى."
       flags:
         off_topic: "بۇ ئۇچۇر بىلەن قانال ماۋزۇسىدا بەلگىلەنگەن نۆۋەتتىكى سۆھبەت بىلەن مۇناسىۋەتسىز، باشقا جايغا يۆتكەش لازىم بولۇشى مۇمكىن."
         inappropriate: "ئەقىللىق ئادەم بۇ ئۇچۇردا ھۇجۇم، ھاقارەت ياكى <a href=\"%{basePath}/guidelines\">جامائەت مىزانىمىز</a>غا خىلاپ مەزمۇن بار دەپ قارايدۇ."
@@ -720,7 +722,6 @@ ug:
           composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"
           composer_italic: "%{shortcut} يانتۇ (كىرگۈزۈش كۆزنىكىلا)"
           composer_code: "%{shortcut} كود (كىرگۈزۈش كۆزنىكىلا)"
-          drawer_open: "%{shortcut} سۆھبەت تارتمىسىنى ئاچ"
           drawer_close: "%{shortcut} سۆھبەت تارتمىسىنى ياپ"
           mark_all_channels_read: "%{shortcut} ھەممە قانالغا ئوقۇلدى بەلگىسى سال"
     topic_statuses:

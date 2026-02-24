@@ -12,8 +12,8 @@ import { i18n } from "discourse-i18n";
 
 @classNames("group-dropdown")
 @selectKitOptions({
-  caretDownIcon: "caret-right",
-  caretUpIcon: "caret-down",
+  caretDownIcon: "angle-right",
+  caretUpIcon: "angle-down",
   filterable: "hasManyGroups",
 })
 @pluginApiIdentifiers("group-dropdown")

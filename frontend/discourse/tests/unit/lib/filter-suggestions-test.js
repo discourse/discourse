@@ -340,4 +340,50 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
       "cam is excluded after being used"
     );
   });
+
+  test("tag_group suggestions properly quote names with special characters", async function (assert) {
+    pretender.get("/tag_groups/filter/search.json", () =>
+      response({
+        results: [
+          { name: "Simple", tag_names: ["tag1"] },
+          { name: "My Tag Group", tag_names: ["tag2"] },
+          { name: 'Quote "Test" Group', tag_names: ["tag3"] },
+          { name: "It's a Group", tag_names: ["tag4"] },
+        ],
+      })
+    );
+
+    const tips = [
+      {
+        name: "tag_group:",
+        description: "Tag Group",
+        type: "tag_group",
+        priority: 1,
+      },
+    ];
+
+    const res = await FilterSuggestions.getSuggestions(
+      "tag_group:",
+      tips,
+      buildContext()
+    );
+    const terms = res.suggestions.map((s) => s.term);
+
+    assert.strictEqual(terms[0], "Simple", "simple names are not quoted");
+    assert.strictEqual(
+      terms[1],
+      '"My Tag Group"',
+      "names with spaces are quoted"
+    );
+    assert.strictEqual(
+      terms[2],
+      "'Quote \"Test\" Group'",
+      "names with double quotes use single quotes"
+    );
+    assert.strictEqual(
+      terms[3],
+      '"It\'s a Group"',
+      "names with single quotes use double quotes and escape internal single quotes"
+    );
+  });
 });

@@ -51,6 +51,15 @@ const extension = {
       handler: (state, match, start, end) => {
         const hashtagStart = start + match[1].length;
         const name = match[2].slice(1);
+
+        // Don't convert anchors in URLs to hashtags
+        const $pos = state.doc.resolve(hashtagStart);
+        if (
+          $pos.marks().some((mark) => mark.type === state.schema.marks.link)
+        ) {
+          return false;
+        }
+
         return (
           state.selection.$from.nodeBefore?.type !==
             state.schema.nodes.hashtag &&

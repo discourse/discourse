@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component, { Input } from "@ember/component";
 import { computed } from "@ember/object";
 import { schedule } from "@ember/runloop";

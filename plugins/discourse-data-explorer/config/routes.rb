@@ -26,5 +26,10 @@ Discourse::Application.routes.draw do
         format: /(json|csv)/,
       }
 
-  mount DiscourseDataExplorer::Engine, at: "/admin/plugins/explorer"
+  mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
+  get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")
+  get "/admin/plugins/explorer/queries" =>
+        redirect("/admin/plugins/discourse-data-explorer/queries")
+  get "/admin/plugins/explorer/queries/:id" =>
+        redirect("/admin/plugins/discourse-data-explorer/queries/%{id}")
 end

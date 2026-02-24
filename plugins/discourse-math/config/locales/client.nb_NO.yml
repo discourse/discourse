@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 nb_NO:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Bruk"
-      insert_modal:
-        insert: "Sett inn"

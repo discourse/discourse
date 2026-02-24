@@ -67,8 +67,7 @@ class OptimizedImage < ActiveRecord::Base
 
     if original_path.blank?
       # download is protected with a DistributedMutex
-      external_copy = store.download_safe(upload)
-      original_path = external_copy&.path
+      original_path = store.download(upload)
     end
 
     if extension == ".svg" && upload.extension != "svg"
@@ -147,9 +146,6 @@ class OptimizedImage < ActiveRecord::Base
         temp_file.close!
       end
 
-      # make sure we remove the cached copy from external stores
-      external_copy&.close if store.external?
-
       thumbnail
     end
   end
@@ -170,7 +166,7 @@ class OptimizedImage < ActiveRecord::Base
       if local?
         Discourse.store.path_for(self)
       else
-        Discourse.store.download!(self).path
+        Discourse.store.download!(self)
       end
     File.size(path)
   end

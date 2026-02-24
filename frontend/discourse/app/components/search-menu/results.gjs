@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -28,8 +27,6 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 
 export default class Results extends Component {
   @service search;
-
-  @tracked searchTopics = this.args.searchTopics;
 
   get renderInitialOptions() {
     return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;

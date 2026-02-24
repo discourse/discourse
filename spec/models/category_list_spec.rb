@@ -22,7 +22,7 @@ RSpec.describe CategoryList do
 
     let(:admin_category_list) { CategoryList.new(Guardian.new(admin), include_topics: true) }
 
-    it "doesn't set has_children when an unpriveleged user is querying" do
+    it "doesn't set has_children when an unprivileged user is querying" do
       found = category_list.categories.find { |c| c.id == category.id }
       expect(found.has_children).to eq(false)
     end

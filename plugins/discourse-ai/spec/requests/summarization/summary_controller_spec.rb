@@ -203,4 +203,112 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       end
     end
   end
+
+  describe "#regen_summary" do
+    fab!(:admin)
+    fab!(:group)
+    fab!(:topic)
+    fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
+
+    fab!(:topic_1, :topic)
+    fab!(:post_3) { Fabricate(:post, topic: topic_1, post_number: 1) }
+    fab!(:post_4) { Fabricate(:post, topic: topic_1, post_number: 2) }
+
+    before do
+      enable_current_plugin
+      assign_fake_provider_to(:ai_default_llm_model)
+      SiteSetting.ai_summarization_enabled = true
+
+      group.add(admin)
+      assign_persona_to(:ai_summarization_persona, [group.id])
+    end
+
+    context "when a single topic id is provided" do
+      before { sign_in(admin) }
+
+      it "deletes cached summary and enqueues regeneration job" do
+        existing_summary = Fabricate(:ai_summary, target: topic)
+
+        put "/discourse-ai/summarization/regen_summary", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(AiSummary.find_by(id: existing_summary.id)).to be_nil
+        expect(Jobs::StreamTopicAiSummary.jobs.size).to eq(1)
+
+        job_args = Jobs::StreamTopicAiSummary.jobs.first["args"].first
+        expect(job_args["topic_id"]).to eq(topic.id)
+        expect(job_args["user_id"]).to eq(admin.id)
+        expect(job_args["skip_age_check"]).to eq(true)
+      end
+
+      it "enqueues job even when there is no existing summary" do
+        put "/discourse-ai/summarization/regen_summary", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::StreamTopicAiSummary.jobs.size).to eq(1)
+      end
+    end
+
+    context "when multiple topic ids are provided" do
+      before { sign_in(admin) }
+
+      it "regenerates the summaries" do
+        put "/discourse-ai/summarization/regen_summary",
+            params: {
+              topic_ids: [topic.id, topic_1.id],
+            }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::StreamTopicAiSummary.jobs.size).to eq(2)
+
+        job_topic_ids = Jobs::StreamTopicAiSummary.jobs.map { |j| j["args"].first["topic_id"] }
+        expect(job_topic_ids).to contain_exactly(topic.id, topic_1.id)
+      end
+    end
+
+    context "when more than 30 topics are provided" do
+      before { sign_in(admin) }
+
+      it "raises an error" do
+        topics = 31.times.map { Fabricate(:topic) }
+        topic_ids = topics.map(&:id)
+
+        put "/discourse-ai/summarization/regen_summary", params: { topic_ids: topic_ids }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
+    context "when user is not allowed to regenerate summaries" do
+      fab!(:user)
+
+      before { sign_in(user) }
+
+      it "returns a 403" do
+        put "/discourse-ai/summarization/regen_summary", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user cannot see the topic" do
+      fab!(:moderator)
+
+      before do
+        group.add(moderator)
+        sign_in(moderator)
+      end
+
+      it "returns a 403 for private topics user cannot access" do
+        private_group = Fabricate(:group)
+        private_category = Fabricate(:private_category, group: private_group)
+        private_topic = Fabricate(:topic, category: private_category)
+
+        put "/discourse-ai/summarization/regen_summary", params: { topic_id: private_topic.id }
+
+        expect(response.status).to eq(403)
+      end
+    end
+  end
 end

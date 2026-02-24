@@ -71,6 +71,9 @@ module DiscourseAi
         return if !post.custom_fields[SHOULD_SCAN_POST_CUSTOM_FIELD]
         return if post.updated_at < MAX_AGE_TO_SCAN.ago
 
+        editor = post.last_editor
+        return if editor && (editor.staff? || editor.bot?)
+
         last_scan = AiSpamLog.where(post_id: post.id).order(created_at: :desc).first
 
         if last_scan && last_scan.created_at > EDIT_DELAY_MINUTES.minutes.ago

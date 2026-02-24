@@ -35,6 +35,15 @@ class Report
     page_view_logged_in_reqs
   ]
 
+  ADMIN_ONLY_REPORTS = %w[top_uploads]
+
+  def self.hidden?(type, admin:)
+    return true if !admin && ADMIN_ONLY_REPORTS.include?(type)
+    hidden_reports =
+      SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
+    hidden_reports.include?(type)
+  end
+
   COLORS = {
     turquoise: "#1EB8D1",
     lime: "#9BC53D",
@@ -43,6 +52,20 @@ class Report
     brown: "#8A6916",
     yellow: "#FFCD56",
   }
+
+  LEGACY_REPORTS = %w[
+    bookmarks
+    likes
+    moderator_warning_private_messages
+    notify_moderators_private_messages
+    notify_user_private_messages
+    post_edits
+    profile_views
+    system_private_messages
+    top_users_by_likes_received_from_inferior_trust_level
+    top_users_by_likes_received_from_a_variety_of_people
+    user_to_user_private_messages
+  ]
 
   include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
@@ -114,7 +137,8 @@ class Report
                 :primary_color,
                 :secondary_color,
                 :filters,
-                :available_filters
+                :available_filters,
+                :legacy
 
   def self.default_days
     30
@@ -235,6 +259,7 @@ class Report
       higher_is_better: self.higher_is_better,
       modes: self.modes,
     }.tap do |json|
+      json[:legacy] = self.legacy if self.legacy
       json[:icon] = self.icon if self.icon
       json[:error] = self.error if self.error
       json[:total] = self.total if self.total
@@ -274,6 +299,8 @@ class Report
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
     report.labels = Report.default_labels
+
+    report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements
 
     report
   end

@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Uygula"
-      insert_modal:
-        insert: "Ekle"

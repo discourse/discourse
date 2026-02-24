@@ -2,14 +2,14 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import RequestGroupMembershipForm from "./modal/request-group-membership-form";
 
-@classNames("group-membership-button")
+@tagName("")
 export default class GroupMembershipButton extends Component {
   @service appEvents;
   @service currentUser;
@@ -98,32 +98,34 @@ export default class GroupMembershipButton extends Component {
   }
 
   <template>
-    {{#if this.canJoinGroup}}
-      <DButton
-        @action={{this.joinGroup}}
-        @icon="user-plus"
-        @label="groups.join"
-        @disabled={{this.updatingMembership}}
-        class="btn-default group-index-join"
-      />
-    {{else if this.canLeaveGroup}}
-      <DButton
-        @action={{this.leaveGroup}}
-        @icon="user-xmark"
-        @label="groups.leave"
-        @disabled={{this.updatingMembership}}
-        class="btn-danger group-index-leave"
-      />
-    {{else if this.canRequestMembership}}
-      <DButton
-        @action={{this.showRequestMembershipForm}}
-        @disabled={{this.loading}}
-        @icon="user-plus"
-        @label="groups.request"
-        class="btn-default group-index-request"
-      />
-    {{else}}
-      {{yield}}
-    {{/if}}
+    <div class="group-membership-button" ...attributes>
+      {{#if this.canJoinGroup}}
+        <DButton
+          @action={{this.joinGroup}}
+          @icon="user-plus"
+          @label="groups.join"
+          @disabled={{this.updatingMembership}}
+          class="btn-default group-index-join"
+        />
+      {{else if this.canLeaveGroup}}
+        <DButton
+          @action={{this.leaveGroup}}
+          @icon="user-xmark"
+          @label="groups.leave"
+          @disabled={{this.updatingMembership}}
+          class="btn-danger group-index-leave"
+        />
+      {{else if this.canRequestMembership}}
+        <DButton
+          @action={{this.showRequestMembershipForm}}
+          @disabled={{this.loading}}
+          @icon="user-plus"
+          @label="groups.request"
+          class="btn-default group-index-request"
+        />
+      {{else}}
+        {{yield}}
+      {{/if}}
+    </div>
   </template>
 }

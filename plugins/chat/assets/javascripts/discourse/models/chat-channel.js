@@ -72,9 +72,12 @@ export default class ChatChannel {
   @tracked threadingEnabled;
   @tracked draft;
   @tracked newestMessage;
+  @tracked pinnedMessagesCount;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
+  pendingOptimisticPins = new Set();
+  pendingOptimisticUnpins = new Set();
 
   @tracked _currentUserMembership;
   @tracked _lastMessage;
@@ -100,6 +103,7 @@ export default class ChatChannel {
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
+    this.pinnedMessagesCount = args.pinned_messages_count ?? 0;
 
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
@@ -159,6 +163,10 @@ export default class ChatChannel {
 
   get canRemoveMembers() {
     return this.meta?.can_remove_members;
+  }
+
+  get canManagePins() {
+    return this.meta?.can_manage_pins;
   }
 
   get escapedTitle() {
@@ -225,6 +233,14 @@ export default class ChatChannel {
         this.threadsManager.unreadThreadCount >
       0
     );
+  }
+
+  get hasPinnedMessages() {
+    return this.pinnedMessagesCount > 0;
+  }
+
+  get hasUnseenPins() {
+    return this.currentUserMembership?.hasUnseenPins ?? false;
   }
 
   async stageMessage(message) {

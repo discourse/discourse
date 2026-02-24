@@ -75,21 +75,40 @@ module SiteSettingExtension
     @mutex ||= Mutex.new
   end
 
+  # Represents the current values of all site settings, incorporating
+  # the database values and merging them with shadowed settings and
+  # default values.
   def current
     @containers ||= {}
     @containers[provider.current_site] ||= {}
   end
 
+  # Represents settings that actually have a value saved in the
+  # database. We currently even store the default value in the
+  # DB if an admin saves a different value then changes back
+  # to the default.
+  def modified
+    @modified ||= {}
+    @modified[provider.current_site] ||= {}
+  end
+
+  # Represents a map of theme IDs to all theme site settings
+  # and values.
   def theme_site_settings
     @theme_site_settings ||= {}
     @theme_site_settings[provider.current_site] ||= {}
   end
 
+  #
   def humanized_names(name)
     @humanized_names ||= {}
     @humanized_names[name] ||= humanized_name(name)
   end
 
+  # Used for upcoming changes settings to determine which specific
+  # groups have the change turned on for them. This is done separately
+  # from group-based site settings because upcoming change settings
+  # are always booleans.
   def site_setting_group_ids
     @site_setting_group_ids ||= {}
     @site_setting_group_ids[provider.current_site] ||= {}
@@ -119,6 +138,10 @@ module SiteSettingExtension
     @mandatory_values ||= {}
   end
 
+  def disallowed_groups
+    @disallowed_groups ||= {}
+  end
+
   def shadowed_settings
     @shadowed_settings ||= Set.new
   end
@@ -131,7 +154,9 @@ module SiteSettingExtension
   # in site_settings.yml:
   #
   # setting_name:
-  #   setting_options...
+  #   default: false
+  #   client: true
+  #   hidden: true
   #   upcoming_change:
   #     status: "alpha" (see UpcomingChanges.statuses.keys)
   #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
@@ -341,6 +366,16 @@ module SiteSettingExtension
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
 
+        if !is_hidden && type_supervisor.dependencies[setting_name].present? &&
+             type_supervisor.dependencies.behaviors[setting_name] == :hidden
+          # Hidden if any of the dependent settings are not true. Use the getter so upcoming
+          # change settings use their resolved value (promotion status, admin override, etc.).
+          is_hidden =
+            !type_supervisor.dependencies[setting_name].all? do |dependency|
+              public_send(dependency)
+            end
+        end
+
         next true if !is_hidden
         next false if !include_hidden
         next true if filter_allowed_hidden.nil?
@@ -435,9 +470,11 @@ module SiteSettingExtension
             secret: secret_settings.include?(s),
             placeholder: placeholder(s),
             mandatory_values: mandatory_values[s],
+            disallowed_groups: disallowed_groups[s],
             requires_confirmation: requires_confirmation_settings[s],
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
+            depends_on: type_supervisor.dependencies[s],
           )
           opts.merge!(type_hash)
         end
@@ -500,6 +537,8 @@ module SiteSettingExtension
             )
           ]
 
+        new_modified = new_hash.dup
+
         refresh_site_setting_group_ids!
 
         defaults_view = defaults.all(new_hash[:default_locale])
@@ -514,6 +553,8 @@ module SiteSettingExtension
 
         changes.each { |name, val| current[name] = val }
         deletions.each { |name, _| current[name] = defaults_view[name] }
+        modified.clear
+        modified.merge!(new_modified)
         uploads.clear
       end
 
@@ -608,6 +649,7 @@ module SiteSettingExtension
     old_val = current[name]
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
+    modified.delete(name)
 
     return if current[name] == old_val
 
@@ -660,8 +702,14 @@ module SiteSettingExtension
         (mandatory_values[name.to_sym].split("|") | sanitized_val.to_s.split("|")).join("|")
     end
 
+    if disallowed_groups[name.to_sym]
+      disallowed = disallowed_groups[name.to_sym].split("|")
+      sanitized_val = sanitized_val.to_s.split("|").reject { |v| disallowed.include?(v) }.join("|")
+    end
+
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
+    modified[name] = current[name]
 
     return if current[name] == old_val
 
@@ -980,11 +1028,17 @@ module SiteSettingExtension
 
         refresh! if current[name].nil?
 
-        value = current[name]
+        value =
+          if upcoming_change_metadata[name]
+            UpcomingChanges.resolved_value(name)
+          else
+            current[name]
+          end
 
         if mandatory_values[name]
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
+
         value
       end
     end
@@ -1066,6 +1120,7 @@ module SiteSettingExtension
       defaults.load_setting(name, default, opts.delete(:locale_default))
 
       mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
+      disallowed_groups[name] = opts[:disallowed_groups] if opts[:disallowed_groups]
 
       requires_confirmation_settings[name] = (
         if SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.values.include?(
@@ -1091,7 +1146,7 @@ module SiteSettingExtension
         split_areas = opts[:area].split("|")
         if split_areas.any? { |area| !SiteSetting.valid_areas.include?(area) }
           raise Discourse::InvalidParameters.new(
-                  "Area is invalid, valid areas are: #{SiteSetting.valid_areas.join(", ")}",
+                  "One of the areas in #{opts[:area]} for setting #{name} is invalid, valid areas are: #{SiteSetting.valid_areas.join(", ")}",
                 )
         end
         areas[name] = split_areas

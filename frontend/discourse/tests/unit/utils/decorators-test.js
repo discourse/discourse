@@ -1,11 +1,9 @@
-// /* eslint-disable ember/no-classic-components */
+// /* eslint-disable ember/no-classic-components, ember/no-observers */
 // import Component from "@ember/component";
 // import EmberObject from "@ember/object";
-// import { getOwner } from "@ember/owner";
 // import { clearRender, render, settled } from "@ember/test-helpers";
 // import { observes as nativeClassObserves } from "@ember-decorators/object";
 // import { hbs } from "ember-cli-htmlbars";
-// import curryComponent from "ember-curry-component";
 // import { module, test } from "qunit";
 // import discourseComputed, {
 //   afterRender,
@@ -118,9 +116,10 @@
 //   setupRenderingTest(hooks);
 
 //   test("afterRender", async function (assert) {
+//     this.registry.register("component:foo-component", fooComponent);
 //     this.set("baz", 0);
 
-//     await render(curryComponent(fooComponent, { baz: this.baz }), getOwner(this));
+//     await render(hbs`<FooComponent @baz={{this.baz}} />`);
 
 //     assert.dom(".foo-component").exists();
 //     assert.strictEqual(this.baz, 1);
@@ -132,8 +131,13 @@
 //   });
 
 //   test("discourseComputed works in EmberObject classes", async function (assert) {
+//     this.registry.register(
+//       "component:ember-object-component",
+//       EmberObjectComponent
+//     );
+
 //     this.set("name", "Jarek");
-//     await render(curryComponent(EmberObjectComponent, { name: this.name }, getOwner(this)));
+//     await render(hbs`<EmberObjectComponent @name={{this.name}} />`);
 
 //     assert.dom(".ember-object-component").hasText("hello, Jarek");
 
@@ -147,8 +151,10 @@
 //   });
 
 //   test("discourseComputed works in native classes", async function (assert) {
+//     this.registry.register("component:native-component", NativeComponent);
+
 //     this.set("name", "Jarek");
-//     await render(curryComponent(NativeComponent, { name: this.name }, getOwner(this)));
+//     await render(hbs`<NativeComponent @name={{this.name}} />`);
 
 //     assert.dom(".native-component").hasText("hello, Jarek");
 

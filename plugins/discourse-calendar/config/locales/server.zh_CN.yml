@@ -77,7 +77,7 @@ zh_CN:
       ongoing_event_reminder: "%{title} 正在进行。"
     errors:
       bulk_invite:
-        max_invitees: "前 %{max_invittes} 位受邀者已创建。尝试将文件拆分成更小的部分。"
+        max_invitees: "前 %{max_invitees} 位受邀者已创建。尝试将文件拆分成更小的部分。"
         error: "上传文件时出错。请稍后再试。"
       models:
         event:

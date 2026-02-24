@@ -46,6 +46,7 @@ export default class Radio extends Component {
             >
               <input
                 type="radio"
+                name={{@field.id}}
                 value={{choice.id}}
                 class="wizard-container__radio"
                 disabled={{choice.disabled}}

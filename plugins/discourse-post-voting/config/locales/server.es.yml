@@ -52,21 +52,9 @@ es:
         agree_and_delete:
           title: "Eliminar comentario"
           description: "Elimina el comentario para que los usuarios no puedan verlo."
-        agree_and_suspend:
-          title: "Suspender al usuario"
-          description: "Aceptar la denuncia y suspender al usuario."
-        agree_and_silence:
-          title: "Silenciar al usuario"
-          description: "Aceptar la denuncia y silenciar al usuario."
         disagree_and_restore:
           title: "Discrepar y restaurar comentario"
           description: "Restaura el comentario para que todos los usuarios puedan verlo."
-        disagree:
-          title: "Mantener comentario"
-        ignore:
-          title: "Ignorar reporte"
-        delete_and_agree:
-          description: "Ignorar la denuncia eliminándola de la cola y eliminar el comentario."
   post_action_types:
     vote:
       title: "Votar"
@@ -118,10 +106,6 @@ es:
           disagree_and_restore:
             title: "Discrepar y restaurar comentario"
             description: "Restaura el comentario para que todos los usuarios puedan verlo."
-          disagree:
-            title: "Mantener comentario"
-          ignore:
-            title: "Ignorar reporte"
         transcript:
           view: "Ver la transcripción de los comentarios anteriores"
       reviewable_score_types:

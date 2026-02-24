@@ -68,7 +68,6 @@ export default <template>
 
         <div class="group-details-button">
           <GroupMembershipButton
-            @tagName=""
             @model={{@controller.model}}
             @showLogin={{routeAction "showLogin"}}
           />

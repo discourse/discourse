@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { blur, fillIn, focus, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -25,7 +25,7 @@ module(
 
       assert.strictEqual(formKit().field("color").value(), "FF0000");
 
-      await formKit().field("color").fillIn("00FF00");
+      await fillIn(".form-kit__control-color-input-hex", "00FF00");
       await formKit().submit();
 
       assert.strictEqual(data.color, "00FF00");
@@ -99,8 +99,29 @@ module(
 
       const swatches = formKit().field("color").swatches();
       assert.false(swatches[0].isUsed);
-      assert.true(swatches[1].isUsed);
-      assert.false(swatches[2].isUsed);
+      assert.false(swatches[1].isUsed);
+      assert.true(swatches[2].isUsed);
+    });
+
+    test("sorting used colors does not mutate the original array", async function (assert) {
+      const colors = ["FF0000", "00FF00", "0000FF"];
+      const usedColors = ["00FF00"];
+
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="color" @title="Color" as |field|>
+              <field.Color @colors={{colors}} @usedColors={{usedColors}} />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.deepEqual(
+        colors,
+        ["FF0000", "00FF00", "0000FF"],
+        "original colors array should not be mutated"
+      );
     });
 
     test("when disabled", async function (assert) {
@@ -165,6 +186,27 @@ module(
 
       const picker = formKit().field("color").pickerElement;
       assert.strictEqual(picker.value, "#800080");
+    });
+
+    test("@fallbackValue restores value when field is cleared", async function (assert) {
+      let data = { color: "" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="color" @title="Color" as |field|>
+              <field.Color @fallbackValue="AABBCC" />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      await focus(".form-kit__control-color-input-hex");
+      await fillIn(".form-kit__control-color-input-hex", "");
+      await blur(".form-kit__control-color-input-hex");
+
+      assert.strictEqual(formKit().field("color").value(), "AABBCC");
     });
   }
 );

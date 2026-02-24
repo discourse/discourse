@@ -2,6 +2,7 @@ en:
   site_settings:
     chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
     chat_enabled: "Enable chat."
+    chat_pinned_messages: "Enable pinned messages in chat channels."
     enable_public_channels: "Enable public channels based on categories."
     chat_allowed_groups: "Users in these groups can chat. Note that admins and moderators can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
@@ -17,6 +18,7 @@ en:
     chat_archive_destination_topic_status: "The status that the destination topic should be once a channel archive is completed. This only applies when the destination topic is a new topic, not an existing one."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages. Note that admins and moderators can always flag chat messages."
+    chat_pinning_messages_allowed_groups: "Users in these groups are allowed to pin chat messages in channels that they can access. Note that admins and moderators can always pin chat messages. Any member of a group chat or DM can pin messages there."
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
@@ -68,6 +70,7 @@ en:
         closed: "The channel is closed, no messages can be edited or deleted"
         read_only: "The channel is read only, no messages can be edited or deleted"
       user_cannot_send_message: "You cannot send messages at this time."
+      user_not_in_channel: "You must be a member of this channel."
       rate_limit_exceeded: "Exceeded the limit of chat messages that can be sent within 30 seconds"
       auto_silence_from_flags: "Chat message flagged with score high enough to silence user."
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
@@ -99,6 +102,9 @@ en:
       thread_invalid_for_channel: "Thread is not part of the provided channel."
       thread_does_not_match_parent: "Thread does not match parent message."
       invalid_direct_message: "You are not allowed to create this direct message."
+      pin_limit_reached: "This channel has reached the maximum number of pinned messages (%{limit})."
+      message_already_pinned: "This message is already pinned."
+      message_not_pinned: "This message is not pinned."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
@@ -263,18 +269,18 @@ en:
           one: "[%{site_name}] New thread message in %{channel}"
           other: "[%{site_name}] New thread messages in %{channel}"
         watched_threads:
-          one: "[%{site_name}] New thread messages in %{channel} and %{count} other"
-          other: "[%{site_name}] New thread messages in %{channel} and %{count} others"
+          one: "[%{site_name}] New thread messages in %{channel} and %{count} other channel"
+          other: "[%{site_name}] New thread messages in %{channel} and %{count} other channels"
         chat_dm_1:
           one: "[%{site_name}] New message from %{name}"
           other: "[%{site_name}] New messages from %{name}"
         chat_dm_2: "[%{site_name}] New messages from %{name_1} and %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] New messages from %{name} and %{count} others"
+        chat_dm_3_or_more: "[%{site_name}] New messages from %{name} and %{count} other direct message channels"
         chat_channel_1:
           one: "[%{site_name}] New message in %{channel}"
           other: "[%{site_name}] New messages in %{channel}"
         chat_channel_2: "[%{site_name}] New messages in %{channel_1} and %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] New messages in %{channel} and %{count} others"
+        chat_channel_3_or_more: "[%{site_name}] New messages in %{channel} and %{count} other channels"
         chat_channel_and_dm: "[%{site_name}] New messages in %{channel} and from %{name}"
       unsubscribe: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       unsubscribe_no_link: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}."

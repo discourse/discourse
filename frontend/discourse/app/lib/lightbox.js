@@ -9,11 +9,27 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import { waitForPromise } from "@ember/test-waiters";
 
-export default async function lightbox(elem, additionalData = {}) {
+const INIT_PROMISES = new WeakMap();
+
+export default function lightbox(elem, additionalData = {}) {
   if (!elem) {
-    return;
+    return Promise.resolve();
   }
 
+  if (INIT_PROMISES.has(elem)) {
+    return INIT_PROMISES.get(elem);
+  }
+
+  const promise = initLightbox(elem, additionalData).catch((error) => {
+    INIT_PROMISES.delete(elem);
+    throw error;
+  });
+
+  INIT_PROMISES.set(elem, promise);
+  return promise;
+}
+
+async function initLightbox(elem, additionalData = {}) {
   const currentUser = helperContext()?.currentUser;
   const siteSettings = helperContext().siteSettings;
   const caps = helperContext().capabilities;
@@ -294,6 +310,16 @@ export default async function lightbox(elem, additionalData = {}) {
       el.getAttribute("data-target-height") ||
       imgEl?.getAttribute("height") ||
       null;
+
+    // If thumbnail has different aspect ratio than full image,
+    // use the full image as msrc for smooth zoom animation
+    if (data.targetWidth && data.targetHeight && data.w && data.h) {
+      const thumbRatio = data.targetWidth / data.targetHeight;
+      const fullRatio = data.w / data.h;
+      if (Math.abs(thumbRatio - fullRatio) / fullRatio > 0.05) {
+        data.msrc = data.src;
+      }
+    }
 
     // So we can attach things like a Post model from the caller.
     Object.keys(additionalData).forEach((key) => {

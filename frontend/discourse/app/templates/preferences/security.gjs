@@ -142,10 +142,10 @@ export default <template>
       {{#if @controller.canShowAllAuthTokens}}
         <a href {{on "click" @controller.toggleShowAllAuthTokens}}>
           {{#if @controller.showAllAuthTokens}}
-            {{icon "caret-up"}}
+            {{icon "angle-up"}}
             <span>{{i18n "user.auth_tokens.show_few"}}</span>
           {{else}}
-            {{icon "caret-down"}}
+            {{icon "angle-down"}}
             <span>
               {{i18n
                 "user.auth_tokens.show_all"

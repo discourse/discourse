@@ -1,13 +1,13 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { cancel, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
-import { isiPad } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 
 @classNameBindings(
@@ -24,6 +24,8 @@ import Composer from "discourse/models/composer";
   "currentUserPrimaryGroupClass"
 )
 export default class ComposerBody extends Component {
+  @service capabilities;
+
   elementId = "reply-control";
 
   @discourseComputed("composer.action")
@@ -105,7 +107,7 @@ export default class ComposerBody extends Component {
       this.cancelled();
     } else if (
       e.key === "Enter" &&
-      (e.ctrlKey || e.metaKey || (isiPad() && e.altKey))
+      (e.ctrlKey || e.metaKey || (this.capabilities.isIpadOS && e.altKey))
     ) {
       // Ctrl+Enter or Cmd+Enter
       // iPad physical keyboard does not offer Command or Ctrl detection

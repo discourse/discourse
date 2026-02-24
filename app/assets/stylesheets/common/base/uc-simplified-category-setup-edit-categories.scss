@@ -1,6 +1,12 @@
+@use "lib/viewport";
+
 .uc-enable-simplified-category-creation {
   .select-kit.multi-select.group-chooser {
     width: var(--form-kit-large-input);
+
+    @include viewport.until(sm) {
+      width: 100%;
+    }
   }
 
   div.edit-category {
@@ -94,5 +100,30 @@
 
   .category-permissions-table {
     width: 100%;
+  }
+
+  .form-kit__errors-summary {
+    margin-top: var(--space-4);
+
+    + .form-kit__section.edit-category-content {
+      margin-top: 0;
+    }
+  }
+
+  .form-kit__conditional-display {
+    .badge-category__wrapper {
+      min-height: 2.6em;
+      top: var(--space-1);
+    }
+
+    .form-kit__container-content:has(.is-disabled) {
+      // select-kit has pointer-events disabled, so we need to style the parent
+      cursor: not-allowed;
+    }
+  }
+
+  .edit-category .edit-category-footer {
+    padding: 0;
+    margin-bottom: var(--space-4);
   }
 }

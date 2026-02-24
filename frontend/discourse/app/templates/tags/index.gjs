@@ -115,7 +115,7 @@ export default <template>
         >{{i18n "tagging.sort_by_count"}}</a></span>
       <span class="tag-sort-name {{if @controller.sortedByName 'active'}}"><a
           href
-          {{on "click" @controller.sortById}}
+          {{on "click" @controller.sortByName}}
         >{{i18n "tagging.sort_by_name"}}</a></span>
     </div>
 

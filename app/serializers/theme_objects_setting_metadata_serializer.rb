@@ -18,7 +18,9 @@ class ThemeObjectsSettingMetadataSerializer < ApplicationSerializer
 
     object.theme.internal_translations.each do |internal_translation|
       if internal_translation.key.start_with?(key)
-        locales[internal_translation.key.delete_prefix(key)] = internal_translation.value
+        locale_key = internal_translation.key.delete_prefix(key)
+        locale_key = locale_key.gsub(".schema.properties.", ".")
+        locales[locale_key] = internal_translation.value
       end
     end
 

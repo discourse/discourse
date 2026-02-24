@@ -31,6 +31,6 @@ RSpec.describe TopicTrackingStateItemSerializer do
     report = TopicTrackingState.report(user)
     serialized = described_class.new(report[0], scope: Guardian.new(user), root: false).as_json
 
-    expect(serialized[:tags]).to contain_exactly("bananas", "apples")
+    expect(serialized[:tags].map { |t| t["name"] }).to contain_exactly("bananas", "apples")
   end
 end

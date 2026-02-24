@@ -243,6 +243,28 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
         described_class.after_cooked_post(post)
       }.not_to change(Jobs::AiSpamScan.jobs, :size)
     end
+
+    it "does not create a reviewable when staff edits a topic" do
+      Jobs.run_immediately!
+
+      post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: false, reason: "no spam detected" }],
+      ) do
+        post =
+          create_post(
+            user: user,
+            title: "Topic to test AI spam flagging",
+            raw: "Initial content that will pass initial scan.",
+          )
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) { PostRevisor.new(post).revise!(moderator, title: "A completely different title") }
+
+      expect(Reviewable.where(target: post).count).to eq(0)
+    end
   end
 
   describe ".hide_post" do

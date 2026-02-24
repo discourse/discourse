@@ -5,23 +5,5 @@
 # https://translate.discourse.org/
 
 he:
-  solved: "נפתר"
-  posted: "פורסם"
-  by_username: "מאת ‎@%{username}"
-  vote_count:
-    one: "הצבעה"
-    two: "שתי הצבעות"
-    many: "%{count} הצבעות"
-    other: "%{count} הצבעות"
-  like_count:
-    one: "לייק %{count}"
-    two: "%{count} לייקים"
-    many: "%{count} לייקים"
-    other: "%{count} לייקים"
-  reply_count:
-    one: "תגובה"
-    two: "שתי תגובות"
-    many: "%{count} תגובות"
-    other: "%{count} תגובות"
   theme_metadata:
     description: "ערכת נושא פשוטה ויפה שמשפרת את חוויית השימוש באתרי Discourse."

@@ -61,7 +61,6 @@ sk:
         description: Keď sa značky témy zmenia, spustí sa automatizácia
       topic:
         title: Témy
-        description: Pridružený skript sa použije iba na zadanú tému, čo je užitočné napríklad pri skriptoch, ktoré vykonávajú validáciu
       after_post_cook:
         title: Po spracovaní príspevku
         description: Keď je obsah príspevku spracovaný, automatizácia bude spustená.

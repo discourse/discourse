@@ -15,12 +15,15 @@ import { i18n } from "discourse-i18n";
 export default class ChangePostNoticeModal extends Component {
   @service currentUser;
 
-  @tracked post = this.args.model.post;
   @tracked notice = this.args.model.post.notice?.raw ?? "";
   @tracked saving = false;
 
   resolve = this.args.model.resolve;
   reject = this.args.model.reject;
+
+  get post() {
+    return this.args.model.post;
+  }
 
   get disabled() {
     return (

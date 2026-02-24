@@ -11,6 +11,8 @@ class Upload < ActiveRecord::Base
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
   DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
+  # the maximum length of a base62 encoded sha1
+  MAX_BASE62_SHA1_LENGTH = 27
 
   belongs_to :user
   belongs_to :access_control_post, class_name: "Post"
@@ -171,16 +173,12 @@ class Upload < ActiveRecord::Base
 
   def content
     original_path = Discourse.store.path_for(self)
-    external_copy = nil
 
     if original_path.blank?
-      external_copy = Discourse.store.download!(self)
-      original_path = external_copy.path
+      File.read(Discourse.store.download!(self))
+    else
+      File.read(original_path)
     end
-
-    File.read(original_path)
-  ensure
-    File.unlink(external_copy.path) if external_copy
   end
 
   def fix_image_extension
@@ -189,10 +187,7 @@ class Upload < ActiveRecord::Base
     begin
       # this is relatively cheap once cached
       original_path = Discourse.store.path_for(self)
-      if original_path.blank?
-        external_copy = Discourse.store.download_safe(self)
-        original_path = external_copy&.path
-      end
+      original_path = Discourse.store.download(self) if original_path.blank?
 
       image_info =
         begin
@@ -303,7 +298,7 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          Discourse.store.download!(self).path
+          Discourse.store.download!(self)
         end
 
       if extension == "svg"
@@ -387,7 +382,7 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          Discourse.store.download_safe(self)&.path
+          Discourse.store.download(self)
         end
 
       if local_path.nil?
@@ -470,6 +465,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.sha1_from_base62_encoded(encoded_sha1)
+    return nil if encoded_sha1.length > MAX_BASE62_SHA1_LENGTH
     sha1 = Base62.decode(encoded_sha1).to_s(16)
 
     if sha1.length > SHA1_LENGTH

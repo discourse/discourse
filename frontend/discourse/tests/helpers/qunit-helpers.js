@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import {
   find,
@@ -43,6 +44,7 @@ import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -263,6 +265,7 @@ export function testCleanup(container, app) {
   clearAboutPageActivities();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
+  clearRegisteredEditCategoryTabs();
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
@@ -332,24 +335,10 @@ export function addPretenderCallback(name, fn) {
   }
 }
 
-export function acceptance(name, optionsOrCallback) {
+export function acceptance(name, callback) {
   name = `Acceptance: ${name}`;
 
-  let callback;
   let options = {};
-  if (typeof optionsOrCallback === "function") {
-    callback = optionsOrCallback;
-  } else if (typeof optionsOrCallback === "object") {
-    deprecated(
-      `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      {
-        since: "2.6.0",
-        dropFrom: "2.9.0.beta1",
-        id: "discourse.qunit.acceptance-function",
-      }
-    );
-    options = optionsOrCallback;
-  }
 
   addPretenderCallback(name, options.pretend);
 

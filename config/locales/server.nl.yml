@@ -630,13 +630,13 @@ nl:
 
       Selecteer voordat je een bericht plaatst een categorie of tag om dit topic te groeperen met gerelateerde discussies, zodat anderen het gemakkelijk kunnen vinden.
 
-      [Zie onze communityrichtlijnen](%{base_path}/richtlijnen) voor meer tips en advies over deelname aan onze community.
+      [Zie onze communityrichtlijnen](%{base_path}/guidelines) voor meer tips en advies over deelname aan onze community.
     "new-reply": |
       Bedankt voor je bijdrage aan %{site_name}!
 
       Vergeet niet dat we allemaal echte mensen zijn. Wees vriendelijk voor de andere communityleden.
 
-      [Zie onze communityrichtlijnen](%{base_path}/richtlijnen) voor meer tips en advies over deelname aan onze community.
+      [Zie onze communityrichtlijnen](%{base_path}/guidelines) voor meer tips en advies over deelname aan onze community.
     dominating_topic: Je hebt veel in dit topic geplaatst! Geef anderen ook de kans om mee te doen.
     get_a_room:
       one: Je hebt één keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
@@ -1692,7 +1692,6 @@ nl:
     manifest_icon: "Afbeelding die als logo/splashafbeelding op Android wordt gebruikt. Wordt automatisch verkleind naar 512 x 512. Bij leeg laten wordt large_icon gebruikt."
     manifest_screenshots: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
-    apple_touch_icon: "Pictogram voor Apple touch-apparaten. Een doorzichtige achtergrond wordt niet aanbevolen. De grootte wordt automatisch aangepast naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
@@ -2070,8 +2069,6 @@ nl:
     num_flaggers_to_close_topic: "Minimale aantal unieke melders dat nodig is om automatisch een topic te pauzeren voor interventie."
     num_hours_to_close_topic: "Aantal uren om een topic te pauzeren voor interventie."
     auto_respond_to_flag_actions: "Automatisch antwoord inschakelen bij weggooien van een markering."
-    min_first_post_typing_time: "Minimale tijd in milliseconden dat een gebruiker moet typen tijdens een eerste bericht. Als de drempelwaarde niet wordt bereikt, wordt het bericht automatisch in de wachtrij voor goedkeuring gezet. Stel dit in op 0 om uit te schakelen (niet aanbevolen)."
-    fast_typing_threshold: "De minimale tijd in milliseconden die een gebruiker moet typen voor het eerste bericht. Als de drempel niet wordt gehaald, komt het bericht automatisch in de beoordelingswachtrij terecht. Laag is 1 seconde, standaard is 3 seconden, hoog is 5 seconden."
     auto_silence_fast_typers_on_first_post: "Demp automatisch gebruikers die niet aan `fast typing threshold` voldoen"
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
     auto_silence_first_post_regex: "Hoofdletterongevoelige reguliere expressie die bij een overeenkomst het eerste bericht van een gebruiker dempt en in de goedkeuringswachtrij plaatst. Voorbeeld: bizar|a[bc]a zorgt ervoor dat alle eerste berichten die bizar, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
@@ -2184,8 +2181,6 @@ nl:
     delete_associated_accounts_on_password_reset: "Verwijder het aan de gebruiker gekoppelde account wanneer deze het wachtwoord wijzigt."
     allow_featured_topic_on_user_profiles: "Sta gebruikers toe een link naar een topic uit te lichten op hun gebruikerskaart en profiel."
     show_inactive_accounts: "Aangemelde gebruikers mogen profielen van inactieve accounts doorbladeren."
-    hide_silencing_reasons: "Dempingsredenen niet openbaar weergeven in gebruikersprofielen."
-    hide_suspension_reasons: "Schorsingsredenen niet openbaar weergeven op gebruikersprofielen."
     log_personal_messages_views: "PB-weergaven door beheerder voor andere gebruikers/groepen loggen."
     ignored_users_count_message_threshold: "Moderators inlichten als een bepaalde gebruiker door dit aantal andere gebruikers wordt genegeerd."
     ignored_users_message_gap_days: "Wachttijd voordat moderators opnieuw worden ingelicht over een gebruiker die door veel andere wordt genegeerd."
@@ -2198,7 +2193,6 @@ nl:
     dont_feed_the_trolls_threshold: "Aantal markeringen van andere gebruikers voordat er wordt gewaarschuwd."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobielvriendelijk thema, met de mogelijkheid om naar de volledige website over te schakelen. Schakel dit uit als je een eigen stylesheet wilt gebruiken dat volledig responsief is."
     dominating_topic_minimum_percent: "Het percentage berichten dat een gebruiker in een topic moet maken voordat deze aan het te veel domineren van een topic wordt herinnerd."
-    pm_warn_user_last_seen_months_ago: "Waarschuw gebruikers bij het maken van een nieuw PB wanneer de doelontvanger meer dan n maanden niet is gezien."
     suppress_uncategorized_badge: "De badge voor ongecategoriseerde topics niet in topiclijsten weergeven."
     header_dropdown_category_count: "Het aantal categorieën dat in het header-vervolgkeuzemenu kan worden weergegeven."
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
@@ -2247,7 +2241,6 @@ nl:
     notify_about_reviewable_item_after: "Stuur een privébericht naar moderators als er na dit aantal uren beoordeelbare items zijn die nog niet zijn afgehandeld. Stel dit in op 0 om het uit te schakelen."
     delete_drafts_older_than_n_days: "Verwijder concepten die meer dan (n) dagen niet zijn gewijzigd."
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op -1 om nooit te verwijderen of op 0 om direct te verwijderen."
-    bootstrap_mode_min_users: 'Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen en de knop Aan de slag te verwijderen (stel dit in op 0 om het uit te schakelen, dit kan tot 24 uur duren). Zie <a target="_blank" href="https://meta.discourse.org/t/-/322876">het topic over de bootstrapmodus op Meta</a> voor meer informatie.'
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
     secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in persoonlijke berichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">de topic Veilige uploads op Meta</a> voor meer informatie.'
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
@@ -2394,10 +2387,9 @@ nl:
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
-    experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
-    experimental_auto_grid_images: "Afbeeldingen worden automatisch tussen [grid]-tags geplaatst wanneer er 3 of meer afbeeldingen worden geüpload in de editor."
+    enable_auto_grid_images: "Afbeeldingen worden automatisch tussen [grid]-tags geplaatst wanneer er 3 of meer afbeeldingen worden geüpload in de editor."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     show_user_menu_avatars: "Gebruikersavatars weergeven in het gebruikersmenu"
     about_page_hidden_groups: "Geef leden van specifieke groepen niet weer op de over/-pagina."
@@ -4139,7 +4131,10 @@ nl:
     page_title: "Pagina niet gevonden"
     title: "Oeps! Die pagina bestaat niet of is privé."
     see_more: "Meer"
+    search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
+    home: "Ga naar de startpagina"
+    placeholder: "Zoek topics op titel of trefwoorden…"
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."

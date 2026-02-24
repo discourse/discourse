@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::AiBot::BotController do
+RSpec.describe DiscourseAi::Discover::DiscoveriesController do
   fab!(:user)
 
   before do
@@ -66,7 +66,6 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         expect {
           post "/discourse-ai/discoveries/continue-convo",
                params: {
-                 user_id: user.id,
                  query: query,
                  context: context,
                }
@@ -76,29 +75,27 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         expect(response.parsed_body["topic_id"]).to be_present
       end
 
-      it "returns invalid parameters if the user_id is missing" do
-        post "/discourse-ai/discoveries/continue-convo", params: { query: query, context: context }
-
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include("user_id")
-      end
-
-      it "returns invalid parameters if the query is missing" do
-        post "/discourse-ai/discoveries/continue-convo",
-             params: {
-               user_id: user.id,
-               context: context,
-             }
-
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include("query")
-      end
-
       it "returns invalid parameters if the context is missing" do
-        post "/discourse-ai/discoveries/continue-convo", params: { user_id: user.id, query: query }
+        post "/discourse-ai/discoveries/continue-convo", params: { query: query }
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include("context")
+      end
+
+      describe "group-based restrictions" do
+        fab!(:staff_group) { Group[:staff] }
+
+        before { ai_persona.update(allowed_group_ids: [staff_group.id]) }
+
+        it "forbid users without group access from creating conversations" do
+          expect(user.in_any_groups?([staff_group.id])).to be_falsey
+
+          expect {
+            post "/discourse-ai/discoveries/continue-convo", params: { query:, context: }
+          }.not_to change { Topic.where(user: user).count }
+
+          expect(response.status).to eq(403)
+        end
       end
     end
   end

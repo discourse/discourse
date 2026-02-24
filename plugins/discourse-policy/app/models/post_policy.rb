@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class PostPolicy < ActiveRecord::Base
-  self.ignored_columns = [
-    "group_id", # TODO (sam) (2023-01-01) remove
-  ]
-
   belongs_to :post
 
   has_many :post_policy_groups, dependent: :destroy

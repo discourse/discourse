@@ -53,7 +53,7 @@ task "reviewables:mass-handle", %i[reviewable_type username action_id] => :envir
 
     puts <<~MSG
       You need to specify an action to perform on the #{count} pending #{reviewable_class}.
-      Here's a list of the all avaiable actions on the #{reviewable_class} type:
+      Here's a list of the all available actions on the #{reviewable_class} type:
       #{actions.join("\n")}
     MSG
     next

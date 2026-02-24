@@ -257,6 +257,7 @@ $hpad: 0.65em;
   text-decoration: none;
   text-wrap: nowrap;
   line-height: 1;
+  unicode-bidi: plaintext;
 
   &[data-valid="false"] {
     background: unset;
@@ -269,10 +270,6 @@ $hpad: 0.65em;
 
   &.--wide {
     background: var(--highlight-low-or-medium);
-  }
-
-  &.--current {
-    background: var(--tertiary-400);
   }
 }
 

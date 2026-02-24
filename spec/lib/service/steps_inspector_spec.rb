@@ -340,7 +340,7 @@ RSpec.describe Service::StepsInspector do
         expect(error).to match(/ActiveModel::Error attribute=parameter, type=blank, options={}/)
       end
 
-      it "returns the provided paramaters" do
+      it "returns the provided parameters" do
         # first option is for ruby 3.3 and the other for 3.4
         expect(error).to match(/{"parameter"=>nil, "other_param"=>nil}/).or match(
                /{"parameter" => nil, "other_param" => nil}/,

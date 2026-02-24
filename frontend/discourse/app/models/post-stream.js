@@ -512,7 +512,7 @@ export default class PostStream extends RestModel {
   }
 
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
-  async prependMore() {
+  async prependMore({ beforePrepend } = {}) {
     // Make sure we can append more posts
     if (!this.canPrependMore) {
       return;
@@ -522,7 +522,14 @@ export default class PostStream extends RestModel {
       this.loadingAbove = true;
 
       try {
+        let captured = false;
         await this.fetchNextWindow(this.posts[0].post_number, false, (p) => {
+          // Capture the anchor position before the first post is inserted.
+          // The network await above gave Ember time to render the spinner.
+          if (!captured) {
+            beforePrepend?.();
+            captured = true;
+          }
           this.prependPost(p);
         });
       } finally {
@@ -537,6 +544,9 @@ export default class PostStream extends RestModel {
 
       try {
         const posts = await this.findPostsByIds(postIds.reverse());
+        // Capture the anchor position after the fetch (spinner rendered during
+        // the await) and before inserting new posts into the stream.
+        beforePrepend?.();
         posts.forEach((p) => this.prependPost(p));
       } finally {
         this.loadingAbove = false;
@@ -1187,9 +1197,11 @@ export default class PostStream extends RestModel {
       }
     } catch (error) {
       // If we get a 403 error, refresh the window to prevent continuous retries
-      if (error.jqXHR && error.jqXHR.status === 403) {
+      if (error.jqXHR?.status === 403) {
         window.location.reload();
+        return;
       }
+      throw error;
     }
   }
 

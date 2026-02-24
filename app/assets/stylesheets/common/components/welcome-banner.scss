@@ -137,6 +137,10 @@
       .search-icon-wrapper {
         display: none;
       }
+
+      .no-results {
+        padding-top: var(--space-3);
+      }
     }
 
     .search-link .d-icon {

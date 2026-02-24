@@ -38,7 +38,7 @@ class PostMover
     topic
   end
 
-  def to_new_topic(title, category_id = nil, tags = nil)
+  def to_new_topic(title, category_id = nil, tag_ids: nil, tags: nil)
     @move_type = PostMover.move_types[:new_topic]
     @creating_new_topic = true
 
@@ -56,7 +56,11 @@ class PostMover
             created_at: post.created_at,
             archetype: archetype,
           )
-        DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
+        if tag_ids.present?
+          DiscourseTagging.tag_topic_by_ids(new_topic, Guardian.new(user), tag_ids)
+        elsif tags.present?
+          DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
+        end
         move_posts_to new_topic
         watch_new_topic
         update_topic_excerpt new_topic

@@ -105,8 +105,8 @@ zh_CN:
         chat_usage:
           title: 聊天活动
           total_messages: 总消息数
-          dm_messages: DM 消息
-          unique_dm_channels: DM 对话
+          dm_messages: 直接消息
+          unique_dm_channels: 直接消息对话
           reactions_received: 收到的回应
           avg_message_length: 平均消息长度
           favorite_channels: 最喜欢的频道
@@ -119,6 +119,12 @@ zh_CN:
           message_1:
             other: "今年你发送了 <strong>%{count}</strong> 条消息！"
           reply_1: "lol 超棒的 B-)"
+          message_2_MF: |
+            你有 { dm_count, plural,
+                other {<strong>#</strong> DM 对话}
+            } 和 { channel_count, plural,
+                other {~ ~<strong>#</strong> 不同的人或群体}
+            }。
           reply_2: "酷毙了 :D"
           message_3:
             other: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"

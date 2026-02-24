@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import $ from "jquery";
 import { isTesting } from "discourse/lib/environment";

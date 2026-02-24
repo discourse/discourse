@@ -553,7 +553,7 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(5)
+          expect(UserHistory.count).to eq(1)
         end
 
         it "creates category with description containing markdown" do
@@ -690,6 +690,45 @@ RSpec.describe CategoriesController do
         expect(UserHistory.count).to eq(1)
         expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
+    end
+  end
+
+  describe "#move" do
+    it "requires login" do
+      post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
+      expect(response.status).to eq(403)
+    end
+
+    it "raises an error for a non-staff user" do
+      sign_in(user)
+      post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
+      expect(response.status).to eq(403)
+    end
+
+    it "blocks a moderator from moving a category they cannot see" do
+      SiteSetting.moderators_manage_categories = true
+      moderator = Fabricate(:moderator)
+      group = Fabricate(:group)
+      restricted_category = Fabricate(:category, read_restricted: true)
+      restricted_category.set_permissions(group => :full)
+      restricted_category.save!
+      original_position = restricted_category.position
+
+      sign_in(moderator)
+      post "/category/#{restricted_category.id}/move.json",
+           params: {
+             category_id: restricted_category.id,
+             position: 0,
+           }
+
+      expect(response.status).to eq(403)
+      expect(restricted_category.reload.position).to eq(original_position)
+    end
+
+    it "allows an admin to move any category" do
+      sign_in(admin)
+      post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
+      expect(response.status).to eq(200)
     end
   end
 
@@ -862,7 +901,7 @@ RSpec.describe CategoriesController do
                 },
               }
           expect(response.status).to eq(200)
-          expect(UserHistory.count).to eq(6)
+          expect(UserHistory.count).to eq(2)
         end
 
         it "does not log false permission changes when everyone group name is localized" do
@@ -1592,6 +1631,22 @@ RSpec.describe CategoriesController do
           "Foobar",
           "Notfoo",
         )
+      end
+
+      it "matches categories with accented names using unaccented search term" do
+        accented_category = Fabricate(:category, name: "Éditions")
+
+        post "/categories/search.json", params: { term: "editions" }
+
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to include("Éditions")
+      end
+
+      it "matches categories with unaccented names using accented search term" do
+        Fabricate(:category, name: "Editions")
+
+        post "/categories/search.json", params: { term: "Éditions" }
+
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to include("Editions")
       end
     end
 

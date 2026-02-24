@@ -1,11 +1,15 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 
-@classNames("tap-tile-grid")
+@tagName("")
 export default class TapTileGrid extends Component {
   activeTile = null;
 
-  <template>{{yield (hash activeTile=this.activeTile)}}</template>
+  <template>
+    <div class="tap-tile-grid" ...attributes>
+      {{yield (hash activeTile=this.activeTile)}}
+    </div>
+  </template>
 }

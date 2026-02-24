@@ -4,9 +4,8 @@ import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
+import { optionalRequire } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
-import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ModelAccuracies from "./model-accuracies";
 
 export default class ReviewableAiChatMessage extends Component {
@@ -14,7 +13,18 @@ export default class ReviewableAiChatMessage extends Component {
     if (!this.args.reviewable.chat_channel) {
       return;
     }
+
+    const ChatChannel = optionalRequire(
+      "discourse/plugins/chat/discourse/models/chat-channel"
+    );
+
     return ChatChannel.create(this.args.reviewable.chat_channel);
+  }
+
+  get ChatChannelTitle() {
+    return optionalRequire(
+      "discourse/plugins/chat/discourse/components/chat-channel-title"
+    );
   }
 
   <template>
@@ -28,21 +38,17 @@ export default class ReviewableAiChatMessage extends Component {
             @reviewable.target_id
           }}
         >
-          <ChatChannelTitle @channel={{this.chatChannel}} />
+          <this.ChatChannelTitle @channel={{this.chatChannel}} />
         </LinkTo>
       </div>
     {{/if}}
 
     <div class="post-contents-wrapper">
-      <ReviewableCreatedBy
-        @user={{@reviewable.target_created_by}}
-        @tagName=""
-      />
+      <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
       <div class="post-contents">
         <ReviewablePostHeader
           @reviewable={{@reviewable}}
           @createdBy={{@reviewable.target_created_by}}
-          @tagName=""
         />
 
         <div class="post-body">

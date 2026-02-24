@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 el:
+  discourse_rewind:
+    reports_not_cached: "Δεν έχουν δημιουργηθεί αναφορές ακόμη. Ανανεώστε τη σελίδα."

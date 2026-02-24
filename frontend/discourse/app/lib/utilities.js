@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
@@ -278,17 +279,6 @@ export function isAppleDevice() {
   return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
 }
 
-let iPadDetected = undefined;
-
-export function isiPad() {
-  if (iPadDetected === undefined) {
-    iPadDetected =
-      window.navigator.userAgent.match(/iPad/g) &&
-      !window.navigator.userAgent.match(/Trident/g);
-  }
-  return iPadDetected;
-}
-
 export function safariHacksDisabled() {
   deprecated(
     "`safariHacksDisabled()` is deprecated, it now always returns `false`",
@@ -348,12 +338,16 @@ export function clipboardHelpers(e, opts) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+export function removeAccents(string) {
+  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 // Replace any accented characters with their ASCII equivalent
 // Return the string if it only contains ASCII printable characters,
 // otherwise use the fallback
 export function toAsciiPrintable(string, fallback) {
   if (typeof string.normalize === "function") {
-    string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    string = removeAccents(string);
   }
 
   return /^[\040-\176]*$/.test(string) ? string : fallback;
@@ -698,6 +692,13 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
  */
 export function findTableRegex() {
   return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
+}
+
+export function replaceTableRaw(raw, lineRange, newTableRaw) {
+  const lines = raw.split("\n");
+  const before = lines.slice(0, lineRange[0]);
+  const after = lines.slice(lineRange[1]);
+  return [...before, ...newTableRaw.trimEnd().split("\n"), ...after].join("\n");
 }
 
 export function tokenRange(tokens, start, end) {

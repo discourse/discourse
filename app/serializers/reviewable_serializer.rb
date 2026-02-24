@@ -110,7 +110,7 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def topic_tags
-    object.topic.tags.map(&:name)
+    object.topic.tags.map { |t| { id: t.id, name: t.name, slug: t.slug } }
   end
 
   def include_topic_tags?
@@ -193,8 +193,6 @@ class ReviewableSerializer < ApplicationSerializer
 
     return if user.blank?
 
-    serializer_class =
-      scope.can_see_reviewable_ui_refresh? ? FlaggedUserSerializer : UserWithCustomFieldsSerializer
-    serializer_class.new(user, scope:, root: false)
+    FlaggedUserSerializer.new(user, scope: scope, root: false)
   end
 end

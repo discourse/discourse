@@ -125,7 +125,6 @@ export default class ChannelsListPublic extends Component {
 
     <PluginOutlet
       @name="below-public-chat-channels"
-      @tagName=""
       @outletArgs={{lazyHash inSidebar=this.inSidebar}}
     />
   </template>

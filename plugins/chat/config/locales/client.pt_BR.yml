@@ -44,6 +44,12 @@ pt_BR:
           one: "%{formatted_number} mensagem de chat"
           other: "%{formatted_number} mensagens de chat"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Canal"
+        description: "Descrição"
+        actions: "Ações"
+        settings: "Definições"
       text_copied: Texto copiado para área de transferência
       link_copied: Link copiado para área de transferência
       back_to_forum: "Fórum"
@@ -579,13 +585,9 @@ pt_BR:
           other: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
       retention_reminders:
         indefinitely_short: "indefinidamente"
-        indefinitely_long: "As configurações do chat foram definidas para manter as mensagens do canal indefinidamente."
         short:
           one: "%{count} dia"
           other: "%{count} dias"
-        long:
-          one: "As configurações do chat foram definidas para manter as mensagens do canal durante %{count} dia."
-          other: "As configurações do chat foram definidas para manter as mensagens do canal durante %{count} dias."
       flags:
         off_topic: "Esta mensagem não é relevante para a discussão atual, conforme definido pelo título do canal, e provavelmente deve ser movida para outro lugar."
         inappropriate: "Esta mensagem contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação de <a href=\"%{basePath}/guidelines\">nossas diretrizes da comunidade</a>."
@@ -717,7 +719,6 @@ pt_BR:
           composer_bold: "%{shortcut} Negrito (somente compositor)"
           composer_italic: "%{shortcut} Itálico (somente compositor)"
           composer_code: "%{shortcut} Código (somente compositor)"
-          drawer_open: "%{shortcut} Abrir a gaveta do chat"
           drawer_close: "%{shortcut} Fechar a gaveta do chat"
           mark_all_channels_read: "%{shortcut} Marcar todos os canais como lidos"
     topic_statuses:

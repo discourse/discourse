@@ -49,7 +49,7 @@ acceptance("Composer Form Template", function (needs) {
     whisperer: true,
   });
   needs.settings({
-    experimental_form_templates: true,
+    enable_form_templates: true,
     general_category_id: 1,
     default_composer_category: 1,
   });

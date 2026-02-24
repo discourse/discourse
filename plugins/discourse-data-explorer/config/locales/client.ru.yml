@@ -81,8 +81,6 @@ ru:
           invalid: "Недопустимое значение"
           no_such_category: "Нет такой категории"
           no_such_group: "Нет такой группы"
-          invalid_date: "%{date} — недопустимая дата"
-          invalid_time: "%{time} — недопустимое время"
     group:
       reports: "Отчеты"
     admin:

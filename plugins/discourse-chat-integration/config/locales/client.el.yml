@@ -7,20 +7,36 @@
 el:
   js:
     chat_integration:
+      menu_title: "Ενσωματώσεις Συνομιλίας"
       settings: "Ρυθμίσεις"
+      no_providers: "Πρέπει να ενεργοποιήσετε ορισμένους παρόχους στις ρυθμίσεις του πρόσθετου"
+      channels_with_errors: "Ορισμένα κανάλια για αυτόν τον πάροχο απέτυχαν την τελευταία φορά που στάλθηκαν μηνύματα. Πατήστε στο/στα εικονίδιο/α σφάλματος για να μάθετε περισσότερα."
       group_mention_template: "Επισημάνσεις της ομάδας: @%{name}"
+      group_message_template: "Μηνύματα προς: @%{name}"
+      choose_group: "(επιλέξτε μια ομάδα)"
       all_categories: "(όλες οι κατηγορίες)"
       all_tags: "(όλες οι ετικέτες)"
+      create_rule: "Δημιουργία Κανόνα"
+      create_channel: "Δημιουργία Καναλιού"
       delete_channel: "Σβήσιμο"
       test_channel: "Δοκιμή"
       edit_channel: "Επεξεργασία"
+      channel_delete_confirm: "Σίγουρα θέλετε να διαγράψετε αυτό το κανάλι; Όλοι οι σχετικοί κανόνες θα διαγραφούν."
       test_modal:
+        title: "Στείλτε ένα δοκιμαστικό μήνυμα"
         topic: "Θέμα"
+        send: "Αποστολή Δοκιμαστικού Μηνύματος"
         close: "Κλείσιμο"
+        success: "Το μήνυμα στάλθηκε με επιτυχία"
       type:
         normal: Φυσιολογικό
+        group_message: Μήνυμα Ομάδας
+        group_mention: Επισήμανση Ομάδας
       filter:
         mute: 'Σίγαση'
+        follow: 'Πρώτη ανάρτηση μόνο'
+        watch: 'Όλες οι αναρτήσεις και οι απαντήσεις'
+        thread: 'Όλες οι αναρτήσεις με απαντήσεις σε νήματα'
       rule_table:
         filter: "Φίλτρο"
         category: "Κατηγορία"
@@ -28,9 +44,18 @@ el:
         edit_rule: "Επεξεργασία"
         delete_rule: "Σβήσιμο"
       edit_channel_modal:
+        title: "Επεξεργασία Καναλιού"
+        save: "Αποθήκευση Καναλιού"
         cancel: "Άκυρο"
+        provider: "Πάροχος"
+        channel_validation:
+          ok: "Έγκυρο"
+          fail: "Μη έγκυρη μορφή"
       edit_rule_modal:
+        title: Επεξεργασία Κανόνα
+        save: Αποθήκευση Κανόνα
         cancel: Άκυρο
+        provider: Πάροχος
         type: Τύπος
         channel: Κανάλι
         filter: Φίλτρο
@@ -39,56 +64,99 @@ el:
         tags: Ετικέτες
         instructions:
           type: "Αλλάξτε τον τύπο για την ενεργοποίηση ειδοποιήσεων για ομαδικά μηνύματα ή επισημάνσεις"
+          filter: "Επίπεδο ειδοποίησης. Η σίγαση παρακάμπτει άλλους κανόνες που αντιστοιχούν"
+          category: "Αυτός ο κανόνας θα ισχύει μόνο για θέματα στην καθορισμένη κατηγορία"
+          group: "Αυτός ο κανόνας θα ισχύει για αναρτήσεις που αναφέρονται σε αυτήν την ομάδα"
+          tags: "Αν καθοριστεί, αυτός ο κανόνας θα ισχύει μόνο για θέματα που έχουν τουλάχιστον μία από αυτές τις ετικέτες"
       provider:
         slack:
+          title: "Slack"
           param:
             identifier:
               title: Κανάλι
+              help: "π.χ. #κανάλι, @όνομα χρήστη."
+          errors:
+            channel_not_found: "Το καθορισμένο κανάλι δεν υπάρχει στο Slack"
         telegram:
+          title: "Telegram"
           param:
             name:
               title: "Όνομα"
+              help: "Ένα όνομα για την περιγραφή του καναλιού. Δεν χρησιμοποιείται για τη σύνδεση με το Telegram"
+            chat_id:
+              title: ID Συνομιλίας
+          errors:
+            channel_not_found: "Το καθορισμένο κανάλι δεν υπάρχει στο Telegram"
         discord:
           title: "Discord"
           param:
             name:
               title: "Όνομα"
+              help: "Ένα όνομα για την περιγραφή του καναλιού. Δεν χρησιμοποιείται για τη σύνδεση με το Telegram."
             webhook_url:
               title: Webhook URL
         guilded:
+          title: "Guilded"
           param:
             name:
               title: "Όνομα"
+              help: "Ένα όνομα για την περιγραφή του καναλιού. Δεν χρησιμοποιείται για τη σύνδεση με το Guilded"
             webhook_url:
               title: Webhook URL
         mattermost:
+          title: "Mattermost"
           param:
             identifier:
               title: Κανάλι
+              help: "π.χ. #κανάλι, @όνομα χρήστη."
+          errors:
+            channel_not_found: "Το καθορισμένο κανάλι δεν υπάρχει στο Mattermost"
         matrix:
+          title: "Matrix"
           param:
             name:
               title: "Όνομα"
+              help: "Ένα όνομα για την περιγραφή του καναλιού. Δεν χρησιμοποιείται για τη σύνδεση με το Matrix"
+            room_id:
+              title: "ID Δωματίου"
+          errors:
+            unknown_token: "Το διακριτικό πρόσβασης δεν είναι έγκυρο"
+            unknown_room: "Το ID δωματίου δεν είναι έγκυρο"
         zulip:
+          title: "Zulip"
           param:
             subject:
               title: "Αντικείμενο"
         rocketchat:
+          title: "Rocket.Chat"
           param:
             identifier:
               title: Κανάλι
+              help: "π.χ. #κανάλι, @όνομα χρήστη."
+          errors:
+            invalid_channel: "Αυτό το κανάλι δεν υπάρχει στο Rocket Chat"
         gitter:
+          title: "Gitter"
           param:
             name:
               title: "Όνομα"
+              help: "Το όνομα ενός δωματίου Gitter π.χ. gitterHQ/services."
             webhook_url:
               title: "Webhook URL"
+        flowdock:
+          title: "Flowdock"
+        groupme:
+          title: "GroupMe"
         teams:
+          title: "Microsoft Teams"
           param:
             name:
               title: "Όνομα"
+              help: "Ένα όνομα καναλιού Teams π.χ. discourse"
             webhook_url:
               title: "Webhook URL"
+          errors:
+            invalid_channel: "Αυτό το κανάλι δεν υπάρχει στο Microsoft Teams"
         powerautomate:
           param:
             name:
@@ -98,12 +166,17 @@ el:
           errors:
             invalid_webhook: "Αυτό το URL του webhook δεν είναι έγκυρο."
         webex:
+          title: "Webex Teams"
           param:
             name:
               title: "Όνομα"
+              help: "Ένα όνομα χώρου Webex π.χ. discourse"
             webhook_url:
               title: "Webhook URL"
+          errors:
+            invalid_channel: "Αυτό το κανάλι δεν υπάρχει στο Webex"
         google:
+          title: "Google Chat"
           param:
             name:
               title: "Όνομα"

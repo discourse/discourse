@@ -199,5 +199,93 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
         end
       end
     end
+
+    describe "posts_moved event" do
+      fab!(:original_topic, :topic)
+      fab!(:destination_topic, :topic)
+
+      context "when backfill is enabled" do
+        before { SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 10 }
+
+        it "resets highest_target_number on summaries for both topics" do
+          original_summary =
+            Fabricate(:ai_summary, target: original_topic, highest_target_number: 5)
+          destination_summary =
+            Fabricate(:ai_summary, target: destination_topic, highest_target_number: 3)
+
+          DiscourseEvent.trigger(
+            :posts_moved,
+            original_topic_id: original_topic.id,
+            destination_topic_id: destination_topic.id,
+          )
+
+          expect(original_summary.reload.highest_target_number).to eq(0)
+          expect(destination_summary.reload.highest_target_number).to eq(0)
+        end
+
+        it "enqueues fast_track_topic_gist jobs for both topics when gists are enabled" do
+          expect_enqueued_with(
+            job: :fast_track_topic_gist,
+            args: {
+              topic_id: original_topic.id,
+              force_regenerate: true,
+            },
+          ) do
+            expect_enqueued_with(
+              job: :fast_track_topic_gist,
+              args: {
+                topic_id: destination_topic.id,
+                force_regenerate: true,
+              },
+            ) do
+              DiscourseEvent.trigger(
+                :posts_moved,
+                original_topic_id: original_topic.id,
+                destination_topic_id: destination_topic.id,
+              )
+            end
+          end
+        end
+
+        it "does not enqueue gist jobs when gists are disabled" do
+          SiteSetting.ai_summary_gists_enabled = false
+
+          DiscourseEvent.trigger(
+            :posts_moved,
+            original_topic_id: original_topic.id,
+            destination_topic_id: destination_topic.id,
+          )
+
+          expect(Jobs::FastTrackTopicGist.jobs.size).to eq(0)
+        end
+      end
+
+      context "when backfill is disabled" do
+        before { SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 0 }
+
+        it "does not reset summaries" do
+          original_summary =
+            Fabricate(:ai_summary, target: original_topic, highest_target_number: 5)
+
+          DiscourseEvent.trigger(
+            :posts_moved,
+            original_topic_id: original_topic.id,
+            destination_topic_id: destination_topic.id,
+          )
+
+          expect(original_summary.reload.highest_target_number).to eq(5)
+        end
+
+        it "does not enqueue gist jobs" do
+          DiscourseEvent.trigger(
+            :posts_moved,
+            original_topic_id: original_topic.id,
+            destination_topic_id: destination_topic.id,
+          )
+
+          expect(Jobs::FastTrackTopicGist.jobs.size).to eq(0)
+        end
+      end
+    end
   end
 end

@@ -7,6 +7,12 @@ export default class extends NotificationTypeBase {
     return i18n("notifications.upcoming_changes.automatically_promoted.title");
   }
 
+  get linkTitle() {
+    return i18n("notifications.titles.upcoming_change_automatically_promoted", {
+      changeName: this.notification.data.upcoming_change_humanized_name,
+    });
+  }
+
   get description() {
     return i18n(
       "notifications.upcoming_changes.automatically_promoted.description",

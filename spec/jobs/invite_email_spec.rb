@@ -30,6 +30,12 @@ RSpec.describe Jobs::InviteEmail do
         invite.reload
         expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sent])
       end
+
+      it "does not send email when allow_email_invites is disabled" do
+        SiteSetting.allow_email_invites = false
+        InviteMailer.expects(:send_invite).never
+        Jobs::InviteEmail.new.execute(invite_id: invite.id)
+      end
     end
   end
 end

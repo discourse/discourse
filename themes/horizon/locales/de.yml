@@ -5,25 +5,5 @@
 # https://translate.discourse.org/
 
 de:
-  solved: "Gelöst"
-  unsolved: "Ungelöst"
-  posted: "hat geschrieben"
-  by_username: "von @%{username}"
-  replied: "antwortete"
-  vote_count:
-    one: "%{count} Stimme"
-    other: "%{count} Stimmen"
-  like_count:
-    one: "%{count} „Gefällt mir“"
-    other: "%{count} „Gefällt mir“"
-  reply_count:
-    one: "%{count} Antwort"
-    other: "%{count} Antworten"
   theme_metadata:
     description: "Ein einfaches, schönes Theme, das die standardmäßige Benutzererfahrung für Discourse-Seiten verbessert."
-    settings:
-      topic_card_context:
-        description: "Die Menge der Informationen, die auf den Themenkarten angezeigt werden. „Einfach“ zeigt nur wenige Informationen an. „Umfassender Kontext“ enthält Schlagwörter, den Lösungsstatus, zugeordnete Benutzer und die Anzahl der Stimmen."
-        choices:
-          simple: "Einfach"
-          high_context: "Umfassender Kontext (experimentell)"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ruby "~> 3.3"
+ruby "~> 3.4"
 
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
@@ -290,6 +290,7 @@ end
 gem "dry-initializer", "~> 3.1"
 
 gem "parallel"
+gem "tty-prompt", require: false
 
 # for discourse-zendesk-plugin
 gem "inflection", require: false

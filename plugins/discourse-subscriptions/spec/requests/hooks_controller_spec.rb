@@ -173,7 +173,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
-      it "is successfull" do
+      it "is successful" do
         post "/s/hooks.json"
         expect(response.status).to eq 200
       end
@@ -272,7 +272,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
-      it "is successfull" do
+      it "is successful" do
         post "/s/hooks.json"
         expect(response.status).to eq 200
       end

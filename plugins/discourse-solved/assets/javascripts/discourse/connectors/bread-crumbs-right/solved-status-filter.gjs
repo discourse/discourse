@@ -32,7 +32,9 @@ export default class SolvedStatusFilter extends Component {
     ) {
       return true;
     } else {
-      return args.currentCategory?.enable_accepted_answers;
+      return (
+        args.currentCategory?.custom_fields?.enable_accepted_answers === "true"
+      );
     }
   }
 
@@ -67,7 +69,7 @@ export default class SolvedStatusFilter extends Component {
           @content={{this.statuses}}
           @value={{this.status}}
           @valueProperty="value"
-          @options={{hash caretDownIcon="caret-right" caretUpIcon="caret-down"}}
+          @options={{hash caretDownIcon="angle-right" caretUpIcon="angle-down"}}
           @onChange={{this.changeStatus}}
           class="solved-status-filter"
         />

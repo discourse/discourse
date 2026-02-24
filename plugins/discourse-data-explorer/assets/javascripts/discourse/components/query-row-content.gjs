@@ -54,9 +54,9 @@ export default class QueryRowContent extends Component {
   }
 
   <template>
-    <tr>
+    <tr class="query-result-row">
       {{#each this.results as |result|}}
-        <td>
+        <td class="query-result-cell">
           <result.component
             @ctx={{result.ctx}}
             @params={{result.params}}

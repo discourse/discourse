@@ -46,6 +46,14 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
+      edit_category:
+        tab_title: "Czat"
+        channel: "Kanał"
+        description: "Opis"
+        actions: "Akcje"
+        settings: "Ustawienia"
+        no_channels: "Brak kanałów czatu powiązanych z tą kategorią"
+        no_channels_body: "Możesz mieć wiele kanałów w każdej kategorii, dostępnych dla tych samych członków na podstawie ustawień bezpieczeństwa kategorii. <a href='%{chatBrowseUrl}'>Utwórz kanał czatu</a>."
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
       back_to_forum: "Forum"
@@ -646,18 +654,19 @@ pl_PL:
           many: "%{commaSeparatedUsernames} i %{count} inni piszą"
           other: "%{commaSeparatedUsernames} i %{count} innych piszą"
       retention_reminders:
+        chat_settings: "Ustawienia czatu"
         indefinitely_short: "nieokreślony"
-        indefinitely_long: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez czas nieokreślony."
+        indefinitely_long: "%{chatSettingsLink} zostały ustawione w celu bezterminowego przechowywania wiadomości kanału."
         short:
           one: "%{count} dzień"
           few: "%{count} dni"
           many: "%{count} dni"
           other: "%{count} dni"
         long:
-          one: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dzień."
-          few: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
-          many: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
-          other: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
+          one: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dzień."
+          few: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dni."
+          many: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dni."
+          other: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dni."
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
@@ -795,7 +804,7 @@ pl_PL:
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
           composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
           composer_code: "%{shortcut} Kod (tylko kompozytor)"
-          drawer_open: "%{shortcut} Otwórz szufladę czatu"
+          drawer_toggle: "%{shortcut} Przełącz szufladę czatu"
           drawer_close: "%{shortcut} Zamknij szufladę czatu"
           mark_all_channels_read: "%{shortcut} Zaznacz wszystkie kanały jako przeczytane"
     topic_statuses:

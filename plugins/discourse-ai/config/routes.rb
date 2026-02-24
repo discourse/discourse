@@ -63,6 +63,7 @@ DiscourseAi::Engine.routes.draw do
   scope module: :summarization, path: "/summarization", defaults: { format: :json } do
     get "/t/:topic_id" => "summary#show", :constraints => { topic_id: /\d+/ }
     put "/regen_gist" => "summary#regen_gist"
+    put "/regen_summary" => "summary#regen_summary"
     get "/channels/:channel_id" => "chat_summary#show"
   end
 
@@ -134,7 +135,7 @@ Discourse::Application.routes.draw do
               only: %i[index new create edit update destroy],
               path: "ai-llms",
               controller: "discourse_ai/admin/ai_llms" do
-      collection { get :test }
+      collection { post :test }
     end
 
     resources :ai_llm_quotas,
@@ -153,5 +154,10 @@ Discourse::Application.routes.draw do
               only: %i[index edit],
               path: "ai-features",
               controller: "discourse_ai/admin/ai_features"
+
+    resources :ai_secrets,
+              only: %i[index show new create edit update destroy],
+              path: "ai-secrets",
+              controller: "discourse_ai/admin/ai_secrets"
   end
 end

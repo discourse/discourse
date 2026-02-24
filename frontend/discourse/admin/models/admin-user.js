@@ -1,4 +1,4 @@
-import { filter, gt, lt, not, or } from "@ember/object/computed";
+import { gt, lt, not, or } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
@@ -6,7 +6,6 @@ import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
-import Group from "discourse/models/group";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
@@ -35,14 +34,20 @@ export default class AdminUser extends User {
 
   @trackedArray groups;
 
-  @filter("groups", (g) => !g.automatic && Group.create(g)) customGroups;
-  @filter("groups", (g) => g.automatic && Group.create(g)) automaticGroups;
   @or("active", "staged") canViewProfile;
   @gt("bounce_score", 0) canResetBounceScore;
   @propertyNotEqual("originalTrustLevel", "trust_level") dirty;
   @lt("trust_level", 4) canLockTrustLevel;
   @not("staff") canSuspend;
   @not("staff") canSilence;
+
+  get customGroups() {
+    return this.groups?.filter((g) => !g.automatic) ?? [];
+  }
+
+  get automaticGroups() {
+    return this.groups?.filter((g) => g.automatic) ?? [];
+  }
 
   @discourseComputed("bounce_score", "reset_bounce_score_after")
   bounceScore(bounce_score, reset_bounce_score_after) {

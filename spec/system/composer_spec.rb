@@ -90,4 +90,62 @@ describe "Composer", type: :system do
 
     expect(composer.reply_button_focused?).to eq(true)
   end
+
+  context "with tagging enabled" do
+    fab!(:tag) { Fabricate(:tag, name: "test-tag") }
+    fab!(:category)
+    let(:mini_tag_chooser) { PageObjects::Components::SelectKit.new(".mini-tag-chooser") }
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      category.set_permissions(everyone: :full)
+      category.save!
+    end
+
+    it "creates a topic with tags" do
+      page.visit "/new-topic"
+      expect(composer).to be_opened
+
+      composer.fill_title("Test topic with tags")
+      composer.fill_content("This is a test topic with tags")
+      composer.switch_category(category.name)
+
+      mini_tag_chooser.expand
+      mini_tag_chooser.search(tag.name)
+      mini_tag_chooser.select_row_by_name(tag.name)
+      mini_tag_chooser.collapse
+
+      composer.create
+
+      expect(topic_page).to have_topic_title("Test topic with tags")
+      expect(topic_page.topic_tags).to include(tag.name)
+    end
+  end
+
+  context "with fixed category positions" do
+    fab!(:parent_category) { Fabricate(:category, name: "Software", position: 102) }
+    fab!(:subcategory) do
+      Fabricate(:category, name: "Email", parent_category: parent_category, position: 25)
+    end
+
+    before do
+      SiteSetting.fixed_category_positions = true
+      SiteSetting.fixed_category_positions_on_create = true
+    end
+
+    it "groups subcategories immediately after their parent in the category chooser" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+
+      category_chooser = composer.category_chooser
+      category_chooser.expand
+
+      option_names = category_chooser.option_names
+      parent_index = option_names.index("Software")
+      child_index = option_names.index("Email")
+
+      expect(child_index).to eq(parent_index + 1)
+    end
+  end
 end

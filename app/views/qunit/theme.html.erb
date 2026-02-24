@@ -13,6 +13,14 @@
 
       <%= preload_script "@embroider/virtual/test-support", from_vite: true %>
 
+      <%= render "layouts/plugin_js", 
+        opts: {
+          include_disabled: true,
+          include_admin_asset: true,
+          only: @required_plugins
+        }
+      %>
+
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
 

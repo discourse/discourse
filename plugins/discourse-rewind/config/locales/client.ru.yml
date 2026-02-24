@@ -72,7 +72,6 @@ ru:
         chat_usage:
           title: Активность в чате
           total_messages: Всего сообщений
-          dm_messages: Сообщений DM
           messages: сообщений
           author: Вы
           author_others: "%{username}"

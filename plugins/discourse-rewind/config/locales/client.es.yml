@@ -94,8 +94,6 @@ es:
         chat_usage:
           title: Actividad del chat
           total_messages: Total de mensajes
-          dm_messages: Mensajes privados
-          unique_dm_channels: Conversaciones en mensajes privados
           reactions_received: Reacciones recibidas
           avg_message_length: Longitud media de los mensajes
           favorite_channels: Canales favoritos

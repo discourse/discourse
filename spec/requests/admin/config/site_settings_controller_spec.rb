@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::SiteSettingsController do
+RSpec.describe Admin::Config::SiteSettingsController do
   fab!(:admin)
   fab!(:user)
 

@@ -4,9 +4,8 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import DComboButton from "discourse/components/d-combo-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -23,6 +22,7 @@ export default class TopicDraftsDropdown extends Component {
 
   @tracked drafts = [];
   @tracked loading = false;
+  dMenu;
 
   get draftCount() {
     return this.currentUser.draft_count;
@@ -40,6 +40,10 @@ export default class TopicDraftsDropdown extends Component {
       : "";
   }
 
+  get showViewAll() {
+    return this.draftCount > DRAFTS_LIMIT;
+  }
+
   draftIcon(item) {
     if (item.draft_key.startsWith(NEW_TOPIC_KEY)) {
       return "layer-group";
@@ -48,10 +52,6 @@ export default class TopicDraftsDropdown extends Component {
     } else {
       return "reply";
     }
-  }
-
-  get showViewAll() {
-    return this.draftCount > DRAFTS_LIMIT;
   }
 
   @action
@@ -98,50 +98,64 @@ export default class TopicDraftsDropdown extends Component {
   }
 
   <template>
-    <DMenu
-      @identifier="topic-drafts-menu"
-      @title={{i18n "drafts.dropdown.title"}}
-      @icon="chevron-down"
-      @onShow={{this.onShowMenu}}
-      @onRegisterApi={{this.onRegisterApi}}
-      @modalForMobile={{true}}
-      @disabled={{@disabled}}
-      class={{concatClass "btn-small" @btnTypeClass}}
+    <DComboButton
+      class={{if @showDrafts "--has-menu"}}
+      aria-label={{i18n "topic.create_group"}}
+      ...attributes
+      as |combo|
     >
-      <:content>
-        <DropdownMenu as |dropdown|>
-          {{#each this.drafts as |draft|}}
-            <dropdown.item class="topic-drafts-item">
-              <DButton
-                @action={{fn this.resumeDraft draft}}
-                @icon={{this.draftIcon draft}}
-                @translatedLabel={{or
-                  draft.title
-                  (i18n "drafts.dropdown.untitled")
-                }}
-                class="btn-secondary"
-              />
-            </dropdown.item>
-          {{/each}}
+      <combo.Button
+        @action={{@action}}
+        @label={{@label}}
+        @icon="far-pen-to-square"
+        id={{@btnId}}
+        class={{@btnClasses}}
+      />
 
-          {{#if this.showViewAll}}
-            <dropdown.divider />
+      {{#if @showDrafts}}
+        <combo.Menu
+          @identifier="topic-drafts-menu"
+          @title={{i18n "drafts.dropdown.title"}}
+          @onShow={{this.onShowMenu}}
+          @onRegisterApi={{this.onRegisterApi}}
+          @modalForMobile={{true}}
+          aria-label={{i18n "drafts.dropdown.title"}}
+          class={{@btnTypeClass}}
+        >
+          <DropdownMenu as |dropdown|>
+            {{#each this.drafts as |draft|}}
+              <dropdown.item class="topic-drafts-item">
+                <DButton
+                  @action={{fn this.resumeDraft draft}}
+                  @icon={{this.draftIcon draft}}
+                  @translatedLabel={{or
+                    draft.title
+                    (i18n "drafts.dropdown.untitled")
+                  }}
+                  class="btn-secondary"
+                />
+              </dropdown.item>
+            {{/each}}
 
-            <dropdown.item>
-              <DButton
-                @href="/my/activity/drafts"
-                @model={{this.currentUser}}
-                class="btn-link view-all-drafts"
-              >
-                <span
-                  data-other-drafts={{this.otherDraftsCount}}
-                >{{this.otherDraftsText}}</span>
-                <span>{{i18n "drafts.dropdown.view_all"}}</span>
-              </DButton>
-            </dropdown.item>
-          {{/if}}
-        </DropdownMenu>
-      </:content>
-    </DMenu>
+            {{#if this.showViewAll}}
+              <dropdown.divider />
+
+              <dropdown.item>
+                <DButton
+                  @href="/my/activity/drafts"
+                  @model={{this.currentUser}}
+                  class="btn-link view-all-drafts"
+                >
+                  <span
+                    data-other-drafts={{this.otherDraftsCount}}
+                  >{{this.otherDraftsText}}</span>
+                  <span>{{i18n "drafts.dropdown.view_all"}}</span>
+                </DButton>
+              </dropdown.item>
+            {{/if}}
+          </DropdownMenu>
+        </combo.Menu>
+      {{/if}}
+    </DComboButton>
   </template>
 }

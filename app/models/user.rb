@@ -172,8 +172,6 @@ class User < ActiveRecord::Base
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
   before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
-  before_save :check_qualification_for_users_directory,
-              if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_option
@@ -197,8 +195,6 @@ class User < ActiveRecord::Base
   after_save :badge_grant
   after_save :index_search
   after_save :check_site_contact_username
-  after_save :add_to_user_directory,
-             if: Proc.new { SiteSetting.bootstrap_mode_enabled && @qualified_for_users_directory }
 
   after_save do
     if saved_change_to_uploaded_avatar_id?
@@ -1644,8 +1640,8 @@ class User < ActiveRecord::Base
     Post.with_deleted.where(user_id: self.id).where.not(deleted_at: nil).count
   end
 
-  def number_of_flagged_posts
-    ReviewableFlaggedPost.where(target_created_by: self.id).count
+  def number_of_flags
+    Reviewable.where(target_created_by: self).count
   end
 
   def number_of_rejected_posts
@@ -2201,7 +2197,7 @@ class User < ActiveRecord::Base
   private
 
   def main_user_record
-    anonymous? ? master_user : self
+    (anonymous? && master_user) ? master_user : self
   end
 
   def set_default_sidebar_section_links(update: false)
@@ -2301,18 +2297,6 @@ class User < ActiveRecord::Base
 
   def validate_status!(status)
     UserStatus.new(status).validate!
-  end
-
-  def check_qualification_for_users_directory
-    if (!self.active_was && self.active) || (!self.approved_was && self.approved) ||
-         (self.id_was.nil? && self.id.present?)
-      @qualified_for_users_directory = true
-    end
-  end
-
-  def add_to_user_directory
-    DirectoryItem.add_missing_users_all_periods
-    @qualified_for_users_directory = false
   end
 end
 

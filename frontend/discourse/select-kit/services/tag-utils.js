@@ -45,11 +45,14 @@ export default class TagUtils extends Service {
     }
 
     const toLowerCaseOrUndefined = (string) => {
-      return isEmpty(string) ? undefined : string.toLowerCase();
+      if (isEmpty(string)) {
+        return undefined;
+      }
+      return typeof string === "string" ? string.toLowerCase() : undefined;
     };
 
     const inCollection = content
-      .map((c) => toLowerCaseOrUndefined(getValue(c)))
+      .map((c) => toLowerCaseOrUndefined(c?.name || getValue(c)))
       .filter(Boolean)
       .includes(filter);
 

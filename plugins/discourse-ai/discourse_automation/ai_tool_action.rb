@@ -5,7 +5,7 @@ if defined?(DiscourseAutomation)
     version 1
     run_in_background
 
-    triggerables %i[post_created_edited]
+    triggerables %i[post_created_edited stalled_topic]
 
     # Select which AI tool to run
     field :tool,
@@ -24,6 +24,7 @@ if defined?(DiscourseAutomation)
 
     script do |context, fields, automation|
       post = context["post"]
+      post ||= context["topic"]&.posts&.find_by(post_number: 1)
       next if post.blank? || post.user&.bot?
 
       begin

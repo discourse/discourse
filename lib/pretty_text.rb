@@ -218,9 +218,9 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.serialized_regexps_for_action(:censor, engine: :js).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.regexps_for_action(:replace, engine: :js).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.regexps_for_action(:link, engine: :js).to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serialized_regexps_for_action(:censor).to_json};
+        __optInput.watchedWordsReplace = #{WordWatcher.regexps_for_action(:replace).to_json};
+        __optInput.watchedWordsLink = #{WordWatcher.regexps_for_action(:link).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
         __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
       JS
@@ -493,7 +493,12 @@ module PrettyText
     return "" if html.blank?
 
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
-    doc = Nokogiri::HTML5.fragment(html)
+    doc =
+      begin
+        Nokogiri::HTML5.fragment(html)
+      rescue ArgumentError
+        return ""
+      end
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)

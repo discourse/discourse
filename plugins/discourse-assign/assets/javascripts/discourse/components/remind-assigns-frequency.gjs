@@ -1,10 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class RemindAssignsFrequency extends Component {
   @discourseComputed(
     "user.custom_fields.remind_assigns_frequency",
@@ -32,21 +34,23 @@ export default class RemindAssignsFrequency extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.assign_enabled}}
-      <div class="controls controls-dropdown">
-        <label>{{i18n
-            "discourse_assign.reminders_frequency.description"
-          }}</label>
-        <ComboBox
-          @id="remind-assigns-frequency"
-          @valueProperty="value"
-          @content={{this.availableFrequencies}}
-          @value={{this.selectedFrequency}}
-          @onChange={{fn
-            (mut this.user.custom_fields.remind_assigns_frequency)
-          }}
-        />
-      </div>
-    {{/if}}
+    <div ...attributes>
+      {{#if this.siteSettings.assign_enabled}}
+        <div class="controls controls-dropdown">
+          <label>{{i18n
+              "discourse_assign.reminders_frequency.description"
+            }}</label>
+          <ComboBox
+            @id="remind-assigns-frequency"
+            @valueProperty="value"
+            @content={{this.availableFrequencies}}
+            @value={{this.selectedFrequency}}
+            @onChange={{fn
+              (mut this.user.custom_fields.remind_assigns_frequency)
+            }}
+          />
+        </div>
+      {{/if}}
+    </div>
   </template>
 }

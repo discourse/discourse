@@ -1591,6 +1591,36 @@ RSpec.describe ApplicationController do
         end
       end
     end
+
+    context "with content localization enabled" do
+      def banner_html
+        preloaded = Nokogiri::HTML5.fragment(response.body).css("#data-preloaded").first
+        JSON.parse(JSON.parse(preloaded["data-preloaded"])["banner"])["html"]
+      end
+
+      before do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.login_required = false
+        p1.update!(locale: "en")
+        p1.topic.update!(locale: "en")
+        Fabricate(:post_localization, post: p1, locale: "de", cooked: "<p>German banner</p>")
+        Fabricate(:post_localization, post: p1, locale: "zh_CN", cooked: "<p>Chinese banner</p>")
+        ApplicationLayoutPreloader.banner_json_cache.clear
+      end
+
+      it "caches banner separately per locale to prevent cache poisoning" do
+        get "/login", headers: { Cookie: "locale=de" }
+        expect(banner_html).to eq("<p>German banner</p>")
+
+        get "/login", headers: { Cookie: "locale=zh_CN" }
+        expect(banner_html).to eq("<p>Chinese banner</p>")
+
+        get "/login"
+        expect(banner_html).to eq("<p>A banner topic</p>")
+      end
+    end
   end
 
   describe "Early hint header" do

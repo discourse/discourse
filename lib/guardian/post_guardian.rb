@@ -133,7 +133,7 @@ module PostGuardian
   end
 
   def can_delete_all_posts?(user)
-    is_staff? && user && !user.admin? &&
+    is_staff? && user && !user.admin? && user.trust_level < TrustLevel[2] &&
       (
         is_admin? ||
           (
@@ -416,18 +416,16 @@ module PostGuardian
   private
 
   def can_create_post_in_topic?(topic)
-    if !SiteSetting.enable_system_message_replies? && topic.try(:subtype) == "system_message"
+    if !SiteSetting.enable_system_message_replies? && topic&.subtype == "system_message"
       return false
     end
 
-    (
-      !SpamRule::AutoSilence.prevent_posting?(@user) ||
-        (!!topic.try(:private_message?) && topic.allowed_users.include?(@user))
-    ) &&
-      (
-        !topic || !topic.category ||
-          Category.post_create_allowed(self).where(id: topic.category.id).count == 1
-      )
+    is_pm = !!topic&.private_message?
+    return false if is_pm && topic.subtype != "system_message" && !can_see_topic?(topic)
+    return false if !is_pm && SpamRule::AutoSilence.prevent_posting?(@user)
+
+    !topic || !topic.category ||
+      Category.post_create_allowed(self).where(id: topic.category_id).exists?
   end
 
   def topic_memoize_key(topic)

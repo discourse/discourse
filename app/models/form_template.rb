@@ -49,7 +49,8 @@ class FormTemplate < ActiveRecord::Base
       form_field.each do |key, value|
         ordered_field[key] = value
 
-        ordered_field["choices"] = tags.map(&:name) if key == "id"
+        ordered_field["choices"] = tags.map { |t| { "id" => t.id, "name" => t.name } } if key ==
+          "id"
       end
 
       ordered_field["attributes"] ||= {}

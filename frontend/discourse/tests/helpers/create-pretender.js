@@ -127,13 +127,20 @@ export function applyDefaultHandlers(pretender) {
     return response(json);
   });
 
-  pretender.get("/tags", () => {
+  pretender.get("/tags.json", () => {
     return response({
       tags: [
-        { id: 123, name: "eviltrout", text: "eviltrout", count: 1 },
+        {
+          id: 123,
+          name: "eviltrout",
+          slug: "eviltrout",
+          text: "eviltrout",
+          count: 1,
+        },
         {
           id: 234,
           name: "planned",
+          slug: "planned",
           text: "planned",
           count: 7,
           pm_only: false,
@@ -141,6 +148,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 345,
           name: "private",
+          slug: "private",
           text: "private",
           count: 0,
           pm_only: true,
@@ -153,15 +161,17 @@ export function applyDefaultHandlers(pretender) {
             name: "Ford Cars",
             tags: [
               {
-                id: "Escort",
+                id: 456,
                 name: "Escort",
+                slug: "escort",
                 text: "Escort",
                 count: 1,
                 pm_only: false,
               },
               {
-                id: "focus",
+                id: 457,
                 name: "focus",
+                slug: "focus",
                 text: "focus",
                 count: 3,
                 pm_only: false,
@@ -173,15 +183,17 @@ export function applyDefaultHandlers(pretender) {
             name: "Honda Cars",
             tags: [
               {
-                id: "civic",
+                id: 458,
                 name: "civic",
+                slug: "civic",
                 text: "civic",
                 count: 4,
                 pm_only: false,
               },
               {
-                id: "accord",
+                id: 459,
                 name: "accord",
+                slug: "accord",
                 text: "accord",
                 count: 2,
                 pm_only: false,
@@ -193,15 +205,17 @@ export function applyDefaultHandlers(pretender) {
             name: "Makes",
             tags: [
               {
-                id: "ford",
+                id: 460,
                 name: "ford",
+                slug: "ford",
                 text: "ford",
                 count: 5,
                 pm_only: false,
               },
               {
-                id: "honda",
+                id: 461,
                 name: "honda",
+                slug: "honda",
                 text: "honda",
                 count: 6,
                 pm_only: false,
@@ -218,17 +232,17 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/tags/filter/search", (request) => {
     const responseBody = {
       results: [
-        { id: "monkey", name: "monkey", count: 1 },
-        { id: "gazelle", name: "gazelle", count: 2 },
-        { id: "dog", name: "dog", count: 3 },
-        { id: "cat", name: "cat", count: 4 },
+        { id: 1, name: "monkey", slug: "monkey", count: 1 },
+        { id: 2, name: "gazelle", slug: "gazelle", count: 2 },
+        { id: 3, name: "dog", slug: "dog", count: 3 },
+        { id: 4, name: "cat", slug: "cat", count: 4 },
       ],
     };
 
     if (
       request.queryParams.categoryId === "1" &&
       request.queryParams.q === "" &&
-      !request.queryParams.selected_tags.includes("monkey")
+      !request.queryParams.selected_tag_ids?.includes("1")
     ) {
       responseBody["required_tag_group"] = {
         name: "monkey group",

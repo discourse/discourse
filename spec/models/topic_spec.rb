@@ -771,7 +771,7 @@ RSpec.describe Topic do
         expect(Topic.similar_to("unrelated term", "1 2 3 poddle")).to eq([])
       end
 
-      it "doesnt match numbered lists against numbers in Post#raw" do
+      it "doesn't match numbered lists against numbers in Post#raw" do
         post.update!(raw: <<~RAW)
         Internet Explorer 11+ Oct 2013 Google Chrome 32+ Jan 2014 Firefox 27+ Feb 2014 Safari 6.1+ Jul 2012 Safari, iOS 8+ Oct 2014
         RAW

@@ -249,6 +249,9 @@ id:
       title: "Topik Baru & Belum Dibaca"
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
+    admin_onboarding_banner:
+      spread_the_word:
+        copied_to_clipboard: "Tautan disalin ke papan klip!"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
@@ -1113,8 +1116,6 @@ id:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> penanda yang membantu'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> post yang ditandai'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> post dihapus'
         suspensions:
@@ -1773,6 +1774,8 @@ id:
         selected_count:
           other: "%{count} dipilih"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
+        error_topic_count:
+          other: "%{count} topik"
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
@@ -1960,6 +1963,8 @@ id:
         remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
+      validations:
+        icon_required: "Pilih ikon."
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
@@ -1968,6 +1973,10 @@ id:
         create: "Buat"
       email_in_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
       review_group_name: "nama grup"
+      none_subcategory_text: "Tidak ada"
+      visibility:
+        public: "Umum"
+        group_restricted: "Pribadi"
       notifications:
         watching:
           title: "Melihat"
@@ -2401,7 +2410,7 @@ id:
           all: "Semua"
           trending_search:
             disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
-          average_chart_label: Rata-rata
+          sort_button: "Urutkan berdasarkan %{column}"
           filters:
             category:
               label: Kategori
@@ -2433,6 +2442,7 @@ id:
         save: "Simpan"
         cancel: "Batal"
         continue: "Lanjutkan"
+        copy_key: "Salin"
         revoke: "Cabut"
       api:
         user: "Pengguna"

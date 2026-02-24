@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
@@ -19,7 +20,10 @@ export default class DiscourseNewFeatureItem extends Component {
 
   @tracked settingEnabled = this.args.item.setting_enabled;
   @tracked toggleSettingDisabled = false;
-  @tracked isExperiment = this.args.item.experiment;
+
+  get isExperiment() {
+    return this.args.item.experiment;
+  }
 
   get identifier() {
     return this.args.item.title ? dasherize(this.args.item.title) : null;

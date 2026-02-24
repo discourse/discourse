@@ -10,8 +10,6 @@ lt:
       ai_tool_action:
         title: DI įrankio veiksmas
         description: Vykdyti dirbtinio intelekto įrankį, kai suveikia automatizavimas
-  site_settings:
-    ai_helper_image_caption_model: "Pasirinkite modelį, kurį naudosite vaizdų antraštėms generuoti"
   reports:
     overall_sentiment:
       yaxis: "Data"

@@ -71,8 +71,19 @@ RSpec.describe TagGroup do
         expect(TagGroup.visible(Guardian.new(admin)).pluck(:name)).to match_array(
           TagGroup.pluck(:name),
         )
+
+        # Moderators see tag groups they have permission for via group membership,
+        # but not tag groups restricted to categories they can't access (like admins-only)
+        # or tag groups with permissions only for groups they're not in
         expect(TagGroup.visible(Guardian.new(moderator)).pluck(:name)).to match_array(
-          TagGroup.pluck(:name),
+          [
+            public_tag_group.name,
+            private_tag_group.name,
+            unrestricted_tag_group.name,
+            everyone_tag_group.name,
+            visible_tag_group.name,
+            staff_only_tag_group.name,
+          ],
         )
 
         expect(TagGroup.visible(Guardian.new(user2)).pluck(:name)).to match_array(

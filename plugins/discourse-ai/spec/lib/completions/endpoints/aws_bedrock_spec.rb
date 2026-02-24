@@ -489,11 +489,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   end
 
   describe "disabled tool use" do
-    it "handles tool_choice: :none by adding a prefill message instead of using tool_choice param" do
+    it "handles tool_choice: :none by adding a user message instead of using tool_choice param" do
       proxy = DiscourseAi::Completions::Llm.proxy(model)
       request = nil
 
-      # Create a prompt with tool_choice: :none
       prompt =
         DiscourseAi::Completions::Prompt.new(
           "You are a helpful assistant",
@@ -510,7 +509,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           tool_choice: :none,
         )
 
-      # Mock response from Bedrock
       content = {
         content: [text: "I won't use any tools. Here's a direct response instead."],
         usage: {
@@ -531,22 +529,98 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
       proxy.generate(prompt, user: user)
 
-      # Parse the request body
       request_body = JSON.parse(request.body)
 
-      # Verify that tool_choice is NOT present (not supported in Bedrock)
       expect(request_body).not_to have_key("tool_choice")
 
-      # Verify that an assistant message was added with no_more_tool_calls_text
       messages = request_body["messages"]
-      expect(messages.length).to eq(2) # user message + added assistant message
+      expect(messages.length).to eq(2)
 
       last_message = messages.last
-      expect(last_message["role"]).to eq("assistant")
+      expect(last_message["role"]).to eq("user")
 
       expect(last_message["content"]).to eq(
-        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text,
+        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text_user,
       )
+    end
+  end
+
+  describe "tool_choice :none with response_format" do
+    it "injects user message workaround and assistant prefill when structured output is disabled" do
+      model.update!(
+        provider_params: model.provider_params.merge("disable_native_structured_output" => true),
+      )
+
+      schema = {
+        type: "json_schema",
+        json_schema: {
+          name: "reply",
+          schema: {
+            type: "object",
+            properties: {
+              key: {
+                type: "string",
+              },
+            },
+            required: ["key"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      }
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a helpful assistant",
+          messages: [{ type: :user, content: "reply as json" }],
+          tools: [
+            {
+              name: "echo",
+              description: "echo something",
+              parameters: [
+                { name: "text", type: "string", description: "text to echo", required: true },
+              ],
+            },
+          ],
+          tool_choice: :none,
+        )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "\"key\":\"value\"}"],
+        usage: {
+          input_tokens: 25,
+          output_tokens: 15,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate(prompt, user: user, response_format: schema)
+
+      request_body = JSON.parse(request.body)
+
+      expect(request_body).not_to have_key("tool_choice")
+      expect(request_body).not_to have_key("output_config")
+
+      messages = request_body["messages"]
+      expect(messages.length).to eq(3)
+      expect(messages[0]["role"]).to eq("user")
+      expect(messages[1]["role"]).to eq("user")
+      expect(messages[1]["content"]).to eq(
+        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text_user,
+      )
+      expect(messages[2]).to eq({ "role" => "assistant", "content" => "{" })
     end
   end
 
@@ -869,7 +943,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     end
   end
 
-  describe "structured output via prefilling" do
+  describe "structured output via output_config" do
     it "forces the response to be a JSON and using the given JSON schema" do
       schema = {
         type: "json_schema",
@@ -892,7 +966,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       messages =
         [
           { type: "message_start", message: { usage: { input_tokens: 9 } } },
-          { type: "content_block_delta", delta: { text: "\"" } },
+          { type: "content_block_delta", delta: { text: "{\"" } },
           { type: "content_block_delta", delta: { text: "key" } },
           { type: "content_block_delta", delta: { text: "\":\"" } },
           { type: "content_block_delta", delta: { text: "Hello!" } },
@@ -922,11 +996,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         expected = {
           "max_tokens" => 4096,
           "anthropic_version" => "bedrock-2023-05-31",
-          "messages" => [
-            { "role" => "user", "content" => "hello world" },
-            { "role" => "assistant", "content" => "{" },
-          ],
+          "messages" => [{ "role" => "user", "content" => "hello world" }],
           "system" => "You are a helpful bot",
+          "output_config" => {
+            "format" => {
+              "type" => "json_schema",
+              "schema" => schema[:json_schema][:schema].deep_stringify_keys,
+            },
+          },
         }
         expect(JSON.parse(request.body)).to eq(expected)
 
@@ -962,7 +1039,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       messages =
         [
           { type: "message_start", message: { usage: { input_tokens: 9 } } },
-          { type: "content_block_delta", delta: { text: "\"" } },
+          { type: "content_block_delta", delta: { text: "{\"" } },
           { type: "content_block_delta", delta: { text: "key" } },
           { type: "content_block_delta", delta: { text: "\":" } },
           { type: "content_block_delta", delta: { text: " [\"" } },
@@ -1000,11 +1077,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         expected = {
           "max_tokens" => 4096,
           "anthropic_version" => "bedrock-2023-05-31",
-          "messages" => [
-            { "role" => "user", "content" => "hello world" },
-            { "role" => "assistant", "content" => "{" },
-          ],
+          "messages" => [{ "role" => "user", "content" => "hello world" }],
           "system" => "You are a helpful bot",
+          "output_config" => {
+            "format" => {
+              "type" => "json_schema",
+              "schema" => schema[:json_schema][:schema].deep_stringify_keys,
+            },
+          },
         }
         expect(JSON.parse(request.body)).to eq(expected)
 
@@ -1013,6 +1093,63 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           "There",
         )
         expect(structured_output.read_buffered_property(:plain)).to eq("I'm here too")
+      end
+    end
+  end
+
+  describe "structured output via prefilling when native structured output is disabled" do
+    it "falls back to assistant message prefill" do
+      model.update!(
+        provider_params: model.provider_params.merge("disable_native_structured_output" => true),
+      )
+      schema = {
+        type: "json_schema",
+        json_schema: {
+          name: "reply",
+          schema: {
+            type: "object",
+            properties: {
+              key: {
+                type: "string",
+              },
+            },
+            required: ["key"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      }
+
+      messages =
+        [
+          { type: "message_start", message: { usage: { input_tokens: 9 } } },
+          { type: "content_block_delta", delta: { text: "\"key\":\"value\"}" } },
+          { type: "message_delta", delta: { usage: { output_tokens: 25 } } },
+        ].map { |message| encode_message(message) }
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+      bedrock_mock.with_chunk_array_support do
+        stub_request(
+          :post,
+          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
+        )
+          .with do |inner_request|
+            request = inner_request
+            true
+          end
+          .to_return(status: 200, body: messages)
+
+        structured_output = nil
+        proxy.generate("hello world", response_format: schema, user: user) do |partial|
+          structured_output = partial
+        end
+
+        request_body = JSON.parse(request.body)
+        expect(request_body["messages"].last).to eq({ "role" => "assistant", "content" => "{" })
+        expect(request_body).not_to have_key("output_config")
+
+        expect(structured_output.read_buffered_property(:key)).to eq("value")
       end
     end
   end
@@ -1129,7 +1266,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   end
 
   describe "effort parameter" do
-    it "includes effort in output_config and anthropic_beta when set to low, medium, or high" do
+    it "includes effort in output_config when set to low, medium, or high" do
       model.update!(
         provider_params: {
           access_key_id: "123",
@@ -1163,10 +1300,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
       request_body = JSON.parse(request.body)
       expect(request_body.dig("output_config", "effort")).to eq("medium")
-      expect(request_body["anthropic_beta"]).to eq(["effort-2025-11-24"])
+      expect(request_body).not_to have_key("anthropic_beta")
     end
 
-    it "omits effort and anthropic_beta when set to default" do
+    it "omits effort when set to default" do
       model.update!(
         provider_params: {
           access_key_id: "123",
@@ -1201,6 +1338,62 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       request_body = JSON.parse(request.body)
       expect(request_body).not_to have_key("output_config")
       expect(request_body).not_to have_key("anthropic_beta")
+    end
+
+    it "merges effort and structured output format in output_config" do
+      model.update!(provider_params: { access_key_id: "123", region: "us-east-1", effort: "high" })
+
+      schema = {
+        type: "json_schema",
+        json_schema: {
+          name: "reply",
+          schema: {
+            type: "object",
+            properties: {
+              key: {
+                type: "string",
+              },
+            },
+            required: ["key"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      }
+
+      messages =
+        [
+          { type: "message_start", message: { usage: { input_tokens: 9 } } },
+          { type: "content_block_delta", delta: { text: "{\"key\":\"value\"}" } },
+          { type: "message_delta", delta: { usage: { output_tokens: 25 } } },
+        ].map { |message| encode_message(message) }
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+      bedrock_mock.with_chunk_array_support do
+        stub_request(
+          :post,
+          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
+        )
+          .with do |inner_request|
+            request = inner_request
+            true
+          end
+          .to_return(status: 200, body: messages)
+
+        proxy.generate("hello world", response_format: schema, user: user) { |partial| }
+
+        request_body = JSON.parse(request.body)
+        expect(request_body["output_config"]).to eq(
+          {
+            "effort" => "high",
+            "format" => {
+              "type" => "json_schema",
+              "schema" => schema[:json_schema][:schema].deep_stringify_keys,
+            },
+          },
+        )
+      end
     end
   end
 end

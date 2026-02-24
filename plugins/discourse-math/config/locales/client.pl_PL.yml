@@ -5,19 +5,3 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  js:
-    discourse_math:
-      edit_math: "Edytuj matematykę"
-      edit_modal:
-        title: "Edytuj matematykę"
-        label: "Matematyka"
-        apply: "Zastosuj"
-      composer:
-        insert_math: "Wstaw matematykę"
-      insert_modal:
-        title_inline: "Wstaw wbudowaną matematykę"
-        title_block: "Wstaw blokową matematykę"
-        label: "LaTeX"
-        placeholder: "E=mc^2"
-        insert: "Wstaw"
-        block_mode: "Tryb blokowy (wyświetlane równanie)"

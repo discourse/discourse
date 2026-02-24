@@ -44,6 +44,12 @@ fa_IR:
           one: "%{formatted_number} پیام چت"
           other: "%{formatted_number} پیام چت"
     chat:
+      edit_category:
+        tab_title: "گفتگو"
+        channel: "کانال"
+        description: "توضیح"
+        actions: "عملیات"
+        settings: "تنظیم"
       text_copied: متن در کلیپ بورد کپی شد
       link_copied: پیوند در کلیپ بورد کپی شد
       back_to_forum: "انجمن"
@@ -402,7 +408,6 @@ fa_IR:
         title: "گفتگو"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} تغییر کانال"
-          drawer_open: "%{shortcut} باز کردن کِشوی گفتگو"
           drawer_close: "%{shortcut} بستن کِشوی گفتگو"
     topic_statuses:
       chat:
