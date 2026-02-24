@@ -64,7 +64,7 @@ module PageObjects
       end
 
       def save_settings
-        if page.has_css?(".admin-changes-banner", wait: 2)
+        if page.has_css?(".admin-changes-banner", wait: 0)
           find(".admin-changes-banner .btn-primary").click
         else
           find("#save-category").click
