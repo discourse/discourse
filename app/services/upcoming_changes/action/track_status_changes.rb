@@ -68,6 +68,9 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
         # minus one (previous status) criteria for notification, then we should notify
         # admins here.
         if should_notify_admins?(change_name)
+          Rails.logger.info(
+            "Notifying admins about available change #{change_name} from TrackStatusChanges",
+          )
           notified =
             UpcomingChanges::Action::NotifyAdminsOfAvailableChange.call(change_name:, all_admins:)
           notified_changes << change_name if notified
