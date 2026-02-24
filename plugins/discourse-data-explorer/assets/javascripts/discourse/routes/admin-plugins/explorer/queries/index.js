@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 
 const PLUGIN_ID = "discourse-data-explorer";
 
-export default class AdminPluginsExplorerIndexRoute extends Route {
+export default class AdminPluginsExplorerQueriesIndexRoute extends Route {
   @service router;
 
   beforeModel() {

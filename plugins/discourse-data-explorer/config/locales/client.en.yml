@@ -61,6 +61,7 @@ en:
           null_: "Null"
       export: "Export"
       view_json: "View JSON"
+      view: "View"
       save: "Save changes"
       saverun: "Save changes and run"
       run: "Run"

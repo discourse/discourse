@@ -199,15 +199,18 @@ export default <template>
                           -
                         {{/if}}
                       </td>
-                      <td class="d-table__cell-actions">
-                        <LinkTo
-                          {{on "click" @controller.scrollTop}}
-                          @route="adminPlugins.show.explorer.details"
-                          @model={{query.id}}
-                          class="btn btn-default btn-small"
-                        >
-                          {{i18n "edit"}}
-                        </LinkTo>
+                      <td class="d-table__cell-controls">
+                        <div class="d-table__cell-actions">
+                          <LinkTo
+                            {{on "click" @controller.scrollTop}}
+                            @route="adminPlugins.show.explorer.details"
+                            @model={{query.id}}
+                            class="btn btn-default btn-small"
+                          >
+                            {{i18n "explorer.view"}}
+                          </LinkTo>
+                        </div>
+
                       </td>
                     </tr>
                   {{else}}

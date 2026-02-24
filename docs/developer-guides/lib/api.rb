@@ -55,7 +55,7 @@ module API
   def self.fetch_current_state
     result =
       client.post(
-        "/admin/plugins/explorer/queries/#{DATA_EXPLORER_QUERY_ID}/run",
+        "/admin/plugins/discourse-data-explorer/queries/#{DATA_EXPLORER_QUERY_ID}/run",
         { params: { category_id: CATEGORY_ID.to_s }.to_json },
       ).body
 
