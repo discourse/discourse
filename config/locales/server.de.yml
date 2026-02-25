@@ -19,7 +19,7 @@ de:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    -
+    - null
     - Januar
     - Februar
     - März
@@ -60,8 +60,8 @@ de:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} von %{username}"
-    too_many_urls: "Onebox kann nicht mehr als 10 URLs in einer einzigen Anfrage einbinden."
-    concurrency_not_allowed: "Gleichzeitige Inline-Oneboxing-Anfragen sind nicht erlaubt. Bitte sende nur eine Anfrage auf einmal."
+    too_many_urls: "Es können nicht mehr als 10 URLs in einer einzigen Anfrage in Inline-Oneboxen umgewandelt werden."
+    concurrency_not_allowed: "Gleichzeitige Anfragen zur Umwandlung von URLs in Inline-Oneboxen sind nicht erlaubt. Bitte sende nur eine Anfrage auf einmal."
   components:
     enabled_filter: "Aktiviert"
     disabled_filter: "Deaktiviert"
@@ -347,7 +347,7 @@ de:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Browserkennungen müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass legitime Benutzer versehentlich einer Durchsatzratenbegrenzung unterworfen werden."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst das Entfernen der Bild-Metadaten nicht deaktivieren, wenn „composer media optimization image enabled“ aktiviert ist. Deaktiviere „composer media optimization image enabled“, bevor du das Entfernen der Bild-Metadaten deaktivierst."
-      x_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
+      x_summary_large_image_no_svg: "X-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
       tl0_and_anonymous_flag: "Für anonyme Benutzer muss entweder „site contact email“ oder „email address to report illegal content“ angegeben werden."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Für diese Einstellung muss zuerst die Einstellung „allow anonymous mode“ aktiviert werden."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1589,7 +1589,7 @@ de:
     problem:
       twitter_login: 'Die Anmeldung über Twitter scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
       group_email_credentials: 'Es gab ein Problem mit den E-Mail-Anmeldedaten für die Gruppe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Bis dieses Problem behoben ist, werden keine E-Mails aus dem Posteingang der Gruppe versendet. %{error}'
-      upcoming_change_stable_opted_out: 'Deine Website hat die bevorstehende Änderung "%{upcoming_change}" deaktiviert. Diese Änderung hat jetzt den Status „dauerhaft“ erreicht und wird bald entfernt. Besuche <a href="%{base_path}/admin/config/upcoming-changes">die Seite mit den bevorstehenden Änderungen</a>, um mehr über diese Änderung zu erfahren.'
+      upcoming_change_stable_opted_out: 'Deine Website hat die bevorstehende Änderung „%{upcoming_change}“ deaktiviert. Diese Änderung hat jetzt den Status „stabil“ erreicht und wird bald entfernt. Besuche <a href="%{base_path}/admin/config/upcoming-changes">die Seite mit den bevorstehenden Änderungen</a>, um mehr über diese Änderung zu erfahren.'
       rails_env: "Dein Server läuft im %{env}-Modus."
       host_names: "Deine config/database.yml-Datei verwendet den Standard-Hostnamen localhost. Trage hier den Hostnamen deiner Website ein."
       sidekiq: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
@@ -1638,7 +1638,7 @@ de:
     support_mixed_text_direction: "Unterstütze die Vermischung von rechtsläufigem und linksläufigem Text"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen (ohne persönliche Nachrichten)"
     min_first_post_length: "Zulässige Mindestlänge des ersten Beitrags (Thementext) (ohne persönliche Nachrichten)"
-    prevent_uploads_only_posts: "Markdown-Code von Uploads bei der Prüfung der Mindestlänge des Beitrags (festgelegt mit der \"min post lenght\" Einstellung) nicht berücksichtigen"
+    prevent_uploads_only_posts: "Markdown-Code von Uploads bei der Prüfung der Mindestlänge des Beitrags (festgelegt mit der Einstellung „min post length“) nicht berücksichtigen"
     min_personal_message_post_length: "Minimal zulässige Beitragslänge in Zeichen für Nachrichten (sowohl erster Beitrag als auch Antworten)"
     max_post_length: "Maximal zulässige Beitragslänge in Zeichen."
     topic_featured_link_enabled: "Ermöglicht es Benutzern, ihren Themen einen Feature-Link zuzuweisen. Wenn diese Funktion aktiviert ist, können Themen mit einem hervorgehobenen Link versehen werden, der öffentlich sichtbar ist und bearbeitet werden kann, wenn der Benutzer über ausreichende Berechtigungen verfügt. Der Feature-Link kann die Verständlichkeit eines Themas verbessern, indem er zusätzliche Inhalte bereitstellt."
@@ -1714,7 +1714,7 @@ de:
     logo: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird die Website-Überschrift angezeigt."
     logo_small: "Kleine Logo-Grafik oben links auf der Website, die beim Herunterscrollen angezeigt wird. Verwende ein quadratisches Bild (120 × 120). Falls leer, wird ein „Home“-Zeichen angezeigt."
     digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Website. Verwende ein breites rechteckiges Bild. Verwende kein SVG-Bild. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
-    mobile_logo: "Das Logo auf der mobilen Ausgabe deiner Website. Wir empehlen ein quartatisches Bild zu verwenden, damit die Kopfzeile nicht zu voll wird. Aber du kannst auch ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1 verwenden. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
+    mobile_logo: "Das Logo auf der mobilen Ausgabe deiner Website. Wir empfehlen ein quadratisches Bild zu verwenden, damit die Kopfzeile nicht zu voll wird. Aber du kannst auch ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1 verwenden. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
     logo_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „logo“."
     logo_small_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „logo small“."
     mobile_logo_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „mobile logo“."
@@ -1806,7 +1806,6 @@ de:
     llms_txt: "Lade eine Textdatei hoch, die unter /llms.txt für LLM-Crawler bereitgestellt wird. Siehe <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> für weitere Informationen."
     content_security_policy: "Aktiviere die Content-Security-Policy (CSP). CSP ist eine zusätzliche Sicherheitsebene, die hilft, bestimmte Arten von Angriffen zu verhindern, z. B. Cross Site Scripting (XSS) und Data Injection."
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) aktivieren"
-    content_security_policy_collect_reports: "Aktiviere die Sammlung von Berichten zu CSP-Verstößen unter /csp_reports"
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
     content_security_policy_script_src: "Zusätzliche Skript-Quellen auf der Erlaubnisliste. Der aktuelle Host und das CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minderung von XSS-Angriffen mit Content Security Policy</a> (CSP). Host-Quellen werden ignoriert, wenn content_security_policy_strict_dynamic aktiviert ist."
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
@@ -1961,7 +1960,7 @@ de:
     invite_link_max_redemptions_limit_users: "Die maximal zulässigen Einlösungen für Einladungslinks, die von regulären Benutzern erstellt wurden, dürfen diesen Wert nicht überschreiten."
     alert_admins_if_errors_per_minute: "Anzahl der Fehler pro Minute, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. HINWEIS: Erfordert einen Neustart."
     alert_admins_if_errors_per_hour: "Anzahl der Fehler pro Stunde, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. HINWEIS: Erfordert einen Neustart."
-    categories_topics: 'Anzahl der Themen, die auf der Seite /categories angezeigt werden. Bei 0 wird automatisch ein Wert gewählt, um die beiden Spalten (Kategorien und Themen) symmetrisch zu halten. Nur relevant für „Kategorien und aktuelle/ angesagte Themen“ <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">category page style Einstellungen</a>.'
+    categories_topics: 'Anzahl der Themen, die auf der Seite /categories angezeigt werden. Bei 0 wird automatisch ein Wert gewählt, um die beiden Spalten (Kategorien und Themen) symmetrisch zu halten. Nur relevant für die <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">Kategorien-Seitenstile</a> „Kategorien und aktuelle/angesagte Themen“.'
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
     suggested_topics_max_days_old: "Vorgeschlagene Themen sollten nicht älter als n Tage sein."
@@ -2115,6 +2114,8 @@ de:
     num_flaggers_to_close_topic: "Mindestzahl unabhängiger Mitglieder, die ein Thema melden, damit es automatisch für eine Prüfung pausiert wird."
     num_hours_to_close_topic: "Anzahl der Stunden, um ein Thema für eine Intervention zu pausieren."
     auto_respond_to_flag_actions: "Automatische Antwort auf abgearbeitete Meldungen aktivieren."
+    min_first_post_typing_time: "Zeit, die ein Benutzer mindestens aufwenden muss, um seinen ersten Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0, um dieses Verhalten zu deaktivieren (nicht empfohlen)."
+    fast_typing_threshold: "Zeit, die ein Benutzer mindestens aufwenden muss, um seinen ersten Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. „Low“ ist 1 Sekunde, „standard“ sind 3 Sekunden, „high“ sind 5 Sekunden."
     auto_silence_fast_typers_on_first_post: "Automatisches Stummschalten von Benutzern, die `fast typing threshold` nicht erreichen"
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
     auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Erfolg dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a wird dazu führen, dass alle Beiträge, die „wüten“ oder „aba“ oder „aca“ enthalten, stummgeschaltet werden. Gilt nur für den ersten Beitrag. VERALTET: Verwende stattdessen „Beobachtete Wörter stummschalten“."
@@ -2133,7 +2134,7 @@ de:
     alternative_reply_by_email_addresses: "Liste der alternativen Vorlagen für die Beantwortung per E-Mail (eingehende E-Mail-Adressen). Beispiel: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Verwende HTML statt Text für eingehende E-Mails."
     strip_incoming_email_lines: "Entferne führende und folgende Leerzeichen von jeder Zeile eingehender E-Mails."
-    disable_emails: "Discourse daran hindern, jegliche E-Mails zu versenden. Wähle „yes“, um E-Mails für alle Benutzer zu deaktivieren. Wähle „non-staff“, um E-Mails für alle Benutzer außer den Team-Mitgliedern zu deaktivieren."
+    disable_emails: "Discourse daran hindern, jegliche E-Mails zu versenden. Wähle „yes“, um ausgehende E-Mails für alle Benutzer zu deaktivieren. Wähle „non-staff“, um E-Mails für alle Benutzer außer den Team-Mitgliedern zu deaktivieren."
     allow_email_invites: "Wenn diese Funktion deaktiviert ist, können Benutzer keine Einladungs-E-Mails mehr über Discourse versenden."
     strip_images_from_short_emails: "Entferne Bilder aus E-Mails kleiner als 2800 Bytes."
     short_email_length: "Lege die maximale Länge einer E-Mail in Bytes fest, damit sie als „kurz“ in Bezug auf die Bildunterdrückung eingestuft wird. Wenn die Größe einer E-Mail diese Einstellung nicht überschreitet, werden alle Bilder (wie Avatare und Emojis) aus der E-Mail entfernt."
@@ -2442,17 +2443,17 @@ de:
     welcome_banner_image: "Lege ein Bild fest, das im Hintergrund des Willkommensbanners angezeigt werden soll."
     welcome_banner_location: "Legt fest, wo auf der Seite das Willkommensbanner erscheinen soll."
     welcome_banner_page_visibility: "Legt fest, auf welchen Seiten das Willkommensbanner erscheinen soll."
-    welcome_banner_text_color: "Wenn du die „Welcome banner image“ Einstellung konfiguriert hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du keine Farbe wählst oder kein Hintergrundbild hochgeladen hast, wird die Farbe vom aktiven Theme bestimmt."
+    welcome_banner_text_color: "Wenn du die Einstellung „Welcome banner image“ konfiguriert hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du keine Farbe wählst oder kein Hintergrundbild hochgeladen hast, wird die Farbe vom aktiven Theme bestimmt."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     splash_screen_image: "Ein SVG-Bild, das auf dem Bildschirm angezeigt wird, während die Website geladen wird. Animierte SVGs sollten nur CSS-Transformations oder - Deckkraftanimationen verwenden. Verwende eindeutige Namen für die Css-Klassen und Keyframes. Du kannst var(--primary), var(--secondary) und var(--tertiary) verwenden, um auf die Farben des Themes zu verweisen."
     navigation_menu: "Lege die Seitenleiste oder das Kopfzeilen-Drop-down als Hauptnavigationsmenü für deine Website fest. Die Seitenleiste wird empfohlen."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
-    enable_form_templates: "Aktivieren die Formularvorlagen-Funktion. Damit kannst du ein strukturiertes Formular mit Datenvalidierung im Rahmen der Themenerstellung erzwingen."
+    enable_form_templates: "Aktiviere die Formularvorlagen-Funktion. Damit kannst du ein strukturiertes Formular mit Datenvalidierung im Rahmen der Themenerstellung erzwingen."
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
-    enable_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
+    enable_auto_grid_images: "Schließt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Editor hochgeladen werden."
     impersonate_without_logout: "Erlaube Administratoren in die Rolle eines anderen Benutzers zu schlüpfen, ohne sich von ihrem Administratorkonto abmelden zu müssen."
     experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -2477,11 +2478,13 @@ de:
     content_localization_allow_author_localization: "Ermögliche es Autoren, die Lokalisierungen ihrer eigenen Themen und Beiträge über das Beitragsmenü zu aktualisieren."
     enable_upcoming_changes: "Aktiviere bevorstehende Änderungen"
     fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
-    floating_dismiss_topics_on_mobile: "Zeigt auf dem Handy über der Themenliste eine schwebende \"Verwerfen...\"-Schaltfläche, um den Zugriff zu erleichtern und Platz im oberen Bereich der Themenliste freizugeben"
+    floating_dismiss_topics_on_mobile: "Zeigt auf dem Handy über der Themenliste eine schwebende „Verwerfen …“-Schaltfläche, um den Zugriff zu erleichtern und Platz im oberen Bereich der Themenliste freizugeben"
     rename_faq_to_guidelines: "Diese Änderung benennt die FAQ-Seite in „Richtlinien“ um. Die FAQ-Seite ist weiterhin unter /faq erreichbar. Die Einstellung „faq url“ funktioniert wie bisher."
+    experimental_tag_settings_page: "Aktiviere eine eigene Einstellungsseite für Schlagwörter unter /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Ermöglicht eine vereinfachte Kategorienerstellung mit weniger Optionen und einer übersichtlicheren Oberfläche."
     enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung \"Splash Screen Image\" hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
     modernize_foundation_theme: "Diese Änderung führt Design-Änderungen am Foundation-Theme in Discourse ein."
+    reporting_improvements: "Verbesserungen der Navigation, des Designs und der Benutzerfreundlichkeit für die Admin-Berichte in Discourse."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_datetime: "Ungültiges Datums-/Uhrzeitformat. Bitte stelle sicher, dass du ein gültiges Datum und eine gültige Uhrzeit eingegeben hast."
@@ -2489,6 +2492,8 @@ de:
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
       valid_username: "Es gibt einen Benutzer mit diesem Benutzernamen."
       invalid_group: "Es gibt keine Gruppe mit diesem Namen."
+      invalid_svg: "Das SVG-Bild ist ungültig. Es muss ein SVG-Element enthalten und darf keine Skripte oder Event-Handler enthalten."
+      invalid_upload: "Der Upload ist ungültig oder existiert nicht."
       invalid_topic: "Es gibt kein Thema mit dieser ID."
       invalid_integer_min_max: "Der Wert muss zwischen %{min} und %{max} liegen."
       invalid_integer_min: "Der Wert muss %{min} oder größer sein."
@@ -2526,12 +2531,12 @@ de:
       reply_by_email_disabled: "Du musst erst „reply by email“ aktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_url_is_empty: "Du musst eine „discourse connect url'“ festlegen, bevor du diese Einstellung aktivierst."
       enable_local_logins_disabled: "Du musst erst „enable local logins“ aktivieren, bevor du diese Einstellung aktivierst."
-      min_username_length_exists: "Du kannst die Mindestlänge von Benutzernamen nicht über den kürzesten Benutzernamen (%{username}) setzen."
-      min_group_name_length_exists: "Du kannst die minimale Länge von Benutzernamen nicht länger als den kürzesten Gruppennamen (%{group_name}) setzen."
-      min_username_length_range: "Du kannst das Minimum nicht über das Maximum setzen."
-      max_username_length_exists: "Du kannst die maximale Länge von Benutzernamen nicht unter den längsten Benutzernamen (%{username}) setzen."
-      max_group_name_length_exists: "Du kannst die maximale Länge von Benutzernamen nicht kürzer als längsten Gruppennamen (%{group_name}) setzen."
-      max_username_length_range: "Du kannst das Maximum nicht unter das Minimum setzen."
+      min_username_length_exists: "Du kannst die „min username length“ Einstellung nicht größer als den kürzesten Benutzernamen (%{username}) konfigurieren."
+      min_group_name_length_exists: "Du kannst die „min username length“ Einstellung nicht größer als den kürzesten Gruppennamen (%{group_name}) konfigurieren."
+      min_username_length_range: "Du kannst die „min username length“ Einstellung nicht größer als die „max username length“ Einstellung konfigurieren."
+      max_username_length_exists: "Du kannst die „max username length“ Einstellung nicht kleiner als den längsten Benutzernamen (%{username}) konfigurieren."
+      max_group_name_length_exists: "Du kannst die „max username length“ Einstellung nicht kleiner als den längsten Gruppennamen (%{group_name}) konfigurieren."
+      max_username_length_range: "Du kannst die „max username length“ Einstellung nicht kleiner als die „min username length“ Einstellung konfigurieren."
       invalid_hex_value: "Farbwerte müssen als 6-stellige Hexadezimalcodes angegeben werden."
       empty_selectable_avatars: "Du musst zunächst mindestens zwei auswählbare Avatare hochladen, bevor du diese Einstellung aktivieren kannst."
       category_search_priority:
@@ -2594,7 +2599,6 @@ de:
       exclude_tag: "Themen mit einem bestimmten Schlagwort ausschließen"
       exclude_tags_any: "Themen mit einem der angegebenen Schlagwörter ausschließen (durch Kommas getrennt)"
       exclude_tags_all: "Themen mit allen angegebenen Schlagwörtern ausschließen (durch Kommas getrennt)"
-      tags_alias: "Alias für den Filter 'Schlagwort:'"
       tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe anzeigen"
       exclude_tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe ausschließen"
       activity_before: "Themen mit letzter Aktivität vor einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
@@ -2632,7 +2636,7 @@ de:
       in_watching_first_post: "Themen anzeigen, bei denen du den ersten Beitrag beobachtest"
       in_new: "Themen anzeigen, die neu sind oder neue Antworten haben"
       in_new_replies: "Themen mit neuen Antworten anzeigen"
-      in_new_topics: "Zeige neue Themen"
+      in_new_topics: "Neue Themen anzeigen"
       in_unseen: "Themen anzeigen, die du noch nicht gesehen hast"
       order_activity: "Nach letzter Aktivität sortieren (die neuesten zuerst)"
       order_activity_asc: "Nach letzter Aktivität sortieren (die ältesten zuerst)"
@@ -2795,6 +2799,7 @@ de:
       csrf_detected: "Die Autorisierung ist leider abgelaufen oder du hast den Browser gewechselt. Bitte versuche es erneut."
       request_error: "Beim Start der Autorisierung ist leider ein Fehler aufgetreten. Bitte versuche es erneut."
       invalid_iat: "Das Autorisierungstoken kann wegen unterschiedlicher Server-Uhrzeiten leider nicht geprüft werden. Bitte versuche es erneut."
+      unauthorized: "Leider wurde deine Anfrage vom Anmeldeanbieter nicht autorisiert. Bitte versuche es erneut oder kontaktiere einen Administrator."
     omniauth_error_unknown: "Bei der Verarbeitung deiner Anmeldung ist etwas schiefgelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
     omniauth_confirm_button: "Weiter"
@@ -4183,7 +4188,7 @@ de:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
-      preview: "E-Mail Adresse aktualisiert."
+      preview: "E-Mail-Adresse aktualisiert."
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere einen Website-Administrator, wenn du von einem Fehler ausgehst.
@@ -5051,7 +5056,7 @@ de:
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
   finish_installation:
     congratulations: "Glückwunsch, du hast Discourse installiert!"
-    login_with_discourse_id: "Mit Discourse-ID anmelden"
+    login_with_discourse_id: "Mit Discourse ID anmelden"
     discourse_id_help: "Bitte verwende den Button, um dich mit einem Discourse ID-Konto anzumelden. <br/><br/>Stelle sicher, dass du ein Discourse ID-Konto mit einer primären E-Mail-Adresse, die der Umgebungsvariablen `DISCOURSE_DEVELOPER_EMAILS` entspricht, verwendest."
     discourse_id_error_help: "Du hast dich entschieden, die Einrichtung der E-Mail vorerst zu überspringen. Leider kann die Einrichtung aufgrund der obigen Fehlermeldung nicht fortgesetzt werden. Bitte melde dieses Problem auf <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
@@ -5068,7 +5073,7 @@ de:
     discourse_id:
       help: "Wir richten jetzt Discourse ID für dich ein."
       no_allowed_emails: "In DISCOURSE_DEVELOPER_EMAILS sind keine zulässigen E-Mail-Adressen konfiguriert. Die Einrichtung der Website kann nicht fortgesetzt werden."
-      global_notice: "Es haben sich noch keine Administratoren angemeldet. Bitte melde dich mit einem Discourse ID-Konto und einer E-Mail an, die der Umgebungsvariablen `DISCOURSE_DEVELOPER_EMAILS` entspricht, um die Installation abzuschließen."
+      global_notice: "Es haben sich noch keine Administratoren angemeldet. Bitte melde dich mit einem Discourse ID-Konto und einer E-Mail-Adresse an, die der Umgebungsvariablen `DISCOURSE_DEVELOPER_EMAILS` entspricht, um die Installation abzuschließen."
   safe_mode:
     title: "Abgesicherten Modus betreten"
     description: "Im abgesicherten Modus kannst du deine Website testen, ohne Themes oder clientseitige Plug-in-Anpassungen zu laden. Server-seitige Plug-in-Anpassungen bleiben aktiviert."
@@ -5082,7 +5087,7 @@ de:
   dev_mode:
     title: "Entwicklermodus"
     enable_rack_mini_profiler: "Rack Mini Profiler für 1 Stunde sitzungsunabhängig aktivieren"
-    enter: "Enter"
+    enter: "Entwicklermodus betreten"
   wizard:
     title: "Discourse einrichten"
     step:
@@ -5146,14 +5151,14 @@ de:
         open: "Offener Pull Request"
         approved: "Genehmigter Pull Request"
         changes_requested: "Änderungen angefordert"
-        merged: "Gemergter Pull Request"
+        merged: "Zusammengeführter Pull Request"
         closed: "Geschlossener Pull Request"
       status_date:
         open: "offen"
         draft: "entworfen"
         approved: "genehmigt"
         changes_requested: "Änderungen angefordert"
-        merged: "Merged am"
+        merged: "Zusammengeführt am"
         closed: "geschlossen"
   discourse_push_notifications:
     popup:
@@ -5306,7 +5311,7 @@ de:
         title: "Beitrag verwerfen"
         complete: "Beitrag verworfen."
       revise_and_reject_post:
-        title: "Überarbeitung anfordern..."
+        title: "Überarbeitung anfordern …"
         complete: "Beitrag wurde bis zur Überarbeitung abgelehnt."
       ignore:
         title: "Ignorieren"
@@ -5378,10 +5383,6 @@ de:
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
       post_actions:
         bundle_title: "Was willst du mit dem Beitrag machen?"
-      no_action_post:
-        title: "Keine Aktion"
-        description: "Keine Maßnahmen bezüglich des Beitrags ergreifen"
-        complete: "Keine Aktion bezüglich des Beitrags ausgeführt"
       delete_post:
         title: "Beitrag löschen"
         description: "Diesen Beitrag löschen"
@@ -5402,16 +5403,8 @@ de:
         title: "Beitrag bearbeiten"
         description: "Den Inhalt dieses Beitrags bearbeiten"
         complete: "Beitrag bearbeitet"
-      convert_to_pm:
-        title: "In PN umwandeln"
-        description: "Diesen Beitrag in eine persönliche Nachricht umwandeln"
-        complete: "Beitrag in persönliche Nachricht umgewandelt"
       user_actions:
         bundle_title: "Was willst du mit dem Benutzer machen?"
-      no_action_user:
-        title: "Keine Aktion"
-        description: "Keine Maßnahmen gegen den Benutzer ergreifen"
-        complete: "Keine Maßnahmen gegen den Benutzer ergriffen"
       silence_user:
         title: "Benutzer stummschalten"
         description: "Benutzer daran hindern Beiträge zu veröffentlichen"
@@ -5429,11 +5422,11 @@ de:
         reason: "Gelöscht via Warteschlange zur Überprüfung"
       delete_and_block_user:
         title: "Löschen & Blockieren"
-        description: "Lösche den Benutzer und blockiere seine IP/E-Mail"
+        description: "Lösche den Benutzer und blockiere seine IP/E-Mail-Adresse"
         complete: "Benutzer gelöscht und gesperrt"
       delete_user_block:
         title: "Löschen & Blockieren"
-        description: "Lösche den Benutzer und blockiere seine IP/E-Mail"
+        description: "Lösche den Benutzer und blockiere seine IP/E-Mail-Adresse"
         complete: "Benutzer gelöscht und gesperrt"
   email_style:
     html_missing_placeholder: "Die HTML-Vorlage muss %{placeholder} beinhalten"

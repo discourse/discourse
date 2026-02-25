@@ -11,14 +11,14 @@ pt:
         no_semicolons: "Remova os pontos e vírgulas da consulta."
         dirty: "Deve guardar a consulta antes de executar."
     explorer:
+      default_query: "Predefinição"
       or: "ou"
       admins_only: "O explorador de dados está disponível apenas para os administradores."
       title: "Explorador de Dados"
-      create: "Criar Nova"
+      create: "Criar"
       create_placeholder: "Nome da consulta..."
       import:
         label: "Importar"
-        modal: "Importar Uma Consulta"
       help:
         label: "Ajuda"
       schema:
@@ -30,13 +30,9 @@ pt:
           yes: "Sim"
           no: "Não"
       export: "Exportar"
-      save: "Guardar alterações"
-      saverun: "Guardar Alterações e Executar"
       run: "Executar"
-      undo: "Ignorar Alterações"
       edit: "Editar"
       delete: "Eliminar"
-      recover: "Recuperar Consulta"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
@@ -48,7 +44,6 @@ pt:
       query_description: "Descrição"
       column: "Coluna %{number}"
       explain_label: "Incluir plano de consulta?"
-      save_params: "Definir Predefinições"
       reset_params: "Repor"
       search_placeholder: "Pesquisar..."
     group:

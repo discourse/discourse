@@ -18,6 +18,17 @@ ja:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "広告タイプ"
+            house_ad_name:
+              label: "自社広告名"
+            ad_placement:
+              label: "広告プレースメント"
+            user_type:
+              label: "ユーザータイプ"
       adplugin:
         house_ads:
           title: "自社広告"
@@ -34,6 +45,8 @@ ja:
           show_to_anons: "匿名ユーザーに表示する"
           show_to_logged_in_users: "ログインユーザーに表示する"
           category_chooser_description: "この広告が表示されるカテゴリを選択するか、すべての場所に広告を表示する場合には空白のままにします。`no_ads_for_categories` サイト設定はこの設定より優先されます。"
+          category_chooser_description_with_routes: "この広告が表示されるカテゴリを選択します。すべての場所に広告を表示する場合にはこの設定とルート選択を空白のままにします。`no_ads_for_categories` サイト設定はこの設定より優先されます。"
+          route_chooser_description: "この広告が表示されるページ/ルートを選択します。すべての場所の広告を表示する場合は、この設定とカテゴリの選択を空白のままにします。"
           group_chooser_description: "この広告を表示できるグループを選択するか、サインイン中のすべてのユーザーに広告を表示するには空白のままにします。"
           preview: "プレビュー"
           back: "自社広告"

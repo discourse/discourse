@@ -1270,8 +1270,6 @@ pt:
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
-      min_username_length_range: "Não pode definir o mínimo acima do máximo."
-      max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -2036,8 +2034,6 @@ pt:
   safe_mode:
     title: "Entrar em modo de segurança"
     enter: "Entrar em Modo de Segurança"
-  dev_mode:
-    enter: "Entrar"
   wizard:
     title: "Configuração do Discourse"
     step:

@@ -50,6 +50,7 @@ es:
         description: "Descripción"
         actions: "Acciones"
         settings: "Ajustes"
+        no_channels: "No hay canales de chat asociados a esta categoría"
       text_copied: Texto copiado en el portapapeles
       link_copied: Enlace copiado en el portapapeles
       back_to_forum: "Foro"
@@ -64,6 +65,7 @@ es:
       cancel: "Cancelar"
       cancel_reply: "Cancelar respuesta"
       chat_channels: "Canales"
+      pinned: "Anclado"
       browse_all_channels: "Examinar todos los canales"
       see_in: "Ver en"
       move_to_channel:
@@ -584,7 +586,9 @@ es:
           one: "%{commaSeparatedUsernames} y %{count} más está escribiendo"
           other: "%{commaSeparatedUsernames} y %{count} más están escribiendo"
       retention_reminders:
+        chat_settings: "Los ajustes de chat"
         indefinitely_short: "indefinidamente"
+        indefinitely_long: "%{chatSettingsLink} están configurados para conservar los mensajes del canal indefinidamente."
         short:
           one: "%{count} día"
           other: "%{count} días"

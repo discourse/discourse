@@ -407,7 +407,6 @@ id:
       in_reply_to: "sebagai balasan"
       explain:
         why: "jelaskan mengapa butir ini berada dalam antrian"
-        title: "Penilaian yang Dapat Ditinjau"
         formula: "Rumus"
         subtotal: "Subtotal"
         total: "Total"
@@ -421,10 +420,8 @@ id:
           title: "Pengguna yang sebelumnya telah disteujui untuk mendapatkan benderanya, diberikan bonus."
         trust_level_bonus:
           name: "tingkat kepercayaan"
-          title: "Butir yang dapat ditinjau dibuat oleh pengguna dengan tingkat kepercayaan yang lebih tinggi akan memiliki skor yang lebih tinggi."
         type_bonus:
           name: "jenis bonus"
-          title: "Jenis tertentu yang dapat ditinjau akan diberikan bonus oleh staf untuk menjadikannya prioritas yang lebih tinggi."
       revise_and_reject_post:
         title: "Merevisi"
         reason: "Alasan"
@@ -432,7 +429,6 @@ id:
         feedback: "Umpan balik"
         other_reason: "Lainnya..."
         optional: "opsional"
-      stale_help: "Butir tinjauan ini telah diselesaikan oleh <b>%{username}</b>."
       claim_help:
         optional: "Anda dapat mengklaim item ini untuk mencegah orang lain meninjaunya."
         required: "Anda harus mengklaim hal ini sebelum dapat meninjaunya."
@@ -2135,7 +2131,15 @@ id:
       selector_remove_filter: "hapus filter"
       tags: "Label"
       add_synonyms: "Menambahkan"
-      description: "Deskripsi (maks 1000 karakter)"
+      description: "Deskripsi"
+      settings:
+        title: "Pengaturan"
+        general: "Umum"
+        back: "Kembali"
+        name: "Nama"
+      localization:
+        name: "Nama"
+        description: "Deskripsi"
       sort_by_count: "menghitung"
       sort_by_name: "nama"
       bulk_create_button: "Buat"
@@ -2315,6 +2319,9 @@ id:
         remove_muted_tags_from_latest:
           always: "selalu"
           never: "tidak pernah"
+      reports:
+        group_members: "Anggota"
+        group_other: "Lainnya"
       config_sections:
         account:
           title: "Akun"
@@ -2325,7 +2332,6 @@ id:
         enabled: "Diaktifkan"
         enabled_for_options:
           everyone: "Semua orang"
-          staff: "Hanya staf"
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
@@ -2371,6 +2377,10 @@ id:
           sub_pages:
             logs:
               title: "Log"
+        reports:
+          sub_pages:
+            settings:
+              title: "Pengaturan"
         email_logs:
           sub_pages:
             sent:
@@ -2383,9 +2393,6 @@ id:
         default_value: "Asal"
       search:
         title: "Cari"
-        result_types:
-          setting:
-            other: "Pengaturan"
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
@@ -2846,6 +2853,8 @@ id:
             title: "Saat mendaftar"
             description: "Saat pengguna baru mendaftar, mereka harus mengisi kolom ini. Pengguna yang sudah ada tidak terpengaruh."
           confirmation: "Ini akan meminta pengguna yang ada untuk mengisi kolom ini dan tidak akan mengizinkan mereka melakukan hal lain di situs Anda hingga kolom tersebut terisi. Lanjutkan?"
+        field_types:
+          date: "Tanggal"
       site_text:
         edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"

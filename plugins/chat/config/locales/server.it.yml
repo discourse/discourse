@@ -241,19 +241,14 @@ it:
         watched_thread:
           one: "[%{site_name}] Nuovo messaggio nel thread in %{channel}"
           other: "[%{site_name}] Nuovi messaggi nel thread in %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Nuovi messaggi nel thread in %{channel} e %{count} altro"
-          other: "[%{site_name}] Nuovi messaggi nel thread in %{channel} e altri %{count}"
         chat_dm_1:
           one: "[%{site_name}] Nuovo messaggio da %{name}"
           other: "[%{site_name}] Nuovi messaggi da %{name}"
         chat_dm_2: "[%{site_name}] Nuovi messaggi da %{name_1} e %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Nuovi messaggi da %{name} e altri %{count}"
         chat_channel_1:
           one: "[%{site_name}] Nuovo messaggio in %{channel}"
           other: "[%{site_name}] Nuovi messaggi in %{channel}"
         chat_channel_2: "[%{site_name}] Nuovi messaggi in %{channel_1} e %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Nuovi messaggi in %{channel} e altri %{count}"
         chat_channel_and_dm: "[%{site_name}] Nuovi messaggi in %{channel} e da %{name}"
       unsubscribe: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link} o %{unsubscribe_link} per annullare l'iscrizione."
       unsubscribe_no_link: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link}."
