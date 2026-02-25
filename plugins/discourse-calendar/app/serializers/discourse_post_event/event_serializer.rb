@@ -90,7 +90,7 @@ module DiscoursePostEvent
     end
 
     def can_update_attendance
-      scope.current_user && object.can_user_update_attendance(scope.current_user)
+      scope.current_user && object.can_user_update_attendance?(scope.current_user)
     end
 
     def creator

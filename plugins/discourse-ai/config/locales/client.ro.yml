@@ -165,7 +165,7 @@ ro:
         remove_parameter: "Elimină"
         parameter_required: "Necesare"
         edit: "Editează"
-        test: "Rulează test"
+        test: "Test"
         delete: "Șterge"
         test_modal:
           run: "Rulează test"
@@ -202,7 +202,7 @@ ro:
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-5: "Cel mai inteligent model de la Anthropic"
+          anthropic-claude-opus-4-6: "Cel mai inteligent model de la Anthropic"
           open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5"
         next:
           title: "Următorul"
@@ -215,7 +215,6 @@ ro:
           fake: "Personalizat"
         provider_fields:
           role_arn: "Rol ARN AWS Bedrock"
-          effort: "Nivel de efort (doar Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Anulează"

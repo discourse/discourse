@@ -2850,6 +2850,12 @@ onebox:
     type: list
     secret: true
     list_type: secret
+  reddit_onebox_client_id:
+    default: ""
+    secret: true
+  reddit_onebox_client_secret:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -4217,6 +4223,7 @@ experimental:
   enable_auto_grid_images:
     default: false
     client: true
+    hidden: true
     area: "experimental"
     upcoming_change:
       status: "experimental"

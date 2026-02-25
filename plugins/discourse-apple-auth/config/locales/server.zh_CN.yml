@@ -7,7 +7,7 @@
 zh_CN:
   site_settings:
     sign_in_with_apple_enabled: '是否启用使用 Apple 登录？'
-    apple_client_id: "（使用 Apple 登录）开发者控制台中的 Apple“服务标识符”。通常是一个反向域名格式的字符串（例如 com.example.auth）。"
+    apple_client_id: "（使用 Apple 登录）开发者控制台中的 Apple“服务标识符”。通常是一个反向域名样式的字符串（例如 com.example.auth）。"
     apple_team_id: '（使用 Apple 登录）Apple Team ID（10 个字符）'
     apple_key_id: '（使用 Apple 登录）Apple Key ID（10 个字符）'
     apple_pem: '（使用 Apple 登录）Apple Pem 文件内容。包括 BEGIN 和 END 行'

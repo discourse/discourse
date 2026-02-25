@@ -9,7 +9,7 @@ el:
     user_notes_enabled: "Επιτρέψτε στους συντονιστές να προθέτουν σημειώσεις στους χρήστες"
     user_notes_moderators_delete: "Να επιτρέπεται στους συντονιστές να διαγράφουν σημειώσεις χρήστη"
   user_notes:
-    official_warning: "Έλαβες μια επίσημη προειδοποίηση από το @%{username} - %{warning_link}"
+    official_warning: "Έλαβες μια επίσημη προειδοποίηση από @%{username} - %{warning_link}"
     user_suspended: "Ο χρήστης @%{username} ανέστειλε αυτόν τον λογαριασμό έως τις %{suspended_till}. Λόγος: %{reason}"
     user_silenced: "Ο χρήστης @%{username} ανέστειλε αυτόν τον λογαριασμό έως τις %{silenced_till}. Λόγος: %{reason}"
   reports:

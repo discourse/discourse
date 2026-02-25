@@ -251,10 +251,11 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
 
     context "when using basic meta description when necessary" do
       before do
-        stub_request(
-          :get,
-          "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/",
-        ).to_return(status: 200, body: onebox_response("reddit_image"))
+        stub_request(:get, "https://www.example.com/og-content").to_return(
+          status: 200,
+          body:
+            '<html><head><meta property="og:title" content="OG Title"/><meta property="og:description" content="OG description for testing"/></head><body></body></html>',
+        )
         stub_request(:get, "https://www.example.com/content").to_return(
           status: 200,
           body: onebox_response("basic_description"),
@@ -262,11 +263,8 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       end
 
       it "uses opengraph tags when present" do
-        onebox =
-          described_class.new(
-            "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/",
-          )
-        expect(onebox.to_html).to include("4 votes and 1 comment so far on Reddit")
+        onebox = described_class.new("https://www.example.com/og-content")
+        expect(onebox.to_html).to include("OG description for testing")
       end
 
       it "fallback to basic meta description if other description tags are missing" do

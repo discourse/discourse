@@ -7,7 +7,9 @@
 sq:
   js:
     explorer:
+      default_query: "Paracaktuar"
       or: "ose"
+      create: "Krijo"
       import:
         label: "Importo"
       help:
@@ -17,7 +19,6 @@ sq:
           yes: "Po"
           no: "Jo"
       export: "Eksporto"
-      save: "Ruaj ndryshimet"
       edit: "Redaktoni"
       delete: "Fshij"
       result_count:

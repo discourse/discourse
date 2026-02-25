@@ -671,19 +671,13 @@ nl:
       in_reply_to: "in antwoord op"
       filtered_flagged_by: "Gemarkeerd door"
       unknown:
-        title:
-          one: "Je hebt wachtende beoordeelbare items van een uitgeschakelde plug-in:"
-          other: "Je hebt wachtende beoordeelbare items van uitgeschakelde plug-ins:"
         instruction: "Ze kunnen pas correct worden weergegeven nadat je de betreffende plug-in hebt ingeschakeld. Schakel de plug-in in en vernieuw de pagina. Je kunt ze ook negeren. <a href='%{url}' target='_blank'>Meer informatie...</a>"
         reviewable_unknown_source: "%{reviewableType} (onbekende plug-in)"
         reviewable_known_source: "%{reviewableType} (van de plug-in '%{pluginName}' )"
         ignore_all: "Alles negeren"
         enable_plugins: "Plug-ins inschakelen"
-        delete_confirm: "Weet je zeker dat je alle beoordelingen wilt verwijderen die zijn gemaakt door uitgeschakelde plug-ins?"
-        ignore_success: "Alle beoordelingen gemaakt door uitgeschakelde plug-ins zijn verwijderd."
       explain:
         why: "leg uit waarom dit item in de wachtrij is beland"
-        title: "Beoordeelbare scores"
         formula: "Formule"
         subtotal: "Subtotaal"
         total: "Totaal"
@@ -697,10 +691,8 @@ nl:
           title: "Gebruikers waarvan markeringen in het verleden zijn geaccordeerd ontvangen een bonus."
         trust_level_bonus:
           name: "vertrouwensniveau"
-          title: "Beoordeelbare items die door gebruikers met een hoger vertrouwensniveau zijn gemaakt hebben een hogere score."
         type_bonus:
           name: "typebonus"
-          title: "Aan bepaalde beoordeelbare typen kan door medewerkers een bonus worden toegekend om ze hogere prioriteit te geven."
       revise_and_reject_post:
         title: "Herzien"
         reason: "Reden"
@@ -709,7 +701,6 @@ nl:
         custom_reason: "Geef een duidelijke beschrijving van de reden"
         other_reason: "Anders..."
         optional: "optioneel"
-      stale_help: "Dit beoordeelbare item is afgehandeld door <b>%{username}</b>."
       claim_help:
         optional: "Je kunt dit item claimen om te voorkomen dat anderen het beoordelen."
         required: "Je moet items claimen voordat je ze kunt beoordelen."
@@ -3180,8 +3171,6 @@ nl:
         max_views:
           placeholder: maximum
           aria_label: filteren op maximumaantal weergaven
-        additional_options:
-          label: "Filteren op aantal berichten en topicweergaven"
     hamburger_menu: "Navigatiemenu"
     new_item: "nieuw"
     go_back: "terug"
@@ -4737,7 +4726,20 @@ nl:
         one: "Het synoniem wordt ook verwijderd."
         other: "De %{count} synoniemen worden ook verwijderd."
       edit_tag: "Tagnaam en -beschrijving bewerken"
-      description: "Beschrijving (max. 1000 tekens)"
+      description: "Beschrijving"
+      settings:
+        title: "Instellingen"
+        general: "Algemeen"
+        localizations: "Lokalisaties"
+        back: "Terug"
+        name: "Naam"
+        slug: "Slug"
+        name_placeholder: "Tagnaam"
+        synonyms_subtitle: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door %{name}"
+      localization:
+        locale: "Taal"
+        name: "Naam"
+        description: "Beschrijving"
       sort_by: "Sorteren op:"
       sort_by_count: "aantal"
       sort_by_name: "naam"
@@ -5240,9 +5242,13 @@ nl:
           never: "nooit"
       reports:
         title: "Lijst van beschikbare rapporten"
-        meta_doc: "Rapporten zijn een krachtig hulpmiddel om te begrijpen wat er op je site gebeurt. Ze kunnen je helpen trends te identificeren, problemen te signaleren en beslissingen te nemen op basis van gegevens."
         sidebar_title: "Rapporten"
         back: "Terug naar alle rapporten"
+        group_traffic: "Verkeer"
+        group_members: "Leden"
+        group_moderation: "Moderatie"
+        group_security: "Beveiliging"
+        group_other: "Overig"
       config_sections:
         account:
           title: "Account"
@@ -5267,7 +5273,6 @@ nl:
         preview: "Voorbeeld"
         enabled_for_options:
           everyone: "Iedereen"
-          staff: "Alleen medewerkers"
         statuses:
           experimental: "Experimenteel"
         impact_roles:
@@ -5340,7 +5345,6 @@ nl:
               help_text: "De aanbevolen grootte is 600 x 80 pixels."
             large_icon:
               title: "Vierkant pictogram"
-              description: "Een vierkante versie van het logo wordt bovenaan het beheerscherm weergegeven en is ook het logo in het startscherm van de mobiele app."
               help_text: "De aanbevolen grootte is 512 x 512 pixels."
             square_icon_dark:
               required: "Ander vierkant pictogram gebruiken voor de donkere modus?"
@@ -5491,7 +5495,7 @@ nl:
           header_description: "Rapporten zijn een krachtig hulpmiddel om te begrijpen wat er op je site gebeurt. Ze kunnen je helpen trends te identificeren, problemen te signaleren en beslissingen te nemen op basis van gegevens."
           sub_pages:
             settings:
-              title: "Dashboardinstellingen"
+              title: "Instellingen"
         badges:
           title: "Badges"
           header_description: "Badges belonen gebruikers voor hun activiteit, bijdragen en prestaties om positief gedrag en betrokkenheid binnen de community te erkennen, te valideren en aan te moedigen"
@@ -5641,22 +5645,6 @@ nl:
         result_count:
           one: '%{count} resultaat voor "%{filter}"'
           other: '%{count} resultaten voor "%{filter}"'
-        result_types:
-          page:
-            one: "Pagina"
-            other: "Pagina's"
-          report:
-            one: "Rapport"
-            other: "Rapporten"
-          setting:
-            one: "Instelling"
-            other: "Instellingen"
-          theme:
-            one: "Thema"
-            other: "Thema's"
-          component:
-            one: "Onderdeel"
-            other: "Onderdelen"
       new_features:
         title: "Wat is er nieuw?"
         check_for_updates: "Controleren op updates"
@@ -7665,6 +7653,7 @@ nl:
         field_types:
           text: "Tekst"
           textarea: "Tekstgebied"
+          date: "Datum"
           confirm: "Bevestiging"
           dropdown: "Vervolgkeuzelijst"
           multiselect: "Meervoudige selectie"

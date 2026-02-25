@@ -5,29 +5,219 @@
 # https://translate.discourse.org/
 
 ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "網目状のスプライン..."
+      viewing_other_user: "<strong>%{username}</strong> の Discourse Rewind レポートを表示中です。"
+      cannot_view_rewind_gibberish: >
+        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Bootstrapping anomaly log...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
+      cannot_view_rewind: >
+        この Discourse Rewind レポートを表示できません。オーナーが公開していない可能性があります。<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Discourse Rewind を有効にする。これにより、プロフィールとアバターに年末のアクティビティの要約が表示されます。"
+        share_publicly: "Discourse Rewind サマリーを他のフォーラムメンバーを共有する。すべてのフォーラムメンバーがあなたの Discourse Rewind サマリーを閲覧できるようになります。"
+        cannot_share_when_profile_hidden: "Rewind を共有するには、他のユーザーがあなたの公開プロフィールを閲覧できるようにする必要があります。"
+      profile_link: "%{rewindYear} Discourse Rewind を見る"
       share:
         toggle_label:
           private: "非公開"
           public: "公開"
+        confirm: "共有する前に Rewind を必ず確認してください。個人メッセージのデータが含まれる可能性があります。いつでも非公開に設定できます。"
+        confirm_button:
+          enable: "公開する"
+          disable: "非公開にする"
+        enabled_success: "あなたの Rewind を他のフォーラムメンバーと共有できるようになりました。"
+        disabled_success: "あなたの Rewind は非公開になりました。"
       reports:
+        activity_calendar:
+          title: アクティビティカレンダー
+          cell_title:
+            visited_no_posts: "%{date} に訪問して閲覧しましたが、投稿しませんでした。"
+            visited_no_posts_others: "%{username} が %{date} に訪問して閲覧しましたが、投稿しませんでした。"
+            visited_with_posts:
+              other: "%{date} に %{count} 件投稿しました。"
+            visited_with_posts_others:
+              other: "%{username} が %{date} に %{count} 件投稿しました。"
+            no_activity: "%{date} にはアクセスしていませんでした。"
+            no_activity_others: "%{username} は %{date} にはアクセスしていませんでした。"
+        top_words:
+          title: 語の使用状況
         reading_time:
           title: 閲覧時間
+          book_comparison: "<code>%{readingTime}</code>、このサイトを読んでいました！<i>%{bookTitle}</i> を読み終えるのにかかる時間です"
+          book_comparison_others: "%{username} は <code>%{readingTime}</code>、このサイトを読んでいました！<i>%{bookTitle}</i> を読み終えるのにかかる時間です"
+        post_used_reactions:
+          title: トピックで最も使用されたリアクション
+          total_number: "合計リアクション数: %{count}"
+        post_received_reactions:
+          title: トピックで最も受けたリアクション
+        fbff:
+          title: あなたの FBFF (フォーラムのベストフレンドフォーエバー)
+          title_others: "%{username} の FBFF (フォーラムのベストフレンドフォーエバー)"
+        most_viewed_categories:
+          title:
+            other: あなたが最も閲覧したカテゴリ上位 %{count}
+          title_others:
+            other: "%{username} が最も閲覧したカテゴリ上位 %{count}"
+        most_viewed_tags:
+          title:
+            other: あなたが最も閲覧したタグ上位 %{count}
+          title_others:
+            other: "%{username} が最も閲覧したタグ上位 %{count}"
+        best_topics:
+          view_topic: トピックを見る
+          title:
+            other: あなたのトピック上位 %{count}
+          title_others:
+            other: "%{username} のトピック上位 %{count}"
+        best_posts:
+          view_post: 投稿を見る
+          title:
+            other: あなたの投稿上位 %{count}
+          title_others:
+            other: "%{username} の投稿上位 %{count}"
+        ai_usage:
+          title: AI の使用状況
+          total_requests: 合計リクエスト
+          total_tokens: 合計トークン
+          success_rate: 成功率
+          favorite_features: 最も使用された機能
+          favorite_models: 最も使用された AI モデル
+          wake_up: "目を覚まして、%{username}..."
+          system_title: "AI の使用が検出されました"
+          section_features: "上位機能"
+          section_models: "上位モデル"
         assignments:
+          title: タスク
+          total_assigned: 自分に割り当てられたタスク
           total_assigned_others: "が %{username} に割り当てました"
+          completed: 完了したタスク
+          pending: 保留中のタスク
+          assigned_by_user: 与えられたタスク
+          completion_rate: 完了率
         chat_usage:
+          title: チャットアクティビティ
+          total_messages: 合計メッセージ数
+          reactions_received: 受け取ったリアクション
+          avg_message_length: 平均メッセージ長
+          favorite_channels: お気に入りのチャンネル
           messages: メッセージ
+          bot_name: XxRewindBotxX
           author: あなた
           author_others: "%{username}"
+          channel_title: "#チャットアクティビティ"
           status_online: "● オンライン"
+          message_1:
+            other: "今年、<strong>%{count}</strong> 件のメッセージを送信しました！"
+          reply_1: "笑 すごいね B-)"
+          message_2_MF: |
+            { dm_count, plural,
+                other {<strong>#</strong> 件の DM 会話}
+            }を{ channel_count, plural,
+                other {<strong>#</strong> 人のユーザーまたはグループ}
+            }と行いました。
+          reply_2: "いいねぇ :D"
+          message_3:
+            other: "あなたのメッセージは大好評でした！<strong>%{count}</strong> 件のリアクションがありました ❤️"
+          reply_3: "やったー 8-)"
+          message_4: "平均メッセージ長は <strong>%{length}</strong> 文字でした"
+          message_5: "お気に入りのチャンネル:"
+          dancing_baby_alt: "ダンシングベイビー"
+        favorite_gifs:
+          title:
+            other: あなたのお気に入りの GIF 上位 %{count}
+          title_others:
+            other: "%{username} のお気に入りの GIF 上位 %{count}"
+          total_usage:
+            other: 合計 %{count} 回使用
         invites:
           title: 招待
+          total_invites: 送信した合計招待数
+          redeemed: 承諾された招待数
+          redemption_rate: 承諾率
+          avg_trust_level: 平均信頼レベル
+          invitee_impact: あなたの招待者のインパクト
+          invitee_impact_others: "%{username} の招待者のインパクト"
           invitee_posts: 作成した投稿数
+          invitee_topics: 開始したトピック数
           invitee_likes: '「いいね！」した数'
+          most_active_invitee: 最もアクティブな招待者
+          guest_book_title: ゲストブック
+          guest_book_subtitle: あなたのコミュニティーへの招待
+          guest_book_subtitle_others: "%{username} のコミュニティーへの招待"
           label_invitations_sent: "招待状を送信しました:"
+          label_guests_joined: "承諾された招待数:"
+          label_acceptance_rate: "承諾率:"
+          section_contributions: 招待者の貢献
+          label_posts_written: "作成した投稿数:"
+          label_topics_started: "開始したトピック数:"
+          label_likes_given: "与えられた「いいね！」数:"
+          section_most_active: 最もアクティブなゲスト
         new_user_interactions:
+          title: 新しいユーザーのメンタリング
+          subtitle:
+            other: 今年、%{count} 人の新規ユーザーを支援しました
+          subtitle_others:
+            other: "%{username} は今年、%{count} 人の新規ユーザーを支援しました"
+          new_member:
+            other: "%{count} 人の新規メンバー"
+          total_interactions: 合計インタラクション
+          unique_new_users: ユニーク新規ユーザー
           likes_given: '「いいね！」した数'
+          replies: 投稿への返信
           mentions: メンション
+          topics_with_new_users: 新規ユーザーのトピック
+          contributions_helped: あなたの貢献が役立ちました
+          contributions_helped_others: "%{username} の貢献が役立ちました"
+        time_of_day_activity:
+          title: 1 日のアクティビティリズム
+          play_button: アクティビティを音で再生
+          play_button_others: "%{username} のアクティビティを音で再生"
+          stop_button: 音声の再生を停止
         writing_analysis:
+          title: 作文の分析
+          menu_file: ファイル
           menu_other: その他
+          menu_additional: 追加
+          menu_opening: 開く
+          help_text: F1 でヘルプを表示
+          app_name: DiscoStar Professional
+          release_info: CDCK から %{rewindYear} 年リリース
+          total_words: 合計語数
+          total_posts: 合計投稿数
+          avg_post_length: 平均投稿長
+          readability_score_label: 可読性スコア
+          readability_level: 可読性レベル
+          readability_score:
+            over_80:
+              1: "アーネスト・ヘミングウェイ"
+              2: "レイモンド・カーヴァー"
+              3: "マイケル・クライトン"
+              4: "ロナルド・ダール"
+            over_60:
+              1: "C.S. ルイス"
+              2: "スティーブン・キング"
+              3: "アガサ・クリスティー"
+              4: "ジョージ R.R. マーティン"
+            over_40:
+              1: "ジョージ・オーウェル"
+              2: "F. スコット・フィッツジェラルド"
+              3: "オルダス・ハクスリー"
+              4: "ジョーン・ディディオン"
+            over_20:
+              1: "コーマック・マッカーシー"
+              2: "ウィリアム・フォークナー"
+              3: "ヴァージニア・ウルフ"
+              4: "ガブリエル・ガルシア・マルケス"
+            over_0:
+              1: "ジェームス・ジョイス"
+              2: "トーマス・ピンチョン"
+              3: "デイヴィッド・フォスター・ウォレス"
+              4: "フョードル・ドストエフスキー"
