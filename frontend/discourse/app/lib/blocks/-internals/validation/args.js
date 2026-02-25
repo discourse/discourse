@@ -862,7 +862,10 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
             }
           } else {
             // No specific class or RestModel fallback, check RestModel + __type
-            if (!(value instanceof RestModel) || value.__type !== modelType) {
+            if (
+              !(value instanceof RestModel) ||
+              value["__type"] !== modelType
+            ) {
               return argValidationError(
                 argName,
                 `must be an instance of ${modelType} model.`,

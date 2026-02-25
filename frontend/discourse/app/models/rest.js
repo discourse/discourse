@@ -39,8 +39,6 @@ export default class RestModel extends EmberObject {
 
   primaryKey = "id";
   @tracked __state;
-  /** @type {string | undefined} */
-  __type;
 
   beforeCreate() {}
   afterCreate() {}
