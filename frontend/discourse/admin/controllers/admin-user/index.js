@@ -8,7 +8,7 @@ import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
+import { propertyNotEqual, setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -42,7 +42,10 @@ export default class AdminUserIndexController extends Controller {
   @and("model.second_factor_enabled", "model.can_disable_second_factor")
   canDisableSecondFactor;
 
-  @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
+  @computed("model.username_lower")
+  get preferencesPath() {
+    return userPath(`${this.model?.username_lower}/preferences`);
+  }
 
   get customGroupIds() {
     return this.model.customGroups.map((group) => group.id);

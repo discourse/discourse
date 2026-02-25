@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, and, not, or } from "@ember/object/computed";
+import { alias, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -94,8 +94,6 @@ export default class TopicController extends Controller {
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
 
-  @and("canEditTopicFeaturedLink", "buffered.featured_link")
-  canRemoveTopicFeaturedLink;
   @not("model.isPrivateMessage") showCategoryChooser;
   @or("model.errorHtml", "model.errorMessage") hasError;
   @not("hasError") noErrorYet;
@@ -135,6 +133,12 @@ export default class TopicController extends Controller {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  @computed("canEditTopicFeaturedLink", "buffered.featured_link")
+  get canRemoveTopicFeaturedLink() {
+    // TODO (devxp) we need a buffered proxy that works with tracked properties
+    return this.canEditTopicFeaturedLink && this.get("buffered.featured_link");
   }
 
   @cached

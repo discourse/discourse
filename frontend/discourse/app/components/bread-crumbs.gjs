@@ -2,10 +2,8 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { computed } from "@ember/object";
-import { filter } from "@ember/object/computed";
 import { compare } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-//  A breadcrumb including category drop downs
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryVariables from "discourse/helpers/category-variables";
 import concatClass from "discourse/helpers/concat-class";
@@ -21,22 +19,24 @@ export default class BreadCrumbs extends Component {
   editingCategory = false;
   editingCategoryTab = null;
 
-  @filter("categories", function (c) {
-    deprecated(
-      "The parentCategories property of the bread-crumbs component is deprecated",
-      { id: "discourse.breadcrumbs.parentCategories" }
-    );
-    if (
-      c.id === this.site.get("uncategorized_category_id") &&
-      !this.siteSettings.allow_uncategorized_topics
-    ) {
-      // Don't show "uncategorized" if allow_uncategorized_topics setting is false.
-      return false;
-    }
+  @computed("categories.[]")
+  get parentCategories() {
+    return this.categories.filter((c) => {
+      deprecated(
+        "The parentCategories property of the bread-crumbs component is deprecated",
+        { id: "discourse.breadcrumbs.parentCategories" }
+      );
+      if (
+        c.id === this.site.get("uncategorized_category_id") &&
+        !this.siteSettings.allow_uncategorized_topics
+      ) {
+        // Don't show "uncategorized" if allow_uncategorized_topics setting is false.
+        return false;
+      }
 
-    return !c.get("parentCategory");
-  })
-  parentCategories;
+      return !c.get("parentCategory");
+    });
+  }
 
   @computed("category", "categories", "noSubcategories")
   get categoryBreadcrumbs() {
