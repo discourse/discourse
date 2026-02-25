@@ -305,7 +305,7 @@ module DiscoursePostEvent
       self.invitees.where.not(user_id: fetch_users.select(:id)).delete_all
     end
 
-    def can_user_update_attendance(user)
+    def can_user_update_attendance?(user)
       return false if self.closed || self.expired?
       return true if self.public?
 
