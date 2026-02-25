@@ -489,20 +489,26 @@ class PostsController < ApplicationController
     post = find_post_from_params
     raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
 
-    post_revision = find_post_revision_from_params
-    post_revision_serializer =
-      PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
-    render_json_dump(post_revision_serializer)
+    render_json_dump(
+      PostRevisionSerializer.new(find_post_revision_from_params, scope: guardian, root: false),
+    )
+  rescue ONPDiff::DiffLimitExceeded
+    render_json_error(I18n.t("errors.diff_too_complex"), status: 422)
   end
 
   def latest_revision
     post = find_post_from_params
     raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
 
-    post_revision = find_latest_post_revision_from_params
-    post_revision_serializer =
-      PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
-    render_json_dump(post_revision_serializer)
+    render_json_dump(
+      PostRevisionSerializer.new(
+        find_latest_post_revision_from_params,
+        scope: guardian,
+        root: false,
+      ),
+    )
+  rescue ONPDiff::DiffLimitExceeded
+    render_json_error(I18n.t("errors.diff_too_complex"), status: 422)
   end
 
   def hide_revision

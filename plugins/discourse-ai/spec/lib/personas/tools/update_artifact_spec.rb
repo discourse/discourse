@@ -172,6 +172,46 @@ RSpec.describe DiscourseAi::Personas::Tools::UpdateArtifact do
       expect(tool.custom_raw).not_to include("### JavaScript Changes")
     end
 
+    it "falls back when diff rendering exceeds the comparison budget" do
+      responses = [<<~TXT.strip]
+        [HTML]
+        <div>Updated</div>
+        [/HTML]
+      TXT
+
+      ONPDiff
+        .any_instance
+        .stubs(:diff)
+        .raises(
+          ONPDiff::DiffLimitExceeded.new(
+            comparisons_used: 1,
+            comparison_budget: 0,
+            left_size: 1,
+            right_size: 1,
+          ),
+        )
+
+      tool = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+        tool =
+          described_class.new(
+            { artifact_id: artifact.id, instructions: "Just update the HTML" },
+            bot_user: bot_user,
+            llm: llm_model.to_llm,
+            persona_options: {
+              "update_algorithm" => "full",
+            },
+            context: DiscourseAi::Personas::BotContext.new(messages: [], post: post),
+          )
+
+        result = tool.invoke {}
+        expect(result[:status]).to eq("success")
+      end
+
+      expect(tool.custom_raw).to include(I18n.t("errors.diff_too_complex"))
+    end
+
     it "handles updates to specific versions" do
       # Create first version
       responses = [<<~TXT.strip]
