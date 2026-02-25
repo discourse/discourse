@@ -138,14 +138,14 @@ module ApplicationHelper
       # seconds.
       if !script.start_with?("discourse/tests/")
         if is_brotli_req?
-          if script.start_with?("js/")
-            path = path.sub(%r{^js/}, "br/")
+          if path.start_with?("/assets/js/")
+            path = path.sub(%r{^/assets/js/}, "/assets/br/")
           else
             path = path.sub(/\.([^.]+)\z/, '.br.\1')
           end
         elsif is_gzip_req?
-          if script.start_with?("js/")
-            path = path.sub(%r{^js/}, "gz/")
+          if path.start_with?("/assets/js/")
+            path = path.sub(%r{^/assets/js/}, "/assets/gz/")
           else
             path = path.sub(/\.([^.]+)\z/, '.gz.\1')
           end
