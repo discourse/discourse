@@ -33,9 +33,11 @@ export default class SolvedSettings extends Component {
   }
 
   @action
-  onChangeSetting(value) {
-    this.enableAcceptedAnswers = value;
-    this.customFields.enable_accepted_answers = value ? "true" : "false";
+  onChangeSetting(event) {
+    this.enableAcceptedAnswers = event.target.checked;
+    this.customFields.enable_accepted_answers = event.target.checked
+      ? "true"
+      : "false";
   }
 
   @action
@@ -56,41 +58,33 @@ export default class SolvedSettings extends Component {
   }
 
   <template>
-    <div class="category-custom-settings-outlet solved-settings" ...attributes>
-      <h3>{{i18n "solved.title"}}</h3>
-
+    <@outletArgs.form.Section @title={{i18n "solved.title"}} ...attributes>
       {{#unless this.siteSettings.allow_solved_on_all_topics}}
-        <section class="field">
-          <div class="enable-accepted-answer">
-            <label class="checkbox-label">
-              <input
-                {{on
-                  "change"
-                  (withEventValue this.onChangeSetting "target.checked")
-                }}
-                checked={{this.enableAcceptedAnswers}}
-                type="checkbox"
-              />
-              {{i18n "solved.allow_accepted_answers"}}
-            </label>
-          </div>
-        </section>
+        <@outletArgs.form.Container>
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              checked={{this.enableAcceptedAnswers}}
+              {{on "change" this.onChangeSetting}}
+            />
+            {{i18n "solved.allow_accepted_answers"}}
+          </label>
+        </@outletArgs.form.Container>
       {{/unless}}
 
-      <section class="field auto-close-solved-topics">
-        <label for="auto-close-solved-topics">
-          {{i18n "solved.solved_topics_auto_close_hours"}}
-        </label>
+      <@outletArgs.form.Container
+        @title={{i18n "solved.solved_topics_auto_close_hours"}}
+      >
         <input
           {{on "input" (withEventValue this.onChangeAutoCloseHours)}}
-          value={{@outletArgs.category.custom_fields.solved_topics_auto_close_hours}}
+          value={{this.customFields.solved_topics_auto_close_hours}}
           type="number"
           min="0"
           id="auto-close-solved-topics"
         />
-      </section>
+      </@outletArgs.form.Container>
 
-      <section class="field">
+      <@outletArgs.form.Container>
         <div class="notify-on-staff-accept-solved">
           <label class="checkbox-label">
             <input
@@ -106,9 +100,9 @@ export default class SolvedSettings extends Component {
             {{i18n "solved.notify_on_staff_accept_solved"}}
           </label>
         </div>
-      </section>
+      </@outletArgs.form.Container>
 
-      <section class="field">
+      <@outletArgs.form.Container>
         <div class="empty-box-on-unsolved">
           <label class="checkbox-label">
             <input
@@ -124,7 +118,7 @@ export default class SolvedSettings extends Component {
             {{i18n "solved.empty_box_on_unsolved"}}
           </label>
         </div>
-      </section>
-    </div>
+      </@outletArgs.form.Container>
+    </@outletArgs.form.Section>
   </template>
 }
