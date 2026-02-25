@@ -328,7 +328,11 @@ export default class AiToolEditorForm extends Component {
 
           <form.Row as |row|>
             <row.Col>
-              <collection.Field @name="required" @title="Required" as |field|>
+              <collection.Field
+                @name="required"
+                @title={{i18n "discourse_ai.ai_tool.parameter_required"}}
+                as |field|
+              >
                 <field.Checkbox />
               </collection.Field>
             </row.Col>
@@ -336,7 +340,7 @@ export default class AiToolEditorForm extends Component {
             <row.Col>
               <collection.Field
                 @name="isEnum"
-                @title="Enum"
+                @title={{i18n "discourse_ai.ai_tool.parameter_enum"}}
                 @onSet={{this.toggleIsEnum}}
                 as |field|
               >
