@@ -95,13 +95,13 @@ export default class AdminPluginsListItem extends Component {
         <div class="admin-plugins-list__name-with-badges">
           {{#if this.pluginUrl}}
             <a
-              class="d-admin-row__overview-name admin-plugins-list__name"
+              class="d-table__overview-name admin-plugins-list__name"
               href={{this.pluginUrl}}
             >
               {{@plugin.nameTitleized}}
             </a>
           {{else}}
-            <div class="d-admin-row__overview-name admin-plugins-list__name">
+            <div class="d-table__overview-name admin-plugins-list__name">
               {{@plugin.nameTitleized}}
             </div>
           {{/if}}
@@ -120,10 +120,10 @@ export default class AdminPluginsListItem extends Component {
             @outletArgs={{lazyHash plugin=@plugin}}
           />
         </div>
-        <div class="d-admin-row__overview-author admin-plugins-list__author">
+        <div class="d-table__overview-author admin-plugins-list__author">
           {{@plugin.author}}
         </div>
-        <div class="d-admin-row__overview-about admin-plugins-list__about">
+        <div class="d-table__overview-about admin-plugins-list__about">
           {{@plugin.about}}
           {{#if @plugin.linkUrl}}
             <a
