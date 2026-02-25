@@ -6,6 +6,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import categoryBadge from "discourse/helpers/category-badge";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -88,6 +89,17 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
   get shouldRenderArchiveRow() {
     return this.chatGuardian.canArchiveChannel(this.args.channel);
+  }
+
+  get canToggleChannelState() {
+    return this.args.channel.isClosed;
+  }
+
+  get openChannelDisabledReason() {
+    if (this.args.channel.isArchived) {
+      return i18n("chat.channel_settings.open_channel_disabled_archived");
+    }
+    return i18n("chat.channel_settings.open_channel_disabled_read_only");
   }
 
   get toggleChannelWideMentionsAvailable() {
@@ -549,13 +561,30 @@ export default class ChatRouteChannelInfoSettings extends Component {
                         @icon="lock"
                         class="close-btn chat-form__btn btn-transparent"
                       />
-                    {{else}}
+                    {{else if this.canToggleChannelState}}
                       <DButton
                         @action={{this.onToggleChannelState}}
                         @label="chat.channel_settings.open_channel"
                         @icon="unlock"
                         class="open-btn chat-form__btn btn-transparent"
                       />
+                    {{else}}
+                      <DTooltip
+                        @identifier="channel-open-disabled"
+                        @placement="left"
+                      >
+                        <:trigger>
+                          <DButton
+                            @label="chat.channel_settings.open_channel"
+                            @icon="unlock"
+                            @disabled={{true}}
+                            class="open-btn chat-form__btn btn-transparent"
+                          />
+                        </:trigger>
+                        <:content>
+                          {{this.openChannelDisabledReason}}
+                        </:content>
+                      </DTooltip>
                     {{/if}}
                   </:action>
                 </section.row>
