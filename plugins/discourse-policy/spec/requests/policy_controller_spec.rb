@@ -48,19 +48,21 @@ describe DiscoursePolicy::PolicyController do
       policy
     end
 
+    before { group2.add_owner(moderator) }
+
     it "adds/removes users to the group when they accept the policy" do
       sign_in(user1)
       put "/policy/accept.json", params: { post_id: post.id }
 
       expect(response.status).to eq(200)
       expect(post.reload.post_policy.accepted_by.map(&:id)).to eq([user1.id])
-      expect(group2.users.pluck(:id)).to contain_exactly(user1.id)
+      expect(group2.users.pluck(:id)).to contain_exactly(moderator.id, user1.id)
 
       put "/policy/unaccept.json", params: { post_id: post.id }
 
       expect(response.status).to eq(200)
       expect(post.reload.post_policy.accepted_by.map(&:id)).to eq([])
-      expect(group2.users.pluck(:id)).to contain_exactly
+      expect(group2.users.pluck(:id)).to contain_exactly(moderator.id)
     end
   end
 
@@ -190,6 +192,47 @@ describe DiscoursePolicy::PolicyController do
       get "/policy/accepted.json", params: { post_id: post.id, offset: 0 }
       expect(response.status).to eq(200)
       expect(response.parsed_body["users"]).to be_an(Array)
+    end
+  end
+
+  describe "#accept" do
+    fab!(:group2, :group)
+    fab!(:post) { Fabricate(:post, user: moderator) }
+    fab!(:post_policy) do
+      policy = Fabricate(:post_policy, post: post, add_users_to_group: group2.id)
+      PostPolicyGroup.create!(post_policy_id: policy.id, group_id: group.id)
+      policy
+    end
+
+    it "returns 422 when the post author cannot manage the group that accepting users are added to" do
+      post_policy.update!(add_users_to_group: Group::AUTO_GROUPS[:admins])
+      sign_in(user1)
+      put "/policy/accept.json", params: { post_id: post.id }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_policy.errors.policy_group_inaccessible"),
+      )
+    end
+  end
+
+  describe "#unaccept" do
+    fab!(:group2, :group)
+    fab!(:post) { Fabricate(:post, user: moderator) }
+    fab!(:post_policy) do
+      policy = Fabricate(:post_policy, post: post, add_users_to_group: group2.id)
+      PostPolicyGroup.create!(post_policy_id: policy.id, group_id: group.id)
+      policy
+    end
+
+    it "returns 422 when the post author cannot manage the group that accepting users are added to" do
+      post_policy.update!(add_users_to_group: Group::AUTO_GROUPS[:admins])
+      PolicyUser.add!(user1, post_policy)
+      sign_in(user1)
+      put "/policy/unaccept.json", params: { post_id: post.id }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_policy.errors.policy_group_inaccessible"),
+      )
     end
   end
 end
