@@ -22,11 +22,11 @@ module PageObjects
       end
 
       def select_topic(index)
-        topic_cards[index].find(".predefined-topic-options-modal__select-btn").click
+        topic_cards[index].click
       end
 
       def cancel
-        find(".predefined-topic-options-modal__cancel-button").click
+        close
       end
     end
   end

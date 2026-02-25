@@ -35,7 +35,7 @@ export default class StartPostingOption extends Component {
       <DButton
         @label={{this.actionLabel}}
         @action={{this.onSelect}}
-        class="btn-primary"
+        class="btn-default"
       />
     </div>
   </template>
