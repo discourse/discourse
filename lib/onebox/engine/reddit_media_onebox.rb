@@ -117,8 +117,7 @@ module Onebox
         json_url = @url.sub(%r{/?(\?.*)?$}, ".json")
         headers = reddit_auth_header
         if headers.any?
-          json_url =
-            json_url.sub(/:\/\/(www|old|np|new)\.reddit\.com/, "://oauth.reddit.com")
+          json_url = json_url.sub(%r{://(www|old|np|new)\.reddit\.com}, "://oauth.reddit.com")
         end
         response = Onebox::Helpers.fetch_response(json_url, headers:)
         parsed = ::MultiJson.load(response)
