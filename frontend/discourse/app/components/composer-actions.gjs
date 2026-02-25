@@ -7,7 +7,6 @@ import { camelize } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
@@ -514,7 +513,8 @@ export default class ComposerActions extends Component {
             {{#each data.actions as |availAction|}}
               <dropdown.item>
                 <DButton
-                  class={{concatClass "composer-actions-btn"}}
+                  class="composer-actions-btn
+                    {{if availAction.description '--with-description'}}"
                   @action={{fn this.onSelectAction availAction.id}}
                   data-action-id={{availAction.id}}
                 >
