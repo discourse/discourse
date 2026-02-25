@@ -152,6 +152,7 @@ export default <template>
                     <tr class="d-admin-row__content query-row">
                       <td class="d-admin-row__overview">
                         <a
+                          class="query-link"
                           href={{getURL
                             (concat
                               "/admin/plugins/discourse-data-explorer/queries/"
