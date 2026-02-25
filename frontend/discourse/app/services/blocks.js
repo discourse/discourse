@@ -12,6 +12,7 @@ import {
   resolveBlock,
 } from "discourse/lib/blocks/-internals/registry/block";
 import { getAllConditionTypeEntries } from "discourse/lib/blocks/-internals/registry/condition";
+import { getAllOutlets } from "discourse/lib/blocks/-internals/registry/outlet";
 import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
 
 /**
@@ -75,6 +76,27 @@ export default class Blocks extends Service {
    * @type {number}
    */
   #lastKnownRegistrySize = 0;
+
+  /*
+   * Block Outlet Methods
+   */
+
+  /**
+   * Returns all registered block outlet names (both core and custom).
+   *
+   * Core outlets are defined in `lib/registry/block-outlets.js`. Custom outlets
+   * are registered by plugins and themes via `api.registerBlockOutlet()`.
+   *
+   * @returns {string[]} Array of outlet names (e.g., ["hero-blocks", "homepage-blocks", ...]).
+   *
+   * @example
+   * ```javascript
+   * const outlets = this.blocks.listOutlets();
+   * ```
+   */
+  listOutlets() {
+    return getAllOutlets();
+  }
 
   /*
    * Block Registry Methods

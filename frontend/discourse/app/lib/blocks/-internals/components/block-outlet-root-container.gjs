@@ -3,7 +3,11 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import cssIdentifier from "discourse/helpers/css-identifier";
+import {
+  outletClassName,
+  outletContainerClassName,
+  outletLayoutClassName,
+} from "discourse/lib/blocks/-internals/css";
 import { withDebugGroup } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
@@ -32,9 +36,6 @@ import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block"
  */
 export default class BlockOutletRootContainer extends Component {
   @service blocks;
-  @service cssStyles;
-
-  #cssCleanup;
 
   /**
    * Cache for curried components, keyed by their stable block key.
@@ -52,57 +53,36 @@ export default class BlockOutletRootContainer extends Component {
   #componentCache = new Map();
 
   /**
-   * Initializes the container component and registers its container query CSS
-   * via the css-styles service.
+   * The CSS-safe version of the outlet name, used as the class for the
+   * outermost wrapper `<div>`.
    *
-   * @param {import("@ember/owner").default} owner - The Ember owner instance.
-   * @param {Object} args - The component arguments.
-   * @param {string} args.outletName - The name of the outlet.
-   */
-  constructor(owner, args) {
-    super(owner, args);
-    const rule = `.${this.containerClassName} { container: ${args.outletName} / inline-size; }`;
-    this.#cssCleanup = this.cssStyles.addRule(rule, {
-      stylesheet: "blocks",
-    });
-  }
-
-  /**
-   * Cleans up resources registered during the component's lifecycle.
-   */
-  willDestroy() {
-    super.willDestroy();
-    this.#cssCleanup?.();
-  }
-
-  /**
-   * The CSS-safe version of the outlet name.
-   *
-   * Converts namespaced outlet names (e.g., "plugin:outlet") to valid CSS
-   * identifiers by replacing colons with hyphens.
-   *
-   * @returns {string} The CSS-safe outlet name (e.g., "plugin-outlet").
+   * @see {@link outletClassName} for the naming convention.
+   * @returns {string} The CSS-safe outlet name (e.g., "hero-blocks").
    */
   get safeOutletName() {
-    return cssIdentifier(this.args.outletName);
+    return outletClassName(this.args.outletName);
   }
 
   /**
-   * The CSS class name for the container element.
+   * The CSS class name for the container element that establishes the
+   * CSS container query context for child blocks.
    *
-   * @returns {string} The container class name (e.g., "topic-list__container").
+   * @see {@link outletContainerClassName} for the naming convention.
+   * @returns {string} The container class name (e.g., "hero-blocks__container").
    */
   get containerClassName() {
-    return `${this.safeOutletName}__container`;
+    return outletContainerClassName(this.args.outletName);
   }
 
   /**
-   * The CSS class name for the layout element.
+   * The CSS class name for the layout element that wraps the rendered
+   * block children.
    *
-   * @returns {string} The layout class name (e.g., "topic-list__layout").
+   * @see {@link outletLayoutClassName} for the naming convention.
+   * @returns {string} The layout class name (e.g., "hero-blocks__layout").
    */
   get layoutClassName() {
-    return `${this.safeOutletName}__layout`;
+    return outletLayoutClassName(this.args.outletName);
   }
 
   /**
