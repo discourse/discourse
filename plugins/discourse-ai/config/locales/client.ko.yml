@@ -133,6 +133,7 @@ ko:
         remove_parameter: "제거"
         parameter_required: "필수"
         edit: "편집"
+        test: "테스트"
         delete: "삭제"
       secrets:
         short_title: "자격 증명"

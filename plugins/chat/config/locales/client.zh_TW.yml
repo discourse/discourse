@@ -48,6 +48,7 @@ zh_TW:
       cancel: "取消"
       cancel_reply: "取消回覆"
       chat_channels: "頻道"
+      pinned: "已釘選"
       browse_all_channels: "瀏覽所有頻道"
       move_to_channel:
         title: "將訊息移至頻道"

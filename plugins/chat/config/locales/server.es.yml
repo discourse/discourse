@@ -72,6 +72,7 @@ es:
         closed: "El canal está cerrado, no se pueden editar ni eliminar mensajes"
         read_only: "El canal es de solo lectura, no se pueden editar ni eliminar mensajes"
       user_cannot_send_message: "No puedes enviar mensajes en este momento."
+      user_not_in_channel: "Debes unirte a este canal."
       rate_limit_exceeded: "Se ha superado el límite de mensajes de chat que se pueden enviar en 30 segundos"
       auto_silence_from_flags: "Mensaje de chat marcado con una puntuación lo suficientemente alta como para silenciar al usuario."
       channel_cannot_be_archived: "El canal no se puede archivar en este momento, debe estar cerrado o abierto para ser archivado."
@@ -242,19 +243,14 @@ es:
         watched_thread:
           one: "[%{site_name}] Nuevo mensaje en un hilo en %{channel}"
           other: "[%{site_name}] Nuevos mensajes en un hilo en %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Nuevos mensajes en hilos en %{channel} y %{count} más"
-          other: "[%{site_name}] Nuevos mensajes en hilos en %{channel} y %{count} más"
         chat_dm_1:
           one: "[%{site_name}] Nuevo mensaje de %{name}"
           other: "[%{site_name}] Nuevos mensajes de %{name}"
         chat_dm_2: "[%{site_name}] Nuevos mensajes de %{name_1} y %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Nuevos mensajes de %{name} y otros %{count}"
         chat_channel_1:
           one: "[%{site_name}] Nuevo mensaje en %{channel}"
           other: "[%{site_name}] Nuevos mensajes en %{channel}"
         chat_channel_2: "[%{site_name}] Nuevos mensajes en %{channel_1} y %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Nuevos mensajes en %{channel} y otros %{count}"
         chat_channel_and_dm: "[%{site_name}] Nuevos mensajes en %{channel} y desde %{name}"
       unsubscribe: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}, o %{unsubscribe_link} para darte de baja."
       unsubscribe_no_link: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}."

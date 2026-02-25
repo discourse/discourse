@@ -8,6 +8,7 @@ pl_PL:
   reports:
     currently_away:
       title: Użytkownicy aktualnie nieobecni
+      description: "Użytkownicy, którzy aktualnie są na urlopie lub nie mają urlopu, można ich filtrować według grup."
       labels:
         username: Nazwa użytkownika
   discourse_automation:

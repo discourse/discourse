@@ -22,6 +22,7 @@ nb_NO:
         yesterday: "I går"
       create: "Opprett"
       cancel: "Avbryt"
+      pinned: "Fastsatt"
       channel_settings:
         edit: "Endre"
         add: "Legg til"

@@ -150,8 +150,9 @@ fa_IR:
         save: "ذخیره"
         remove_parameter: "پاک کردن"
         parameter_required: "مورد نیاز"
+        credential_not_set: "(تنظیم نشده)"
         edit: "ویرایش"
-        test: "اجرا کردن تست"
+        test: "آزمایش کردن"
         delete: "حذف"
         test_modal:
           run: "اجرا کردن تست"
@@ -164,6 +165,7 @@ fa_IR:
         edit: "ویرایش"
         delete: "حذف"
         embedding: "جاسازی"
+        tool: "ابزار"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"

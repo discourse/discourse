@@ -7,9 +7,11 @@
 ja:
   admin_js:
     admin:
+      calendar: "カレンダーとイベント"
       site_settings:
         categories:
           discourse_post_event: "Discourse イベント"
+          discourse_calendar: "カレンダーとイベント"
   js:
     notifications:
       titles:
@@ -34,6 +36,7 @@ ja:
         header_title: "祝祭日"
         pick_region_description: "地域を選択すると、その地域の祝祭日が表示されます。"
         disabled_holidays_description: "無効化された祝祭日は、スタッフの祝祭日カレンダーから除外されます。"
+        header_description: "地域を選択すると、その地域の休日が表示されます。無効化された休日は、スタッフの休日カレンダーから除外されます。"
       date: "日付"
       add_to_calendar: "Google カレンダーに追加"
       toggle_timezone_offset_title: "タイムゾーンオフセットの切り替え"
@@ -42,6 +45,7 @@ ja:
         title: "地域"
         none: "なし"
         use_current_region: "現在の地域を使用"
+        select_region: "地域を選択..."
         names:
           ae: "アラブ首長国連邦"
           ar: "アルゼンチン"
@@ -407,6 +411,7 @@ ja:
         event:
           expired: "期限切れ"
           closed: "終了"
+          full: "満席"
           status:
             standalone:
               title: "単発"
@@ -464,6 +469,9 @@ ja:
         minimal:
           label: "ミニマルイベント"
           checkbox_label: "参加/不参加ボタンと招待者のステータスを非表示にする"
+        max_attendees:
+          label: "最大参加者"
+          placeholder: "制限なし"
         allow_chat:
           label: "チャットの統合"
           checkbox_label: "イベント専用のチャットチャンネルを作成して管理する"

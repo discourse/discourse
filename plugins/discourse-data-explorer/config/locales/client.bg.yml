@@ -7,7 +7,9 @@
 bg:
   js:
     explorer:
+      default_query: "По подразбиране"
       or: "или"
+      create: "Създай"
       import:
         label: "Импорт"
       help:
@@ -19,7 +21,6 @@ bg:
           yes: "Да"
           no: "Не"
       export: "Експорт "
-      save: "Запази промените"
       edit: "Редактирай"
       delete: "Изтрий"
       result_count:

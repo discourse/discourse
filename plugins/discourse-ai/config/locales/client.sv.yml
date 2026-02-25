@@ -123,7 +123,9 @@ sv:
         save: "Spara"
         remove_parameter: "Ta bort"
         parameter_required: "Krävs"
+        credential_not_set: "(inte inställd)"
         edit: "Redigera"
+        test: "Testa"
         delete: "Ta bort"
       secrets:
         short_title: "Kontouppgifter"

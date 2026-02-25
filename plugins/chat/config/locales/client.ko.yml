@@ -37,6 +37,7 @@ ko:
       create: "글"
       cancel: "취소"
       chat_channels: "채널"
+      pinned: "핀 지정됨"
       move_to_channel:
         instructions:
           other: "<strong>%{count}개</strong>의 메시지를 옮기고 있습니다. 새로운 채널을 선택하세요. <strong>%{channelTitle}</strong>에 메시지가 이동되었다는 것이 표시될 것입니다. 답변된 메시지는 새로운 채널에 이동되지 않을 것이며, 기존 채널의 메시지는 답변하는 메시지로 표시되지 않을 것입니다."

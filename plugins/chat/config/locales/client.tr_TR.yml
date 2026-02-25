@@ -64,6 +64,7 @@ tr_TR:
       cancel: "İptal et"
       cancel_reply: "Yanıtı iptal et"
       chat_channels: "Kanallar"
+      pinned: "Sabitlendi"
       browse_all_channels: "Tüm kanallara göz atın"
       see_in: "Şurada bak:"
       move_to_channel:

@@ -67,6 +67,7 @@ ru:
       cancel_reply: "Отменить ответ"
       chat_channels: "Каналы"
       starred: "Отмечено звездочкой"
+      pinned: "Закреплена"
       browse_all_channels: "Просмотреть все каналы"
       see_in: "Смотреть в:"
       move_to_channel:

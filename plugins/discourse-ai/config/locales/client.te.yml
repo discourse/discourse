@@ -109,6 +109,7 @@ te:
         remove_parameter: "తీసివేయండి"
         parameter_required: "అవసరం"
         edit: "సవరించండి"
+        test: "పరీక్షించండి"
         delete: "తొలగించండి"
       secrets:
         short_title: "ఆధారాలు"

@@ -60,8 +60,6 @@ hu:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
-    too_many_urls: "Egy kérelemben nem lehet 10-nél több URL-címet beilleszteni."
-    concurrency_not_allowed: "Egyidejű beágyazott egydobozos kérések nem engedélyezettek. Kérjük, egyszerre egy kérést küldjön."
   components:
     enabled_filter: "Engedélyezed"
     disabled_filter: "Kikapcsolt"
@@ -347,7 +345,6 @@ hu:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakter hosszúaknak kell lenniük, hogy elkerüljék a jogos felhasználók véletlen sebességkorlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nem lehet letiltani a szalagkép metaadatait, ha a composer médiaoptimalizáló kép engedélyezve van. Kapcsolja ki ezt az opciót, mielőtt letiltaná a szalagkép metaadatokat."
-      x_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
       tl0_and_anonymous_flag: "A névtelen felhasználók számára meg kell adni a „webhely kapcsolatfelvételi e-mail-címét” vagy „az illegális tartalom bejelentéséhez szükséges e-mail-címet”."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Ehhez a beállításhoz először engedélyezni kell az 'anonim mód engedélyezése' beállítást."
     conflicting_google_user_id: 'A fiók Google-fiók azonosítója megváltozott; biztonsági okokból a személyzet beavatkozása szükséges. Kérjük, lépjen kapcsolatba a személyzettel, és mutassa meg nekik a következő címet: <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1805,7 +1802,6 @@ hu:
     llms_txt: "Töltsön fel egy szöveges fájlt, amely az /llms.txt útvonalon lesz elérhető az LLM-robotok (crawlerek) számára. További információért látogasson el az <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> oldalra."
     content_security_policy: "Engedélyezze a Tartalombiztonsági Szabályzatot (Content-Security-Policy, CSP). A CSP egy további biztonsági réteg, amely segít megelőzni bizonyos típusú támadásokat, beleértve a keresztoldali szkriptelést (Cross Site Scripting, XSS) és az adatbefecskendezést."
     content_security_policy_report_only: "Engedélyezze a Tartalombiztonsági Szabályzat Csak Jelentés Módját (CSP)"
-    content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."
     content_security_policy_frame_ancestors: "Korlátozza, ki ágyazhatja be ezt a webhelyet iframe-ekbe a CSP segítségével. Az engedélyezett kiszolgálók szabályozása a <a href='%{base_path}/admin/customize/embedding'>Beágyazás</a> oldalon történik"
     content_security_policy_script_src: "További engedélyezett szkriptforrások. Az aktuális kiszolgáló és CDN alapértelmezetten szerepel. Lásd <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS támadások mérséklése Tartalombiztonsági Szabályzattal.</a> (CSP). Egyéb kiszolgálóforrások figyelmen kívül maradnak, mivel a strict-dynamic engedélyezve van."
     invalidate_inactive_admin_email_after_days: "Azok az adminisztrátori fiókok, amelyek ennyi napja nem látogatták meg a webhelyet, újra kell érvényesíteniük az e-mail címüket a bejelentkezés előtt. Állítsa 0-ra a kikapcsoláshoz."
@@ -1891,7 +1887,6 @@ hu:
     enable_local_logins_via_email: "Engedélyezze a felhasználóknak, hogy egy kattintással bejelentkezési linket kérjenek, amelyet e-mailben kapnak meg."
     allow_new_registrations: "Új felhasználók regisztrációjának engedélyezése. Vegye ki a jelölést, hogy megakadályozza, hogy bárki új fiókot hozzon létre."
     enable_signup_cta: "Mutasson értesítést a visszatérő névtelen felhasználóknak, és ajánlja fel, hogy regisztráljanak egy fiókot."
-    enable_discourse_id: "Engedélyezze a Discourse ID-n keresztüli hitelesítést, amely egy egyszeri bejelentkezési szolgáltatás, amely lehetővé teszi a felhasználók számára, hogy egyetlen fiókkal több Discourse-oldalra is bejelentkezzenek. Az olyan gyakori közösségi bejelentkezési szolgáltatók, mint a Google, a Facebook, az Apple és a Github további konfiguráció nélkül támogatottak. További részletekért lásd: <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
     enable_google_oauth2_logins: "Engedélyezze a Google Oauth2 hitelesítést. A Google jelenleg ezt a hitelesítési módszert támogatja. Kulcs és titkos kód szükséges. Lásd: <a href='https://meta.discourse.org/t/15858' target='_blank'>A Google bejelentkezés konfigurálása a Discourse</a>számára."
     google_oauth2_client_id: "A Google-alkalmazás által megadott egyedi ügyfél-azonosító, amelyet a hitelesítési folyamathoz használnak."
     google_oauth2_client_secret: "A Google-alkalmazás titkos kliens kódja."
@@ -2132,7 +2127,6 @@ hu:
     alternative_reply_by_email_addresses: "Alternatív sablonok listája a bejövő e-mail-címekre történő válaszadáshoz. Példa: %%{reply_key}@reply.example.com|válaszok+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Szöveg helyett HTML-kódot használjon bejövő e-mailekhez."
     strip_incoming_email_lines: "Távolítsa el a kezdő és a záró szóközöket a bejövő e-mailek minden sorából."
-    disable_emails: "Megakadályozza, hogy a Discourse bármilyen típusú e-mailt küldjön. Válassza az „igen” lehetőséget az e-mailek letiltásához az összes felhasználó számára. Válassza a „nem személyzet” lehetőséget, ha csak a nem stábtagok számára szeretné letiltani az e-maileket."
     allow_email_invites: "Ha le van tiltva, a felhasználók nem tudnak meghívókat küldeni a Discourse-on keresztül."
     strip_images_from_short_emails: "Képek eltávolítása 2800 bájtnál kisebb méretű e-mailekből"
     short_email_length: "Határozza meg bájtban azt a maximális hosszt, amelyen egy e-mailt „rövid”-nek kell minősíteni a képelnyomás miatt. Ha egy e-mail mérete nem haladja meg ezt a beállítást, az e-mailben található képek (például avatarok és hangulatjelek) törlődnek."
@@ -2418,7 +2412,6 @@ hu:
     dashboard_hidden_reports: "Engedélyezze a megadott jelentések elrejtését a vezérlőpulton."
     dashboard_visible_tabs: "Válassza ki, hogy a vezérlőpult mely lapjai legyenek láthatóak."
     dashboard_general_tab_activity_metrics: "Válassza ki azokat a jelentéseket, amelyek aktivitási mutatóként jelenjenek meg az általános fülön."
-    gravatar_enabled: "Használd a <a href='https://gravatar.com/'>Gravatar</a> szolgáltatást a felhasználói avatarokhoz. Ez megakadályozza, hogy a felhasználók a Gravatarra váltsanak avatarjaikhoz, de nem befolyásolja azokat a felhasználókat, akik már használják azt."
     gravatar_name: "Adja meg a Gravatar szolgáltató nevét. Ezt a nevet általában a Gravatar avatarokat biztosító forrás azonosítására használják a webhelyen."
     gravatar_base_url: "Adja meg a Gravatar szolgáltató API-jának elérési URL-jét. Ez a beállítás kulcsfontosságú az e-mail címek Gravatar URL-é alakításához, ahol az avatar képek tárolva vannak."
     gravatar_login_url: "A `gravatar_base_url`-hez viszonyított URL, amely lehetővé teszi a felhasználónak, hogy bejelentkezzen a Gravatar szolgáltatásba."
@@ -2514,12 +2507,6 @@ hu:
       reply_by_email_disabled: "A beállítás engedélyezése előtt először engedélyeznie kell a „válasz e-mailben” funkciót."
       discourse_connect_url_is_empty: "Először be kell állítania egy 'discourse connect url'-t, mielőtt engedélyezné ezt a beállítást."
       enable_local_logins_disabled: "Először engedélyeznie kell a 'helyi bejelentkezések engedélyezése' opciót, mielőtt ezt a beállítást engedélyezné."
-      min_username_length_exists: "Nem állíthatja a felhasználónév minimális hosszát a legrövidebb felhasználónév (%{username}) fölé."
-      min_group_name_length_exists: "A minimális felhasználónévhossz nem állítható a legrövidebb csoportnév (%{group_name}) fölé."
-      min_username_length_range: "Nem lehet a legnagyobb értéknél nagyobb legkisebb értéket beállítani."
-      max_username_length_exists: "Nem állíthatja a felhasználónév maximális hosszát a leghosszabb felhasználónév (%{username}) alá."
-      max_group_name_length_exists: "A felhasználónév maximális hossza nem állítható a leghosszabb csoportnév (%{group_name}) alá."
-      max_username_length_range: "Nem lehet a legkisebb értéknél kisebb legnagyobb értéket beállítani."
       invalid_hex_value: "A színértékeknek 6 számjegyű hexadecimális kódoknak kell lenniük."
       empty_selectable_avatars: "A beállítás engedélyezése előtt fel kell töltened legalább két választható avatart."
       category_search_priority:
@@ -2582,7 +2569,6 @@ hu:
       exclude_tag: "Egy adott címkével rendelkező témák kizárása"
       exclude_tags_any: "Kizárja a megadott címkék bármelyikét tartalmazó témákat (vesszővel elválasztva)."
       exclude_tags_all: "Kizárja a megadott címkékkel rendelkező témákat (plusz-szeparált)"
-      tags_alias: "A „tag:” szűrő álneve"
       tag_group: "Témák megjelenítése egy adott címkecsoport címkéivel"
       exclude_tag_group: "Címkékkel ellátott témák kizárása egy adott címkecsoportból"
       activity_before: "Mutassa a témákat, amelyek utolsó aktivitása egy adott dátum előtt (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) történt"
@@ -5011,7 +4997,6 @@ hu:
   dev_mode:
     title: "Fejlesztői mód"
     enable_rack_mini_profiler: "Engedélyezze a Rack Mini Profiler 1 órás megőrzését a munkamenet-változások között"
-    enter: "Belépés"
   wizard:
     title: "Discourse telepítő"
     step:
@@ -5307,10 +5292,6 @@ hu:
         complete: "Bejegyzés jóváhagyva és felfedve"
       post_actions:
         bundle_title: "Mit akarsz csinálni a bejegyzéssel?"
-      no_action_post:
-        title: "Nincs művelet"
-        description: "Ne tegyen semmit a bejegyzéssel kapcsolatban"
-        complete: "Nem történt intézkedés a bejegyzéssel kapcsolatban"
       delete_post:
         title: "Bejegyzés törlése"
         description: "Bejegyzés törlése"
@@ -5331,16 +5312,8 @@ hu:
         title: "Bejegyzés szerkesztése"
         description: "A bejegyzés tartalmának szerkesztése"
         complete: "Bejegyzés szerkesztve"
-      convert_to_pm:
-        title: "Átalakít PÜ-re"
-        description: "Alakítsa át ezt a bejegyzést személyes üzenetté"
-        complete: "Bejegyzés személyes üzenetté alakítva"
       user_actions:
         bundle_title: "Mit szeretnél csinálni a felhasználóval?"
-      no_action_user:
-        title: "Nincs művelet"
-        description: "Ne tegyen lépéseket a felhasználó ellen"
-        complete: "Nem történt intézkedés a felhasználó ellen"
       silence_user:
         title: "Felhasználó némítása"
         description: "Felhasználó letiltása a posztolásról"

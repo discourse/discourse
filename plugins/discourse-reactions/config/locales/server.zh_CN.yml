@@ -13,7 +13,7 @@ zh_CN:
     discourse_reactions_desaturated_reaction_panel: "通过在悬停前显示不饱和的回应，减少回应的视觉噪音。"
     discourse_reactions_excluded_from_like: "不计为“赞”的回应。任何不在此列表中的回应都将计为“赞”，用于徽章、报告和其他目的。"
     discourse_reactions_like_sync_enabled: "如果启用此功能，历史回应将创建其匹配的“赞”记录，`discourse_reactions_excluded_from_like` 中定义的回应除外。此同步将在后台定期发生，当您更改 `discourse_reactions_excluded_from_like` 时也会进行同步。"
-    discourse_reactions_allow_any_emoji: "如果启用此设置，将添加一个按钮，允许用户在回应中选择任意自定义表情符号。要限制用户可用表情符号的范围，请使用 `emoji_deny_list` 站点设置。"
+    discourse_reactions_allow_any_emoji: "如果启用此设置，将添加一个按钮，允许用户在回应选择器中选择任意表情符号。成员将被允许选择任何表情符号，包括自定义表情符号，用于回应。要限制可用回应，请使用 `emoji_deny_list` 站点设置。"
     errors:
       invalid_excluded_emoji: "您不能排除不在 'discourse reactions enabled reactions' 中的表情符号，也不能排除用于 'discourse reactions reaction for like' 的表情符号。"
   badges:

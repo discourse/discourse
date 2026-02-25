@@ -126,6 +126,7 @@ sl:
         save: "Shrani"
         remove_parameter: "Odstrani"
         parameter_required: "Zahtevano"
+        credential_not_set: "(ni nastavljeno)"
         edit: "Uredi"
         delete: "Izbriši"
       secrets:

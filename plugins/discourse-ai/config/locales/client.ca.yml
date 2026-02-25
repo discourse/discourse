@@ -115,6 +115,7 @@ ca:
         remove_parameter: "Elimina"
         parameter_required: "Necessari"
         edit: "Edita"
+        test: "Test"
         delete: "Suprimeix"
       secrets:
         short_title: "Credencials"

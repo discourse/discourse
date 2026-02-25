@@ -770,21 +770,13 @@ he:
       in_reply_to: "בתגובה ל"
       filtered_flagged_by: "סומן על ידי"
       unknown:
-        title:
-          one: "יש לך פריטים שממתינים לבדיקה מתוסף מושבת:"
-          two: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
-          many: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
-          other: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
         instruction: "אי אפשר להציג אותם כראוי עד להפעלת התוסף המתאים. נא להפעיל את התוסף ולרענן את העמוד. לחלופין, אפשר להתעלם מהם. <a href='%{url}' target='_blank'>מידע נוסף…</a>"
         reviewable_unknown_source: "%{reviewableType} (תוסף לא ידוע)"
         reviewable_known_source: "%{reviewableType} (מהתוסף ‚%{pluginName}’)"
         ignore_all: "התעלמות מהכול"
         enable_plugins: "הפעלת תוספים"
-        delete_confirm: "למחוק את כל הביקורות שנוצרו על ידי תוספים שהושבתו?"
-        ignore_success: "כל הביקורות שנוצרו על ידי תוספים שהושבתו תימחקנה."
       explain:
         why: "נא להסביר למה הפריט הזה הגיע לתור"
-        title: "ניקוד שניתן לסקירה"
         formula: "נוסחה"
         subtotal: "סכום ביניים"
         total: "סה״כ"
@@ -798,10 +790,8 @@ he:
           title: "משתמשים שסימון הדגל שלהם היה מוצדק בעבר מקבלים בונוס."
         trust_level_bonus:
           name: "דרגת אמון"
-          title: "לפריטים לסקירה שנוצרו על ידי משתמשים בדרגות אמון גבוהות יותר יש ניקוד גבוה יותר."
         type_bonus:
           name: "בונוס סוג"
-          title: "לסוגים מסוימים של פריטים לסקירה ניתן להקצות בונוס על ידי הסגל כדי שהעדיפות שלהם תעלה."
       revise_and_reject_post:
         title: "עריכת שינויים"
         reason: "סיבה"
@@ -810,7 +800,6 @@ he:
         custom_reason: "הוספת תיאור ברור של הסיבה"
         other_reason: "אחר…"
         optional: "רשות"
-      stale_help: "הפריט לסקירה נפתר על ידי <b>%{username}</b>."
       claim_help:
         optional: "אפשר לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
         required: "עליך לדרוש פריטים לפני שיתאפשר לך לסקור אותם."
@@ -3539,8 +3528,6 @@ he:
         max_views:
           placeholder: מרבי
           aria_label: סינון לפי כמות הצפיות המרבית
-        additional_options:
-          label: "סינון לפי כמות פוסטים וצפיות בנושאים"
     hamburger_menu: "תפריט ניווט"
     new_item: "חדש"
     go_back: "חזור אחורה"
@@ -4386,7 +4373,11 @@ he:
           edit: "עריכה"
           delete: "מחיקה"
         add: "הוספת תרגום חדש"
-        manage: "ניהול תרגומים (%{count} קיימים)"
+        manage:
+          one: "ניהול תרגומים (%{count} קיימים)"
+          two: "ניהול תרגומים (%{count} קיימים)"
+          many: "ניהול תרגומים (%{count} קיימים)"
+          other: "ניהול תרגומים (%{count} קיימים)"
         view:
           one: "הצגת שפה מתורגמת"
           two: "הצגת שתי שפות מתורגמות"
@@ -5343,7 +5334,20 @@ he:
         other: "%{count} המילים הנרדפות שקשורות אליה תימחקנה גם כן."
       edit_tag: "עריכת שם התגית ותיאורה"
       edit: "עריכת התגית הזאת"
-      description: "תיאור (1000 תווים לכל היותר)"
+      description: "תיאור"
+      settings:
+        title: "הגדרות"
+        general: "כללי"
+        localizations: "תרגומים"
+        back: "חזרה"
+        name: "שם"
+        slug: "מזהה ייצוגי"
+        name_placeholder: "שם תגית"
+        synonyms_subtitle: "תגיות אלו תוחלפנה בתגית %{name}"
+      localization:
+        locale: "הגדרות מקומיות"
+        name: "שם"
+        description: "תיאור"
       sort_by: "סידור לפי:"
       sort_by_count: "ספירה"
       sort_by_name: "שם"
@@ -5902,9 +5906,13 @@ he:
           never: "אף פעם"
       reports:
         title: "רשימת דיווחים זמינים"
-        meta_doc: "דוחות הם כלי רב עוצמה שמאפשר לך להבין מה קורה באתר שלך. הם יכולים לסייע לך לזהות מגמות, לאתר בעיות ולהחליט על בסיס נתונים."
         sidebar_title: "דוחות"
         back: "חזרה לכל הדוחות"
+        group_traffic: "תנועה"
+        group_members: "חברים"
+        group_moderation: "פיקוח"
+        group_security: "אבטחה"
+        group_other: "אחר"
       config_sections:
         account:
           title: "חשבון"
@@ -5945,7 +5953,6 @@ he:
         enabled_for_options:
           no_one: "אף אחד"
           everyone: "כולם"
-          staff: "סגל בלבד"
           specific_groups: "קבוצה או קבוצות מסוימות"
           specific_groups_with_group_names:
             one: "הקבוצה %{groupNames}"
@@ -6051,7 +6058,6 @@ he:
               help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
             large_icon:
               title: "סמל מרובע"
-              description: "גרסה מרובעת של תמונת הלוגו מופיעה בחלק העליון של הניהול והיא גם לוגו היישומון במסך הבית של המכשיר הנייד."
               help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
             square_icon_dark:
               required: "האם להשתמש בסמל מרובע אחר עבור מצב כהה?"
@@ -6237,7 +6243,7 @@ he:
           header_description: "דוחות הם כלי רב עוצמה שמאפשר לך להבין מה קורה באתר שלך. הם יכולים לסייע לך לזהות מגמות, לאתר בעיות ולהחליט על בסיס נתונים."
           sub_pages:
             settings:
-              title: "הגדרות לוח הבקרה"
+              title: "הגדרות"
         badges:
           title: "עיטורים"
           header_description: "עיטורים מתגמלים משתמשים על הפעילויות שלהם וההישגים כדי להוקיר, לתקף ולעודד התנהגות ומעורבות חיובית בתוך הקהילה"
@@ -6387,32 +6393,6 @@ he:
           two: 'שתי תוצאות עבור „%{filter}”'
           many: '%{count} תוצאות עבור „%{filter}”'
           other: '%{count} תוצאות עבור „%{filter}”'
-        result_types:
-          page:
-            one: "עמוד"
-            two: "עמודים"
-            many: "עמודים"
-            other: "עמודים"
-          report:
-            one: "דוח"
-            two: "דוחות"
-            many: "דוחות"
-            other: "דוחות"
-          setting:
-            one: "הגדרה"
-            two: "הגדרות"
-            many: "הגדרות"
-            other: "הגדרות"
-          theme:
-            one: "תמה"
-            two: "תמות"
-            many: "תמות"
-            other: "תמות"
-          component:
-            one: "רכיב"
-            two: "רכיבים"
-            many: "רכיבים"
-            other: "רכיבים"
       new_features:
         title: "מה חדש?"
         check_for_updates: "חיפוש עדכונים"
@@ -8525,6 +8505,7 @@ he:
         field_types:
           text: "טקסט"
           textarea: "אזור טקסט"
+          date: "תאריך"
           confirm: "אישור"
           dropdown: "נגלל"
           multiselect: "מגוון בחירות"

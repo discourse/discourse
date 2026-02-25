@@ -6,6 +6,7 @@
 
 el:
   js:
+    gamification_score: "Εις υγείαν"
     gamification:
       you: "Εσείς"
       leaderboard:

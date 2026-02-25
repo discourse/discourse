@@ -49,6 +49,7 @@ ar:
     all_day_event_start_time: "ستبدأ الأحداث التي ليس بها وقت محدَّد للبدء في هذا الوقت. التنسيق هو HH:mm. للساعة 6 صباحًا، أدخل 06:00."
     all_day_event_end_time: "ستنتهي الأحداث التي ليس بها وقت محدَّد للانتهاء في هذا الوقت. التنسيق هو HH:mm. للساعة 6 مساءً، أدخل 18:00."
     all_day_event_time_error: "الوقت غير صالح. يجب كتابة الوقت بالتنسيق HH:mm (مثال: 08:00)."
+    calendar_categories: "اعرض التقويم أعلى الفئة. مُعرّف الفئة إلزامي. مثال: categoryId=6;weekends=false;defaultView=year;\n إعدادات أخرى صالحة: weekends(true/false) لتحديد عرض عطلات نهاية الأسبوع، defaultView(day,week,month,year) لتحديد طريقة عرض التقويم الافتراضية."
     calendar_categories_outlet: "يسمح بتغيير المنفذ المفترض أن يعرض تقويم الفئة."
     working_days: "تحديد أيام العمل. يمكنك عرض مدى توافر مجموعة باستخدام علامة `timezones` في منشور: مثال: `[timezones group=admins][timezones]`"
     working_day_start_hour: "وقت البدء لساعات يوم العمل"
@@ -60,6 +61,7 @@ ar:
     calendar_automatic_holidays_enabled: "يحدِّد حالة العطلة تلقائيًا حسب المنطقة الجغرافية للمستخدمين (ملاحظة: يمكنك إيقاف عطلات تلقائية محدَّدة في إعدادات المكوِّن الإضافي)"
     event_participation_buttons: "قائمة أزرار المشاركة في الأحداث التي يمكن للمستخدمين استخدامها."
     sidebar_show_upcoming_events: "عرض رابط الأحداث القادمة في الشريط الجانبي ضمن \"المزيد\"."
+    calendar_first_day_of_week: "حدد اليوم الأول من الأسبوع لعرض التقويم. الخيارات المتاحة هي السبت، أو الأحد، أو الاثنين."
   discourse_calendar:
     invite_user_notification: "دعاك %{username} إلى: %{description}"
     calendar_must_be_in_first_post: "لا يمكن استخدام علامة التقويم إلا في المنشور الأول في الموضوع."
@@ -85,6 +87,7 @@ ar:
           raw_invitees:
             only_group: "لا يقبل الحدث إلا أسماء المجموعات."
           ends_at_before_starts_at: "لا يمكن أن ينتهي الحدث قبل أن يبدأ."
+          max_attendees_reached: "هذا الحدث مكتمل العدد."
           start_must_be_present_and_a_valid_date: "يتطلَّب الحدث تاريخ بدء صالحًا."
           end_must_be_a_valid_date: "يجب أن يكون تاريخ الانتهاء تاريخًا صالحًا."
           invalid_recurrence: "يجب أن يكون التكرار واحدًا مما يلي: every_month أو every_week أو every_two_weeks أو every_four_week أو every_day، أو every_weekday."

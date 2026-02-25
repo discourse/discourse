@@ -8,6 +8,7 @@ ar:
   site_settings:
     policy_enabled: "هل تريد السماح بالسياسات؟"
     policy_restrict_to_staff_posts: "قد لا تظهر السياسات إلا على منشورات فريق العمل"
+    create_policy_allowed_groups: "يلزم الانضمام إلى المجموعة لإضافة السياسات إلى المنشورات"
     policy_easy_revoke: "عرض زرَّي القبول والإلغاء في الوقت نفسه"
   discourse_policy:
     errors:

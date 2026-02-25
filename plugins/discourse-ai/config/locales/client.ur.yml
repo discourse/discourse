@@ -157,7 +157,9 @@ ur:
         save: "محفوظ کریں"
         remove_parameter: "خارج کریں"
         parameter_required: "درکار"
+        credential_not_set: "(سیٹ نہیں)"
         edit: "ترمیم کریں"
+        test: "ٹیسٹ"
         delete: "مٹائیں"
       secrets:
         short_title: "شہادت"

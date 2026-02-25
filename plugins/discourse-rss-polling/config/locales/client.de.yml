@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_rss_polling: "Discourse – RSS-Abfrage"
+          discourse_rss_polling: "Discourse RSS-Abfrage"
   js:
     rss_polling:
       title: RSS-Abfrage

@@ -12,8 +12,8 @@ zh_CN:
     github_linkback_access_token: '一个有效访问令牌，用于将发布反向链接的用户以及计算提交/贡献以授予徽章。有关如何获取令牌的说明，请参阅<a href="https://meta.discourse.org/t/99895">此处</a>。'
     github_linkback_maximum_links: "从单个帖子创建的最大反向链接数。当帖子包含更多链接时，将不会创建任何链接。"
     github_permalinks_enabled: "启用 GitHub 永久链接覆盖"
-    github_pr_status_enabled: "在onebox中显示 Github pull request状态（draft, open, approved, merged, closed）"
-    github_webhook_secret: "用于 Github webhook 签名验证的 Secret token，在您的Github webhook 设置中配置。"
+    github_pr_status_enabled: "在 onebox 中显示 Github 拉取请求状态（草稿、开放、已批准、已合并、已关闭）"
+    github_webhook_secret: "用于 Github 网络钩子签名验证的密钥令牌。在您的 Github 网络钩子设置中配置。"
     github_permalinks_exclude: "应从永久链接覆盖中排除的文件名或目录。仅提供文件名或完整路径：user/repository/optional-directory/filename"
     github_badges_enabled: "启用 GitHub 徽章"
     github_badges_repos: "用于扫描贡献和提交的 GitHub 仓库的 URL"

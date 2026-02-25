@@ -60,8 +60,6 @@ nl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{post_number} van %{username}"
-    too_many_urls: "Er kunnen niet meer dan 10 URL's inlijn worden ge-oneboxt in één verzoek."
-    concurrency_not_allowed: "Gelijktijdige inline oneboxverzoeken zijn niet toegestaan. Stuur één verzoek tegelijk."
   components:
     enabled_filter: "Ingeschakeld"
     disabled_filter: "Uitgeschakeld"
@@ -344,7 +342,6 @@ nl:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents moeten minimaal 3 tekens lang zijn om te voorkomen dat de snelheid van legitieme gebruikers per ongeluk wordt beperkt."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Je kunt de volgende waarden niet toevoegen aan de instelling: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Je kunt megagegevens van afbeeldingen strippen niet uitschakelen als 'composer media optimization image enabled' is ingeschakeld. Schakel 'composer media optimization image enabled' uit voordat je megagegevens van afbeeldingen strippen uitschakelt."
-      x_summary_large_image_no_svg: "Twitter-samenvattingsafbeeldingen die worden gebruikt voor twitter:image-metadata mogen geen .svg-afbeelding zijn."
       tl0_and_anonymous_flag: "Voor anonieme gebruikers moet ofwel 'site contact email' of 'email address to report illegal content' worden opgegeven."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Voor deze instelling moet eerst de instelling 'allow anonymous mode' worden ingeschakeld."
     conflicting_google_user_id: 'De Google-account-ID voor deze account is gewijzigd; om beveiligingsredenen is medewerkerinterventie vereist. Neem contact op met een medewerker en wijs hem of haar op <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1768,7 +1765,6 @@ nl:
     slow_down_crawler_rate: "Als slow_down_crawler_user_agents is opgegeven, is deze beperking op alle crawlers van toepassing (aantal seconden vertraging tussen verzoeken)"
     content_security_policy: "Schakel Content-Security-Policy (CSP) in. CSP is een extra beveiligingslaag die bepaalde soorten aanvallen helpt voorkomen, waaronder cross-site scripting (XSS) en data-injectie."
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) inschakelen"
-    content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
     content_security_policy_frame_ancestors: "Beperken wie deze website kan insluiten in iframes via CSP. Beheer toegestane hosts op <a href='%{base_path}/admin/customize/embedding'>Insluiten</a>"
     content_security_policy_script_src: "Aanvullende scriptbronnen op de toelatingslijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-aanvallen beperken met Content Security Policy.</a> (CSP). Andere hostbronnen worden genegeerd omdat strict-dynamic is ingeschakeld."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
@@ -2085,7 +2081,6 @@ nl:
     alternative_reply_by_email_addresses: "Lijst van alternatieve sjablonen voor adressen voor inkomende e-mail bij antwoorden per e-mail. Voorbeeld: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "HTML in plaats van tekst gebruiken voor inkomende e-mail."
     strip_incoming_email_lines: "Voorloop- en volgspaties uit elke regel van inkomende e-mails verwijderen."
-    disable_emails: "Voorkomen dat Discourse alle soorten e-mail verstuurt. Selecteer 'yes' om e-mails voor alle gebruikers uit te schakelen. Selecteer 'non-medewerkerf' om alleen e-mails voor medewerkers uit te schakelen."
     strip_images_from_short_emails: "Afbeeldingen met grootte van minder dan 2800 bytes uit e-mails verwijderen"
     short_email_length: "Bepaal de maximale lengte, in bytes, voor een e-mail om te worden geclassificeerd als 'kort' voor afbeeldingsonderdrukking. Als een e-mail niet groter is dan deze instelling, worden alle afbeeldingen (zoals avatars en emoji's) in de e-mail verwijderd."
     display_name_on_email_from: "Volledige namen in van-veld van e-mails weergeven"
@@ -2365,7 +2360,6 @@ nl:
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
     dashboard_general_tab_activity_metrics: "Kies rapporten die als activiteitsgegevens op het algemene tabblad worden weergegeven."
-    gravatar_enabled: "Gebruik de <a href='https://gravatar.com/'>Gravatar</a>-service voor gebruikersavatars. Dit voorkomt dat gebruikers overschakelen naar Gravatar voor hun avatars, maar heeft geen invloed op gebruikers die het al gebruiken."
     gravatar_name: "Geef de naam op van de Gravatar-provider. Deze naam wordt meestal gebruikt om de bron te identificeren die Gravatar-avatars aan de site levert."
     gravatar_base_url: "Geef de URL op voor toegang tot de API van de Gravatar-provider. Deze instelling is cruciaal voor het omzetten van e-mailadressen in Gravatar-URL's waar avatarafbeeldingen worden opgeslagen."
     gravatar_login_url: "URL relatief aan `gravatar_base_url`, waarmee de gebruiker zich kan aanmelden op de Gravatar-service."
@@ -2446,12 +2440,6 @@ nl:
       reply_by_email_disabled: "Je moet eerst 'reply by email' inschakelen voordat je deze instelling inschakelt."
       discourse_connect_url_is_empty: "Je moet een 'DiscourseConnect-URL' instellen voordat je deze instelling inschakelt."
       enable_local_logins_disabled: "Je moet eerst 'enable local logins' inschakelen voordat je deze instelling inschakelt."
-      min_username_length_exists: "Je kunt de minimale gebruikersnaamlengte niet hoger instellen dan de kortste gebruikersnaam (%{username})."
-      min_group_name_length_exists: "Je kunt de minimale gebruikersnaamlengte niet hoger instellen dan de kortste groepsnaam (%{group_name})."
-      min_username_length_range: "Je kunt het minimum niet hoger instellen dan het maximum."
-      max_username_length_exists: "Je kunt de maximale gebruikersnaamlengte niet lager instellen dan de langste gebruikersnaam (%{username})."
-      max_group_name_length_exists: "Je kunt de maximale gebruikersnaamlengte niet lager instellen dan de langste groepsnaam (%{group_name})."
-      max_username_length_range: "Je kunt het maximum niet lager instellen dan het minimum."
       invalid_hex_value: "Kleurwaarden moeten 6-cijferige hexadecimale codes zijn."
       empty_selectable_avatars: "Je moet eerst minimaal twee selecteerbare avatars uploaden voordat je deze instelling inschakelt."
       category_search_priority:
@@ -2510,7 +2498,6 @@ nl:
       exclude_tag: "Sluit topics met een specifieke tag uit"
       exclude_tags_any: "Sluit topics met een van de opgegeven tags uit (door komma's gescheiden)"
       exclude_tags_all: "Sluit topics met alle opgegeven tags uit (door plustekens gescheiden)"
-      tags_alias: "Alias voor 'tag:'-filter"
       tag_group: "Geef topics met tags van een specifieke taggroep weer"
       exclude_tag_group: "Sluit topics met tags van een specifieke taggroep uit"
       activity_before: "Geef topics weer met de laatste activiteit vóór een datum (JJJJ-MM-DD of aantal dagen geleden)"
@@ -4902,8 +4889,6 @@ nl:
     deprecation_error_label: Laat Javascript-deprecaties een foutmelding geven
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
-  dev_mode:
-    enter: "Enter"
   wizard:
     title: "Discourse instellen"
     step:
@@ -5161,8 +5146,6 @@ nl:
       approve_and_unhide:
         title: "Ja"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
-      no_action_post:
-        title: "Geen actie"
       delete_post:
         title: "Bericht verwijderen"
         complete: "Bericht verwijderd"
@@ -5171,8 +5154,6 @@ nl:
       restore_post:
         title: "Bericht herstellen"
         complete: "Bericht hersteld"
-      no_action_user:
-        title: "Geen actie"
       silence_user:
         title: "Gebruiker dempen"
         complete: "Gebruiker gedempt"

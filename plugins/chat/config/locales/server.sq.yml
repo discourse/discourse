@@ -219,12 +219,10 @@ sq:
           one: "[%{site_name}] Mesazh i ri nga %{name}"
           other: "[%{site_name}] Mesazhe të reja nga %{name}"
         chat_dm_2: "[%{site_name}] Mesazhe të reja nga %{name_1} dhe %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Mesazhe të reja nga %{name} dhe %{count} të tjerë"
         chat_channel_1:
           one: "[%{site_name}] Mesazh i ri në %{channel}"
           other: "[%{site_name}] Mesazhe të reja në %{channel}"
         chat_channel_2: "[%{site_name}] Mesazhe të reja në %{channel_1} dhe %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Mesazhe të reja në %{channel} dhe %{count} të tjerë"
         chat_channel_and_dm: "[%{site_name}] Mesazhe të reja në %{channel} dhe nga %{name}"
       unsubscribe: "Kjo përmbledhje bisede dërgohet nga %{site_link} kur nuk jeni në kanal. Ndrysho %{email_preferences_link}, ose %{unsubscribe_link} për t'u çregjistruar."
       unsubscribe_no_link: "Kjo përmbledhje bisede dërgohet nga %{site_link} kur jeni në kanal. Ndryshoni %{email_preferences_link}tuaj."

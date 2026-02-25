@@ -524,7 +524,6 @@ sq:
       filtered_flagged_by: "Shënuar nga"
       explain:
         why: "shpjegoni pse ky artikull përfundoi në radhë"
-        title: "Vlerësimi i rishikueshëm"
         formula: "Formula"
         subtotal: "Nëntotali"
         total: "Total"
@@ -538,17 +537,14 @@ sq:
           title: "Përdoruesve me shënimet e të cilëve janë rënë dakord historikisht u jepet një bonus."
         trust_level_bonus:
           name: "niveli i besimit"
-          title: "Artikujt e rishikueshëm të krijuar nga përdoruesit e nivelit më të lartë të besimit kanë një rezultat më të lartë."
         type_bonus:
           name: "lloji i bonusit"
-          title: "Disa lloje të rishikueshme mund t'u caktohen një bonus nga stafi për t'i bërë ato një prioritet më të lartë."
       revise_and_reject_post:
         title: "Rishikoni"
         reason: "Arsye"
         send_pm: "Dërgo PM"
         feedback: "Reagime"
         optional: "opsionale"
-      stale_help: "Ky artikull i rishikueshëm është zgjidhur nga <b>%{username}</b>."
       claim_help:
         optional: "Ju mund ta përvetësoni këtë artikull për të parandaluar të tjerët ta shqyrtojnë atë."
         required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
@@ -2829,8 +2825,6 @@ sq:
         max_views:
           placeholder: maksimale
           aria_label: Filtro sipas shikimeve maksimale
-        additional_options:
-          label: "Filtro sipas numrit të postimeve dhe shikimeve të temës"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
@@ -3799,6 +3793,15 @@ sq:
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
+      description: "Përshkrimi"
+      settings:
+        title: "Rregullimet"
+        general: "Karakteristika të përgjithshme"
+        back: "Kthehu mbrapa"
+        name: "Emri"
+      localization:
+        name: "Emri"
+        description: "Përshkrimi"
       sort_by: "Rendit sipas:"
       sort_by_count: "numri"
       sort_by_name: "emër"
@@ -3950,6 +3953,11 @@ sq:
         remove_muted_tags_from_latest:
           always: "gjithmonë"
           never: "asnjëherë"
+      reports:
+        group_traffic: "Trafik"
+        group_members: "Anëtarë"
+        group_security: "Siguria"
+        group_other: "Të tjerë"
       config_sections:
         account:
           title: "Llogaria"
@@ -4034,6 +4042,10 @@ sq:
           sub_pages:
             logs:
               title: "Ditari"
+        reports:
+          sub_pages:
+            settings:
+              title: "Rregullimet"
         badges:
           title: "Stemat"
         permalinks:

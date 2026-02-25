@@ -31,6 +31,7 @@ pl_PL:
   reports:
     accepted_solutions:
       title: "Zaakceptowane rozwiązania"
+      description: "Ile tematów miało zaakceptowane rozwiązanie dziennie w określonym przedziale dat, z opcjonalnym filtrem kategorii i 30-dniowym porównaniem całkowitych wyników."
       xaxis: "Dzień"
       yaxis: "Wszystkie"
   solved:

@@ -112,3 +112,6 @@ el:
         voters_count_diff:
           one: "και %{count} ακόμα χρήστης..."
           other: "και %{count} ακόμα χρήστες..."
+    review:
+      transcript:
+        view: "Προβολή μεταγραφής προηγούμενων μηνυμάτων"

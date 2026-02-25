@@ -115,6 +115,7 @@ bg:
         save: "Запази"
         remove_parameter: "Премахване"
         parameter_required: "Задъжителни"
+        credential_not_set: "(не е зададено)"
         edit: "Редактирай"
         delete: "Изтрий"
       secrets:

@@ -607,21 +607,13 @@ lt:
       in_reply_to: "atsakant į"
       filtered_flagged_by: "Pažymėjo"
       unknown:
-        title:
-          one: "Yra laukiančių peržiūrų dėl išjungto papildinio:"
-          few: "Yra laukiančių peržiūrų dėl išjungto papildinio:"
-          many: "Yra laukiančių peržiūrų dėl išjungto papildinio:"
-          other: "Yra laukiančių peržiūrų dėl išjungtų papildinių:"
         instruction: "Jie negalės būti tinkamai rodomi, kol neįgalinsite atitinkamo papildinio. Įjunkite papildinį ir atnaujinkite puslapį. Arba galite jų ignoruoti. <a href='%{url}' target='_blank'>Sužinokite daugiau...</a>"
         reviewable_unknown_source: "%{reviewableType} (nežinomas įskiepis)"
         reviewable_known_source: "%{reviewableType} (iš „%{pluginName}“ įskiepio)"
         ignore_all: "Ignoruoti viską"
         enable_plugins: "Įjungti papildinius"
-        delete_confirm: "Ar tikrai norite ištrinti visas išjungtų papildinių sukurtas apžvalgas?"
-        ignore_success: "Visos išjungtų papildinių sukurtos apžvalgos buvo ištrintos."
       explain:
         why: "paaiškinkite, kodėl šis elementas atsidūrė eilėje"
-        title: "Peržiūrimas balas"
         formula: "Formulė"
         subtotal: "Tarpinė suma"
         total: "Viso"
@@ -635,10 +627,8 @@ lt:
           title: "Naudotojams, kurių vėliavoms istoriškai pritarta, suteikiama premija."
         trust_level_bonus:
           name: "patikimumo lygis"
-          title: "Peržiūrimi elementai, sukurti aukštesnio pasitikėjimo lygio naudotojų, turi didesnį balą."
         type_bonus:
           name: "tipo premija"
-          title: "Tam tikriems peržiūrėtiems tipams darbuotojai gali priskirti premiją, kad jie taptų aukštesniu prioritetu."
       revise_and_reject_post:
         title: "Pataisyti"
         reason: "Priežastis"
@@ -647,7 +637,6 @@ lt:
         custom_reason: "Pateikite aiškų priežasties aprašymą"
         other_reason: "Kiti..."
         optional: "pasirinktinai"
-      stale_help: "Ši peržiūra buvo išspręsta <b>%{username}</b>."
       claim_help:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
         required: "Turite pareikšti teises į elementus, kad galėtumėte juos peržiūrėti."
@@ -2726,8 +2715,6 @@ lt:
         max_views:
           placeholder: maksimalus
           aria_label: filtruoti pagal daugiausia peržiūrų
-        additional_options:
-          label: "Filtruoti pagal įrašų skaičių ir temos peržiūras"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
@@ -3884,6 +3871,16 @@ lt:
       delete_tag: "Ištrinti žymą"
       delete_confirm_no_topics: "Ar tikrai norite ištrinti šią žymą?"
       edit_tag: "Redaguoti žymos pavadinimą ir aprašymą"
+      description: "Aprašymas"
+      settings:
+        title: "Nustatymai"
+        general: "Bendrieji"
+        back: "Atgal"
+        name: "Vardas"
+        name_placeholder: "Žymos pavadinimas"
+      localization:
+        name: "Vardas"
+        description: "Aprašymas"
       sort_by: "Rūšiuoti pagal:"
       sort_by_count: "skaičių"
       sort_by_name: "vardą"
@@ -4133,6 +4130,11 @@ lt:
       reports:
         title: "Galimų ataskaitų sąrašas"
         sidebar_title: "Pranešimai"
+        group_traffic: "Srautas"
+        group_members: "Nariai"
+        group_moderation: "Moderavimas"
+        group_security: "Apsauga"
+        group_other: "Kiti"
       config_sections:
         account:
           title: "Paskyra"
@@ -4154,7 +4156,6 @@ lt:
         preview: "Peržiūrėti"
         enabled_for_options:
           everyone: "Visi"
-          staff: "Tik personalui"
         impact_roles:
           admins: "Administratoriai"
           moderators: "Moderatoriai"
@@ -4233,6 +4234,9 @@ lt:
               title: "Įrašai"
         reports:
           title: "Pranešimai"
+          sub_pages:
+            settings:
+              title: "Nustatymai"
         badges:
           title: "Trofėjai"
         permalinks:
@@ -4275,17 +4279,6 @@ lt:
         default_value: "Numatytasis"
       search:
         title: "Paieška"
-        result_types:
-          theme:
-            one: "Tema"
-            few: "Temos"
-            many: "Temos"
-            other: "Temos"
-          component:
-            one: "Komponentas"
-            few: "Komponentai"
-            many: "Komponentai"
-            other: "Komponentai"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
@@ -5454,6 +5447,7 @@ lt:
           enabled: "Ieškoma"
         field_types:
           text: "Tekstas"
+          date: "Data"
           confirm: "Patvirtinimas"
           dropdown: "Išskleidimas"
           multiselect: "Daugialypis pasirinkimas"

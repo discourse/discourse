@@ -68,10 +68,10 @@ zh_CN:
           fields:
             categories:
               label: 类别
-              description: 仅当举报的话题属于这些类别时才会触发
+              description: 仅当被举报的话题属于这些类别时才触发
             tags:
               label: 标签
-              description: 仅当标记的话题包含以下任一标签时才会触发
+              description: 仅当被举报的话题包含以下任一标签时才触发
         not_found: 找不到用于自动化 `%{automation}` 的触发器 `%{trigger}`，请确保关联插件已安装
         user_badge_granted:
           fields:

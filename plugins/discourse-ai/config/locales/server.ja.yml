@@ -8,24 +8,51 @@ ja:
   activerecord:
     attributes:
       llm_model:
+        name: "モデル ID"
         max_prompt_tokens: "コンテキストウィンドウ"
+  dashboard:
+    problem:
+      ai_llm_status:
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> に注意が必要です。過去 %{count} 時間で、%{total_calls} 回中 %{failed_calls} 回応答できませんでした。"
+      ai_credit_soft_limit: "%{model_name} のクレジット残量がわずか %{percentage_remaining}% になりました。クレジットは %{reset_date} にリセットされます。<a href='%{url}'>AI モデルを見る</a>"
+      ai_credit_hard_limit: "%{model_name} の AI クレジットがなくなりました。%{reset_date} まで AI 機能を利用できません。<a href='%{url}'>AI モデルを見る</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "レビューキューに投稿を追加する"
         review_hide: "投稿をレビューキューに追加して非表示にする"
+        review_delete: "投稿をレビューキューに追加して削除する"
+        review_delete_silence: "投稿をレビューキューに追加して削除し、ユーザーを投稿禁止にする"
         spam: "迷惑として通報して投稿を非表示にする"
         spam_silence: "迷惑として通報し、投稿を非表示にしてユーザーを投稿禁止にする"
     scriptables:
+      ai_tool_action:
+        title: AI ツールアクション
+        description: 自動化がトリガーされたら AI ツールを実行します
       llm_persona_triage:
         title: AI ペルソナを使った投稿のトリアージ
         description: "特定の AI ペルソナを使って投稿に返信します"
       llm_triage:
         title: AI を使った投稿のトリアージ
         description: "大規模言語モデルを使って投稿に優先順位を付けます"
+        flagged_post: |
+          <div>モデルからの応答:</div>
+          <p>%{llm_response}</p>
+          <b><a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> ルールによってトリガーされました。</b>
+        notify_author_pm:
+          subject: "投稿はレビューのため、一時的に削除されました"
+          body: |
+            @%{username}、こんにちは。
+
+            「%{topic_title}」のあなたの投稿は一時的に削除され、モデレーターによるレビュー待ちとなっています。承認されると、自動的に復元されます。
+
+            参照: %{post_url}
       llm_report:
         title: AI を使った定期レポート
         description: "大規模言語モデルに基づく定期レポート"
+      llm_tagger:
+        title: AI を使用してトピックにタグを付ける
+        description: "AI を使用してトピックを自動的にタグ付けします"
   site_settings:
     discourse_ai_enabled: "Discourse AI プラグインを有効にします。"
     ai_default_llm_model: "すべての AI 機能に使用するデフォルトの LLM モデル"
@@ -58,6 +85,8 @@ ja:
     ai_nsfw_flag_threshold_sexy: "官能的として分類された画像が NSFW として見なされるためのしきい値。"
     ai_nsfw_models: "NSFW 推論に使用するモデル。"
     ai_spam_detection_enabled: "AI 迷惑行為検出モジュールを有効にする"
+    ai_spam_detection_max_post_count: "迷惑行為をスキャンされなくなるまでにユーザーが投稿できる最大投稿数"
+    ai_spam_detection_max_trust_level: "迷惑行為をスキャンするユーザーの最大信頼レベル"
     ai_openai_api_key: "OpenAI API の API キー。画像の作成と編集のみに使用されます。GPT の場合は、LLM 構成タブを使用します"
     ai_helper_enabled: "AI ヘルパーを有効にします。"
     composer_ai_helper_allowed_groups: "これらのグループのユーザーの作成ツールには、AI ヘルパーボタンが表示されます。"
@@ -66,6 +95,7 @@ ja:
     ai_helper_automatic_chat_thread_title: "スレッドのコンテンツに基づいてチャットスレッドのタイトルを自動的に設定する。"
     ai_helper_enabled_features: "AI ヘルパーで有効にする機能を選択します。"
     post_ai_helper_allowed_groups: "投稿内で AI ヘルパー機能にアクセスできるユーザーグループ"
+    ai_helper_post_illustrator_persona: "AI ヘルパーのイラスト投稿機能に使用するペルソナ。注意: この機能を使用するには、画像生成ツールも作成する必要があります (管理 > プラグイン > Discourse AI > ツール)。"
     ai_embeddings_selected_model: "選択したモデルを使用して、埋め込みを生成します。"
     ai_embeddings_generate_for_pms: "個人メッセージの埋め込みを生成します。"
     ai_embeddings_semantic_related_topics_enabled: "関連トピックのセマンティック検索を使用します。"
@@ -75,6 +105,8 @@ ja:
     ai_embeddings_semantic_search_use_hyde: "セマンティック前ページ検索に HyDE を使用する。LLM を使って、ユーザーの検索語句から仮定される投稿を作成し、一致検索を支援します。"
     ai_embeddings_semantic_quick_search_enabled: "検索メニューポップアップのセマンティック検索オプションを有効にする。"
     ai_embeddings_semantic_related_include_closed_topics: "閉鎖トピックをセマンティック検索結果に含める"
+    ai_embeddings_semantic_related_age_penalty: "セマンティック検索結果のトピックに指数年齢ペナルティを適用する。0.0 = ペナルティなし、0.3 = 最近のアクティブなコンテンツに対する緩いバイアス、1.0+ = 強い最新性バイアス。"
+    ai_embeddings_semantic_related_age_time_scale: "年齢ペナルティ計算に使用する時間スケール (日数)。この日数以上非アクティブなトピックには penalty-1.0 で約 50% のペナルティが適用されます。年間スケールには 365、四半期スケールには 90 を使用します。"
     ai_embeddings_per_post_enabled: 各投稿の埋め込みを生成する
     ai_summarization_enabled: "要約機能を有効にする"
     ai_summarization_persona: "要約機能に使用するペルソナ"
@@ -82,10 +114,15 @@ ja:
     ai_summary_gists_enabled: "トピック内の最新の返信の簡単な要約を自動的に生成する"
     ai_summary_backfill_maximum_topics_per_hour: "1 時間あたりにバックフィルするトピック要約の数。"
     ai_bot_enabled: "AI ボットモジュールを有効にします。"
+    ai_bot_enabled_llms: "AI ボット会話に選択できる LLM"
     ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"
     ai_bot_debugging_allowed_groups: "これらのグループが生の AI リクエストと応答を表示するデバッグボタンを投稿に表示することを許可する"
     ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可する。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
+    ai_bot_add_to_header: "AI ボットとの PM を開始するためのボタンをヘッダーに表示する"
+    ai_bot_add_to_community_section: "サイドバーのコミュニティーセクションに、AI ボットとの PM を開始するためのリンクを表示する"
     ai_bot_github_access_token: "GitHub AI ツールで使用する GitHub アクセストークン (検索サポートに必要)"
+    ai_discover_enabled: "発見検索機能を有効にする"
+    ai_discover_persona: "発見検索機能に使用するペルソナ"
     ai_google_custom_search_api_key: "Google カスタム検索 API の API キーは https://developers.google.com/custom-search を参照してください"
     ai_google_custom_search_cx: "Google カスタム検索 API の CX"
     ai_discord_search_enabled: "Discord 検索機能を有効にします"
@@ -94,8 +131,15 @@ ja:
     ai_discord_search_mode: "Discord 検索に使用する検索モードを選択する"
     ai_discord_search_persona: "Discord 検索に使用するペルソナ。"
     ai_discord_allowed_guilds: "ボットが検索できる Discord ギルド (サーバー)"
+    ai_translation_enabled: "AI 翻訳機能を有効にする"
     ai_translation_backfill_limit_to_public_content: "有効にすると、公開カテゴリのコンテンツのみが翻訳されます。無効にすると、グループ PM と非公開カテゴリのコンテンツも翻訳対象として送信されます。"
+    ai_translation_include_bot_content: "有効にすると、ボット (0 未満のユーザー ID) が書き込んだコンテンツも翻訳に送信されます。"
+    ai_translation_max_post_length: "翻訳される投稿の最大文字数。これより長い投稿は翻訳されません。"
     ai_translation_backfill_max_age_days: "翻訳する投稿とトピックの最大経過日数。これより古い投稿とトピックは翻訳されません。0 にするとバックファイルは無効になりますが、新しい投稿の翻訳は無効になりません。"
+    ai_translation_backfill_hourly_rate: "バックフィル操作中に 1 時間あたりに翻訳する投稿とトピックの数。既存のコンテンツの翻訳の自動バックフィルを無効にする場合は 0 に設定します。"
+    ai_translation_max_tokens_multiplier: "翻訳に使用するトークンの最大数を決定する乗数。デフォルトでは、最大トークンは投稿の文字数の 2～5 倍に設定されています。この乗数は、トークンをより多く使用する思考や推論モデルを可能にするために調整できます。"
+    ai_usage_rollup_after_days: "日次集計にロールアップするまでに、リクエストごとの AI 使用統計を保持する日数。ロールアップを無効にする場合は 0 に設定します。"
+    ai_audit_logs_purge_after_days: "この日数より古い AI API 監査ログを削除します。デフォルトは約 6 か月です。無期限に保持する場合は 0 に設定します。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI プラグインは、これを毒コメントとして分類した後に通報しました。
@@ -214,10 +258,18 @@ ja:
           name: "為替レート"
         stock_quote:
           name: "株価 (AlphaVantage)"
+        image_generation_category:
+          name: "画像の生成..."
         image_generation_custom:
           name: "カスタム"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "空白から始める..."
       name:
@@ -225,6 +277,11 @@ ja:
     ai_helper:
       errors:
         completion_request_failed: "提案しようとしたときに問題が発生しました。もう一度お試しください。"
+        no_illustrator_persona: "投稿のイラストレーターペルソナが構成されていません。サイト設定を確認してください。"
+        no_image_generation_tool: "投稿のイラストレーターペルソナには画像生成ツールが接続されている必要があります。管理パネルでこのペルソナの画像生成ツールを構成してください。"
+        no_image_generated: "画像の生成に失敗しまっした。もう一度お試しになるか、ツールの構成を確認してください。"
+        llm_model_not_configured: "画像生成用の言語モデルが構成されていません。サイト設定でデフォルトの言語モデルを構成してください。"
+        unknown_error: "サムネイルの生成中に予期しないエラーが発生しました。もう一度お試しください。"
       prompts:
         translate: '%{language} に翻訳する'
         generate_titles: トピックのタイトルを提案
@@ -257,6 +314,7 @@ ja:
     ai_bot:
       reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
       default_pm_prefix: "[無題の AI ボット PM]"
+      thinking: "思考中"
       personas:
         default_llm_required: "チャットを有効にする前に、デフォルトの LLM モデルが必要です"
         cannot_delete_system_persona: "システムペルソナは削除できません。代わりに無効にしてください"
@@ -324,6 +382,7 @@ ja:
           description: "ヘルパーの Markdown テーブルの生成機能を強化するデフォルトのペルソナ"
         post_illustrator:
           name: "イラスト投稿ツール"
+          description: "利用可能な画像生成ツールを使用してイラスト投稿の画像を生成します"
         proofreader:
           name: "校正ツール"
           description: "ヘルパーのテキストの校正機能を強化するデフォルトのペルソナ"
@@ -360,6 +419,9 @@ ja:
         report_runner:
           name: "レポートランナー"
           description: "レポートの自動化スクリプトで使用されるデフォルトのペルソナ"
+        discover:
+          name: "発見"
+          description: "発見機能に使用されるデフォルトのペルソナ (無料検索)"
       topic_not_found: "要約がありません。トピックが見つかりません！"
       summarizing: "トピックの要約を生成中"
       searching: "検索中: '%{query}'"
@@ -412,6 +474,10 @@ ja:
           base_query:
             name: "ベース検索クエリ"
             description: "検索時に使用するベースクエリ。例: '#urgent' は検索クエリの先頭に '#urgent' を追加し、緊急のカテゴリまたはタグを持つトピックのみが含まれます。"
+        flag_post:
+          flag_type:
+            name: "通報タイプ"
+            description: "投稿がレビュー、非表示、削除されるか、迷惑行為として扱われるかを制御します。"
       tool_summary:
         read_artifact: "ウェブアーティファクトを読み取る"
         update_artifact: "ウェブアーティファクトを更新"
@@ -420,6 +486,7 @@ ja:
         github_search_files: "GitHub 検索ファイル"
         github_search_code: "GitHub コード検索"
         github_file_content: "GitHub ファイルコンテンツ"
+        github_diff: "GitHub の差分"
         random_picker: "ランダムピッカー"
         categories: "カテゴリをリスト表示"
         flag_post: "投稿を通報"
@@ -448,8 +515,10 @@ ja:
         github_search_code: "GitHub リポジトリでコードを検索する"
         github_search_files: "GitHub リポジトリでファイルを検索する"
         github_file_content: "GitHub リポジトリからファイルのコンテンツを取得する"
+        github_diff: "GitHub プルリクエストまたはコミットの差分を取得する"
         random_picker: "ランダムな数字またはリストのランダムな要素を選択する"
         categories: "フォーラムのすべての公開カテゴリをリストする"
+        flag_post: "現在の投稿をスタッフによるレビュー対象として通報する"
         search: "フォーラムのすべての公開トピックを検索する"
         tags: "フォーラムのすべてのタグをリストする"
         time: "様々なタイムゾーンの時間を調べる"
@@ -476,6 +545,7 @@ ja:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "%{repo_name}@%{branch} から %{file_paths} のコンテンツを取得しました"
         random_picker: "%{options} から選択中。選択: %{result}"
+        flag_post: "投稿 %{post_id} を通報中 (flag_post: %{flag_post})"
         read: "読み取り中: <a href='%{url}'>%{title}</a>"
         time: "%{timezone} の時刻は %{time} です"
         summarize: "<a href='%{url}'>%{title}</a> の要約"
@@ -505,6 +575,15 @@ ja:
         continue_conversation:
           title: "発見の会話: %{query} を検索"
           raw: "%{query} の検索において、次の情報を提供してくれました:\n\n%{context}\n\n会話を続けましょう。"
+      flag_post:
+        errors:
+          no_context: "通報できる投稿コンテンツがありません。"
+          no_reason: "投稿の通報には理由が必要です。"
+          invalid_flag_type: "通報タイプが無効です。"
+        skipped: "判定は false でした。通報は作成されませんでした。"
+        already_flagged: "投稿はすでにレビュー対象として通報されています。"
+        flagged: "投稿はレビュー対象として通報されました。"
+        reason: "AI ボットはこの投稿を通報しまっした。\n\n理由: %{reason}"
     summarization:
       configuration_hint:
         other: "先に次の設定を構成します: %{settings}"
@@ -549,13 +628,22 @@ ja:
       configuration:
         disable_embeddings: "先に 'ai embeddings enabled' を無効にしてください。"
         choose_model: "先に 'ai embeddings selected model' を設定してください。"
+        model_test_failed: "このモデルでテスト埋め込みを生成できませんでした。正しく構成されていることを確認してください。"
     llm_models:
       missing_provider_param: "%{param} は空白にできません"
       bedrock_invalid_url: "このモデルを使用するには、すべてのフィールドに入力してください。"
+      bedrock_missing_auth: "AWS Bedrock では、アクセスキー ID またはロール ARN の構成が必要です"
     ai_staff_action_logger:
       updated: "更新"
       set: "設定"
       removed: "削除"
+    translation:
+      errors:
+        disabled: "AI 翻訳機能が完全に構成されていません。"
+        all_posts_translated: "このトピックの投稿はすべて翻訳済みです。"
+    llm_credit_allocation:
+      limit_exceeded_user: "このコミュニティーは今日の AI クレジット上限に達しました。%{reset_time} 以降にもう一度お試しいただくか、詳細についてサイト管理者にお問い合わせください。"
+      limit_exceeded_admin: "AI クレジットの上限に達しました。%{reset_time} 以降にもう一度お試しください。"
     errors:
       quota_exceeded: "このモデルの使用量制限を超過しました。%{relative_time}後にもう一度お試しください。"
       quota_required: "このモデルのトークンまたは使用量の上限を指定する必要があります"

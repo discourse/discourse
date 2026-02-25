@@ -11,15 +11,15 @@ sw:
         no_semicolons: "Ondoa alama ya mkato kwenye swali."
         dirty: "Lazima uhifadhi taarifa kabla ya kutekeleza."
     explorer:
+      default_query: "Halisi"
       or: "au"
       admins_only: "Uwezo wa kupitia taarifa zote unapatikana kwa viongozi tu."
       title: "Utafiti wa Taarifa"
-      create: "Tengeneza Mpya"
+      create: "Tengeneza"
       create_placeholder: "Jina la ulizo..."
       description_placeholder: "Andika maelezo hapa"
       import:
         label: "Imeingizwa kutoka sehemu nyingine"
-        modal: "Ingiza Ulizo"
       help:
         label: "Msaada"
       schema:
@@ -32,11 +32,8 @@ sw:
           no: "Hapana"
           null_: "Hamna Kitu"
       export: "Hamisha"
-      save: "Hifadhi Mabadiliko"
-      undo: "Kataa Mabadiliko"
       edit: "Hariri"
       delete: "Futa"
-      recover: "Rejesha Suala"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "Mabaliko uliyofanya kwenye ulizo hayajahifadhiwa, hifadhi kabla ya kwenda kwingine."
@@ -45,6 +42,5 @@ sw:
       query_description: "Maelezo"
       query_user: "Imetengenezwa na"
       explain_label: "pamoja na mpango wa swala?"
-      save_params: "Seti Chaguo-misingi"
       reset_params: "Weka/Anzisha Upya"
       search_placeholder: "Tafuta"

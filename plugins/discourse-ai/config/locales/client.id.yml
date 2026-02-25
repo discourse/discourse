@@ -235,11 +235,6 @@ id:
         providers:
           google: "Google"
         semantic_search: "Topik (Semantik)"
-        semantic_search_loading: "Mencari hasil lebih banyak menggunakan AI"
-        semantic_search_results:
-          toggle: "Menampilkan %{count} hasil yang ditemukan menggunakan AI"
-          toggle_hidden: "Menyembunyikan %{count} hasil yang ditemukan menggunakan AI"
-          none: "Maaf, pencarian AI kami tidak menemukan topik yang cocok"
         ai_generated_result: "Hasil pencarian ditemukan menggunakan AI"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"

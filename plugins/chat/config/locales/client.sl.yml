@@ -41,6 +41,7 @@ sl:
         yesterday: "Včeraj"
       create: "Ustvari"
       cancel: "Prekliči"
+      pinned: "Pripeto"
       channel_settings:
         edit: "Uredi"
         add: "Dodaj"

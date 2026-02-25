@@ -448,7 +448,6 @@ te:
       in_reply_to: "సమాధానముగా"
       explain:
         why: "ఈ అంశం క్యూలో ఎందుకు నిలిచిందో వివరించండి"
-        title: "సమీక్షించదగిన స్కోరింగ్"
         formula: "ఫార్ములా"
         subtotal: "ఉపమొత్తం"
         total: "మొత్తం"
@@ -462,10 +461,8 @@ te:
           title: "ఫిర్యాదులు చారిత్రాత్మకంగా అంగీకరించబడిన సభ్యులకు బోనస్ ఇవ్వబడుతుంది."
         trust_level_bonus:
           name: "విశ్వసనీయ స్థాయి"
-          title: "అధిక విశ్వసనీయ స్థాయి సభ్యులు సృష్టించిన సమీక్షించదగిన అంశాలు అధిక స్కోర్‌ను కలిగి ఉంటాయి."
         type_bonus:
           name: "టైప్ బోనస్"
-          title: "కొన్ని సమీక్షించదగిన రకాలను వారికి అధిక ప్రాధాన్యతనిచ్చేలా సిబ్బంది బోనస్ను కేటాయించవచ్చు."
       revise_and_reject_post:
         title: "సవరించండి"
         reason: "కారణం"
@@ -474,7 +471,6 @@ te:
         custom_reason: "కారణం గురించి స్పష్టమైన వివరణ ఇవ్వండి"
         other_reason: "ఇతర..."
         optional: "ఐచ్ఛికం"
-      stale_help: "ఈ సమీక్షించదగినది <b>%{username}</b> ద్వారా పరిష్కరించబడింది."
       claim_help:
         optional: "ఇతరులు దీన్ని సమీక్షించకుండా నిరోధించడానికి మీరు ఈ అంశాన్ని దావా చేయవచ్చు."
         required: "మీరు అంశాలను సమీక్షించే ముందు వాటిని తప్పనిసరిగా దావా చేయాలి."
@@ -2546,8 +2542,6 @@ te:
         max_views:
           placeholder: గరిష్ట
           aria_label: గరిష్ట వీక్షణల ద్వారా ఫిల్టర్ చేయండి
-        additional_options:
-          label: "పోస్ట్ కౌంట్ మరియు విషయం వీక్షణల వారీగా ఫిల్టర్ చేయండి"
     new_item: "కొత్త"
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
@@ -3939,7 +3933,17 @@ te:
         one: "దీని పర్యాయపదం కూడా తొలగించబడుతుంది."
         other: "దీని %{count} పర్యాయపదాలు కూడా తొలగించబడతాయి."
       edit_tag: "ట్యాగ్ పేరు మరియు వివరణను సవరించండి"
-      description: "వివరణ (గరిష్టంగా 1000 అక్షరాలు)"
+      description: "వివరణ"
+      settings:
+        title: "అమరికలు"
+        general: "సాధారణ"
+        back: "వెనుకకు"
+        name: "పేరు"
+        slug: "స్లగ్"
+        name_placeholder: "ట్యాగ్ పేరు"
+      localization:
+        name: "పేరు"
+        description: "వివరణ"
       sort_by: "క్రమబద్ధీకరించండి:"
       sort_by_count: "గణన ద్వారా"
       sort_by_name: "పేరు"
@@ -4338,6 +4342,11 @@ te:
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
         sidebar_title: "నివేదికలు"
+        group_traffic: "ట్రాఫిక్"
+        group_members: "సభ్యులు"
+        group_moderation: "మోడరేషన్"
+        group_security: "సెక్యూరిటీ"
+        group_other: "ఇతర"
       config_sections:
         account:
           title: "ఖాతా"
@@ -4440,6 +4449,9 @@ te:
               title: "లాగులు"
         reports:
           title: "నివేదికలు"
+          sub_pages:
+            settings:
+              title: "అమరికలు"
         badges:
           title: "బ్యాడ్జీలు"
         permalinks:
@@ -4482,13 +4494,6 @@ te:
         default_value: "అప్రమేయ"
       search:
         title: "వెతుకు"
-        result_types:
-          theme:
-            one: "థీమ్"
-            other: "థీమ్స్"
-          component:
-            one: "భాగం"
-            other: "భాగాలు"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
@@ -6028,6 +6033,7 @@ te:
           enabled: "శోధించదగినది"
         field_types:
           text: "వచనం"
+          date: "తేదీ"
           confirm: "ఖాయము"
           dropdown: "డ్రాప్డౌన్"
           multiselect: "బహుళ ఎంపిక"

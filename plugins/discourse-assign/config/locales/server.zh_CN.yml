@@ -14,7 +14,7 @@ zh_CN:
     assign_self_regex: "需要为自指定传递的正则表达式。例如，“我的名单”"
     assign_other_regex: "通过提及将话题指定给其他人需要传递的正则表达式。例如，“您的名单”"
     unassign_on_group_archive: "当消息被群组归档时，取消指定消息（如果移回收件箱则重新指定）"
-    unassign_on_close: "主题关闭时自动取消分配。注意：不会创建任何追踪帖子。"
+    unassign_on_close: "当话题关闭时自动取消指定。注意：不会创建任何跟踪帖子。"
     reassign_on_open: "当话题被打开后，重新指定给之前指定的用户/群组"
     invite_on_assign: "将个人消息指定给用户或群组时，如果他们还不是参与者，请邀请他们加入 PM。"
     assign_mailer: "何时发送任务指定的通知电子邮件"

@@ -68,8 +68,13 @@ ar:
       cancel: "إلغاء"
       cancel_reply: "إلغاء الرد"
       chat_channels: "القنوات"
+      starred: "مميز بنجمة"
+      starred_channels: "القنوات المميزة بنجمة"
+      starred_channels_empty: "لا توجد قنوات مميّزة بنجمة حتى الآن. أضِف نجمة إلى القنوات التي تهمك لتظهر هنا ويسهل الوصول إليها."
+      pinned: "مثبَّت"
       browse_all_channels: "استعراض كل القنوات"
       see_in: "رؤيتها في"
+      open_channel_menu: "افتح قائمة القناة"
       move_to_channel:
         title: "نقل الرسائل إلى القناة"
         instructions:
@@ -92,6 +97,8 @@ ar:
         title: "إعدادات القناة"
         edit: "تعديل"
         add: "إضافة"
+        star_channel: "ميّز القناة بنجمة"
+        unstar_channel: "إزالة تمييز القناة"
         close_channel: "إغلاق القناة"
         open_channel: "فتح القناة"
         archive_channel: "أرشفة القناة"
@@ -99,6 +106,7 @@ ar:
         join_channel: "الانضمام إلى القناة"
         leave_channel: "مغادرة القناة"
         leave_groupchat_info: "بمغادرة هذه الدردشة الجماعية، ستفقد الوصول إليها إلى الأبد ولن تتلقى أي إشعارات متعلقة بها. للانضمام مرة أخرى، ستحتاج إلى إعادة دعوتك من قِبل أحد أعضاء الدردشة الجماعية."
+        notification_settings: "إعدادات الإشعارات"
         notification_settings_context: "الإشعارات"
         join: "الانضمام"
         leave: "مغادرة"
@@ -151,6 +159,7 @@ ar:
       email_frequency:
         description: "سنراسلك عبر البريد الإلكتروني فقط إذا لم نرك في آخر 15 دقيقة."
         never: "أبدًا"
+        title: "أرسل إليّ رسالة بريد إلكتروني عند استلام رسالة مباشرة أو رسالة في دردشة جماعية"
         when_away: "عندما أكون غائبًا فقط"
       header_indicator_preference:
         title: "إظهار مؤشر النشاط في الرأس"
@@ -161,6 +170,7 @@ ar:
       separate_sidebar_mode:
         title: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة"
       send_shortcut:
+        title: "إرسال اختصار"
         enter:
           label: "الإرسال بواسطة مفتاح Enter"
         meta_enter:
@@ -275,8 +285,10 @@ ar:
       no_public_channels: "لم تنضم إلى أي قنوات بعد‎!"
       no_public_channels_cta: "تصفح القنوات"
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
+      chat_notifications_title: "إشعارات الدردشة"
       only_chat_push_notifications:
         title: "إرسال الإشعارات الفورية للدردشة فقط"
+      personalization_title: "التخصيص"
       ignore_channel_wide_mention:
         title: "تجاهل الإشارات على مستوى القناة"
       show_thread_title_prompts:
@@ -370,6 +382,10 @@ ar:
         yesterday: الأمس
       search_view:
         filter_placeholder: البحث في الرسائل
+        message_result_label: "رسالة دردشة من %{username}: %{preview} %{threadInfo}"
+        in_thread: "ضمن الموضوع ‎%{title}‎"
+        sr_instructions: "اضغط على مفتاح Enter أو مفتاح المسافة لفتح الرسالة. استخدم مفتاح Tab للتنقّل بين النتائج."
+        results_list_label: "نتائج البحث في رسائل الدردشة"
       members_view:
         filter_placeholder: العثور على أعضاء
         add_member: إضافة عضو
@@ -412,6 +428,8 @@ ar:
         slug_description: يتم استخدام مسار للقناة في عنوان URL بدلًا من اسم القناة
         name: اسم القناة
         slug: مسار القناة (اختياري)
+        emoji: رمز تعبيري للقناة (اختياري)
+        reset_emoji: إعادة تعيين الرمز التعبيري
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا
@@ -496,6 +514,9 @@ ar:
         types:
           category: "الفئة"
           topic: "الموضوع"
+        emoji:
+          label: "رمز تعبيري للقناة (اختياري)"
+          reset: "إعادة تعيين الرمز التعبيري"
       reviewable:
         type: "رسالة دردشة"
         message_in_channel: "القناة"
@@ -546,6 +567,7 @@ ar:
         follow: "الانضمام"
         followed: "انضم"
         mute: "كتم القناة"
+        unmute: "إلغاء كتم صوت القناة"
         threading_enabled: "مفعَّلة"
         threading_disabled: "متوقفة"
         muted_on: "تشغيل"
@@ -571,6 +593,8 @@ ar:
           export_has_started: "بدأ التصدير. ستتلقى رسالة خاصة عندما يصبح جاهزًا."
       search:
         short_title: البحث
+        title: بحث في الدردشة
+        aria_label: "الانتقال إلى البحث في الدردشة"
         no_results: "لم يتم العثور على نتائج"
         sort:
           relevance: "مدى الصلة بالموضوع"
@@ -818,6 +842,7 @@ ar:
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"
           composer_italic: "%{shortcut} مائل (أداة الإنشاء فقط)"
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"
+          drawer_toggle: "%{shortcut} لتبديل لوحة الدردشة"
           drawer_close: "%{shortcut} إغلاق درج الدردشة"
           mark_all_channels_read: "%{shortcut} وضع علامة \"مقروءة\" على كل القنوات"
     topic_statuses:
@@ -848,6 +873,7 @@ ar:
           title: الدردشة
     sidebar:
       start_new_dm:
+        text: بدء رسالة مباشرة جديدة
         title: إنشاء دردشة شخصية
       panels:
         chat:

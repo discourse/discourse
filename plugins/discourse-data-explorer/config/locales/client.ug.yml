@@ -7,7 +7,9 @@
 ug:
   js:
     explorer:
+      default_query: "كۆڭۈلدىكى"
       or: "ياكى"
+      create: "قۇر"
       help:
         label: "ياردەم"
       types:
@@ -15,7 +17,9 @@ ug:
           yes: "ھەئە"
           no: "ياق"
       export: "چىقار"
+      view: "كۆرۈنۈش"
       save: "ئۆزگەرتىشنى ساقلا"
+      undo: "ئۆزگەرتىشنى تاشلىۋەت"
       edit: "تەھرىر"
       delete: "ئۆچۈر"
       result_count:

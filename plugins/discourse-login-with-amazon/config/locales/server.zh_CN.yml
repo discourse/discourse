@@ -11,8 +11,8 @@ zh_CN:
     login_with_amazon_client_secret: "使用 Amazon 客户端密钥登录"
     login_with_amazon_scope: "使用 Amazon OAuth2 范围登录（空格分隔）"
     login_with_amazon_overrides_email: "覆盖 Discourse 用户帐户上的电子邮件地址。"
-    login_with_amazon_user_can_connect: "允许现有用户在偏好设置中连接他们的亚马逊账户。"
-    login_with_amazon_user_can_revoke: "允许用户在偏好设置中撤销其关联的亚马逊账户。"
+    login_with_amazon_user_can_connect: "允许现有用户在偏好设置中关联他们的 Amazon 账户。"
+    login_with_amazon_user_can_revoke: "允许用户在偏好设置中撤销其关联的 Amazon 账户。"
     errors:
       login_with_amazon_client_id_is_blank: "在启用此设置之前，您必须设置“使用 Amazon 客户端 ID 登录”。"
       login_with_amazon_client_secret_is_blank: "在启用此设置之前，您必须设置“使用 Amazon 客户端密钥登录”。"

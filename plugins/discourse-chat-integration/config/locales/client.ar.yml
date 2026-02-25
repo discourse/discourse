@@ -82,6 +82,7 @@ ar:
               help: "على سبيل المثال، #channel، @username."
           errors:
             action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
+            channel_not_found: "القناة المحددة غير موجودة على Slack."
         telegram:
           title: "Telegram"
           param:
@@ -128,6 +129,7 @@ ar:
               help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Matrix."
             room_id:
               title: "مُعرِّف الغرفة"
+              help: "\"المُعرِّف الخاص\" للغرفة. يجب أن يبدو مثل: !abcdefghijkl"
           errors:
             unknown_token: "رمز الوصول غير صالح"
             unknown_room: "مُعرِّف الغرفة غير صالح"

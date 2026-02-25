@@ -114,8 +114,9 @@ zh_TW:
         save: "儲存"
         remove_parameter: "移除"
         parameter_required: "必要設定"
+        credential_not_set: "(未設定)"
         edit: "編輯"
-        test: "執行測試"
+        test: "測試"
         delete: "刪除"
         test_modal:
           run: "執行測試"

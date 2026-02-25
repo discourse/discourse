@@ -7,7 +7,9 @@
 lt:
   js:
     explorer:
+      default_query: "Numatytasis"
       or: "arba"
+      create: "Sukurti"
       import:
         label: "Importuoti"
       help:

@@ -121,7 +121,9 @@ vi:
         save: "Lưu lại"
         remove_parameter: "Xóa"
         parameter_required: "Bắt buộc"
+        credential_not_set: "(chưa đặt)"
         edit: "Sửa"
+        test: "Kiểm tra"
         delete: "Xóa"
       secrets:
         short_title: "Thông tin đăng nhập"
@@ -202,12 +204,7 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
-        semantic_search_loading: "Tìm kiếm thêm kết quả bằng AI"
         semantic_search_results:
-          toggle: "Xem %{count} kết quả tìm thấy bằng AI"
-          toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
-          none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
-          new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
           unavailable: "Kết quả AI không khả dụng"
           zero_results_expanded: "Không tìm thấy kết quả, hiển thị %{count} kết quả AI"
         semantic_search_tooltips:

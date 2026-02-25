@@ -31,6 +31,7 @@ de:
   reports:
     accepted_solutions:
       title: "Akzeptierte Lösungen"
+      description: "Anzahl der pro Tag als gelöst markierten Themen innerhalb eines ausgewählten Datumsbereichs, optional nach Kategorie gefiltert, einschließlich eines 30-Tage-Vergleichswerts."
       xaxis: "Tag"
       yaxis: "Gesamt"
   solved:
