@@ -101,11 +101,7 @@ module Jobs
               filter.call(user, payload)
             end
           if send_notification
-            ::MessageBus.publish(
-              "/chat/notification-alert/#{user.id}",
-              payload,
-              user_ids: [user.id],
-            )
+            ::MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
           end
 
           ::PostAlerter.push_notification(user, payload)

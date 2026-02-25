@@ -61,7 +61,10 @@ import classPrepend, {
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import deprecated from "discourse/lib/deprecated";
-import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
+import {
+  registerDesktopNotificationFilter,
+  registerDesktopNotificationHandler,
+} from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { isDevelopment, isTesting } from "discourse/lib/environment";
@@ -1256,6 +1259,23 @@ class _PluginApi {
    **/
   registerDesktopNotificationHandler(handler) {
     registerDesktopNotificationHandler(handler);
+  }
+
+  /**
+   * Register a desktop notification filter. Return `false` from
+   * the filter to suppress the notification entirely (both the
+   * browser Notification and any registered handlers).
+   *
+   * ```javascript
+   * api.registerDesktopNotificationFilter((data) => {
+   *   if (data.channel_id === currentChannelId) {
+   *     return false;
+   *   }
+   * });
+   * ```
+   **/
+  registerDesktopNotificationFilter(filter) {
+    registerDesktopNotificationFilter(filter);
   }
 
   /**

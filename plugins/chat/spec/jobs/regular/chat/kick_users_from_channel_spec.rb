@@ -6,7 +6,7 @@ RSpec.describe Jobs::Chat::KickUsersFromChannel do
   it "publishes the correct MessageBus message" do
     message =
       MessageBus
-        .track_publish(Chat::Publisher.kick_users_message_bus_channel(channel.id)) do
+        .track_publish(Chat::Publisher::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL) do
           described_class.new.execute(channel_id: channel.id, user_ids: [1, 2, 3])
         end
         .first
@@ -19,7 +19,7 @@ RSpec.describe Jobs::Chat::KickUsersFromChannel do
     channel.trash!
     message =
       MessageBus
-        .track_publish(Chat::Publisher.kick_users_message_bus_channel(channel.id)) do
+        .track_publish(Chat::Publisher::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL) do
           described_class.new.execute(channel_id: channel_id, user_ids: [1, 2, 3])
         end
         .first
@@ -29,7 +29,7 @@ RSpec.describe Jobs::Chat::KickUsersFromChannel do
   it "does nothing if no user_ids are provided" do
     message =
       MessageBus
-        .track_publish(Chat::Publisher.kick_users_message_bus_channel(channel.id)) do
+        .track_publish(Chat::Publisher::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL) do
           described_class.new.execute(channel_id: channel.id)
         end
         .first

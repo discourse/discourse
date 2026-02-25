@@ -53,7 +53,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
       it "publishes new last read to clients" do
         messages = MessageBus.track_publish { result }
-        expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
+        expect(messages.map(&:channel)).to include("/chat/user-state/#{current_user.id}")
       end
 
       context "when the user is a member of the thread" do

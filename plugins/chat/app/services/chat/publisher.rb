@@ -2,10 +2,6 @@
 
 module Chat
   module Publisher
-    def self.new_messages_message_bus_channel(chat_channel_id)
-      "#{root_message_bus_channel(chat_channel_id)}/new-messages"
-    end
-
     def self.root_message_bus_channel(chat_channel_id)
       "/chat/#{chat_channel_id}"
     end
@@ -44,9 +40,10 @@ module Chat
 
       if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
-          self.new_messages_message_bus_channel(chat_channel.id),
+          CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
           {
-            type: "channel",
+            type: "new_messages",
+            payload_type: "channel",
             channel_id: chat_channel.id,
             thread_id: chat_message.thread_id,
             message:
@@ -61,9 +58,10 @@ module Chat
 
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
-          self.new_messages_message_bus_channel(chat_channel.id),
+          CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
           {
-            type: "thread",
+            type: "new_messages",
+            payload_type: "thread",
             channel_id: chat_channel.id,
             thread_id: chat_message.thread_id,
             force_thread: chat_message.thread&.force,
@@ -106,14 +104,10 @@ module Chat
       )
     end
 
-    def self.user_has_threads_message_bus_channel(user_id)
-      "/chat/user-has-threads/#{user_id}"
-    end
-
     def self.publish_user_has_threads!(user)
       MessageBus.publish(
-        user_has_threads_message_bus_channel(user.id),
-        { has_threads: true },
+        user_state_message_bus_channel(user.id),
+        { type: "has_threads", has_threads: true },
         user_ids: [user.id],
       )
     end
@@ -134,15 +128,6 @@ module Chat
         message_bus_targets,
         chat_channel,
         serialize_message_with_type(chat_message, :edit),
-      )
-    end
-
-    def self.publish_refresh!(chat_channel, chat_message)
-      message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
-      publish_to_targets!(
-        message_bus_targets,
-        chat_channel,
-        serialize_message_with_type(chat_message, :refresh),
       )
     end
 
@@ -279,12 +264,13 @@ module Chat
         .merge(options)
     end
 
-    def self.user_tracking_state_message_bus_channel(user_id)
-      "/chat/user-tracking-state/#{user_id}"
+    def self.user_state_message_bus_channel(user_id)
+      "/chat/user-state/#{user_id}"
     end
 
     def self.publish_user_tracking_state!(user, channel, message)
       data = {
+        type: "tracking_state",
         channel_id: channel.id,
         last_read_message_id: message.id,
         thread_id: message.thread_id,
@@ -299,9 +285,6 @@ module Chat
 
       data.merge!(channel_tracking_data)
 
-      # Need the thread unread overview if channel has threading enabled
-      # and a message is sent in the thread. We also need to pass the actual
-      # thread tracking state.
       if channel.threading_enabled && message.thread_reply?
         data[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
           guardian: user.guardian,
@@ -320,14 +303,10 @@ module Chat
       end
 
       MessageBus.publish(
-        self.user_tracking_state_message_bus_channel(user.id),
+        self.user_state_message_bus_channel(user.id),
         data.as_json,
         user_ids: [user.id],
       )
-    end
-
-    def self.bulk_user_tracking_state_message_bus_channel(user_id)
-      "/chat/bulk-user-tracking-state/#{user_id}"
     end
 
     def self.publish_bulk_user_tracking_state!(user, channel_last_read_map)
@@ -349,24 +328,16 @@ module Chat
       end
 
       MessageBus.publish(
-        self.bulk_user_tracking_state_message_bus_channel(user.id),
-        channel_last_read_map.as_json,
+        self.user_state_message_bus_channel(user.id),
+        { type: "bulk_tracking_state", channels: channel_last_read_map }.as_json,
         user_ids: [user.id],
       )
     end
 
-    def self.new_mentions_message_bus_channel(chat_channel_id)
-      "/chat/#{chat_channel_id}/new-mentions"
-    end
-
-    def self.kick_users_message_bus_channel(chat_channel_id)
-      "/chat/#{chat_channel_id}/kick"
-    end
-
     def self.publish_new_mention(user_id, chat_channel_id, chat_message_id)
       MessageBus.publish(
-        self.new_mentions_message_bus_channel(chat_channel_id),
-        { message_id: chat_message_id, channel_id: chat_channel_id }.as_json,
+        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+        { type: "new_mentions", message_id: chat_message_id, channel_id: chat_channel_id }.as_json,
         user_ids: [user_id],
       )
     end
@@ -398,18 +369,19 @@ module Chat
 
     def self.publish_kick_users(channel_id, user_ids)
       MessageBus.publish(
-        kick_users_message_bus_channel(channel_id),
-        { channel_id: channel_id },
+        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+        { type: "kick", channel_id: channel_id },
         user_ids: user_ids,
       )
     end
 
-    CHANNEL_EDITS_MESSAGE_BUS_CHANNEL = "/chat/channel-edits"
+    CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL = "/chat/channel-updates"
 
     def self.publish_chat_channel_edit(chat_channel, acting_user)
       MessageBus.publish(
-        CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
+        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
         {
+          type: "edits",
           chat_channel_id: chat_channel.id,
           name: chat_channel.title(acting_user),
           description: chat_channel.description,
@@ -419,27 +391,25 @@ module Chat
       )
     end
 
-    CHANNEL_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-status"
-
     def self.publish_channel_status(chat_channel)
       MessageBus.publish(
-        CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
-        { chat_channel_id: chat_channel.id, status: chat_channel.status },
+        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+        { type: "status", chat_channel_id: chat_channel.id, status: chat_channel.status },
         permissions(chat_channel),
       )
     end
-
-    CHANNEL_METADATA_MESSAGE_BUS_CHANNEL = "/chat/channel-metadata"
 
     def self.publish_chat_channel_metadata(chat_channel)
       MessageBus.publish(
-        CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
-        { chat_channel_id: chat_channel.id, memberships_count: chat_channel.user_count },
+        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+        {
+          type: "metadata",
+          chat_channel_id: chat_channel.id,
+          memberships_count: chat_channel.user_count,
+        },
         permissions(chat_channel),
       )
     end
-
-    CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-archive-status"
 
     def self.publish_archive_status(
       chat_channel,
@@ -449,8 +419,9 @@ module Chat
       total_messages:
     )
       MessageBus.publish(
-        CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
+        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
         {
+          type: "archive_status",
           chat_channel_id: chat_channel.id,
           archive_failed: archive_status == :failed,
           archive_completed: archive_status == :success,
@@ -458,7 +429,7 @@ module Chat
           total_messages: total_messages,
           archive_topic_id: archive_topic_id,
         },
-        permissions(chat_channel),
+        group_ids: [Group::AUTO_GROUPS[:staff]],
       )
     end
 

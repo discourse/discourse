@@ -291,11 +291,12 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
         it "publishes user tracking state using the new chat message as the last_read_message_id" do
           messages =
-            MessageBus.track_publish(
-              Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
-            ) { post "/chat/#{chat_channel.id}.json", params: { message: message } }
+            MessageBus.track_publish(Chat::Publisher.user_state_message_bus_channel(user.id)) do
+              post "/chat/#{chat_channel.id}.json", params: { message: message }
+            end
           expect(response.status).to eq(200)
-          expect(messages.first.data["last_read_message_id"]).to eq(Chat::Message.last.id)
+          tracking_message = messages.find { |m| m.data["type"] == "tracking_state" }
+          expect(tracking_message.data["last_read_message_id"]).to eq(Chat::Message.last.id)
         end
 
         context "when sending a message in a thread" do
@@ -311,9 +312,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
           it "publishes user tracking state using the old membership last_read_message_id" do
             messages =
-              MessageBus.track_publish(
-                Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
-              ) do
+              MessageBus.track_publish(Chat::Publisher.user_state_message_bus_channel(user.id)) do
                 post "/chat/#{chat_channel.id}.json",
                      params: {
                        message: message,
@@ -321,7 +320,8 @@ RSpec.describe Chat::Api::ChannelMessagesController do
                      }
               end
             expect(response.status).to eq(200)
-            expect(messages.first.data["last_read_message_id"]).to eq(message_1.id)
+            tracking_message = messages.find { |m| m.data["type"] == "tracking_state" }
+            expect(tracking_message.data["last_read_message_id"]).to eq(message_1.id)
           end
 
           context "when thread is not part of the provided channel" do

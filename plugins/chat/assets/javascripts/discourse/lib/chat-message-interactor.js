@@ -445,37 +445,16 @@ export default class ChatemojiReactions {
 
   @action
   pin() {
-    this.message.pinned = true;
-    this.message.channel.pinnedMessagesCount++;
-    this.message.channel.pendingOptimisticPins.add(this.message.id);
-
     return this.chatApi
       .pinMessage(this.message.channel.id, this.message.id)
-      .catch((error) => {
-        this.message.pinned = false;
-        this.message.channel.pinnedMessagesCount--;
-        this.message.channel.pendingOptimisticPins.delete(this.message.id);
-        popupAjaxError(error);
-      });
+      .catch(popupAjaxError);
   }
 
   @action
   unpin() {
-    this.message.pinned = false;
-    this.message.channel.pinnedMessagesCount = Math.max(
-      0,
-      this.message.channel.pinnedMessagesCount - 1
-    );
-    this.message.channel.pendingOptimisticUnpins.add(this.message.id);
-
     return this.chatApi
       .unpinMessage(this.message.channel.id, this.message.id)
-      .catch((error) => {
-        this.message.pinned = true;
-        this.message.channel.pinnedMessagesCount++;
-        this.message.channel.pendingOptimisticUnpins.delete(this.message.id);
-        popupAjaxError(error);
-      });
+      .catch(popupAjaxError);
   }
 
   @action

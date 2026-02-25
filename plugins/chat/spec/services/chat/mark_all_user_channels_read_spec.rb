@@ -135,9 +135,12 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
 
       it "publishes tracking state in bulk for affected channels" do
         message =
-          messages.find { |m| m.channel == "/chat/bulk-user-tracking-state/#{current_user.id}" }
+          messages.find do |m|
+            m.channel == "/chat/user-state/#{current_user.id}" &&
+              m.data["type"] == "bulk_tracking_state"
+          end
 
-        expect(message.data).to eq(
+        expect(message.data["channels"]).to eq(
           channel_1.id.to_s => {
             "last_read_message_id" => message_2.id,
             "last_reply_created_at" => nil,

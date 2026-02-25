@@ -232,9 +232,9 @@ RSpec.describe Chat::Channel do
         expect(messages.length).to eq(3)
         expect(messages.map(&:data)).to match_array(
           [
-            { chat_channel_id: category_channel_1.id, memberships_count: 2 },
-            { chat_channel_id: category_channel_2.id, memberships_count: 3 },
-            { chat_channel_id: dm_channel_1.id, memberships_count: 2 },
+            { type: "metadata", chat_channel_id: category_channel_1.id, memberships_count: 2 },
+            { type: "metadata", chat_channel_id: category_channel_2.id, memberships_count: 3 },
+            { type: "metadata", chat_channel_id: dm_channel_1.id, memberships_count: 2 },
           ],
         )
 
