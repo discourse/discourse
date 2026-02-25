@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
+import icon from "discourse/helpers/d-icon";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -514,7 +515,8 @@ export default class ComposerActions extends Component {
             {{#each data.actions as |availAction|}}
               <dropdown.item>
                 <DButton
-                  class={{dConcatClass "composer-actions-btn"}}
+                  class="composer-actions-btn
+                    {{if availAction.description '--with-description'}}"
                   @action={{fn this.onSelectAction availAction.id}}
                   data-action-id={{availAction.id}}
                 >
