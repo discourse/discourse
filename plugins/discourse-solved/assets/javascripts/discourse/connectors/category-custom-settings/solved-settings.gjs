@@ -32,7 +32,7 @@ export default class SolvedSettings extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.enable_simplified_category_creation}}
+    {{#if @outletArgs.form}}
       <@outletArgs.form.Section @title={{i18n "solved.title"}} ...attributes>
         {{#unless this.siteSettings.allow_solved_on_all_topics}}
           <@outletArgs.form.Container>
