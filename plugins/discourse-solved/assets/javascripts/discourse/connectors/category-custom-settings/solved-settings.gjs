@@ -32,31 +32,68 @@ export default class SolvedSettings extends Component {
   }
 
   <template>
-    <@outletArgs.form.Section @title={{i18n "solved.title"}} ...attributes>
-      {{#unless this.siteSettings.allow_solved_on_all_topics}}
-        <@outletArgs.form.Container>
-          <label class="checkbox-label">
-            <input
-              type="checkbox"
-              checked={{this.enableAcceptedAnswers}}
-              {{on "change" this.onChangeSetting}}
-            />
-            {{i18n "solved.allow_accepted_answers"}}
-          </label>
-        </@outletArgs.form.Container>
-      {{/unless}}
+    {{#if this.siteSettings.enable_simplified_category_creation}}
+      <@outletArgs.form.Section @title={{i18n "solved.title"}} ...attributes>
+        {{#unless this.siteSettings.allow_solved_on_all_topics}}
+          <@outletArgs.form.Container>
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                checked={{this.enableAcceptedAnswers}}
+                {{on "change" this.onChangeSetting}}
+              />
+              {{i18n "solved.allow_accepted_answers"}}
+            </label>
+          </@outletArgs.form.Container>
+        {{/unless}}
 
-      <@outletArgs.form.Container
-        @title={{i18n "solved.solved_topics_auto_close_hours"}}
+        <@outletArgs.form.Container
+          @title={{i18n "solved.solved_topics_auto_close_hours"}}
+        >
+          <input
+            {{on "input" (withEventValue this.onChangeAutoCloseHours)}}
+            value={{this.customFields.solved_topics_auto_close_hours}}
+            type="number"
+            min="0"
+            id="auto-close-solved-topics"
+          />
+        </@outletArgs.form.Container>
+      </@outletArgs.form.Section>
+    {{else}}
+      <div
+        class="category-custom-settings-outlet solved-settings"
+        ...attributes
       >
-        <input
-          {{on "input" (withEventValue this.onChangeAutoCloseHours)}}
-          value={{this.customFields.solved_topics_auto_close_hours}}
-          type="number"
-          min="0"
-          id="auto-close-solved-topics"
-        />
-      </@outletArgs.form.Container>
-    </@outletArgs.form.Section>
+        <h3>{{i18n "solved.title"}}</h3>
+
+        {{#unless this.siteSettings.allow_solved_on_all_topics}}
+          <section class="field">
+            <div class="enable-accepted-answer">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={{this.enableAcceptedAnswers}}
+                  {{on "change" this.onChangeSetting}}
+                />
+                {{i18n "solved.allow_accepted_answers"}}
+              </label>
+            </div>
+          </section>
+        {{/unless}}
+
+        <section class="field auto-close-solved-topics">
+          <label for="auto-close-solved-topics">
+            {{i18n "solved.solved_topics_auto_close_hours"}}
+          </label>
+          <input
+            {{on "input" (withEventValue this.onChangeAutoCloseHours)}}
+            value={{this.customFields.solved_topics_auto_close_hours}}
+            type="number"
+            min="0"
+            id="auto-close-solved-topics"
+          />
+        </section>
+      </div>
+    {{/if}}
   </template>
 }
