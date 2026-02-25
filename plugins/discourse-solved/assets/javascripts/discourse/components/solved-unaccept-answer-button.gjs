@@ -11,6 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import setAcceptedSolution from "../lib/set-accepted-solution";
 
 export default class SolvedUnacceptAnswerButton extends Component {
   @service appEvents;
@@ -118,7 +119,7 @@ async function unacceptPost(post) {
       data: { id: post.id },
     });
 
-    topic.setAcceptedSolution(undefined);
+    setAcceptedSolution(topic, undefined);
   } catch (e) {
     popupAjaxError(e);
   }
