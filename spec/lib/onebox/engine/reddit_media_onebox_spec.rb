@@ -87,6 +87,62 @@ RSpec.describe Onebox::Engine::RedditMediaOnebox do
     end
   end
 
+  describe "authenticated requests" do
+    let(:image_link) do
+      "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition"
+    end
+    let(:oauth_json_url) do
+      "https://oauth.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition.json"
+    end
+    let(:token_url) { "https://www.reddit.com/api/v1/access_token" }
+
+    context "when Reddit OAuth credentials are configured" do
+      before do
+        SiteSetting.reddit_onebox_client_id = "test_client_id"
+        SiteSetting.reddit_onebox_client_secret = "test_client_secret"
+
+        stub_request(:post, token_url).to_return(
+          status: 200,
+          body: { access_token: "test_token", token_type: "bearer", expires_in: 3600 }.to_json,
+        )
+
+        stub_request(:get, oauth_json_url).with(
+          headers: {
+            "Authorization" => "Bearer test_token",
+          },
+        ).to_return(status: 200, body: onebox_response("reddit_image"))
+      end
+
+      it "uses oauth.reddit.com with auth header" do
+        described_class.new(image_link).to_html
+        expect(WebMock).to have_requested(:get, oauth_json_url).with(
+          headers: {
+            "Authorization" => "Bearer test_token",
+          },
+        )
+      end
+    end
+
+    context "when Reddit OAuth credentials are blank" do
+      before do
+        SiteSetting.reddit_onebox_client_id = ""
+        SiteSetting.reddit_onebox_client_secret = ""
+
+        stub_request(:get, "#{image_link}.json").to_return(
+          status: 200,
+          body: onebox_response("reddit_image"),
+        )
+      end
+
+      it "uses www.reddit.com without auth header" do
+        described_class.new(image_link).to_html
+        expect(WebMock).to have_requested(:get, "#{image_link}.json").with { |req|
+          req.headers.exclude?("Authorization")
+        }
+      end
+    end
+  end
+
   describe ".===" do
     it "matches valid Reddit URL" do
       valid_url = URI(image_link)
