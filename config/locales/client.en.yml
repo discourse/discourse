@@ -3215,7 +3215,7 @@ en:
           label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
-          label: "Create new topic"
+          label: "New topic"
           desc: Create a new topic
         create_personal_message:
           label: "New message"
