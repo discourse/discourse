@@ -127,6 +127,11 @@ class CategoriesController < ApplicationController
     render json: success_json
   end
 
+  def types
+    guardian.ensure_can_create_category!
+    render json: { types: Categories::TypeRegistry.list }
+  end
+
   def show
     guardian.ensure_can_see!(@category)
 
@@ -141,6 +146,7 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
+    category_type = params[:category_type]
 
     if category_params[:description].present? &&
          category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
@@ -165,6 +171,10 @@ class CategoriesController < ApplicationController
 
     if @category.save
       @category.move_to(position.to_i) if position
+
+      if category_type.present?
+        Categories::Configure.call(guardian:, params: { category_id: @category.id, category_type: })
+      end
 
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)

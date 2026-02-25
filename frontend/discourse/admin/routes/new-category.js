@@ -14,6 +14,7 @@ function getNewCategoryDefaultColors() {
 }
 
 export default class NewCategory extends DiscourseRoute {
+  @service categoryTypeChooser;
   @service router;
 
   controllerName = "edit-category.tabs";
@@ -60,11 +61,22 @@ export default class NewCategory extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 
+    const result = this.categoryTypeChooser.consume();
+    if (result) {
+      controller.model.set("category_type", result.type);
+      controller.model.set("category_type_name", result.typeName);
+      controller.model.set("category_type_schema", result.typeSchema);
+    }
+
     controller.selectedTab = "general";
     controller.parentParams = {};
   }
 
   titleToken() {
+    const typeName = this.controller?.model?.category_type_name;
+    if (typeName) {
+      return i18n("category.create_with_type", { typeName });
+    }
     return i18n("category.create");
   }
 

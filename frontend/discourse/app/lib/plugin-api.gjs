@@ -3367,6 +3367,7 @@ class _PluginApi {
    * @param {string} tab.name - display name shown on the tab
    * @param {Class} tab.component - Glimmer component to render as tab content
    * @param {Function} [tab.condition] - optional callback returning boolean to conditionally show the tab
+   * @param {boolean} [tab.primary] - if true, tab is shown without requiring "Advanced settings" toggle
    */
   registerEditCategoryTab(tab) {
     registeredEditCategoryTabs.push(tab);

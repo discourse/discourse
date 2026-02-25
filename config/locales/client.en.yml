@@ -4624,7 +4624,11 @@ en:
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
       create: "New category"
+      create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      choose_type:
+        title: "Choose Category Type"
+        requires_plugin: "Requires plugin"
       save: "Save category"
       slug: "Category slug"
       parent: "Parent category"
