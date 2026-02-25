@@ -312,7 +312,10 @@ if (themeTestPages) {
 } else {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
-    "/assets/plugins/": {
+    "/assets/js/plugins/": {
+      target,
+    },
+    "/assets/map/plugins/": {
       target,
     },
     "/plugins/": {

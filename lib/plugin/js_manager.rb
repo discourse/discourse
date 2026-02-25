@@ -13,7 +13,9 @@ module Plugin
         .load_path
         .assets
         .find do |a|
-          a.logical_path.to_s.match?(/^plugins\/#{plugin_name}_#{filename}-\w{8}\.digested\.js$/)
+          a.logical_path.to_s.match?(
+            /^js\/plugins\/#{plugin_name}_#{filename}-\w{8}\.digested\.js$/,
+          )
         end
         &.logical_path
     end
@@ -31,7 +33,8 @@ module Plugin
       print "Building #{plugin.directory_name}... "
       start = Time.now
 
-      output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/plugins"
+      output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/js/plugins"
+      map_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/map/plugins"
 
       entrypoints = { "main" => "assets/javascripts", "admin" => "admin/assets/javascripts" }
       entrypoints["test"] = "test/javascripts" if Rails.env.local?
@@ -76,11 +79,17 @@ module Plugin
         )
       base36_digest = hex_digest.to_i(16).to_s(36).first(8)
 
-      output_path = "#{output_dir}"
       filename_prefix = "#{plugin.directory_name}_"
       filename_suffix = "-#{base36_digest}.digested"
 
-      if !(cache? && File.exist?("#{output_path}/#{filename_prefix}main#{filename_suffix}.js"))
+      expected_entrypoints =
+        entrypoints_config.keys.map do |name|
+          "#{output_dir}/#{filename_prefix}#{name}#{filename_suffix}.js"
+        end
+
+      files_exist = expected_entrypoints.all? { |path| File.exist?(path) }
+
+      if !cache? || !files_exist
         compiler =
           Plugin::JsCompiler.new(
             plugin.directory_name,
@@ -92,19 +101,20 @@ module Plugin
           )
         result = compiler.compile!
 
-        FileUtils.mkdir_p(output_path)
+        FileUtils.mkdir_p(output_dir)
+        FileUtils.mkdir_p(map_dir)
         result.each do |file, info|
           code = info["code"]
-          code += "\n//# sourceMappingURL=#{file}.map\n" if info["map"]
-          File.write("#{output_path}/#{file}", code)
+          code += "\n//# sourceMappingURL=../../map/plugins/#{file}.map\n" if info["map"]
+          File.write("#{output_dir}/#{file}", code)
 
-          File.write("#{output_path}/#{file}.map", info["map"]) if info["map"]
+          File.write("#{map_dir}/#{file}.map", info["map"]) if info["map"]
         end
       end
 
       # Delete any old versions
       Dir
-        .glob("#{output_dir}/*")
+        .glob("#{output_dir}/**/*")
         .reject { |path| path.include?(filename_suffix) || path.include?("_extra") }
         .each { |path| FileUtils.rm_rf(path) }
 
