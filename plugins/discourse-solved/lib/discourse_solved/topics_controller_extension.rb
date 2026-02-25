@@ -14,7 +14,12 @@ module DiscourseSolved
           if post_ids.map(&:to_i).include?(solution_post_id)
             solution_post = Post.find_by(id: solution_post_id)
             if solution_post
-              DiscourseSolved::UnacceptAnswer.call(params: { post_id: solution_post.id })
+              DiscourseSolved::UnacceptAnswer.call(
+                params: {
+                  post_id: solution_post.id,
+                },
+                guardian: Discourse.system_user.guardian,
+              )
             end
           end
         end

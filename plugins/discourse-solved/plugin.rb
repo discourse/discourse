@@ -128,12 +128,19 @@ after_initialize do
   add_to_serializer(:user_summary, :solved_count) { object.solved_count }
   add_to_serializer(:post, :can_accept_answer) { scope.can_accept_answer?(topic, object) }
   add_to_serializer(:post, :can_unaccept_answer) do
-    scope.can_accept_answer?(topic, object) && accepted_answer
+    scope.can_unaccept_answer?(topic, object) && accepted_answer
   end
   add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
-  on(:post_destroyed) { |post| DiscourseSolved::UnacceptAnswer.call(params: { post_id: post.id }) }
+  on(:post_destroyed) do |post|
+    DiscourseSolved::UnacceptAnswer.call(
+      params: {
+        post_id: post.id,
+      },
+      guardian: Discourse.system_user.guardian,
+    )
+  end
 
   on(:filter_auto_bump_topics) do |_category, filters|
     filters.push(
@@ -170,7 +177,14 @@ after_initialize do
       if !new_allowed
         if topic.solved.present?
           post = topic.solved.answer_post
-          DiscourseSolved::UnacceptAnswer.call(params: { post_id: post.id }) if post
+          if post
+            DiscourseSolved::UnacceptAnswer.call(
+              params: {
+                post_id: post.id,
+              },
+              guardian: Discourse.system_user.guardian,
+            )
+          end
         end
       end
     end

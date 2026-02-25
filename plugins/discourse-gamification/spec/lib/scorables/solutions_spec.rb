@@ -31,7 +31,7 @@ RSpec.describe DiscourseGamification::Solutions do
         params: {
           post_id: answer_post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(query_results).to contain_exactly(
@@ -42,7 +42,7 @@ RSpec.describe DiscourseGamification::Solutions do
         params: {
           post_id: answer_post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
       expect(query_results).to be_empty
     end
@@ -53,7 +53,7 @@ RSpec.describe DiscourseGamification::Solutions do
         params: {
           post_id: answer_post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(query_results).to be_empty

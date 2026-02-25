@@ -38,7 +38,7 @@ describe ComposerMessagesFinder do
           params: {
             post_id: post.id,
           },
-          guardian: Guardian.new(Discourse.system_user),
+          guardian: Discourse.system_user.guardian,
         )
         expect(
           described_class.new(
@@ -54,7 +54,7 @@ describe ComposerMessagesFinder do
           params: {
             post_id: post.id,
           },
-          guardian: Guardian.new(Discourse.system_user),
+          guardian: Discourse.system_user.guardian,
         )
         message =
           described_class.new(

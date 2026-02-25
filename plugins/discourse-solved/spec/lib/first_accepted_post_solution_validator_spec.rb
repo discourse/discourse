@@ -13,7 +13,7 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
         params: {
           post_id: post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(described_class.check(post, trust_level: "any")).to eq(true)
@@ -26,7 +26,7 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
         params: {
           post_id: previously_accepted_post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       topic2 = Fabricate(:topic_with_op)
@@ -35,7 +35,7 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
         params: {
           post_id: newly_accepted_post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(described_class.check(newly_accepted_post, trust_level: "any")).to eq(false)
@@ -52,7 +52,7 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
         params: {
           post_id: post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(described_class.check(post, trust_level: TrustLevel[0])).to eq(false)
@@ -66,7 +66,7 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
         params: {
           post_id: post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(described_class.check(post, trust_level: TrustLevel[2])).to eq(true)

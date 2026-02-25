@@ -23,7 +23,7 @@ describe UserCardSerializer do
         params: {
           post_id: post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(serializer.as_json[:accepted_answers]).to eq(1)

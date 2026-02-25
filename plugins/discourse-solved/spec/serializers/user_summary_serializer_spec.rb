@@ -26,7 +26,7 @@ describe UserSummarySerializer do
         params: {
           post_id: post.id,
         },
-        guardian: Guardian.new(Discourse.system_user),
+        guardian: Discourse.system_user.guardian,
       )
 
       expect(serializer.as_json[:solved_count]).to eq(1)

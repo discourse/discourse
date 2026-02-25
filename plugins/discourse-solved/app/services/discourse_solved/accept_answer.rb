@@ -15,9 +15,9 @@ class DiscourseSolved::AcceptAnswer
 
   lock(:topic) do
     transaction do
-      only_if(:previous_answer_exists) { step :remove_previous_accepted_answer }
-      step :log_user_action
-      model :solved, :create_solved
+      only_if(:previous_answer_exists) { step :revoke_previous_accepted_answer }
+      step :credit_post_author
+      model :solved, :mark_as_solved
       only_if(:should_notify_post_author) { step :notify_post_author }
       only_if(:should_notify_topic_owner) { step :notify_topic_owner }
     end
@@ -46,7 +46,7 @@ class DiscourseSolved::AcceptAnswer
     topic.solved&.answer_post_id.present?
   end
 
-  def remove_previous_accepted_answer(topic:)
+  def revoke_previous_accepted_answer(topic:)
     UserAction.where(
       action_type: UserAction::SOLVED,
       target_post: topic.solved.answer_post,
@@ -54,7 +54,7 @@ class DiscourseSolved::AcceptAnswer
     topic.solved.destroy!
   end
 
-  def log_user_action(post:, guardian:)
+  def credit_post_author(post:, guardian:)
     UserAction.log_action!(
       action_type: UserAction::SOLVED,
       user_id: post.user_id,
@@ -64,7 +64,7 @@ class DiscourseSolved::AcceptAnswer
     )
   end
 
-  def create_solved(post:, topic:, guardian:)
+  def mark_as_solved(post:, topic:, guardian:)
     DiscourseSolved::SolvedTopic.create(topic:, answer_post: post, accepter: guardian.user)
   end
 

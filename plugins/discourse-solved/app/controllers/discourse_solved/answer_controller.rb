@@ -22,17 +22,11 @@ class DiscourseSolved::AnswerController < ::ApplicationController
   end
 
   def unaccept
-    post = Post.find(params[:id].to_i)
-
-    topic = post.topic
-    topic ||= Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
-
-    guardian.ensure_can_accept_answer!(topic, post)
-
-    DiscourseSolved::UnacceptAnswer.call(params: { post_id: post.id }) do
+    DiscourseSolved::UnacceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
       on_success { render json: success_json }
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_unaccept_answer) { raise Discourse::InvalidAccess }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end

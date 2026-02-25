@@ -24,14 +24,9 @@ describe DirectoryItem, type: :model do
         params: {
           post_id: topic_post1.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
-      DiscourseSolved::AcceptAnswer.call!(
-        params: {
-          post_id: pm_post.id,
-        },
-        guardian: Guardian.new(admin),
-      )
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: pm_post.id }, guardian: admin.guardian)
 
       DirectoryItem.refresh!
 
@@ -48,13 +43,13 @@ describe DirectoryItem, type: :model do
         params: {
           post_id: topic_post1.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
       DiscourseSolved::AcceptAnswer.call!(
         params: {
           post_id: topic_post2.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
       topic_post2.update(deleted_at: Time.zone.now)
 
@@ -73,13 +68,13 @@ describe DirectoryItem, type: :model do
         params: {
           post_id: topic_post1.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
       DiscourseSolved::AcceptAnswer.call!(
         params: {
           post_id: topic_post2.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
       topic2.update(deleted_at: Time.zone.now)
 
@@ -100,7 +95,7 @@ describe DirectoryItem, type: :model do
         params: {
           post_id: topic_post1.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
 
       DirectoryItem.refresh!
@@ -118,7 +113,7 @@ describe DirectoryItem, type: :model do
         params: {
           post_id: topic_post1.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
       user.update(suspended_till: 1.day.from_now)
 
@@ -137,7 +132,7 @@ describe DirectoryItem, type: :model do
         params: {
           post_id: topic_post1.id,
         },
-        guardian: Guardian.new(admin),
+        guardian: admin.guardian,
       )
 
       DirectoryItem.refresh!
@@ -157,7 +152,7 @@ describe DirectoryItem, type: :model do
           params: {
             post_id: topic_post1.id,
           },
-          guardian: Guardian.new(Discourse.system_user),
+          guardian: Discourse.system_user.guardian,
         )
 
         DirectoryItem.refresh!

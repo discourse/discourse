@@ -11,51 +11,72 @@ class DiscourseSolved::UnacceptAnswer
 
   model :post
   model :topic
+  policy :can_unaccept_answer
 
-  only_if(:is_accepted_answer) do
-    lock(:topic) { transaction { step :unaccept } }
+  only_if(:post_is_accepted_answer) do
+    lock(:topic) do
+      transaction do
+        step :revoke_solved_credit
+        step :remove_accepted_answer_notification
+        step :unmark_as_solved
+      end
+    end
 
-    step :enqueue_web_hooks
+    only_if(:unaccepted_solution_webhooks_active) { step :enqueue_web_hooks }
     step :publish_unaccepted
   end
 
   private
 
-  def fetch_post(params:)
-    Post.with_deleted.find_by(id: params.post_id)
+  def fetch_post(params:, guardian:)
+    return Post.with_deleted.find_by(id: params.post_id) if guardian.is_staff?
+    Post.find_by(id: params.post_id)
   end
 
-  def fetch_topic(post:)
-    post.topic || Topic.unscoped.find_by(id: post.topic_id)
+  def fetch_topic(post:, guardian:)
+    return Topic.with_deleted.find_by(id: post.topic_id) if guardian.is_staff?
+    post.topic
   end
 
-  def is_accepted_answer(topic:, post:)
-    topic.solved.present? && topic.solved.answer_post_id == post.id
+  def can_unaccept_answer(guardian:, topic:, post:)
+    guardian.can_unaccept_answer?(topic, post)
   end
 
-  def unaccept(post:, topic:)
-    solved = topic.solved
+  def post_is_accepted_answer(topic:, post:)
+    topic.solved&.answer_post == post
+  end
 
-    UserAction.where(action_type: UserAction::SOLVED, target_post_id: post.id).destroy_all
+  def revoke_solved_credit(post:)
+    UserAction.where(action_type: UserAction::SOLVED, target_post: post).destroy_all
+  end
+
+  def remove_accepted_answer_notification(post:, topic:)
     Notification.find_by(
+      topic:,
       notification_type: Notification.types[:custom],
-      user_id: post.user_id,
-      topic_id: post.topic_id,
+      user: post.user,
       post_number: post.post_number,
     )&.destroy!
-    solved.destroy!
+  end
+
+  def unmark_as_solved(topic:)
+    topic.solved.destroy!
+  end
+
+  def unaccepted_solution_webhooks_active
+    WebHook.active_web_hooks(:unaccepted_solution).exists?
   end
 
   def enqueue_web_hooks(post:)
-    if WebHook.active_web_hooks(:unaccepted_solution).exists?
-      payload = WebHook.generate_payload(:post, post)
-      WebHook.enqueue_solved_hooks(:unaccepted_solution, post, payload)
-    end
+    WebHook.enqueue_solved_hooks(:unaccepted_solution, post, WebHook.generate_payload(:post, post))
   end
 
   def publish_unaccepted(post:, topic:)
     DiscourseEvent.trigger(:unaccepted_solution, post)
-    secure_audience = topic.secure_audience_publish_messages
-    MessageBus.publish("/topic/#{topic.id}", { type: :unaccepted_solution }, secure_audience)
+    MessageBus.publish(
+      "/topic/#{topic.id}",
+      { type: :unaccepted_solution },
+      topic.secure_audience_publish_messages,
+    )
   end
 end
