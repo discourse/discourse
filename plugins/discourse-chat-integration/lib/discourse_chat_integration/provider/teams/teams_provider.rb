@@ -5,7 +5,6 @@ module DiscourseChatIntegration::Provider::TeamsProvider
   PROVIDER_ENABLED_SETTING = :chat_integration_teams_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [
-    { key: "name", regex: '^\S+$', unique: true },
     { key: "webhook_url", regex: '^https:\/\/\S+$', unique: true, hidden: true },
   ]
 
