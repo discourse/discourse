@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "../mixins/reddit_auth_header"
+
 module Onebox
   module Engine
     class RedditMediaOnebox
       include Engine
+      include Onebox::Mixins::RedditAuthHeader
 
       always_https
       matches_domain(
@@ -112,7 +115,11 @@ module Onebox
         return @reddit_post if defined?(@reddit_post)
 
         json_url = @url.sub(%r{/?(\?.*)?$}, ".json")
-        response = Onebox::Helpers.fetch_response(json_url)
+        headers = reddit_auth_header
+        if headers.any?
+          json_url = json_url.sub(%r{://(www|old|np|new)\.reddit\.com}, "://oauth.reddit.com")
+        end
+        response = Onebox::Helpers.fetch_response(json_url, headers:)
         parsed = ::MultiJson.load(response)
         @reddit_post = parsed[0]["data"]["children"][0]["data"]
       rescue StandardError
