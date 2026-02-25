@@ -42,8 +42,7 @@ module Onebox
               )
 
             if response.status == 200
-              data = ::MultiJson.load(response.body)
-              data["access_token"]
+              ::MultiJson.load(response.body)["access_token"]
             end
           end
       end
