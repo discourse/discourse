@@ -60,6 +60,13 @@ el:
               label: "Κατηγορίες"
             tags:
               label: "Ετικέτες"
+            debug_mode:
+              label: "Λειτουργία Αποσφαλμάτωσης"
+              description: "Ενεργοποιήστε τη λειτουργία αποσφαλμάτωσης για να δείτε την ακατέργαστη είσοδο και έξοδο του LLM"
+        ai_tool_action:
+          fields:
+            tool:
+              description: "Το εργαλείο AI που θα εκτελείται όταν πυροδοτείται ο αυτοματισμός"
         llm_triage:
           fields:
             category:
@@ -68,6 +75,7 @@ el:
               label: "Ετικέτες"
             canned_reply:
               label: "Απάντηση"
+              description: "Ακατέργαστο κείμενο της έτοιμης απάντησης που θα δημοσιευτεί στο θέμα"
             flag_type:
               label: "Τύπος αναφοράς"
               description: "Τύπος σημαίας που θα εφαρμοστεί στην ανάρτηση (ανεπιθύμητο ή απλώς αναγγελία για έλεγχο)"
@@ -106,6 +114,8 @@ el:
         ai_helper:
           setting_groups:
             automation: "Αυτοματισμός"
+        translation:
+          post_raw_translator: "Μεταφραστής ακατέργαστης ανάρτησης"
         spam:
           name: "Ανεπιθύμητα"
       modals:
@@ -153,6 +163,8 @@ el:
         description: "Περιγραφή"
         mentionable: Να επιτρέπονται επισημάνσεις
         user: Χρήστης
+        allow_chat_direct_messages: "Να επιτρέπονται τα άμεσα μηνύματα συνομιλίας"
+        allow_chat_direct_messages_help: "Εάν είναι ενεργοποιημένη, οι χρήστες σε επιτρεπόμενες ομάδες μπορούν να στέλνουν άμεσα μηνύματα σε αυτήν την περσόνα."
         allow_chat_channel_mentions: "Να επιτρέπονται επισημάνσεις καναλιών συνομιλίας"
         allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
@@ -186,6 +198,7 @@ el:
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
+        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         back: "Πίσω"
@@ -247,7 +260,15 @@ el:
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
         shortcut_link: "AI bot"
+        debug_ai: "Προβολή ακατέργαστου AI αιτήματος και απάντησης"
         debug_ai_modal:
+          title: "Προβολή αλληλεπίδρασης AI"
+          copy_request: "Αντιγραφή αιτήματος"
+          copy_response: "Αντιγραφή απάντησης"
+          request_tokens: "Διακριτικά αιτήματος:"
+          response_tokens: "Διακριτικά απάντησης:"
+          cache_read_tokens: "Διακριτικά ανάγνωσης προσωρινής μνήμης:"
+          cache_write_tokens: "Διακριτικά εγγραφής προσωρινής μνήμης:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"
@@ -257,6 +278,7 @@ el:
         share_modal:
           copy: "Αντιγραφή"
         conversations:
+          placeholder: "Κάντε μια ερώτηση..."
           messages_sidebar_title: "Συζητήσεις"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"

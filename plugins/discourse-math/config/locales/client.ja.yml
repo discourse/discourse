@@ -7,7 +7,17 @@
 ja:
   js:
     discourse_math:
+      edit_math: "数式を編集"
       edit_modal:
+        title: "数式を編集"
+        label: "数式"
         apply: "適用"
+      composer:
+        insert_math: "数式を挿入"
       insert_modal:
+        title_inline: "インライン数式を挿入"
+        title_block: "ブロック数式を挿入"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
         insert: "挿入"
+        block_mode: "ブロックモード (表示される式)"

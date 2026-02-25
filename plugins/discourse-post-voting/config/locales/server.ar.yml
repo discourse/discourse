@@ -39,8 +39,11 @@ ar:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "ماذا تريد أن تفعل بهذا التعليق؟"
         no_action_comment:
           title: "التي لم يتم اتخاذ إجراء بشأنها"
+          description: "اترك التعليق كما هو."
         agree_and_keep_comment:
           title: "إبقاء التعليق"
           description: "الموافقة على البلاغ والاحتفاظ بالتعليق دون تغيير"
@@ -64,7 +67,12 @@ ar:
           description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
         disagree:
           title: "إبقاء التعليق"
+          description: "رفض البلاغ وترك التعليق كما هو."
+        ignore:
+          title: "تجاهل البلاغ"
+          description: "أزله من قائمة الانتظار دون اتخاذ أي إجراء."
         delete_and_agree:
+          title: "تجاهل البلاغ وحذف التعليق"
           description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
   post_action_types:
     vote:
@@ -117,12 +125,17 @@ ar:
             title: "حذف التعليق"
             description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
           delete_and_agree:
+            title: "تجاهل البلاغ وحذف التعليق"
             description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
           disagree_and_restore:
             title: "عدم الموافقة واستعادة التعليق"
             description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
           disagree:
             title: "إبقاء التعليق"
+            description: "رفض البلاغ وترك التعليق كما هو."
+          ignore:
+            title: "تجاهل البلاغ"
+            description: "أزله من قائمة الانتظار دون اتخاذ أي إجراء."
         transcript:
           view: "عرض نص التعليقات السابقة"
       reviewable_score_types:

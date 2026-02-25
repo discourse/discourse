@@ -11,7 +11,7 @@ de:
         staff_actions:
           actions:
             create_automation: Automatisierung erstellen
-            update_automation: automatisierung aktualisieren
+            update_automation: Automatisierung aktualisieren
             delete_automation: Automatisierung löschen
     discourse_automation:
       title: Automatisierung

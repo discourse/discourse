@@ -18,6 +18,7 @@ ja:
         title: "テンプレート (テキストエリア内)"
         insert_template: "%{shortcut} テンプレートの挿入"
     templates:
+      filter_hint: "キーワードでフィルタ..."
       insert_template: "テンプレートの挿入"
       close_templates: "テンプレートセレクタを閉じる"
       copy: "テンプレートのコピー"

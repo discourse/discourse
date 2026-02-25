@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_solved: "Discourse – Gelöst"
+          discourse_solved: "Discourse Gelöst"
   js:
     notifications:
       alt:

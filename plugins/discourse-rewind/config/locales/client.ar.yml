@@ -5,29 +5,319 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "جارٍ تجهيز الشبكات.."
+      viewing_other_user: "أنت تشاهد تقرير <strong>%{username}</strong> في ميزة Discourse Rewind."
+      cannot_view_rewind_gibberish: >
+        [تم رفض الوصول:: فشل روتين إعادة تشغيل النظام الرئيسي]<br><br> جارٍ تهيئة سجل الشذوذ...<br><br> &nbsp;&nbsp;>> نقص في سعة المخزن المؤقت الكمي ⧛<br> &nbsp;&nbsp;>> انحراف التكافؤ بين العقد (Δ=004.33)<br> &nbsp;&nbsp;>> جزء من الحزمة ϟ عند الإزاحة ∇47<br> &nbsp;&nbsp;>> انتهت مهلة مصافحة قناة التدفق<br><br>
+      cannot_view_rewind: >
+        لا يتوفر عرض تقرير Discourse Rewind هذا. قد يكون المالك لم يشارك التقرير للجمهور؟<br><br>$> _<br><br>
+      preferences:
+        enable_rewind: "فعّل ميزة Discourse Rewind. سيعرض هذا ملخص نشاطك السنوي في ملفك الشخصي وعلى صورتك الرمزية."
+        share_publicly: "شارك ملخص نشاطك السنوي في Discourse Rewind مع أعضاء المنتدى الآخرين. سيتمكّن أي عضو من الاطلاع على ملخصك."
+        cannot_share_when_profile_hidden: "لكي تتمكن من مشاركة Rewind، يجب السماح للآخرين بعرض ملفك الشخصي العام."
+      profile_link: "عرض ملخص نشاطك في Discourse Rewind لعام %{rewindYear}"
       share:
         toggle_label:
           private: "خاص"
           public: "عام"
+        confirm: "تأكد من مراجعة ملخص Rewind لديك قبل مشاركته، فقد يتضمن بيانات من الرسائل الشخصية. يمكنك إعادة جعله خاصًا في أي وقت."
+        confirm_button:
+          enable: "اجعله عامًا"
+          disable: "اجعله خاصًا"
+        enabled_success: "يمكنك الآن مشاركة ملخص Rewind مع أعضاء المنتدى الآخرين."
+        disabled_success: "أصبح ملخص Rewind الآن خاصًا."
       reports:
+        activity_calendar:
+          title: جدول النشاط
+          cell_title:
+            visited_no_posts: "لقد زرت المنتدى وتصفحت المحتوى في %{date}، لكنك لم تنشر أي منشورات."
+            visited_no_posts_others: "زار %{username} المنتدى وتصفّح المحتوى في %{date}، لكنه لم ينشر أي منشورات."
+            visited_with_posts:
+              zero: "لم تنشئ أي منشورات في %{date}."
+              one: "أنشأت منشورًا واحدًا في %{date}."
+              two: "أنشأت منشورين في %{date}."
+              few: "أنشأت %{count} منشورات في %{date}."
+              many: "أنشأت %{count} منشورًا في %{date}."
+              other: "أنشأت %{count} منشور في %{date}."
+            visited_with_posts_others:
+              zero: "أنشأ %{username} %{count} منشور في %{date}."
+              one: "أنشأ %{username} منشورًا واحدًا في %{date}."
+              two: "أنشأ %{username} منشورين في %{date}."
+              few: "أنشأ %{username} %{count} منشورات في %{date}."
+              many: "أنشأ %{username} %{count} منشورًا في %{date}."
+              other: "أنشأ %{username} %{count} منشور في %{date}."
+            no_activity: "لم تكن متواجدًا في المنتدى في %{date}."
+            no_activity_others: "لم يكن %{username} متواجدًا في المنتدى في %{date}."
+        top_words:
+          title: استخدام الكلمات
         reading_time:
           title: وقت القراءة
+          book_comparison: "لقد قضيت <code>%{readingTime}</code> في القراءة على موقعنا! هذا الوقت يعادل الوقت اللازم لقراءة <i>%{bookTitle}</i>"
+          book_comparison_others: "قضى %{username} <code>%{readingTime}</code> في القراءة على موقعنا! هذا الوقت يعادل الوقت اللازم لقراءة <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: أكثر التفاعلات استخدامًا في الموضوعات
+          total_number: "إجمالي عدد التفاعلات: %{count}"
+        post_received_reactions:
+          title: أكثر التفاعلات الواردة في المواضيع
+        fbff:
+          title: صديقك المفضل إلى الأبد في المنتدى
+          title_others: "صديق %{username} المفضل إلى الأبد في المنتدى"
+        most_viewed_categories:
+          title:
+            zero: ليست لديك فئات حققت مشاهدة أكثر من غيرها
+            one: الفئة الأكثر مشاهدة لديك
+            two: الفئتان الأكثر مشاهدة لديك
+            few: أكثر %{count} فئات مشاهدة لديك
+            many: أكثر %{count} فئة مشاهدة لديك
+            other: أكثر %{count} فئة مشاهدة لديك
+          title_others:
+            zero: "ليست لدى %{username} فئات حققت مشاهدة أكثر من غيرها"
+            one: "الفئة الأكثر مشاهدة لدى %{username}"
+            two: "الفئتان الأكثر مشاهدة لدى %{username}"
+            few: "أكثر %{count} فئات مشاهدة لدى %{username}"
+            many: "أكثر %{count} فئة مشاهدة لدى %{username}"
+            other: "أكثر %{count} فئة مشاهدة لدى %{username}"
+        most_viewed_tags:
+          title:
+            zero: ليست لديك وسوم حققت مشاهدة أكثر من غيرها
+            one: الوسم الأكثر مشاهدة لديك
+            two: الوسمان الأكثر مشاهدة لديك
+            few: أكثر %{count} وسوم مشاهدة لديك
+            many: أكثر %{count} وسمًا مشاهدة لديك
+            other: أكثر %{count} وسم مشاهدة لديك
+          title_others:
+            zero: "ليست لدى %{username} وسوم حققت مشاهدة أكثر من غيرها"
+            one: "الوسم الأكثر مشاهدة لدى %{username}"
+            two: "الوسمان الأكثر مشاهدة لدى %{username}"
+            few: "أكثر %{count} وسوم مشاهدة لدى %{username}"
+            many: "أكثر %{count} وسمًا مشاهدة لدى %{username}"
+            other: "أكثر %{count} وسم مشاهدة لدى %{username}"
+        best_topics:
+          view_topic: عرض الموضوع
+          title:
+            zero: ليست لديك أي موضوعات مثالية
+            one: أفضل موضوع لديك
+            two: أفضل موضوعين لديك
+            few: أفضل %{count} موضوعات لديك
+            many: أفضل %{count} موضوعًا لديك
+            other: أفضل %{count} موضوع لديك
+          title_others:
+            zero: "ليست لدى %{username} أي موضوعات مثالية"
+            one: "أفضل موضوع لدى %{username}"
+            two: "أفضل موضوعين لدى %{username}"
+            few: "أفضل %{count} موضوعات لدى %{username}"
+            many: "أفضل %{count} موضوعًا لدى %{username}"
+            other: "أفضل %{count} موضوع لدى %{username}"
+        best_posts:
+          view_post: عرض المنشور
+          title:
+            zero: ليس لديك منشور مثالي
+            one: أفضل منشور لديك
+            two: أفضل منشورين لديك
+            few: أفضل %{count} منشورات لديك
+            many: أفضل %{count} منشورًا لديك
+            other: أفضل %{count} منشور لديك
+          title_others:
+            zero: "ليس لدى %{username} منشور مثالي"
+            one: "أفضل منشور لدى %{username}"
+            two: "أفضل منشوران لدى %{username}"
+            few: "أفضل %{count} منشورات لدى %{username}"
+            many: "أفضل %{count} منشورًا لدى %{username}"
+            other: "أفضل %{count} منشور لدى %{username}"
+        ai_usage:
+          title: استخدام الذكاء الاصطناعي
+          total_requests: إجمالي الطلبات
+          total_tokens: إجمالي الرموز
+          success_rate: معدل النجاح
+          favorite_features: الميزات الأكثر استخدامًا
+          favorite_models: نماذج الذكاء الاصطناعي الأكثر استخدامًا
+          wake_up: "انهض يا %{username}..."
+          system_title: "تم رصد استخدام تقنيات الذكاء الاصطناعي"
+          section_features: "أهم الميزات"
+          section_models: "أفضل النماذج"
         assignments:
+          title: المهام
+          total_assigned: المهام المعينة لي
           total_assigned_others: "معيَّن إلى %{username}"
+          completed: قائمة المهام المكتملة
+          pending: المهام المعلقة
+          assigned_by_user: المهام المعطاة
+          completion_rate: معدل الإكمال
         chat_usage:
+          title: نشاط الدردشة
+          total_messages: إجمالي الرسائل
+          dm_messages: الرسائل الخاصة
+          unique_dm_channels: المحاثات الخاصة
+          reactions_received: التفاعلات المستلمة
+          avg_message_length: متوسط طول الرسالة
+          favorite_channels: القنوات المفضلة
           messages: الرسائل
+          bot_name: XxRewindBotxX
           author: أنت
           author_others: "%{username}"
+          channel_title: "#نشاط_الدردشة"
           status_online: "● متصل"
+          message_1:
+            zero: "لقد أرسلت <strong>%{count}</strong> من الرسائل هذا العام!"
+            one: "لقد أرسلت رسالة واحدة (<strong>%{count}</strong>) هذا العام!"
+            two: "لقد أرسلت رسالتين (<strong>%{count}</strong>) هذا العام!"
+            few: "لقد أرسلت <strong>%{count}</strong> رسائل هذا العام!"
+            many: "لقد أرسلت <strong>%{count}</strong> رسالة هذا العام!"
+            other: "لقد أرسلت <strong>%{count}</strong> رسالة هذا العام!"
+          reply_1: "هذا رائع B-)"
+          message_2_MF: |
+            { dm_count, plural,
+                zero {ليس لديك أي محادثات خاصة}one {لديك محادثة خاصة واحدة (<strong>#</strong>)}
+                two {لديك محادثتان خاصتان (<strong>#</strong>)}
+                few {لديك <strong>#</strong> محادثات خاصة}
+                many {لديك <strong>#</strong> محادثة خاصة}
+              other {لديك <strong>#</strong> محادثة خاصة}
+            } مع{ channel_count, plural,
+                zero {أي شخص أو مجموعة}one {شخص واحد أو مجموعة واحدة (<strong>#</strong>)}
+                two {شخصين مختلفين أو مجموعتين مختلفتين (<strong>#</strong>)}
+                few {<strong>#</strong> أشخاص مختلفين أو مجموعات مختلفة}
+                many {<strong>#</strong> شخصًا مختلفًا أو مجموعة مختلفة}
+              other {<strong>#</strong> شخص مختلف أو مجموعة مختلفة}
+            }.
+          reply_2: "ممتاااااز :D"
+          message_3:
+            zero: "أحب الناس رسائلك! حصلت على <strong>%{count}</strong> من التفاعلات ❤️"
+            one: "أحب الناس رسائلك! حصلت على تفاعل واحد (<strong>%{count}</strong>) ❤️"
+            two: "أحب الناس رسائلك! حصلت على تفاعلين (<strong>%{count}</strong>) ❤️"
+            few: "أحب الناس رسائلك! حصلت على <strong>%{count}</strong> تفاعلات ❤️"
+            many: "أحب الناس رسائلك! حصلت على <strong>%{count}</strong> تفاعلًا ❤️"
+            other: "أحب الناس رسائلك! حصلت على <strong>%{count}</strong> تفاعل ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "بلغ متوسط طول رسالتك <strong>%{length}</strong> من الأحرف"
+          message_5: "قنواتك المفضلة:"
+          dancing_baby_alt: "طفل راقص"
+        favorite_gifs:
+          title:
+            zero: صورة GIF المفضلة لديك
+            one: صورة GIF المفضلة لديك
+            two: صورتا GIF المفضلتان لديك
+            few: صور GIF الـ%{count} المفضلة لديك
+            many: صور GIF الـ%{count} المفضلة لديك
+            other: صور GIF الـ%{count} المفضلة لديك
+          title_others:
+            zero: "صورة GIF المفضلة لدى %{username}"
+            one: "صورة GIF المفضلة لدى %{username}"
+            two: "صورتا GIF المفضلتان لدى %{username}"
+            few: "صور GIF الـ%{count} المفضلة لدى %{username}"
+            many: "صور GIF الـ%{count} المفضلة لدى %{username}"
+            other: "صور GIF الـ%{count} المفضلة لدى %{username}"
+          total_usage:
+            zero: ليس هناك أي استخدامات
+            one: الاستخدام مرة واحدة
+            two: إجمالي الاستخدام مرتين
+            few: إجمالي الاستخدام %{count} مرات
+            many: إجمالي الاستخدام %{count} مرة
+            other: إجمالي الاستخدام %{count} مرة
         invites:
           title: الدعوات
+          total_invites: إجمالي الدعوات المرسلة
+          redeemed: الدعوات المقبولة
+          redemption_rate: معدل القبول
+          avg_trust_level: متوسط مستوى الثقة
+          invitee_impact: تأثير المدعوين
+          invitee_impact_others: "تأثير المدعوين من %{username}"
           invitee_posts: منشور تم إنشاؤه
+          invitee_topics: المواضيع المطروحة
           invitee_likes: تسجيلات الإعجاب الممنوحة
+          most_active_invitee: المدعو الأكثر نشاطًا
+          guest_book_title: سجل الزوار
+          guest_book_subtitle: دعوات مجتمعك
+          guest_book_subtitle_others: "دعوات مجتمع %{username}"
           label_invitations_sent: "تم إرسال الدعوات:"
+          label_guests_joined: "الدعوات المقبولة:"
+          label_acceptance_rate: "معدل القبول:"
+          section_contributions: مساهمات المدعوين
+          label_posts_written: "المنشورات المكتوبة:"
+          label_topics_started: "الموضوعات المطروحة:"
+          label_likes_given: "تسجيلات الإعجاب الممنوحة:"
+          section_most_active: الضيف الأكثر نشاطًا
         new_user_interactions:
+          title: توجيه المستخدمين الجدد
+          subtitle:
+            zero: لم تساعد أي مستخدمين جددًا هذا العام
+            one: ساعدت مستخدمًا واحدًا جديدًا هذا العام
+            two: ساعدت مستخدمين جديدين هذا العام
+            few: ساعدت %{count} مستخدمين جددًا هذا العام
+            many: ساعدت %{count} مستخدمًا جديدًا هذا العام
+            other: ساعدت %{count} مستخدم جديد هذا العام
+          subtitle_others:
+            zero: "لم يساعد %{username} أي مستخدمين جددًا هذا العام"
+            one: "ساعد %{username} مستخدمًا واحدًا جديدًا هذا العام"
+            two: "ساعد %{username} مستخدمين جديدين هذا العام"
+            few: "ساعد %{username} %{count} مستخدمين جددًا هذا العام"
+            many: "ساعد %{username} %{count} مستخدمًا جديدًا هذا العام"
+            other: "ساعد %{username} %{count} مستخدم جديد هذا العام"
+          new_member:
+            zero: "ليس هناك أي أعضاء جدد"
+            one: "عضو واحد جديد"
+            two: "عضوان جديدان"
+            few: "%{count} أعضاء جددًا"
+            many: "%{count} عضوًا جديدًا"
+            other: "%{count} عضو جديد"
+          total_interactions: إجمالي التفاعلات
+          unique_new_users: المستخدمون الجدد الفريدون
           likes_given: تسجيلات الإعجاب الممنوحة
+          replies: الردود على المنشورات
           mentions: الإشارات
+          topics_with_new_users: الموضوعات التي شارك فيها المستخدمون الجدد
+          contributions_helped: كانت مساهماتك مفيدة
+          contributions_helped_others: "كانت مساهمات %{username} مفيدة"
+        time_of_day_activity:
+          title: روتين النشاط اليومي
+          play_button: استمع إلى نشاطك على شكل صوت
+          play_button_others: "استمع إلى نشاط %{username} على شكل صوت"
+          stop_button: إيقاف تشغيل الصوت
         writing_analysis:
+          title: تحليل الكتابة
+          menu_file: ملف
           menu_other: أخرى
+          menu_additional: إضافي
+          menu_opening: مفتوح
+          help_text: اضغط على F1 للحصول على المساعدة
+          app_name: محترف في DiscoStar
+          release_info: إصدار %{rewindYear} من CDCK
+          total_words: إجمالي الكلمات
+          total_posts: إجمالي المنشورات
+          avg_post_length: متوسط طول المنشور
+          readability_score_label: درجة سهولة القراءة
+          readability_level: مستوى سهولة القراءة
+          readability_score:
+            over_80:
+              1: "إرنست همنغواي"
+              2: "ريموند كارفر"
+              3: "مايكل كرايتون"
+              4: "روالد دال"
+            over_60:
+              1: "سي إس لويس"
+              2: "ستيفن كينغ"
+              3: "أغاثا كريستي"
+              4: "جورج آر آر مارتن"
+            over_40:
+              1: "جورج أورويل"
+              2: "إف. سكوت فيتزجيرالد"
+              3: "ألدوس هكسلي"
+              4: "جوان ديديون"
+            over_20:
+              1: "كورماك مكارثي"
+              2: "ويليام فولكنر"
+              3: "فيرجينيا وولف"
+              4: "غابرييل غارسيا ماركيز"
+            over_0:
+              1: "جيمس جويس"
+              2: "توماس بينشون"
+              3: "ديفيد فوستر والاس"
+              4: "فيودور دوستويفسكي"

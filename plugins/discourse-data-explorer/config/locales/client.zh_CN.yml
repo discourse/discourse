@@ -29,7 +29,7 @@ zh_CN:
         auto_resolution: "<h2>自动实体解析</h2> <p>当您的查询返回实体 ID 时，数据资源管理器可能会自动将其替换为查询结果中的实体名称和其他有用信息。自动解析适用于 <i><b>USER_ID</b></i>、<i><b>GROUP_ID</b></i>、<i><b>topic_id</b></i>、<i><b>CATEGORY_ID</b></i> 和 <i><b>badge_id</b></i>。要尝试此操作，请运行以下查询：</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
         custom_params: "<h2>创建自定义参数</h2> <p>要为您的查询创建自定义参数，请将其放在查询的顶部并遵循以下格式：</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>注意：包含 [params] 以及它前面的两个破折号和您要声明的每个自定义参数的第一行是必需的。</i></p>"
         default_values: "<h3>默认值</h3> <p>您可以声明带或不带默认值的参数。默认值将显示在查询编辑器下方的文本字段中，您可以根据需要对其进行编辑。没有默认值声明的参数仍将生成一个文本字段，但将为空并以红色高亮显示。</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
-        data_types: "<h3>数据类型</h3> <p>以下是您可以使用的常见数据类型：</p> <ul> <li><b>整数</b> - 有符号四字节整数</li> <li><b>文本</b> - 可变长度字符字符串</li> <li><b>布尔值</b> – true/false</li> <li><b>日期</b> - 日历日期（年、月、日）</li> </ul> <p>有关数据类型的更多信息，请访问<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>此网站</a>。</p>"
+        data_types: "<h3>数据类型</h3> <p>以下是您可以使用的常见数据类型：</p> <ul> <li><b>整数</b> - 有符号四字节整数</li> <li><b>文本</b> - 可变长度字符字符串</li> <li><b>布尔值</b> – true/false</li> <li><b>日期</b> - 日历日期（年、月、日）</li> <li><b>current_user_id</b> - 运行查询的用户的 ID（自动注入，对群组报告有用）</li> </ul> <p>有关数据类型的更多信息，请访问<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>此网站</a>。</p>"
       schema:
         title: "数据库架构"
         filter: "搜索…"

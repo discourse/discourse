@@ -7,7 +7,17 @@
 ar:
   js:
     discourse_math:
+      edit_math: "تعديل المعادلة"
       edit_modal:
+        title: "تعديل المعادلة"
+        label: "معادلات رياضية"
         apply: "تطبيق"
+      composer:
+        insert_math: "إدراج معادلة رياضية"
       insert_modal:
+        title_inline: "إدراج معادلة مضمنة"
+        title_block: "إدراج معادلة منفصلة"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
         insert: "إدراج"
+        block_mode: "وضع الكتلة (معادلة معروضة)"

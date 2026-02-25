@@ -31,6 +31,7 @@ ja:
     chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
     chat_preferred_index: "/chat を読み込む際の優先タブ。"
     allow_chat_in_anonymous_mode: "この設定を有効にすると、匿名でサイトを閲覧しているユーザーがチャットを使用できるようになります。この設定には、`allow anonymous mode` を有効にする必要があります。"
+    chat_search_enabled: "この設定を有効にすると、ユーザーはチャットメッセージを検索できるようになります。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
       direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"
@@ -103,9 +104,16 @@ ja:
     reviewables:
       message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
       actions:
+        message_actions:
+          bundle_title: "メッセージをどうしますか？"
         no_action_message:
           title: "未対応"
+          description: "メッセージをそのままにします。"
+        delete_message:
+          title: "メッセージを削除する"
+          description: "メッセージを完全に削除します。"
         restore_message:
+          title: "メッセージを復元する"
           description: "ユーザーが閲覧できるようにメッセージを復元します。"
         agree:
           title: "同意…"
@@ -128,10 +136,17 @@ ja:
           title: "メッセージを削除"
           description: "ユーザーが閲覧できないようにメッセージを削除します。"
         delete_and_agree:
+          title: "通報を無視してメッセージを削除する"
           description: "キューから削除して通報を無視し、そのメッセージを削除します。"
         disagree_and_restore:
           title: "同意せずにメッセージを復元"
           description: "すべてのユーザーが閲覧できるようにメッセージを復元します。"
+        disagree:
+          title: "メッセージを保持する"
+          description: "通報を却下してメッセージを未変更のままにします。"
+        ignore:
+          title: "通報を無視する"
+          description: "対応せずにキューから削除します。"
       direct_messages:
         transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
         transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
@@ -172,6 +187,7 @@ ja:
         is_already_in_use: "はすでに使用されています"
     bookmarkable:
       notification_title_channel: "%{channel_name} のメッセージ"
+      notification_title_direct_message: "%{channel_name} のメッセージ"
     personal_chat: "パーソナルチャット"
     onebox:
       inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"
@@ -241,8 +257,10 @@ ja:
         other: "%{count} 件のメッセージを表示"
       view_more:
         other: "さらに %{count} 件のメッセージを表示"
+      your_chat_settings: "チャットメールの設定"
   unsubscribe:
     chat_summary:
+      select_title: "チャット要約メールを設定する:"
       never: なし
       when_away: 退席中の時のみ
   category:

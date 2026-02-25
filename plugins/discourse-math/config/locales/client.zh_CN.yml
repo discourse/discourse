@@ -16,8 +16,8 @@ zh_CN:
         insert_math: "插入公式"
       insert_modal:
         title_inline: "插入行内公式"
-        title_block: "插入块级公式"
+        title_block: "插入分块公式"
         label: "LaTeX"
         placeholder: "E=mc^2"
         insert: "插入"
-        block_mode: "块模式（显示方程式）"
+        block_mode: "块模式（显示的方程式）"

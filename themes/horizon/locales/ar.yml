@@ -6,28 +6,33 @@
 
 ar:
   solved: "تم الحل"
+  unsolved: "لم يُحل بعد"
   posted: "تم النشر"
   by_username: "من قِبل @%{username}"
+  replied: "تم الرد"
   vote_count:
     zero: "%{count} من الأصوات"
     one: "صوت واحد %{count}"
     two: "صوتان %{count}"
     few: "%{count} أصوات"
     many: "%{count} صوتًا"
-    other: "%{count} من الأصوات"
+    other: "%{count} صوت"
   like_count:
-    zero: "%{count} إعجابًا"
+    zero: "%{count} من الإعجابات"
     one: "إعجاب واحد (%{count})"
     two: "إعجابان (%{count})"
     few: "%{count} إعجابات"
     many: "%{count} إعجابًا"
-    other: "%{count} إعجابًا"
+    other: "%{count} إعجاب"
   reply_count:
-    zero: "%{count} ردًا"
+    zero: "%{count} من الردود"
     one: "رد واحد (%{count})"
     two: "ردَّان (%{count})"
     few: "%{count} ردود"
     many: "%{count} ردًا"
-    other: "%{count} ردًا"
+    other: "%{count} رد"
   theme_metadata:
     description: "سمة سهلة وجذابة تسهم في تحسين تجربة التشغيل الافتراضية لمواقع Discourse."
+    settings:
+      topic_card_high_context:
+        description: "عند التفعيل، يعرض سياقًا إضافيًا على بطاقات الموضوعات، بما في ذلك الوسوم، ومقتطفات من المحتوى، وحالة الحل، والمستخدمين المعينين، وعدد الأصوات (تجريبي)."

@@ -3573,6 +3573,8 @@ ur:
           12_hours: "12 گھنٹے"
           24_hours: "24 گھنٹے"
           custom: "اپنی مرضی کے مطابق مدت"
+      slow_mode_notice:
+        duration: "براہ کرم اس عنوان پر اپنی پوسٹس کے درمیان %{duration} کا انتظار کریں"
       topic_status_update:
         title: "موضوع ٹائمر"
         save: "ٹائمر مقرر کریں"
@@ -3602,6 +3604,8 @@ ur:
         title: "آخری دھاگہ کے بعد موضوع از خود بند ہونے والا ہے"
       auto_delete:
         title: "موضوع خودبخود حذف کریں"
+      auto_delete_after_last_post:
+        title: "آخری دھاگہ کے بعد موضوع از خود حذف ہونے والا ہے"
       auto_bump:
         title: "خود کار طریقے سے موضوع دھکا لگائیں"
       reminder:
@@ -3613,6 +3617,7 @@ ur:
         auto_close: "یہ موضوع خود کار طریقے سے بند کر دیا جائے گا %{timeLeft}۔"
         auto_publish_to_category: "یہ موضوع <a href=%{categoryUrl}>#%{categoryName}</a> میں شائع کر دیا جائے گا %{timeLeft}۔"
         auto_close_after_last_post: "یہ موضوع آخری جواب کے %{duration} بعد بند ہو جائے گا۔"
+        auto_delete_after_last_post: "یہ موضوع آخری جواب کے %{duration} بعد حذف ہو جائے گا۔"
         auto_delete: "یہ موضوع خودبخود مٹادیا جائے گا %{timeLeft}۔"
         auto_bump: "اس موضوع کو خود کار طریقے سے دھکا لگایا جائے گا %{timeLeft}۔"
         auto_reminder: "آپ کو اس موضوع کے بارے میں یاد دہانی کرائی جائے گی %{timeLeft}۔"
@@ -3708,6 +3713,8 @@ ur:
       reply:
         title: "جواب"
         help: "اس ٹاپک کا جواب لکھنا شروع کریں"
+      footer_buttons:
+        region_label: "موضوع کے ایکشنز"
       share:
         title: "موضوع کا اشتراک کریں"
         extended_title: "رابطہ شیئر کریں"
@@ -3887,6 +3894,12 @@ ur:
           one: آپ نے <b>%{count}</b> دھاگہ منتخب کیا۔
           other: "آپ نے <b>%{count}</b> دھاگے منتخب کیے۔"
       deleted_by_author_simple: "(موضوع مصنف نے مٹایا)"
+      localizations:
+        title_edit_warning:
+          message: "یہ ترجمہ شدہ موضوعاتی عنوان ہے۔<br><br>کیا آپ اس %{language} میں <b>اصل</b> زمرہ، ٹیگز، اور ٹائٹل کو حذف کرنا چاہتے ہیں یا خصوصی <b>ترجمہ</b>میں ترمیم کرنا چاہتے ہیں؟"
+          action_original: "اصل میں ترمیم کریں"
+          action_translation: "ترجمہ شدہ موضوعاتی عنوان میں ترمیم کریں"
+        editing_translation: "%{language} ترجمہ میں ترمیم کرتے ہوئے"
     post_list:
       title: "تازہ ترین پوسٹس"
       empty: "کوئی پوسٹس نہیں"
@@ -3894,7 +3907,9 @@ ur:
       bulk:
         select_all: "سبھی منتخب کریں"
         clear_all: "سبھی ہٹا دیں"
+        actions: "حجمی عوامل"
     post:
+      accessible_heading: "پوسٹ منجانب %{username} %{date}"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
       quote_reply_shortcut: "اقتباس (یا q دبائیں)"

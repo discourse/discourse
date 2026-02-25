@@ -564,6 +564,10 @@ es:
       resume: "Reanudar"
       remove: "Eliminar"
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
+      bulk_delete_confirmation: "Eliminar borradores"
+      bulk_delete_message:
+        one: "¿Seguro que quieres eliminar este borrador?"
+        other: "¿De verdad quieres eliminar estos %{count} borradores?"
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje personal"
       edit_topic: "Editar borrador de tema"
@@ -633,6 +637,7 @@ es:
       show_more: "Mostrar más"
       show_less: "Mostrar menos"
       back_to_queue: "Volver a la cola"
+      editing_post: "Editando publicación…"
       order_by: "Ordenar por"
       date_filter: "Publicado entre"
       in_reply_to: "en respuesta a"
@@ -829,6 +834,10 @@ es:
         is_this_post: "¿Es este/a %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "o"
         something_else_wrong: "¿Hay algún problema con este/a %{reviewable_type}?"
+        approve_user: "¿Aprobar este usuario?"
+        suspect_user: "Este usuario, ¿es spam?"
+        approve_post: "¿Aprobar esta publicación?"
+        approve_topic: "¿Aprobar este tema?"
       types:
         reviewable_flagged_post:
           title: "Publicación denunciada"
@@ -847,9 +856,14 @@ es:
           title: "Publicación"
           noun: "publicación"
         reviewable_ai_chat_message:
+          title: "Mensaje de chat denunciado por IA"
           noun: "mensaje de chat"
         reviewable_ai_post:
+          title: "Publicación denunciada por IA"
           noun: "publicación"
+        reviewable_post_voting_comment:
+          title: "Comentario denunciado"
+          noun: "comentario"
       flagged_as: "Marcado como"
       post_flagged_as: "Publicación denunciada: "
       chat_flagged_as: "Mensaje de chat denunciado: "
@@ -863,6 +877,7 @@ es:
         target_created: "Publicación creada"
         target_created_by: "Publicación creada por %{username} · %{relativeDate}"
         target_deleted: "Publicación eliminada"
+        target_deleted_by: "Publicación eliminada por %{username} · %{relativeDate}"
         flagged: "Marcado"
         flagged_as_by: "Marcado como %{flagReason} por %{username} · %{relativeDate}"
         claimed: "Reclamado"
@@ -1368,6 +1383,7 @@ es:
         title: "Próximos cambios"
         for_user:
           enabled: "¿Activado?"
+          why: "¿Por qué?"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -2029,6 +2045,7 @@ es:
         redeemed_tab_with_count: "Canjeados (%{count})"
         invited_via: "Invitación"
         invited_via_link: "enlace %{key} (%{count} / %{max} canjeados)"
+        generating_link: "Generando enlace..."
         groups: "Grupos"
         topic: "Tema"
         sent: "Creado/Último enviado"
@@ -2720,7 +2737,11 @@ es:
         title: "Traduciendo publicación"
         select: "Seleccionar traducción"
         save: "Guardar traducción"
+        original_content: "Publicación original"
+        translation_preview: "Vista previa de la traducción"
+        original: "Original"
         translation: "Traducción"
+        no_translation_yet: "Empieza a escribir para ver una vista previa de la traducción..."
         placeholder: "Introduce la traducción del post aquí..."
       group_mentioned_limit:
         one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."
@@ -2776,7 +2797,9 @@ es:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
       title: "O pulsa %{modifier}Intro"
+      save_and_close: "Guardar y cerrar"
       discard: "Descartar"
+      draft_saved: "¡Borrador guardado!"
       users_placeholder: "Añadir usuarios o grupos"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
@@ -2832,9 +2855,15 @@ es:
       list_item: "Lista de elementos"
       toggle_direction: "Mostrar/ocultar dirección"
       wrap_modal:
+        attributes_label: "Atributos"
         apply: "Aplicar"
       help: "Ayuda de edición con Markdown"
+      enter_fullscreen: "Abrir editor en pantalla completa"
+      exit_fullscreen: "Salir del editor en pantalla completa"
       exit_fullscreen_prompt: "Pulsa <kbd>ESC</kbd> para salir del modo pantalla completa"
+      show_toolbar: "Mostrar barra de herramientas del editor"
+      hide_toolbar: "Ocultar barra de herramientas del editor"
+      peek_mode_toggle: "Activar/desactivar el modo vistazo"
       modal_ok: "Aceptar"
       cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
       create_message_error: "Lo sentimos, se produjo un error al crear ese mensaje. Inténtalo de nuevo."
@@ -2881,6 +2910,7 @@ es:
           desc: "Responder sin alterar la fecha de última respuesta"
         toggle_unlisted:
           label: Mostrar/ocultar no listados
+          desc: "Los temas que no están incluidos en la lista solo son accesibles a través de su enlace directo"
       reload: "Recargar"
       ignore: "Ignorar"
       image_alt_text:
@@ -2891,7 +2921,11 @@ es:
         zoom_out: "Disminuir el tamaño de la imagen"
         zoom_in: "Aumentar el tamaño de la imagen"
         remove: "Eliminar imagen"
+        add_to_grid: "Añadir a la retícula"
+        move_outside_grid: "Sacar de la retícula"
       image: "imagen"
+      grid_label: "Se mostrará como una retícula"
+      grid_mode_grid: "Retícula"
       image_scale_button: "Escalar imagen a %{percent} %"
       delete_image_button: Eliminar imagen
       toggle_image_grid: Alternar cuadrícula de imágenes
@@ -3317,6 +3351,7 @@ es:
           unread: "No tienes nada por leer... ¡Impresionante!"
           new_new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
           new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
+          generic: "No hay nada que ver aquí... ¡vuelve pronto!"
     topic_bulk_actions:
       dismiss:
         name: "Descartar"
@@ -3475,6 +3510,8 @@ es:
           12_hours: "12 Horas"
           24_hours: "24 Horas"
           custom: "Otra duración"
+      slow_mode_notice:
+        duration: "Por favor, espera %{duration} entre tus publicaciones en este tema"
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -3504,6 +3541,8 @@ es:
         title: "Cerrar tema automáticamente después de cierto tiempo de la última publicación"
       auto_delete:
         title: "Eliminar tema automáticamente"
+      auto_delete_after_last_post:
+        title: "Eliminar tema automáticamente cuando pase un tiempo desde la última publicación"
       auto_bump:
         title: "Reflotar tema automáticamente"
       reminder:
@@ -3515,6 +3554,7 @@ es:
         auto_close: "Este tema se cerrará automáticamente %{timeLeft}."
         auto_publish_to_category: "Este tema se publicará en <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_after_last_post: "Este tema se cerrará %{duration} después de la última respuesta."
+        auto_delete_after_last_post: "Este tema será eliminado tras %{duration} desde la última publicación."
         auto_delete: "Este tema se eliminará automáticamente %{timeLeft}."
         auto_bump: "Este tema se reflotará automáticamente %{timeLeft}."
         auto_reminder: "Te recordaremos sobre este tema %{timeLeft}."
@@ -3901,6 +3941,7 @@ es:
           confirm_delete: "¿Seguro que quieres eliminar las traducciones de «%{languageCode}»?"
         success: "Las traducciones se han actualizado correctamente"
         post_language_selector:
+          title: "Idioma de la publicación"
           none: "Ninguno"
         edit_warning:
           message: "Esta publicación ha sido traducida.<br><br>¿Quieres editar la original en %{language} o editar esta traducción específica?"
@@ -4116,6 +4157,7 @@ es:
       general: "General"
       settings: "Ajustes"
       advanced: "Avanzado"
+      show_advanced: "Ajustes avanzados"
       topic_template: "Plantilla"
       tags: "Etiquetas"
       localizations: "Localizaciones"
@@ -4152,6 +4194,8 @@ es:
       save_error: Se produjo un error al guardar la categoría
       errors:
         self_lockout: "Estás a punto de cambiar los permisos de la categoría de una forma que perderías tu propio acceso. ¿De verdad quieres continuar?"
+      validations:
+        emoji_required: "Selecciona un emoji para continuar."
       name: "Nombre de la categoría"
       untitled: "Categoría sin nombre"
       description: "Descripción"
@@ -4163,6 +4207,7 @@ es:
       style: "Estilo"
       icon: "Icono"
       emoji: "Emoji"
+      select_emoji: "Seleccionar emoji"
       background_color: "Color"
       foreground_color: "Color del texto"
       color_validations:
@@ -4233,12 +4278,18 @@ es:
       position_disabled: "Las categorías se mostrarán por orden de actividad. Para controlar el orden de las categorías en las listas, activa el ajuste <a href='%{url}'>«posiciones fijas de las categorías»</a>."
       minimum_required_tags: "Número mínimo de etiquetas requeridas en un tema:"
       default_slow_mode: 'Activar el "modo lento" en los nuevos temas de esta categoría.'
+      subcategory_of: "Subcategoría de..."
       none_subcategory_text: "Ninguna"
+      subcategory_permissions_warning: "Una subcategoría de una categoría privada no puede ser pública."
       visibility:
         title: "Acceso"
         public: "Público"
         all_members: "Todos los miembros"
         group_restricted: "Privado"
+        who_can_see: "Quién puede ver esta categoría"
+        who_can_post: "Quién puede publicar en esta categoría"
+        more_options_hint: "Más permisos disponibles en"
+        more_options_hint_link: "ajustes avanzados."
       num_auto_bump_daily: "Número de temas abiertos que se reflotarán diariamente de forma automática:"
       auto_bump_cooldown_days: "Mínimo de días antes de reactivar el mismo tema:"
       navigate_to_first_post_after_read: "Ir a la primera publicación después de haber leído los temas"
@@ -4553,10 +4604,14 @@ es:
     lightbox:
       download: "Descargar"
       open: "Imagen original"
+      image_info: "Información de la imagen"
+      quote: "Citar imagen"
       previous: "Anterior (flecha izquierda)"
       next: "Siguiente (flecha derecha)"
       counter: "%curr% de %total%"
       close: "Cerrar (Esc)"
+      zoom: "Zoom (tecla Z)"
+      error: "No se puede cargar la imagen"
       content_load_error: '<a href="%url%">El contenido</a> no se pudo cargar.'
       image_load_error: '<a href="%url%">La imagen</a> no se pudo cargar.'
     cannot_render_video: Este vídeo no se puede mostrar porque tu navegador no es compatible con el códec.
@@ -4722,6 +4777,7 @@ es:
       add_to_calendar: "Añadir al calendario"
       google: "Calendario de Google"
       ics: "ICS"
+      default_title: "Evento programado"
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
@@ -4736,6 +4792,7 @@ es:
       choose_for_topic_required_group:
         one: "selecciona %{count} etiqueta de «%{name}»…"
         other: "selecciona %{count} etiquetas de «%{name}»…"
+      info: "Mostrar info de la etiqueta"
       default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
       staff_info: "Para añadir restricciones, mete la etiqueta a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
@@ -4766,6 +4823,7 @@ es:
         one: "Su sinónimo también se eliminará"
         other: "Sus %{count} sinónimos también se eliminarán."
       edit_tag: "Editar el nombre y la descripción de la etiqueta"
+      edit: "Editar esta etiqueta"
       description: "Descripción (máx. 1000 caracteres)"
       sort_by: "Ordenar por:"
       sort_by_count: "cantidad"
@@ -4776,6 +4834,7 @@ es:
       upload_description: "Sube un archivo csv para crear etiquetas en masa"
       upload_instructions: "Una por línea, opcional con un grupo de etiquetas en el formato «tag_name,tag_group»."
       upload_successful: "Etiquetas subidas con éxito"
+      bulk_create_inline_placeholder: "Crear etiquetas (separadas por comas)"
       bulk_create_button: "Crear"
       delete_unused_confirmation:
         one: "%{count} etiqueta será eliminada: %{tags}"
@@ -4810,13 +4869,18 @@ es:
           description: "No se te notificará sobre temas nuevos con esta etiqueta, ni aparecerán en tu pestaña de no leídos."
       groups:
         back_btn: "Volver a todas las etiquetas"
+        title: "Grupos de etiquetas"
         about_heading: "Selecciona un grupo de etiquetas, o crea uno nuevo"
         about_heading_empty: "Crea un nuevo grupo de etiquetas para empezar"
         about_description: "Los grupos de etiquetas te ayudan a gestionar los permisos de muchas etiquetas en un único sitio."
+        new: "Nuevo grupo"
+        new_title: "Crear nuevo grupo"
+        edit_title: "Editar grupo de etiquetas"
         tags_label: "Etiquetas en este grupo"
         parent_tag_label: "Etiqueta principal"
         parent_tag_description: "Las etiquetas de este grupo solo se podrán usar si la etiqueta principal está presente."
         one_per_topic_label: "Limitar las etiquetas de este grupo a utilizarse solo una vez por tema"
+        new_name: "Nuevo grupo de etiquetas"
         name_placeholder: "Nombre"
         save: "Guardar"
         delete: "Eliminar"
@@ -5008,6 +5072,7 @@ es:
           header_link_text: "Categorías"
           header_action_title: "Editar las categorías de tu barra lateral"
           header_action_new: "Crear categoría"
+          header_action_edit_sidebar: "Editar categorías de la barra lateral"
           configure_defaults: "Configurar valores predeterminados"
         community:
           edit_section:
@@ -5254,6 +5319,8 @@ es:
             bookmarks: "Temas en %{category} sin etiquetas que has añadido a marcadores"
             default: "%{filter} temas en %{category} sin etiquetas"
         categories: "Todas las categorías"
+    language_switcher:
+      title: "Cambiar idioma del sitio"
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
@@ -5292,14 +5359,24 @@ es:
           title: "Avanzado"
       upcoming_changes:
         name: "Nombre"
+        plugin: "Plugin"
+        metadata: "Metadatos"
         enabled: "Activado"
+        enabled_for: "Activado para..."
+        show_image: "Ver imagen"
+        groups_updated: "Grupos actualizados"
+        save_groups: "Guardar grupos"
         select_groups: "Seleccionar grupos…"
         preview: "Vista previa"
         enabled_for_options:
+          no_one: "Nadie"
           everyone: "Todos"
           staff: "Solo personal"
         statuses:
           experimental: "Experimental"
+          alpha: "Alfa"
+          beta: "Beta"
+          stable: "Estable"
           permanent: "Permanente"
         impact_roles:
           admins: "Administradores"
@@ -5379,7 +5456,9 @@ es:
             signups_30_days: "Registros (30 días)"
             logins_30_days: "Inicios de sesión (30 días)"
           regenerate_credentials: "Regenerar credenciales"
+          description: "Discourse ID es un servicio de inicio de sesión único que permite a los usuarios iniciar sesión en varios sitios de Discourse usando una sola cuenta. Es compatible con los proveedores de inicio de sesión de redes sociales comunes como Google, Facebook, Apple y Github, sin ninguna configuración adicional."
           learn_more: "Más información"
+          regenerate_success: "Credenciales regeneradas correctamente."
         logo:
           title: "Logo"
           header_description: "Configura los logotipos e iconos utilizados en todo tu sitio"
@@ -5495,6 +5574,7 @@ es:
               locale_label: "Idioma"
             header_new_members:
               label: "Cabecera para nuevos miembros"
+              placeholder: "¡Hola, %{preferred_display_name}!"
             header_logged_in:
               label: "Cabecera para miembros registrados"
               placeholder: "¡Te damos la bienvenida de nuevo, %{preferred_display_name}!"
@@ -5507,6 +5587,7 @@ es:
               placeholder: "Únete a nuestra comunidad para participar"
             search_placeholder:
               label: "Texto a mostrar en la caja de búsqueda si está vacía"
+              placeholder: "Buscar temas..."
         navigation:
           title: "Navegación"
           header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
@@ -6053,6 +6134,7 @@ es:
               suspend: Suspender cuentas de usuario.
               delete: Eliminar cuentas de usuario.
               list: Obtener una lista de usuarios.
+              create: Crear un nuevo usuario.
             user_status:
               read: Lee el estado del usuario.
               update: Actualizar estado de usuario.
@@ -6156,6 +6238,7 @@ es:
           user_destroyed: "Se ha eliminado el usuario"
           user_suspended: "El usuario está suspendido"
           user_unsuspended: "El usuario no está suspendido"
+          user_anonymized: "El usuario está anonimizado"
         reviewable_event:
           group_name: "Eventos revisables"
           reviewable_created: "El elemento revisable está listo"
@@ -6595,6 +6678,7 @@ es:
         copy_to_clipboard: "Copiar al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
+        theme_owner: "Propiedad de:"
         email_templates:
           title: "Correo electrónico"
           subject: "Asunto"
@@ -6603,6 +6687,7 @@ es:
           revert: "Revertir los cambios"
           revert_confirm: "¿Seguro que quieres revertir los cambios?"
           edit: "Editar"
+          back: "Volver a plantillas"
         component:
           all_filter: "Todo"
           used_filter: "Usado"
@@ -6637,6 +6722,8 @@ es:
           create_name: "Nombre"
           save: "Guardar"
           long_title: "Modificar los colores, CSS y contenidos HTML de su sitio"
+          dark_mode: "%{themeName} (modo oscuro)"
+          light_mode: "%{themeName} (modo claro)"
           edit: "Editar"
           edit_confirm: "Este es un tema remoto, si editas CSS/HTML, los cambios se eliminarán la próxima vez que actualices el tema."
           update_confirm: "Estos cambios locales se eliminarán por la actualización. ¿Seguro que quieres continuar?"
@@ -7197,6 +7284,7 @@ es:
             tag_group_change: "cambiar grupo de etiquetas"
             delete_associated_accounts: "eliminar cuentas asociadas"
             change_theme_site_setting: "cambiar ajustes del tema del sitio"
+            stop_impersonating: "deja de suplantar"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos electrónicos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."

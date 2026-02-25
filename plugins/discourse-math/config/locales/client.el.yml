@@ -10,4 +10,5 @@ el:
       edit_modal:
         apply: "Εφαρμογή"
       insert_modal:
+        placeholder: "E=mc^2"
         insert: "Εισαγωγή"

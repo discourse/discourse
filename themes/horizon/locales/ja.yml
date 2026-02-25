@@ -6,8 +6,10 @@
 
 ja:
   solved: "解決済み"
+  unsolved: "未解決"
   posted: "投稿しました"
   by_username: "作成者: @%{username}"
+  replied: "返信済み"
   vote_count:
     other: "%{count} 票"
   like_count:
@@ -16,3 +18,6 @@ ja:
     other: "返信: %{count} 件"
   theme_metadata:
     description: "Discourse サイトのすぐに使用できるエクスペリエンスを向上させる、シンプルで美しいテーマ"
+    settings:
+      topic_card_high_context:
+        description: "有効にすると、トピックカードにタグ、抜粋、解決済みステータス、割り当てられたユーザー、および投票数を含む追加のコンテキストが表示されます (実験的)"
