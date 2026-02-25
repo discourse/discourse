@@ -8,6 +8,7 @@ el:
   js:
     explorer:
       or: "ή"
+      description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       import:
         label: "Εισαγωγή"
       help:

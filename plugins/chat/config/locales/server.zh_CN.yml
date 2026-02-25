@@ -31,7 +31,7 @@ zh_CN:
     chat_editing_grace_period_max_diff_high_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 2 及以上）。"
     chat_preferred_index: "加载/聊天时的首选项标签页。"
     allow_chat_in_anonymous_mode: "启用此设置以允许匿名浏览您网站的用户使用聊天。此设置需要启用 `allow anonymous mode` 设置。"
-    chat_search_enabled: "启用该设置以允许用户搜索聊天信息。"
+    chat_search_enabled: "启用此设置以允许用户搜索聊天消息。"
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
@@ -105,9 +105,9 @@ zh_CN:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
         message_actions:
-          bundle_title: "您想如何处理这条信息？"
+          bundle_title: "您想如何处理该消息？"
         no_action_message:
-          title: "无行动"
+          title: "无措施"
           description: "保持消息原样。"
         delete_message:
           title: "删除消息"
@@ -143,10 +143,10 @@ zh_CN:
           description: "恢复消息，以便所有用户都可以看到。"
         disagree:
           title: "保留消息"
-          description: "不同意举报，消息内容不变。"
+          description: "不同意举报，并保持消息内容不变。"
         ignore:
           title: "忽略举报"
-          description: "将其从审核队列中移除，不采取任何措施"
+          description: "将其从队列中移除，不采取任何措施。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
@@ -186,8 +186,8 @@ zh_CN:
         slug_contains_non_ascii_chars: "包含非 ASCII 字符"
         is_already_in_use: "已在使用中"
     bookmarkable:
-      notification_title_channel: "%{channel_name}中的消息"
-      notification_title_direct_message: "%{channel_name} 中的消息"
+      notification_title_channel: "%{channel_name} 中的消息"
+      notification_title_direct_message: "包含 %{channel_name} 的消息"
     personal_chat: "个人聊天"
     onebox:
       inline_to_message: "消息 #%{message_id}，来自%{username} – #%{chat_channel}"
@@ -257,10 +257,10 @@ zh_CN:
         other: "查看 %{count} 条消息"
       view_more:
         other: "查看其他 %{count} 条消息"
-      your_chat_settings: "聊天邮件偏好设置"
+      your_chat_settings: "聊天电子邮件偏好设置"
   unsubscribe:
     chat_summary:
-      select_title: "设置聊天摘要电子邮件为："
+      select_title: "将聊天摘要电子邮件设置为："
       never: 永不
       when_away: 仅在离开时
   category:

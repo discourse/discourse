@@ -16,7 +16,7 @@ de:
               update_personas: "Ermöglicht die Aktualisierung von KI-Personas"
       site_settings:
         categories:
-          discourse_ai: "Discourse-KI"
+          discourse_ai: "Discourse KI"
       dashboard:
         emotion:
           title: "Emotion"
@@ -210,7 +210,7 @@ de:
               description: "Maximale Anzahl an Schlagwörtern, mit denen ein einzelner Beitrag versehen werden kann"
             max_post_tokens:
               label: "Maximale Beitrags-Token"
-              description: "Maximale Anzahl von Token aus dem Beitrags-Inhalt, die analysiert werden sollen"
+              description: "Maximale Anzahl von Token aus dem Beitragsinhalt, die analysiert werden sollen"
             allow_restricted_tags:
               label: "Eingeschränkte Schlagwörter zulassen"
               description: "Erlaube der KI, Schlagwörter mit eingeschränkten Berechtigungen oder Sichtbarkeit vorzuschlagen und anzuwenden."
@@ -293,7 +293,7 @@ de:
           search: "Discord-Suche"
           setting_groups:
             settings: "Grundlegende Einstellungen"
-            discord_configuration: "Discord Konfiguration"
+            discord_configuration: "Discord-Konfiguration"
         inference:
           name: "Abgeleitete Konzepte"
           description: "Ordnet Themen und Beiträge in Interessensgebiete/Labels."
@@ -381,7 +381,7 @@ de:
             other: "%{count} Tage"
         progress_chart:
           title: "Übersetzungsfortschritt"
-          data_label: "%{percentage}%"
+          data_label: "%{percentage} %"
           tooltip_translated: "%{done} von %{total} nicht-%{language}en Beiträgen übersetzt"
           bar_done:
             one: "%{count} Beitrag"
@@ -392,7 +392,7 @@ de:
             title: "Übersetzt diesen Beitrag in alle unterstützten Sprachen"
             confirm: "Dadurch werden alle vorhandenen Übersetzungen in diesem Beitrag aktualisiert. Bist du sicher?"
             success: "Der Beitrag wurde zur Übersetzung gesendet"
-        credit_limit_warning: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben um %{reset_time} zurückgesetzt wird."
+        credit_limit_warning: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben am %{reset_time} zurückgesetzt wird."
         credit_limit_warning_no_time: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben zurückgesetzt wird."
       spam:
         short_title: "Spam"
@@ -692,8 +692,8 @@ de:
           max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
         credit_allocation:
           credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
-          soft_limit_warning: "Für dieses Modell sind heute noch %{percentage}% des KI-Guthabens übrig."
-          hard_limit_warning: "Du hast keine KI-Guthaben mehr für dieses Modell. Die KI-Funktionen, die dieses Modell nutzen, sind bis %{reset_date} nicht mehr verfügbar."
+          soft_limit_warning: "Für dieses Modell sind heute noch %{percentage} % des KI-Guthabens übrig."
+          hard_limit_warning: "Du hast kein KI-Guthaben mehr für dieses Modell. Die KI-Funktionen, die dieses Modell nutzen, sind bis %{reset_date} nicht mehr verfügbar."
           next_reset: "Guthaben wird am %{time} Uhr zurückgesetzt"
         usage:
           ai_bot: "KI-Bot"
@@ -794,7 +794,7 @@ de:
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
           prompt_caching: "Aufforderung-Zwischenspeichern-Modus"
-          prompt_caching_never: "Niemals - Verwende keine zwischengespeicherten Aufforderungen"
+          prompt_caching_never: "Niemals - Keine zwischengespeicherten Aufforderungen verwenden"
           prompt_caching_tool_results: "Tool-Ergebnisse - Zwischenspeichern, wenn Tool-Ergebnisse vorhanden sind (empfohlen)"
           prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
           effort: "Anstrengungsgrad (nur Claude Opus 4.5)"

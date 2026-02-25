@@ -12,7 +12,7 @@ de:
           discourse_rewind: "Discourse Rückblick"
   js:
     discourse_rewind:
-      placeholder: Discourse Rückblick
+      placeholder: Discourse-Rückblick
       title: Rückblick
       loading: "Splines werden retikuliert …"
       viewing_other_user: "Du siehst dir gerade den Discourse-Rückblick-Bericht von <strong>%{username}</strong> an."
@@ -21,7 +21,7 @@ de:
       cannot_view_rewind: >
         Du kannst diesen Discourse-Rückblick-Bericht nicht anzeigen.  Vielleicht hat der Eigentümer ihn nicht öffentlich freigegeben?<br><br> $> _<br><br>
       preferences:
-        enable_rewind: "Discourse Rückblick aktivieren. Dadurch wird die Jahresübersicht deiner Aktivitäten in deinem Profil und auf deinem Avatar angezeigt."
+        enable_rewind: "Discourse-Rückblick aktivieren. Dadurch wird die Jahresübersicht deiner Aktivitäten in deinem Profil und auf deinem Avatar angezeigt."
         share_publicly: "Discourse-Rückblick mit anderen Forenmitgliedern teilen. Jedes Forenmitglied kann deinen Discourse-Rückblick ansehen."
         cannot_share_when_profile_hidden: "Um den Rückblick zu teilen, musst du anderen erlauben, dein öffentliches Profil anzusehen."
       profile_link: "Schau deinen Rückblick für %{rewindYear} an"
@@ -100,14 +100,14 @@ de:
           success_rate: Erfolgsquote
           favorite_features: Meistgenutzte Funktionen
           favorite_models: Meistgenutzte KI-Modelle
-          wake_up: "Wach auf, %{username}…"
+          wake_up: "Aufwachen, %{username} …"
           system_title: "KI-NUTZUNG ERKANNT"
           section_features: "TOP FUNKTIONEN"
           section_models: "TOP-KI-MODELLE"
         assignments:
           title: Zuordnungen
           total_assigned: Mir zugeordnet
-          total_assigned_others: "%{username} Zugeordnet"
+          total_assigned_others: "%{username} zugeordnet"
           completed: Abgeschlossene Zuordnungen
           pending: Ausstehende Zuordnungen
           assigned_by_user: Erhaltene Zuordnungen
@@ -115,7 +115,7 @@ de:
         chat_usage:
           title: Chat-Aktivität
           total_messages: Nachrichten gesamt
-          dm_messages: DN Nachrichten
+          dm_messages: Direktnachrichten
           unique_dm_channels: DN-Unterhaltungen
           reactions_received: Erhaltene Reaktionen
           avg_message_length: Ø Nachrichtenlänge

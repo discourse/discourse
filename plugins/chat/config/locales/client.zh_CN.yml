@@ -59,7 +59,7 @@ zh_CN:
       chat_channels: "频道"
       starred: "收藏"
       starred_channels: "收藏的频道"
-      starred_channels_empty: "您未收藏任何频道，收藏一些频道，以便在此快速访问它们。"
+      starred_channels_empty: "您未收藏任何频道。收藏一些频道，以便在此处快速访问它们。"
       browse_all_channels: "浏览所有频道"
       see_in: "参见"
       open_channel_menu: "打开频道菜单"
@@ -76,7 +76,7 @@ zh_CN:
         edit: "编辑"
         add: "添加"
         star_channel: "收藏频道"
-        unstar_channel: "取消收藏"
+        unstar_channel: "取消收藏频道"
         close_channel: "关闭频道"
         open_channel: "打开频道"
         archive_channel: "归档频道"
@@ -132,7 +132,7 @@ zh_CN:
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
-        title: "向我发送聊天直通消息或群聊时向我发送电子邮件"
+        title: "当我收到聊天私信或群聊时向我发送电子邮件"
         when_away: "仅在离开时"
       header_indicator_preference:
         title: "在标题中显示活动指示器"
@@ -319,8 +319,8 @@ zh_CN:
         yesterday: 昨天
       search_view:
         filter_placeholder: 搜索消息
-        message_result_label: "来自 %{username}的聊天消息： %{preview} %{threadInfo}"
-        in_thread: "在线程 %{title}"
+        message_result_label: "来自 %{username} 的聊天消息：%{preview} %{threadInfo}"
+        in_thread: "位于对话 %{title} 中"
         sr_instructions: "按 Enter 或空格键打开消息。使用 Tab 在结果之间导航。"
         results_list_label: "聊天消息搜索结果"
       members_view:
@@ -462,7 +462,7 @@ zh_CN:
         follow: "加入"
         followed: "已加入"
         mute: "将频道设为免打扰"
-        unmute: "取消频道静音"
+        unmute: "取消将频道设为免打扰"
         threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"
@@ -490,7 +490,7 @@ zh_CN:
         short_title: 搜索
         title: 搜索聊天
         aria_label: "切换到聊天搜索"
-        no_results: "无搜索结果"
+        no_results: "找不到结果"
         sort:
           relevance: "相关性"
           latest: "最新"

@@ -9,102 +9,102 @@ zh_CN:
     admin:
       site_settings:
         categories:
-          discourse_rewind: "Discourse Rewind"
+          discourse_rewind: "Discourse 回顾"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
+      placeholder: Discourse 回顾
       title: 回顾
-      loading: "正在重构样条曲线中…"
-      viewing_other_user: "您正在查看<strong>%{username}</strong>的Discourse Rewind。"
+      loading: "正在重构样条曲线…"
+      viewing_other_user: "您正在查看 <strong>%{username}</strong> 的 Discourse 回顾。"
       cannot_view_rewind_gibberish: >
-        [访问被拒绝::主机子程序回滚失败]<br><br> 引导异常日志...<br><br> &nbsp;&nbsp;>> 量子缓冲区欠载 ⧛<br> &nbsp;&nbsp;>> 跨节点奇偶校验漂移 (Δ=004.33)<br> &nbsp;&nbsp;>> 数据包 ϟ 分片偏移量 ∇47<br> &nbsp;&nbsp;>> 通量导管握手超时<br><br>
+        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Bootstrapping anomaly log...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
       cannot_view_rewind: >
-        您无权访问该用户的 Discourse Rewind，可能该用户选择不公开他的回顾内容。<br><br> $> _<br><br>
+        您无法查看此 Discourse 回顾报告。也许所有者尚未公开分享？<br><br> $> _<br><br>
       preferences:
-        enable_rewind: "开启 Discourse Rewind。这将在您的个人资料和您的头像框中展示当年度的活动总结。"
-        share_publicly: "与其他论坛成员分享 Discourse Rewind 总结。任何论坛成员都可以查看您的 Discourse Rewind 总结。"
-        cannot_share_when_profile_hidden: "要分享 Rewind，您必须允许其他人查看您的公开个人资料。"
-      profile_link: "查看您 %{rewindYear} 年度的 Discourse Rewind"
+        enable_rewind: "启用 Discourse 回顾。这将在您的个人资料中和您的头像上显示年终活动总结。"
+        share_publicly: "与其他论坛成员分享 Discourse 回顾总结。任何论坛成员都可以查看您的 Discourse 回顾总结。"
+        cannot_share_when_profile_hidden: "要分享回顾，您必须允许其他人查看您的公开个人资料。"
+      profile_link: "查看您的 %{rewindYear} 年 Discourse 回顾"
       share:
         toggle_label:
           private: "不公开"
           public: "公开"
-        confirm: "在分享您的回顾记录前请仔细检查，这可能包含您的隐私信息。您可以随时将其设为私有。"
+        confirm: "在分享您的回顾前请仔细检查，其中可能包含来自个人消息的数据。您可以随时重新将其设为不公开。"
         confirm_button:
           enable: "设为公开"
-          disable: "设为私有"
-        enabled_success: "你的回顾内容现在可与其他论坛成员分享了。"
-        disabled_success: "已设为私有。"
+          disable: "设为不公开"
+        enabled_success: "您的回顾现在可与其他论坛成员分享了。"
+        disabled_success: "您的回复现在已设为非公开。"
       reports:
         activity_calendar:
           title: 活动日历
           cell_title:
-            visited_no_posts: "你在 %{date} 来潜水了，但没有发帖。"
-            visited_no_posts_others: "%{username} 在 %{date} 访问并潜水，但没有发过帖子。"
+            visited_no_posts: "您在 %{date} 访问并潜水，但没有发帖。"
+            visited_no_posts_others: "%{username} 在 %{date} 访问并潜水，但没有发帖。"
             visited_with_posts:
-              other: "你在 %{date} 发了 %{count} 篇帖子。"
+              other: "您在 %{date} 发表了 %{count} 个帖子。"
             visited_with_posts_others:
-              other: "%{username} 在 %{date} 发布了 %{count} 条帖子。"
-            no_activity: "你在 %{date} 没来过。"
-            no_activity_others: "%{username} 在 %{date} 没有活动"
+              other: "%{username} 在 %{date} 发表了 %{count} 个帖子。"
+            no_activity: "您在 %{date} 没来过。"
+            no_activity_others: "%{username} 在 %{date} 没来过。"
         top_words:
           title: 词语使用
         reading_time:
           title: 阅读时间
-          book_comparison: "您在本站上阅读了 <code>%{readingTime}</code> ！这相当于您阅读完 <i>%{bookTitle}</i> 所需要的时间。"
-          book_comparison_others: "%{username} 在我们网站上花了 <code>%{readingTime}</code> 阅读时间！这相当于阅读完 <i>%{bookTitle}</i> 这本书所需的时间。"
+          book_comparison: "您在我们的站点上阅读了 <code>%{readingTime}</code>！这相当于您读完 <i>%{bookTitle}</i> 所需的时间。"
+          book_comparison_others: "%{username} 在我们的站点上阅读了 <code>%{readingTime}</code>！这相当于读完 <i>%{bookTitle}</i> 所需的时间。"
         post_used_reactions:
           title: 话题中最常用的回应
-          total_number: "回应总数： %{count}"
+          total_number: "回应总数：%{count}"
         post_received_reactions:
-          title: 收到最多回应的主题
+          title: 收到最多回应的话题
         fbff:
-          title: 你的论坛挚友 (Forum Best FriendForever)
+          title: 您的论坛挚友
           title_others: "%{username} 的论坛挚友"
         most_viewed_categories:
           title:
-            other: 你最常浏览的 %{count} 个分类
+            other: 您最常浏览的 %{count} 个类别
           title_others:
-            other: "%{username} 的 %{count} 个最常浏览的分类"
+            other: "%{username} 最常浏览的 %{count} 个类别"
         most_viewed_tags:
           title:
-            other: 你最常浏览的 %{count} 个标签
+            other: 您最常浏览的 %{count} 个标签
           title_others:
-            other: "%{username} 的 %{count} 个最常浏览的标签"
+            other: "%{username} 最常浏览的 %{count} 个标签"
         best_topics:
           view_topic: 查看话题
           title:
-            other: 你最优秀的 %{count} 个话题
+            other: 您最好的 %{count} 个话题
           title_others:
-            other: "%{username} 的 %{count} 个最佳话题"
+            other: "%{username} 最好的 %{count} 个话题"
         best_posts:
           view_post: 查看帖子
           title:
-            other: 你最优秀的 %{count} 个帖子
+            other: 您最好的 %{count} 个帖子
           title_others:
-            other: "%{username} 的 %{count} 个最佳帖子"
+            other: "%{username} 最好的 %{count} 个帖子"
         ai_usage:
           title: AI 使用
-          total_requests: 总请求数
-          total_tokens: 总词元数
+          total_requests: 请求总数
+          total_tokens: 词元总数
           success_rate: 成功率
           favorite_features: 使用最多的功能
           favorite_models: 最常用的 AI 模型
-          wake_up: "醒醒吧， %{username}..."
+          wake_up: "醒醒吧，%{username}…"
           system_title: "检测到 AI 使用"
-          section_features: "顶级功能"
-          section_models: "顶级模型"
+          section_features: "位居前列的功能"
+          section_models: "位居前列的模型"
         assignments:
           title: 指定
           total_assigned: 指定给我
-          total_assigned_others: "已被分配至%{username}"
-          completed: 指定已完成
+          total_assigned_others: "指定给 %{username}"
+          completed: 任务已完成
           pending: 待指定的任务
           assigned_by_user: 已指定的任务
           completion_rate: 完成率
         chat_usage:
           title: 聊天活动
-          total_messages: 总消息数
+          total_messages: 消息总数
           dm_messages: DM 消息
           unique_dm_channels: DM 对话
           reactions_received: 收到的回应
@@ -117,24 +117,24 @@ zh_CN:
           channel_title: "#聊天活动"
           status_online: "● 在线"
           message_1:
-            other: "今年你发送了 <strong>%{count}</strong> 条消息！"
-          reply_1: "lol 超棒的 B-)"
+            other: "今年您发送了 <strong>%{count}</strong> 条消息！"
+          reply_1: "哈哈，太棒了 B-)"
           message_2_MF: |
-            你有 { dm_count, plural,
+            您有包含 { channel_count, plural,
+                other {<strong>#</strong> 个人或群组}
+            }的{ dm_count, plural,
                 other {<strong>#</strong> DM 对话}
-            } 和 { channel_count, plural,
-                other {~ ~<strong>#</strong> 不同的人或群体}
             }。
           reply_2: "酷毙了 :D"
           message_3:
-            other: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
+            other: "大家都很喜欢您的消息！您收到了 <strong>%{count}</strong> 个回应 ❤️"
           reply_3: "r0fl rAwr 8-)"
-          message_4: "你的平均消息长度为 <strong>%{length}</strong> 个字符"
-          message_5: "你最喜欢的频道："
-          dancing_baby_alt: "跳舞宝宝（Dancing Baby）"
+          message_4: "您的平均消息长度为 <strong>%{length}</strong> 个字符"
+          message_5: "您最喜欢的频道："
+          dancing_baby_alt: "跳舞的宝宝"
         favorite_gifs:
           title:
-            other: 你最喜欢的 %{count} GIF
+            other: 您最喜欢的 %{count} 个 GIF
           title_others:
             other: "%{username} 最喜欢的 %{count} 个 GIF"
           total_usage:
@@ -145,42 +145,42 @@ zh_CN:
           redeemed: 已接受的邀请
           redemption_rate: 接受率
           avg_trust_level: 平均信任级别
-          invitee_impact: 你的受邀者带来的影响
-          invitee_impact_others: "%{username} 邀请用户的影响"
+          invitee_impact: 您的受邀者的影响
+          invitee_impact_others: "%{username} 的受邀者的影响"
           invitee_posts: 创建的帖子
-          invitee_topics: 发起的话题数
+          invitee_topics: 发起的话题
           invitee_likes: 点赞
           most_active_invitee: 最活跃的受邀者
           guest_book_title: 留言簿
-          guest_book_subtitle: 你的社区邀请
+          guest_book_subtitle: 您的社区邀请
           guest_book_subtitle_others: "%{username} 的社区邀请"
-          label_invitations_sent: "已发送邀请:"
-          label_guests_joined: "已接受邀请："
-          label_acceptance_rate: "接受率:"
-          section_contributions: 受邀者的贡献
+          label_invitations_sent: "已发送的邀请:"
+          label_guests_joined: "已接受的邀请："
+          label_acceptance_rate: "接受率："
+          section_contributions: 受邀者贡献
           label_posts_written: "撰写的帖子："
-          label_topics_started: "发起的话题:"
-          label_likes_given: "点赞数："
+          label_topics_started: "发起的话题："
+          label_likes_given: "点赞："
           section_most_active: 最活跃访客
         new_user_interactions:
           title: 指导新用户
           subtitle:
-            other: 今年你帮助了 %{count} 位新用户
+            other: 今年您帮助了 %{count} 个新用户
           subtitle_others:
             other: "%{username} 今年帮助了 %{count} 个新用户"
           new_member:
             other: "%{count} 个新成员"
-          total_interactions: 总互动次数
-          unique_new_users: 唯一新用户
+          total_interactions: 互动总数
+          unique_new_users: 唯一身份新用户
           likes_given: 点赞
           replies: 回复帖子
           mentions: 提及
           topics_with_new_users: 有新用户的话题
-          contributions_helped: 你的贡献很有帮助
-          contributions_helped_others: "%{username} 的贡献帮助了他人"
+          contributions_helped: 您的贡献很有帮助
+          contributions_helped_others: "%{username} 的贡献很有帮助"
         time_of_day_activity:
           title: 每日活动节奏
-          play_button: 以声音播放你的活动
+          play_button: 以声音播放您的活动
           play_button_others: "播放 %{username} 的活动声音"
           stop_button: 停止音频播放
         writing_analysis:
@@ -191,35 +191,35 @@ zh_CN:
           menu_opening: 正在打开
           help_text: 按 F1 获取帮助
           app_name: DiscoStar Professional
-          release_info: CDCK 于 %{rewindYear} 发布
+          release_info: 通过 CDCK 发布 %{rewindYear} 报告
           total_words: 总字数
-          total_posts: 总帖子数
+          total_posts: 帖子总数
           avg_post_length: 平均帖子长度
           readability_score_label: 可读性评分
           readability_level: 可读性级别
           readability_score:
             over_80:
-              1: "Ernest Hemingway（海明威）"
-              2: "Raymond Carver（雷蒙德·卡佛）"
-              3: "Michael Crichton（迈克尔·克莱顿）"
-              4: "Roald Dahl（罗尔德·达尔）"
+              1: "厄尼斯特·海明威（Ernest Hemingway）"
+              2: "雷蒙德·卡佛（Raymond Carver）"
+              3: "迈克尔·克莱顿（Michael Crichton）"
+              4: "罗尔德·达尔（Roald Dahl）"
             over_60:
-              1: "C.S. Lewis（C.S.刘易斯）"
-              2: "Stephen King（史蒂芬·金）"
-              3: "Agatha Christie（阿加莎·克里斯蒂）"
-              4: "George R.R. Martin（乔治·R·R·马丁）"
+              1: "C.S. 刘易斯（C.S. Lewis）"
+              2: "史蒂芬·金（Stephen King）"
+              3: "阿加莎·克里斯蒂（Agatha Christie）"
+              4: "乔治·R.R.·马丁（George R.R. Martin）"
             over_40:
-              1: "George Orwell（乔治·奥威尔）"
-              2: "F. Scott Fitzgerald（菲茨杰拉德）"
-              3: "Aldous Huxley（阿道司·赫胥黎）"
-              4: "Joan Didion（琼·狄迪恩）"
+              1: "乔治·奥威尔（George Orwell）"
+              2: "弗朗西斯·斯科特·菲茨杰拉德（F. Scott Fitzgerald）"
+              3: "奥尔德斯·赫胥黎（Aldous Huxley）"
+              4: "琼·狄迪恩（Joan Didion）"
             over_20:
-              1: "Cormac McCarthy（科马克·麦卡锡）"
-              2: "William Faulkner（威廉·福克纳）"
-              3: "Virgina Woolf（弗吉尼亚·伍尔夫）"
-              4: "Gabriel Garcia Marquez（加夫列尔·加西亚·马尔克斯）"
+              1: "科马克·麦卡锡（Cormac McCarthy）"
+              2: "威廉·福克纳（William Faulkner）"
+              3: "弗吉尼亚·伍尔夫（Virgina Woolf）"
+              4: "加夫列尔·加西亚·马尔克斯（Gabriel Garcia Marquez）"
             over_0:
-              1: "James Joyce（詹姆斯·乔伊斯）"
-              2: "Thomas Pynchon（托马斯·品钦）"
-              3: "David Foster Wallace（大卫·福斯特·华莱士）"
-              4: "Fyodor Dostoevsky（陀思妥耶夫斯基）"
+              1: "詹姆斯·乔伊斯（James Joyce）"
+              2: "托马斯·品钦（Thomas Pynchon）"
+              3: "大卫·福斯特·华莱士（David Foster Wallace）"
+              4: "费奥多尔·陀思妥耶夫斯基（Fyodor Dostoevsky）"

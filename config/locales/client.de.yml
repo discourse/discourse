@@ -647,6 +647,7 @@ de:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"
       back_to_queue: "Zurück zur Warteschlange"
+      editing_post: "Beitrag wird bearbeitet …"
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
@@ -698,9 +699,9 @@ de:
         claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
         automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
-        title: "Dieses Thema reservieren"
+        title: "Dieses Thema übernehmen"
       unclaim:
-        help: "Diese Reservierung entfernen"
+        help: "Diese Übernahme entfernen"
       awaiting_approval: "Wartet auf Genehmigung"
       delete: "Löschen"
       settings:
@@ -865,10 +866,10 @@ de:
           title: "Beitrag"
           noun: "Beitrag"
         reviewable_ai_chat_message:
-          title: "von KI gemeldete Chatnachricht"
+          title: "KI-gemeldete Chat-Nachricht"
           noun: "Chat-Nachricht"
         reviewable_ai_post:
-          title: "von KI gemeldeter Beitrag"
+          title: "KI-gemeldeter Beitrag"
           noun: "Beitrag"
         reviewable_post_voting_comment:
           title: "Gemeldeter Kommentar"
@@ -891,7 +892,7 @@ de:
         flagged_as_by: "Gemeldet als %{flagReason} von %{username} · %{relativeDate}"
         claimed: "Übernommen"
         claimed_by: "Übernommen von %{username} · %{relativeDate}"
-        unclaimed_by: "Abgegeben von %{username} · %{relativeDate}"
+        unclaimed_by: "Übernahme entfernt von %{username} · %{relativeDate}"
         reviewed: "Überprüft"
         approved_by: "Genehmigt von %{username} · %{relativeDate}"
         rejected_by: "Abgelehnt von %{username} · %{relativeDate}"
@@ -2012,7 +2013,7 @@ de:
         first_time_and_daily: "Für das erste „Gefällt mir“ sowie maximal täglich"
         first_time: "Nur für das erste „Gefällt mir“ eines Beitrags"
         never: "Nie"
-      notify_on_linked_posts: "Benachrichtige mich, wenn jemand einen Link zu einem meiner Beiträge teilt"
+      notify_on_linked_posts: "Mich benachrichtigen, wenn jemand einen Link zu einem meiner Beiträge teilt"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
         unless_emailed: "sofern noch nicht gesendet"
@@ -2072,7 +2073,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
-        generating_link: "Link wird generiert..."
+        generating_link: "Link wird generiert …"
         groups: "Gruppen"
         topic: "Thema"
         sent: "Erstellt/Zuletzt gesendet"
@@ -2683,7 +2684,7 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
-      read_only: "nur Lesen"
+      read_only: "schreibgeschützt"
       read_only_description: "Du hast in dieser Kategorie nur Leserechte, daher kannst du sie nicht auswählen."
     timezone_input:
       ambiguous_ist: "IST ist zweideutig, bitte wähle eine bestimmte Zeitzone (z. B. Asien/Kolkata)"
@@ -2773,8 +2774,8 @@ de:
         original_content: "Original-Beitrag"
         translation_preview: "Übersetzungsvorschau"
         original: "Original"
-        translation: "Übersetzen"
-        no_translation_yet: "Fang an zu tippen, um eine Vorschau der Übersetzung zu sehen..."
+        translation: "Übersetzung"
+        no_translation_yet: "Fang an zu tippen, um eine Vorschau der Übersetzung zu sehen …"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
         show_raw_markdown: "Rohversion anzeigen"
       group_mentioned_limit:
@@ -2908,7 +2909,7 @@ de:
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
       show_toolbar: "Editor-Werkzeugleiste anzeigen"
       hide_toolbar: "Editor-Werkzeugleiste ausblenden"
-      peek_mode_toggle: "Editior-Position umschalten"
+      peek_mode_toggle: "Editor-Position umschalten"
       modal_ok: "OK"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       create_message_error: "Entschuldige, es gab einen Fehler beim Erstellen der Nachricht. Bitte versuche es noch einmal."
@@ -3413,7 +3414,7 @@ de:
           unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
-          generic: "Hier gibt es nichts zu sehen... Schau bald wieder vorbei!"
+          generic: "Hier gibt es nichts zu sehen … Schau bald wieder vorbei!"
     topic_bulk_actions:
       dismiss:
         name: "Verwerfen"
@@ -3456,7 +3457,7 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_long: "Erstelle ein neues Thema"
+      create_long: "Neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
       archive_message:
@@ -3895,7 +3896,7 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
       localizations:
         title_edit_warning:
-          message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagwörter und den Titel in %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
+          message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagwörter und den Titel auf %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
           action_original: "Original bearbeiten"
           action_translation: "Übersetzten Thementitel bearbeiten"
         editing_translation: "Übersetzung nach %{language} bearbeiten"
@@ -3940,8 +3941,8 @@ de:
       load_more_posts_below: "Darunter weitere Beiträge laden"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
       sr_load_more_replies: "Weitere eingebettete Antworten laden"
-      loading_more_posts_above: "Weitere Beiträge werden darüber geladen..."
-      loading_more_posts_below: "Weitere Beiträge werden darunter geladen..."
+      loading_more_posts_above: "Weitere Beiträge werden darüber geladen …"
+      loading_more_posts_below: "Weitere Beiträge werden darunter geladen …"
       loading_complete: "Laden abgeschlossen"
       sr_date: "Beitragsdatum"
       sr_expand_replies:
@@ -4346,7 +4347,7 @@ de:
       position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
-      subcategory_of: "Unterkategorie von..."
+      subcategory_of: "Unterkategorie von …"
       none_subcategory_text: "Keiner"
       subcategory_permissions_warning: "Eine Unterkategorie einer privaten Kategorie kann nicht öffentlich sein."
       visibility:
@@ -5412,7 +5413,7 @@ de:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
     reset_filter: "Zurücksetzen"
-    toggle_filters: "Dropdowns zum Filtern anzeigen/ ausblenden"
+    toggle_filters: "Dropdowns zum Filtern anzeigen/ausblenden"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5450,7 +5451,7 @@ de:
         plugin: "Plug-in"
         metadata: "Metadaten"
         enabled: "Aktiviert"
-        enabled_for: "Aktiviert für..."
+        enabled_for: "Aktiviert für …"
         show_image: "Bild anzeigen"
         edit_groups: "Gruppenweise Aktivierung bearbeiten"
         groups_updated: "Gruppen aktualisiert!"
@@ -5459,7 +5460,7 @@ de:
         no_changes_to_save: "Keine Änderungen zu speichern"
         select_groups: "Gruppen auswählen …"
         opt_in_groups: "Gruppenweise Aktivierung"
-        opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „dauerhaft“ erreicht."
+        opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „stabil“ erreicht."
         enabled_for_throttle: "Du hast zu schnell geändert, für wen diese Änderung aktiviert ist. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
         change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
         change_disabled: "Du hast diese Änderung deaktiviert"
@@ -5542,7 +5543,7 @@ de:
           keywords: "Gebietsschema|Sprachvariante|Sprache|Zeitzone|unicode|ltr|Umlaute"
         upcoming_changes:
           title: "Bevorstehende Änderungen"
-          header_description: "Eine Liste bevorstehender Änderungen an Discourse, die sich auf deine Webseite auswirken können, sowie experimentelle Funktionen, die du aktivieren kannst. Du kannst nach Auswirkungen, Änderungsart und Status filtern.\n\nDie gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Sobald eine Änderung den Status „dauerhaft“ erreicht, spielen diese Gruppen keine Rolle mehr."
+          header_description: "Eine Liste bevorstehender Änderungen an Discourse, die sich auf deine Webseite auswirken können, sowie experimentelle Funktionen, die du aktivieren kannst. Du kannst nach Auswirkungen, Änderungsart und Status filtern.\n\nDie gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Sobald eine Änderung den Status „stabil“ erreicht, spielen diese Gruppen keine Rolle mehr."
         login:
           title: "Anmeldung und Authentifizierung"
           header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
@@ -5563,7 +5564,7 @@ de:
             logins_30_days: "Anmeldungen (30 Tage)"
           regenerate_credentials: "Anmeldedaten neu generieren"
           regenerate_confirm: "Bist du sicher, dass du deine Discourse ID-Anmeldedaten neu generieren willst? Dadurch wird ein neues Client-Geheimnis generiert. Die Erneuerung der Anmeldedaten ist normalerweise nicht erforderlich, kann aber für mehr Sicherheit nützlich sein."
-          description: "Discourse ID ist einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt."
+          description: "Discourse ID ist ein Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt."
           learn_more: "Mehr erfahren"
           regenerate_success: "Die Anmeldedaten wurden erfolgreich neu generiert."
         logo:
@@ -5658,7 +5659,7 @@ de:
           saved: "Die Einstellungen für das Willkommensbanner wurden erfolgreich gespeichert."
           form:
             enabled_themes:
-              label: "In Themes aktiviert..."
+              label: "In Themes aktiviert …"
               description: "Wähle aus, welche Themes das Banner anzeigen sollen. Nur aktive Themes werden angezeigt."
               select_label: "Themes auswählen"
             background_image:
@@ -5707,7 +5708,7 @@ de:
             search_placeholder:
               label: "Platzhalter für die Suche"
               description: "Platzhaltertext für das Suchfeld im Willkommensbanner."
-              placeholder: "Themen suchen..."
+              placeholder: "Themen suchen …"
         navigation:
           title: "Navigation"
           header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Administrator-Seitenleiste."
@@ -6603,7 +6604,7 @@ de:
             description: "Einstellungen, die es Themes ermöglichen, mehr Kontrolle über das gesamte Website-Erlebnis zu haben, indem sie eine kleine Teilmenge der wichtigsten Website-Einstellungen überschreiben."
           themes:
             title: "Themes"
-            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
+            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Benutzer verändern."
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
@@ -6821,7 +6822,7 @@ de:
           body: "Nachrichtentext"
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
-          search_templates: "Nach Vorlagennamen filtern ..."
+          search_templates: "Nach Vorlagennamen filtern …"
           no_templates_found: "Keine Vorlage entspricht deinen Filtern."
           edit: "Bearbeiten"
           back: "Zurück zu Vorlagen"
@@ -7825,8 +7826,8 @@ de:
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
             description:
-              one: "Lösche %{count} Beitrag von @%{username}..."
-              other: "Lösche %{count} Beiträge von @%{username}..."
+              one: "Lösche %{count} Beitrag von @%{username} …"
+              other: "Lösche %{count} Beiträge von @%{username} …"
           confirmation:
             title: "Alle Beiträge von @%{username} löschen"
             description: |

@@ -35,10 +35,10 @@ zh_CN:
     reviewables:
       actions:
         comment_actions:
-          bundle_title: "你想如何处理这条评论？"
+          bundle_title: "您想如何处理该评论？"
         no_action_comment:
-          title: "无行动"
-          description: "请保留原评论。"
+          title: "无措施"
+          description: "保持评论原样。"
         agree_and_keep_comment:
           title: "保留评论"
           description: "同意举报并保持评论不变。"
@@ -55,19 +55,19 @@ zh_CN:
           title: "封禁用户"
           description: "同意举报并封禁用户。"
         agree_and_silence:
-          title: "禁言用户"
+          title: "将用户禁言"
           description: "同意举报并将用户禁言。"
         disagree_and_restore:
           title: "不同意并恢复评论"
           description: "恢复评论，以便所有用户都可以看到。"
         disagree:
           title: "保留评论"
-          description: "不同意举报内容，保持评论不变。"
+          description: "不同意举报，并保持评论不变。"
         ignore:
           title: "忽略举报"
-          description: "将其从审核队列中移除，不采取任何措施"
+          description: "将其从队列中移除，不采取任何措施。"
         delete_and_agree:
-          title: "忽略举报并删除消息"
+          title: "忽略举报并删除评论"
           description: "通过从队列中移除来忽略举报并删除评论。"
   post_action_types:
     vote:
@@ -115,17 +115,17 @@ zh_CN:
             title: "删除评论"
             description: "删除评论，使用户看不到。"
           delete_and_agree:
-            title: "忽略举报并删除消息"
+            title: "忽略举报并删除评论"
             description: "通过从队列中移除来忽略举报并删除评论。"
           disagree_and_restore:
             title: "不同意并恢复评论"
             description: "恢复评论，以便所有用户都可以看到。"
           disagree:
             title: "保留评论"
-            description: "不同意举报内容，保持评论不变。"
+            description: "不同意举报，并保持评论不变。"
           ignore:
             title: "忽略举报"
-            description: "将其从审核队列中移除，不采取任何措施"
+            description: "将其从队列中移除，不采取任何措施。"
         transcript:
           view: "查看以前的评论转录文本"
       reviewable_score_types:

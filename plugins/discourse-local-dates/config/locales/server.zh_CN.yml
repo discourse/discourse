@@ -9,5 +9,5 @@ zh_CN:
     discourse_local_dates_enabled: "启用 discourse-local-dates 功能。这将使用 [date] 元素在帖子中添加对本地时区感知日期的支持。"
     discourse_local_dates_default_formats: "常用的日期时间格式，请参阅：<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs 字符串格式</a>"
     discourse_local_dates_default_timezones: "时区的默认列表，必须是有效的<a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>时区</a>"
-    discourse_local_dates_email_format: "用于在电子邮件中显示日期的格式，例如：“LLLL”、“llll”或“YYYY-MM-DDTHH:mm:ss[Z]”。请参阅：<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs 字符串格式</a>"
+    discourse_local_dates_email_format: "用于在电子邮件中显示日期的格式，示例：'LLLL'、'llll' 或 'YYYY-MM-DDTHH:mm:ss[Z]'。请参阅：<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs 字符串格式</a>"
     discourse_local_dates_email_timezone: "用于在电子邮件中显示日期的时区，必须是有效的<a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>时区</a>"

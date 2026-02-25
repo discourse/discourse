@@ -36,7 +36,7 @@ zh_CN:
         header_title: "假期"
         pick_region_description: "选择一个区域以查看该区域的假期。"
         disabled_holidays_description: "已禁用的假期将被排除在管理人员假期日历之外。"
-        header_description: "请选择一个地区以查看该地区的假期。被禁用的假期将从员工假期日历中排除。"
+        header_description: "请选择一个区域以查看该区域的假期。被禁用的假期将从员工假期日历中排除。"
       date: "日期"
       add_to_calendar: "添加到 Google 日历"
       toggle_timezone_offset_title: "切换时区偏移"
@@ -45,7 +45,7 @@ zh_CN:
         title: "区域"
         none: "无"
         use_current_region: "使用当前区域"
-        select_region: "选择一个地区……"
+        select_region: "选择一个区域…"
         names:
           ae: "阿拉伯联合酋长国"
           ar: "阿根廷"
@@ -350,7 +350,7 @@ zh_CN:
       bulk_invite: "批量邀请"
       close_event: "关闭活动"
       open_event: "开放活动"
-      destroy_event: "移除事件"
+      destroy_event: "移除活动"
       invitees_modal:
         title_invited: "活动参与"
         title_participated: "参与用户列表"
@@ -424,11 +424,11 @@ zh_CN:
               title: "不公开"
               description: "只有受邀用户可以加入不公开活动。"
       composer:
-        name_placeholder: "事件"
+        name_placeholder: "活动"
         end_date_placeholder: "设置结束日期"
         location_placeholder: "添加位置或网址"
         max_attendees_placeholder: "设置最大参与人数"
-        description_placeholder: "添加事件描述"
+        description_placeholder: "添加活动描述"
       builder_modal:
         custom_fields:
           label: "自定义字段"
@@ -498,7 +498,7 @@ zh_CN:
           label: "受邀群组"
         status:
           label: "状态"
-        delete_confirmation_message: "删除此事件？"
+        delete_confirmation_message: "删除此活动？"
       invite_user_or_group:
         title: "通知用户或群组"
         invite: "发送"

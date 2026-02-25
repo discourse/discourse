@@ -7,6 +7,7 @@
 ja:
   discourse_subscriptions:
     customer_not_found: お客様が見つかりません
+    subscription_not_found: サブスクリプションが見つかりません
     card:
       declined: カードが拒否されました
       invalid: カードが無効です

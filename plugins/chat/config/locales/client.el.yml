@@ -113,10 +113,12 @@ el:
         title: "Δεν βρέθηκαν κανάλια"
         my_threads: "Δεν έχετε κανένα νήμα ακόμη. Τα νήματα στα οποία συμμετέχετε θα εμφανίζονται εδώ."
       email_frequency:
+        description: "Θα σου στείλουμε ηλεκτρονικό μήνυμα μόνο εάν δεν σε έχουμε δει τα τελευταία 15 λεπτά."
         never: "Ποτέ"
         when_away: "Μόνο όταν είμαι μακριά"
       header_indicator_preference:
         all_new: "Όλα Τα Νέα Μηνύματα"
+        dm_and_mentions: "Άμεσα Μηνύματα, Επισημάνσεις και Παρακολουθούμενα Θέματα"
         only_mentions: "Μόνο Επισημάνσεις"
         never: "Ποτέ"
       send_shortcut:
@@ -422,6 +424,7 @@ el:
         title: Τα νήματά μου
         aria_label: "Εναλλαγή στη λίστα νημάτων μου"
       direct_messages:
+        title: "ΑΜ"
         aria_label: "Εναλλαγή σε άμεσα μηνύματα"
         new: "Δημιουργήστε μια προσωπική συνομιλία"
         create: "Εμπρός"
@@ -559,10 +562,18 @@ el:
     discourse_automation:
       scriptables:
         send_chat_message:
+          title: Αποστολή μηνύματος συνομιλίας
           fields:
+            chat_channel_id:
+              label: ID καναλιού συνομιλίας
             message:
               label: Μήνυμα
+            sender:
+              label: Αποστολέας
+              description: Προεπιλέγεται στο σύστημα
     review:
+      transcript:
+        view: "Προβολή μεταγραφής προηγούμενων μηνυμάτων"
       types:
         chat_reviewable_message:
           title: "Αναφερόμενο μήνυμα συνομιλίας"
@@ -580,6 +591,7 @@ el:
           composer_bold: "%{shortcut} Έντονη γραφή (μόνο για συνθέτη)"
           composer_italic: "%{shortcut} Πλάγια γραφή (μόνο για συνθέτη)"
           composer_code: "%{shortcut} Κώδικας (μόνο για συνθέτη)"
+          drawer_toggle: "%{shortcut} Εναλλαγή συρταριού συνομιλίας"
           drawer_close: "%{shortcut} Κλείσιμο συρταριού συνομιλίας"
           mark_all_channels_read: "%{shortcut} Σήμανση όλων των καναλιών ως διαβασμένα"
     user_menu:

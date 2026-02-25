@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 ar:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: عدد مرات ظهور إعلانات House Ads في Adplugin
+      description: "تقرير مرات ظهور إعلانات House Ads"
+    ad_plugin_ad_impressions:
+      title: عدد مرات ظهور الإعلانات في Adplugin
+      description: "تقرير مرات ظهور الإعلانات"
+    ad_plugin_impressions_by_user:
+      title: مرات ظهور الإعلانات عبر المكون الإضافي حسب المستخدم
+      description: "مرات ظهور الإعلانات مجمّعة حسب المستخدم"
+    ad_plugin_click_through_rate:
+      title: أداء التحويلات في Adplugin
+      description: "تقرير أداء الإعلانات حسب الإعلان وموضع العرض"
+    ad_plugin_click_through_rate_by_placement:
+      title: أداء Adplugin حسب موضع العرض
+      description: "تقرير أداء الإعلانات حسب موضع العرض"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: أداء Adplugin حسب نوع الإعلان
+      description: "تقرير أداء الإعلانات حسب نوع الإعلان"
+  errors:
+    already_clicked: "النقر مسجّل مسبقًا"
   site_settings:
     discourse_adplugin_enabled: تفعيل discourse-adplugin
     no_ads_for_personal_messages: "عدم عرض الإعلانات عند عرض الرسائل الشخصية"
@@ -16,6 +37,7 @@ ar:
     house_ads_after_nth_post: 'عرض إعلان بعد كل N من المنشورات، حيث تكون N هي القيمة، إذا تم تحديد إعلانات داخلية "بين المنشورات"'
     house_ads_frequency: "النسبة المئوية لمعدل عرض الإعلانات الداخلية إذا تم إعداد شبكات إعلانية أخرى للظهور في مساحة إعلانية"
     ads_txt: "محتوى ملف ads.txt الخاص بك. يمكنك العثور على مزيد من التفاصيل في <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>صفحة المساعدة من Google AdSense</a>."
+    ad_plugin_routes_enabled: "تفعيل استهداف المسارات لإعلانات house ads"
     dfp_publisher_id: "أدخل رمز شبكة مدير إعلانات Google (DFP سابقًا)، والذي يمكنك العثور عليه في إعدادات شبكتك. ملاحظة: ستحتاج إلى تحديث الإعداد \"content security policy script src\". راجع <a href='https://meta.discourse.org/t/33734' target='_blank'>هذا الموضوع</a> للحصول على أحدث التعليمات."
     dfp_publisher_id_mobile: "(اختياري) إذا كنت ترغب في استخدام رقم تعريفي مختلف للناشر في \"مدير الإعلانات\" لإصدار الجوَّال من الموقع، فأدخل ه هنا. اتركه فارغًا لاستخدام dfp_publisher_id على الجوَّال."
     dfp_through_trust_level: "عرض إعلاناتك للمستخدمين حسب مستويات الثقة. لن يرى الإعلانات المستخدمون ذوو مستوى الثقة الأعلى من هذه القيمة."

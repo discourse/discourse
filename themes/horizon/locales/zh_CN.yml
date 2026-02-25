@@ -8,16 +8,16 @@ zh_CN:
   solved: "已解决"
   unsolved: "未解决"
   posted: "已发布"
-  by_username: "作者 @%{username}"
+  by_username: "作者：@%{username}"
   replied: "回复"
   vote_count:
     other: "%{count} 票"
   like_count:
     other: "%{count} 个赞"
   reply_count:
-    other: "%{count} 个回复"
+    other: "%{count} 条回复"
   theme_metadata:
     description: "一个简单、美观的主题，可以改善 Discourse 站点的开箱即用体验。"
     settings:
       topic_card_high_context:
-        description: "启用后，在话题卡片上显示更大上下文，包括标签、摘录、已解决状态、分配的用户和投票次数（实验性）"
+        description: "启用后，在话题卡片上显示附加上下文，包括标签、摘录、已解决状态、指定的用户和票数（实验性）"

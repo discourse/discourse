@@ -295,9 +295,13 @@ fr:
     back_button: "Retour"
     welcome_banner:
       header:
+        new_members: "Bienvenue, %{preferred_display_name}!"
         logged_in_members: "Bienvenue, %{preferred_display_name} !"
         anonymous_members: "Bienvenue sur %{site_name} !"
       search_placeholder: "Recherche"
+    impersonation:
+      notice: "Vous endossez l'identité de %{username}"
+      stop: "Cesser d'endosser l'identité"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Il se peut que votre site ne fonctionne pas, car un thème ou un composant comporte des erreurs. Consultez la console du navigateur pour obtenir plus d'informations."
@@ -5763,8 +5767,8 @@ fr:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
               logged_on_users: "Utilisateurs connectés"
-              members: "Propriétaires, membres et modérateurs de groupes"
-              staff: "Propriétaires et modérateurs de groupes"
+              members: "Propriétaires et membres du groupe, et modérateurs"
+              staff: "Propriétaires du groupe et modérateurs"
               owners: "Propriétaires du groupe"
               description: "Les administrateurs peuvent voir tous les groupes."
             members_visibility_levels:
