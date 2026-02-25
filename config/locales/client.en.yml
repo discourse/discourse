@@ -468,10 +468,10 @@ en:
         description: "Give people something to talk about together"
         action: "Icebreaker ideas"
         choose_option: "How would you like to start?"
-        predefined_topics: "Pre-defined Topics"
-        predefined_topics_subtitle: "Break the ice with one of the following conversation starters. <br/> Pick one and customize it to your liking:"
+        predefined_topics: "Icebreaker templates"
+        predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
-        use_predefined: "Use pre-defined Topics"
+        use_predefined: "Browse templates"
         start_with_this: "Start with this"
         back: "Back"
         icebreakers:

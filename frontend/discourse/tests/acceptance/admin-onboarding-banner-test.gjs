@@ -87,9 +87,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await step.clickAction();
 
     assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
-    await click(
-      ".predefined-topic-options-modal__card:last-child .predefined-topic-options-modal__select-btn"
-    );
+    await click(".predefined-topic-options-modal__card:last-child");
 
     await click(".create");
     await visit("/");
