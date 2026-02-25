@@ -124,7 +124,7 @@ module Onebox
               .sub("://np.reddit.com", "://oauth.reddit.com")
               .sub("://new.reddit.com", "://oauth.reddit.com")
         end
-        response = Onebox::Helpers.fetch_response(json_url, headers: headers)
+        response = Onebox::Helpers.fetch_response(json_url, headers:)
         parsed = ::MultiJson.load(response)
         @reddit_post = parsed[0]["data"]["children"][0]["data"]
       rescue StandardError
