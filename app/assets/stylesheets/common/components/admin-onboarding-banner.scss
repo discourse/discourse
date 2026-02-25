@@ -103,3 +103,37 @@
     }
   }
 }
+
+.start-posting-options-modal {
+  .option {
+    padding-bottom: var(--space-4);
+  }
+}
+
+.predefined-topic-options-modal {
+  .d-modal__subtitle-text {
+    padding: var(--space-2) 0;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__card {
+    margin-bottom: var(--space-4);
+  }
+
+  &__content {
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  &__card:last-child > &__content {
+    border-bottom: none;
+  }
+
+  &__body {
+    max-width: var(--modal-max-width);
+  }
+}

@@ -58,7 +58,7 @@ pl_PL:
           edit: "Edytuj"
           tabs:
             ads: "Reklamy"
-            settings: "Ustawień"
+            settings: "Ustawienia"
           topic_list_top:
             title: "Reklama nad listą tematów"
             description: "Reklamy do wyświetlania na górze listy tematów."

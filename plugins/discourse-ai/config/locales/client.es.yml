@@ -396,7 +396,6 @@ es:
         overwrite: "Sobrescribir"
         description: "Descripción"
         no_llm_selected: "No se seleccionó ningún modelo de idioma"
-        use_parent_llm: "Usar modelo de idioma de personas"
         max_context_posts: "Número máximo de publicaciones contextuales"
         max_context_posts_help: "El número máximo de mensajes a utilizar como contexto para la IA cuando responda a un usuario. (vacío por defecto)"
         vision_enabled: Visión activada
@@ -529,8 +528,9 @@ es:
         parameter_description: "Descripción del parámetro"
         enum_value: "Valor de enumeración"
         add_enum_value: "Añadir valor de enumeración"
+        credential_not_set: "(no establecido)"
         edit: "Editar"
-        test: "Ejecutar prueba"
+        test: "Probar"
         delete: "Eliminar"
         saved: "Herramienta guardada"
         confirm_delete: "¿Seguro que quieres eliminar esta herramienta?"
@@ -547,6 +547,7 @@ es:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incrustado"
+        tool: "Herramienta"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -604,8 +605,8 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-5: "El modelo antrópico más inteligente"
-          anthropic-claude-sonnet-4-5: "Equilibrio óptimo entre velocidad y coste"
+          anthropic-claude-opus-4-6: "El modelo antrópico más inteligente"
+          anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
           open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
@@ -770,12 +771,7 @@ es:
         provider_fields:
           model_name: "Nombre del modelo"
         semantic_search: "Temas (semánticos)"
-        semantic_search_loading: "Buscando más resultados usando IA"
         semantic_search_results:
-          toggle: "Mostrando %{count} resultados encontrados usando IA"
-          toggle_hidden: "Ocultando %{count} resultados encontrados usando IA"
-          none: "Lo sentimos, nuestra búsqueda mediante IA no ha encontrado temas coincidentes"
-          new: "Pulsa «Buscar» para empezar a buscar nuevos resultados con IA"
           unavailable: "Resultados de IA no disponibles"
         semantic_search_tooltips:
           results_explanation: "Cuando esté activada, se añadirán resultados de búsqueda de IA adicionales a continuación."

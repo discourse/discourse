@@ -18,6 +18,7 @@ ar:
         title: "القوالب (داخل منطقة نصية)"
         insert_template: "%{shortcut} إدراج قالب"
     templates:
+      filter_hint: "التصفية حسب الكلمة الرئيسية..."
       insert_template: "إدراج قالب"
       close_templates: "إغلاق محدِّد القوالب"
       copy: "نسخ القالب"

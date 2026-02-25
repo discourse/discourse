@@ -3,8 +3,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
-export default class PluginOutletDebugButton extends Component {
+export default class SafeModeButton extends Component {
   get safeModeActive() {
     return new URLSearchParams(window.location.search).has("safe_mode");
   }
@@ -22,7 +23,7 @@ export default class PluginOutletDebugButton extends Component {
 
   <template>
     <button
-      title="Toggle safe mode"
+      title={{i18n "dev_tools.toggle_safe_mode"}}
       class={{concatClass
         "toggle-safe-mode"
         (if this.safeModeActive "--active")

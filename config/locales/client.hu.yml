@@ -657,19 +657,13 @@ hu:
       in_reply_to: "válasz erre:"
       filtered_flagged_by: "Megjelölte"
       unknown:
-        title:
-          one: "Függőben lévő felülvizsgálandó elemek vannak a letiltott bővítményből:"
-          other: "Függőben lévő felülvizsgálandó elemek vannak a letiltott bővítményekből:"
         instruction: "Nem jeleníthetők meg megfelelően, amíg nem engedélyezi a megfelelő bővítményt. Engedélyezze a bővítményt, és frissítse az oldalt. Alternatív megoldásként figyelmen kívül hagyhatja őket. <a href='%{url}' target='_blank'>További információ…</a>"
         reviewable_unknown_source: "%{reviewableType} (ismeretlen bővítmény)"
         reviewable_known_source: "%{reviewableType} (a(z) „%{pluginName}” bővítményből)"
         ignore_all: "Összes figyelmen kívül hagyása"
         enable_plugins: "Bővítmények engedélyezése"
-        delete_confirm: "Biztos benne, hogy törölni szeretné a letiltott bővítmények által létrehozott összes értékelést?"
-        ignore_success: "A letiltott bővítmények által létrehozott összes értékelés törölve lett."
       explain:
         why: "magyarázza el, miért került ez a tétel a sorba"
-        title: "Ellenőrizhető pontozás"
         formula: "Képlet"
         subtotal: "Részösszeg"
         total: "Összesen"
@@ -683,10 +677,8 @@ hu:
           title: "Azok a felhasználók, akik előzőleg egyetértettek a jelzéssel, bónuszt kapnak."
         trust_level_bonus:
           name: "bizalmi szint"
-          title: "A magasabb bizalmi szintű felhasználók által létrehozott felülvizsgálandó elemek magasabb pontszámmal rendelkeznek."
         type_bonus:
           name: "típusbónusz"
-          title: "Bizonyos felülvizsgálandó típusokat a stáb bónuszban részesíthet, hogy magasabb prioritást kapjanak."
       revise_and_reject_post:
         title: "Felülvizsgálat"
         reason: "Ok"
@@ -695,7 +687,6 @@ hu:
         custom_reason: "Adjon egyértelmű leírást az okáról"
         other_reason: "Egyéb…"
         optional: "nem kötelező"
-      stale_help: "Ezt a felülvizsgálandó elemet <b>%{username}</b> oldotta meg."
       claim_help:
         optional: "Zárolhatja ezt az elemet, hogy mások ne hagyhassák jóvá."
         required: "Zárolnia kell az elemeket, hogy jóvá tudja őket hagyni."
@@ -3261,8 +3252,6 @@ hu:
         max_views:
           placeholder: legfeljebb
           aria_label: szűrés a megtekintések legnagyobb száma szerint
-        additional_options:
-          label: "Szűrés bejegyzésszám és témamegtekintések szerint"
     hamburger_menu: "Navigációs menü"
     new_item: "új"
     go_back: "visszalépés"
@@ -4005,7 +3994,9 @@ hu:
           edit: "Szerkesztés"
           delete: "Törlés"
         add: "Új fordítás hozzáadása"
-        manage: "Fordítások kezelése (%{count} meglévő)"
+        manage:
+          one: "Fordítások kezelése (%{count} meglévő)"
+          other: "Fordítások kezelése (%{count} meglévő)"
         view:
           one: "%{count} fordítás megtekintése"
           other: "%{count} fordítás megtekintése"
@@ -4904,7 +4895,20 @@ hu:
         other: "%{count} szinonimája is törlésre kerül."
       edit_tag: "Címke nevének és leírásának szerkesztése"
       edit: "Címke szerkesztése"
-      description: "Leírás (max. 1000 karakter)"
+      description: "Leírás"
+      settings:
+        title: "Beállítások"
+        general: "Általános"
+        localizations: "Lokalizációk"
+        back: "Vissza"
+        name: "Név"
+        slug: "URL slug"
+        name_placeholder: "Címke neve"
+        synonyms_subtitle: "A következő címkék használatakor ezek helyére %{name}kerül"
+      localization:
+        locale: "Nyelv"
+        name: "Név"
+        description: "Leírás"
       sort_by: "Rendezés"
       sort_by_count: "besorol"
       sort_by_name: "név"
@@ -5434,9 +5438,13 @@ hu:
           never: "soha"
       reports:
         title: "Aktív bejelentések listája"
-        meta_doc: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
         sidebar_title: "Jelentések"
         back: "Vissza az összes jelentéshez"
+        group_traffic: "Forgalom"
+        group_members: "Tagok"
+        group_moderation: "Moderálás"
+        group_security: "Biztonság"
+        group_other: "Egyéb"
       config_sections:
         account:
           title: "Fiók"
@@ -5480,7 +5488,6 @@ hu:
         enabled_for_options:
           no_one: "Senki"
           everyone: "Mindenki"
-          staff: "Csak a stáb"
           specific_groups: "Meghatározott csoport(ok)"
           specific_groups_with_group_names:
             one: "a %{groupNames} csoport"
@@ -5503,7 +5510,6 @@ hu:
           all: "Összes"
           enabled_all: "Minden engedélyezett állapot"
           enabled: "Bekapcsolva"
-          enabled_for_staff: "Engedélyezve a személyzet számára"
           enabled_for_specific_groups: "Engedélyezve bizonyos csoportok számára"
           disabled: "Kikapcsolva"
           impact_type_all: "Minden ütközési típus"
@@ -5592,7 +5598,6 @@ hu:
               help_text: "Az ajánlott méret 600×80 képpont."
             large_icon:
               title: "Négyzet alakú ikon"
-              description: "A logó képének négyzetes változata az adminisztráció tetején jelenik meg, és egyben a mobil kezdőképernyőjének logója is."
               help_text: "Az ajánlott méret 512×512 képpont."
             square_icon_dark:
               required: "Másik négyzet ikon használata a sötét módhoz?"
@@ -5780,7 +5785,7 @@ hu:
           header_description: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
           sub_pages:
             settings:
-              title: "Irányítópult beállításai"
+              title: "Beállítások"
         badges:
           title: "Jelvények"
           header_description: "A jelvények jutalmazzák a felhasználókat tevékenységeikért, hozzájárulásaikért és eredményeikért, amelyek célja a közösségen belüli pozitív magatartás és elkötelezettség elismerése, érvényesítése és ösztönzése"
@@ -5933,22 +5938,6 @@ hu:
         result_count:
           one: '%{count} eredmény a(z) „%{filter}” kifejezésre'
           other: '%{count} találat a(z) „%{filter}” kifejezésre'
-        result_types:
-          page:
-            one: "Oldal"
-            other: "Oldalak"
-          report:
-            one: "Jelentés"
-            other: "Jelentések"
-          setting:
-            one: "Beállítás"
-            other: "Beállítások"
-          theme:
-            one: "Téma"
-            other: "Témák"
-          component:
-            one: "Összetevő"
-            other: "Összetevők"
       new_features:
         title: "Újdonságok"
         check_for_updates: "Frissítések keresése"
@@ -8040,6 +8029,7 @@ hu:
         field_types:
           text: "Szöveg"
           textarea: "Szövegmező"
+          date: "Dátum"
           confirm: "Megerősítés"
           dropdown: "Legördülő menü"
           multiselect: "Többszörös kiválasztás"

@@ -64,6 +64,7 @@ fa_IR:
       cancel: "انصراف"
       cancel_reply: "لغو پاسخ"
       chat_channels: "کانال‌ها"
+      pinned: "سنجاق شده"
       browse_all_channels: "مرور همه کانال‌ها"
       see_in: "ببینید در"
       move_to_channel:

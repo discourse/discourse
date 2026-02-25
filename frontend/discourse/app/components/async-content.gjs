@@ -52,7 +52,7 @@ export default class AsyncContent extends Component {
         : this.#resolveAsyncData(asyncData, context);
     }
 
-    if (!this.#isPromise(value)) {
+    if (value && !this.#isPromise(value)) {
       throw new Error(
         `\`<AsyncContent />\` expects @asyncData to be an async function or a promise`
       );

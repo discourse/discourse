@@ -6,7 +6,7 @@
 
 pl_PL:
   site_settings:
-    data_explorer_enabled: "Włącz eksplorator danych w /admin/plugins/discourse-data-explorer"
+    data_explorer_enabled: "Włącz eksplorator danych"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

@@ -6,6 +6,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { forceMobile } from "discourse/lib/mobile";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { Placeholder } from "discourse/models/post-stream";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -620,5 +621,45 @@ module("Unit | Controller | topic", function (hooks) {
     await settled();
 
     assert.true(destroyed, "post was destroyed");
+  });
+
+  test("topic-controller:finished-editing behavior transformer", async function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = this.store.createRecord("topic", {
+      id: 123,
+      title: "Test",
+    });
+    controller.setProperties({ model });
+    controller.set("editingTopic", true);
+
+    sinon.stub(model.constructor, "update").resolves();
+    sinon.stub(controller, "send");
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "topic-controller:finished-editing",
+        ({ next }) => {
+          if (controller.blockWithTransformer) {
+            return;
+          }
+          next();
+        }
+      );
+    });
+
+    controller.blockWithTransformer = true;
+    await controller.finishedEditingTopic();
+
+    assert.true(
+      controller.editingTopic,
+      "transformer blocked finishedEditingTopic"
+    );
+
+    controller.blockWithTransformer = false;
+    await controller.finishedEditingTopic();
+    assert.false(
+      controller.editingTopic,
+      "transformer allowed finishedEditingTopic"
+    );
   });
 });

@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
+import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -55,6 +56,13 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
+import { captureCallSite } from "discourse/lib/blocks/-internals/error";
+import {
+  _registerBlock,
+  _registerBlockFactory,
+} from "discourse/lib/blocks/-internals/registry/block";
+import { _registerConditionType } from "discourse/lib/blocks/-internals/registry/condition";
+import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -117,7 +125,10 @@ import Composer, {
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
 import { _addTrackedPostProperty } from "discourse/models/post";
-import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
+import {
+  _addTrackedTopicProperty,
+  registerCustomLastUnreadUrlCallback,
+} from "discourse/models/topic";
 import {
   addSaveableUserField,
   addSaveableUserOptionField,
@@ -734,6 +745,20 @@ class _PluginApi {
    */
   addTrackedPostProperties(...names) {
     names.forEach((name) => _addTrackedPostProperty(name));
+  }
+
+  /**
+   * Adds tracked properties to the topic model.
+   *
+   * This method is used to mark properties as tracked for topic updates.
+   *
+   * You'll need to do this if you've added properties to a Topic and need them to be
+   * automatically updated in the UI when there are changes in the model.
+   *
+   * @param {...string} names - The names of the properties to be tracked.
+   */
+  addTrackedTopicProperties(...names) {
+    names.forEach((name) => _addTrackedTopicProperty(name));
   }
 
   /**
@@ -3353,6 +3378,201 @@ class _PluginApi {
    */
   registerEditCategoryTab(tab) {
     registeredEditCategoryTabs.push(tab);
+  }
+
+  /**
+   * Registers block components to render in a designated outlet.
+   *
+   * **IMPORTANT:** Must be called in an initializer that runs after "freeze-block-registry".
+   * All blocks must be registered via `registerBlock()` before this is called.
+   *
+   * Block outlets are extension points where themes and plugins can render custom
+   * content layouts. Each block must be decorated with `@block` from "discourse/blocks".
+   *
+   * Blocks can have conditions that determine when they render. Conditions support
+   * AND logic (array), OR logic (`any`), and NOT logic (`not`).
+   *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
+   *
+   * @param {string} outletName - The block outlet identifier
+   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
+   *
+   * @example
+   * ```javascript
+   * import { block } from "discourse/blocks";
+   *
+   * @block("my-banner")
+   * class MyBanner extends Component {
+   *   <template>
+   *     <h1>{{@title}}</h1>
+   *   </template>
+   * }
+   *
+   * api.renderBlocks("homepage-blocks", [
+   *   // Simple block without conditions
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Welcome!" },
+   *   },
+   *   // Block with conditions (AND logic - all must pass)
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Admin Banner" },
+   *     conditions: [
+   *       { type: "route", pages: ["DISCOVERY_PAGES"] },
+   *       { type: "user", admin: true }
+   *     ],
+   *   },
+   *   // Block with OR conditions
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Staff Banner" },
+   *     conditions: [
+   *       { any: [
+   *         { type: "user", admin: true },
+   *         { type: "user", moderator: true }
+   *       ]}
+   *     ],
+   *   },
+   * ]);
+   * ```
+   */
+  renderBlocks(outletName, blocks) {
+    // Capture call site here, excluding this method, so the stack trace
+    // points directly to the user's code that called api.renderBlocks().
+    const callSiteError = captureCallSite(this.renderBlocks);
+    _renderBlocks(outletName, blocks, this.container, callSiteError);
+  }
+
+  /**
+   * Registers a block component for use with `renderBlocks()`.
+   *
+   * **IMPORTANT:** Must be called in a pre-initializer that runs before "freeze-block-registry".
+   * The block registry is frozen by the "freeze-block-registry" initializer, preventing
+   * late registrations.
+   *
+   * Supports two registration patterns:
+   *
+   * 1. **Direct class registration**: `registerBlock(BlockClass)`
+   *    Registers using the block's own `blockName` from its `@block` decorator.
+   *
+   * 2. **Lazy loading with factory**: `registerBlock("name", () => import(...))`
+   *    Registers a factory function for lazy loading. The block module won't be
+   *    loaded until actually needed. The resolved block's `blockName` must match
+   *    the registered name.
+   *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
+   *
+   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
+   * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
+   *
+   * @example Direct class registration
+   * ```javascript
+   * import HeroBanner from "../blocks/hero-banner";
+   * api.registerBlock(HeroBanner);
+   * ```
+   *
+   * @example Lazy loading with factory
+   * ```javascript
+   * api.registerBlock("sidebar-widget", () => import("../blocks/sidebar-widget"));
+   * ```
+   */
+  registerBlock(blockOrName, factory) {
+    if (typeof blockOrName === "string") {
+      // Lazy loading: registerBlock("name", () => import(...))
+      if (typeof factory !== "function") {
+        throw new Error(
+          `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
+        );
+      }
+      _registerBlockFactory(blockOrName, factory);
+    } else {
+      // Direct class: registerBlock(BlockClass)
+      _registerBlock(blockOrName);
+    }
+  }
+
+  /**
+   * Registers a custom block outlet where blocks can be rendered.
+   *
+   * This allows plugins and themes to define their own block outlets that can be
+   * used with `renderBlocks()`. Custom outlets must follow naming conventions:
+   * - Core outlets: `outlet-name` (kebab-case)
+   * - Plugin outlets: `namespace:outlet-name` (e.g., `chat:message-actions`)
+   * - Theme outlets: `theme:namespace:outlet-name` (e.g., `theme:my-theme:hero`)
+   *
+   * **IMPORTANT:** Must be called in a pre-initializer before "freeze-block-registry".
+   *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
+   *
+   * @param {string} outletName - The outlet name (must follow naming conventions).
+   * @param {Object} [options] - Outlet configuration options.
+   * @param {string} [options.description] - Human-readable description of the outlet.
+   *
+   * @example
+   * ```javascript
+   * // In a pre-initializer
+   * api.registerBlockOutlet("chat:message-actions", {
+   *   description: "Actions displayed below chat messages",
+   * });
+   *
+   * // Later, in an api-initializer
+   * api.renderBlocks("chat:message-actions", [...]);
+   * ```
+   */
+  registerBlockOutlet(outletName, options) {
+    _registerOutlet(outletName, options);
+  }
+
+  /**
+   * Registers a custom block condition type.
+   *
+   * Custom conditions must use the `@blockCondition` decorator from "discourse/blocks/conditions"
+   * and extend `BlockCondition`. The class must implement the `evaluate(args)` method.
+   *
+   * **Note: The `evaluate()` method MUST be pure and idempotent.** It may be called
+   * multiple times during a single render cycle, especially when debug logging
+   * is enabled, and should not perform any side effects or state mutations.
+   *
+   * @experimental This API is under active development and may change or be removed
+   * in future releases without prior notice. Use with caution in production environments.
+   *
+   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class decorated with `@blockCondition`.
+   *
+   * @example
+   * ```javascript
+   * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
+   *
+   * @blockCondition({
+   *   type: "feature-flag",
+   *   args: {
+   *     flag: { type: "string", required: true },
+   *   },
+   * })
+   * class BlockFeatureFlagCondition extends BlockCondition {
+   *   @service currentUser;
+   *
+   *   evaluate(args) {
+   *     return this.currentUser?.feature_flags?.[args.flag] === true;
+   *   }
+   * }
+   *
+   * api.registerBlockConditionType(BlockFeatureFlagCondition);
+   *
+   * // Then use it in renderBlocks:
+   * api.renderBlocks("homepage-blocks", [
+   *   {
+   *     block: MyBlock,
+   *     conditions: [{ type: "feature-flag", flag: "new_feature" }]
+   *   }
+   * ]);
+   * ```
+   */
+  registerBlockConditionType(ConditionClass) {
+    _registerConditionType(ConditionClass);
   }
 
   // eslint-disable-next-line no-unused-vars
