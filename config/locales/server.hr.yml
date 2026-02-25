@@ -2750,8 +2750,6 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
-  dev_mode:
-    enter: "Unesi"
   wizard:
     step:
       setup:
@@ -2854,13 +2852,9 @@ hr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      no_action_post:
-        title: "Nema akcije"
       delete_post:
         title: "Izbrišite objavu"
         complete: "Post izbrisan"
-      no_action_user:
-        title: "Nema akcije"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

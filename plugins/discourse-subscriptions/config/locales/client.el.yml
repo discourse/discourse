@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    discourse_subscriptions_enable_verbose_logging: Ενεργοποιεί πιο λεπτομερή καταγραφή για να βοηθήσει στην αποσφαλμάτωση. Παρακαλούμε μην την αφήνετε μόνιμα ενεργοποιημένη στην παραγωγή.
   js:
     discourse_subscriptions:
       title: Συνδρομές Discourse

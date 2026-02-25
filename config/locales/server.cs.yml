@@ -60,8 +60,6 @@ cs:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
-    too_many_urls: "Do jednoho požadavku nelze vložit více než 10 adres URL."
-    concurrency_not_allowed: "Souběžné požadavky na inline-oneboxing nejsou povoleny. Odešlete prosím vždy jednu žádost."
   components:
     enabled_filter: "Zapnuto"
     disabled_filter: "Vypnuto"
@@ -399,7 +397,6 @@ cs:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastavení nemůžete přidat žádnou z následujících hodnot: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Odstranění metadat odstranění obrázků nelze zakázat, pokud je povolena možnost 'composer media optimization image enabled'. Před vypnutím odstraňování metadat obrázků zakažte možnost 'composer media optimization image enabled'."
-      x_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
       tl0_and_anonymous_flag: "Pro anonymní uživatele musí být nastaven buď 'site contact email' nebo 'email address to report illegal content'."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Toto nastavení vyžaduje, aby bylo nejprve povoleno nastavení 'allow anonymous mode'."
     conflicting_google_user_id: 'ID účtu Google pro tento účet se změnilo; z bezpečnostních důvodů je nutný zásah redakce. Kontaktujte prosím redakci a odkažte je na <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1944,7 +1941,6 @@ cs:
     slow_down_crawler_rate: "Pokud je zadána hodnota slow_down_crawler_user_agents,použije se tato hodnota na všechny crawlery (počet sekund prodlevy mezi požadavky)."
     content_security_policy: "Povolte zásady zabezpečení obsahu (CSP). CSP je další vrstva zabezpečení, která pomáhá předcházet určitým typům útoků, včetně Cross Site Scripting (XSS) a data injection."
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
-    content_security_policy_collect_reports: "Povolit shromažďování zpráv o porušení CSP na /csp_reports"
     content_security_policy_frame_ancestors: "Omezit, kdo může zabudovat tento web do iframů přes CSP. Nastavte povolené hostitele v <a href='%{base_path}/admin/customize/embedding'>Zabudování</a>"
     content_security_policy_script_src: "Další zdroje skriptů na seznamu povolených. Aktuální hostitel a CDN jsou zahrnuty ve výchozím nastavení. Viz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmírnění útoků XSS pomocí zásad zabezpečení obsahu.</a> (CSP). Ostatní zdroje hostitelů jsou ignorovány, protože je povoleno nastavení strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Administrátorské účty, které web v tomto počtu dní nenavštívily, budou muset před přihlášením znovu ověřit svou e-mailovou adresu. Pro deaktivaci nastavte hodnotu 0."
@@ -2030,7 +2026,6 @@ cs:
     enable_local_logins_via_email: "Umožnit uživatelům požádat o přihlášení odesláním odkazu pro přihlášení jedním kliknutím prostřednictvím e-mailu."
     allow_new_registrations: "Povolit registraci nových uživatelů. Zrušte zaškrtnutí této možnosti, pokud chcete zabránit komukoli ve vytváření nového účtu."
     enable_signup_cta: "Zobrazit vracejícím se anonymním uživatelům oznámení s výzvou k registraci účtu."
-    enable_discourse_id: "Povolit ověření pomocí Discourse ID, jednotné přihlašovací služby, která umožňuje uživatelům přihlásit se na více stránkách Discourse pomocí jediného účtu. Běžní poskytovatelé sociálních přihlášení jako Google, Facebook, Apple, Github jsou podporováni bez další konfigurace. Více informací naleznete na <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
     enable_google_oauth2_logins: "Povolit ověřování Google Oauth2. Toto je metoda ověřování, kterou Google aktuálně podporuje. Vyžaduje klíč a tajný kód. Viz <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfigurace přihlášení Google pro Discourse</a>."
     google_oauth2_client_id: "Jedinečné ID klienta poskytnuté vaší aplikací Google, používané pro proces ověřování."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
@@ -2334,8 +2329,6 @@ cs:
         many: "Musí mít alespoň %{count} znaků."
         other: "Musí mít alespoň %{count} znaků."
       staged_users_disabled: "Než toto nastavení povolíte, musíte nejprve povolit „předběžně založené uživatele“."
-      min_username_length_range: "Nemůžete nastavit minimum nad maximum."
-      max_username_length_range: "Nemůžete nastavit maximum pod minimum."
       delete_rejected_email_after_days: "Toto nastavení nemůže být nižší než nastavení delete_email_logs_after_days nebo vyšší než %{max}."
     keywords:
       navigation_menu: "postranní panel|rozbalovací nabídka v záhlaví"
@@ -2362,7 +2355,6 @@ cs:
       exclude_tag: "Vyloučit témata s konkrétním štítkem"
       exclude_tags_any: "Vyloučit témata s kterýmkoli ze zadaných štítků (oddělenými čárkou)"
       exclude_tags_all: "Vyloučit témata se všemi zadanými štítky (oddělenými plusem)"
-      tags_alias: "Alias pro filtr 'tag:'"
       tag_group: "Zobrazit témata se štítky z konkrétní skupiny štítků"
       exclude_tag_group: "Vyloučit témata se štítky z konkrétní skupiny štítků"
       activity_before: "Zobrazit témata s poslední činností před datem (RRRR-MM-DD nebo před x dny)"
@@ -4441,8 +4433,6 @@ cs:
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
     enter: "Vstoupit do bezpečného režimu"
     must_select: "Chcete-li vstoupit do bezpečného režimu, musíte vybrat alespoň jednu možnost."
-  dev_mode:
-    enter: "Enter"
   wizard:
     title: "Nastavení Discourse"
     step:
@@ -4677,10 +4667,6 @@ cs:
         complete: "Příspěvek schválen a zviditelněn"
       post_actions:
         bundle_title: "Co chcete s příspěvkem udělat?"
-      no_action_post:
-        title: "Bez akce"
-        description: "S příspěvkem nepodniknout žádnou akci"
-        complete: "S příspěvkem nebyla provedena žádná akce"
       delete_post:
         title: "Odstranit příspěvek"
         description: "Smazat příspěvek"
@@ -4701,16 +4687,8 @@ cs:
         title: "Upravit příspěvek"
         description: "Upravit obsah tohoto příspěvku"
         complete: "Příspěvek upraven"
-      convert_to_pm:
-        title: "Převést na SZ"
-        description: "Převést tento příspěvek na soukromou zprávu"
-        complete: "Příspěvek převeden na soukromou zprávu"
       user_actions:
         bundle_title: "Co chcete udělat s tímto uživatelem?"
-      no_action_user:
-        title: "Bez akce"
-        description: "Proti tomuto uživateli nepodniknout žádná opatření"
-        complete: "Proti uživateli nebyla podniknuta žádná opatření"
       silence_user:
         title: "Ztišit uživatele"
         description: "Zabránit uživateli v publikování příspěvků"

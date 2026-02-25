@@ -111,6 +111,7 @@ sq:
         save: "Ruani"
         remove_parameter: "Hiq"
         parameter_required: "E nevojshme"
+        credential_not_set: "(nuk është vendosur)"
         edit: "Redaktoni"
         delete: "Fshij"
       secrets:

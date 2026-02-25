@@ -876,7 +876,7 @@ be:
       remove_filter: "выдаліць фільтр"
       category: "Катэгорыя"
       reorder:
-        apply_all: "Ужыць"
+        apply_all: "Прымяніць"
         position: "Пазіцыя"
       posts: "Допісы"
       topics: "Тэмы"
@@ -1838,6 +1838,15 @@ be:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "дадаць"
+      description: "Апісанне"
+      settings:
+        title: "Налады"
+        general: "Агульныя"
+        back: "Назад"
+        name: "Імя"
+      localization:
+        name: "Імя"
+        description: "Апісанне"
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
@@ -1973,6 +1982,11 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+        group_traffic: "трафік"
+        group_members: "Члены"
+        group_moderation: "Мадэрацыя"
+        group_security: "Бяспека"
+        group_other: "Іншае"
       config_sections:
         account:
           title: "Аккаўнт"
@@ -2057,6 +2071,9 @@ be:
               title: "Логі"
         reports:
           title: "Справаздачы"
+          sub_pages:
+            settings:
+              title: "Налады"
         badges:
           title: "значкі"
         permalinks:

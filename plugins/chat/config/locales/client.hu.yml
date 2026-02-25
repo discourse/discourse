@@ -67,6 +67,7 @@ hu:
       starred: "Csillagozott"
       starred_channels: "Csillagozott csatornák"
       starred_channels_empty: "Még nem csillagozott meg egyetlen csatornát sem. Csillagozd meg a csatornákat, hogy itt lásd őket a gyors hozzáférés érdekében."
+      pinned: "Kiemelt"
       browse_all_channels: "Összes csatorna tallózása"
       see_in: "Lásd itt"
       open_channel_menu: "Csatornamenü megnyitása"

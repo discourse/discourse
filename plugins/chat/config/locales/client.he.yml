@@ -67,6 +67,7 @@ he:
       cancel: "ביטול"
       cancel_reply: "ביטול תגובה"
       chat_channels: "ערוצים"
+      pinned: "נעוץ"
       browse_all_channels: "עיון בכל הערוצים"
       see_in: "לראות ב־"
       move_to_channel:
