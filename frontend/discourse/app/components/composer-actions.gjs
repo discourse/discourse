@@ -4,14 +4,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
-import {
-  applyBehaviorTransformer,
-  applyValueTransformer,
-} from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -21,6 +14,10 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 // Separate snapshots for new component validation
@@ -62,12 +59,28 @@ export default class ComposerActions extends Component {
     return this.args.post;
   }
 
+  get whisper() {
+    return this.args.whisper;
+  }
+
+  get noBump() {
+    return this.args.noBump;
+  }
+
   get composerModel() {
     return this.args.composerModel;
   }
 
   get replyOptions() {
     return this.args.replyOptions;
+  }
+
+  get canWhisper() {
+    return this.args.canWhisper;
+  }
+
+  get canUnlistTopic() {
+    return this.args.canUnlistTopic;
   }
 
   get isEditing() {
@@ -116,17 +129,29 @@ export default class ComposerActions extends Component {
     }
   }
 
+  // Single cached getter for all template data to prevent reactivity cycles
   @cached
   get templateData() {
-    const { action: currentAction, isInSlowMode, isEditing } = this;
+    // First compute icon and label
+    const {
+      action: currentAction,
+      whisper,
+      noBump,
+      isInSlowMode,
+      isEditing,
+    } = this;
 
     let iconName;
     if (currentAction === CREATE_TOPIC) {
-      iconName = "far-pen-to-square";
+      iconName = "plus";
     } else if (currentAction === PRIVATE_MESSAGE) {
       iconName = "envelope";
     } else if (currentAction === CREATE_SHARED_DRAFT) {
       iconName = "far-clipboard";
+    } else if (whisper) {
+      iconName = "far-eye-slash";
+    } else if (noBump) {
+      iconName = "anchor";
     } else if (isInSlowMode) {
       iconName = "hourglass-start";
     } else if (isEditing) {
@@ -137,7 +162,11 @@ export default class ComposerActions extends Component {
 
     let labelText;
     if (currentAction === CREATE_TOPIC) {
-      labelText = i18n("composer.composer_actions.create_topic.label");
+      if (this.canUnlistTopic && this.composerModel?.unlistTopic) {
+        labelText = i18n("composer.composer_actions.create_unlisted_topic");
+      } else {
+        labelText = i18n("composer.composer_actions.create_topic.label");
+      }
     } else if (currentAction === PRIVATE_MESSAGE) {
       labelText = i18n(
         "composer.composer_actions.create_personal_message.label"
@@ -145,7 +174,11 @@ export default class ComposerActions extends Component {
     } else if (currentAction === CREATE_SHARED_DRAFT) {
       labelText = i18n("composer.composer_actions.shared_draft.label");
     } else if (currentAction === REPLY) {
-      if (isInSlowMode) {
+      if (whisper) {
+        labelText = i18n("composer.composer_actions.toggle_whisper.label");
+      } else if (noBump) {
+        labelText = i18n("composer.composer_actions.toggle_topic_bump.label");
+      } else if (isInSlowMode) {
         labelText = i18n("composer.composer_actions.slow_mode_reply");
       } else {
         labelText = i18n(
@@ -158,6 +191,7 @@ export default class ComposerActions extends Component {
       labelText = i18n("composer.composer_actions.create_topic.label");
     }
 
+    // Now compute available actions
     const availableActions = this._computeAvailableActions();
 
     return {
@@ -168,11 +202,13 @@ export default class ComposerActions extends Component {
     };
   }
 
+  // Focus on just the 3 reply actions for now
   _computeAvailableActions() {
     let items = [];
 
-    const currentTopic = _topicSnapshot || this.topic;
-    const currentPost = _postSnapshot || this.post;
+    // Use current args instead of snapshots for stability during rendering
+    const currentTopic = this.topic;
+    const currentPost = this.post;
     const currentAction = this.action;
 
     // 1. Reply as New Topic (reply_as_new_topic)
@@ -184,12 +220,12 @@ export default class ComposerActions extends Component {
       !currentTopic.isPrivateMessage &&
       !this.isEditing &&
       this.currentUser?.can_create_topic &&
-      currentTopic.id
+      currentTopic.id // Use current topic instead of snapshot during rendering
     ) {
       const actionObj = {
         name: i18n("composer.composer_actions.reply_as_new_topic.label"),
         description: i18n("composer.composer_actions.reply_as_new_topic.desc"),
-        icon: "far-pen-to-square",
+        icon: "plus",
         id: "reply_as_new_topic",
       };
 
@@ -216,11 +252,8 @@ export default class ComposerActions extends Component {
     }
 
     // 2.5. Reply to Topic (reply_to_topic) - show when user is currently replying to a specific post
-    // Excludes CREATE_TOPIC and PRIVATE_MESSAGE modes which have their own reply_to_topic sections
     if (
       !this.isEditing &&
-      currentAction !== CREATE_TOPIC &&
-      currentAction !== PRIVATE_MESSAGE &&
       ((currentAction !== REPLY && currentTopic) ||
         (currentAction === REPLY &&
           currentTopic &&
@@ -238,9 +271,23 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
+    // 3. Toggle Topic Bump (toggle_topic_bump) - REPLY MODE ONLY
+    const showToggleTopicBump =
+      this.currentUser?.staff || this.currentUser?.trust_level === 4;
+    if (currentAction === REPLY && showToggleTopicBump) {
+      const actionObj = {
+        name: i18n("composer.composer_actions.toggle_topic_bump.label"),
+        description: i18n("composer.composer_actions.toggle_topic_bump.desc"),
+        icon: "anchor",
+        id: "toggle_topic_bump",
+      };
+
+      items.push(actionObj);
+    }
+
     // === CREATE_TOPIC MODE ACTIONS ===
 
-    // 3. Reply to Topic (when in CREATE_TOPIC mode, allow going back to REPLY)
+    // 4. Reply to Topic (when in CREATE_TOPIC mode, allow going back to REPLY)
     if (currentAction === CREATE_TOPIC && !this.isEditing && _topicSnapshot) {
       const actionObj = {
         name: i18n("composer.composer_actions.reply_to_topic.label"),
@@ -252,7 +299,19 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    // 4. Shared Draft (shared_draft) - CREATE_TOPIC MODE ONLY
+    // 5. Toggle Unlisted (for CREATE_TOPIC mode)
+    if (currentAction === CREATE_TOPIC && this.canUnlistTopic) {
+      const actionObj = {
+        name: i18n("composer.composer_actions.toggle_unlisted.label"),
+        description: i18n("composer.composer_actions.toggle_unlisted.desc"),
+        icon: "far-eye-slash",
+        id: "toggle_unlisted",
+      };
+
+      items.push(actionObj);
+    }
+
+    // 6. Shared Draft (shared_draft) - CREATE_TOPIC MODE ONLY
     if (currentAction === CREATE_TOPIC && this.site.shared_drafts_category_id) {
       const actionObj = {
         name: i18n("composer.composer_actions.shared_draft.label"),
@@ -309,49 +368,35 @@ export default class ComposerActions extends Component {
       const actionObj = {
         name: i18n("composer.composer_actions.create_topic.label"),
         description: i18n("composer.composer_actions.create_topic.desc"),
-        icon: "far-pen-to-square",
+        icon: "share",
         id: "create_topic",
       };
 
       items.push(actionObj);
     }
 
-    return applyValueTransformer("composer-actions-content", items, {
-      action: currentAction,
-      topic: currentTopic,
-      post: currentPost,
-      composerModel: this.composerModel,
-    });
-  }
-
-  @action
-  registerDmenuApi(api) {
-    this.dmenuApi = api;
+    return items;
   }
 
   @action
   async onSelectAction(actionId) {
-    await this.dmenuApi?.close({ focusTrigger: true });
-
-    const options = this.composerModel.getProperties(
-      "draftKey",
-      "draftSequence",
-      "title",
-      "reply",
-      "disableScopedCategory"
-    );
-
+    // EXACT method dispatch pattern from original
     const composerAction = `${camelize(actionId)}Selected`;
     if (this[composerAction]) {
-      this[composerAction](options, this.composerModel);
-    } else {
-      applyBehaviorTransformer("composer-actions-on-select", () => {}, {
-        actionId,
-        options,
-        model: this.composerModel,
-      });
+      this[composerAction](
+        this.composerModel.getProperties(
+          "draftKey",
+          "draftSequence",
+          "title",
+          "reply",
+          "disableScopedCategory"
+        ),
+        this.composerModel
+      );
     }
   }
+
+  // Action methods - preserve exact logic from original
 
   _continuedFromText(post, topic) {
     let url = post?.url || topic?.url;
@@ -404,20 +449,6 @@ export default class ComposerActions extends Component {
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
 
-  replyAsNewGroupMessageSelected(options) {
-    const recipients = [];
-    const details = this.topic.details;
-
-    details.allowed_users.forEach((u) => recipients.push(u.username));
-    details.allowed_groups.forEach((g) => recipients.push(g.name));
-
-    options.action = PRIVATE_MESSAGE;
-    options.draftKey = this.composer.pmDraftKey;
-    options.archetypeId = "private_message";
-    options.recipients = recipients.join(",");
-    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
-  }
-
   replyToPostSelected(options) {
     options.action = REPLY;
     options.post = _postSnapshot;
@@ -429,6 +460,16 @@ export default class ComposerActions extends Component {
     options.topic = _topicSnapshot;
     this._openComposer(options);
   }
+
+  toggleTopicBumpSelected(options, model) {
+    model.toggleProperty("noBump");
+  }
+
+  toggleUnlistedSelected(options, model) {
+    model.toggleProperty("unlistTopic");
+  }
+
+  // === TEMPORARY: CREATE_TOPIC MODE ACTION METHODS ===
 
   _switchCreate(options, composerAction) {
     options.action = composerAction;
@@ -460,27 +501,25 @@ export default class ComposerActions extends Component {
         @modalForMobile={{true}}
         @closeOnClickOutside={{true}}
         @closeOnEscape={{true}}
-        @onRegisterApi={{this.registerDmenuApi}}
         @triggerClass="composer-actions-trigger btn-flat btn-icon-text"
         @contentClass="composer-actions-dropdown"
         class="composer-actions-new"
       >
         <:trigger>
-          {{icon "angle-down" class="composer-actions-caret"}}
+          {{dIcon "angle-down" class="composer-actions-caret"}}
         </:trigger>
 
         <:content>
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             {{#each data.actions as |availAction|}}
               <dropdown.item>
                 <DButton
-                  class="composer-actions-btn
-                    {{if availAction.description '--with-description'}}"
+                  class={{dConcatClass "composer-actions-btn"}}
                   @action={{fn this.onSelectAction availAction.id}}
                   data-action-id={{availAction.id}}
                 >
                   <div class="composer-actions-btn__icons">
-                    {{icon availAction.icon}}
+                    {{dIcon availAction.icon}}
                   </div>
                   <div class="composer-actions-btn__texts">
                     <span class="composer-actions-btn__label">
@@ -498,7 +537,7 @@ export default class ComposerActions extends Component {
                 No actions available
               </div>
             {{/unless}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     {{/let}}
