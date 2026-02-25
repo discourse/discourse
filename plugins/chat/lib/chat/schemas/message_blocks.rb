@@ -72,6 +72,7 @@ module Chat
         url: {
           type: "string",
           maxLength: 500,
+          pattern: "^(https://|/)",
         },
         parent_name: {
           type: "string",

@@ -4,7 +4,7 @@ module Chat
   module Blocks
     module Elements
       class CategorySerializer < ApplicationSerializer
-        attributes :type, :title, :color, :description, :url, :parent_name, :parent_color, :simple
+        attributes :type, :title, :color, :description, :url, :parent_name, :parent_color
 
         def type
           object["type"]
@@ -48,10 +48,6 @@ module Chat
 
         def include_parent_color?
           object["parent_color"].present?
-        end
-
-        def include_simple?
-          object["simple"].present?
         end
       end
     end

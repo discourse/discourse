@@ -64,7 +64,7 @@ RSpec.describe "Informative blocks in chat messages", type: :system do
     end
   end
 
-  context "with a category element with a URL" do
+  context "with a category element with a relative URL" do
     fab!(:message_1) do
       Fabricate(
         :chat_message,
@@ -84,6 +84,52 @@ RSpec.describe "Informative blocks in chat messages", type: :system do
 
       expect(page).to have_css("a.block__category-link[href='/c/support']")
       expect(page).to have_css("a.block__category-link .badge-category__name", text: "Support")
+    end
+  end
+
+  context "with a category element with an https:// URL" do
+    fab!(:message_1) do
+      Fabricate(
+        :chat_message,
+        user: Discourse.system_user,
+        chat_channel: channel_1,
+        blocks: [
+          {
+            type: "informative",
+            elements: [
+              { type: "category", title: "Support", color: "0088CC", url: "https://discourse.org" },
+            ],
+          },
+        ],
+      )
+    end
+
+    it "renders a link wrapping the category badge" do
+      chat_page.visit_channel(channel_1)
+
+      expect(page).to have_css("a.block__category-link[href='https://discourse.org']")
+      expect(page).to have_css("a.block__category-link .badge-category__name", text: "Support")
+    end
+  end
+
+  context "with a category element with a javascript: URL" do
+    it "rejects the message as invalid" do
+      message =
+        Chat::Message.new(
+          user: Discourse.system_user,
+          chat_channel: channel_1,
+          blocks: [
+            {
+              type: "informative",
+              elements: [
+                { type: "category", title: "Support", color: "0088CC", url: "javascript:alert(1)" },
+              ],
+            },
+          ],
+        )
+
+      expect(message).not_to be_valid
+      expect(message.errors[:blocks]).to be_present
     end
   end
 
