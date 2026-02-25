@@ -1,20 +1,73 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
+import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
+const UpcomingChangesList = <template>
+  <table class="d-table upcoming-changes-table">
+    <thead class="d-table__header">
+      <tr class="d-table__row">
+        <th class="d-table__header-cell upcoming-change__name-header">{{i18n
+            "admin.upcoming_changes.name"
+          }}</th>
+        <th class="d-table__header-cell upcoming-change__enabled-header">{{i18n
+            "admin.upcoming_changes.enabled_for"
+          }}</th>
+      </tr>
+    </thead>
+    <tbody class="d-table__body">
+      {{#each @upcomingChanges as |change|}}
+        <UpcomingChangeItem
+          @change={{change}}
+          @enabledForChanged={{@enabledForChanged}}
+        />
+      {{/each}}
+    </tbody>
+  </table>
+</template>;
+
 export default class AdminConfigAreasUpcomingChanges extends Component {
+  @tracked changeNamesFilter = this.args.changeNamesFilter ?? "";
+
   @cached
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
       change.upcoming_change = new TrackedObject(change.upcoming_change);
       return new TrackedObject(change);
     });
+  }
+
+  get upcomingChangesByNameFilter() {
+    let filterList = (this.changeNamesFilter || "")
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (filterList.length === 0) {
+      return this.upcomingChanges;
+    }
+
+    return this.upcomingChanges.filter((change) =>
+      filterList.includes(change.setting.toLowerCase())
+    );
+  }
+
+  get formattedChangeNamesFilter() {
+    return this.upcomingChangesByNameFilter
+      .map((change) => change.humanized_name)
+      .join(", ");
+  }
+
+  @action
+  clearChangeNamesFilter() {
+    this.changeNamesFilter = "";
+    this.args.onClearChangeNamesFilter?.();
   }
 
   get dropdownOptions() {
@@ -146,44 +199,44 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   <template>
-    <AdminFilterControls
-      @array={{this.upcomingChanges}}
-      @searchableProps={{array
-        "humanized_name"
-        "description"
-        "plugin_identifier"
-      }}
-      @dropdownOptions={{this.dropdownOptions}}
-      @inputPlaceholder={{i18n
-        "admin.upcoming_changes.filter.search_placeholder"
-      }}
-      @noResultsMessage={{i18n
-        "admin.upcoming_changes.filter.search_placeholder"
-      }}
-    >
-      <:content as |upcomingChanges|>
-        <table class="d-table upcoming-changes-table">
-          <thead class="d-table__header">
-            <tr class="d-table__row">
-              <th
-                class="d-table__header-cell upcoming-change__name-header"
-              >{{i18n "admin.upcoming_changes.name"}}</th>
-              <th
-                class="d-table__header-cell upcoming-change__enabled-header"
-              >{{i18n "admin.upcoming_changes.enabled_for"}}</th>
-            </tr>
-          </thead>
-          <tbody class="d-table__body">
-            {{#each upcomingChanges as |change|}}
-              <UpcomingChangeItem
-                @change={{change}}
-                @enabledForChanged={{this.enabledForChanged}}
-              />
-            {{/each}}
-          </tbody>
-        </table>
-      </:content>
-    </AdminFilterControls>
+    {{#unless this.changeNamesFilter}}
+      <AdminFilterControls
+        @array={{this.upcomingChanges}}
+        @searchableProps={{array
+          "humanized_name"
+          "description"
+          "plugin_identifier"
+        }}
+        @dropdownOptions={{this.dropdownOptions}}
+        @inputPlaceholder={{i18n
+          "admin.upcoming_changes.filter.search_placeholder"
+        }}
+        @noResultsMessage={{i18n
+          "admin.upcoming_changes.filter.search_placeholder"
+        }}
+      >
+        <:content as |upcomingChanges|>
+          <UpcomingChangesList
+            @upcomingChanges={{upcomingChanges}}
+            @enabledForChanged={{this.enabledForChanged}}
+          />
+        </:content>
+      </AdminFilterControls>
+    {{/unless}}
+
+    {{#if this.changeNamesFilter}}
+      <div class="upcoming-changes__name-filter">
+        <DButton
+          @icon="filter-circle-xmark"
+          @action={{this.clearChangeNamesFilter}}
+        />
+        <span> {{this.formattedChangeNamesFilter}}</span>
+      </div>
+      <UpcomingChangesList
+        @upcomingChanges={{this.upcomingChangesByNameFilter}}
+        @enabledForChanged={{this.enabledForChanged}}
+      />
+    {{/if}}
 
     {{#unless this.upcomingChanges}}
       <AdminConfigAreaEmptyList
