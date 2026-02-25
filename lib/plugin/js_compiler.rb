@@ -22,7 +22,7 @@ class Plugin::JsCompiler
       @tree,
       {
         pluginName: @plugin_name,
-        minify: @minify && !@@terser_disabled,
+        minify: @minify,
         entrypoints: @entrypoints,
         filenamePrefix: @filename_prefix,
         filenameSuffix: @filename_suffix,
