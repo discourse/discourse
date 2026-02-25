@@ -7,11 +7,11 @@ module DiscoursePostEvent
     params do
       attribute :event_id, :integer
       attribute :invitee_id, :integer
-      attribute :status, :string
+      attribute :status, :symbol
 
       validates :event_id, presence: true
       validates :invitee_id, presence: true
-      validates :status, inclusion: { in: Invitee.statuses.keys.map(&:to_s) }
+      validates :status, inclusion: { in: Invitee.statuses.keys }
     end
 
     model :invitee
@@ -42,11 +42,11 @@ module DiscoursePostEvent
     end
 
     def can_update_attendance(guardian:, event:)
-      event.can_user_update_attendance(guardian.user)
+      event.can_user_update_attendance?(guardian.user)
     end
 
     def has_capacity(event:, invitee:, params:)
-      params.status != "going" || !event.at_capacity? || invitee.status == Invitee.statuses[:going]
+      params.status != :going || !event.at_capacity? || invitee.status == Invitee.statuses[:going]
     end
 
     def update(invitee:, params:)

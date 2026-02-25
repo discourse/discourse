@@ -59,7 +59,7 @@ module DiscoursePostEvent
     def update
       DiscoursePostEvent::UpdateInvitee.call(
         params: {
-          status: params[:invitee][:status],
+          status: params.dig(:invitee, :status),
           event_id: params[:event_id],
           invitee_id: params[:invitee_id],
         },

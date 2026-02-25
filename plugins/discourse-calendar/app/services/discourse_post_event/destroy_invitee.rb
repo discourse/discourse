@@ -40,7 +40,7 @@ module DiscoursePostEvent
     end
 
     def can_update_attendance(guardian:, event:)
-      event.can_user_update_attendance(guardian.user)
+      event.can_user_update_attendance?(guardian.user)
     end
 
     def destroy(invitee:)
