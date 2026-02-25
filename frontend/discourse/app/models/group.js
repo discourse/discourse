@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-observers */
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
@@ -47,7 +46,10 @@ export default class Group extends RestModel {
   requestersLimit = null;
   requestersOffset = null;
 
-  @equal("mentionable_level", 99) canEveryoneMention;
+  @computed("mentionable_level")
+  get canEveryoneMention() {
+    return this.mentionable_level === 99;
+  }
 
   @computed("automatic_membership_email_domains")
   get emailDomains() {

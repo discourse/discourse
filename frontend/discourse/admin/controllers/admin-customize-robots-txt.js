@@ -1,20 +1,25 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { not } from "@ember/object/computed";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
-import { propertyEqual } from "discourse/lib/computed";
+import { deepEqual } from "discourse/lib/object";
 
 export default class AdminCustomizeRobotsTxtController extends Controller {
   @tracked model;
   saved = false;
   isSaving = false;
 
-  @propertyEqual("model.robots_txt", "buffered.robots_txt") saveDisabled;
+  @computed("model.robots_txt", "buffered.robots_txt")
+  get saveDisabled() {
+    return deepEqual(this.model?.robots_txt, this.buffered?.robots_txt);
+  }
 
-  @not("model.overridden") resetDisabled;
+  @computed("model.overridden")
+  get resetDisabled() {
+    return !this.model?.overridden;
+  }
 
   @cached
   @dependentKeyCompat

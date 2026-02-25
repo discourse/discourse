@@ -1,9 +1,8 @@
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
-import { setting } from "discourse/lib/computed";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
@@ -29,8 +28,15 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service site;
   @service restrictedRouting;
 
-  @setting("title") siteTitle;
-  @setting("short_site_description") shortSiteDescription;
+  @computed("siteSettings.title")
+  get siteTitle() {
+    return this.siteSettings.title;
+  }
+
+  @computed("siteSettings.short_site_description")
+  get shortSiteDescription() {
+    return this.siteSettings.short_site_description;
+  }
 
   @action
   loading(transition) {

@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -224,10 +223,23 @@ export default class NavItem extends EmberObject {
 
   @tracked name;
   @tracked tag;
-  @reads("name") filterType;
 
   @tracked _title;
   @tracked _displayName;
+
+  @tracked _filterTypeOverride;
+
+  @dependentKeyCompat
+  get filterType() {
+    if (this._filterTypeOverride !== undefined) {
+      return this._filterTypeOverride;
+    }
+    return this.name;
+  }
+
+  set filterType(value) {
+    this._filterTypeOverride = value;
+  }
 
   @dependentKeyCompat
   get title() {

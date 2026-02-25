@@ -11,7 +11,6 @@ import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
-import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { gt, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -41,7 +40,10 @@ export default class AdminThemeEditor extends Component {
 
   warning = null;
 
-  @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
+  @computed("fieldName", "currentTargetName")
+  get editorId() {
+    return `${this.fieldName}|${this.currentTargetName}`;
+  }
 
   get visibleTargets() {
     return this.theme.targets.filter((target) => {

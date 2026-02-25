@@ -1,5 +1,4 @@
 import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
@@ -8,11 +7,30 @@ import SingleSelectHeaderComponent from "discourse/select-kit/components/select-
 @classNames("dropdown-select-box-header")
 @classNameBindings("btnClassName", "btnStyleClass", "btnCustomClasses")
 export default class DropdownSelectBoxHeader extends SingleSelectHeaderComponent {
-  @readOnly("selectKit.options.showFullTitle") showFullTitle;
-  @readOnly("selectKit.options.customStyle") customStyle;
-  @readOnly("selectKit.options.btnCustomClasses") btnCustomClasses;
-  @readOnly("selectKit.options.caretUpIcon") caretUpIcon;
-  @readOnly("selectKit.options.caretDownIcon") caretDownIcon;
+  @computed("selectKit.options.showFullTitle")
+  get showFullTitle() {
+    return this.selectKit?.options?.showFullTitle;
+  }
+
+  @computed("selectKit.options.customStyle")
+  get customStyle() {
+    return this.selectKit?.options?.customStyle;
+  }
+
+  @computed("selectKit.options.btnCustomClasses")
+  get btnCustomClasses() {
+    return this.selectKit?.options?.btnCustomClasses;
+  }
+
+  @computed("selectKit.options.caretUpIcon")
+  get caretUpIcon() {
+    return this.selectKit?.options?.caretUpIcon;
+  }
+
+  @computed("selectKit.options.caretDownIcon")
+  get caretDownIcon() {
+    return this.selectKit?.options?.caretDownIcon;
+  }
 
   @computed("showFullTitle")
   get btnClassName() {

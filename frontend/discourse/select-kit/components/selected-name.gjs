@@ -1,8 +1,8 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { computed, get } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
@@ -21,12 +21,24 @@ export default class SelectedName extends Component {
   headerLabel = null;
   id = null;
 
-  @reads("headerLang") lang;
+  @tracked _langOverride;
 
   init() {
     super.init(...arguments);
 
     this.set("id", guidFor(this));
+  }
+
+  @computed("headerLang")
+  get lang() {
+    if (this._langOverride !== undefined) {
+      return this._langOverride;
+    }
+    return this.headerLang;
+  }
+
+  set lang(value) {
+    this._langOverride = value;
   }
 
   didReceiveAttrs() {

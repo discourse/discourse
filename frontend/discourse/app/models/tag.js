@@ -1,10 +1,12 @@
 import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import getURL from "discourse/lib/get-url";
 import RestModel from "discourse/models/rest";
 
 export default class Tag extends RestModel {
-  @readOnly("pm_only") pmOnly;
+  @computed("pm_only")
+  get pmOnly() {
+    return this.pm_only;
+  }
 
   @computed("slug", "id")
   get url() {

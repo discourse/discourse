@@ -2,7 +2,6 @@
 import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { and, equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import DatePickerFuture from "discourse/components/date-picker-future";
@@ -47,11 +46,6 @@ const BINDINGS = {
 
 @tagName("")
 export default class TimeShortcutPicker extends Component {
-  @equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM) customDatetimeSelected;
-  @equal("selectedShortcut", TIME_SHORTCUT_TYPES.RELATIVE)
-  relativeTimeSelected;
-  @and("customDate", "customTime") customDatetimeFilled;
-
   userTimezone = null;
 
   onTimeSelected = null;
@@ -73,6 +67,21 @@ export default class TimeShortcutPicker extends Component {
   customTime = null;
 
   _itsatrap = null;
+
+  @computed("selectedShortcut")
+  get customDatetimeSelected() {
+    return this.selectedShortcut === TIME_SHORTCUT_TYPES.CUSTOM;
+  }
+
+  @computed("selectedShortcut")
+  get relativeTimeSelected() {
+    return this.selectedShortcut === TIME_SHORTCUT_TYPES.RELATIVE;
+  }
+
+  @computed("customDate", "customTime")
+  get customDatetimeFilled() {
+    return this.customDate && this.customTime;
+  }
 
   @on("init")
   _setupPicker() {

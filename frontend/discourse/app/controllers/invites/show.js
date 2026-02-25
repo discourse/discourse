@@ -1,8 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action, computed } from "@ember/object";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, bool, not, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -46,21 +45,89 @@ export default class InvitesShowController extends Controller {
     getAccountPassword: () => this.accountPassword,
   });
   successMessage = null;
-  @readOnly("model.is_invite_link") isInviteLink;
-  @readOnly("model.invited_by") invitedBy;
-  @alias("model.email") email;
-  @alias("email") accountEmail;
-  @readOnly("model.existing_user_id") existingUserId;
-  @readOnly("model.existing_user_can_redeem") existingUserCanRedeem;
-  @readOnly("model.existing_user_can_redeem_error") existingUserCanRedeemError;
-  @bool("existingUserId") existingUserRedeeming;
-  @alias("model.hidden_email") hiddenEmail;
-  @alias("model.email_verified_by_link") emailVerifiedByLink;
-  @alias("model.different_external_email") differentExternalEmail;
-  @not("externalAuthsOnly") passwordRequired;
   errorMessage = null;
   authOptions = null;
   maskPassword = true;
+
+  @computed("model.is_invite_link")
+  get isInviteLink() {
+    return this.model?.is_invite_link;
+  }
+
+  @computed("model.invited_by")
+  get invitedBy() {
+    return this.model?.invited_by;
+  }
+
+  @computed("model.email")
+  get email() {
+    return this.model?.email;
+  }
+
+  set email(value) {
+    set(this, "model.email", value);
+  }
+
+  @computed("email")
+  get accountEmail() {
+    return this.email;
+  }
+
+  set accountEmail(value) {
+    set(this, "email", value);
+  }
+
+  @computed("model.existing_user_id")
+  get existingUserId() {
+    return this.model?.existing_user_id;
+  }
+
+  @computed("model.existing_user_can_redeem")
+  get existingUserCanRedeem() {
+    return this.model?.existing_user_can_redeem;
+  }
+
+  @computed("model.existing_user_can_redeem_error")
+  get existingUserCanRedeemError() {
+    return this.model?.existing_user_can_redeem_error;
+  }
+
+  @computed("existingUserId")
+  get existingUserRedeeming() {
+    return !!this.existingUserId;
+  }
+
+  @computed("model.hidden_email")
+  get hiddenEmail() {
+    return this.model?.hidden_email;
+  }
+
+  set hiddenEmail(value) {
+    set(this, "model.hidden_email", value);
+  }
+
+  @computed("model.email_verified_by_link")
+  get emailVerifiedByLink() {
+    return this.model?.email_verified_by_link;
+  }
+
+  set emailVerifiedByLink(value) {
+    set(this, "model.email_verified_by_link", value);
+  }
+
+  @computed("model.different_external_email")
+  get differentExternalEmail() {
+    return this.model?.different_external_email;
+  }
+
+  set differentExternalEmail(value) {
+    set(this, "model.different_external_email", value);
+  }
+
+  @computed("externalAuthsOnly")
+  get passwordRequired() {
+    return !this.externalAuthsOnly;
+  }
 
   get userFields() {
     return this.userFieldsValidationHelper.userFields;

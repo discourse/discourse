@@ -1,15 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { propertyNotEqual, setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
+import { deepEqual } from "discourse/lib/object";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
@@ -32,15 +32,35 @@ export default class AdminUserIndexController extends Controller {
   ssoLastPayload = null;
   isLoading = false;
 
-  @setting("enable_badges") showBadges;
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-  @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
 
-  @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
-  primaryGroupDirty;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
 
-  @and("model.second_factor_enabled", "model.can_disable_second_factor")
-  canDisableSecondFactor;
+  @computed("model.manual_locked_trust_level.length")
+  get hasLockedTrustLevel() {
+    return !isEmpty(this.model?.manual_locked_trust_level);
+  }
+
+  @computed("originalPrimaryGroupId", "model.primary_group_id")
+  get primaryGroupDirty() {
+    return !deepEqual(
+      this.originalPrimaryGroupId,
+      this.model?.primary_group_id
+    );
+  }
+
+  @computed("model.second_factor_enabled", "model.can_disable_second_factor")
+  get canDisableSecondFactor() {
+    return (
+      this.model?.second_factor_enabled && this.model?.can_disable_second_factor
+    );
+  }
 
   @computed("model.username_lower")
   get preferencesPath() {

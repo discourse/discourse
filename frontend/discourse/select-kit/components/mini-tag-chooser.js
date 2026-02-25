@@ -1,12 +1,11 @@
 import { action, computed } from "@ember/object";
-import { empty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import {
   attributeBindings,
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import { setting } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
@@ -44,11 +43,25 @@ export default class MiniTagChooser extends MultiSelectComponent {
   valueProperty = "id";
   nameProperty = "name";
 
-  @empty("value") noTags;
-  @or("allowCreate", "site.can_create_tag") allowAnyTag;
+  @computed("value.length")
+  get noTags() {
+    return isEmpty(this.value);
+  }
 
-  @setting("max_tag_search_results") maxTagSearchResults;
-  @setting("max_tags_per_topic") maxTagsPerTopic;
+  @computed("allowCreate", "site.can_create_tag")
+  get allowAnyTag() {
+    return this.allowCreate || this.site?.can_create_tag;
+  }
+
+  @computed("siteSettings.max_tag_search_results")
+  get maxTagSearchResults() {
+    return this.siteSettings.max_tag_search_results;
+  }
+
+  @computed("siteSettings.max_tags_per_topic")
+  get maxTagsPerTopic() {
+    return this.siteSettings.max_tags_per_topic;
+  }
 
   @computed("value.[]")
   get tags() {

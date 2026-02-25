@@ -1,20 +1,19 @@
 import { cached, tracked } from "@glimmer/tracking";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
-import { fmt, propertyEqual } from "discourse/lib/computed";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
-import { deepMerge } from "discourse/lib/object";
+import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
@@ -327,24 +326,91 @@ export default class Topic extends RestModel {
 
   message = null;
 
-  @alias("lastPoster.user") lastPosterUser;
-  @alias("lastPoster.primary_group") lastPosterGroup;
-  @alias("details.allowed_groups") allowedGroups;
-  @notEmpty("deleted_at") deleted;
-  @fmt("url", "%@/print") printUrl;
-  @equal("archetype", "private_message") isPrivateMessage;
-  @equal("archetype", "banner") isBanner;
-  @alias("bookmarks.length") bookmarkCount;
-  @and("pinned", "category.isUncategorizedCategory") isPinnedUncategorized;
-  @notEmpty("excerpt") hasExcerpt;
-  @propertyEqual("last_read_post_number", "highest_post_number") readLastPost;
-  @and("pinned", "readLastPost") canClearPin;
-  @or("details.can_edit", "details.can_edit_tags") canEditTags;
-
   @tracked _details = this.store.createRecord("topicDetails", {
     id: this.id,
     topic: this,
   });
+
+  @computed("lastPoster.user")
+  get lastPosterUser() {
+    return this.lastPoster?.user;
+  }
+
+  set lastPosterUser(value) {
+    set(this, "lastPoster.user", value);
+  }
+
+  @computed("lastPoster.primary_group")
+  get lastPosterGroup() {
+    return this.lastPoster?.primary_group;
+  }
+
+  set lastPosterGroup(value) {
+    set(this, "lastPoster.primary_group", value);
+  }
+
+  @computed("details.allowed_groups")
+  get allowedGroups() {
+    return this.details?.allowed_groups;
+  }
+
+  set allowedGroups(value) {
+    set(this, "details.allowed_groups", value);
+  }
+
+  @computed("deleted_at.length")
+  get deleted() {
+    return !isEmpty(this.deleted_at);
+  }
+
+  @computed("url")
+  get printUrl() {
+    return `${this.url}/print`;
+  }
+
+  @computed("archetype")
+  get isPrivateMessage() {
+    return this.archetype === "private_message";
+  }
+
+  @computed("archetype")
+  get isBanner() {
+    return this.archetype === "banner";
+  }
+
+  @computed("bookmarks.length")
+  get bookmarkCount() {
+    return this.bookmarks?.length;
+  }
+
+  set bookmarkCount(value) {
+    set(this, "bookmarks.length", value);
+  }
+
+  @computed("pinned", "category.isUncategorizedCategory")
+  get isPinnedUncategorized() {
+    return this.pinned && this.category?.isUncategorizedCategory;
+  }
+
+  @computed("excerpt.length")
+  get hasExcerpt() {
+    return !isEmpty(this.excerpt);
+  }
+
+  @dependentKeyCompat
+  get readLastPost() {
+    return deepEqual(this.last_read_post_number, this.highest_post_number);
+  }
+
+  @computed("pinned", "readLastPost")
+  get canClearPin() {
+    return this.pinned && this.readLastPost;
+  }
+
+  @computed("details.can_edit", "details.can_edit_tags")
+  get canEditTags() {
+    return this.details?.can_edit || this.details?.can_edit_tags;
+  }
 
   @computed("last_read_post_number", "highest_post_number")
   get visited() {

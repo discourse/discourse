@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import Component, { Input, Textarea } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { afterRender } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -18,8 +17,15 @@ export default class AdminPenaltyPostAction extends Component {
   postAction = null;
   postEdit = null;
 
-  @equal("postAction", "edit") editing;
-  @equal("postAction", "delete_all") deletingAll;
+  @computed("postAction")
+  get editing() {
+    return this.postAction === "edit";
+  }
+
+  @computed("postAction")
+  get deletingAll() {
+    return this.postAction === "delete_all";
+  }
 
   @computed
   get penaltyActions() {

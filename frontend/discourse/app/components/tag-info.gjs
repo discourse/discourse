@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { and, reads } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -39,9 +39,37 @@ export default class TagInfo extends Component {
   newTagName = null;
   newTagDescription = null;
 
-  @reads("currentUser.canEditTags") canEditTags;
-  @reads("currentUser.staff") canAdminTag;
-  @and("canEditTags", "showEditControls") editSynonymsMode;
+  @tracked _canEditTagsOverride;
+  @tracked _canAdminTagOverride;
+
+  @computed("currentUser.canEditTags")
+  get canEditTags() {
+    if (this._canEditTagsOverride !== undefined) {
+      return this._canEditTagsOverride;
+    }
+    return this.currentUser?.canEditTags;
+  }
+
+  set canEditTags(value) {
+    this._canEditTagsOverride = value;
+  }
+
+  @computed("currentUser.staff")
+  get canAdminTag() {
+    if (this._canAdminTagOverride !== undefined) {
+      return this._canAdminTagOverride;
+    }
+    return this.currentUser?.staff;
+  }
+
+  set canAdminTag(value) {
+    this._canAdminTagOverride = value;
+  }
+
+  @computed("canEditTags", "showEditControls")
+  get editSynonymsMode() {
+    return this.canEditTags && this.showEditControls;
+  }
 
   get useSettingsPage() {
     return this.siteSettings.experimental_tag_settings_page;

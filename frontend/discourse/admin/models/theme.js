@@ -1,5 +1,4 @@
 import { computed, get } from "@ember/object";
-import { gt, or } from "@ember/object/computed";
 import { isBlank, isEmpty } from "@ember/utils";
 import ThemeSettings from "discourse/admin/models/theme-settings";
 import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
@@ -42,12 +41,27 @@ class Theme extends RestModel {
   @trackedArray parentThemes;
   @trackedArray theme_fields;
 
-  @or("default", "user_selectable") isActive;
-  @gt("remote_theme.commits_behind", 0) isPendingUpdates;
-  @gt("editedFields.length", 0) hasEditedFields;
-  @gt("parent_themes.length", 0) hasParents;
-
   changed = false;
+
+  @computed("default", "user_selectable")
+  get isActive() {
+    return this.default || this.user_selectable;
+  }
+
+  @computed("remote_theme.commits_behind")
+  get isPendingUpdates() {
+    return this.remote_theme?.commits_behind > 0;
+  }
+
+  @computed("editedFields.length")
+  get hasEditedFields() {
+    return this.editedFields?.length > 0;
+  }
+
+  @computed("parent_themes.length")
+  get hasParents() {
+    return this.parent_themes?.length > 0;
+  }
 
   @computed("theme_fields.[]")
   get targets() {

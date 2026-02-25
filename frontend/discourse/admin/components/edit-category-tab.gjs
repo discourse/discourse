@@ -2,21 +2,28 @@
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { underscore } from "@ember/string";
+import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
-import { propertyEqual } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
+import { deepEqual } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class EditCategoryTab extends Component {
-  @empty("params.slug") newCategory;
-  @propertyEqual("selectedTab", "tab") active;
+  @computed("params.slug.length")
+  get newCategory() {
+    return isEmpty(this.params?.slug);
+  }
+
+  @computed("selectedTab", "tab")
+  get active() {
+    return deepEqual(this.selectedTab, this.tab);
+  }
 
   @computed("tab")
   get tabClassName() {
@@ -39,7 +46,10 @@ export default class EditCategoryTab extends Component {
 
   @computed("params.slug", "params.parentSlug")
   get fullSlug() {
-    const slugPart = this.params?.parentSlug && this.params?.slug ? `${this.params?.parentSlug}/${this.params?.slug}` : this.params?.slug;
+    const slugPart =
+      this.params?.parentSlug && this.params?.slug
+        ? `${this.params?.parentSlug}/${this.params?.slug}`
+        : this.params?.slug;
     return getURL(`/c/${slugPart}/edit/${this.tab}`);
   }
 

@@ -2,8 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import EmberObject, { action } from "@ember/object";
-import { not } from "@ember/object/computed";
+import EmberObject, { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
@@ -34,10 +33,13 @@ export default class ComposerMessages extends Component {
   usersNotSeen = null;
   recipientNames = [];
 
-  @not("composer.viewOpenOrFullscreen") hidden;
-
   _lastSimilaritySearch = null;
   _similarTopicsMessage = null;
+
+  @computed("composer.viewOpenOrFullscreen")
+  get hidden() {
+    return !this.composer?.viewOpenOrFullscreen;
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);

@@ -2,7 +2,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isHTMLSafe } from "@ember/template";
@@ -220,32 +219,106 @@ export default class Composer extends RestModel {
   draftSaving = false;
   draftForceSave = false;
   showFullScreenExitPrompt = false;
-  @reads("site.archetypes") archetypes;
-  @equal("action", CREATE_SHARED_DRAFT) sharedDraft;
-  @equal("action", CREATE_TOPIC) creatingTopic;
-  @equal("action", CREATE_SHARED_DRAFT) creatingSharedDraft;
-  @equal("action", PRIVATE_MESSAGE) creatingPrivateMessage;
-  @not("creatingPrivateMessage") notCreatingPrivateMessage;
-  @not("privateMessage") notPrivateMessage;
-  @or("creatingTopic", "editingFirstPost") topicFirstPost;
-  @equal("composeState", OPEN) viewOpen;
-  @equal("composeState", DRAFT) viewDraft;
-  @equal("composeState", FULLSCREEN) viewFullscreen;
-  @or("viewOpen", "viewFullscreen") viewOpenOrFullscreen;
-  @and("editingPost", "post.firstPost") editingFirstPost;
 
-  @or(
+  @tracked _categoryId = null;
+
+  @tracked _archetypesOverride;
+
+  @computed("site.archetypes")
+  get archetypes() {
+    if (this._archetypesOverride !== undefined) {
+      return this._archetypesOverride;
+    }
+    return this.site?.archetypes;
+  }
+
+  set archetypes(value) {
+    this._archetypesOverride = value;
+  }
+
+  @computed("action")
+  get sharedDraft() {
+    return this.action === CREATE_SHARED_DRAFT;
+  }
+
+  @computed("action")
+  get creatingTopic() {
+    return this.action === CREATE_TOPIC;
+  }
+
+  @computed("action")
+  get creatingSharedDraft() {
+    return this.action === CREATE_SHARED_DRAFT;
+  }
+
+  @computed("action")
+  get creatingPrivateMessage() {
+    return this.action === PRIVATE_MESSAGE;
+  }
+
+  @computed("creatingPrivateMessage")
+  get notCreatingPrivateMessage() {
+    return !this.creatingPrivateMessage;
+  }
+
+  @computed("privateMessage")
+  get notPrivateMessage() {
+    return !this.privateMessage;
+  }
+
+  @computed("creatingTopic", "editingFirstPost")
+  get topicFirstPost() {
+    return this.creatingTopic || this.editingFirstPost;
+  }
+
+  @computed("composeState")
+  get viewOpen() {
+    return this.composeState === OPEN;
+  }
+
+  @computed("composeState")
+  get viewDraft() {
+    return this.composeState === DRAFT;
+  }
+
+  @computed("composeState")
+  get viewFullscreen() {
+    return this.composeState === FULLSCREEN;
+  }
+
+  @computed("viewOpen", "viewFullscreen")
+  get viewOpenOrFullscreen() {
+    return this.viewOpen || this.viewFullscreen;
+  }
+
+  @computed("editingPost", "post.firstPost")
+  get editingFirstPost() {
+    return this.editingPost && this.post?.firstPost;
+  }
+
+  @computed(
     "creatingTopic",
     "creatingPrivateMessage",
     "editingFirstPost",
     "creatingSharedDraft"
   )
-  canEditTitle;
+  get canEditTitle() {
+    return (
+      this.creatingTopic ||
+      this.creatingPrivateMessage ||
+      this.editingFirstPost ||
+      this.creatingSharedDraft
+    );
+  }
 
-  @and("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
-  canCategorize;
-
-  @tracked _categoryId = null;
+  @computed("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
+  get canCategorize() {
+    return (
+      this.canEditTitle &&
+      this.notCreatingPrivateMessage &&
+      this.notPrivateMessage
+    );
+  }
 
   @computed("reply", "originalText")
   get replyDirty() {

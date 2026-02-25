@@ -1,5 +1,4 @@
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
@@ -250,9 +249,23 @@ export default class GoogleDfpAd extends AdComponent {
   loadedGoogletag = false;
   lastAdRefresh = null;
 
-  @alias("size.width") width;
+  @computed("size.width")
+  get width() {
+    return this.size?.width;
+  }
 
-  @alias("size.height") height;
+  set width(value) {
+    set(this, "size.width", value);
+  }
+
+  @computed("size.height")
+  get height() {
+    return this.size?.height;
+  }
+
+  set height(value) {
+    set(this, "size.height", value);
+  }
 
   @computed
   get size() {

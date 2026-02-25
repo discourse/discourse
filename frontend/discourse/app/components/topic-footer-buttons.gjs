@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat, hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias, or } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { compare } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -32,10 +31,37 @@ function bind(fn, context) {
 
 @tagName("")
 export default class TopicFooterButtons extends Component {
-  @alias("currentUser.can_send_private_messages") canSendPms;
-  @alias("topic.details.can_invite_to") canInviteTo;
-  @alias("currentUser.user_option.enable_defer") canDefer;
-  @or("topic.archived", "topic.closed", "topic.deleted") inviteDisabled;
+  @computed("currentUser.can_send_private_messages")
+  get canSendPms() {
+    return this.currentUser?.can_send_private_messages;
+  }
+
+  set canSendPms(value) {
+    set(this, "currentUser.can_send_private_messages", value);
+  }
+
+  @computed("topic.details.can_invite_to")
+  get canInviteTo() {
+    return this.topic?.details?.can_invite_to;
+  }
+
+  set canInviteTo(value) {
+    set(this, "topic.details.can_invite_to", value);
+  }
+
+  @computed("currentUser.user_option.enable_defer")
+  get canDefer() {
+    return this.currentUser?.user_option?.enable_defer;
+  }
+
+  set canDefer(value) {
+    set(this, "currentUser.user_option.enable_defer", value);
+  }
+
+  @computed("topic.archived", "topic.closed", "topic.deleted")
+  get inviteDisabled() {
+    return this.topic?.archived || this.topic?.closed || this.topic?.deleted;
+  }
 
   get inlineButtons() {
     return getTopicFooterButtons(this);

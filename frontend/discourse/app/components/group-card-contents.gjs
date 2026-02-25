@@ -1,6 +1,5 @@
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
-import { alias, gt } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
@@ -11,7 +10,6 @@ import DButton from "discourse/components/d-button";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import routeAction from "discourse/helpers/route-action";
-import { setting } from "discourse/lib/computed";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -29,16 +27,34 @@ const maxMembersToDisplay = 10;
 export default class GroupCardContents extends CardContentsBase {
   @service composer;
 
-  @setting("allow_profile_backgrounds") allowBackgrounds;
-  @setting("enable_badges") showBadges;
-
-  @alias("topic.postStream") postStream;
-  @gt("moreMembersCount", 0) showMoreMembers;
-
   elementId = "group-card";
   mentionSelector = "a.mention-group";
 
   group = null;
+
+  @computed("siteSettings.allow_profile_backgrounds")
+  get allowBackgrounds() {
+    return this.siteSettings.allow_profile_backgrounds;
+  }
+
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
+  @computed("moreMembersCount")
+  get showMoreMembers() {
+    return this.moreMembersCount > 0;
+  }
 
   @computed("group.members.[]")
   get highlightedMembers() {

@@ -3,15 +3,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { empty, or } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModalCancel from "discourse/components/d-modal-cancel";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { setting } from "discourse/lib/computed";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -26,12 +24,31 @@ export default class UsernamePreference extends Component {
   @tracked saving = false;
   @tracked taken = false;
 
-  @setting("max_username_length") maxLength;
-  @setting("min_username_length") minLength;
-  @empty("newUsername") newUsernameEmpty;
+  @computed("siteSettings.max_username_length")
+  get maxLength() {
+    return this.siteSettings.max_username_length;
+  }
 
-  @or("saving", "newUsernameEmpty", "taken", "unchanged", "errorMessage")
-  saveDisabled;
+  @computed("siteSettings.min_username_length")
+  get minLength() {
+    return this.siteSettings.min_username_length;
+  }
+
+  @computed("newUsername.length")
+  get newUsernameEmpty() {
+    return isEmpty(this.newUsername);
+  }
+
+  @computed("saving", "newUsernameEmpty", "taken", "unchanged", "errorMessage")
+  get saveDisabled() {
+    return (
+      this.saving ||
+      this.newUsernameEmpty ||
+      this.taken ||
+      this.unchanged ||
+      this.errorMessage
+    );
+  }
 
   get unchanged() {
     return this.newUsername === this.args.user.username;

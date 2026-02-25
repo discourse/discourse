@@ -1,7 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
-import EmberObject, { computed, get } from "@ember/object";
+import EmberObject, { computed, get, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -93,9 +92,16 @@ export default class Site extends RestModel {
   @trackedArray categories = [];
   @trackedArray groups = [];
 
-  @alias("is_readonly") isReadOnly;
-
   #siteInitialized = false;
+
+  @computed("is_readonly")
+  get isReadOnly() {
+    return this.is_readonly;
+  }
+
+  set isReadOnly(value) {
+    set(this, "is_readonly", value);
+  }
 
   get categoriesByCount() {
     return arraySortedByProperties(this.categories, this.topicCountDesc);

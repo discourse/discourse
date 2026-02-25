@@ -2,8 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { gt, readOnly } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -31,12 +30,19 @@ export default class WebhookEvents extends Component {
   @tracked redeliverEnabled = true;
   @trackedArray incomingEventIds = [];
 
-  @readOnly("incomingEventIds.length") incomingCount;
-  @gt("incomingCount", 0) hasIncoming;
-
   constructor() {
     super(...arguments);
     this.loadEvents();
+  }
+
+  @computed("incomingEventIds.length")
+  get incomingCount() {
+    return this.incomingEventIds?.length;
+  }
+
+  @computed("incomingCount")
+  get hasIncoming() {
+    return this.incomingCount > 0;
   }
 
   async loadEvents() {

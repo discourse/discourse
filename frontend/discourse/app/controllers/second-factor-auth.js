@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { equal, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
@@ -22,14 +21,45 @@ export default class SecondFactorAuthController extends Controller {
   userSelectedMethod = null;
   isLoading = false;
 
-  @readOnly("model.totp_enabled") totpEnabled;
-  @readOnly("model.backup_enabled") backupCodesEnabled;
-  @readOnly("model.security_keys_enabled") securityKeysEnabled;
-  @readOnly("model.allowed_methods") allowedMethods;
-  @readOnly("model.description") customDescription;
-  @equal("shownSecondFactorMethod", TOTP) showTotpForm;
-  @equal("shownSecondFactorMethod", SECURITY_KEY) showSecurityKeyForm;
-  @equal("shownSecondFactorMethod", BACKUP_CODE) showBackupCodesForm;
+  @computed("model.totp_enabled")
+  get totpEnabled() {
+    return this.model?.totp_enabled;
+  }
+
+  @computed("model.backup_enabled")
+  get backupCodesEnabled() {
+    return this.model?.backup_enabled;
+  }
+
+  @computed("model.security_keys_enabled")
+  get securityKeysEnabled() {
+    return this.model?.security_keys_enabled;
+  }
+
+  @computed("model.allowed_methods")
+  get allowedMethods() {
+    return this.model?.allowed_methods;
+  }
+
+  @computed("model.description")
+  get customDescription() {
+    return this.model?.description;
+  }
+
+  @computed("shownSecondFactorMethod")
+  get showTotpForm() {
+    return this.shownSecondFactorMethod === TOTP;
+  }
+
+  @computed("shownSecondFactorMethod")
+  get showSecurityKeyForm() {
+    return this.shownSecondFactorMethod === SECURITY_KEY;
+  }
+
+  @computed("shownSecondFactorMethod")
+  get showBackupCodesForm() {
+    return this.shownSecondFactorMethod === BACKUP_CODE;
+  }
 
   @computed("allowedMethods.[]", "totpEnabled")
   get totpAvailable() {

@@ -2,7 +2,6 @@
 import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
@@ -28,7 +27,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -55,36 +53,103 @@ export default class UserCardContents extends CardContentsBase {
   mentionSelector = "a.mention";
   ariaLabel = i18n("user.card");
 
-  @setting("allow_profile_backgrounds") allowBackgrounds;
-  @setting("enable_badges") showBadges;
-  @setting("display_local_time_in_user_card") showUserLocalTime;
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-
-  @alias("topic.postStream") postStream;
-
-  @gte("topicPostCount", 2) enoughPostsForFiltering;
-
-  @and("viewingTopic", "postStream.hasNoFilters", "enoughPostsForFiltering")
-  showFilter;
-
-  @gt("postStream.userFilters.length", 0) hasUserFilters;
-  @gt("moreBadgesCount", 0) showMoreBadges;
-  @and("viewingAdmin", "showName", "user.canBeDeleted") showDelete;
-  @not("user.isBasic") linkWebsite;
-  @or("user.suspend_reason", "user.silence_reason") isRestricted;
-  @or("isRestricted", "user.bio_excerpt") isRestrictedOrHasBio;
-  @and("user.staged", "canCheckEmails") showCheckEmail;
-
   user = null;
 
   // If inside a topic
   topicPostCount = null;
 
-  @and(
+  @computed("siteSettings.allow_profile_backgrounds")
+  get allowBackgrounds() {
+    return this.siteSettings.allow_profile_backgrounds;
+  }
+
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
+
+  @computed("siteSettings.display_local_time_in_user_card")
+  get showUserLocalTime() {
+    return this.siteSettings.display_local_time_in_user_card;
+  }
+
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
+  @computed("topicPostCount")
+  get enoughPostsForFiltering() {
+    return this.topicPostCount >= 2;
+  }
+
+  @computed(
+    "viewingTopic",
+    "postStream.hasNoFilters",
+    "enoughPostsForFiltering"
+  )
+  get showFilter() {
+    return (
+      this.viewingTopic &&
+      this.postStream?.hasNoFilters &&
+      this.enoughPostsForFiltering
+    );
+  }
+
+  @computed("postStream.userFilters.length")
+  get hasUserFilters() {
+    return this.postStream?.userFilters?.length > 0;
+  }
+
+  @computed("moreBadgesCount")
+  get showMoreBadges() {
+    return this.moreBadgesCount > 0;
+  }
+
+  @computed("viewingAdmin", "showName", "user.canBeDeleted")
+  get showDelete() {
+    return this.viewingAdmin && this.showName && this.user?.canBeDeleted;
+  }
+
+  @computed("user.isBasic")
+  get linkWebsite() {
+    return !this.user?.isBasic;
+  }
+
+  @computed("user.suspend_reason", "user.silence_reason")
+  get isRestricted() {
+    return this.user?.suspend_reason || this.user?.silence_reason;
+  }
+
+  @computed("isRestricted", "user.bio_excerpt")
+  get isRestrictedOrHasBio() {
+    return this.isRestricted || this.user?.bio_excerpt;
+  }
+
+  @computed("user.staged", "canCheckEmails")
+  get showCheckEmail() {
+    return this.user?.staged && this.canCheckEmails;
+  }
+
+  @computed(
     "user.featured_topic",
     "siteSettings.allow_featured_topic_on_user_profiles"
   )
-  showFeaturedTopic;
+  get showFeaturedTopic() {
+    return (
+      this.user?.featured_topic &&
+      this.siteSettings?.allow_featured_topic_on_user_profiles
+    );
+  }
 
   @computed("user.name", "user.username")
   get showName() {

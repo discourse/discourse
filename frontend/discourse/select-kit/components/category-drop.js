@@ -1,9 +1,7 @@
 import { action, computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { setting } from "discourse/lib/computed";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   getEditCategoryUrl,
@@ -47,11 +45,6 @@ const MORE_COLLECTION = "MORE_COLLECTION";
 })
 @pluginApiIdentifiers(["category-drop"])
 export default class CategoryDrop extends ComboBoxComponent {
-  @readOnly("category.id") value;
-  @readOnly("categoriesWithShortcuts") content;
-  @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
-  @setting("allow_uncategorized_topics") allowUncategorized;
-
   noCategoriesLabel = i18n("categories.no_subcategories");
   navigateToEdit = false;
   editingCategory = false;
@@ -60,6 +53,26 @@ export default class CategoryDrop extends ComboBoxComponent {
   init() {
     super.init(...arguments);
     this.insertAfterCollection(MAIN_COLLECTION, MORE_COLLECTION);
+  }
+
+  @computed("category.id")
+  get value() {
+    return this.category?.id;
+  }
+
+  @computed("categoriesWithShortcuts")
+  get content() {
+    return this.categoriesWithShortcuts;
+  }
+
+  @computed("selectKit.options.parentCategory.displayName")
+  get parentCategoryName() {
+    return this.selectKit?.options?.parentCategory?.displayName;
+  }
+
+  @computed("siteSettings.allow_uncategorized_topics")
+  get allowUncategorized() {
+    return this.siteSettings.allow_uncategorized_topics;
   }
 
   modifyComponentForCollection(collection) {

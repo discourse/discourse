@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
-import { action, computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
@@ -15,9 +14,16 @@ export default class TopicProgress extends Component {
   docked = false;
   progressPosition = null;
 
-  @alias("topic.postStream") postStream;
-
   _streamPercentage = null;
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
 
   @computed(
     "postStream.loaded",

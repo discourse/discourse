@@ -1,6 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { computed } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import {
   attributeBindings,
   classNames,
@@ -16,9 +16,45 @@ import { or } from "discourse/truth-helpers";
 @classNames("multi-select-header")
 @attributeBindings("ariaLabel:aria-label")
 export default class MultiSelectHeader extends SelectKitHeaderComponent {
-  @reads("selectKit.options.caretUpIcon") caretUpIcon;
-  @reads("selectKit.options.caretDownIcon") caretDownIcon;
-  @reads("selectKit.options.headerAriaLabel") ariaLabel;
+  @tracked _caretUpIconOverride;
+  @tracked _caretDownIconOverride;
+  @tracked _ariaLabelOverride;
+
+  @computed("selectKit.options.caretUpIcon")
+  get caretUpIcon() {
+    if (this._caretUpIconOverride !== undefined) {
+      return this._caretUpIconOverride;
+    }
+    return this.selectKit?.options?.caretUpIcon;
+  }
+
+  set caretUpIcon(value) {
+    this._caretUpIconOverride = value;
+  }
+
+  @computed("selectKit.options.caretDownIcon")
+  get caretDownIcon() {
+    if (this._caretDownIconOverride !== undefined) {
+      return this._caretDownIconOverride;
+    }
+    return this.selectKit?.options?.caretDownIcon;
+  }
+
+  set caretDownIcon(value) {
+    this._caretDownIconOverride = value;
+  }
+
+  @computed("selectKit.options.headerAriaLabel")
+  get ariaLabel() {
+    if (this._ariaLabelOverride !== undefined) {
+      return this._ariaLabelOverride;
+    }
+    return this.selectKit?.options?.headerAriaLabel;
+  }
+
+  set ariaLabel(value) {
+    this._ariaLabelOverride = value;
+  }
 
   @computed("selectKit.isExpanded", "caretUpIcon", "caretDownIcon")
   get caretIcon() {

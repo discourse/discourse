@@ -1,15 +1,14 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { action, computed } from "@ember/object";
-import { alias, gt, not, or } from "@ember/object/computed";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
+import { deepEqual } from "discourse/lib/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
@@ -19,17 +18,6 @@ export default class AccountController extends Controller {
   @service dialog;
   @service modal;
   @controller user;
-
-  @setting("enable_names") canEditName;
-  @setting("enable_user_status") canSelectUserStatus;
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-
-  @alias("user.viewingSelf") canDownloadPosts;
-  @not("currentUser.can_delete_account") cannotDeleteAccount;
-  @or("model.isSaving", "deleting", "cannotDeleteAccount") deleteDisabled;
-  @gt("model.availableTitles.length", 0) canSelectTitle;
-  @gt("model.availableFlairs.length", 0) canSelectFlair;
-  @propertyNotEqual("model.id", "currentUser.id") disableConnectButtons;
 
   canSaveUser = true;
   newNameInput = null;
@@ -41,6 +29,55 @@ export default class AccountController extends Controller {
   init() {
     super.init(...arguments);
     this.set("revoking", {});
+  }
+
+  @computed("siteSettings.enable_names")
+  get canEditName() {
+    return this.siteSettings.enable_names;
+  }
+
+  @computed("siteSettings.enable_user_status")
+  get canSelectUserStatus() {
+    return this.siteSettings.enable_user_status;
+  }
+
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @computed("user.viewingSelf")
+  get canDownloadPosts() {
+    return this.user?.viewingSelf;
+  }
+
+  set canDownloadPosts(value) {
+    set(this, "user.viewingSelf", value);
+  }
+
+  @computed("currentUser.can_delete_account")
+  get cannotDeleteAccount() {
+    return !this.currentUser?.can_delete_account;
+  }
+
+  @computed("model.isSaving", "deleting", "cannotDeleteAccount")
+  get deleteDisabled() {
+    return this.model?.isSaving || this.deleting || this.cannotDeleteAccount;
+  }
+
+  @computed("model.availableTitles.length")
+  get canSelectTitle() {
+    return this.model?.availableTitles?.length > 0;
+  }
+
+  @computed("model.availableFlairs.length")
+  get canSelectFlair() {
+    return this.model?.availableFlairs?.length > 0;
+  }
+
+  @computed("model.id", "currentUser.id")
+  get disableConnectButtons() {
+    return !deepEqual(this.model?.id, this.currentUser?.id);
   }
 
   get saveAttrNames() {

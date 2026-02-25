@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { url } from "discourse/lib/computed";
+import getURL from "discourse/lib/get-url";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -16,12 +16,12 @@ export default class UserStream extends RestModel {
   @tracked itemsLoaded = 0;
   @trackedArray content = [];
 
-  @url(
-    "itemsLoaded",
-    "user.username_lower",
-    "/user_actions.json?offset=%@&username=%@"
-  )
-  baseUrl;
+  @computed("itemsLoaded", "user.username_lower")
+  get baseUrl() {
+    return getURL(
+      `/user_actions.json?offset=${this.itemsLoaded}&username=${this.user?.username_lower}`
+    );
+  }
 
   @computed("filter")
   get filterParam() {

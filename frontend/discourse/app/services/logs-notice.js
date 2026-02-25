@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-observers */
 import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -19,8 +18,6 @@ export default class LogsNoticeService extends Service {
   @service messageBus;
 
   text = "";
-
-  @readOnly("currentUser.admin") isAdmin;
 
   init() {
     super.init(...arguments);
@@ -47,6 +44,11 @@ export default class LogsNoticeService extends Service {
       "/logs_error_rate_exceeded",
       this.onLogRateLimit
     );
+  }
+
+  @computed("currentUser.admin")
+  get isAdmin() {
+    return this.currentUser?.admin;
   }
 
   @bind

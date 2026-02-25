@@ -1,5 +1,4 @@
-import EmberObject, { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import EmberObject, { computed, set } from "@ember/object";
 import { isNone } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
@@ -53,8 +52,23 @@ export default class Invite extends EmberObject {
     });
   }
 
-  @alias("topics.firstObject.id") topicId;
-  @alias("topics.firstObject.title") topicTitle;
+  @computed("topics.firstObject.id")
+  get topicId() {
+    return this.topics?.firstObject?.id;
+  }
+
+  set topicId(value) {
+    set(this, "topics.firstObject.id", value);
+  }
+
+  @computed("topics.firstObject.title")
+  get topicTitle() {
+    return this.topics?.firstObject?.title;
+  }
+
+  set topicTitle(value) {
+    set(this, "topics.firstObject.title", value);
+  }
 
   save(data) {
     const promise = this.id

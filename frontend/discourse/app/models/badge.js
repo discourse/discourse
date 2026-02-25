@@ -1,5 +1,4 @@
-import EmberObject, { computed } from "@ember/object";
-import { alias, none } from "@ember/object/computed";
+import EmberObject, { computed, set } from "@ember/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
@@ -66,9 +65,19 @@ export default class Badge extends RestModel {
     );
   }
 
-  @none("id") newBadge;
+  @computed("id")
+  get newBadge() {
+    return this.id == null;
+  }
 
-  @alias("image_url") image;
+  @computed("image_url")
+  get image() {
+    return this.image_url;
+  }
+
+  set image(value) {
+    set(this, "image_url", value);
+  }
 
   @computed
   get url() {

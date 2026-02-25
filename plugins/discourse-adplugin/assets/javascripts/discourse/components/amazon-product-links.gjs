@@ -1,5 +1,4 @@
 import { computed } from "@ember/object";
-import { and } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
@@ -7,9 +6,6 @@ import AdComponent from "./ad-component";
 
 @tagName("")
 export default class AmazonProductLinks extends AdComponent {
-  @and("showAmazonAds", "showToGroups", "showAfterPost", "showOnCurrentPage")
-  showAd;
-
   init() {
     const data = {
       "topic-list-top": {},
@@ -143,6 +139,21 @@ export default class AmazonProductLinks extends AdComponent {
     this.set("mobile_amazon_height", data[placement]["mobile_amazon_height"]);
     this.set("mobile_amazon_width", data[placement]["mobile_amazon_width"]);
     super.init();
+  }
+
+  @computed(
+    "showAmazonAds",
+    "showToGroups",
+    "showAfterPost",
+    "showOnCurrentPage"
+  )
+  get showAd() {
+    return (
+      this.showAmazonAds &&
+      this.showToGroups &&
+      this.showAfterPost &&
+      this.showOnCurrentPage
+    );
   }
 
   @computed("amazon_width", "amazon_height")

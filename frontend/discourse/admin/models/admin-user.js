@@ -1,9 +1,8 @@
 import { computed } from "@ember/object";
-import { gt, lt, not, or } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyNotEqual } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
+import { deepEqual } from "discourse/lib/object";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
@@ -34,12 +33,35 @@ export default class AdminUser extends User {
 
   @trackedArray groups;
 
-  @or("active", "staged") canViewProfile;
-  @gt("bounce_score", 0) canResetBounceScore;
-  @propertyNotEqual("originalTrustLevel", "trust_level") dirty;
-  @lt("trust_level", 4) canLockTrustLevel;
-  @not("staff") canSuspend;
-  @not("staff") canSilence;
+  @computed("active", "staged")
+  get canViewProfile() {
+    return this.active || this.staged;
+  }
+
+  @computed("bounce_score")
+  get canResetBounceScore() {
+    return this.bounce_score > 0;
+  }
+
+  @computed("originalTrustLevel", "trust_level")
+  get dirty() {
+    return !deepEqual(this.originalTrustLevel, this.trust_level);
+  }
+
+  @computed("trust_level")
+  get canLockTrustLevel() {
+    return this.trust_level < 4;
+  }
+
+  @computed("staff")
+  get canSuspend() {
+    return !this.staff;
+  }
+
+  @computed("staff")
+  get canSilence() {
+    return !this.staff;
+  }
 
   get customGroups() {
     return this.groups?.filter((g) => !g.automatic) ?? [];

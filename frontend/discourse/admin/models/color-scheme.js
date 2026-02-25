@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
-import { not } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { ajax } from "discourse/lib/ajax";
 import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
@@ -50,9 +50,8 @@ export default class ColorScheme extends EmberObject {
 
   @tracked name;
   @tracked user_selectable;
+  @tracked id;
   @trackedArray colors;
-
-  @not("id") newRecord;
 
   init() {
     super.init(...arguments);
@@ -63,6 +62,11 @@ export default class ColorScheme extends EmberObject {
       return ColorSchemeColor.create(c);
     });
     this.startTrackingChanges();
+  }
+
+  @dependentKeyCompat
+  get newRecord() {
+    return !this.id;
   }
 
   @computed

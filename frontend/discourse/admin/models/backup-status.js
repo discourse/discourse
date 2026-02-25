@@ -1,8 +1,10 @@
 import EmberObject, { computed } from "@ember/object";
-import { not } from "@ember/object/computed";
 
 export default class BackupStatus extends EmberObject {
-  @not("restoreEnabled") restoreDisabled;
+  @computed("restoreEnabled")
+  get restoreDisabled() {
+    return !this.restoreEnabled;
+  }
 
   @computed("allowRestore", "isOperationRunning")
   get restoreEnabled() {

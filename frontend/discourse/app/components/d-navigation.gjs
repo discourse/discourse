@@ -16,7 +16,6 @@ import TagInfoButton from "discourse/components/tag-info-button";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { setting } from "discourse/lib/computed";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -31,7 +30,10 @@ export default class DNavigation extends Component {
   @service siteSettings;
   @service currentUser;
 
-  @setting("fixed_category_positions") fixedCategoryPositions;
+  @computed("siteSettings.fixed_category_positions")
+  get fixedCategoryPositions() {
+    return this.siteSettings.fixed_category_positions;
+  }
 
   get canEditTags() {
     return this.currentUser?.canEditTags;
@@ -140,9 +142,7 @@ export default class DNavigation extends Component {
     "router.currentRoute.queryParams",
     "skipCategoriesNavItem"
   )
-  get navItems(
-    
-  ) {
+  get navItems() {
     return NavItem.buildList(this.category, {
       filterType: this.filterType,
       noSubcategories: this.noSubcategories,

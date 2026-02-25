@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
@@ -34,11 +33,27 @@ export default class ComposerActionTitle extends Component {
   @service currentUser;
   @service siteSettings;
 
-  @alias("model.replyOptions") options;
-  @alias("model.action") action;
-
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
+
+  @computed("model.replyOptions")
+  get options() {
+    return this.model?.replyOptions;
+  }
+
+  set options(value) {
+    set(this, "model.replyOptions", value);
+  }
+
+  @computed("model.action")
+  get action() {
+    return this.model?.action;
+  }
+
+  set action(value) {
+    set(this, "model.action", value);
+  }
+
   @computed("options", "action", "model.tags", "model.category")
   get actionTitle() {
     const result = this.model.customizationFor("actionTitle");

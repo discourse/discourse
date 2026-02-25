@@ -1,5 +1,4 @@
 import { action, computed } from "@ember/object";
-import { equal, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
@@ -43,8 +42,15 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
   seq = 0;
 
-  @equal("action", EDIT) isEditing;
-  @gt("topic.slow_mode_seconds", 0) isInSlowMode;
+  @computed("action")
+  get isEditing() {
+    return this.action === EDIT;
+  }
+
+  @computed("topic.slow_mode_seconds")
+  get isInSlowMode() {
+    return this.topic?.slow_mode_seconds > 0;
+  }
 
   @computed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
   get iconForComposerAction() {

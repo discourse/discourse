@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import DirectoryItemUserFieldValue from "discourse/components/directory-item-user-field-value";
 import UserInfo from "discourse/components/user-info";
@@ -9,12 +10,11 @@ import directoryColumnIsUserField from "discourse/helpers/directory-column-is-us
 import directoryItemLabel from "discourse/helpers/directory-item-label";
 import directoryItemValue from "discourse/helpers/directory-item-value";
 import formatDuration from "discourse/helpers/format-duration";
-import { propertyEqual } from "discourse/lib/computed";
+import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class DirectoryItem extends Component {
-  @propertyEqual("item.user.id", "currentUser.id") me;
   columns = null;
 
   <template>
@@ -66,4 +66,9 @@ export default class DirectoryItem extends Component {
       {{/if}}
     </div>
   </template>
+
+  @computed("item.user.id", "currentUser.id")
+  get me() {
+    return deepEqual(this.item?.user?.id, this.currentUser?.id);
+  }
 }
