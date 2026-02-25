@@ -14,6 +14,7 @@ class Report
     trust_level
     file_extension
     include_subcategories
+    hidden_labels
   ]
 
   MODES = {

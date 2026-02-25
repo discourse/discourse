@@ -111,6 +111,23 @@ export default class AdminReportStackedChart extends Component {
           legend: {
             display: true,
             position: "bottom",
+            onClick: (e, legendItem, legend) => {
+              const index = legendItem.datasetIndex;
+              const ci = legend.chart;
+              const req = chartData[index].req;
+
+              if (ci.isDatasetVisible(index)) {
+                ci.hide(index);
+                if (!chartOptions.hiddenLabels.includes(req)) {
+                  chartOptions.hiddenLabels.push(req);
+                }
+              } else {
+                ci.show(index);
+                chartOptions.hiddenLabels = chartOptions.hiddenLabels.filter(
+                  (l) => l !== req
+                );
+              }
+            },
             labels: {
               usePointStyle: true,
               pointStyle: "rectRounded",
