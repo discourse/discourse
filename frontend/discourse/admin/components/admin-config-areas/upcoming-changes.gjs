@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
 const UpcomingChangesList = <template>
@@ -33,41 +32,12 @@ const UpcomingChangesList = <template>
 </template>;
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
-  @tracked changeNamesFilter = this.args.changeNamesFilter ?? "";
-
   @cached
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
       change.upcoming_change = new TrackedObject(change.upcoming_change);
       return new TrackedObject(change);
     });
-  }
-
-  get upcomingChangesByNameFilter() {
-    let filterList = (this.changeNamesFilter || "")
-      .split(",")
-      .map((s) => s.trim().toLowerCase())
-      .filter(Boolean);
-
-    if (filterList.length === 0) {
-      return this.upcomingChanges;
-    }
-
-    return this.upcomingChanges.filter((change) =>
-      filterList.includes(change.setting.toLowerCase())
-    );
-  }
-
-  get formattedChangeNamesFilter() {
-    return this.upcomingChangesByNameFilter
-      .map((change) => change.humanized_name)
-      .join(", ");
-  }
-
-  @action
-  clearChangeNamesFilter() {
-    this.changeNamesFilter = "";
-    this.args.onClearChangeNamesFilter?.();
   }
 
   get dropdownOptions() {
@@ -199,44 +169,30 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   <template>
-    {{#unless this.changeNamesFilter}}
-      <AdminFilterControls
-        @array={{this.upcomingChanges}}
-        @searchableProps={{array
-          "humanized_name"
-          "description"
-          "plugin_identifier"
-        }}
-        @dropdownOptions={{this.dropdownOptions}}
-        @inputPlaceholder={{i18n
-          "admin.upcoming_changes.filter.search_placeholder"
-        }}
-        @noResultsMessage={{i18n
-          "admin.upcoming_changes.filter.search_placeholder"
-        }}
-      >
-        <:content as |upcomingChanges|>
-          <UpcomingChangesList
-            @upcomingChanges={{upcomingChanges}}
-            @enabledForChanged={{this.enabledForChanged}}
-          />
-        </:content>
-      </AdminFilterControls>
-    {{/unless}}
-
-    {{#if this.changeNamesFilter}}
-      <div class="upcoming-changes__name-filter">
-        <DButton
-          @icon="filter-circle-xmark"
-          @action={{this.clearChangeNamesFilter}}
+    <AdminFilterControls
+      @array={{this.upcomingChanges}}
+      @searchableProps={{array
+        "humanized_name"
+        "description"
+        "plugin_identifier"
+      }}
+      @dropdownOptions={{this.dropdownOptions}}
+      @inputPlaceholder={{i18n
+        "admin.upcoming_changes.filter.search_placeholder"
+      }}
+      @noResultsMessage={{i18n
+        "admin.upcoming_changes.filter.search_placeholder"
+      }}
+      @initialTextFilter={{@changeNamesFilter}}
+      @onResetFilters={{@onClearChangeNamesFilter}}
+    >
+      <:content as |upcomingChanges|>
+        <UpcomingChangesList
+          @upcomingChanges={{upcomingChanges}}
+          @enabledForChanged={{this.enabledForChanged}}
         />
-        <span> {{this.formattedChangeNamesFilter}}</span>
-      </div>
-      <UpcomingChangesList
-        @upcomingChanges={{this.upcomingChangesByNameFilter}}
-        @enabledForChanged={{this.enabledForChanged}}
-      />
-    {{/if}}
+      </:content>
+    </AdminFilterControls>
 
     {{#unless this.upcomingChanges}}
       <AdminConfigAreaEmptyList

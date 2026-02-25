@@ -34,6 +34,7 @@ import { and, not } from "discourse/truth-helpers";
  * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
  *                                              For multiple dropdowns: receives (key, value)
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
+ * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  */
 
 export default class AdminFilterControls extends Component {
@@ -122,13 +123,18 @@ export default class AdminFilterControls extends Component {
     }
 
     if (this.textFilter.length > 0) {
-      const term = this.textFilter.toLowerCase();
-      filtered = filtered.filter((item) => {
-        return this.searchableProps.some((key) => {
-          const value = this.getNestedValue(item, key);
-          return value && value.toString().toLowerCase().includes(term);
-        });
-      });
+      const terms = this.textFilter
+        .split(",")
+        .map((t) => t.trim().replace(/_/g, " ").toLowerCase())
+        .filter(Boolean);
+      filtered = filtered.filter((item) =>
+        terms.some((term) =>
+          this.searchableProps.some((key) => {
+            const value = this.getNestedValue(item, key);
+            return value && value.toString().toLowerCase().includes(term);
+          })
+        )
+      );
     }
 
     if (this.hasMultipleDropdowns) {
@@ -176,6 +182,10 @@ export default class AdminFilterControls extends Component {
 
   @action
   setupComponent() {
+    if (this.args.initialTextFilter) {
+      this.textFilter = this.args.initialTextFilter.replace(/,\s*/g, ", ");
+    }
+
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
         this.dropdownFilters[key] = this.defaultValue(key);
