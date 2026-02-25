@@ -13,8 +13,7 @@ module Plugin
         .load_path
         .assets
         .find do |a|
-          a.logical_path.to_s.match?(/^plugins\/#{plugin_name}-\w{8}\.digested\//) &&
-            a.logical_path.basename.to_s == "#{filename}.js"
+          a.logical_path.to_s.match?(/^plugins\/#{plugin_name}_#{filename}-\w{8}\.digested\.js$/)
         end
         &.logical_path
     end
@@ -77,7 +76,9 @@ module Plugin
         )
       base36_digest = hex_digest.to_i(16).to_s(36).first(8)
 
-      output_path = "#{output_dir}/#{plugin.directory_name}-#{base36_digest}.digested"
+      output_path = "#{output_dir}"
+      filename_prefix = "#{plugin.directory_name}_"
+      filename_suffix = "-#{base36_digest}.digested"
 
       if !(cache? && Dir.exist?(output_path))
         compiler =
@@ -86,6 +87,8 @@ module Plugin
             minify: minify?,
             tree: tree,
             entrypoints: entrypoints_config,
+            filename_prefix:,
+            filename_suffix:,
           )
         result = compiler.compile!
 
@@ -101,8 +104,8 @@ module Plugin
 
       # Delete any old versions
       Dir
-        .glob("#{output_dir}/#{plugin.directory_name}*")
-        .reject { |path| path == output_path || File.file?(path) }
+        .glob("#{output_dir}/*")
+        .reject { |path| path.include?(filename_suffix) || path.include?("_extra") }
         .each { |path| FileUtils.rm_rf(path) }
 
       puts "done (#{(Time.now - start).round(2)}s)"

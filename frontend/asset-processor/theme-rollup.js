@@ -111,7 +111,8 @@ globalThis.rollup = function (modules, opts) {
       return bundle.generate({
         format: "es",
         sourcemap: "hidden",
-        chunkFileNames: "chunk.[hash:6].js",
+        entryFileNames: `${opts.filenamePrefix ?? ""}[name]${opts.filenameSuffix ?? ""}.js`,
+        chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:6]${opts.filenameSuffix ?? ""}.js`,
       });
     })
     .then(({ output }) => {

@@ -1,11 +1,20 @@
 # frozen_string_literal: true
 
 class Plugin::JsCompiler
-  def initialize(plugin_name, minify: true, tree: {}, entrypoints: {})
+  def initialize(
+    plugin_name,
+    minify: true,
+    tree: {},
+    entrypoints: {},
+    filename_prefix: nil,
+    filename_suffix: nil
+  )
     @plugin_name = plugin_name
     @tree = tree
     @entrypoints = entrypoints
     @minify = minify
+    @filename_prefix = filename_prefix
+    @filename_suffix = filename_suffix
   end
 
   def compile!
@@ -15,6 +24,8 @@ class Plugin::JsCompiler
         pluginName: @plugin_name,
         minify: @minify && !@@terser_disabled,
         entrypoints: @entrypoints,
+        filenamePrefix: @filename_prefix,
+        filenameSuffix: @filename_suffix,
       },
     )
   rescue AssetProcessor::TranspileError => e
