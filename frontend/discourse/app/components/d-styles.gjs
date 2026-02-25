@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import htmlClass from "discourse/helpers/html-class";
+import { outletContainerRule } from "discourse/lib/blocks/-internals/css";
 import { getURLWithCDN } from "discourse/lib/get-url";
 
 export default class DStyles extends Component {
+  @service blocks;
   @service session;
   @service site;
   @service interfaceColor;
@@ -81,6 +84,20 @@ export default class DStyles extends Component {
     return css.join("\n");
   }
 
+  /**
+   * Generates the CSS container query rules for all registered block outlets.
+   *
+   * Each outlet gets a rule that sets the `container` property on its container
+   * element, enabling `@container` queries in child blocks. The outlet registry
+   * is frozen after boot, so this value is computed once.
+   *
+   * @returns {string} The concatenated CSS rules for all outlets.
+   */
+  @cached
+  get blockOutletStyles() {
+    return this.blocks.listOutlets().map(outletContainerRule).join("\n");
+  }
+
   <template>
     {{#if this.siteSettings.viewport_based_mobile_mode}}
       {{htmlClass (if this.site.mobileView "mobile-view" "desktop-view")}}
@@ -95,6 +112,9 @@ export default class DStyles extends Component {
         {{this.categoryBackgrounds}}
         {{this.categoryBadges}}
       {{/if}}
+    </style>
+    <style id="d-styles-block-outlets">
+      {{this.blockOutletStyles}}
     </style>
   </template>
 }

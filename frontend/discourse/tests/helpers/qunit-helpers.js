@@ -14,6 +14,7 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -90,6 +91,7 @@ import { clearNavItems } from "discourse/models/nav-item";
 import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
+import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
@@ -101,6 +103,10 @@ import {
 } from "discourse/services/keyboard-shortcuts";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+import {
+  resetBlockRegistryForTesting,
+  resetDebugCallbacks,
+} from "discourse/tests/helpers/block-testing";
 import {
   currentSettings,
   mergeSettings,
@@ -268,10 +274,14 @@ export function testCleanup(container, app) {
   clearRegisteredTabs();
   clearRegisteredEditCategoryTabs();
   clearAddedTrackedPostProperties();
+  clearAddedTrackedTopicProperties();
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();
   resetCustomUserNavMessagesDropdownRows();
+  _resetOutletLayoutsForTesting();
+  resetBlockRegistryForTesting();
+  resetDebugCallbacks();
 }
 
 function cleanupCssGeneratorTags() {

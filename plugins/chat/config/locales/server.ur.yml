@@ -54,12 +54,6 @@ ur:
     notify_moderators:
       chat_pm_title: '"%{channel_name}" میں ایک گپ شپ کے پیغام کو عملے کی توجہ کی ضرورت ہے۔'
       chat_pm_body: "%{link}\n\n%{message}"
-  user_notifications:
-    chat_summary:
-      subject:
-        watched_threads:
-          one: "[%{site_name}] %{channel} اور %{count} دیگر میں نئے دھاگوں کے پیغامات"
-          other: "[%{site_name}] %{channel} اور %{count} دیگر میں نئے دھاگوں کے پیغامات"
   unsubscribe:
     chat_summary:
       never: کبھی نہیں

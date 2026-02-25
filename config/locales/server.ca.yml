@@ -1195,7 +1195,6 @@ ca:
     allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
-    content_security_policy_collect_reports: "Habilita la recol·lecció de reports de violació de CSP en /csp_reports"
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
@@ -1371,7 +1370,6 @@ ca:
     alternative_reply_by_email_addresses: "Llista de plantilles alternatives per a les adreces de resposta per correu. Per exemple: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Utilitza HTML en comptes de text per al correu electrònic entrant."
     strip_incoming_email_lines: "Elimina els espais en blanc al principi i al final de cada línia de correu electrònic entrant."
-    disable_emails: "Evita que Discourse enviï cap mena de correu electrònic. Seleccioneu \"sí\" per a inhabilitar els correus per a tots els usuaris. Seleccioneu \"no equip responsable\" per a inhabilitar els correus sols per a usuaris fora de l'equip responsable."
     strip_images_from_short_emails: "Elimina imatges de correus amb una mida inferior a 2800 bytes"
     display_name_on_email_from: "Mostra noms complets en els camps de remitent dels correus"
     unsubscribe_via_email: "Permet als usuaris cancel·lar la subscripció enviant un correu amb 'unsubscribe' en el tema o en el cos del missatge."
@@ -1542,10 +1540,6 @@ ca:
       staged_users_disabled: "Cal activar 'usuaris ficticis' abans d'activar aquest paràmetre."
       reply_by_email_disabled: "Cal habilitar primer 'resposta per correu' abans d'habilitar aquesta opció."
       enable_local_logins_disabled: "Primer cal habilitar \"habilita els inicis de sessió locals\" abans d'habilitar aquesta opció."
-      min_username_length_exists: "No podeu establir la longitud mínima del nom d'usuari per damunt del nom d'usuari més curt (%{username})."
-      min_username_length_range: "No podeu definir el mínim per damunt del màxim."
-      max_username_length_exists: "No podeu establir la longitud màxima del nom d'usuari per sota del nom d'usuari més llarg (%{username})."
-      max_username_length_range: "No podeu definir el màxim per sota del mínim."
       invalid_hex_value: "Els valors de color han de ser codis hexadecimals de 6 dígits."
       allowed_unicode_usernames:
         regex_invalid: "L'expressió regular no és vàlida: %{error}"
@@ -2731,8 +2725,6 @@ ca:
     title: "Entra en mode segur"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
-  dev_mode:
-    enter: "Retorn"
   wizard:
     title: "Instal·lació de Discourse"
     step:
@@ -2850,12 +2842,8 @@ ca:
         title: "Sí"
       approve_and_unhide:
         title: "Sí"
-      no_action_post:
-        title: "Cap acció"
       delete_post:
         complete: "Publicació suprimida"
-      no_action_user:
-        title: "Cap acció"
       delete_user:
         complete: "Usuari suprimit"
         reason: "Suprimit mitjançant cua de revisió"

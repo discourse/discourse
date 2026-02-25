@@ -57,6 +57,7 @@ sq:
       bot: "bot"
       create: "Krijo"
       cancel: "Anulo"
+      pinned: "E përzgjedhur"
       channel_settings:
         edit: "Redakto"
         add: "Shto"

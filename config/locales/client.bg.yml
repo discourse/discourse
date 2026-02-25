@@ -424,7 +424,6 @@ bg:
       in_reply_to: "в отговор на"
       explain:
         why: "обясни защо този елемент се озова в опашката"
-        title: "Оценяване с възможност за преразглеждане"
         formula: "Формула"
         subtotal: "Междинна сума"
         total: "Общо"
@@ -438,17 +437,14 @@ bg:
           title: "Потребителите, чиито сигнали исторически са били съгласувани, получават бонус."
         trust_level_bonus:
           name: "ниво на доверие"
-          title: "Елементите, които могат да се преглеждат, създадени от потребители с по-високо ниво на доверие, имат по-висок резултат."
         type_bonus:
           name: "тип бонус"
-          title: "Определени типове, подлежащи на преглед, могат да получат бонус от персонала, за да бъдат с по-висок приоритет."
       revise_and_reject_post:
         title: "Преразглеждане"
         reason: "Причина"
         send_pm: "Изпратете ЛС"
         feedback: "Обратна връзка"
         optional: "по избор"
-      stale_help: "Този преглед е разрешен от <b>%{username}</b>."
       claim_help:
         optional: "Можете да заявите този артикул, за да попречите на други да го преглеждат."
         required: "Трябва да заявите артикули, преди да можете да ги прегледате."
@@ -3248,6 +3244,16 @@ bg:
       choose_for_topic: "етикети по желание"
       add_synonyms: "Добави"
       delete_tag: "Изтрийте таг"
+      description: "Описание"
+      settings:
+        title: "Настройки"
+        general: "Основни"
+        back: "Назад"
+        name: "Име"
+        slug: "Slug"
+      localization:
+        name: "Име "
+        description: "Описание"
       sort_by: "Сортирай по:"
       sort_by_count: "брой"
       sort_by_name: "име"
@@ -3421,6 +3427,11 @@ bg:
         remove_muted_tags_from_latest:
           always: "винаги"
           never: "никога"
+      reports:
+        group_traffic: "Трафик"
+        group_members: "Членове"
+        group_security: "Сигурност"
+        group_other: "Други"
       config_sections:
         account:
           title: "Профил"
@@ -3438,7 +3449,6 @@ bg:
         preview: "Преглед"
         enabled_for_options:
           everyone: "Всички"
-          staff: "Само за екипа"
         impact_roles:
           admins: "Админи"
           moderators: "Модератори"
@@ -3502,6 +3512,10 @@ bg:
           sub_pages:
             logs:
               title: "Логове"
+        reports:
+          sub_pages:
+            settings:
+              title: "Настройки"
         badges:
           title: "Значки"
         permalinks:
@@ -4329,6 +4343,7 @@ bg:
           title: "Показване в потребителската карта"
         field_types:
           text: "Текст"
+          date: "Дата"
           confirm: "Потвърждение"
           dropdown: "Падащо"
       site_text:
