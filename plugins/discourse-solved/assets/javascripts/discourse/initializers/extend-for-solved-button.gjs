@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
 import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
+import setAcceptedSolution from "../lib/set-accepted-solution";
 
 function initializeWithApi(api) {
   customizePost(api);
@@ -15,40 +15,7 @@ function initializeWithApi(api) {
     api.addDiscoveryQueryParam("solved", { replace: true, refreshModel: true });
   }
 
-  api.modifyClass(
-    "model:topic",
-    (Superclass) =>
-      class extends Superclass {
-        @tracked accepted_answer;
-        @tracked has_accepted_answer;
-
-        setAcceptedSolution(acceptedAnswer) {
-          this.postStream?.posts?.forEach((post) => {
-            if (!acceptedAnswer) {
-              post.setProperties({
-                accepted_answer: false,
-                topic_accepted_answer: false,
-              });
-            } else if (post.post_number > 1) {
-              post.setProperties(
-                acceptedAnswer.post_number === post.post_number
-                  ? {
-                      accepted_answer: true,
-                      topic_accepted_answer: true,
-                    }
-                  : {
-                      accepted_answer: false,
-                      topic_accepted_answer: true,
-                    }
-              );
-            }
-          });
-
-          this.accepted_answer = acceptedAnswer;
-          this.has_accepted_answer = !!acceptedAnswer;
-        }
-      }
-  );
+  api.addTrackedTopicProperties("accepted_answer", "has_accepted_answer");
 }
 
 function customizePost(api) {
@@ -122,7 +89,7 @@ function handleMessages(api) {
     const topic = controller.model;
 
     if (topic) {
-      topic.setAcceptedSolution(message.accepted_answer);
+      setAcceptedSolution(topic, message.accepted_answer);
     }
   };
 
