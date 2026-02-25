@@ -1,126 +1,616 @@
-/**
+/*
   This CSS file is loaded dynamically when loadDevTools() is run in the console.
   It is not part of our normal CSS build process, so SCSS variables are not available.
   Native CSS nesting can be used safely, because developers who use this tool are expected to have modern browsers.
 */
-.plugin-outlet-info {
-  --plugin-outlet-info-border-color: #080;
-  --plugin-outlet-info-background-color: #0c0;
 
-  margin: 1px;
-  border: 1px solid var(--plugin-outlet-info-border-color);
-  display: inline-block;
+:root {
+  /* Colors by usage */
+  --dev-tools-plugin-outlet-color: #16a34a;
+  --dev-tools-plugin-outlet-hover-color: #15803d;
+  --dev-tools-wrapper-outlet-color: #2563eb;
+  --dev-tools-wrapper-outlet-hover-color: #1d4ed8;
+  --dev-tools-block-color: #d97706;
+  --dev-tools-block-hover-color: #b45309;
+  --dev-tools-ghost-color: #dc2626;
+  --dev-tools-ghost-hover-color: #b91c1c;
+  --dev-tools-block-outlet-color: #f59e0b;
 
-  background-color: var(--plugin-outlet-info-background-color);
-  color: white;
-
-  text-align: center;
-  font-size: 14px !important;
-  font-weight: normal;
-  padding: 1px 5px;
-  display: inline-flex;
-  align-items: center;
-
-  .d-icon {
-    color: white !important;
-    font-size: 14px !important;
-    width: 14px !important;
-  }
-
-  &.--wrapper {
-    --plugin-outlet-info-border-color: #00c;
-    --plugin-outlet-info-background-color: #88f;
-  }
+  /* Shared values */
+  --dev-tools-badge-font-size: 0.75rem;
+  --dev-tools-badge-padding: 2px 5px;
+  --dev-tools-badge-radius: 0 0 4px 0;
+  --dev-tools-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
+  --dev-tools-bg-opacity: 0.05;
+  --dev-tools-container-margin: 2px;
+  --dev-tools-mono-font:
+    "Courier New", courier, "Lucida Console", monaco, monospace;
 }
 
-.plugin-outlet-info__wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.plugin-outlet-info__heading {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 10px;
-
-  display: flex;
-  gap: 5px;
-
-  .title {
-    flex-grow: 1;
-  }
-
-  .github-link {
-    color: var(--primary-medium);
-  }
-}
-
-.plugin-outlet-info__content {
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  font-size: 14px;
-  grid-gap: 10px;
-  min-width: 300px;
-  max-width: 100%;
-  width: 100%;
-  overflow: hidden;
-
-  & > div {
-    min-width: 0;
-  }
-
-  .fw {
-    font-family:
-      "Courier New", "Courier", "Lucida Console", "Monaco", monospace;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background: var(--primary-very-low);
-  }
-
-  .value {
-    display: flex;
-    gap: 5px;
-  }
-
-  .no-arguments {
-    grid-column: span 2;
-  }
-
-  a {
-    color: var(--primary-medium);
-  }
-}
-
+/* Dev Tools Toolbar */
 .dev-tools-toolbar {
   position: fixed;
   z-index: 999999;
-
   display: flex;
   flex-direction: column;
+  background-color: var(--primary-200);
+  border-radius: 0 5px 5px 0;
+  box-shadow: var(--dev-tools-shadow);
+  opacity: 0.8;
+  transition: opacity 0.2s ease-in-out;
 
-  background-color: var(--primary-low);
-  border-radius: 0px 5px 5px 0px;
+  &.--dragging {
+    opacity: 0.5;
+  }
 
   button {
     background: none;
     border: none;
     padding: 5px;
-    color: var(--primary-medium);
+    color: var(--primary-700);
+
+    .d-icon {
+      color: inherit !important;
+    }
 
     &:hover:not(.gripper) {
-      background-color: var(--primary-very-low);
+      background-color: var(--primary-50);
     }
 
     &.gripper {
       cursor: grab;
-      padding-bottom: 0;
-      padding-top: 0;
-      color: var(--primary-400);
+      padding-block: 0;
+      border-bottom: 1px dotted var(--primary-low-mid);
+      color: var(--primary-500);
     }
 
     &.--active {
+      background-color: var(--primary-100);
+      color: var(--tertiary);
+
+      .d-icon {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+/* Shared Base Styles */
+
+/* Base styles for all debug container boundaries */
+.plugin-outlet-debug,
+.block-debug-info,
+.block-debug-ghost,
+.block-outlet-debug {
+  position: relative;
+  margin: var(--dev-tools-container-margin);
+}
+
+/* Base styles for all debug badges */
+.plugin-outlet-debug__badge,
+.block-debug-badge,
+.block-debug-ghost__badge,
+.block-outlet-debug__badge {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: white !important;
+  padding: var(--dev-tools-badge-padding) !important;
+  font-size: var(--dev-tools-badge-font-size) !important;
+  font-weight: bold;
+  border-radius: var(--dev-tools-badge-radius);
+  cursor: pointer;
+  text-shadow: var(--dev-tools-shadow);
+
+  .d-icon {
+    color: white !important;
+    font-size: var(--dev-tools-badge-font-size) !important;
+    font-weight: bold;
+    width: var(--dev-tools-badge-font-size) !important;
+    filter: drop-shadow(var(--dev-tools-shadow));
+  }
+}
+
+/* Plugin Outlet Debug */
+.plugin-outlet-debug {
+  border: 1px dashed var(--dev-tools-plugin-outlet-color);
+  background: rgb(22 163 74 / var(--dev-tools-bg-opacity));
+
+  /* Wrapper outlets are compact inline markers */
+  &.--wrapper {
+    border: none;
+    background: none;
+
+    .plugin-outlet-debug__badge {
+      position: static;
+      background: var(--dev-tools-wrapper-outlet-color);
+      border-radius: 4px;
+
+      &:hover {
+        background: var(--dev-tools-wrapper-outlet-hover-color);
+      }
+    }
+  }
+}
+
+.plugin-outlet-debug__badge {
+  background: var(--dev-tools-plugin-outlet-color);
+
+  &:hover {
+    background: var(--dev-tools-plugin-outlet-hover-color);
+  }
+}
+
+/* Block Debug Overlay */
+.block-debug-info {
+  border: 1px dotted var(--dev-tools-block-color);
+  background: rgb(217 119 6 / var(--dev-tools-bg-opacity));
+  padding: 2px;
+
+  &.--rendered {
+    border-color: var(--dev-tools-block-color);
+  }
+}
+
+.block-debug-badge {
+  background: var(--dev-tools-block-color);
+
+  &:hover {
+    background: var(--dev-tools-block-hover-color);
+  }
+}
+
+/* Ghost blocks (hidden/failed conditions) */
+.block-debug-ghost {
+  border: 1px dashed var(--dev-tools-ghost-color);
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+  );
+  padding: 2px;
+  min-height: 30px;
+}
+
+.block-debug-ghost__badge {
+  background: var(--dev-tools-ghost-color);
+
+  &:hover {
+    background: var(--dev-tools-ghost-hover-color);
+  }
+}
+
+.block-debug-ghost__children {
+  margin-top: 4px;
+}
+
+/* Nested ghost blocks: reduced padding */
+.block-debug-ghost__children .block-debug-ghost {
+  padding: 2px;
+}
+
+/* Odd depth levels: flip stripe direction */
+.block-debug-ghost__children > .block-debug-ghost {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+  );
+}
+
+/* Even depth levels: original stripe direction */
+.block-debug-ghost__children
+  > .block-debug-ghost
+  > .block-debug-ghost__children
+  > .block-debug-ghost {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+    rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+  );
+}
+
+/* Block Outlet boundaries */
+.block-outlet-debug {
+  border: 1px dashed var(--dev-tools-block-outlet-color);
+  padding: 2px;
+  min-height: 20px;
+  background: rgb(245 158 11 / var(--dev-tools-bg-opacity));
+
+  &.--validation-failed {
+    border: 1px dashed var(--dev-tools-ghost-color);
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgb(220 38 38 / var(--dev-tools-bg-opacity)) 10px,
+      rgb(220 38 38 / var(--dev-tools-bg-opacity)) 20px
+    );
+  }
+}
+
+.block-outlet-debug__badge {
+  background: var(--dev-tools-block-outlet-color);
+
+  &.--error {
+    background: var(--dev-tools-ghost-color);
+
+    &:hover {
+      background: var(--dev-tools-ghost-hover-color);
+    }
+  }
+}
+
+/* Block Debug Tooltip */
+.block-debug-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
+  min-width: 280px;
+  max-width: 450px;
+
+  &.--ghost {
+    .block-debug-tooltip__header {
+      color: #f44336;
+    }
+  }
+}
+
+.block-debug-tooltip__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: bold;
+  color: var(--dev-tools-block-color);
+
+  &.--failed {
+    color: var(--dev-tools-ghost-color);
+  }
+
+  .d-icon {
+    font-size: var(--dev-tools-badge-font-size) !important;
+  }
+}
+
+.block-debug-tooltip__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.block-debug-tooltip__title {
+  font-size: 14px;
+}
+
+.block-debug-tooltip__location {
+  font-weight: normal;
+  font-size: 12px;
+  opacity: 0.7;
+  margin-left: 20px;
+}
+
+.block-debug-tooltip__status {
+  font-size: 10px;
+  padding: 1px 4px;
+  background: var(--dev-tools-ghost-color);
+  color: white;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.block-debug-tooltip__section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.block-debug-tooltip__section-title {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  opacity: 0.6;
+
+  .--passed {
+    color: var(--success);
+  }
+
+  .--failed {
+    color: var(--danger);
+  }
+}
+
+.block-debug-tooltip__empty {
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.block-debug-tooltip__hint {
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.7;
+  border-top: 1px solid var(--primary-low);
+  padding-top: 8px;
+}
+
+/* Block Debug Conditions Tree */
+.block-debug-conditions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--dev-tools-mono-font);
+  font-size: 12px;
+
+  &.--passed {
+    .block-debug-condition__type {
       color: var(--success);
     }
   }
+
+  &.--failed {
+    .block-debug-condition__type {
+      color: var(--danger);
+    }
+  }
+}
+
+.block-debug-condition {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &.--combinator {
+    .block-debug-condition__type {
+      font-weight: bold;
+    }
+  }
+}
+
+.block-debug-condition__type {
+  &.--combinator {
+    color: #607d8b;
+  }
+}
+
+.block-debug-condition__args {
+  opacity: 0.7;
+  font-size: 11px;
+}
+
+.block-debug-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  min-width: 160px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+}
+
+.fk-d-menu[data-identifier="block-debug-menu"] {
+  z-index: 1000001;
+}
+
+/*
+ * Shared Outlet Components
+ * Used by both PluginOutlet and BlockOutlet debug overlays.
+ */
+
+/* Shared Outlet Info Tooltip Structure */
+.outlet-info__wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+}
+
+.outlet-info__heading {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  gap: 5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--primary-low);
+  margin-bottom: 8px;
+
+  .title {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .github-link {
+    color: var(--primary-medium);
+  }
+
+  /* Type-specific heading colors */
+  &.--plugin-outlet {
+    color: var(--dev-tools-plugin-outlet-color);
+  }
+
+  &.--wrapper-outlet {
+    color: var(--dev-tools-wrapper-outlet-color);
+  }
+
+  &.--block-outlet {
+    color: var(--dev-tools-block-outlet-color);
+  }
+
+  &.--error {
+    color: var(--dev-tools-ghost-color);
+  }
+}
+
+.outlet-info__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.outlet-info__section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.outlet-info__section-title {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--primary-medium);
+  letter-spacing: 0.5px;
+}
+
+.outlet-info__stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-high);
+}
+
+.outlet-info__empty {
+  font-style: italic;
+  color: var(--primary-medium);
+}
+
+.outlet-info__status {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--dev-tools-ghost-color);
+  color: white;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.outlet-info__error {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+pre.outlet-info__error-message {
+  margin: 0;
+  padding: 8px;
+  background: none;
+  border: none;
+  font-size: 11px;
+  line-height: 1.4;
+  font-family: var(--dev-tools-mono-font);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Shared Outlet Args Table */
+.outlet-args-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.--empty {
+    font-style: italic;
+    color: var(--primary-medium);
+  }
+}
+
+.outlet-args-table__row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    background: var(--primary-very-low);
+  }
+
+  &.--deprecated {
+    .outlet-args-table__key {
+      color: var(--tertiary);
+      text-decoration: line-through;
+    }
+  }
+}
+
+.outlet-args-table__key {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  color: #2196f3;
+  white-space: nowrap;
+}
+
+.outlet-args-table__deprecated-badge {
+  color: var(--tertiary);
+  font-size: 10px;
+
+  .d-icon {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+.outlet-args-table__value {
+  font-family: var(--dev-tools-mono-font);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.outlet-args-table__type {
+  font-size: 10px;
+  opacity: 0.5;
+  margin-right: 4px;
+}
+
+.outlet-args-table__deprecation-info {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--tertiary);
+  padding-left: 8px;
+  margin-top: -2px;
+  margin-bottom: 4px;
+}
+
+.outlet-args-table__deprecation-version {
+  opacity: 0.7;
 }
