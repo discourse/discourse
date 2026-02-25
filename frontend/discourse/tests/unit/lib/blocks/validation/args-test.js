@@ -2066,7 +2066,7 @@ module("Unit | Lib | blocks/validation/args", function () {
 
       try {
         validateBlockArgs({ args: { user: { name: 123 } } }, NestedObjectBlock);
-        assert.ok(false, "should have thrown");
+        assert.true(false, "should have thrown");
       } catch (error) {
         assert.true(error instanceof BlockError, "should be BlockError");
         assert.true(

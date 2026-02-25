@@ -30,9 +30,9 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
  */
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
+  "admin-onboarding-start-posting-options",
   "admin-plugin-icon",
   "admin-reports-show-query-params",
-  "admin-onboarding-start-posting-options",
   "bulk-select-in-nav-controls",
   "category-available-views",
   "category-default-colors",
@@ -49,8 +49,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-save-button-label",
   "composer-service-cannot-submit-post",
   "composer-toggles-class",
-  "create-topic-label",
   "create-topic-button-class",
+  "create-topic-label",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",
   "flag-button-render-decision",
