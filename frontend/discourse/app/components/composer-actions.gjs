@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -130,8 +129,10 @@ export default class ComposerActions extends Component {
     }
   }
 
+  // Single cached getter for all template data to prevent reactivity cycles
   @cached
   get templateData() {
+    // First compute icon and label
     const {
       action: currentAction,
       whisper,
@@ -142,11 +143,7 @@ export default class ComposerActions extends Component {
 
     let iconName;
     if (currentAction === CREATE_TOPIC) {
-      if (this.canUnlistTopic && this.composerModel?.unlistTopic) {
-        iconName = "far-eye-slash";
-      } else {
-        iconName = "far-pen-to-square";
-      }
+      iconName = "plus";
     } else if (currentAction === PRIVATE_MESSAGE) {
       iconName = "envelope";
     } else if (currentAction === CREATE_SHARED_DRAFT) {
@@ -194,6 +191,7 @@ export default class ComposerActions extends Component {
       labelText = i18n("composer.composer_actions.create_topic.label");
     }
 
+    // Now compute available actions
     const availableActions = this._computeAvailableActions();
 
     return {
@@ -204,12 +202,13 @@ export default class ComposerActions extends Component {
     };
   }
 
-
+  // Focus on just the 3 reply actions for now
   _computeAvailableActions() {
     let items = [];
 
-    const currentTopic = _topicSnapshot || this.topic;
-    const currentPost = _postSnapshot || this.post;
+    // Use current args instead of snapshots for stability during rendering
+    const currentTopic = this.topic;
+    const currentPost = this.post;
     const currentAction = this.action;
 
     // 1. Reply as New Topic (reply_as_new_topic)
@@ -221,12 +220,12 @@ export default class ComposerActions extends Component {
       !currentTopic.isPrivateMessage &&
       !this.isEditing &&
       this.currentUser?.can_create_topic &&
-      currentTopic.id 
+      currentTopic.id // Use current topic instead of snapshot during rendering
     ) {
       const actionObj = {
         name: i18n("composer.composer_actions.reply_as_new_topic.label"),
         description: i18n("composer.composer_actions.reply_as_new_topic.desc"),
-        icon: "far-pen-to-square",
+        icon: "plus",
         id: "reply_as_new_topic",
       };
 
@@ -369,7 +368,7 @@ export default class ComposerActions extends Component {
       const actionObj = {
         name: i18n("composer.composer_actions.create_topic.label"),
         description: i18n("composer.composer_actions.create_topic.desc"),
-        icon: "far-pen-to-square",
+        icon: "share",
         id: "create_topic",
       };
 
@@ -380,14 +379,8 @@ export default class ComposerActions extends Component {
   }
 
   @action
-  registerDmenuApi(api) {
-    this.dmenuApi = api;
-  }
-
-  @action
   async onSelectAction(actionId) {
-    await this.dmenuApi?.close({ focusTrigger: true });
-
+    // EXACT method dispatch pattern from original
     const composerAction = `${camelize(actionId)}Selected`;
     if (this[composerAction]) {
       this[composerAction](
@@ -402,6 +395,8 @@ export default class ComposerActions extends Component {
       );
     }
   }
+
+  // Action methods - preserve exact logic from original
 
   _continuedFromText(post, topic) {
     let url = post?.url || topic?.url;
@@ -454,20 +449,6 @@ export default class ComposerActions extends Component {
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
 
-  replyAsNewGroupMessageSelected(options) {
-    const recipients = [];
-    const details = this.topic.details;
-
-    details.allowed_users.forEach((u) => recipients.push(u.username));
-    details.allowed_groups.forEach((g) => recipients.push(g.name));
-
-    options.action = PRIVATE_MESSAGE;
-    options.draftKey = this.composer.pmDraftKey;
-    options.archetypeId = "private_message";
-    options.recipients = recipients.join(",");
-    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
-  }
-
   replyToPostSelected(options) {
     options.action = REPLY;
     options.post = _postSnapshot;
@@ -487,6 +468,8 @@ export default class ComposerActions extends Component {
   toggleUnlistedSelected(options, model) {
     model.toggleProperty("unlistTopic");
   }
+
+  // === TEMPORARY: CREATE_TOPIC MODE ACTION METHODS ===
 
   _switchCreate(options, composerAction) {
     options.action = composerAction;
@@ -518,7 +501,6 @@ export default class ComposerActions extends Component {
         @modalForMobile={{true}}
         @closeOnClickOutside={{true}}
         @closeOnEscape={{true}}
-        @onRegisterApi={{this.registerDmenuApi}}
         @triggerClass="composer-actions-trigger btn-flat btn-icon-text"
         @contentClass="composer-actions-dropdown"
         class="composer-actions-new"
@@ -532,22 +514,21 @@ export default class ComposerActions extends Component {
             {{#each data.actions as |availAction|}}
               <dropdown.item>
                 <DButton
-                  class="composer-actions-btn
-                    {{if availAction.description '--with-description'}}"
+                  class={{dConcatClass "composer-actions-btn"}}
                   @action={{fn this.onSelectAction availAction.id}}
                   data-action-id={{availAction.id}}
                 >
                   <div class="composer-actions-btn__icons">
                     {{dIcon availAction.icon}}
                   </div>
-                    <div class="composer-actions-btn__texts">
-                      <span class="composer-actions-btn__label">
-                        {{availAction.name}}
-                      </span>
-                      <span class="composer-actions-btn__description">
-                        {{availAction.description}}
-                      </span>
-                    </div>
+                  <div class="composer-actions-btn__texts">
+                    <span class="composer-actions-btn__label">
+                      {{availAction.name}}
+                    </span>
+                    <span class="composer-actions-btn__description">
+                      {{availAction.description}}
+                    </span>
+                  </div>
                 </DButton>
               </dropdown.item>
             {{/each}}
