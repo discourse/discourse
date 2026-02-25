@@ -204,6 +204,12 @@ module DiscourseAi
 
           result << "```"
           result.join("\n")
+        rescue ONPDiff::DiffLimitExceeded
+          <<~DIFF.strip
+            ```diff
+            # #{I18n.t("errors.diff_too_complex")}
+            ```
+          DIFF
         end
 
         def update_custom_html(artifact:, artifact_version:, new_version:)

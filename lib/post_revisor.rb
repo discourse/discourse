@@ -444,6 +444,8 @@ class PostRevisor
     @diff_size ||=
       begin
         ONPDiff.new(before, after).short_diff.sum { |str, type| type == :common ? 0 : str.size }
+      rescue ONPDiff::DiffLimitExceeded
+        Float::INFINITY
       end
   end
 
