@@ -80,7 +80,7 @@ module Plugin
       filename_prefix = "#{plugin.directory_name}_"
       filename_suffix = "-#{base36_digest}.digested"
 
-      if !(cache? && Dir.exist?(output_path))
+      if !(cache? && File.exist?("#{output_path}/#{filename_prefix}main#{filename_suffix}.js"))
         compiler =
           Plugin::JsCompiler.new(
             plugin.directory_name,
