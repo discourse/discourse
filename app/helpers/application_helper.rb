@@ -131,24 +131,17 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      # assets needed for theme testing are not compressed because they take a fair
-      # amount of time to compress (+30 seconds) during rebuilds/deploys when the
-      # vast majority of sites will never need them, so it makes more sense to serve
-      # them uncompressed instead of making everyone's rebuild/deploy take +30 more
-      # seconds.
-      if !script.start_with?("discourse/tests/")
-        if is_brotli_req?
-          if path.start_with?("/assets/js/")
-            path = path.sub(%r{^/assets/js/}, "/assets/br/")
-          else
-            path = path.sub(/\.([^.]+)\z/, '.br.\1')
-          end
-        elsif is_gzip_req?
-          if path.start_with?("/assets/js/")
-            path = path.sub(%r{^/assets/js/}, "/assets/gz/")
-          else
-            path = path.sub(/\.([^.]+)\z/, '.gz.\1')
-          end
+      if is_brotli_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/br/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.br.\1')
+        end
+      elsif is_gzip_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/gz/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
     end
