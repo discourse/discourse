@@ -30,80 +30,11 @@ export default class CategoryElement extends Component {
   }
 
   <template>
-    {{#if @definition.simple}}
-      {{! Simple badge style - just the badge, no box }}
-      {{#if @definition.url}}
-        <a href={{@definition.url}} class="block__category-simple-link">
-          <span class="badge-category__wrapper">
-            {{#if @definition.parent_name}}
-              <span
-                class="badge-category --style-square"
-                style={{this.parentBadgeStyle}}
-              >
-                <span
-                  class="badge-category__name"
-                >{{@definition.parent_name}}</span>
-              </span>
-            {{/if}}
-            <span
-              class={{concatClass "badge-category" this.childBadgeClasses}}
-              style={{this.childBadgeStyle}}
-            >
-              <span class="badge-category__name">{{@definition.title}}</span>
-            </span>
-          </span>
-        </a>
-      {{else}}
-        <span class="badge-category__wrapper">
-          {{#if @definition.parent_name}}
-            <span
-              class="badge-category --style-square"
-              style={{this.parentBadgeStyle}}
-            >
-              <span
-                class="badge-category__name"
-              >{{@definition.parent_name}}</span>
-            </span>
-          {{/if}}
-          <span
-            class={{concatClass "badge-category" this.childBadgeClasses}}
-            style={{this.childBadgeStyle}}
-          >
-            <span class="badge-category__name">{{@definition.title}}</span>
-          </span>
-        </span>
-      {{/if}}
-    {{else}}
-      {{! Box style - full category box with description }}
-      <div class="block__category" style={{this.boxStyle}}>
-        <div class="block__category-inner">
-          <div class="block__category-heading">
-            {{#if @definition.url}}
-              <a href={{@definition.url}} class="block__category-link">
-                <span class="badge-category__wrapper">
-                  {{#if @definition.parent_name}}
-                    <span
-                      class="badge-category --style-square"
-                      style={{this.parentBadgeStyle}}
-                    >
-                      <span
-                        class="badge-category__name"
-                      >{{@definition.parent_name}}</span>
-                    </span>
-                  {{/if}}
-                  <span
-                    class={{concatClass
-                      "badge-category"
-                      this.childBadgeClasses
-                    }}
-                  >
-                    <span
-                      class="badge-category__name"
-                    >{{@definition.title}}</span>
-                  </span>
-                </span>
-              </a>
-            {{else}}
+    <div class="block__category" style={{this.boxStyle}}>
+      <div class="block__category-inner">
+        <div class="block__category-heading">
+          {{#if @definition.url}}
+            <a href={{@definition.url}} class="block__category-link">
               <span class="badge-category__wrapper">
                 {{#if @definition.parent_name}}
                   <span
@@ -123,15 +54,33 @@ export default class CategoryElement extends Component {
                   >{{@definition.title}}</span>
                 </span>
               </span>
-            {{/if}}
-          </div>
-          {{#if @definition.description}}
-            <div class="block__category-description">
-              {{@definition.description}}
-            </div>
+            </a>
+          {{else}}
+            <span class="badge-category__wrapper">
+              {{#if @definition.parent_name}}
+                <span
+                  class="badge-category --style-square"
+                  style={{this.parentBadgeStyle}}
+                >
+                  <span
+                    class="badge-category__name"
+                  >{{@definition.parent_name}}</span>
+                </span>
+              {{/if}}
+              <span
+                class={{concatClass "badge-category" this.childBadgeClasses}}
+              >
+                <span class="badge-category__name">{{@definition.title}}</span>
+              </span>
+            </span>
           {{/if}}
         </div>
+        {{#if @definition.description}}
+          <div class="block__category-description">
+            {{@definition.description}}
+          </div>
+        {{/if}}
       </div>
-    {{/if}}
+    </div>
   </template>
 }

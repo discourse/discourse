@@ -18,7 +18,6 @@
     }
   }
 
-  // Informative block styling
   .block__informative-wrapper {
     margin: 0.5em 0;
   }
@@ -36,13 +35,11 @@
     display: flex;
     align-items: stretch;
 
-    // When category has simple mode, make it inline
     .block__category-simple-wrapper {
       display: inline-flex;
     }
   }
 
-  // Category element styling (box style similar to CategoriesBoxes)
   .block__category {
     position: relative;
     display: flex;
@@ -100,31 +97,5 @@
     font-size: var(--font-0);
     color: var(--primary-high);
     line-height: var(--line-height-medium);
-  }
-
-  // Simple badge styling
-  .block__informative-item {
-    // Style for simple badges (badges without the box wrapper)
-    > .badge-category__wrapper,
-    > .block__category-simple-link .badge-category__wrapper {
-      font-size: var(--font-down-1);
-
-      .badge-category__name {
-        font-weight: bold;
-        color: var(--primary);
-      }
-    }
-  }
-
-  // Simple badge link styling
-  .block__category-simple-link {
-    text-decoration: none;
-    color: inherit;
-
-    &:hover {
-      .badge-category__name {
-        color: var(--tertiary);
-      }
-    }
   }
 }

@@ -81,9 +81,6 @@ module Chat
           type: "string",
           pattern: "^[0-9A-Fa-f]{6}$",
         },
-        simple: {
-          type: "boolean",
-        },
       },
       required: %w[schema_version type title color],
       additionalProperties: false,

@@ -50,10 +50,6 @@ module Chat
           object["parent_color"].present?
         end
 
-        def simple
-          object["simple"]
-        end
-
         def include_simple?
           object["simple"].present?
         end
