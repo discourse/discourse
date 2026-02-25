@@ -9,17 +9,17 @@ en:
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       long: "%B %-d, %Y, %l:%M%P"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       no_day: "%B %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -2757,6 +2757,7 @@ en:
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
+    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2804,12 +2805,12 @@ en:
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
-      min_group_name_length_exists: "You cannot set the minimum group name length above the shortest group name (%{group_name})."
-      min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
-      max_group_name_length_exists: "You cannot set the maximum group name length below the longest group name (%{group_name})."
-      max_username_length_range: "You cannot set the maximum below the minimum."
+      min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
+      min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
+      min_username_length_range: "You cannot set 'min username length' above 'max username length'."
+      max_username_length_exists: "You cannot set 'max username length' below the longest username (%{username})."
+      max_group_name_length_exists: "You cannot set 'max username length' below the longest group name (%{group_name})."
+      max_username_length_range: "You cannot set the 'max username length' below 'min username length'."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
       empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
       category_search_priority:
@@ -2876,7 +2877,6 @@ en:
       exclude_tag: "Exclude topics with a specific tag"
       exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
       exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
-      tags_alias: "Alias for 'tag:' filter"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"

@@ -2507,20 +2507,41 @@ RSpec.describe GroupsController do
   describe "#request_membership" do
     fab!(:new_user, :user)
 
+    before { group.update_column(:allow_membership_requests, true) }
+
     it "requires the user to log in" do
       post "/groups/#{group.name}/request_membership.json"
       expect(response.status).to eq(403)
     end
 
-    it "requires a reason" do
+    it "rejects the request when allow_membership_requests is false" do
+      group.update!(allow_membership_requests: false)
+      sign_in(new_user)
+
+      post "/groups/#{group.name}/request_membership.json", params: { reason: "Please add me" }
+
+      expect(response.status).to eq(403)
+      expect(GroupRequest.where(group: group, user: new_user).exists?).to eq(false)
+    end
+
+    it "rejects the request when the user is already a group member" do
       sign_in(user)
+
+      post "/groups/#{group.name}/request_membership.json", params: { reason: "Please add me" }
+
+      expect(response.status).to eq(403)
+      expect(GroupRequest.where(group: group, user: user).exists?).to eq(false)
+    end
+
+    it "requires a reason" do
+      sign_in(new_user)
 
       post "/groups/#{group.name}/request_membership.json"
       expect(response.status).to eq(400)
     end
 
     it "checks for duplicates" do
-      sign_in(user)
+      sign_in(new_user)
 
       post "/groups/#{group.name}/request_membership.json", params: { reason: "Please add me in" }
 
@@ -2532,7 +2553,7 @@ RSpec.describe GroupsController do
     end
 
     it "limits the character count of the reason" do
-      sign_in(user)
+      sign_in(new_user)
 
       post "/groups/#{group.name}/request_membership.json",
            params: {
@@ -2550,7 +2571,7 @@ RSpec.describe GroupsController do
       owner2 = Fabricate(:user, last_seen_at: 1.day.ago)
       [owner1, owner2].each { |owner| group.add_owner(owner) }
 
-      sign_in(user)
+      sign_in(new_user)
 
       post "/groups/#{group.name}/request_membership.json", params: { reason: "Please add me in" }
 
@@ -2562,7 +2583,7 @@ RSpec.describe GroupsController do
 
       expect(body["relative_url"]).to eq(topic.relative_url)
       expect(post.topic.custom_fields["requested_group_id"].to_i).to eq(group.id)
-      expect(post.user).to eq(user)
+      expect(post.user).to eq(new_user)
 
       expect(topic.title).to eq(
         I18n.t("groups.request_membership_pm.title", group_name: group.name),
@@ -2570,7 +2591,7 @@ RSpec.describe GroupsController do
 
       expect(post.raw).to start_with("Please add me in")
       expect(topic.archetype).to eq(Archetype.private_message)
-      expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
+      expect(topic.allowed_users).to contain_exactly(new_user, owner1, owner2)
       expect(topic.allowed_groups).to eq([])
     end
   end

@@ -161,14 +161,21 @@ class PostActionNotifier
   private
 
   def self.notification_is_disabled?(post_revision)
+    if SiteSetting.disable_system_edit_notifications &&
+         post_revision.user_id == Discourse::SYSTEM_USER_ID
+      return true
+    end
+
     modifications = post_revision.modifications
-    (
-      SiteSetting.disable_system_edit_notifications &&
-        post_revision.user_id == Discourse::SYSTEM_USER_ID
-    ) ||
-      (
-        SiteSetting.disable_category_edit_notifications &&
-          modifications&.dig("category_id").present?
-      ) || (SiteSetting.disable_tags_edit_notifications && modifications&.dig("tags").present?)
+
+    if SiteSetting.disable_category_edit_notifications && modifications&.dig("category_id").present?
+      return true
+    end
+
+    if SiteSetting.disable_tags_edit_notifications && modifications&.dig("tags").present?
+      return true
+    end
+
+    false
   end
 end

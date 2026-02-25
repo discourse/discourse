@@ -57,6 +57,7 @@ export default class EditCategoryTabsController extends Controller {
   @service site;
   @service router;
   @service keyValueStore;
+  @service toasts;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
   @tracked
@@ -223,6 +224,11 @@ export default class EditCategoryTabsController extends Controller {
       }
 
       this.set("saving", false);
+
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("saved") },
+      });
 
       if (!this.model.id) {
         this.router.transitionTo(

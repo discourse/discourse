@@ -318,6 +318,7 @@ en:
     skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+    emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
@@ -3153,6 +3154,7 @@ en:
       upload_description: "enter upload description here"
       olist_title: "Numbered list"
       ulist_title: "Bulleted list"
+      list_title: "Lists"
       list_item: "List item"
       toggle_direction: "Toggle direction"
       apply_wrap_title: "Apply wrap"
@@ -5903,9 +5905,16 @@ en:
 
       reports:
         title: "List of available reports"
-        meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
         back: "Back to all reports"
+        group_engagement: "Engagement"
+        group_traffic: "Traffic"
+        group_members: "Members"
+        group_content: "Content & Health"
+        group_moderation: "Moderation"
+        group_security: "Security"
+        group_other: "Other"
+        legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
       config_sections:
         account:
@@ -5952,7 +5961,7 @@ en:
         enabled_for_options:
           no_one: "No one"
           everyone: "Everyone"
-          staff: "Staff only"
+          staff: "%{staffGroupName} only"
           specific_groups: "Specific group(s)"
           specific_groups_with_group_names:
             one: "the group %{groupNames}"
@@ -5975,7 +5984,7 @@ en:
           all: "All"
           enabled_all: "All enabled states"
           enabled: "Enabled"
-          enabled_for_staff: "Enabled for staff"
+          enabled_for_staff: "Enabled for %{staffGroupName}"
           enabled_for_specific_groups: "Enabled for specific groups"
           disabled: "Disabled"
           impact_type_all: "All impact types"
@@ -6256,7 +6265,7 @@ en:
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
           sub_pages:
             settings:
-              title: "Dashboard settings"
+              title: "Settings"
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"

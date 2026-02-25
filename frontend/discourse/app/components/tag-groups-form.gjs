@@ -1,5 +1,5 @@
 /* eslint-disable ember/no-classic-components */
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
@@ -21,8 +21,6 @@ import { i18n } from "discourse-i18n";
 export default class TagGroupsForm extends Component {
   @service dialog;
   @service site;
-
-  @tracked model;
 
   // All but the "everyone" group
   allGroups = this.site.groups.filter(

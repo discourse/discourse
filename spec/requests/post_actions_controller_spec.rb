@@ -72,6 +72,27 @@ RSpec.describe PostActionsController do
 
           expect(response).to be_forbidden
         end
+
+        it "does not return post content when the user can no longer see the post" do
+          restricted_category = Fabricate(:category, read_restricted: true)
+          post.topic.update!(category: restricted_category)
+
+          delete "/post_actions/#{post.id}.json",
+                 params: {
+                   post_action_type_id: PostActionType.types[:like],
+                 }
+
+          expect(response.status).to eq(204)
+          expect(response.body).to be_blank
+          expect(
+            PostAction.exists?(
+              user_id: user.id,
+              post_id: post.id,
+              post_action_type_id: PostActionType.types[:like],
+              deleted_at: nil,
+            ),
+          ).to eq(false)
+        end
       end
     end
   end

@@ -1,10 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import Chart from "discourse/admin/components/chart";
 
 export default class DoughnutChart extends Component {
-  @tracked canvasSize = null;
-
   get config() {
     const totalScore = this.args.totalScore || "";
 

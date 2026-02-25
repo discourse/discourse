@@ -56,7 +56,7 @@ export default class AvatarUploader extends Component {
         id="custom-profile-upload"
         {{didInsert this.uppyUpload.setup}}
         class="hidden-upload-field"
-        disabled={{this.uploading}}
+        disabled={{this.uppyUpload.uploading}}
         type="file"
         accept="image/*"
         aria-hidden="true"
@@ -64,7 +64,7 @@ export default class AvatarUploader extends Component {
       <DButton
         @translatedLabel={{this.uploadLabel}}
         @icon="far-image"
-        @disabled={{this.uploading}}
+        @disabled={{this.uppyUpload.uploading}}
         @action={{this.chooseImage}}
         @title="user.change_avatar.upload_title"
         class="btn-default avatar-uploader__button"

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -48,8 +47,6 @@ export default class GlimmerHeader extends Component {
   @service site;
   @service appEvents;
   @service header;
-
-  @tracked skipSearchContext = this.site.mobileView;
 
   appEventsListeners = modifierFn(() => {
     this.appEvents.on(
@@ -163,7 +160,7 @@ export default class GlimmerHeader extends Component {
       const context = this.search.searchContext;
       let params = "";
       if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.skipSearchContext}`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.site.mobileView}`;
       }
 
       if (this.router.currentRouteName === "full-page-search") {

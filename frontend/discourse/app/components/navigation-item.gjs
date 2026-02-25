@@ -1,5 +1,4 @@
 /* eslint-disable ember/no-classic-components */
-import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -9,8 +8,7 @@ import { filterTypeForMode } from "discourse/lib/filter-mode";
 
 @tagName("")
 export default class NavigationItem extends Component {
-  @tracked filterMode;
-
+  filterMode;
   hidden = false;
   activeClass = "";
   hrefLink = null;

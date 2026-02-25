@@ -37,8 +37,7 @@ export default class AdminThemeEditor extends Component {
   @service router;
 
   @tracked showAdvanced;
-  @tracked onlyOverridden;
-  @tracked currentTargetName;
+  currentTargetName;
 
   warning = null;
 
@@ -52,17 +51,12 @@ export default class AdminThemeEditor extends Component {
       if (!this.showAdvanced && ADVANCED_TARGETS.includes(target.name)) {
         return false;
       }
-      if (!this.onlyOverridden) {
-        return true;
-      }
+      return true;
     });
   }
 
   get visibleFields() {
     let fields = this.theme.fields[this.currentTargetName];
-    if (this.onlyOverridden) {
-      fields = fields.filter((field) => field.edited);
-    }
     if (!this.showAdvanced) {
       fields = fields.filter(
         (field) => field.edited || !ADVANCED_FIELDS.includes(field.name)
