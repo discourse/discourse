@@ -90,9 +90,11 @@ describe "Content Localization" do
       page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-        I18n.t("js.content_localization.toggle_localized.not_translated"),
-      )
+      I18n.with_locale(:ja) do
+        expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+          I18n.t("js.content_localization.toggle_localized.not_translated"),
+        )
+      end
 
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
