@@ -1,4 +1,4 @@
-import { array, fn } from "@ember/helper";
+import { array, concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
@@ -9,6 +9,7 @@ import PickFilesButton from "discourse/components/pick-files-button";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
+import getURL from "discourse/lib/get-url";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
@@ -150,13 +151,23 @@ export default <template>
                   {{#each filteredQueries as |query|}}
                     <tr class="d-admin-row__content query-row">
                       <td class="d-admin-row__overview">
-                        <strong class="query-name">{{query.name}}</strong>
-                        {{#if query.is_default}}
-                          <span class="query-badge">{{i18n
-                              "explorer.default_query"
-                            }}</span>
-                        {{/if}}
-                        <div class="query-desc">{{query.description}}</div>
+                        <a
+                          class="query-link"
+                          href={{getURL
+                            (concat
+                              "/admin/plugins/discourse-data-explorer/queries/"
+                              query.id
+                            )
+                          }}
+                        >
+                          <strong class="query-name">{{query.name}}</strong>
+                          {{#if query.is_default}}
+                            <span class="query-badge">{{i18n
+                                "explorer.default_query"
+                              }}</span>
+                          {{/if}}
+                          <div class="query-desc">{{query.description}}</div>
+                        </a>
                       </td>
                       <td class="d-admin-row__detail query-created-by">
                         <div class="d-admin-row__mobile-label">
@@ -207,7 +218,7 @@ export default <template>
                             @model={{query.id}}
                             class="btn btn-default btn-small"
                           >
-                            {{i18n "explorer.view"}}
+                            {{i18n "edit"}}
                           </LinkTo>
                         </div>
 

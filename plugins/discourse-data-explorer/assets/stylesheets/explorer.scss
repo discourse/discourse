@@ -437,8 +437,10 @@ table.group-reports {
   }
 
   .query-row {
-    a {
-      width: 100%;
+    a.query-link {
+      @include viewport.until(md) {
+        max-width: 75ch;
+      }
     }
 
     .query-name {
@@ -460,6 +462,10 @@ table.group-reports {
     .query-desc {
       color: var(--primary-high);
       max-width: 20vw;
+
+      @include viewport.until(md) {
+        max-width: 90vw;
+      }
     }
 
     .query-created-by {
