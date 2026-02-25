@@ -20,6 +20,8 @@ es:
       voted_title: "Votado"
       voting_closed_title: "Cerrado"
       voting_limit: "Límite"
+      see_votes: "Te quedan %{count}/%{max} votos"
+      locked_description: "Sube de nivel de confianza para votar"
       votes:
         one: "%{count} voto"
         other: "%{count} votos"

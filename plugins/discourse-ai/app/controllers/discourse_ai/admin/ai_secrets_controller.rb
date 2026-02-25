@@ -6,7 +6,11 @@ module DiscourseAi
       requires_plugin PLUGIN_NAME
 
       def index
-        secrets = AiSecret.all.includes(:llm_models, :embedding_definitions).order(:name)
+        secrets =
+          AiSecret
+            .all
+            .includes(:llm_models, :embedding_definitions, ai_tool_secret_bindings: :ai_tool)
+            .order(:name)
 
         render json: {
                  ai_secrets:
@@ -19,7 +23,12 @@ module DiscourseAi
       end
 
       def show
-        secret = AiSecret.includes(:llm_models, :embedding_definitions).find(params[:id])
+        secret =
+          AiSecret.includes(
+            :llm_models,
+            :embedding_definitions,
+            ai_tool_secret_bindings: :ai_tool,
+          ).find(params[:id])
         render json: AiSecretSerializer.new(secret, scope: { unmask: true })
       end
 

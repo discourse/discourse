@@ -636,19 +636,13 @@ it:
       in_reply_to: "in risposta a"
       filtered_flagged_by: "Contrassegnato da"
       unknown:
-        title:
-          one: "Hai un plugin disabilitato in attesa di revisione:"
-          other: "Hai plugin disabilitati in attesa di revisione:"
         instruction: "Non possono essere visualizzati correttamente finché non attivi il plugin appropriato. Abilita il plugin e aggiorna la pagina. In alternativa, puoi ignorarli. <a href='%{url}' target='_blank'>Scopri di più...</a>"
         reviewable_unknown_source: "%{reviewableType} (plugin sconosciuto)"
         reviewable_known_source: "%{reviewableType} (dal plugin '%{pluginName}')"
         ignore_all: "Ignora tutto"
         enable_plugins: "Abilita i plugin"
-        delete_confirm: "Vuoi davvero eliminare tutte le recensioni create dai plugin disabilitati?"
-        ignore_success: "Tutte le recensioni create da plugin disabilitati sono state eliminate."
       explain:
         why: "spiega perché questo oggetto è stato aggiunto alla coda"
-        title: "Punteggio rivedibile"
         formula: "Formula"
         subtotal: "Totale parziale"
         total: "Totale"
@@ -662,10 +656,8 @@ it:
           title: "Agli utenti le cui segnalazioni sono state storicamente accettate viene concesso un bonus."
         trust_level_bonus:
           name: "livello di attendibilità"
-          title: "Gli articoli revisionabili creati da utenti con un livello di attendibilità più elevato hanno un punteggio più alto."
         type_bonus:
           name: "tipo di bonus"
-          title: "Ad alcune tipologie revisionabili può essere assegnato un bonus dallo staff, per aumentare la loro priorità."
       revise_and_reject_post:
         title: "Revisione"
         reason: "Motivo"
@@ -674,7 +666,6 @@ it:
         custom_reason: "Fornisci una descrizione chiara del motivo"
         other_reason: "Altro..."
         optional: "facoltativo"
-      stale_help: "La revisione di questo elemento è stata condotta da <b>%{username}</b>."
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
         required: "Per poter revisionare gli elementi devi prima rivendicarli."
@@ -3120,8 +3111,6 @@ it:
         max_views:
           placeholder: massimo
           aria_label: filtra per visualizzazioni massime
-        additional_options:
-          label: "Filtra per numero di messaggi e visualizzazioni dell'argomento"
     hamburger_menu: "Menu di navigazione"
     new_item: "nuovo"
     go_back: "indietro"
@@ -4668,7 +4657,20 @@ it:
         one: "Anche il suo sinonimo verrà eliminato."
         other: "I suoi %{count} sinonimi verranno a loro volta eliminati."
       edit_tag: "Modifica il nome e la descrizione dell’etichetta"
-      description: "Descrizione (max 1000 caratteri)"
+      description: "Descrizione"
+      settings:
+        title: "Impostazioni"
+        general: "Generale"
+        localizations: "Localizzazioni"
+        back: "Indietro"
+        name: "Nome"
+        slug: "Abbreviazione"
+        name_placeholder: "Nome etichetta"
+        synonyms_subtitle: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con %{name}"
+      localization:
+        locale: "Localizzazione"
+        name: "Nome"
+        description: "Descrizione"
       sort_by: "Ordina per:"
       sort_by_count: "conteggio"
       sort_by_name: "nome"
@@ -5171,9 +5173,13 @@ it:
           never: "mai"
       reports:
         title: "Elenco dei rapporti disponibili"
-        meta_doc: "I report sono uno strumento potente per aiutarti a capire cosa sta succedendo sul tuo sito. Possono aiutarti a identificare tendenze, individuare problemi e prendere decisioni basate sui dati."
         sidebar_title: "Report"
         back: "Torna a tutti i report"
+        group_traffic: "Traffico"
+        group_members: "Membri"
+        group_moderation: "Moderazione"
+        group_security: "Sicurezza"
+        group_other: "Altri"
       config_sections:
         account:
           title: "Account"
@@ -5198,7 +5204,6 @@ it:
         preview: "Anteprima"
         enabled_for_options:
           everyone: "Chiunque"
-          staff: "Solo staff"
         statuses:
           experimental: "Sperimentale"
         impact_roles:
@@ -5271,7 +5276,6 @@ it:
               help_text: "La dimensione consigliata è 600 x 80 pixel."
             large_icon:
               title: "Icona quadrata"
-              description: "Una versione quadrata dell'immagine del logo appare nella parte superiore dell'amministrazione ed è anche il logo dell'app nella schermata iniziale del dispositivo mobile."
               help_text: "La dimensione consigliata è 512 x 512 pixel."
             square_icon_dark:
               required: "Utilizzare un'icona quadrata diversa per la modalità scura?"
@@ -5422,7 +5426,7 @@ it:
           header_description: "I report sono uno strumento potente per aiutarti a capire cosa sta succedendo sul tuo sito. Possono aiutarti a identificare tendenze, individuare problemi e prendere decisioni basate sui dati."
           sub_pages:
             settings:
-              title: "Impostazioni della dashboard"
+              title: "Impostazioni"
         badges:
           title: "Distintivi"
           header_description: "I distintivi premiano gli utenti per le loro attività, i loro contributi e i loro risultati, per riconoscere, convalidare e incoraggiare comportamenti positivi e l'impegno all'interno della community"
@@ -5572,22 +5576,6 @@ it:
         result_count:
           one: '%{count} risultato per "%{filter}"'
           other: '%{count} risultati per "%{filter}"'
-        result_types:
-          page:
-            one: "Pagina"
-            other: "Pagine"
-          report:
-            one: "Report"
-            other: "Report"
-          setting:
-            one: "Impostazione"
-            other: "Impostazioni"
-          theme:
-            one: "Tema"
-            other: "Temi"
-          component:
-            one: "Componente"
-            other: "Componenti"
       new_features:
         title: "Cosa c'è di nuovo?"
         check_for_updates: "Controlla gli aggiornamenti"
@@ -7596,6 +7584,7 @@ it:
         field_types:
           text: "Testo"
           textarea: "Area di testo"
+          date: "Data"
           confirm: "Conferma"
           dropdown: "A discesa"
           multiselect: "Selezione multipla"

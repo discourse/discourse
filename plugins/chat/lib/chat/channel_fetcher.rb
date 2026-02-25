@@ -119,11 +119,15 @@ module Chat
       if options[:chatable_id].present? && options[:chatable_type].present?
         filter_chatable = options[:chatable_type].constantize&.find_by_id(options[:chatable_id])
         if filter_chatable.present? && guardian.can_see_chatable?(filter_chatable)
+          chatable_ids =
+            if options[:include_subcategories] && options[:chatable_type] == "Category"
+              Category.subcategory_ids(options[:chatable_id].to_i)
+            else
+              [options[:chatable_id]]
+            end
+
           channels =
-            channels.where(
-              chatable_id: options[:chatable_id],
-              chatable_type: options[:chatable_type],
-            )
+            channels.where(chatable_id: chatable_ids, chatable_type: options[:chatable_type])
         end
       end
 
@@ -221,6 +225,7 @@ module Chat
           options.merge(include_archives: true, filter_on_category_name: true),
         )
 
+      channels = channels.includes(:pinned_messages) if SiteSetting.chat_pinned_messages
       channels = channels.to_a
       preload_custom_fields_for(channels)
       channels
@@ -263,6 +268,7 @@ module Chat
           )
 
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
+      query = query.includes(:pinned_messages) if SiteSetting.chat_pinned_messages
 
       if options[:filter]
         filter_term = options[:filter].downcase

@@ -52,6 +52,7 @@ class SiteSerializer < ApplicationSerializer
     :full_name_required_for_signup,
     :full_name_visible_in_signup,
     :admin_config_login_routes,
+    :email_configured,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -269,7 +270,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serialized_regexps_for_action(:censor, engine: :js)
+    WordWatcher.serialized_regexps_for_action(:censor)
   end
 
   def custom_emoji_translation
@@ -285,11 +286,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.regexps_for_action(:replace, engine: :js)
+    WordWatcher.regexps_for_action(:replace)
   end
 
   def watched_words_link
-    WordWatcher.regexps_for_action(:link, engine: :js)
+    WordWatcher.regexps_for_action(:link)
   end
 
   def categories
@@ -414,6 +415,10 @@ class SiteSerializer < ApplicationSerializer
 
   def include_admin_config_routes?
     scope.is_admin?
+  end
+
+  def email_configured
+    GlobalSetting.smtp_address.present?
   end
 
   def full_name_required_for_signup

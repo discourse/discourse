@@ -7,7 +7,7 @@
 zh_CN:
   discourse_subscriptions:
     customer_not_found: 找不到客户
-    subscription_not_found: 未找到订阅
+    subscription_not_found: 找不到订阅
     card:
       declined: 银行卡被拒绝
       invalid: 卡片无效

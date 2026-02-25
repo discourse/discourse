@@ -62,7 +62,7 @@ zh_CN:
         categories_list:
           title: "类别列表"
         topic_link:
-          title: "主题链接和状态"
+          title: "话题链接和状态"
         topic_list_item:
           title: "话题列表项"
         topic_statuses:

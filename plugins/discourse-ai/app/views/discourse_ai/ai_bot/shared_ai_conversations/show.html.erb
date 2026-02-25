@@ -36,7 +36,7 @@
     <section>
       <header class="page-header">
         <h1><%= @shared_conversation.title %></h1>
-        <time datetime="<%= @shared_conversation.populated_context.first.created_at.iso8601 %>"><%= @shared_conversation.populated_context.first.created_at.strftime('%d %B %Y') %></time>
+        <time datetime="<%= @shared_conversation.populated_context.first.created_at.iso8601 %>"><%= I18n.l(@shared_conversation.populated_context.first.created_at, format: :date_only) %></time>
       </header>
 
       <% @shared_conversation.populated_context.each do |post| %>

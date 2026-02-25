@@ -69,6 +69,7 @@ cs:
       starred: "Oblíbené"
       starred_channels: "Oblíbené kanály"
       starred_channels_empty: "Zatím jste neoznačili žádné kanály jako oblíbené. Ty se zde objeví pro rychlejší přístup."
+      pinned: "Připnuto"
       browse_all_channels: "Procházet všechny kanály"
       see_in: "Zobrazit v"
       open_channel_menu: "Otevřít nabídku kanálu"

@@ -49,13 +49,6 @@ module DiscourseAi
             end
           end
         end
-
-        def anthropic_cache_headers
-          caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
-          return {} if caching_mode == "never"
-
-          { "anthropic-beta" => "prompt-caching-2024-07-31" }
-        end
       end
     end
   end

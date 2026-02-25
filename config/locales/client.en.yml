@@ -318,6 +318,7 @@ en:
     skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+    emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
@@ -756,18 +757,18 @@ en:
       filtered_flagged_by: "Flagged by"
       unknown:
         title:
-          one: "You have pending reviewables from disabled plugin:"
-          other: "You have pending reviewables from disabled plugins:"
+          one: "You have pending review queue items from disabled plugin:"
+          other: "You have pending review queue items from disabled plugins:"
         instruction: "They cannot be properly displayed until you enable the relevant plugin. Please enable the plugin and refresh the page. Alternatively, you can ignore them. <a href='%{url}' target='_blank'>Learn more...</a>"
         reviewable_unknown_source: "%{reviewableType} (unknown plugin)"
         reviewable_known_source: "%{reviewableType} (from the '%{pluginName}' plugin)"
         ignore_all: "Ignore all"
         enable_plugins: "Enable plugins"
-        delete_confirm: "Are you sure you want to delete all reviews created by disabled plugins?"
-        ignore_success: "All reviews created by disabled plugins have been deleted."
+        delete_confirm: "Are you sure you want to delete all review queue items created by disabled plugins?"
+        ignore_success: "All review queue items created by disabled plugins have been deleted."
       explain:
         why: "explain why this item ended up in the queue"
-        title: "Reviewable Scoring"
+        title: "Review Queue Item Scoring"
         formula: "Formula"
         subtotal: "Subtotal"
         total: "Total"
@@ -781,10 +782,10 @@ en:
           title: "Users whose flags have been historically agreed with are given a bonus."
         trust_level_bonus:
           name: "trust level"
-          title: "Reviewable items created by higher trust level users have a higher score."
+          title: "Flags created by higher trust level users have a higher score."
         type_bonus:
           name: "type bonus"
-          title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+          title: "Certain flag types can be assigned a bonus by staff to make them a higher priority."
       revise_and_reject_post:
         title: "Revise"
         reason: "Reason"
@@ -793,7 +794,7 @@ en:
         custom_reason: "Give a clear description of the reason"
         other_reason: "Other..."
         optional: "optional"
-      stale_help: "This reviewable has been resolved by <b>%{username}</b>."
+      stale_help: "This item has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -3153,6 +3154,7 @@ en:
       upload_description: "enter upload description here"
       olist_title: "Numbered list"
       ulist_title: "Bulleted list"
+      list_title: "Lists"
       list_item: "List item"
       toggle_direction: "Toggle direction"
       apply_wrap_title: "Apply wrap"
@@ -3544,8 +3546,6 @@ en:
         max_views:
           placeholder: maximum
           aria_label: filter by maximum views
-        additional_options:
-          label: "Filter by post count and topic views"
 
     hamburger_menu: "Navigation menu"
     new_item: "new"
@@ -4353,7 +4353,9 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
-        manage: "Manage translations (%{count} existing)"
+        manage:
+          one: "Manage translations (%{count} existing)"
+          other: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
@@ -5903,9 +5905,16 @@ en:
 
       reports:
         title: "List of available reports"
-        meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
         back: "Back to all reports"
+        group_engagement: "Engagement"
+        group_traffic: "Traffic"
+        group_members: "Members"
+        group_content: "Content & Health"
+        group_moderation: "Moderation"
+        group_security: "Security"
+        group_other: "Other"
+        legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
       config_sections:
         account:
@@ -5952,7 +5961,7 @@ en:
         enabled_for_options:
           no_one: "No one"
           everyone: "Everyone"
-          staff: "Staff only"
+          staff: "%{staffGroupName} only"
           specific_groups: "Specific group(s)"
           specific_groups_with_group_names:
             one: "the group %{groupNames}"
@@ -5975,7 +5984,7 @@ en:
           all: "All"
           enabled_all: "All enabled states"
           enabled: "Enabled"
-          enabled_for_staff: "Enabled for staff"
+          enabled_for_staff: "Enabled for %{staffGroupName}"
           enabled_for_specific_groups: "Enabled for specific groups"
           disabled: "Disabled"
           impact_type_all: "All impact types"
@@ -6066,7 +6075,7 @@ en:
               help_text: "Recommended size is 600 x 80 pixels."
             large_icon:
               title: "Square icon"
-              description: "A squared version of the logo image appears at the top of the administration and is also the mobile home screen app logo."
+              description: "A square version of the logo image appears at the top of the site and is also the mobile app logo."
               help_text: "Recommended size is 512 x 512 pixels."
             square_icon_dark:
               required: "Use a different square icon for dark mode?"
@@ -6256,7 +6265,7 @@ en:
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
           sub_pages:
             settings:
-              title: "Dashboard settings"
+              title: "Settings"
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
@@ -6414,22 +6423,6 @@ en:
         result_count:
           one: '%{count} result for "%{filter}"'
           other: '%{count} results for "%{filter}"'
-        result_types:
-          page:
-            one: "Page"
-            other: "Pages"
-          report:
-            one: "Report"
-            other: "Reports"
-          setting:
-            one: "Setting"
-            other: "Settings"
-          theme:
-            one: "Theme"
-            other: "Themes"
-          component:
-            one: "Component"
-            other: "Components"
 
       new_features:
         title: "What's new?"
@@ -8575,6 +8568,7 @@ en:
         field_types:
           text: "Text"
           textarea: "Textarea"
+          date: "Date"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"

@@ -38,6 +38,8 @@ ar:
           title: "نظام الخطوط"
         colors:
           title: "الألوان"
+        dialog:
+          title: "حوار"
         icons:
           title: "الأيقونات"
           full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
@@ -59,6 +61,8 @@ ar:
           title: "التنقّل الرأسي"
         categories_list:
           title: "قائمة الفئات"
+        topic_link:
+          title: "رابط الموضوع والحالة"
         topic_list_item:
           title: "العنصر في قائمة الموضوعات"
         topic_statuses:
@@ -99,6 +103,8 @@ ar:
           title: "أيقونات الترويسة"
         spinners:
           title: "المُنزلقات"
+        otp:
+          title: "رمز التحقق لمرة واحدة"
         empty_state:
           title: "حالة فارغة"
         tooltips:

@@ -8,6 +8,7 @@ de:
   reports:
     currently_away:
       title: Derzeit abwesende Benutzer
+      description: "Benutzer, die aktuell im Urlaub oder abwesend sind. Diese können nach Gruppenmitgliedschaft gefiltert werden."
       labels:
         username: Benutzername
   discourse_automation:
@@ -87,7 +88,7 @@ de:
           raw_invitees:
             only_group: "Ein Ereignis akzeptiert nur Gruppennamen."
           ends_at_before_starts_at: "Ein Ereignis kann nicht enden, bevor es beginnt."
-          max_attendees_reached: "Diese Veranstaltung ist ausgebucht."
+          max_attendees_reached: "Dieses Ereignis ist ausgebucht."
           start_must_be_present_and_a_valid_date: "Ein Ereignis erfordert ein gültiges Startdatum."
           end_must_be_a_valid_date: "Das Enddatum muss ein gültiges Datum sein."
           invalid_recurrence: "Die Wiederholung muss einer der folgenden Werte sein: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

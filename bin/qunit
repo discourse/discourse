@@ -250,8 +250,8 @@ class QunitRunner
 
     args = []
 
+    run_ember_build unless reuse_build
     if @qunit_path
-      run_theme_build(unless_build_reused: reuse_build)
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
       args += %w[pnpm testem ci -f testem.js]
       args += ["--parallel", parallel.to_s] if parallel
@@ -262,7 +262,7 @@ class QunitRunner
       args += ["--file-path", file_path_filter] if file_path_filter
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
       args += ["--random", resolved_seed]
-      args += %w[--path dist] if reuse_build
+      args += %w[--path dist]
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
@@ -394,7 +394,15 @@ class QunitRunner
       puts "[dry-run] skipping pnpm install"
       return
     end
-    system("pnpm", "install", exception: true)
+
+    node_modules_outdated =
+      begin
+        File.read("node_modules/.pnpm/lock.yaml") != File.read("pnpm-lock.yaml")
+      rescue Errno::ENOENT
+        true
+      end
+
+    system("pnpm", "install", exception: true) if node_modules_outdated
   end
 
   def detect_browser
@@ -465,13 +473,11 @@ class QunitRunner
     puts "Rails server is warmed up"
   end
 
-  def run_theme_build(unless_build_reused: false)
+  def run_ember_build
     if @dry_run
       puts "[dry-run] skipping ember build for themes"
       return
     end
-
-    return if unless_build_reused
 
     system("pnpm", "ember", "build", chdir: frontend_dir, exception: true)
   end

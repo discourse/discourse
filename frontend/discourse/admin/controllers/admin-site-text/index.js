@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ReseedModal from "discourse/admin/components/modal/reseed";
 import discourseDebounce from "discourse/lib/debounce";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -26,6 +27,7 @@ export default class AdminSiteTextIndexController extends Controller {
 
   @tracked searching = false;
   @tracked preferred = false;
+  @tracked canLoadMore = true;
 
   queryParams = [
     "q",
@@ -35,6 +37,17 @@ export default class AdminSiteTextIndexController extends Controller {
     "untranslated",
     "onlySelectedLocale",
   ];
+
+  #page = 0;
+  #results = new TrackedArray();
+
+  get siteTexts() {
+    return this.#results.flat();
+  }
+
+  get extras() {
+    return this.model?.extras ?? {};
+  }
 
   get resolvedOverridden() {
     return [true, "true"].includes(this.overridden) ?? false;
@@ -72,10 +85,26 @@ export default class AdminSiteTextIndexController extends Controller {
         locale: this.resolvedLocale,
         untranslated: this.resolvedUntranslated,
         only_selected_locale: this.resolvedOnlySelectedLocale,
+        page: this.#page,
       });
+
+      if (this.#page === 0) {
+        this.#results.length = 0;
+      }
+
+      this.#results.push(this.model.content);
+      this.canLoadMore = this.model.extras?.has_more ?? false;
     } finally {
       this.searching = false;
     }
+  }
+
+  resetSearch() {
+    this.#page = 0;
+    this.#results.length = 0;
+    this.canLoadMore = true;
+    this.searching = true;
+    this._performSearch();
   }
 
   get availableLocales() {
@@ -101,64 +130,51 @@ export default class AdminSiteTextIndexController extends Controller {
 
   @action
   toggleOverridden() {
-    if (this.resolvedOverridden) {
-      this.overridden = null;
-    } else {
-      this.overridden = true;
-    }
-    this.searching = true;
-    discourseDebounce(this, this._performSearch, 400);
+    this.overridden = this.resolvedOverridden ? null : true;
+    this.resetSearch();
   }
 
   @action
   toggleOutdated() {
-    if (this.resolvedOutdated) {
-      this.outdated = null;
-    } else {
-      this.outdated = true;
-    }
-    this.searching = true;
-    discourseDebounce(this, this._performSearch, 400);
+    this.outdated = this.resolvedOutdated ? null : true;
+    this.resetSearch();
   }
 
   @action
   toggleUntranslated() {
-    if (this.resolvedUntranslated) {
-      this.untranslated = null;
-    } else {
-      this.untranslated = true;
-    }
-    this.searching = true;
-    discourseDebounce(this, this._performSearch, 400);
+    this.untranslated = this.resolvedUntranslated ? null : true;
+    this.resetSearch();
   }
 
   @action
   toggleOnlySelectedLocale() {
-    if (this.resolvedOnlySelectedLocale) {
-      this.onlySelectedLocale = null;
-    } else {
-      this.onlySelectedLocale = true;
-    }
-    this.searching = true;
-    discourseDebounce(this, this._performSearch, 400);
+    this.onlySelectedLocale = this.resolvedOnlySelectedLocale ? null : true;
+    this.resetSearch();
   }
 
   @action
   search() {
     const q = this.q;
     if (q !== lastSearch) {
-      this.searching = true;
-      discourseDebounce(this, this._performSearch, 400);
       lastSearch = q;
+      discourseDebounce(this, this.resetSearch, 400);
     }
   }
 
   @action
   updateLocale(value) {
-    this.searching = true;
     this.locale = value;
+    this.resetSearch();
+  }
 
-    discourseDebounce(this, this._performSearch, 400);
+  @action
+  loadMore() {
+    if (this.searching || !this.canLoadMore) {
+      return;
+    }
+    this.#page += 1;
+    this.searching = true;
+    this._performSearch();
   }
 
   @action

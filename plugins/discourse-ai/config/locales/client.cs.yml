@@ -144,8 +144,9 @@ cs:
         save: "Uložit"
         remove_parameter: "Smazat"
         parameter_required: "Povinné"
+        credential_not_set: "(nenastaveno)"
         edit: "Upravit"
-        test: "Spustit test"
+        test: "Test"
         delete: "Smazat"
         test_modal:
           run: "Spustit test"
@@ -158,6 +159,7 @@ cs:
         edit: "Upravit"
         delete: "Smazat"
         embedding: "Zabudování"
+        tool: "Nástroj"
       llms:
         display_name: "Název"
         save: "Uložit"
@@ -178,6 +180,9 @@ cs:
         usage:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
+        model_description:
+          anthropic-claude-opus-4-6: "Nejinteligentnější model společnosti Anthropic"
+          anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"
         tests:
@@ -267,10 +272,6 @@ cs:
           CDCK: "CDCK"
           fake: "Přizpůsobené"
         semantic_search_results:
-          toggle: "Zobrazeno %{count} výsledků nalezených pomocí AI"
-          toggle_hidden: "Skryto %{count} výsledků nalezených pomocí AI"
-          none: "Je nám líto, naše vyhledávání AI nenalezlo žádná odpovídající témata"
-          new: "Stisknutím tlačítka „hledat“ začněte hledat nové výsledky pomocí AI"
           unavailable: "Výsledky AI nejsou k dispozici"
         semantic_search_tooltips:
           results_explanation: "Pokud je tato funkce povolena, budou níže přidány další výsledky vyhledávání pomocí umělé inteligence."

@@ -26,7 +26,7 @@ import { addGroupPostSmallActionCode } from "discourse/components/post/small-act
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
-} from "discourse/components/reviewable-refresh/item";
+} from "discourse/components/reviewable/item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
@@ -117,7 +117,10 @@ import Composer, {
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
 import { _addTrackedPostProperty } from "discourse/models/post";
-import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
+import {
+  _addTrackedTopicProperty,
+  registerCustomLastUnreadUrlCallback,
+} from "discourse/models/topic";
 import {
   addSaveableUserField,
   addSaveableUserOptionField,
@@ -737,6 +740,20 @@ class _PluginApi {
   }
 
   /**
+   * Adds tracked properties to the topic model.
+   *
+   * This method is used to mark properties as tracked for topic updates.
+   *
+   * You'll need to do this if you've added properties to a Topic and need them to be
+   * automatically updated in the UI when there are changes in the model.
+   *
+   * @param {...string} names - The names of the properties to be tracked.
+   */
+  addTrackedTopicProperties(...names) {
+    names.forEach((name) => _addTrackedTopicProperty(name));
+  }
+
+  /**
    * Decommissioned API
    **/
   addPostMenuButton() {
@@ -848,6 +865,8 @@ class _PluginApi {
    * @returns {boolean} - Whether the button should be displayed.
    *
    * @param {Object} opts - An Object.
+   * @param {string} [opts.menu] - Target menu: 'list' for list dropdown, omit for options popup (default).
+   * @param {string} [opts.name] - Unique identifier for the option.
    * @param {string} opts.icon - The name of the FontAwesome icon to display for the button.
    * @param {string} opts.label - The I18n translation key for the button's label.
    * @param {string} opts.shortcut - The keyboard shortcut to apply, NOTE: this will unconditionally add CTRL/META key (eg: m means CTRL+m).
@@ -864,6 +883,18 @@ class _PluginApi {
    *   shortcut: 'm',
    *   condition: (composer) => {
    *     return composer.editingPost;
+   *   }
+   * });
+   *
+   * @example
+   * // Add option to list dropdown
+   * api.addComposerToolbarPopupMenuOption({
+   *   menu: 'list',
+   *   name: 'my-custom-list',
+   *   icon: 'list-check',
+   *   label: 'my_plugin.custom_list',
+   *   action: (toolbarEvent) => {
+   *     toolbarEvent.applyList("- [x] ", "list_item");
    *   }
    * });
    **/

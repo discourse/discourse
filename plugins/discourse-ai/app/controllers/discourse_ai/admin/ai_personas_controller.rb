@@ -140,6 +140,45 @@ module DiscourseAi
       end
 
       def stream_reply
+        custom_tools = nil
+        tool_results = nil
+        resume_token = params[:resume_token].to_s
+
+        begin
+          custom_tools = stream_reply_custom_tools
+          tool_results = stream_reply_tool_results
+        rescue ArgumentError => e
+          return render_json_error e.message
+        end
+
+        if resume_token.present?
+          # This is a best-effort fast-fail check. The token can still expire between this
+          # check and async execution, which is handled again inside the session loader.
+          if !DiscourseAi::AiBot::StreamReplyCustomToolsSession.resume_state_exists?(resume_token)
+            return render_json_error(I18n.t("discourse_ai.errors.invalid_stream_resume_token"))
+          end
+
+          if tool_results.blank?
+            return render_json_error(I18n.t("discourse_ai.errors.no_tool_results_specified"))
+          end
+
+          hijack = request.env["rack.hijack"]
+          io = hijack.call
+
+          DiscourseAi::AiBot::ResponseHttpStreamer.queue_streamed_reply(
+            io: io,
+            persona: nil,
+            user: nil,
+            topic: nil,
+            query: "",
+            custom_instructions: "",
+            current_user: current_user,
+            resume_token: resume_token,
+            tool_results: tool_results,
+          )
+          return
+        end
+
         persona =
           AiPersona.find_by(name: params[:persona_name]) ||
             AiPersona.find_by(id: params[:persona_id])
@@ -196,12 +235,17 @@ module DiscourseAi
           query: params[:query].to_s,
           custom_instructions: params[:custom_instructions].to_s,
           current_user: current_user,
+          custom_tools: custom_tools,
         )
       end
 
       private
 
       AI_STREAM_CONVERSATION_UNIQUE_ID = "ai-stream-conversation-unique-id"
+      MAX_STREAM_REPLY_CUSTOM_TOOLS = 20
+      MAX_STREAM_REPLY_TOOL_RESULTS = 20
+      MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES = 10_000
+      MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES = 100 * 1024
 
       def stage_user
         unique_id = params[:user_unique_id].to_s
@@ -224,6 +268,134 @@ module DiscourseAi
           user.save!
           user
         end
+      end
+
+      def stream_reply_custom_tools
+        return [] if !params.key?(:custom_tools)
+
+        raw_tools = params[:custom_tools]
+        return [] if raw_tools.blank?
+
+        if !raw_tools.is_a?(Array)
+          raise ArgumentError,
+                I18n.t(
+                  "discourse_ai.errors.invalid_custom_tools",
+                  details: I18n.t("discourse_ai.errors.expected_array"),
+                )
+        end
+
+        if raw_tools.size > MAX_STREAM_REPLY_CUSTOM_TOOLS
+          raise ArgumentError,
+                I18n.t(
+                  "discourse_ai.errors.too_many_custom_tools",
+                  max: MAX_STREAM_REPLY_CUSTOM_TOOLS,
+                )
+        end
+
+        parsed =
+          raw_tools.map do |tool|
+            hash = normalize_hash_param(tool, key: :custom_tools)
+            parameters = hash["parameters"]
+            hash["parameters"] = parameters.reject(&:blank?) if parameters.is_a?(Array)
+            definition = nil
+            begin
+              definition =
+                DiscourseAi::Completions::ToolDefinition.from_hash(hash.deep_symbolize_keys)
+            rescue ArgumentError, NoMethodError => e
+              raise ArgumentError,
+                    I18n.t("discourse_ai.errors.invalid_custom_tools", details: e.message)
+            end
+            definition_hash = definition.to_h.stringify_keys
+            if definition_hash.to_json.bytesize > MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES
+              raise ArgumentError,
+                    I18n.t(
+                      "discourse_ai.errors.custom_tool_definition_too_large",
+                      max: MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES,
+                    )
+            end
+            definition_hash
+          end
+
+        names = parsed.map { |tool| tool["name"] }
+        duplicate_names = names.tally.select { |_, count| count > 1 }.keys
+        if duplicate_names.present?
+          raise ArgumentError,
+                I18n.t(
+                  "discourse_ai.errors.duplicate_custom_tools",
+                  names: duplicate_names.join(", "),
+                )
+        end
+
+        parsed
+      end
+
+      def stream_reply_tool_results
+        if params.key?(:tool_results) && params.key?(:tool_result)
+          raise ArgumentError, I18n.t("discourse_ai.errors.ambiguous_tool_results")
+        end
+
+        raw_results = params.key?(:tool_results) ? params[:tool_results] : params[:tool_result]
+        return [] if raw_results.blank?
+
+        raw_results = [raw_results] if !raw_results.is_a?(Array)
+
+        if raw_results.size > MAX_STREAM_REPLY_TOOL_RESULTS
+          raise ArgumentError,
+                I18n.t(
+                  "discourse_ai.errors.too_many_tool_results",
+                  max: MAX_STREAM_REPLY_TOOL_RESULTS,
+                )
+        end
+
+        raw_results.map do |tool_result|
+          hash = normalize_hash_param(tool_result, key: :tool_results)
+          id = hash["tool_call_id"].presence || hash["id"].presence
+          if id.blank?
+            raise ArgumentError,
+                  I18n.t("discourse_ai.errors.invalid_tool_results", details: "tool_call_id")
+          end
+
+          if !hash.key?("content")
+            raise ArgumentError,
+                  I18n.t("discourse_ai.errors.invalid_tool_results", details: "content")
+          end
+
+          content = hash["content"]
+          if content.nil?
+            raise ArgumentError,
+                  I18n.t("discourse_ai.errors.invalid_tool_results", details: "content")
+          end
+          content_bytesize = content.is_a?(String) ? content.bytesize : content.to_json.bytesize
+
+          if content_bytesize > MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES
+            raise ArgumentError,
+                  I18n.t(
+                    "discourse_ai.errors.tool_result_content_too_large",
+                    max: MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES,
+                  )
+          end
+
+          { "tool_call_id" => id.to_s, "content" => content }
+        rescue JSON::GeneratorError
+          raise ArgumentError,
+                I18n.t("discourse_ai.errors.invalid_tool_results", details: "content")
+        end
+      end
+
+      def normalize_hash_param(raw, key:)
+        hash = raw
+        hash = hash.to_unsafe_h if hash.is_a?(ActionController::Parameters)
+
+        if !hash.is_a?(Hash)
+          raise ArgumentError,
+                I18n.t(
+                  "discourse_ai.errors.invalid_stream_param",
+                  key: key,
+                  details: I18n.t("discourse_ai.errors.expected_object"),
+                )
+        end
+
+        hash.stringify_keys
       end
 
       def find_ai_persona

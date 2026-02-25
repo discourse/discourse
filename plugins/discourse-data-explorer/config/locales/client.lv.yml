@@ -7,7 +7,9 @@
 lv:
   js:
     explorer:
+      default_query: "Noklusējums"
       or: "vai"
+      create: "Izveidot"
       import:
         label: "Importēt"
       help:
@@ -19,7 +21,6 @@ lv:
           yes: "Jā"
           no: "Nē"
       export: "Eksportēt"
-      save: "Saglabāt izmaiņas"
       edit: "Labot"
       delete: "Dzēst"
       query_groups: "Grupas"

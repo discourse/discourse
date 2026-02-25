@@ -37,6 +37,7 @@ et:
       cancel: "Tühista"
       cancel_reply: "Tühista vastus"
       chat_channels: "Kanalid"
+      pinned: "Esiletõstetud"
       browse_all_channels: "Sirvi kõiki kanaleid"
       channel_settings:
         edit: "Muuda"

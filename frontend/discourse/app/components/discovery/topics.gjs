@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -26,8 +25,6 @@ export default class DiscoveryTopics extends Component {
   @service documentTitle;
   @service currentUser;
   @service topicTrackingState;
-
-  @tracked loadingNew;
 
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;

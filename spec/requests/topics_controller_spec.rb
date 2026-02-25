@@ -2259,6 +2259,25 @@ RSpec.describe TopicsController do
             expect(response.status).to eq(200)
             expect(topic.reload.tags).to contain_exactly(tag)
           end
+
+          it "does not create a revision when tags param is empty and topic has no tags" do
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [] }, as: :json
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(200)
+          end
+
+          it "creates a revision when all tags are removed from a topic" do
+            topic.tags << tag
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [] }, as: :json
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to be_empty
+          end
         end
 
         context "when topic is private" do
@@ -4187,6 +4206,7 @@ RSpec.describe TopicsController do
         SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
         tag1 = Fabricate(:tag)
         topic.update!(user:)
+        _first_post = Fabricate(:post, topic:, user:)
 
         put "/topics/bulk.json",
             params: {
@@ -4206,6 +4226,7 @@ RSpec.describe TopicsController do
         SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
         tag1 = Fabricate(:tag)
         topic.update!(user:)
+        _first_post = Fabricate(:post, topic:, user:)
 
         put "/topics/bulk.json",
             params: {

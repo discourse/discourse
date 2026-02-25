@@ -21,6 +21,17 @@ RSpec.describe DiscourseAi::Admin::AiSecretsController do
       expect(json["ai_secrets"][0]["secret"]).to eq("********")
     end
 
+    it "includes tool usage in used_by" do
+      tool = Fabricate(:ai_tool, secret_contracts: [{ alias: "api_key" }])
+      AiToolSecretBinding.create!(ai_tool: tool, alias: "api_key", ai_secret_id: ai_secret.id)
+
+      get "/admin/plugins/discourse-ai/ai-secrets.json"
+
+      json = response.parsed_body
+      used_by = json["ai_secrets"][0]["used_by"]
+      expect(used_by.map { |item| item["type"] }).to include("tool")
+    end
+
     it "requires admin" do
       sign_in(user)
       get "/admin/plugins/discourse-ai/ai-secrets.json"
@@ -113,6 +124,16 @@ RSpec.describe DiscourseAi::Admin::AiSecretsController do
       Fabricate(:llm_model, ai_secret: ai_secret)
 
       delete "/admin/plugins/discourse-ai/ai-secrets/#{ai_secret.id}.json"
+      expect(response.status).to eq(409)
+      expect(AiSecret.find_by(id: ai_secret.id)).to be_present
+    end
+
+    it "refuses to delete a secret used by a tool binding" do
+      tool = Fabricate(:ai_tool, secret_contracts: [{ alias: "api_key" }])
+      AiToolSecretBinding.create!(ai_tool: tool, alias: "api_key", ai_secret_id: ai_secret.id)
+
+      delete "/admin/plugins/discourse-ai/ai-secrets/#{ai_secret.id}.json"
+
       expect(response.status).to eq(409)
       expect(AiSecret.find_by(id: ai_secret.id)).to be_present
     end

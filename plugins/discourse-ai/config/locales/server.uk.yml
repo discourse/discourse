@@ -282,6 +282,16 @@ uk:
           name: "Почніть з чистого аркуша..."
       name:
         characters: "повинні містити тільки цифри, літери та підкреслення"
+      secret_contracts:
+        invalid_payload: "Таємні контракти повинні бути масивом."
+        invalid_contract: "Секретний контракт за індексом %{index} недійсний."
+        alias_required: "Секретний контракт за індексом %{index} повинен містити псевдонім."
+        alias_too_long: "Секретний псевдонім `%{alias}` занадто довгий."
+        alias_invalid: "Секретний псевдонім `%{alias}` має містити лише цифри, літери та символи підкреслення."
+        alias_not_unique: "Секретний псевдонім `%{alias}` дублюється."
+      secret_bindings:
+        invalid_payload: "Секретні зв'язки повинні бути масивом."
+        secret_not_found: "Вибраний обліковий запис не існує."
     ai_helper:
       errors:
         completion_request_failed: "Щось пішло не так під час спроби надати пропозиції. Будь ласка, спробуйте ще раз."
@@ -677,8 +687,6 @@ uk:
         disable_embeddings: "Спершу потрібно вимкнути функцію «AI embeddings enabled»."
         choose_model: "Спочатку встановіть 'ai embeddings selected model'."
         model_test_failed: "Нам не вдалося створити тестове вбудовування з цією моделлю. Перевірте, чи правильно налаштовано."
-    secrets:
-      delete_failed_in_use: "Цей обліковий запис наразі використовується одним або кількома LLM або вбудовуваннями і не може бути видалений."
     llm_models:
       missing_provider_param: "%{param} не може бути пустим"
       secret_required: "Необхідно вибрати обліковий запис"

@@ -28,25 +28,25 @@ describe DiscourseDataExplorer::QueryController do
       before { SiteSetting.data_explorer_enabled = false }
 
       it "denies every request" do
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(404)
 
-        get "/admin/plugins/explorer/schema.json"
+        get "/admin/plugins/discourse-data-explorer/schema.json"
         expect(response.status).to eq(404)
 
-        get "/admin/plugins/explorer/queries/3.json"
+        get "/admin/plugins/discourse-data-explorer/queries/3.json"
         expect(response.status).to eq(404)
 
-        post "/admin/plugins/explorer/queries.json", params: { id: 3 }
+        post "/admin/plugins/discourse-data-explorer/queries.json", params: { id: 3 }
         expect(response.status).to eq(404)
 
-        post "/admin/plugins/explorer/queries/3/run.json"
+        post "/admin/plugins/discourse-data-explorer/queries/3/run.json"
         expect(response.status).to eq(404)
 
-        put "/admin/plugins/explorer/queries/3.json"
+        put "/admin/plugins/discourse-data-explorer/queries/3.json"
         expect(response.status).to eq(404)
 
-        delete "/admin/plugins/explorer/queries/3.json"
+        delete "/admin/plugins/discourse-data-explorer/queries/3.json"
         expect(response.status).to eq(404)
       end
     end
@@ -54,7 +54,7 @@ describe DiscourseDataExplorer::QueryController do
     describe "#index" do
       it "behaves nicely with no user created queries" do
         DiscourseDataExplorer::Query.destroy_all
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
@@ -63,7 +63,7 @@ describe DiscourseDataExplorer::QueryController do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "B")
         make_query("SELECT 1 as value", name: "A")
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json["queries"].length).to eq(
           DiscourseDataExplorer::Queries.default.count + 2,
@@ -77,11 +77,41 @@ describe DiscourseDataExplorer::QueryController do
         make_query("SELECT 1 as value", name: "A", hidden: false)
         make_query("SELECT 1 as value", name: "B", hidden: true)
         make_query("SELECT 1 as value", name: "C", hidden: true)
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json["queries"].length).to eq(
           DiscourseDataExplorer::Queries.default.count + 1,
         )
+      end
+
+      it "merges default query data with persisted last_run_at and groups" do
+        freeze_time
+
+        post "/admin/plugins/discourse-data-explorer/queries/-1/run.json"
+        expect(response.status).to eq(200)
+
+        # Run persists the default query in the local DB; update it to assert index merges it
+        group = Fabricate(:group)
+        persisted = DiscourseDataExplorer::Query.find_by(id: -1)
+        persisted.update!(last_run_at: 3.days.ago, groups: [group])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json"
+        expect(response.status).to eq(200)
+
+        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
+        default_in_response = response_json["queries"].find { |q| q["id"] == -1 }
+        expect(default_in_response).to be_present
+        expect(Time.parse(default_in_response["last_run_at"])).to eq_time(3.days.ago)
+        expect(default_in_response["group_ids"]).to eq([group.id])
+      end
+
+      it "doesn't show double-ups of default queries" do
+        post "/admin/plugins/discourse-data-explorer/queries/-1/run.json"
+        expect(response.status).to eq(200)
+
+        get "/admin/plugins/discourse-data-explorer/queries.json"
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
     end
 
@@ -91,7 +121,7 @@ describe DiscourseDataExplorer::QueryController do
 
       it "allows group to access system query" do
         query = DiscourseDataExplorer::Query.find(-4)
-        put "/admin/plugins/explorer/queries/#{query.id}.json",
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
             params: {
               "query" => {
                 "name" => query.name,
@@ -110,7 +140,7 @@ describe DiscourseDataExplorer::QueryController do
 
       it "returns a proper json error for invalid updates" do
         query = DiscourseDataExplorer::Query.find(-4)
-        put "/admin/plugins/explorer/queries/#{query.id}",
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
             params: {
               "query" => {
                 "name" => "",
@@ -125,14 +155,14 @@ describe DiscourseDataExplorer::QueryController do
 
     describe "#destroy" do
       it "returns 404 when query does not exist" do
-        delete "/admin/plugins/explorer/queries/999999.json"
+        delete "/admin/plugins/discourse-data-explorer/queries/999999.json"
         expect(response.status).to eq(404)
       end
 
       it "hides the query" do
         query = make_query("SELECT 1 as value")
 
-        delete "/admin/plugins/explorer/queries/#{query.id}.json"
+        delete "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
 
         expect(response.status).to eq(200)
         expect(query.reload.hidden).to eq(true)
@@ -142,7 +172,7 @@ describe DiscourseDataExplorer::QueryController do
     describe "#run" do
       def run_query(id, params = {}, explain = false)
         params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post "/admin/plugins/explorer/queries/#{id}/run.json",
+        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
              params: {
                params: params.to_json,
                explain: explain,
@@ -209,7 +239,7 @@ describe DiscourseDataExplorer::QueryController do
         SQL
 
         # Test with hash format
-        post "/admin/plugins/explorer/queries/#{query.id}/run.json",
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
              params: {
                params: {
                  foo: 42,
@@ -226,7 +256,11 @@ describe DiscourseDataExplorer::QueryController do
       it "can accept empty hash for parameters" do
         query = make_query "SELECT 23 as my_value"
 
-        post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { params: {} }
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               params: {
+               },
+             }
         expect(response.status).to eq(200)
         expect(response_json["success"]).to eq(true)
         expect(response_json["columns"]).to eq(["my_value"])
@@ -235,7 +269,7 @@ describe DiscourseDataExplorer::QueryController do
 
       context "when rate limited" do
         def unlimited_request(query_id, headers = {})
-          post "/admin/plugins/explorer/queries/#{query_id}/run.json",
+          post "/admin/plugins/discourse-data-explorer/queries/#{query_id}/run.json",
                params: {
                  params: {}.to_json,
                },
@@ -245,7 +279,7 @@ describe DiscourseDataExplorer::QueryController do
         end
 
         def limited_request(query_id, headers = {})
-          post "/admin/plugins/explorer/queries/#{query_id}/run.json",
+          post "/admin/plugins/discourse-data-explorer/queries/#{query_id}/run.json",
                params: {
                  params: {}.to_json,
                },
@@ -434,7 +468,10 @@ describe DiscourseDataExplorer::QueryController do
 
       it "can export data in CSV format" do
         query = make_query("SELECT 23 as my_value")
-        post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { download: 1 }
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               download: 1,
+             }
         expect(response.status).to eq(200)
       end
 
@@ -454,10 +491,16 @@ describe DiscourseDataExplorer::QueryController do
           run_query query.id
           expect(response_json["rows"].count).to eq(2)
 
-          post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: 1 }
+          post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+               params: {
+                 limit: 1,
+               }
           expect(response_json["rows"].count).to eq(1)
 
-          post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: "ALL" }
+          post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+               params: {
+                 limit: "ALL",
+               }
           expect(response_json["rows"].count).to eq(3)
         end
 
@@ -471,10 +514,13 @@ describe DiscourseDataExplorer::QueryController do
             SELECT id FROM posts
             SQL
 
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1 }
+            post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
+                 params: {
+                   download: 1,
+                 }
             expect(response.body.split("\n").count).to eq(3)
 
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv",
+            post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
                    limit: 1,
@@ -482,7 +528,7 @@ describe DiscourseDataExplorer::QueryController do
             expect(response.body.split("\n").count).to eq(2)
 
             # The value `ALL` is not supported in csv exports.
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv",
+            post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
                    limit: "ALL",
@@ -520,7 +566,7 @@ describe DiscourseDataExplorer::QueryController do
 
     it "cannot access admin endpoints" do
       query = make_query("SELECT 1 as value")
-      post "/admin/plugins/explorer/queries/#{query.id}/run.json"
+      post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json"
       expect(response.status).to eq(403)
     end
 
