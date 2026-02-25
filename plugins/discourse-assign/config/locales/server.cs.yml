@@ -25,6 +25,9 @@ cs:
     assign_allowed_on_groups: "Uživatelé v těchto skupinách mohou přidělovat témata a mohou jim být témata přidělována."
     enable_assign_status: "Ke každému úkolu přidat přizpůsobitelné stavové pole."
     assign_statuses: "Seznam stavů dostupných pro každý úkol. První stav je výchozí stav použitý pro každé nové přidělení."
+    ignore_solved_topics_in_assigned_reminder: "Zabránit tomu, aby připomenutí úkolů zahrnovala vyřešená témata. Relevantní pouze při použití pluginu discourse-assign."
+    assignment_status_on_solve: "Když je téma vyřešeno, aktualizujte všechny úkoly na tento stav."
+    assignment_status_on_unsolve: "Když je téma nevyřešené, aktualizujte všechna přiřazení na tento stav"
     errors:
       assign_statuses:
         too_few: "Musí být k dispozici alespoň dva různé stavy."

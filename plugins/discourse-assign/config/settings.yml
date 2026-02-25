@@ -47,3 +47,11 @@ discourse_assign:
     default: "New|In Progress|Done"
     allow_any: true
     validator: AssignStatusesValidator
+  ignore_solved_topics_in_assigned_reminder:
+    default: false
+  assignment_status_on_solve:
+    type: string
+    default: ""
+  assignment_status_on_unsolve:
+    type: string
+    default: ""

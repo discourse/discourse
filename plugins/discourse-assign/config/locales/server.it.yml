@@ -24,6 +24,9 @@ it:
     assign_allowed_on_groups: "Gli utenti in questi gruppi possono assegnare argomenti ed essere assegnati ad argomenti."
     enable_assign_status: "Aggiungi un campo di stato personalizzabile a ogni assegnazione."
     assign_statuses: "Elenco degli stati disponibili per ogni assegnazione. Il primo stato è quello predefinito applicato a ogni nuova assegnazione."
+    ignore_solved_topics_in_assigned_reminder: "Evita che i promemoria per le assegnazioni includano argomenti risolti. Rilevante solo quando si utilizza il plug-in discourse-assign."
+    assignment_status_on_solve: "Quando un argomento viene risolto, aggiorna tutte le assegnazioni a questo stato"
+    assignment_status_on_unsolve: "Quando la risoluzione di un argomento viene annullata, aggiorna tutte le assegnazioni a questo stato"
     errors:
       assign_statuses:
         too_few: "Devono essere disponibili almeno due stati diversi."

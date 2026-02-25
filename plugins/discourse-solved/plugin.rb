@@ -386,5 +386,4 @@ after_initialize do
 
   DiscourseDev::DiscourseSolved.populate(self)
   DiscourseAutomation::EntryPoint.inject(self) if defined?(DiscourseAutomation)
-  DiscourseAssign::EntryPoint.inject(self) if defined?(DiscourseAssign)
 end

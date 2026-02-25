@@ -25,6 +25,9 @@ pl_PL:
     assign_allowed_on_groups: "Użytkownicy w tych grupach mogą przypisywać tematy i być przydzielani do tematów."
     enable_assign_status: "Dodaj pole statusu, które można dostosować do każdego zadania."
     assign_statuses: "Lista statusów dostępnych dla każdego zadania. Pierwszy status to domyślny status stosowany do każdego nowego zadania."
+    ignore_solved_topics_in_assigned_reminder: "Zapobiegaj wyświetlaniu przypomnień o zadaniach, które nie obejmują rozwiązanych tematów. Dotyczy tylko korzystania z wtyczki discourse-assign."
+    assignment_status_on_solve: "Gdy temat zostanie rozwiązany, zaktualizuj wszystkie zadania do tego statusu"
+    assignment_status_on_unsolve: "Jeśli temat jest nierozwiązany, zaktualizuj wszystkie zadania do tego statusu"
     errors:
       assign_statuses:
         too_few: "Muszą być dostępne co najmniej dwa różne statusy."
