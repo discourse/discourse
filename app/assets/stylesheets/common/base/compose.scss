@@ -37,6 +37,10 @@ html.composer-open:not(.has-full-page-chat) {
   }
 }
 
+.composer-actions-dropdown {
+  z-index: 700;
+}
+
 #reply-control {
   position: fixed;
   display: flex;
@@ -218,8 +222,13 @@ html.composer-open:not(.has-full-page-chat) {
       }
     }
 
+    .composer-actions-trigger {
+      border-color: var(--input-border-color);
+    }
+
     .composer-action-title {
       display: flex;
+      gap: var(--space-2);
       align-items: center;
       width: auto;
       max-width: 100%;

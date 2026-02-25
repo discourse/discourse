@@ -481,7 +481,6 @@ en:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
 
-
       spread_the_word:
         title: "Spread the Word!"
         description: "Share a link with everyone in your network"
@@ -3196,6 +3195,9 @@ en:
         reply: Reply
         draft: Draft
         edit: Edit
+        reply_to_topic_composer_action:
+          label: Reply
+          desc: Reply to the topic, not any specific post
         reply_to_post:
           label: Reply to a post by %{postUsername}
           desc: Reply to a specific post
@@ -3213,7 +3215,7 @@ en:
           label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
-          label: "New topic"
+          label: "Create new topic"
           desc: Create a new topic
         create_personal_message:
           label: "New message"
