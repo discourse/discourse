@@ -26,8 +26,8 @@ module Onebox
         Discourse
           .cache
           .fetch("reddit_onebox_access_token", expires_in: 50.minutes) do
-            client_id = SiteSetting.reddit_onebox_client_id
-            client_secret = SiteSetting.reddit_onebox_client_secret
+            user = SiteSetting.reddit_onebox_client_id
+            password = SiteSetting.reddit_onebox_client_secret
 
             response =
               Excon.post(
@@ -37,8 +37,8 @@ module Onebox
                   "Content-Type" => "application/x-www-form-urlencoded",
                   "User-Agent" => Onebox::Helpers.user_agent,
                 },
-                user: client_id,
-                password: client_secret,
+                user:,
+                password:,
               )
 
             if response.status == 200
