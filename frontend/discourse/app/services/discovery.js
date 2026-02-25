@@ -37,6 +37,12 @@ export default class DiscoveryService extends Service {
     }
   }
 
+  get custom() {
+    if (this.onDiscoveryRoute) {
+      return this.router.currentRouteName === "discovery.custom";
+    }
+  }
+
   get #routeAttrs() {
     return this.router.currentRoute.attributes;
   }
