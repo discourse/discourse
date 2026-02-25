@@ -28,6 +28,67 @@ RSpec.describe TopicView do
     end
   end
 
+  describe "#reset_post_collection" do
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:post2) { Fabricate(:post, topic: topic) }
+    fab!(:post3) { Fabricate(:post, topic: topic) }
+
+    it "replaces the posts collection" do
+      tv = TopicView.new(topic.id, evil_trout)
+      original_posts = tv.posts.to_a
+
+      new_posts = [post3]
+      tv.reset_post_collection(posts: new_posts)
+
+      expect(tv.posts).to eq(new_posts)
+      expect(tv.posts).not_to eq(original_posts)
+    end
+
+    it "clears memoized state derived from the previous posts" do
+      tv = TopicView.new(topic.id, evil_trout)
+
+      tv.all_post_actions
+      tv.reviewable_counts
+      tv.mentioned_users
+      tv.category_group_moderator_user_ids
+      tv.primary_group_names
+      tv.last_post
+
+      tv.reset_post_collection(posts: [post2])
+
+      expect(tv.all_post_actions).to be_a(Hash)
+      expect(tv.last_post).to eq(post2)
+      expect(tv.mentioned_users).to eq({})
+      expect(tv.primary_group_names).to be_a(Hash)
+    end
+
+    it "allows preload hooks to run on the new posts" do
+      tv = TopicView.new(topic.id, evil_trout)
+      preloaded_post_ids = nil
+      preloader = lambda { |view| preloaded_post_ids = view.posts.map(&:id) }
+
+      TopicView.on_preload(&preloader)
+
+      tv.reset_post_collection(posts: [post2, post3])
+      TopicView.preload(tv)
+
+      expect(preloaded_post_ids).to contain_exactly(post2.id, post3.id)
+    ensure
+      TopicView.cancel_preload(&preloader)
+    end
+
+    it "skips post loading when skip_post_loading is true" do
+      tv = TopicView.new(topic.id, evil_trout, skip_post_loading: true)
+
+      expect(tv.posts).to eq([])
+      expect(tv.filtered_posts.count).to eq(0)
+      expect(tv.topic).to eq(topic)
+
+      tv.reset_post_collection(posts: [post1, post2])
+      expect(tv.posts).to eq([post1, post2])
+    end
+  end
+
   it "raises a not found error if the topic doesn't exist" do
     expect { TopicView.new(1_231_232, evil_trout) }.to raise_error(Discourse::NotFound)
   end
