@@ -575,6 +575,17 @@ describe PostRevisor do
         expect(post.public_version).to eq(1)
         expect(post.revisions.size).to eq(0)
       end
+
+      it "does not create a new version for tag-only topic change within grace period when tags unchanged" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.editing_grace_period = 1.minute
+
+        post_revisor.revise!(post.user, { tags: [] }, revised_at: post.updated_at + 10.seconds)
+        post.reload
+
+        expect(post.version).to eq(1)
+        expect(post.revisions.size).to eq(0)
+      end
     end
 
     describe "edit reasons" do
@@ -1055,15 +1066,15 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: %w[new-tag new-tag-2])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [["new-tag"], %w[new-tag new-tag-2]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag")
+      expect(after).to contain_exactly("new-tag", "new-tag-2")
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: ["new-tag-3"])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [%w[new-tag new-tag-2], ["new-tag-3"]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag", "new-tag-2")
+      expect(after).to contain_exactly("new-tag-3")
       expect(post_revisor.raw_changed?).to eq(false)
     end
 

@@ -26,7 +26,7 @@ import { addGroupPostSmallActionCode } from "discourse/components/post/small-act
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
-} from "discourse/components/reviewable-refresh/item";
+} from "discourse/components/reviewable/item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
@@ -63,6 +63,7 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { isDevelopment, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
@@ -116,7 +117,10 @@ import Composer, {
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
 import { _addTrackedPostProperty } from "discourse/models/post";
-import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
+import {
+  _addTrackedTopicProperty,
+  registerCustomLastUnreadUrlCallback,
+} from "discourse/models/topic";
 import {
   addSaveableUserField,
   addSaveableUserOptionField,
@@ -736,6 +740,20 @@ class _PluginApi {
   }
 
   /**
+   * Adds tracked properties to the topic model.
+   *
+   * This method is used to mark properties as tracked for topic updates.
+   *
+   * You'll need to do this if you've added properties to a Topic and need them to be
+   * automatically updated in the UI when there are changes in the model.
+   *
+   * @param {...string} names - The names of the properties to be tracked.
+   */
+  addTrackedTopicProperties(...names) {
+    names.forEach((name) => _addTrackedTopicProperty(name));
+  }
+
+  /**
    * Decommissioned API
    **/
   addPostMenuButton() {
@@ -847,6 +865,8 @@ class _PluginApi {
    * @returns {boolean} - Whether the button should be displayed.
    *
    * @param {Object} opts - An Object.
+   * @param {string} [opts.menu] - Target menu: 'list' for list dropdown, omit for options popup (default).
+   * @param {string} [opts.name] - Unique identifier for the option.
    * @param {string} opts.icon - The name of the FontAwesome icon to display for the button.
    * @param {string} opts.label - The I18n translation key for the button's label.
    * @param {string} opts.shortcut - The keyboard shortcut to apply, NOTE: this will unconditionally add CTRL/META key (eg: m means CTRL+m).
@@ -863,6 +883,18 @@ class _PluginApi {
    *   shortcut: 'm',
    *   condition: (composer) => {
    *     return composer.editingPost;
+   *   }
+   * });
+   *
+   * @example
+   * // Add option to list dropdown
+   * api.addComposerToolbarPopupMenuOption({
+   *   menu: 'list',
+   *   name: 'my-custom-list',
+   *   icon: 'list-check',
+   *   label: 'my_plugin.custom_list',
+   *   action: (toolbarEvent) => {
+   *     toolbarEvent.applyList("- [x] ", "list_item");
    *   }
    * });
    **/
@@ -3313,6 +3345,31 @@ class _PluginApi {
    */
   registerCategorySaveProperty(property) {
     _addCategoryPropertyForSave(property);
+  }
+
+  /**
+   * Registers a custom tab for the category edit page.
+   * Only available when the `enable_simplified_category_creation`
+   * site setting is enabled, this will not work for the legacy
+   * category edit page.
+   *
+   * ```
+   * api.registerEditCategoryTab({
+   *   id: "chat",
+   *   name: "Chat",
+   *   component: MyChatComponent,
+   *   condition: ({ category, siteSettings }) => siteSettings.chat_enabled,
+   * });
+   * ```
+   *
+   * @param {Object} tab
+   * @param {string} tab.id - unique identifier for the tab, used in URL routing
+   * @param {string} tab.name - display name shown on the tab
+   * @param {Class} tab.component - Glimmer component to render as tab content
+   * @param {Function} [tab.condition] - optional callback returning boolean to conditionally show the tab
+   */
+  registerEditCategoryTab(tab) {
+    registeredEditCategoryTabs.push(tab);
   }
 
   // eslint-disable-next-line no-unused-vars

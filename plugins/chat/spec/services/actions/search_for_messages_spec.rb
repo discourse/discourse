@@ -20,7 +20,7 @@ RSpec.describe Chat::Action::SearchForMessages do
       SearchIndexer.enable
       SiteSetting.chat_enabled = true
       channel.add(current_user)
-      [message_1, message_2, message_3].each { SearchIndexer.index(_1, force: true) }
+      [message_1, message_2, message_3].each { SearchIndexer.index(it, force: true) }
     end
 
     it "returns matching messages" do
@@ -50,7 +50,7 @@ RSpec.describe Chat::Action::SearchForMessages do
 
       before do
         [alice_message_1, alice_message_2, bob_message].each do
-          SearchIndexer.index(_1, force: true)
+          SearchIndexer.index(it, force: true)
         end
       end
 
@@ -115,7 +115,7 @@ RSpec.describe Chat::Action::SearchForMessages do
 
       before do
         args[:limit] = 2
-        [message_4, message_5].each { SearchIndexer.index(_1, force: true) }
+        [message_4, message_5].each { SearchIndexer.index(it, force: true) }
       end
 
       it "limits the number of results" do
@@ -128,7 +128,7 @@ RSpec.describe Chat::Action::SearchForMessages do
       fab!(:message_5) { Fabricate(:chat_message, chat_channel: channel, message: "test five") }
       fab!(:message_6) { Fabricate(:chat_message, chat_channel: channel, message: "test six") }
 
-      before { [message_4, message_5, message_6].each { SearchIndexer.index(_1, force: true) } }
+      before { [message_4, message_5, message_6].each { SearchIndexer.index(it, force: true) } }
 
       context "with offset parameter" do
         let(:all_results) do
@@ -213,7 +213,7 @@ RSpec.describe Chat::Action::SearchForMessages do
 
       before do
         [original_message, thread_reply, regular_message].each do
-          SearchIndexer.index(_1, force: true)
+          SearchIndexer.index(it, force: true)
         end
       end
 
@@ -255,7 +255,7 @@ RSpec.describe Chat::Action::SearchForMessages do
       before do
         channel_2.add(current_user)
         [channel_1_message, channel_2_message, private_channel_message].each do
-          SearchIndexer.index(_1, force: true)
+          SearchIndexer.index(it, force: true)
         end
       end
 

@@ -3,9 +3,10 @@
 RSpec.describe "assets:precompile" do
   describe "assets:precompile:asset_processor" do
     it "compiles the js processor" do
-      path = Rake::Task["assets:precompile:asset_processor"].actions.first.call
+      FileUtils.rm_rf AssetProcessor::PROCESSOR_DIR
+      Rake::Task["assets:precompile:asset_processor"].actions.first.call
 
-      expect(path).to end_with("tmp/asset-processor.js")
+      path = AssetProcessor.processor_file_path
       expect(File.exist?(path)).to eq(true)
     end
   end

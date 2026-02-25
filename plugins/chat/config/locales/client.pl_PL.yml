@@ -46,6 +46,15 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
+      edit_category:
+        tab_title: "Czat"
+        channel: "Kanał"
+        description: "Opis"
+        actions: "Akcje"
+        settings: "Ustawienia"
+        no_channels: "Brak kanałów czatu powiązanych z tą kategorią"
+        no_channels_body: "Możesz mieć wiele kanałów w każdej kategorii, dostępnych dla tych samych członków na podstawie ustawień bezpieczeństwa kategorii. <a href='%{chatBrowseUrl}'>Utwórz kanał czatu</a>."
+        include_subcategories: "Uwzględnij kanały podkategorii"
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
       back_to_forum: "Forum"
@@ -63,6 +72,15 @@ pl_PL:
       starred: "Wyróżnione"
       starred_channels: "Wyróżnione kanały"
       starred_channels_empty: "Nie wyróżniono jeszcze żadnego kanału. Wyróżnij kanały, aby je tu zobaczyć i mieć do nich szybki dostęp."
+      pinned_messages:
+        title: "Przypięte wiadomości"
+        close: "Zamknij przypięte wiadomości"
+        pinned_by_you: "Przypięte przez Ciebie"
+        pinned_by_user: "Przypięte przez %{username}"
+      no_pinned_messages: "Żadnych przypiętych wiadomości na tym kanale."
+      pin_message: "Przypnij wiadomość"
+      unpin_message: "Odepnij wiadomość"
+      pinned: "Przypięty"
       browse_all_channels: "Przeglądaj wszystkie kanały"
       see_in: "Zobacz w"
       open_channel_menu: "Otwórz menu kanału"

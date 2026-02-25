@@ -1500,6 +1500,9 @@ sw:
         choose_new_tags: "Chagua lebo mpya kwa ajili ya hizi mada:"
         choose_append_tags: "Chagua lebo mpya kuweka kwenye mada hizi:"
         changed_tags: "lebo za hizo mada zilibadilishwa."
+        error_topic_count:
+          one: "%{count} topiki"
+          other: "%{count} Topiki"
       none:
         unread: "Hauna mada ambazo hazijasomwa."
         new: "Hauna mada mpya."
@@ -2232,6 +2235,15 @@ sw:
       add_synonyms: "Ongeza"
       delete_tag: "futa lebo"
       delete_confirm_no_topics: "Una uhakika unataka kufuta lebo hii?"
+      description: "Maelezo"
+      settings:
+        title: "Mipangilio"
+        general: "Jumla"
+        back: "Iliyopita"
+        name: "Jina"
+      localization:
+        name: "Jina"
+        description: "Maelezo"
       sort_by: "Pangilia kwa:"
       sort_by_count: "hesabu"
       sort_by_name: "jina"
@@ -2392,6 +2404,10 @@ sw:
           never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
+        group_traffic: "Utembeleaji"
+        group_members: "Wanachama"
+        group_security: "Ulinzi"
+        group_other: "Nyingine"
       config_sections:
         account:
           title: "Akaunti"
@@ -2474,6 +2490,10 @@ sw:
           sub_pages:
             logs:
               title: "Batli"
+        reports:
+          sub_pages:
+            settings:
+              title: "Mipangilio"
         badges:
           title: "Beji"
         permalinks:
@@ -2513,10 +2533,6 @@ sw:
         default_value: "Halisi"
       search:
         title: "Tafuta"
-        result_types:
-          theme:
-            one: "Mandhari"
-            other: "Mandhari"
       dashboard:
         title: "Ubao"
         version: "Toleo"
@@ -2633,6 +2649,7 @@ sw:
         save: "Hifadhi"
         cancel: "Ghairi"
         continue: "Endelea"
+        copy_key: "Nakili"
         revoke: "Futa"
       api:
         none: "Hakuna funguo za API zilizo amilifu kwa sasa."
@@ -3385,6 +3402,7 @@ sw:
           title: "Onyesha kwenye kadi ya mtumiaji"
         field_types:
           text: "Neno"
+          date: "Tarehe"
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:

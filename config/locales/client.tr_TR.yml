@@ -636,19 +636,13 @@ tr_TR:
       in_reply_to: "şuna yanıt olarak"
       filtered_flagged_by: "Bayrak ekleyen kişi:"
       unknown:
-        title:
-          one: "Devre dışı bırakılmış eklentiden bekleyen incelenebilir dosyalarınız var:"
-          other: "Devre dışı bırakılmış eklentilerden bekleyen incelenebilir dosyalarınız var:"
         instruction: "İlgili eklentiyi etkinleştirmediğiniz sürece düzgün görüntülenemezler. Lütfen eklentiyi etkinleştirin ve sayfayı yenileyin. Alternatif olarak, bunları görmezden gelebilirsiniz. <a href='%{url}' target='_blank'>Daha fazlasını öğrenin...</a>"
         reviewable_unknown_source: "%{reviewableType} (bilinmeyen eklenti)"
         reviewable_known_source: "%{reviewableType} (\"%{pluginName}\" eklentisinden)"
         ignore_all: "Tümünü yok say"
         enable_plugins: "Eklentileri etkinleştir"
-        delete_confirm: "Devre dışı bırakılan eklentiler tarafından oluşturulan tüm incelemeleri silmek istediğinizden emin misiniz?"
-        ignore_success: "Devre dışı bırakılan eklentiler tarafından oluşturulan tüm incelemeler silindi."
       explain:
         why: "bu ögenin neden kuyruğa girdiğini açıklayın"
-        title: "İncelenebilir Puanlama"
         formula: "Formül"
         subtotal: "Ara toplam"
         total: "Toplam"
@@ -662,10 +656,8 @@ tr_TR:
           title: "Bayrakları tarihsel olarak kabul edilen kullanıcılara bonus verilir."
         trust_level_bonus:
           name: "güven seviyesi"
-          title: "Güven seviyesi yüksek kullanıcılar tarafından oluşturulan, incelenebilir ögeler daha yüksek bir puana sahiptir."
         type_bonus:
           name: "tür bonusu"
-          title: "Bazı incelenebilir türlere daha yüksek öncelikli olmaları için personel tarafından bonus atanabilir."
       revise_and_reject_post:
         title: "Gözden geçir"
         reason: "Sebep"
@@ -674,7 +666,6 @@ tr_TR:
         custom_reason: "Sebebi net bir şekilde açıklayın"
         other_reason: "Diğer..."
         optional: "i̇steğe bağlı"
-      stale_help: "Bu incelenebilir, <b>%{username}</b> tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
         required: "Ögeleri inceleyebilmek için önce talepte bulunmalısınız."
@@ -3123,8 +3114,6 @@ tr_TR:
         max_views:
           placeholder: en fazla
           aria_label: en fazla görüntülemeye göre filtrele
-        additional_options:
-          label: "Gönderi sayısına ve konu görüntülemelerine göre filtrele"
     hamburger_menu: "Navigasyon menüsü"
     new_item: "yeni"
     go_back: "geri dön"
@@ -3255,6 +3244,9 @@ tr_TR:
           other: "İlerleme: <strong>%{count}</strong> konu"
         performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
         completed: "Toplu işlemler başarıyla tamamlandı!"
+        error_topic_count:
+          one: "%{count} konu"
+          other: "%{count} konu"
       none:
         unread: "Okunmamış konunuz bulunmuyor."
         unseen: "Görülmemiş konunuz bulunmuyor."
@@ -4668,7 +4660,20 @@ tr_TR:
         one: "Eş anlamlısı da silinecek."
         other: "%{count} eş anlamlısı da silinecek."
       edit_tag: "Etiket adını ve açıklamasını düzenle"
-      description: "Açıklama (en fazla 1000 karakter)"
+      description: "Açıklama"
+      settings:
+        title: "Ayarlar"
+        general: "Genel"
+        localizations: "Yerelleştirmeler"
+        back: "Geri"
+        name: "Ad"
+        slug: "Kısa ad"
+        name_placeholder: "Etiket adı"
+        synonyms_subtitle: "Aşağıdaki etiketler kullanıldığında %{name}ile değiştirilir"
+      localization:
+        locale: "Yerel Ayar"
+        name: "Ad"
+        description: "Açıklama"
       sort_by: "Sıralama ölçütü:"
       sort_by_count: "sayı"
       sort_by_name: "ad"
@@ -5171,9 +5176,13 @@ tr_TR:
           never: "asla"
       reports:
         title: "Mevcut raporlar listesi"
-        meta_doc: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
         sidebar_title: "Raporlar"
         back: "Tüm raporlara geri dön"
+        group_traffic: "Trafik"
+        group_members: "Üyeler"
+        group_moderation: "Moderasyon"
+        group_security: "Güvenlik"
+        group_other: "Diğer"
       config_sections:
         account:
           title: "Hesap"
@@ -5198,7 +5207,6 @@ tr_TR:
         preview: "Ön izle"
         enabled_for_options:
           everyone: "Herkes"
-          staff: "Sadece personel"
         statuses:
           experimental: "Deneysel"
         impact_roles:
@@ -5271,7 +5279,6 @@ tr_TR:
               help_text: "Önerilen boyut 600 x 80 pikseldir."
             large_icon:
               title: "Kare simge"
-              description: "Logo görüntüsünün kare bir versiyonu, yönetimin üst kısmında görünür ve aynı zamanda mobil ana ekran uygulaması logosudur."
               help_text: "Önerilen boyut 512 x 512 pikseldir."
             square_icon_dark:
               required: "Koyu mod için farklı bir kare simge kullanılsın mı?"
@@ -5422,7 +5429,7 @@ tr_TR:
           header_description: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
           sub_pages:
             settings:
-              title: "Pano ayarları"
+              title: "Ayarlar"
         badges:
           title: "Rozetler"
           header_description: "Rozetler, topluluk içindeki olumlu davranışları ve katılımı tanımak, doğrulamak ve teşvik etmek için kullanıcıları aktiviteleri, katkıları ve başarıları için ödüllendirir"
@@ -5572,22 +5579,6 @@ tr_TR:
         result_count:
           one: '"%{filter}" için %{count} sonuç'
           other: '"%{filter}" için %{count} sonuç'
-        result_types:
-          page:
-            one: "Sayfa"
-            other: "Sayfa"
-          report:
-            one: "Rapor"
-            other: "Rapor"
-          setting:
-            one: "Ayar"
-            other: "Ayarlar"
-          theme:
-            one: "Tema"
-            other: "Temalar"
-          component:
-            one: "Bileşen"
-            other: "Bileşenler"
       new_features:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
@@ -5801,6 +5792,7 @@ tr_TR:
         save: "Kaydet"
         cancel: "İptal et"
         continue: "Devam et"
+        copy_key: "Kopyala"
         back: "API anahtarlarına geri dön"
         revoke: "Geri çek"
         undo_revoke: "İptal işlemini geri al"
@@ -7595,6 +7587,7 @@ tr_TR:
         field_types:
           text: "Metin"
           textarea: "Metin alanı"
+          date: "Tarih"
           confirm: "Onayla"
           dropdown: "Açılır Menü"
           multiselect: "Çoklu seçim"

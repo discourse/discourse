@@ -12,11 +12,17 @@ gl:
           always: "Sempre"
           never: "Nunca"
     chat:
+      edit_category:
+        channel: "Canle"
+        description: "Descrición"
+        actions: "Accións"
+        settings: "Configuración"
       deleted_chat_username: eliminado
       dates:
         yesterday: "Onte"
       create: "Crear"
       cancel: "Cancelar"
+      pinned: "Fixado"
       channel_settings:
         edit: "Editar"
         add: "Engadir"

@@ -6,7 +6,7 @@ module Onebox
       def github_auth_header(github_org)
         return {} if SiteSetting.github_onebox_access_tokens.blank?
 
-        org_tokens = SiteSetting.github_onebox_access_tokens.split("\n").to_h { _1.split("|") }
+        org_tokens = SiteSetting.github_onebox_access_tokens.split("\n").to_h { it.split("|") }
 
         token = org_tokens[github_org] || org_tokens["default"]
 

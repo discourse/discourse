@@ -44,6 +44,12 @@ fa_IR:
           one: "%{formatted_number} پیام چت"
           other: "%{formatted_number} پیام چت"
     chat:
+      edit_category:
+        tab_title: "گفتگو"
+        channel: "کانال"
+        description: "توضیح"
+        actions: "عملیات"
+        settings: "تنظیم"
       text_copied: متن در کلیپ بورد کپی شد
       link_copied: پیوند در کلیپ بورد کپی شد
       back_to_forum: "انجمن"
@@ -58,6 +64,7 @@ fa_IR:
       cancel: "انصراف"
       cancel_reply: "لغو پاسخ"
       chat_channels: "کانال‌ها"
+      pinned: "سنجاق شده"
       browse_all_channels: "مرور همه کانال‌ها"
       see_in: "ببینید در"
       move_to_channel:

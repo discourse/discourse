@@ -8,6 +8,7 @@ import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { bind } from "discourse/lib/decorators";
+import { isDevelopment } from "discourse/lib/environment";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
@@ -81,6 +82,22 @@ export default class GlobalNotice extends Component {
     return !this.router.currentRouteName.startsWith("wizard.");
   }
 
+  get #isEmailRelatedRoute() {
+    const routeName = this.router.currentRouteName;
+    return (
+      routeName?.startsWith("admin") ||
+      routeName?.startsWith("review") ||
+      routeName?.startsWith("account-created") ||
+      routeName?.startsWith("invites") ||
+      routeName?.startsWith("userInvited") ||
+      routeName === "login" ||
+      routeName === "preferences.email" ||
+      routeName === "preferences.emails" ||
+      routeName === "preferences.notifications" ||
+      routeName === "preferences.security"
+    );
+  }
+
   get notices() {
     let notices = [];
 
@@ -146,10 +163,6 @@ export default class GlobalNotice extends Component {
         Notice.create({
           text: i18n("emails_are_disabled"),
           id: "alert-emails-disabled",
-          options: {
-            dismissable: true,
-            persistentDismiss: false,
-          },
         })
       );
     } else if (this.siteSettings.disable_emails === "non-staff") {
@@ -157,9 +170,15 @@ export default class GlobalNotice extends Component {
         Notice.create({
           text: i18n("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
+        })
+      );
+    } else if (!this.site.email_configured && !isDevelopment()) {
+      notices.push(
+        Notice.create({
+          text: i18n("emails_are_disabled_no_smtp"),
+          id: "alert-emails-disabled",
           options: {
-            dismissable: true,
-            persistentDismiss: false,
+            visibility: () => this.#isEmailRelatedRoute,
           },
         })
       );

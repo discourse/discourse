@@ -495,7 +495,6 @@ nb_NO:
       in_reply_to: "i svar til"
       explain:
         why: "forklar hvorfor dette elementet ble plassert i køen"
-        title: "Trust factor"
         formula: "Formel"
         subtotal: "Delsum"
         total: "Total"
@@ -509,10 +508,8 @@ nb_NO:
           title: "Brukere som historisk gir gode flagg får bonus."
         trust_level_bonus:
           name: "tillitsnivå"
-          title: "Elementer opprettet av brukere med høyere tillitsrangering har høyere score"
         type_bonus:
           name: "type bonus"
-          title: "Visse typer som kan gjennomgås, kan tildeles en bonus av personalet for å gjøre dem til en høyere prioritet."
       revise_and_reject_post:
         title: "Revider"
         reason: "Begrunnelse"
@@ -521,7 +518,6 @@ nb_NO:
         custom_reason: "Gi en tydelig beskrivelse av årsaken"
         other_reason: "Annet..."
         optional: "valgfritt"
-      stale_help: "Denne vurderingen har blitt løst av <b>%{username}</b>."
       claim_help:
         optional: "Du kan gjøre krav på dette elementet for å hindre andre i å gjennomgå det."
         required: "Du må gjøre krav på varer før du kan se gjennom dem."
@@ -2746,8 +2742,6 @@ nb_NO:
         max_views:
           placeholder: maksimum
           aria_label: filtrer etter maksimal antall visninger
-        additional_options:
-          label: "Filtrer etter antall innlegg og emnevisninger"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og innstillinger"
@@ -2877,6 +2871,9 @@ nb_NO:
           other: "Fremgang: <strong>%{count}</strong> emner"
         performing: "Utfører masseoperasjoner, vennligst vent…"
         completed: "Masseoperasjoner fullført med suksess!"
+        error_topic_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
       none:
         unread: "Du har ingen uleste emner."
         unseen: "Du har ingen usette emner."
@@ -4108,6 +4105,17 @@ nb_NO:
       delete_confirm_synonyms:
         one: "Synonymen vil også bli slettet."
         other: "Dets %{count} synonymer vil også bli slettet."
+      description: "Beskrivelse"
+      settings:
+        title: "Innstillinger"
+        general: "Generelt"
+        back: "Forrige"
+        name: "Navn"
+        slug: "Navn i URL"
+        synonyms_subtitle: "Når følgende merkelapper brukes, vil de bli erstattet med %{name}"
+      localization:
+        name: "Navn"
+        description: "Beskrivelse"
       sort_by: "Sorter etter:"
       sort_by_count: "antall"
       sort_by_name: "navn"
@@ -4326,6 +4334,11 @@ nb_NO:
       reports:
         title: "Liste over tilgjengelige rapporter"
         sidebar_title: "Rapporter"
+        group_traffic: "Trafikk"
+        group_members: "Medlemmer"
+        group_moderation: "Moderering"
+        group_security: "Sikkerhet"
+        group_other: "Annet"
       config_sections:
         account:
           title: "Konto"
@@ -4347,7 +4360,6 @@ nb_NO:
         preview: "Forhåndsvis"
         enabled_for_options:
           everyone: "Alle"
-          staff: "Bare ansatte"
         impact_roles:
           admins: "Adminer"
           moderators: "Moderatorer"
@@ -4417,6 +4429,9 @@ nb_NO:
               title: "Logger"
         reports:
           title: "Rapporter"
+          sub_pages:
+            settings:
+              title: "Innstillinger"
         badges:
           title: "Merker"
         permalinks:
@@ -4465,13 +4480,6 @@ nb_NO:
         default_value: "Forvalg"
       search:
         title: "Søk"
-        result_types:
-          theme:
-            one: "Drakt"
-            other: "Drakter"
-          component:
-            one: "Komponent"
-            other: "Komponenter"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
@@ -4625,6 +4633,7 @@ nb_NO:
         save: "Lagre"
         cancel: "Avbryt"
         continue: "Fortsett"
+        copy_key: "Kopier"
         revoke: "Trekk tilbake"
       api:
         generate_master: "Generer Master API-nøkkel"
@@ -5553,6 +5562,7 @@ nb_NO:
           title: "Vis på brukerkort"
         field_types:
           text: "Tekst"
+          date: "Dato"
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:

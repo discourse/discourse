@@ -68,10 +68,8 @@ class PostRevisor
         removed_tags = prev_tags - persisted_tag_names
         diff_tags = added_tags | removed_tags
 
-        if diff_tags.present?
-          if !SiteSetting.disable_tags_edit_notifications
-            Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
-          end
+        if diff_tags.present? && !self.silent
+          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
 
           PostRevisor.create_small_action_for_tag_changes(
             topic: t,
@@ -241,6 +239,7 @@ class PostRevisor
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
+    @fields.delete(:tags) if @fields.has_key?(:tags) && @fields[:tags].blank? && @topic.tags.empty?
 
     # always reset edit_reason unless provided, do not set to nil else
     # previous reasons are lost
@@ -627,13 +626,15 @@ class PostRevisor
     end
 
     @post_revision =
-      PostRevision.create!(
+      PostRevision.new(
         user_id: @post.last_editor_id,
         post_id: @post.id,
         number: @post.version,
         modifications:,
         hidden: @hidden_revision,
       )
+    @post_revision.silent = @silent
+    @post_revision.save!
   end
 
   def update_revision

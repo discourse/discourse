@@ -472,7 +472,6 @@ ko:
         enable_plugins: "플러그인 사용"
       explain:
         why: "이 항목이 대기열에 있는 이유 설명"
-        title: "검토 가능 점수"
         formula: "공식"
         subtotal: "소계"
         total: "합계"
@@ -486,10 +485,8 @@ ko:
           title: "신고가 수락된 경우 신고자에게 보너스가 주어집니다."
         trust_level_bonus:
           name: "회원 레벨"
-          title: "신뢰 레벨이 더 높은 사용자가 만든 검토 가능 항목은 더 높은 점수를 받습니다."
         type_bonus:
           name: "유형 보너스"
-          title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
       revise_and_reject_post:
         title: "수정"
         reason: "이유"
@@ -498,7 +495,6 @@ ko:
         custom_reason: "이유를 명확하게 설명해 주세요."
         other_reason: "기타..."
         optional: "선택 사항"
-      stale_help: "이 검토 가능 항목은 <b>%{username}</b> 님이 해결했습니다."
       claim_help:
         optional: "다른 사용자가 검토하지 못하도록 이 항목을 독점할 수 있습니다."
         required: "항목을 검토하려면 먼저 항목을 독점해야 합니다."
@@ -2363,8 +2359,6 @@ ko:
         max_views:
           placeholder: 최대
           aria_label: 최대 조회수로 필터링
-        additional_options:
-          label: "게시물 수 및 글 조회수로 필터링"
     new_item: "새로운"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
@@ -2437,6 +2431,8 @@ ko:
           other: "<b>%{count}</b>개의 글에서 태그가 모두 제거됩니다. 계속할까요?"
         progress:
           other: "진행률: <strong>%{count}</strong>개의 글"
+        error_topic_count:
+          other: "%{count}개의 글"
       none:
         unread: "읽지 않은 글이 없습니다."
         unseen: "확인하지 않은 글이 없습니다."
@@ -3523,6 +3519,18 @@ ko:
       delete_confirm_synonyms:
         other: "%{count}개의 동의어도 삭제됩니다."
       edit_tag: "태그 이름 및 설명 편집"
+      description: "내용"
+      settings:
+        title: "설정"
+        general: "일반"
+        back: "뒤로"
+        name: "그룹명"
+        slug: "강타"
+        name_placeholder: "태그명"
+        synonyms_subtitle: "다음 태그를 사용하면 %{name} 으로 대체됩니다"
+      localization:
+        name: "그룹명"
+        description: "내용"
       sort_by: "정렬 기준:"
       sort_by_count: "개수"
       sort_by_name: "이름"
@@ -3779,6 +3787,11 @@ ko:
       reports:
         title: "사용 가능한 리포트 목록"
         sidebar_title: "보고서"
+        group_traffic: "트래픽"
+        group_members: "회원"
+        group_moderation: "관리"
+        group_security: "보안"
+        group_other: "기타"
       config_sections:
         account:
           title: "계정"
@@ -3800,7 +3813,6 @@ ko:
         preview: "미리 보기"
         enabled_for_options:
           everyone: "모두"
-          staff: "직원 만"
         impact_roles:
           admins: "관리자"
           moderators: "관리자"
@@ -3888,6 +3900,9 @@ ko:
               title: "로그"
         reports:
           title: "보고서"
+          sub_pages:
+            settings:
+              title: "설정"
         badges:
           title: "배지"
         permalinks:
@@ -3936,17 +3951,6 @@ ko:
         default_value: "기본"
       search:
         title: "검색"
-        result_types:
-          page:
-            other: "페이지"
-          report:
-            other: "보고서"
-          setting:
-            other: "설정"
-          theme:
-            other: "테마"
-          component:
-            other: "구성 요소"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
@@ -4106,6 +4110,7 @@ ko:
         save: "저장"
         cancel: "취소"
         continue: "계속하기"
+        copy_key: "복사"
         revoke: "취소"
         revoked: "해지"
       api:
@@ -5243,6 +5248,7 @@ ko:
           disabled: "검색할 수 없음"
         field_types:
           text: "텍스트"
+          date: "날짜"
           confirm: "확인"
           dropdown: "드롭다운"
           multiselect: "다중 선택"

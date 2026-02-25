@@ -6,6 +6,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "full-page-search-load-more",
   "post-menu-toggle-like-action",
   "post-stream-error-loading",
+  "topic-controller:finished-editing",
   "topic-list-item-click",
 ]);
 
@@ -13,6 +14,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
   "admin-plugin-icon",
   "admin-reports-show-query-params",
+  "admin-onboarding-start-posting-options",
   "bulk-select-in-nav-controls",
   "category-available-views",
   "category-default-colors",
@@ -89,4 +91,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "user-field-components",
   "user-menu-notification-item-acting-user-avatar",
   "user-notes-modal-subtitle",
+  "welcome-banner-display-for-route",
 ]);

@@ -804,7 +804,7 @@ module DiscourseTagging
     Discourse.cache.delete(TAGS_STAFF_CACHE_KEY)
   end
 
-  def self.clean_tag(tag)
+  def self.clean_tag(tag, truncate: true)
     tag = tag.dup
     tag.downcase! if SiteSetting.force_lowercase_tags
     tag.strip!
@@ -812,7 +812,7 @@ module DiscourseTagging
     tag.gsub!(/[^[:word:][:punct:]]+/, "")
     tag.gsub!(TAGS_FILTER_REGEXP, "")
     tag.squeeze!("-")
-    tag[0...SiteSetting.max_tag_length]
+    truncate ? tag[0...SiteSetting.max_tag_length] : tag
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})
@@ -912,7 +912,13 @@ module DiscourseTagging
       now = Time.current
       rows =
         names_to_create.map do |n|
-          { name: n, target_tag_id: target_tag.id, created_at: now, updated_at: now }
+          {
+            name: n,
+            slug: Slug.for(n, ""),
+            target_tag_id: target_tag.id,
+            created_at: now,
+            updated_at: now,
+          }
         end
       valid_ids += Tag.insert_all(rows, returning: :id).pluck("id")
     end

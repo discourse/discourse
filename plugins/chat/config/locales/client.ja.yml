@@ -43,6 +43,12 @@ ja:
         chat_messages:
           other: "%{formatted_number} チャットメッセージ"
     chat:
+      edit_category:
+        tab_title: "チャット"
+        channel: "チャンネル"
+        description: "説明"
+        actions: "アクション"
+        settings: "設定"
       text_copied: テキストをクリップボードにコピーしました
       link_copied: リンクをクリップボードにコピーしました
       back_to_forum: "フォーラム"
@@ -57,8 +63,13 @@ ja:
       cancel: "キャンセル"
       cancel_reply: "返信をキャンセルする"
       chat_channels: "チャンネル"
+      starred: "スター付き"
+      starred_channels: "スター付きのチャンネル"
+      starred_channels_empty: "まだどのチャンネルにもスターを設定していません。チャンネルにスターを設定すると、ここで素早くアクセスできます。"
+      pinned: "固定"
       browse_all_channels: "すべてのチャンネルを閲覧する"
       see_in: "表示:"
+      open_channel_menu: "チャンネルメニューを開く"
       move_to_channel:
         title: "メッセージをチャンネルに移動する"
         instructions:
@@ -71,6 +82,8 @@ ja:
         title: "チャンネルの設定"
         edit: "編集"
         add: "追加"
+        star_channel: "チャンネルにスターを設定する"
+        unstar_channel: "チャンネルのスターを解除する"
         close_channel: "チャンネルを閉鎖する"
         open_channel: "チャンネルを開く"
         archive_channel: "チャンネルをアーカイブする"
@@ -78,6 +91,7 @@ ja:
         join_channel: "チャンネルに参加する"
         leave_channel: "チャンネルから退出する"
         leave_groupchat_info: "このグループチャットから退出すると、それにアクセスできなくなり、そのチャットに関連する通知を受信しなくなります。もう一度参加するには、グループチャットのメンバーから招待を受ける必要があります。"
+        notification_settings: "通知設定"
         notification_settings_context: "通知"
         join: "参加"
         leave: "退出"
@@ -125,6 +139,7 @@ ja:
       email_frequency:
         description: "15 分以上アクセスがない場合にのみメールで通知します。"
         never: "なし"
+        title: "チャットダイレクトメッセージまたはグループチャットを受信したらメールで通知する"
         when_away: "退席中の時のみ"
       header_indicator_preference:
         title: "ヘッダーにアクティビティインジケーターを表示"
@@ -135,6 +150,7 @@ ja:
       separate_sidebar_mode:
         title: "フォーラムとチャットに個別のサイドバーモードを表示する"
       send_shortcut:
+        title: "送信ショートカット"
         enter:
           label: "Enter で送信"
         meta_enter:
@@ -226,6 +242,7 @@ ja:
       chat_notifications_title: "チャット通知"
       only_chat_push_notifications:
         title: "チャットのプッシュ通知のみ送信する"
+      personalization_title: "パーソナライズ"
       ignore_channel_wide_mention:
         title: "チャンネル全体のメンションを無視する"
       show_thread_title_prompts:
@@ -309,6 +326,10 @@ ja:
         yesterday: 昨日
       search_view:
         filter_placeholder: メッセージを検索
+        message_result_label: "%{username} からのチャットメッセージ: %{preview} %{threadInfo}"
+        in_thread: "スレッド %{title}"
+        sr_instructions: "Enter または Space キーを押してメッセージを開きます。Tab キーで結果間を移動します。"
+        results_list_label: "チャットメッセージの検索結果"
       members_view:
         filter_placeholder: メンバーを検索
         add_member: メンバーを追加
@@ -351,6 +372,8 @@ ja:
         slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
         slug: チャンネルスラグ (オプション)
+        emoji: チャンネル絵文字 (オプション)
+        reset_emoji: 絵文字をリセット
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -403,6 +426,9 @@ ja:
         types:
           category: "カテゴリ"
           topic: "トピック"
+        emoji:
+          label: "チャンネル絵文字 (オプション)"
+          reset: "絵文字をリセット"
       reviewable:
         type: "チャットメッセージ"
         message_in_channel: "チャンネル"
@@ -443,6 +469,7 @@ ja:
         follow: "参加"
         followed: "参加中"
         mute: "チャンネルをミュート"
+        unmute: "チャンネルのミュートを解除する"
         threading_enabled: "有効"
         threading_disabled: "無効"
         muted_on: "オン"
@@ -468,6 +495,9 @@ ja:
           export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
       search:
         short_title: 検索
+        title: チャットを検索
+        aria_label: "チャット検索に切り替える"
+        no_results: "何も見つかりませんでした"
         sort:
           relevance: "関連性の高い項目"
           latest: "最新"
@@ -674,6 +704,7 @@ ja:
           composer_bold: "%{shortcut} 太字 (作成ツールのみ)"
           composer_italic: "%{shortcut} 斜体 (作成ツールのみ)"
           composer_code: "%{shortcut} コード (作成ツールのみ)"
+          drawer_toggle: "%{shortcut} チャットドロワーを切り替える"
           drawer_close: "%{shortcut} チャットドロワーを閉じる"
           mark_all_channels_read: "%{shortcut} すべてのチャンネルを既読としてマークします"
     topic_statuses:
@@ -699,6 +730,7 @@ ja:
           title: チャット
     sidebar:
       start_new_dm:
+        text: 新しい DM を開始
         title: パーソナルチャットを作成
       panels:
         chat:

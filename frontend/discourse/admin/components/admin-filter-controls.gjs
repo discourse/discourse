@@ -39,9 +39,9 @@ import { and, not } from "discourse/truth-helpers";
 export default class AdminFilterControls extends Component {
   @tracked textFilter = "";
   @tracked dropdownFilter = "all";
-  @tracked dropdownFilters = new TrackedObject();
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+  dropdownFilters = new TrackedObject();
 
   constructor() {
     super(...arguments);
@@ -230,6 +230,8 @@ export default class AdminFilterControls extends Component {
   }
 
   <template>
+    {{yield to="aboveFilters"}}
+
     {{#if this.showFilters}}
       <div
         class={{concatClass

@@ -9,6 +9,7 @@ de:
   site_settings:
     solved_enabled: "Aktiviere das solved-Plug-in; erlaubt Benutzern, Lösungen für Themen auszuwählen"
     allow_solved_on_all_topics: "Benutzern erlauben, Lösungen für alle Themen auszuwählen (wenn diese Option nicht aktiviert ist, können Lösungen nach Kategorie oder Schlagwort aktiviert werden)"
+    allow_solved_in_groups: "Erlaube das Auswählen von Lösungen in Gruppennachrichten für diese Gruppen."
     accept_all_solutions_trust_level: "Minimale Vertrauensstufe, die das Akzeptieren von Lösungen in jedem Thema erlaubt (auch wenn nicht selbst erstellt)"
     accept_all_solutions_allowed_groups: "Gruppen, die Lösungen zu jedem Thema akzeptieren dürfen (auch wenn sie nicht Ersteller des Themas sind). Administratoren und Moderatoren haben diese Befugnis grundsätzlich."
     empty_box_on_unsolved: "Zeige eine leere Box neben ungelösten Themen"
@@ -30,6 +31,7 @@ de:
   reports:
     accepted_solutions:
       title: "Akzeptierte Lösungen"
+      description: "Anzahl der pro Tag als gelöst markierten Themen innerhalb eines ausgewählten Datumsbereichs, optional nach Kategorie gefiltert, einschließlich eines 30-Tage-Vergleichswerts."
       xaxis: "Tag"
       yaxis: "Gesamt"
   solved:

@@ -124,7 +124,7 @@ class Groups::Create
   end
 
   def build_user_attributes(params:)
-    params.owner_ids.map { { user_id: _1, owner: true } } + params.user_ids.map { { user_id: _1 } }
+    params.owner_ids.map { { user_id: it, owner: true } } + params.user_ids.map { { user_id: it } }
   end
 
   def instantiate_group(params:, guardian:, user_attributes:, options:)
@@ -132,7 +132,7 @@ class Groups::Create
       params.except(:owner_usernames, :usernames, :associated_group_ids).merge(
         options.dynamic_attributes,
       ),
-    ) { _1.group_users.build(user_attributes) }
+    ) { it.group_users.build(user_attributes) }
   end
 
   def should_associate_groups(guardian:, params:)

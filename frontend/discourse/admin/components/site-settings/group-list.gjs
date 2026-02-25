@@ -10,11 +10,14 @@ export default class GroupList extends Component {
   nameProperty = "name";
   valueProperty = "id";
 
-  @computed("site.groups")
+  @computed("site.groups", "setting.disallowed_groups")
   get groupChoices() {
-    return (this.site.groups || []).map((g) => {
-      return { name: g.name, id: g.id.toString() };
-    });
+    const disallowed = (this.setting?.disallowed_groups || "")
+      .split("|")
+      .filter(Boolean);
+    return (this.site.groups || [])
+      .filter((g) => !disallowed.includes(g.id.toString()))
+      .map((g) => ({ name: g.name, id: g.id.toString() }));
   }
 
   @computed("value")

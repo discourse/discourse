@@ -60,8 +60,6 @@ sk:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} podľa %{username}"
-    too_many_urls: "V jednej požiadavke nie je možné vložiť do jedného poľa viac ako 10 adries URL."
-    concurrency_not_allowed: "Súbežné požiadavky na inline-oneboxing nie sú povolené. Prosím, pošlite vždy len jednu žiadosť."
   components:
     enabled_filter: "Povolené"
     disabled_filter: "Vypnuté"
@@ -398,7 +396,6 @@ sk:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Používateľské agendy musia mať dĺžku aspoň 3 znaky, aby nedošlo k náhodnému obmedzeniu rýchlosti legitímnych používateľov."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastaveniu nemôžete pridať žiadnu z nasledujúcich hodnôt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Ak je povolená možnosť „optimalizácia obrazu pre kompozitor“, nemôžete zakázať metadáta obrázka pásu. Pred zakázaním metadát obrázkov pásu zakážte možnosť „optimalizácia obrazu kompozitora je povolená“."
-      x_summary_large_image_no_svg: "Súhrnné obrázky Twitteru používané pre metadáta twitter:image nemôžu byť obrázky .svg."
       tl0_and_anonymous_flag: "V prípade anonymných používateľov sa musí uviesť buď \"kontaktný e-mail stránky\", alebo \"e-mailová adresa na nahlásenie nezákonného obsahu\"."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Toto nastavenie vyžaduje, aby bolo najprv povolené nastavenie \"povoliť anonymný režim\"."
     conflicting_google_user_id: 'ID účtu Google pre toto konto sa zmenilo; z bezpečnostných dôvodov je potrebný zásah personálu. Obráťte sa na personál a odkážte ich na <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>.'
@@ -1919,7 +1916,6 @@ sk:
     slow_down_crawler_rate: "Ak je zadaný parameter slow_down_crawler_user_agents, táto rýchlosť sa uplatní na všetky crawlery (počet sekúnd oneskorenia medzi požiadavkami)"
     content_security_policy: "Povoľte Content-Security-Policy (CSP). CSP je ďalšia vrstva zabezpečenia, ktorá pomáha predchádzať určitým typom útokov vrátane Cross Site Scripting (XSS) a injekcie dát."
     content_security_policy_report_only: "Povoliť Content-Security-Policy-Report-Only (CSP)"
-    content_security_policy_collect_reports: "Povolenie zberu správ o porušeniach CSP na adrese /csp_reports"
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
     content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Ostatné zdroje hostiteľa sú ignorované, pretože je povolená funkcia strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Účty administrátorov, ktorí nenavštívili stránku počas tohto počtu dní, budú musieť pred prihlásením znovu overiť svoju e-mailovú adresu. Nastavte na 0, aby ste to zakázali."
@@ -2218,8 +2214,6 @@ sk:
     num_flaggers_to_close_topic: "Minimálny počet rôznych oznamovateľov potrebný na automatické pozastavenie témy pre intervenciu."
     num_hours_to_close_topic: "Počet hodín na pozastavenie témy pre intervenciu."
     auto_respond_to_flag_actions: "Zapnúť automatickú odpoveď pri odstránení označenia."
-    min_first_post_typing_time: "Minimalny čas písania prvého príspevku v milisekundách, ak je čas kratší ako je limit, príspevok bude automaticky zaradený do fronty na schválenie. Nastav 0 pre vypnutie (Neoporúča sa)"
-    fast_typing_threshold: "Minimálny čas v milisekundách, ktorý musí používateľ napísať pre svoj prvý príspevok. Ak sa táto hranica nedodrží, príspevok sa automaticky zaradí do frontu na preskúmanie. Nízka hodnota je 1 sekunda, štandardná hodnota je 3 sekundy, vysoká hodnota je 5 sekúnd."
     auto_silence_fast_typers_on_first_post: "Automatické umlčanie používateľov, ktorí nespĺňajú prah `rýchleho písania`"
     auto_silence_fast_typers_max_trust_level: "Maximálna úroveň dôvery na automatické umlčanie rýchlych pisateľov"
     auto_silence_first_post_regex: "Regex nerozlišujúci veľké a malé písmená, ktorý v prípade odovzdania spôsobí, že prvý príspevok používateľa bude umlčaný a odoslaný do frontu na schválenie. Príklad: raging|a[bc]a , spôsobí, že všetky príspevky obsahujúce raging alebo aba alebo aca budú umlčané ako prvé. Platí len pre prvý príspevok. ZRUŠENÉ: Namiesto toho použite umlčanie sledovaných slov."
@@ -2236,7 +2230,6 @@ sk:
     alternative_reply_by_email_addresses: "Zoznam alternatívnych šablón pre odpoveď e-mailom na prichádzajúce e-mailové adresy. Príklad: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Používajte HTML namiesto textu pre prichádzajúce e-maily."
     strip_incoming_email_lines: "Odstráňte úvodné a koncové biele znaky z každého riadku prichádzajúcich e-mailov."
-    disable_emails: "Zabráňte aplikácii Discourse odosielať akékoľvek e-maily. Výberom možnosti \"áno\" zakážete odosielanie e-mailov všetkým používateľom. Výberom možnosti \"non-staff\" zakážete e-maily len pre používateľov, ktorí nie sú členmi personálu."
     strip_images_from_short_emails: "Odobrať obrázky z e-mailov s veľkosťou menšou ako 2800 bajtov"
     short_email_length: "Definujte maximálnu dĺžku e-mailu v bajtoch, aby bol klasifikovaný ako \"krátky\" na potlačenie obrázkov. Ak veľkosť e-mailu neprekročí toto nastavenie, všetky obrázky (napríklad avatary a emotikony) v e-maile budú odstránené."
     display_name_on_email_from: "V emailovom poli Od zobraziť plné mená"
@@ -2392,7 +2385,6 @@ sk:
     notify_about_reviewable_item_after: "Ak sú položky, ktoré sa dajú preskúmať a ktoré neboli spracované ani po toľkých hodinách, pošlite osobnú správu moderátorom. Nastavte na 0, aby ste to zakázali."
     delete_drafts_older_than_n_days: "Odstránenie návrhov, ktoré neboli zmenené viac ako (n) dní."
     delete_merged_stub_topics_after_days: "Počet dní, ktoré treba čakať pred automatickým odstránením úplne zlúčených tém. Nastavte na hodnotu -1, aby ste nikdy neodstránili. Nastavte na 0 na okamžité odstránenie."
-    bootstrap_mode_min_users: 'Minimálny počet používateľov potrebný na vypnutie režimu bootstrap a odstránenie tlačidla Začíname (pre vypnutie nastavte hodnotu 0, môže to trvať až 24 hodín). Podrobnosti nájdete v <a target="_blank" href="https://meta.discourse.org/t/-/322876">téme Režim bootstrap na stránke Meta</a>.'
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom v preberaní príloh."
     secure_uploads: 'Obmedzuje prístup ku VŠETKÝM nahraným materiálom (obrázky, video, zvuk, text, pdf, zips a ďalšie). Ak je povolené „potrebné prihlásenie“, prístup k nahrávkam majú iba prihlásení používatelia. V opačnom prípade bude prístup obmedzený len pre nahrávanie médií v osobných správach a súkromných kategóriách. VAROVANIE: Toto nastavenie je zložité a vyžaduje si hlboké administratívne porozumenie. Podrobnosti nájdete v téme <a target="_blank" href="https://meta.discourse.org/t/-/140017">v téme bezpečného nahrávania na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umožňuje vkladanie zabezpečených obrázkov, ktoré by sa za normálnych okolností v e-mailoch redigovali, ak je ich veľkosť menšia ako nastavenie \"secure uploads max email embed image size kb\"."
@@ -2515,7 +2507,6 @@ sk:
     dashboard_hidden_reports: "Povoliť skrytie zadaných správ z hlavného panela."
     dashboard_visible_tabs: "Vyberte, ktoré karty hlavného panela budú viditeľné."
     dashboard_general_tab_activity_metrics: "Na karte Všeobecné vyberte správy, ktoré sa majú zobrazovať ako metriky aktivity."
-    gravatar_enabled: "Používajte službu <a href='https://gravatar.com/'>Gravatar</a> pre avatary používateľov. Zabráni to používateľom prejsť na službu Gravatar pre ich avatary, ale nebude to mať vplyv na používateľov, ktorí ju už používajú."
     gravatar_name: "Zadajte názov poskytovateľa služby Gravatar. Tento názov sa zvyčajne používa na identifikáciu zdroja, ktorý poskytuje avatary Gravatar na lokalitu."
     gravatar_base_url: "Zadajte adresu URL na prístup k rozhraniu API poskytovateľa Gravatar. Toto nastavenie je rozhodujúce pre konverziu e-mailových adries na adresy URL Gravataru, v ktorých sú uložené obrázky avataru."
     gravatar_login_url: "URL relatívna k `gravatar_base_url`, ktorá poskytuje používateľovi prihlásenie do služby Gravatar."
@@ -2598,12 +2589,6 @@ sk:
       reply_by_email_disabled: "Pred povolením tohto nastavenia musíte najprv povoliť funkciu \"odpovedať e-mailom\"."
       discourse_connect_url_is_empty: "Pred povolením tohto nastavenia musíte nastaviť \"url adresu discourse connect\"."
       enable_local_logins_disabled: "Pred povolením tohto nastavenia musíte najskôr povoliť „povoliť miestne prihlásenie“."
-      min_username_length_exists: "Minimálnu dĺžku používateľského mena nemôžete nastaviť nad najkratšie používateľské meno (%{username})."
-      min_group_name_length_exists: "Minimálnu dĺžku používateľského mena nemôžete nastaviť nad najkratší názov skupiny (%{group_name})."
-      min_username_length_range: "Nemôžete nastaviť minimum viac ako maximum."
-      max_username_length_exists: "Maximálnu dĺžku používateľského mena nemôžete nastaviť pod najdlhšie používateľské meno (%{username})."
-      max_group_name_length_exists: "Maximálnu dĺžku používateľského mena nemôžete nastaviť pod najdlhší názov skupiny (%{group_name})."
-      max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
       invalid_hex_value: "Hodnoty farieb musia byť 6-miestne hexadecimálne kódy."
       empty_selectable_avatars: "Pred povolením tohto nastavenia musíte najprv nahrať aspoň dva vyberateľné avatary."
       category_search_priority:
@@ -2664,7 +2649,6 @@ sk:
       exclude_tag: "Vylúčenie tém s konkrétnou značkou"
       exclude_tags_any: "Vylúčiť témy s niektorou zo zadaných značiek (oddelených čiarkami)"
       exclude_tags_all: "Vylúčiť témy so všetkými zadanými značkami (oddelenými plusom)"
-      tags_alias: "Alias pre filter 'tag:'"
       tag_group: "Zobrazenie tém so značkami z konkrétnej skupiny značiek"
       exclude_tag_group: "Vylúčenie tém so značkami z určitej skupiny značiek"
       activity_before: "Zobraziť témy s poslednou aktivitou pred dátumom (RRRR-MM-DD alebo pred niekoľkými dňami)"
@@ -5134,8 +5118,6 @@ sk:
     deprecation_error_label: Zabezpečte, aby deprekácie Javascriptu vyvolali chybu
     enter: "Vstup do núdzového režimu"
     must_select: "Ak chcete vstúpiť do núdzového režimu, musíte vybrať aspoň jednu možnosť."
-  dev_mode:
-    enter: "Zadajte"
   wizard:
     title: "Nastavenie Discourse"
     step:
@@ -5399,8 +5381,6 @@ sk:
       approve_and_unhide:
         title: "Áno"
         complete: "Príspevok schválený a odkrytý"
-      no_action_post:
-        title: "Žiadna akcia"
       delete_post:
         title: "Odstrániť príspevok"
         complete: "Príspevok zmazaný"
@@ -5409,8 +5389,6 @@ sk:
       restore_post:
         title: "Obnoviť príspevok"
         complete: "Príspevok bol obnovený"
-      no_action_user:
-        title: "Žiadna akcia"
       silence_user:
         title: "Umlčať používateľa"
         complete: "Používateľ umlčaný"

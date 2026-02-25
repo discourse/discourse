@@ -462,7 +462,6 @@ sv:
       in_reply_to: "som svar till"
       explain:
         why: "förklara varför detta föremål hamnade i kön"
-        title: "Granskningsvärdering"
         formula: "Formel"
         subtotal: "Delsumma"
         total: "Totalt"
@@ -476,10 +475,8 @@ sv:
           title: "Användare vars flaggor historiskt har fått medhåll ges en bonus."
         trust_level_bonus:
           name: "förtroendenivå"
-          title: "Granskade objekt skapade av användare med högre förtroendenivå har en högre poäng."
         type_bonus:
           name: "typ bonus"
-          title: "Vissa granskningsärenden kan tilldelas en bonus av personal för att ge dem en högre prioritet."
       revise_and_reject_post:
         title: "Revidera"
         reason: "Anledning"
@@ -488,7 +485,6 @@ sv:
         custom_reason: "Ge en tydlig beskrivning av orsaken"
         other_reason: "Annan..."
         optional: "valfritt"
-      stale_help: "Detta granskningsbara objekt har lösts av <b>%{username}</b>."
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
         required: "Du måste göra anspråk innan du kan granska dem."
@@ -2578,8 +2574,6 @@ sv:
         max_views:
           placeholder: maximalt
           aria_label: filtrera efter största antal visningar
-        additional_options:
-          label: "Filtrera efter inläggsantal och ämnesvisningar"
     new_item: "ny"
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
@@ -2702,6 +2696,9 @@ sv:
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
+        error_topic_count:
+          one: "%{count} ämne"
+          other: "%{count} ämnen"
       none:
         unread: "Du har inga olästa ämnen."
         unseen: "Du har inga osedda ämnen."
@@ -3957,7 +3954,18 @@ sv:
         one: "Dess synonym kommer också att raderas."
         other: "Dess %{count} synonymer kommer också att raderas."
       edit_tag: "Redigera taggnamn och beskrivning"
-      description: "Beskrivning (max. 1000 tecken)"
+      description: "Beskrivning"
+      settings:
+        title: "Inställningar"
+        general: "Allmänt"
+        back: "Tillbaka"
+        name: "Namn"
+        slug: "Slug"
+        name_placeholder: "Namn på tagg"
+        synonyms_subtitle: "När följande taggar används, kommer de att ersättas med %{name}"
+      localization:
+        name: "Namn"
+        description: "Beskrivning"
       sort_by: "Sortera efter:"
       sort_by_count: "summa"
       sort_by_name: "namn"
@@ -4357,6 +4365,11 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         sidebar_title: "Rapporter"
+        group_traffic: "Trafik"
+        group_members: "Medlemmar"
+        group_moderation: "Moderering"
+        group_security: "Säkerhet"
+        group_other: "Övrigt"
       config_sections:
         account:
           title: "Konto"
@@ -4381,7 +4394,6 @@ sv:
         preview: "Förhandsgranska"
         enabled_for_options:
           everyone: "Alla"
-          staff: "Endast personal"
         impact_roles:
           admins: "Administratörer"
           moderators: "Moderatorer"
@@ -4463,6 +4475,9 @@ sv:
               title: "Loggar"
         reports:
           title: "Rapporter"
+          sub_pages:
+            settings:
+              title: "Inställningar"
         badges:
           title: "Utmärkelser"
         permalinks:
@@ -4512,13 +4527,6 @@ sv:
         default_value: "Standard"
       search:
         title: "Sök"
-        result_types:
-          theme:
-            one: "Tema"
-            other: "Teman"
-          component:
-            one: "Komponent"
-            other: "Komponenter"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4694,6 +4702,7 @@ sv:
         save: "Spara"
         cancel: "Avbryt"
         continue: "Fortsätt"
+        copy_key: "Kopiera"
         revoke: "Upphäv"
         revoked: "Återkallad"
       api:
@@ -6056,6 +6065,7 @@ sv:
           enabled: "Sökbart"
         field_types:
           text: "Text"
+          date: "Datum"
           confirm: "Bekräftelse"
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"

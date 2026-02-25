@@ -242,19 +242,14 @@ nl:
         watched_thread:
           one: "[%{site_name}] Nieuw threadbericht in %{channel}"
           other: "[%{site_name}] Nieuwe threadberichten in %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} andere groep"
-          other: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} andere groepen"
         chat_dm_1:
           one: "[%{site_name}] Nieuw bericht van %{name}"
           other: "[%{site_name}] Nieuw berichten van %{name}"
         chat_dm_2: "[%{site_name}] Nieuwe berichten van %{name_1} en %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Nieuwe berichten van %{name} en %{count} anderen"
         chat_channel_1:
           one: "[%{site_name}] Nieuw bericht in %{channel}"
           other: "[%{site_name}] Nieuwe berichten in %{channel}"
         chat_channel_2: "[%{site_name}] Nieuwe berichten in %{channel_1} en %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Nieuwe berichten in %{channel} en %{count} andere groepen"
         chat_channel_and_dm: "[%{site_name}] Nieuwe berichten in %{channel} en van %{name}"
       unsubscribe: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       unsubscribe_no_link: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}."

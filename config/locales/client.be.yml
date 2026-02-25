@@ -876,7 +876,7 @@ be:
       remove_filter: "выдаліць фільтр"
       category: "Катэгорыя"
       reorder:
-        apply_all: "Ужыць"
+        apply_all: "Прымяніць"
         position: "Пазіцыя"
       posts: "Допісы"
       topics: "Тэмы"
@@ -1423,7 +1423,7 @@ be:
         bookmarks: "Закладкі"
         profile: "Профіль"
     topics:
-      new_messages_marker: "быў(-ла)"
+      new_messages_marker: "апошняе наведванне"
       bulk:
         select_all: "Выбраць усе"
         delete: "Выдаліць тэмы"
@@ -1437,56 +1437,61 @@ be:
         toggle: "пераключыць масавы выбар тэм"
         actions: "Масавыя дзеянні"
         close_topics: "Закрыць тэмы"
-        archive_topics: "Заархіваваныя тэмы"
+        archive_topics: "Архіваваць тэмы"
         move_messages_to_inbox: "Перамясціць ва Уваходныя"
+        error_topic_count:
+          one: "%{count} тэма"
+          few: "%{count} тэмы"
+          many: "%{count} тэм"
+          other: "%{count} тэма"
       none:
         unread: "У вас няма непрачытаных тэм."
         new: "У вас няма новых тэм."
         read: "Вы яшчэ не прачыталі ніводнай тэмы."
-        posted: "Вы яшчэ не дапісвалі ў адну тэму."
-        bookmarks: "У вас пакуль няма тэмаў у закладках."
+        posted: "У вас яшчэ няма допісаў ні ў адной тэме."
+        bookmarks: "У вас пакуль няма тэм у закладках."
         category: "У катэгорыі %{category} няма тэм."
-        top: "There are no top topics."
+        top: "Няма галоўных тэм."
     topic_bulk_actions:
       close_topics:
-        name: "зачыніць"
+        name: "Закрыць"
       archive_topics:
-        name: "архіў"
+        name: "У архіў"
       move_messages_to_inbox:
-        name: "Перамясціць у тэчцы Уваходныя"
+        name: "Ва Уваходныя"
       delete_topics:
-        name: "выдаляць"
+        name: "Выдаліць"
     topic:
-      create: "пачаць новую тэму"
+      create: "Новая тэма"
       archive_message:
-        title: "архіў"
+        title: "Архіў"
       move_to_inbox:
-        title: "Перамясціць у тэчцы Уваходныя"
-      list: "тэмы"
+        title: "Ва Уваходныя"
+      list: "Тэмы"
       new: "новая тэма"
       unread: "непрачытаныя"
       title: "Тэма"
       invalid_access:
-        title: "Тэма прыватнай."
-        description: "Прабачце, у Вас няма доступу да гэтай тэмы!"
-        login_required: "You need to log in to see that topic."
+        title: "Тэма прыватная"
+        description: "У Вас няма доступу да гэтай тэмы!"
+        login_required: "Увайдзіце ў сістэму, каб убачыць гэту тэму."
       server_error:
-        title: "Тэму не атрымалася загрузіць"
-        description: "Выбачайце, мы не змаглі спампаваць гэтую тэму, верагодна, з-за праблем са злучэннем. Калі ласка, паспрабуйце яшчэ раз. Калі праблема застаецца, дайце нам ведаць."
+        title: "Не ўдалося загрузіць тэму"
+        description: "Не атрымалася загрузіць гэту тэму, верагодна, з-за праблем з падключэннем. Паспрабуйце яшчэ раз. Калі праблема застанецца, звярніцеся да нас."
       not_found:
-        title: "Тэму не знойдзена"
-        description: "Выбачайце, мы не змаглі знайсці гэтую тэму. Магчыма, яна была выдаленая мадэратарам?"
-      back_to_list: "Вярнуцца да спісу тым"
+        title: "Тэма не знойдзена"
+        description: "Не атрымалася знайсці гэту тэму. Магчыма, яна была выдалена мадэратарам?"
+      back_to_list: "Вярнуцца да спісу тэм"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
-      deleted: "Тэма была выдаленая"
+      deleted: "Тэма была выдалена"
       slow_mode_update:
         enable: "Уключыць"
         remove: "Адключыць"
       topic_status_update:
-        when: "калі:"
+        when: "Калі:"
       auto_close:
-        title: "Аўтаматычнае закрыццё тэмы"
+        title: "Аўтаматычна закрываць тэму"
         error: "Калі ласка, увядзіце карэктнае значэнне."
       auto_close_title: "Настройка аўтаматычнага закрыцця"
       timeline:
@@ -1833,6 +1838,15 @@ be:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "дадаць"
+      description: "Апісанне"
+      settings:
+        title: "Налады"
+        general: "Агульныя"
+        back: "Назад"
+        name: "Імя"
+      localization:
+        name: "Імя"
+        description: "Апісанне"
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
@@ -1968,6 +1982,11 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+        group_traffic: "трафік"
+        group_members: "Члены"
+        group_moderation: "Мадэрацыя"
+        group_security: "Бяспека"
+        group_other: "Іншае"
       config_sections:
         account:
           title: "Аккаўнт"
@@ -2052,6 +2071,9 @@ be:
               title: "Логі"
         reports:
           title: "Справаздачы"
+          sub_pages:
+            settings:
+              title: "Налады"
         badges:
           title: "значкі"
         permalinks:
@@ -2165,6 +2187,7 @@ be:
         save: "захаваць"
         cancel: "адмяніць"
         continue: "Працягнуць"
+        copy_key: "капіяваць"
         revoke: "адклікаць"
       api:
         generate_master: "Згенераваць Галоўны ключ API"

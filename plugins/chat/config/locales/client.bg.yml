@@ -28,6 +28,11 @@ bg:
             chat:
               create_message: "Създаване на чат съобщение в зададен канал."
     chat:
+      edit_category:
+        tab_title: "Чат"
+        description: "Описание"
+        actions: "Действия"
+        settings: "Настройки"
       deleted_chat_username: изтрит
       dates:
         yesterday: "Вчера"
@@ -39,6 +44,7 @@ bg:
       cancel: "Прекрати"
       cancel_reply: "Отмяна на отговора"
       chat_channels: "Канали"
+      pinned: "Закована"
       browse_all_channels: "Преглед на всички канали"
       move_to_channel:
         title: "Преместване на съобщенията в канал"

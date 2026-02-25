@@ -114,7 +114,9 @@ nb_NO:
         save: "Lagre"
         remove_parameter: "Fjern"
         parameter_required: "Påkrevd"
+        credential_not_set: "(ikke angitt)"
         edit: "Rediger"
+        test: "Test"
         delete: "Slett"
       secrets:
         short_title: "Legitimasjon"

@@ -1694,6 +1694,9 @@ et:
         progress:
           one: "Edenemine: <strong>%{count}</strong> teema"
           other: "Edenemine: <strong>%{count}</strong> teemat"
+        error_topic_count:
+          one: "%{count} teema"
+          other: "%{count} teemat"
       none:
         unread: "Sul ei ole lugemata teemasid."
         new: "Sul ei ole uusi teemasid."
@@ -2545,6 +2548,15 @@ et:
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
+      description: "Kirjeldus"
+      settings:
+        title: "Seaded"
+        general: "Üldine"
+        back: "Tagasi"
+        name: "Nimi"
+      localization:
+        name: "Nimi"
+        description: "Kirjeldus"
       sort_by: "Järjesta:"
       sort_by_count: "üldarv"
       sort_by_name: "nimi"
@@ -2714,6 +2726,12 @@ et:
         remove_muted_tags_from_latest:
           always: "alati"
           never: "mitte kunagi"
+      reports:
+        group_traffic: "Liiklus"
+        group_members: "Liikmed"
+        group_moderation: "Modereerimine"
+        group_security: "Turve"
+        group_other: "Muu"
       config_sections:
         account:
           title: "Konto"
@@ -2798,6 +2816,10 @@ et:
           sub_pages:
             logs:
               title: "Logid"
+        reports:
+          sub_pages:
+            settings:
+              title: "Seaded"
         badges:
           title: "Märgised"
         permalinks:
@@ -2843,13 +2865,6 @@ et:
         default_value: "Vaikimisi"
       search:
         title: "Otsi"
-        result_types:
-          theme:
-            one: "Kujundusteema"
-            other: "Kujundused"
-          component:
-            one: "Komponent"
-            other: "Komponendid"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -2965,6 +2980,7 @@ et:
         save: "Salvesta"
         cancel: "Tühista"
         continue: "Jätka"
+        copy_key: "Kopeeri"
         revoke: "Tühista "
       api:
         generate_master: "Genereeri API peavõti"
@@ -3718,6 +3734,7 @@ et:
           title: "Kuva kasutaja profiilil"
         field_types:
           text: "Tekst"
+          date: "Kuupäev"
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:

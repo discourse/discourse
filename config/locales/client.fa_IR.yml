@@ -567,19 +567,13 @@ fa_IR:
       in_reply_to: "در پاسخ به"
       filtered_flagged_by: "پرچم گذاری شده توسط"
       unknown:
-        title:
-          one: "از طرف افزونه غیرفعال شده، موارد قابل بازبینی معلق دارید:"
-          other: "از طرف افزونه‌های غیرفعال، موارد قابل بازبینی معلق دارید:"
         instruction: "تا زمانی که پلاگین مربوط را فعال نکنید، نمی توانند به درستی نمایش داده شوند. لطفا افزونه را فعال کنید و صفحه را تازه کنید. البته می توانید آنها را نادیده نیز بگیرید. <a href='%{url}' target='_blank'>بیشتر بدانید...</a>"
         reviewable_unknown_source: "%{reviewableType} (افزونه ناشناخته)"
         reviewable_known_source: "%{reviewableType} (از افزونه '%{pluginName}')"
         ignore_all: "چشم‌پوشی از همه"
         enable_plugins: "فعال‌سازی افزونه"
-        delete_confirm: "آیا مطمئن هستید که می‌خواهید تمام بررسی‌های ایجاد شده توسط پلاگین‌های غیرفعال را حذف کنید؟"
-        ignore_success: "تمام بررسی‌های ایجاد شده توسط پلاگین‌های غیرفعال حذف شده‌اند."
       explain:
         why: "توضیح دهید که چرا این مورد در صف پایان یافت"
-        title: "امتیازدهی قابل تجدید نظر"
         formula: "فرمول"
         subtotal: "جمع جزء"
         total: "مجموع"
@@ -593,10 +587,8 @@ fa_IR:
           title: "کاربرانی که پرچم آن ها به طور گروهی پذیرفته شده است، یک امتیاز دریافت می کنند."
         trust_level_bonus:
           name: "سطح اعتماد"
-          title: "موارد قابل بررسی که توسط کاربرانی با میزان اعتماد بیشتر ایجاد شده اند، اولویت بالاتری دارند."
         type_bonus:
           name: "امتیاز را وارد کنید"
-          title: "موارد قابل بررسی خاص می توانند کارمندان دارای امتیاز شوند تا اولویت آن ها را بیشتر کند."
       revise_and_reject_post:
         title: "تجدید نظر کردن"
         reason: "دلیل"
@@ -605,7 +597,6 @@ fa_IR:
         custom_reason: "شرح واضحی از دلیل ارائه دهید"
         other_reason: "غیره…"
         optional: "اختیاری"
-      stale_help: "این موردِ قابل بررسی توسط <b>%{username}</b> حل شده است."
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
         required: "قبل از بازنگری موارد باید آن‌ها را درخواست دهید."
@@ -2914,8 +2905,6 @@ fa_IR:
         max_views:
           placeholder: حداکثر
           aria_label: فیلتر بر اساس حداکثر بازدید
-        additional_options:
-          label: "بر اساس تعداد پست‌ها و بازدیدهای موضوع فیلتر کنید"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -3045,6 +3034,9 @@ fa_IR:
           other: "پیشرفت: <strong>%{count}</strong> موضوع"
         performing: "در حال انجام عملیات انبوه، لطفاً صبر کنید..."
         completed: "عملیات انبوه با موفقیت انجام شد!"
+        error_topic_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوع"
       none:
         unread: "موضوع خوانده نشده‌ای ندارید."
         unseen: "شما هیچ موضوع دیده نشده‌ای ندارید."
@@ -4407,7 +4399,20 @@ fa_IR:
         one: "مترادف آن نیز حذف خواهد شد."
         other: "%{count} مترادف آن نیز حذف خواهند شد."
       edit_tag: "ویرایش نام و توضیحات برچسب"
-      description: "توضیحات (حداکثر ۱۰۰۰ نویسه)"
+      description: "توضیح"
+      settings:
+        title: "تنظیم"
+        general: "عمومی"
+        localizations: "محلی‌سازی‌ها"
+        back: "بازگشت"
+        name: "نام"
+        slug: "نشانک (slug)"
+        name_placeholder: "نام برچسب"
+        synonyms_subtitle: "هنگامی که از برچسب‌های زیر استفاده می‌شود، آنها با %{name}جایگزین می‌شوند"
+      localization:
+        locale: "زبان"
+        name: "نام"
+        description: "توضیح"
       sort_by: "مرتب سازی بر اساس:"
       sort_by_count: "تعداد"
       sort_by_name: "نام"
@@ -4839,9 +4844,13 @@ fa_IR:
           never: "هیچوقت"
       reports:
         title: "لیستی از گزارشات موجود"
-        meta_doc: "گزارش‌ها ابزار قدرتمندی هستند که به شما کمک می‌کنند بفهمید چه اتفاقی در سایت شما می‌افتد. آنها می توانند به شما در شناسایی روندها، شناسایی مشکلات و تصمیم گیری بر اساس داده ها کمک کنند."
         sidebar_title: "گزارشات"
         back: "بازگشت به همه گزارش‌ها"
+        group_traffic: "ترافیک"
+        group_members: "اعضاء"
+        group_moderation: "نظارت"
+        group_security: "امنیت"
+        group_other: "دیگر"
       config_sections:
         account:
           title: "حساب کاربری"
@@ -4866,7 +4875,6 @@ fa_IR:
         preview: "پیش‌نمایش"
         enabled_for_options:
           everyone: "همه"
-          staff: "فقط به تیم مدیریت"
         statuses:
           experimental: "آزمایشی"
         impact_roles:
@@ -4984,6 +4992,9 @@ fa_IR:
         reports:
           title: "گزارشات"
           header_description: "گزارش‌ها ابزار قدرتمندی هستند که به شما کمک می‌کنند بفهمید چه اتفاقی در سایت شما می‌افتد. آنها می توانند به شما در شناسایی روندها، شناسایی مشکلات و تصمیم گیری بر اساس داده ها کمک کنند."
+          sub_pages:
+            settings:
+              title: "تنظیم"
         badges:
           title: "نشان‌ها"
         content:
@@ -5068,22 +5079,6 @@ fa_IR:
         default_value: "پیش‌فرض"
       search:
         title: "جستجو"
-        result_types:
-          page:
-            one: "صفحه"
-            other: "صفحه"
-          report:
-            one: "گزارش"
-            other: "گزارش"
-          setting:
-            one: "تنظیم"
-            other: "تنظیم"
-          theme:
-            one: "قالب"
-            other: "قالب‌ها"
-          component:
-            one: "کامپوننت "
-            other: "کامپوننت‌ها"
       new_features:
         title: "چه چیزی جدید شده؟"
         check_for_updates: "برررسی به‌روز‌رسانی‌ها"
@@ -5292,6 +5287,7 @@ fa_IR:
         save: "ذخیره"
         cancel: "انصراف"
         continue: "ادامه"
+        copy_key: "کپی"
         back: "بازگشت به کلیدهای API"
         revoke: "ابطال"
         undo_revoke: "لغو ابطال"
@@ -6883,6 +6879,7 @@ fa_IR:
           disabled: "قابل جستجو نیست"
         field_types:
           text: "متن"
+          date: "تاریخ"
           confirm: "تاییدیه"
           dropdown: "کرکره‌ای"
           multiselect: "انتخاب چندگانه"

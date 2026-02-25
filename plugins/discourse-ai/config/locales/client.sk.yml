@@ -391,7 +391,6 @@ sk:
         overwrite: "Prepísať"
         description: "Popis"
         no_llm_selected: "Nie je vybraný žiadny jazykový model"
-        use_parent_llm: "Použiť jazykový model personas"
         max_context_posts: "Maximálny počet kontextových príspevkov"
         max_context_posts_help: "Maximálny počet príspevkov, ktoré sa majú použiť ako kontext pre AI pri odpovedi používateľovi. (predvolene prázdne)"
         vision_enabled: Videnie povolené
@@ -526,8 +525,9 @@ sk:
         parameter_description: "Popis parametra"
         enum_value: "Hodnota enumu"
         add_enum_value: "Pridať enum hodnotu"
+        credential_not_set: "(nie je nastavené)"
         edit: "Upraviť"
-        test: "Spustiť test"
+        test: "Test"
         delete: "Odstrániť"
         saved: "Nástroj uložený"
         confirm_delete: "Naozaj chcete tento nástroj odstrániť?"
@@ -544,6 +544,7 @@ sk:
         edit: "Upraviť"
         delete: "Odstrániť"
         embedding: "Vkladám"
+        tool: "Nástroj"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"
@@ -602,8 +603,8 @@ sk:
           other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
         model_description:
           none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
-          anthropic-claude-opus-4-5: "Najinteligentnejší model spoločnosti Anthropic"
-          anthropic-claude-sonnet-4-5: "Optimálna rovnováha medzi rýchlosťou a cenou"
+          anthropic-claude-opus-4-6: "Najinteligentnejší model spoločnosti Anthropic"
+          anthropic-claude-sonnet-4-6: "Optimálna rovnováha medzi rýchlosťou a cenou"
           anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
           open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5"
         preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
@@ -770,12 +771,7 @@ sk:
         provider_fields:
           model_name: "Názov modelu"
         semantic_search: "Témy (sémantické)"
-        semantic_search_loading: "Vyhľadávanie ďalších výsledkov pomocou AI"
         semantic_search_results:
-          toggle: "Zobrazuje sa %{count} nájdených výsledkov pomocou AI"
-          toggle_hidden: "Skrytie výsledkov %{count} nájdených pomocou AI"
-          none: "Je nám ľúto, naša AI nenašla žiadne zodpovedajúce témy"
-          new: "Stlačením tlačidla \"hľadať\" začnete vyhľadávať nové výsledky pomocou AI"
           unavailable: "Výsledky AI nie sú k dispozícii"
         semantic_search_tooltips:
           results_explanation: "Ak je táto funkcia povolená, pod ňu sa pridajú ďalšie výsledky vyhľadávania s AI."

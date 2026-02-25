@@ -8,7 +8,8 @@ module Jobs
       def execute(args)
         return unless SiteSetting.rss_polling_enabled
 
-        return unless @author = User.find_by_username(args[:author_username])
+        @author = User.find_by_username(args[:author_username])
+        return if @author.nil?
 
         @discourse_category_id = args[:discourse_category_id]
         return if @discourse_category_id.present? && !Category.exists?(@discourse_category_id)
@@ -39,13 +40,10 @@ module Jobs
 
       def poll_feed
         topics_polled_from_feed.each do |feed_item|
-          next if !feed_item.content.present?
-          next if !feed_item.title.present?
-
-          if (
-               feed_category_filter.present? &&
-                 feed_item.categories.none? { |c| c.include?(feed_category_filter) }
-             )
+          next if feed_item.content.blank?
+          next if feed_item.title.blank?
+          if feed_category_filter.present? &&
+               feed_item.categories.none? { |c| c.include?(feed_category_filter) }
             next
           end
 
@@ -54,9 +52,7 @@ module Jobs
           updated_tags = discourse_tags
           if !SiteSetting.rss_polling_update_tags
             url = TopicEmbed.normalize_url(feed_item.url)
-            embed = TopicEmbed.topic_embed_by_url(url)
-            topic_exists = embed.present?
-            updated_tags = nil if topic_exists
+            updated_tags = nil if TopicEmbed.topic_embed_by_url(url).present?
           end
 
           post =
@@ -90,58 +86,100 @@ module Jobs
       end
 
       def set_image_as_thumbnail(post, image_link)
-        begin
-          final_destination = FinalDestination.new(image_link)
-          image_final_url = final_destination.resolve
-          image_data = Excon.new(image_final_url.to_s).request(method: :get, expects: 200).body
-          tmp = Tempfile.new("downloaded_image")
-          tmp.binmode
-          tmp.write(image_data)
-          tmp.rewind
-          source_filename = File.basename(URI.parse(image_final_url).path)
-          upload = UploadCreator.new(tmp, source_filename).create_for(post.user.id)
-          UploadReference.ensure_exist!(upload_ids: [upload.id], target: post)
-          post.raw = "<img src=\"#{upload.url}\"><br/><br/>#{post.raw}"
-          post.save!
-          post.rebake!
-        rescue => e
-          Rails.logger.error(
-            "RSS Polling: Unable to download and save #{image_link} for post ##{post.id} #{e.message}",
-          )
-        ensure
-          begin
-            tmp.close
-          rescue StandardError
-            nil
+        tmp = nil
+        image_uri = nil
+
+        fd = FinalDestination.new(image_link)
+        fd.get do |response, chunk, uri|
+          throw :done if uri.blank? || !response.is_a?(Net::HTTPSuccess)
+
+          if tmp.nil?
+            image_uri = uri
+            tmp = Tempfile.new("downloaded_image")
+            tmp.binmode
           end
-          begin
-            tmp.unlink
-          rescue StandardError
-            nil
-          end
+
+          tmp.write(chunk)
         end
+
+        return if tmp.nil?
+
+        tmp.rewind
+        source_filename = File.basename(image_uri.path)
+        upload = UploadCreator.new(tmp, source_filename).create_for(post.user.id)
+        UploadReference.ensure_exist!(upload_ids: [upload.id], target: post)
+        post.raw = "<img src=\"#{upload.url}\"><br/><br/>#{post.raw}"
+        post.save!
+        post.rebake!
+      rescue => e
+        Rails.logger.error(
+          "RSS Polling: Unable to download and save #{image_link} for post ##{post.id} #{e.message}",
+        )
+      ensure
+        tmp&.close
+        tmp&.unlink
       end
 
       def topics_polled_from_feed
         raw_feed = fetch_raw_feed
-        return [] if raw_feed.blank?
+
+        if raw_feed.blank?
+          Rails.logger.warn("RSS Polling: Failed to fetch feed from #{feed_url}")
+          return []
+        end
 
         parsed_feed = RSS::Parser.parse(raw_feed, false)
-        return [] if parsed_feed.blank?
+
+        if parsed_feed.blank?
+          Rails.logger.warn("RSS Polling: Unable to parse feed from #{feed_url}")
+          return []
+        end
 
         parsed_feed.items.map { |item| ::DiscourseRssPolling::FeedItem.new(item) }
-      rescue RSS::NotWellFormedError, RSS::InvalidRSSError
+      rescue RSS::NotWellFormedError, RSS::InvalidRSSError => e
+        Discourse.warn_exception(e, message: "RSS Polling: Invalid RSS from #{feed_url}")
         []
       end
 
       def fetch_raw_feed
-        final_destination = FinalDestination.new(@feed_url)
-        feed_final_url = final_destination.resolve
-        return nil unless final_destination.status == :resolved
+        url, headers = extract_api_credentials(@feed_url)
+        body = +""
 
-        Excon.new(feed_final_url.to_s).request(method: :get, expects: 200).body
-      rescue Excon::Error::HTTPStatus
-        nil
+        fd = FinalDestination.new(url, headers:)
+        response_status = nil
+
+        fd.get do |response, chunk, uri|
+          if uri.blank? || !response.is_a?(Net::HTTPSuccess)
+            response_status = response&.code
+            throw :done
+          end
+          body << chunk
+        end
+
+        if body.blank? && response_status.present?
+          Rails.logger.warn(
+            "RSS Polling: HTTP #{response_status} when fetching #{feed_url} (status: #{fd.status})",
+          )
+        end
+
+        body.presence
+      end
+
+      def extract_api_credentials(url)
+        uri = URI.parse(url)
+        return url, {} if uri.query.blank?
+
+        params = CGI.parse(uri.query)
+        api_key = params.delete("api_key")&.first
+        api_username = params.delete("api_username")&.first
+
+        return url, {} if api_key.blank?
+
+        headers = { "Api-Key" => api_key }
+        headers["Api-Username"] = api_username if api_username.present?
+
+        uri.query = params.empty? ? nil : URI.encode_www_form(params)
+        [uri.to_s, headers]
       end
     end
   end

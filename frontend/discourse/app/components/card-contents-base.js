@@ -84,7 +84,7 @@ export default class CardContentsBase extends Component {
       post,
     });
 
-    document.querySelector(".card-cloak")?.classList.remove("hidden");
+    document.querySelector(".card-cloak")?.classList.add("--visible");
 
     this.appEvents.trigger("user-card:show", { username });
     // Using `next()` to optimise INP
@@ -106,7 +106,7 @@ export default class CardContentsBase extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    document.addEventListener("mousedown", this._clickOutsideHandler);
+    document.addEventListener("pointerdown", this._clickOutsideHandler);
     document.addEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {
@@ -245,7 +245,7 @@ export default class CardContentsBase extends Component {
   @bind
   _hide() {
     if (!this.visible && this.site.mobileView) {
-      document.querySelector(".card-cloak")?.classList.add("hidden");
+      document.querySelector(".card-cloak")?.classList.remove("--visible");
     }
 
     this._menuInstance?.destroy();
@@ -273,7 +273,7 @@ export default class CardContentsBase extends Component {
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    document.removeEventListener("mousedown", this._clickOutsideHandler);
+    document.removeEventListener("pointerdown", this._clickOutsideHandler);
     document.removeEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {

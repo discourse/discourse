@@ -67,7 +67,7 @@ export default class RagUploader extends Component {
       ajax(
         `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${targetName}&target_id=${this.target.id}`
       ).then((statuses) => {
-        this.set("ragIndexingStatuses", statuses);
+        this.ragIndexingStatuses = statuses;
       });
     }
 

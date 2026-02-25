@@ -45,6 +45,12 @@ export default class TagShowRoute extends DiscourseRoute {
     let slug = params.tag_slug || params.tag_name;
     let id = parseInt(params.tag_id, 10);
 
+    if (params.tag_id && isNaN(id) && params.category_slug_path_with_id) {
+      params.category_slug_path_with_id = `${params.category_slug_path_with_id}/${slug}`;
+      slug = params.tag_id;
+      id = null;
+    }
+
     if (!slug) {
       slug = NONE;
       id = null;
@@ -61,8 +67,19 @@ export default class TagShowRoute extends DiscourseRoute {
           id = result.tag_info.id;
           // redirect to canonical URL with ID
           const routeName = transition.to.name;
-          const newParams = { ...params, tag_slug: slug, tag_id: id };
-          return this.router.replaceWith(routeName, newParams);
+          const transitionQueryParams = transition.to.queryParams;
+          if (params.category_slug_path_with_id) {
+            return this.router.replaceWith(
+              routeName,
+              params.category_slug_path_with_id,
+              result.tag_info.slug,
+              id,
+              { queryParams: transitionQueryParams }
+            );
+          }
+          return this.router.replaceWith(routeName, result.tag_info.slug, id, {
+            queryParams: transitionQueryParams,
+          });
         }
       } catch {
         // tag not found, continue with slug only
@@ -127,6 +144,8 @@ export default class TagShowRoute extends DiscourseRoute {
           transition.to.queryParams["category"]
         );
       }
+    } else if (slug === NONE) {
+      filter = `tag/${NONE}/l/${topicFilter}`;
     } else {
       // use ID-only format for API calls
       filter = `tag/${id}/l/${topicFilter}`;

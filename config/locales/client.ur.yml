@@ -657,19 +657,13 @@ ur:
       in_reply_to: "کے جواب میں"
       filtered_flagged_by: "نے فلَیگ کیا"
       unknown:
-        title:
-          one: "آپ کے پاس غیر فعال اضافی سہولتوں سے قابل جائزہ زیر التواء ہیں:"
-          other: "آپ کے پاس غیر فعال اضافی سہولتوں سے قابل جائزہ زیر التواء ہیں:"
         instruction: "جب تک آپ متعلقہ اضافی سہولت کو فعال نہیں کرتے ہیں تب تک وہ صحیح طریقے سے ظاہر نہیں ہو سکتی۔ براہ کرم اضافی سہولت کو فعال کریں اور صفحہ کو ریفریش کریں۔ متبادل کے طور پر، آپ ان کو نظر انداز کر سکتے ہیں۔ <a href='%{url}' target='_blank'>مزید جانیں...</a>"
         reviewable_unknown_source: "%{reviewableType} (نامعلوم اضافی سہولت)"
         reviewable_known_source: "%{reviewableType} ('%{pluginName}' اضافی سہولت سے)"
         ignore_all: "سب کو نظر انداز کریں"
         enable_plugins: "اضافی سہولتوں کو فعال کریں"
-        delete_confirm: "کیا آپ واقعی غیر فعال اضافی سہولتوں کے ذریعے بنائے گئے تمام جائزوں کو حذف کرنا چاہتے ہیں؟"
-        ignore_success: "غیر فعال اضافی سہولتوں کے ذریعہ بنائے گئے تمام جائزے حذف کردیئے گئے۔"
       explain:
         why: "وضاحت کریں کہ یہ شے آخر میں قطار میں کیوں داخل ہو گئی"
-        title: "قابل تجدید اسکورنگ"
         formula: "فارمولا"
         subtotal: "جزوی میزان"
         total: "حاصل جمع"
@@ -683,10 +677,8 @@ ur:
           title: "جن اراکین کے فلَیگز کے ساتھ تاریخی طور پر اتفاق کیا گیا ہو انہیں بَونَس دیا جاتا ہے۔"
         trust_level_bonus:
           name: "اعتماد کی سطح"
-          title: "اعلیٰ فعالیت کا درجہ رکھنے والے اراکین کے ذریعہ تخلیق کردہ قابلِ جائزہ متن کا اسکور زیادہ ہوتا ہے۔"
         type_bonus:
           name: "قِسم بَونَس"
-          title: "سٹاف کی طرف سے کچھ قابل تجدید اقسام کو بَونَس تفویض کیا جاسکتا ہے تاکہ ان کو اعلیٰ ترجیح بنایا جاسکے۔"
       revise_and_reject_post:
         title: "نظر ثانی"
         reason: "وجہ"
@@ -695,7 +687,6 @@ ur:
         custom_reason: "وجہ واضح طور پر بیان کریں"
         other_reason: "دیگر..."
         optional: "اختیاری"
-      stale_help: "اس نظر ثانی کا حل <b>%{username}</b>نے کیا ہے۔"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
         required: "اشیاء کا جائزہ لینے سے پہلے آپ کا اُن کو کََلیم کرنا ضروری ہے۔"
@@ -2897,7 +2888,15 @@ ur:
       toggle_direction: "سمت ٹوگل کریں"
       apply_wrap_title: "رَیپ اپلائی کریں"
       wrap_modal:
+        title: "ریپ میں ترمیم کریں"
+        name_label: "ریپ کا نام"
+        attributes_label: "خصوصیات"
+        add_attribute: "خصوصیت شامل کریں"
+        remove_attribute: "خصوصیت ہٹا دیں"
         apply: "لاگو کریں"
+        unwrap: "اَن ریپ کریں"
+        no_attributes: "ابھی تک کوئی خصوصیات شامل نہیں کی گئیں۔"
+      wrap_text: "ریپ کا مواد"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
@@ -2954,6 +2953,7 @@ ur:
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
         toggle_unlisted:
           label: غیر مندرج ٹوگل
+          desc: "غیر اندراج شدہ عنوانات صرف براہ راست لنک سے قابل رسائی ہیں"
       reload: "دوبارہ لوڈ"
       ignore: "نظر انداز کریں"
       image_alt_text:
@@ -2964,7 +2964,14 @@ ur:
         zoom_out: "تصویر کا سائز کم کریں"
         zoom_in: "تصویر کا سائز بڑھائیں"
         remove: "تصویر کو ہٹا دیں"
+        add_to_grid: "گرڈ میں شامل کریں"
+        move_outside_grid: "گرڈ سے باہر منتقل کریں"
       image: "تصویر"
+      grid_label: "یہ ایک گرڈ کے طور پر دکھایا جائے گا"
+      grid_mode_grid: "گرڈ"
+      grid_mode_carousel: "کیروسل"
+      grid_mode_title: "تصویری گیلری کے انداز کو %{mode}پر سیٹ کریں"
+      remove_grid: "گرڈ کو ہٹائیں"
       image_scale_button: "تصویر کو %{percent}% اسکیل کریں"
       delete_image_button: تصویر کو حذف کریں
       toggle_image_grid: تصویری گرڈ کو ٹوگل کریں
@@ -2974,6 +2981,7 @@ ur:
         remove: "لنک ہٹانا"
         visit: "بیرونی ٹیب میں لنک کھولیں"
         link_copied: "لنک کاپی ہو گیا!"
+      unsupported_token: "رِچ ٹیکسٹ ایڈیٹر اس پوسٹ میں استعمال ہونے والی تمام خصوصیات کو سپورٹ نہیں کرتا ہے؛مارک ڈاؤن ایڈیٹر پر منتقل کیا جا رہا ہے۔"
     notifications:
       tooltip:
         regular:
@@ -3043,6 +3051,13 @@ ur:
       votes_released: "%{description} - مکمل"
       new_features: "نئی خصوصیات دستیاب ہیں!"
       admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
+      upcoming_changes:
+        available:
+          title: "آنے والی تبدیلیاں"
+          description: "'%{changeName}' پیش نظارہ کے لیے دستیاب ہے"
+        automatically_promoted:
+          title: "آنے والی تبدیلیاں"
+          description: "'%{changeName}' خود بخود فعال ہو گیا ہے"
       dismiss_confirmation:
         body:
           default:
@@ -3099,7 +3114,10 @@ ur:
         membership_request_consolidated: "نئی رکنیت کی درخواستیں"
         reaction: "نیا ردعمل"
         votes_released: "ووٹ جاری کر دیا گیا"
+        new_features: "ڈسکورس کی نئی خصوصیات جاری کر دی گئی ہیں"
         admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
+        upcoming_change_available: "نئی آنے والی تبدیلی '%{changeName}' دستیاب ہے"
+        upcoming_change_automatically_promoted: "آنے والی تبدیلی '%{changeName}' خود بخود فعال ہو گئی ہے"
     upload_selector:
       change: "تبدیل"
       delete: "مٹائیں"
@@ -3190,6 +3208,7 @@ ur:
           aria_label: ٹیگز کا استعمال کرتے ہوئے فلٹر
         filters:
           label: صرف موضوعات/دھاگے لوٹائیں۔۔۔
+          all: پیغامات شامل کریں
           title: صرف عنوان سے ملتے ہوئے
           likes: جو میں نے لائیک کیے
           posted: جن میں میں نے پوسٹ کیا
@@ -3235,8 +3254,6 @@ ur:
         max_views:
           placeholder: زیادہ سے زیادہ
           aria_label: زیادہ سے زیادہ آراء سے فلٹر
-        additional_options:
-          label: "دھاگے کی گنتی اور موضوع کے ملاحظات کے لحاظ سے فلٹر"
     hamburger_menu: "نیویگیشن مینو"
     new_item: "نیا"
     go_back: "واپس جائیں"
@@ -3366,8 +3383,12 @@ ur:
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
+        notify: "اس تبدیلی کے بارے میں صارفین کو مطلع کریں۔"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
+        error_topic_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوعات"
       none:
         unread: "آپ کے پاس کوئی بغیر پڑھے موضوع موجود نہیں۔"
         unseen: "آپ کے لیے کوئی ان دیکھے موضوعات نہیں ہیں۔"
@@ -3385,6 +3406,7 @@ ur:
           unread: "کچھ بھی بغیر پڑھا نہیں بچا... متاثر کن!"
           new_new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
           new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
+          generic: "یہاں دیکھنے کے لیے کچھ نہیں ہے...جلد ہی دوبارہ چیک کریں!"
     topic_bulk_actions:
       dismiss:
         name: "بر خاست کریں"
@@ -3513,12 +3535,15 @@ ur:
       created_at: "پر بنا: %{date}"
       bumped_at: "تازہ ترین: %{date}"
       browse_latest_topics: "تازہ ترین موضوعات کو براؤز کریں"
+      browse_new_replies: "نئے جوابات کو براؤز کریں"
+      browse_new_topics: "نئے موضوعات کو براؤز کریں"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       jump_reply: "دھاگہ کے اصل مقام پر جائیں"
       jump_reply_aria: "@%{username}کے دھاگہ کو اس کی اصل جگہ پر لے جائیں"
       jump_reply_button: "دھاگہ پر جائیں"
       deleted: "موضوع مٹادیا گیا ہے"
       slow_mode_update:
+        title: "سست موڈ"
         select: "اراکین اس موضوع میں پوسٹ کر سکتے ہیں اس عرصہ میں صرف ایک بار :"
         description: "تیزی سے چلنے والی یا متنازعہ بحثوں میں سوچ بچار کو فروغ دینے کے لیے، اراکین کو اس موضوع پر دوبارہ پوسٹ کرنے سے پہلے انتظار کرنا چاہیے۔"
         enable: "فعال کریں"
@@ -3540,6 +3565,8 @@ ur:
           12_hours: "12 گھنٹے"
           24_hours: "24 گھنٹے"
           custom: "اپنی مرضی کے مطابق مدت"
+      slow_mode_notice:
+        duration: "براہ کرم اس عنوان پر اپنی پوسٹس کے درمیان %{duration} کا انتظار کریں"
       topic_status_update:
         title: "موضوع ٹائمر"
         save: "ٹائمر مقرر کریں"
@@ -3569,6 +3596,8 @@ ur:
         title: "آخری دھاگہ کے بعد موضوع از خود بند ہونے والا ہے"
       auto_delete:
         title: "موضوع خودبخود حذف کریں"
+      auto_delete_after_last_post:
+        title: "آخری دھاگہ کے بعد موضوع از خود حذف ہونے والا ہے"
       auto_bump:
         title: "خود کار طریقے سے موضوع دھکا لگائیں"
       reminder:
@@ -3580,6 +3609,7 @@ ur:
         auto_close: "یہ موضوع خود کار طریقے سے بند کر دیا جائے گا %{timeLeft}۔"
         auto_publish_to_category: "یہ موضوع <a href=%{categoryUrl}>#%{categoryName}</a> میں شائع کر دیا جائے گا %{timeLeft}۔"
         auto_close_after_last_post: "یہ موضوع آخری جواب کے %{duration} بعد بند ہو جائے گا۔"
+        auto_delete_after_last_post: "یہ موضوع آخری جواب کے %{duration} بعد حذف ہو جائے گا۔"
         auto_delete: "یہ موضوع خودبخود مٹادیا جائے گا %{timeLeft}۔"
         auto_bump: "اس موضوع کو خود کار طریقے سے دھکا لگایا جائے گا %{timeLeft}۔"
         auto_reminder: "آپ کو اس موضوع کے بارے میں یاد دہانی کرائی جائے گی %{timeLeft}۔"
@@ -3675,6 +3705,8 @@ ur:
       reply:
         title: "جواب"
         help: "اس ٹاپک کا جواب لکھنا شروع کریں"
+      footer_buttons:
+        region_label: "موضوع کے ایکشنز"
       share:
         title: "موضوع کا اشتراک کریں"
         extended_title: "رابطہ شیئر کریں"
@@ -3854,6 +3886,12 @@ ur:
           one: آپ نے <b>%{count}</b> دھاگہ منتخب کیا۔
           other: "آپ نے <b>%{count}</b> دھاگے منتخب کیے۔"
       deleted_by_author_simple: "(موضوع مصنف نے مٹایا)"
+      localizations:
+        title_edit_warning:
+          message: "یہ ترجمہ شدہ موضوعاتی عنوان ہے۔<br><br>کیا آپ اس %{language} میں <b>اصل</b> زمرہ، ٹیگز، اور ٹائٹل کو حذف کرنا چاہتے ہیں یا خصوصی <b>ترجمہ</b>میں ترمیم کرنا چاہتے ہیں؟"
+          action_original: "اصل میں ترمیم کریں"
+          action_translation: "ترجمہ شدہ موضوعاتی عنوان میں ترمیم کریں"
+        editing_translation: "%{language} ترجمہ میں ترمیم کرتے ہوئے"
     post_list:
       title: "تازہ ترین پوسٹس"
       empty: "کوئی پوسٹس نہیں"
@@ -3861,7 +3899,9 @@ ur:
       bulk:
         select_all: "سبھی منتخب کریں"
         clear_all: "سبھی ہٹا دیں"
+        actions: "حجمی عوامل"
     post:
+      accessible_heading: "پوسٹ منجانب %{username} %{date}"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
       quote_reply_shortcut: "اقتباس (یا q دبائیں)"
@@ -3941,7 +3981,9 @@ ur:
           edit: "ترمیم کریں"
           delete: "مٹائیں"
         add: "نیا ترجمہ شامل"
-        manage: "ترجمے کا انتظام کریں (%{count} موجودہ)"
+        manage:
+          one: "ترجمے کا انتظام کریں (%{count} موجودہ)"
+          other: "ترجمے کا انتظام کریں (%{count} موجودہ)"
         view:
           one: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
           other: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
@@ -4781,7 +4823,19 @@ ur:
         other: "اس کے %{count} مترادفات بھی مٹا دیے جائیں گے۔"
       edit_tag: "ٹیگ نام اور تفصیل میں ترمیم کریں"
       edit: "ٹیگ میں ترمیم کریں"
-      description: "تفصیل (زیادہ سے زیادہ 1000 حروف)"
+      description: "تفصیل"
+      settings:
+        title: "سیٹِنگ"
+        general: "عام"
+        localizations: "لوکلائزیشنز"
+        back: "واپس"
+        name: "نام"
+        slug: "سلگ"
+        name_placeholder: "ٹیگ کا نام"
+      localization:
+        locale: "لوکیل"
+        name: "نام"
+        description: "تفصیل"
       sort_by: "ترتیب بہ:"
       sort_by_count: "شمار"
       sort_by_name: "نام"
@@ -5288,9 +5342,13 @@ ur:
           never: "کبھی نہیں"
       reports:
         title: "دستیاب رپورٹوں کی فہرست"
-        meta_doc: "رپورٹس ایک طاقتور ہتھیار ہیں جو آپ کو یہ سمجھنے میں مدد کرتی ہیں کہ آپ کی سائٹ پر کیا ہو رہا ہے۔ وہ آپ کو رجحانات، مسائل کی نشاندہی کرنے اور ڈیٹا کی بنیاد پر فیصلے کرنے میں مدد کر سکتی ہیں۔"
         sidebar_title: "رپورٹیں"
         back: "تمام رپورٹس پر واپس"
+        group_traffic: "ٹریفک"
+        group_members: "ممبران"
+        group_moderation: "ماڈریٹر کا کام"
+        group_security: "سیکورٹی"
+        group_other: "دیگر"
       config_sections:
         account:
           title: "اکاؤنٹ"
@@ -5315,7 +5373,6 @@ ur:
         preview: "جھلک دیکھیں"
         enabled_for_options:
           everyone: "ہر کوئی"
-          staff: "صرف سٹاف کیلئے"
         statuses:
           experimental: "تجرباتی"
         impact_roles:
@@ -5387,7 +5444,6 @@ ur:
               help_text: "تجویز کردہ سائز 600 x 80 پکسلز ہے۔"
             large_icon:
               title: "مربع آئیکن"
-              description: "لوگو کی تصویر کا مربع ورژن انتظامیہ کے اوپر ظاہر ہوتا ہے اور یہ موبائل ہوم اسکرین ایپ کا لوگو بھی ہے۔"
               help_text: "تجویز کردہ سائز 512 x 512 پکسلز ہے۔"
             square_icon_dark:
               required: "ڈارک موڈ کے لیے ایک مختلف مربع آئیکن استعمال کریں؟"
@@ -5540,7 +5596,7 @@ ur:
           header_description: "رپورٹس ایک طاقتور ٹول ہیں جو آپ کو یہ سمجھنے میں مدد کرتی ہیں کہ آپ کی سائٹ پر کیا ہو رہا ہے۔ وہ آپ کو رجحانات کی نشاندہی کرنے، مسائل کی نشاندہی کرنے اور ڈیٹا کی بنیاد پر فیصلے کرنے میں مدد کر سکتے ہیں۔"
           sub_pages:
             settings:
-              title: "ڈیش بورڈ کی ترتیبات"
+              title: "سیٹِنگ"
         badges:
           title: "تمغات"
           header_description: "تمغات اراکین کو ان کی سرگرمیوں، شراکتوں اور کامیابیوں کو پہچاننے، توثیق کرنے اور کمیونٹی کے اندر مثبت رویے اور مشغولیت کی حوصلہ افزائی کے لیے انعام دیتے ہیں۔"
@@ -5693,22 +5749,6 @@ ur:
         result_count:
           one: '%{count} نتیجہ برائے "%{filter}"'
           other: '%{count} نتائج برائے "%{filter}"'
-        result_types:
-          page:
-            one: "صفحه"
-            other: "صفحات"
-          report:
-            one: "گزارش"
-            other: "گزارشات"
-          setting:
-            one: "ترتیب"
-            other: "ترتیبات"
-          theme:
-            one: "تھیم"
-            other: "تِھیمز"
-          component:
-            one: "جزو"
-            other: "اجزاء"
       new_features:
         title: "نیا کیا ہے؟"
         check_for_updates: "اپ ڈیٹس کے لیے چیک کریں۔"
@@ -5930,6 +5970,7 @@ ur:
         save: "محفوظ کریں"
         cancel: "منسوخ"
         continue: "جاری رکھی"
+        copy_key: "کاپی"
         back: "اے پی آئی کلیدیں پر واپس جائیں"
         revoke: "منسوخ کریں"
         undo_revoke: "منسوخی واپس لیں"
@@ -7408,6 +7449,7 @@ ur:
             title: "اختیاری"
         field_types:
           text: "ٹیکسٹ"
+          date: "تاریخ"
           confirm: "تصدیق"
           dropdown: "ڈراپ ڈاؤن"
           multiselect: "کثیر الانتخاب"

@@ -55,6 +55,30 @@ describe "Admin Webhooks Page", type: :system do
     webhooks_page.click_save
 
     expect(webhooks_page).to have_webhook_details("https://www.example.com/4")
+
+    webhook = WebHook.find_by(payload_url: "https://www.example.com/4")
+    expect(webhook.tags).to contain_exactly(tag)
+  end
+
+  it "persists tag filters when re-editing a webhook" do
+    tag_chooser = PageObjects::Components::SelectKit.new(".tag-chooser")
+
+    webhooks_page.visit_page
+    webhooks_page.click_add
+
+    tag_chooser.expand
+    tag_chooser.search(tag.name)
+    tag_chooser.select_row_by_name(tag.name)
+
+    webhooks_page.fill_payload_url("https://www.example.com/5")
+    webhooks_page.click_save
+
+    expect(webhooks_page).to have_webhook_details("https://www.example.com/5")
+
+    webhooks_page.click_back
+    webhooks_page.click_edit("https://www.example.com/5")
+
+    expect(tag_chooser).to have_selected_name(tag.name)
   end
 
   it "can delete webhooks" do

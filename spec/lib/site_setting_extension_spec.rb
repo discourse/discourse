@@ -183,34 +183,6 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
-  describe "DiscourseEvent for login_required changed to true" do
-    before do
-      SiteSetting.login_required = false
-      SiteSetting.bootstrap_mode_min_users = 50
-      SiteSetting.bootstrap_mode_enabled = true
-    end
-
-    it "lowers bootstrap mode min users for private sites" do
-      SiteSetting.login_required = true
-
-      expect(SiteSetting.bootstrap_mode_min_users).to eq(10)
-    end
-  end
-
-  describe "DiscourseEvent for login_required changed to false" do
-    before do
-      SiteSetting.login_required = true
-      SiteSetting.bootstrap_mode_min_users = 50
-      SiteSetting.bootstrap_mode_enabled = true
-    end
-
-    it "resets bootstrap mode min users for public sites" do
-      SiteSetting.login_required = false
-
-      expect(SiteSetting.bootstrap_mode_min_users).to eq(50)
-    end
-  end
-
   describe "int setting" do
     before do
       settings.setting(:test_setting, 77)
@@ -1325,6 +1297,24 @@ RSpec.describe SiteSettingExtension do
     ensure
       SiteSetting.find_by(name: "embedded_media_post_allowed_groups").destroy
       SiteSetting.provider = test_provider
+    end
+  end
+
+  describe "disallowed_groups for group list settings" do
+    it "strips disallowed groups when setting a value" do
+      SiteSetting.whispers_allowed_groups = "0|1|2"
+      expect(SiteSetting.whispers_allowed_groups).to eq("1|2")
+
+      SiteSetting.whispers_allowed_groups = "0"
+      expect(SiteSetting.whispers_allowed_groups).to eq("")
+
+      SiteSetting.whispers_allowed_groups = "1|0|2|0"
+      expect(SiteSetting.whispers_allowed_groups).to eq("1|2")
+    end
+
+    it "is included in all_settings output" do
+      setting = SiteSetting.all_settings.find { |s| s[:setting] == :whispers_allowed_groups }
+      expect(setting[:disallowed_groups]).to eq("0")
     end
   end
 

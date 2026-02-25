@@ -31,6 +31,7 @@ ar:
     chat_editing_grace_period_max_diff_high_trust: "الحد الأقصى لعدد تغييرات الأحرف المسموح بها خلال فترة السماح بالتعديل في الدردشة، وعرض علامة (تم التعديل) بجانب رسالة الدردشة إذا تم تغيير المزيد (مستوى الثقة 2 وأعلى)."
     chat_preferred_index: "علامة التبويب المفضَّلة عند تحميل /chat."
     allow_chat_in_anonymous_mode: "فعّل هذا الإعداد للسماح للمستخدمين الذين يتصفحون موقعك بشكل مجهول باستخدام الدردشة. يتطلب هذا الإعداد تفعيل خيار \"السماح بالوضع المجهول\"."
+    chat_search_enabled: "فعّل هذا الإعداد للسماح للمستخدمين بالبحث في رسائل الدردشة."
     errors:
       chat_default_channel: "يجب أن تكون قناة الدردشة الافتراضية قناةً عامة."
       direct_message_enabled_groups_invalid: "يجب عليك تحديد مجموعة واحدة على الأقل لهذا الإعداد. إذا كنت لا تريد أن يقوم أي شخص باستثناء فريق العمل بإرسال رسائل مباشرة، فاختر مجموعة فريق العمل."
@@ -118,8 +119,17 @@ ar:
     reviewables:
       message_already_handled: "شكرًا، لكننا راجعنا هذه الرسالة بالفعل وقرَّرنا أنك لست بحاجة إلى الإبلاغ عنها مرة أخرى."
       actions:
+        message_actions:
+          bundle_title: "ماذا تريد أن تفعل بهذه الرسالة؟"
         no_action_message:
           title: "التي لم يتم اتخاذ إجراء بشأنها"
+          description: "لا تغيّر الرسالة."
+        delete_message:
+          title: "حذف الرسالة"
+          description: "حذف الرسالة نهائيًا"
+        restore_message:
+          title: "استعادة الرسالة"
+          description: "استعادة الرسالة ليتمكّن المستخدمون من رؤيتها."
         agree:
           title: "موافقة..."
         agree_and_keep_message:
@@ -141,10 +151,17 @@ ar:
           title: "حذف الرسالة"
           description: "يمكنك حذف الرسالة حتى لا يتمكن المستخدمون من رؤيتها."
         delete_and_agree:
+          title: "تجاهل البلاغ وحذف الرسالة"
           description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف الرسالة."
         disagree_and_restore:
           title: "عدم الموافقة واستعادة الرسالة"
           description: "يمكنك استعادة الرسالة حتى يتمكن جميع المستخدمين من رؤيتها."
+        disagree:
+          title: "الاحتفاظ بالرسالة"
+          description: "رفض البلاغ وترك الرسالة كما هي."
+        ignore:
+          title: "تجاهل البلاغ"
+          description: "أزلها من قائمة الانتظار دون اتخاذ أي إجراء."
       direct_messages:
         transcript_title: "نص الرسائل السابقة في %{channel_name}"
         transcript_body: "لمنحك مزيدًا من السياق، فقد ضمَّنا نسخة من الرسائل السابقة في هذه المحادثة (حتى عشر رسائل):\n\n%{transcript}"
@@ -223,6 +240,9 @@ ar:
       errors:
         slug_contains_non_ascii_chars: "يتضمَّن حروفًا لا تنتمي إلى ترميز ASCII"
         is_already_in_use: "قيد الاستخدام بالفعل"
+    bookmarkable:
+      notification_title_channel: "رسالة في القناة %{channel_name}"
+      notification_title_direct_message: "رسالة مع القناة %{channel_name}"
     personal_chat: "الدردشة الشخصية"
     onebox:
       inline_to_message: "الرسالة #%{message_id} بواسطة %{username} - #%{chat_channel}"
@@ -300,13 +320,6 @@ ar:
           few: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
           many: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
           other: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
-        watched_threads:
-          zero: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
-          one: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخر"
-          two: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
-          few: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
-          many: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
-          other: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
         chat_dm_1:
           zero: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"
           one: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"
@@ -315,7 +328,6 @@ ar:
           many: "‎[%{site_name}] ‎ رسائل جديدة من ‎ %{name}"
           other: "‎ [%{site_name}] ‎رسائل جديدة من ‎ %{name}"
         chat_dm_2: "‎ [%{site_name}]رسائل جديدة من‎ %{name_1} ‎و‎%{name_2}"
-        chat_dm_3_or_more: "‎[%{site_name}] ‎ رسائل جديدة من‎ %{name} ‎و‎ %{count} ‎آخرين"
         chat_channel_1:
           zero: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
           one: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
@@ -324,7 +336,6 @@ ar:
           many: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
           other: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
         chat_channel_2: "‎[%{site_name}]‎ رسائل جديدة في‎ %{channel_1} ‎و‎%{channel_2}"
-        chat_channel_3_or_more: "‎[%{site_name}] رسائل جديدة في‎ %{channel} ‎و‎%{count} ‎آخرين"
         chat_channel_and_dm: "‎[%{site_name}] رسائل جديدة في‎ %{channel} ‎ومن‎ %{name}"
       unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
       unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."
@@ -342,8 +353,10 @@ ar:
         few: "عرض %{count} رسائل إضافية"
         many: "عرض %{count} رسائل إضافية"
         other: "عرض %{count} رسائل إضافية"
+      your_chat_settings: "تفضيلات البريد الإلكتروني للدردشة"
   unsubscribe:
     chat_summary:
+      select_title: "حدد إعدادات الرسائل إلكترونية التلخيصية للدردشة إلى:"
       never: أبدًا
       when_away: عندما أكون غائبًا فقط
   category:

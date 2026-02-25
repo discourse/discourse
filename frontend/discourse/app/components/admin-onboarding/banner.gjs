@@ -5,12 +5,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
-import PredefinedTopicOptions from "discourse/components/admin-onboarding/modal/pre-defined-topic-options";
+import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
+import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -20,11 +22,9 @@ const STEPS = [
 
     @service composer;
     @service appEvents;
-    @service modal;
-    @service siteSettings;
 
     icon = "comments";
-    icebreakerTopics = [
+    icebreaker_topics = [
       "fun_facts",
       "coolest_thing_you_have_seen_today",
       "introduce_yourself",
@@ -45,35 +45,98 @@ const STEPS = [
       this.markAsCompleted();
     }
 
+    @action
+    async performAction() {
+      const randomTopic =
+        this.icebreaker_topics[
+          Math.floor(Math.random() * this.icebreaker_topics.length)
+        ];
+
+      this.composer.openNewTopic({
+        title: i18n(
+          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.title`
+        ),
+        body: i18n(
+          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.body`
+        ),
+      });
+    }
+  },
+  class InviteCollaborators extends OnboardingStep {
+    static name = "invite_collaborators";
+
+    @service modal;
+    @service appEvents;
+
+    icon = "paper-plane";
+
+    constructor() {
+      super(...arguments);
+      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    willDestroy() {
+      super.willDestroy(...arguments);
+      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    @action
+    performAction() {
+      this.modal.show(CreateInvite, {
+        model: { invites: new TrackedArray() },
+      });
+    }
+  },
+  class StartPosting extends OnboardingStep {
+    static name = "start_posting";
+
+    @service composer;
+    @service appEvents;
+    @service modal;
+    @service siteSettings;
+
+    icon = "comments";
+
+    constructor() {
+      super(...arguments);
+
+      this.appEvents.on("topic:created", this, this.completeStep);
+      this.appEvents.on(
+        "admin-onboarding:posting-complete",
+        this,
+        this.completeStep
+      );
+    }
+
+    willDestroy() {
+      super.willDestroy(...arguments);
+
+      this.appEvents.off("topic:created", this, this.completeStep);
+      this.appEvents.off(
+        "admin-onboarding:posting-complete",
+        this,
+        this.completeStep
+      );
+    }
+
+    completeStep() {
+      this.markAsCompleted();
+    }
+
     showStartPostingOptions() {
-      // if Discourse AI is not enabled, we can skip the options and go straight to the showPredefinedOptions flow
-      if (!this.siteSettings.discourse_ai_enabled) {
-        return this.showPredefinedOptions();
+      const options = applyValueTransformer(
+        "admin-onboarding-start-posting-options",
+        [PredefinedTopicOption]
+      );
+
+      if (options.length === 1) {
+        // show predefined topics directly if it's the only option available
+        return this.modal.show(PredefinedTopicsOptionsModal);
       }
 
       this.modal.show(StartPostingOptions, {
         model: {
-          onSelectPredefined: () => this.showPredefinedOptions(),
-          onSelectAi: () => this.startCommunityKickstarter(),
-        },
-      });
-    }
-
-    async startCommunityKickstarter() {
-      this.appEvents.trigger("admin-onboarding:select-ai", {
-        close: () => this.modal.close(),
-      });
-    }
-
-    showPredefinedOptions() {
-      this.modal.show(PredefinedTopicOptions, {
-        model: {
-          topics: this.icebreakerTopics,
-          onSelectTopic: (topic) => this.openTopic(topic),
-          onBack: () =>
-            this.siteSettings.discourse_ai_enabled
-              ? this.showStartPostingOptions()
-              : this.modal.close(),
+          options,
         },
       });
     }
@@ -92,32 +155,6 @@ const STEPS = [
     @action
     async performAction() {
       this.showStartPostingOptions();
-    }
-  },
-  class InviteCollaborators extends OnboardingStep {
-    static name = "invite_collaborators";
-
-    @service modal;
-    @service appEvents;
-
-    step = this.name;
-    icon = "paper-plane";
-
-    constructor() {
-      super(...arguments);
-      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    willDestroy() {
-      super.willDestroy(...arguments);
-      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    @action
-    performAction() {
-      this.modal.show(CreateInvite, {
-        model: { invites: new TrackedArray() },
-      });
     }
   },
   class SpreadTheWord extends OnboardingStep {

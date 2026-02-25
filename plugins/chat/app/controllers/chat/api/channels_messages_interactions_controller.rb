@@ -8,6 +8,7 @@ class Chat::Api::ChannelsMessagesInteractionsController < Chat::ApiController
       end
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_model_not_found(:message) { raise Discourse::NotFound }
+      on_failed_policy(:can_interact_with_message) { raise Discourse::NotFound }
       on_model_not_found(:action) { raise Discourse::NotFound }
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)

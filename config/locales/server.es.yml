@@ -60,8 +60,6 @@ es:
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
-    too_many_urls: "No se pueden incluir más de 10 URL en una única solicitud de onebox."
-    concurrency_not_allowed: "No se permiten solicitudes simultáneas de inline-oneboxing. Envía una sola solicitud a la vez."
   components:
     enabled_filter: "Activado"
     disabled_filter: "Desactivado"
@@ -344,7 +342,6 @@ es:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar accidentalmente la velocidad de los usuarios legítimos."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
-      x_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
       tl0_and_anonymous_flag: "Debes proporcionar el «site contact email» (correo electrónico de contacto del sitio) o la «email address to report illegal content» (dirección de correo electrónico para denunciar contenido ilegal) para los usuarios anónimos."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Este ajuste requiere que primero se active el ajuste «allow anonymous mode»."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1776,7 +1773,6 @@ es:
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
     content_security_policy: "Activa la Política de Seguridad de Contenidos (CSP). La CSP es una capa adicional de seguridad que ayuda a evitar ciertos tipos de ataques, como el Cross Site Scripting (XSS) y la inyección de datos."
     content_security_policy_report_only: "Activar la política de seguridad de contenido de solo denuncias (CSP)"
-    content_security_policy_collect_reports: "Activar la recolección de denuncias de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
     content_security_policy_script_src: "Fuentes de scripts adicionales permitidas. El host actual y la CDN se incluyen por defecto. Ver <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar los ataques XSS con la Política de Seguridad de Contenidos.</a> (CSP). Otras fuentes de host se ignoran, ya que está activada la dinámica estricta."
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
@@ -2077,8 +2073,6 @@ es:
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para su intervención"
     num_hours_to_close_topic: "Número de horas que se pausa un tema para su invervención."
     auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer una denuncia."
-    min_first_post_typing_time: "Período mínimo en milisegundos durante el que un usuario debe escribir en su primera publicación, si no se llega a este umbral, la publicación entrará automáticamente a la cola de moderación. Establece esta opción a 0 para desactivar (no recomendado)."
-    fast_typing_threshold: "Cantidad mínima de tiempo en milisegundos que un usuario debe escribir para su primera publicación. Si no se alcanza el umbral, la publicación entrará automáticamente en la cola de revisión. El mínimo es de 1 segundo, el estándar es de 3 segundos y el máximo es de 5 segundos."
     auto_silence_fast_typers_on_first_post: "Silencia automáticamente a los usuarios que no alcancen el umbral de escritura rápida"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar a usuarios que escriban demasiado rápido en su primera publicación"
     auto_silence_first_post_regex: "Expresión regular (que ignora mayúsculas/minúsculas) que, si coincide con la primera publicación de un usuario, lo silenciará y mandará el mensaje a la cola de aprobación. Por ejemplo: enfadado|a[bc]a hará que todas las primeras publicaciones que contengan enfadado, aba o aca se manden a la cola y se silencie al autor. Solo se ejecutará en el primer mensaje de cada usuario. DEPRECIADO: Utiliza en su lugar Palabras Vigiladas para Silencio."
@@ -2095,7 +2089,6 @@ es:
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por correo electrónico. Ejemplo: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Usar el HTML en vez del texto para los correos electrónicos entrantes."
     strip_incoming_email_lines: "Elimina los espacios en blanco iniciales y finales de cada línea de correos electrónicos entrantes."
-    disable_emails: "Evite que el Discourse envíe cualquier clase de correo electrónico. Seleccione «sí» para desactivar los correos electrónicos a todos los usuarios. Seleccione «no staff» para desactivar los correos electrónicos solo para usuarios que no formen parte del personal."
     strip_images_from_short_emails: "Quitar imágenes que tengan un tamaño menor a 2800 Bytes de los correos electrónicos"
     short_email_length: "Define la longitud máxima, en bytes, para que un correo electrónico se clasifique como «corto» para la supresión de imágenes. Si el tamaño de un correo electrónico no supera este valor, se eliminarán todas las imágenes (como avatares y emojis) que contenga."
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de correos electrónicos"
@@ -2251,7 +2244,6 @@ es:
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después de estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     delete_drafts_older_than_n_days: "Elimina los borradores que no se hayan modificado en más de (n) días."
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Establece -1 para no eliminar nunca. Establece 0 para eliminar inmediatamente."
-    bootstrap_mode_min_users: 'Número mínimo de usuarios necesarios para desactivar el modo de arranque y eliminar el botón de Inicio (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas). Consulta <a target="_blank" href="https://meta.discourse.org/t/-/322876">el tema sobre el modo de arranque en Meta</a> para más detalles.'
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si la opción «inicio de sesión obligatorio» está activada, solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas multimedia en mensajes personales y categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere profundos conocimientos administrativos. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema sobre subidas seguras en Meta</a> para obtener más información.'
     secure_uploads_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente estarían redactadas en los correos electrónicos, si su tamaño es menor que el ajuste de «tamaño máximo de la imagen incrustada en el correo electrónico»."
@@ -2376,7 +2368,6 @@ es:
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
     dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
-    gravatar_enabled: "Usa el servicio <a href='https://gravatar.com/'>Gravatar</a> para los avatares de usuario. Esto evitará que los usuarios cambien a Gravatar para sus avatares, pero no afectará a quienes ya lo usan."
     gravatar_name: "Especifica el nombre del proveedor del servicio Gravatar. Este nombre se utiliza normalmente para identificar la fuente que proporciona avatares Gravatar al sitio."
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
     gravatar_login_url: "URL relativa a «gravatar_base_url», que proporciona al usuario el acceso al servicio Gravatar."
@@ -2457,12 +2448,6 @@ es:
       reply_by_email_disabled: "Primero debes activar «responder por correo electrónico» antes de activar esta configuración."
       discourse_connect_url_is_empty: "Debes rellenar «discourse connect url» antes de activar este ajuste."
       enable_local_logins_disabled: "Primero debes activar «activar inicio de sesión local» antes de activar esta configuración."
-      min_username_length_exists: "No puede establecer la longitud de usuario mínima por encima del nombre de usuario más corto (%{username})"
-      min_group_name_length_exists: "No puedes establecer la longitud de nombre de usuario mínima por encima del nombre de grupo más corto (%{group_name})"
-      min_username_length_range: "No puedes establecer el mínimo por encima del máximo."
-      max_username_length_exists: "No puedes establecer la longitud de usuario máxima por debajo del nombre de usuario más largo (%{username})."
-      max_group_name_length_exists: "No puedes establecer la longitud de nombre usuario máxima por debajo del nombre de grupo más largo (%{group_name})."
-      max_username_length_range: "No puedes establecer el máximo por debajo del mínimo."
       invalid_hex_value: "Los colores debe ser códigos hexadecimalesde 6 dígitos."
       empty_selectable_avatars: "Debes subir al menos dos avatares seleccionables antes de activar esta configuración."
       category_search_priority:
@@ -2521,7 +2506,6 @@ es:
       exclude_tag: "Excluir temas con una etiqueta específica"
       exclude_tags_any: "Excluir temas con cualquiera de las etiquetas especificadas (separadas por comas)"
       exclude_tags_all: "Excluir temas con todas las etiquetas especificadas (separadas por comas)"
-      tags_alias: "Alias para el filtro «etiqueta:»"
       tag_group: "Mostrar temas con etiquetas de un grupo de etiquetas específico"
       exclude_tag_group: "Excluir temas con etiquetas de un grupo de etiquetas específico"
       activity_before: "Mostrar temas con última actividad antes de una fecha (AAAA-MM-DD o hace días)"
@@ -4917,8 +4901,6 @@ es:
     deprecation_error_label: Hacer que las depreciaciones de Javascript produzcan un error
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
-  dev_mode:
-    enter: "Intro"
   wizard:
     title: "Instalación de Discourse"
     step:
@@ -5187,10 +5169,6 @@ es:
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
       post_actions:
         bundle_title: "¿Qué quieres hacer con la publicación?"
-      no_action_post:
-        title: "Ninguna acción"
-        description: "No hacer nada"
-        complete: "No se ha tomado ninguna medida al respecto"
       delete_post:
         title: "Eliminar publicación"
         description: "Eliminar esta publicación"
@@ -5211,16 +5189,8 @@ es:
         title: "Editar publicación"
         description: "Editar el contenido de esta publicación"
         complete: "Publicación editada"
-      convert_to_pm:
-        title: "Convertir en mensaje personal"
-        description: "Convertir esta publicación en un mensaje personal"
-        complete: "Publicación convertida en mensaje personal"
       user_actions:
         bundle_title: "¿Qué quieres hacer con el usuario?"
-      no_action_user:
-        title: "Ninguna acción"
-        description: "No hacer nada con el usuario"
-        complete: "No se ha tomado ninguna medida contra el usuario"
       silence_user:
         title: "Silenciar al usuario"
         description: "Evitar que el usuario siga publicando"

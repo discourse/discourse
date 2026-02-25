@@ -123,7 +123,9 @@ hr:
         save: "Spremi"
         remove_parameter: "Ukloni"
         parameter_required: "Potrebno"
+        credential_not_set: "(nije postavljeno)"
         edit: "Uredi"
+        test: "Test"
         delete: "Izbriši"
       secrets:
         short_title: "Vjerodajnice"

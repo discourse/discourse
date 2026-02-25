@@ -2,8 +2,9 @@
 
 .uc-modernize-foundation-theme {
   --d-logo-height: 2.3em;
-  --sidebar-section-wrapper-padding: var(--space-3) var(--space-2)
-    var(--space-4);
+  --main-outlet-padding-top: var(--space-4);
+  --sidebar-section-wrapper-padding: var(--main-outlet-padding-top)
+    var(--space-2) var(--space-4);
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --input-border-color: var(--primary-200);
@@ -48,7 +49,8 @@
   .btn-primary,
   .btn.no-text,
   .view-all-drafts,
-  .discourse-reactions-counter .reactions-counter {
+  .discourse-reactions-counter .reactions-counter,
+  #topic-progress-wrapper {
     &:not(
       .sidebar-footer-actions-button,
       #search-button,
@@ -60,12 +62,28 @@
       .notifications-tracking-btn,
       .user-menu-tab,
       .--with-description,
-      .chat-message-react-btn
+      .chat-message-react-btn,
+      .profile-tab-btn
     ) {
       padding-block: 0;
       height: var(--button-height);
       padding-inline: var(--space-2);
     }
+  }
+
+  .btn.no-text.btn-icon {
+    &:not(.user-menu-tab, .user-menu-tab-active) {
+      width: var(--button-height);
+    }
+  }
+
+  .container.posts .topic-navigation .btn-toggle-localized-content.--active {
+    --d-button-default-icon-color: var(--tertiary);
+    --d-button-default-icon-color--hover: var(--tertiary);
+  }
+
+  .select-kit.dropdown-select-box.composer-actions .select-kit-header .d-icon {
+    padding: 0;
   }
 
   .discourse-reactions-counter .reactions-counter {
@@ -96,10 +114,6 @@
   .navigation-container .nav-pills > li > a {
     padding: 0 0.65em;
     height: var(--button-height);
-  }
-
-  .navigation-container {
-    margin-bottom: var(--d-main-content-gap);
   }
 
   .topic-replies-toggle-wrapper .topics-replies-toggle {
@@ -253,7 +267,7 @@
   }
 
   // Select Kit
-  .select-kit .select-kit-header:not(.btn),
+  .select-kit .select-kit-header,
   .d-date-input .date-picker {
     height: var(--button-height);
     border: var(--d-button-default-border);
@@ -302,6 +316,10 @@
     height: 3.25em;
   }
 
+  .d-header {
+    --search-input-height: var(--space-8);
+  }
+
   .d-header .title {
     @include viewport.from(sm) {
       --d-logo-height: 2.3em;
@@ -324,7 +342,7 @@
   }
 
   .header-sidebar-toggle button .d-icon,
-  .d-header-icons .d-icon {
+  .d-header-icons .header-dropdown-toggle:not(.user-menu-panel) .d-icon {
     font-size: var(--font-up-3);
   }
 

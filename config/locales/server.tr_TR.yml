@@ -60,8 +60,6 @@ tr_TR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
-    too_many_urls: "Tek bir talepte 10’dan fazla URL’yi satır içinde onebox olarak ekleyemezsiniz."
-    concurrency_not_allowed: "Eş zamanlı satır içi onebox yapma taleplerine izin verilmez. Lütfen her seferinde bir talep gönderin."
   components:
     enabled_filter: "Etkin"
     disabled_filter: "Devre Dışı"
@@ -344,7 +342,6 @@ tr_TR:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Kullanıcı aracıları, geçerli kullanıcıların yanlışlıkla sınırlandırılmasını önlemek için en az 3 karakter uzunluğunda olmalıdır."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara şu değerlerden herhangi birini ekleyemezsiniz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "\"Besteci medya optimizasyonu görüntüsü etkin\" etkinleştirilmişse şerit görüntü meta verilerini devre dışı bırakamazsınız. Şerit görüntü meta verilerini devre dışı bırakmadan önce \"besteci medya optimizasyonu görüntüsü etkin\" seçeneğini devre dışı bırakın."
-      x_summary_large_image_no_svg: "twitter:image meta verileri için kullanılan Twitter özet görüntüleri .svg görüntüsü olamaz."
       tl0_and_anonymous_flag: "Anonim kullanıcılar için ya \"site contact email\" ya da \"email address to report illegal content\" sağlanmalıdır."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Bu ayar öncelikle \"anonim moduna izin ver\" ayarının etkinleştirilmesini gerektiriyor."
     conflicting_google_user_id: 'Bu hesabın Google Hesap Kimliği değişti; güvenlik nedeniyle personelin müdahalesi gerekiyor. Lütfen personelle iletişime geçin ve onları <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>adresine yönlendirin.'
@@ -1774,7 +1771,6 @@ tr_TR:
     slow_down_crawler_rate: "slow_down_crawler_user_agents belirtilirse bu oran tüm veri gezginleri için geçerli olur (istekler arasındaki saniye gecikme sayısı)"
     content_security_policy: "İçerik Güvenliği Politikasını (CSP) etkinleştirin. CSP, Siteler Arası Komut Dosyası Çalıştırma (XSS) ve veri enjeksiyonu da dâhil olmak üzere belirli saldırı türlerini önlemeye yardımcı olan ek bir güvenlik katmanıdır."
     content_security_policy_report_only: "Sadece-Raporla-İçerik-Güvenlik-Politikasını (CSP) Etkinleştir"
-    content_security_policy_collect_reports: "CSP ihlal raporu toplamayı /csp_reports adresinde etkinleştir"
     content_security_policy_frame_ancestors: "CSP aracılığıyla bu siteyi iframe'lere kimlerin yerleştirebileceğini kısıtlayın. <a href='%{base_path}/admin/customize/embedding'>Gömme</a> bölümünde izin verilen sunucuları kontrol edin"
     content_security_policy_script_src: "İzin verilen ek komut dosyası kaynakları. Geçerli sunucu ve İTA varsayılan olarak dâhil edilir. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>İçerik Güvenliği İlkesi ile XSS Saldırılarını Azaltma.</a> (CSP). Diğer sunucu kaynakları, strict-dynamic etkinleştirildiği için yok sayılır."
     invalidate_inactive_admin_email_after_days: "Bu kadar gün içinde siteyi ziyaret etmemiş olan yönetici hesaplarının oturum açmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
@@ -2075,8 +2071,6 @@ tr_TR:
     num_flaggers_to_close_topic: "Bir konuyu müdahale için otomatik olarak duraklatmak üzere gereken minimum benzersiz bayrak ekleyen kişi sayısı"
     num_hours_to_close_topic: "Müdahale amacıyla bir konuyu duraklatmak için saat sayısı."
     auto_respond_to_flag_actions: "Bir bayrağı kaldırırken otomatik yanıtı etkinleştirin."
-    min_first_post_typing_time: "Bir kullanıcının ilk gönderi sırasında yazması gereken milisaniye cinsinden minimum süre, eşik karşılanmazsa gönderi otomatik olarak onay gerekiyor kuyruğuna girer. Devre dışı bırakmak için 0 olarak ayarlayın (önerilmez)"
-    fast_typing_threshold: "Bir kullanıcının ilk gönderisi için yazması gereken milisaniye cinsinden minimum süre. Eşik karşılanmazsa gönderi otomatik olarak değerlendirme kuyruğuna girer. Düşük 1 saniye, standart 3 saniye, yüksek 5 saniyedir."
     auto_silence_fast_typers_on_first_post: "`fast typing threshold`u karşılamayan kullanıcıları otomatik olarak susturun"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazanları otomatik olarak susturmak için maksimum güven seviyesi"
     auto_silence_first_post_regex: "Büyük/küçük harfe duyarlı olmayan regex, geçilirse kullanıcının ilk gönderisinin susturulmasına ve onay kuyruğuna gönderilmesine neden olur. Örnek: raging|a[bc]a , raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Sadece ilk gönderi için geçerlidir. DEVRE DIŞI BIRAKILDI: Bunun yerine İzlenen Kelimeleri Sessize Al'ı kullanın."
@@ -2093,7 +2087,6 @@ tr_TR:
     alternative_reply_by_email_addresses: "Gelen e-posta adreslerini e-posta ile yanıtlamak için alternatif şablonların listesi. Örnek: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Gelen e-postalar için metin yerine HTML kullanın."
     strip_incoming_email_lines: "Gelen e-postaların her satırından baştaki ve sondaki boşlukları kaldırın."
-    disable_emails: "Discourse'un her türlü e-posta göndermesini engelleyin. Tüm kullanıcılar için e-postaları devre dışı bırakmak için \"evet\"i seçin. Yalnızca personel olmayan kullanıcılar için e-postaları devre dışı bırakmak amacıyla \"personel olmayan\" seçeneğini belirleyin."
     strip_images_from_short_emails: "Boyutu 2800 Bayt'tan küçük olan e-postalardaki görüntüleri soyun"
     short_email_length: "Bir e-postanın görüntü bastırma için \"kısa\" olarak sınıflandırılacağı maksimum uzunluğu bayt cinsinden tanımlayın. Bir e-postanın boyutu bu ayarı aşmazsa e-postadaki tüm görüntüler (avatarlar ve emoji'ler gibi) çıkarılır."
     display_name_on_email_from: "Alanlardan gelen e-postalarda tam adları gösterin"
@@ -2249,7 +2242,6 @@ tr_TR:
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hâlâ incelenmemiş öge varsa moderatörlere mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
     delete_drafts_older_than_n_days: "(n) günden daha uzun süredir değiştirilmemiş taslakları silin."
     delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş taslak konularını otomatik olarak silmeden önce beklenecek gün sayısı. Asla silmemek için -1 olarak ayarlayın. Hemen silmek için 0 olarak ayarlayın."
-    bootstrap_mode_min_users: 'Ön yükleme modunu devre dışı bırakmak ve Başlarken düğmesini kaldırmak için gereken minimum kullanıcı sayısı (devre dışı bırakmak için 0 olarak ayarlayın, 24 saate kadar sürebilir). Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta''daki ön yükleme modu konusuna</a> bakın.'
     prevent_anons_from_downloading_files: "Anonim kullanıcıların ekleri indirmesini önleyin."
     secure_uploads: 'TÜM yüklemelere (resimler, video, ses, metin, pdf''ler, zip''ler ve diğerleri) erişimi sınırlar. "Giriş yapma gerekli" etkinleştirilmişse yüklemelere yalnızca giriş yapmış kullanıcılar erişebilir. Aksi takdirde, erişim yalnızca kişisel mesajlardaki ve özel kategorilerdeki medya yüklemeleri için sınırlı olur. UYARI: Bu ayar karmaşıktır ve derin bir yönetim anlayışı gerektirir. Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta''daki güvenli yüklemeler konusuna</a> bakın.'
     secure_uploads_allow_embed_images_in_emails: "Boyutları \"güvenli yüklemeler maksimum e-posta yerleştirme görüntü boyutu kb\" ayarından küçükse normalde e-postalara redakte edilecek güvenli görüntülerin yerleştirilmesine izin verir."
@@ -2374,7 +2366,6 @@ tr_TR:
     dashboard_hidden_reports: "Belirtilen raporların panodan gizlenmesine izin verin."
     dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
     dashboard_general_tab_activity_metrics: "Genel sekmesinde aktivite metrikleri olarak görüntülenecek raporları seçin."
-    gravatar_enabled: "Kullanıcı avatarları için <a href='https://gravatar.com/'>Gravatar</a> hizmetini kullanın. Bu, kullanıcıların avatarları için Gravatar'a geçmesini engeller ancak halihazırda Gravatar kullanan kullanıcıları etkilemez."
     gravatar_name: "Gravatar hizmet sağlayıcısının adını belirtin. Bu ad genellikle siteye Gravatar avatarları sağlayan kaynağı tanımlamak için kullanılır."
     gravatar_base_url: "Gravatar sağlayıcısının API'sine erişmek için URL'yi belirtin. Bu ayar, e-posta adreslerini avatar görüntülerinin depolandığı Gravatar URL'lerine dönüştürmek için kritik öneme sahiptir."
     gravatar_login_url: "Kullanıcıya Gravatar hizmetine giriş yapmasını sağlayan `gravatar_base_url` ögesine göre URL."
@@ -2455,12 +2446,6 @@ tr_TR:
       reply_by_email_disabled: "Bu ayarı etkinleştirmeden önce \"e-posta ile yanıtla\" özelliğini etkinleştirmeniz gerekiyor."
       discourse_connect_url_is_empty: "Bu ayarı etkinleştirmeden önce bir \"discourse bağlantı URL'si\" ayarlamanız gerekiyor."
       enable_local_logins_disabled: "Bu ayarı etkinleştirmeden önce \"yerel girişleri etkinleştir\" seçeneğini etkinleştirmeniz gerekiyor."
-      min_username_length_exists: "Minimum kullanıcı adı uzunluğunu en kısa kullanıcı adının üzerinde ayarlayamazsınız (%{username})."
-      min_group_name_length_exists: "En kısa grup adının (%{group_name}) üstünde minimum kullanıcı adı uzunluğunu ayarlayamazsınız."
-      min_username_length_range: "Minimum değeri maksimum değerin üzerinde ayarlayamazsınız."
-      max_username_length_exists: "Maksimum kullanıcı adı uzunluğunu en uzun kullanıcı adının (%{username}) altında ayarlayamazsınız."
-      max_group_name_length_exists: "Kullanıcı adı uzunluğunu en uzun grup adının (%{group_name}) altına ayarlayamazsınız."
-      max_username_length_range: "Maksimum değeri minimum değerin altında ayarlayamazsınız."
       invalid_hex_value: "Renk değerleri 6 haneli onaltılık kodlar olmalıdır."
       empty_selectable_avatars: "Bu ayarı etkinleştirmeden önce en az iki seçilebilir avatar yüklemeniz gerekiyor."
       category_search_priority:
@@ -2519,7 +2504,6 @@ tr_TR:
       exclude_tag: "Belirli bir etikete sahip konuları hariç tutun"
       exclude_tags_any: "Belirtilen etiketlerden herhangi birine sahip konuları hariç tutun (virgülle ayrılmış)"
       exclude_tags_all: "Belirtilen etiketlerin tümüne sahip konuları hariç tutun (artı ile ayrılmış)"
-      tags_alias: "\"tag:\" filtresi için takma ad"
       tag_group: "Belirli bir etiket grubundan etiketlere sahip konuları gösterin"
       exclude_tag_group: "Belirli bir etiket grubundan etiketli konuları hariç tutun"
       activity_before: "Belirli bir tarihten önceki son aktiviteye sahip konuları gösterin (YYYY-AA-GG veya günler önce)"
@@ -4867,8 +4851,6 @@ tr_TR:
     deprecation_error_label: Javascript kullanımdan kaldırmaları hata oluştursun
     enter: "Güvenli Moda Gir"
     must_select: "Güvenli moda girmek için en az bir seçenek belirlemelisiniz."
-  dev_mode:
-    enter: "Enter"
   wizard:
     title: "Discourse Kurulumu"
     step:
@@ -5126,8 +5108,6 @@ tr_TR:
       approve_and_unhide:
         title: "Evet"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
-      no_action_post:
-        title: "Eylem yok"
       delete_post:
         title: "Gönderiyi sil"
         complete: "Gönderi silindi"
@@ -5136,8 +5116,6 @@ tr_TR:
       restore_post:
         title: "Gönderiyi geri yükle"
         complete: "Gönderi geri yüklendi"
-      no_action_user:
-        title: "Eylem yok"
       silence_user:
         title: "Kullanıcıyı sustur"
         complete: "Kullanıcı susturuldu"

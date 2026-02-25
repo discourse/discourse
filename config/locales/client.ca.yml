@@ -440,7 +440,6 @@ ca:
       in_reply_to: "en resposta a"
       explain:
         why: "expliqueu per què aquest element ha acabat a la cua"
-        title: "Puntuació revisable"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -454,10 +453,8 @@ ca:
           title: "Es dóna una bonificació als usuaris que hagin creat banderes amb les quals històricament s'hagi estat d'acord. "
         trust_level_bonus:
           name: "nivell de confiança"
-          title: "Els elements revisables creats per usuaris de nivell superior de confiança tenen una puntuació més alta."
         type_bonus:
           name: "bonificació tipus"
-          title: "El personal pot assignar una bonificació a certs tipus revisables perquè tinguin una prioritat més alta."
       revise_and_reject_post:
         reason: "Motiu"
         optional: "opcional"
@@ -1968,6 +1965,9 @@ ca:
         choose_new_tags: "Trieu noves etiquetes per a aquests temes:"
         choose_append_tags: "Trieu noves etiquetes a afegir per a aquests temes:"
         changed_tags: "Les etiquetes d'aquests temes han estat canviades."
+        error_topic_count:
+          one: "%{count} tema"
+          other: "%{count} temes"
       none:
         unread: "No teniu cap tema no llegit."
         new: "No teniu cap tema nou."
@@ -2862,6 +2862,15 @@ ca:
         one: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la del tema %{count} al qual és assignada?"
         other: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la dels %{count} temes als quals és assignada?"
       delete_confirm_no_topics: "Esteu segur que voleu suprimir aquesta etiqueta?"
+      description: "Descripció"
+      settings:
+        title: "Configuració"
+        general: "General"
+        back: "Enrere"
+        name: "Nom"
+      localization:
+        name: "Nom"
+        description: "Descripció"
       sort_by: "Ordena per:"
       sort_by_count: "comptabilitza"
       sort_by_name: "nom"
@@ -3052,6 +3061,11 @@ ca:
       reports:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
+        group_traffic: "Tràfic"
+        group_members: "Membres"
+        group_moderation: "Moderació"
+        group_security: "Seguretat"
+        group_other: "Altres"
       config_sections:
         account:
           title: "Compte"
@@ -3073,7 +3087,6 @@ ca:
         preview: "Previsualitza"
         enabled_for_options:
           everyone: "Tothom"
-          staff: "Només l'equip responsable"
         impact_roles:
           admins: "Administradors"
           moderators: "Moderadors"
@@ -3145,6 +3158,9 @@ ca:
               title: "Registres"
         reports:
           title: "Reports"
+          sub_pages:
+            settings:
+              title: "Configuració"
         badges:
           title: "Insígnies"
         permalinks:
@@ -3193,13 +3209,6 @@ ca:
         default_value: "Per defecte"
       search:
         title: "Cerca"
-        result_types:
-          theme:
-            one: "Aparença"
-            other: "Aparences"
-          component:
-            one: "Component"
-            other: "Components"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3349,6 +3358,7 @@ ca:
         save: "Desa"
         cancel: "Cancel·la"
         continue: "Continua"
+        copy_key: "Còpia"
         revoke: "Revoca"
         revoked: "Revocat"
       api:
@@ -4280,6 +4290,7 @@ ca:
           title: "Mostra en la targeta d'usuari"
         field_types:
           text: "Text"
+          date: "Data"
           confirm: "Confirmació"
           dropdown: "Desplega"
       site_text:

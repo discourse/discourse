@@ -1270,11 +1270,9 @@ class Search
         term_without_quote = $1 if @term =~ /'(.+)'/
 
         posts = posts.joins("JOIN users u ON u.id = posts.user_id")
-        posts =
-          posts.where(
-            "posts.raw || ' ' || post_search_data.raw_data || ' ' || u.username || ' ' || COALESCE(u.name, '') ILIKE ?",
-            "%#{term_without_quote}%",
-          )
+        user_search_fields = +"posts.raw || ' ' || post_search_data.raw_data || ' ' || u.username"
+        user_search_fields << " || ' ' || COALESCE(u.name, '')" if SiteSetting.enable_names
+        posts = posts.where("#{user_search_fields} ILIKE ?", "%#{term_without_quote}%")
       else
         posts = posts.where(post_number: 1) if @in_title
         posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")

@@ -200,6 +200,7 @@ module DiscourseAi
           post = Post.includes(:topic).find_by(id: post_id)
 
           raise Discourse::InvalidParameters.new(:post_id) unless post
+          guardian.ensure_can_see!(post)
 
           Jobs.enqueue(
             :stream_post_helper,
