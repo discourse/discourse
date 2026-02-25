@@ -5,6 +5,7 @@ RSpec.describe "Archived channel settings", type: :system do
   fab!(:current_user, :admin)
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:channel_settings) { PageObjects::Pages::ChatChannelSettings.new }
 
   before do
     chat_system_bootstrap
@@ -19,10 +20,10 @@ RSpec.describe "Archived channel settings", type: :system do
     it "shows a disabled open channel button with a tooltip" do
       chat.visit_channel_settings(channel_1)
 
-      expect(page).to have_css(".open-btn[disabled]")
-      expect(page).to have_no_css(".close-btn")
+      expect(channel_settings).to have_open_button(disabled: true)
+      expect(channel_settings).to have_no_close_button
 
-      find(".open-btn").hover
+      channel_settings.hover_open_button
       expect(page).to have_content(
         I18n.t("js.chat.channel_settings.open_channel_disabled_archived"),
       )
@@ -41,10 +42,10 @@ RSpec.describe "Archived channel settings", type: :system do
     it "shows a disabled open channel button with a tooltip" do
       chat.visit_channel_settings(channel_1)
 
-      expect(page).to have_css(".open-btn[disabled]")
-      expect(page).to have_no_css(".close-btn")
+      expect(channel_settings).to have_open_button(disabled: true)
+      expect(channel_settings).to have_no_close_button
 
-      find(".open-btn").hover
+      channel_settings.hover_open_button
       expect(page).to have_content(
         I18n.t("js.chat.channel_settings.open_channel_disabled_read_only"),
       )
