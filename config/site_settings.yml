@@ -4217,6 +4217,7 @@ experimental:
   enable_auto_grid_images:
     default: false
     client: true
+    hidden: true
     area: "experimental"
     upcoming_change:
       status: "experimental"
