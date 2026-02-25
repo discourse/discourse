@@ -213,6 +213,9 @@ class DiscourseURL extends EmberObject {
     }
 
     path = applyValueTransformer("route-to-url", path, { opts });
+    if (isEmpty(path)) {
+      return;
+    }
 
     // In embed mode, open all navigation in new tabs except same-topic navigation
     if (EmbedMode.enabled) {

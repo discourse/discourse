@@ -82,6 +82,7 @@ export default class PostScreenTracker {
     }
     this.#elementToPost.delete(element);
     this.#observer.unobserve(element);
+    discourseDebounce(this, this.#updateScreenTracking, DEBOUNCE_MS);
   }
 
   destroy() {

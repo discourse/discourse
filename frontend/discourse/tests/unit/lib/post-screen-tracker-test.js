@@ -112,16 +112,11 @@ module("Unit | Lib | post-screen-tracker", function (hooks) {
     await settled();
 
     tracker.unobserve(el);
-    // Fire a new intersection on a different element to trigger an update
-    const el2 = document.createElement("div");
-    const post2 = { post_number: 6, read: false };
-    tracker.observe(el2, post2);
-    fireEntry(el2, true);
     await settled();
 
     const lastCall = mockScreenTrack.calls.at(-1);
-    assert.false(lastCall.onScreen.includes(5));
-    assert.true(lastCall.onScreen.includes(6));
+    assert.deepEqual(lastCall.onScreen, []);
+    assert.deepEqual(lastCall.readOnScreen, []);
   });
 
   test("ignores entries for unknown elements", async function (assert) {

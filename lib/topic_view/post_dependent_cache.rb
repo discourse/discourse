@@ -4,13 +4,8 @@
 #
 # Any method in TopicView (or a plugin) that caches data derived from @posts
 # can register itself with `memoize_for_posts`. When @posts is replaced via
-# the `posts=` writer, all registered caches are automatically cleared —
+# `reset_post_collection`, all registered caches are automatically cleared —
 # no hardcoded ivar list required.
-#
-# This also provides the `skip_post_loading` initializer option so that
-# callers who supply their own post set (e.g. nested-replies plugin) can
-# skip the default post-loading pipeline entirely instead of loading posts
-# and then immediately discarding them.
 module TopicView::PostDependentCache
   extend ActiveSupport::Concern
 
@@ -35,10 +30,12 @@ module TopicView::PostDependentCache
     end
   end
 
-  # The single write path for replacing @posts.
-  # Clears all registered post-dependent caches automatically.
-  def posts=(new_posts)
-    @posts = new_posts
+  # Replaces @posts with a new collection and clears all registered
+  # post-dependent caches. Use this instead of writing to @posts directly
+  # when you need to swap in a different set of posts (e.g. a plugin that
+  # builds its own post tree) after the TopicView has been initialized.
+  def reset_post_collection(posts:)
+    @posts = posts
     self.class.post_dependent_ivars.each do |ivar|
       remove_instance_variable(ivar) if instance_variable_defined?(ivar)
     end

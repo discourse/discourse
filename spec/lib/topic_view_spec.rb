@@ -28,7 +28,7 @@ RSpec.describe TopicView do
     end
   end
 
-  describe "#posts=" do
+  describe "#reset_post_collection" do
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:post2) { Fabricate(:post, topic: topic) }
     fab!(:post3) { Fabricate(:post, topic: topic) }
@@ -38,7 +38,7 @@ RSpec.describe TopicView do
       original_posts = tv.posts.to_a
 
       new_posts = [post3]
-      tv.posts = new_posts
+      tv.reset_post_collection(posts: new_posts)
 
       expect(tv.posts).to eq(new_posts)
       expect(tv.posts).not_to eq(original_posts)
@@ -54,7 +54,7 @@ RSpec.describe TopicView do
       tv.primary_group_names
       tv.last_post
 
-      tv.posts = [post2]
+      tv.reset_post_collection(posts: [post2])
 
       expect(tv.all_post_actions).to be_a(Hash)
       expect(tv.last_post).to eq(post2)
@@ -69,7 +69,7 @@ RSpec.describe TopicView do
 
       TopicView.on_preload(&preloader)
 
-      tv.posts = [post2, post3]
+      tv.reset_post_collection(posts: [post2, post3])
       TopicView.preload(tv)
 
       expect(preloaded_post_ids).to contain_exactly(post2.id, post3.id)
@@ -84,7 +84,7 @@ RSpec.describe TopicView do
       expect(tv.filtered_posts.count).to eq(0)
       expect(tv.topic).to eq(topic)
 
-      tv.posts = [post1, post2]
+      tv.reset_post_collection(posts: [post1, post2])
       expect(tv.posts).to eq([post1, post2])
     end
   end
