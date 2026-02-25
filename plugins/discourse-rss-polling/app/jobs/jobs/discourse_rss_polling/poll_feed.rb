@@ -122,27 +122,64 @@ module Jobs
 
       def topics_polled_from_feed
         raw_feed = fetch_raw_feed
-        return [] if raw_feed.blank?
+
+        if raw_feed.blank?
+          Rails.logger.warn("RSS Polling: Failed to fetch feed from #{feed_url}")
+          return []
+        end
 
         parsed_feed = RSS::Parser.parse(raw_feed, false)
-        return [] if parsed_feed.blank?
+
+        if parsed_feed.blank?
+          Rails.logger.warn("RSS Polling: Unable to parse feed from #{feed_url}")
+          return []
+        end
 
         parsed_feed.items.map { |item| ::DiscourseRssPolling::FeedItem.new(item) }
-      rescue RSS::NotWellFormedError, RSS::InvalidRSSError
+      rescue RSS::NotWellFormedError, RSS::InvalidRSSError => e
+        Discourse.warn_exception(e, message: "RSS Polling: Invalid RSS from #{feed_url}")
         []
       end
 
       def fetch_raw_feed
+        url, headers = extract_api_credentials(@feed_url)
         body = +""
 
-        FinalDestination
-          .new(@feed_url)
-          .get do |response, chunk, uri|
-            throw :done if uri.blank? || !response.is_a?(Net::HTTPSuccess)
-            body << chunk
+        fd = FinalDestination.new(url, headers:)
+        response_status = nil
+
+        fd.get do |response, chunk, uri|
+          if uri.blank? || !response.is_a?(Net::HTTPSuccess)
+            response_status = response&.code
+            throw :done
           end
+          body << chunk
+        end
+
+        if body.blank? && response_status.present?
+          Rails.logger.warn(
+            "RSS Polling: HTTP #{response_status} when fetching #{feed_url} (status: #{fd.status})",
+          )
+        end
 
         body.presence
+      end
+
+      def extract_api_credentials(url)
+        uri = URI.parse(url)
+        return url, {} if uri.query.blank?
+
+        params = CGI.parse(uri.query)
+        api_key = params.delete("api_key")&.first
+        api_username = params.delete("api_username")&.first
+
+        return url, {} if api_key.blank?
+
+        headers = { "Api-Key" => api_key }
+        headers["Api-Username"] = api_username if api_username.present?
+
+        uri.query = params.empty? ? nil : URI.encode_www_form(params)
+        [uri.to_s, headers]
       end
     end
   end

@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "حواشي Discourse"
   js:
     footnote:
+      title: "الحواشي السفلية"
       add: "إضافة حاشية سفلية"

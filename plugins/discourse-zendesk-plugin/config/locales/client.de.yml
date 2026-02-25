@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_zendesk: "Discourse – Zendesk"
+          discourse_zendesk: "Discourse Zendesk"
   js:
     topic:
       create_zendesk_issue: "Zendesk-Ticket erstellen"

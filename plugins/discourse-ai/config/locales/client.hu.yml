@@ -131,8 +131,9 @@ hu:
         save: "Mentés"
         remove_parameter: "Eltávolítás"
         parameter_required: "Kötelező"
+        credential_not_set: "(nincs beállítva)"
         edit: "Szerkesztés"
-        test: "Teszt futtatása"
+        test: "Teszt"
         delete: "Törlés"
         test_modal:
           run: "Teszt futtatása"

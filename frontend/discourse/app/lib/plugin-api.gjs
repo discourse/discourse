@@ -125,7 +125,10 @@ import Composer, {
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
 import { _addTrackedPostProperty } from "discourse/models/post";
-import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
+import {
+  _addTrackedTopicProperty,
+  registerCustomLastUnreadUrlCallback,
+} from "discourse/models/topic";
 import {
   addSaveableUserField,
   addSaveableUserOptionField,
@@ -742,6 +745,20 @@ class _PluginApi {
    */
   addTrackedPostProperties(...names) {
     names.forEach((name) => _addTrackedPostProperty(name));
+  }
+
+  /**
+   * Adds tracked properties to the topic model.
+   *
+   * This method is used to mark properties as tracked for topic updates.
+   *
+   * You'll need to do this if you've added properties to a Topic and need them to be
+   * automatically updated in the UI when there are changes in the model.
+   *
+   * @param {...string} names - The names of the properties to be tracked.
+   */
+  addTrackedTopicProperties(...names) {
+    names.forEach((name) => _addTrackedTopicProperty(name));
   }
 
   /**

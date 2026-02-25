@@ -24,7 +24,7 @@ zh_CN:
       voting_closed_title: "已关闭"
       voting_limit: "限制"
       see_votes: "您还剩余 %{count}/%{max} 票"
-      locked: "投票已锁定"
+      locked: "已锁定"
       locked_description: "提升信任级别以投票"
       votes:
         other: "%{count} 票"

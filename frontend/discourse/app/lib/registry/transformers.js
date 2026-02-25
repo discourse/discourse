@@ -15,6 +15,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "full-page-search-load-more",
   "post-menu-toggle-like-action",
   "post-stream-error-loading",
+  "topic-controller:finished-editing",
   "topic-list-item-click",
 ]);
 
@@ -31,6 +32,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-plugin-icon",
   "admin-reports-show-query-params",
+  "admin-onboarding-start-posting-options",
   "bulk-select-in-nav-controls",
   "category-available-views",
   "category-default-colors",

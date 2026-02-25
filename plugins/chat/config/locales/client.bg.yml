@@ -44,6 +44,7 @@ bg:
       cancel: "Прекрати"
       cancel_reply: "Отмяна на отговора"
       chat_channels: "Канали"
+      pinned: "Закована"
       browse_all_channels: "Преглед на всички канали"
       move_to_channel:
         title: "Преместване на съобщенията в канал"

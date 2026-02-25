@@ -91,6 +91,7 @@ import { clearNavItems } from "discourse/models/nav-item";
 import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
+import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
@@ -273,6 +274,7 @@ export function testCleanup(container, app) {
   clearRegisteredTabs();
   clearRegisteredEditCategoryTabs();
   clearAddedTrackedPostProperties();
+  clearAddedTrackedTopicProperties();
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();

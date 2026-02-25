@@ -589,19 +589,13 @@ da:
       in_reply_to: "som svar til"
       filtered_flagged_by: "Anmeldt af"
       unknown:
-        title:
-          one: "Du har afventende gennemgange fra deaktiveret plugin:"
-          other: "Du har afventende gennemgange fra deaktiveret plugins:"
         instruction: "De kan ikke vises korrekt, før du aktiverer det relevante plugin. Aktivér venligst plugin'et, og opdater siden. Alternativt kan du ignorere dem. <a href='%{url}' target='_blank'>Få mere at vide...</a>"
         reviewable_unknown_source: "%{reviewableType} (ukendt plugin)"
         reviewable_known_source: "%{reviewableType} (fra '%{pluginName}' plugin)"
         ignore_all: "Ignorer alle"
         enable_plugins: "Aktivér plugins"
-        delete_confirm: "Er du sikker på, at du vil slette alle anmeldelser oprettet af deaktiverede plugins?"
-        ignore_success: "Alle anmeldelser oprettet af deaktiverede plugins er blevet slettet."
       explain:
         why: "forklar hvorfor dette punkt endte i køen"
-        title: "Scoring, der kan gennemgås"
         formula: "Formular"
         subtotal: "Mellemtotal"
         total: "Total"
@@ -615,10 +609,8 @@ da:
           title: "Brugere, hvis markeringer historisk er blevet bekræftet/godkendt, får en bonus."
         trust_level_bonus:
           name: "tillidsniveau"
-          title: "Punkter til gennemgang, som er oprettet af brugere med højere tillidsniveau, har en højere score."
         type_bonus:
           name: "skriv bonus"
-          title: "Visse gennemgåelige typer kan tildeles en bonus af medarbejdere, for at give dem til en højere prioritet."
       revise_and_reject_post:
         title: "Revidere"
         reason: "Begrundelse"
@@ -627,7 +619,6 @@ da:
         custom_reason: "Giv en klar beskrivelse af årsagen"
         other_reason: "Andet..."
         optional: "valgfri"
-      stale_help: "Denne gennemgang er blevet løst af <b>%{username}</b>."
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -3981,7 +3972,18 @@ da:
         one: "Dets synonym slettes også."
         other: "Dets %{count} synonymer slettes også."
       edit_tag: "Rediger mærke navn og beskrivelse"
-      description: "Beskrivelse (maks. 1000 tegn)"
+      description: "Beskrivelse"
+      settings:
+        title: "Indstillinger"
+        general: "Overordnet"
+        back: "Tilbage"
+        name: "Navn"
+        slug: "Alias (Slug)"
+        name_placeholder: "Mærke navn"
+        synonyms_subtitle: "Når følgende tags bruges, vil de blive erstattet med %{name}"
+      localization:
+        name: "Navn"
+        description: "Beskrivelse"
       sort_by: "Sortér efter:"
       sort_by_count: "antal"
       sort_by_name: "navn"
@@ -4332,6 +4334,11 @@ da:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
         back: "Tilbage til alle rapporter"
+        group_traffic: "Trafik"
+        group_members: "Brugere"
+        group_moderation: "Moderation"
+        group_security: "Sikkerhed"
+        group_other: "Andre"
       config_sections:
         account:
           title: "Konto"
@@ -4356,7 +4363,6 @@ da:
         preview: "Forhåndsvisning"
         enabled_for_options:
           everyone: "Alle"
-          staff: "Kun personale"
         statuses:
           experimental: "Eksperimentel"
         impact_roles:
@@ -4481,6 +4487,9 @@ da:
               title: "Logs"
         reports:
           title: "Rapporter"
+          sub_pages:
+            settings:
+              title: "Indstillinger"
         badges:
           title: "Emblemer"
         content:
@@ -4545,22 +4554,6 @@ da:
         result_count:
           one: '%{count} resultat for "%{filter}"'
           other: '%{count} resultater for "%{filter}"'
-        result_types:
-          page:
-            one: "Side"
-            other: "Sider"
-          report:
-            one: "Rapport"
-            other: "Rapporter"
-          setting:
-            one: "Indstilling"
-            other: "Indstillinger"
-          theme:
-            one: "Tema"
-            other: "Temaer"
-          component:
-            one: "Komponent"
-            other: "komponenter"
       new_features:
         title: "Hvad er nyt?"
         check_for_updates: "Se efter opdateringer"
@@ -6073,6 +6066,7 @@ da:
         field_types:
           text: "Tekst"
           textarea: "Tekstområde"
+          date: "Dato"
           confirm: "Bekræft"
           dropdown: "Rulleboks"
           multiselect: "Multivælg"

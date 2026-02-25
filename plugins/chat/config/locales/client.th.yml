@@ -21,6 +21,7 @@ th:
         yesterday: "เมื่อวาน"
       create: "สร้าง"
       cancel: "ยกเลิก"
+      pinned: "ปักหมุดแล้ว"
       channel_settings:
         edit: "แก้ไข"
         add: "เพิ่ม"

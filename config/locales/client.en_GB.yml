@@ -105,6 +105,9 @@ en_GB:
       navigation:
         title: "Navigation"
     tagging:
+      description: "Description"
+      localization:
+        description: "Description"
       manage_groups_description: "Define groups to organise tags"
     sidebar:
       sections:

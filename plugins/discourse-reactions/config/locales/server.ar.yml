@@ -13,6 +13,7 @@ ar:
     discourse_reactions_desaturated_reaction_panel: "يقلل التشويش البصري للتفاعلات عن طريق عرضها بألوان غير مشبَّعة حتى التمرير فوقها."
     discourse_reactions_excluded_from_like: "التفاعلات التي لا تُحتسَب كتسجيل إعجاب. سيتم احتساب أي تفاعلات غير موجودة في هذه القائمة كتسجيل إعجاب للشارات والبلاغات وأغراضٍ أخرى."
     discourse_reactions_like_sync_enabled: "إذا تم تفعيل هذا الإعداد، فسيتم إنشاء سجلات الإعجاب المطابقة للتفاعلات التاريخية، باستثناء تلك التفاعلات المحدَّدة في `discourse_reactions_excluded_from_like`. ستحدث هذه المزامنة بشكلٍ منتظم في الخلفية، وأيضًا عند تغيير `discourse_reactions_excluded_from_like`."
+    discourse_reactions_allow_any_emoji: "عند تفعيل هذا الخيار، سيُضاف زر يتيح للمستخدمين اختيار أي رمز تعبيري من قائمة الردود. سيتم السماح للأعضاء باختيار أي رمز تعبيري، بما في ذلك الرموز المخصصة. لتقييد الرموز المتاحة، استخدم إعداد الموقع emoji_deny_list."
     errors:
       invalid_excluded_emoji: "لا يمكنك استبعاد الرموز التعبيرية التي ليست ضمن 'discourse reactions enabled reactions' ولا يمكنك استبعاد الرموز التعبيرية المستخدمة في 'discourse reactions reaction for like'."
   badges:

@@ -60,8 +60,6 @@ he:
   inline_oneboxer:
     topic_page_title_post_number: "מס׳ %{post_number}"
     topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
-    too_many_urls: "אי אפשר להכניס יותר מ־10 קישורים לתיבה תוחמת בבקשה אחת."
-    concurrency_not_allowed: "אי אפשר לשלוח בקשות להטמעת תיבות תוחמות במקביל. נא לשלוח בקשה אחת כל פעם."
   components:
     enabled_filter: "פעיל"
     disabled_filter: "כבוי"
@@ -398,7 +396,6 @@ he:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "סוכני משתמש חייבים להיות באורך של 3 תווים לפחות כדי למנוע הגבלה בשוגג של כמות פניות ממשתמשים תקפים."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "אי אפשר להוסיף אף אחת מהערכים הבאים להגדרה: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "אי אפשר להשבית הפשטת נתוני על מתמונה אם האפשרות ‚תמונת מיטוב מדיה בכתיבת הודעה פעילה’ פעילה. יש להשבית את האפשרות בטרם השבתת הפשטת נתוני על מתמונה."
-      x_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
       tl0_and_anonymous_flag: "יש לספק ‚דוא״ל קשר עם האתר’ או ‚כתובת דוא״ל לדיווח על תוכן לא חוקי’ למשתמשים אלמוניים."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "ההגדרה הזאת דורשת את הפעלת ההגדרה ‚לאפשר מצב אלמוני’ תחילה."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1944,7 +1941,6 @@ he:
     slow_down_crawler_rate: "אם הוגדר slow_down_crawler_user_agents (האטת סורקי אינטרנט) קצב זה יחול על כל סורקי האינטרנט (כמות ההמתנה בשניות בין בקשות)"
     content_security_policy: "אפשר מדיניות תוכן-אבטחה (CSP). CSP הוא שכבת אבטחה נוספת שעוזרת למנוע סוגים מסוימים של התקפות, כולל Cross Site Scripting (XSS) והזרקת נתונים."
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד - CSP)"
-    content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפט נוספים ברשימת ההיתרים. השרת המקומי וה-CDN כלולים כברירת מחדל. ראה <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>הגבלת התקפות XSS עם מדיניות אבטחת תוכן.</a> (CSP). מקורות שרת מקומי יתעלמו שכן strict-dynamic מופעל."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
@@ -2030,7 +2026,6 @@ he:
     enable_local_logins_via_email: "לאפשר למשתמשים לבקש לשלוח אליהם קישור לכניסה בלחיצה אחת בדוא״ל."
     allow_new_registrations: "לאפשר הרשמות של משתמשים חדשים. יש לבטל סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "להציג מודעה למשתמשים אלמוניים חוזרים שמציעה להם להירשם כדי לקבל חשבון."
-    enable_discourse_id: "הפעלת אימות דרך Discourse ID, שירות כניסה אחודה שמאפשר למשתמשים להיכנס למגוון אתרי Discourse עם חשבון אחד. ספקי כניסה נפוצים כגון Google,‏ Facebook,‏ Apple ו־GitHub נתמכים בלי הגדרות נוספות. בכתובת <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> אפשר למצוא פרטים נוספים."
     enable_google_oauth2_logins: "להפעיל אימות עם Oauth2 מול Google. זו שיטת האימות שכרגע נתמכת מול Google. דורשת מפתח וסוד. יש לעיין ב<a href='https://meta.discourse.org/t/15858' target='_blank'>הגדרת כניסה עם Google ל־Discourse</a>."
     google_oauth2_client_id: "מזהה הלקוח הייחודי שסופק על ידי יישום ה־Google שלך, המשמש לתהליך האימות."
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
@@ -2269,7 +2264,6 @@ he:
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות בדוא״ל באמצעות כתובות דוא״ל נכנסות. למשל: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "להשתמש ב־HTML במקום בטקסט בהודעות דוא״ל נכנסות."
     strip_incoming_email_lines: "להסיר רווחים מובילים וסוגרים בכל שורה בהודעות דוא״ל נכנסות."
-    disable_emails: "למנוע מ־Discourse לשלוח כל סוג של הודעות דוא״ל. יש לבחור ב־‚כן’ כדי להשבית את כל הודעות הדוא״ל לכל המשתמשים. ניתן גם לבחור ב־‚ללא סגל’ כדי להשבית את ההודעות למשתמשים שאינם נמנים עם הסגל."
     strip_images_from_short_emails: "הסרת תמונות מהודעות דוא״ל שגודלן אינו עולה על 2800 בתים"
     short_email_length: "הגדרת האורך המרבי, בבתים, לסיווג הודעת דוא״ל כ‚קצרה’ כדי להדחיק תמונות. אם גודל של הודעת דוא״ל לא חורג מהערך הזה, תמונות כלשהן (כגון תמונות ייצוגיות ואמוג׳ים) בהודעות הדוא״ל תוסרנה."
     display_name_on_email_from: "להציג שמות מלאים בשדה „מאת” בדוא״ל"
@@ -2555,7 +2549,6 @@ he:
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
     dashboard_general_tab_activity_metrics: "נא לבחור דיווחים שיופיעו בתור מדדי פעילות בלשונית הכללית."
-    gravatar_enabled: "אפשר להשתמש בשירות <a href='https://gravatar.com/'>Gravatar</a> לתמונות ייצוגיות של משתמשים. ההגדרה הזאת תמנע ממשתמשים לעבור ל־Gravatar עבור התמונות ייצוגיות שלהם, אך לא תשפיע על משתמשים שכבר עשו זאת."
     gravatar_name: "נא לציין את שם ספק שירות Gravatar. השם הזה בדרך כלל ישמש לזיהוי ספק מקור תמונות ה־Gravatar הייצוגיות באתר."
     gravatar_base_url: "נא לציין את כתובת הגישה ל־API של ספק Gravatar. ההגדרה הזאת הכרחית להמרת כתובות דוא״ל לכתובות Gravatar בה מאוחסנות התמונות הייצוגיות."
     gravatar_login_url: "כתובת ביחס אל `gravatar_base_url` (כתובת הבסיס של Gravatar) שמספקת למשתמש גישה לשירות Gravatar."
@@ -2644,12 +2637,6 @@ he:
       reply_by_email_disabled: "עליך להפעיל את ‚תגובה בדוא״ל’ בטרם הפעלת הגדרה זו."
       discourse_connect_url_is_empty: "עליך להגדיר ‚כתובת discourse connect’ בטרם הפעלת הגדרה זו."
       enable_local_logins_disabled: "עליך תחילה להפעיל את ‚הפעלת כניסה מקומית’ בטרם הפעלת הגדרה זו."
-      min_username_length_exists: "לא ניתן להגדיר את האורך המזערי לשם המשתמש לפחות תווים מאשר שם המשתמש הקצר ביותר במערכת (%{username})."
-      min_group_name_length_exists: "לא ניתן להגדיר את האורך המזערי לשם המשתמש ליותר תווים מאשר שם הקבוצה הקצר ביותר (%{group_name})."
-      min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."
-      max_username_length_exists: "לא ניתן להגדיר את האורך המרבי לשם המשתמש ליותר תווים מאשר שם המשתמש הארוך ביותר במערכת (%{username})."
-      max_group_name_length_exists: "לא ניתן להגדיר את האורך המרבי לשם המשתמש לפחות תווים מאשר שם הקבוצה הארוך ביותר (%{group_name})."
-      max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       invalid_hex_value: "ערכי הצבעים חייבים להיות קודים הקסדצימליים באורך 6 תווים."
       empty_selectable_avatars: "עליך להעלות שתי תמונות ייצוגיות לפחות כדי לבחור ביניהן לפני הפעלת האפשרות הזאת."
       category_search_priority:
@@ -2709,7 +2696,6 @@ he:
       exclude_tag: "החרגת נושאים עם תגית מסוימת"
       exclude_tags_any: "החרגת נושאים עם לפחות אחת מבין התגיות שצוינו (מופרדות בפסיקים)"
       exclude_tags_all: "החרגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
-      tags_alias: "כינוי למסנן ‚tag:‎’"
       tag_group: "הצגת נושאים עם תגיות מקבוצת תגיות מסוימת"
       exclude_tag_group: "החרגת נושאים עם תגיות מקבוצת תגיות מסוימת"
       activity_before: "הצגת נושאים עם פעילות אחרונה לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
@@ -5180,8 +5166,6 @@ he:
     deprecation_error_label: לגרום להשבתות נקודתיות של JavaScript לעורר שגיאה
     enter: "כנסו למצב בטוח"
     must_select: "עליך לבחור באפשרות אחת לפחות כדי להיכנס למצב בטוח."
-  dev_mode:
-    enter: "Enter"
   wizard:
     title: "הקמת Discourse"
     step:
@@ -5458,10 +5442,6 @@ he:
         complete: "הפוסט אושר והוצג מחדש"
       post_actions:
         bundle_title: "מה לעשות עם הפוסט?"
-      no_action_post:
-        title: "אין פעולה"
-        description: "לא לנקוט בפעולה על הפוסט"
-        complete: "לא ננקטה פעולה על הפוסט"
       delete_post:
         title: "מחיקת פוסט"
         description: "למחוק את הפוסט הזה"
@@ -5482,16 +5462,8 @@ he:
         title: "עריכת פוסט"
         description: "עריכת תוכן הפוסט הזה"
         complete: "פוסט נערך"
-      convert_to_pm:
-        title: "המרה להודעה פרטית"
-        description: "להמיר את הפוסט הזה להודעה פרטית"
-        complete: "הפוסט הומר להודעה פרטית"
       user_actions:
         bundle_title: "מה לעשות עם המשתמש/ת?"
-      no_action_user:
-        title: "אין פעולה"
-        description: "לא לנקוט בפעולות נגד המשתמש/ת"
-        complete: "לא לנקוט בפעולה נגד המשתמש/ת"
       silence_user:
         title: "השתקת משתמש"
         description: "למנוע מהמשתמש/ת לפרסם"
