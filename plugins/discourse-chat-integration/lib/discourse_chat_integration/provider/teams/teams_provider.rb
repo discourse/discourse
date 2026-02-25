@@ -101,7 +101,7 @@ module DiscourseChatIntegration::Provider::TeamsProvider
               {
                 type: "Image",
                 style: "Person",
-                url: "http:#{post.user.small_avatar_url}",
+                url: post.user.small_avatar_url,
                 altText: display_name,
                 size: "Small",
               },
