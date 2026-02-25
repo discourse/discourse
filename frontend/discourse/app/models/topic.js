@@ -19,9 +19,9 @@ import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { 
+import {
   defineTrackedProperty,
-  trackedArray 
+  trackedArray,
 } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
