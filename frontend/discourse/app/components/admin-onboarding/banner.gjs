@@ -5,10 +5,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
+import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
+import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
+import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -43,44 +47,69 @@ const STEPS = [
 
     @service composer;
     @service appEvents;
+    @service modal;
+    @service siteSettings;
 
     icon = "comments";
-    icebreaker_topics = [
-      "fun_facts",
-      "coolest_thing_you_have_seen_today",
-      "introduce_yourself",
-      "what_is_your_favorite_food",
-    ];
 
     constructor() {
       super(...arguments);
-      this.appEvents.on("topic:created", this, this.checkIfPosted);
+
+      this.appEvents.on("topic:created", this, this.completeStep);
+      this.appEvents.on(
+        "admin-onboarding:posting-complete",
+        this,
+        this.completeStep
+      );
     }
 
     willDestroy() {
       super.willDestroy(...arguments);
-      this.appEvents.off("topic:created", this, this.checkIfPosted);
+
+      this.appEvents.off("topic:created", this, this.completeStep);
+      this.appEvents.off(
+        "admin-onboarding:posting-complete",
+        this,
+        this.completeStep
+      );
     }
 
-    checkIfPosted() {
+    completeStep() {
       this.markAsCompleted();
+    }
+
+    showStartPostingOptions() {
+      const options = applyValueTransformer(
+        "admin-onboarding-start-posting-options",
+        [PredefinedTopicOption]
+      );
+
+      if (options.length === 1) {
+        // show predefined topics directly if it's the only option available
+        return this.modal.show(PredefinedTopicsOptionsModal);
+      }
+
+      this.modal.show(StartPostingOptions, {
+        model: {
+          options,
+        },
+      });
+    }
+
+    openTopic(topicKey) {
+      this.composer.openNewTopic({
+        title: i18n(
+          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.title`
+        ),
+        body: i18n(
+          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.body`
+        ),
+      });
     }
 
     @action
     async performAction() {
-      const randomTopic =
-        this.icebreaker_topics[
-          Math.floor(Math.random() * this.icebreaker_topics.length)
-        ];
-
-      this.composer.openNewTopic({
-        title: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.title`
-        ),
-        body: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.body`
-        ),
-      });
+      this.showStartPostingOptions();
     }
   },
   class SpreadTheWord extends OnboardingStep {

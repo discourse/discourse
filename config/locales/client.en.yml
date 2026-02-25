@@ -467,6 +467,13 @@ en:
         title: "Start Posting"
         description: "Give people something to talk about together"
         action: "Icebreaker ideas"
+        choose_option: "How would you like to start?"
+        predefined_topics: "Pre-defined Topics"
+        predefined_topics_subtitle: "Break the ice with one of the following conversation starters. <br/> Pick one and customize it to your liking:"
+        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
+        use_predefined: "Use pre-defined Topics"
+        start_with_this: "Start with this"
+        back: "Back"
         icebreakers:
           fun_facts:
             title: "What are some fun facts about you?"
@@ -480,7 +487,6 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
-
 
       spread_the_word:
         title: "Spread the Word!"
