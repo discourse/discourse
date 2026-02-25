@@ -1,27 +1,27 @@
 import Controller from "@ember/controller";
+import { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class AdminController extends Controller {
   @service router;
   @service currentUser;
 
-  @discourseComputed("siteSettings.enable_group_directory")
-  showGroups(enableGroupDirectory) {
-    return !enableGroupDirectory;
+  @computed("siteSettings.enable_group_directory")
+  get showGroups() {
+    return !this.siteSettings?.enable_group_directory;
   }
 
-  @discourseComputed("siteSettings.enable_badges")
-  showBadges(enableBadges) {
-    return this.currentUser.get("admin") && enableBadges;
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.currentUser.get("admin") && this.siteSettings?.enable_badges;
   }
 
-  @discourseComputed("router._router.currentPath")
-  adminContentsClassName(currentPath) {
-    let cssClasses = currentPath
-      .split(".")
-      .filter((segment) => {
+  @computed("router._router.currentPath")
+  get adminContentsClassName() {
+    let cssClasses = this.router?._router?.currentPath
+      ?.split(".")
+      ?.filter((segment) => {
         return (
           segment !== "index" &&
           segment !== "loading" &&
@@ -29,8 +29,8 @@ export default class AdminController extends Controller {
           segment !== "admin"
         );
       })
-      .map(dasherize)
-      .join(" ");
+      ?.map(dasherize)
+      ?.join(" ");
 
     // this is done to avoid breaking css customizations
     if (cssClasses.includes("dashboard")) {

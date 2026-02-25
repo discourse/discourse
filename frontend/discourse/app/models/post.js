@@ -1,14 +1,13 @@
 import { cached, tracked } from "@glimmer/tracking";
-import EmberObject, { get } from "@ember/object";
-import { alias, and, equal, not, or } from "@ember/object/computed";
+import EmberObject, { computed, get, set } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
+import { deepEqual } from "discourse/lib/object";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import {
@@ -199,16 +198,10 @@ export default class Post extends RestModel {
   @tracked via_email;
   @tracked wiki;
   @tracked yours;
-
-  @alias("can_edit") canEdit; // for compatibility with existing code
-  @equal("trust_level", 0) new_user;
-  @equal("post_number", 1) firstPost;
-  @and("firstPost", "topic.deleted_at") deletedViaTopic; // mark fist post as deleted if topic was deleted
-  @or("deleted_at", "deletedViaTopic") deleted; // post is either highlighted as deleted or hidden/removed from the post stream
-  @not("deleted") notDeleted;
-  @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
-  @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
-  @alias("topic.details.created_by.id") topicCreatedById;
+  // for compatibility with existing code
+  // mark fist post as deleted if topic was deleted
+  // post is either highlighted as deleted or hidden/removed from the post stream
+  // post or content still can be recovered
 
   constructor() {
     super(...arguments);
@@ -219,13 +212,70 @@ export default class Post extends RestModel {
     });
   }
 
+  @dependentKeyCompat
+  get canEdit() {
+    return this.can_edit;
+  }
+
+  set canEdit(value) {
+    this.can_edit = value;
+  }
+
+  @dependentKeyCompat
+  get new_user() {
+    return this.trust_level === 0;
+  }
+
+  @dependentKeyCompat
+  get firstPost() {
+    return this.post_number === 1;
+  }
+
+  @computed("firstPost", "topic.deleted_at")
+  get deletedViaTopic() {
+    return this.firstPost && this.topic?.deleted_at;
+  }
+
+  @computed("deleted_at", "deletedViaTopic")
+  get deleted() {
+    return this.deleted_at || this.deletedViaTopic;
+  }
+
+  @computed("deleted")
+  get notDeleted() {
+    return !this.deleted;
+  }
+
+  @dependentKeyCompat
+  get recoverable() {
+    return this.deleted_at || this.user_deleted;
+  }
+
+  @computed("topic.details.created_by.id", "user_id")
+  get topicOwner() {
+    return deepEqual(this.topic?.details?.created_by?.id, this.user_id);
+  }
+
+  @computed("topic.details.created_by.id")
+  get topicCreatedById() {
+    return this.topic?.details?.created_by?.id;
+  }
+
+  set topicCreatedById(value) {
+    set(this, "topic.details.created_by.id", value);
+  }
+
   get shareUrl() {
     return this.customShare || resolveShareUrl(this.url, this.currentUser);
   }
 
-  @discourseComputed("name", "username")
-  showName(name, username) {
-    return name && name !== username && this.siteSettings.display_name_on_posts;
+  @computed("name", "username")
+  get showName() {
+    return (
+      this.name &&
+      this.name !== this.username &&
+      this.siteSettings.display_name_on_posts
+    );
   }
 
   get deletedBy() {
@@ -236,24 +286,24 @@ export default class Post extends RestModel {
     return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
-  @discourseComputed("post_number", "topic_id", "topic.slug")
-  url(post_number, topic_id, topicSlug) {
+  @computed("post_number", "topic_id", "topic.slug")
+  get url() {
     return postUrl(
-      topicSlug || this.topic_slug,
-      topic_id || this.get("topic.id"),
-      post_number
+      this.topic?.slug || this.topic_slug,
+      this.topic_id || this.get("topic.id"),
+      this.post_number
     );
   }
 
   // Don't drop the /1
-  @discourseComputed("post_number", "url")
-  urlWithNumber(postNumber, baseUrl) {
-    return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
+  @computed("post_number", "url")
+  get urlWithNumber() {
+    return this.post_number === 1 ? `${this.url}/1` : this.url;
   }
 
-  @discourseComputed("username")
-  usernameUrl(username) {
-    return userPath(username);
+  @computed("username")
+  get usernameUrl() {
+    return userPath(this.username);
   }
 
   updatePostField(field, value) {
@@ -276,8 +326,8 @@ export default class Post extends RestModel {
     return this.link_counts.filter((link) => link.internal && link.title);
   }
 
-  @discourseComputed("actions_summary.@each.can_act")
-  flagsAvailable() {
+  @computed("actions_summary.@each.can_act")
+  get flagsAvailable() {
     // TODO: Investigate why `this.site` is sometimes null when running
     // Search - Search with context
     if (!this.site) {
@@ -289,17 +339,20 @@ export default class Post extends RestModel {
     );
   }
 
-  @discourseComputed(
-    "siteSettings.use_pg_headlines_for_excerpt",
-    "topic_title_headline"
-  )
-  useTopicTitleHeadline(enabled, title) {
-    return enabled && title;
+  @computed("siteSettings.use_pg_headlines_for_excerpt", "topic_title_headline")
+  get useTopicTitleHeadline() {
+    return (
+      this.siteSettings?.use_pg_headlines_for_excerpt &&
+      this.topic_title_headline
+    );
   }
 
-  @discourseComputed("topic_title_headline")
-  topicTitleHeadline(title) {
-    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
+  @computed("topic_title_headline")
+  get topicTitleHeadline() {
+    return fancyTitle(
+      this.topic_title_headline,
+      this.siteSettings.support_mixed_text_direction
+    );
   }
 
   get canBookmark() {

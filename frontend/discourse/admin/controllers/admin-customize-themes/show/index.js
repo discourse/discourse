@@ -1,13 +1,7 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import {
-  empty,
-  filterBy,
-  mapBy,
-  notEmpty,
-  readOnly,
-} from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -15,8 +9,7 @@ import ThemeSettings from "discourse/admin/models/theme-settings";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { url } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import ThemeUploadAddModal from "../../../components/theme-upload-add";
@@ -32,32 +25,100 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
 
   editRouteName = "adminCustomizeThemes.edit";
 
-  @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
-  @url("model.id", "/admin/themes/%@/preview") previewUrl;
-  @url("model.id", "model.locale", "/admin/themes/%@/translations/%@")
-  getTranslationsUrl;
-  @empty("selectedChildThemeId") addButtonDisabled;
-  @mapBy("model.parentThemes", "name") parentThemesNames;
-  @filterBy("allThemes", "component", false) availableParentThemes;
-  @filterBy("availableParentThemes", "isActive") availableActiveParentThemes;
-  @mapBy("availableParentThemes", "name") availableThemesNames;
-  @filterBy("availableChildThemes", "hasParents") availableActiveChildThemes;
-  @mapBy("availableChildThemes", "name") availableComponentsNames;
-  @mapBy("availableActiveChildThemes", "name") availableActiveComponentsNames;
-  @mapBy("model.childThemes", "name") childThemesNames;
-  @notEmpty("settings") hasSettings;
-  @notEmpty("translations") hasTranslations;
-  @notEmpty("model.themeable_site_settings") hasThemeableSiteSettings;
-  @readOnly("model.settings") settings;
-  @readOnly("model.themeable_site_settings") themeSiteSettings;
+  @computed("model.id")
+  get downloadUrl() {
+    return getURL(`/admin/customize/themes/${this.model?.id}/export`);
+  }
 
-  @discourseComputed("model.component", "model.remote_theme")
-  showCheckboxes() {
+  @computed("model.id")
+  get previewUrl() {
+    return getURL(`/admin/themes/${this.model?.id}/preview`);
+  }
+
+  @computed("model.id", "model.locale")
+  get getTranslationsUrl() {
+    return getURL(
+      `/admin/themes/${this.model?.id}/translations/${this.model?.locale}`
+    );
+  }
+
+  @computed("selectedChildThemeId.length")
+  get addButtonDisabled() {
+    return isEmpty(this.selectedChildThemeId);
+  }
+
+  @computed("model.parentThemes.@each.name")
+  get parentThemesNames() {
+    return this.model?.parentThemes?.map?.((item) => item.name) ?? [];
+  }
+
+  @computed("allThemes.@each.component")
+  get availableParentThemes() {
+    return this.allThemes?.filter?.((item) => item.component === false) ?? [];
+  }
+
+  @computed("availableParentThemes.@each.isActive")
+  get availableActiveParentThemes() {
+    return this.availableParentThemes?.filter?.((item) => item.isActive) ?? [];
+  }
+
+  @computed("availableParentThemes.@each.name")
+  get availableThemesNames() {
+    return this.availableParentThemes?.map?.((item) => item.name) ?? [];
+  }
+
+  @computed("availableChildThemes.@each.hasParents")
+  get availableActiveChildThemes() {
+    return this.availableChildThemes?.filter?.((item) => item.hasParents) ?? [];
+  }
+
+  @computed("availableChildThemes.@each.name")
+  get availableComponentsNames() {
+    return this.availableChildThemes?.map?.((item) => item.name) ?? [];
+  }
+
+  @computed("availableActiveChildThemes.@each.name")
+  get availableActiveComponentsNames() {
+    return this.availableActiveChildThemes?.map?.((item) => item.name) ?? [];
+  }
+
+  @computed("model.childThemes.@each.name")
+  get childThemesNames() {
+    return this.model?.childThemes?.map?.((item) => item.name) ?? [];
+  }
+
+  @computed("settings.length")
+  get hasSettings() {
+    return !isEmpty(this.settings);
+  }
+
+  @computed("translations.length")
+  get hasTranslations() {
+    return !isEmpty(this.translations);
+  }
+
+  @computed("model.themeable_site_settings.length")
+  get hasThemeableSiteSettings() {
+    return !isEmpty(this.model?.themeable_site_settings);
+  }
+
+  @computed("model.settings")
+  get settings() {
+    return this.model?.settings;
+  }
+
+  @computed("model.themeable_site_settings")
+  get themeSiteSettings() {
+    return this.model?.themeable_site_settings;
+  }
+
+  @computed("model.component", "model.remote_theme")
+  get showCheckboxes() {
     return !this.model.component || this.model.remote_theme;
   }
 
-  @discourseComputed("model.theme_fields.[]")
-  extraFiles() {
+  @computed("model.theme_fields.[]")
+  get extraFiles() {
     return this.model.theme_fields
       ?.filter(
         ({ target, type_id }) =>
@@ -67,8 +128,8 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       ?.sort((a, b) => (a.file_path || "").localeCompare(b.file_path || ""));
   }
 
-  @discourseComputed("model.editedFields")
-  editedFieldsFormatted() {
+  @computed("model.editedFields")
+  get editedFieldsFormatted() {
     const descriptions = [];
     ["common", "desktop", "mobile"].forEach((target) => {
       const fields = this.editedFieldsForTarget(target);
@@ -90,32 +151,37 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     return descriptions;
   }
 
-  @discourseComputed("colorSchemeId", "model.color_scheme_id")
-  lightColorSchemeChanged(colorSchemeId, existingId) {
-    colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
+  @computed("colorSchemeId", "model.color_scheme_id")
+  get lightColorSchemeChanged() {
+    const colorSchemeId =
+      this.colorSchemeId === null ? null : parseInt(this.colorSchemeId, 10);
 
-    return colorSchemeId !== existingId;
+    return colorSchemeId !== this.model?.color_scheme_id;
   }
 
-  @discourseComputed("darkColorSchemeId", "model.dark_color_scheme_id")
-  darkColorSchemeChanged(darkColorSchemeId, existingId) {
-    darkColorSchemeId =
-      darkColorSchemeId === null ? null : parseInt(darkColorSchemeId, 10);
-    return darkColorSchemeId !== existingId;
+  @computed("darkColorSchemeId", "model.dark_color_scheme_id")
+  get darkColorSchemeChanged() {
+    const darkColorSchemeId =
+      this.darkColorSchemeId === null
+        ? null
+        : parseInt(this.darkColorSchemeId, 10);
+    return darkColorSchemeId !== this.model?.dark_color_scheme_id;
   }
 
-  @discourseComputed("availableChildThemes", "model.childThemes.[]", "model")
-  selectableChildThemes(available, childThemes) {
-    if (available) {
-      const themes = !childThemes
-        ? available
-        : available.filter((theme) => !childThemes.includes(theme));
+  @computed("availableChildThemes", "model.childThemes.[]", "model")
+  get selectableChildThemes() {
+    if (this.availableChildThemes) {
+      const themes = !this.model?.childThemes
+        ? this.availableChildThemes
+        : this.availableChildThemes.filter(
+            (theme) => !this.model?.childThemes.includes(theme)
+          );
       return themes.length === 0 ? null : themes;
     }
   }
 
-  @discourseComputed("model.parentThemes.[]")
-  relativesSelectorSettingsForComponent() {
+  @computed("model.parentThemes.[]")
+  get relativesSelectorSettingsForComponent() {
     return SiteSetting.create({
       list_type: "compact",
       type: "list",
@@ -132,8 +198,8 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     });
   }
 
-  @discourseComputed("model.childThemesNames.[]")
-  relativesSelectorSettingsForTheme() {
+  @computed("model.childThemesNames.[]")
+  get relativesSelectorSettingsForTheme() {
     return SiteSetting.create({
       list_type: "compact",
       type: "list",
@@ -150,47 +216,51 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     });
   }
 
-  @discourseComputed("allThemes", "model.component", "model")
-  availableChildThemes(allThemes) {
+  @computed("allThemes", "model.component", "model")
+  get availableChildThemes() {
     if (!this.get("model.component")) {
       const themeId = this.get("model.id");
-      return allThemes.filter(
+      return this.allThemes.filter(
         (theme) => theme.get("id") !== themeId && theme.get("component")
       );
     }
   }
 
-  @discourseComputed("model.component")
-  convertKey(component) {
-    const type = component ? "component" : "theme";
+  @computed("model.component")
+  get convertKey() {
+    const type = this.model?.component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}`;
   }
 
-  @discourseComputed("model.component")
-  convertTooltip(component) {
-    const type = component ? "component" : "theme";
+  @computed("model.component")
+  get convertTooltip() {
+    const type = this.model?.component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}_tooltip`;
   }
 
-  @discourseComputed("model.translations")
-  translations(translations) {
-    return translations.map((setting) =>
+  @computed("model.translations")
+  get translations() {
+    return this.model?.translations?.map((setting) =>
       ThemeSettings.create({ ...setting, textarea: true })
     );
   }
 
-  @discourseComputed(
+  @computed(
     "model.remote_theme.local_version",
     "model.remote_theme.remote_version",
     "model.remote_theme.commits_behind"
   )
-  hasOverwrittenHistory(localVersion, remoteVersion, commitsBehind) {
-    return localVersion !== remoteVersion && commitsBehind === -1;
+  get hasOverwrittenHistory() {
+    return (
+      this.model?.remote_theme?.local_version !==
+        this.model?.remote_theme?.remote_version &&
+      this.model?.remote_theme?.commits_behind === -1
+    );
   }
 
-  @discourseComputed("model.remoteError", "updatingRemote")
-  showRemoteError(errorMessage, updating) {
-    return errorMessage && !updating;
+  @computed("model.remoteError", "updatingRemote")
+  get showRemoteError() {
+    return this.model?.remoteError && !this.updatingRemote;
   }
 
   editedFieldsForTarget(target) {
@@ -249,9 +319,9 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     );
   }
 
-  @discourseComputed("model.user.id", "model.default")
-  showConvert(userId, defaultTheme) {
-    return userId > 0 && !defaultTheme;
+  @computed("model.user.id", "model.default")
+  get showConvert() {
+    return this.model?.user?.id > 0 && !this.model?.default;
   }
 
   @action

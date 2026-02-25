@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
-import { empty, or } from "@ember/object/computed";
-import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
+import EmberObject, { action, computed } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { deepEqual } from "discourse/lib/object";
 import { emailValid } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -16,37 +15,51 @@ export default class EmailController extends Controller {
   newEmail = null;
   successMessage = null;
 
-  @empty("newEmail") newEmailEmpty;
-
-  @or("saving", "newEmailEmpty", "taken", "unchanged", "invalidEmail")
-  saveDisabled;
-
-  @propertyEqual("newEmailLower", "oldEmail") unchanged;
-
-  @discourseComputed("newEmail")
-  newEmailLower(newEmail) {
-    return newEmail.toLowerCase().trim();
+  @computed("newEmail.length")
+  get newEmailEmpty() {
+    return isEmpty(this.newEmail);
   }
 
-  @discourseComputed("saving", "new")
-  saveButtonText(saving, isNew) {
-    if (saving) {
+  @computed("saving", "newEmailEmpty", "taken", "unchanged", "invalidEmail")
+  get saveDisabled() {
+    return (
+      this.saving ||
+      this.newEmailEmpty ||
+      this.taken ||
+      this.unchanged ||
+      this.invalidEmail
+    );
+  }
+
+  @computed("newEmailLower", "oldEmail")
+  get unchanged() {
+    return deepEqual(this.newEmailLower, this.oldEmail);
+  }
+
+  @computed("newEmail")
+  get newEmailLower() {
+    return this.newEmail.toLowerCase().trim();
+  }
+
+  @computed("saving", "new")
+  get saveButtonText() {
+    if (this.saving) {
       return i18n("saving");
     }
-    if (isNew) {
+    if (this.new) {
       return i18n("user.add_email.add");
     }
     return i18n("user.change");
   }
 
-  @discourseComputed("newEmail")
-  invalidEmail(newEmail) {
-    return !emailValid(newEmail);
+  @computed("newEmail")
+  get invalidEmail() {
+    return !emailValid(this.newEmail);
   }
 
-  @discourseComputed("invalidEmail", "oldEmail", "newEmail")
-  emailValidation(invalidEmail, oldEmail, newEmail) {
-    if (invalidEmail && (oldEmail || newEmail)) {
+  @computed("invalidEmail", "oldEmail", "newEmail")
+  get emailValidation() {
+    if (this.invalidEmail && (this.oldEmail || this.newEmail)) {
       return EmberObject.create({
         failed: true,
         reason: i18n("user.email.invalid"),

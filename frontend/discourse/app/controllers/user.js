@@ -1,12 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { compare, isEmpty } from "@ember/utils";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
@@ -20,20 +17,67 @@ export default class UserController extends Controller {
 
   @controller("user-notifications") userNotifications;
 
-  @setting("moderators_view_emails") canModeratorsViewEmails;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
 
-  @equal("router.currentRouteName", "user.summary") isSummaryRoute;
-  @or("model.can_ignore_user", "model.can_mute_user") canMuteOrIgnoreUser;
-  @gt("model.number_of_flags_given", 0) hasGivenFlags;
-  @gt("model.number_of_flags", 0) hasFlags;
-  @gt("model.number_of_deleted_posts", 0) hasDeletedPosts;
-  @gt("model.number_of_silencings", 0) hasBeenSilenced;
-  @gt("model.number_of_suspensions", 0) hasBeenSuspended;
-  @gt("model.warnings_received_count", 0) hasReceivedWarnings;
-  @gt("model.number_of_rejected_posts", 0) hasRejectedPosts;
-  @equal("model.trust_level", 0) isTrustLevelZero;
-  @or("isTrustLevelZero", "model.trust_level") hasTrustLevel;
-  @or(
+  @computed("router.currentRouteName")
+  get isSummaryRoute() {
+    return this.router?.currentRouteName === "user.summary";
+  }
+
+  @computed("model.can_ignore_user", "model.can_mute_user")
+  get canMuteOrIgnoreUser() {
+    return this.model?.can_ignore_user || this.model?.can_mute_user;
+  }
+
+  @computed("model.number_of_flags_given")
+  get hasGivenFlags() {
+    return this.model?.number_of_flags_given > 0;
+  }
+
+  @computed("model.number_of_flags")
+  get hasFlags() {
+    return this.model?.number_of_flags > 0;
+  }
+
+  @computed("model.number_of_deleted_posts")
+  get hasDeletedPosts() {
+    return this.model?.number_of_deleted_posts > 0;
+  }
+
+  @computed("model.number_of_silencings")
+  get hasBeenSilenced() {
+    return this.model?.number_of_silencings > 0;
+  }
+
+  @computed("model.number_of_suspensions")
+  get hasBeenSuspended() {
+    return this.model?.number_of_suspensions > 0;
+  }
+
+  @computed("model.warnings_received_count")
+  get hasReceivedWarnings() {
+    return this.model?.warnings_received_count > 0;
+  }
+
+  @computed("model.number_of_rejected_posts")
+  get hasRejectedPosts() {
+    return this.model?.number_of_rejected_posts > 0;
+  }
+
+  @computed("model.trust_level")
+  get isTrustLevelZero() {
+    return this.model?.trust_level === 0;
+  }
+
+  @computed("isTrustLevelZero", "model.trust_level")
+  get hasTrustLevel() {
+    return this.isTrustLevelZero || this.model?.trust_level;
+  }
+
+  @computed(
     "hasGivenFlags",
     "hasFlags",
     "hasDeletedPosts",
@@ -42,42 +86,73 @@ export default class UserController extends Controller {
     "hasReceivedWarnings",
     "hasRejectedPosts"
   )
-  showStaffCounters;
-  @and(
+  get showStaffCounters() {
+    return (
+      this.hasGivenFlags ||
+      this.hasFlags ||
+      this.hasDeletedPosts ||
+      this.hasBeenSilenced ||
+      this.hasBeenSuspended ||
+      this.hasReceivedWarnings ||
+      this.hasRejectedPosts
+    );
+  }
+
+  @computed(
     "model.featured_topic",
     "siteSettings.allow_featured_topic_on_user_profiles"
   )
-  showFeaturedTopic;
-  @not("model.isBasic") linkWebsite;
-  @and("model.can_be_deleted", "model.can_delete_all_posts") canDeleteUser;
-  @readOnly("router.currentRoute.parent.name") currentParentRoute;
-
-  @discourseComputed("model.username")
-  viewingSelf(username) {
-    return this.currentUser && username === this.currentUser?.get("username");
+  get showFeaturedTopic() {
+    return (
+      this.model?.featured_topic &&
+      this.siteSettings?.allow_featured_topic_on_user_profiles
+    );
   }
 
-  @discourseComputed("viewingSelf", "model.profile_hidden")
-  canExpandProfile(viewingSelf, profileHidden) {
-    return !profileHidden && viewingSelf;
+  @computed("model.isBasic")
+  get linkWebsite() {
+    return !this.model?.isBasic;
   }
 
-  @discourseComputed("model.profileBackgroundUrl")
-  hasProfileBackgroundUrl(background) {
-    return !isEmpty(background.toString());
+  @computed("model.can_be_deleted", "model.can_delete_all_posts")
+  get canDeleteUser() {
+    return this.model?.can_be_deleted && this.model?.can_delete_all_posts;
   }
 
-  @discourseComputed(
+  @computed("router.currentRoute.parent.name")
+  get currentParentRoute() {
+    return this.router?.currentRoute?.parent?.name;
+  }
+
+  @computed("model.username")
+  get viewingSelf() {
+    return (
+      this.currentUser &&
+      this.model?.username === this.currentUser?.get("username")
+    );
+  }
+
+  @computed("viewingSelf", "model.profile_hidden")
+  get canExpandProfile() {
+    return !this.model?.profile_hidden && this.viewingSelf;
+  }
+
+  @computed("model.profileBackgroundUrl")
+  get hasProfileBackgroundUrl() {
+    return !isEmpty(this.model?.profileBackgroundUrl?.toString());
+  }
+
+  @computed(
     "model.profile_hidden",
     "isSummaryRoute",
     "viewingSelf",
     "forceExpand"
   )
-  collapsedInfo(profileHidden, isSummaryRoute, viewingSelf, forceExpand) {
-    if (profileHidden) {
+  get collapsedInfo() {
+    if (this.model?.profile_hidden) {
       return true;
     }
-    return (!isSummaryRoute || viewingSelf) && !forceExpand;
+    return (!this.isSummaryRoute || this.viewingSelf) && !this.forceExpand;
   }
 
   @computed("collapsedInfo")
@@ -93,69 +168,79 @@ export default class UserController extends Controller {
     };
   }
 
-  @discourseComputed("model.suspended", "model.silenced", "currentUser.staff")
-  isNotRestrictedOrIsStaff(suspended, silenced, isStaff) {
-    return (!suspended && !silenced) || isStaff;
+  @computed("model.suspended", "model.silenced", "currentUser.staff")
+  get isNotRestrictedOrIsStaff() {
+    return (
+      (!this.model?.suspended && !this.model?.silenced) ||
+      this.currentUser?.staff
+    );
   }
 
-  @discourseComputed("model.trust_level")
-  removeNoFollow(trustLevel) {
-    return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
+  @computed("model.trust_level")
+  get removeNoFollow() {
+    return (
+      this.model?.trust_level > 2 && !this.siteSettings.tl3_links_no_follow
+    );
   }
 
-  @discourseComputed("viewingSelf", "currentUser.admin")
-  showBookmarks(viewingSelf, isAdmin) {
-    return viewingSelf || isAdmin;
+  @computed("viewingSelf", "currentUser.admin")
+  get showBookmarks() {
+    return this.viewingSelf || this.currentUser?.admin;
   }
 
-  @discourseComputed("viewingSelf")
-  showDrafts(viewingSelf) {
-    return viewingSelf;
+  @computed("viewingSelf")
+  get showDrafts() {
+    return this.viewingSelf;
   }
 
-  @discourseComputed("viewingSelf")
-  showRead(viewingSelf) {
-    return viewingSelf;
+  @computed("viewingSelf")
+  get showRead() {
+    return this.viewingSelf;
   }
 
-  @discourseComputed(
+  @computed(
     "viewingSelf",
     "currentUser.admin",
     "currentUser.can_send_private_messages"
   )
-  showPrivateMessages(viewingSelf, isAdmin) {
+  get showPrivateMessages() {
     return (
-      this.currentUser?.can_send_private_messages && (viewingSelf || isAdmin)
+      this.currentUser?.can_send_private_messages &&
+      (this.viewingSelf || this.currentUser?.admin)
     );
   }
 
-  @discourseComputed("viewingSelf", "currentUser.admin")
-  showActivityTab(viewingSelf, isAdmin) {
-    return viewingSelf || isAdmin || !this.siteSettings.hide_user_activity_tab;
+  @computed("viewingSelf", "currentUser.admin")
+  get showActivityTab() {
+    return (
+      this.viewingSelf ||
+      this.currentUser?.admin ||
+      !this.siteSettings.hide_user_activity_tab
+    );
   }
 
-  @discourseComputed("viewingSelf", "currentUser.admin")
-  showNotificationsTab(viewingSelf, isAdmin) {
-    return viewingSelf || isAdmin;
+  @computed("viewingSelf", "currentUser.admin")
+  get showNotificationsTab() {
+    return this.viewingSelf || this.currentUser?.admin;
   }
 
-  @discourseComputed("model.name")
-  nameFirst(name) {
-    return prioritizeNameInUx(name);
+  @computed("model.name")
+  get nameFirst() {
+    return prioritizeNameInUx(this.model?.name);
   }
 
-  @discourseComputed("model.badge_count")
-  showBadges(badgeCount) {
-    return this.siteSettings.enable_badges && badgeCount > 0;
+  @computed("model.badge_count")
+  get showBadges() {
+    return this.siteSettings.enable_badges && this.model?.badge_count > 0;
   }
 
-  @discourseComputed()
-  canInviteToForum() {
+  @computed()
+  get canInviteToForum() {
     return this.currentUser?.get("can_invite_to_forum");
   }
 
-  @discourseComputed("model.user_fields.@each.value")
-  publicUserFields() {
+  @computed("model.user_fields.@each.value")
+  get publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
     if (!isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
@@ -173,10 +258,10 @@ export default class UserController extends Controller {
     }
   }
 
-  @discourseComputed("model.primary_group_name")
-  primaryGroup(group) {
-    if (group) {
-      return `group-${group}`;
+  @computed("model.primary_group_name")
+  get primaryGroup() {
+    if (this.model?.primary_group_name) {
+      return `group-${this.model?.primary_group_name}`;
     }
   }
 

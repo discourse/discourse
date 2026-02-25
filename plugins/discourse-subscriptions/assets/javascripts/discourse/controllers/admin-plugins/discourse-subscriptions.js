@@ -1,10 +1,9 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminPluginsDiscourseSubscriptionsController extends Controller {
@@ -12,18 +11,18 @@ export default class AdminPluginsDiscourseSubscriptionsController extends Contro
 
   loading = false;
 
-  @discourseComputed
-  stripeConfigured() {
+  @computed
+  get stripeConfigured() {
     return !!this.siteSettings.discourse_subscriptions_public_key;
   }
 
-  @discourseComputed
-  campaignEnabled() {
+  @computed
+  get campaignEnabled() {
     return this.siteSettings.discourse_subscriptions_campaign_enabled;
   }
 
-  @discourseComputed
-  campaignProductSet() {
+  @computed
+  get campaignProductSet() {
     return !!this.siteSettings.discourse_subscriptions_campaign_product;
   }
 

@@ -9,9 +9,8 @@ import {
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
-import { propertyEqual } from "discourse/lib/computed";
 import { INTERFACE_COLOR_MODES } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
+import { deepEqual } from "discourse/lib/object";
 import {
   currentThemeId,
   listThemes,
@@ -47,13 +46,20 @@ export default class InterfaceController extends Controller {
   previewingColorScheme = false;
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
-
-  @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
-  @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
 
-  @discourseComputed("makeThemeDefault")
-  saveAttrNames(makeThemeDefault) {
+  @computed("model.id", "currentUser.id")
+  get canPreviewColorScheme() {
+    return deepEqual(this.model?.id, this.currentUser?.id);
+  }
+
+  @computed("model.id", "currentUser.id")
+  get isViewingOwnProfile() {
+    return deepEqual(this.model?.id, this.currentUser?.id);
+  }
+
+  @computed("makeThemeDefault")
+  get saveAttrNames() {
     let attrs = [
       "locale",
       "external_links_in_new_tab",
@@ -77,7 +83,7 @@ export default class InterfaceController extends Controller {
       "enable_markdown_monospace_font",
     ];
 
-    if (makeThemeDefault) {
+    if (this.makeThemeDefault) {
       attrs.push("theme_ids");
     }
 
@@ -86,19 +92,21 @@ export default class InterfaceController extends Controller {
     });
   }
 
-  @discourseComputed()
-  availableLocales() {
+  @computed()
+  get availableLocales() {
     return this.siteSettings.available_locales;
   }
 
-  @discourseComputed("currentThemeId")
-  defaultDarkSchemeId(themeId) {
-    const theme = this.userSelectableThemes?.find((t) => t.id === themeId);
+  @computed("currentThemeId")
+  get defaultDarkSchemeId() {
+    const theme = this.userSelectableThemes?.find(
+      (t) => t.id === this.currentThemeId
+    );
     return theme?.dark_color_scheme_id || -1;
   }
 
-  @discourseComputed
-  textSizes() {
+  @computed
+  get textSizes() {
     return TEXT_SIZES.map((value) => {
       return { name: i18n(`user.text_size.${value}`), value };
     });
@@ -112,15 +120,15 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  @discourseComputed
-  titleCountModes() {
+  @computed
+  get titleCountModes() {
     return TITLE_COUNT_MODES.map((value) => {
       return { name: i18n(`user.title_count_mode.${value}`), value };
     });
   }
 
-  @discourseComputed
-  bookmarkAfterNotificationModes() {
+  @computed
+  get bookmarkAfterNotificationModes() {
     return Object.keys(AUTO_DELETE_PREFERENCES).map((key) => {
       return {
         value: AUTO_DELETE_PREFERENCES[key],
@@ -129,71 +137,70 @@ export default class InterfaceController extends Controller {
     });
   }
 
-  @discourseComputed
-  userSelectableThemes() {
+  @computed
+  get userSelectableThemes() {
     return listThemes(this.site);
   }
 
-  @discourseComputed("userSelectableThemes")
-  showThemeSelector(themes) {
-    return themes && themes.length > 1;
+  @computed("userSelectableThemes")
+  get showThemeSelector() {
+    return this.userSelectableThemes && this.userSelectableThemes.length > 1;
   }
 
-  @discourseComputed("themeId")
-  themeIdChanged(themeId) {
+  @computed("themeId")
+  get themeIdChanged() {
     if (!this.isViewingOwnProfile) {
       return false;
     }
 
     if (this.currentThemeId === -1) {
-      this.set("currentThemeId", themeId);
+      this.set("currentThemeId", this.themeId); // eslint-disable-line ember/no-side-effects
       return false;
     } else {
-      return this.currentThemeId !== themeId;
+      return this.currentThemeId !== this.themeId;
     }
   }
 
-  @discourseComputed
-  userSelectableColorSchemes() {
+  @computed
+  get userSelectableColorSchemes() {
     return listColorSchemes(this.site);
   }
 
-  @discourseComputed(
-    "userSelectableThemes",
-    "userSelectableColorSchemes",
-    "themeId"
-  )
-  currentSchemeCanBeSelected(userThemes, userColorSchemes, themeId) {
-    if (!userThemes || !themeId) {
+  @computed("userSelectableThemes", "userSelectableColorSchemes", "themeId")
+  get currentSchemeCanBeSelected() {
+    if (!this.userSelectableThemes || !this.themeId) {
       return false;
     }
 
-    const theme = userThemes.find((t) => t.id === themeId);
+    const theme = this.userSelectableThemes.find((t) => t.id === this.themeId);
     if (!theme) {
       return false;
     }
 
-    return userColorSchemes.find(
+    return this.userSelectableColorSchemes.find(
       (colorScheme) => colorScheme.id === theme.color_scheme_id
     );
   }
 
-  @discourseComputed("model.user_option.theme_ids", "themeId")
-  showThemeSetDefault(userOptionThemes, selectedTheme) {
+  @computed("model.user_option.theme_ids", "themeId")
+  get showThemeSetDefault() {
     if (!this.isViewingOwnProfile) {
       return false;
     }
 
-    return !userOptionThemes || userOptionThemes[0] !== selectedTheme;
+    return (
+      !this.model?.user_option?.theme_ids ||
+      this.model?.user_option?.theme_ids?.[0] !== this.themeId
+    );
   }
 
-  @discourseComputed("model.user_option.text_size", "textSize")
-  showTextSetDefault(userOptionTextSize, selectedTextSize) {
+  @computed("model.user_option.text_size", "textSize")
+  get showTextSetDefault() {
     if (!this.isViewingOwnProfile) {
       return false;
     }
 
-    return userOptionTextSize !== selectedTextSize;
+    return this.model?.user_option?.text_size !== this.textSize;
   }
 
   get isInLightMode() {
@@ -254,8 +261,8 @@ export default class InterfaceController extends Controller {
     setDefaultHomepage(userHome || siteHome);
   }
 
-  @discourseComputed()
-  userSelectableHome() {
+  @computed()
+  get userSelectableHome() {
     let homeValues = {};
     Object.keys(USER_HOMES).forEach((newValue) => {
       const newKey = USER_HOMES[newValue];
@@ -288,29 +295,28 @@ export default class InterfaceController extends Controller {
     return result;
   }
 
-  @discourseComputed("selectedDarkColorSchemeId", "currentThemeId")
-  showInterfaceColorModeSelector(selectedDarkColorSchemeId, themeId) {
-    const theme = this.userSelectableThemes?.find((t) => t.id === themeId);
+  @computed("selectedDarkColorSchemeId", "currentThemeId")
+  get showInterfaceColorModeSelector() {
+    const theme = this.userSelectableThemes?.find(
+      (t) => t.id === this.currentThemeId
+    );
     return (
       (this.defaultDarkSchemeId > 0 &&
         theme.color_scheme_id &&
         theme.color_scheme_id !== theme.dark_color_scheme_id) ||
-      selectedDarkColorSchemeId > 0
+      this.selectedDarkColorSchemeId > 0
     );
   }
 
-  @discourseComputed
-  userSelectableDarkColorSchemes() {
+  @computed
+  get userSelectableDarkColorSchemes() {
     return listColorSchemes(this.site, {
       darkOnly: true,
     });
   }
 
-  @discourseComputed(
-    "userSelectableColorSchemes",
-    "userSelectableDarkColorSchemes"
-  )
-  showColorSchemeSelector() {
+  @computed("userSelectableColorSchemes", "userSelectableDarkColorSchemes")
+  get showColorSchemeSelector() {
     return (
       this.showLightColorSchemeSelector ||
       this.showDarkColorSchemeSelector ||
@@ -318,14 +324,20 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  @discourseComputed("userSelectableColorSchemes")
-  showLightColorSchemeSelector(lightSchemes) {
-    return lightSchemes && lightSchemes.length > 1;
+  @computed("userSelectableColorSchemes")
+  get showLightColorSchemeSelector() {
+    return (
+      this.userSelectableColorSchemes &&
+      this.userSelectableColorSchemes.length > 1
+    );
   }
 
-  @discourseComputed("userSelectableDarkColorSchemes")
-  showDarkColorSchemeSelector(darkSchemes) {
-    return darkSchemes && darkSchemes.length > 1;
+  @computed("userSelectableDarkColorSchemes")
+  get showDarkColorSchemeSelector() {
+    return (
+      this.userSelectableDarkColorSchemes &&
+      this.userSelectableDarkColorSchemes.length > 1
+    );
   }
 
   get interfaceColorModes() {

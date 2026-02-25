@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import UserExport from "discourse/admin/models/user-export";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -21,8 +21,6 @@ export default class extends Component {
   @tracked userExport = null;
   @tracked userExportReloading = false;
 
-  @notEmpty("userExport") userExportAvailable;
-
   constructor() {
     super(...arguments);
     this.messageBus.subscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
@@ -36,6 +34,11 @@ export default class extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
+  }
+
+  @computed("userExport.length")
+  get userExportAvailable() {
+    return !isEmpty(this.userExport);
   }
 
   @bind

@@ -1,17 +1,28 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { reads } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class CategoriesController extends Controller {
   @service router;
   @service composer;
 
-  @reads("currentUser.staff") canEdit;
+  @tracked _canEditOverride;
 
-  @discourseComputed
-  isCategoriesRoute() {
+  @computed("currentUser.staff")
+  get canEdit() {
+    if (this._canEditOverride !== undefined) {
+      return this._canEditOverride;
+    }
+    return this.currentUser?.staff;
+  }
+
+  set canEdit(value) {
+    this._canEditOverride = value;
+  }
+
+  @computed
+  get isCategoriesRoute() {
     return this.router.currentRouteName === "discovery.categories";
   }
 

@@ -1,12 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, bool, not, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
@@ -47,21 +45,89 @@ export default class InvitesShowController extends Controller {
     getAccountPassword: () => this.accountPassword,
   });
   successMessage = null;
-  @readOnly("model.is_invite_link") isInviteLink;
-  @readOnly("model.invited_by") invitedBy;
-  @alias("model.email") email;
-  @alias("email") accountEmail;
-  @readOnly("model.existing_user_id") existingUserId;
-  @readOnly("model.existing_user_can_redeem") existingUserCanRedeem;
-  @readOnly("model.existing_user_can_redeem_error") existingUserCanRedeemError;
-  @bool("existingUserId") existingUserRedeeming;
-  @alias("model.hidden_email") hiddenEmail;
-  @alias("model.email_verified_by_link") emailVerifiedByLink;
-  @alias("model.different_external_email") differentExternalEmail;
-  @not("externalAuthsOnly") passwordRequired;
   errorMessage = null;
   authOptions = null;
   maskPassword = true;
+
+  @computed("model.is_invite_link")
+  get isInviteLink() {
+    return this.model?.is_invite_link;
+  }
+
+  @computed("model.invited_by")
+  get invitedBy() {
+    return this.model?.invited_by;
+  }
+
+  @computed("model.email")
+  get email() {
+    return this.model?.email;
+  }
+
+  set email(value) {
+    set(this, "model.email", value);
+  }
+
+  @computed("email")
+  get accountEmail() {
+    return this.email;
+  }
+
+  set accountEmail(value) {
+    set(this, "email", value);
+  }
+
+  @computed("model.existing_user_id")
+  get existingUserId() {
+    return this.model?.existing_user_id;
+  }
+
+  @computed("model.existing_user_can_redeem")
+  get existingUserCanRedeem() {
+    return this.model?.existing_user_can_redeem;
+  }
+
+  @computed("model.existing_user_can_redeem_error")
+  get existingUserCanRedeemError() {
+    return this.model?.existing_user_can_redeem_error;
+  }
+
+  @computed("existingUserId")
+  get existingUserRedeeming() {
+    return !!this.existingUserId;
+  }
+
+  @computed("model.hidden_email")
+  get hiddenEmail() {
+    return this.model?.hidden_email;
+  }
+
+  set hiddenEmail(value) {
+    set(this, "model.hidden_email", value);
+  }
+
+  @computed("model.email_verified_by_link")
+  get emailVerifiedByLink() {
+    return this.model?.email_verified_by_link;
+  }
+
+  set emailVerifiedByLink(value) {
+    set(this, "model.email_verified_by_link", value);
+  }
+
+  @computed("model.different_external_email")
+  get differentExternalEmail() {
+    return this.model?.different_external_email;
+  }
+
+  set differentExternalEmail(value) {
+    set(this, "model.different_external_email", value);
+  }
+
+  @computed("externalAuthsOnly")
+  get passwordRequired() {
+    return !this.externalAuthsOnly;
+  }
 
   get userFields() {
     return this.userFieldsValidationHelper.userFields;
@@ -110,30 +176,30 @@ export default class InvitesShowController extends Controller {
     this.setProperties(props);
   }
 
-  @discourseComputed
-  discourseConnectEnabled() {
+  @computed
+  get discourseConnectEnabled() {
     return this.siteSettings.enable_discourse_connect;
   }
 
-  @discourseComputed
-  welcomeTitle() {
+  @computed
+  get welcomeTitle() {
     return i18n("invites.welcome_to", {
       site_name: this.siteSettings.title,
     });
   }
 
-  @discourseComputed("email")
-  yourEmailMessage(email) {
-    return i18n("invites.your_email", { email });
+  @computed("email")
+  get yourEmailMessage() {
+    return i18n("invites.your_email", { email: this.email });
   }
 
-  @discourseComputed
-  externalAuthsEnabled() {
+  @computed
+  get externalAuthsEnabled() {
     return findLoginMethods().length > 0;
   }
 
-  @discourseComputed
-  externalAuthsOnly() {
+  @computed
+  get externalAuthsOnly() {
     return (
       !this.siteSettings.enable_local_logins &&
       !this.siteSettings.enable_discourse_connect &&
@@ -141,17 +207,17 @@ export default class InvitesShowController extends Controller {
     );
   }
 
-  @discourseComputed("existingUserId")
-  showWelcomeHeader(existingUserId) {
-    return !existingUserId;
+  @computed("existingUserId")
+  get showWelcomeHeader() {
+    return !this.existingUserId;
   }
 
-  @discourseComputed("externalAuthsOnly", "discourseConnectEnabled")
-  showSignupProgressBar(externalAuthsOnly, discourseConnectEnabled) {
-    return !(externalAuthsOnly || discourseConnectEnabled);
+  @computed("externalAuthsOnly", "discourseConnectEnabled")
+  get showSignupProgressBar() {
+    return !(this.externalAuthsOnly || this.discourseConnectEnabled);
   }
 
-  @discourseComputed(
+  @computed(
     "emailValidation.failed",
     "usernameValidation.failed",
     "passwordValidation.failed",
@@ -160,74 +226,61 @@ export default class InvitesShowController extends Controller {
     "existingUserRedeeming",
     "existingUserCanRedeem"
   )
-  submitDisabled(
-    emailValidationFailed,
-    usernameValidationFailed,
-    passwordValidationFailed,
-    nameValidationFailed,
-    userFieldsValidationFailed,
-    existingUserRedeeming,
-    existingUserCanRedeem
-  ) {
-    if (existingUserRedeeming) {
-      return !existingUserCanRedeem;
+  get submitDisabled() {
+    if (this.existingUserRedeeming) {
+      return !this.existingUserCanRedeem;
     }
 
     return (
-      emailValidationFailed ||
-      usernameValidationFailed ||
-      passwordValidationFailed ||
-      nameValidationFailed ||
-      userFieldsValidationFailed
+      this.emailValidation?.failed ||
+      this.usernameValidation?.failed ||
+      this.passwordValidation?.failed ||
+      this.nameValidation?.failed ||
+      this.userFieldsValidation?.failed
     );
   }
 
-  @discourseComputed(
+  @computed(
     "externalAuthsEnabled",
     "externalAuthsOnly",
     "discourseConnectEnabled"
   )
-  showSocialLoginAvailable(
-    externalAuthsEnabled,
-    externalAuthsOnly,
-    discourseConnectEnabled
-  ) {
+  get showSocialLoginAvailable() {
     return (
-      externalAuthsEnabled && !externalAuthsOnly && !discourseConnectEnabled
+      this.externalAuthsEnabled &&
+      !this.externalAuthsOnly &&
+      !this.discourseConnectEnabled
     );
   }
 
-  @discourseComputed(
+  @computed(
     "externalAuthsOnly",
     "authOptions",
     "emailValidation.failed",
     "existingUserRedeeming"
   )
-  shouldDisplayForm(
-    externalAuthsOnly,
-    authOptions,
-    emailValidationFailed,
-    existingUserRedeeming
-  ) {
+  get shouldDisplayForm() {
     return (
       (this.siteSettings.enable_local_logins ||
-        (externalAuthsOnly && authOptions && !emailValidationFailed)) &&
+        (this.externalAuthsOnly &&
+          this.authOptions &&
+          !this.emailValidation?.failed)) &&
       !this.siteSettings.enable_discourse_connect &&
-      !existingUserRedeeming
+      !this.existingUserRedeeming
     );
   }
 
-  @discourseComputed
-  showFullname() {
+  @computed
+  get showFullname() {
     return this.site.full_name_visible_in_signup;
   }
 
-  @discourseComputed
-  fullnameRequired() {
+  @computed
+  get fullnameRequired() {
     return this.site.full_name_required_for_signup;
   }
 
-  @discourseComputed(
+  @computed(
     "email",
     "rejectedEmails.[]",
     "authOptions.email",
@@ -236,16 +289,8 @@ export default class InvitesShowController extends Controller {
     "emailVerifiedByLink",
     "differentExternalEmail"
   )
-  emailValidation(
-    email,
-    rejectedEmails,
-    externalAuthEmail,
-    externalAuthEmailValid,
-    hiddenEmail,
-    emailVerifiedByLink,
-    differentExternalEmail
-  ) {
-    if (hiddenEmail && !differentExternalEmail) {
+  get emailValidation() {
+    if (this.hiddenEmail && !this.differentExternalEmail) {
       return EmberObject.create({
         ok: true,
         reason: i18n("user.email.ok"),
@@ -253,25 +298,25 @@ export default class InvitesShowController extends Controller {
     }
 
     // If blank, fail without a reason
-    if (isEmpty(email)) {
+    if (isEmpty(this.email)) {
       return EmberObject.create({
         failed: true,
       });
     }
 
-    if (rejectedEmails.includes(email)) {
+    if (this.rejectedEmails?.includes(this.email)) {
       return EmberObject.create({
         failed: true,
         reason: i18n("user.email.invalid"),
       });
     }
 
-    if (externalAuthEmail && externalAuthEmailValid) {
+    if (this.authOptions?.email && this.authOptions?.email_valid) {
       const provider = this.authProviderDisplayName(
         this.get("authOptions.auth_provider")
       );
 
-      if (externalAuthEmail === email) {
+      if (this.authOptions?.email === this.email) {
         return EmberObject.create({
           ok: true,
           reason: i18n("user.email.authenticated", {
@@ -288,14 +333,14 @@ export default class InvitesShowController extends Controller {
       }
     }
 
-    if (emailVerifiedByLink) {
+    if (this.emailVerifiedByLink) {
       return EmberObject.create({
         ok: true,
         reason: i18n("user.email.authenticated_by_invite"),
       });
     }
 
-    if (emailValid(email)) {
+    if (emailValid(this.email)) {
       return EmberObject.create({
         ok: true,
         reason: i18n("user.email.ok"),
@@ -315,13 +360,13 @@ export default class InvitesShowController extends Controller {
     return matchingProvider ? matchingProvider.get("prettyName") : providerName;
   }
 
-  @discourseComputed
-  ssoPath() {
+  @computed
+  get ssoPath() {
     return getUrl("/session/sso");
   }
 
-  @discourseComputed
-  disclaimerHtml() {
+  @computed
+  get disclaimerHtml() {
     if (this.site.tos_url && this.site.privacy_policy_url) {
       return i18n("create_account.disclaimer", {
         tos_link: this.site.tos_url,
@@ -330,14 +375,14 @@ export default class InvitesShowController extends Controller {
     }
   }
 
-  @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
-  associateHtml(url, provider) {
-    if (!url) {
+  @computed("authOptions.associate_url", "authOptions.auth_provider")
+  get associateHtml() {
+    if (!this.authOptions?.associate_url) {
       return;
     }
     return i18n("create_account.associate", {
-      associate_link: url,
-      provider: i18n(`login.${provider}.name`),
+      associate_link: this.authOptions?.associate_url,
+      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
     });
   }
 

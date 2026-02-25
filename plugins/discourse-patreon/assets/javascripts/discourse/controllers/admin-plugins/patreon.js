@@ -1,10 +1,9 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import FilterRule from "discourse/plugins/discourse-patreon/discourse/models/filter-rule";
@@ -18,8 +17,8 @@ export default class AdminPluginsPatreonController extends Controller {
     return `$${reward.amount_cents / 100} - ${reward.title}`;
   }
 
-  @discourseComputed("rewards")
-  rewardsNames() {
+  @computed("rewards")
+  get rewardsNames() {
     return Object.values(this.rewards)
       .filter((r) => r.id >= 0)
       .map((r) => this.prettyPrintReward(r));

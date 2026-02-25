@@ -3,7 +3,6 @@ import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import CategoryRow from "discourse/select-kit/components/category-row";
@@ -26,9 +25,6 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 })
 @pluginApiIdentifiers(["category-chooser"])
 export default class CategoryChooser extends ComboBoxComponent {
-  @setting("allow_uncategorized_topics") allowUncategorized;
-  @setting("fixed_category_positions_on_create") fixedCategoryPositionsOnCreate;
-
   init() {
     super.init(...arguments);
 
@@ -43,6 +39,16 @@ export default class CategoryChooser extends ComboBoxComponent {
         this.notifyPropertyChange("value");
       });
     }
+  }
+
+  @computed("siteSettings.allow_uncategorized_topics")
+  get allowUncategorized() {
+    return this.siteSettings.allow_uncategorized_topics;
+  }
+
+  @computed("siteSettings.fixed_category_positions_on_create")
+  get fixedCategoryPositionsOnCreate() {
+    return this.siteSettings.fixed_category_positions_on_create;
   }
 
   modifyComponentForRow() {

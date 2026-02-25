@@ -1,9 +1,9 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { and, empty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
@@ -11,9 +11,7 @@ import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
-import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -23,24 +21,43 @@ import { i18n } from "discourse-i18n";
 export default class EditCategorySettings extends buildCategoryPanel(
   "settings"
 ) {
-  @setting("email_in") emailInEnabled;
-  @setting("fixed_category_positions") showPositionInput;
+  @computed("siteSettings.email_in")
+  get emailInEnabled() {
+    return this.siteSettings.email_in;
+  }
 
-  @and("category.show_subcategory_list", "isParentCategory")
-  showSubcategoryListStyle;
-  @empty("category.sort_order") isDefaultSortOrder;
+  @computed("siteSettings.fixed_category_positions")
+  get showPositionInput() {
+    return this.siteSettings.fixed_category_positions;
+  }
 
-  @discourseComputed(
+  @computed("category.show_subcategory_list", "isParentCategory")
+  get showSubcategoryListStyle() {
+    return this.category?.show_subcategory_list && this.isParentCategory;
+  }
+
+  @computed("category.sort_order.length")
+  get isDefaultSortOrder() {
+    return isEmpty(this.category?.sort_order);
+  }
+
+  @computed(
     "category.isParent",
     "category.parent_category_id",
     "transientData.parent_category_id"
   )
-  isParentCategory(isParent, parentCategoryId, transientParentCategoryId) {
-    return isParent || !(parentCategoryId || transientParentCategoryId);
+  get isParentCategory() {
+    return (
+      this.category?.isParent ||
+      !(
+        this.category?.parent_category_id ||
+        this.transientData?.parent_category_id
+      )
+    );
   }
 
-  @discourseComputed
-  availableSubcategoryListStyles() {
+  @computed
+  get availableSubcategoryListStyles() {
     return [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
       {
@@ -62,8 +79,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     ];
   }
 
-  @discourseComputed("category.id", "category.custom_fields")
-  availableViews(categoryId, customFields) {
+  @computed("category.id", "category.custom_fields")
+  get availableViews() {
     const views = [
       { name: i18n("filters.hot.title"), value: "hot" },
       { name: i18n("filters.latest.title"), value: "latest" },
@@ -71,8 +88,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     ];
 
     const context = {
-      categoryId,
-      customFields,
+      categoryId: this.category?.id,
+      customFields: this.category?.custom_fields,
     };
 
     return applyMutableValueTransformer(
@@ -82,8 +99,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     );
   }
 
-  @discourseComputed
-  availableTopPeriods() {
+  @computed
+  get availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
       (p) => {
         return { name: i18n(`filters.top.${p}.title`), value: p };
@@ -91,15 +108,15 @@ export default class EditCategorySettings extends buildCategoryPanel(
     );
   }
 
-  @discourseComputed
-  availableListFilters() {
+  @computed
+  get availableListFilters() {
     return ["all", "none"].map((p) => {
       return { name: i18n(`category.list_filters.${p}`), value: p };
     });
   }
 
-  @discourseComputed
-  searchPrioritiesOptions() {
+  @computed
+  get searchPrioritiesOptions() {
     const options = [];
 
     Object.entries(SEARCH_PRIORITIES).forEach((entry) => {
@@ -114,8 +131,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     return options;
   }
 
-  @discourseComputed
-  availableSorts() {
+  @computed
+  get availableSorts() {
     return applyMutableValueTransformer("category-sort-orders", [
       "likes",
       "op_likes",
@@ -130,27 +147,27 @@ export default class EditCategorySettings extends buildCategoryPanel(
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  @discourseComputed("category.sort_ascending")
-  sortAscendingOption(sortAscending) {
-    if (sortAscending === "false") {
+  @computed("category.sort_ascending")
+  get sortAscendingOption() {
+    if (this.category?.sort_ascending === "false") {
       return false;
     }
-    if (sortAscending === "true") {
+    if (this.category?.sort_ascending === "true") {
       return true;
     }
-    return sortAscending;
+    return this.category?.sort_ascending;
   }
 
-  @discourseComputed
-  sortAscendingOptions() {
+  @computed
+  get sortAscendingOptions() {
     return [
       { name: i18n("category.sort_ascending"), value: true },
       { name: i18n("category.sort_descending"), value: false },
     ];
   }
 
-  @discourseComputed
-  hiddenRelativeIntervals() {
+  @computed
+  get hiddenRelativeIntervals() {
     return ["mins"];
   }
 

@@ -1,17 +1,20 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, get } from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { action, computed, get } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "../../components/modal/api-key-urls";
 
 export default class AdminApiKeysNewController extends Controller {
   @service router;
+
   @service modal;
+
+  @tracked userMode;
 
   userModes = [
     { id: "all", name: i18n("admin.api.all_users") },
@@ -25,19 +28,22 @@ export default class AdminApiKeysNewController extends Controller {
   globalScopes = null;
   scopes = null;
 
-  @equal("userMode", "single") showUserSelector;
-
   init() {
     super.init(...arguments);
     this._loadScopes();
   }
 
-  @discourseComputed("model.{description,username}", "showUserSelector")
-  saveDisabled(model, showUserSelector) {
-    if (isBlank(model.description)) {
+  @dependentKeyCompat
+  get showUserSelector() {
+    return this.userMode === "single";
+  }
+
+  @computed("model.{description,username}", "showUserSelector")
+  get saveDisabled() {
+    if (isBlank(this.model?.description)) {
       return true;
     }
-    if (showUserSelector && isBlank(model.username)) {
+    if (this.showUserSelector && isBlank(this.model?.username)) {
       return true;
     }
     return false;

@@ -1,8 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
@@ -20,25 +19,25 @@ export default class ShowController extends Controller {
   queryParams = ["username"];
   hiddenSetTitle = true;
 
-  @discourseComputed("userBadgesAll")
-  filteredList(userBadgesAll) {
-    return userBadgesAll.filter((item) => item.badge.allow_title);
+  @computed("userBadgesAll")
+  get filteredList() {
+    return this.userBadgesAll.filter((item) => item.badge.allow_title);
   }
 
-  @discourseComputed("filteredList")
-  selectableUserBadges(filteredList) {
+  @computed("filteredList")
+  get selectableUserBadges() {
     return [
       EmberObject.create({
         id: 0,
         badge: Badge.create({ name: i18n("badges.none") }),
       }),
-      ...uniqueItemsFromArray(filteredList, "badge.name"),
+      ...uniqueItemsFromArray(this.filteredList, "badge.name"),
     ];
   }
 
-  @discourseComputed("username")
-  user(username) {
-    if (username) {
+  @computed("username")
+  get user() {
+    if (this.username) {
       return this.userBadges[0].get("user");
     }
   }
@@ -47,14 +46,18 @@ export default class ShowController extends Controller {
     return this.username ? this.userBadgesGrantCount : this.model.grant_count;
   }
 
-  @discourseComputed("model.grant_count", "userBadgesGrantCount")
-  othersCount(modelCount, userCount) {
-    return modelCount - userCount;
+  @computed("model.grant_count", "userBadgesGrantCount")
+  get othersCount() {
+    return this.model?.grant_count - this.userBadgesGrantCount;
   }
 
-  @discourseComputed("model.allow_title", "model.has_badge", "model")
-  canSelectTitle(hasTitleBadges, hasBadge) {
-    return this.siteSettings.enable_badges && hasTitleBadges && hasBadge;
+  @computed("model.allow_title", "model.has_badge", "model")
+  get canSelectTitle() {
+    return (
+      this.siteSettings.enable_badges &&
+      this.model?.allow_title &&
+      this.model?.has_badge
+    );
   }
 
   get canLoadMore() {
@@ -64,9 +67,9 @@ export default class ShowController extends Controller {
     return this.grantCount > (this.userBadges?.length || 0);
   }
 
-  @discourseComputed("user", "model.grant_count")
-  canShowOthers(user, grantCount) {
-    return !!user && grantCount > 1;
+  @computed("user", "model.grant_count")
+  get canShowOthers() {
+    return !!this.user && this.model?.grant_count > 1;
   }
 
   @action

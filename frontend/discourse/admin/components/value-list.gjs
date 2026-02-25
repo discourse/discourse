@@ -1,9 +1,10 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { empty, reads } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import {
@@ -11,7 +12,6 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -20,15 +20,30 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 export default class ValueList extends Component {
   @trackedArray collection = null;
 
-  @empty("newValue") inputInvalid;
-
   inputDelimiter = null;
   inputType = null;
   newValue = "";
   values = null;
   onChange = null;
 
-  @reads("addKey") noneKey;
+  @tracked _noneKeyOverride;
+
+  @computed("newValue.length")
+  get inputInvalid() {
+    return isEmpty(this.newValue);
+  }
+
+  @computed("addKey")
+  get noneKey() {
+    if (this._noneKeyOverride !== undefined) {
+      return this._noneKeyOverride;
+    }
+    return this.addKey;
+  }
+
+  set noneKey(value) {
+    this._noneKeyOverride = value;
+  }
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
@@ -44,9 +59,9 @@ export default class ValueList extends Component {
     );
   }
 
-  @discourseComputed("choices.[]", "collection.[]")
-  filteredChoices(choices, collection) {
-    return makeArray(choices).filter((i) => !collection.includes(i));
+  @computed("choices.[]", "collection.[]")
+  get filteredChoices() {
+    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
   }
 
   keyDown(event) {
@@ -143,9 +158,9 @@ export default class ValueList extends Component {
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
   }
 
-  @discourseComputed("collection")
-  showUpDownButtons(collection) {
-    return collection.length - 1 ? true : false;
+  @computed("collection")
+  get showUpDownButtons() {
+    return this.collection.length - 1 ? true : false;
   }
 
   _splitValues(values, delimiter) {

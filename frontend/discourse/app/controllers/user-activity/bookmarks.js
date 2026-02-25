@@ -1,12 +1,11 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
-import { equal, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
-import discourseComputed from "discourse/lib/decorators";
 import { iconHTML } from "discourse/lib/icon-library";
 import Bookmark from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
@@ -25,8 +24,15 @@ export default class UserActivityBookmarksController extends Controller {
 
   bulkSelectHelper = new BulkSelectHelper(this);
 
-  @notEmpty("q") inSearchMode;
-  @equal("model.bookmarks.length", 0) noContent;
+  @computed("q.length")
+  get inSearchMode() {
+    return !isEmpty(this.q);
+  }
+
+  @computed("model.bookmarks.length")
+  get noContent() {
+    return this.model?.bookmarks?.length === 0;
+  }
 
   @computed("q")
   get searchTerm() {
@@ -37,8 +43,8 @@ export default class UserActivityBookmarksController extends Controller {
     this._searchTerm = value;
   }
 
-  @discourseComputed()
-  emptyStateBody() {
+  @computed()
+  get emptyStateBody() {
     return htmlSafe(
       i18n("user.no_bookmarks_body", {
         icon: iconHTML("bookmark"),
@@ -46,14 +52,14 @@ export default class UserActivityBookmarksController extends Controller {
     );
   }
 
-  @discourseComputed("inSearchMode", "noContent")
-  userDoesNotHaveBookmarks(inSearchMode, noContent) {
-    return !inSearchMode && noContent;
+  @computed("inSearchMode", "noContent")
+  get userDoesNotHaveBookmarks() {
+    return !this.inSearchMode && this.noContent;
   }
 
-  @discourseComputed("inSearchMode", "noContent")
-  nothingFound(inSearchMode, noContent) {
-    return inSearchMode && noContent;
+  @computed("inSearchMode", "noContent")
+  get nothingFound() {
+    return this.inSearchMode && this.noContent;
   }
 
   @action

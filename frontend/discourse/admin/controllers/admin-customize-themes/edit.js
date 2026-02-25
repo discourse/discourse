@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
-import { url } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class AdminCustomizeThemesEditController extends Controller {
@@ -12,33 +11,36 @@ export default class AdminCustomizeThemesEditController extends Controller {
   currentTarget = 0;
   maximized = false;
 
-  @url("model.id", "/admin/themes/%@/preview") previewUrl;
-
   showAdvanced = false;
   editRouteName = "adminCustomizeThemes.edit";
   showRouteName = "adminCustomizeThemes.show";
+
+  @computed("model.id")
+  get previewUrl() {
+    return getURL(`/admin/themes/${this.model?.id}/preview`);
+  }
 
   setTargetName(name) {
     const target = this.get("model.targets").find((t) => t.name === name);
     this.set("currentTarget", target && target.id);
   }
 
-  @discourseComputed("currentTarget")
-  currentTargetName(id) {
+  @computed("currentTarget")
+  get currentTargetName() {
     const target = this.get("model.targets").find(
-      (t) => t.id === parseInt(id, 10)
+      (t) => t.id === parseInt(this.currentTarget, 10)
     );
     return target && target.name;
   }
 
-  @discourseComputed("model.isSaving")
-  saveButtonText(isSaving) {
-    return isSaving ? i18n("saving") : i18n("admin.customize.save");
+  @computed("model.isSaving")
+  get saveButtonText() {
+    return this.model?.isSaving ? i18n("saving") : i18n("admin.customize.save");
   }
 
-  @discourseComputed("model.changed", "model.isSaving")
-  saveDisabled(changed, isSaving) {
-    return !changed || isSaving;
+  @computed("model.changed", "model.isSaving")
+  get saveDisabled() {
+    return !this.model?.changed || this.model?.isSaving;
   }
 
   @action

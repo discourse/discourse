@@ -4,8 +4,6 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 
 const PROBLEMS_CHECK_MINUTES = 1;
@@ -22,7 +20,10 @@ export default class AdminDashboardController extends Controller {
   isLoading = false;
   dashboardFetchedAt = null;
 
-  @setting("version_checks") showVersionChecks;
+  @computed("siteSettings.version_checks")
+  get showVersionChecks() {
+    return this.siteSettings.version_checks;
+  }
 
   @computed("siteSettings.dashboard_visible_tabs")
   get visibleTabs() {
@@ -109,9 +110,9 @@ export default class AdminDashboardController extends Controller {
     }
   }
 
-  @discourseComputed("problemsFetchedAt")
-  problemsTimestamp(problemsFetchedAt) {
-    return moment(problemsFetchedAt).format("LLL");
+  @computed("problemsFetchedAt")
+  get problemsTimestamp() {
+    return moment(this.problemsFetchedAt).format("LLL");
   }
 
   @action

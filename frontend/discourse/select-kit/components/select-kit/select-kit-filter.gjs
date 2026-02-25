@@ -2,7 +2,6 @@
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { not } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
 import {
   attributeBindings,
@@ -10,7 +9,6 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import discourseComputed from "discourse/lib/decorators";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { i18n } from "discourse-i18n";
 
@@ -21,7 +19,10 @@ import { i18n } from "discourse-i18n";
 export default class SelectKitFilter extends Component {
   tabIndex = -1;
 
-  @not("isHidden") isExpanded;
+  @computed("isHidden")
+  get isExpanded() {
+    return !this.isHidden;
+  }
 
   @computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
@@ -35,18 +36,18 @@ export default class SelectKitFilter extends Component {
     );
   }
 
-  @discourseComputed(
+  @computed(
     "selectKit.options.filterPlaceholder",
     "selectKit.options.translatedFilterPlaceholder",
     "selectKit.options.allowAny"
   )
-  placeholder(placeholder, translatedPlaceholder) {
-    if (isPresent(translatedPlaceholder)) {
-      return translatedPlaceholder;
+  get placeholder() {
+    if (isPresent(this.selectKit?.options?.translatedFilterPlaceholder)) {
+      return this.selectKit?.options?.translatedFilterPlaceholder;
     }
 
-    if (isPresent(placeholder)) {
-      return i18n(placeholder);
+    if (isPresent(this.selectKit?.options?.filterPlaceholder)) {
+      return i18n(this.selectKit?.options?.filterPlaceholder);
     }
 
     return i18n(

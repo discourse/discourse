@@ -3,14 +3,12 @@ import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { not, or as computedOr, readOnly } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
-import discourseComputed from "discourse/lib/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import ListSetting from "discourse/select-kit/components/list-setting";
@@ -19,10 +17,6 @@ import { i18n } from "discourse-i18n";
 @tagName("")
 export default class GroupsFormMembershipFields extends Component {
   tokenSeparator = "|";
-
-  @readOnly("site.can_associate_groups") showAssociatedGroups;
-  @not("model.automatic") canEdit;
-  @computedOr("model.flair_icon", "model.flair_url") hasFlair;
 
   trustLevelOptions = [
     {
@@ -43,6 +37,21 @@ export default class GroupsFormMembershipFields extends Component {
     }
   }
 
+  @computed("site.can_associate_groups")
+  get showAssociatedGroups() {
+    return this.site?.can_associate_groups;
+  }
+
+  @computed("model.automatic")
+  get canEdit() {
+    return !this.model?.automatic;
+  }
+
+  @computed("model.flair_icon", "model.flair_url")
+  get hasFlair() {
+    return this.model?.flair_icon || this.model?.flair_url;
+  }
+
   @computed("model.grant_trust_level", "trustLevelOptions")
   get groupTrustLevel() {
     return (
@@ -51,36 +60,29 @@ export default class GroupsFormMembershipFields extends Component {
     );
   }
 
-  @discourseComputed("model.visibility_level", "model.public_admission")
-  disableMembershipRequestSetting(visibility_level, publicAdmission) {
-    visibility_level = parseInt(visibility_level, 10);
-    return publicAdmission || visibility_level > 1;
+  @computed("model.visibility_level", "model.public_admission")
+  get disableMembershipRequestSetting() {
+    const visibility_level = parseInt(this.model?.visibility_level, 10);
+    return this.model?.public_admission || visibility_level > 1;
   }
 
-  @discourseComputed(
-    "model.visibility_level",
-    "model.allow_membership_requests"
-  )
-  disablePublicSetting(visibility_level, allowMembershipRequests) {
-    visibility_level = parseInt(visibility_level, 10);
-    return allowMembershipRequests || visibility_level > 1;
+  @computed("model.visibility_level", "model.allow_membership_requests")
+  get disablePublicSetting() {
+    const visibility_level = parseInt(this.model?.visibility_level, 10);
+    return this.model?.allow_membership_requests || visibility_level > 1;
   }
 
-  @discourseComputed(
-    "model.visibility_level",
-    "model.primary_group",
-    "hasFlair"
-  )
-  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
-    if (visibilityLevel === 0) {
+  @computed("model.visibility_level", "model.primary_group", "hasFlair")
+  get privateGroupNameNotice() {
+    if (this.model?.visibility_level === 0) {
       return;
     }
 
-    if (isPrimaryGroup) {
+    if (this.model?.primary_group) {
       return i18n("admin.groups.manage.alert.primary_group", {
         group_name: this.model.name,
       });
-    } else if (hasFlair) {
+    } else if (this.hasFlair) {
       return i18n("admin.groups.manage.alert.flair_group", {
         group_name: this.model.name,
       });

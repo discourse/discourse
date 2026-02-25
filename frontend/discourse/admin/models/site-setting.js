@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
-import { alias } from "@ember/object/computed";
+import EmberObject, { computed, set } from "@ember/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
   DEFAULT_USER_PREFERENCES,
@@ -8,7 +7,7 @@ import {
 } from "discourse/admin/lib/constants";
 import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const AUTO_REFRESH_ON_SAVE = [
@@ -73,26 +72,73 @@ export default class SiteSetting extends EmberObject {
 
   settingObjectHelper = new SettingObjectHelper(this);
 
-  @alias("settingObjectHelper.overridden") overridden;
-  @alias("settingObjectHelper.computedValueProperty") computedValueProperty;
-  @alias("settingObjectHelper.computedNameProperty") computedNameProperty;
-  @alias("settingObjectHelper.validValues") validValues;
-  @alias("settingObjectHelper.allowsNone") allowsNone;
-  @alias("settingObjectHelper.anyValue") anyValue;
-
   constructor() {
     super(...arguments);
     this.buffered = BufferedProxy.create({ content: this });
   }
 
-  @discourseComputed("setting")
-  staffLogFilter(setting) {
-    if (!setting) {
+  @computed("settingObjectHelper.overridden")
+  get overridden() {
+    return this.settingObjectHelper?.overridden;
+  }
+
+  set overridden(value) {
+    set(this, "settingObjectHelper.overridden", value);
+  }
+
+  @computed("settingObjectHelper.computedValueProperty")
+  get computedValueProperty() {
+    return this.settingObjectHelper?.computedValueProperty;
+  }
+
+  set computedValueProperty(value) {
+    set(this, "settingObjectHelper.computedValueProperty", value);
+  }
+
+  @computed("settingObjectHelper.computedNameProperty")
+  get computedNameProperty() {
+    return this.settingObjectHelper?.computedNameProperty;
+  }
+
+  set computedNameProperty(value) {
+    set(this, "settingObjectHelper.computedNameProperty", value);
+  }
+
+  @computed("settingObjectHelper.validValues")
+  get validValues() {
+    return this.settingObjectHelper?.validValues;
+  }
+
+  set validValues(value) {
+    set(this, "settingObjectHelper.validValues", value);
+  }
+
+  @computed("settingObjectHelper.allowsNone")
+  get allowsNone() {
+    return this.settingObjectHelper?.allowsNone;
+  }
+
+  set allowsNone(value) {
+    set(this, "settingObjectHelper.allowsNone", value);
+  }
+
+  @computed("settingObjectHelper.anyValue")
+  get anyValue() {
+    return this.settingObjectHelper?.anyValue;
+  }
+
+  set anyValue(value) {
+    set(this, "settingObjectHelper.anyValue", value);
+  }
+
+  @computed("setting")
+  get staffLogFilter() {
+    if (!this.setting) {
       return;
     }
 
     return {
-      subject: setting,
+      subject: this.setting,
       action_name: "change_site_setting",
     };
   }

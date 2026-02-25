@@ -1,8 +1,6 @@
 import { action, computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import { setting } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
@@ -39,16 +37,30 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 export default class TagDrop extends ComboBoxComponent {
   @service tagUtils;
 
-  @readOnly("tag.name") value;
-
-  @setting("max_tag_search_results") maxTagSearchResults;
-  @setting("tags_sort_alphabetically") sortTagsAlphabetically;
-  @setting("max_tags_in_filter_list") maxTagsInFilterList;
-
   init() {
     super.init(...arguments);
 
     this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
+  }
+
+  @computed("tag.name")
+  get value() {
+    return this.tag?.name;
+  }
+
+  @computed("siteSettings.max_tag_search_results")
+  get maxTagSearchResults() {
+    return this.siteSettings.max_tag_search_results;
+  }
+
+  @computed("siteSettings.tags_sort_alphabetically")
+  get sortTagsAlphabetically() {
+    return this.siteSettings.tags_sort_alphabetically;
+  }
+
+  @computed("siteSettings.max_tags_in_filter_list")
+  get maxTagsInFilterList() {
+    return this.siteSettings.max_tags_in_filter_list;
   }
 
   @computed("maxTagsInFilterList", "topTags.[]", "mainCollection.[]")

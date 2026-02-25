@@ -1,13 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import { or } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import NotificationsButton from "discourse/select-kit/components/notifications-button";
@@ -15,18 +14,6 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class GroupsFormInteractionFields extends Component {
-  @or(
-    "model.members_visibility_level",
-    "visibilityLevelOptions.firstObject.value"
-  )
-  membersVisibilityLevel;
-
-  @or("model.messageable_level", "aliasLevelOptions.firstObject.value")
-  messageableLevel;
-
-  @or("model.mentionable_level", "aliasLevelOptions.firstObject.value")
-  mentionableLevel;
-
   visibilityLevelOptions = [
     {
       name: i18n("admin.groups.manage.interaction.visibility_levels.public"),
@@ -63,42 +50,71 @@ export default class GroupsFormInteractionFields extends Component {
 
   watchingNotificationLevel = NotificationLevels.WATCHING;
 
-  @discourseComputed(
-    "model.default_notification_level",
-    "watchingNotificationLevel"
+  @computed(
+    "model.members_visibility_level",
+    "visibilityLevelOptions.firstObject.value"
   )
-  defaultNotificationLevel(
-    defaultNotificationLevel,
-    watchingNotificationLevel
-  ) {
-    if (Object.values(NotificationLevels).includes(defaultNotificationLevel)) {
-      return defaultNotificationLevel;
+  get membersVisibilityLevel() {
+    return (
+      this.model?.members_visibility_level ||
+      this.visibilityLevelOptions?.firstObject?.value
+    );
+  }
+
+  @computed("model.messageable_level", "aliasLevelOptions.firstObject.value")
+  get messageableLevel() {
+    return (
+      this.model?.messageable_level ||
+      this.aliasLevelOptions?.firstObject?.value
+    );
+  }
+
+  @computed("model.mentionable_level", "aliasLevelOptions.firstObject.value")
+  get mentionableLevel() {
+    return (
+      this.model?.mentionable_level ||
+      this.aliasLevelOptions?.firstObject?.value
+    );
+  }
+
+  @computed("model.default_notification_level", "watchingNotificationLevel")
+  get defaultNotificationLevel() {
+    if (
+      Object.values(NotificationLevels).includes(
+        this.model?.default_notification_level
+      )
+    ) {
+      return this.model?.default_notification_level;
     }
-    return watchingNotificationLevel;
+    return this.watchingNotificationLevel;
   }
 
-  @discourseComputed(
-    "siteSettings.email_in",
-    "model.automatic",
-    "currentUser.admin"
-  )
-  showEmailSettings(emailIn, automatic, isAdmin) {
-    return emailIn && isAdmin && !automatic;
+  @computed("siteSettings.email_in", "model.automatic", "currentUser.admin")
+  get showEmailSettings() {
+    return (
+      this.siteSettings?.email_in &&
+      this.currentUser?.admin &&
+      !this.model?.automatic
+    );
   }
 
-  @discourseComputed(
+  @computed(
     "model.isCreated",
     "model.can_admin_group",
     "currentUser.can_create_group"
   )
-  canAdminGroup(isCreated, canAdmin, canCreate) {
-    return (!isCreated && canCreate) || (isCreated && canAdmin);
+  get canAdminGroup() {
+    return (
+      (!this.model?.isCreated && this.currentUser?.can_create_group) ||
+      (this.model?.isCreated && this.model?.can_admin_group)
+    );
   }
 
-  @discourseComputed("membersVisibilityLevel")
-  membersVisibilityPrivate(membersVisibilityLevel) {
+  @computed("membersVisibilityLevel")
+  get membersVisibilityPrivate() {
     return (
-      membersVisibilityLevel !== this.visibilityLevelOptions.firstObject.value
+      this.membersVisibilityLevel !==
+      this.visibilityLevelOptions.firstObject.value
     );
   }
 

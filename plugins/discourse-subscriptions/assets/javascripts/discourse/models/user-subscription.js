@@ -1,6 +1,5 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import Plan from "discourse/plugins/discourse-subscriptions/discourse/models/plan";
 
@@ -14,25 +13,25 @@ export default class UserSubscription extends EmberObject {
     );
   }
 
-  @discourseComputed("status")
-  canceled(status) {
-    return status === "canceled";
+  @computed("status")
+  get canceled() {
+    return this.status === "canceled";
   }
 
-  @discourseComputed("current_period_end", "canceled_at")
-  endDate(current_period_end, canceled_at) {
-    if (!canceled_at) {
-      return moment.unix(current_period_end).format("LL");
+  @computed("current_period_end", "canceled_at")
+  get endDate() {
+    if (!this.canceled_at) {
+      return moment.unix(this.current_period_end).format("LL");
     } else {
       return i18n("discourse_subscriptions.user.subscriptions.cancelled");
     }
   }
 
-  @discourseComputed("discount")
-  discounted(discount) {
-    if (discount) {
-      const amount_off = discount.coupon.amount_off;
-      const percent_off = discount.coupon.percent_off;
+  @computed("discount")
+  get discounted() {
+    if (this.discount) {
+      const amount_off = this.discount.coupon.amount_off;
+      const percent_off = this.discount.coupon.percent_off;
 
       if (amount_off) {
         return `${parseFloat(amount_off * 0.01).toFixed(2)}`;

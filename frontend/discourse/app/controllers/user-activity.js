@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
+import { computed } from "@ember/object";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityController extends Controller {
@@ -10,17 +10,21 @@ export default class UserActivityController extends Controller {
 
   @tracked userActionType = null;
 
-  @discourseComputed("currentUser.draft_count")
-  draftLabel(count) {
-    return count > 0
-      ? i18n("drafts.label_with_count", { count })
+  @computed("currentUser.draft_count")
+  get draftLabel() {
+    return this.currentUser?.draft_count > 0
+      ? i18n("drafts.label_with_count", {
+          count: this.currentUser?.draft_count,
+        })
       : i18n("drafts.label");
   }
 
-  @discourseComputed("model.pending_posts_count")
-  pendingLabel(count) {
-    return count > 0
-      ? i18n("pending_posts.label_with_count", { count })
+  @computed("model.pending_posts_count")
+  get pendingLabel() {
+    return this.model?.pending_posts_count > 0
+      ? i18n("pending_posts.label_with_count", {
+          count: this.model?.pending_posts_count,
+        })
       : i18n("pending_posts.label");
   }
 }

@@ -1,15 +1,14 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import Permalink from "discourse/admin/models/permalink";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
-import { fmt } from "discourse/lib/computed";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
@@ -20,13 +19,16 @@ export default class PermalinkForm extends Component {
   formSubmitted = false;
   permalinkType = "topic_id";
 
-  @fmt("permalinkType", "admin.permalink.%@") permalinkTypePlaceholder;
-
   action = null;
   permalinkTypeValue = null;
 
-  @discourseComputed
-  permalinkTypes() {
+  @computed("permalinkType")
+  get permalinkTypePlaceholder() {
+    return `admin.permalink.${this.permalinkType}`;
+  }
+
+  @computed
+  get permalinkTypes() {
     return [
       { id: "topic_id", name: i18n("admin.permalink.topic_id") },
       { id: "post_id", name: i18n("admin.permalink.post_id") },

@@ -1,14 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import BulkUserDeleteConfirmation from "discourse/admin/components/bulk-user-delete-confirmation";
 import AdminUser from "discourse/admin/models/admin-user";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { computedI18n, setting } from "discourse/lib/computed";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 
@@ -22,7 +22,6 @@ export default class AdminUsersListShowController extends Controller {
   @tracked displayBulkActions = false;
   @tracked bulkSelectedUserIdsSet = new Set();
   @tracked bulkSelectedUsersMap = {};
-  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   query = null;
   order = null;
@@ -32,26 +31,34 @@ export default class AdminUsersListShowController extends Controller {
   listFilter = null;
   lastSelected = null;
 
-  @computedI18n("search_hint") searchHint;
-
   _page = 1;
   _results = new TrackedArray();
   _canLoadMore = true;
+
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @dependentKeyCompat
+  get searchHint() {
+    return i18n(`search_hint`);
+  }
 
   get users() {
     return this._results.flat();
   }
 
-  @discourseComputed("query")
-  title(query) {
-    return i18n("admin.users.titles." + query);
+  @computed("query")
+  get title() {
+    return i18n("admin.users.titles." + this.query);
   }
 
-  @discourseComputed("showEmails")
-  columnCount(showEmails) {
+  @computed("showEmails")
+  get columnCount() {
     let colCount = 7; // note that the first column is hardcoded in the template
 
-    if (showEmails) {
+    if (this.showEmails) {
       colCount += 1;
     }
 

@@ -1,12 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, getProperties } from "@ember/object";
-import { and } from "@ember/object/computed";
+import { action, computed, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -75,7 +73,10 @@ export default class EditCategoryTabsController extends Controller {
   validators = [];
   textColors = ["000000", "FFFFFF"];
 
-  @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
+  @computed("showTooltip", "model.cannot_delete_reason")
+  get showDeleteReason() {
+    return this.showTooltip && this.model?.cannot_delete_reason;
+  }
 
   get formData() {
     const data = getProperties(this.model, ...FIELD_LIST);
@@ -87,23 +88,23 @@ export default class EditCategoryTabsController extends Controller {
     return data;
   }
 
-  @discourseComputed("saving", "deleting")
-  deleteDisabled(saving, deleting) {
-    return deleting || saving || false;
+  @computed("saving", "deleting")
+  get deleteDisabled() {
+    return this.deleting || this.saving || false;
   }
 
-  @discourseComputed("name")
-  categoryName(name) {
-    name = name || "";
+  @computed("name")
+  get categoryName() {
+    const name = this.name || "";
     return name.trim().length > 0 ? name : i18n("preview");
   }
 
-  @discourseComputed("saving", "model.id")
-  saveLabel(saving, id) {
-    if (saving) {
+  @computed("saving", "model.id")
+  get saveLabel() {
+    if (this.saving) {
       return "saving";
     }
-    return id ? "category.save" : "category.create";
+    return this.model?.id ? "category.save" : "category.create";
   }
 
   get baseTitle() {

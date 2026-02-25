@@ -1,8 +1,6 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
@@ -14,12 +12,6 @@ const EMAIL_LEVELS = {
 
 export default class EmailsController extends Controller {
   subpageTitle = i18n("user.preferences_nav.emails");
-
-  @equal("model.user_option.email_messages_level", EMAIL_LEVELS.ONLY_WHEN_AWAY)
-  emailMessagesLevelAway;
-
-  @equal("model.user_option.email_level", EMAIL_LEVELS.ONLY_WHEN_AWAY)
-  emailLevelAway;
 
   previousRepliesOptions = [
     { name: i18n("user.email_previous_replies.always"), value: 0 },
@@ -45,6 +37,19 @@ export default class EmailsController extends Controller {
     { name: i18n("user.email_digests.every_six_months"), value: 259200 },
   ];
 
+  @computed("model.user_option.email_messages_level")
+  get emailMessagesLevelAway() {
+    return (
+      this.model?.user_option?.email_messages_level ===
+      EMAIL_LEVELS.ONLY_WHEN_AWAY
+    );
+  }
+
+  @computed("model.user_option.email_level")
+  get emailLevelAway() {
+    return this.model?.user_option?.email_level === EMAIL_LEVELS.ONLY_WHEN_AWAY;
+  }
+
   get saveAttrNames() {
     return applyValueTransformer(
       "preferences-save-attributes",
@@ -63,8 +68,8 @@ export default class EmailsController extends Controller {
     );
   }
 
-  @discourseComputed()
-  frequencyEstimate() {
+  @computed()
+  get frequencyEstimate() {
     let estimate = this.get("model.mailing_list_posts_per_day");
     if (!estimate || estimate < 2) {
       return i18n("user.mailing_list_mode.few_per_day");
@@ -75,16 +80,16 @@ export default class EmailsController extends Controller {
     }
   }
 
-  @discourseComputed()
-  mailingListModeOptions() {
+  @computed()
+  get mailingListModeOptions() {
     return [
       { name: this.frequencyEstimate, value: 1 },
       { name: i18n("user.mailing_list_mode.individual_no_echo"), value: 2 },
     ];
   }
 
-  @discourseComputed()
-  emailFrequencyInstructions() {
+  @computed()
+  get emailFrequencyInstructions() {
     return this.siteSettings.email_time_window_mins
       ? i18n("user.email.frequency", {
           count: this.siteSettings.email_time_window_mins,

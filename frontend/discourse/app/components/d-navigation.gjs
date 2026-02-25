@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
@@ -16,8 +16,6 @@ import TagInfoButton from "discourse/components/tag-info-button";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -32,7 +30,10 @@ export default class DNavigation extends Component {
   @service siteSettings;
   @service currentUser;
 
-  @setting("fixed_category_positions") fixedCategoryPositions;
+  @computed("siteSettings.fixed_category_positions")
+  get fixedCategoryPositions() {
+    return this.siteSettings.fixed_category_positions;
+  }
 
   get canEditTags() {
     return this.currentUser?.canEditTags;
@@ -69,8 +70,8 @@ export default class DNavigation extends Component {
 
   // Should be a `readOnly` instead but some themes/plugins still pass
   // the `categories` property into this component
-  @discourseComputed()
-  categories() {
+  @computed()
+  get categories() {
     let categories = this.site.categoriesList;
 
     if (!this.siteSettings.allow_uncategorized_topics) {
@@ -89,13 +90,13 @@ export default class DNavigation extends Component {
     return categories;
   }
 
-  @discourseComputed("category")
-  showCategoryNotifications(category) {
-    return category && this.currentUser;
+  @computed("category")
+  get showCategoryNotifications() {
+    return this.category && this.currentUser;
   }
 
-  @discourseComputed("category.notification_level")
-  categoryNotificationLevel(notificationLevel) {
+  @computed("category.notification_level")
+  get categoryNotificationLevel() {
     if (
       this.currentUser?.indirectly_muted_category_ids?.includes(
         this.category.id
@@ -103,37 +104,37 @@ export default class DNavigation extends Component {
     ) {
       return NotificationLevels.MUTED;
     } else {
-      return notificationLevel;
+      return this.category?.notification_level;
     }
   }
 
   // don't show tag notification menu on tag intersections
-  @discourseComputed("tagNotification", "additionalTags")
-  showTagNotifications(tagNotification, additionalTags) {
-    return tagNotification && !additionalTags;
+  @computed("tagNotification", "additionalTags")
+  get showTagNotifications() {
+    return this.tagNotification && !this.additionalTags;
   }
 
-  @discourseComputed("category", "createTopicDisabled")
-  categoryReadOnlyBanner(category, createTopicDisabled) {
-    if (category && this.currentUser && createTopicDisabled) {
-      return category.read_only_banner;
+  @computed("category", "createTopicDisabled")
+  get categoryReadOnlyBanner() {
+    if (this.category && this.currentUser && this.createTopicDisabled) {
+      return this.category.read_only_banner;
     }
   }
 
-  @discourseComputed("category.can_edit")
-  showCategoryEdit(canEdit) {
-    return canEdit;
+  @computed("category.can_edit")
+  get showCategoryEdit() {
+    return this.category?.can_edit;
   }
 
-  @discourseComputed("additionalTags", "category", "tag.name")
-  showToggleInfo(additionalTags, category, tagId) {
+  @computed("additionalTags", "category", "tag.name")
+  get showToggleInfo() {
     if (this.siteSettings.experimental_tag_settings_page) {
       return this.currentUser;
     }
-    return !additionalTags && !category && tagId !== "none";
+    return !this.additionalTags && !this.category && this.tag?.name !== "none";
   }
 
-  @discourseComputed(
+  @computed(
     "filterType",
     "category",
     "noSubcategories",
@@ -141,27 +142,20 @@ export default class DNavigation extends Component {
     "router.currentRoute.queryParams",
     "skipCategoriesNavItem"
   )
-  navItems(
-    filterType,
-    category,
-    noSubcategories,
-    tag,
-    currentRouteQueryParams,
-    skipCategoriesNavItem
-  ) {
-    return NavItem.buildList(category, {
-      filterType,
-      noSubcategories,
-      currentRouteQueryParams,
-      tag,
+  get navItems() {
+    return NavItem.buildList(this.category, {
+      filterType: this.filterType,
+      noSubcategories: this.noSubcategories,
+      currentRouteQueryParams: this.router?.currentRoute?.queryParams,
+      tag: this.tag,
       siteSettings: this.siteSettings,
-      skipCategoriesNavItem,
+      skipCategoriesNavItem: this.skipCategoriesNavItem,
     });
   }
 
-  @discourseComputed("filterType")
-  notCategoriesRoute(filterType) {
-    return filterType !== "categories";
+  @computed("filterType")
+  get notCategoriesRoute() {
+    return this.filterType !== "categories";
   }
 
   @action

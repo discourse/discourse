@@ -1,9 +1,7 @@
 /* global Stripe */
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { not } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import Subscription from "discourse/plugins/discourse-subscriptions/discourse/models/subscription";
 import Transaction from "discourse/plugins/discourse-subscriptions/discourse/models/transaction";
@@ -23,8 +21,6 @@ export default class SubscribeShowController extends Controller {
     postalCode: null,
   };
 
-  @not("currentUser") isAnonymous;
-
   isCountryUS = false;
   isCountryCA = false;
 
@@ -42,13 +38,21 @@ export default class SubscribeShowController extends Controller {
     this.set("isCountryCA", this.cardholderAddress.country === "CA");
   }
 
+  @computed("currentUser")
+  get isAnonymous() {
+    return !this.currentUser;
+  }
+
   alert(path) {
     this.dialog.alert(i18n(`discourse_subscriptions.${path}`));
   }
 
-  @discourseComputed("model.product.repurchaseable", "model.product.subscribed")
-  canPurchase(repurchaseable, subscribed) {
-    if (!repurchaseable && subscribed) {
+  @computed("model.product.repurchaseable", "model.product.subscribed")
+  get canPurchase() {
+    if (
+      !this.model?.product?.repurchaseable &&
+      this.model?.product?.subscribed
+    ) {
       return false;
     }
 

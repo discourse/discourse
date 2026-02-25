@@ -1,10 +1,9 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
-import { mapBy } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import loadChartJS, {
   loadChartJSDatalabels,
 } from "discourse/lib/load-chart-js";
@@ -21,8 +20,6 @@ export default class PollBreakdownChart extends Component {
   highlightedOption = null;
   setHighlightedOption = null;
 
-  @mapBy("options", "votes") data;
-
   _optionToSlice = null;
   _previousHighlightedSliceIndex = null;
   _previousDisplayMode = null;
@@ -38,6 +35,11 @@ export default class PollBreakdownChart extends Component {
     if (this._chart) {
       this._chart.destroy();
     }
+  }
+
+  @computed("options.@each.votes")
+  get data() {
+    return this.options?.map?.((item) => item.votes) ?? [];
   }
 
   async didInsertElement() {
@@ -64,22 +66,24 @@ export default class PollBreakdownChart extends Component {
     }
   }
 
-  @discourseComputed("optionColors", "index")
-  colorStyle(optionColors, index) {
-    return htmlSafe(`background: ${optionColors[index]};`);
+  @computed("optionColors", "index")
+  get colorStyle() {
+    return htmlSafe(`background: ${this.optionColors[this.index]};`);
   }
 
-  @discourseComputed("data", "displayMode")
-  chartConfig(data, displayMode) {
+  @computed("data", "displayMode")
+  get chartConfig() {
+    const data = this.data;
+    const displayMode = this.displayMode;
     const transformedData = [];
     let counter = 0;
 
-    this._optionToSlice = {};
+    this._optionToSlice = {}; // eslint-disable-line ember/no-side-effects
 
     data.forEach((votes, index) => {
       if (votes > 0) {
         transformedData.push(votes);
-        this._optionToSlice[index] = counter++;
+        this._optionToSlice[index] = counter++; // eslint-disable-line ember/no-side-effects
       }
     });
 

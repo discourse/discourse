@@ -1,14 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import { i18n as computedI18n } from "discourse/lib/computed";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class UserNotificationScheduleDay extends Component {
-  @computedI18n("day", "user.notification_schedule.%@") dayLabel;
-
   <template>
     <tr class="day {{this.dayLabel}}">
       <td class="day-label">{{this.dayLabel}}</td>
@@ -33,4 +31,9 @@ export default class UserNotificationScheduleDay extends Component {
       {{/if}}
     </tr>
   </template>
+
+  @computed("day")
+  get dayLabel() {
+    return i18n(`user.notification_schedule.${this.day}`);
+  }
 }

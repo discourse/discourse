@@ -4,8 +4,6 @@ import { service } from "@ember/service";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import Report from "discourse/admin/models/report";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
@@ -25,19 +23,24 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   isLoading = false;
   dashboardFetchedAt = null;
 
-  @setting("log_search_queries") logSearchQueriesEnabled;
-
   @staticReport("users_by_type") usersByTypeReport;
   @staticReport("users_by_trust_level") usersByTrustLevelReport;
   @staticReport("storage_report") storageReport;
+
+  @computed("siteSettings.log_search_queries")
+  get logSearchQueriesEnabled() {
+    return this.siteSettings.log_search_queries;
+  }
 
   get reportModes() {
     return REPORT_MODES;
   }
 
-  @discourseComputed("siteSettings.dashboard_general_tab_activity_metrics")
-  activityMetrics(metrics) {
-    return (metrics || "").split("|").filter(Boolean);
+  @computed("siteSettings.dashboard_general_tab_activity_metrics")
+  get activityMetrics() {
+    return (this.siteSettings?.dashboard_general_tab_activity_metrics || "")
+      .split("|")
+      .filter(Boolean);
   }
 
   @computed("siteSettings.dashboard_hidden_reports")
@@ -76,13 +79,13 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
     ].some((report) => !this.hiddenReports.includes(report));
   }
 
-  @discourseComputed
-  today() {
+  @computed
+  get today() {
     return moment().locale("en").utc().endOf("day");
   }
 
-  @discourseComputed
-  activityMetricsFilters() {
+  @computed
+  get activityMetricsFilters() {
     const lastMonth = moment()
       .locale("en")
       .utc()
@@ -95,45 +98,45 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
     };
   }
 
-  @discourseComputed
-  topReferredTopicsOptions() {
+  @computed
+  get topReferredTopicsOptions() {
     return {
       table: { total: false, limit: 8 },
     };
   }
 
-  @discourseComputed
-  siteTrafficOptions() {
+  @computed
+  get siteTrafficOptions() {
     return {
       stackedChart: { hiddenLabels: ["page_view_other", "page_view_crawler"] },
     };
   }
 
-  @discourseComputed
-  topReferredTopicsFilters() {
+  @computed
+  get topReferredTopicsFilters() {
     return {
       startDate: moment().subtract(6, "days").startOf("day"),
       endDate: this.today,
     };
   }
 
-  @discourseComputed
-  trendingSearchFilters() {
+  @computed
+  get trendingSearchFilters() {
     return {
       startDate: moment().subtract(1, "month").startOf("day"),
       endDate: this.today,
     };
   }
 
-  @discourseComputed
-  trendingSearchOptions() {
+  @computed
+  get trendingSearchOptions() {
     return {
       table: { total: false, limit: 8 },
     };
   }
 
-  @discourseComputed
-  trendingSearchDisabledLabel() {
+  @computed
+  get trendingSearchDisabledLabel() {
     return i18n("admin.dashboard.reports.trending_search.disabled", {
       basePath: getURL(""),
     });

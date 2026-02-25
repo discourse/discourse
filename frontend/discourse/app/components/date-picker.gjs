@@ -5,7 +5,6 @@ import { schedule } from "@ember/runloop";
 import { waitForPromise } from "@ember/test-waiters";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const DATE_FORMAT = "YYYY-MM-DD";
@@ -17,9 +16,9 @@ export default class DatePicker extends Component {
   maxDate = null;
   _picker = null;
 
-  @discourseComputed("site.mobileView")
-  inputType(mobileView) {
-    return mobileView ? "date" : "text";
+  @computed("site.mobileView")
+  get inputType() {
+    return this.site?.mobileView ? "date" : "text";
   }
 
   @on("didInsertElement")

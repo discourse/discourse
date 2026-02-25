@@ -1,9 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { alias, or, readOnly } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
@@ -14,14 +12,6 @@ import { i18n } from "discourse-i18n";
 
 export default class PasswordResetController extends Controller {
   @tracked accountPassword;
-  @alias("model.is_developer") isDeveloper;
-  @alias("model.admin") admin;
-  @alias("model.second_factor_required") secondFactorRequired;
-  @alias("model.security_key_required") securityKeyRequired;
-  @alias("model.backup_enabled") backupEnabled;
-  @or("model.second_factor_required", "model.security_key_required")
-  securityKeyOrSecondFactorRequired;
-  @readOnly("model.multiple_second_factor_methods") otherMethodAllowed;
 
   passwordRequired = true;
   errorMessage = null;
@@ -34,11 +24,68 @@ export default class PasswordResetController extends Controller {
 
   lockImageUrl = getURL("/images/lock.svg");
 
-  @discourseComputed("securityKeyRequired", "selectedSecondFactorMethod")
-  displaySecurityKeyForm(securityKeyRequired, selectedSecondFactorMethod) {
+  @computed("model.is_developer")
+  get isDeveloper() {
+    return this.model?.is_developer;
+  }
+
+  set isDeveloper(value) {
+    set(this, "model.is_developer", value);
+  }
+
+  @computed("model.admin")
+  get admin() {
+    return this.model?.admin;
+  }
+
+  set admin(value) {
+    set(this, "model.admin", value);
+  }
+
+  @computed("model.second_factor_required")
+  get secondFactorRequired() {
+    return this.model?.second_factor_required;
+  }
+
+  set secondFactorRequired(value) {
+    set(this, "model.second_factor_required", value);
+  }
+
+  @computed("model.security_key_required")
+  get securityKeyRequired() {
+    return this.model?.security_key_required;
+  }
+
+  set securityKeyRequired(value) {
+    set(this, "model.security_key_required", value);
+  }
+
+  @computed("model.backup_enabled")
+  get backupEnabled() {
+    return this.model?.backup_enabled;
+  }
+
+  set backupEnabled(value) {
+    set(this, "model.backup_enabled", value);
+  }
+
+  @computed("model.second_factor_required", "model.security_key_required")
+  get securityKeyOrSecondFactorRequired() {
     return (
-      securityKeyRequired &&
-      selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
+      this.model?.second_factor_required || this.model?.security_key_required
+    );
+  }
+
+  @computed("model.multiple_second_factor_methods")
+  get otherMethodAllowed() {
+    return this.model?.multiple_second_factor_methods;
+  }
+
+  @computed("securityKeyRequired", "selectedSecondFactorMethod")
+  get displaySecurityKeyForm() {
+    return (
+      this.securityKeyRequired &&
+      this.selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
     );
   }
 
@@ -59,16 +106,16 @@ export default class PasswordResetController extends Controller {
     return this.passwordValidationHelper.passwordValidation;
   }
 
-  @discourseComputed()
-  continueButtonText() {
+  @computed()
+  get continueButtonText() {
     return i18n("password_reset.continue", {
       site_name: this.siteSettings.title,
     });
   }
 
-  @discourseComputed("redirectTo")
-  redirectHref(redirectTo) {
-    return getURL(redirectTo || "/");
+  @computed("redirectTo")
+  get redirectHref() {
+    return getURL(this.redirectTo || "/");
   }
 
   get showPasswordValidation() {

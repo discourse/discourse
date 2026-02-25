@@ -1,31 +1,42 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/components/d-button";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class EmailStylesEditor extends Component {
   @service dialog;
 
-  @reads("fieldName") editorId;
+  @tracked _editorIdOverride;
 
-  @discourseComputed("fieldName")
-  currentEditorMode(fieldName) {
-    return fieldName === "css" ? "scss" : fieldName;
+  @computed("fieldName")
+  get editorId() {
+    if (this._editorIdOverride !== undefined) {
+      return this._editorIdOverride;
+    }
+    return this.fieldName;
   }
 
-  @discourseComputed("fieldName", "styles.html", "styles.css")
-  resetDisabled(fieldName) {
+  set editorId(value) {
+    this._editorIdOverride = value;
+  }
+
+  @computed("fieldName")
+  get currentEditorMode() {
+    return this.fieldName === "css" ? "scss" : this.fieldName;
+  }
+
+  @computed("fieldName", "styles.html", "styles.css")
+  get resetDisabled() {
     return (
-      this.get(`styles.${fieldName}`) ===
-      this.get(`styles.default_${fieldName}`)
+      this.get(`styles.${this.fieldName}`) ===
+      this.get(`styles.default_${this.fieldName}`)
     );
   }
 

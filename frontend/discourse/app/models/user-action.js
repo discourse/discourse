@@ -1,6 +1,5 @@
-import { equal, or } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { escapeExpression, postUrl } from "discourse/lib/utilities";
@@ -85,27 +84,77 @@ export default class UserAction extends RestModel {
 
   @service currentUser;
 
-  @or("name", "username") presentName;
-  @or("target_name", "target_username") targetDisplayName;
-  @or("acting_name", "acting_username") actingDisplayName;
-  @equal("action_type", UserActionTypes.replies) replyType;
-  @equal("action_type", UserActionTypes.posts) postType;
-  @equal("action_type", UserActionTypes.topics) topicType;
-  @equal("action_type", UserActionTypes.bookmarks) bookmarkType;
-  @equal("action_type", UserActionTypes.messages_sent) messageSentType;
-  @equal("action_type", UserActionTypes.messages_received) messageReceivedType;
-  @equal("action_type", UserActionTypes.mentions) mentionType;
-  @or("messageSentType", "messageReceivedType") isPM;
-  @or("postType", "replyType") postReplyType;
+  @computed("name", "username")
+  get presentName() {
+    return this.name || this.username;
+  }
 
-  @discourseComputed("category_id")
-  category() {
+  @computed("target_name", "target_username")
+  get targetDisplayName() {
+    return this.target_name || this.target_username;
+  }
+
+  @computed("acting_name", "acting_username")
+  get actingDisplayName() {
+    return this.acting_name || this.acting_username;
+  }
+
+  @computed("action_type")
+  get replyType() {
+    return this.action_type === UserActionTypes.replies;
+  }
+
+  @computed("action_type")
+  get postType() {
+    return this.action_type === UserActionTypes.posts;
+  }
+
+  @computed("action_type")
+  get topicType() {
+    return this.action_type === UserActionTypes.topics;
+  }
+
+  @computed("action_type")
+  get bookmarkType() {
+    return this.action_type === UserActionTypes.bookmarks;
+  }
+
+  @computed("action_type")
+  get messageSentType() {
+    return this.action_type === UserActionTypes.messages_sent;
+  }
+
+  @computed("action_type")
+  get messageReceivedType() {
+    return this.action_type === UserActionTypes.messages_received;
+  }
+
+  @computed("action_type")
+  get mentionType() {
+    return this.action_type === UserActionTypes.mentions;
+  }
+
+  @computed("messageSentType", "messageReceivedType")
+  get isPM() {
+    return this.messageSentType || this.messageReceivedType;
+  }
+
+  @computed("postType", "replyType")
+  get postReplyType() {
+    return this.postType || this.replyType;
+  }
+
+  @computed("category_id")
+  get category() {
     return Category.findById(this.category_id);
   }
 
-  @discourseComputed("action_type")
-  descriptionKey(action) {
-    if (action === null || UserAction.TO_SHOW.includes(action)) {
+  @computed("action_type")
+  get descriptionKey() {
+    if (
+      this.action_type === null ||
+      UserAction.TO_SHOW.includes(this.action_type)
+    ) {
       if (this.isPM) {
         return this.sameUser ? "sent_by_you" : "sent_by_user";
       } else {
@@ -134,44 +183,44 @@ export default class UserAction extends RestModel {
     }
   }
 
-  @discourseComputed("username")
-  sameUser(username) {
-    return username === this.currentUser?.get("username");
+  @computed("username")
+  get sameUser() {
+    return this.username === this.currentUser?.get("username");
   }
 
-  @discourseComputed("target_username")
-  targetUser(targetUsername) {
-    return targetUsername === this.currentUser?.get("username");
+  @computed("target_username")
+  get targetUser() {
+    return this.target_username === this.currentUser?.get("username");
   }
 
-  @discourseComputed("target_username")
-  targetUserUrl(username) {
-    return userPath(username);
+  @computed("target_username")
+  get targetUserUrl() {
+    return userPath(this.target_username);
   }
 
-  @discourseComputed("username")
-  usernameLower(username) {
-    return username.toLowerCase();
+  @computed("username")
+  get usernameLower() {
+    return this.username.toLowerCase();
   }
 
-  @discourseComputed("usernameLower")
-  userUrl(usernameLower) {
-    return userPath(usernameLower);
+  @computed("usernameLower")
+  get userUrl() {
+    return userPath(this.usernameLower);
   }
 
-  @discourseComputed()
-  postUrl() {
+  @computed()
+  get postUrl() {
     return postUrl(this.slug, this.topic_id, this.post_number);
   }
 
-  @discourseComputed()
-  replyUrl() {
+  @computed()
+  get replyUrl() {
     return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   }
 
-  @discourseComputed("title")
-  titleHtml(title) {
-    return title && emojiUnescape(escapeExpression(title));
+  @computed("title")
+  get titleHtml() {
+    return this.title && emojiUnescape(escapeExpression(this.title));
   }
 
   addChild(action) {
@@ -203,7 +252,7 @@ export default class UserAction extends RestModel {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "childGroups",
     "childGroups.likes.items",
     "childGroups.likes.items.[]",
@@ -214,7 +263,7 @@ export default class UserAction extends RestModel {
     "childGroups.bookmarks.items",
     "childGroups.bookmarks.items.[]"
   )
-  children() {
+  get children() {
     const g = this.childGroups;
     let rval = [];
     if (g) {

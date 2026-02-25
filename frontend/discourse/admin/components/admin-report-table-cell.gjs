@@ -1,23 +1,53 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class AdminReportTableCell extends Component {
   options = null;
 
-  @alias("label.type") type;
-  @alias("label.mainProperty") property;
-  @alias("computedLabel.formattedValue") formattedValue;
-  @alias("computedLabel.value") value;
+  @computed("label.type")
+  get type() {
+    return this.label?.type;
+  }
 
-  @discourseComputed("label", "data", "options")
-  computedLabel(label, data, options) {
-    return label.compute(data, options || {});
+  set type(value) {
+    set(this, "label.type", value);
+  }
+
+  @computed("label.mainProperty")
+  get property() {
+    return this.label?.mainProperty;
+  }
+
+  set property(value) {
+    set(this, "label.mainProperty", value);
+  }
+
+  @computed("computedLabel.formattedValue")
+  get formattedValue() {
+    return this.computedLabel?.formattedValue;
+  }
+
+  set formattedValue(value) {
+    set(this, "computedLabel.formattedValue", value);
+  }
+
+  @computed("computedLabel.value")
+  get value() {
+    return this.computedLabel?.value;
+  }
+
+  set value(value) {
+    set(this, "computedLabel.value", value);
+  }
+
+  @computed("label", "data", "options")
+  get computedLabel() {
+    return this.label.compute(this.data, this.options || {});
   }
 
   <template>

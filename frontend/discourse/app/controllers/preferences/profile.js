@@ -1,12 +1,10 @@
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
+import EmberObject, { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { compare, isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
@@ -16,17 +14,35 @@ export default class ProfileController extends Controller {
 
   subpageTitle = i18n("user.preferences_nav.profile");
 
-  @readOnly("model.can_change_bio") canChangeBio;
-  @readOnly("model.can_change_location") canChangeLocation;
-  @readOnly("model.can_change_website") canChangeWebsite;
-  @readOnly("model.can_upload_profile_header") canUploadProfileHeader;
-  @readOnly("model.can_upload_user_card_background")
-  canUploadUserCardBackground;
-
   calendarOptions = [
     { name: i18n("download_calendar.google"), value: "google" },
     { name: i18n("download_calendar.ics"), value: "ics" },
   ];
+
+  @computed("model.can_change_bio")
+  get canChangeBio() {
+    return this.model?.can_change_bio;
+  }
+
+  @computed("model.can_change_location")
+  get canChangeLocation() {
+    return this.model?.can_change_location;
+  }
+
+  @computed("model.can_change_website")
+  get canChangeWebsite() {
+    return this.model?.can_change_website;
+  }
+
+  @computed("model.can_upload_profile_header")
+  get canUploadProfileHeader() {
+    return this.model?.can_upload_profile_header;
+  }
+
+  @computed("model.can_upload_user_card_background")
+  get canUploadUserCardBackground() {
+    return this.model?.can_upload_user_card_background;
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(
@@ -48,8 +64,8 @@ export default class ProfileController extends Controller {
     );
   }
 
-  @discourseComputed("model.user_fields.@each.value")
-  userFields() {
+  @computed("model.user_fields.@each.value")
+  get userFields() {
     let siteUserFields = this.site.user_fields;
     if (isEmpty(siteUserFields)) {
       return;
@@ -75,14 +91,14 @@ export default class ProfileController extends Controller {
       });
   }
 
-  @discourseComputed("currentUser.needs_required_fields_check")
-  showEnforcedRequiredFieldsNotice(needsRequiredFieldsCheck) {
-    return needsRequiredFieldsCheck;
+  @computed("currentUser.needs_required_fields_check")
+  get showEnforcedRequiredFieldsNotice() {
+    return this.currentUser?.needs_required_fields_check;
   }
 
-  @discourseComputed("model.user_option.default_calendar")
-  canChangeDefaultCalendar(defaultCalendar) {
-    return defaultCalendar !== "none_selected";
+  @computed("model.user_option.default_calendar")
+  get canChangeDefaultCalendar() {
+    return this.model?.user_option?.default_calendar !== "none_selected";
   }
 
   @action

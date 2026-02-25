@@ -1,5 +1,4 @@
-import { get } from "@ember/object";
-import { gt, or } from "@ember/object/computed";
+import { computed, get } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
 import ThemeSettings from "discourse/admin/models/theme-settings";
 import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
@@ -8,7 +7,6 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
@@ -43,15 +41,30 @@ class Theme extends RestModel {
   @trackedArray parentThemes;
   @trackedArray theme_fields;
 
-  @or("default", "user_selectable") isActive;
-  @gt("remote_theme.commits_behind", 0) isPendingUpdates;
-  @gt("editedFields.length", 0) hasEditedFields;
-  @gt("parent_themes.length", 0) hasParents;
-
   changed = false;
 
-  @discourseComputed("theme_fields.[]")
-  targets() {
+  @computed("default", "user_selectable")
+  get isActive() {
+    return this.default || this.user_selectable;
+  }
+
+  @computed("remote_theme.commits_behind")
+  get isPendingUpdates() {
+    return this.remote_theme?.commits_behind > 0;
+  }
+
+  @computed("editedFields.length")
+  get hasEditedFields() {
+    return this.editedFields?.length > 0;
+  }
+
+  @computed("parent_themes.length")
+  get hasParents() {
+    return this.parent_themes?.length > 0;
+  }
+
+  @computed("theme_fields.[]")
+  get targets() {
     return [
       { id: 0, name: "common" },
       { id: 1, name: "desktop", icon: "desktop" },
@@ -63,8 +76,8 @@ class Theme extends RestModel {
     });
   }
 
-  @discourseComputed("theme_fields.[]")
-  fieldNames() {
+  @computed("theme_fields.[]")
+  get fieldNames() {
     const common = [
       "scss",
       "head_tag",
@@ -87,15 +100,11 @@ class Theme extends RestModel {
     };
   }
 
-  @discourseComputed(
-    "fieldNames",
-    "theme_fields.[]",
-    "theme_fields.@each.error"
-  )
-  fields(fieldNames) {
+  @computed("fieldNames", "theme_fields.[]", "theme_fields.@each.error")
+  get fields() {
     const hash = {};
-    Object.keys(fieldNames).forEach((target) => {
-      hash[target] = fieldNames[target].map((fieldName) => {
+    Object.keys(this.fieldNames).forEach((target) => {
+      hash[target] = this.fieldNames[target].map((fieldName) => {
         const field = {
           name: fieldName,
           edited: this.hasEdited(target, fieldName),
@@ -115,15 +124,15 @@ class Theme extends RestModel {
     return hash;
   }
 
-  @discourseComputed("theme_fields")
-  themeFields(fields) {
-    if (!fields) {
-      this.set("theme_fields", []);
+  @computed("theme_fields")
+  get themeFields() {
+    if (!this.theme_fields) {
+      this.set("theme_fields", []); // eslint-disable-line ember/no-side-effects
       return {};
     }
 
     let hash = {};
-    fields.forEach((field) => {
+    this.theme_fields.forEach((field) => {
       if (!field.type_id || FIELDS_IDS.includes(field.type_id)) {
         hash[this.getKey(field)] = field;
       }
@@ -131,34 +140,38 @@ class Theme extends RestModel {
     return hash;
   }
 
-  @discourseComputed("theme_fields", "theme_fields.[]")
-  uploads(fields) {
-    if (!fields) {
+  @computed("theme_fields", "theme_fields.[]")
+  get uploads() {
+    if (!this.theme_fields) {
       return [];
     }
-    return fields.filter(
+    return this.theme_fields.filter(
       (f) => f.target === "common" && f.type_id === THEME_UPLOAD_VAR
     );
   }
 
-  @discourseComputed("theme_fields", "theme_fields.@each.error")
-  isBroken(fields) {
+  @computed("theme_fields", "theme_fields.@each.error")
+  get isBroken() {
     return (
-      fields && fields.some((field) => field.error && field.error.length > 0)
+      this.theme_fields &&
+      this.theme_fields.some((field) => field.error && field.error.length > 0)
     );
   }
 
-  @discourseComputed("theme_fields.[]")
-  editedFields(fields) {
-    return fields.filter(
+  @computed("theme_fields.[]")
+  get editedFields() {
+    return this.theme_fields?.filter(
       (field) => !isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
     );
   }
 
-  @discourseComputed("remote_theme.last_error_text")
-  remoteError(errorText) {
-    if (errorText && errorText.length > 0) {
-      return errorText;
+  @computed("remote_theme.last_error_text")
+  get remoteError() {
+    if (
+      this.remote_theme?.last_error_text &&
+      this.remote_theme?.last_error_text?.length > 0
+    ) {
+      return this.remote_theme?.last_error_text;
     }
   }
 
@@ -254,16 +267,16 @@ class Theme extends RestModel {
     }
   }
 
-  @discourseComputed("childThemes.[]")
-  child_theme_ids(childThemes) {
-    if (childThemes) {
-      return childThemes.map((theme) => get(theme, "id"));
+  @computed("childThemes.[]")
+  get child_theme_ids() {
+    if (this.childThemes) {
+      return this.childThemes?.map((theme) => get(theme, "id"));
     }
   }
 
-  @discourseComputed("recentlyInstalled", "component", "hasParents")
-  warnUnassignedComponent(recent, component, hasParents) {
-    return recent && component && !hasParents;
+  @computed("recentlyInstalled", "component", "hasParents")
+  get warnUnassignedComponent() {
+    return this.recentlyInstalled && this.component && !this.hasParents;
   }
 
   removeChildTheme(theme) {

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { empty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import { topicLevels } from "discourse/lib/notification-levels";
@@ -11,7 +11,10 @@ import { i18n } from "discourse-i18n";
 export default class NotificationLevel extends Component {
   notificationLevelId = null;
 
-  @empty("notificationLevelId") disabled;
+  @computed("notificationLevelId.length")
+  get disabled() {
+    return isEmpty(this.notificationLevelId);
+  }
 
   get notificationLevels() {
     return topicLevels.map((level) => ({

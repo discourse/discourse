@@ -2,10 +2,10 @@
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import EmberObject, { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import EmberObject, { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
@@ -13,10 +13,10 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
-import { propertyNotEqual } from "discourse/lib/computed";
-import computed, { debounce } from "discourse/lib/decorators";
+import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import { deepEqual } from "discourse/lib/object";
 import { cook } from "discourse/lib/text";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
@@ -41,11 +41,6 @@ export default class LocalDatesCreate extends Component {
   fromSelected = null;
   toSelected = null;
 
-  @notEmpty("date") fromFilled;
-  @notEmpty("toDate") toFilled;
-  @propertyNotEqual("currentUserTimezone", "options.timezone")
-  timezoneIsDifferentFromUserTimezone;
-
   init() {
     super.init(...arguments);
 
@@ -59,6 +54,21 @@ export default class LocalDatesCreate extends Component {
       timezone: this.currentUserTimezone,
       date: moment().format(this.dateFormat),
     });
+  }
+
+  @computed("date.length")
+  get fromFilled() {
+    return !isEmpty(this.date);
+  }
+
+  @computed("toDate.length")
+  get toFilled() {
+    return !isEmpty(this.toDate);
+  }
+
+  @computed("currentUserTimezone", "options.timezone")
+  get timezoneIsDifferentFromUserTimezone() {
+    return !deepEqual(this.currentUserTimezone, this.options?.timezone);
   }
 
   didInsertElement() {
@@ -87,19 +97,22 @@ export default class LocalDatesCreate extends Component {
   }
 
   @computed("date", "toDate", "toTime")
-  isRange(date, toDate, toTime) {
-    return date && (toDate || toTime);
+  get isRange() {
+    return this.date && (this.toDate || this.toTime);
   }
 
   @computed("computedConfig", "isRange")
-  isValid(config, isRange) {
-    const fromConfig = config.from;
-    if (!config.from.dateTime || !config.from.dateTime.isValid()) {
+  get isValid() {
+    const fromConfig = this.computedConfig.from;
+    if (
+      !this.computedConfig.from.dateTime ||
+      !this.computedConfig.from.dateTime.isValid()
+    ) {
       return false;
     }
 
-    if (isRange) {
-      const toConfig = config.to;
+    if (this.isRange) {
+      const toConfig = this.computedConfig.to;
 
       if (
         !toConfig.dateTime ||
@@ -114,7 +127,11 @@ export default class LocalDatesCreate extends Component {
   }
 
   @computed("date", "time", "isRange", "options.{format,timezone}")
-  fromConfig(date, time, isRange, options = {}) {
+  get fromConfig() {
+    const date = this.date;
+    let time = this.time;
+    const isRange = this.isRange;
+    const options = this.options || {};
     const timeInferred = time ? false : true;
 
     let dateTime;
@@ -143,7 +160,11 @@ export default class LocalDatesCreate extends Component {
   }
 
   @computed("toDate", "toTime", "isRange", "options.{timezone,format}")
-  toConfig(date, time, isRange, options = {}) {
+  get toConfig() {
+    let date = this.toDate;
+    let time = this.toTime;
+    const isRange = this.isRange;
+    const options = this.options || {};
     const timeInferred = time ? false : true;
 
     if (time && !date) {
@@ -176,46 +197,49 @@ export default class LocalDatesCreate extends Component {
   }
 
   @computed("recurring", "timezones", "timezone", "format")
-  options(recurring, timezones, timezone, format) {
+  get options() {
     return EmberObject.create({
-      recurring,
-      timezones,
-      timezone,
-      format,
+      recurring: this.recurring,
+      timezones: this.timezones,
+      timezone: this.timezone,
+      format: this.format,
     });
   }
 
   @computed(
-    "fromConfig.{date}",
-    "toConfig.{date}",
+    "fromConfig.date",
+    "toConfig.date",
     "options.{recurring,timezones,timezone,format}"
   )
-  computedConfig(fromConfig, toConfig, options) {
+  get computedConfig() {
     return EmberObject.create({
-      from: fromConfig,
-      to: toConfig,
-      options,
+      from: this.fromConfig,
+      to: this.toConfig,
+      options: this.options,
     });
   }
 
   @computed
-  currentUserTimezone() {
+  get currentUserTimezone() {
     return this.currentUser.user_option.timezone || moment.tz.guess();
   }
 
   @computed
-  allTimezones() {
+  get allTimezones() {
     return moment.tz.names();
   }
 
   @computed("currentUserTimezone")
-  formattedCurrentUserTimezone(timezone) {
-    return timezone.replace("_", " ").replace("Etc/", "").replace("/", ", ");
+  get formattedCurrentUserTimezone() {
+    return this.currentUserTimezone
+      .replace("_", " ")
+      .replace("Etc/", "")
+      .replace("/", ", ");
   }
 
   @computed("formats")
-  previewedFormats(formats) {
-    return formats.map((format) => {
+  get previewedFormats() {
+    return this.formats.map((format) => {
       return {
         format,
         preview: moment().format(format),
@@ -224,7 +248,7 @@ export default class LocalDatesCreate extends Component {
   }
 
   @computed
-  recurringOptions() {
+  get recurringOptions() {
     const key = "discourse_local_dates.create.form.recurring";
 
     return [
@@ -268,40 +292,44 @@ export default class LocalDatesCreate extends Component {
   }
 
   @computed("advancedMode")
-  toggleModeBtnLabel(advancedMode) {
-    return advancedMode
+  get toggleModeBtnLabel() {
+    return this.advancedMode
       ? "discourse_local_dates.create.form.simple_mode"
       : "discourse_local_dates.create.form.advanced_mode";
   }
 
   @computed("computedConfig.{from,to,options}", "options", "isValid", "isRange")
-  markup(config, options, isValid, isRange) {
+  get markup() {
     let text;
 
-    if (isValid && config.from) {
-      if (config.to && config.to.range) {
+    if (this.isValid && this.computedConfig?.from) {
+      if (this.computedConfig?.to && this.computedConfig?.to.range) {
         text = this._generateDateMarkup(
-          config.from,
-          options,
-          isRange,
-          config.to
+          this.computedConfig?.from,
+          this.options,
+          this.isRange,
+          this.computedConfig?.to
         );
       } else {
-        text = this._generateDateMarkup(config.from, options, isRange);
+        text = this._generateDateMarkup(
+          this.computedConfig?.from,
+          this.options,
+          this.isRange
+        );
       }
     }
     return text;
   }
 
   @computed("fromConfig.dateTime")
-  formattedFrom(dateTime) {
-    return dateTime.format("LLLL");
+  get formattedFrom() {
+    return this.fromConfig?.dateTime?.format("LLLL");
   }
 
   @computed("toConfig.dateTime")
-  formattedTo(dateTime) {
-    return dateTime.isValid()
-      ? dateTime.format("LLLL")
+  get formattedTo() {
+    return this.toConfig?.dateTime?.isValid()
+      ? this.toConfig?.dateTime?.format("LLLL")
       : i18n("discourse_local_dates.create.form.until");
   }
 
@@ -312,13 +340,13 @@ export default class LocalDatesCreate extends Component {
   }
 
   @computed("fromSelected", "toSelected")
-  selectedDate(fromSelected) {
-    return fromSelected ? this.date : this.toDate;
+  get selectedDate() {
+    return this.fromSelected ? this.date : this.toDate;
   }
 
   @computed("fromSelected", "toSelected")
-  selectedTime(fromSelected) {
-    return fromSelected ? this.time : this.toTime;
+  get selectedTime() {
+    return this.fromSelected ? this.time : this.toTime;
   }
 
   @action

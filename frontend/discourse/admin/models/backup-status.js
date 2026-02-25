@@ -1,12 +1,13 @@
-import EmberObject from "@ember/object";
-import { not } from "@ember/object/computed";
-import discourseComputed from "discourse/lib/decorators";
+import EmberObject, { computed } from "@ember/object";
 
 export default class BackupStatus extends EmberObject {
-  @not("restoreEnabled") restoreDisabled;
+  @computed("restoreEnabled")
+  get restoreDisabled() {
+    return !this.restoreEnabled;
+  }
 
-  @discourseComputed("allowRestore", "isOperationRunning")
-  restoreEnabled(allowRestore, isOperationRunning) {
-    return allowRestore && !isOperationRunning;
+  @computed("allowRestore", "isOperationRunning")
+  get restoreEnabled() {
+    return this.allowRestore && !this.isOperationRunning;
   }
 }

@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
-import { and, notEmpty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -50,14 +50,6 @@ export default class BookmarkModal extends Component {
   @tracked flash = null;
   @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
-  @notEmpty("userTimezone") userHasTimezoneSet;
-
-  @notEmpty("bookmark.id") showDelete;
-
-  @notEmpty("bookmark.id") editingExistingBookmark;
-
-  @and("bookmark.id", "bookmark.reminderAt") existingBookmarkHasReminder;
-
   @tracked _closeWithoutSaving = false;
   @tracked _savingBookmarkManually = false;
   @tracked _saving = false;
@@ -70,6 +62,26 @@ export default class BookmarkModal extends Component {
     this._itsatrap?.destroy();
     this._itsatrap = null;
     this.keyboardShortcuts.unpause();
+  }
+
+  @computed("userTimezone.length")
+  get userHasTimezoneSet() {
+    return !isEmpty(this.userTimezone);
+  }
+
+  @computed("bookmark.id.length")
+  get showDelete() {
+    return !isEmpty(this.bookmark?.id);
+  }
+
+  @computed("bookmark.id.length")
+  get editingExistingBookmark() {
+    return !isEmpty(this.bookmark?.id);
+  }
+
+  @computed("bookmark.id", "bookmark.reminderAt")
+  get existingBookmarkHasReminder() {
+    return this.bookmark?.id && this.bookmark?.reminderAt;
   }
 
   get userTimezone() {

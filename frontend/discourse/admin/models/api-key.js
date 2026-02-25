@@ -1,12 +1,13 @@
 import { computed } from "@ember/object";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
-import { fmt } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
 
 export default class ApiKey extends RestModel {
-  @fmt("truncated_key", "%@ ...") truncatedKey;
+  @computed("truncated_key")
+  get truncatedKey() {
+    return `${this.truncated_key} ...`;
+  }
 
   @computed("_user")
   get user() {
@@ -34,12 +35,12 @@ export default class ApiKey extends RestModel {
     }
   }
 
-  @discourseComputed("description")
-  shortDescription(description) {
-    if (!description || description.length < 40) {
-      return description;
+  @computed("description")
+  get shortDescription() {
+    if (!this.description || this.description.length < 40) {
+      return this.description;
     }
-    return `${description.substring(0, 40)}...`;
+    return `${this.description.substring(0, 40)}...`;
   }
 
   revoke() {
@@ -63,8 +64,8 @@ export default class ApiKey extends RestModel {
     );
   }
 
-  @discourseComputed()
-  basePath() {
+  @computed()
+  get basePath() {
     return this.store
       .adapterFor("api-key")
       .pathFor(this.store, "api-key", this.id);

@@ -1,9 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { alias, equal, gte, none } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
@@ -28,13 +26,7 @@ export default class ExceptionController extends Controller {
   thrown;
   lastTransition;
 
-  @equal("thrown.status", 404) isNotFound;
-  @equal("thrown.status", 403) isForbidden;
-  @gte("thrown.status", 500) isServer;
-  @none("isNetwork", "isServer") isUnknown;
-
   // Handling for the detailed_404 setting (which actually creates 403s)
-  @alias("thrown.responseJSON.extras.html") errorHtml;
 
   // TODO
   // make ajax requests to /srv/status with exponential backoff
@@ -43,36 +35,72 @@ export default class ExceptionController extends Controller {
 
   loading = false;
 
-  @alias("thrown.requestedUrl") requestUrl;
+  @computed("thrown.status")
+  get isNotFound() {
+    return this.thrown?.status === 404;
+  }
 
-  @discourseComputed("thrown")
-  isNetwork(thrown) {
+  @computed("thrown.status")
+  get isForbidden() {
+    return this.thrown?.status === 403;
+  }
+
+  @computed("thrown.status")
+  get isServer() {
+    return this.thrown?.status >= 500;
+  }
+
+  @computed("isNetwork")
+  get isUnknown() {
+    return this.isNetwork == null;
+  }
+
+  @computed("thrown.responseJSON.extras.html")
+  get errorHtml() {
+    return this.thrown?.responseJSON?.extras?.html;
+  }
+
+  set errorHtml(value) {
+    set(this, "thrown.responseJSON.extras.html", value);
+  }
+
+  @computed("thrown.requestedUrl")
+  get requestUrl() {
+    return this.thrown?.requestedUrl;
+  }
+
+  set requestUrl(value) {
+    set(this, "thrown.requestedUrl", value);
+  }
+
+  @computed("thrown")
+  get isNetwork() {
     // never made it on the wire
-    if (thrown && thrown.readyState === 0) {
+    if (this.thrown && this.thrown.readyState === 0) {
       return true;
     }
 
     // timed out
-    if (thrown && thrown.jqTextStatus === "timeout") {
+    if (this.thrown && this.thrown.jqTextStatus === "timeout") {
       return true;
     }
 
     return false;
   }
 
-  @discourseComputed("isNetwork", "thrown.status", "thrown")
-  reason(isNetwork, thrownStatus, thrown) {
-    if (thrown.reason) {
-      return thrown.reason;
-    } else if (isNetwork) {
+  @computed("isNetwork", "thrown.status", "thrown")
+  get reason() {
+    if (this.thrown.reason) {
+      return this.thrown.reason;
+    } else if (this.isNetwork) {
       return i18n("errors.reasons.network");
-    } else if (thrownStatus >= 500) {
+    } else if (this.thrown?.status >= 500) {
       return i18n("errors.reasons.server");
-    } else if (thrownStatus === 404) {
+    } else if (this.thrown?.status === 404) {
       return i18n("errors.reasons.not_found");
-    } else if (thrownStatus === 403) {
+    } else if (this.thrown?.status === 403) {
       return i18n("errors.reasons.forbidden");
-    } else if (thrown === null) {
+    } else if (this.thrown === null) {
       return i18n("errors.reasons.unknown");
     } else {
       // TODO
@@ -80,29 +108,29 @@ export default class ExceptionController extends Controller {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "networkFixed",
     "isNetwork",
     "thrown.status",
     "thrown.statusText",
     "thrown"
   )
-  desc(networkFixed, isNetwork, thrownStatus, thrownStatusText, thrown) {
-    if (thrown.desc) {
-      return thrown.desc;
-    } else if (networkFixed) {
+  get desc() {
+    if (this.thrown.desc) {
+      return this.thrown.desc;
+    } else if (this.networkFixed) {
       return i18n("errors.desc.network_fixed");
-    } else if (isNetwork) {
+    } else if (this.isNetwork) {
       return i18n("errors.desc.network");
-    } else if (thrownStatus === 404) {
+    } else if (this.thrown?.status === 404) {
       return i18n("errors.desc.not_found");
-    } else if (thrownStatus === 403) {
+    } else if (this.thrown?.status === 403) {
       return i18n("errors.desc.forbidden");
-    } else if (thrownStatus >= 500) {
+    } else if (this.thrown?.status >= 500) {
       return i18n("errors.desc.server", {
-        status: thrownStatus + " " + thrownStatusText,
+        status: this.thrown?.status + " " + this.thrown?.statusText,
       });
-    } else if (thrown === null) {
+    } else if (this.thrown === null) {
       return i18n("errors.desc.unknown");
     } else {
       // TODO
@@ -137,13 +165,13 @@ export default class ExceptionController extends Controller {
     };
   }
 
-  @discourseComputed("networkFixed", "isNetwork", "lastTransition")
-  enabledButtons(networkFixed, isNetwork, lastTransition) {
-    if (networkFixed) {
+  @computed("networkFixed", "isNetwork", "lastTransition")
+  get enabledButtons() {
+    if (this.networkFixed) {
       return [this.buttons.ButtonLoadPage];
-    } else if (isNetwork) {
+    } else if (this.isNetwork) {
       return [this.buttons.ButtonBackDim, this.buttons.ButtonTryAgain];
-    } else if (!lastTransition) {
+    } else if (!this.lastTransition) {
       return [this.buttons.ButtonBackBright];
     } else {
       return [this.buttons.ButtonBackBright, this.buttons.ButtonTryAgain];

@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { and } from "@ember/object/computed";
 import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
@@ -35,8 +34,6 @@ export default class Chat extends Service {
   presenceChannel = null;
   isNetworkUnreliable = false;
 
-  @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
-
   @tracked _activeMessage = null;
   @tracked _activeChannel = null;
 
@@ -61,6 +58,13 @@ export default class Chat extends Service {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
       removeOnPresenceChange(this.onPresenceChangeCallback);
     }
+  }
+
+  @computed("currentUser.has_chat_enabled", "siteSettings.chat_enabled")
+  get userCanChat() {
+    return (
+      this.currentUser?.has_chat_enabled && this.siteSettings?.chat_enabled
+    );
   }
 
   get activeChannel() {

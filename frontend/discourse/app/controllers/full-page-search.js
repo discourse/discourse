@@ -1,7 +1,8 @@
 /* eslint-disable ember/no-observers */
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { gt, or } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -9,7 +10,7 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import { setTransient } from "discourse/lib/page-tracker";
 import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import { scrollTop } from "discourse/lib/scroll-top";
@@ -47,14 +48,21 @@ export function registerFullPageSearchType(
 
 export default class FullPageSearchController extends Controller {
   @service composer;
+
   @service appEvents;
+
   @service siteSettings;
+
   @service searchPreferencesManager;
+
   @service currentUser;
+
   @controller application;
 
+  @tracked searching = false;
+  @tracked loading = false;
+
   bulkSelectEnabled = null;
-  loading = false;
 
   queryParams = [
     "q",
@@ -69,7 +77,6 @@ export default class FullPageSearchController extends Controller {
   context_id = null;
   search_type = SEARCH_TYPE_DEFAULT;
   context = null;
-  searching = false;
   sortOrder = 0;
   sortOrders = null;
   invalidSearch = false;
@@ -78,8 +85,6 @@ export default class FullPageSearchController extends Controller {
   searchTypes = null;
   additionalSearchResults = [];
   error = null;
-  @gt("bulkSelectHelper.selected.length", 0) hasSelection;
-  @or("searching", "loading") searchButtonDisabled;
   _searchOnSortChange = true;
 
   init() {
@@ -140,27 +145,37 @@ export default class FullPageSearchController extends Controller {
     this.bulkSelectHelper = new PostBulkSelectHelper(this);
   }
 
-  @discourseComputed("resultCount")
-  hasResults(resultCount) {
-    return (resultCount || 0) > 0;
+  @computed("bulkSelectHelper.selected.length")
+  get hasSelection() {
+    return this.bulkSelectHelper?.selected?.length > 0;
   }
 
-  @discourseComputed("expanded")
-  expandFilters(expanded) {
-    return expanded === "true";
+  @dependentKeyCompat
+  get searchButtonDisabled() {
+    return this.searching || this.loading;
   }
 
-  @discourseComputed("q")
-  hasAutofocus(q) {
-    return isEmpty(q);
+  @computed("resultCount")
+  get hasResults() {
+    return (this.resultCount || 0) > 0;
   }
 
-  @discourseComputed("q")
-  highlightQuery(q) {
-    if (!q) {
+  @computed("expanded")
+  get expandFilters() {
+    return this.expanded === "true";
+  }
+
+  @computed("q")
+  get hasAutofocus() {
+    return isEmpty(this.q);
+  }
+
+  @computed("q")
+  get highlightQuery() {
+    if (!this.q) {
       return;
     }
-    return q
+    return this.q
       .split(/\s+/)
       .filter((t) => t !== "l")
       .join(" ");
@@ -177,34 +192,34 @@ export default class FullPageSearchController extends Controller {
     this.set("skip_context", !val);
   }
 
-  @discourseComputed("context", "context_id")
-  searchContextDescription(context, id) {
-    let name = id;
-    if (context === "category") {
-      let category = Category.findById(id);
+  @computed("context", "context_id")
+  get searchContextDescription() {
+    let name = this.context_id;
+    if (this.context === "category") {
+      let category = Category.findById(this.context_id);
       if (!category) {
         return;
       }
 
       name = category.get("name");
     }
-    return searchContextDescription(context, name);
+    return searchContextDescription(this.context, name);
   }
 
-  @discourseComputed("q")
-  searchActive(q) {
-    return isValidSearchTerm(q, this.siteSettings);
+  @computed("q")
+  get searchActive() {
+    return isValidSearchTerm(this.q, this.siteSettings);
   }
 
-  @discourseComputed("q")
-  noSortQ(q) {
-    q = this.cleanTerm(q);
+  @computed("q")
+  get noSortQ() {
+    const q = this.cleanTerm(this.q);
     return escapeExpression(q);
   }
 
-  @discourseComputed("canCreateTopic", "siteSettings.login_required")
-  showSuggestion(canCreateTopic, loginRequired) {
-    return canCreateTopic || !loginRequired;
+  @computed("canCreateTopic", "siteSettings.login_required")
+  get showSuggestion() {
+    return this.canCreateTopic || !this.siteSettings?.login_required;
   }
 
   setSearchTerm(term) {
@@ -261,9 +276,9 @@ export default class FullPageSearchController extends Controller {
     }
   }
 
-  @discourseComputed("q")
-  showLikeCount(q) {
-    return q?.includes("order:likes");
+  @computed("q")
+  get showLikeCount() {
+    return this.q?.includes("order:likes");
   }
 
   @observes("q")
@@ -275,29 +290,36 @@ export default class FullPageSearchController extends Controller {
     }
   }
 
-  @discourseComputed("q")
-  isPrivateMessage(q) {
+  @computed("q")
+  get isPrivateMessage() {
     return (
-      q &&
+      this.q &&
       this.currentUser &&
-      (q.includes("in:messages") ||
-        q.includes("in:personal") ||
-        q.includes(
+      (this.q.includes("in:messages") ||
+        this.q.includes("in:personal") ||
+        this.q.includes(
           `personal_messages:${this.currentUser.get("username_lower")}`
         ))
     );
   }
 
-  @discourseComputed("q")
-  isPMOnly(q) {
+  @computed("q")
+  get isPMOnly() {
     // Check if search is filtered to private messages only
-    return q && /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(q);
+    return (
+      this.q &&
+      /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(this.q)
+    );
   }
 
-  @discourseComputed("resultCount", "noSortQ")
-  resultCountLabel(count, term) {
-    const plus = count % 50 === 0 ? "+" : "";
-    return i18n("search.result_count", { count, plus, term });
+  @computed("resultCount", "noSortQ")
+  get resultCountLabel() {
+    const plus = this.resultCount % 50 === 0 ? "+" : "";
+    return i18n("search.result_count", {
+      count: this.resultCount,
+      plus,
+      term: this.noSortQ,
+    });
   }
 
   @observes("model.{posts,categories,tags,users}.length", "searchResultPosts")
@@ -315,57 +337,58 @@ export default class FullPageSearchController extends Controller {
     );
   }
 
-  @discourseComputed("hasResults")
-  canBulkSelect(hasResults) {
-    return this.currentUser && this.currentUser.staff && hasResults;
+  @computed("hasResults")
+  get canBulkSelect() {
+    return this.currentUser && this.currentUser.staff && this.hasResults;
   }
 
-  @discourseComputed(
-    "bulkSelectHelper.selected.length",
-    "searchResultPosts.length"
-  )
-  hasUnselectedResults(selectionCount, postsCount) {
-    return selectionCount < postsCount;
-  }
-
-  @discourseComputed("model.grouped_search_result.can_create_topic")
-  canCreateTopic(userCanCreateTopic) {
-    return this.currentUser && userCanCreateTopic;
-  }
-
-  @discourseComputed("page")
-  isLastPage(page) {
-    return page === PAGE_LIMIT;
-  }
-
-  @discourseComputed("search_type")
-  usingDefaultSearchType(searchType) {
-    return searchType === SEARCH_TYPE_DEFAULT;
-  }
-
-  @discourseComputed("search_type")
-  customSearchType(searchType) {
-    return customSearchTypes.find(
-      (type) => searchType === type["searchTypeId"]
+  @computed("bulkSelectHelper.selected.length", "searchResultPosts.length")
+  get hasUnselectedResults() {
+    return (
+      this.bulkSelectHelper?.selected?.length < this.searchResultPosts?.length
     );
   }
 
-  @discourseComputed("bulkSelectEnabled")
-  searchInfoClassNames(bulkSelectEnabled) {
-    return bulkSelectEnabled
+  @computed("model.grouped_search_result.can_create_topic")
+  get canCreateTopic() {
+    return (
+      this.currentUser && this.model?.grouped_search_result?.can_create_topic
+    );
+  }
+
+  @computed("page")
+  get isLastPage() {
+    return this.page === PAGE_LIMIT;
+  }
+
+  @computed("search_type")
+  get usingDefaultSearchType() {
+    return this.search_type === SEARCH_TYPE_DEFAULT;
+  }
+
+  @computed("search_type")
+  get customSearchType() {
+    return customSearchTypes.find(
+      (type) => this.search_type === type["searchTypeId"]
+    );
+  }
+
+  @computed("bulkSelectEnabled")
+  get searchInfoClassNames() {
+    return this.bulkSelectEnabled
       ? "search-info bulk-select-visible"
       : "search-info";
   }
 
-  @discourseComputed("model.posts", "additionalSearchResults")
-  searchResultPosts(posts, additionalSearchResults) {
-    if (additionalSearchResults?.list?.length > 0) {
+  @computed("model.posts", "additionalSearchResults")
+  get searchResultPosts() {
+    if (this.additionalSearchResults?.list?.length > 0) {
       return reciprocallyRankedList(
-        [posts, additionalSearchResults.list],
-        ["topic_id", additionalSearchResults.identifier]
+        [this.model?.posts, this.additionalSearchResults.list],
+        ["topic_id", this.additionalSearchResults.identifier]
       );
     } else {
-      return posts;
+      return this.model?.posts;
     }
   }
 

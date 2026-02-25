@@ -1,9 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
-import { not } from "@ember/object/computed";
+import EmberObject, { computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
@@ -51,9 +50,8 @@ export default class ColorScheme extends EmberObject {
 
   @tracked name;
   @tracked user_selectable;
+  @tracked id;
   @trackedArray colors;
-
-  @not("id") newRecord;
 
   init() {
     super.init(...arguments);
@@ -66,8 +64,13 @@ export default class ColorScheme extends EmberObject {
     this.startTrackingChanges();
   }
 
-  @discourseComputed
-  description() {
+  @dependentKeyCompat
+  get newRecord() {
+    return !this.id;
+  }
+
+  @computed
+  get description() {
     return "" + this.name;
   }
 
@@ -118,20 +121,15 @@ export default class ColorScheme extends EmberObject {
     return newScheme;
   }
 
-  @discourseComputed(
-    "name",
-    "user_selectable",
-    "colors.@each.changed",
-    "saving"
-  )
-  changed(name, user_selectable) {
+  @computed("name", "user_selectable", "colors.@each.changed", "saving")
+  get changed() {
     if (!this.originals) {
       return false;
     }
-    if (this.originals.name !== name) {
+    if (this.originals.name !== this.name) {
       return true;
     }
-    if (this.originals.user_selectable !== user_selectable) {
+    if (this.originals.user_selectable !== this.user_selectable) {
       return true;
     }
     if (this.colors.some((c) => c.get("changed"))) {
@@ -141,13 +139,15 @@ export default class ColorScheme extends EmberObject {
     return false;
   }
 
-  @discourseComputed("changed")
-  disableSave(changed) {
+  @computed("changed")
+  get disableSave() {
     if (this.theme_id) {
       return false;
     }
 
-    return !changed || this.saving || this.colors.some((c) => !c.get("valid"));
+    return (
+      !this.changed || this.saving || this.colors.some((c) => !c.get("valid"))
+    );
   }
 
   save(opts) {

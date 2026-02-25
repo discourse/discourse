@@ -1,14 +1,15 @@
-import { cached } from "@glimmer/tracking";
-import EmberObject, { computed, get } from "@ember/object";
+import { cached, tracked } from "@glimmer/tracking";
+import EmberObject, { computed, get, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import { removeValueFromArray } from "discourse/lib/array-tools";
+import {
+  arraySortedByProperties,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -87,19 +88,23 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
+  @tracked topicCountDesc = ["topic_count:desc"];
   @trackedArray categories = [];
   @trackedArray groups = [];
 
-  @alias("is_readonly") isReadOnly;
-
-  @sort("categories", "topicCountDesc") categoriesByCount;
-
   #siteInitialized = false;
 
-  init() {
-    super.init(...arguments);
+  @computed("is_readonly")
+  get isReadOnly() {
+    return this.is_readonly;
+  }
 
-    this.topicCountDesc = ["topic_count:desc"];
+  set isReadOnly(value) {
+    set(this, "is_readonly", value);
+  }
+
+  get categoriesByCount() {
+    return arraySortedByProperties(this.categories, this.topicCountDesc);
   }
 
   get groupsById() {
@@ -186,17 +191,17 @@ export default class Site extends RestModel {
     return map;
   }
 
-  @discourseComputed("notification_types")
-  notificationLookup(notificationTypes) {
+  @computed("notification_types")
+  get notificationLookup() {
     const result = [];
-    Object.keys(notificationTypes).forEach(
-      (k) => (result[notificationTypes[k]] = k)
+    Object.keys(this.notification_types).forEach(
+      (k) => (result[this.notification_types[k]] = k)
     );
     return result;
   }
 
-  @discourseComputed("post_action_types.[]")
-  flagTypes() {
+  @computed("post_action_types.[]")
+  get flagTypes() {
     const postActionTypes = this.post_action_types;
     if (!postActionTypes) {
       return [];
@@ -226,18 +231,18 @@ export default class Site extends RestModel {
   }
 
   // Returns it in the correct order, by setting
-  @discourseComputed("categories.[]")
-  categoriesList(categories) {
+  @computed("categories.[]")
+  get categoriesList() {
     return this.siteSettings.fixed_category_positions
-      ? categories
+      ? this.categories
       : this.sortedCategories;
   }
 
-  @discourseComputed("categories.[]", "categories.@each.notification_level")
-  trackedCategoriesList(categories) {
+  @computed("categories.[]", "categories.@each.notification_level")
+  get trackedCategoriesList() {
     const trackedCategories = [];
 
-    for (const category of categories) {
+    for (const category of this.categories) {
       if (category.isTracked) {
         if (
           this.siteSettings.allow_uncategorized_topics ||

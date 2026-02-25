@@ -1,12 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { or } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
-import discourseComputed from "discourse/lib/decorators";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
 import {
@@ -28,15 +26,21 @@ export default class UserTopicsListController extends Controller {
 
   bulkSelectHelper = new BulkSelectHelper(this);
 
-  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
-  canBulkSelect;
-
   constructor() {
     super(...arguments);
 
     for (const [name, info] of Object.entries(QUERY_PARAMS)) {
       defineTrackedProperty(this, name, info.default);
     }
+  }
+
+  @computed("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  get canBulkSelect() {
+    return (
+      this.currentUser?.canManageTopic ||
+      this.showDismissRead ||
+      this.showResetNew
+    );
   }
 
   @dependentKeyCompat
@@ -52,19 +56,19 @@ export default class UserTopicsListController extends Controller {
     return this.bulkSelectHelper.selected;
   }
 
-  @discourseComputed("model.topics.length", "incomingCount")
-  noContent(topicsLength, incomingCount) {
-    return topicsLength === 0 && incomingCount === 0;
+  @computed("model.topics.length", "incomingCount")
+  get noContent() {
+    return this.model?.topics?.length === 0 && this.incomingCount === 0;
   }
 
-  @discourseComputed("filter", "model.topics.length")
-  showResetNew(filter, hasTopics) {
-    return filter === NEW_FILTER && hasTopics;
+  @computed("filter", "model.topics.length")
+  get showResetNew() {
+    return this.filter === NEW_FILTER && this.model?.topics?.length;
   }
 
-  @discourseComputed("filter", "model.topics.length")
-  showDismissRead(filter, hasTopics) {
-    return filter === UNREAD_FILTER && hasTopics;
+  @computed("filter", "model.topics.length")
+  get showDismissRead() {
+    return this.filter === UNREAD_FILTER && this.model?.topics?.length;
   }
 
   subscribe() {

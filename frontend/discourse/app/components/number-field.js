@@ -1,7 +1,6 @@
 import { computed } from "@ember/object";
 import { classNameBindings } from "@ember-decorators/component";
 import TextField from "discourse/components/text-field";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -57,8 +56,8 @@ export default class NumberField extends TextField {
     }
   }
 
-  @discourseComputed("placeholderKey")
-  placeholder(key) {
-    return key ? i18n(key) : "";
+  @computed("placeholderKey")
+  get placeholder() {
+    return this.placeholderKey ? i18n(this.placeholderKey) : "";
   }
 }

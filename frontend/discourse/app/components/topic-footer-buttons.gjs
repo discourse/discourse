@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat, hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias, or } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { compare } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -17,7 +16,6 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
@@ -33,10 +31,37 @@ function bind(fn, context) {
 
 @tagName("")
 export default class TopicFooterButtons extends Component {
-  @alias("currentUser.can_send_private_messages") canSendPms;
-  @alias("topic.details.can_invite_to") canInviteTo;
-  @alias("currentUser.user_option.enable_defer") canDefer;
-  @or("topic.archived", "topic.closed", "topic.deleted") inviteDisabled;
+  @computed("currentUser.can_send_private_messages")
+  get canSendPms() {
+    return this.currentUser?.can_send_private_messages;
+  }
+
+  set canSendPms(value) {
+    set(this, "currentUser.can_send_private_messages", value);
+  }
+
+  @computed("topic.details.can_invite_to")
+  get canInviteTo() {
+    return this.topic?.details?.can_invite_to;
+  }
+
+  set canInviteTo(value) {
+    set(this, "topic.details.can_invite_to", value);
+  }
+
+  @computed("currentUser.user_option.enable_defer")
+  get canDefer() {
+    return this.currentUser?.user_option?.enable_defer;
+  }
+
+  set canDefer(value) {
+    set(this, "currentUser.user_option.enable_defer", value);
+  }
+
+  @computed("topic.archived", "topic.closed", "topic.deleted")
+  get inviteDisabled() {
+    return this.topic?.archived || this.topic?.closed || this.topic?.deleted;
+  }
 
   get inlineButtons() {
     return getTopicFooterButtons(this);
@@ -46,9 +71,9 @@ export default class TopicFooterButtons extends Component {
     return getTopicFooterDropdowns(this);
   }
 
-  @discourseComputed("canSendPms", "topic.isPrivateMessage")
-  canArchive(canSendPms, isPM) {
-    return canSendPms && isPM;
+  @computed("canSendPms", "topic.isPrivateMessage")
+  get canArchive() {
+    return this.canSendPms && this.topic?.isPrivateMessage;
   }
 
   get inlineActionables() {
@@ -79,36 +104,40 @@ export default class TopicFooterButtons extends Component {
     return this.dropdownButtons.length === 1 ? this.dropdownButtons[0] : null;
   }
 
-  @discourseComputed("topic.isPrivateMessage")
-  showNotificationsButton(isPM) {
-    return !isPM || this.canSendPms;
+  @computed("topic.isPrivateMessage")
+  get showNotificationsButton() {
+    return !this.topic?.isPrivateMessage || this.canSendPms;
   }
 
-  @discourseComputed("topic.details.notification_level")
-  showNotificationUserTip(notificationLevel) {
-    return notificationLevel >= NotificationLevels.TRACKING;
+  @computed("topic.details.notification_level")
+  get showNotificationUserTip() {
+    return (
+      this.topic?.details?.notification_level >= NotificationLevels.TRACKING
+    );
   }
 
-  @discourseComputed("topic.message_archived")
-  archiveIcon(archived) {
-    return archived ? "envelope" : "folder";
+  @computed("topic.message_archived")
+  get archiveIcon() {
+    return this.topic?.message_archived ? "envelope" : "folder";
   }
 
-  @discourseComputed("topic.message_archived")
-  archiveTitle(archived) {
-    return archived ? "topic.move_to_inbox.help" : "topic.archive_message.help";
+  @computed("topic.message_archived")
+  get archiveTitle() {
+    return this.topic?.message_archived
+      ? "topic.move_to_inbox.help"
+      : "topic.archive_message.help";
   }
 
-  @discourseComputed("topic.message_archived")
-  archiveLabel(archived) {
-    return archived
+  @computed("topic.message_archived")
+  get archiveLabel() {
+    return this.topic?.message_archived
       ? "topic.move_to_inbox.title"
       : "topic.archive_message.title";
   }
 
-  @discourseComputed("topic.isPrivateMessage")
-  showBookmarkLabel(isPM) {
-    return !isPM;
+  @computed("topic.isPrivateMessage")
+  get showBookmarkLabel() {
+    return !this.topic?.isPrivateMessage;
   }
 
   <template>

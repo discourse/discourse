@@ -2,10 +2,9 @@
 import { tracked } from "@glimmer/tracking";
 import Component, { Input, Textarea } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
-import discourseComputed, { afterRender } from "discourse/lib/decorators";
+import { afterRender } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -18,11 +17,18 @@ export default class AdminPenaltyPostAction extends Component {
   postAction = null;
   postEdit = null;
 
-  @equal("postAction", "edit") editing;
-  @equal("postAction", "delete_all") deletingAll;
+  @computed("postAction")
+  get editing() {
+    return this.postAction === "edit";
+  }
 
-  @discourseComputed
-  penaltyActions() {
+  @computed("postAction")
+  get deletingAll() {
+    return this.postAction === "delete_all";
+  }
+
+  @computed
+  get penaltyActions() {
     const allActions = ACTIONS.map((id) => ({
       id,
       name: i18n(`admin.user.penalty_post_${id}`),

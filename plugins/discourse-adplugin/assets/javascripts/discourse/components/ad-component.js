@@ -1,10 +1,9 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
-import { alias, or } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { throwAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import {
   isNthPost,
   isNthTopicListItem,
@@ -13,26 +12,7 @@ import {
 export default class AdComponent extends Component {
   @service router;
   @service session;
-
-  @or(
-    "router.currentRoute.attributes.category.id",
-    "router.currentRoute.parent.attributes.category_id"
-  )
-  currentCategoryId;
-  @or(
-    "router.currentRoute.attributes.category.slug",
-    "router.currentRoute.parent.attributes.category.slug"
-  )
-  currentCategorySlug;
   // Server needs to compute this in case hidden tags are being used.
-  @alias("router.currentRoute.parent.attributes.tags_disable_ads")
-  topicTagsDisableAds;
-  @or(
-    "router.currentRoute.attributes.category.read_restricted",
-    "router.currentRoute.parent.attributes.category.read_restricted"
-  )
-  isRestrictedCategory;
-  @alias("router.currentRoute.name") currentRouteName;
 
   _impressionId = null;
   _clickTracked = false;
@@ -41,23 +21,80 @@ export default class AdComponent extends Component {
     this.trackClick();
   };
 
-  @discourseComputed(
+  @computed(
+    "router.currentRoute.attributes.category.id",
+    "router.currentRoute.parent.attributes.category_id"
+  )
+  get currentCategoryId() {
+    return (
+      this.router?.currentRoute?.attributes?.category?.id ||
+      this.router?.currentRoute?.parent?.attributes?.category_id
+    );
+  }
+
+  @computed(
+    "router.currentRoute.attributes.category.slug",
+    "router.currentRoute.parent.attributes.category.slug"
+  )
+  get currentCategorySlug() {
+    return (
+      this.router?.currentRoute?.attributes?.category?.slug ||
+      this.router?.currentRoute?.parent?.attributes?.category?.slug
+    );
+  }
+
+  @computed("router.currentRoute.parent.attributes.tags_disable_ads")
+  get topicTagsDisableAds() {
+    return this.router?.currentRoute?.parent?.attributes?.tags_disable_ads;
+  }
+
+  set topicTagsDisableAds(value) {
+    set(this, "router.currentRoute.parent.attributes.tags_disable_ads", value);
+  }
+
+  @computed(
+    "router.currentRoute.attributes.category.read_restricted",
+    "router.currentRoute.parent.attributes.category.read_restricted"
+  )
+  get isRestrictedCategory() {
+    return (
+      this.router?.currentRoute?.attributes?.category?.read_restricted ||
+      this.router?.currentRoute?.parent?.attributes?.category?.read_restricted
+    );
+  }
+
+  @computed("router.currentRoute.name")
+  get currentRouteName() {
+    return this.router?.currentRoute?.name;
+  }
+
+  set currentRouteName(value) {
+    set(this, "router.currentRoute.name", value);
+  }
+
+  @computed(
     "router.currentRoute.attributes.__type",
     "router.currentRoute.attributes.id"
   )
-  topicListTag(type, tag) {
-    if (type === "tag" && tag) {
-      return tag;
+  get topicListTag() {
+    if (
+      this.router?.currentRoute?.attributes?.__type === "tag" &&
+      this.router?.currentRoute?.attributes?.id
+    ) {
+      return this.router?.currentRoute?.attributes?.id;
     }
   }
 
-  @discourseComputed("router.currentRoute.parent.attributes.archetype")
-  isPersonalMessage(topicType) {
-    return topicType === "private_message";
+  @computed("router.currentRoute.parent.attributes.archetype")
+  get isPersonalMessage() {
+    return (
+      this.router?.currentRoute?.parent?.attributes?.archetype ===
+      "private_message"
+    );
   }
 
-  @discourseComputed
-  showToGroups() {
+  @computed
+  get showToGroups() {
     if (!this.currentUser) {
       return true;
     }
@@ -65,32 +102,29 @@ export default class AdComponent extends Component {
     return this.currentUser.show_to_groups;
   }
 
-  @discourseComputed(
+  @computed(
     "currentCategoryId",
     "topicTagsDisableAds",
     "topicListTag",
     "isPersonalMessage",
     "isRestrictedCategory"
   )
-  showOnCurrentPage(
-    categoryId,
-    topicTagsDisableAds,
-    topicListTag,
-    isPersonalMessage,
-    isRestrictedCategory
-  ) {
+  get showOnCurrentPage() {
     return (
-      !topicTagsDisableAds &&
-      (!categoryId ||
+      !this.topicTagsDisableAds &&
+      (!this.currentCategoryId ||
         !this.siteSettings.no_ads_for_categories ||
         !this.siteSettings.no_ads_for_categories
           .split("|")
-          .includes(categoryId.toString())) &&
-      (!topicListTag ||
+          .includes(this.currentCategoryId.toString())) &&
+      (!this.topicListTag ||
         !this.siteSettings.no_ads_for_tags ||
-        !this.siteSettings.no_ads_for_tags.split("|").includes(topicListTag)) &&
-      (!isPersonalMessage || !this.siteSettings.no_ads_for_personal_messages) &&
-      (!isRestrictedCategory ||
+        !this.siteSettings.no_ads_for_tags
+          .split("|")
+          .includes(this.topicListTag)) &&
+      (!this.isPersonalMessage ||
+        !this.siteSettings.no_ads_for_personal_messages) &&
+      (!this.isRestrictedCategory ||
         !this.siteSettings.no_ads_for_restricted_categories)
     );
   }

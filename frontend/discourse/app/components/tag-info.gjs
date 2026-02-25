@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { and, reads } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -22,7 +22,6 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
 
@@ -40,42 +39,72 @@ export default class TagInfo extends Component {
   newTagName = null;
   newTagDescription = null;
 
-  @reads("currentUser.canEditTags") canEditTags;
-  @reads("currentUser.staff") canAdminTag;
-  @and("canEditTags", "showEditControls") editSynonymsMode;
+  @tracked _canEditTagsOverride;
+  @tracked _canAdminTagOverride;
+
+  @computed("currentUser.canEditTags")
+  get canEditTags() {
+    if (this._canEditTagsOverride !== undefined) {
+      return this._canEditTagsOverride;
+    }
+    return this.currentUser?.canEditTags;
+  }
+
+  set canEditTags(value) {
+    this._canEditTagsOverride = value;
+  }
+
+  @computed("currentUser.staff")
+  get canAdminTag() {
+    if (this._canAdminTagOverride !== undefined) {
+      return this._canAdminTagOverride;
+    }
+    return this.currentUser?.staff;
+  }
+
+  set canAdminTag(value) {
+    this._canAdminTagOverride = value;
+  }
+
+  @computed("canEditTags", "showEditControls")
+  get editSynonymsMode() {
+    return this.canEditTags && this.showEditControls;
+  }
 
   get useSettingsPage() {
     return this.siteSettings.experimental_tag_settings_page;
   }
 
-  @discourseComputed("tagInfo.tag_group_names")
-  tagGroupsInfo(tagGroupNames) {
+  @computed("tagInfo.tag_group_names")
+  get tagGroupsInfo() {
     return i18n("tagging.tag_groups_info", {
-      count: tagGroupNames.length,
-      tag_groups: tagGroupNames.join(", "),
+      count: this.tagInfo?.tag_group_names?.length,
+      tag_groups: this.tagInfo?.tag_group_names?.join(", "),
     });
   }
 
-  @discourseComputed("tagInfo.categories")
-  categoriesInfo(categories) {
+  @computed("tagInfo.categories")
+  get categoriesInfo() {
     return i18n("tagging.category_restrictions", {
-      count: categories.length,
+      count: this.tagInfo?.categories?.length,
     });
   }
 
-  @discourseComputed(
-    "tagInfo.tag_group_names",
-    "tagInfo.categories",
-    "tagInfo.synonyms"
-  )
-  nothingToShow(tagGroupNames, categories, synonyms) {
-    return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
+  @computed("tagInfo.tag_group_names", "tagInfo.categories", "tagInfo.synonyms")
+  get nothingToShow() {
+    return (
+      isEmpty(this.tagInfo?.tag_group_names) &&
+      isEmpty(this.tagInfo?.categories) &&
+      isEmpty(this.tagInfo?.synonyms)
+    );
   }
 
-  @discourseComputed("newTagName")
-  updateDisabled(newTagName) {
+  @computed("newTagName")
+  get updateDisabled() {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    newTagName = newTagName ? newTagName.replace(filterRegexp, "").trim() : "";
+    const newTagName = this.newTagName
+      ? this.newTagName.replace(filterRegexp, "").trim()
+      : "";
     return newTagName.length === 0;
   }
 
