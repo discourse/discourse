@@ -143,7 +143,11 @@ after_initialize do
         post_policy.private = policy["data-private"] == "true"
 
         if policy["data-add-users-to-group"].present?
-          post_policy.add_users_to_group = Group.find_by_name(policy["data-add-users-to-group"])&.id
+          add_to_group = Group.find_by_name(policy["data-add-users-to-group"])
+          post_policy.add_users_to_group =
+            if add_to_group && Guardian.new(post.user).can_edit_group?(add_to_group)
+              add_to_group.id
+            end
         end
 
         if has_group
