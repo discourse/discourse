@@ -54,8 +54,12 @@ class Admin::StaffActionLogsController < Admin::StaffController
 
     diff_fields.each do |k, v|
       output << "<h3>#{k}</h3><p></p>"
-      diff = DiscourseDiff.new(v[:prev] || "", v[:cur] || "")
-      output << diff.side_by_side_markdown
+      begin
+        diff = DiscourseDiff.new(v[:prev] || "", v[:cur] || "")
+        output << diff.side_by_side_markdown
+      rescue ONPDiff::DiffLimitExceeded
+        output << "<p>#{CGI.escapeHTML(I18n.t("errors.diff_too_complex"))}</p>"
+      end
     end
 
     render json: { side_by_side: output }
