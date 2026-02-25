@@ -87,8 +87,8 @@ export default <template>
             <ConditionalLoadingSpinner @condition={{@controller.loading}} />
 
             <div class="container discourse-data-explorer-query-list">
-              <table class="d-admin-table recent-queries">
-                <thead class="heading-container">
+              <table class="d-table recent-queries">
+                <thead class="d-table__header heading-container">
                   <th class="col heading name">
                     <div
                       role="button"
@@ -148,8 +148,8 @@ export default <template>
                 </thead>
                 <tbody>
                   {{#each filteredQueries as |query|}}
-                    <tr class="d-admin-row__content query-row">
-                      <td class="d-admin-row__overview">
+                    <tr class="d-table__row query-row">
+                      <td class="d-table__cell --overview">
                         <strong class="query-name">{{query.name}}</strong>
                         {{#if query.is_default}}
                           <span class="query-badge">{{i18n
@@ -158,8 +158,8 @@ export default <template>
                         {{/if}}
                         <div class="query-desc">{{query.description}}</div>
                       </td>
-                      <td class="d-admin-row__detail query-created-by">
-                        <div class="d-admin-row__mobile-label">
+                      <td class="d-table__cell --detail query-created-by">
+                        <div class="d-table__mobile-label">
                           {{i18n "explorer.query_user"}}
                         </div>
                         {{#if query.username}}
@@ -170,8 +170,8 @@ export default <template>
                           </div>
                         {{/if}}
                       </td>
-                      <td class="d-admin-row__detail query-group-names">
-                        <div class="d-admin-row__mobile-label">
+                      <td class="d-table__cell --detail query-group-names">
+                        <div class="d-table__mobile-label">
                           {{i18n "explorer.query_groups"}}
                         </div>
                         <div class="group-names">
@@ -183,8 +183,8 @@ export default <template>
                           {{/unless}}
                         </div>
                       </td>
-                      <td class="d-admin-row__detail query-created-at">
-                        <div class="d-admin-row__mobile-label">
+                      <td class="d-table__cell --detail query-created-at">
+                        <div class="d-table__mobile-label">
                           {{i18n "explorer.query_time"}}
                         </div>
                         {{#if query.last_run_at}}

@@ -61,7 +61,7 @@ export default class AdminUserUpcomingChanges extends Component {
                   {{/if}}
                 </td>
                 <td class="d-table__cell">
-                  <div class="d-admin-row__mobile-label">
+                  <div class="d-table__mobile-label">
                     {{i18n "user.upcoming_changes.for_user.enabled"}}
                   </div>
 
@@ -74,7 +74,7 @@ export default class AdminUserUpcomingChanges extends Component {
                   </span>
                 </td>
                 <td class="d-table__cell">
-                  <div class="d-admin-row__mobile-label">
+                  <div class="d-table__mobile-label">
                     {{i18n "user.upcoming_changes.for_user.why"}}
                   </div>
 
