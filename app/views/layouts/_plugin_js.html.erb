@@ -3,9 +3,9 @@
 <%- Discourse.find_plugin_js_assets(opts).tap do |plugin_assets| %>
   <%- plugin_assets.each do |asset| %>
     <%= preload_script asset[:name], attrs: {
-          "data-discourse-plugin": asset[:plugin]&.metadata&.name,
-          "data-official": asset[:plugin]&.metadata&.official?,
-          "data-preinstalled": asset[:plugin]&.preinstalled?,
-        }.compact %>
+          "data-discourse-plugin": asset[:plugin].metadata.name,
+          "data-official": asset[:plugin].metadata.official?,
+          "data-preinstalled": asset[:plugin].preinstalled?,
+        } %>
   <%- end %>
 <%- end %>
