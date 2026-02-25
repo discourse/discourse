@@ -5996,7 +5996,7 @@ en:
         enabled_for_options:
           no_one: "No one"
           everyone: "Everyone"
-          staff: "Staff only"
+          staff: "%{staffGroupName} only"
           specific_groups: "Specific group(s)"
           specific_groups_with_group_names:
             one: "the group %{groupNames}"
@@ -6019,7 +6019,7 @@ en:
           all: "All"
           enabled_all: "All enabled states"
           enabled: "Enabled"
-          enabled_for_staff: "Enabled for staff"
+          enabled_for_staff: "Enabled for %{staffGroupName}"
           enabled_for_specific_groups: "Enabled for specific groups"
           disabled: "Disabled"
           impact_type_all: "All impact types"
