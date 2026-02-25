@@ -264,7 +264,6 @@ export default class GoogleAdsense extends AdComponent {
         (if this.isResponsive "adsense-responsive")
       }}
       ...attributes
-      {{this._setupTracking}}
     >
       {{#if this.showAd}}
         <div class="google-adsense-label"><h2>{{i18n

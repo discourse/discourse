@@ -267,6 +267,8 @@ export default class AdSlot extends AdComponent {
           @category={{this.category}}
           @postNumber={{this.postNumber}}
           @indexNumber={{this.indexNumber}}
+          @tagName={{this.childTagName}}
+          @colspan={{this.colspan}}
         />
       {{/each}}
     {{/each}}

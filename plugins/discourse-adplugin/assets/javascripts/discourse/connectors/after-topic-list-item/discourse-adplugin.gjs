@@ -20,13 +20,13 @@ export default class DiscourseAdplugin extends Component {
 
   <template>
     <tr class="after-topic-list-item-outlet discourse-adplugin" ...attributes>
-      <td colspan="5">
-        <AdSlot
-          @placement="topic-list-between"
-          @category={{this.category.slug}}
-          @indexNumber={{this.index}}
-        />
-      </td>
+      <AdSlot
+        @placement="topic-list-between"
+        @category={{this.category.slug}}
+        @indexNumber={{this.index}}
+        @childTagName="td"
+        @colspan="5"
+      />
     </tr>
   </template>
 }

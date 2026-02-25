@@ -26,6 +26,11 @@ export default class HouseAd extends AdComponent {
     }
   };
 
+  @discourseComputed
+  colspanAttribute() {
+    return this.tagName === "td" ? "5" : null;
+  }
+
   @discourseComputed("placement", "showAd")
   adUnitClass(placement, showAd) {
     return showAd ? `house-${placement}` : "";
@@ -188,11 +193,7 @@ export default class HouseAd extends AdComponent {
   }
 
   <template>
-    <div
-      class={{concatClass "house-creative" this.adUnitClass}}
-      ...attributes
-      {{this._setupTracking}}
-    >
+    <div class={{concatClass "house-creative" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
         {{htmlSafe this.adHtml}}
       {{/if}}

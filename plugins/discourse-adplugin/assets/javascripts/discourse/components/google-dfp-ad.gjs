@@ -441,11 +441,7 @@ export default class GoogleDfpAd extends AdComponent {
   }
 
   <template>
-    <div
-      class={{concatClass "google-dfp-ad" this.adUnitClass}}
-      ...attributes
-      {{this._setupTracking}}
-    >
+    <div class={{concatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
         {{#if this.site.mobileView}}
           <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2
