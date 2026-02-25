@@ -49,7 +49,7 @@
 .ai-tool-list-editor__current,
 .ai-persona-list-editor__current,
 .ai-llms-list-editor__configured {
-  .d-admin-table {
+  .d-table {
     @include viewport.from(md) {
       th,
       td {

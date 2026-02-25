@@ -263,11 +263,11 @@ export default class AiPersonaListEditor extends Component {
             <:content as |filteredPersonas|>
               <table
                 class={{concatClass
-                  "content-list ai-persona-list-editor d-admin-table"
+                  "content-list ai-persona-list-editor d-table"
                   (concat "--layout-" this.currentLayout.id)
                 }}
               >
-                <thead>
+                <thead class="d-table__header">
                   <tr>
                     <th>{{i18n "discourse_ai.ai_persona.name"}}</th>
                     <th>{{i18n "discourse_ai.llms.short_title"}}</th>
@@ -279,12 +279,12 @@ export default class AiPersonaListEditor extends Component {
                     <tr
                       data-persona-id={{persona.id}}
                       class={{concatClass
-                        "ai-persona-list__row d-admin-row__content"
+                        "ai-persona-list__row d-table__row"
                         (if persona.priority "--priority")
                         (if persona.enabled "--enabled")
                       }}
                     >
-                      <td class="d-admin-row__overview">
+                      <td class="d-table__cell --overview">
                         <div class="ai-persona-list__name-with-description">
                           <h3 class="ai-persona-list__name">
                             {{#if persona.user}}
@@ -297,7 +297,7 @@ export default class AiPersonaListEditor extends Component {
                           </div>
                         </div>
                       </td>
-                      <td class="d-admin-row__llms">
+                      <td class="ai-persona-list__llms">
                         {{#if persona.default_llm}}
                           <span class="--card-label">
                             {{i18n "discourse_ai.ai_persona.llms_list"}}
@@ -310,7 +310,7 @@ export default class AiPersonaListEditor extends Component {
                           />
                         {{/if}}
                       </td>
-                      <td class="d-admin-row__features">
+                      <td class="ai-persona-list__features">
                         {{#if persona.features.length}}
                           <span class="--card-label">
                             {{i18n
@@ -319,7 +319,7 @@ export default class AiPersonaListEditor extends Component {
                             }}
                           </span>
                           {{#each persona.features as |feature index|}}
-                            <span class="d-admin-row__row-feature-list">
+                            <span class="ai-persona-list__feature-list">
                               {{#if (gt index 0)}}, {{/if}}
                               <DButton
                                 class="btn-flat btn-small ai-persona-list__row-item-feature"
@@ -337,7 +337,7 @@ export default class AiPersonaListEditor extends Component {
                           {{/each}}
                         {{/if}}
                       </td>
-                      <td class="d-admin-row__controls">
+                      <td class="d-table__cell --controls">
                         <LinkTo
                           @route="adminPlugins.show.discourse-ai-personas.edit"
                           @model={{persona}}

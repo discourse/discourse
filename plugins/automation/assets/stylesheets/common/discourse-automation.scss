@@ -29,8 +29,8 @@
     margin-top: 1em;
   }
 
-  .d-admin-table.automations {
-    .d-admin-row__content {
+  .d-table.automations {
+    .d-table__row {
       @include viewport.until(md) {
         display: grid;
         grid-template-columns: 1fr;
@@ -38,31 +38,31 @@
       }
     }
 
-    .d-admin-row__name {
+    .automations__name {
       @include viewport.until(md) {
         order: 1;
       }
     }
 
-    .d-admin-row__detail.automations__runs {
+    .d-table__cell.--detail.automations__runs {
       @include viewport.until(md) {
         order: 2; // move below the name to avoid empty spacing
       }
     }
 
-    .d-admin-row__detail.automations__updated-by {
+    .d-table__cell.--detail.automations__updated-by {
       @include viewport.until(md) {
         order: 3;
       }
     }
 
-    .d-admin-row__detail.automations__enabled {
+    .d-table__cell.--detail.automations__enabled {
       @include viewport.until(md) {
         order: 5;
       }
     }
 
-    .d-admin-row__controls.automations__controls {
+    .d-table__cell.--controls.automations__controls {
       text-align: right;
       display: flex;
       flex-direction: row;
