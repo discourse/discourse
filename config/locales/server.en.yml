@@ -286,6 +286,7 @@ en:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    diff_too_complex: "The diff is too complex to compute safely. Please try smaller edits."
     messages:
       invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
