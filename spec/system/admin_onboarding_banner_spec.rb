@@ -5,7 +5,6 @@ describe "Admin Onboarding Banner", type: :system do
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
-  let(:start_posting_modal) { PageObjects::Modals::AdminOnboardingStartPosting.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
