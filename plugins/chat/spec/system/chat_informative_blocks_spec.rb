@@ -118,6 +118,7 @@ RSpec.describe "Informative blocks in chat messages", type: :system do
         Chat::Message.new(
           user: Discourse.system_user,
           chat_channel: channel_1,
+          message: "test",
           blocks: [
             {
               type: "informative",
