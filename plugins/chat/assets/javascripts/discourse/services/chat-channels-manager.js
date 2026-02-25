@@ -17,7 +17,6 @@ const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;
 
 export default class ChatChannelsManager extends Service {
   @service chatApi;
-  @service chatSubscriptionsManager;
   @service chatStateManager;
   @service currentUser;
   @service chatDraftsManager;
@@ -108,8 +107,6 @@ export default class ChatChannelsManager extends Service {
   }
 
   async follow(model) {
-    this.chatSubscriptionsManager.startChannelSubscription(model);
-
     if (!model.currentUserMembership.following) {
       return this.chatApi.followChannel(model.id).then((membership) => {
         model.currentUserMembership = membership;
@@ -122,7 +119,6 @@ export default class ChatChannelsManager extends Service {
 
   async unfollow(model) {
     try {
-      this.chatSubscriptionsManager.stopChannelSubscription(model);
       model.currentUserMembership = await this.chatApi.unfollowChannel(
         model.id
       );
@@ -142,7 +138,6 @@ export default class ChatChannelsManager extends Service {
     if (!model) {
       return;
     }
-    this.chatSubscriptionsManager.stopChannelSubscription(model);
     delete this._cached[model.id];
   }
 

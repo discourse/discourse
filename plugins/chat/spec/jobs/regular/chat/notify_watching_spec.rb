@@ -19,7 +19,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
   def notification_messages_for(user, chat_message: message)
     MessageBus
       .track_publish { run_job(chat_message) }
-      .filter { |m| m.channel == "/chat/notification-alert/#{user.id}" }
+      .filter { |m| m.channel == "/notification-alert/#{user.id}" }
   end
 
   def track_core_notification(user:, message:, type: ::Notification.types[:chat_watched_thread])

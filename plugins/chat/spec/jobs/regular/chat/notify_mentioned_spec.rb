@@ -54,7 +54,7 @@ describe Jobs::Chat::NotifyMentioned do
     already_notified_user_ids: []
   )
     MessageBus
-      .track_publish("/chat/notification-alert/#{user.id}") do
+      .track_publish("/notification-alert/#{user.id}") do
         job.execute(
           chat_message_id: message.id,
           timestamp: message.created_at.to_s,

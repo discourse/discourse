@@ -133,7 +133,7 @@ module Jobs
 
         if !membership.notifications_never? && !membership.muted?
           ::MessageBus.publish(
-            "/chat/notification-alert/#{membership.user_id}",
+            "/notification-alert/#{membership.user_id}",
             payload,
             user_ids: [membership.user_id],
           )

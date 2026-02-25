@@ -579,7 +579,7 @@ RSpec.describe Chat::Api::ChannelsController do
 
       it "publishes an update" do
         messages =
-          MessageBus.track_publish("/chat/channel-edits") do
+          MessageBus.track_publish("/chat/channel-updates") do
             put "/chat/api/channels/#{channel.id}",
                 params: {
                   channel: {

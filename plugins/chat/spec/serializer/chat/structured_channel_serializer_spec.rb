@@ -101,12 +101,12 @@ RSpec.describe Chat::StructuredChannelSerializer do
 
   describe "#meta" do
     context "when user is anonymous" do
-      it "does not query MessageBus for the user_tracking_state_message_bus_channel last_id" do
-        Chat::Publisher.expects(:user_tracking_state_message_bus_channel).never
+      it "does not query MessageBus for the user_state_message_bus_channel last_id" do
+        Chat::Publisher.expects(:user_state_message_bus_channel).never
         json = described_class.new(fetch_data, scope: Guardian.new).as_json
-        expect(
-          json.dig(:structured_channel, :meta, :message_bus_last_ids).key?(:user_tracking_state),
-        ).to eq(false)
+        expect(json.dig(:structured_channel, :meta, :message_bus_last_ids).key?(:user_state)).to eq(
+          false,
+        )
       end
     end
 
@@ -118,17 +118,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
             .as_json
             .dig(:structured_channel, :meta, :message_bus_last_ids)
             .keys,
-        ).to eq(
-          %i[
-            channel_metadata
-            channel_edits
-            channel_status
-            new_channel
-            archive_status
-            user_tracking_state
-            user_has_threads
-          ],
-        )
+        ).to eq(%i[channel_updates new_channel user_state])
       end
 
       it "calls MessageBus.last_ids with all the required channels for each public and DM chat chat channel" do
@@ -136,26 +126,12 @@ RSpec.describe Chat::StructuredChannelSerializer do
           .expects(:last_ids)
           .with do |*args|
             [
-              Chat::Publisher::CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
-              Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
-              Chat::Publisher::CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
+              Chat::Publisher::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
               Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
-              Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
-              Chat::Publisher.user_tracking_state_message_bus_channel(user1.id),
-              Chat::Publisher.user_has_threads_message_bus_channel(user1.id),
-              Chat::Publisher.new_messages_message_bus_channel(channel1.id),
-              Chat::Publisher.new_mentions_message_bus_channel(channel1.id),
-              Chat::Publisher.kick_users_message_bus_channel(channel1.id),
+              Chat::Publisher.user_state_message_bus_channel(user1.id),
               Chat::Publisher.root_message_bus_channel(channel1.id),
-              Chat::Publisher.new_messages_message_bus_channel(channel2.id),
-              Chat::Publisher.new_mentions_message_bus_channel(channel2.id),
-              Chat::Publisher.kick_users_message_bus_channel(channel2.id),
               Chat::Publisher.root_message_bus_channel(channel2.id),
-              Chat::Publisher.new_messages_message_bus_channel(channel3.id),
-              Chat::Publisher.new_mentions_message_bus_channel(channel3.id),
               Chat::Publisher.root_message_bus_channel(channel3.id),
-              Chat::Publisher.new_messages_message_bus_channel(channel4.id),
-              Chat::Publisher.new_mentions_message_bus_channel(channel4.id),
               Chat::Publisher.root_message_bus_channel(channel4.id),
             ].to_set == args.to_set
           end
@@ -174,9 +150,6 @@ RSpec.describe Chat::StructuredChannelSerializer do
             root: nil,
             scope: guardian,
             membership: membership1,
-            new_messages_message_bus_last_id: 0,
-            new_mentions_message_bus_last_id: 0,
-            kick_message_bus_last_id: 0,
             channel_message_bus_last_id: 0,
             can_join_chat_channel: true,
             post_allowed_category_ids: nil,
@@ -195,8 +168,6 @@ RSpec.describe Chat::StructuredChannelSerializer do
             root: nil,
             scope: guardian,
             membership: membership3,
-            new_messages_message_bus_last_id: 0,
-            new_mentions_message_bus_last_id: 0,
             channel_message_bus_last_id: 0,
           )
           .once

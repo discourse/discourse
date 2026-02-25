@@ -125,13 +125,8 @@ module Chat
     end
 
     def meta
-      ids = {
-        channel_message_bus_last_id: channel_message_bus_last_id,
-        new_messages: new_messages_message_bus_id,
-        new_mentions: new_mentions_message_bus_id,
-      }
+      ids = { channel_message_bus_last_id: channel_message_bus_last_id }
 
-      ids[:kick] = kick_message_bus_id if !object.direct_message_channel?
       data = { message_bus_last_ids: ids }
 
       if @opts.key?(:can_join_chat_channel)
@@ -165,21 +160,6 @@ module Chat
     def channel_message_bus_last_id
       @opts[:channel_message_bus_last_id] ||
         MessageBus.last_id(Chat::Publisher.root_message_bus_channel(object.id))
-    end
-
-    def new_messages_message_bus_id
-      @opts[:new_messages_message_bus_last_id] ||
-        MessageBus.last_id(Chat::Publisher.new_messages_message_bus_channel(object.id))
-    end
-
-    def new_mentions_message_bus_id
-      @opts[:new_mentions_message_bus_last_id] ||
-        MessageBus.last_id(Chat::Publisher.new_mentions_message_bus_channel(object.id))
-    end
-
-    def kick_message_bus_id
-      @opts[:kick_message_bus_last_id] ||
-        MessageBus.last_id(Chat::Publisher.kick_users_message_bus_channel(object.id))
     end
   end
 end
