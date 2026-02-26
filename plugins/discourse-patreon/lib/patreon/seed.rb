@@ -42,8 +42,16 @@ module Patreon
         )
       badge.save!
 
-      basic_filter = { default_group.id.to_s => ["0"] }
-      Patreon.set("filters", basic_filter)
+      all_patrons_reward =
+        PatreonReward.find_or_create_by!(patreon_id: "0") do |r|
+          r.title = "All Patrons"
+          r.amount_cents = 0
+        end
+
+      PatreonGroupRewardFilter.find_or_create_by!(
+        group: default_group,
+        patreon_reward: all_patrons_reward,
+      )
     end
   end
 end

@@ -5,7 +5,7 @@ discourse_patreon:
   patreon_login_enabled:
     default: false
     client: true
-    validator: 'PatreonLoginEnabledValidator'
+    validator: "Patreon::Validators::PatreonLoginEnabledValidator"
   patreon_client_id:
     default: ''
   patreon_client_secret:

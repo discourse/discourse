@@ -5,14 +5,17 @@ module Jobs
     every 6.hours
     sidekiq_options retry: false
 
-    def execute(args)
-      unless SiteSetting.patreon_enabled && SiteSetting.patreon_creator_access_token &&
-               SiteSetting.patreon_creator_refresh_token
+    def execute(_args)
+      unless SiteSetting.patreon_enabled && SiteSetting.patreon_creator_access_token.present? &&
+               SiteSetting.patreon_creator_refresh_token.present?
         return
       end
 
       Patreon::Patron.update!
-      Patreon.set("last_sync", at: Time.now)
+      PatreonSyncLog.create!(synced_at: Time.zone.now)
+
+      # Keep only the most recent sync logs
+      PatreonSyncLog.order(synced_at: :desc).offset(100).delete_all
     end
   end
 end
