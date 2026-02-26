@@ -99,6 +99,7 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       expect(checklist).to have_items(count: 2)
 
       rich.send_keys(:home)
+      wait_for_timeout
       rich.send_keys(:backspace)
 
       expect(checklist).to have_checkboxes(count: 1)
@@ -132,6 +133,7 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       expect(checklist).to have_items(count: 1)
 
       rich.send_keys(:home)
+      wait_for_timeout
       rich.send_keys(:backspace)
 
       expect(checklist).to have_no_checkboxes
