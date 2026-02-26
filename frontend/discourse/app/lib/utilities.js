@@ -114,7 +114,7 @@ export function extractDomainFromUrl(url) {
   return url.split(":")[0];
 }
 
-export function selectedText() {
+export function selectedHTML() {
   const selection = window.getSelection();
   if (selection.isCollapsed) {
     return "";
@@ -170,7 +170,16 @@ export function selectedText() {
       }
     });
 
-  return toMarkdown(div.outerHTML);
+  return div.outerHTML;
+}
+
+export async function selectedText() {
+  const html = selectedHTML();
+  if (!html) {
+    return "";
+  }
+
+  return await toMarkdown(html);
 }
 
 export function selectedNode() {

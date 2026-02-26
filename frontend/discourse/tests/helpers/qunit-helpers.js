@@ -68,11 +68,6 @@ import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/a
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import {
-  clearBlockDecorateCallbacks,
-  clearTagDecorateCallbacks,
-  clearTextDecorateCallbacks,
-} from "discourse/lib/to-markdown";
-import {
   resetHighestReadCache,
   setTopicList,
 } from "discourse/lib/topic-list-tracker";
@@ -238,9 +233,6 @@ export function testCleanup(container, app) {
   clearPresenceCallbacks();
   restoreBaseUri();
   resetTopicsSectionLinks();
-  clearTagDecorateCallbacks();
-  clearBlockDecorateCallbacks();
-  clearTextDecorateCallbacks();
   clearResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();

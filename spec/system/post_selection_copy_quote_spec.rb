@@ -4,6 +4,7 @@ describe "Post selection | Copy quote", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:cdp) { PageObjects::CDP.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, raw: "Hello world it's time for quoting!") }
@@ -53,6 +54,7 @@ describe "Post selection | Copy quote", type: :system do
 
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
       topic_page.copy_quote_button.click
+      expect(toasts).to have_success(I18n.t("js.post.quote_copied_to_clipboard"))
 
       cdp.clipboard_has_text?(<<~QUOTE.chomp, chomp: true)
     [quote=\"#{post.user.username}, post:1, topic:#{topic.id}\"]\nHello worl\n[/quote]\n
@@ -110,21 +112,25 @@ describe "Post selection | Copy quote", type: :system do
       # Test 1: Loose list stays loose (items 0-1)
       select_list_items(post_selector, 0, 1)
       topic_page.copy_quote_button.click
+      expect(toasts).to have_success(I18n.t("js.post.quote_copied_to_clipboard"))
       cdp.clipboard_has_text?("1. First loose\n\n2. Second loose", strict: false)
 
       # Test 2: Tight list stays tight (items 2-3)
       select_list_items(post_selector, 2, 3)
       topic_page.copy_quote_button.click
+      expect(toasts).to have_success(I18n.t("js.post.quote_copied_to_clipboard"))
       cdp.clipboard_has_text?("1. First tight\n2. Second tight", strict: false)
 
       # Test 3: Nested list preserves start number (items 4-5 are 100, 101)
       select_list_items(post_selector, 4, 5)
       topic_page.copy_quote_button.click
+      expect(toasts).to have_success(I18n.t("js.post.quote_copied_to_clipboard"))
       cdp.clipboard_has_text?("100. Hundred\n101. Hundred one", strict: false)
 
       # Test 4: Nested tight bullet list stays tight (items 6-7)
       select_list_items(post_selector, 6, 7)
       topic_page.copy_quote_button.click
+      expect(toasts).to have_success(I18n.t("js.post.quote_copied_to_clipboard"))
       cdp.clipboard_has_text?("* nested hello\n* nested world", strict: false)
     end
   end
