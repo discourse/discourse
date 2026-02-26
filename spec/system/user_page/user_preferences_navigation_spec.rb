@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences | Navigation menu", type: :system do
+describe "User preferences | User Navigation", type: :system do
   fab!(:user)
   let(:everyone_group) { Group[:everyone] }
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }

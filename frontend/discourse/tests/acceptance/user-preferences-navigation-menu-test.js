@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import Site from "discourse/models/site";
 import {
@@ -59,10 +59,18 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
         "category1 doesn't have badge text before the preference is enabled"
       );
 
-    await click(
-      ".preferences-navigation-menu-navigation .pref-show-count-new-items input"
+    await click("[data-name='sidebar_show_count_of_new_items'] input");
+    await click(".save-controls .btn-primary");
+
+    // Wait for the save to complete
+    await waitFor(".save-controls .saved", { timeout: 5000 });
+
+    // Wait for the sidebar to update - wait for the badge to appear
+
+    await waitFor(
+      `.sidebar-section-link[data-link-name="everything"] .sidebar-section-link-content-badge`,
+      { timeout: 5000 }
     );
-    await click(".save-changes");
 
     assert
       .dom(
@@ -137,10 +145,8 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
         "category1's link href is the latest topics list of the category before the preference is enabled"
       );
 
-    await click(
-      ".preferences-navigation-menu-navigation .pref-link-to-filtered-list input"
-    );
-    await click(".save-changes");
+    await click("[data-name='sidebar_link_to_filtered_list'] input");
+    await click(".save-controls .btn-primary");
 
     assert
       .dom('.sidebar-section-link[data-link-name="everything"]')
