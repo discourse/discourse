@@ -101,8 +101,7 @@ module ApplicationHelper
   end
 
   def script_asset_path(script)
-    logical_path = "#{script}.js"
-    path = ActionController::Base.helpers.asset_path(logical_path)
+    path = ActionController::Base.helpers.asset_path("#{script}.js")
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       resolved_s3_asset_cdn_url =
