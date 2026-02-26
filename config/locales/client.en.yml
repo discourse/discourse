@@ -5930,7 +5930,7 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset"
+    reset_filter: "Reset filter"
     toggle_filters: "Toggle dropdown filters"
 
     admin:
