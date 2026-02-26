@@ -212,12 +212,15 @@ class Theme extends RestModel {
 
   setField(target, name, value, upload_id, type_id) {
     this.set("changed", true);
+
+    // Normalize JS field target/name consistently with getField()
+    if (target === "common" && name === "js") {
+      target = "extra_js";
+      name = JS_FILENAME;
+    }
+
     let themeFields = this.themeFields;
     let field = { name, target, value, upload_id, type_id };
-    if (field.name === "js" && target === "common") {
-      field.target = "extra_js";
-      field.name = JS_FILENAME;
-    }
 
     // slow path for uploads and so on
     if (type_id && type_id > 1) {

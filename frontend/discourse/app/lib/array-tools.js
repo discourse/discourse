@@ -1,4 +1,5 @@
 import { get } from "@ember/object";
+import { compare } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 /**
@@ -160,4 +161,31 @@ export function uniqueItemsFromArray(array, selector) {
       : dedupeBy(array, buildSelector(selector));
 
   return array instanceof TrackedArray ? new TrackedArray(items) : items;
+}
+
+/**
+ * Returns a sorted copy of an array using Ember-style sort definitions.
+ *
+ * Each definition is a string `"property"` or `"property:direction"` where
+ * direction is `"asc"` (default) or `"desc"`. Dot-notation paths are supported
+ * (e.g., `"badge.badge_type_id"`).
+ *
+ * @param {Array} array - The array to sort. Returns `[]` if not an array.
+ * @param {string[]} sortDefinitions - Sort definition strings.
+ * @returns {Array} A new sorted array.
+ */
+export function arraySortedByProperties(array, sortDefinitions) {
+  if (!Array.isArray(array)) {
+    return [];
+  }
+  return array.toSorted((a, b) => {
+    for (const s of sortDefinitions ?? []) {
+      const [prop, dir = "asc"] = s.split(":");
+      const result = compare(get(a, prop), get(b, prop));
+      if (result !== 0) {
+        return dir === "desc" ? -result : result;
+      }
+    }
+    return 0;
+  });
 }

@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
-import { equal, notEmpty } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
@@ -26,7 +27,11 @@ export default class UserActivityBookmarksController extends Controller {
   bulkSelectHelper = new BulkSelectHelper(this);
 
   @notEmpty("q") inSearchMode;
-  @equal("model.bookmarks.length", 0) noContent;
+
+  @dependentKeyCompat
+  get noContent() {
+    return this.model?.bookmarks?.length === 0;
+  }
 
   @computed("q")
   get searchTerm() {
