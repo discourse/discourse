@@ -270,11 +270,41 @@ export default class KeyboardShortcutLib extends Service {
    *
    * - click      - allows to provide a selector on which a click event
    *                will be triggered, eg: { click: ".topic.last .title" }
+   * - context    - a CSS selector string or function that scopes the shortcut.
+   *                When provided, the shortcut only fires if the context matches
+   *                (element exists in DOM / function returns truthy). Otherwise,
+   *                the previously-bound handler for this key fires instead.
    **/
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
     // like `z z` are valid for ItsATrap
-    this.bindKey(shortcut.trim(), { handler: callback, ...opts });
+    shortcut = shortcut.trim();
+
+    if (opts.context) {
+      const contextTest =
+        typeof opts.context === "function"
+          ? opts.context
+          : () => document.querySelector(opts.context) !== null;
+
+      const dm = this.keyTrapper._directMap;
+      const previousCallback =
+        dm[shortcut + ":undefined"] ||
+        dm[shortcut + ":keypress"] ||
+        dm[shortcut + ":keydown"] ||
+        dm[shortcut + ":keyup"];
+
+      const originalCallback = callback;
+      callback = function (...args) {
+        if (contextTest()) {
+          return originalCallback(...args);
+        }
+        if (previousCallback) {
+          return previousCallback(...args);
+        }
+      };
+    }
+
+    this.bindKey(shortcut, { handler: callback, ...opts });
     if (opts.help) {
       addExtraKeyboardShortcutHelp(opts.help);
     }
