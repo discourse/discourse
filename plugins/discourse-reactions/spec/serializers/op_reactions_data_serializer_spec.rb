@@ -67,15 +67,7 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
     end
 
     context "when first_post is loaded and modifier is true" do
-      before do
-        topic.association(:first_post).target = first_post
-        first_post.post_actions_with_reaction_users =
-          DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-            [first_post.id],
-          )[
-            first_post.id
-          ]
-      end
+      before { topic.association(:first_post).target = first_post }
 
       it "includes all required fields" do
         json = serializer_class.new(topic, scope: Guardian.new(user_1), root: false).as_json
@@ -105,14 +97,7 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
           Fabricate(:reaction_user, reaction: reaction_otter, user: user_1, post: first_post)
           Fabricate(:reaction_user, reaction: reaction_otter, user: user_2, post: first_post)
           Fabricate(:reaction_user, reaction: reaction_plus_1, user: user_3, post: first_post)
-
           first_post.reload
-          first_post.post_actions_with_reaction_users =
-            DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-              [first_post.id],
-            )[
-              first_post.id
-            ]
         end
 
         it "includes reactions sorted by count and current user data" do
@@ -137,14 +122,7 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
             user: user_2,
             post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
           )
-
           first_post.reload
-          first_post.post_actions_with_reaction_users =
-            DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-              [first_post.id],
-            )[
-              first_post.id
-            ]
         end
 
         it "shows likes as main_reaction_id" do
@@ -177,15 +155,7 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
           )
         end
 
-        before do
-          first_post.reload
-          first_post.post_actions_with_reaction_users =
-            DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-              [first_post.id],
-            )[
-              first_post.id
-            ]
-        end
+        before { first_post.reload }
 
         it "shows canToggle correctly based on permissions and undo window" do
           json_with_like =
@@ -228,12 +198,6 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
 
             topic.reload
             topic.association(:first_post).target = first_post.reload
-            first_post.post_actions_with_reaction_users =
-              DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-                [first_post.id],
-              )[
-                first_post.id
-              ]
           end
 
           it "can see all reactions and counts from other users" do
@@ -264,12 +228,6 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
 
             topic.reload
             topic.association(:first_post).target = first_post.reload
-            first_post.post_actions_with_reaction_users =
-              DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-                [first_post.id],
-              )[
-                first_post.id
-              ]
           end
 
           it "can see likes as main_reaction_id" do
@@ -295,14 +253,7 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
             user: user_2,
             post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
           )
-
           first_post.reload
-          first_post.post_actions_with_reaction_users =
-            DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-              [first_post.id],
-            )[
-              first_post.id
-            ]
         end
 
         it "correctly combines reactions and likes with proper user states" do
