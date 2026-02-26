@@ -8,7 +8,7 @@ module PageObjects
       HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
       MENTION_MENU = ".autocomplete.ac-user"
       RICH_EDITOR = ".d-editor-input.ProseMirror"
-      POST_LANGUAGE_SELECTOR = ".post-language-selector"
+      POST_LANGUAGE_SELECTOR = ".post-language-selector-trigger"
 
       def initialize(composer_id = COMPOSER_ID)
         @composer_id = composer_id
