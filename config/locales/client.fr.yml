@@ -6,6 +6,12 @@
 
 fr:
   js:
+    blocks:
+      ghost:
+        status: "Statut"
+        in_location: "dans"
+        hidden: "masqué"
+        failed: "échec"
     number:
       format:
         separator: ","
@@ -406,6 +412,8 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
+      start_posting:
+        back: "Retour"
       spread_the_word:
         action: "Copier le lien"
         copied_to_clipboard: "Lien copié dans le presse-papiers!"
@@ -5628,15 +5636,6 @@ fr:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
           learn_more: "En savoir plus…"
-          experimental: "Expérimental"
-          only_experiments: "Afficher uniquement les fonctionnalités expérimentales"
-          experiment_enabled: "Vous avez activé la fonctionnalité expérimentale."
-          experiment_disabled: "Vous avez désactivé la fonctionnalité expérimentale."
-          experiment_tooltip:
-            title_enabled: "Désactiver la fonctionnalité expérimentale"
-            content_enabled: "La modification de cette option désactivera la fonctionnalité pour tous les utilisateurs."
-          feature_tooltip:
-            content_enabled: "La modification de cette option désactivera la fonctionnalité pour tous les utilisateurs."
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."

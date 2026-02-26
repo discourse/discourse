@@ -6,6 +6,12 @@
 
 da:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "i"
+        hidden: "skjult"
+        failed: "fejlet"
     number:
       format:
         separator: "."
@@ -397,6 +403,8 @@ da:
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
     admin_onboarding_banner:
+      start_posting:
+        back: "Tilbage"
       spread_the_word:
         action: "Kopiér link"
     about:
@@ -4576,7 +4584,6 @@ da:
         new_features:
           title: "Hvad er nyt?"
           learn_more: "Lær mere..."
-          experimental: "Eksperimentel"
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
         no_problems: "Ingen problemer fundet."

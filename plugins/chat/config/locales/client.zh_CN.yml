@@ -86,6 +86,8 @@ zh_CN:
         unstar_channel: "取消收藏频道"
         close_channel: "关闭频道"
         open_channel: "打开频道"
+        open_channel_disabled_archived: "无法重新打开已存档的频道。"
+        open_channel_disabled_read_only: "无法重新打开只读频道。"
         archive_channel: "归档频道"
         delete_channel: "删除频道"
         join_channel: "加入频道"

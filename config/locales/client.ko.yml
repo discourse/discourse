@@ -6,6 +6,11 @@
 
 ko:
   js:
+    blocks:
+      ghost:
+        status: "상태"
+        hidden: "숨김"
+        failed: "실패"
     number:
       format:
         separator: "."
@@ -274,6 +279,8 @@ ko:
       pill: "추천"
       pm_title: "제안된 메시지"
     admin_onboarding_banner:
+      start_posting:
+        back: "뒤로"
       spread_the_word:
         action: "링크 복사"
     about:

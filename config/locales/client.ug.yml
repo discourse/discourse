@@ -6,6 +6,12 @@
 
 ug:
   js:
+    blocks:
+      ghost:
+        status: "ھالەت"
+        in_location: "دا"
+        hidden: "يوشۇرۇن"
+        failed: "مەغلۇب بولدى"
     carousel:
       go_to_slide: "%{index}-سىيرىلمىغا يۆتكەل"
       previous: "ئالدىنقى سىيرىلما"
@@ -415,6 +421,8 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      start_posting:
+        back: "كەينى"
       spread_the_word:
         action: "ئۇلانما كۆچۈر"
         copied_to_clipboard: "ئۇلانما چاپلاش تاختىسىغا كۆچۈرۈلدى!"
@@ -5863,19 +5871,6 @@ ug:
           title: "يېڭىلىق?"
           subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «مول بىلىم» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
           learn_more: "مول بىلىم…"
-          experimental: "تەجرىبە"
-          only_experiments: "پەقەت تەجرىبە ئىقتىدارلىرىنىلا كۆرسىتىدۇ"
-          experiment_enabled: "تەجرىبە ئىقتىدارىنى قوزغاتتىڭىز."
-          experiment_disabled: "تەجرىبە ئىقتىدارىنى چەكلىدىڭىز."
-          feature_enabled: "ئىقتىدارنى قوزغاتتىڭىز."
-          feature_disabled: "ئىقتىدارنى چەكلىدىڭىز."
-          experiment_tooltip:
-            title_enabled: "تەجرىبە ئىقتىدارىنى تاقايدۇ"
-            content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."
-          feature_tooltip:
-            title_disabled: "بۇ ئىقتىدارنى سىناڭ"
-            title_enabled: "ئىقتىدارنى تاقايدۇ"
-            content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."
         last_checked: "ئاخىرقى تەكشۈرۈلگەن ۋاقىت"
         refresh_problems: "يېڭىلا"
         no_problems: "ھېچقانداق مەسىلە بايقالمىدى."

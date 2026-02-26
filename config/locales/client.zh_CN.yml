@@ -6,6 +6,13 @@
 
 zh_CN:
   js:
+    blocks:
+      ghost:
+        status: "状态"
+        in_location: "位置："
+        hidden: "已隐藏"
+        not_registered: "未注册"
+        failed: "失败"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -396,6 +403,7 @@ zh_CN:
         title: "开始发帖"
         description: "给人们一些共同谈论的话题"
         action: "破冰创意"
+        back: "返回"
         icebreakers:
           fun_facts:
             title: "关于你，有哪些有趣的小事？"
@@ -5748,23 +5756,6 @@ zh_CN:
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
           no_new_features_error: "加载最新功能列表时出现错误。您可以在<a href='%{url}' target='_blank'>Discourse Meta 社区</a>查看以前的新功能公告。"
           learn_more: "了解详情…"
-          experimental: "实验性"
-          only_experiments: "只显示实验性功能"
-          experiment_enabled: "您已启用实验性功能。"
-          experiment_disabled: "您已禁用实验性功能。"
-          feature_enabled: "您已启用该功能。"
-          feature_disabled: "您已禁用该功能。"
-          toggled_too_fast: "您切换开关的频率过快。请稍等几秒钟后再试。"
-          experiment_tooltip:
-            title_disabled: "试用这个实验性功能"
-            title_enabled: "关闭实验性功能"
-            content_disabled: "试试我们正在开发的最新功能吧！它仍处于试验阶段，因此我们可能随时将其移除。您可以随时选择退出。<br/><br/>更改此项将为所有用户启用该功能。"
-            content_enabled: "更改此项将为所有用户禁用该功能。"
-          feature_tooltip:
-            title_disabled: "试用此功能"
-            title_enabled: "关闭功能"
-            content_disabled: "试试这个新功能吧！您可以随时选择退出。<br/><br/>更改此项将为所有用户启用该功能。"
-            content_enabled: "更改此项将为所有用户禁用该功能。"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题。"

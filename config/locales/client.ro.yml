@@ -6,6 +6,11 @@
 
 ro:
   js:
+    blocks:
+      ghost:
+        status: "Stare"
+        hidden: "ascuns"
+        failed: "eșuată"
     number:
       format:
         separator: "."
@@ -437,6 +442,8 @@ ro:
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
     admin_onboarding_banner:
+      start_posting:
+        back: "Înapoi"
       spread_the_word:
         action: "Copiază legătură"
     about:
@@ -4228,15 +4235,6 @@ ro:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
           learn_more: "Află mai multe..."
-          experimental: "Experimental"
-          only_experiments: "Afișează doar caracteristici experimentale"
-          experiment_enabled: "Ai activat funcționalitatea experimentală."
-          experiment_disabled: "Ai dezactivat funcționalitatea experimentală."
-          experiment_tooltip:
-            title_enabled: "Dezactivează funcționalitatea experimentală"
-            content_enabled: "Modificând aceasta va dezactiva funcționalitatea pentru toți utilizatorii."
-          feature_tooltip:
-            content_enabled: "Modificând aceasta va dezactiva funcționalitatea pentru toți utilizatorii."
         last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
         no_problems: "Nu a apărut nicio problemă."

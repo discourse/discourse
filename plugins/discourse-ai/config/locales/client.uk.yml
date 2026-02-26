@@ -382,8 +382,6 @@ uk:
           enable_translations: "Увімкнути автоматичний переклад"
         stats:
           title: "Статистика перекладів"
-          complete_language_detection_description: "Усі повідомленнях, що відповідають вимогам %{total} мають можливість використовувати свою мову."
-          incomplete_language_detection_description: "%{done} з %{total} дописів, які відповідають вимогам, визначено їхню мову."
           backfill_disabled: "Автозаповнення вимкнено, перекладатимуться лише нові публікації."
           backfill_message: "<a href='%{settingsUrl}'>Налаштування заповнення</a> налаштовано на переклад усіх публікацій після %{date} — це, за оцінками, займе %{eta}."
           eta_minutes:

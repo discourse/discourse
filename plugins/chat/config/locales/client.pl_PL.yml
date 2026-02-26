@@ -106,6 +106,8 @@ pl_PL:
         unstar_channel: "Usuń wyróżnienie kanału"
         close_channel: "Zamknij kanał"
         open_channel: "Otwórz kanał"
+        open_channel_disabled_archived: "Zarchiwizowanych kanałów nie można ponownie otworzyć."
+        open_channel_disabled_read_only: "Kanałów przeznaczonych tylko do odczytu nie można ponownie otworzyć."
         archive_channel: "Archiwizuj kanał"
         delete_channel: "Usuń kanał"
         join_channel: "Dołącz do kanału"

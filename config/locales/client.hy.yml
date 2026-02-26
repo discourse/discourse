@@ -6,6 +6,11 @@
 
 hy:
   js:
+    blocks:
+      ghost:
+        status: "Ստատուս"
+        hidden: "թաքցված"
+        failed: "ձախողված"
     number:
       format:
         separator: "."
@@ -292,6 +297,8 @@ hy:
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
     admin_onboarding_banner:
+      start_posting:
+        back: "Ետ"
       spread_the_word:
         action: "Պատճենել հղումը"
     about:

@@ -6,6 +6,12 @@
 
 it:
   js:
+    blocks:
+      ghost:
+        status: "Stato"
+        in_location: "in"
+        hidden: "nascosto"
+        failed: "non riuscito"
     number:
       format:
         separator: ","
@@ -401,6 +407,8 @@ it:
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
+      start_posting:
+        back: "Indietro"
       spread_the_word:
         action: "Copia link"
         copied_to_clipboard: "Link copiato negli appunti!"
@@ -5599,15 +5607,6 @@ it:
           title: "Cosa c'è di nuovo?"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
           learn_more: "Scopri di più..."
-          experimental: "Sperimentale"
-          only_experiments: "Mostra solo le funzionalità sperimentali"
-          experiment_enabled: "Hai attivato la funzionalità sperimentale."
-          experiment_disabled: "Hai disattivato la funzionalità sperimentale."
-          experiment_tooltip:
-            title_enabled: "Disattiva la funzionalità sperimentale"
-            content_enabled: "Modificando questa impostazione, la funzionalità verrà disabilitata per tutti gli utenti."
-          feature_tooltip:
-            content_enabled: "Modificando questa impostazione, la funzionalità verrà disabilitata per tutti gli utenti."
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."

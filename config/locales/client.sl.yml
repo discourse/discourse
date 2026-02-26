@@ -6,6 +6,11 @@
 
 sl:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        hidden: "skrito"
+        failed: "spodletelo"
     number:
       format:
         separator: ","
@@ -300,6 +305,8 @@ sl:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
     admin_onboarding_banner:
+      start_posting:
+        back: "Nazaj"
       spread_the_word:
         copied_to_clipboard: "Povezava je bila kopirana v odložišče!"
     about:

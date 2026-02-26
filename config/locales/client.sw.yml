@@ -6,6 +6,10 @@
 
 sw:
   js:
+    blocks:
+      ghost:
+        hidden: "imefichwa"
+        failed: "kushindwa"
     number:
       format:
         separator: "."
@@ -206,6 +210,9 @@ sw:
       other: "Herufi %{count}"
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Iliyopita"
     about:
       edit: "Hariri ukurasa huu"
       simple_title: "Kuhusu "

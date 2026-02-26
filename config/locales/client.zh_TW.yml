@@ -6,6 +6,11 @@
 
 zh_TW:
   js:
+    blocks:
+      ghost:
+        status: "狀態"
+        in_location: "在"
+        failed: "失敗"
     number:
       format:
         separator: "."
@@ -367,6 +372,8 @@ zh_TW:
       pill: "建議"
       pm_title: "推薦訊息"
     admin_onboarding_banner:
+      start_posting:
+        back: "上一步"
       spread_the_word:
         action: "複製連結"
     about:
@@ -4974,15 +4981,6 @@ zh_TW:
           title: "有什麼最新消息？"
           subtitle: "我們一直在發布新功能和改進。此頁面涵蓋了重點，但您可以單擊「了解更多」以查看詳細的版本說明。"
           learn_more: "了解更多..."
-          experimental: "實驗性"
-          only_experiments: "僅顯示實驗性功能"
-          experiment_enabled: "您已啟用實驗性功能。"
-          experiment_disabled: "您已停用實驗性功能。"
-          experiment_tooltip:
-            title_enabled: "關閉實驗性功能"
-            content_enabled: "更改此項將為所有使用者禁用該功能。"
-          feature_tooltip:
-            content_enabled: "更改此項將為所有使用者禁用該功能。"
         last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
         no_problems: "未發現任何問題。"

@@ -6,6 +6,12 @@
 
 bg:
   js:
+    blocks:
+      ghost:
+        status: "Статус"
+        in_location: "в"
+        hidden: "скрит"
+        failed: "провалени"
     number:
       format:
         separator: "."
@@ -279,6 +285,9 @@ bg:
       pill: "Свързани съобщения"
     suggested_topics:
       pm_title: "Предложени съобщения"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Назад"
     about:
       edit: "Редактирайте тази страница"
       simple_title: "Относно"

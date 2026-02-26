@@ -6,6 +6,12 @@
 
 fa_IR:
   js:
+    blocks:
+      ghost:
+        status: "وضعیت"
+        in_location: "در"
+        hidden: "مخفی"
+        failed: "ناموفق"
     number:
       format:
         separator: "."
@@ -340,6 +346,8 @@ fa_IR:
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
+      start_posting:
+        back: "بازگشت"
       spread_the_word:
         action: "رونوشت پیوند"
         copied_to_clipboard: "پیوند در کلیپ بورد کپی شد!"
@@ -5102,14 +5110,6 @@ fa_IR:
           title: "چه چیزی جدید شده؟"
           subtitle: "ما همیشه در حال انتشار ویژگی ها و بهبودهای جدید هستیم. این صفحه نکات برجسته را پوشش می‌دهد، اما می‌توانید روی «بیشتر بدانید» کلیک کنید تا یادداشت‌های انتشار گسترده را ببینید."
           learn_more: "بیشتر بدانید..."
-          experimental: "آزمایشی"
-          experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."
-          experiment_disabled: "شما ویژگی آزمایشی را غیرفعال کرده‌اید."
-          experiment_tooltip:
-            title_enabled: "ویژگی آزمایشی را خاموش کنید"
-            content_enabled: "با تغییر این تنظیم، این ویژگی برای همه کاربران غیرفعال می‌شود."
-          feature_tooltip:
-            content_enabled: "با تغییر این تنظیم، این ویژگی برای همه کاربران غیرفعال می‌شود."
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."

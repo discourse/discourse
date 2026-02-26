@@ -6,6 +6,12 @@
 
 tr_TR:
   js:
+    blocks:
+      ghost:
+        status: "Durum"
+        in_location: "içinde"
+        hidden: "gizli"
+        failed: "başarısız"
     number:
       format:
         separator: "."
@@ -401,6 +407,8 @@ tr_TR:
       pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
+      start_posting:
+        back: "Geri"
       spread_the_word:
         action: "Bağlantıyı kopyala"
         copied_to_clipboard: "Bağlantı panoya kopyalandı!"
@@ -5602,15 +5610,6 @@ tr_TR:
           title: "Yenilikler"
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
           learn_more: "Daha fazla bilgi edinin..."
-          experimental: "Deneysel"
-          only_experiments: "Yalnızca deneysel özellikleri göster"
-          experiment_enabled: "Deneysel özelliği etkinleştirdiniz."
-          experiment_disabled: "Deneysel özelliği devre dışı bıraktınız."
-          experiment_tooltip:
-            title_enabled: "Deneysel özelliği kapat"
-            content_enabled: "Bunu değiştirmek özelliği tüm kullanıcılar için devre dışı bırakır."
-          feature_tooltip:
-            content_enabled: "Bunu değiştirmek özelliği tüm kullanıcılar için devre dışı bırakır."
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."

@@ -6,6 +6,12 @@
 
 sv:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "i"
+        hidden: "dold"
+        failed: "misslyckad"
     number:
       format:
         separator: "."
@@ -295,6 +301,8 @@ sv:
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
     admin_onboarding_banner:
+      start_posting:
+        back: "Tillbaka"
       spread_the_word:
         copied_to_clipboard: "Länken har kopierats till urklipp!"
     about:
