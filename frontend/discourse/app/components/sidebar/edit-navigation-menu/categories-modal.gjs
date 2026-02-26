@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedSet } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DecoratedHtml from "discourse/components/decorated-html";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
@@ -30,9 +30,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   @tracked fetchedCategoriesGroupings = [];
   @tracked loadingMore = false;
   @tracked
-  selectedCategoryIds = new TrackedSet([
-    ...this.currentUser.sidebar_category_ids,
-  ]);
+  selectedCategoryIds = trackedSet([...this.currentUser.sidebar_category_ids]);
   selectedFilter = "";
   selectedMode = "everything";
   fetchedCategories;
@@ -215,7 +213,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @action
   resetToDefaults() {
-    this.selectedCategoryIds = new TrackedSet(
+    this.selectedCategoryIds = trackedSet(
       this.siteSettings.default_navigation_menu_categories
         .split("|")
         .map((id) => parseInt(id, 10))

@@ -1,4 +1,4 @@
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { trackedObject } from "@ember/reactive/collections";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsShowHouseAdsShow extends DiscourseRoute {
@@ -6,7 +6,7 @@ export default class AdminPluginsShowHouseAdsShow extends DiscourseRoute {
     const parentModel = this.modelFor("adminPlugins.show.houseAds");
 
     if (params.id === "new") {
-      return new TrackedObject({
+      return trackedObject({
         name: null,
         html: null,
         visible_to_logged_in_users: true,
@@ -27,7 +27,7 @@ export default class AdminPluginsShowHouseAdsShow extends DiscourseRoute {
         );
       }
 
-      return new TrackedObject(houseAd);
+      return trackedObject(houseAd);
     }
   }
 
