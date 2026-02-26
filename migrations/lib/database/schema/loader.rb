@@ -58,7 +58,7 @@ module Migrations::Database::Schema
           enum = @enums_by_name[modified_column[:enum]] if modified_column&.key?(:enum)
 
           ColumnDefinition.new(
-            name: name_for(column),
+            name: name_for(column, modified_column),
             datatype: datatype_for(column, modified_column, enum),
             nullable: nullable_for(column, modified_column),
             max_length: column.type == :text ? column.limit : nil,
@@ -110,8 +110,11 @@ module Migrations::Database::Schema
       end
     end
 
-    def name_for(column)
-      @global.modified_name(column.name) || column.name
+    def name_for(column, modified_column)
+      name = modified_column[:rename_to] if modified_column&.key?(:rename_to)
+      name ||= @global.modified_name(column.name)
+
+      name || column.name
     end
 
     def datatype_for(column, modified_column, enum)
