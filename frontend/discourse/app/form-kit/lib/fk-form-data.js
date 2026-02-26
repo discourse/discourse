@@ -236,8 +236,8 @@ export default class FKFormData {
         target[parts[0]] = value;
       },
       (patches, inversePatches) => {
-        this.patches.push(...patches);
-        this.inversePatches.push(...inversePatches);
+        this.patches = [...this.patches, ...patches];
+        this.inversePatches = [...this.inversePatches, ...inversePatches];
       }
     );
   }

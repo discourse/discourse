@@ -45,6 +45,7 @@ class FKForm extends Component {
   constructor() {
     super(...arguments);
 
+    const instance = this;
     this.args.onRegisterApi?.({
       set: this.set,
       setProperties: this.setProperties,
@@ -55,6 +56,9 @@ class FKForm extends Component {
       removeError: this.removeError,
       patches: this.formData.patches,
       removeErrors: this.removeErrors,
+      get isDirty() {
+        return instance.formData.isDirty;
+      },
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
