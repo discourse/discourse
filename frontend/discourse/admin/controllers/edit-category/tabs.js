@@ -44,6 +44,7 @@ const FIELD_LIST = [
   "subcategory_list_style",
   "read_only_banner",
   "email_in",
+  "email_in_enabled",
   "email_in_allow_strangers",
   "mailinglist_mirror",
   "allowed_tag_groups",
