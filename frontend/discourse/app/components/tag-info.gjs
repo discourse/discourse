@@ -3,6 +3,7 @@ import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { and, reads } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -63,13 +64,13 @@ export default class TagInfo extends Component {
     });
   }
 
-  @discourseComputed(
-    "tagInfo.tag_group_names",
-    "tagInfo.categories",
-    "tagInfo.synonyms"
-  )
-  nothingToShow(tagGroupNames, categories, synonyms) {
-    return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
+  @dependentKeyCompat
+  get nothingToShow() {
+    return (
+      isEmpty(this.tagInfo?.tag_group_names) &&
+      isEmpty(this.tagInfo?.categories) &&
+      isEmpty(this.tagInfo?.synonyms)
+    );
   }
 
   @discourseComputed("newTagName")
