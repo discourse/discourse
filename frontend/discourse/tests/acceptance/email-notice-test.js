@@ -70,3 +70,16 @@ acceptance("Email Disabled Banner - no SMTP configured", function (needs) {
     assert.dom(".alert-emails-disabled").exists();
   });
 });
+
+acceptance(
+  "Email Disabled Banner - email_configured absent from site data",
+  function (needs) {
+    needs.site({});
+
+    test("no banner when email_configured is absent", async function (assert) {
+      this.siteSettings.disable_emails = "no";
+      await visit("/login");
+      assert.dom(".alert-emails-disabled").doesNotExist();
+    });
+  }
+);
