@@ -63,7 +63,10 @@
       .user-menu-tab,
       .--with-description,
       .chat-message-react-btn,
-      .profile-tab-btn
+      .profile-tab-btn,
+      .back-button,
+      .composer-actions-btn,
+      .language-switcher-trigger
     ) {
       padding-block: 0;
       height: var(--button-height);
