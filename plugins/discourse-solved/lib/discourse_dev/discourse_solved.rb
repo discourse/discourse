@@ -49,7 +49,12 @@ module DiscourseDev
             post = DiscourseDev::Post.new(solved_topic, 1).create!
           end
 
-          ::DiscourseSolved.accept_answer!(post, post.topic.user, topic: post.topic)
+          ::DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: post.id,
+            },
+            guardian: post.topic.user.guardian,
+          )
         end
       end
     end

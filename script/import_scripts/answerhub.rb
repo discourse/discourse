@@ -239,8 +239,12 @@ class ImportScripts::AnswerHub < ImportScripts::Base
                     user_id =
                       user_id_from_imported_user_id(p["c_author"]) || Discourse::SYSTEM_USER_ID
                     current_user = User.find(user_id)
-                    solved = DiscourseSolved.accept_answer!(post, current_user)
-                    # puts "SOLVED: #{solved}"
+                    DiscourseSolved::Answer::Accept.call!(
+                      params: {
+                        post_id: post.id,
+                      },
+                      guardian: current_user.guardian,
+                    )
                   end
                 end
               rescue ActiveRecord::RecordInvalid

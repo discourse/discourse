@@ -18,9 +18,8 @@ describe UserSummarySerializer do
       expect(serializer.as_json[:solved_count]).to eq(0)
 
       topic = Fabricate(:topic)
-      Fabricate(:post, topic:)
       post = Fabricate(:post, topic:, user:)
-      DiscourseSolved.accept_answer!(post, Discourse.system_user)
+      Fabricate(:solved_topic, topic:, answer_post: post)
 
       expect(serializer.as_json[:solved_count]).to eq(1)
     end

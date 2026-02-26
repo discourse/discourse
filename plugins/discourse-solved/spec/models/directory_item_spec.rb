@@ -3,7 +3,6 @@
 describe DirectoryItem, type: :model do
   describe "Updating user directory with solutions count" do
     fab!(:user)
-    fab!(:admin)
 
     fab!(:topic1) { Fabricate(:topic, archetype: "regular", user:) }
     fab!(:topic_post1) { Fabricate(:post, topic: topic1, user:, created_at: 10.years.ago) }
@@ -17,8 +16,8 @@ describe DirectoryItem, type: :model do
     before { SiteSetting.solved_enabled = true }
 
     it "excludes PM post solutions from solutions" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
-      DiscourseSolved.accept_answer!(pm_post, admin)
+      Fabricate(:solved_topic, topic: topic1, answer_post: topic_post1)
+      Fabricate(:solved_topic, topic: pm, answer_post: pm_post)
 
       DirectoryItem.refresh!
 
@@ -31,8 +30,8 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes deleted posts from solutions" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
-      DiscourseSolved.accept_answer!(topic_post2, admin)
+      Fabricate(:solved_topic, topic: topic1, answer_post: topic_post1)
+      Fabricate(:solved_topic, topic: topic2, answer_post: topic_post2)
       topic_post2.update(deleted_at: Time.zone.now)
 
       DirectoryItem.refresh!
@@ -46,8 +45,8 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes deleted topics from solutions" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
-      DiscourseSolved.accept_answer!(topic_post2, admin)
+      Fabricate(:solved_topic, topic: topic1, answer_post: topic_post1)
+      Fabricate(:solved_topic, topic: topic2, answer_post: topic_post2)
       topic2.update(deleted_at: Time.zone.now)
 
       DirectoryItem.refresh!
@@ -63,7 +62,7 @@ describe DirectoryItem, type: :model do
     it "excludes solutions for silenced users" do
       user.update(silenced_till: 1.day.from_now)
 
-      DiscourseSolved.accept_answer!(topic_post1, admin)
+      Fabricate(:solved_topic, topic: topic1, answer_post: topic_post1)
 
       DirectoryItem.refresh!
 
@@ -76,7 +75,7 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes solutions for suspended users" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
+      Fabricate(:solved_topic, topic: topic1, answer_post: topic_post1)
       user.update(suspended_till: 1.day.from_now)
 
       DirectoryItem.refresh!
@@ -90,7 +89,7 @@ describe DirectoryItem, type: :model do
     end
 
     it "includes solutions for active users" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
+      Fabricate(:solved_topic, topic: topic1, answer_post: topic_post1)
 
       DirectoryItem.refresh!
 
@@ -105,7 +104,7 @@ describe DirectoryItem, type: :model do
     context "when refreshing across dates" do
       it "updates the user's solution count from 1 to 0" do
         freeze_time 40.days.ago
-        DiscourseSolved.accept_answer!(topic_post1, Discourse.system_user)
+        Fabricate(:solved_topic, topic: topic1, answer_post: topic_post1)
 
         DirectoryItem.refresh!
 
