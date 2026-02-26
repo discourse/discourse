@@ -2121,6 +2121,39 @@ RSpec.describe Topic do
             }
           end
         end
+
+        describe "tracking state notifications" do
+          it "publishes category change when moving to a restricted category" do
+            restricted_category =
+              Fabricate(:category_with_definition, read_restricted: true, user: user)
+
+            messages =
+              MessageBus.track_publish { topic.change_category_to_id(restricted_category.id) }
+
+            delete_message = messages.find { |m| m.channel == "/delete" }
+            latest_message = messages.find { |m| m.channel == "/latest" }
+
+            expect(delete_message).to be_present
+            expect(delete_message.data["topic_id"]).to eq(topic.id)
+
+            expect(latest_message).to be_present
+            expect(latest_message.data["topic_id"]).to eq(topic.id)
+          end
+
+          it "publishes latest when moving between public categories" do
+            another_category =
+              Fabricate(:category_with_definition, read_restricted: false, user: user)
+
+            messages =
+              MessageBus.track_publish("/latest") do
+                topic.change_category_to_id(another_category.id)
+              end
+
+            expect(messages.length).to eq(1)
+            expect(messages.first.data["topic_id"]).to eq(topic.id)
+            expect(messages.first.data["payload"]["category_id"]).to eq(another_category.id)
+          end
+        end
       end
 
       context "when allow_uncategorized_topics is false" do
