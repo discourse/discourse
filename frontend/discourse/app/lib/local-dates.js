@@ -1,6 +1,6 @@
 import { optionalRequire } from "./utilities";
 
-export function applyLocalDates(dates, siteSettings, timezone) {
+export function applyLocalDates(dates, siteSettings, profileTimezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
   }
@@ -10,5 +10,5 @@ export function applyLocalDates(dates, siteSettings, timezone) {
     "applyLocalDates"
   );
 
-  _applyLocalDates(dates, siteSettings, timezone);
+  _applyLocalDates(dates, siteSettings, profileTimezone);
 }

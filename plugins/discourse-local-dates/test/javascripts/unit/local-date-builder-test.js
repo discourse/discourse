@@ -603,4 +603,82 @@ module("Unit | Library | local-date-builder", function () {
       );
     });
   });
+
+  test("option[profileTimezone] - shows timezone when browser differs from profile", function (assert) {
+    freezeTime({ date: "2020-03-22", timezone: LOS_ANGELES }, () => {
+      // User's browser is in Los Angeles, but their profile is set to Paris
+      const localDateBuilder = new LocalDateBuilder(
+        {
+          date: "2020-03-22",
+          time: "14:00",
+          timezone: PARIS,
+        },
+        LOS_ANGELES, // browser timezone (localTimezone)
+        { profileTimezone: PARIS } // user's profile timezone
+      );
+
+      const result = localDateBuilder.build();
+      assert.true(
+        result.formatted.includes("Los Angeles"),
+        "shows timezone abbreviation when browser differs from profile"
+      );
+    });
+
+    freezeTime({ date: "2020-03-22", timezone: PARIS }, () => {
+      // User's browser and profile are the same (Paris)
+      const localDateBuilder = new LocalDateBuilder(
+        {
+          date: "2020-03-22",
+          time: "14:00",
+          timezone: PARIS,
+        },
+        PARIS, // browser timezone (localTimezone)
+        { profileTimezone: PARIS } // user's profile timezone - same as browser
+      );
+
+      const result = localDateBuilder.build();
+      assert.false(
+        result.formatted.includes("Paris"),
+        "does not show timezone abbreviation when browser matches profile"
+      );
+    });
+
+    freezeTime({ date: "2020-03-22", timezone: LOS_ANGELES }, () => {
+      // No profile timezone provided (anonymous user)
+      const localDateBuilder = new LocalDateBuilder(
+        {
+          date: "2020-03-22",
+          time: "14:00",
+          timezone: PARIS,
+        },
+        LOS_ANGELES, // browser timezone (localTimezone)
+        { profileTimezone: null } // no profile timezone
+      );
+
+      const result = localDateBuilder.build();
+      assert.false(
+        result.formatted.includes("Los Angeles"),
+        "does not show timezone abbreviation when no profile timezone is set"
+      );
+    });
+
+    freezeTime({ date: "2020-03-22", timezone: LOS_ANGELES }, () => {
+      // Profile timezone is undefined (anonymous user or profile not set)
+      const localDateBuilder = new LocalDateBuilder(
+        {
+          date: "2020-03-22",
+          time: "14:00",
+          timezone: PARIS,
+        },
+        LOS_ANGELES, // browser timezone (localTimezone)
+        {} // no profileTimezone option
+      );
+
+      const result = localDateBuilder.build();
+      assert.false(
+        result.formatted.includes("Los Angeles"),
+        "does not show timezone abbreviation when profileTimezone option is not provided"
+      );
+    });
+  });
 });

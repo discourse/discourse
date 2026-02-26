@@ -1,3 +1,4 @@
+import { set } from "@ember/object";
 import { render } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -10,6 +11,14 @@ module("Integration | Component | Dates", function (hooks) {
   hooks.beforeEach(function () {
     moment.tz.guess = () => "UTC";
     this.clock = fakeTime("2025-11-01T00:00:00Z", "UTC", true);
+
+    // Set user's profile timezone to match browser timezone
+    // to avoid timezone mismatch display in tests.
+    // setupRenderingTest sets timezone to Australia/Brisbane by default.
+    set(this.currentUser, "user_option", {
+      ...this.currentUser.user_option,
+      timezone: "UTC",
+    });
   });
 
   hooks.afterEach(function () {
@@ -62,7 +71,7 @@ module("Integration | Component | Dates", function (hooks) {
   };
 
   module("dates without time", function () {
-    test("formats weekdays within range 1 day before and 2 days after the specified day", async function (assert) {
+    test("formats events within calendar range (today/tomorrow)", async function (assert) {
       await render(
         <template>
           <div data-post-id="123">
@@ -74,8 +83,8 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Sunday → Monday",
-          "`startsAt` should show full weekday names"
+          "Today 2:00 PM → Tomorrow 2:00 PM",
+          "events within calendar range should use relative formatting"
         );
     });
 
@@ -164,8 +173,8 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Yesterday 6:00 PM → Tomorrow 6:00 PM",
-          "`startsAt` should not show current year and time"
+          "Yesterday 8:00 AM → Tomorrow 8:00 AM",
+          "multi-day events should use relative dates with times"
         );
     });
 
@@ -181,8 +190,8 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Today 6:00 PM → 7:00 PM (Brisbane)",
-          "`endsAt` should show from today time to time only"
+          "Today 8:00 AM → 9:00 AM (UTC)",
+          "same-day events should show times with timezone suffix"
         );
     });
 
