@@ -90,10 +90,14 @@
     align-items: center;
   }
 
-  .select-kit .select-kit-header .selected-name .name {
-    @include ellipsis;
+  .user-primary-navigation .group-dropdown {
     max-width: 15ch;
-    display: inline-block;
+
+    .name {
+      display: inline-block;
+
+      @include ellipsis;
+    }
   }
 
   .d-header-icons .btn.icon {
