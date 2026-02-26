@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -33,8 +34,9 @@ export default class TagInfo extends Component {
   @service router;
   @service siteSettings;
 
+  @tracked tagInfo = null;
+
   loading = false;
-  tagInfo = null;
   newSynonyms = null;
   showEditControls = false;
   editing = false;
@@ -64,13 +66,16 @@ export default class TagInfo extends Component {
     });
   }
 
-  // Bridge TrackedArray content changes to the classic system so that
-  // @computed("synonyms") invalidates when synonyms are added/removed.
-  // Without this, @computed only sees reference changes, not TrackedArray
-  // content mutations.
+  // Bridge TrackedArray content changes to the classic tag system. `@tracked tagInfo` lets the getter invalidate when
+  // tagInfo is reassigned (reload). Consuming `synonyms.length` captures the TrackedArray's collection tag so the
+  // getter also invalidates on in-place mutations (push/splice/remove).
   @dependentKeyCompat
   get synonyms() {
-    return this.tagInfo?.synonyms;
+    const synonyms = this.tagInfo?.synonyms;
+    if (synonyms) {
+      synonyms.length;
+    }
+    return synonyms;
   }
 
   @discourseComputed(
