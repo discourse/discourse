@@ -9,7 +9,7 @@ RSpec.describe ListController do
 
   it "shows the user who posted the accepted answer second" do
     TopicFeaturedUsers.ensure_consistency!
-    DiscourseSolved.accept_answer!(p3, p1.user, topic: p1.topic)
+    Fabricate(:solved_topic, topic: p1.topic, answer_post: p3)
 
     get "/latest.json"
     posters = response.parsed_body["topic_list"]["topics"].first["posters"]

@@ -2,33 +2,29 @@
 
 describe DiscourseSolved::Queries do
   fab!(:user)
-  fab!(:admin)
 
   describe ".solved_count" do
     it "returns the correct count of solved topics for a user" do
       expect(described_class.solved_count(user.id)).to eq(0)
 
       topic1 = Fabricate(:topic)
-      Fabricate(:post, topic: topic1)
       post1 = Fabricate(:post, topic: topic1, user: user)
-      DiscourseSolved.accept_answer!(post1, admin)
+      Fabricate(:solved_topic, topic: topic1, answer_post: post1)
 
       expect(described_class.solved_count(user.id)).to eq(1)
 
       topic2 = Fabricate(:topic)
-      Fabricate(:post, topic: topic2)
       post2 = Fabricate(:post, topic: topic2, user: user)
-      DiscourseSolved.accept_answer!(post2, admin)
+      Fabricate(:solved_topic, topic: topic2, answer_post: post2)
 
       expect(described_class.solved_count(user.id)).to eq(2)
     end
 
     it "excludes deleted posts from the count" do
       topic = Fabricate(:topic)
-      Fabricate(:post, topic: topic)
       post = Fabricate(:post, topic: topic, user: user)
 
-      DiscourseSolved.accept_answer!(post, admin)
+      Fabricate(:solved_topic, topic: topic, answer_post: post)
       expect(described_class.solved_count(user.id)).to eq(1)
 
       post.update!(deleted_at: Time.zone.now)
@@ -37,10 +33,9 @@ describe DiscourseSolved::Queries do
 
     it "excludes deleted topics from the count" do
       topic = Fabricate(:topic)
-      Fabricate(:post, topic: topic)
       post = Fabricate(:post, topic: topic, user: user)
 
-      DiscourseSolved.accept_answer!(post, admin)
+      Fabricate(:solved_topic, topic: topic, answer_post: post)
       expect(described_class.solved_count(user.id)).to eq(1)
 
       topic.update!(deleted_at: Time.zone.now)
@@ -49,21 +44,18 @@ describe DiscourseSolved::Queries do
 
     it "excludes private messages from the count" do
       topic = Fabricate(:topic)
-      Fabricate(:post, topic: topic)
       post = Fabricate(:post, topic: topic, user: user)
-      DiscourseSolved.accept_answer!(post, admin)
+      Fabricate(:solved_topic, topic: topic, answer_post: post)
 
       pm = Fabricate(:topic, archetype: Archetype.private_message, category_id: nil)
-      Fabricate(:post, topic: pm)
       pm_post = Fabricate(:post, topic: pm, user: user)
-      DiscourseSolved.accept_answer!(pm_post, admin)
+      Fabricate(:solved_topic, topic: pm, answer_post: pm_post)
 
       expect(described_class.solved_count(user.id)).to eq(1)
     end
 
     it "returns 0 for users with no solutions" do
       expect(described_class.solved_count(user.id)).to eq(0)
-      expect(described_class.solved_count(admin.id)).to eq(0)
     end
   end
 end

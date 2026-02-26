@@ -3,24 +3,22 @@
 class DiscourseSolved::AnswerController < ::ApplicationController
   requires_plugin DiscourseSolved::PLUGIN_NAME
 
+  before_action :limit_accepts
+
   def accept
-    limit_accepts
-
-    post = Post.find(params[:id].to_i)
-
-    topic = post.topic
-    topic ||= Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
-
-    guardian.ensure_can_accept_answer!(topic, post)
-
-    accepted_answer = DiscourseSolved.accept_answer!(post, current_user, topic: topic)
-
-    render_json_dump(accepted_answer)
+    DiscourseSolved::Answer::Accept.call(params: { post_id: params[:id] }, guardian:) do |result|
+      on_success { |topic:| render_json_dump(topic.accepted_answer_post_info) }
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
+      end
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_accept_answer) { raise Discourse::InvalidAccess }
+    end
   end
 
   def unaccept
-    limit_accepts
-
     post = Post.find(params[:id].to_i)
 
     topic = post.topic
@@ -32,6 +30,8 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
     render json: success_json
   end
+
+  private
 
   def limit_accepts
     return if current_user.staff?

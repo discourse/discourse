@@ -118,14 +118,10 @@ RSpec.describe "Managing Posts solved status" do
           topic: Fabricate(:topic, title: "A topic that is not solved but open"),
         )
 
-      solved_post =
-        Fabricate(
-          :post,
-          raw: "My solution carrot",
-          topic: Fabricate(:topic, title: "A topic that will be closed", closed: true),
-        )
+      solved_topic = Fabricate(:topic, title: "A topic that will be closed", closed: true)
+      solved_post = Fabricate(:post, raw: "My solution carrot", topic: solved_topic)
 
-      DiscourseSolved.accept_answer!(solved_post, Discourse.system_user)
+      Fabricate(:solved_topic, topic: solved_topic, answer_post: solved_post)
 
       result = Search.execute("carrot")
       expect(result.posts.pluck(:id)).to eq([normal_post.id, solved_post.id])
@@ -173,7 +169,7 @@ RSpec.describe "Managing Posts solved status" do
       fab!(:post_unsolved_2) { Fabricate(:post, topic: topic_unsolved_2) }
       fab!(:post_solved) do
         post = Fabricate(:post, topic: topic_solved)
-        DiscourseSolved.accept_answer!(post, Discourse.system_user)
+        topic_solved.solved.update!(answer_post: post)
         post
       end
       fab!(:post_disabled_1) { Fabricate(:post, topic: topic_disabled_1) }
@@ -228,7 +224,7 @@ RSpec.describe "Managing Posts solved status" do
       post = create_post(category: category)
       post2 = create_post(category: category)
 
-      DiscourseSolved.accept_answer!(post, Discourse.system_user)
+      Fabricate(:solved_topic, topic: post.topic, answer_post: post)
 
       category.num_auto_bump_daily = 2
       category.save!
@@ -300,9 +296,14 @@ RSpec.describe "Managing Posts solved status" do
       op = topic.user
       user = post.user
 
-      expect { DiscourseSolved.accept_answer!(post, Discourse.system_user) }.to change {
-        user.notifications.count
-      }.by(1) & change { op.notifications.count }.by(1)
+      expect {
+        DiscourseSolved::Answer::Accept.call!(
+          params: {
+            post_id: post.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+      }.to change { user.notifications.count }.by(1) & change { op.notifications.count }.by(1)
 
       notification = user.notifications.last
       expect(notification.notification_type).to eq(Notification.types[:custom])
@@ -328,18 +329,28 @@ RSpec.describe "Managing Posts solved status" do
         topic = Fabricate(:topic, user: Fabricate(:user))
         post = Fabricate(:post, post_number: 2, topic: topic, user: author)
 
-        expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
-          author.notifications.count
-        }
+        expect {
+          DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: post.id,
+            },
+            guardian: solution_accepter.guardian,
+          )
+        }.not_to change { author.notifications.count }
       end
 
       it "does not send notification to topic author" do
         topic = Fabricate(:topic, user: author)
         post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
 
-        expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
-          author.notifications.count
-        }
+        expect {
+          DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: post.id,
+            },
+            guardian: solution_accepter.guardian,
+          )
+        }.not_to change { author.notifications.count }
       end
     end
 
@@ -361,7 +372,7 @@ RSpec.describe "Managing Posts solved status" do
       topic.trash!(Discourse.system_user)
 
       post "/solution/accept.json", params: { id: p1.id }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
 
       sign_in(Fabricate(:admin))
       post "/solution/accept.json", params: { id: p1.id }
@@ -434,7 +445,7 @@ RSpec.describe "Managing Posts solved status" do
     describe "when solved_topics_auto_close_hours is enabled" do
       before do
         SiteSetting.solved_topics_auto_close_hours = 2
-        DiscourseSolved.accept_answer!(p1, user)
+        DiscourseSolved::Answer::Accept.call!(params: { post_id: p1.id }, guardian: user.guardian)
         topic.reload
       end
 
@@ -451,7 +462,7 @@ RSpec.describe "Managing Posts solved status" do
     end
 
     it "triggers a webhook" do
-      DiscourseSolved.accept_answer!(p1, user)
+      Fabricate(:solved_topic, topic: p1.topic, answer_post: p1)
 
       Fabricate(:solved_web_hook)
       post "/solution/unaccept.json", params: { id: p1.id }
@@ -507,7 +518,7 @@ RSpec.describe "Managing Posts solved status" do
         expect(result[:success]).to eq(true)
 
         expect(p1.topic.assignment.status).to eq("New")
-        DiscourseSolved.accept_answer!(p1, user)
+        DiscourseSolved::Answer::Accept.call!(params: { post_id: p1.id }, guardian: user.guardian)
         topic.reload
 
         expect(topic.solved.answer_post_id).to eq(p1.id)
@@ -519,7 +530,7 @@ RSpec.describe "Managing Posts solved status" do
         result = assigner.assign(user)
         expect(result[:success]).to eq(true)
 
-        DiscourseSolved.accept_answer!(p1, user)
+        DiscourseSolved::Answer::Accept.call!(params: { post_id: p1.id }, guardian: user.guardian)
 
         expect(p1.reload.topic.assignment.reload.status).to eq("Done")
 
@@ -547,7 +558,12 @@ RSpec.describe "Managing Posts solved status" do
         post_response = Fabricate(:post, topic: topic_question, user: user_3)
         Assigner.new(post_response, user_3).assign(user_3)
 
-        DiscourseSolved.accept_answer!(post_response, user)
+        DiscourseSolved::Answer::Accept.call!(
+          params: {
+            post_id: post_response.id,
+          },
+          guardian: user.guardian,
+        )
 
         expect(topic_question.assignment.assigned_to_id).to eq(user_2.id)
         expect(post_response.assignment.assigned_to_id).to eq(user_3.id)
@@ -559,10 +575,10 @@ RSpec.describe "Managing Posts solved status" do
 
       describe "assigned topic reminder" do
         it "excludes solved topics when ignore_solved_topics_in_assigned_reminder is false" do
-          other_topic = Fabricate(:topic, title: "Topic that should be there")
+          other_topic = Fabricate(:topic_with_op, title: "Topic that should be there")
           post = Fabricate(:post, topic: other_topic, user: user)
 
-          other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
+          other_topic2 = Fabricate(:topic_with_op, title: "Topic that should be there2")
           post2 = Fabricate(:post, topic: other_topic2, user: user)
 
           Assigner.new(post.topic, user).assign(user)
@@ -572,7 +588,12 @@ RSpec.describe "Managing Posts solved status" do
           topics = reminder.send(:assigned_topics, user, order: :asc)
           expect(topics.to_a.length).to eq(2)
 
-          DiscourseSolved.accept_answer!(post2, Discourse.system_user)
+          DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: post2.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
           topics = reminder.send(:assigned_topics, user, order: :asc)
           expect(topics.to_a.length).to eq(2)
           expect(topics).to include(other_topic2)
@@ -589,10 +610,10 @@ RSpec.describe "Managing Posts solved status" do
         it "does not count solved topics using assignment_status_on_solve status" do
           SiteSetting.ignore_solved_topics_in_assigned_reminder = true
 
-          other_topic = Fabricate(:topic, title: "Topic that should be there")
+          other_topic = Fabricate(:topic_with_op, title: "Topic that should be there")
           post = Fabricate(:post, topic: other_topic, user: user)
 
-          other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
+          other_topic2 = Fabricate(:topic_with_op, title: "Topic that should be there2")
           post2 = Fabricate(:post, topic: other_topic2, user: user)
 
           Assigner.new(post.topic, user).assign(user)
@@ -601,7 +622,12 @@ RSpec.describe "Managing Posts solved status" do
           reminder = PendingAssignsReminder.new
           expect(reminder.send(:assigned_count_for, user)).to eq(2)
 
-          DiscourseSolved.accept_answer!(post2, Discourse.system_user)
+          DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: post2.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
           expect(reminder.send(:assigned_count_for, user)).to eq(1)
         end
       end
@@ -614,7 +640,7 @@ RSpec.describe "Managing Posts solved status" do
       topic = Fabricate(:topic, user:)
       reply = Fabricate(:post, topic:, user:, post_number: 2)
 
-      DiscourseSolved.accept_answer!(reply, user)
+      Fabricate(:solved_topic, topic:, answer_post: reply)
 
       topic.trash!(Discourse.system_user)
       reply.reload
@@ -625,20 +651,20 @@ RSpec.describe "Managing Posts solved status" do
     end
   end
 
-  describe "#accept_answer!" do
-    it "marks the post as the accepted answer correctly" do
+  describe "replacing an accepted answer" do
+    it "replaces the previous accepted answer with a new one" do
       user = Fabricate(:user, trust_level: 1)
       topic = Fabricate(:topic, user:)
       reply1 = Fabricate(:post, topic:, user:, post_number: 2)
       reply2 = Fabricate(:post, topic:, user:, post_number: 3)
 
-      DiscourseSolved.accept_answer!(reply1, user)
+      DiscourseSolved::Answer::Accept.call!(params: { post_id: reply1.id }, guardian: user.guardian)
       topic.reload
 
       expect(topic.solved.answer_post_id).to eq(reply1.id)
       expect(topic.solved.topic_timer).to eq(topic.public_topic_timer)
 
-      DiscourseSolved.accept_answer!(reply2, user)
+      DiscourseSolved::Answer::Accept.call!(params: { post_id: reply2.id }, guardian: user.guardian)
       topic.reload
 
       expect(topic.solved.answer_post_id).to eq(reply2.id)
@@ -647,17 +673,32 @@ RSpec.describe "Managing Posts solved status" do
 
   describe "user actions stream modifier" do
     it "correctly list solutions" do
-      t1 = Fabricate(:topic)
-      t2 = Fabricate(:topic)
-      t3 = Fabricate(:topic)
+      t1 = Fabricate(:topic_with_op)
+      t2 = Fabricate(:topic_with_op)
+      t3 = Fabricate(:topic_with_op)
 
       p1 = Fabricate(:post, topic: t1, user:)
       p2 = Fabricate(:post, topic: t2, user:)
       p3 = Fabricate(:post, topic: t3, user:)
 
-      DiscourseSolved.accept_answer!(p1, Discourse.system_user)
-      DiscourseSolved.accept_answer!(p2, Discourse.system_user)
-      DiscourseSolved.accept_answer!(p3, Discourse.system_user)
+      DiscourseSolved::Answer::Accept.call!(
+        params: {
+          post_id: p1.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
+      DiscourseSolved::Answer::Accept.call!(
+        params: {
+          post_id: p2.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
+      DiscourseSolved::Answer::Accept.call!(
+        params: {
+          post_id: p3.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
 
       t1.trash!(Discourse.system_user)
       t2.convert_to_private_message(Discourse.system_user)
@@ -688,7 +729,12 @@ RSpec.describe "Managing Posts solved status" do
 
       messages =
         MessageBus.track_publish("/topic/#{reply.topic.id}") do
-          DiscourseSolved.accept_answer!(reply, admin)
+          DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: reply.id,
+            },
+            guardian: admin.guardian,
+          )
           DiscourseSolved.unaccept_answer!(reply)
         end
       expect(messages.count).to eq(2)
@@ -715,7 +761,12 @@ RSpec.describe "Managing Posts solved status" do
 
       messages =
         MessageBus.track_publish("/topic/#{private_post.topic.id}") do
-          DiscourseSolved.accept_answer!(reply, admin)
+          DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: reply.id,
+            },
+            guardian: admin.guardian,
+          )
         end
 
       expect(messages.count).to eq(1)
@@ -737,7 +788,12 @@ RSpec.describe "Managing Posts solved status" do
 
       messages =
         MessageBus.track_publish("/topic/#{private_post.topic.id}") do
-          DiscourseSolved.accept_answer!(private_reply, admin)
+          DiscourseSolved::Answer::Accept.call!(
+            params: {
+              post_id: private_reply.id,
+            },
+            guardian: admin.guardian,
+          )
         end
 
       expect(messages.count).to eq(1)

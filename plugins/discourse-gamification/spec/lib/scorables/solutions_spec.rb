@@ -24,7 +24,7 @@ RSpec.describe DiscourseGamification::Solutions do
     it "scores accepted answers correctly" do
       freeze_time DateTime.parse("2024-01-01 12:00")
 
-      DiscourseSolved.accept_answer!(answer_post, Discourse.system_user)
+      Fabricate(:solved_topic, topic:, answer_post: answer_post)
 
       expect(query_results).to contain_exactly(
         have_attributes(user_id: answer_user.id, date: Time.current.beginning_of_day, points: 5.0),
@@ -36,7 +36,7 @@ RSpec.describe DiscourseGamification::Solutions do
 
     it "doesn't score self-accepted answers" do
       topic.update!(user: answer_user)
-      DiscourseSolved.accept_answer!(answer_post, Discourse.system_user)
+      Fabricate(:solved_topic, topic:, answer_post: answer_post)
 
       expect(query_results).to be_empty
     end
