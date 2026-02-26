@@ -6,6 +6,12 @@
 
 hu:
   js:
+    blocks:
+      ghost:
+        status: "Állapot"
+        in_location: "ebben:"
+        hidden: "rejtett"
+        failed: "sikertelen"
     carousel:
       go_to_slide: "%{index} elemre ugrás"
       previous: "Előző elem"
@@ -415,6 +421,8 @@ hu:
       pill: "Ajánlott"
       pm_title: "Ajánlott üzenetek"
     admin_onboarding_banner:
+      start_posting:
+        back: "Vissza"
       spread_the_word:
         action: "Hivatkozás másolása"
         copied_to_clipboard: "Hivatkozás vágólapra másolva!"
@@ -5962,23 +5970,6 @@ hu:
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
           no_new_features_error: "Hiba történt a hírfolyam betöltésekor. A korábbi új funkciókkal kapcsolatos bejelentéseket a <a href='%{url}' target='_blank'>Discourse Meta közösség</a>oldalán tekintheti meg."
           learn_more: "Tudjon meg többet..."
-          experimental: "Kísérleti"
-          only_experiments: "Csak kísérleti funkciók megjelenítése"
-          experiment_enabled: "Engedélyezte a kísérleti funkciót."
-          experiment_disabled: "Letiltotta a kísérleti funkciót."
-          feature_enabled: "Engedélyezted a funkciót."
-          feature_disabled: "Letiltottad a funkciót."
-          toggled_too_fast: "Túl gyorsan kapcsoltad a kapcsolót. Várj néhány másodpercet, mielőtt újra próbálkozol."
-          experiment_tooltip:
-            title_disabled: "Próbálja ki ezt a kísérleti funkciót"
-            title_enabled: "Kísérleti funkció kikapcsolása"
-            content_disabled: "Próbálja ki legújabb fejlesztés alatt álló funkciónkat! Még kísérleti stádiumban van, így bármikor eltávolíthatjuk. Bármikor leiratkozhat.<br/><br/>Ennek a módosítása minden felhasználó számára engedélyezi a funkciót."
-            content_enabled: "Ennek módosítása letiltja a funkciót minden felhasználó számára."
-          feature_tooltip:
-            title_disabled: "Próbálja ki ezt a funkciót"
-            title_enabled: "Kapcsolja ki a funkciót"
-            content_disabled: "Próbálja ki ezt az új funkciót! Bármikor leiratkozhat.<br/><br/>Megváltoztatása esetén a funkció minden felhasználó számára engedélyezve lesz."
-            content_enabled: "Ennek módosítása letiltja a funkciót minden felhasználó számára."
         last_checked: "Utoljára ellenőrizve"
         refresh_problems: "Újratöltés"
         no_problems: "Nem találtunk semmilyen problémát."

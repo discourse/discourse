@@ -6,6 +6,11 @@
 
 et:
   js:
+    blocks:
+      ghost:
+        status: "Staatus"
+        hidden: "peidetud"
+        failed: "ebaõnnestunud"
     number:
       format:
         separator: "."
@@ -245,6 +250,9 @@ et:
       title: "Uued ja lugemata teemad"
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Tagasi"
     about:
       edit: "Muuda seda lehekülge"
       simple_title: "Teave"

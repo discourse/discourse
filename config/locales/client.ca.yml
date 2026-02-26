@@ -6,6 +6,11 @@
 
 ca:
   js:
+    blocks:
+      ghost:
+        status: "Estat"
+        hidden: "amagat"
+        failed: "fallits"
     number:
       format:
         separator: "."
@@ -292,6 +297,9 @@ ca:
       pill: "Missatges relacionats"
     suggested_topics:
       pm_title: "Missatges recomanats"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Enrere"
     about:
       edit: "Edita aquesta pàgina"
       simple_title: "Quant a"

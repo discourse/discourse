@@ -6,6 +6,12 @@
 
 he:
   js:
+    blocks:
+      ghost:
+        status: "מצב"
+        in_location: "בתוך"
+        hidden: "מוסתר"
+        failed: "נכשל"
     carousel:
       go_to_slide: "מעבר לשקופית %{index}"
       previous: "השקופית הקודמת"
@@ -479,6 +485,8 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
+      start_posting:
+        back: "חזרה"
       spread_the_word:
         action: "העתקת קישור"
         copied_to_clipboard: "קישור הועתק ללוח הגזירים!"
@@ -6417,23 +6425,6 @@ he:
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
           no_new_features_error: "אירעה שגיאה בטעינת ערוץ העדכונים. ניתן לראות הכרזות קודמות על יכולות חדשות ב<a href='%{url}' target='_blank'>קהילת Discourse Meta</a>."
           learn_more: "מידע נוסף…"
-          experimental: "ניסיוני"
-          only_experiments: "להציג יכולות ניסיוניות בלבד"
-          experiment_enabled: "הפעלת את היכולת הניסיונית."
-          experiment_disabled: "השבתת את היכולת הניסיונית."
-          feature_enabled: "הפעלת את היכולת."
-          feature_disabled: "השבתת את היכולת."
-          toggled_too_fast: "החלפת את מצב המתג מהר מדי. נא לחכות כמה שניות בטרם החלפת המצב שוב."
-          experiment_tooltip:
-            title_disabled: "התנסות ביכולת הניסיונית הזאת"
-            title_enabled: "כיבוי יכולת ניסיונית"
-            content_disabled: "מזמינים אותך לעשות סיבוב על היכולת החדשה שאנו מפתחים! היא עדיין בשלבי ניסוי, לכן יכול להיות שנסיר אותה בכל רגע נתון. אפשר לכבות אותה בכל רגע נתון.<br/><br/>שינוי ההגדרה הזאת יפעיל את היכולת לכל המשתמשים."
-            content_enabled: "שינוי מצב ההגדרה הזאת ישבית את היכולת לכל המשתמשים."
-          feature_tooltip:
-            title_disabled: "התנסות ביכולת הזאת"
-            title_enabled: "כיבוי היכולת"
-            content_disabled: "כדאי להתנסות ביכולת החדשה! אפשר להפסיק את ההתנסות בכל רגע נתון.<br/><br/>שינוי ההגדרה הזאת יפעיל את היכולת לכל המשתמשים."
-            content_enabled: "שינוי מצב ההגדרה הזאת ישבית את היכולת לכל המשתמשים."
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
         no_problems: "לא נמצאו בעיות."

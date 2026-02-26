@@ -6,6 +6,12 @@
 
 sq:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "në"
+        hidden: "fshehur"
+        failed: "dështoi"
     number:
       format:
         separator: "."
@@ -296,6 +302,8 @@ sq:
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
     admin_onboarding_banner:
+      start_posting:
+        back: "Kthehu mbrapa"
       spread_the_word:
         action: "Kopjoni lidhjen"
         copied_to_clipboard: "Linku u kopjua në memo!"

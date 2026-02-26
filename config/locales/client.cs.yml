@@ -6,6 +6,12 @@
 
 cs:
   js:
+    blocks:
+      ghost:
+        status: "Stav"
+        in_location: "v"
+        hidden: "skrytý"
+        failed: "neúspěšný"
     carousel:
       go_to_slide: "Přejít na snímek č. %{index}"
       previous: "Předchozí snímek"
@@ -482,6 +488,8 @@ cs:
       pm_title: "Doporučené zprávy"
     admin_onboarding_banner:
       launch_in_easy_steps: "Odstartujte v %{step_count} snadných krocích"
+      start_posting:
+        back: "Zpět"
       spread_the_word:
         action: "Kopírovat odkaz"
         copied_to_clipboard: "Odkaz zkopírován do schránky!"
@@ -6521,23 +6529,6 @@ cs:
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
           no_new_features_error: "Při načítání zdroje došlo k chybě. Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>komunitě Discourse Meta</a>."
           learn_more: "Více informací..."
-          experimental: "Experimentální"
-          only_experiments: "Zobrazit pouze experimentální funkce"
-          experiment_enabled: "Povolili jste experimentální funkci."
-          experiment_disabled: "Vypnuli jste experimentální funkci."
-          feature_enabled: "Funkci jste povolili."
-          feature_disabled: "Funkci jste zakázali."
-          toggled_too_fast: "Přepínač jste přepnuli příliš rychle. Počkejte prosím několik vteřin před dalším pokusem."
-          experiment_tooltip:
-            title_disabled: "Vyzkoušejte tuto experimentální funkci"
-            title_enabled: "Vypněte experimentální funkci"
-            content_disabled: "Vyzkoušejte naši nejnovější funkci ve vývoji! Je stále v experimentální fázi, takže ji můžeme kdykoli odstranit. Můžete se odhlásit, kdykoli budete chtít.<br/><br/>Přepnutím ji povolíte pro všechny uživatele."
-            content_enabled: "Změna tohoto nastavení vypnete funkci pro všechny uživatele."
-          feature_tooltip:
-            title_disabled: "Vyzkoušejte tuto funkci"
-            title_enabled: "Vypnout funkci"
-            content_disabled: "Vyzkoušejte tuto novou funkci! Můžete ji vypnout, kdykoli budete chtít.<br/><br/>Přepnutím povolíte funkci povolí pro všechny uživatele."
-            content_enabled: "Změna tohoto nastavení vypnete funkci pro všechny uživatele."
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."

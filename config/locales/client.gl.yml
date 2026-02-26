@@ -6,6 +6,11 @@
 
 gl:
   js:
+    blocks:
+      ghost:
+        status: "Estado"
+        hidden: "agochado"
+        failed: "fallou"
     number:
       format:
         separator: ","
@@ -243,6 +248,9 @@ gl:
       pill: "Mensaxes relacionadas"
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Volver"
     about:
       edit: "Editar esta páxina"
       simple_title: "Verbo de"

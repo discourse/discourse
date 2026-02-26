@@ -6,6 +6,12 @@
 
 de:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "in"
+        hidden: "versteckt"
+        failed: "fehlgeschlagen"
     carousel:
       go_to_slide: "Gehe zu Folie %{index}"
       previous: "Vorherige Folie"
@@ -329,6 +335,8 @@ de:
       theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plug-in '%{name}'"
       unknown_source: "Eines deiner Themes oder Plug-ins"
+    dev_tools:
+      disable_dev_tools: "Entwicklertools deaktivieren"
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -429,6 +437,7 @@ de:
         title: "Beginne mit dem Erstellen von Beiträgen"
         description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
         action: "Fragen zum Einstieg"
+        back: "Zurück"
         icebreakers:
           fun_facts:
             title: "Was sind ein paar interessante Fakten über dich?"
@@ -6063,23 +6072,6 @@ de:
           no_new_features_found: "Es gibt keine Einträge im Feed oder der ausgewählte Filter hat keine Ergebnisse zurückgegeben. Du kannst frühere Ankündigungen neuer Funktionen in der <a href='%{url}' target='_blank'>Discourse Meta Community</a> sehen."
           no_new_features_error: "Es gab einen Fehler beim Laden des Feeds. Du kannst frühere Ankündigungen neuer Funktionen in der <a href='%{url}' target='_blank'>Discourse Meta Community</a> sehen."
           learn_more: "Mehr erfahren …"
-          experimental: "Experimentell"
-          only_experiments: "Nur experimentelle Funktionen anzeigen"
-          experiment_enabled: "Du hast die experimentelle Funktion aktiviert."
-          experiment_disabled: "Du hast die experimentelle Funktion deaktiviert."
-          feature_enabled: "Du hast die Funktion aktiviert."
-          feature_disabled: "Du hast die Funktion deaktiviert."
-          toggled_too_fast: "Du hast den Umschalter zu schnell betätigt. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
-          experiment_tooltip:
-            title_disabled: "Probiere diese experimentelle Funktion aus"
-            title_enabled: "Experimentelle Funktion ausschalten"
-            content_disabled: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiv."
-            content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
-          feature_tooltip:
-            title_disabled: "Probiere diese Funktion aus"
-            title_enabled: "Deaktiviere diese Funktion"
-            content_disabled: "Teste diese neue Funktion! Du kannst sie jederzeit wieder deaktivieren, wenn du möchtest.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiviert."
-            content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."

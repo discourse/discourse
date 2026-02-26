@@ -382,8 +382,6 @@ pl_PL:
           enable_translations: "Włącz automatyczne tłumaczenia"
         stats:
           title: "Statystyki tłumaczeń"
-          complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
-          incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
           backfill_message: "<a href='%{settingsUrl}'>Ustawienia uzupełniania</a> są skonfigurowane tak, aby tłumaczyć wszystkie posty po %{date} — szacuje się, że zajmie to %{eta}."
           eta_minutes:
