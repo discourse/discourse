@@ -125,6 +125,11 @@ globalThis.rollup = function (modules, opts) {
               {
                 code: chunk.code,
                 map: JSON.stringify(chunk.map),
+                name: chunk.name,
+                isEntry: chunk.isEntry,
+                imports: chunk.imports.filter((i) =>
+                  output.find((c) => c.fileName === i)
+                ),
               },
             ];
           })

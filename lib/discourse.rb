@@ -458,7 +458,7 @@ module Discourse
       if plugin.js_asset_exists?
         if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
           assets << {
-            name: "plugins/#{plugin.directory_name}/main",
+            name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main"),
             plugin: plugin,
             type_module: true,
             importmap_name: "discourse/plugins/#{plugin.directory_name}",
@@ -479,7 +479,7 @@ module Discourse
       if args[:include_admin_asset] && plugin.admin_js_asset_exists?
         if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
           assets << {
-            name: "plugins/#{plugin.directory_name}/admin",
+            name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin"),
             plugin: plugin,
             type_module: true,
           }
@@ -492,7 +492,7 @@ module Discourse
            plugin.test_js_asset_exists?
         if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
           assets << {
-            name: "plugins/#{plugin.directory_name}/test",
+            name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test"),
             plugin: plugin,
             type_module: true,
           }

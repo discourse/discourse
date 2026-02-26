@@ -2,22 +2,12 @@
 
 module Plugin
   class JsManager
-    def self.digested_logical_path_for(script)
-      return if !script.start_with?("plugins/")
-      _, plugin_name, filename = script.split("/")
+    def self.digested_logical_path_for(plugin_name, entrypoint_name)
+      manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_name}/manifest.json"
+      manifest = JSON.parse(File.read(manifest_path))
+      entrypoint_filename = manifest[entrypoint_name]["fileName"]
 
-      # Todo: optimize this lookup
-      Rails
-        .application
-        .assets
-        .load_path
-        .assets
-        .find do |a|
-          a.logical_path.to_s.match?(
-            /^js\/plugins\/#{plugin_name}_#{filename}-\w{8}\.digested\.js$/,
-          )
-        end
-        &.logical_path
+      "js/plugins/#{entrypoint_filename.sub(/\.js$/, "")}"
     end
 
     def compile!
@@ -33,8 +23,9 @@ module Plugin
       print "Building #{plugin.directory_name}... "
       start = Time.now
 
-      output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/js/plugins"
-      map_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/map/plugins"
+      base_output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}"
+      js_dir = "#{base_output_dir}/js/plugins"
+      map_dir = "#{base_output_dir}/map/plugins"
 
       entrypoints = { "main" => "assets/javascripts", "admin" => "admin/assets/javascripts" }
       entrypoints["test"] = "test/javascripts" if Rails.env.local?
@@ -84,7 +75,7 @@ module Plugin
 
       expected_entrypoints =
         entrypoints_config.keys.map do |name|
-          "#{output_dir}/#{filename_prefix}#{name}#{filename_suffix}.js"
+          "#{js_dir}/#{filename_prefix}#{name}#{filename_suffix}.js"
         end
 
       files_exist = expected_entrypoints.all? { |path| File.exist?(path) }
@@ -101,20 +92,28 @@ module Plugin
           )
         result = compiler.compile!
 
-        FileUtils.mkdir_p(output_dir)
+        FileUtils.mkdir_p(js_dir)
         FileUtils.mkdir_p(map_dir)
-        result.each do |file, info|
-          code = info["code"]
-          code += "\n//# sourceMappingURL=../../map/plugins/#{file}.map\n" if info["map"]
-          File.write("#{output_dir}/#{file}", code)
 
-          File.write("#{map_dir}/#{file}.map", info["map"]) if info["map"]
+        manifest = {}
+        result.each do |file_name, info|
+          code = info["code"]
+          code += "\n//# sourceMappingURL=../../map/plugins/#{file_name}.map\n" if info["map"]
+          File.write("#{js_dir}/#{file_name}", code)
+
+          File.write("#{map_dir}/#{file_name}.map", info["map"]) if info["map"]
+
+          if info["isEntry"]
+            manifest[info["name"]] = { fileName: file_name, imports: info["imports"] }
+          end
         end
+
+        File.write("#{base_output_dir}/manifest.json", JSON.pretty_generate(manifest))
       end
 
       # Delete any old versions
       Dir
-        .glob("#{output_dir}/**/*")
+        .glob("#{base_output_dir}/*/*/*")
         .reject { |path| path.include?(filename_suffix) || path.include?("_extra") }
         .each { |path| FileUtils.rm_rf(path) }
 
