@@ -569,6 +569,39 @@ RSpec.describe TopicUser do
     expect(tu.last_read_post_number).to eq(p2.post_number)
   end
 
+  describe ".update_bookmarked" do
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic:) }
+
+    it "clears stale bookmarked flags when no bookmarks exist" do
+      tu = Fabricate(:topic_user, topic:, bookmarked: true)
+
+      TopicUser.update_bookmarked
+
+      expect(tu.reload.bookmarked).to eq(false)
+    end
+
+    it "does not clear bookmarked when a bookmark exists" do
+      tu = Fabricate(:topic_user, topic:, bookmarked: true)
+      Fabricate(:bookmark, user: tu.user, bookmarkable: post)
+
+      TopicUser.update_bookmarked
+
+      expect(tu.reload.bookmarked).to eq(true)
+    end
+
+    it "scopes to a specific topic when topic_id is provided" do
+      other_topic = Fabricate(:topic)
+      tu = Fabricate(:topic_user, topic:, bookmarked: true)
+      other_tu = Fabricate(:topic_user, topic: other_topic, user: tu.user, bookmarked: true)
+
+      TopicUser.update_bookmarked(topic_id: topic.id)
+
+      expect(tu.reload.bookmarked).to eq(false)
+      expect(other_tu.reload.bookmarked).to eq(true)
+    end
+  end
+
   describe "mailing_list_mode" do
     it "will receive email notification for every topic" do
       user1 = Fabricate(:user)
