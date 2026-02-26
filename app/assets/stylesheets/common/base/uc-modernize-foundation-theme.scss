@@ -266,10 +266,9 @@
   }
 
   // Select Kit
-  .select-kit .select-kit-header,
+  .select-kit .select-kit-header:not(.composer-actions-btn),
   .d-date-input .date-picker {
     height: var(--button-height);
-    border: var(--d-button-default-border);
   }
 
   .select-kit.is-expanded .select-kit-filter.is-expanded {
