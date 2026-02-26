@@ -101,14 +101,6 @@ RSpec.describe ApplicationHelper do
         expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
-      it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
-        helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip, br"
-        link = helper.preload_script("discourse/tests/theme_qunit_ember_jquery")
-        expect(link).to include(
-          %r{https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery-\w{8}.js},
-        )
-      end
-
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
         expect(helper.preload_script("start-discourse")).to include(
