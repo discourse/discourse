@@ -568,6 +568,58 @@ RSpec.describe UploadCreator do
             expect(result.original_sha1).not_to eq(nil)
           end
         end
+
+        context "with primary upload deduplication" do
+          let(:opts) { { for_private_message: true } }
+
+          it "deduplicates when a primary exists with same original_sha1 and secure status" do
+            # Create first upload which becomes the primary
+            first_upload = UploadCreator.new(file, filename, opts).create_for(user.id)
+            expect(first_upload.primary_upload_id).to be_nil
+            expect(first_upload.original_sha1).to be_present
+            primary_url = first_upload.url
+
+            # Create second upload with same file - should reference the primary
+            second_upload =
+              UploadCreator.new(file_from_fixtures(filename), filename, opts).create_for(user.id)
+
+            expect(second_upload.id).not_to eq(first_upload.id)
+            expect(second_upload.primary_upload_id).to eq(first_upload.id)
+            expect(second_upload.url).to eq(primary_url)
+            expect(second_upload.original_sha1).to eq(first_upload.original_sha1)
+          end
+
+          it "creates separate primaries for different security contexts" do
+            # Create secure upload
+            secure_upload = UploadCreator.new(file, filename, opts).create_for(user.id)
+            expect(secure_upload.secure).to eq(true)
+            expect(secure_upload.primary_upload_id).to be_nil
+
+            # Create public upload with same file
+            public_opts = { for_site_setting: true }
+            public_upload =
+              UploadCreator.new(file_from_fixtures(filename), filename, public_opts).create_for(
+                admin.id,
+              )
+
+            expect(public_upload.secure).to eq(false)
+            expect(public_upload.primary_upload_id).to be_nil
+            expect(public_upload.original_sha1).to eq(secure_upload.original_sha1)
+            expect(public_upload.url).not_to eq(secure_upload.url)
+          end
+
+          it "does not deduplicate thumbnails" do
+            thumb_opts = opts.merge(type: "thumbnail")
+
+            first_thumb = UploadCreator.new(file, filename, thumb_opts).create_for(user.id)
+            second_thumb =
+              UploadCreator.new(file_from_fixtures(filename), filename, thumb_opts).create_for(
+                user.id,
+              )
+
+            expect(second_thumb.primary_upload_id).to be_nil
+          end
+        end
       end
     end
 

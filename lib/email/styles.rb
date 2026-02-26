@@ -326,7 +326,17 @@ module Email
           upload_shas = {}
           stripped_media.each do |div|
             url = div["data-stripped-secure-media"] || div["data-stripped-secure-upload"]
-            upload_shas[url] = Upload.sha1_from_long_url(url)
+            # Prefer data-base62-sha1 for unique upload identification with deduplication
+            # When uploads share storage URLs, data-base62-sha1 preserves unique identity
+            sha1 =
+              if (base62 = div["data-base62-sha1"]).present?
+                Upload.sha1_from_base62(base62)
+              else
+                Upload.sha1_from_long_url(url)
+              end
+            # Use base62_sha1 as key when present to handle deduped uploads with same URL
+            key = div["data-base62-sha1"].presence || url
+            upload_shas[key] = sha1
           end
           upload_shas
         end
@@ -341,11 +351,11 @@ module Email
       uploads = stripped_secure_image_uploads
       upload_shas = stripped_upload_sha_map
       stripped_media.each do |div|
-        upload =
-          uploads.find do |upl|
-            upl.sha1 ==
-              upload_shas[div["data-stripped-secure-media"] || div["data-stripped-secure-upload"]]
-          end
+        # Use same key logic as stripped_upload_sha_map: prefer base62_sha1 for deduped uploads
+        key =
+          div["data-base62-sha1"].presence ||
+            (div["data-stripped-secure-media"] || div["data-stripped-secure-upload"])
+        upload = uploads.find { |upl| upl.sha1 == upload_shas[key] }
         next if !upload
 
         if attachments[attachments_index[upload.sha1]]

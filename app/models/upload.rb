@@ -16,6 +16,8 @@ class Upload < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :access_control_post, class_name: "Post"
+  belongs_to :primary_upload, class_name: "Upload", optional: true
+  has_many :dependent_uploads, class_name: "Upload", foreign_key: :primary_upload_id
 
   # when we access this post we don't care if the post
   # is deleted
@@ -55,6 +57,18 @@ class Upload < ActiveRecord::Base
     UserProfile.where(profile_background_upload_id: self.id).update_all(
       profile_background_upload_id: nil,
     )
+
+    # If this is a primary upload, transfer primary status to a dependent
+    if primary_upload_id.nil? && dependent_uploads.exists?
+      new_primary = dependent_uploads.order(:id).first
+      remaining = dependent_uploads.where.not(id: new_primary.id)
+
+      new_primary.update_columns(primary_upload_id: nil, url: self.url)
+      remaining.update_all(primary_upload_id: new_primary.id)
+
+      # Mark that we transferred ownership so destroy skips S3 removal
+      @transferred_to_new_primary = true
+    end
   end
 
   after_destroy do
@@ -209,7 +223,12 @@ class Upload < ActiveRecord::Base
 
   def destroy
     Upload.transaction do
-      Discourse.store.remove_upload(self)
+      # Skip S3 removal if:
+      # - This is a dependent upload (file belongs to the primary)
+      # - This primary will transfer ownership to a dependent (before_destroy sets the flag)
+      will_transfer = primary_upload_id.nil? && dependent_uploads.exists?
+      should_remove_file = primary_upload_id.nil? && !will_transfer
+      Discourse.store.remove_upload(self) if should_remove_file
       super
     end
   end
@@ -241,6 +260,29 @@ class Upload < ActiveRecord::Base
       return nil
     end
     upload
+  end
+
+  # Find a primary upload for the given content hash and security context.
+  # Primary uploads have primary_upload_id = nil and are the canonical storage
+  # location for deduplicated uploads.
+  def self.find_primary_for(original_sha1:, secure:)
+    return nil if original_sha1.blank?
+    where(original_sha1: original_sha1, secure: secure, primary_upload_id: nil).first
+  end
+
+  # Check if this upload is a primary (has dependents or could have dependents)
+  def primary?
+    primary_upload_id.nil? && original_sha1.present?
+  end
+
+  # Check if this upload is a dependent (references a primary)
+  def dependent?
+    primary_upload_id.present?
+  end
+
+  # Get the actual storage URL (from primary if dependent)
+  def storage_url
+    primary_upload&.url || url
   end
 
   def self.secure_uploads_url?(url)
@@ -460,6 +502,10 @@ class Upload < ActiveRecord::Base
     self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
+  def self.sha1_from_base62(base62)
+    self.sha1_from_base62_encoded(base62)
+  end
+
   def self.sha1_from_long_url(url)
     $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
   end
@@ -496,14 +542,58 @@ class Upload < ActiveRecord::Base
     end
 
     secure_status_did_change = self.secure? != mark_secure
+
+    # Handle deduplication context transitions before changing secure status
+    if secure_status_did_change && primary_upload_id.present?
+      handle_dedup_context_transition(mark_secure)
+    end
+
     self.update(secure_params(mark_secure, reason, source))
 
     if secure_status_did_change && Discourse.store.external?
-      Discourse.store.update_upload_access_control(self)
+      # Skip ACL update if we're still a dependent (we switched to a new primary)
+      Discourse.store.update_upload_access_control(self) if primary_upload_id.nil?
       sync_optimized_videos_secure_status(mark_secure)
     end
 
     secure_status_did_change
+  end
+
+  def handle_dedup_context_transition(new_secure_status)
+    return if primary_upload_id.nil?
+
+    # Try to find a primary with matching secure status
+    new_primary = Upload.find_primary_for(original_sha1: original_sha1, secure: new_secure_status)
+
+    if new_primary
+      # Switch to the new primary
+      update_columns(primary_upload_id: new_primary.id, url: new_primary.url)
+    elsif Discourse.store.external?
+      # No matching primary exists and using S3 - copy file and become a primary
+      copy_from_primary_and_become_primary(new_secure_status)
+    else
+      # Local store - just break the relationship, file will be handled by store
+      update_columns(primary_upload_id: nil)
+    end
+  end
+
+  def copy_from_primary_and_become_primary(new_secure_status)
+    return if primary_upload_id.nil?
+
+    store = Discourse.store
+    source_path = store.get_path_for_upload(self)
+
+    # Generate our own destination path using our sha1
+    extension = self.extension.present? ? ".#{self.extension}" : File.extname(original_filename)
+    dest_path = store.get_path_for("original", id, sha1, extension)
+    dest_path = File.join(store.upload_path, dest_path) if Rails.configuration.multisite
+
+    # Copy the file to our own path
+    store.copy_file(source: source_path, destination: dest_path, secure: new_secure_status)
+
+    # Update URL to our own path and clear primary relationship
+    new_url = File.join(store.absolute_base_url, dest_path)
+    update_columns(primary_upload_id: nil, url: new_url)
   end
 
   def sync_optimized_videos_secure_status(mark_secure)
@@ -695,29 +785,30 @@ end
 # Table name: uploads
 #
 #  id                           :integer          not null, primary key
-#  user_id                      :integer          not null
-#  original_filename            :string           not null
-#  filesize                     :bigint           not null
-#  width                        :integer
-#  height                       :integer
-#  url                          :string           not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  sha1                         :string(40)
-#  origin                       :string(2000)
-#  retain_hours                 :integer
-#  extension                    :string(10)
-#  thumbnail_width              :integer
-#  thumbnail_height             :integer
-#  etag                         :string
-#  secure                       :boolean          default(FALSE), not null
-#  access_control_post_id       :bigint
-#  original_sha1                :string
 #  animated                     :boolean
-#  verification_status          :integer          default(1), not null
+#  dominant_color               :text
+#  etag                         :string
+#  extension                    :string(10)
+#  filesize                     :bigint           not null
+#  height                       :integer
+#  origin                       :string(2000)
+#  original_filename            :string           not null
+#  original_sha1                :string
+#  retain_hours                 :integer
+#  secure                       :boolean          default(FALSE), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
-#  dominant_color               :text
+#  sha1                         :string(40)
+#  thumbnail_height             :integer
+#  thumbnail_width              :integer
+#  url                          :string           not null
+#  verification_status          :integer          default(1), not null
+#  width                        :integer
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  access_control_post_id       :bigint
+#  primary_upload_id            :bigint
+#  user_id                      :integer          not null
 #
 # Indexes
 #
@@ -728,7 +819,13 @@ end
 #  index_uploads_on_id                      (id) WHERE (dominant_color IS NULL)
 #  index_uploads_on_id_and_url              (id,url)
 #  index_uploads_on_original_sha1           (original_sha1)
+#  index_uploads_on_primary_lookup          (original_sha1,secure) WHERE ((primary_upload_id IS NULL) AND (original_sha1 IS NOT NULL))
+#  index_uploads_on_primary_upload_id       (primary_upload_id)
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (primary_upload_id => uploads.id) ON DELETE => nullify
 #
