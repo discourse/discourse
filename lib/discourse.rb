@@ -459,6 +459,7 @@ module Discourse
         if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
           assets << {
             name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main"),
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
             plugin: plugin,
             type_module: true,
             importmap_name: "discourse/plugins/#{plugin.directory_name}",
@@ -480,6 +481,7 @@ module Discourse
         if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
           assets << {
             name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin"),
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
             plugin: plugin,
             type_module: true,
           }
@@ -493,6 +495,7 @@ module Discourse
         if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
           assets << {
             name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test"),
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
             plugin: plugin,
             type_module: true,
           }

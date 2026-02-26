@@ -5,10 +5,14 @@
     <%= generate_import_map(plugin_assets) %>
   </script>
   <%- plugin_assets.each do |asset| %>
-    <%if asset[:type_module] %>
+    <% if asset[:type_module] %>
       <link rel="modulepreload" href="<%= script_asset_path(asset[:name]) %>" nonce="<%= csp_nonce_placeholder %>" data-plugin-name="<%= asset[:plugin].directory_name %>">
     <% else %>
       <%= preload_script asset[:name] %>
+    <% end %>
+
+    <% asset[:imports]&.each do |import| %>
+      <link rel="modulepreload" href="<%= script_asset_path(import) %>" nonce="<%= csp_nonce_placeholder %>">
     <% end %>
   <%- end %>
 <%- end %>

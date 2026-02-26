@@ -7,7 +7,15 @@ module Plugin
       manifest = JSON.parse(File.read(manifest_path))
       entrypoint_filename = manifest[entrypoint_name]["fileName"]
 
-      "js/plugins/#{entrypoint_filename.sub(/\.js$/, "")}"
+      "js/plugins/#{entrypoint_filename.delete_suffix(".js")}"
+    end
+
+    def self.import_paths_for(plugin_name, entrypoint_name)
+      manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_name}/manifest.json"
+      manifest = JSON.parse(File.read(manifest_path))
+      imports = manifest[entrypoint_name]["imports"]
+
+      imports.map { "js/plugins/#{it.delete_suffix(".js")}" }
     end
 
     def compile!
