@@ -1,5 +1,24 @@
 en:
   js:
+    blocks:
+      ghost:
+        # Section titles
+        status: "Status"
+        conditions: "Conditions"
+        arguments: "Arguments"
+        container_args: "Container Args"
+        in_location: "in"
+        # Status text (used in badge, header, and status section)
+        hidden: "hidden"
+        not_registered: "not registered"
+        no_visible_children: "no visible children"
+        failed: "failed"
+      ghost_reasons:
+        # Longer hint messages shown at bottom of ghost tooltip
+        optional_missing_hint: "This optional block is not rendered because it's not registered."
+        no_visible_children_hint: "This container block is not rendered because none of its children are visible."
+        condition_failed_hint: "This block is not rendered because its conditions failed."
+        head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -355,6 +374,8 @@ en:
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
     broken_transformer_alert: "There was an error. Your site may not work properly."
+    broken_block_alert: "A block configuration error was detected. Check browser console for details."
+    broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
@@ -362,6 +383,20 @@ en:
       theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plugin '%{name}'"
       unknown_source: "One of your themes or plugins"
+
+    dev_tools:
+      drag_to_move: "Drag to move"
+      toggle_plugin_outlet_debug: "Toggle plugin outlet debug"
+      toggle_block_debug: "Toggle block debug"
+      block_debug:
+        outlet_boundaries: "Outlet boundaries"
+        visual_overlay: "Visual overlay"
+        ghost_blocks: "Ghost blocks"
+        condition_debugging: "Condition debugging"
+      toggle_safe_mode: "Toggle safe mode"
+      toggle_verbose_localization: "Toggle verbose localization"
+      toggle_mobile_view: "Toggle mobile view"
+      disable_dev_tools: "Disable dev tools"
 
     s3:
       regions:
@@ -467,6 +502,13 @@ en:
         title: "Start Posting"
         description: "Give people something to talk about together"
         action: "Icebreaker ideas"
+        choose_option: "How would you like to start?"
+        predefined_topics: "Icebreaker templates"
+        predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
+        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
+        use_predefined: "Browse templates"
+        start_with_this: "Start with this"
+        back: "Back"
         icebreakers:
           fun_facts:
             title: "What are some fun facts about you?"
@@ -480,7 +522,6 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
-
 
       spread_the_word:
         title: "Spread the Word!"
@@ -6449,23 +6490,6 @@ en:
           no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           learn_more: "Learn more..."
-          experimental: "Experimental"
-          only_experiments: "Only show experimental features"
-          experiment_enabled: "You have enabled the experimental feature."
-          experiment_disabled: "You have disabled the experimental feature."
-          feature_enabled: "You have enabled the feature."
-          feature_disabled: "You have disabled the feature."
-          toggled_too_fast: "You have switched the toggle too fast. Please wait a few seconds before trying again."
-          experiment_tooltip:
-            title_disabled: "Try this experimental feature"
-            title_enabled: "Turn off experimental feature"
-            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
-            content_enabled: "Changing this will disable the feature for all users."
-          feature_tooltip:
-            title_disabled: "Try this feature"
-            title_enabled: "Turn off feature"
-            content_disabled: "Give this new feature a spin! You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
-            content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
         refresh_problems: "Refresh"

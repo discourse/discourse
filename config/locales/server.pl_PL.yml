@@ -300,6 +300,7 @@ pl_PL:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
+    diff_too_complex: "Różnica jest zbyt złożona, aby obliczyć ją bezpiecznie. Spróbuj wprowadzić mniejsze zmiany."
     messages:
       invalid_locale: "%{invalid_locale} to nieprawidłowe ustawienia regionalne"
       too_long_validation:
@@ -1865,6 +1866,8 @@ pl_PL:
     max_oneboxes_per_post: "Ustaw maksymalną liczbę oneboxów, które można umieścić w jednym poście. Oneboxy zapewniają podgląd powiązanej treści bezpośrednio w poście."
     facebook_app_access_token: "Token wygenerowany z Twojego identyfikatora aplikacji Facebook i sekret. Używany do generowania osadzonych oneboxów z serwisu Instagram."
     github_onebox_access_tokens: "Mapowanie organizacji lub użytkownika GitHub na token dostępu GitHub, który jest używany do generowania oneboxów GitHub dla prywatnych repozytoriów, commitów, pull requestów, zgłoszeń i zawartości plików. Bez tego tylko publiczne adresy URL GitHub będą miały onebox."
+    reddit_onebox_client_id: "Identyfikator klienta OAuth API Reddit używany do uwierzytelniania skrzynek Reddit. Utwórz aplikację typu „skrypt” na stronie reddit.com/prefs/apps, aby uzyskać dane uwierzytelniające."
+    reddit_onebox_client_secret: "Klucz klienta OAuth API Reddit używany do uwierzytelniania skrzynek OneBox w Reddit. Znajduje się w aplikacji typu „skrypt” utworzonej na stronie reddit.com/prefs/apps."
     logo: "Obraz logo w lewym górnym rogu witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku kształtu większym niż 3: 1. Jeśli pole pozostanie puste, wyświetlony zostanie tekst tytułu witryny."
     logo_small: "Mały obraz logo w lewym górnym rogu witryny, widoczny podczas przewijania w dół. Użyj kwadratowego obrazu 120 × 120. Jeśli pole pozostanie puste, wyświetlony zostanie glif domowy."
     digest_logo: "Alternatywne logo użyte w górnej części podsumowania e-mail witryny. Użyj szerokiego obrazu prostokąta. Nie używaj obrazu SVG. Jeśli pole pozostanie puste, zostanie użyty obraz z ustawienia „logo”."

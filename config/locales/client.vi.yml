@@ -6,6 +6,12 @@
 
 vi:
   js:
+    blocks:
+      ghost:
+        status: "Trạng thái"
+        in_location: "trong"
+        hidden: "ẩn"
+        failed: "thất bại"
     carousel:
       go_to_slide: "Đến slide %{index}"
       previous: "Slide trước"
@@ -383,6 +389,8 @@ vi:
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
+      start_posting:
+        back: "Quay lại"
       spread_the_word:
         action: "Sao chép link"
     about:
@@ -5682,23 +5690,6 @@ vi:
           subtitle: "Chúng tôi liên tục phát hành các tính năng và cải tiến mới. Trang này nêu bật những điểm chính, nhưng bạn có thể nhấn vào 'Tìm hiểu thêm' để xem ghi chú phát hành chi tiết."
           no_new_features_error: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
           learn_more: "Tìm hiểu thêm..."
-          experimental: "Thí nghiệm"
-          only_experiments: "Chỉ hiển thị các tính năng thử nghiệm"
-          experiment_enabled: "Bạn đã kích hoạt tính năng thử nghiệm."
-          experiment_disabled: "Bạn đã tắt tính năng thử nghiệm."
-          feature_enabled: "Bạn đã kích hoạt tính năng."
-          feature_disabled: "Bạn đã tắt tính năng."
-          toggled_too_fast: "Bạn đã chuyển đổi quá nhanh. Vui lòng đợi vài giây trước khi thử lại."
-          experiment_tooltip:
-            title_disabled: "Thử tính năng thử nghiệm này"
-            title_enabled: "Tắt tính năng thử nghiệm"
-            content_disabled: "Hãy dùng thử tính năng mới nhất mà chúng tôi đang phát triển! Tính năng này vẫn đang trong giai đoạn thử nghiệm, vì vậy chúng tôi có thể loại bỏ nó bất cứ lúc nào. Bạn có thể hủy kích hoạt bất cứ khi nào bạn muốn.<br/><br/>Thay đổi tùy chọn này sẽ kích hoạt tính năng cho tất cả thành viên."
-            content_enabled: "Việc thay đổi này sẽ vô hiệu hóa tính năng đối với tất cả thành viên."
-          feature_tooltip:
-            title_disabled: "Thử tính năng này"
-            title_enabled: "Tắt tính năng"
-            content_disabled: "Hãy thử tính năng mới này! Bạn có thể tắt bất cứ lúc nào bạn muốn.<br/><br/>Thay đổi tùy chọn này sẽ kích hoạt tính năng cho tất cả thành viên."
-            content_enabled: "Việc thay đổi này sẽ vô hiệu hóa tính năng đối với tất cả thành viên."
         last_checked: "Kiểm tra lần cuối"
         refresh_problems: "Làm mới"
         no_problems: "Không phát hiện vấn đề"

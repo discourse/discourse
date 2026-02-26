@@ -7,12 +7,6 @@
     margin-bottom: 1em;
   }
 
-  .flagged-post-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-
   .status {
     color: var(--primary-medium);
 
@@ -378,24 +372,6 @@
     }
   }
 
-  .reviewable-post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 100%;
-
-    .reviewable-reply-to {
-      display: flex;
-      align-items: center;
-      color: var(--primary-medium);
-      font-size: 0.9em;
-
-      .d-icon {
-        margin-right: 0.5em;
-      }
-    }
-  }
-
   .post-contents {
     width: 100%;
     min-width: 0; // Flexbox fix
@@ -548,25 +524,6 @@
     font-weight: bold;
   }
 
-  .reviewable-contents {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 1.5rem 0 1rem;
-    background: var(--secondary);
-    padding: 1rem;
-
-    @include viewport.until(sm) {
-      .reviewable-post-header,
-      .post-body {
-        max-width: 100%;
-
-        p {
-          overflow-x: scroll;
-        }
-      }
-    }
-  }
-
   .reviewable-actions {
     display: flex;
     flex-wrap: wrap;
@@ -581,13 +538,6 @@
 
 .reviewable-stale {
   opacity: 0.7;
-}
-
-.reviewable-deleted {
-  .reviewable-contents .post-contents .post-body {
-    background-color: var(--danger-low-mid);
-    padding: 0.5em;
-  }
 }
 
 .blur-images {

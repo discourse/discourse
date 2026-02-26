@@ -6,6 +6,12 @@
 
 hr:
   js:
+    blocks:
+      ghost:
+        status: "Statust"
+        in_location: "u"
+        hidden: "skriveno"
+        failed: "neuspješno"
     number:
       format:
         separator: "."
@@ -436,6 +442,8 @@ hr:
       pill: "Predloženo"
       pm_title: "Predložene poruke"
     admin_onboarding_banner:
+      start_posting:
+        back: "Natrag"
       spread_the_word:
         action: "Kopirajte poveznicu"
     about:
@@ -5806,23 +5814,6 @@ hr:
           title: "Što je novo?"
           subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."
           learn_more: "Saznajte više..."
-          experimental: "Eksperimentalno"
-          only_experiments: "Prikaži samo eksperimentalne značajke"
-          experiment_enabled: "Uspješno ste uključili eksperimentalnu značajku."
-          experiment_disabled: "Uspješno ste isključili eksperimentalnu značajku."
-          feature_enabled: "Omogućili ste značajku."
-          feature_disabled: "Onemogućili ste značajku."
-          toggled_too_fast: "Prebrzо ste promijenili postavku. Pričekajte nekoliko sekundi prije ponovnog pokušaja."
-          experiment_tooltip:
-            title_disabled: "Isprobajte ovu eksperimentalnu značajku"
-            title_enabled: "Isključite eksperimentalnu značajku"
-            content_disabled: "Isprobajte našu najnoviju značajku koja je u razvoju! Još je u eksperimentalnoj fazi, pa je možemo ukloniti u bilo kojem trenutku. Možete je isključiti bilo kada.<br/><br/>Promjena ove postavke omogućit će značajku za sve korisnike."
-            content_enabled: "Promjenom ove postavke onemogućit ćete značajku za sve korisnike."
-          feature_tooltip:
-            title_disabled: "Isprobajte ovu značajku"
-            title_enabled: "Isključite značajku"
-            content_disabled: "Isprobajte ovu novu značajku! Možete je isključiti bilo kada.<br/><br/>Promjena ove postavke omogućit će značajku za sve korisnike."
-            content_enabled: "Promjenom ove postavke onemogućit ćete značajku za sve korisnike."
         last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
         no_problems: "Nisu pronađeni problemi."

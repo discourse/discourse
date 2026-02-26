@@ -6,6 +6,12 @@
 
 sr:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "u"
+        hidden: "sakriveno"
+        failed: "neuspešno"
     number:
       format:
         separator: ","
@@ -323,6 +329,9 @@ sr:
       title: "Novi i Nepročitane teme"
       pill: "Predloženo"
       pm_title: "Predložene poruke"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Nazad"
     about:
       edit: "Izmeni ovu stranu"
       simple_title: "O nama"

@@ -6,6 +6,12 @@
 
 pt_BR:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "em"
+        hidden: "oculto"
+        failed: "falha"
     number:
       format:
         separator: ","
@@ -403,6 +409,8 @@ pt_BR:
       pill: "Sugestões"
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
+      start_posting:
+        back: "Voltar"
       spread_the_word:
         action: "Copiar link"
         copied_to_clipboard: "Link copiado para área de transferência!"
@@ -5645,15 +5653,6 @@ pt_BR:
           title: "Novidades?"
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
           learn_more: "Saiba mais..."
-          experimental: "Experimental"
-          only_experiments: "Exibir apenas recursos experimentais"
-          experiment_enabled: "Você ativou o recurso experimental."
-          experiment_disabled: "Você desativou o recurso experimental."
-          experiment_tooltip:
-            title_enabled: "Desativar este recurso experimental"
-            content_enabled: "Altere esta opção para desativar este recurso para todos(as) os(as) usuários(as)."
-          feature_tooltip:
-            content_enabled: "Altere esta opção para desativar este recurso para todos(as) os(as) usuários(as)."
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema foi encontrado."

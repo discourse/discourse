@@ -6,6 +6,22 @@
 
 pl_PL:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        conditions: "Warunki"
+        arguments: "Argumenty"
+        container_args: "Argumenty kontenera"
+        in_location: "w"
+        hidden: "ukryty"
+        not_registered: "niezarejestrowany"
+        no_visible_children: "brak widocznych podrzędnych"
+        failed: "nieudany"
+      ghost_reasons:
+        optional_missing_hint: "Ten opcjonalny blok nie jest renderowany, ponieważ nie jest zarejestrowany."
+        no_visible_children_hint: "Ten blok kontenera nie jest renderowany, ponieważ żaden z jego elementów podrzędnych nie jest widoczny."
+        condition_failed_hint: "Ten blok nie został wyrenderowany, ponieważ jego warunki nie zostały spełnione."
+        head_hidden_tail_hint: "Ten blok nie jest renderowany, ponieważ w kontenerze `head` najpierw został renderowany inny blok."
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -379,12 +395,27 @@ pl_PL:
     broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
+    broken_block_alert: "Wykryto błąd konfiguracji bloku. Szczegóły znajdziesz w konsoli przeglądarki."
+    broken_block_factory_alert: "Nie udało się załadować bloku. Niektóre elementy interfejsu użytkownika mogą nie wyświetlać się poprawnie."
     critical_deprecation:
       notice: "<b>[Uwaga administratora]</b> %{source} zawiera kod, który wymaga aktualizacji. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>dowiedz się więcej</em></a>)"
       theme_source: "Motyw <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Wtyczka „%{name}”"
       unknown_source: "Jeden z Twoich motywów lub wtyczek"
+    dev_tools:
+      drag_to_move: "Przeciągnij, aby przesunąć"
+      toggle_plugin_outlet_debug: "Przełącz debugowanie wyjścia wtyczki"
+      toggle_block_debug: "Przełącz debugowanie bloku"
+      block_debug:
+        outlet_boundaries: "Granice wyjścia"
+        visual_overlay: "Nakładka wizualna"
+        ghost_blocks: "Bloki duchów"
+        condition_debugging: "Debugowanie warunków"
+      toggle_safe_mode: "Przełącz tryb awaryjny"
+      toggle_verbose_localization: "Przełącz szczegółową lokalizację"
+      toggle_mobile_view: "Przełącz widok mobilny"
+      disable_dev_tools: "Wyłącz narzędzia programistyczne"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -493,6 +524,13 @@ pl_PL:
         title: "Rozpocznij publikowanie"
         description: "Daj ludziom temat do wspólnej rozmowy"
         action: "Pomysły na przełamanie lodów"
+        choose_option: "Jak chcesz zacząć?"
+        predefined_topics: "Szablony przełamujące lody"
+        predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
+        predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
+        use_predefined: "Przeglądaj szablony"
+        start_with_this: "Zacznij od tego"
+        back: "Wstecz"
         icebreakers:
           fun_facts:
             title: "Jakie są ciekawostki na Twój temat?"
@@ -3710,8 +3748,8 @@ pl_PL:
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Zastrzeż tematy"
         relist_topics: "Odśwież listę tematów"
-        reset_bump_dates: "Zresetuj daty ważności"
-        defer: "Oznacz jako nieprzeczytane"
+        reset_bump_dates: "Zresetuj datę podbicia"
+        defer: "Oznacz jako nieprzeczytany"
         delete: "Usuń tematy"
         delete_topics_count:
           one: "Usuń temat"
@@ -3729,13 +3767,13 @@ pl_PL:
           many: "Czy na pewno chcesz usunąć %{count} wpisów?"
           other: "Czy na pewno chcesz usunąć %{count} wpisów?"
         dismiss: "Wyczyść"
-        dismiss_read: "Wyczyść nieprzeczytane"
+        dismiss_read: "Odrzuć wszystkie nieprzeczytane"
         dismiss_read_with_selected:
-          one: "Odrzuć %{count} nieprzeczytane"
+          one: "Odrzuć %{count} nieprzeczytany"
           few: "Odrzuć %{count} nieprzeczytane"
           many: "Odrzuć %{count} nieprzeczytanych"
           other: "Odrzuć %{count} nieprzeczytanych"
-        dismiss_button: "Wyczyść…"
+        dismiss_button: "Odrzuć…"
         dismiss_button_with_selected:
           one: "Odrzuć (%{count})…"
           few: "Odrzuć (%{count})…"
@@ -6624,23 +6662,6 @@ pl_PL:
           no_new_features_found: "Brak elementów w kanale lub wybrany filtr nie zwrócił żadnych wyników. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
           no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
           learn_more: "Dowiedz się więcej..."
-          experimental: "Eksperymentalne"
-          only_experiments: "Pokaż tylko funkcje eksperymentalne"
-          experiment_enabled: "Włączono funkcję eksperymentalną."
-          experiment_disabled: "Wyłączono funkcję eksperymentalną."
-          feature_enabled: "Włączyłeś tę funkcję."
-          feature_disabled: "Wyłączyłeś tę funkcję."
-          toggled_too_fast: "Przełączyłeś przełącznik zbyt szybko. Odczekaj kilka sekund przed ponowną próbą."
-          experiment_tooltip:
-            title_disabled: "Wypróbuj tę eksperymentalną funkcję"
-            title_enabled: "Wyłącz funkcję eksperymentalną"
-            content_disabled: "Wypróbuj naszą najnowszą, rozwijaną funkcję! Jest jeszcze w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz zrezygnować, kiedy tylko chcesz.<br/><br/>Zmiana tej opcji spowoduje włączenie tej funkcji dla wszystkich użytkowników."
-            content_enabled: "Zmiana tej opcji spowoduje wyłączenie funkcji dla wszystkich użytkowników."
-          feature_tooltip:
-            title_disabled: "Wypróbuj tę funkcję"
-            title_enabled: "Wyłącz funkcję"
-            content_disabled: "Wypróbuj tę nową funkcję! Możesz z niej zrezygnować, kiedy tylko chcesz.<br/><br/>Zmiana tej opcji spowoduje włączenie tej funkcji dla wszystkich użytkowników."
-            content_enabled: "Zmiana tej opcji spowoduje wyłączenie funkcji dla wszystkich użytkowników."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."

@@ -1,5 +1,14 @@
+/**
+ * Registry of available behavior transformers in the application.
+ * Behavior transformers allow plugins and themes to modify or enhance the specific behaviors and interactions.
+ * These transformers are invoked at key points to allow customization of the application behavior.
+ *
+ * USE ONLY lowercase names
+ *
+ * @constant {ReadonlyArray<string>} BEHAVIOR_TRANSFORMERS - An immutable array of behavior transformer identifiers
+ */
+// eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
-  // use only lowercase names
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",
@@ -10,8 +19,18 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "topic-list-item-click",
 ]);
 
+/**
+ * Registry of available value transformers in the application.
+ * Value transformers allow plugins and themes to modify or replace specific values before they are used by the application.
+ * Each transformer represents a specific value or computation that can be customized.
+ *
+ * USE ONLY lowercase names
+ *
+ * @constant {ReadonlyArray<string>} VALUE_TRANSFORMERS - An immutable array of value transformer identifiers
+ */
+// eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
-  // use only lowercase names
+  "admin-onboarding-start-posting-options",
   "admin-plugin-icon",
   "admin-reports-show-query-params",
   "bulk-select-in-nav-controls",
@@ -25,13 +44,13 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-editor-reply-placeholder",
   "composer-force-editor-mode",
   "composer-message-components",
-  "composer-reply-options-user-link-name",
   "composer-reply-options-user-avatar-template",
+  "composer-reply-options-user-link-name",
   "composer-save-button-label",
   "composer-service-cannot-submit-post",
   "composer-toggles-class",
-  "create-topic-label",
   "create-topic-button-class",
+  "create-topic-label",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",
   "flag-button-render-decision",

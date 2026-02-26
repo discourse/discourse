@@ -1,7 +1,11 @@
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Onboarding Banner", function (needs) {
@@ -74,15 +78,59 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert.dom(".admin-onboarding-banner").doesNotExist();
   });
 
-  test("it can complete `start_posting` step", async function (assert) {
+  test("it can complete `start_posting` step with predefined data", async function (assert) {
     const step = withStep("start_posting", assert);
     await visit("/");
 
     step.isNotChecked();
 
     await step.clickAction();
+
+    assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
+    await click(".predefined-topic-options-modal__card:last-child");
+
     await click(".create");
     await visit("/");
+
+    step.isChecked();
+  });
+
+  test("it can complete `start_posting` step with registered posting-options", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "admin-onboarding-start-posting-options",
+        ({ value }) => {
+          value.push(
+            class ExtraOption extends StartPostingOption {
+              @service appEvents;
+
+              name = "extra-option";
+              title = "admin_onboarding_banner.start_posting.extra_option";
+              body =
+                "admin_onboarding_banner.start_posting.extra_option_description";
+              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
+
+              @action
+              onSelect() {
+                this.appEvents.trigger("admin-onboarding:posting-complete");
+                this.args.closeModal();
+              }
+            }
+          );
+          return value;
+        }
+      );
+    });
+
+    const step = withStep("start_posting", assert);
+    await visit("/");
+
+    step.isNotChecked();
+
+    await step.clickAction();
+
+    assert.dom(".option").exists({ count: 2 });
+    await click(".extra-option .btn");
 
     step.isChecked();
   });

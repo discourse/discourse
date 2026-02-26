@@ -6,6 +6,12 @@
 
 lt:
   js:
+    blocks:
+      ghost:
+        status: "Statusas"
+        in_location: "į"
+        hidden: "paslėptas"
+        failed: "nepavyko"
     carousel:
       go_to_slide: "Eiti į skaidrę %{index}"
       previous: "Ankstesnė skaidrė"
@@ -343,6 +349,8 @@ lt:
       pill: "Siūloma"
       pm_title: "Rekomenduojamos žinutės"
     admin_onboarding_banner:
+      start_posting:
+        back: "Atgal"
       spread_the_word:
         action: "Nukopijuoti nuorodą"
         copied_to_clipboard: "Nuoroda nukopijuota į iškarpinę!"
