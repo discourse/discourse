@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
@@ -63,8 +62,8 @@ export default class EmailsController extends Controller {
     );
   }
 
-  @discourseComputed()
-  frequencyEstimate() {
+  @computed()
+  get frequencyEstimate() {
     let estimate = this.get("model.mailing_list_posts_per_day");
     if (!estimate || estimate < 2) {
       return i18n("user.mailing_list_mode.few_per_day");
@@ -75,16 +74,16 @@ export default class EmailsController extends Controller {
     }
   }
 
-  @discourseComputed()
-  mailingListModeOptions() {
+  @computed()
+  get mailingListModeOptions() {
     return [
       { name: this.frequencyEstimate, value: 1 },
       { name: i18n("user.mailing_list_mode.individual_no_echo"), value: 2 },
     ];
   }
 
-  @discourseComputed()
-  emailFrequencyInstructions() {
+  @computed()
+  get emailFrequencyInstructions() {
     return this.siteSettings.email_time_window_mins
       ? i18n("user.email.frequency", {
           count: this.siteSettings.email_time_window_mins,

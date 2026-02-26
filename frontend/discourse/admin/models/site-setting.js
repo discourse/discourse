@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
@@ -8,7 +8,7 @@ import {
 } from "discourse/admin/lib/constants";
 import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const AUTO_REFRESH_ON_SAVE = [
@@ -85,14 +85,14 @@ export default class SiteSetting extends EmberObject {
     this.buffered = BufferedProxy.create({ content: this });
   }
 
-  @discourseComputed("setting")
-  staffLogFilter(setting) {
-    if (!setting) {
+  @computed("setting")
+  get staffLogFilter() {
+    if (!this.setting) {
       return;
     }
 
     return {
-      subject: setting,
+      subject: this.setting,
       action_name: "change_site_setting",
     };
   }

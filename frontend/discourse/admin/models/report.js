@@ -1,8 +1,7 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import { durationTiny, number } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
@@ -205,14 +204,20 @@ export default class Report extends EmberObject {
   description_link = null;
   description = null;
 
-  @discourseComputed("type", "start_date", "end_date")
-  reportUrl(type, start_date, end_date) {
-    start_date = moment.utc(start_date).locale("en").format("YYYY-MM-DD");
+  @computed("type", "start_date", "end_date")
+  get reportUrl() {
+    const start_date = moment
+      .utc(this.start_date)
+      .locale("en")
+      .format("YYYY-MM-DD");
 
-    end_date = moment.utc(end_date).locale("en").format("YYYY-MM-DD");
+    const end_date = moment
+      .utc(this.end_date)
+      .locale("en")
+      .format("YYYY-MM-DD");
 
     return getURL(
-      `/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`
+      `/admin/reports/${this.type}?start_date=${start_date}&end_date=${end_date}`
     );
   }
 
@@ -251,33 +256,33 @@ export default class Report extends EmberObject {
     }
   }
 
-  @discourseComputed("data", "average")
-  todayCount() {
+  @computed("data", "average")
+  get todayCount() {
     return this.valueAt(0);
   }
 
-  @discourseComputed("data", "average")
-  yesterdayCount() {
+  @computed("data", "average")
+  get yesterdayCount() {
     return this.valueAt(1);
   }
 
-  @discourseComputed("data", "average")
-  sevenDaysAgoCount() {
+  @computed("data", "average")
+  get sevenDaysAgoCount() {
     return this.valueAt(7);
   }
 
-  @discourseComputed("data", "average")
-  thirtyDaysAgoCount() {
+  @computed("data", "average")
+  get thirtyDaysAgoCount() {
     return this.valueAt(30);
   }
 
-  @discourseComputed("data", "average")
-  lastSevenDaysCount() {
+  @computed("data", "average")
+  get lastSevenDaysCount() {
     return this.averageCount(7, this.valueFor(1, 7));
   }
 
-  @discourseComputed("data", "average")
-  lastThirtyDaysCount() {
+  @computed("data", "average")
+  get lastThirtyDaysCount() {
     return this.averageCount(30, this.valueFor(1, 30));
   }
 
@@ -285,85 +290,81 @@ export default class Report extends EmberObject {
     return this.average ? value / count : value;
   }
 
-  @discourseComputed("yesterdayCount", "higher_is_better")
-  yesterdayTrend(yesterdayCount, higherIsBetter) {
-    return this._computeTrend(this.valueAt(2), yesterdayCount, higherIsBetter);
-  }
-
-  @discourseComputed("lastSevenDaysCount", "higher_is_better")
-  sevenDaysTrend(lastSevenDaysCount, higherIsBetter) {
+  @computed("yesterdayCount", "higher_is_better")
+  get yesterdayTrend() {
     return this._computeTrend(
-      this.valueFor(8, 14),
-      lastSevenDaysCount,
-      higherIsBetter
+      this.valueAt(2),
+      this.yesterdayCount,
+      this.higher_is_better
     );
   }
 
-  @discourseComputed("data")
-  currentTotal(data) {
-    return data.reduce((cur, pair) => cur + pair.y, 0);
+  @computed("lastSevenDaysCount", "higher_is_better")
+  get sevenDaysTrend() {
+    return this._computeTrend(
+      this.valueFor(8, 14),
+      this.lastSevenDaysCount,
+      this.higher_is_better
+    );
   }
 
-  @discourseComputed("data", "currentTotal")
-  currentAverage(data, total) {
-    return makeArray(data).length === 0
+  @computed("data")
+  get currentTotal() {
+    return this.data.reduce((cur, pair) => cur + pair.y, 0);
+  }
+
+  @computed("data", "currentTotal")
+  get currentAverage() {
+    return makeArray(this.data).length === 0
       ? 0
-      : parseFloat((total / parseFloat(data.length)).toFixed(1));
+      : parseFloat(
+          (this.currentTotal / parseFloat(this.data.length)).toFixed(1)
+        );
   }
 
-  @discourseComputed("trend", "higher_is_better")
-  trendIcon(trend, higherIsBetter) {
-    return this._iconForTrend(trend, higherIsBetter);
+  @computed("trend", "higher_is_better")
+  get trendIcon() {
+    return this._iconForTrend(this.trend, this.higher_is_better);
   }
 
-  @discourseComputed("sevenDaysTrend", "higher_is_better")
-  sevenDaysTrendIcon(sevenDaysTrend, higherIsBetter) {
-    return this._iconForTrend(sevenDaysTrend, higherIsBetter);
+  @computed("sevenDaysTrend", "higher_is_better")
+  get sevenDaysTrendIcon() {
+    return this._iconForTrend(this.sevenDaysTrend, this.higher_is_better);
   }
 
-  @discourseComputed("thirtyDaysTrend", "higher_is_better")
-  thirtyDaysTrendIcon(thirtyDaysTrend, higherIsBetter) {
-    return this._iconForTrend(thirtyDaysTrend, higherIsBetter);
+  @computed("thirtyDaysTrend", "higher_is_better")
+  get thirtyDaysTrendIcon() {
+    return this._iconForTrend(this.thirtyDaysTrend, this.higher_is_better);
   }
 
-  @discourseComputed("yesterdayTrend", "higher_is_better")
-  yesterdayTrendIcon(yesterdayTrend, higherIsBetter) {
-    return this._iconForTrend(yesterdayTrend, higherIsBetter);
+  @computed("yesterdayTrend", "higher_is_better")
+  get yesterdayTrendIcon() {
+    return this._iconForTrend(this.yesterdayTrend, this.higher_is_better);
   }
 
-  @discourseComputed(
-    "prev_period",
-    "currentTotal",
-    "currentAverage",
-    "higher_is_better"
-  )
-  trend(prev, currentTotal, currentAverage, higherIsBetter) {
-    const total = this.average ? currentAverage : currentTotal;
-    return this._computeTrend(prev, total, higherIsBetter);
+  @computed("prev_period", "currentTotal", "currentAverage", "higher_is_better")
+  get trend() {
+    const total = this.average ? this.currentAverage : this.currentTotal;
+    return this._computeTrend(this.prev_period, total, this.higher_is_better);
   }
 
-  @discourseComputed(
+  @computed(
     "prev30Days",
     "prev_period",
     "lastThirtyDaysCount",
     "higher_is_better"
   )
-  thirtyDaysTrend(
-    prev30Days,
-    prev_period,
-    lastThirtyDaysCount,
-    higherIsBetter
-  ) {
+  get thirtyDaysTrend() {
     return this._computeTrend(
-      prev30Days ?? prev_period,
-      lastThirtyDaysCount,
-      higherIsBetter
+      this.prev30Days ?? this.prev_period,
+      this.lastThirtyDaysCount,
+      this.higher_is_better
     );
   }
 
-  @discourseComputed("type")
-  method(type) {
-    if (type === "time_to_first_response") {
+  @computed("type")
+  get method() {
+    if (this.type === "time_to_first_response") {
       return "average";
     } else {
       return "sum";
@@ -382,9 +383,10 @@ export default class Report extends EmberObject {
     }
   }
 
-  @discourseComputed("prev_period", "currentTotal", "currentAverage")
-  trendTitle(prev, currentTotal, currentAverage) {
-    let current = this.average ? currentAverage : currentTotal;
+  @computed("prev_period", "currentTotal", "currentAverage")
+  get trendTitle() {
+    let prev = this.prev_period;
+    let current = this.average ? this.currentAverage : this.currentTotal;
     let percent = this.percentChangeString(prev, current);
 
     if (this.average) {
@@ -427,50 +429,50 @@ export default class Report extends EmberObject {
     return title.join(" ");
   }
 
-  @discourseComputed("yesterdayCount")
-  yesterdayCountTitle(yesterdayCount) {
-    return this.changeTitle(this.valueAt(2), yesterdayCount, "yesterday");
+  @computed("yesterdayCount")
+  get yesterdayCountTitle() {
+    return this.changeTitle(this.valueAt(2), this.yesterdayCount, "yesterday");
   }
 
-  @discourseComputed("lastSevenDaysCount")
-  sevenDaysCountTitle(lastSevenDaysCount) {
+  @computed("lastSevenDaysCount")
+  get sevenDaysCountTitle() {
     return this.changeTitle(
       this.valueFor(8, 14),
-      lastSevenDaysCount,
+      this.lastSevenDaysCount,
       "two_weeks_ago"
     );
   }
 
-  @discourseComputed("prev30Days", "prev_period")
-  canDisplayTrendIcon(prev30Days, prev_period) {
-    return prev30Days ?? prev_period;
+  @computed("prev30Days", "prev_period")
+  get canDisplayTrendIcon() {
+    return this.prev30Days ?? this.prev_period;
   }
 
-  @discourseComputed("prev30Days", "prev_period", "lastThirtyDaysCount")
-  thirtyDaysCountTitle(prev30Days, prev_period, lastThirtyDaysCount) {
+  @computed("prev30Days", "prev_period", "lastThirtyDaysCount")
+  get thirtyDaysCountTitle() {
     return this.changeTitle(
-      prev30Days ?? prev_period,
-      lastThirtyDaysCount,
+      this.prev30Days ?? this.prev_period,
+      this.lastThirtyDaysCount,
       "thirty_days_ago"
     );
   }
 
-  @discourseComputed("data")
-  sortedData(data) {
-    return this.xAxisIsDate ? [...data].reverse() : [...data];
+  @computed("data")
+  get sortedData() {
+    return this.xAxisIsDate ? [...this.data].reverse() : [...this.data];
   }
 
-  @discourseComputed("data")
-  xAxisIsDate() {
+  @computed("data")
+  get xAxisIsDate() {
     if (!this.data[0]) {
       return false;
     }
     return this.data && this.data[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/);
   }
 
-  @discourseComputed("labels")
-  computedLabels(labels) {
-    return labels.map((label) => {
+  @computed("labels")
+  get computedLabels() {
+    return this.labels.map((label) => {
       const type = label.type || "string";
 
       let mainProperty;
