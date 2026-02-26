@@ -2,8 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import { tagFor, track, updateTag } from "@glimmer/validator";
 import { meta as metaFor, peekMeta } from "@ember/-internals/meta";
 import { TrackedDescriptor } from "@ember/-internals/metal";
+import { trackedArray, trackedSet } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { TrackedArray, TrackedSet } from "@ember-compat/tracked-built-ins";
 
 /**
  * Define a tracked property on an object without needing to use the @tracked decorator.
@@ -130,7 +130,7 @@ export class DeferredTrackedSet {
   #set;
 
   constructor(value) {
-    this.#set = new TrackedSet(value);
+    this.#set = trackedSet(value);
   }
 
   has(value) {
@@ -180,6 +180,27 @@ export class DeferredTrackedSet {
   }
 }
 
+// Capture the prototype shared by all tracked arrays returned by Ember's
+// trackedArray(). The constructor returns a Proxy whose getPrototypeOf trap
+// yields this prototype, so isPrototypeOf can detect them without access
+// to the (unexported) TrackedArray class.
+const trackedArrayPrototype = Object.getPrototypeOf(trackedArray());
+
+/**
+ * Checks whether a value is a tracked array created by Ember's native
+ * `trackedArray()` from `@ember/reactive/collections`.
+ *
+ * This does NOT detect instances of the legacy `TrackedArray` class from
+ * `@ember-compat/tracked-built-ins`. Only arrays produced by Ember's
+ * `trackedArray()` function share the prototype used for detection.
+ *
+ * @param {unknown} value - The value to check.
+ * @returns {boolean} `true` if the value is a tracked array, `false` otherwise.
+ */
+export function isTrackedArray(value) {
+  return value != null && trackedArrayPrototype.isPrototypeOf(value);
+}
+
 /**
  * Converts a value to TrackedArray if needed and validates the type.
  *
@@ -193,12 +214,12 @@ function ensureTrackedArray(value, propertyName) {
     return value;
   }
 
-  if (value instanceof TrackedArray) {
+  if (isTrackedArray(value)) {
     return value;
   }
 
   if (Array.isArray(value)) {
-    return new TrackedArray(value);
+    return trackedArray(value);
   }
 
   throw new Error(
