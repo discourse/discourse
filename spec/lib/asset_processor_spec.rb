@@ -405,4 +405,45 @@ RSpec.describe AssetProcessor do
       )
     end.to raise_error(AssetProcessor::TranspileError)
   end
+
+  it "todo" do
+    mod = <<~JS.chomp
+      export default "module 1";
+    JS
+
+    admin_mod = <<~JS.chomp
+      import comp from "./my-component";
+      console.log(comp);
+      export default "module 2";
+    JS
+
+    result =
+      AssetProcessor.new.rollup(
+        {
+          "discourse/components/my-component.gjs" => mod,
+          "discourse/components/my-admin-component.gjs" => admin_mod,
+        },
+        {
+          themeId: 22,
+          entrypoints: {
+            main: {
+              modules: %w[discourse/components/my-component.gjs],
+            },
+            admin: {
+              modules: %w[discourse/components/my-admin-component.gjs],
+            },
+          },
+        },
+      )
+
+    expect(result["main.js"]["imports"].length).to eq(1)
+    expect(result["main.js"]["imports"].first).to include("chunk")
+    expect(result["main.js"]["name"]).to eq("main")
+    expect(result["main.js"]["isEntry"]).to eq(true)
+
+    expect(result["admin.js"]["imports"].length).to eq(1)
+    expect(result["admin.js"]["imports"].first).to include("chunk")
+    expect(result["admin.js"]["name"]).to eq("admin")
+    expect(result["admin.js"]["isEntry"]).to eq(true)
+  end
 end
