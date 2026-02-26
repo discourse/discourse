@@ -13,7 +13,7 @@ import {
 } from "discourse/lib/array-tools";
 import deprecated from "discourse/lib/deprecated";
 import { deepMerge } from "discourse/lib/object";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
@@ -68,9 +68,9 @@ export default class PostStream extends RestModel {
   @tracked stagingPost = false;
   @tracked timelineLookup = [];
 
-  @trackedArray posts = [];
-  @trackedArray stream = [];
-  @trackedArray userFilters = [];
+  @autoTrackedArray posts = [];
+  @autoTrackedArray stream = [];
+  @autoTrackedArray userFilters = [];
 
   _identityMap = {};
 

@@ -10,7 +10,7 @@ import FieldInput from "discourse/admin/components/schema-setting/field";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
 import { gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -22,9 +22,9 @@ export default class SchemaSettingNewEditor extends Component {
   @tracked activeIndex = 0;
   @tracked saveButtonDisabled = false;
   @tracked validationErrorMessage;
-  @trackedArray activeDataPaths = [];
-  @trackedArray activeSchemaPaths = [];
-  @trackedArray history = [];
+  @autoTrackedArray activeDataPaths = [];
+  @autoTrackedArray activeSchemaPaths = [];
+  @autoTrackedArray history = [];
 
   inputFieldObserver = new Map();
   data = this.#trackNestedArrays(cloneJSON(this.args.setting.value));

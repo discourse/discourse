@@ -4,7 +4,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
 
 export default class BulkSelectHelper {
@@ -18,7 +18,7 @@ export default class BulkSelectHelper {
   @tracked autoAddBookmarksToBulkSelect = false;
   @tracked lastCheckedElementId = null;
 
-  @trackedArray selected;
+  @autoTrackedArray selected;
 
   constructor(context, topics) {
     if (topics) {

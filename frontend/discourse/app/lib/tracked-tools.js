@@ -217,10 +217,10 @@ function ensureTrackedArray(value, propertyName) {
  *
  * @example
  * class TodoList {
- *   @trackedArray todos = ['Buy milk', 'Walk dog'];
+ *   @autoTrackedArray todos = ['Buy milk', 'Walk dog'];
  * }
  */
-export function trackedArray(target, key, desc) {
+export function autoTrackedArray(target, key, desc) {
   if (desc.initializer) {
     const originalInitializer = desc.initializer;
     desc.initializer = function () {
@@ -236,7 +236,7 @@ export function trackedArray(target, key, desc) {
     isTracked: true,
   });
 
-  function trackedArraySetter(value) {
+  function autoTrackedArraySetter(value) {
     set.call(this, ensureTrackedArray(value, key));
   }
 
@@ -249,7 +249,7 @@ export function trackedArray(target, key, desc) {
   // that are already @tracked). The getter captures the TrackedArray's
   // collection tag via track(), then updates tagFor(obj, key) so that
   // @computed properties watching this key see content changes.
-  function trackedArrayGetter() {
+  function autoTrackedArrayGetter() {
     // Read the value outside track() to avoid a tag cycle. get.call(this)
     // consumes the property's own tag (tagFor(this, key)) via the tracked
     // storage. If we captured that inside track() and then called updateTag
@@ -276,12 +276,12 @@ export function trackedArray(target, key, desc) {
   // https://github.com/emberjs/ember.js/blob/d4f7c5c4075bc5b04736e0e965468bdbe6da135c/packages/%40ember/-internals/metal/lib/tracked.ts#L185
   metaFor(target).writeDescriptors(
     key,
-    new TrackedDescriptor(trackedArrayGetter, trackedArraySetter)
+    new TrackedDescriptor(autoTrackedArrayGetter, autoTrackedArraySetter)
   );
 
   return {
-    get: trackedArrayGetter,
-    set: trackedArraySetter,
+    get: autoTrackedArrayGetter,
+    set: autoTrackedArraySetter,
     enumerable: true,
     configurable: true,
     isTracked: true,
@@ -361,3 +361,6 @@ export function enumerateTrackedEntries(obj) {
   const keys = enumerateTrackedKeys(obj);
   return keys.map((key) => [key, obj[key]]);
 }
+
+/** @deprecated Use `autoTrackedArray` instead. */
+export { autoTrackedArray as trackedArray };

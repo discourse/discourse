@@ -12,7 +12,7 @@ import {
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -26,7 +26,7 @@ export default class GrantBadgeModal extends Component {
   @tracked flashType = null;
   @tracked allBadges = [];
   @tracked availableBadges = [];
-  @trackedArray userBadges = [];
+  @autoTrackedArray userBadges = [];
 
   get noAvailableBadges() {
     !this.availableBadges.length;

@@ -15,7 +15,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
@@ -38,7 +38,7 @@ export default class SignupPageController extends Controller {
   @tracked skipConfirmation;
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
-  @trackedArray rejectedEmails = [];
+  @autoTrackedArray rejectedEmails = [];
 
   accountChallenge = 0;
   accountHoneypot = 0;
