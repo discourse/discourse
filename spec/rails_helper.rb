@@ -497,10 +497,13 @@ RSpec.configure do |config|
             should_set_raise_on_deprecation =
               if extension_match
                 type_dir, extension_name = extension_match.captures
-                extension_root = Rails.root.join(type_dir, extension_name)
 
-                # Preinstalled plugins/themes don't have a .git directory
-                !extension_root.join(".git").exist?
+                if type_dir == "plugins"
+                  Discourse.preinstalled_plugins.any? { |p| p.directory_name == extension_name }
+                else
+                  # Preinstalled themes don't have a .git directory
+                  !Rails.root.join(type_dir, extension_name, ".git").exist?
+                end
               else
                 # Not a plugin or theme spec
                 true
@@ -1201,9 +1204,7 @@ def plugin_from_fixtures(plugin_name)
   FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
   FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
 
-  plugin = Plugin::Instance.new
-  plugin.path = File.join(tmp_plugins_dir, plugin_name, "plugin.rb")
-  plugin
+  Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
 end
 
 def concurrency_safe_tmp_dir

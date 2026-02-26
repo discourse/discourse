@@ -394,6 +394,10 @@ module Discourse
     plugins.find_all { |p| !p.metadata.official? }
   end
 
+  def self.preinstalled_plugins
+    plugins.find_all(&:preinstalled?)
+  end
+
   def self.find_plugins(args)
     plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?

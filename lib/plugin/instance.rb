@@ -619,6 +619,11 @@ class Plugin::Instance
     "#{git_repo.url}/commit/#{commit_hash}"
   end
 
+  def preinstalled?
+    return @preinstalled if defined?(@preinstalled)
+    @preinstalled = !File.exist?(File.join(directory, ".git"))
+  end
+
   def git_repo
     @git_repo ||= GitRepo.new(directory, name)
   end
