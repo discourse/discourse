@@ -107,9 +107,9 @@ function initializeDiscourseReactions(api) {
 
         get label() {
           const count = this.notification.data.count;
-          const nameOrUsername = this.siteSettings.prioritize_full_name_in_ux
-            ? this.notification.data.display_name || this.username
-            : this.username;
+          const nameOrUsername = this.siteSettings.prioritize_username_in_ux
+            ? this.username
+            : this.notification.data.display_name || this.username;
 
           if (!count || count === 1 || !this.notification.data.username2) {
             return nameOrUsername;
@@ -120,10 +120,10 @@ function initializeDiscourseReactions(api) {
               count: count - 1,
             });
           } else {
-            const nameOrUsername2 = this.siteSettings.prioritize_full_name_in_ux
-              ? this.notification.data.name2 ||
-                formatUsername(this.notification.data.username2)
-              : formatUsername(this.notification.data.username2);
+            const nameOrUsername2 = this.siteSettings.prioritize_username_in_ux
+              ? formatUsername(this.notification.data.username2)
+              : this.notification.data.name2 ||
+                formatUsername(this.notification.data.username2);
             return i18n("notifications.reaction_2_users", {
               username: nameOrUsername,
               username2: nameOrUsername2,
