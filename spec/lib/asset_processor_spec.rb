@@ -406,7 +406,7 @@ RSpec.describe AssetProcessor do
     end.to raise_error(AssetProcessor::TranspileError)
   end
 
-  it "todo" do
+  it "outputs entrypoint manifest data" do
     mod = <<~JS.chomp
       export default "module 1";
     JS
