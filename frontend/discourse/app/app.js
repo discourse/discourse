@@ -88,7 +88,7 @@ async function loadPluginFromModulePreload(link) {
   }
 }
 
-export async function loadThemes() {
+export async function loadThemesAndPlugins() {
   const promises = [
     ...[
       ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
