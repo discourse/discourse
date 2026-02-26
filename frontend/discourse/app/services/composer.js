@@ -12,6 +12,7 @@ import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
+import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -851,14 +852,10 @@ export default class ComposerService extends Service {
   }
 
   @action
-  async toggleWrap(toolbarEvent) {
+  toggleWrap(toolbarEvent) {
     const initialAttributes = toolbarEvent.state?.inWrap
       ? toolbarEvent.state.wrapAttributes || ""
       : "";
-
-    const WrapAttributesModal = (
-      await import("discourse/static/prosemirror/components/wrap-attributes-modal")
-    ).default;
 
     this.modal.show(WrapAttributesModal, {
       model: {

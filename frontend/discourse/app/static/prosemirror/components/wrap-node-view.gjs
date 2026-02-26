@@ -3,11 +3,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { NodeSelection } from "prosemirror-state";
+import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
   parseAttributesString,
   serializeAttributes,
 } from "discourse/lib/wrap-utils";
-import WrapAttributesModal from "./wrap-attributes-modal";
 
 export default class WrapNodeView extends Component {
   @service modal;
