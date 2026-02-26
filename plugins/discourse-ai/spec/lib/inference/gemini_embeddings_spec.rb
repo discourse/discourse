@@ -54,14 +54,7 @@ RSpec.describe DiscourseAi::Inference::GeminiEmbeddings do
     context "when dimensions are provided" do
       let(:dimensions) { 512 }
       let(:payload) do
-        {
-          content: {
-            parts: [{ text: content }],
-          },
-          embedding_config: {
-            output_dimensionality: dimensions,
-          },
-        }.to_json
+        { content: { parts: [{ text: content }] }, outputDimensionality: dimensions }.to_json
       end
 
       before do
@@ -75,7 +68,7 @@ RSpec.describe DiscourseAi::Inference::GeminiEmbeddings do
         let(:response_status) { 200 }
         let(:response_body) { { embedding: { values: [0.1, 0.2, 0.3] } }.to_json }
 
-        it "includes embedding_config with output_dimensionality in the request" do
+        it "includes outputDimensionality in the request" do
           result = gemini_embeddings.perform!(content)
           expect(result).to eq([0.1, 0.2, 0.3])
         end
@@ -98,7 +91,7 @@ RSpec.describe DiscourseAi::Inference::GeminiEmbeddings do
         )
       end
 
-      it "does not include embedding_config in the request" do
+      it "does not include outputDimensionality in the request" do
         gemini_embeddings.perform!(content)
         expect(WebMock).to have_requested(:post, url).with(body: payload)
       end
