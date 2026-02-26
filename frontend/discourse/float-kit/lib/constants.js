@@ -46,7 +46,6 @@ export const TOOLTIP = {
     onClose: null,
     onShow: null,
     onRegisterApi: null,
-    updateOnScroll: true,
     portalOutletElement: null,
   },
   portalOutletId: "d-tooltip-portal-outlet",
@@ -86,7 +85,6 @@ export const MENU = {
     triggerClass: null,
     contentClass: null,
     class: null,
-    updateOnScroll: true,
     matchTriggerMinWidth: false,
     matchTriggerWidth: false,
     portalOutletElement: null,
@@ -99,6 +97,7 @@ import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 export const TOAST = {
   options: {
     autoClose: true,
+    autoUpdate: { ancestorScroll: false },
     duration: "short",
     component: DDefaultToast,
     showProgressBar: false,

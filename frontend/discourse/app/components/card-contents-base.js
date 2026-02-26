@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { alias, match } from "@ember/object/computed";
-import { next, schedule, throttle } from "@ember/runloop";
+import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -194,52 +194,45 @@ export default class CardContentsBase extends Component {
     return this._show(target.innerText.replace(/^@/, ""), target, event);
   }
 
-  get autoUpdateCard() {
-    return this.cardTarget.dataset["autoUpdateCard"] === "true";
-  }
+  async _positionCard(target) {
+    if (this.site.desktopView) {
+      this._menuInstance = await this.menu.show(target, {
+        content: this.element,
+        autoUpdate: { ancestorScroll: false, layoutShift: false },
+        identifier: "usercard",
+        padding: {
+          top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),
+          right: 10,
+          bottom: 10,
+          left: 10,
+        },
+        maxWidth: "unset",
+      });
+    } else {
+      this._menuInstance = await this.menu.show(target, {
+        content: this.element,
+        strategy: "fixed",
+        identifier: "usercard",
+        computePosition: (content) => {
+          content.style.left = "10px";
+          content.style.right = "10px";
+          content.style.top = 10 + AVATAR_OVERFLOW_SIZE + "px";
+        },
+      });
+    }
 
-  _positionCard(target) {
-    schedule("afterRender", async () => {
-      if (this.site.desktopView) {
-        this._menuInstance = await this.menu.show(target, {
-          content: this.element,
-          autoUpdate: this.autoUpdateCard,
-          hide: this.autoUpdateCard,
-          identifier: "usercard",
-          padding: {
-            top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),
-            right: 10,
-            bottom: 10,
-            left: 10,
-          },
-          maxWidth: "unset",
-        });
-      } else {
-        this._menuInstance = await this.menu.show(target, {
-          content: this.element,
-          strategy: "fixed",
-          identifier: "usercard",
-          computePosition: (content) => {
-            content.style.left = "10px";
-            content.style.right = "10px";
-            content.style.top = 10 + AVATAR_OVERFLOW_SIZE + "px";
-          },
-        });
-      }
+    this.element.classList.toggle("docked-card", this.isDocked);
 
-      this.element.classList.toggle("docked-card", this.isDocked);
+    // After the card is shown, focus on the first link
+    //
+    // note: we DO NOT use afterRender here cause _positionCard may
+    // run afterwards, if we allowed this to happen the usercard
+    // may be offscreen and we may scroll all the way to it on focus
 
-      // After the card is shown, focus on the first link
-      //
-      // note: we DO NOT use afterRender here cause _positionCard may
-      // run afterwards, if we allowed this to happen the usercard
-      // may be offscreen and we may scroll all the way to it on focus
-
-      discourseLater(() => {
-        this.element.setAttribute("tabindex", "-1");
-        this.element.focus();
-      }, 350);
-    });
+    discourseLater(() => {
+      this.element.setAttribute("tabindex", "-1");
+      this.element.focus();
+    }, 350);
   }
 
   @bind
