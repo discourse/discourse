@@ -42,7 +42,7 @@ RSpec.describe Jobs::ChangeDisplayName do
       it "rewrites the cooked quote display name" do
         expect { described_class.new.execute(args) }.to change { post.reload.cooked }.to(
           match_html(<<~HTML.strip),
-          <aside class="quote no-group" data-username="#{username}" data-post="1" data-topic="#{quoted_post.topic.id}">
+          <aside class="quote no-group" data-username="#{username}" data-display-name="#{new_display_name}" data-post="1" data-topic="#{quoted_post.topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> #{new_display_name}:</div>
