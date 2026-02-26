@@ -38,6 +38,7 @@ import {
 } from "discourse/lib/uploads";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import { parseAttributesString } from "discourse/lib/wrap-utils";
 import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
@@ -49,8 +50,6 @@ import Composer, {
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
-import WrapAttributesModal from "discourse/static/prosemirror/components/wrap-attributes-modal";
-import { parseAttributesString } from "discourse/static/prosemirror/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -852,10 +851,14 @@ export default class ComposerService extends Service {
   }
 
   @action
-  toggleWrap(toolbarEvent) {
+  async toggleWrap(toolbarEvent) {
     const initialAttributes = toolbarEvent.state?.inWrap
       ? toolbarEvent.state.wrapAttributes || ""
       : "";
+
+    const WrapAttributesModal = (
+      await import("discourse/static/prosemirror/components/wrap-attributes-modal")
+    ).default;
 
     this.modal.show(WrapAttributesModal, {
       model: {
