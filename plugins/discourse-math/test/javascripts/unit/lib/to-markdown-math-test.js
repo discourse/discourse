@@ -18,13 +18,13 @@ module("Unit | Lib | to-markdown-math", function (hooks) {
     }
   });
 
-  test("converts inline mathjax to markdown", function (assert) {
+  test("converts inline mathjax to markdown", async function (assert) {
     const html = `<p>Lorem ipsum <span class="math" data-applied-mathjax="true" style="display: none;">E=mc^2</span><span class="math-container inline-math mathjax-math" style=""><mjx-container class="MathJax" jax="SVG"><svg></svg></mjx-container></span> dolor sit amet.</p>`;
     const markdown = `Lorem ipsum $E=mc^2$ dolor sit amet.`;
-    assert.strictEqual(toMarkdown(html), markdown);
+    assert.strictEqual(await toMarkdown(html), markdown);
   });
 
-  test("converts block mathjax to markdown", function (assert) {
+  test("converts block mathjax to markdown", async function (assert) {
     const html = `<p>Before</p>
     <div class="math" data-applied-mathjax="true" style="display: none;">
     \\sqrt{(-1)} \\; 2^3 \\; \\sum \\; \\pi
@@ -39,6 +39,6 @@ $$
 
 After`;
 
-    assert.strictEqual(toMarkdown(html), markdown);
+    assert.strictEqual(await toMarkdown(html), markdown);
   });
 });

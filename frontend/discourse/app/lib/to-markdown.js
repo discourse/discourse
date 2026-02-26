@@ -1,37 +1,15 @@
-import { DOMParser as ProseMirrorDOMParser } from "prosemirror-model";
-import { createSchema } from "../static/prosemirror/core/schema";
-import Serializer from "../static/prosemirror/core/serializer";
-import { transformWordListsHtml } from "../static/prosemirror/extensions/word-paste";
-import { isBoundary } from "../static/prosemirror/lib/plugin-utils";
 import {
   areDefaultExtensionsRegistered,
   getExtensions,
-  markDefaultExtensionsRegistered,
-  registerRichEditorExtension,
 } from "./composer/rich-editor-extensions";
 
-function ensureDefaultExtensions() {
+async function ensureDefaultExtensions() {
   if (areDefaultExtensionsRegistered()) {
     return;
   }
 
-  try {
-    if (typeof require !== "undefined" && typeof require.has === "function") {
-      const modulePath =
-        "discourse/static/prosemirror/extensions/register-default";
-
-      if (require.has(modulePath)) {
-        const defaultExtensions = require(modulePath).default;
-
-        if (!areDefaultExtensionsRegistered()) {
-          defaultExtensions.forEach(registerRichEditorExtension);
-          markDefaultExtensionsRegistered();
-        }
-      }
-    }
-  } catch {
-    // require not available or module not found
-  }
+  // The module's side effect registers the defaults and marks them as registered
+  await import("discourse/static/prosemirror/extensions/register-default");
 }
 
 // Deprecated no-ops - kept for backward compatibility
@@ -55,9 +33,24 @@ export function clearTagDecorateCallbacks() {}
 export function clearBlockDecorateCallbacks() {}
 export function clearTextDecorateCallbacks() {}
 
-export default function toMarkdown(html) {
+export default async function toMarkdown(html) {
   try {
-    ensureDefaultExtensions();
+    await ensureDefaultExtensions();
+
+    const [
+      { DOMParser: ProseMirrorDOMParser },
+      { createSchema },
+      { default: Serializer },
+      { transformWordListsHtml },
+      { isBoundary },
+    ] = await Promise.all([
+      import("prosemirror-model"),
+      import("discourse/static/prosemirror/core/schema"),
+      import("discourse/static/prosemirror/core/serializer"),
+      import("discourse/static/prosemirror/extensions/word-paste"),
+      import("discourse/static/prosemirror/lib/plugin-utils"),
+    ]);
+
     const extensions = getExtensions();
     const schema = createSchema(extensions);
     const domParser = ProseMirrorDOMParser.fromSchema(schema);
