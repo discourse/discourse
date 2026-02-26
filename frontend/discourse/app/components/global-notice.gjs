@@ -172,7 +172,7 @@ export default class GlobalNotice extends Component {
           id: "alert-emails-disabled",
         })
       );
-    } else if (!this.site.email_configured && !isDevelopment()) {
+    } else if (this.site.email_configured === false && !isDevelopment()) {
       notices.push(
         Notice.create({
           text: i18n("emails_are_disabled_no_smtp"),
