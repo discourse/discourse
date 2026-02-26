@@ -171,8 +171,9 @@ function rewireActionModifier(appInstance) {
   //
   // TODO: Investigate if a cleaner override is possible.
   const renderer = appInstance.lookup("renderer:-dom");
-  const lookupModifier = renderer._runtimeResolver.lookupModifier;
-  renderer._runtimeResolver.lookupModifier = (name, owner) => {
+  const resolver = renderer.state.context.resolver;
+  const lookupModifier = resolver.lookupModifier;
+  resolver.lookupModifier = (name, owner) => {
     if (name === "action") {
       return actionModifier;
     } else {
