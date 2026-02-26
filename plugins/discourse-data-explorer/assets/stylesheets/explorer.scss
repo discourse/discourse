@@ -436,8 +436,8 @@ table.group-reports {
     }
   }
 
-  .query-row {
-    a.query-link {
+  .d-table__row.query-row {
+    .d-table__overview-link {
       @include viewport.until(md) {
         max-width: 75ch;
       }

@@ -1,4 +1,4 @@
-import { array, concat, fn } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
@@ -9,7 +9,6 @@ import PickFilesButton from "discourse/components/pick-files-button";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
-import getURL from "discourse/lib/get-url";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
@@ -151,23 +150,22 @@ export default <template>
                   {{#each filteredQueries as |query|}}
                     <tr class="d-table__row query-row">
                       <td class="d-table__cell --overview">
-                        <a
-                          class="query-link"
-                          href={{getURL
-                            (concat
-                              "/admin/plugins/discourse-data-explorer/queries/"
-                              query.id
-                            )
-                          }}
+                        <LinkTo
+                          class="d-table__overview-link"
+                          @route="adminPlugins.show.explorer.details"
+                          @model={{query.id}}
                         >
-                          <strong class="query-name">{{query.name}}</strong>
-                          {{#if query.is_default}}
-                            <span class="query-badge">{{i18n
-                                "explorer.default_query"
-                              }}</span>
-                          {{/if}}
+                          <div
+                            class="d-table__overview-name query-name"
+                          >{{query.name}}
+                            {{#if query.is_default}}
+                              <span class="query-badge">{{i18n
+                                  "explorer.default_query"
+                                }}</span>
+                            {{/if}}
+                          </div>
                           <div class="query-desc">{{query.description}}</div>
-                        </a>
+                        </LinkTo>
                       </td>
                       <td class="d-table__cell --detail query-created-by">
                         <div class="d-table__mobile-label">
@@ -175,9 +173,12 @@ export default <template>
                         </div>
                         {{#if query.username}}
                           <div>
-                            <a href="/u/{{query.username}}/activity">
-                              <span>{{query.username}}</span>
-                            </a>
+                            <LinkTo
+                              @route="user.summary"
+                              @model={{query.username}}
+                            >
+                              {{query.username}}
+                            </LinkTo>
                           </div>
                         {{/if}}
                       </td>

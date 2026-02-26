@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { USER_FIELD_FLAGS } from "discourse/admin/lib/constants";
@@ -35,10 +36,6 @@ export default class AdminUserFieldItem extends Component {
       .join(", ");
   }
 
-  get editUrl() {
-    return this.router.urlFor("adminUserFields.edit", this.args.userField);
-  }
-
   @action
   moveUp() {
     this.args.moveUpAction(this.args.userField);
@@ -70,15 +67,18 @@ export default class AdminUserFieldItem extends Component {
   <template>
     <tr class="d-table__row admin-user_field-item">
       <td class="d-table__cell --overview">
-        <a
-          class="d-table__overview-name admin-user_field-item__name"
-          href={{this.editUrl}}
+        <LinkTo
+          class="d-table__overview-link"
+          @route="adminUserFields.edit"
+          @model={{@userField}}
         >
-          {{@userField.name}}
-        </a>
-        <div class="d-table__overview-about">{{htmlSafe
-            @userField.description
-          }}</div>
+          <div class="d-table__overview-name admin-user_field-item__name">
+            {{@userField.name}}
+          </div>
+          <div class="d-table__overview-about">{{htmlSafe
+              @userField.description
+            }}</div>
+        </LinkTo>
         <div class="d-table__overview-flags">{{this.flags}}</div>
       </td>
       <td class="d-table__cell --detail">

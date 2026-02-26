@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
@@ -46,13 +47,6 @@ export default class AdminFlagItem extends Component {
     return this.canDelete
       ? "admin.config_areas.flags.form.delete_flag"
       : "admin.config_areas.flags.form.non_deletable";
-  }
-
-  get editUrl() {
-    if (!this.canEdit) {
-      return null;
-    }
-    return this.router.urlFor("adminConfig.flags.edit", this.args.flag);
   }
 
   @action
@@ -135,19 +129,27 @@ export default class AdminFlagItem extends Component {
       }}
     >
       <td class="d-table__cell --overview">
-        {{#if this.editUrl}}
-          <a
-            class="d-table__overview-name admin-flag-item__name"
-            href={{this.editUrl}}
-          >{{@flag.name}}</a>
+        {{#if this.canEdit}}
+          <LinkTo
+            @route="adminConfig.flags.edit"
+            @model={{@flag}}
+            class="d-table__overview-link"
+          >
+            <div
+              class="d-table__overview-name admin-flag-item__name"
+            >{{@flag.name}}</div>
+            <div class="d-table__overview-about">{{htmlSafe
+                @flag.description
+              }}</div>
+          </LinkTo>
         {{else}}
           <div
             class="d-table__overview-name admin-flag-item__name"
           >{{@flag.name}}</div>
+          <div class="d-table__overview-about">{{htmlSafe
+              @flag.description
+            }}</div>
         {{/if}}
-        <div class="d-table__overview-about">{{htmlSafe
-            @flag.description
-          }}</div>
       </td>
       <td class="d-table__cell --detail">
         <div class="d-table__mobile-label">
