@@ -6,6 +6,12 @@
 
 fi:
   js:
+    blocks:
+      ghost:
+        status: "Tila"
+        in_location: "kohteessa"
+        hidden: "piilotettu"
+        failed: "epäonnistui"
     number:
       format:
         separator: ","
@@ -401,6 +407,8 @@ fi:
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
     admin_onboarding_banner:
+      start_posting:
+        back: "Takaisin"
       spread_the_word:
         action: "Kopioi linkki"
         copied_to_clipboard: "Linkki kopioitiin leikepöydälle!"
@@ -5602,23 +5610,6 @@ fi:
           title: "Mitä uutta?"
           subtitle: "Julkaisemme jatkuvasti uusia ominaisuuksia ja parannuksia. Tämä sivu kattaa kohokohdat, mutta voit katsoa kattavat julkaisutiedot napsauttamalla Lisätietoja."
           learn_more: "Lisätietoja..."
-          experimental: "Kokeellinen"
-          only_experiments: "Näytä vain kokeelliset ominaisuudet"
-          experiment_enabled: "Olet ottanut kokeellisen ominaisuuden käyttöön."
-          experiment_disabled: "Olet poistanut kokeellisen ominaisuuden käytöstä."
-          feature_enabled: "Olet ottanut ominaisuuden käyttöön."
-          feature_disabled: "Olet poistanut ominaisuuden käytöstä."
-          toggled_too_fast: "Olet vaihtanut valitsinta liian nopeasti. Odota muutama sekunti ennen kuin yrität uudelleen."
-          experiment_tooltip:
-            title_disabled: "Kokeile tätä kokeellista ominaisuutta"
-            title_enabled: "Poista kokeellinen ominaisuus käytöstä"
-            content_disabled: "Kokeile uusinta kehitysvaiheessa olevaa ominaisuuttamme! Se on vielä kokeiluvaiheessa, joten voimme poistaa sen milloin tahansa. Voit poistaa sen käytöstä milloin tahansa.<br/><br/>Tämän muuttaminen ottaa ominaisuuden käyttöön kaikille käyttäjille."
-            content_enabled: "Tämän muuttaminen poistaa ominaisuuden käytöstä kaikilta käyttäjiltä."
-          feature_tooltip:
-            title_disabled: "Kokeile tätä ominaisuutta"
-            title_enabled: "Poista ominaisuus käytöstä"
-            content_disabled: "Kokeile tätä uutta ominaisuutta! Voit poistaa sen käytöstä milloin tahansa.<br/><br/>Tämän muuttaminen ottaa ominaisuuden käyttöön kaikille käyttäjille."
-            content_enabled: "Tämän muuttaminen poistaa ominaisuuden käytöstä kaikilta käyttäjiltä."
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."

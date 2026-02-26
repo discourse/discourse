@@ -100,6 +100,8 @@ de:
         unstar_channel: "Sternchen von Kanal entfernen"
         close_channel: "Kanal schließen"
         open_channel: "Kanal öffnen"
+        open_channel_disabled_archived: "Archivierte Kanäle können nicht wieder geöffnet werden."
+        open_channel_disabled_read_only: "Schreibgeschützte Kanäle können nicht wieder geöffnet werden."
         archive_channel: "Kanal archivieren"
         delete_channel: "Kanal löschen"
         join_channel: "Kanal beitreten"

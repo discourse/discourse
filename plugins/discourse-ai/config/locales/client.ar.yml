@@ -384,8 +384,6 @@ ar:
           enable_translations: "تمكين الترجمات الآلية"
         stats:
           title: "إحصائيات الترجمة"
-          complete_language_detection_description: "تم اكتشاف لغة جميع المنشورات المؤهلة والبالغ عددها %{total}."
-          incomplete_language_detection_description: "تم اكتشاف لغة %{done} من المنشورات المؤهلة والبالغ عددها %{total}."
           backfill_disabled: "تم تعطيل ميزة الترجمة الرجعية، ولن تتم ترجمة سوى المنشورات الجديدة."
           backfill_message: "تم تكوين <a href='%{settingsUrl}'>إعدادات الترجمة الرجعية</a> بحيث تتم ترجمة جميع المنشورات التي نُشرت بعد %{date} — من المتوقع أن يستغرق ذلك %{eta}."
           eta_minutes:

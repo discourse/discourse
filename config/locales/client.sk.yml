@@ -6,6 +6,12 @@
 
 sk:
   js:
+    blocks:
+      ghost:
+        status: "Stav"
+        in_location: "v"
+        hidden: "skryté"
+        failed: "nepodarilo sa"
     number:
       format:
         separator: ","
@@ -365,6 +371,8 @@ sk:
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
+      start_posting:
+        back: "Späť"
       spread_the_word:
         action: "Kopírovať odkaz"
         copied_to_clipboard: "Odkaz bol skopírovaný do schránky!"
@@ -6010,15 +6018,6 @@ sk:
           title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           learn_more: "Zistiť viac..."
-          experimental: "Experimentálne"
-          only_experiments: "Zobraziť len experimentálne funkcie"
-          experiment_enabled: "Povolili ste experimentálnu funkciu."
-          experiment_disabled: "Experimentálnu funkciu ste zakázali."
-          experiment_tooltip:
-            title_enabled: "Vypnutie experimentálnej funkcie"
-            content_enabled: "Zmenou tejto funkcie zakážete túto funkciu pre všetkých používateľov."
-          feature_tooltip:
-            content_enabled: "Zmenou tejto funkcie zakážete túto funkciu pre všetkých používateľov."
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."

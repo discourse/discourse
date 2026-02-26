@@ -6,6 +6,12 @@
 
 nb_NO:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "i"
+        hidden: "skjult"
+        failed: "feilet"
     number:
       format:
         separator: "."
@@ -291,6 +297,9 @@ nb_NO:
       title: "Nye og uleste emner"
       pill: "Foreslåtte"
       pm_title: "Anbefalte meldinger"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Forrige"
     about:
       edit: "Endre denne siden"
       simple_title: "Om"

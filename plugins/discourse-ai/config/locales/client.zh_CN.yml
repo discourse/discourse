@@ -370,8 +370,6 @@ zh_CN:
           enable_translations: "启用自动翻译"
         stats:
           title: "翻译统计"
-          complete_language_detection_description: "所有符合条件的 %{total} 个帖子均已检测到其语言。"
-          incomplete_language_detection_description: "%{total} 个符合条件的帖子中的 %{done} 个已检测到其语言。"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
           backfill_message: "<a href='%{settingsUrl}'>回填设置</a>配置为翻译 %{date} 后的所有帖子 – 预计需要 %{eta}。"
           eta_minutes:

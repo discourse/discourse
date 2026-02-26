@@ -6,6 +6,12 @@
 
 es:
   js:
+    blocks:
+      ghost:
+        status: "Estado"
+        in_location: "en"
+        hidden: "oculto"
+        failed: "falló"
     number:
       format:
         separator: ","
@@ -414,6 +420,7 @@ es:
       start_posting:
         title: "Empezar a publicar"
         action: "Ideas para romper el hielo"
+        back: "Atrás"
         icebreakers:
           introduce_yourself:
             title: "Preséntate"
@@ -5843,23 +5850,6 @@ es:
           title: "Novedades"
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
           learn_more: "Más información..."
-          experimental: "Experimental"
-          only_experiments: "Mostrar solo características experimentales"
-          experiment_enabled: "Has activado la característica experimental."
-          experiment_disabled: "Has desactivado la característica experimental."
-          feature_enabled: "Has activado la característica."
-          feature_disabled: "Has desactivado la característica."
-          toggled_too_fast: "Has activado el interruptor demasiado rápido. Espera unos segundos antes de volver a intentarlo."
-          experiment_tooltip:
-            title_disabled: "Prueba esta característica experimental"
-            title_enabled: "Desactivar la característica experimental"
-            content_disabled: "¡Prueba nuestra nueva característica en desarrollo! Aún está en fase experimental, por lo que podríamos eliminarla en cualquier momento. Puedes excluirte cuando quieras.<br/><br/>Si cambias esto, se activará la característica para todos los usuarios."
-            content_enabled: "Si cambias esto, se desactivará la característica para todos los usuarios."
-          feature_tooltip:
-            title_disabled: "Probar esta característica"
-            title_enabled: "Desactivar características"
-            content_disabled: "¡Prueba esta característica! Puedes desactivarla cuando quieras.<br/><br/>Al cambiar esta opción, la característica estará disponible para todos los usuarios."
-            content_enabled: "Si cambias esto, se desactivará la característica para todos los usuarios."
         last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
         no_problems: "No se ha encontrado ningún problema."

@@ -337,8 +337,6 @@ he:
           enable_translations: "הפעלת תרגומים אוטומטיים"
         stats:
           title: "סטטיסטיקת תרגום"
-          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
-          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
           eta_minutes:
             one: "דקה"

@@ -6,6 +6,12 @@
 
 nl:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "in"
+        hidden: "verborgen"
+        failed: "mislukt"
     carousel:
       go_to_slide: "Ga naar dia %{index}"
       previous: "Vorige dia"
@@ -418,6 +424,7 @@ nl:
         title: "Begin met posten"
         description: "Geef mensen iets om samen over te praten"
         action: "Ideeën voor ijsbrekers"
+        back: "Terug"
         icebreakers:
           fun_facts:
             title: "Wat zijn leuke weetjes over jou?"
@@ -5668,15 +5675,6 @@ nl:
           title: "Wat is er nieuw?"
           subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."
           learn_more: "Meer informatie..."
-          experimental: "Experimenteel"
-          only_experiments: "Alleen experimentele functies weergeven"
-          experiment_enabled: "Je hebt de experimentele functie ingeschakeld."
-          experiment_disabled: "Je hebt de experimentele functie uitgeschakeld."
-          experiment_tooltip:
-            title_enabled: "Schakel de experimentele functie uit"
-            content_enabled: "Wijziging hiervan schakelt de functie uit voor alle gebruikers."
-          feature_tooltip:
-            content_enabled: "Wijziging hiervan schakelt de functie uit voor alle gebruikers."
         last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
         no_problems: "Er zijn geen problemen gevonden."

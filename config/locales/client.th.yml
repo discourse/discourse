@@ -6,6 +6,11 @@
 
 th:
   js:
+    blocks:
+      ghost:
+        status: "สถานะ"
+        hidden: "ถูกซ่อน"
+        failed: "ล้มเหลว"
     number:
       format:
         separator: "."
@@ -233,6 +238,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
+    admin_onboarding_banner:
+      start_posting:
+        back: "กลับ"
     about:
       simple_title: "เกี่ยวกับ"
       title: "เกี่ยวกับ %{title}"

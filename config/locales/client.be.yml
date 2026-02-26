@@ -6,6 +6,10 @@
 
 be:
   js:
+    blocks:
+      ghost:
+        status: "Статус"
+        failed: "памылка"
     number:
       format:
         separator: ","
@@ -409,6 +413,9 @@ be:
       pill: "Звязаныя паведамленні"
     suggested_topics:
       pm_title: "Прапанаваныя паведамленні"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Назад"
     about:
       edit: "Рэдагаваць гэту старонку"
       simple_title: "Пра сайт"
@@ -1434,8 +1441,8 @@ be:
           other: "Выдаліць тэмы"
         dismiss_read: "Адхіліць усе непрачытаныя"
         dismiss_new: "Адхіліць новыя"
-        toggle: "пераключыць масавы выбар тэм"
-        actions: "Масавыя дзеянні"
+        toggle: "Пераключыць групавы выбар тэм"
+        actions: "Групавыя дзеянні"
         close_topics: "Закрыць тэмы"
         archive_topics: "Архіваваць тэмы"
         move_messages_to_inbox: "Перамясціць ва Уваходныя"
@@ -1456,7 +1463,7 @@ be:
       close_topics:
         name: "Закрыць"
       archive_topics:
-        name: "У архіў"
+        name: "У Архіў"
       move_messages_to_inbox:
         name: "Ва Уваходныя"
       delete_topics:

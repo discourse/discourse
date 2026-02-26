@@ -6,6 +6,12 @@
 
 pt:
   js:
+    blocks:
+      ghost:
+        status: "Estado"
+        in_location: "em"
+        hidden: "escondido"
+        failed: "falhado"
     number:
       format:
         separator: "."
@@ -409,6 +415,8 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     admin_onboarding_banner:
+      start_posting:
+        back: "Anterior"
       spread_the_word:
         action: "Copiar hiperligação"
     about:
@@ -4745,18 +4753,6 @@ pt:
         new_features:
           title: "O que é novo?"
           learn_more: "Saiba mais..."
-          experimental: "Experimental"
-          only_experiments: "Mostrar apenas as funcionalidades experimentais"
-          experiment_enabled: "Ativou a funcionalidade experimental."
-          experiment_disabled: "Desativou a funcionalidade experimental."
-          feature_enabled: "Ativou a funcionalidade."
-          feature_disabled: "Desativou a funcionalidade."
-          experiment_tooltip:
-            title_disabled: "Teste esta funcionalidade experimental"
-            title_enabled: "Desativar a funcionalidade experimental"
-          feature_tooltip:
-            title_disabled: "Teste esta funcionalidade"
-            title_enabled: "Desativar funcionalidade"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
