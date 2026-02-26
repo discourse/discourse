@@ -4226,7 +4226,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
   rename_faq_to_guidelines:
@@ -4236,7 +4236,7 @@ experimental:
     area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "experimental"
+      status: "alpha"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   experimental_tag_settings_page:
     default: false
@@ -4248,7 +4248,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
   impersonate_without_logout:
@@ -4256,7 +4256,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
