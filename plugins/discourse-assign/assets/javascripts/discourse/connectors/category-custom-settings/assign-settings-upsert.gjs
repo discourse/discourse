@@ -16,7 +16,7 @@ export default class AssignSettingsUpsert extends Component {
 
   @action
   async onToggleUnassignedFilter(_, { set, name }) {
-    await set(name, !this.enableUnassignedFilter);
+    await set(name, this.enableUnassignedFilter ? "false" : "true");
   }
 
   <template>

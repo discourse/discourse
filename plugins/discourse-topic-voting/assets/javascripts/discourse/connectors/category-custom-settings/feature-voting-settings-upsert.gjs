@@ -15,7 +15,7 @@ export default class FeatureVotingSettingsUpsert extends Component {
 
   @action
   async onToggleTopicVoting(_, { set, name }) {
-    await set(name, !this.enableTopicVoting);
+    await set(name, this.enableTopicVoting ? "false" : "true");
   }
 
   <template>

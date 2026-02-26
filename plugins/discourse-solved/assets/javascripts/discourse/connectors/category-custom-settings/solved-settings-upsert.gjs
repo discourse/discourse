@@ -19,7 +19,7 @@ export default class SolvedSettingsUpsert extends Component {
 
   @action
   async onToggleAcceptedAnswers(_, { set, name }) {
-    await set(name, !this.enableAcceptedAnswers);
+    await set(name, this.enableAcceptedAnswers ? "false" : "true");
   }
 
   <template>
