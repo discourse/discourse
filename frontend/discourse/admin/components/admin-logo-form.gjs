@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
 import SimpleList from "discourse/admin/components/simple-list";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -19,7 +19,7 @@ export default class AdminLogoForm extends Component {
   @service toasts;
 
   @tracked loading = false;
-  placeholders = new TrackedObject();
+  placeholders = trackedObject();
 
   constructor() {
     super(...arguments);
