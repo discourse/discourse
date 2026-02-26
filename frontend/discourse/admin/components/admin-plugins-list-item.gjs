@@ -95,7 +95,7 @@ export default class AdminPluginsListItem extends Component {
         <div class="admin-plugins-list__name-with-badges">
           {{#if this.pluginUrl}}
             <a
-              class="d-table__overview-name admin-plugins-list__name"
+              class="d-table__overview-name admin-plugins-list__name d-table__overview-link"
               href={{this.pluginUrl}}
             >
               {{@plugin.nameTitleized}}
