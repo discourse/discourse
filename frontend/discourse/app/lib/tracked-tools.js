@@ -385,3 +385,6 @@ export function enumerateTrackedEntries(obj) {
   const keys = enumerateTrackedKeys(obj);
   return keys.map((key) => [key, obj[key]]);
 }
+
+/** @deprecated Use `autoTrackedArray` instead. */
+export { autoTrackedArray as trackedArray };
