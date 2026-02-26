@@ -3,13 +3,15 @@
 require "json"
 require "open3"
 
+RunResult = Struct.new(:success, :stdout, :stderr, keyword_init: true)
+
 def run(*cmd, allow_failure: false)
   puts "Running: #{cmd.join(" ")}"
   stdout, stderr, status = Open3.capture3(*cmd)
   puts stdout unless stdout.empty?
   puts stderr unless stderr.empty?
   raise "Command failed: #{cmd.join(" ")}\n#{stderr}" unless status.success? || allow_failure
-  [stdout.strip, status.success?]
+  RunResult.new(success: status.success?, stdout: stdout.strip, stderr: stderr.strip)
 end
 
 def gh(*args, allow_failure: false)
@@ -19,8 +21,7 @@ end
 pr_number = ENV.fetch("PR_NUMBER")
 
 # Get PR details (title, body, base branch)
-pr_json, = gh("pr", "view", pr_number, "--json", "title,body,baseRefName")
-pr = JSON.parse(pr_json)
+pr = JSON.parse(gh("pr", "view", pr_number, "--json", "title,body,baseRefName").stdout)
 
 pr_title = pr["title"]
 pr_body = pr["body"] || ""
@@ -37,28 +38,12 @@ run("git", "fetch", "origin", "#{pr_ref}:pr-head")
 run("git", "fetch", "origin", base_branch)
 
 # Find merge base between PR head and base branch
-merge_base, = run("git", "merge-base", "pr-head", "origin/#{base_branch}")
+merge_base = run("git", "merge-base", "pr-head", "origin/#{base_branch}").stdout
+pr_head = run("git", "rev-parse", "pr-head").stdout
 puts "Merge base: #{merge_base}"
 
-# Get commits from merge base to PR head (in chronological order)
-commits_output, = run("git", "rev-list", "--reverse", "#{merge_base}..pr-head")
-commits_to_pick = commits_output.split("\n").reject(&:empty?)
-
-if commits_to_pick.empty?
-  puts "No commits to backport"
-  gh("pr", "comment", pr_number, "--body", "No commits found to backport.")
-  exit 0
-end
-
-puts "Found #{commits_to_pick.length} commit(s) to cherry-pick:"
-commits_to_pick.each do |sha|
-  subject, = run("git", "log", "-1", "--pretty=%s", sha)
-  puts "  - #{sha[0..7]}: #{subject}"
-end
-
 # Read versions.json from main branch to find backport targets
-versions_content, = run("git", "show", "origin/main:versions.json")
-versions = JSON.parse(versions_content)
+versions = JSON.parse(run("git", "show", "origin/main:versions.json").stdout)
 
 # Find versions that are both supported and released
 backport_versions =
@@ -90,8 +75,7 @@ backport_versions.each do |version|
   puts "\n--- Backporting to #{release_branch} ---"
 
   # Check if release branch exists
-  branch_exists, = run("git", "ls-remote", "--heads", "origin", release_branch)
-  if !branch_exists.include?(release_branch)
+  if !run("git", "ls-remote", "--heads", "origin", release_branch).stdout.include?(release_branch)
     puts "Release branch #{release_branch} does not exist, skipping"
     results << { version: version, success: false, error: "Release branch does not exist" }
     next
@@ -104,71 +88,67 @@ backport_versions.each do |version|
   run("git", "checkout", "-B", backport_branch, "origin/#{release_branch}")
 
   # Cherry-pick the commits
-  cherry_pick_success = true
-  error_message = nil
+  cherry_pick_range = "#{merge_base}..#{pr_head}"
+  puts "Cherry-picking #{cherry_pick_range}..."
+  result = run("git", "cherry-pick", cherry_pick_range, allow_failure: true)
 
-  commits_to_pick.each do |sha|
-    puts "Cherry-picking #{sha}..."
-    _, success = run("git", "cherry-pick", sha, allow_failure: true)
-    unless success
-      cherry_pick_success = false
-      # Get the conflict details
-      status_output, = run("git", "status", "--short", allow_failure: true)
-      error_message = "Cherry-pick of #{sha} failed with conflicts:\n```\n#{status_output}\n```"
-      run("git", "cherry-pick", "--abort", allow_failure: true)
-      break
-    end
+  unless result.success
+    puts "Failed to backport to #{version}:\n#{result.stderr}"
+    results << {
+      version: version,
+      success: false,
+      error: result.stderr,
+      release_branch: release_branch,
+      backport_branch: backport_branch,
+      cherry_pick_range: cherry_pick_range,
+    }
+    run("git", "cherry-pick", "--abort", allow_failure: true)
+    run("git", "checkout", "main", allow_failure: true)
+    next
   end
 
-  if cherry_pick_success
-    # Push the backport branch
-    run("git", "push", "-f", "origin", backport_branch)
+  # Push the backport branch
+  run("git", "push", "-f", "origin", backport_branch)
 
-    # Create or update PR
-    backport_title = "#{pr_title} [backport #{version}]"
-    backport_body = <<~BODY
-      Backport of ##{pr_number} to #{release_branch}.
+  # Create or update PR
+  backport_title = "#{pr_title} [backport #{version}]"
+  backport_body = <<~BODY
+    Backport of ##{pr_number} to #{release_branch}.
 
-      ---
+    ---
 
-      #{pr_body}
-    BODY
+    #{pr_body}
+  BODY
 
-    # Try to create the PR
-    _, created =
-      gh(
-        "pr",
-        "create",
-        "--base",
-        release_branch,
-        "--head",
-        backport_branch,
-        "--title",
-        backport_title,
-        "--body",
-        backport_body,
-        allow_failure: true,
-      )
+  # Try to create the PR
+  created =
+    gh(
+      "pr",
+      "create",
+      "--base",
+      release_branch,
+      "--head",
+      backport_branch,
+      "--title",
+      backport_title,
+      "--body",
+      backport_body,
+      allow_failure: true,
+    ).success
 
-    if created
-      # Get the PR URL for the newly created PR
-      pr_url_output, = gh("pr", "view", backport_branch, "--json", "url", "-q", ".url")
-      pr_url = pr_url_output.strip
-      puts "Created PR: #{pr_url}"
-    else
-      # PR already exists, update it
-      puts "PR already exists, updating..."
-      gh("pr", "edit", backport_branch, "--title", backport_title, "--body", backport_body)
-      pr_url_output, = gh("pr", "view", backport_branch, "--json", "url", "-q", ".url")
-      pr_url = pr_url_output.strip
-      puts "Updated PR: #{pr_url}"
-    end
-
-    results << { version: version, success: true, pr_url: pr_url }
+  if created
+    # Get the PR URL for the newly created PR
+    pr_url = gh("pr", "view", backport_branch, "--json", "url", "-q", ".url").stdout.strip
+    puts "Created PR: #{pr_url}"
   else
-    puts "Failed to backport to #{version}: #{error_message}"
-    results << { version: version, success: false, error: error_message }
+    # PR already exists, update it
+    puts "PR already exists, updating..."
+    gh("pr", "edit", backport_branch, "--title", backport_title, "--body", backport_body)
+    pr_url = gh("pr", "view", backport_branch, "--json", "url", "-q", ".url").stdout.strip
+    puts "Updated PR: #{pr_url}"
   end
+
+  results << { version: version, success: true, pr_url: pr_url }
 
   # Return to main branch for next iteration
   run("git", "checkout", "main", allow_failure: true)
@@ -188,7 +168,24 @@ end
 
 if failed.any?
   comment_lines << "### Failed backports"
-  failed.each { |r| comment_lines << "- **#{r[:version]}**: #{r[:error]}" }
+  failed.each do |r|
+    if r[:cherry_pick_range]
+      comment_lines << <<~MSG
+        #### #{r[:version]}
+        ```
+        #{r[:error]}
+        ```
+
+        To resolve manually:
+        ```bash
+        git checkout -B #{r[:backport_branch]} origin/#{r[:release_branch]}
+        git cherry-pick #{r[:cherry_pick_range]}
+        ```
+      MSG
+    else
+      comment_lines << "- **#{r[:version]}**: #{r[:error]}"
+    end
+  end
 end
 
 comment_lines << "No backports were attempted." if successful.empty? && failed.empty?
