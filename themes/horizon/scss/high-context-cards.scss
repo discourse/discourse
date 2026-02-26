@@ -197,6 +197,8 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   .topic-excerpt {
+    overflow-wrap: anywhere;
+
     span {
       word-break: break-word;
     }
