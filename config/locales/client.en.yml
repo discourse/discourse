@@ -3237,6 +3237,9 @@ en:
         reply: Reply
         draft: Draft
         edit: Edit
+        reply_to_topic_composer_action:
+          label: Reply
+          desc: Reply to the topic, not any specific post
         reply_to_post:
           label: Reply to a post by %{postUsername}
           desc: Reply to a specific post
