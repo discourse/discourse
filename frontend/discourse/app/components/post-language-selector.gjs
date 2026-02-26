@@ -47,7 +47,7 @@ export default class PostLanguageSelector extends Component {
       @label={{this.selectedLanguage}}
       @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
-      @class="btn-transparent post-language-selector"
+      @triggerClass="btn-transparent"
     >
       <:content>
         <DropdownMenu as |dropdown|>
