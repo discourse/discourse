@@ -125,7 +125,7 @@ export default class AdminFilterControls extends Component {
     if (this.textFilter.length > 0) {
       const terms = this.textFilter
         .split(",")
-        .map((t) => t.trim().replace(/_/g, " ").toLowerCase())
+        .map((t) => t.trim().toLowerCase())
         .filter(Boolean);
       filtered = filtered.filter((item) =>
         terms.some((term) =>
@@ -258,6 +258,15 @@ export default class AdminFilterControls extends Component {
             class="admin-filter-controls__input"
             @icons={{hash left="magnifying-glass"}}
           />
+
+          {{#if (and this.hasActiveFilters (not @loading))}}
+            <DButton
+              @icon="arrow-rotate-left"
+              @label="reset_filter"
+              @action={{this.resetFilters}}
+              class="btn-default admin-filter-controls__reset"
+            />
+          {{/if}}
 
           {{#if this.hasMultipleDropdowns}}
             <DButton

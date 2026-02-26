@@ -2,42 +2,27 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 
-const UpcomingChangesList = <template>
-  <table class="d-table upcoming-changes-table">
-    <thead class="d-table__header">
-      <tr class="d-table__row">
-        <th class="d-table__header-cell upcoming-change__name-header">{{i18n
-            "admin.upcoming_changes.name"
-          }}</th>
-        <th class="d-table__header-cell upcoming-change__enabled-header">{{i18n
-            "admin.upcoming_changes.enabled_for"
-          }}</th>
-      </tr>
-    </thead>
-    <tbody class="d-table__body">
-      {{#each @upcomingChanges as |change|}}
-        <UpcomingChangeItem
-          @change={{change}}
-          @enabledForChanged={{@enabledForChanged}}
-        />
-      {{/each}}
-    </tbody>
-  </table>
-</template>;
-
 export default class AdminConfigAreasUpcomingChanges extends Component {
+  @service site;
+
   @cached
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
       change.upcoming_change = new TrackedObject(change.upcoming_change);
       return new TrackedObject(change);
     });
+  }
+
+  get staffGroupName() {
+    return this.site.groupsById[AUTO_GROUPS.staff.id].name;
   }
 
   get dropdownOptions() {
@@ -141,7 +126,9 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
             change.upcoming_change.enabled_for === "everyone",
         },
         {
-          label: i18n("admin.upcoming_changes.filter.enabled_for_staff"),
+          label: i18n("admin.upcoming_changes.filter.enabled_for_staff", {
+            staffGroupName: this.staffGroupName,
+          }),
           value: "enabled_for_staff",
           filterFn: (change) => change.upcoming_change.enabled_for === "staff",
         },
@@ -175,6 +162,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         "humanized_name"
         "description"
         "plugin_identifier"
+        "setting"
       }}
       @dropdownOptions={{this.dropdownOptions}}
       @inputPlaceholder={{i18n
@@ -187,10 +175,26 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       @onResetFilters={{@onClearChangeNamesFilter}}
     >
       <:content as |upcomingChanges|>
-        <UpcomingChangesList
-          @upcomingChanges={{upcomingChanges}}
-          @enabledForChanged={{this.enabledForChanged}}
-        />
+        <table class="d-table upcoming-changes-table">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th
+                class="d-table__header-cell upcoming-change__name-header"
+              >{{i18n "admin.upcoming_changes.name"}}</th>
+              <th
+                class="d-table__header-cell upcoming-change__enabled-header"
+              >{{i18n "admin.upcoming_changes.enabled_for"}}</th>
+            </tr>
+          </thead>
+          <tbody class="d-table__body">
+            {{#each upcomingChanges as |change|}}
+              <UpcomingChangeItem
+                @change={{change}}
+                @enabledForChanged={{@enabledForChanged}}
+              />
+            {{/each}}
+          </tbody>
+        </table>
       </:content>
     </AdminFilterControls>
 

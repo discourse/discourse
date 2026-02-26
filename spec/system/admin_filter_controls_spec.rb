@@ -59,23 +59,29 @@ describe "AdminFilterControls", type: :system do
 
       expect(page).to have_css(".admin-filter-controls")
 
+      expect(filter_controls).to have_no_no_results_reset_button
       filter_controls.type_in_search("xyznonexistent")
       expect(page).to have_css(".admin-plugins-list__row", count: 0)
+      expect(filter_controls).to have_no_results_reset_button
+
+      filter_controls.click_no_results_reset_button
+      expect(filter_controls.search_input_value).to eq("")
+      expect(page).to have_css(".admin-plugins-list__row", count: 2)
+    end
+
+    it "also shows reset button when there are results and active filters" do
+      page.visit("/admin/plugins")
+
+      expect(page).to have_css(".admin-filter-controls")
+
+      expect(filter_controls).to have_no_reset_button
+      filter_controls.type_in_search("poll")
+      expect(page).to have_css(".admin-plugins-list__row", count: 1)
       expect(filter_controls).to have_reset_button
 
       filter_controls.click_reset_button
       expect(filter_controls.search_input_value).to eq("")
       expect(page).to have_css(".admin-plugins-list__row", count: 2)
-    end
-
-    it "does not show reset button when there are results" do
-      page.visit("/admin/plugins")
-
-      expect(page).to have_css(".admin-filter-controls")
-
-      filter_controls.type_in_search("poll")
-      expect(page).to have_css(".admin-plugins-list__row", count: 1)
-      expect(filter_controls).to have_no_reset_button
     end
   end
 
