@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminProduct from "discourse/plugins/discourse-subscriptions/discourse/models/admin-product";
@@ -11,7 +11,7 @@ export default class AdminPluginsDiscourseSubscriptionsProductsIndexRoute extend
 
   async model() {
     const products = await AdminProduct.findAll();
-    return new TrackedArray(products);
+    return trackedArray(products);
   }
 
   @action

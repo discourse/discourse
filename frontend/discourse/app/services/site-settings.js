@@ -1,4 +1,4 @@
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { trackedObject } from "@ember/reactive/collections";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
 import i18n from "discourse-i18n";
@@ -9,7 +9,7 @@ export function createSiteSettingsFromPreloaded(
   currentUser,
   upcomingChanges
 ) {
-  const settings = new TrackedObject(siteSettings);
+  const settings = trackedObject(siteSettings);
 
   if (themeSiteSettingOverrides) {
     for (const [key, value] of Object.entries(themeSiteSettingOverrides)) {

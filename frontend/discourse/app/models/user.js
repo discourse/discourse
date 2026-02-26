@@ -5,12 +5,12 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -1390,7 +1390,7 @@ User.reopenClass({
         responses.set("count", responses.get("count") + stat.get("count"));
       });
 
-    const result = new TrackedArray();
+    const result = trackedArray();
     result.push(...stats.filter((stat) => !stat.isResponse));
 
     let insertAt = 0;

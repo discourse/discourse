@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { optionalRequire } from "discourse/lib/utilities";
 import User from "discourse/models/user";
@@ -113,7 +113,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set sampleInvitees(invitees = []) {
-    this._sampleInvitees = new TrackedArray(
+    this._sampleInvitees = trackedArray(
       invitees.map((i) => DiscoursePostEventInvitee.create(i))
     );
   }
@@ -131,7 +131,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set reminders(reminders = []) {
-    this._reminders = new TrackedArray(reminders);
+    this._reminders = trackedArray(reminders);
   }
 
   get creator() {
