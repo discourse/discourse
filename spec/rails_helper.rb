@@ -1204,9 +1204,7 @@ def plugin_from_fixtures(plugin_name)
   FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
   FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
 
-  plugin = Plugin::Instance.new
-  plugin.path = File.join(tmp_plugins_dir, plugin_name, "plugin.rb")
-  plugin
+  Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
 end
 
 def concurrency_safe_tmp_dir
