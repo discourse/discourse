@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -19,7 +19,7 @@ export default class BulkUserDeleteConfirmation extends Component {
 
   @tracked confirmButtonDisabled = true;
   @tracked deleteStarted = false;
-  logs = new TrackedArray();
+  logs = trackedArray();
   failedUsernames = [];
 
   callAfterBulkDelete = false;

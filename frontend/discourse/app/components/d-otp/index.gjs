@@ -3,9 +3,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
@@ -33,7 +33,7 @@ export default class DOTP extends Component {
   @tracked isFocused = false;
   @tracked isAllSelected = false;
 
-  otp = new TrackedArray(Array(this.slots).fill(""));
+  otp = trackedArray(Array(this.slots).fill(""));
 
   get slots() {
     return this.args.slots ?? DEFAULT_SLOTS;

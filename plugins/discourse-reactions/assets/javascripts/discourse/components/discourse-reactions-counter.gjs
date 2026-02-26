@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -17,7 +17,7 @@ export default class DiscourseReactionsCounter extends Component {
   @service site;
   @service siteSettings;
 
-  reactionsUsers = new TrackedObject();
+  reactionsUsers = trackedObject();
 
   get elementId() {
     return `discourse-reactions-counter-${this.args.post.id}-${

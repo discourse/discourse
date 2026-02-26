@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { i18n } from "discourse-i18n";
 
 function failedResult(attrs) {
@@ -18,8 +18,8 @@ function validResult(attrs) {
 }
 
 export default class PasswordValidationHelper {
-  @tracked rejectedPasswords = new TrackedArray();
-  @tracked rejectedPasswordsMessages = new TrackedMap();
+  @tracked rejectedPasswords = trackedArray();
+  @tracked rejectedPasswordsMessages = trackedMap();
 
   constructor(owner) {
     this.owner = owner;

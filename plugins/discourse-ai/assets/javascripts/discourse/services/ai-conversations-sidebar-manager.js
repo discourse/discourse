@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedArray } from "@ember/reactive/collections";
 import { scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
@@ -24,7 +24,7 @@ export default class AiConversationsSidebarManager extends Service {
   @service router;
 
   @tracked topics = [];
-  @tracked sections = new TrackedArray();
+  @tracked sections = trackedArray();
   @tracked isLoading = true;
 
   api = null;
@@ -248,7 +248,7 @@ export default class AiConversationsSidebarManager extends Service {
     const todaySection = {
       name: "today",
       title: i18n("discourse_ai.ai_bot.conversations.today"),
-      links: new TrackedArray(),
+      links: trackedArray(),
     };
 
     fresh.push(todaySection);
@@ -289,7 +289,7 @@ export default class AiConversationsSidebarManager extends Service {
           default:
             title = autoUpdatingRelativeAge(new Date(t.last_posted_at));
         }
-        sec = { name: dateGroup, title, links: new TrackedArray() };
+        sec = { name: dateGroup, title, links: trackedArray() };
         fresh.push(sec);
       }
 
@@ -303,7 +303,7 @@ export default class AiConversationsSidebarManager extends Service {
       });
     });
 
-    this.sections = new TrackedArray(fresh);
+    this.sections = trackedArray(fresh);
 
     // register each new section once
     for (let sec of fresh) {

@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
@@ -38,7 +38,7 @@ const STEPS = [
     @action
     performAction() {
       this.modal.show(CreateInvite, {
-        model: { invites: new TrackedArray() },
+        model: { invites: trackedArray() },
       });
     }
   },

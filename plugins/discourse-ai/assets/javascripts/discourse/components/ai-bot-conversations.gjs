@@ -5,11 +5,11 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -46,7 +46,7 @@ export default class AiBotConversations extends Component {
 
   @tracked creditStatus = null;
   @tracked selectedLlmId = null;
-  @tracked uploads = new TrackedArray();
+  @tracked uploads = trackedArray();
   // Don't track this directly - we'll get it from uppyUpload
 
   textarea = null;
@@ -330,7 +330,7 @@ export default class AiBotConversations extends Component {
 
   @action
   removeUpload(upload) {
-    this.uploads = new TrackedArray(this.uploads.filter((u) => u !== upload));
+    this.uploads = trackedArray(this.uploads.filter((u) => u !== upload));
   }
 
   @action
@@ -347,7 +347,7 @@ export default class AiBotConversations extends Component {
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
-      this.uploads = new TrackedArray();
+      this.uploads = trackedArray();
     } catch (error) {
       popupAjaxError(error);
     }

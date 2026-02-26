@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ReseedModal from "discourse/admin/components/modal/reseed";
 import discourseDebounce from "discourse/lib/debounce";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -39,7 +39,7 @@ export default class AdminSiteTextIndexController extends Controller {
   ];
 
   #page = 0;
-  #results = new TrackedArray();
+  #results = trackedArray();
 
   get siteTexts() {
     return this.#results.flat();
