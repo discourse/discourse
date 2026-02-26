@@ -124,12 +124,6 @@ export default class AiTranslations extends Component {
     );
   }
 
-  get descriptionTooltip() {
-    return i18n("discourse_ai.translations.stats.description_tooltip", {
-      count: this.total,
-    });
-  }
-
   @action
   navigateToLocalizationSettings() {
     this.router.transitionTo("adminConfig.localization.settings", {
@@ -248,12 +242,6 @@ export default class AiTranslations extends Component {
       default:
         return 50;
     }
-  }
-
-  get descriptionKey() {
-    return this.done === this.total
-      ? "discourse_ai.translations.stats.complete_language_detection_description"
-      : "discourse_ai.translations.stats.incomplete_language_detection_description";
   }
 
   get backfillStatusMessage() {

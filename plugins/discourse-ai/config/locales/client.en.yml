@@ -386,8 +386,6 @@ en:
           enable_translations: "Enable automatic translations"
         stats:
           title: "Translation statistics"
-          complete_language_detection_description: "All %{total} eligible posts have their language detected."
-          incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
           backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
           eta_minutes:
