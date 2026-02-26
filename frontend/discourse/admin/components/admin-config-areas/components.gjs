@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
@@ -56,8 +57,8 @@ const STATUS_FILTER_OPTIONS = [
 
 export default class AdminConfigAreasComponents extends Component {
   @service modal;
-  @service router;
   @service toasts;
+  @service router;
 
   @tracked loading = true;
   @tracked components = [];
@@ -286,7 +287,6 @@ export default class AdminConfigAreasComponents extends Component {
 class ComponentRow extends Component {
   @service toasts;
   @service dialog;
-  @service router;
 
   @tracked enabled = this.args.component.enabled;
   @tracked hasUpdates = this.args.component.remote_theme?.commits_behind > 0;
@@ -337,14 +337,6 @@ class ComponentRow extends Component {
     return (
       this.args.component.description ??
       (remoteUrl && descriptionForRemoteUrl(remoteUrl))
-    );
-  }
-
-  get editUrl() {
-    return this.router.urlFor(
-      "adminCustomizeThemes.show",
-      "themes",
-      this.args.component.id
     );
   }
 
@@ -474,9 +466,13 @@ class ComponentRow extends Component {
         {{if this.hasUpdates 'has-update'}}"
     >
       <td class="d-table__cell --overview">
-        <a class="d-table__overview-name" href={{this.editUrl}}>
-          {{@component.name}}
-        </a>
+        <LinkTo
+          class="d-table__overview-link"
+          @route="adminCustomizeThemes.show"
+          @models={{array "themes" @component.id}}
+        >
+          <div class="d-table__overview-name">{{@component.name}}</div>
+        </LinkTo>
         {{#if @component.remote_theme.authors}}
           <div
             class="d-table__overview-author admin-config-components__author-name"
