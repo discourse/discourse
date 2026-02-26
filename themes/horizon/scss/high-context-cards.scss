@@ -199,10 +199,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
   .topic-excerpt {
     overflow-wrap: anywhere;
 
-    span {
-      word-break: break-word;
-    }
-
     .--high-context & {
       color: var(--primary-high);
       line-height: 1.25;
