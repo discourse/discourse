@@ -1,6 +1,17 @@
 en:
   accepted_answer: "Accepted Answer"
 
+  category_types:
+    support:
+      name: "Support"
+      description: "Q&A category where answers can be marked as solutions"
+
+  discourse_solved:
+    category_type:
+      solved_topics_auto_close_hours:
+        label: "Auto close solved topics (hours)"
+        description: "Automatically close topic after this many hours once marked as solved. Set to 0 to disable."
+
   site_settings:
     solved_enabled: "Enable solved plugin, allow users to select solutions for topics"
     allow_solved_on_all_topics: "Allow users to select solutions on all topics (when unchecked, solutions can be enabled per category or tag)"

@@ -1331,6 +1331,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, only: %i[index create update destroy]
     post "categories/reorder" => "categories#reorder"
+    get "categories/types" => "categories#types"
     get "categories/find" => "categories#find"
     post "categories/search" => "categories#search"
     get "categories/hierarchical_search" => "categories#hierarchical_search"

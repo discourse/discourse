@@ -16,10 +16,11 @@ export const REFRESH_COUNTS_APP_EVENT_NAME =
 
 export default class SidebarUserCategoriesSection extends CommonCategoriesSection {
   @service appEvents;
+  @service categoryTypeChooser;
   @service currentUser;
   @service modal;
   @service navigationMenu;
-  @service router;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -67,6 +68,10 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
     return hasDefaultSidebarCategories(this.siteSettings);
   }
 
+  createCategory() {
+    this.categoryTypeChooser.createCategory();
+  }
+
   @cached
   get headerActions() {
     const actions = [];
@@ -74,7 +79,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
     if (this.currentUser.can_create_category) {
       actions.push({
         id: "new-category",
-        action: () => this.router.transitionTo("newCategory"),
+        action: () => this.createCategory(),
         title: i18n("sidebar.sections.categories.header_action_new"),
       });
     }
