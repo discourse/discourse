@@ -24,6 +24,10 @@ export default class AdminPostMenu extends Component {
       .filter(Boolean);
   }
 
+  get canChangePostOwner() {
+    return this.currentUser?.canChangePostOwner;
+  }
+
   @action
   async topicAction(actionName) {
     await this.args.close();
@@ -107,15 +111,7 @@ export default class AdminPostMenu extends Component {
         </dropdown.item>
       {{/if}}
 
-      {{#if
-        (or
-          this.currentUser.admin
-          (and
-            this.siteSettings.moderators_change_post_ownership
-            this.currentUser.staff
-          )
-        )
-      }}
+      {{#if this.canChangePostOwner}}
         <dropdown.item>
           <DButton
             @label="post.controls.change_owner"

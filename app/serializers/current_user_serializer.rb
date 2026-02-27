@@ -82,7 +82,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_localize_content?,
              :effective_locale,
              :can_see_ip,
-             :is_impersonating
+             :is_impersonating,
+             :can_change_post_owner
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -104,6 +105,17 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def is_impersonating
     !!object.is_impersonating
+  end
+
+  def include_can_change_post_owner?
+    return true if admin?
+    return true if SiteSetting.moderators_change_post_ownership && moderator?
+    return true if object.in_any_groups?(SiteSetting.change_post_ownership_allowed_groups_map)
+    false
+  end
+
+  def can_change_post_owner
+    true
   end
 
   def groups

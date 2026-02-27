@@ -1756,21 +1756,17 @@ export default class TopicController extends Controller {
   }
 
   @discourseComputed(
-    "currentUser.admin",
-    "currentUser.staff",
-    "siteSettings.moderators_change_post_ownership",
     "selectedPostsCount",
-    "selectedPostsUsername"
+    "selectedPostsUsername",
+    "currentUser.canChangePostOwner"
   )
   canChangeOwner(
-    isAdmin,
-    isStaff,
-    modChangePostOwner,
     selectedPostsCount,
-    selectedPostsUsername
+    selectedPostsUsername,
+    canChangePostOwner
   ) {
     return (
-      (isAdmin || (modChangePostOwner && isStaff)) &&
+      !!canChangePostOwner &&
       selectedPostsCount > 0 &&
       selectedPostsUsername !== undefined
     );
