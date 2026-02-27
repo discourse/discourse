@@ -43,7 +43,7 @@ export default <template>
 
           <DButton
             @action={{@controller.changeSource}}
-            @icon="rotate"
+            @icon="code-branch"
             @label="admin.customize.theme.change_source.button"
             class="btn-default"
           />
