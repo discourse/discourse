@@ -22,6 +22,7 @@ class TranslationOverride < ActiveRecord::Base
       topic_id
       context
       username
+      recipient_username
       group_name
       unsubscribe_url
       subject_pm
