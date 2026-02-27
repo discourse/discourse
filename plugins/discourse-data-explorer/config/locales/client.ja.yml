@@ -11,12 +11,10 @@ ja:
         no_semicolons: "クエリからセミコロンを削除します。"
         dirty: "クエリは保存してから実行する必要があります。"
     explorer:
-      default_query: "デフォルト"
       or: "または"
       admins_only: "データエクスプローラーは管理者のみが利用できます。"
       allow_groups: "このクエリへのアクセスをグループに許可する"
       title: "データエクスプローラー"
-      create: "作成"
       create_placeholder: "クエリ名..."
       description_placeholder: "説明をここに入力"
       import:
@@ -37,10 +35,7 @@ ja:
           null_: "Null"
       export: "エクスポート"
       view_json: "JSON を表示"
-      view: "表示"
-      save: "変更を保存"
       run: "実行"
-      undo: "変更を破棄"
       edit: "編集"
       delete: "削除"
       download_json: "JSON"

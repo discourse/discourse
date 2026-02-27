@@ -4072,8 +4072,10 @@ tr_TR:
         delete: "Sil"
         add: "Gerekli etiket grubu ekleyin"
         placeholder: "Etiket grubu seç…"
+        tag_group: "Etiket grubu"
       topic_featured_link_allowed: "Bu kategoride öne çıkan bağlantılara izin ver"
       create_long: "Yeni bir kategori oluştur"
+      unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
       slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
@@ -5171,7 +5173,6 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
-    reset_filter: "Sıfırla"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"

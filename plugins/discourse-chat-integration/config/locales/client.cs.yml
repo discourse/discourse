@@ -8,7 +8,6 @@ cs:
   js:
     chat_integration:
       settings: "Nastavení"
-      channel_exception: "Při posledním odeslání zprávy do tohoto kanálu došlo k neznámé chybě."
       choose_group: "(vyberte skupinu)"
       all_categories: "(všechny kategorie)"
       all_tags: "(všechny štítky)"
@@ -18,7 +17,6 @@ cs:
       test_modal:
         topic: "Téma"
         close: "Zavřít"
-        error: "Při odesílání zprávy došlo k neznámé chybě. Další informace naleznete v protokolech webu."
       type:
         normal: Normální
       filter:

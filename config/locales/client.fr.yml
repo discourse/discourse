@@ -4098,8 +4098,10 @@ fr:
         delete: "Supprimer"
         add: "Ajouter le groupe d'étiquettes requis"
         placeholder: "Sélectionner un groupe d'étiquettes…"
+        tag_group: "Groupe d'étiquettes "
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       create_long: "Créer une nouvelle catégorie"
+      unsaved_changes: "Vous avez des modifications non enregistrées"
       slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
@@ -5197,7 +5199,6 @@ fr:
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
-    reset_filter: "Réinitialiser"
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"

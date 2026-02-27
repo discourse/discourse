@@ -31,11 +31,6 @@ zh_TW:
       chat_channels_count: "聊天頻道"
       chat_users_count: "聊天使用者"
     chat:
-      edit_category:
-        tab_title: "聊天"
-        description: "描述"
-        actions: "動作"
-        settings: "設定"
       back_to_forum: "論壇"
       deleted_chat_username: 已刪除
       dates:
@@ -48,7 +43,6 @@ zh_TW:
       cancel: "取消"
       cancel_reply: "取消回覆"
       chat_channels: "頻道"
-      pinned: "已釘選"
       browse_all_channels: "瀏覽所有頻道"
       move_to_channel:
         title: "將訊息移至頻道"

@@ -16,7 +16,6 @@ pl_PL:
       settings: "Ustawień"
       no_providers: "Musisz włączyć niektórych dostawców w ustawieniach wtyczki"
       channels_with_errors: "Niektóre kanały dla tego dostawcy nie powiodły się, gdy zostały wysłane ostatnie wiadomości. Kliknij ikonę błędu, aby dowiedzieć się więcej."
-      channel_exception: "Podczas ostatniego wysyłania wiadomości do tego kanału wystąpił nieznany błąd."
       group_mention_template: "Wzmianki o: @%{name}"
       group_message_template: "Wiadomości do: @%{name}"
       choose_group: "(wybierz grupę)"
@@ -33,7 +32,6 @@ pl_PL:
         topic: "Temat"
         send: "Wyślij wiadomość testową"
         close: "Zamknij"
-        error: "Podczas wysyłania wiadomości wystąpił nieznany błąd. Sprawdź dzienniki witryny, aby uzyskać więcej informacji."
         success: "Wiadomość wysłana poprawnie"
       type:
         normal: Normalny

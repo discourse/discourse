@@ -21,13 +21,6 @@ el:
           settings: "Ρυθμίσεις"
           save: "Αποθήκευση"
           delete: "Σβήσιμο"
-          html: "HTML"
-          categories: "Κατηγορίες"
-          groups: "Ομάδες"
           filter_placeholder: "Επιλέξτε διαφημίσεις..."
           show_to_anons: "Εμφάνιση σε ανώνυμους χρήστες"
           preview: "Προεπισκόπηση"
-          name: "Όνομα"
-          edit: "Επεξεργασία"
-          tabs:
-            settings: "Ρυθμίσεις"

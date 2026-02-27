@@ -34,8 +34,6 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
-      llm_selector:
-        none: "Ništa"
       features:
         back: "Prethodno"
         disabled: "(neomogućen)"
@@ -112,15 +110,6 @@ bs_BA:
         parameter_required: "Required"
         edit: "Izmijeni"
         delete: "Delete"
-      secrets:
-        short_title: "Identifikacija"
-        name: "Ime"
-        secret: "Value"
-        back: "Prethodno"
-        save: "Sačuvaj"
-        edit: "Izmijeni"
-        delete: "Delete"
-        embedding: "Embedding"
       llms:
         display_name: "Ime"
         save: "Sačuvaj"

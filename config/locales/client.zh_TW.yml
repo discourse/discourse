@@ -4634,7 +4634,6 @@ zh_TW:
   admin_js:
     type_to_filter: "篩選類型…"
     settings: "設定"
-    reset_filter: "重置"
     admin:
       title: "論壇管理員"
       moderator: "板主"

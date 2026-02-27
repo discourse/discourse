@@ -46,11 +46,6 @@ lt:
           many: "%{formatted_number} pokalbių žinutė"
           other: "%{formatted_number} pokalbių žinutės"
     chat:
-      edit_category:
-        tab_title: "Pokalbis"
-        description: "Aprašymas"
-        actions: "Veiksmai"
-        settings: "Nustatymai"
       text_copied: Tekstas nukopijuotas į iškarpinę
       link_copied: Nuoroda nukopijuota į iškarpinę
       back_to_forum: "Forumas"
@@ -65,7 +60,6 @@ lt:
       cancel: "Atšaukti"
       cancel_reply: "Atšaukti atsakymą"
       chat_channels: "Kanalai"
-      pinned: "Prisegta"
       browse_all_channels: "Naršyti visus kanalus"
       see_in: "Žiūrėti"
       open_channel_menu: "Atidaryti kanalo meniu"

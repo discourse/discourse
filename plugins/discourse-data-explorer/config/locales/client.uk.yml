@@ -11,12 +11,10 @@ uk:
         no_semicolons: "Вилучіть крапки з комою з запиту."
         dirty: "Ви повинні зберегти запит перед запуском."
     explorer:
-      default_query: "Стандартна"
       or: "або"
       admins_only: "Data explorer доступний лише адміністраторам."
       allow_groups: "Дозволити групам доступ до цього запиту"
       title: "Data Explorer"
-      create: "Створити"
       create_placeholder: "Назва запиту..."
       description_placeholder: "Введіть тут опис"
       import:
@@ -37,10 +35,7 @@ uk:
           null_: "Null"
       export: "Експорт"
       view_json: "Переглянути JSON"
-      view: "Вигляд"
-      save: "Зберегти зміни"
       run: "Запуск"
-      undo: "Скасувати зміни"
       edit: "Редагувати"
       delete: "Видалити"
       download_json: "JSON"
@@ -76,8 +71,6 @@ uk:
           invalid: "Недійсний"
           no_such_category: "Немає такої категорії"
           no_such_group: "Немає такої групи"
-          invalid_date: "%{date} – недійсна дата"
-          invalid_time: "%{time} – недійсний час"
     group:
       reports: "Звіти"
     admin:

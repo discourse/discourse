@@ -2759,6 +2759,7 @@ gl:
       allow_global_tags_label: "Permitir tamén outras etiquetas"
       required_tag_group:
         delete: "Eliminar"
+        tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir ligazóns de actualidade nesta categoría"
       create_long: "Crear unha nova categoría"
       slug_placeholder: "Inserir guións entre palabras para o url (opcional)"
@@ -3403,7 +3404,6 @@ gl:
         categories: "Todas as categorías"
   admin_js:
     settings: "Configuración"
-    reset_filter: "Restabelecer"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
