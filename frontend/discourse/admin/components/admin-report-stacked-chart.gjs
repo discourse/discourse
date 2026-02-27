@@ -17,6 +17,20 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+const emptyTooltipPlugin = {
+  id: "emptyTooltipPlugin",
+  beforeDraw(chart) {
+    const tooltip = chart.tooltip;
+    if (!tooltip || tooltip.opacity === 0) {
+      return;
+    }
+    const allZero = tooltip.dataPoints?.every((dp) => !dp.parsed.y);
+    if (allZero) {
+      tooltip.opacity = 0;
+    }
+  },
+};
+
 const gradientPlugin = {
   id: "gradientPlugin",
   beforeDatasetsDraw(chart) {
@@ -102,7 +116,7 @@ export default class AdminReportStackedChart extends Component {
     return {
       type: "bar",
       data,
-      plugins: [gradientPlugin],
+      plugins: [gradientPlugin, emptyTooltipPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
