@@ -21,7 +21,10 @@ module DiscourseAi
               max_tokens = 8192 if bedrock_model_id.match?(/3.[57]/)
 
               result = { anthropic_version: "bedrock-2023-05-31" }
-              if llm_model.lookup_custom_param("enable_reasoning")
+              if llm_model.lookup_custom_param("adaptive_thinking")
+                max_tokens = 32_000
+                result[:thinking] = { type: "adaptive" }
+              elsif llm_model.lookup_custom_param("enable_reasoning")
                 # we require special headers to go over 64k output tokens, lets
                 # wait for feature requests before enabling this
                 reasoning_tokens =
@@ -35,7 +38,9 @@ module DiscourseAi
 
               # effort parameter
               effort = llm_model.lookup_custom_param("effort")
-              result[:output_config] = { effort: effort } if %w[low medium high].include?(effort)
+              result[:output_config] = { effort: effort } if %w[low medium high max].include?(
+                effort,
+              )
 
               result
             else

@@ -6,8 +6,21 @@ module DiscourseAi
       module AnthropicShared
         def normalize_model_params(model_params)
           model_params = model_params.dup
-          model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
+
+          thinking_enabled =
+            llm_model.lookup_custom_param("adaptive_thinking") ||
+              llm_model.lookup_custom_param("enable_reasoning")
+
+          if thinking_enabled
+            model_params.delete(:temperature)
+            model_params.delete(:top_p)
+          else
+            model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
+            if llm_model.lookup_custom_param("disable_temperature")
+              model_params.delete(:temperature)
+            end
+          end
+
           model_params
         end
 

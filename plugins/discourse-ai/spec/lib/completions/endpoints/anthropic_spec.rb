@@ -503,6 +503,68 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(log.response_tokens).to eq(25)
   end
 
+  it "strips temperature and top_p when reasoning is enabled" do
+    model.update!(provider_params: { enable_reasoning: true, reasoning_tokens: 2048 })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body: {
+        id: "msg_123",
+        type: "message",
+        role: "assistant",
+        content: [{ type: "text", text: "response" }],
+        model: "claude-3-opus-20240229",
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json,
+    )
+
+    llm.generate(prompt, user: Discourse.system_user, temperature: 0.7, top_p: 0.9)
+
+    expect(parsed_body).not_to have_key(:temperature)
+    expect(parsed_body).not_to have_key(:top_p)
+  end
+
+  it "strips temperature and top_p when adaptive thinking is enabled" do
+    model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body: {
+        id: "msg_123",
+        type: "message",
+        role: "assistant",
+        content: [{ type: "text", text: "response" }],
+        model: "claude-3-opus-20240229",
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json,
+    )
+
+    llm.generate(prompt, user: Discourse.system_user, temperature: 0.7, top_p: 0.9)
+
+    expect(parsed_body).not_to have_key(:temperature)
+    expect(parsed_body).not_to have_key(:top_p)
+  end
+
   it "can operate in regular mode" do
     body = <<~STRING
       {
@@ -1433,7 +1495,114 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     end
   end
 
+  describe "adaptive thinking" do
+    it "sends adaptive thinking config when enabled" do
+      model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body[:thinking]).to eq({ type: "adaptive" })
+      expect(parsed_body[:max_tokens]).to eq(32_000)
+    end
+
+    it "adaptive_thinking takes priority over enable_reasoning" do
+      model.update!(
+        provider_params: {
+          adaptive_thinking: true,
+          enable_reasoning: true,
+          reasoning_tokens: 10_000,
+        },
+      )
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body[:thinking]).to eq({ type: "adaptive" })
+      expect(parsed_body[:max_tokens]).to eq(32_000)
+    end
+  end
+
   describe "effort parameter" do
+    it "includes effort in output_config when set to max" do
+      model.update!(provider_params: { effort: "max" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body.dig(:output_config, :effort)).to eq("max")
+    end
+
     it "includes effort in output_config when set to low, medium, or high" do
       model.update!(provider_params: { effort: "high" })
 

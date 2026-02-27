@@ -389,6 +389,44 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       expect(log.response_tokens).to eq(20)
     end
 
+    it "strips temperature and top_p when reasoning is enabled" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          enable_reasoning: true,
+          reasoning_tokens: 2048,
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user, temperature: 0.7, top_p: 0.9)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body).not_to have_key("temperature")
+      expect(request_body).not_to have_key("top_p")
+    end
+
     it "supports claude 3 streaming" do
       proxy = DiscourseAi::Completions::Llm.proxy(model)
 
@@ -1265,7 +1303,116 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     end
   end
 
+  describe "adaptive thinking" do
+    it "sends adaptive thinking config when enabled" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          enable_reasoning: true,
+          adaptive_thinking: true,
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body["thinking"]).to eq({ "type" => "adaptive" })
+      expect(request_body["max_tokens"]).to eq(32_000)
+    end
+
+    it "adaptive_thinking takes priority over enable_reasoning" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          enable_reasoning: true,
+          adaptive_thinking: true,
+          reasoning_tokens: 10_000,
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body["thinking"]).to eq({ "type" => "adaptive" })
+      expect(request_body["max_tokens"]).to eq(32_000)
+    end
+  end
+
   describe "effort parameter" do
+    it "includes effort in output_config when set to max" do
+      model.update!(provider_params: { access_key_id: "123", region: "us-east-1", effort: "max" })
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body.dig("output_config", "effort")).to eq("max")
+    end
+
     it "includes effort in output_config when set to low, medium, or high" do
       model.update!(
         provider_params: {
