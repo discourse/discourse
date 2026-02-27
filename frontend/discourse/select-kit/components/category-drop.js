@@ -104,8 +104,8 @@ export default class CategoryDrop extends ComboBoxComponent {
     }
 
     // When there's no parent category context, searching also returns
-    // subcategories. Count all categories (including subcategories) to
-    // determine if the search field is useful.
+    // subcategories and sub-subcategories. Count all categories
+    // (including all descendants) to determine if the search field is useful.
     if (!this.options?.parentCategory?.id) {
       const allCategories = this._filterUncategorized(
         this.site.categoriesList || []

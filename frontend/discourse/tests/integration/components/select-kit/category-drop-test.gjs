@@ -383,8 +383,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
 });
 
 // Helper that produces fewer top-level categories than the search threshold,
-// while the site's full categoriesList still contains subcategories that push
-// the searchable total above the threshold.
+// while the site's full categoriesList still contains subcategories and
+// sub-subcategories that push the searchable total above the threshold.
 function initFewTopLevelCategories(context) {
   const topLevelCategories = context.site.categoriesList.filter(
     (c) => !c.parent_category_id
@@ -396,7 +396,7 @@ function initFewTopLevelCategories(context) {
 }
 
 module(
-  "Integration | Component | select-kit/category-drop | search visibility includes subcategories",
+  "Integration | Component | select-kit/category-drop | search visibility includes subcategories and sub-subcategories",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -405,7 +405,7 @@ module(
       initFewTopLevelCategories(this);
     });
 
-    test("[TL0] shows search filter when subcategories bring total above threshold", async function (assert) {
+    test("[TL0] shows search filter when all descendants bring total above threshold", async function (assert) {
       set(this.currentUser, "trust_level", 0);
       set(this.currentUser, "staff", false);
       set(this.currentUser, "admin", false);
@@ -424,11 +424,11 @@ module(
       assert
         .dom(".filter-input")
         .exists(
-          "search is visible for TL0 user when subcategories bring total above threshold"
+          "search is visible for TL0 user when all descendants bring total above threshold"
         );
     });
 
-    test("[admin] shows search filter when subcategories bring total above threshold", async function (assert) {
+    test("[admin] shows search filter when all descendants bring total above threshold", async function (assert) {
       set(this.currentUser, "admin", true);
 
       await render(
@@ -445,14 +445,14 @@ module(
       assert
         .dom(".filter-input")
         .exists(
-          "search is visible for admin when subcategories bring total above threshold"
+          "search is visible for admin when all descendants bring total above threshold"
         );
     });
   }
 );
 
 module(
-  "Integration | Component | select-kit/category-drop | search visibility includes subcategories (anonymous)",
+  "Integration | Component | select-kit/category-drop | search visibility includes subcategories and sub-subcategories (anonymous)",
   function (hooks) {
     setupRenderingTest(hooks, { anonymous: true });
 
@@ -461,7 +461,7 @@ module(
       initFewTopLevelCategories(this);
     });
 
-    test("[anon] shows search filter when subcategories bring total above threshold", async function (assert) {
+    test("[anon] shows search filter when all descendants bring total above threshold", async function (assert) {
       await render(
         <template>
           <CategoryDrop
@@ -476,7 +476,7 @@ module(
       assert
         .dom(".filter-input")
         .exists(
-          "search is visible for anonymous user when subcategories bring total above threshold"
+          "search is visible for anonymous user when all descendants bring total above threshold"
         );
     });
   }
