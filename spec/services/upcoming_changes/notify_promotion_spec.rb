@@ -150,6 +150,16 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
           )
         end
 
+        it "skips sending email when consolidating notifications" do
+          allow(Notification::Action::BulkCreate).to receive(:call).and_call_original
+
+          result
+
+          expect(Notification::Action::BulkCreate).to have_received(:call).with(
+            satisfy { |args| args[:skip_send_email] == true },
+          )
+        end
+
         it "consolidates into a single notification per admin" do
           result
 
@@ -181,6 +191,16 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
               upcoming_change_humanized_names: ["Other change"],
               count: 1,
             }.to_json,
+          )
+        end
+
+        it "does not skip sending email when not consolidating notifications" do
+          allow(Notification::Action::BulkCreate).to receive(:call).and_call_original
+
+          result
+
+          expect(Notification::Action::BulkCreate).to have_received(:call).with(
+            satisfy { |args| args[:skip_send_email] == false },
           )
         end
 

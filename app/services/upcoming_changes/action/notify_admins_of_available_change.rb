@@ -31,7 +31,9 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
         user_id: all_admins.map(&:id),
         read: false,
       )
-    existing_by_user = existing_notifications.to_a.index_by(&:user_id)
+    existing_notification_rows = existing_notifications.to_a
+    existing_by_user = existing_notification_rows.index_by(&:user_id)
+    merge_with_existing = existing_notification_rows.present?
 
     bulk_notification_new_records =
       all_admins.map do |admin|
@@ -47,8 +49,11 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
       end
 
     Notification.transaction do
-      existing_notifications.delete_all if existing_notifications.any?
-      Notification::Action::BulkCreate.call(records: bulk_notification_new_records)
+      existing_notifications.delete_all if merge_with_existing
+      Notification::Action::BulkCreate.call(
+        records: bulk_notification_new_records,
+        skip_send_email: merge_with_existing,
+      )
     end
   end
 
