@@ -511,7 +511,7 @@ module Discourse
 
     assets.each do |asset|
       asset[:plugin_attributes] = {
-        "data-official": asset[:plugin].metadata.official?,
+        "data-official": !!asset[:plugin].metadata&.official?,
         "data-preinstalled": asset[:plugin].preinstalled?,
       }
     end
