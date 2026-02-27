@@ -379,12 +379,20 @@ class GroupsController < ApplicationController
     users = users_from_params.to_a
     emails = []
     if params[:emails]
-      params[:emails]
-        .split(",")
-        .each do |email|
-          existing_user = User.find_by_email(email)
-          existing_user.present? ? users.push(existing_user) : emails.push(email)
-        end
+      email_list = params[:emails].split(",").map { |e| e.strip.downcase }
+      found_users = User.with_email(email_list).to_a
+      users.concat(found_users)
+      if found_users.any?
+        matched_emails =
+          UserEmail
+            .where(user_id: found_users.map(&:id))
+            .where("lower(email) IN (?)", email_list)
+            .pluck(:email)
+            .map(&:downcase)
+        emails = email_list - matched_emails
+      else
+        emails = email_list
+      end
     end
 
     guardian.ensure_can_invite_to_forum!([group]) if emails.present?
@@ -412,7 +420,41 @@ class GroupsController < ApplicationController
     else
       notify = params[:notify_users]&.to_s == "true"
       uniq_users = users.uniq
-      uniq_users.each { |user| add_user_to_group(group, user, notify) }
+
+      if uniq_users.length > 1
+        already_in_group = usernames_already_in_group.to_set
+        new_users = uniq_users.reject { |u| already_in_group.include?(u.username) }
+
+        group.bulk_add(uniq_users.map(&:id))
+
+        if new_users.any?
+          new_user_ids = new_users.map(&:id)
+          now = Time.now
+
+          GroupUser.bulk_set_category_notifications(group, new_user_ids)
+          GroupUser.bulk_set_tag_notifications(group, new_user_ids)
+
+          new_users.each { |user| group.trigger_user_added_event(user, false) }
+          group.bulk_publish_category_updates(new_users)
+
+          GroupHistory.insert_all(
+            new_users.map do |user|
+              {
+                group_id: group.id,
+                acting_user_id: current_user.id,
+                target_user_id: user.id,
+                action: GroupHistory.actions[:add_user_to_group],
+                created_at: now,
+                updated_at: now,
+              }
+            end,
+          )
+
+          new_users.each { |user| group.notify_added_to_group(user) } if notify
+        end
+      else
+        uniq_users.each { |user| add_user_to_group(group, user, notify) }
+      end
 
       emails.each do |email|
         begin
@@ -572,15 +614,42 @@ class GroupsController < ApplicationController
     removed_users = []
     skipped_users = []
 
-    users.each do |user|
-      if group.remove(user)
-        removed_users << user.username
-        GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
-      else
-        if group.users.exclude? user
-          skipped_users << user.username
+    if users.length > 1
+      in_group_ids =
+        GroupUser.where(group_id: group.id, user_id: users.map(&:id)).pluck(:user_id).to_set
+      actually_in_group = users.select { |u| in_group_ids.include?(u.id) }
+      skipped_users = users.reject { |u| in_group_ids.include?(u.id) }.map(&:username)
+
+      if actually_in_group.any?
+        group.bulk_remove(actually_in_group.map(&:id))
+
+        now = Time.now
+        GroupHistory.insert_all(
+          actually_in_group.map do |user|
+            {
+              group_id: group.id,
+              acting_user_id: current_user.id,
+              target_user_id: user.id,
+              action: GroupHistory.actions[:remove_user_from_group],
+              created_at: now,
+              updated_at: now,
+            }
+          end,
+        )
+
+        removed_users = actually_in_group.map(&:username)
+      end
+    else
+      users.each do |user|
+        if group.remove(user)
+          removed_users << user.username
+          GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
         else
-          raise Discourse::InvalidParameters
+          if group.users.exclude? user
+            skipped_users << user.username
+          else
+            raise Discourse::InvalidParameters
+          end
         end
       end
     end

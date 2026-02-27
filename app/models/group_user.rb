@@ -209,6 +209,69 @@ class GroupUser < ActiveRecord::Base
     end
   end
 
+  def self.bulk_set_category_notifications(group, user_ids)
+    defaults = group.group_category_notification_defaults.to_a
+    return if defaults.empty?
+
+    defaults.each do |default|
+      DB.exec(
+        <<~SQL,
+          INSERT INTO category_users (user_id, category_id, notification_level)
+          SELECT id, :category_id, :notification_level
+          FROM users
+          WHERE id IN (:user_ids)
+          ON CONFLICT (user_id, category_id) DO UPDATE
+            SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "category_users.notification_level")}
+        SQL
+        user_ids: user_ids,
+        category_id: default.category_id,
+        notification_level: default.notification_level,
+      )
+    end
+
+    CategoryUser.auto_watch(user_ids: user_ids)
+    CategoryUser.auto_track(user_ids: user_ids)
+  end
+
+  def self.bulk_set_tag_notifications(group, user_ids)
+    defaults = group.group_tag_notification_defaults.to_a
+    return if defaults.empty?
+
+    defaults.each do |default|
+      DB.exec(
+        <<~SQL,
+          INSERT INTO tag_users (user_id, tag_id, notification_level, created_at, updated_at)
+          SELECT id, :tag_id, :notification_level, NOW(), NOW()
+          FROM users
+          WHERE id IN (:user_ids)
+          ON CONFLICT (user_id, tag_id) DO UPDATE
+            SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "tag_users.notification_level")},
+                updated_at = NOW()
+        SQL
+        user_ids: user_ids,
+        tag_id: default.tag_id,
+        notification_level: default.notification_level,
+      )
+    end
+
+    TagUser.auto_watch(user_ids: user_ids)
+    TagUser.auto_track(user_ids: user_ids)
+  end
+
+  # Returns a SQL expression that picks the semantically higher notification
+  # level between two column references. Watching(3) is treated as higher than
+  # watching_first_post(4).
+  def self.semantically_higher_notification_level_sql(new_col, existing_col)
+    <<~SQL.squish
+      CASE
+        WHEN (CASE #{new_col} WHEN 3 THEN 5 ELSE #{new_col} END) >=
+             (CASE #{existing_col} WHEN 3 THEN 5 ELSE #{existing_col} END)
+        THEN #{new_col}
+        ELSE #{existing_col}
+      END
+    SQL
+  end
+
   def increase_group_user_count
     Group.increment_counter(:user_count, self.group_id)
   end
