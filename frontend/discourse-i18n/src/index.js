@@ -470,7 +470,7 @@ export class I18n {
     this.#loadMessageFormatData(localeData.messageFormatData);
 
     if (localeData.overrides) {
-      this._overrides = localeData.overrides;
+      this.#applyOverrides(localeData.overrides);
     }
 
     if (localeData.extra?.admin_js) {
@@ -483,6 +483,28 @@ export class I18n {
 
     if (localeData.theme) {
       this.#loadTheme(localeData.theme);
+    }
+  }
+
+  #applyOverrides(overrides) {
+    for (const [locale, overridesForLocale] of Object.entries(
+      overrides || {}
+    )) {
+      for (const [key, value] of Object.entries(overridesForLocale)) {
+        const segs = key.replace(/^admin_js\./, "js.").split(".");
+        let node = this.translations[locale] || {};
+
+        for (let i = 0; i < segs.length - 1; i++) {
+          if (!(segs[i] in node)) {
+            node[segs[i]] = {};
+          }
+          node = node[segs[i]];
+        }
+
+        if (typeof node === "object") {
+          node[segs[segs.length - 1]] = value;
+        }
+      }
     }
   }
 
