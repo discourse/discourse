@@ -353,9 +353,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("canChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", {
-      can_change_post_owner: false,
-    });
+    const currentUser = this.store.createRecord("user");
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },

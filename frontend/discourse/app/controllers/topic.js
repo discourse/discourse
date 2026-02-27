@@ -1766,7 +1766,7 @@ export default class TopicController extends Controller {
     canChangePostOwner
   ) {
     return (
-      canChangePostOwner &&
+      !!canChangePostOwner &&
       selectedPostsCount > 0 &&
       selectedPostsUsername !== undefined
     );
