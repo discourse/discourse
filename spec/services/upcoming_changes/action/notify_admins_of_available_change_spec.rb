@@ -12,6 +12,12 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
           impact_type: "feature",
           impact_role: "all_members",
         },
+        test_upcoming_change_b: {
+          impact: "feature,all_members",
+          status: :beta,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
       },
     )
   end
@@ -40,13 +46,15 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
       }.by(2)
     end
 
-    it "creates notifications with correct data" do
+    it "creates notifications with array data format" do
       result
 
-      expect(JSON.parse(notification.data)).to include(
-        "upcoming_change_name" => "test_upcoming_change",
-        "upcoming_change_humanized_name" => SiteSetting.humanized_name(:test_upcoming_change),
+      data = JSON.parse(notification.data)
+      expect(data["upcoming_change_names"]).to eq(["test_upcoming_change"])
+      expect(data["upcoming_change_humanized_names"]).to eq(
+        [SiteSetting.humanized_name(:test_upcoming_change)],
       )
+      expect(data["count"]).to eq(1)
     end
 
     it "creates an admins_notified_available_change event" do
@@ -65,6 +73,151 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
           subject: "test_upcoming_change",
         ).count
       }.by(1)
+    end
+
+    context "when there is an existing unread notification" do
+      before do
+        Fabricate(
+          :notification,
+          user: admin_1,
+          notification_type: Notification.types[:upcoming_change_available],
+          read: false,
+          data: {
+            upcoming_change_names: ["test_upcoming_change_b"],
+            upcoming_change_humanized_names: [SiteSetting.humanized_name(:test_upcoming_change_b)],
+            count: 1,
+          }.to_json,
+        )
+      end
+
+      it "skips sending email when consolidating notifications" do
+        allow(Notification::Action::BulkCreate).to receive(:call).and_call_original
+
+        result
+
+        expect(Notification::Action::BulkCreate).to have_received(:call).with(
+          satisfy { |args| args[:skip_send_email] == true },
+        )
+      end
+
+      it "consolidates into a single notification per admin" do
+        result
+
+        notifications =
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_1.id,
+          )
+        expect(notifications.count).to eq(1)
+
+        data = JSON.parse(notifications.first.data)
+        expect(data["upcoming_change_names"]).to contain_exactly(
+          "test_upcoming_change_b",
+          "test_upcoming_change",
+        )
+        expect(data["count"]).to eq(2)
+      end
+    end
+
+    context "when there is an existing read notification" do
+      before do
+        Fabricate(
+          :notification,
+          user: admin_1,
+          notification_type: Notification.types[:upcoming_change_available],
+          read: true,
+          data: {
+            upcoming_change_names: ["test_upcoming_change_b"],
+            upcoming_change_humanized_names: [SiteSetting.humanized_name(:test_upcoming_change_b)],
+            count: 1,
+          }.to_json,
+        )
+      end
+
+      it "does not skip sending email when not consolidating notifications" do
+        allow(Notification::Action::BulkCreate).to receive(:call).and_call_original
+
+        result
+
+        expect(Notification::Action::BulkCreate).to have_received(:call).with(
+          satisfy { |args| args[:skip_send_email] == false },
+        )
+      end
+
+      it "does not consolidate with the read notification" do
+        result
+
+        notifications =
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_1.id,
+          )
+        expect(notifications.count).to eq(2)
+      end
+    end
+
+    context "when the same change is already in an unread notification" do
+      before do
+        Fabricate(
+          :notification,
+          user: admin_1,
+          notification_type: Notification.types[:upcoming_change_available],
+          read: false,
+          data: {
+            upcoming_change_names: ["test_upcoming_change"],
+            upcoming_change_humanized_names: [SiteSetting.humanized_name(:test_upcoming_change)],
+            count: 1,
+          }.to_json,
+        )
+      end
+
+      it "deduplicates the change names" do
+        result
+
+        notifications =
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_1.id,
+          )
+        expect(notifications.count).to eq(1)
+
+        data = JSON.parse(notifications.first.data)
+        expect(data["upcoming_change_names"]).to eq(["test_upcoming_change"])
+        expect(data["count"]).to eq(1)
+      end
+    end
+
+    context "when there is an existing notification with the old data format" do
+      before do
+        Fabricate(
+          :notification,
+          user: admin_1,
+          notification_type: Notification.types[:upcoming_change_available],
+          read: false,
+          data: {
+            upcoming_change_name: "test_upcoming_change_b",
+            upcoming_change_humanized_name: SiteSetting.humanized_name(:test_upcoming_change_b),
+          }.to_json,
+        )
+      end
+
+      it "merges old format into the new array format" do
+        result
+
+        notifications =
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_1.id,
+          )
+        expect(notifications.count).to eq(1)
+
+        data = JSON.parse(notifications.first.data)
+        expect(data["upcoming_change_names"]).to contain_exactly(
+          "test_upcoming_change_b",
+          "test_upcoming_change",
+        )
+        expect(data["count"]).to eq(2)
+      end
     end
   end
 end
