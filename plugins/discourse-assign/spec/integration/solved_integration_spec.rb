@@ -21,30 +21,30 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
 
   describe "updating assignment status on solve" do
     it "updates all assignments to assignment_status_on_solve status when a post is accepted" do
-      assigner = Assigner.new(post.topic, user)
+      assigner = Assigner.new(topic, user)
       result = assigner.assign(user)
       expect(result[:success]).to eq(true)
 
-      expect(post.topic.assignment.status).to eq("New")
+      expect(topic.assignment.status).to eq("New")
       DiscourseSolved.accept_answer!(post, user)
       topic.reload
 
       expect(topic.solved.answer_post_id).to eq(post.id)
-      expect(post.topic.assignment.reload.status).to eq("Done")
+      expect(topic.assignment.reload.status).to eq("Done")
     end
 
     it "updates all assignments to assignment_status_on_unsolve status when a post is unaccepted" do
-      assigner = Assigner.new(post.topic, user)
+      assigner = Assigner.new(topic, user)
       result = assigner.assign(user)
       expect(result[:success]).to eq(true)
 
       DiscourseSolved.accept_answer!(post, user)
 
-      expect(post.reload.topic.assignment.reload.status).to eq("Done")
+      expect(topic.assignment.reload.status).to eq("Done")
 
       DiscourseSolved.unaccept_answer!(post)
 
-      expect(post.reload.topic.assignment.reload.status).to eq("New")
+      expect(topic.assignment.reload.status).to eq("New")
     end
 
     it "does not update the assignee when a post is accepted" do
@@ -83,8 +83,8 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
         other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
         other_post2 = Fabricate(:post, topic: other_topic2, user: user)
 
-        Assigner.new(other_post.topic, user).assign(user)
-        Assigner.new(other_post2.topic, user).assign(user)
+        Assigner.new(other_topic, user).assign(user)
+        Assigner.new(other_topic2, user).assign(user)
 
         reminder = PendingAssignsReminder.new
         topics = reminder.send(:assigned_topics, user, order: :asc)
@@ -113,8 +113,8 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
         other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
         other_post2 = Fabricate(:post, topic: other_topic2, user: user)
 
-        Assigner.new(other_post.topic, user).assign(user)
-        Assigner.new(other_post2.topic, user).assign(user)
+        Assigner.new(other_topic, user).assign(user)
+        Assigner.new(other_topic2, user).assign(user)
 
         reminder = PendingAssignsReminder.new
         expect(reminder.send(:assigned_count_for, user)).to eq(2)
