@@ -298,85 +298,118 @@ export default <template>
                     </a>
                   {{/if}}
                 {{else}}
-                  {{#unless @controller.showRemoteError}}
-                    {{i18n "admin.customize.theme.up_to_date"}}
-                    {{formatDate
-                      @controller.model.remote_theme.updated_at
-                      leaveAgo="true"
-                    }}
-                  {{/unless}}
+                  <span class="git-name">
+                    {{@controller.model.remote_theme.remote_url}}
+                    {{#if
+                      @controller.model.remote_theme.branch
+                    }}/{{@controller.model.remote_theme.branch}}
+                    {{/if}}
+                  </span>
                 {{/if}}
-              {{/if}}
-            </span>
-            {{#if @controller.model.remote_theme.is_git}}
-              {{#if @controller.model.remote_theme.commits_behind}}
-                <DButton
-                  @action={{@controller.updateToLatest}}
-                  @icon="download"
-                  @label="admin.customize.theme.update_to_latest"
-                  class="btn-primary"
-                />
-              {{else}}
-                <DButton
-                  @action={{@controller.checkForThemeUpdates}}
-                  @icon="arrows-rotate"
-                  @label="admin.customize.theme.check_for_updates"
-                  class="btn-default"
-                />
-              {{/if}}
-
-              <DButton
-                @action={{@controller.changeSource}}
-                @icon="rotate"
-                @label="admin.customize.theme.change_source.button"
-                class="btn-default"
-              />
-            {{else}}
-              <span class="status-message">
-                {{icon "circle-info"}}
-                {{i18n "admin.customize.theme.imported_from_archive"}}
               </span>
             {{/if}}
-          </div>
-        {{else if (not @controller.model.system)}}
-          <span class="created-by">
-            <span class="heading">{{i18n
-                "admin.customize.theme.creator"
-              }}</span>
-            <span>
-              <UserLink @user={{@controller.model.user}}>
-                {{formatUsername @controller.model.user.username}}
-              </UserLink>
+
+            {{#if @controller.model.remote_theme.branch}}<span
+                class="branch"
+              ><span class="heading">{{i18n
+                    "admin.customize.theme.branch"
+                  }}</span>
+                <span
+                  class="git-name"
+                >{{@controller.model.remote_theme.branch}}</span></span>{{/if}}
+
+            {{#if @controller.model.remote_theme.theme_version}}<span
+                class="version"
+              ><span class="heading">{{i18n
+                    "admin.customize.theme.version"
+                  }}</span>
+                {{@controller.model.remote_theme.theme_version}}</span>{{/if}}
+          {{/if}}
+
+          {{#if
+            (and
+              (not @controller.model.system)
+              (not @controller.model.remote_theme)
+            )
+          }}
+            <span class="created-by">
+              <span class="heading">{{i18n
+                  "admin.customize.theme.creator"
+                }}</span>
+              <span>
+                <UserLink @user={{@controller.model.user}}>
+                  {{formatUsername @controller.model.user.username}}
+                </UserLink>
+              </span>
             </span>
-          </span>
-        {{/if}}
-        {{#if @controller.showCheckboxes}}
-          <div class="inline-checkboxes">
-            {{#unless @controller.model.component}}
-              <InlineEditCheckbox
-                @action={{@controller.applyDefault}}
-                @labelKey="admin.customize.theme.is_default"
-                @checked={{@controller.model.default}}
-                @modelId={{@controller.model.id}}
-              />
-              <InlineEditCheckbox
-                @action={{@controller.applyUserSelectable}}
-                @labelKey="admin.customize.theme.user_selectable"
-                @checked={{@controller.model.user_selectable}}
-                @modelId={{@controller.model.id}}
-              />
-            {{/unless}}
-            {{#if @controller.model.remote_theme}}
-              <InlineEditCheckbox
-                @action={{@controller.applyAutoUpdateable}}
-                @labelKey="admin.customize.theme.auto_update"
-                @checked={{@controller.model.auto_update}}
-                @modelId={{@controller.model.id}}
-              />
-            {{/if}}
-          </div>
-        {{/if}}
-      </div>
+          {{/if}}
+
+          {{#if @controller.model.remote_theme}}
+            <div class="remote-theme-actions">
+              <span class="status-message">
+                {{#if @controller.updatingRemote}}
+                  {{i18n "admin.customize.theme.updating"}}
+                {{else}}
+                  {{#if @controller.model.remote_theme.commits_behind}}
+                    {{#if @controller.hasOverwrittenHistory}}
+                      {{i18n "admin.customize.theme.has_overwritten_history"}}
+                    {{else}}
+                      {{i18n
+                        "admin.customize.theme.commits_behind"
+                        count=@controller.model.remote_theme.commits_behind
+                      }}
+                    {{/if}}
+                    {{#if @controller.model.remote_theme.github_diff_link}}
+                      <a
+                        href={{@controller.model.remote_theme.github_diff_link}}
+                      >
+                        {{i18n "admin.customize.theme.compare_commits"}}
+                      </a>
+                    {{/if}}
+                  {{else}}
+                    {{#unless @controller.showRemoteError}}
+                      {{i18n "admin.customize.theme.up_to_date"}}
+                      {{formatDate
+                        @controller.model.remote_theme.updated_at
+                        leaveAgo="true"
+                      }}
+                    {{/unless}}
+                  {{/if}}
+                {{/if}}
+              </span>
+              {{#if @controller.model.remote_theme.is_git}}
+                {{#if @controller.model.remote_theme.commits_behind}}
+                  <DButton
+                    @action={{@controller.updateToLatest}}
+                    @icon="download"
+                    @label="admin.customize.theme.update_to_latest"
+                    class="btn-primary"
+                  />
+                {{else}}
+                  <DButton
+                    @action={{@controller.checkForThemeUpdates}}
+                    @icon="arrows-rotate"
+                    @label="admin.customize.theme.check_for_updates"
+                    class="btn-default"
+                  />
+                {{/if}}
+
+                <DButton
+                  @action={{@controller.changeSource}}
+                  @icon="rotate"
+                  @label="admin.customize.theme.change_source.button"
+                  class="btn-default"
+                />
+              {{else}}
+                <span class="status-message">
+                  {{icon "circle-info"}}
+                  {{i18n "admin.customize.theme.imported_from_archive"}}
+                </span>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
 
       {{#if @controller.model.system}}
         <div class="alert alert-info system-theme-info">
