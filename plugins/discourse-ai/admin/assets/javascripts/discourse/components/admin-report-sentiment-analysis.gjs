@@ -30,6 +30,7 @@ import DoughnutChart from "./doughnut-chart";
 
 export default class AdminReportSentimentAnalysis extends Component {
   @service router;
+  @service siteSettings;
 
   @tracked selectedChart = null;
   @tracked posts = [];
@@ -330,55 +331,109 @@ export default class AdminReportSentimentAnalysis extends Component {
     <span {{didInsert this.openToChart}}></span>
 
     {{#unless this.showingSelectedChart}}
-      <table class="sentiment-analysis-table md-table">
-        <thead>
-          <th>{{this.groupingType}}</th>
-          <th>{{i18n
-              "discourse_ai.sentiments.sentiment_analysis.table.total_count"
-            }}</th>
-          <th>{{i18n
-              "discourse_ai.sentiments.sentiment_analysis.table.sentiment"
-            }}</th>
-        </thead>
+      {{#if this.siteSettings.reporting_improvements}}
+        <table class="sentiment-analysis-table md-table">
+          <thead>
+            <th>{{this.groupingType}}</th>
+            <th>{{i18n
+                "discourse_ai.sentiments.sentiment_analysis.table.total_count"
+              }}</th>
+            <th>{{i18n
+                "discourse_ai.sentiments.sentiment_analysis.table.sentiment"
+              }}</th>
+          </thead>
 
-        <tbody>
-          {{#each this.transformedData as |data|}}
-            <tr
-              class="sentiment-analysis-table__row"
-              role="button"
-              {{on "click" (fn this.showDetails data)}}
-            >
-              <td class="sentiment-analysis-table__title">
-                {{#if data.category}}
-                  {{categoryBadge data.category}}
-                {{else}}
-                  {{data.title}}
-                {{/if}}
-              </td>
-              <td
-                class="sentiment-analysis-table__total-score"
-              >{{data.total_score}}</td>
-              <td class="sentiment-horizontal-bar">
-                <AiSentimentHorizontalBar
-                  @type="positive"
-                  @score={{data.score_map.positive}}
-                  @width={{data.widths.positive}}
-                />
-                <AiSentimentHorizontalBar
-                  @type="negative"
-                  @score={{data.score_map.negative}}
-                  @width={{data.widths.negative}}
-                />
-                <AiSentimentHorizontalBar
-                  @type="neutral"
-                  @score={{data.score_map.neutral}}
-                  @width={{data.widths.neutral}}
-                />
-              </td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
+          <tbody>
+            {{#each this.transformedData as |data|}}
+              <tr
+                class="sentiment-analysis-table__row"
+                role="button"
+                {{on "click" (fn this.showDetails data)}}
+              >
+                <td class="sentiment-analysis-table__title">
+                  {{#if data.category}}
+                    {{categoryBadge data.category}}
+                  {{else}}
+                    {{data.title}}
+                  {{/if}}
+                </td>
+                <td
+                  class="sentiment-analysis-table__total-score"
+                >{{data.total_score}}</td>
+                <td class="sentiment-horizontal-bar">
+                  <AiSentimentHorizontalBar
+                    @type="positive"
+                    @score={{data.score_map.positive}}
+                    @width={{data.widths.positive}}
+                  />
+                  <AiSentimentHorizontalBar
+                    @type="negative"
+                    @score={{data.score_map.negative}}
+                    @width={{data.widths.negative}}
+                  />
+                  <AiSentimentHorizontalBar
+                    @type="neutral"
+                    @score={{data.score_map.neutral}}
+                    @width={{data.widths.neutral}}
+                  />
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <div class="admin-report-sentiment-analysis">
+          <table class="sentiment-analysis-table md-table">
+            <thead>
+              <th>{{this.groupingType}}</th>
+              <th>{{i18n
+                  "discourse_ai.sentiments.sentiment_analysis.table.total_count"
+                }}</th>
+              <th>{{i18n
+                  "discourse_ai.sentiments.sentiment_analysis.table.sentiment"
+                }}</th>
+            </thead>
+
+            <tbody>
+              {{#each this.transformedData as |data|}}
+                <tr
+                  class="sentiment-analysis-table__row"
+                  role="button"
+                  {{on "click" (fn this.showDetails data)}}
+                >
+                  <td class="sentiment-analysis-table__title">
+                    {{#if data.category}}
+                      {{categoryBadge data.category}}
+                    {{else}}
+                      {{data.title}}
+                    {{/if}}
+                  </td>
+                  <td
+                    class="sentiment-analysis-table__total-score"
+                  >{{data.total_score}}</td>
+                  <td class="sentiment-horizontal-bar">
+                    <AiSentimentHorizontalBar
+                      @type="positive"
+                      @score={{data.score_map.positive}}
+                      @width={{data.widths.positive}}
+                    />
+                    <AiSentimentHorizontalBar
+                      @type="negative"
+                      @score={{data.score_map.negative}}
+                      @width={{data.widths.negative}}
+                    />
+                    <AiSentimentHorizontalBar
+                      @type="neutral"
+                      @score={{data.score_map.neutral}}
+                      @width={{data.widths.neutral}}
+                    />
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/if}}
     {{/unless}}
 
     {{#if (and this.selectedChart this.showingSelectedChart)}}
