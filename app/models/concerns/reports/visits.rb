@@ -36,28 +36,13 @@ module Reports::Visits
       report.modes = [Report::MODES[:stacked_chart]]
       report.default_group_by = "weekly"
 
-      scope = UserVisit
-      if group_filter.present?
-        group_id = group_filter.to_i
-        scope = scope.joins(user: :group_users).where(group_users: { group_id: group_id })
-      end
-
       desktop_data =
-        scope
-          .where(mobile: false)
-          .where("visited_at >= ? AND visited_at <= ?", report.start_date, report.end_date)
-          .group(:visited_at)
-          .order(:visited_at)
-          .count
+        UserVisit
+          .desktop_by_day(report.start_date, report.end_date, group_filter)
           .map { |date, count| { x: date.to_s, y: count } }
-
       mobile_data =
-        scope
-          .where(mobile: true)
-          .where("visited_at >= ? AND visited_at <= ?", report.start_date, report.end_date)
-          .group(:visited_at)
-          .order(:visited_at)
-          .count
+        UserVisit
+          .mobile_by_day(report.start_date, report.end_date, group_filter)
           .map { |date, count| { x: date.to_s, y: count } }
 
       report.data = [

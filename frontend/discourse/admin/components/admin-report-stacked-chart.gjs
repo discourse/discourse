@@ -35,6 +35,9 @@ const gradientPlugin = {
           ["x", "y", "width", "base"],
           true
         );
+        if (!x || !y || !width || !base) {
+          return;
+        }
         const gradient = ctx.createLinearGradient(
           x - width / 2,
           y,
