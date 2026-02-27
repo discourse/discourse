@@ -482,7 +482,7 @@ module SiteSettingExtension
         opts[:plugin] = plugins[s] if plugins[s]
         opts[:upload] = upload_metadata if upload_metadata
 
-        opts
+        DiscoursePluginRegistry.apply_modifier(:site_setting_result, opts)
       end
       .select do |setting|
         if only_overridden

@@ -16,8 +16,10 @@ import JobStatus from "discourse/admin/components/site-settings/job-status";
 import SiteSetting from "discourse/admin/models/site-setting";
 import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
@@ -290,8 +292,12 @@ export default class SiteSettingComponent extends Component {
     return this.setting.staffLogFilter;
   }
 
+  get isDisabled() {
+    return this.setting.themeable || this.setting.disabled;
+  }
+
   get canUpdate() {
-    if (this.setting.themeable) {
+    if (this.setting.themeable || this.setting.disabled) {
       return false;
     }
 
@@ -416,7 +422,10 @@ export default class SiteSettingComponent extends Component {
   <template>
     <div
       data-setting={{this.setting.setting}}
-      class="row setting {{this.typeClass}} {{if this.overridden 'overridden'}}"
+      class="row setting
+        {{this.typeClass}}
+        {{if this.overridden 'overridden'}}
+        {{if this.setting.disabled 'disabled'}}"
       ...attributes
     >
       <div class="setting-label">
@@ -436,6 +445,11 @@ export default class SiteSettingComponent extends Component {
             </LinkTo>
           {{/if}}
         </h3>
+
+        <PluginOutlet
+          @name="site-setting-after-label"
+          @outletArgs={{lazyHash setting=this.setting}}
+        />
 
         {{#if this.defaultIsAvailable}}
           <DButton
@@ -460,7 +474,7 @@ export default class SiteSettingComponent extends Component {
         {{else}}
           <this.resolvedComponent
             {{on "keydown" this._handleKeydown}}
-            @disabled={{this.setting.themeable}}
+            @disabled={{this.isDisabled}}
             @setting={{this.setting}}
             @value={{this.buffered.value}}
             @preview={{this.preview}}
@@ -476,6 +490,10 @@ export default class SiteSettingComponent extends Component {
             <Description @description={{this.setting.description}} />
             <JobStatus @status={{this.status}} @progress={{this.progress}} />
           {{/if}}
+          <PluginOutlet
+            @name="site-setting-after-description"
+            @outletArgs={{lazyHash setting=this.setting}}
+          />
           {{#if this.showThemeSiteSettingWarning}}
             <div class="setting-theme-warning">
               <p class="setting-theme-warning__text">
