@@ -42,7 +42,9 @@ RSpec.describe "Sidebar New Topic Button", system: true do
       find(".sidebar-new-topic-button").click
 
       expect(page).to have_css("#reply-title")
-      expect(page).to have_css(".mini-tag-chooser .formatted-selection", text: tag.name)
+
+      tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+      expect(tag_chooser).to have_selected_name(tag.name)
     end
 
     it "does not disable button when visiting read-only category" do
