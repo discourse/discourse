@@ -53,6 +53,16 @@ export default class AdminSiteTextEdit extends Controller {
     }
   }
 
+  resetTextarea() {
+    this.#activeTextarea = null;
+    this.#lastCursorPos = null;
+  }
+
+  @action
+  registerTextarea(element) {
+    this.#activeTextarea = element.querySelector("textarea") ?? element;
+  }
+
   @action
   insertInterpolationKey(key) {
     const textarea = this.#activeTextarea;

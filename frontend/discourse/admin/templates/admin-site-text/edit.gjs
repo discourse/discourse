@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
 import DButton from "discourse/components/d-button";
@@ -37,6 +38,7 @@ export default <template>
     {{/if}}
 
     <ExpandingTextArea
+      {{didInsert @controller.registerTextarea}}
       {{on "input" (withEventValue (fn (mut @controller.buffered.value)))}}
       {{on "focusin" @controller.trackTextarea}}
       {{on "focusout" @controller.saveCursorPos}}

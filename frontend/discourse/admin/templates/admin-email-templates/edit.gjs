@@ -1,6 +1,7 @@
 import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
 import DButton from "discourse/components/d-button";
@@ -51,6 +52,7 @@ export default <template>
             }}</LinkTo></h3>
       {{else}}
         <DEditor
+          {{didInsert @controller.registerTextarea}}
           @value={{@controller.buffered.body}}
           @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.markdown}}
           class="email-template__body"
