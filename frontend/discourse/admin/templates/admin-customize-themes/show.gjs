@@ -1,3 +1,4 @@
+import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -55,10 +56,11 @@ export default <template>
           />
         </div>
       {{else}}
-        <DButton
-          @action={{@controller.startEditingName}}
-          class="btn-transparent title-button"
-          role="heading"
+        {{! eslint-disable ember/template-no-invalid-interactive }}
+
+        <h2
+          {{on "click" @controller.startEditingName}}
+          class="title-button"
           aria-level="2"
           aria-label="Edit theme name: {{@controller.model.name}}"
         >
@@ -66,7 +68,7 @@ export default <template>
           {{#unless @controller.model.system}}
             {{dIcon "pencil" class="inline-icon"}}
           {{/unless}}
-        </DButton>
+        </h2>
       {{/if}}
     </div>
 
@@ -167,7 +169,7 @@ export default <template>
 
       <div class="metadata control-unit remote-theme-metadata">
         {{#if @controller.model.remote_theme}}
-          {{#if @controller.model.remote_theme.remote_url}}
+          {{!-- {{#if @controller.model.remote_theme.remote_url}}
             {{#if @controller.sourceIsHttp}}
               <a class="remote-url" href={{@controller.remoteThemeLink}}>{{i18n
                   "admin.customize.theme.source_url"
@@ -180,7 +182,7 @@ export default <template>
                 {{/if}}
               </div>
             {{/if}}
-          {{/if}}
+          {{/if}} --}}
 
           {{#if @controller.model.remote_theme.about_url}}
             <a
@@ -208,6 +210,33 @@ export default <template>
                   "admin.customize.theme.authors"
                 }}</span>
               {{@controller.model.remote_theme.authors}}</span>{{/if}}
+          {{#if @controller.model.remote_theme.remote_url}}
+            <span class="theme-url"><span class="heading">{{i18n
+                  "admin.customize.theme.source_url"
+                }}</span>
+              {{#if @controller.sourceIsHttp}}
+                <a class="git-name" href={{@controller.remoteThemeLink}}>
+                  {{@controller.remoteThemeLink}}</a>
+              {{else}}
+                <span class="git-name">
+                  {{@controller.model.remote_theme.remote_url}}
+                  {{#if
+                    @controller.model.remote_theme.branch
+                  }}/{{@controller.model.remote_theme.branch}}
+                  {{/if}}
+                </span>
+              {{/if}}
+            </span>
+          {{/if}}
+
+          {{#if @controller.model.remote_theme.branch}}<span
+              class="branch"
+            ><span class="heading">{{i18n
+                  "admin.customize.theme.branch"
+                }}</span>
+              <span
+                class="git-name"
+              >{{@controller.model.remote_theme.branch}}</span></span>{{/if}}
 
           {{#if @controller.model.remote_theme.theme_version}}<span
               class="version"

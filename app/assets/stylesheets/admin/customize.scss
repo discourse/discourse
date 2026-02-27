@@ -164,10 +164,10 @@
 
         &:hover {
           color: inherit;
+          cursor: pointer;
 
           .d-icon-pencil {
-            display: block;
-            font-size: var(--font-down-2);
+            opacity: 1;
           }
         }
 
@@ -178,7 +178,9 @@
       }
 
       .d-icon-pencil {
-        display: none;
+        opacity: 0;
+        transition: opacity 0.15s linear;
+        font-size: var(--font-down-2);
       }
 
       .container-edit-title {
@@ -202,18 +204,22 @@
 
     .metadata {
       .authors,
-      .version {
+      .version,
+      .branch {
         display: block;
-
-        .heading {
-          font-weight: bold;
-        }
       }
-    }
 
-    div.remote-url {
-      font-size: var(--font-down-1);
-      margin-bottom: 7px;
+      .heading {
+        font-weight: bold;
+      }
+
+      .git-name {
+        padding-inline: var(--space-1);
+        background-color: var(--primary-200);
+        border-radius: var(--d-border-radius);
+        border: 1px solid var(--primary-300);
+        font-family: monospace;
+      }
     }
 
     a.remote-url,
