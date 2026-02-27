@@ -191,6 +191,10 @@ export default class AdminReport extends Component {
     );
   }
 
+  get showTitle() {
+    return !this.siteSettings.reporting_improvements;
+  }
+
   @action
   changeGrouping(grouping) {
     this.refreshReport({ chartGrouping: grouping });
