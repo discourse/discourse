@@ -5,14 +5,19 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_TAG_TOPIC
 
   version 1
 
-  triggerables %i[post_created_edited pm_created]
+  triggerables %i[post_created_edited pm_created topic_closed]
 
   script do |context, fields|
-    post = context["post"]
+    topic = nil
+    if context["topic"]
+      topic = context["topic"]
+    else
+      post = context["post"]
 
-    next if !post.is_first_post?
-    next if !post.topic
-    next unless topic = Topic.find_by(id: post.topic.id)
+      next if !post.is_first_post?
+      next if !post.topic
+      next unless topic = Topic.find_by(id: post.topic.id)
+    end
 
     tags = fields.dig("tags", "value")
 
