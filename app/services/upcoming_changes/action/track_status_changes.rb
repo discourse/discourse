@@ -67,7 +67,11 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
         # However, if the status was later changed and it meets the promotion status
         # minus one (previous status) criteria for notification, then we should notify
         # admins here.
-        if should_notify_admins?(change_name)
+        if should_notify_admins?(change_name) &&
+             !UpcomingChanges.meets_or_exceeds_status?(
+               change_name,
+               SiteSetting.promote_upcoming_changes_on_status.to_sym,
+             )
           Rails.logger.info(
             "Notifying admins about available change #{change_name} from TrackStatusChanges",
           )
