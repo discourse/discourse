@@ -5,5 +5,17 @@
 # https://translate.discourse.org/
 
 nl:
+  solved: "Opgelost"
+  posted: "geplaatst"
+  by_username: "van @%{username}"
+  vote_count:
+    one: "%{count} stem"
+    other: "%{count} stemmen"
+  like_count:
+    one: "%{count} like"
+    other: "%{count} likes"
+  reply_count:
+    one: "%{count} antwoord"
+    other: "%{count} antwoorden"
   theme_metadata:
     description: "Een eenvoudig, mooi thema dat de out-of-the-box ervaring voor Discourse-sites verbetert."

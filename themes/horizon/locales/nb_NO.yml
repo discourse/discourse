@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  solved: "Løst"
+  posted: "skrevet"
+  reply_count:
+    one: "%{count} svar"
+    other: "%{count} svar"

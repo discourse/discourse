@@ -60,6 +60,8 @@ zh_CN:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
+    too_many_urls: "单次请求中无法将超过 10 个 URL 转换为内联单选框。"
+    concurrency_not_allowed: "不允许同时请求将 URL 转换为内联单选框。请一次只发送一个请求。"
   components:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"
@@ -238,6 +240,7 @@ zh_CN:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
+    diff_too_complex: "差异过于复杂，无法安全计算。请尝试进行较小的修改。"
     messages:
       invalid_locale: "%{invalid_locale} 不是一个有效的语言区域"
       too_long_validation:
@@ -318,6 +321,7 @@ zh_CN:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度必须至少为 3 个字符，以避免意外限制合法用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中：%{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "如果启用了 'composer media optimization image enabled'，则无法禁用带状图片元数据。在禁用带状图片元数据之前，禁用 'composer media optimization image enabled'。"
+      x_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 总结图片不能是 .svg 图片。"
       tl0_and_anonymous_flag: "对于匿名用户，必须提供 'site contact email' 或 'email address to report illegal content'。"
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "此设置需要先启用 'allow anonymous mode' 设置。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1631,6 +1635,8 @@ zh_CN:
     max_oneboxes_per_post: "设置单个帖子中可以包含的最大 onebox 数量。onebox 提供了帖子中链接内容的预览。"
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
     github_onebox_access_tokens: "GitHub 组织或用户与 GitHub 访问令牌之间的映射，用于为私有仓库、提交、拉取请求、议题和文件内容生成 GitHub onebox。如果没有此映射，将只为公开 GitHub URL 创建 onebox。"
+    reddit_onebox_client_id: "Reddit API OAuth 客户端 ID，用于认证 Reddit onebox。在 reddit.com/prefs/apps 上创建 \"脚本 \"类型的应用程序，以获取凭证。"
+    reddit_onebox_client_secret: "用于已认证 Reddit OneBox 的 Reddit API OAuth 客户端密钥。可在 reddit.com/prefs/apps 创建的“脚本”类型应用下找到。"
     logo: "您的网站左上角的徽标图片。使用高度为 120 且宽高比大于 3:1 的宽矩形图片。如果留空，将显示网站标题文本。"
     logo_small: "您的网站左上角的小徽标图片，向下滚动后可见。使用 120×120 的方形图片。如果留空，将显示首页标志符号。"
     digest_logo: "在您网站的电子邮件总结顶部使用的备用徽标图片。使用宽矩形图片。不要使用 SVG 图片。如果留空，则使用 `logo` 设置中的图片。"
@@ -1811,6 +1817,7 @@ zh_CN:
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"
+    enable_discourse_id: "通过 Discourse ID 启用身份验证，这是一种单点登录服务，允许用户使用一个帐户登录多个 Discourse 站点。无需额外配置即可支持 Google、Facebook、Apple 和 GitHub 等常见社交登录提供商。如需了解详情，请参阅 <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>。"
     enable_google_oauth2_logins: "启用 Google Oauth2 身份验证。这是 Google 当前支持的身份验证方法。要求密钥和密钥代码。请参阅<a href='https://meta.discourse.org/t/15858' target='_blank'>为 Discourse 配置 Google 登录</a>。"
     google_oauth2_client_id: "由 Google 应用程序提供的唯一客户端 ID，用于身份验证流程。"
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
@@ -2053,6 +2060,7 @@ zh_CN:
     alternative_reply_by_email_addresses: "通过传入电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "对传入电子邮件使用 HTML 而不是文本。"
     strip_incoming_email_lines: "从传入电子邮件的每一行中移除前导和尾随空格。"
+    disable_emails: "禁止 Discourse 发送任何类型的电子邮件。选择“是”将对所有用户禁用电子邮件。选择“非管理人员”将仅对非管理人员用户禁用电子邮件。"
     allow_email_invites: "禁用后，用户将无法通过 Discourse 发送邀请电子邮件。"
     strip_images_from_short_emails: "从大小小于 2800 字节的电子邮件中去除图片"
     short_email_length: "定义电子邮件被归类为“短”以禁止图片的最大长度（以字节为单位）。如果电子邮件的大小未超过此设置，则电子邮件中的任何图片（例如头像和表情符号）都将被删除。"
@@ -2071,6 +2079,7 @@ zh_CN:
     mailgun_api_key: "用于验证网络钩子消息的 Mailgun Secret API 密钥。"
     sendgrid_verification_key: "用于验证网络钩子消息的 Sendgrid 验证密钥。"
     mailjet_webhook_token: "用于验证网络钩子负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "用于验证网络钩子负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "用于验证网络钩子消息的 Mandrill 身份验证密钥。"
     postmark_webhook_token: "用于验证网络钩子负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "用于验证网络钩子负载的令牌。它必须作为网络钩子的 't' 查询参数传递，例如：https://example.com/webhook/sparkpost?t=supersecret"
@@ -2343,6 +2352,7 @@ zh_CN:
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
+    gravatar_enabled: "使用 <a href='https://gravatar.com/'>Gravatar</a> 服务制作用户头像。这将阻止用户改用 Gravatar 制作头像，但不会影响已使用 Gravatar 的用户。"
     gravatar_name: "指定 Gravatar 服务提供商的名称。此名称通常用于标识向网站提供 Gravatar 头像的来源。"
     gravatar_base_url: "指定用于访问 Gravatar 提供商的 API 的 URL。此设置对于将电子邮件地址转换为存储头像图片的 Gravatar URL 至关重要。"
     gravatar_login_url: "相对于 `gravatar_base_url` 的 URL，它为用户提供了登录 Gravatar 服务的途径。"
@@ -2397,9 +2407,11 @@ zh_CN:
     fake_upcoming_change: "这是用于测试目的虚假即将推出的更改。无需翻译此字符串。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
     rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
+    experimental_tag_settings_page: "在 /tag/:slug/:id/edit 启用标签专用设置页面。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     enable_custom_splash_screen: "允许您使用自己的 SVG 图片自定义加载启动画面。通过“启动画面图片”设置上传图片。警告：这可能会对 LCP 分数和 Google 索引产生负面影响。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题进行了设计修改。"
+    reporting_improvements: "改进了 Discourse 管理报告的导航、设计和可用性。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保输入有效的日期和时间。"
@@ -2407,6 +2419,8 @@ zh_CN:
       invalid_username: "没有使用该用户名的用户。"
       valid_username: "存在一个使用该用户名的用户。"
       invalid_group: "没有使用该名称的群组。"
+      invalid_svg: "SVG图像无效。它必须包含SVG元素，且不能包含任何脚本或事件处理程序。"
+      invalid_upload: "上传内容无效或不存在。"
       invalid_topic: "没有与该 ID 匹配的话题。"
       invalid_integer_min_max: "值必须介于 %{min} 和 %{max}之间。"
       invalid_integer_min: "值必须为 %{min} 或更大。"
@@ -2442,6 +2456,12 @@ zh_CN:
       reply_by_email_disabled: "在启用此设置之前，您必须先启用 'reply by email'。"
       discourse_connect_url_is_empty: "在启用此设置之前，您必须先设置 'discourse connect url'。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
+      min_username_length_exists: "您不能将最小用户名长度设置为高于最短用户名 (%{username})。"
+      min_group_name_length_exists: "您不能将最小用户名长度设置为大于最短群组名称 (%{group_name})。"
+      min_username_length_range: "用户名最小长度不能设置得高于用户名最大长度。"
+      max_username_length_exists: "您不能将最大用户名长度设置为低于最长用户名 (%{username})。"
+      max_group_name_length_exists: "您不能将最大用户名长度设置为小于最长群组名称 (%{group_name})。"
+      max_username_length_range: "您不能将“最大用户名长度”设置为低于“最小用户名长度”。"
       invalid_hex_value: "颜色值必须是 6 位十六进制代码。"
       empty_selectable_avatars: "在启用此设置之前，您必须先上传至少两个可选择的头像。"
       category_search_priority:
@@ -4948,6 +4968,7 @@ zh_CN:
   dev_mode:
     title: "开发者模式"
     enable_rack_mini_profiler: "启用 Rack Mini Profiler，使其在会话切换后保持 1 小时。"
+    enter: "进入开发者模式"
   wizard:
     title: "Discourse 设置"
     step:

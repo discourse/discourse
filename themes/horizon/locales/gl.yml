@@ -5,3 +5,11 @@
 # https://translate.discourse.org/
 
 gl:
+  posted: "publicado"
+  by_username: "de %{username}"
+  like_count:
+    one: "%{count} gústame"
+    other: "%{count} gústame"
+  reply_count:
+    one: "%{count} resposta"
+    other: "%{count} repostas"

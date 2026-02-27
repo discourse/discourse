@@ -497,6 +497,7 @@ zh_CN:
         overwrite: "覆盖"
         description: "描述"
         no_llm_selected: "未选择语言模型"
+        use_parent_llm: "使用个人语言模型"
         max_context_posts: "最大上下文帖子数"
         max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
         vision_enabled: 启用视觉
@@ -630,7 +631,11 @@ zh_CN:
         parameter_description: "参数描述"
         enum_value: "枚举值"
         add_enum_value: "添加枚举值"
+        secret_alias: "凭证别名"
+        secret_alias_help: "脚本中通过 secrets.get(\"alias_name\") 获取别名。请使用字母、数字和下划线。"
+        secret_credential: "凭据"
         add_secret_contract: "添加凭证"
+        remove_secret_contract: "移除凭据"
         credential_not_set: "(未设置)"
         edit: "编辑"
         test: "测试"
@@ -643,6 +648,7 @@ zh_CN:
           result: "测试结果"
       secrets:
         short_title: "凭据"
+        description: "管理在 LLM 和嵌入式系统之间共享的身份验证凭据。"
         name: "名称"
         secret: "值"
         select_secret: "选择凭证..."
@@ -797,6 +803,7 @@ zh_CN:
           disable_system_prompt: "在提示中禁用系统消息"
           enable_native_tool: "启用原生工具支持"
           disable_native_tools: "禁用原生工具支持（使用基于 XML 的工具）"
+          disable_native_structured_output: "禁用原生结构化输出（改用助手消息预填充，Claude 3.x 及更早版本需要此功能）"
           provider_order: "提供商顺序（逗号分隔列表）"
           provider_quantizations: "提供商量化顺序（逗号分隔列表，例如：fp16,fp8）"
           disable_streaming: "禁用流式补全（将流式请求转换为非流式请求）"
@@ -811,6 +818,7 @@ zh_CN:
           prompt_caching_never: "从不 - 不使用提示缓存"
           prompt_caching_tool_results: "工具结果 - 存在工具结果时进行缓存（推荐）"
           prompt_caching_always: "始终 - 始终使用提示缓存"
+          effort: "作用等级"
       related_topics:
         title: "相关话题"
         pill: "相关"
@@ -922,11 +930,14 @@ zh_CN:
           model_name: "模型名称"
         semantic_search: "话题（语义）"
         semantic_search_results:
+          toggle: "AI 结果"
           unavailable: "AI 结果不可用"
           zero_results_expanded: "找不到任何结果，正在显示 %{count} 个 AI 结果"
         semantic_search_tooltips:
           results_explanation: "启用后，将在下方添加更多 AI 搜索结果。"
           invalid_sort: "搜索结果必须按相关性排序才能显示 AI 结果"
+          not_submitted: "提交搜索以启用 AI 结果"
+          no_results: "此搜索未找到 AI 结果"
         semantic_search_unavailable_tooltip: "搜索结果必须按相关性排序才能显示 AI 结果"
         ai_generated_result: "使用 AI 找到的搜索结果"
         quick_search:

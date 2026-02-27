@@ -49,6 +49,9 @@ zh_CN:
         description: "描述"
         actions: "操作"
         settings: "设置"
+        no_channels: "没有与此类别关联的聊天频道"
+        no_channels_body: "每个类别可以创建多个频道，这些频道对同一成员开放，具体取决于类别的安全设置。 <a href='%{chatBrowseUrl}'>创建聊天频道</a>。"
+        include_subcategories: "包含子类别频道"
       text_copied: 文本已复制到剪贴板
       link_copied: 链接已复制到剪贴板
       back_to_forum: "论坛"
@@ -66,6 +69,14 @@ zh_CN:
       starred: "收藏"
       starred_channels: "收藏的频道"
       starred_channels_empty: "您未收藏任何频道。收藏一些频道，以便在此处快速访问它们。"
+      pinned_messages:
+        title: "置顶消息"
+        close: "关闭置顶消息"
+        pinned_by_you: "您置顶"
+        pinned_by_user: "由 %{username} 置顶"
+      no_pinned_messages: "此频道中没有置顶消息。"
+      pin_message: "置顶消息"
+      unpin_message: "取消置顶消息"
       pinned: "已置顶"
       browse_all_channels: "浏览所有频道"
       see_in: "参见"

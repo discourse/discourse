@@ -353,6 +353,7 @@ pl_PL:
       bulk_invite: "Zaproszenie zbiorcze"
       close_event: "Zamknij wydarzenie"
       open_event: "Wydarzenie otwarte"
+      destroy_event: "Zniszcz wydarzenie"
       invitees_modal:
         title_invited: "Udział w wydarzeniu"
         title_participated: "Lista użytkowników, którzy wzięli udział"
@@ -437,6 +438,12 @@ pl_PL:
             private:
               title: "Prywatne"
               description: "Do wydarzenia prywatnego mogą dołączyć wyłącznie zaproszeni użytkownicy."
+      composer:
+        name_placeholder: "Wydarzenie"
+        end_date_placeholder: "Ustaw datę zakończenia"
+        location_placeholder: "Dodaj lokalizację lub adres URL"
+        max_attendees_placeholder: "Ustaw maksymalną liczbę uczestników"
+        description_placeholder: "Dodaj opis wydarzenia"
       builder_modal:
         custom_fields:
           label: "Pola niestandardowe"
@@ -506,6 +513,7 @@ pl_PL:
           label: "Zaproszone grupy"
         status:
           label: "Status"
+        delete_confirmation_message: "Usunąć to wydarzenie?"
       invite_user_or_group:
         title: "Powiadom użytkowników lub grupy"
         invite: "Wyślij"

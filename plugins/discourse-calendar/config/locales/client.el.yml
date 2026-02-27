@@ -281,6 +281,12 @@ el:
             private:
               title: "Ιδιωτική"
               description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
+      composer:
+        name_placeholder: "Εκδήλωση"
+        end_date_placeholder: "Ορισμός ημερομηνίας λήξης"
+        location_placeholder: "Προσθέστε τοποθεσία ή URL"
+        max_attendees_placeholder: "Ορισμός μέγιστων συμμετεχόντων"
+        description_placeholder: "Προσθήκη περιγραφής εκδήλωσης"
       builder_modal:
         custom_fields:
           label: "Προσαρμοσμένα πεδία"

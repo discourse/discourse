@@ -31,6 +31,7 @@ zh_CN:
   reports:
     accepted_solutions:
       title: "已被接受的解决方案"
+      description: "在某个日期范围内，每天有多少个主题接受了解决方案，可选择类别过滤器和 30 天比较总数。"
       xaxis: "天"
       yaxis: "总计"
   solved:

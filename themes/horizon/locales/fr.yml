@@ -5,5 +5,17 @@
 # https://translate.discourse.org/
 
 fr:
+  solved: "Résolus"
+  posted: "publié"
+  by_username: "par @%{username}"
+  vote_count:
+    one: "%{count} vote"
+    other: "%{count} votes"
+  like_count:
+    one: "%{count} « J'aime »"
+    other: "%{count} « J'aime »"
+  reply_count:
+    one: "%{count} réponse"
+    other: "%{count} réponses"
   theme_metadata:
     description: "Un thème simple et élégant qui améliore l'expérience prête à l'emploi pour les sites Discourse."

@@ -117,3 +117,6 @@ fr:
     review:
       transcript:
         view: "Afficher la transcription des messages précédents"
+      types:
+        reviewable_post_voting_comment:
+          title: "Commentaire sur le vote de publication signalé"

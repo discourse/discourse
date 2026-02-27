@@ -2257,6 +2257,7 @@ ru:
     mailgun_api_key: "Секретный ключ API Mailgun, используемый для проверки сообщений вебхука."
     sendgrid_verification_key: "Ключ верификации Sendgrid, используемый для проверки сообщений вебхука."
     mailjet_webhook_token: "Токен для проверки полезной нагрузки вебхука. Передается как параметр «t» запроса в вебхуке, например: https://example.com/webhook/mailjet?t=supersecret."
+    mailpace_webhook_token: "Токен для проверки полезной нагрузки вебхука. Передается как параметр «t» запроса в вебхуке, например: https://example.com/webhook/mailpace?t=supersecret."
     mandrill_authentication_key: "Ключ аутентификации Mandrill, используемый для проверки сообщений вебхука."
     postmark_webhook_token: "Токен для проверки полезной нагрузки вебхука. Передается как параметр «t» запроса в вебхуке, например: https://example.com/webhook/postmark?t=supersecret."
     sparkpost_webhook_token: "Токен для проверки полезной нагрузки вебхука. Передается как параметр «t» запроса в вебхуке, например: https://example.com/webhook/sparkpost?t=supersecret."

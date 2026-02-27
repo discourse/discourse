@@ -9,10 +9,19 @@ zh_CN:
     blocks:
       ghost:
         status: "状态"
+        conditions: "条件"
+        arguments: "参数"
+        container_args: "容器参数"
         in_location: "位置："
         hidden: "已隐藏"
         not_registered: "未注册"
+        no_visible_children: "没有可见子项"
         failed: "失败"
+      ghost_reasons:
+        optional_missing_hint: "由于该可选代码块未注册，因此不会被渲染。"
+        no_visible_children_hint: "由于该容器块中的所有子元素都不可见，因此该容器块不会被渲染。"
+        condition_failed_hint: "由于条件不满足，此代码块未渲染。"
+        head_hidden_tail_hint: "由于 `head` 容器中已先渲染了另一个代码块，因此该代码块未被渲染。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -276,6 +285,7 @@ zh_CN:
     skip_to_top: "跳转到顶部"
     skip_user_nav: "跳到个人资料内容"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
+    emails_are_disabled_no_smtp: "由于未配置SMTP服务器，所有外发邮件功能均已禁用。无法发送任何类型的邮件。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
       message: "我们更新了网站，<span>请刷新</span>以保持网站顺利运行。"
@@ -301,12 +311,27 @@ zh_CN:
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
+    broken_block_alert: "检测到区块配置错误。请查看浏览器控制台了解详情。"
+    broken_block_factory_alert: "区块加载失败。某些 UI 元素可能无法正确显示。"
     critical_deprecation:
       notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。（id：%{id}）"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>了解详情</em></a>)"
       theme_source: "主题 <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "插件 '%{name}'"
       unknown_source: "您的某个主题或插件"
+    dev_tools:
+      drag_to_move: "拖动移动"
+      toggle_plugin_outlet_debug: "切换插件出口调试"
+      toggle_block_debug: "切换区块调试"
+      block_debug:
+        outlet_boundaries: "出口边界"
+        visual_overlay: "视觉叠加"
+        ghost_blocks: "幽灵块"
+        condition_debugging: "条件调试"
+      toggle_safe_mode: "切换安全模式"
+      toggle_verbose_localization: "切换详细本地化"
+      toggle_mobile_view: "切换移动视图"
+      disable_dev_tools: "禁用开发者工具"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -403,6 +428,12 @@ zh_CN:
         title: "开始发帖"
         description: "给人们一些共同谈论的话题"
         action: "破冰创意"
+        choose_option: "你想如何开始？"
+        predefined_topics: "破冰模板"
+        predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自己制作。"
+        predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论。"
+        use_predefined: "浏览模板"
+        start_with_this: "从这里开始"
         back: "返回"
         icebreakers:
           fun_facts:
@@ -648,8 +679,10 @@ zh_CN:
         ignore_all: "全部忽略"
         enable_plugins: "启用插件"
         delete_confirm: "确定要删除所有由禁用插件创建的审核队列项目吗？"
+        ignore_success: "所有由禁用插件创建的审核已被删除。"
       explain:
         why: "解释为什么此条目最终进入队列"
+        title: "审核队列项目评分"
         formula: "公式"
         subtotal: "小计"
         total: "总计"
@@ -663,8 +696,10 @@ zh_CN:
           title: "所提交的举报一直都获得同意的用户将获得加分。"
         trust_level_bonus:
           name: "信任级别"
+          title: "由较高信任级别的用户创建的可审核条目具有较高的分数。"
         type_bonus:
           name: "奖励加分"
+          title: "某些可审核类型可以由管理人员分配加分，以使其具有更高的优先级。"
       revise_and_reject_post:
         title: "修订"
         reason: "原因"
@@ -673,6 +708,7 @@ zh_CN:
         custom_reason: "清楚地描述原因"
         other_reason: "其他…"
         optional: "可选"
+      stale_help: "此可审核条目已被 <b>%{username}</b> 解决。"
       claim_help:
         optional: "您可以认领此条目以避免被他人审核。"
         required: "您必须先认领条目才能进行审核。"
@@ -2773,6 +2809,7 @@ zh_CN:
       upload_description: "在此处输入上传描述"
       olist_title: "编号列表"
       ulist_title: "项目符号列表"
+      list_title: "列表"
       list_item: "列表条目"
       toggle_direction: "切换方向"
       apply_wrap_title: "应用换行"
@@ -4712,9 +4749,12 @@ zh_CN:
         synonyms_hint: "使用上述标签时，它们将被替换为 %{baseTagName}。"
         add_synonyms_confirm: "当前使用 %{synonymNames} 的地方都将更改为使用 %{tagName} 。您确定要进行此更改吗？"
       localization:
+        hint: "添加本地化功能，以便为不同语言的用户显示不同的标签名称。"
         locale: "语言区域"
         name: "名称"
         description: "描述"
+        add: "添加本地化"
+        remove: "移除本地化"
       sort_by: "排序依据："
       sort_by_count: "计数"
       sort_by_name: "名称"
@@ -5232,11 +5272,14 @@ zh_CN:
         title: "可用报告列表"
         sidebar_title: "报告"
         back: "返回到所有报告"
+        group_engagement: "参与度"
         group_traffic: "流量"
         group_members: "成员"
+        group_content: "内容与健康"
         group_moderation: "审核"
         group_security: "安全性"
         group_other: "其他"
+        legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系技术支持。"
       config_sections:
         account:
           title: "帐户"
@@ -5281,6 +5324,7 @@ zh_CN:
         enabled_for_options:
           no_one: "没有人"
           everyone: "所有人"
+          staff: "%{staffGroupName} 仅限"
           specific_groups: "特定群组"
           specific_groups_with_group_names:
             other: "群组 %{groupNames}"
@@ -5302,6 +5346,7 @@ zh_CN:
           all: "所有"
           enabled_all: "所有已启用的状态"
           enabled: "已启用"
+          enabled_for_staff: "已启用 %{staffGroupName}"
           enabled_for_specific_groups: "为特定群组启用"
           disabled: "已禁用"
           impact_type_all: "所有影响类型"
@@ -5391,6 +5436,7 @@ zh_CN:
               help_text: "建议尺寸为 600 x 80 像素。"
             large_icon:
               title: "方形图标"
+              description: "网站顶部会显示一个方形版本的徽标图像，该徽标同时也是移动应用程序的徽标。"
               help_text: "建议尺寸为 512 x 512 像素。"
             square_icon_dark:
               required: "为深色模式使用不同的方形图标？"
@@ -5754,6 +5800,7 @@ zh_CN:
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
+          no_new_features_found: "新闻源中没有项目，或者您所选的过滤器没有返回结果。 您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a> 上看到以前的新功能公告。"
           no_new_features_error: "加载最新功能列表时出现错误。您可以在<a href='%{url}' target='_blank'>Discourse Meta 社区</a>查看以前的新功能公告。"
           learn_more: "了解详情…"
         last_checked: "上次检查"
@@ -5934,6 +5981,7 @@ zh_CN:
         cancel: "取消"
         continue: "继续"
         copy_key: "复制"
+        key_copied_to_clipboard: "API密钥已复制到剪贴板"
         back: "返回到 API 密钥"
         revoke: "撤销"
         undo_revoke: "取消撤销"
