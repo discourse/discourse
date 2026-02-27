@@ -6,6 +6,11 @@
 
 hy:
   js:
+    blocks:
+      ghost:
+        status: "Ստատուս"
+        hidden: "թաքցված"
+        failed: "ձախողված"
     number:
       format:
         separator: "."
@@ -292,6 +297,8 @@ hy:
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
     admin_onboarding_banner:
+      start_posting:
+        back: "Ետ"
       spread_the_word:
         action: "Պատճենել հղումը"
     about:
@@ -516,7 +523,6 @@ hy:
       in_reply_to: "ի պատասխան"
       explain:
         why: "Բացատրել, թե ինչու՞ է այդ էլեմենտը հայտնվել հերթի մեջ: "
-        title: "Ամփոփիչ Գնահատական"
         formula: "Բանաձև"
         subtotal: "Միջանկյալ հանրագումար "
         total: "Ամբողջը"
@@ -530,10 +536,8 @@ hy:
           title: "Օգտատերերը, ում գրավոր բողոքները համաձայնեցված են՝ կստանան բոնուս: "
         trust_level_bonus:
           name: "վստահության մակարդակ"
-          title: "Օգտատրիրոջ վստահության առավել մեծ մակարդակ ունենալու դեպքում, ստուգվող էլեմենտները ստանում են ավելի բարձր բալ: "
         type_bonus:
           name: "բոնուսի տեսակը"
-          title: "Որոշ ստուգվող տեսակների դեպքում, աշխատակիցներին կարող են բոնուս նշանակվել, որպեսզի նրանք գերակայության հասնեն: "
       revise_and_reject_post:
         title: "Վերանայել"
         reason: "Պատճառ"
@@ -542,7 +546,6 @@ hy:
         custom_reason: "Տվեք պատճառի հստակ նկարագրությունը"
         other_reason: "Այլ..."
         optional: "ընտրովի"
-      stale_help: "Այս վերանայումը լուծվել է <b>%{username}</b>- ի կողմից:"
       claim_help:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
         required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
@@ -2519,8 +2522,6 @@ hy:
         max_views:
           placeholder: առավելագույնը
           aria_label: զտել ըստ առավելագույն դիտումների
-        additional_options:
-          label: "Զտել ըստ գրառումների քանակի և թեմայի դիտումների"
     new_item: "նոր"
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
@@ -3579,6 +3580,15 @@ hy:
         one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որին այն վերագրված է:"
         other: "Իսկապե՞ս ուզում եք ջնջել այս պիտակը և հեռացնել այն %{count} թեմայից, որոնց այն վերագրված է:"
       delete_confirm_no_topics: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս պիտակը:"
+      description: "Նկարագրություն"
+      settings:
+        title: "Կարգավորումներ"
+        general: "Ընդհանուր"
+        back: "Ետ"
+        name: "Անուն"
+      localization:
+        name: "Անուն"
+        description: "Նկարագրություն"
       sort_by: "Դասավորել ըստ՝ "
       sort_by_count: "քանակի"
       sort_by_name: "անվան"
@@ -3800,6 +3810,11 @@ hy:
       reports:
         title: "Հասանելի հաշվետվությունների ցանկը"
         sidebar_title: "Հաշվետվություններ"
+        group_traffic: "Այցելությունները"
+        group_members: "Անդամներ"
+        group_moderation: "Մոդերացիա"
+        group_security: "Անվտանգություն"
+        group_other: "Այլ"
       config_sections:
         account:
           title: "Հաշիվ"
@@ -3886,6 +3901,9 @@ hy:
               title: "Գրառումներ"
         reports:
           title: "Հաշվետվություններ"
+          sub_pages:
+            settings:
+              title: "Կարգավորումներ"
         badges:
           title: "Կրծքանշաններ"
         permalinks:
@@ -3928,13 +3946,6 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
-        result_types:
-          theme:
-            one: "Թեմա"
-            other: "Թեմաներ"
-          component:
-            one: "Բաղադրիչ"
-            other: "Բաղադրիչներ"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
@@ -5086,6 +5097,7 @@ hy:
             title: "Ընտրովի"
         field_types:
           text: "Տեքստ"
+          date: "Ամսաթիվ"
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:

@@ -382,8 +382,6 @@ pl_PL:
           enable_translations: "Włącz automatyczne tłumaczenia"
         stats:
           title: "Statystyki tłumaczeń"
-          complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
-          incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
           backfill_message: "<a href='%{settingsUrl}'>Ustawienia uzupełniania</a> są skonfigurowane tak, aby tłumaczyć wszystkie posty po %{date} — szacuje się, że zajmie to %{eta}."
           eta_minutes:
@@ -526,7 +524,7 @@ pl_PL:
         overwrite: "Zastąp"
         description: "Opis"
         no_llm_selected: "Nie wybrano modelu językowego"
-        use_parent_llm: "Użyj modelu językowego person"
+        use_parent_llm: "Użyj modelu językowego persony"
         max_context_posts: "Maksymalny kontekst postów"
         max_context_posts_help: "Maksymalna liczba postów do wykorzystania jako kontekst dla sztucznej inteligencji podczas odpowiadania użytkownikowi. (domyślnie puste)"
         vision_enabled: Wizja włączona
@@ -663,8 +661,14 @@ pl_PL:
         parameter_description: "Opis parametru"
         enum_value: "Wartość enum"
         add_enum_value: "Dodaj wartość enum"
+        secret_alias: "Alias poświadczeń"
+        secret_alias_help: "Alias odwoływany ze skryptów za pomocą secrets.get(\"alias_name\"). Użyj liter, cyfr i podkreśleń."
+        secret_credential: "Poświadczenie"
+        add_secret_contract: "Dodaj poświadczenie"
+        remove_secret_contract: "Usuń poświadczenie"
+        credential_not_set: "(nie ustawiono)"
         edit: "Edytuj"
-        test: "Przeprowadź test"
+        test: "Sprawdź"
         delete: "Usuń"
         saved: "Narzędzie zapisane"
         confirm_delete: "Czy na pewno chcesz usunąć to narzędzie?"
@@ -674,7 +678,7 @@ pl_PL:
           result: "Wynik testu"
       secrets:
         short_title: "Poświadczenia"
-        description: "Zarządzaj danymi uwierzytelniającymi współdzielonymi w ramach LLM i osadzeń."
+        description: "Zarządzaj poświadczeniami uwierzytelniania współdzielonymi przez LLM, osadzenia i narzędzia."
         name: "Nazwa"
         secret: "Wartość"
         select_secret: "Wybierz poświadczenie..."
@@ -694,6 +698,7 @@ pl_PL:
         not_used: "Nieużywane"
         embedding: "Osadzanie"
         cannot_delete_in_use: "Tego poświadczenia nie można usunąć, ponieważ jest ono używane przez:"
+        tool: "Narzędzie"
         modal:
           title: "Utwórz nowe poświadczenie"
       llms:
@@ -763,8 +768,8 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-5: "Najbardziej inteligentny model Anthropic"
-          anthropic-claude-sonnet-4-5: "Optymalna równowaga między szybkością a kosztami"
+          anthropic-claude-opus-4-6: "Najbardziej inteligentny model Anthropic"
+          anthropic-claude-sonnet-4-6: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
           google-gemini-3-pro: "Najinteligentniejszy model Google"
           google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
@@ -774,8 +779,8 @@ pl_PL:
           open_router-deepseek-deepseek-v3-2: "Najnowszy, wysokowydajny model firmy DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Multimodalny model Moonshot z funkcjami wizyjnymi"
           open_router-x-ai-grok-4-fast: "Flagowy model xAI z wizją"
-          open_router-minimax-minimax-m2-1: "Multimodalny model MiniMax z dużym kontekstem"
-          open_router-z-ai-glm-4-7: "Multimodalny model Z-AI z wizją"
+          open_router-minimax-minimax-m2-5: "Multimodalny model MiniMax z dużym kontekstem"
+          open_router-z-ai-glm-5: "Multimodalny model Z-AI z wizją"
           open_router-arcee-ai-trinity-large-preview-free: "Darmowy model open-source od Arcee AI"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
@@ -831,6 +836,7 @@ pl_PL:
           disable_system_prompt: "Wyłącz wiadomość systemową w promptach"
           enable_native_tool: "Włącz obsługę natywnych narzędzi"
           disable_native_tools: "Wyłącz obsługę narzędzi natywnych (użyj narzędzi opartych na XML)"
+          disable_native_structured_output: "Wyłącz natywne, strukturalne wyjście (zamiast tego użyj funkcji wstępnego wypełniania wiadomości asystenta, wymaganej w przypadku Claude 3.x i starszych wersji)"
           provider_order: "Kolejność dostawców (lista rozdzielona przecinkami)"
           provider_quantizations: "Kolejność kwantyzacji dostawców (lista rozdzielona przecinkami, np.: fp16,fp8)"
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
@@ -845,7 +851,7 @@ pl_PL:
           prompt_caching_never: "Nigdy – nie używaj buforowania błyskawicznego"
           prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
           prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
-          effort: "Poziom wysiłku (tylko Claude Opus 4.5)"
+          effort: "Poziom wysiłku"
       related_topics:
         title: "Powiązane tematy"
         pill: "Powiązane"
@@ -959,17 +965,15 @@ pl_PL:
         provider_fields:
           model_name: "Nazwa modelu"
         semantic_search: "Tematy (semantyczne)"
-        semantic_search_loading: "Wyszukiwanie większej liczby wyników przy użyciu AI"
         semantic_search_results:
-          toggle: "Wyświetlanie %{count} wyników znalezionych przy użyciu AI"
-          toggle_hidden: "Ukrywanie %{count} wyników znalezionych przy użyciu AI"
-          none: "Przepraszamy, nasze wyszukiwanie AI nie znalazło pasujących tematów"
-          new: "Naciśnij „Szukaj”, aby rozpocząć wyszukiwanie nowych wyników za pomocą sztucznej inteligencji"
+          toggle: "Wyniki AI"
           unavailable: "Wyniki AI są niedostępne"
           zero_results_expanded: "Znaleziono zero wyników, pokazano %{count} wyników AI"
         semantic_search_tooltips:
           results_explanation: "Po włączeniu tej opcji poniżej zostaną dodane dodatkowe wyniki wyszukiwania AI."
           invalid_sort: "Aby wyświetlić wyniki AI, wyniki wyszukiwania muszą być sortowane według trafności"
+          not_submitted: "Prześlij wyszukiwanie, aby włączyć wyniki AI"
+          no_results: "Nie znaleziono wyników AI dla tego wyszukiwania"
         semantic_search_unavailable_tooltip: "Aby wyświetlić wyniki AI, wyniki wyszukiwania muszą być sortowane według trafności"
         ai_generated_result: "Wynik wyszukiwania znaleziony przy użyciu AI"
         quick_search:

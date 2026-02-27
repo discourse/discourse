@@ -6,6 +6,10 @@
 
 sw:
   js:
+    blocks:
+      ghost:
+        hidden: "imefichwa"
+        failed: "kushindwa"
     number:
       format:
         separator: "."
@@ -206,6 +210,9 @@ sw:
       other: "Herufi %{count}"
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Iliyopita"
     about:
       edit: "Hariri ukurasa huu"
       simple_title: "Kuhusu "
@@ -2235,6 +2242,15 @@ sw:
       add_synonyms: "Ongeza"
       delete_tag: "futa lebo"
       delete_confirm_no_topics: "Una uhakika unataka kufuta lebo hii?"
+      description: "Maelezo"
+      settings:
+        title: "Mipangilio"
+        general: "Jumla"
+        back: "Iliyopita"
+        name: "Jina"
+      localization:
+        name: "Jina"
+        description: "Maelezo"
       sort_by: "Pangilia kwa:"
       sort_by_count: "hesabu"
       sort_by_name: "jina"
@@ -2395,6 +2411,10 @@ sw:
           never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
+        group_traffic: "Utembeleaji"
+        group_members: "Wanachama"
+        group_security: "Ulinzi"
+        group_other: "Nyingine"
       config_sections:
         account:
           title: "Akaunti"
@@ -2477,6 +2497,10 @@ sw:
           sub_pages:
             logs:
               title: "Batli"
+        reports:
+          sub_pages:
+            settings:
+              title: "Mipangilio"
         badges:
           title: "Beji"
         permalinks:
@@ -2516,10 +2540,6 @@ sw:
         default_value: "Halisi"
       search:
         title: "Tafuta"
-        result_types:
-          theme:
-            one: "Mandhari"
-            other: "Mandhari"
       dashboard:
         title: "Ubao"
         version: "Toleo"
@@ -3389,6 +3409,7 @@ sw:
           title: "Onyesha kwenye kadi ya mtumiaji"
         field_types:
           text: "Neno"
+          date: "Tarehe"
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:

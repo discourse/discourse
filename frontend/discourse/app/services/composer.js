@@ -12,6 +12,7 @@ import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
+import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -38,6 +39,7 @@ import {
 } from "discourse/lib/uploads";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import { parseAttributesString } from "discourse/lib/wrap-utils";
 import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
@@ -49,8 +51,6 @@ import Composer, {
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
-import WrapAttributesModal from "discourse/static/prosemirror/components/wrap-attributes-modal";
-import { parseAttributesString } from "discourse/static/prosemirror/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -487,13 +487,14 @@ export default class ComposerService extends Service {
         }),
       ];
 
-      return options
-        .concat(
-          customPopupMenuOptions
-            .map((option) => this._setupPopupMenuOption({ ...option }))
-            .filter((o) => o)
-        )
-        .concat(secondaryOptions);
+      return [
+        ...options,
+        ...customPopupMenuOptions
+          .filter((option) => !option.menu)
+          .map((option) => this._setupPopupMenuOption({ ...option }))
+          .filter(Boolean),
+        ...secondaryOptions,
+      ];
     }
   }
 
@@ -725,12 +726,9 @@ export default class ComposerService extends Service {
       menuItem
     );
     if (typeof menuItem.action === "function") {
-      // note: due to the way args are passed to actions we need
-      // to create the explicity toolbarEvent as a fallback for no
-      // event
-      // Long term we want to avoid needing this awkwardness and pass
-      // the event explicitly
-      return menuItem.action(this.toolbarEvent || toolbarEvent);
+      // toolbarEvent is passed when triggered via keyboard shortcut,
+      // otherwise fall back to stored toolbarEvent from menu open
+      return menuItem.action(toolbarEvent ?? this.toolbarEvent);
     } else {
       return (
         this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins

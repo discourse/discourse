@@ -143,7 +143,7 @@ GEM
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    discourse_ai-tokenizers (0.4)
+    discourse_ai-tokenizers (0.4.1)
       activesupport (>= 6.0)
       tiktoken_ruby (~> 0.0.15)
       tokenizers (~> 0.6.3)
@@ -252,12 +252,13 @@ GEM
       base64
     kgio (2.11.4)
     language_server-protocol (3.17.0.5)
-    libv8-node (24.1.0.0)
-    libv8-node (24.1.0.0-aarch64-linux)
-    libv8-node (24.1.0.0-arm64-darwin)
-    libv8-node (24.1.0.0-x86_64-darwin)
-    libv8-node (24.1.0.0-x86_64-linux)
-    libv8-node (24.1.0.0-x86_64-linux-musl)
+    libv8-node (24.12.0.1)
+    libv8-node (24.12.0.1-aarch64-linux)
+    libv8-node (24.12.0.1-aarch64-linux-musl)
+    libv8-node (24.12.0.1-arm64-darwin)
+    libv8-node (24.12.0.1-x86_64-darwin)
+    libv8-node (24.12.0.1-x86_64-linux)
+    libv8-node (24.12.0.1-x86_64-linux-musl)
     lint_roller (1.1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -295,8 +296,8 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2025.0924)
     mini_mime (1.1.5)
-    mini_racer (0.19.1)
-      libv8-node (~> 24.1.0.0)
+    mini_racer (0.19.2)
+      libv8-node (~> 24.12.0.1)
     mini_scheduler (0.18.0)
       sidekiq (>= 6.5, < 8.0)
     mini_sql (1.6.0)
@@ -977,7 +978,7 @@ CHECKSUMS
   discourse-emojis (1.0.44) sha256=63425a32379fb471d58f5eac9a1e931fc5a94efb7d327f71f1580af4dfe4edb3
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
-  discourse_ai-tokenizers (0.4) sha256=54d7ddcc5479f3bb3057b90f4a85106b4602a07336b51d372c1a1dd8f08104c5
+  discourse_ai-tokenizers (0.4.1) sha256=54ea2224c9dba6e3da96f7f1fe1ae269566df5975568e4919dddae8a55f41610
   discourse_dev_assets (0.0.6) sha256=4dfe7946927aa3d61a4ba89b5aef39d6daaeb70e35d7125dc481806a5c0aea4e
   discourse_math_bundle (1.0.1) sha256=c7d82fa65c9680cab2f77daeba32c1b89e500faccd2269e050ab27d5e1bc8337
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
@@ -1039,12 +1040,13 @@ CHECKSUMS
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   kgio (2.11.4) sha256=bda7a2146115998a5b07154e708e0ac02c38dcee7e793c33e2e14f600fdfffc6
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
-  libv8-node (24.1.0.0) sha256=2f0e9ac629c4c5753eaf7001952bb6dce4eb596f3dc0df3049ee7d9cfb9471cd
-  libv8-node (24.1.0.0-aarch64-linux) sha256=fe7787bdb082d1101f65d8f42572ec6c634776a334d82b9fedded152e1d4f358
-  libv8-node (24.1.0.0-arm64-darwin) sha256=f34bdd85787a32a16db137ffbe83feb1cd09f4d69ff3c43cd2f0a675656ee16b
-  libv8-node (24.1.0.0-x86_64-darwin) sha256=243cfae376d7d54b02fb9e8cfd2a2a08e791d066fb78252925a825f05805083b
-  libv8-node (24.1.0.0-x86_64-linux) sha256=0857486e64f7bd4133d4aa607c42d0abade1ab53dffcbfd30f12e0b7dba8f157
-  libv8-node (24.1.0.0-x86_64-linux-musl) sha256=080a243ac014054780cc0d0be2c18b93642a139d09622c0cfd1ebc8614d24437
+  libv8-node (24.12.0.1) sha256=d93d23b861bfe5de3ba829e34a142402fb83b4c3592dd58d9ac4e027588d739a
+  libv8-node (24.12.0.1-aarch64-linux) sha256=22bd0246cde85d70c88cf772727ac3677a20ac1d169105f82efe5f1f7c39f755
+  libv8-node (24.12.0.1-aarch64-linux-musl) sha256=791b5960f79525e87d1bd1e5f2bf3715ef2a38bac6c97f297853e98a8411ba89
+  libv8-node (24.12.0.1-arm64-darwin) sha256=124904a46b4a15c01ac024b4cf537dcf199cfb49a309cc59f66315e156e48339
+  libv8-node (24.12.0.1-x86_64-darwin) sha256=5eee594393e7a27dc230a7fca5f9f72fc11ed58bce655624a683f4d027bf2d16
+  libv8-node (24.12.0.1-x86_64-linux) sha256=e1236be4765edc109bd6ecef2989cf781bdcbac6f6e2cb3236ec9568540a9cfa
+  libv8-node (24.12.0.1-x86_64-linux-musl) sha256=7563175534c40893815bfd28e8fe27e12ff1656700c7208f53de06d14001712b
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   literate_randomizer (0.4.0) sha256=05073c9b383983b1ed7e26c40b963468e91bc86e663b3eeff3a4af91b84217b1
@@ -1065,7 +1067,7 @@ CHECKSUMS
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
   mime-types-data (3.2025.0924) sha256=f276bca15e59f35767cbcf2bc10e023e9200b30bd6a572c1daf7f4cc24994728
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  mini_racer (0.19.1) sha256=3e4ec1bfbb3ebb39c23d8fc4b6e641b5dc6767a173a8938356c271895e5d6de3
+  mini_racer (0.19.2) sha256=ef3328e7e164d5ef2d38bb25d0da0fde3a9199a6f467461dd5f5e0b6443dd7ef
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7

@@ -113,6 +113,7 @@ hy:
         remove_parameter: "Հեռացնել"
         parameter_required: "Պարտադիր"
         edit: "Խմբագրել"
+        test: "Փորձարկել"
         delete: "Ջնջել"
       secrets:
         short_title: "Հավատարմագրեր"

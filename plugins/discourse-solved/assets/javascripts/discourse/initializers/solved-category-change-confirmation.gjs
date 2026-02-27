@@ -1,82 +1,74 @@
-import { action } from "@ember/object";
+import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation";
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
+function solvedEnabled(categoryId, tags) {
+  const siteSettings = helperContext().siteSettings;
+
+  if (
+    siteSettings.allow_solved_on_all_topics ||
+    Category.findById(categoryId)?.custom_fields?.enable_accepted_answers ===
+      "true"
+  ) {
+    return true;
+  }
+
+  const solvedTags = siteSettings.enable_solved_tags.split("|").filter(Boolean);
+
+  return (tags || []).some((t) => solvedTags.includes(t.name));
+}
+
 export default {
   name: "solved-category-change-confirmation",
 
   initialize() {
     withPluginApi((api) => {
-      api.modifyClass(
-        "controller:topic",
-        (Superclass) =>
-          class extends Superclass {
-            _solvedEnabled(categoryId, tags) {
-              if (
-                this.siteSettings.allow_solved_on_all_topics ||
-                Category.findById(categoryId)?.custom_fields
-                  ?.enable_accepted_answers === "true"
-              ) {
-                return true;
-              }
+      api.registerBehaviorTransformer(
+        "topic-controller:finished-editing",
+        async ({ next, context }) => {
+          const modal = api.container.lookup("service:modal");
+          const props = context.buffered;
+          const model = context.model;
+          let solvedStateChanged = false;
 
-              const solvedTags = this.siteSettings.enable_solved_tags
-                .split("|")
-                .filter(Boolean);
+          if ("category_id" in props || "tags" in props) {
+            const oldCategoryId = model.category_id;
+            const newCategoryId = props.category_id ?? oldCategoryId;
+            const oldTags = model.tags;
+            const newTags = props.tags ?? oldTags;
 
-              return (tags || []).some((t) => solvedTags.includes(t.name));
-            }
+            const oldAllowed = solvedEnabled(oldCategoryId, oldTags);
+            const newAllowed = solvedEnabled(newCategoryId, newTags);
 
-            @action
-            async finishedEditingTopic() {
-              if (!this.editingTopic) {
-                return;
-              }
+            solvedStateChanged = oldAllowed !== newAllowed;
 
-              const props = this.get("buffered.buffer");
-              let solvedStateChanged = false;
+            if (model.accepted_answer && oldAllowed && !newAllowed) {
+              const showConfirmation =
+                localStorage.getItem(STORAGE_KEY) !== "true";
 
-              if ("category_id" in props || "tags" in props) {
-                const oldCategoryId = this.model.category_id;
-                const newCategoryId = props.category_id ?? oldCategoryId;
-                const oldTags = this.model.tags;
-                const newTags = props.tags ?? oldTags;
+              if (showConfirmation) {
+                const result = await modal.show(SolvedRemovalConfirmationModal);
 
-                const oldAllowed = this._solvedEnabled(oldCategoryId, oldTags);
-                const newAllowed = this._solvedEnabled(newCategoryId, newTags);
-
-                solvedStateChanged = oldAllowed !== newAllowed;
-
-                if (this.model.accepted_answer && oldAllowed && !newAllowed) {
-                  const showConfirmation =
-                    localStorage.getItem(STORAGE_KEY) !== "true";
-
-                  if (showConfirmation) {
-                    const result = await this.modal.show(
-                      SolvedRemovalConfirmationModal
-                    );
-
-                    if (!result?.confirmed) {
-                      return;
-                    }
-
-                    if (result.dontShowAgain) {
-                      localStorage.setItem(STORAGE_KEY, "true");
-                    }
-                  }
+                if (!result?.confirmed) {
+                  return;
                 }
-              }
 
-              await super.finishedEditingTopic();
-
-              if (solvedStateChanged) {
-                this.model.postStream.refresh({ forceLoad: true });
+                if (result.dontShowAgain) {
+                  localStorage.setItem(STORAGE_KEY, "true");
+                }
               }
             }
           }
+
+          await next();
+
+          if (solvedStateChanged) {
+            model.postStream.refresh({ forceLoad: true });
+          }
+        }
       );
     });
   },

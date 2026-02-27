@@ -144,15 +144,17 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
       }.not_to raise_error
     end
 
-    it "works with authentication in query parameters" do
+    it "sends API credentials as headers instead of query parameters" do
       authenticated_url = "#{feed_url}?api_key=test123&api_username=testuser"
 
       Discourse.redis.del("rss-polling-feed-polled:#{Digest::SHA1.hexdigest(authenticated_url)}")
 
-      stub_request(:get, authenticated_url).to_return(
-        status: 200,
-        body: file_from_fixtures("feed.rss", "feed"),
-      )
+      stub_request(:get, feed_url).with(
+        headers: {
+          "Api-Key" => "test123",
+          "Api-Username" => "testuser",
+        },
+      ).to_return(status: 200, body: file_from_fixtures("feed.rss", "feed"))
 
       expect {
         job.execute(feed_url: authenticated_url, author_username: author.username)

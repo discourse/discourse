@@ -72,7 +72,7 @@
   }
 
   .btn.no-text.btn-icon {
-    &:not(.user-menu-tab, .user-menu-tab-active) {
+    &:not(.user-menu-tab, .user-menu-tab-active, .dropdown-select-box-header) {
       width: var(--button-height);
     }
   }

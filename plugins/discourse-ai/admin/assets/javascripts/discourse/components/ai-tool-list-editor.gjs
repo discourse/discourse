@@ -270,8 +270,8 @@ export default class AiToolListEditor extends Component {
       </DPageSubheader>
 
       {{#if @tools.content}}
-        <table class="d-admin-table ai-tool-list-editor">
-          <thead>
+        <table class="d-table ai-tool-list-editor">
+          <thead class="d-table__header">
             <th>{{i18n "discourse_ai.tools.name"}}</th>
             <th></th>
           </thead>
@@ -279,9 +279,9 @@ export default class AiToolListEditor extends Component {
             {{#each @tools.content as |tool|}}
               <tr
                 data-tool-id={{tool.id}}
-                class="ai-tool-list__row d-admin-row__content"
+                class="ai-tool-list__row d-table__row"
               >
-                <td class="d-admin-row__overview">
+                <td class="d-table__cell --overview">
                   <div class="ai-tool-list__name-with-description">
                     <div class="ai-tool-list__name">
                       <strong>
@@ -319,7 +319,7 @@ export default class AiToolListEditor extends Component {
                     {{/if}}
                   </div>
                 </td>
-                <td class="d-admin-row__controls">
+                <td class="d-table__cell --controls">
                   <LinkTo
                     @route="adminPlugins.show.discourse-ai-tools.edit"
                     @model={{tool}}

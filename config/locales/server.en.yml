@@ -286,6 +286,7 @@ en:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    diff_too_complex: "The diff is too complex to compute safely. Please try smaller edits."
     messages:
       invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
@@ -1814,6 +1815,8 @@ en:
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
     github_onebox_access_tokens: "A mapping of a GitHub organisation or user to a GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
+    reddit_onebox_client_id: "Reddit API OAuth client ID used for authenticated Reddit oneboxes. Create a 'script' type app at reddit.com/prefs/apps to obtain credentials."
+    reddit_onebox_client_secret: "Reddit API OAuth client secret used for authenticated Reddit oneboxes. Found under the 'script' type app created at reddit.com/prefs/apps."
 
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
@@ -2340,6 +2343,7 @@ en:
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
     mailjet_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
     postmark_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2757,6 +2761,7 @@ en:
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
+    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2804,12 +2809,12 @@ en:
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
-      min_group_name_length_exists: "You cannot set the minimum group name length above the shortest group name (%{group_name})."
-      min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
-      max_group_name_length_exists: "You cannot set the maximum group name length below the longest group name (%{group_name})."
-      max_username_length_range: "You cannot set the maximum below the minimum."
+      min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
+      min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
+      min_username_length_range: "You cannot set 'min username length' above 'max username length'."
+      max_username_length_exists: "You cannot set 'max username length' below the longest username (%{username})."
+      max_group_name_length_exists: "You cannot set 'max username length' below the longest group name (%{group_name})."
+      max_username_length_range: "You cannot set the 'max username length' below 'min username length'."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
       empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
       category_search_priority:

@@ -15,9 +15,7 @@ export default class AiPostHelperTrigger extends Component {
   @service menu;
 
   @tracked postHighlighted = false;
-  @tracked currentMenu = this.menu.getByIdentifier(
-    "post-text-selection-toolbar"
-  );
+  currentMenu = this.menu.getByIdentifier("post-text-selection-toolbar");
 
   // capture the state at the moment the toolbar is rendered
   // so we ensure change of state (selection change for example)
@@ -127,7 +125,7 @@ export default class AiPostHelperTrigger extends Component {
       data: this.menuData,
       placement: "top-start",
       fallbackPlacements: ["bottom-start"],
-      updateOnScroll: false,
+      autoUpdate: { ancestorScroll: false },
       onClose: () => {
         this.removeHighlightedText();
       },

@@ -38,7 +38,9 @@ const target = params.get("target") || "core";
     } else if (element.tagName === "SCRIPT") {
       const script = document.createElement("script");
       script.src = element.src;
-      script.dataset = element.dataset;
+      for (const [key, value] of Object.entries(element.dataset)) {
+        script.dataset[key] = value;
+      }
       script.defer = element.defer;
       script.async = false; // Weirdly, this is true by default when programmatically creating script tags
       outputNode.append(script);

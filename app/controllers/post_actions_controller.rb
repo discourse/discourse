@@ -48,7 +48,11 @@ class PostActionsController < ApplicationController
     if result.failed?
       render_json_error(result)
     else
-      render_post_json(result.post, add_raw: false)
+      if !guardian.can_see_post?(result.post)
+        head :no_content
+      else
+        render_post_json(result.post, add_raw: false)
+      end
     end
   end
 

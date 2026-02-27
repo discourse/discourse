@@ -520,6 +520,7 @@ class Topic < ActiveRecord::Base
 
   def limit_private_messages_per_day
     return unless private_message?
+    return if subtype == TopicSubtype.notify_moderators
     apply_per_day_rate_limit_for("pms", :max_personal_messages_per_day)
   end
 

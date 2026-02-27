@@ -31,3 +31,51 @@ acceptance("Reports", function (needs) {
     assert.dom(".export-csv-btn").exists();
   });
 });
+
+acceptance("Reports | Plugin groups sorted by display name", function (needs) {
+  needs.user();
+  needs.settings({ reporting_improvements: true });
+  needs.pretender((server, helper) => {
+    server.get("/admin/reports", () => {
+      return helper.response({
+        reports: [
+          {
+            title: "Zebra Report",
+            description: "From zebra plugin",
+            type: "zebra_report",
+            plugin: "zebra-plugin",
+            plugin_display_name: "Zebra Analytics",
+          },
+          {
+            title: "Alpha Report",
+            description: "From alpha plugin",
+            type: "alpha_report",
+            plugin: "alpha-plugin",
+            plugin_display_name: "Alpha Metrics",
+          },
+          {
+            title: "Middle Report",
+            description: "From middle plugin",
+            type: "middle_report",
+            plugin: "middle-plugin",
+            plugin_display_name: "Middle Stats",
+          },
+        ],
+      });
+    });
+  });
+
+  test("plugin report groups are sorted alphabetically by display name", async function (assert) {
+    await visit("/admin/reports");
+
+    const groupTitles = [
+      ...document.querySelectorAll(".admin-reports-group__title"),
+    ].map((el) => el.textContent.trim());
+
+    assert.deepEqual(groupTitles, [
+      "Alpha Metrics",
+      "Middle Stats",
+      "Zebra Analytics",
+    ]);
+  });
+});

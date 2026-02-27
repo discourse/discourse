@@ -7,7 +7,9 @@
 bs_BA:
   js:
     explorer:
+      default_query: "Uobičajen"
       or: "ili"
+      create: "napravi"
       help:
         label: "Pomoć"
       schema:
@@ -17,7 +19,6 @@ bs_BA:
           yes: "Da"
           no: "Ne"
       export: "Izvoz"
-      save: "Spremiti promjene"
       edit: "Izmijeni"
       delete: "Delete"
       query_groups: "Grupa"

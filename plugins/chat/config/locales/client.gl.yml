@@ -22,6 +22,7 @@ gl:
         yesterday: "Onte"
       create: "Crear"
       cancel: "Cancelar"
+      pinned: "Fixado"
       channel_settings:
         edit: "Editar"
         add: "Engadir"

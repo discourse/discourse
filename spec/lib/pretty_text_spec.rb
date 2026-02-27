@@ -31,7 +31,7 @@ RSpec.describe PrettyText do
       it "correctly extracts usernames from the new quote format" do
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote no-group" data-username="codinghorror" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="codinghorror" data-display-name="Jeff" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a></div>
