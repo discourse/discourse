@@ -2,7 +2,6 @@
 
 :root {
   --tag-text-color: var(--primary-high);
-  --tag-max-width: 14em;
 }
 
 .container.tags-index {
@@ -64,6 +63,7 @@
 }
 
 .discourse-tag {
+  --tag-max-width: 14em;
   max-width: var(--tag-max-width);
   display: inline-block;
   vertical-align: middle;
@@ -116,11 +116,6 @@
       height: 13px;
     }
   }
-}
-
-.link-bottom-line,
-.topic-header-extra {
-  --tag-max-width: 18em;
 }
 
 .d-header .topic-header-extra {
