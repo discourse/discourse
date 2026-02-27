@@ -27,7 +27,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :user_changes,
              :tags_changes,
              :category_id_changes,
-             :can_edit
+             :can_edit,
+             :diff_error
 
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision
@@ -127,6 +128,9 @@ class PostRevisionSerializer < ApplicationSerializer
       side_by_side: cooked_diff.side_by_side_html,
       side_by_side_markdown: raw_diff.side_by_side_markdown,
     }
+  rescue ONPDiff::DiffLimitExceeded
+    @diff_error = true
+    nil
   end
 
   def title_changes
@@ -139,6 +143,17 @@ class PostRevisionSerializer < ApplicationSerializer
     diff = DiscourseDiff.new(prev, cur)
 
     { inline: diff.inline_html, side_by_side: diff.side_by_side_html }
+  rescue ONPDiff::DiffLimitExceeded
+    @diff_error = true
+    nil
+  end
+
+  def diff_error
+    @diff_error || false
+  end
+
+  def include_diff_error?
+    @diff_error
   end
 
   def include_title_changes?
