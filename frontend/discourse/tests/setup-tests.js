@@ -330,6 +330,12 @@ export default function setupTests(config) {
       app.destroy();
     });
 
+    // Break RSVP promise chains that retain the destroyed app. The test
+    // framework's setupContext calls application.boot(), creating RSVP
+    // promises whose _result holds the app even after resolution.
+    app._bootPromise = null;
+    app._bootResolver = null;
+
     resetPretender();
     clearPresenceState();
 
@@ -350,6 +356,10 @@ export default function setupTests(config) {
     MessageBus.unsubscribe("*");
     localStorage.clear();
     enableLoadMoreObserver();
+
+    // Release the app reference so the destroyed app isn't retained
+    // by this closure until the next test creates a new one.
+    app = null;
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
