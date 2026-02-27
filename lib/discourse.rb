@@ -945,8 +945,10 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
-    # V8 does not support forking, make sure all contexts are disposed
-    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+    if !GlobalSetting.mini_racer_single_threaded
+      # V8 does not support forking, make sure all contexts are disposed
+      ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+    end
 
     # get rid of rubbish so we don't share it
     Process.warmup
@@ -985,10 +987,10 @@ module Discourse
     Logster.store.redis.reconnect
     Sidekiq.redis_pool.reload(&:close)
 
-    # in case v8 was initialized we want to make sure it is nil
-    PrettyText.reset_context
-
-    AssetProcessor.reset_context if defined?(AssetProcessor)
+    if !GlobalSetting.mini_racer_single_threaded
+      PrettyText.reset_context
+      AssetProcessor.reset_context
+    end
 
     # warm up v8 after fork, that way we do not fork a v8 context
     # it may cause issues if bg threads in a v8 isolate randomly stop
@@ -1225,6 +1227,12 @@ module Discourse
       Thread.new { LetterAvatar.image_magick_version },
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberCli.script_chunks },
+      Thread.new do
+        if GlobalSetting.mini_racer_single_threaded
+          PrettyText.cook("warm up **pretty text**")
+          AssetProcessor.v8
+        end
+      end,
     ].each(&:join)
   ensure
     @preloaded_rails = true
