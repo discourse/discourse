@@ -19,7 +19,10 @@ export default class CategoryTypeChooser extends Service {
   }
 
   async createCategory() {
-    if (this.siteSettings.enable_simplified_category_creation) {
+    if (
+      this.siteSettings.enable_simplified_category_creation &&
+      this.siteSettings.enable_category_type_setup
+    ) {
       const result = await this.modal.show(ChooseCategoryType);
       if (!result?.categoryType) {
         return;

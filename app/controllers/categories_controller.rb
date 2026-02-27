@@ -172,7 +172,8 @@ class CategoriesController < ApplicationController
     if @category.save
       @category.move_to(position.to_i) if position
 
-      if category_type.present?
+      if category_type.present? &&
+           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
         Categories::Configure.call(guardian:, params: { category_id: @category.id, category_type: })
       end
 

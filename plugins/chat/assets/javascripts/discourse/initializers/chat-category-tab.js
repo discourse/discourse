@@ -12,7 +12,9 @@ export default {
         name: i18n("chat.edit_category.tab_title"),
         component: CategoryChat,
         condition: ({ category, siteSettings }) =>
-          siteSettings.chat_enabled && category.id,
+          siteSettings.chat_enabled &&
+          category.id &&
+          siteSettings.enable_simplified_category_creation,
       });
     });
   },
