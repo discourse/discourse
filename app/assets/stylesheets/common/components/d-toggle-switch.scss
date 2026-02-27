@@ -80,11 +80,13 @@
     transition: background 0.25s;
 
     .d-icon {
-      font-size: var(--font-down-1);
+      width: calc(var(--toggle-switch-height) * 0.54);
+      height: calc(var(--toggle-switch-height) * 0.54);
       color: var(--secondary);
-      left: 7px;
-      top: 6px;
       position: absolute;
+      top: 50%;
+      left: calc(var(--toggle-switch-height) * 0.291);
+      transform: translateY(-50%);
     }
   }
 
