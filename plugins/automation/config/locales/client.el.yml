@@ -46,6 +46,9 @@ el:
           raw:
             label: Κύριο μέρος
         pms:
+          confirm_remove_pm: "Σίγουρα θέλετε να αφαιρέσετε αυτό το ΠΜ;"
+          placeholder_title: Τίτλος ΠΜ
+          add_pm: Προσθήκη ΠΜ
           no_pm_created: Δεν έχετε δημιουργήσει ακόμη κανένα προσωπικό μήνυμα. Τα προσωπικά μηνύματα θα σταλούν μόλις πυροδοτηθεί ο αυτοματισμός σας.
           title:
             label: Τίτλος
@@ -68,6 +71,8 @@ el:
           fields:
             badge:
               label: Παράσημο
+            only_first_grant:
+              label: Μόνο στην πρώτη χορήγηση
         stalled_topic:
           durations:
             PT1H: "Μία ώρα"
@@ -119,6 +124,10 @@ el:
           fields:
             restricted_group:
               label: Περιορισμός σε ομάδα
+            trust_level_transition:
+              label: Μετάβαση επιπέδου εμπιστοσύνης
+          trust_levels:
+            ALL: "Όλα τα επίπεδα εμπιστοσύνης"
         point_in_time:
           fields:
             execute_at:
@@ -132,17 +141,34 @@ el:
             original_post_only:
               label: Μόνο η αρχική ανάρτηση
               description: Θα ενεργοποιηθεί μόνο αν η ανάρτηση είναι η αρχική ανάρτηση στο θέμα
+            action_type:
+              description: "Προαιρετικό, περιορίστε το έναυσμα μόνο σε συμβάντα δημιουργίας ή επεξεργασίας"
+            valid_trust_levels:
+              label: Έγκυρα επίπεδα εμπιστοσύνης
             restricted_tags:
               label: Ετικέτες
             restricted_categories:
               label: Κατηγορίες
+            exclude_subcategories:
+              label: Εξαίρεση υποκατηγοριών
             restricted_archetype:
               description: Προαιρετικά, να επιτρέπεται το έναυσμα μόνο σε θέματα ή προσωπικά μηνύματα
+            restricted_groups:
+              label: Περιορισμένες ομάδες
+            excluded_groups:
+              label: Εξαιρούμενες ομάδες
             first_post_only:
               label: Πρώτη ανάρτηση μόνο
             first_topic_only:
               label: Πρώτο θέμα μόνο
+            skip_via_email:
+              label: "Παράλειψη μέσω email"
+              description: "Παράλειψη του εναύσματος εάν η ανάρτηση δημιουργήθηκε μέσω email"
+            post_features:
+              label: Χαρακτηριστικά ανάρτησης
+              description: "Προαιρετικό, περιορίστε το έναυσμα μόνο σε αναρτήσεις με αυτά τα χαρακτηριστικά"
           created: Δημιουργήθηκε
+          edited: Επεξεργάστηκε
           topics: Όλα τα θέματα
           personal_messages: Προσωπικά μηνύματα
           public_topics: Δημόσια θέματα (εξαιρούνται όλες οι ασφαλείς κατηγορίες)
@@ -156,6 +182,7 @@ el:
               label: Πεδία προφίλ χρήστη
               description: Θα ενεργοποιηθεί μόνο αν ο χρήστης έχει συμπληρώσει όλα αυτά τα πεδία
             custom_fields:
+              label: Προσαρμοσμένα πεδία χρήστη
               description: Θα ενεργοποιηθεί μόνο αν ο χρήστης έχει συμπληρώσει όλα αυτά τα πεδία
             once_per_user:
               label: Μία φορά ανά χρήστη
@@ -178,6 +205,8 @@ el:
             ignore_group_members:
               label: Αγνόηση μελών ομάδας
               description: Παράλειψη ενεργοποίησης αν ο αποστολέας είναι μέλος της ομάδας που καθορίστηκε παραπάνω
+            valid_trust_levels:
+              label: Έγκυρα επίπεδα εμπιστοσύνης
         topic_tags_changed:
           trigger_on_modes:
             tags_added_or_removed: Ετικέτες προστέθηκαν ή αφαιρέθηκαν
@@ -192,11 +221,19 @@ el:
               description: Θα ενεργοποιηθεί μόνο αν το θέμα έχει κάποια από αυτές τις ετικέτες
         after_post_cook:
           fields:
+            valid_trust_levels:
+              label: Έγκυρα επίπεδα εμπιστοσύνης
             restricted_category:
               label: Κατηγορία
             restricted_tags:
               label: Ετικέτες
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Πρότυπο email
+            recipients:
+              label: Παραλήπτες
         zapier_webhook:
           fields:
             webhook_url:
@@ -342,7 +379,7 @@ el:
           enabled:
             label: "Ενεργοποίηση αυτοματισμού"
           disabled:
-            label: Απενεργοποιημένο
+            label: Απενεργοποιημένος
           last_updated_at:
             label: Τελευταία ενημέρωση
           last_run:

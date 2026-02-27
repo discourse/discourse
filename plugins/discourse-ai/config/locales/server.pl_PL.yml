@@ -282,6 +282,23 @@ pl_PL:
           name: "Zacznij od zera..."
       name:
         characters: "może zawierać tylko cyfry, litery i podkreślenia"
+      secret_contracts:
+        invalid_payload: "Sekretne kontrakty muszą być tablicą."
+        invalid_contract: "Sekretny kontrakt o indeksie %{index} jest nieprawidłowy."
+        alias_required: "Sekretny kontrakt o indeksie %{index} musi zawierać alias."
+        alias_too_long: "Sekretny alias `%{alias}` jest za długi."
+        alias_invalid: "Sekretny alias `%{alias}` może zawierać tylko cyfry, litery i podkreślenia."
+        alias_not_unique: "Sekretny alias `%{alias}` jest zduplikowany."
+      secret_bindings:
+        invalid_payload: "Sekretne powiązania muszą być tablicą."
+        secret_not_found: "Wybrane poświadczenie nie istnieje."
+        alias_not_declared: "Alias `%{alias}` nie jest zadeklarowany w tym narzędziu."
+      secret_runtime:
+        alias_not_declared: "Alias poświadczeń `%{alias}` nie jest zadeklarowany dla tego narzędzia."
+        missing_binding: "Alias poświadczeń `%{alias}` jest wymagany, ale nie jest powiązany."
+        missing_required_aliases: "Brak wymaganych powiązań poświadczeń dla aliasów: %{aliases}."
+        secret_not_found: "Alias poświadczeń `%{alias}` jest powiązany z brakującymi poświadczeniami."
+        unknown_error: "Nie można rozwiązać żądanego poświadczenia."
     ai_helper:
       errors:
         completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."
@@ -652,6 +669,7 @@ pl_PL:
         invalid_seeded_model: "Nie można używać tego modelu z tą funkcją"
         invalid_persona_response_format: "Wybrana osoba musi mieć format odpowiedzi z polem logicznym o nazwie „spam”"
         must_select_model: "Najpierw musisz wybrać LLM"
+        invalid_llm_id: "Wybrany model LLM jest nieprawidłowy"
       endpoints:
         not_configured: "%{display_name} (nie skonfigurowano)"
         configuration_hint:
@@ -670,12 +688,18 @@ pl_PL:
     embeddings:
       delete_failed: "Ten model jest obecnie używany. Najpierw zaktualizuj „wybrany model osadzania sztucznej inteligencji”."
       cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
+      secret_required: "Należy wybrać poświadczenie"
+      secret_not_found: "Wybrane poświadczenie nie istnieje"
       configuration:
         disable_embeddings: "Najpierw musisz wyłączyć opcję „włączone osadzanie sztucznej inteligencji”."
         choose_model: "Najpierw ustaw „osadzenia sztucznej inteligencji wybrane modele”."
         model_test_failed: "Nie udało nam się wygenerować testowego osadzenia z tym modelem. Sprawdź, czy jest poprawnie skonfigurowany."
+    secrets:
+      delete_failed_in_use: "To poświadczenie jest obecnie używane przez jedno lub więcej LLM, osadzeń lub narzędzi i nie może zostać usunięte."
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
+      secret_required: "Należy wybrać poświadczenie"
+      secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
       bedrock_missing_auth: "AWS Bedrock wymaga skonfigurowania Access Key ID lub Role ARN"
     ai_staff_action_logger:
@@ -700,6 +724,26 @@ pl_PL:
       persona_disabled: Podana osobowość jest wyłączona. Sprawdź parametry persona_name lub persona_id.
       no_default_llm: Osobowość musi mieć zdefiniowany parametr default_llm.
       user_not_allowed: Użytkownik nie ma prawa brać udziału w dyskusji na ten temat.
+      invalid_stream_resume_token: Token resume_token jest nieprawidłowy lub wygasł.
+      no_tool_results_specified: Parametr tool_results jest wymagany przy wznawianiu strumienia.
+      invalid_custom_tools: "Parametr custom_tools jest nieprawidłowy: %{details}"
+      duplicate_custom_tools: "Parametr custom_tools zawiera zduplikowane nazwy narzędzi: %{names}"
+      too_many_custom_tools: "Parametr custom_tools może zawierać maksymalnie %{max} narzędzi."
+      custom_tool_definition_too_large: "Każda definicja narzędzia niestandardowego może mieć maksymalnie %{max} bajtów."
+      invalid_stream_param: "Parametr %{key} jest nieprawidłowy: %{details}"
+      expected_array: "oczekiwano tablicy"
+      expected_object: "oczekiwano obiektu"
+      ambiguous_tool_results: "Podaj albo tool_results albo tool_result, nie obydwa."
+      invalid_tool_results: "Parametr tool_results jest nieprawidłowy: %{details}"
+      too_many_tool_results: "Parametr tool_results może zawierać maksymalnie %{max} elementów."
+      no_pending_tool_calls: Nie ma żadnych oczekujących wywołań narzędzi dla tego tokena CV.
+      missing_tool_results: "Brak wyników wyszukiwania dla identyfikatorów wywołań narzędzi: %{ids}"
+      unexpected_tool_results: "Nieoczekiwane wyniki narzędzia dla identyfikatorów wywołań narzędzia: %{ids}"
+      invalid_tool_result_content: "Wynik narzędzia dla %{id} musi zawierać treść"
+      tool_result_content_too_large: "Każdy ładunek zawartości wyniku narzędzia musi mieć maksymalnie %{max} bajtów."
+      stream_reply_max_resume_rounds_reached: Osiągnięto maksymalną liczbę rund wznawiania używania niestandardowych narzędzi (%{max}).
+      stream_reply_state_too_large: "Stan strumienia jest zbyt duży, aby go zachować (maks. %{max} bajtów)."
+      stream_reply_unexpected_error: Podczas przesyłania odpowiedzi wystąpił nieoczekiwany błąd.
       prompt_message_length: Wiadomość %{idx} przekracza limit 1000 znaków.
       persona_already_exists: Osobowość o nazwie %{name} już istnieje.
       custom_tool_exists:

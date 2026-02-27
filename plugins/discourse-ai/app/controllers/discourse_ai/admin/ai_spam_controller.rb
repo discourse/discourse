@@ -94,6 +94,12 @@ module DiscourseAi
 
         raise Discourse::NotFound if !post
 
+        if params[:llm_id].present? && !LlmModel.exists?(id: params[:llm_id])
+          return(
+            render_json_error(I18n.t("discourse_ai.llm.configuration.invalid_llm_id"), status: 422)
+          )
+        end
+
         result =
           DiscourseAi::AiModeration::SpamScanner.test_post(
             post,

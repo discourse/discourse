@@ -109,11 +109,10 @@ export default class UpsertCategorySecurity extends Component {
 
   @action
   onSelectGroup(groupId) {
-    const group = this.site.groups.find((g) => g.id === groupId);
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name: group?.name,
+        group_name: this.site.groupsById[groupId]?.name,
         group_id: groupId,
         permission_type: this.minimumPermission,
       },
@@ -161,6 +160,7 @@ export default class UpsertCategorySecurity extends Component {
         (if (eq @selectedTab "security") "active")
       }}
     >
+
       {{#if @category.is_special}}
         {{#if @category.isUncategorizedCategory}}
           <@form.Alert @type="warning">
@@ -172,6 +172,23 @@ export default class UpsertCategorySecurity extends Component {
           </@form.Alert>
         {{/if}}
       {{/if}}
+
+      {{#if this.allParentGroupsUsed}}
+        <@form.Alert @type="warning">
+          {{i18n "category.permissions.all_parent_groups_used"}}
+        </@form.Alert>
+      {{/if}}
+
+      <@form.Alert @type="warning">
+        {{#if this.everyonePermission}}
+          {{i18n
+            this.everyoneAccessMessageKey
+            everyone_group=this.everyonePermission.group_name
+          }}
+        {{else}}
+          {{i18n "category.permissions.specific_groups_have_access"}}
+        {{/if}}
+      </@form.Alert>
 
       {{#unless @category.is_special}}
         <@form.Container>
@@ -232,19 +249,6 @@ export default class UpsertCategorySecurity extends Component {
             {{/if}}
           </div>
 
-          {{#if this.allParentGroupsUsed}}
-            <@form.Alert @type="warning">
-              {{i18n "category.permissions.all_parent_groups_used"}}
-            </@form.Alert>
-          {{/if}}
-
-          <@form.Alert @type="warning">
-            {{#if this.everyonePermission}}
-              {{i18n this.everyoneAccessMessageKey}}
-            {{else}}
-              {{i18n "category.permissions.specific_groups_have_access"}}
-            {{/if}}
-          </@form.Alert>
         </@form.Container>
       {{/unless}}
 

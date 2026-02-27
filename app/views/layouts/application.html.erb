@@ -47,9 +47,13 @@
 
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
-    <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request, include_admin_asset: staff?).each do |file| %>
-      <%= preload_script file %>
-    <%- end %>
+    <%= render "layouts/plugin_js", opts: {
+        include_official: allow_plugins?,
+        include_unofficial: allow_third_party_plugins?,
+        request: request,
+        include_admin_asset: staff?
+      }
+     %>
 
     <%- if staff? %>
       <% EmberCli.script_chunks["chunk.admin"]&.each do |script_name| %>

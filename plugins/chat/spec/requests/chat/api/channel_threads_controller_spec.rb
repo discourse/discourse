@@ -41,6 +41,24 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
       end
 
+      context "when the thread original message is deleted" do
+        before { thread.original_message.trash! }
+
+        it "returns 404" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+          expect(response.status).to eq(404)
+        end
+
+        context "when the current user is a moderator" do
+          before { current_user.update!(moderator: true) }
+
+          it "returns 200" do
+            get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+            expect(response.status).to eq(200)
+          end
+        end
+      end
+
       context "when the channel_id does not match the thread id" do
         fab!(:other_channel, :chat_channel)
 

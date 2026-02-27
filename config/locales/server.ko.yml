@@ -1345,7 +1345,6 @@ ko:
     allowed_crawler_user_agents: "사이트 액세스를 허용해야 하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스가 허용되지 않아야 하는 웹 크롤러를 식별하는 사용자 에이전트 스트링에서 대소문자를 구분하지 않는 고유한 단어입니다. 허용 목록이 정의된 경우 적용되지 않습니다."
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면 이 비율이 모든 크롤러에 적용됩니다(요청 간 지연 시간(초))."
-    content_security_policy_collect_reports: "/csp_reports에서 CSP 위반 리포트 수집 활성화"
     content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 임베드할 수 있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>임베딩</a>에서 허용된 호스트를 제어합니다."
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
     share_links: "공유 대화창에 표시할 항목과 순서를 결정합니다."
@@ -1558,7 +1557,6 @@ ko:
     num_flaggers_to_close_topic: "중재를 위해 주제를 자동으로 일시 중지하기 위한 최소 고유 신고자 수"
     num_hours_to_close_topic: "중재를 위해 주제를 일시 중지하는 시간입니다."
     auto_respond_to_flag_actions: "신고를 제거할 때 자동 댓글을 활성화합니다."
-    min_first_post_typing_time: "사용자가 첫 게시 중에 입력해야 하는 최소 시간(밀리초)입니다. 한계치가 충족되지 않으면 게시물이 자동으로 필요 승인 대기열에 들어갑니다. 비활성화하려면 0으로 설정합니다(권장하지 않음)."
     auto_silence_fast_typers_max_trust_level: "빠른 게시자를 자동으로 차단하기 위한 최대 신뢰 레벨"
     reviewable_claiming: "검토 가능한 콘텐츠에 대해 조치를 취하려면 먼저 독점해야 하나요?"
     reviewable_default_topics: "기본적으로 주제별로 그룹화된 검토 가능한 콘텐츠 표시"
@@ -1569,7 +1567,6 @@ ko:
     alternative_reply_by_email_addresses: "수신 이메일 주소로 회신 이메일을 보내는 데 사용하는 대체 템플릿 목록입니다. 예: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "수신 이메일에 텍스트 대신 HTML을 사용합니다."
     strip_incoming_email_lines: "수신 이메일의 각 줄에서 앞뒤 공백을 제거합니다."
-    disable_emails: "Discourse에서 모든 유형의 이메일을 보내지 못하도록 합니다. 모든 사용자의 이메일을 비활성화하려면 '예'를 선택합니다. 운영진이 아닌 사용자에 대해서만 이메일을 비활성화하려면 '비운영진'을 선택하세요."
     strip_images_from_short_emails: "2800바이트, 즉 2.73KB 이내 크기를 가지도록 이메일에서 이미지 제거"
     display_name_on_email_from: "이메일 보내는 사람 필드에 전체 이름 표시"
     unsubscribe_via_email: "사용자가 이메일 제목이나 본문에 '구독 해제'를 포함하여 답장하면 이메일을 구독 해제하도록 허용"
@@ -1786,10 +1783,6 @@ ko:
       reply_by_email_disabled: "이 설정을 활성화하기 전에 먼저 '이메일로 회신'을 활성화해야 합니다."
       discourse_connect_url_is_empty: "이 설정을 활성화하기 전에 'discourse connect url'을 설정해야 합니다."
       enable_local_logins_disabled: "이 설정을 활성화하기 전에 먼저 '로컬 로그인 활성화'를 활성화해야 합니다."
-      min_username_length_exists: "최소 아이디 길이를 가장 짧은 아이디(%{username}) 이상으로 설정할 수 없습니다."
-      min_username_length_range: "최솟값은 최댓값보다 크게 설정할 수 없습니다."
-      max_username_length_exists: "최대 아이디 길이를 가장 긴 아이디(%{username}) 이하로 설정할 수 없습니다."
-      max_username_length_range: "최솟값은 최댓값보다 작게 설정할 수 없습니다."
       invalid_hex_value: "색상 값은 6자리 16진수 코드여야 합니다."
       empty_selectable_avatars: "이 설정을 활성화하기 전에 먼저 두 개 이상의 선택 가능한 아바타를 업로드해야 합니다."
       category_search_priority:
@@ -3525,8 +3518,6 @@ ko:
     title: "안전 모드 시작"
     enter: "안전 모드 시작"
     must_select: "안전 모드를 시작하려면 옵션을 하나 이상 선택하세요."
-  dev_mode:
-    enter: "시작하다"
   wizard:
     title: "Discourse Setup"
     step:
@@ -3671,12 +3662,8 @@ ko:
         title: "예"
       approve_and_unhide:
         title: "예"
-      no_action_post:
-        title: "조치 없음"
       delete_post:
         complete: "게시물 삭제됨"
-      no_action_user:
-        title: "조치 없음"
       delete_user:
         complete: "사용자 삭제됨"
         reason: "검토 대기열을 통해 삭제됨"

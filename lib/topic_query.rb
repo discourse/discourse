@@ -862,7 +862,12 @@ class TopicQuery
     if SiteSetting.tagging_enabled
       # Use `preload` here instead since `includes` can end up calling `eager_load` which can unnecessarily lead to
       # joins on the `topic_tags` and `tags` table leading to a much slower query.
-      result = result.preload(:tags)
+      result =
+        if SiteSetting.content_localization_enabled
+          result.preload(tags: :localizations)
+        else
+          result.preload(:tags)
+        end
       result = filter_by_tags(result)
     end
 
@@ -1259,7 +1264,14 @@ class TopicQuery
         "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i}",
       )
 
-    query = query.includes(:tags) if SiteSetting.tagging_enabled
+    if SiteSetting.tagging_enabled
+      query =
+        if SiteSetting.content_localization_enabled
+          query.includes(tags: :localizations)
+        else
+          query.includes(:tags)
+        end
+    end
     query.order("topics.bumped_at DESC")
   end
 

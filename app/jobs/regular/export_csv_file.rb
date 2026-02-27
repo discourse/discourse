@@ -221,10 +221,13 @@ module Jobs
       end
 
       if report.modes == [Report::MODES[:stacked_chart]]
+        hidden_labels = @extra[:hidden_labels].to_s.split(",").map(&:strip)
+
         header = [:x]
         data = {}
 
-        report.data.map do |series|
+        report.data.each do |series|
+          next if hidden_labels.include?(series[:req])
           header << series[:label]
           series[:data].each do |datapoint|
             data[datapoint[:x]] ||= { x: datapoint[:x] }

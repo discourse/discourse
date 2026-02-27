@@ -6,6 +6,12 @@
 
 fi:
   js:
+    blocks:
+      ghost:
+        status: "Tila"
+        in_location: "kohteessa"
+        hidden: "piilotettu"
+        failed: "epäonnistui"
     number:
       format:
         separator: ","
@@ -400,6 +406,12 @@ fi:
       title: "Uudet ja lukemattomat ketjut"
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Takaisin"
+      spread_the_word:
+        action: "Kopioi linkki"
+        copied_to_clipboard: "Linkki kopioitiin leikepöydälle!"
     about:
       edit: "Muokkaa tätä sivua"
       simple_title: "Tietoa"
@@ -632,19 +644,13 @@ fi:
       in_reply_to: "vastauksena:"
       filtered_flagged_by: "Liputtanut"
       unknown:
-        title:
-          one: "Sinulla on odottavia tarkastuksia käytöstä poistetusta lisäosasta:"
-          other: "Sinulla on odottavia tarkastuksia käytöstä poistetuista lisäosista:"
         instruction: "Niitä ei voida näyttää oikein, ennen kuin otat kyseisen lisäosan käyttöön. Ota lisäosa käyttöön ja päivitä sivu. Vaihtoehtoisesti voit jättää ne huomiotta. <a href='%{url}' target='_blank'>Lue lisää...</a>"
         reviewable_unknown_source: "%{reviewableType} (tuntematon lisäosa)"
         reviewable_known_source: "%{reviewableType} (lisäosasta %{pluginName})"
         ignore_all: "Ohita kaikki"
         enable_plugins: "Ota lisäosat käyttöön"
-        delete_confirm: "Oletko varma, että haluat poistaa kaikki arvostelut, jotka on luotu käytöstä poistetuilla lisäosilla?"
-        ignore_success: "Kaikki käytöstä poistettujen lisäosien luomat arvostelut on poistettu."
       explain:
         why: "selitä miksi tämä päätyi jonoon"
-        title: "Käsittelypisteytys"
         formula: "Kaava"
         subtotal: "Välisumma"
         total: "Yhteensä"
@@ -658,10 +664,8 @@ fi:
           title: "Käyttäjät joiden aiemmista lipuista on oltu samaa mieltä saavat bonuspisteitä."
         trust_level_bonus:
           name: "luottamustaso"
-          title: "Korkeampien luottamustasojen käyttäjien luomat käsiteltävät kohteet saavat korkeammat pisteet."
         type_bonus:
           name: "tyyppibonus"
-          title: "Henkilökunta voi määrittää tietyille käsiteltävälle tyypeille bonuksen, jotta ne saavat korkeamman prioriteetin."
       revise_and_reject_post:
         title: "Korjaa"
         reason: "Syy"
@@ -670,7 +674,6 @@ fi:
         custom_reason: "Kuvaile syy selkeästi"
         other_reason: "Muu..."
         optional: "valinnainen"
-      stale_help: "<b>%{username}</b> on ratkaissut tämän käsiteltävän kohteen."
       claim_help:
         optional: "Voit osoittaa tämän kohteen itsellesi, jolloin muut eivät voi käsitellä sitä."
         required: "Sinun täytyy osoittaa kohde itsellesi, ennen kuin voit käsitellä sen."
@@ -3119,8 +3122,6 @@ fi:
         max_views:
           placeholder: enintään
           aria_label: suodata enimmäiskatselukertojen mukaan
-        additional_options:
-          label: "Suodata viestien määrän ja ketjun katselukertojen mukaan"
     hamburger_menu: "Navigointivalikko"
     new_item: "uusi"
     go_back: "palaa takaisin"
@@ -3251,6 +3252,9 @@ fi:
           other: "Edetty: <strong>%{count}</strong> ketjua"
         performing: "Suoritetaan joukkotoimintoja, odota…"
         completed: "Joukkotoiminnot suoritettiin onnistuneesti!"
+        error_topic_count:
+          one: "%{count} ketju"
+          other: "%{count} ketjua"
       none:
         unread: "Sinulla ei ole lukemattomia ketjuja."
         unseen: "Sinulla ei ole näkemättömiä ketjuja."
@@ -4111,10 +4115,8 @@ fi:
         reply: "Vastaus"
         create: "Aloitus"
         no_groups_selected: "Millekään ryhmällä ei ole myönnetty pääsyä; alue näkyy vain henkilökunnalle."
-        everyone_full_access: 'Tämä alue on julkinen: kaikki voivat lukea, vastata ja luoda viestejä. Voit rajoittaa oikeuksia poistamalla yhden tai useamman ryhmälle "kaikki" annetuista oikeuksista.'
         toggle_reply: "Muuta vastausoikeutta"
         toggle_full: "Muuta aloitusoikeutta"
-        inherited: 'Tämä oikeus periytyy ryhmältä "kaikki"'
       uncategorized_security_warning: "Tämä alue on erityinen. Se on tarkoitettu säilytyspaikaksi ketjuille, joilla ei ole aluetta; sille ei voi määritellä turvallisuusasetuksia."
       uncategorized_general_warning: 'Tämä alue on erityinen. Se on oletusalue uusille ketjuille, joille ei ole valittu aluetta. Jos et kaipaa tätä ja haluat mieluummin pakottaa valitsemaan alueen, <a href="%{settingLink}">poista asetus käytöstä täällä</a>. Jos haluat vaihtaa nimeä tai kuvasta, siirry kohtaan <a href="%{customizeLink}">Mukauta / Tekstisisältö</a>.'
       pending_permission_change_alert: "Et ole lisännyt ryhmää %{group} tälle alueelle; lisää klikkaamalla tätä painiketta."
@@ -4666,7 +4668,20 @@ fi:
         one: "Sen synonyymi poistetaan myös."
         other: "Sen %{count} synonyymiä poistetaan myös."
       edit_tag: "Muokkaa tunnisteen nimeä ja kuvausta"
-      description: "Kuvaus (enintään 1 000 merkkiä)"
+      description: "Kuvaus"
+      settings:
+        title: "Asetukset"
+        general: "Yleistä"
+        localizations: "Lokalisoinnit"
+        back: "Takaisin"
+        name: "Nimi"
+        slug: "Polkutunnus"
+        name_placeholder: "Tunnisteen nimi"
+        synonyms_subtitle: "Kun näitä tunnisteita käytetään, ne korvataan tunnisteella %{name}"
+      localization:
+        locale: "Kielialue"
+        name: "Nimi"
+        description: "Kuvaus"
       sort_by: "Järjestys:"
       sort_by_count: "lukumäärä"
       sort_by_name: "nimi"
@@ -5169,9 +5184,13 @@ fi:
           never: "ei koskaan"
       reports:
         title: "Saatavilla olevat raportit"
-        meta_doc: "Raportit ovat tehokas työkalu, joka auttaa sinua ymmärtämään, mitä sivustollasi tapahtuu. Niiden avulla voit tunnistaa trendejä, havaita ongelmia ja tehdä päätöksiä tietojen perusteella."
         sidebar_title: "Raportit"
         back: "Takaisin kaikkiin raportteihin"
+        group_traffic: "Liikenne"
+        group_members: "Jäsenet"
+        group_moderation: "Valvonta"
+        group_security: "Tietoturva"
+        group_other: "Muut"
       config_sections:
         account:
           title: "Tili"
@@ -5196,7 +5215,6 @@ fi:
         preview: "Esikatselu"
         enabled_for_options:
           everyone: "Kaikki"
-          staff: "Vain henkilökunnalle"
         statuses:
           experimental: "Kokeellinen"
         impact_roles:
@@ -5269,7 +5287,6 @@ fi:
               help_text: "Suositeltava koko on 600 x 80 pikseliä."
             large_icon:
               title: "Neliökuvake"
-              description: "Logon neliönmuotoinen versio näkyy hallintapaneelin yläosassa ja toimii myös mobiilisovelluksen aloitusnäytön logona."
               help_text: "Suositeltava koko on 512 x 512 pikseliä."
             square_icon_dark:
               required: "Käytetäänkö tummassa tilassa eri neliökuvaketta?"
@@ -5420,7 +5437,7 @@ fi:
           header_description: "Raportit ovat tehokas työkalu, joka auttaa sinua ymmärtämään, mitä sivustollasi tapahtuu. Niiden avulla voit tunnistaa trendejä, havaita ongelmia ja tehdä päätöksiä tietojen perusteella."
           sub_pages:
             settings:
-              title: "Hallintapaneelin asetukset"
+              title: "Asetukset"
         badges:
           title: "Kunniamerkit"
           header_description: "Kunniamerkit palkitsevat käyttäjiä heidän toiminnastaan, panoksestaan ja saavutuksistaan. Tämä auttaa tunnustamaan, validoimaan ja kannustamaan positiivista käyttäytymistä ja aktiivisuutta yhteisössä"
@@ -5570,22 +5587,6 @@ fi:
         result_count:
           one: '%{count} tulos haulla "%{filter}"'
           other: '%{count} tulosta haulla "%{filter}"'
-        result_types:
-          page:
-            one: "Sivu"
-            other: "Sivut"
-          report:
-            one: "Raportti"
-            other: "Raportit"
-          setting:
-            one: "Asetus"
-            other: "Asetukset"
-          theme:
-            one: "Teema"
-            other: "Teemat"
-          component:
-            one: "Komponentti"
-            other: "Komponentit"
       new_features:
         title: "Mitä uutta?"
         check_for_updates: "Tarkista päivitykset"
@@ -5609,23 +5610,6 @@ fi:
           title: "Mitä uutta?"
           subtitle: "Julkaisemme jatkuvasti uusia ominaisuuksia ja parannuksia. Tämä sivu kattaa kohokohdat, mutta voit katsoa kattavat julkaisutiedot napsauttamalla Lisätietoja."
           learn_more: "Lisätietoja..."
-          experimental: "Kokeellinen"
-          only_experiments: "Näytä vain kokeelliset ominaisuudet"
-          experiment_enabled: "Olet ottanut kokeellisen ominaisuuden käyttöön."
-          experiment_disabled: "Olet poistanut kokeellisen ominaisuuden käytöstä."
-          feature_enabled: "Olet ottanut ominaisuuden käyttöön."
-          feature_disabled: "Olet poistanut ominaisuuden käytöstä."
-          toggled_too_fast: "Olet vaihtanut valitsinta liian nopeasti. Odota muutama sekunti ennen kuin yrität uudelleen."
-          experiment_tooltip:
-            title_disabled: "Kokeile tätä kokeellista ominaisuutta"
-            title_enabled: "Poista kokeellinen ominaisuus käytöstä"
-            content_disabled: "Kokeile uusinta kehitysvaiheessa olevaa ominaisuuttamme! Se on vielä kokeiluvaiheessa, joten voimme poistaa sen milloin tahansa. Voit poistaa sen käytöstä milloin tahansa.<br/><br/>Tämän muuttaminen ottaa ominaisuuden käyttöön kaikille käyttäjille."
-            content_enabled: "Tämän muuttaminen poistaa ominaisuuden käytöstä kaikilta käyttäjiltä."
-          feature_tooltip:
-            title_disabled: "Kokeile tätä ominaisuutta"
-            title_enabled: "Poista ominaisuus käytöstä"
-            content_disabled: "Kokeile tätä uutta ominaisuutta! Voit poistaa sen käytöstä milloin tahansa.<br/><br/>Tämän muuttaminen ottaa ominaisuuden käyttöön kaikille käyttäjille."
-            content_enabled: "Tämän muuttaminen poistaa ominaisuuden käytöstä kaikilta käyttäjiltä."
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."
@@ -5807,6 +5791,7 @@ fi:
         save: "Tallenna"
         cancel: "Peruuta"
         continue: "Jatka"
+        copy_key: "Kopioi"
         back: "Takaisin API-avaimiin"
         revoke: "Peru"
         undo_revoke: "Kumoa peruminen"
@@ -7608,6 +7593,7 @@ fi:
         field_types:
           text: "Teksti"
           textarea: "Tekstialue"
+          date: "Päivämäärä"
           confirm: "Vahvistus"
           dropdown: "Pudotusvalikko"
           multiselect: "Monivalinta"

@@ -20,4 +20,11 @@ et:
           settings: "Seaded"
           save: "Salvesta"
           delete: "Kustuta"
+          html: "HTML"
+          categories: "Liigid"
+          groups: "Rühmad"
           preview: "Eelvaade"
+          name: "Nimi"
+          edit: "Muuda"
+          tabs:
+            settings: "Seaded"

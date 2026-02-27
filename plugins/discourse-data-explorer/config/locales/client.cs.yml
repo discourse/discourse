@@ -7,8 +7,9 @@
 cs:
   js:
     explorer:
+      default_query: "Výchozí"
       or: "nebo"
-      create: "Vytvořit nový"
+      create: "Vytvořit"
       import:
         label: "Import"
       help:
@@ -21,7 +22,9 @@ cs:
           no: "Ne"
           null_: "Null"
       export: "Export"
+      view: "Zobrazit"
       save: "Uložit změny"
+      undo: "Zahodit změny"
       edit: "Upravit"
       delete: "Smazat"
       download_json: "JSON"
@@ -37,5 +40,9 @@ cs:
       query_user: "Vytvořil/a"
       reset_params: "obnovit výchozí"
       search_placeholder: "Hledat…"
+      form:
+        errors:
+          invalid_date: "%{date} je neplatné datum"
+          invalid_time: "%{time} je neplatný čas"
     group:
       reports: "Sestav"

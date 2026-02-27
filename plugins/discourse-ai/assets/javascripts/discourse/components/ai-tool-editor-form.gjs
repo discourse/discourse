@@ -10,6 +10,7 @@ import getURL from "discourse/lib/get-url";
 import { and, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { toPlainObject } from "../lib/utilities";
+import AiSecretSelector from "./ai-secret-selector";
 import AiToolTestModal from "./modal/ai-tool-test-modal";
 import RagOptionsFk from "./rag-options-fk";
 import RagUploader from "./rag-uploader";
@@ -51,15 +52,34 @@ export default class AiToolEditorForm extends Component {
     const plainRagUploads =
       ragUploads.length > 0 ? toPlainObject(ragUploads) : [];
 
+    const secretBindingMap = Object.fromEntries(
+      (this.args.editingModel.secret_bindings || []).map((binding) => [
+        binding.alias,
+        binding.ai_secret_id,
+      ])
+    );
+    const secretContracts = (this.args.editingModel.secret_contracts ?? []).map(
+      (contract) => ({
+        ...contract,
+        ai_secret_id:
+          secretBindingMap[contract.alias] || contract.ai_secret_id || null,
+      })
+    );
+
     return {
       name: this.args.editingModel.name || "",
       tool_name: this.args.editingModel.tool_name || "",
       description: this.args.editingModel.description || "",
       summary: this.args.editingModel.summary || "",
       parameters,
+      secret_contracts: secretContracts,
       script: this.args.editingModel.script || "",
       rag_uploads: plainRagUploads,
     };
+  }
+
+  get secretOptions() {
+    return this.args.secrets || [];
   }
 
   @action
@@ -73,11 +93,7 @@ export default class AiToolEditorForm extends Component {
     set(name, value);
   }
 
-  @action
-  async save(data) {
-    this.isSaving = true;
-
-    // we injected a isEnum thing, we need to clean it up
+  cleanFormData(data) {
     const copiedData = toPlainObject(data);
     if (copiedData.parameters) {
       copiedData.parameters.forEach((parameter) => {
@@ -87,6 +103,30 @@ export default class AiToolEditorForm extends Component {
         delete parameter.isEnum;
       });
     }
+
+    if (copiedData.secret_contracts) {
+      copiedData.secret_bindings = copiedData.secret_contracts.map(
+        ({ alias, ai_secret_id }) => ({
+          alias,
+          ai_secret_id,
+        })
+      );
+      copiedData.secret_contracts = copiedData.secret_contracts.map(
+        ({ alias: contractAlias }) => ({
+          alias: contractAlias,
+        })
+      );
+    } else {
+      copiedData.secret_bindings = [];
+    }
+
+    return copiedData;
+  }
+
+  @action
+  async save(data) {
+    this.isSaving = true;
+    const copiedData = this.cleanFormData(data);
 
     try {
       await this.args.model.save(copiedData);
@@ -151,10 +191,13 @@ export default class AiToolEditorForm extends Component {
   }
 
   @action
-  openTestModal() {
+  openTestModal(data) {
+    const toolData = this.cleanFormData(data);
+
     this.modal.show(AiToolTestModal, {
       model: {
-        tool: this.args.editingModel,
+        toolId: this.args.editingModel.id,
+        toolData,
       },
     });
   }
@@ -285,7 +328,11 @@ export default class AiToolEditorForm extends Component {
 
           <form.Row as |row|>
             <row.Col>
-              <collection.Field @name="required" @title="Required" as |field|>
+              <collection.Field
+                @name="required"
+                @title={{i18n "discourse_ai.ai_tool.parameter_required"}}
+                as |field|
+              >
                 <field.Checkbox />
               </collection.Field>
             </row.Col>
@@ -293,7 +340,7 @@ export default class AiToolEditorForm extends Component {
             <row.Col>
               <collection.Field
                 @name="isEnum"
-                @title="Enum"
+                @title={{i18n "discourse_ai.ai_tool.parameter_enum"}}
                 @onSet={{this.toggleIsEnum}}
                 as |field|
               >
@@ -364,6 +411,66 @@ export default class AiToolEditorForm extends Component {
             name="" type="string" description="" required=false isEnum=false
           )
         }}
+        class="btn-default"
+      />
+
+      {{! CREDENTIAL CONTRACTS }}
+      <form.Collection @name="secret_contracts" as |collection index|>
+        <form.Container class="ai-tool-secret-contract">
+          <form.Row as |row|>
+            <row.Col @size={{6}}>
+              <collection.Field
+                @name="alias"
+                @title={{i18n "discourse_ai.tools.secret_alias"}}
+                @validation="required|length:1,100"
+                @format="full"
+                @tooltip={{i18n "discourse_ai.tools.secret_alias_help"}}
+                as |field|
+              >
+                <field.Input />
+              </collection.Field>
+            </row.Col>
+
+            <row.Col @size={{6}}>
+              <collection.Field
+                @name="ai_secret_id"
+                @title={{i18n "discourse_ai.tools.secret_credential"}}
+                @format="full"
+                as |field|
+              >
+                <field.Custom>
+                  <AiSecretSelector
+                    @value={{field.value}}
+                    @secrets={{this.secretOptions}}
+                    @onChange={{field.set}}
+                  />
+                </field.Custom>
+              </collection.Field>
+            </row.Col>
+          </form.Row>
+
+          <form.Row as |row|>
+            <row.Col class="ai-tool-secret-contract__actions">
+              <form.Button
+                @label="discourse_ai.tools.remove_secret_contract"
+                @icon="trash-can"
+                @action={{fn collection.remove index}}
+                class="btn-danger"
+              />
+            </row.Col>
+          </form.Row>
+        </form.Container>
+      </form.Collection>
+
+      <form.Button
+        @icon="plus"
+        @label="discourse_ai.tools.add_secret_contract"
+        @action={{fn
+          form.addItemToCollection
+          "secret_contracts"
+          (hash alias="" ai_secret_id=null)
+        }}
+        class="btn-default"
       />
 
       {{! SCRIPT }}
@@ -404,16 +511,21 @@ export default class AiToolEditorForm extends Component {
       {{/if}}
 
       <form.Actions>
+        <form.Submit
+          @label="discourse_ai.tools.save"
+          class="ai-tool-editor__save"
+        />
+
         {{#unless @isNew}}
           <form.Button
             @label="discourse_ai.tools.test"
-            @action={{this.openTestModal}}
-            class="ai-tool-editor__test-button"
+            @action={{fn this.openTestModal data}}
+            class="btn-default ai-tool-editor__test-button"
           />
           <form.Button
             @label="discourse_ai.tools.export"
             @action={{this.exportTool}}
-            class="ai-tool-editor__export"
+            class="btn-default ai-tool-editor__export"
           />
           <form.Button
             @label="discourse_ai.tools.delete"
@@ -422,11 +534,6 @@ export default class AiToolEditorForm extends Component {
             class="btn-danger ai-tool-editor__delete"
           />
         {{/unless}}
-
-        <form.Submit
-          @label="discourse_ai.tools.save"
-          class="ai-tool-editor__save"
-        />
       </form.Actions>
     </Form>
   </template>

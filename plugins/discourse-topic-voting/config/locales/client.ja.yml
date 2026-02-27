@@ -10,6 +10,7 @@ ja:
       sort_options:
         votes: "投票"
     topic_voting:
+      title: "トピック投票"
       reached_limit: "票数が不足しています。既存の投票を削除してください！"
       list_votes: "投票をリスト"
       votes_nav_help: "票数が最も多いトピック"
@@ -20,6 +21,9 @@ ja:
       voted_title: "投票済み"
       voting_closed_title: "終了"
       voting_limit: "制限"
+      see_votes: "残り %{count} 票 (全 %{max} 票) です"
+      locked: "ロック済み"
+      locked_description: "信頼レベルを上げて投票します"
       votes:
         other: "%{count} 票"
       anonymous_button:

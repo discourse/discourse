@@ -21,7 +21,15 @@ module DiscourseAi
 
       CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
 
-      def initialize(parameters:, llm:, bot_user:, context: nil, tool:, timeout: nil)
+      def initialize(
+        parameters:,
+        llm:,
+        bot_user:,
+        context: nil,
+        tool:,
+        timeout: nil,
+        secret_bindings: nil
+      )
         if context && !context.is_a?(DiscourseAi::Personas::BotContext)
           raise ArgumentError, "context must be a BotContext object"
         end
@@ -35,6 +43,7 @@ module DiscourseAi
         @tool = tool
         @timeout = timeout || DEFAULT_TIMEOUT
         @running_attached_function = false
+        @secret_bindings = secret_bindings
 
         @sleep_calls_made = 0
         @http_requests_made = 0
@@ -48,8 +57,15 @@ module DiscourseAi
         if username.present?
           User.find_by(username: username)
         else
-          Discourse.system_user
+          @bot_user || Discourse.system_user
         end
+      end
+
+      def resolve_guardian(username)
+        user = resolve_user(username)
+        return nil, nil if user.nil?
+        guardian = user.staged? ? system_guardian : Guardian.new(user)
+        [user, guardian]
       end
 
       def resolve_category(category_id_or_name)
@@ -77,6 +93,7 @@ module DiscourseAi
             attach_index(ctx)
             attach_upload(ctx)
             attach_chain(ctx)
+            attach_secrets(ctx)
             attach_sleep(ctx)
             attach_discourse(ctx)
             ctx.eval(framework_script)
@@ -125,6 +142,12 @@ module DiscourseAi
         const chain = {
           setCustomRaw: _chain_set_custom_raw,
           streamCustomRaw: _chain_stream_custom_raw,
+        };
+
+        const secrets = {
+          get: function(aliasName) {
+            return _secrets_get(aliasName);
+          },
         };
 
         const discourse = {
@@ -278,6 +301,17 @@ module DiscourseAi
 
       def invoke(progress_callback: nil)
         @progress_callback = progress_callback
+        source_bindings = @secret_bindings || tool.secret_bindings
+        missing_aliases = tool.missing_secret_aliases(bindings: source_bindings)
+        if missing_aliases.present?
+          raise Discourse::InvalidParameters.new(
+                  I18n.t(
+                    "discourse_ai.tools.secret_runtime.missing_required_aliases",
+                    aliases: missing_aliases.join(", "),
+                  ),
+                )
+        end
+        preload_secrets(source_bindings)
         mini_racer_context.eval(tool.script)
         eval_with_timeout("invoke(#{JSON.generate(parameters)})")
       rescue MiniRacer::ScriptTerminatedError
@@ -301,6 +335,19 @@ module DiscourseAi
       end
 
       private
+
+      def preload_secrets(bindings)
+        secret_ids =
+          bindings.filter_map do |binding|
+            if binding.respond_to?(:[])
+              binding[:ai_secret_id] || binding["ai_secret_id"]
+            else
+              binding.ai_secret_id
+            end
+          end
+        secret_ids = secret_ids.map(&:to_i).uniq
+        @secrets_cache = secret_ids.present? ? AiSecret.where(id: secret_ids).index_by(&:id) : {}
+      end
 
       MAX_FRAGMENTS = 200
 
@@ -434,6 +481,13 @@ module DiscourseAi
             self.custom_raw = raw
             @progress_callback.call(raw) if @progress_callback
           end,
+        )
+      end
+
+      def attach_secrets(mini_racer_context)
+        mini_racer_context.attach(
+          "_secrets_get",
+          ->(alias_name) { in_attached_function { resolve_tool_secret!(alias_name) } },
         )
       end
 
@@ -584,25 +638,17 @@ module DiscourseAi
               username = params[:username]
               message = params[:message]
 
-              # Validate parameters
               return { error: "Missing required parameter: channel_name" } if channel_name.blank?
-              return { error: "Missing required parameter: username" } if username.blank?
               return { error: "Missing required parameter: message" } if message.blank?
 
-              # Find the user
-              user = User.find_by(username: username)
+              user, guardian = resolve_guardian(username)
               return { error: "User not found: #{username}" } if user.nil?
 
-              # Find the channel
               channel = Chat::Channel.find_by(name: channel_name)
-              if channel.nil?
-                # Try finding by slug if not found by name
-                channel = Chat::Channel.find_by(slug: channel_name.parameterize)
-              end
+              channel ||= Chat::Channel.find_by(slug: channel_name.parameterize)
               return { error: "Channel not found: #{channel_name}" } if channel.nil?
 
               begin
-                guardian = Guardian.new(user)
                 message =
                   ChatSDK::Message.create(
                     raw: message,
@@ -678,12 +724,12 @@ module DiscourseAi
               return { error: "Missing required parameter: title" } if title.blank?
               return { error: "Missing required parameter: raw" } if raw.blank?
 
-              user = resolve_user(username)
+              user, guardian = resolve_guardian(username)
               return { error: "User not found: #{username}" } if user.nil?
 
               category = resolve_category(category_id.presence || category_name)
-
               return { error: "Category not found" } if category.nil?
+              return { error: "Permission denied" } unless guardian.can_create?(Topic, category)
 
               begin
                 post_creator =
@@ -694,7 +740,7 @@ module DiscourseAi
                     category: category.id,
                     tags: tags,
                     skip_validations: true,
-                    guardian: system_guardian,
+                    guardian: guardian,
                   )
 
                 post = post_creator.create
@@ -731,13 +777,12 @@ module DiscourseAi
               return { error: "Missing required parameter: topic_id" } if topic_id.blank?
               return { error: "Missing required parameter: raw" } if raw.blank?
 
-              # Find the user
-              user = resolve_user(username)
+              user, guardian = resolve_guardian(username)
               return { error: "User not found: #{username}" } if user.nil?
 
-              # Verify topic exists
               topic = Topic.find_by(id: topic_id)
               return { error: "Topic not found" } if topic.nil?
+              return { error: "Permission denied" } unless guardian.can_create?(Post, topic)
 
               begin
                 post_creator =
@@ -747,7 +792,7 @@ module DiscourseAi
                     topic_id: topic_id,
                     reply_to_post_number: reply_to_post_number,
                     skip_validations: true,
-                    guardian: system_guardian,
+                    guardian: guardian,
                   )
 
                 post = post_creator.create
@@ -883,15 +928,10 @@ module DiscourseAi
 
               options ||= {}
               edit_reason = options["edit_reason"]
-              username = options["username"]
 
-              user = resolve_user(username)
-              return { error: "User not found: #{username}" } if user.nil?
-
-              guardian = Guardian.new(user)
-              unless guardian.can_edit?(post)
-                return { error: "User is not allowed to edit this post" }
-              end
+              user, guardian = resolve_guardian(options["username"])
+              return { error: "User not found: #{options["username"]}" } if user.nil?
+              return { error: "Permission denied" } unless guardian.can_edit?(post)
 
               revisor = PostRevisor.new(post)
               if revisor.revise!(user, { raw: raw, edit_reason: edit_reason })
@@ -912,10 +952,10 @@ module DiscourseAi
 
               updates ||= {}
               options ||= {}
-              user = resolve_user(options["username"])
-              return { error: "User not found: #{options["username"]}" } if user.nil?
 
-              guardian = Guardian.new(user)
+              user, guardian = resolve_guardian(options["username"])
+              return { error: "User not found: #{options["username"]}" } if user.nil?
+              return { error: "Permission denied" } unless guardian.can_see?(topic)
 
               # Handle category change
               if updates.key?("category")
@@ -1192,6 +1232,36 @@ module DiscourseAi
 
       def find_model_by_type(type, id)
         CUSTOM_FIELD_MODELS[type]&.find_by(id: id)
+      end
+
+      def resolve_tool_secret!(alias_name)
+        value, error =
+          tool.resolve_secret(
+            alias_name,
+            bindings: @secret_bindings || tool.secret_bindings,
+            secrets_cache: @secrets_cache,
+          )
+
+        case error
+        when nil
+          value
+        when :alias_not_declared
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.alias_not_declared", alias: alias_name),
+                )
+        when :missing_binding
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.missing_binding", alias: alias_name),
+                )
+        when :secret_not_found
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.secret_not_found", alias: alias_name),
+                )
+        else
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.unknown_error"),
+                )
+        end
       end
 
       def in_attached_function

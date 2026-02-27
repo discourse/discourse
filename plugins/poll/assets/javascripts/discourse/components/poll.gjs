@@ -643,7 +643,7 @@ export default class PollComponent extends Component {
 
     // This uses the Data Explorer plugin export as CSV route
     // There is detection to check if the plugin is enabled before showing the button
-    ajax(`/admin/plugins/explorer/queries/${queryID}/run.csv`, {
+    ajax(`/admin/plugins/discourse-data-explorer/queries/${queryID}/run.csv`, {
       type: "POST",
       data: {
         // needed for data-explorer route compatibility

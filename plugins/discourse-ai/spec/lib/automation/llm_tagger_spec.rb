@@ -17,6 +17,46 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
     Fabricate(:tag, name: "question")
   end
 
+  describe "stalled_topic trigger" do
+    let(:automation) { Fabricate(:automation, script: "llm_tagger", enabled: true) }
+
+    before do
+      automation.fields.create!(
+        component: "choices",
+        name: "tagger_persona",
+        metadata: {
+          value: ai_persona.id,
+        },
+        target: "script",
+      )
+      automation.fields.create!(
+        component: "tags",
+        name: "available_tags",
+        metadata: {
+          value: %w[bug feature question],
+        },
+        target: "script",
+      )
+    end
+
+    it "resolves post from topic context and applies tags" do
+      mock_response = { "tags" => ["bug"], "confidence" => 90 }.to_json
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
+        automation.running_in_background!
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
+          "topic" => topic,
+          "placeholders" => {
+            "topic_url" => topic.url,
+          },
+        )
+      end
+
+      expect(topic.reload.tags.map(&:name)).to include("bug")
+    end
+  end
+
   describe ".handle" do
     let(:available_tags) { %w[bug feature question] }
 

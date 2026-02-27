@@ -44,6 +44,12 @@ nl:
           one: "%{formatted_number} chatbericht"
           other: "%{formatted_number} chatberichten"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanaal"
+        description: "Beschrijving"
+        actions: "Acties"
+        settings: "Instellingen"
       text_copied: Tekst gekopieerd naar klembord
       link_copied: Link gekopieerd naar klembord
       back_to_forum: "Forum"
@@ -58,6 +64,7 @@ nl:
       cancel: "Annuleren"
       cancel_reply: "Antwoord annuleren"
       chat_channels: "Kanalen"
+      pinned: "Vastgemaakt"
       browse_all_channels: "Alle kanalen bekijken"
       see_in: "Bekijken in"
       move_to_channel:
@@ -81,6 +88,7 @@ nl:
         join_channel: "Deelnemen aan kanaal"
         leave_channel: "Kanaal verlaten"
         leave_groupchat_info: "Als je deze groepschat verlaat, heb je er geen toegang meer toe en ontvang je geen meldingen meer. Om weer deel te kunnen nemen, moet je opnieuw worden uitgenodigd door een lid van de groepschat."
+        notification_settings_context: "Meldingen"
         join: "Deelnemen"
         leave: "Verlaten"
         save_label:
@@ -578,13 +586,9 @@ nl:
           other: "%{commaSeparatedUsernames} en %{count} anderen zijn aan het typen"
       retention_reminders:
         indefinitely_short: "oneindig"
-        indefinitely_long: "Chatinstellingen zijn zo ingesteld dat chatberichten oneindig worden bewaard."
         short:
           one: "%{count} dag"
           other: "%{count} dagen"
-        long:
-          one: "Chatinstellingen zijn zo ingesteld dat chatberichten %{count} dag worden bewaard."
-          other: "Chatinstellingen zijn zo ingesteld dat chatberichten %{count} dagen worden bewaard."
       flags:
         off_topic: "Dit bericht is niet relevant voor de huidige discussie zoals gedefinieerd door de kanaaltitel en moet waarschijnlijk worden verplaats naar elders."
         inappropriate: "Dit bericht bevat inhoud die een redelijk persoon als aanstootgevend, kwetsend of een overtreding van <a href=\"%{basePath}/guidelines\">onze communityrichtlijnen</a> zou beschouwen."

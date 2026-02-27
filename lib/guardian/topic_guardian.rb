@@ -323,6 +323,14 @@ module TopicGuardian
     topic && authenticated? && !topic.private_message? && is_staff?
   end
 
+  def can_change_archetype?(topic, new_archetype)
+    return true if new_archetype == topic.archetype
+    if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
+      return can_banner_topic?(topic)
+    end
+    true
+  end
+
   def can_edit_tags?(topic)
     return false unless can_tag_topics?
     return false if topic.private_message? && !can_tag_pms?
@@ -339,6 +347,7 @@ module TopicGuardian
   def can_perform_action_available_to_group_moderators?(topic)
     return false if anonymous? || topic.nil?
     return true if is_staff?
+    return false if !can_see_topic?(topic)
     return true if @user.has_trust_level?(TrustLevel[4])
 
     is_category_group_moderator?(topic.category)

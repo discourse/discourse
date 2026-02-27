@@ -6,6 +6,12 @@
 
 hr:
   js:
+    blocks:
+      ghost:
+        status: "Statust"
+        in_location: "u"
+        hidden: "skriveno"
+        failed: "neuspješno"
     number:
       format:
         separator: "."
@@ -435,6 +441,11 @@ hr:
       title: "Nove i nepročitane teme"
       pill: "Predloženo"
       pm_title: "Predložene poruke"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Natrag"
+      spread_the_word:
+        action: "Kopirajte poveznicu"
     about:
       edit: "Uredi ovu stranicu"
       simple_title: "O nama"
@@ -692,20 +703,13 @@ hr:
       in_reply_to: "odgovor na"
       filtered_flagged_by: "Označio/la"
       unknown:
-        title:
-          one: "Imate na čekanju zahtjeve za reviziju iz onemogućenog plugin-a:"
-          few: "Imate na čekanju zahtjeve za reviziju iz onemogućenih plugin-a:"
-          other: "Imate na čekanju zahtjeve za reviziju iz onemogućenih plugin-a:"
         instruction: "Ne mogu se ispravno prikazati dok ne omogućite odgovarajući plugin. Molimo omogućite plugin i osvježite stranicu. Alternativno, možete ih zanemariti. <a href='%{url}' target='_blank'>Saznajte više...</a>"
         reviewable_unknown_source: "%{reviewableType} (nepoznati plugin)"
         reviewable_known_source: "%{reviewableType} (iz '%{pluginName}' plugina)"
         ignore_all: "Zanemari sve"
         enable_plugins: "Omogući pluginove"
-        delete_confirm: "Jeste li sigurni da želite izbrisati sve recenzije koje su kreirali onemogućeni pluginovi?"
-        ignore_success: "Svi sadržaji za moderaciju koje su stvorili onemogućeni plugini su obrisani."
       explain:
         why: "objasnite zašto je ta stavka završila u redu čekanja"
-        title: "Moguće ocjenjivanje"
         formula: "Formula"
         subtotal: "Suma stavke"
         total: "Ukupno"
@@ -719,10 +723,8 @@ hr:
           title: "Korisnici s čijim se zastavama povijesno dogovara dobivaju bonus."
         trust_level_bonus:
           name: "razina povjerenja"
-          title: "Stavke koje su stvorili korisnici s visokom razinom povjerenja imaju višu ocjenu."
         type_bonus:
           name: "upišite bonus"
-          title: "Određenim vrstama koje mogu pregledati osoblje može im dodijeliti bonus kako bi im postao veći prioritet."
       revise_and_reject_post:
         title: "Revidiraj"
         reason: "Razlog"
@@ -731,7 +733,6 @@ hr:
         custom_reason: "Dajte jasan opis razloga"
         other_reason: "Ostalo..."
         optional: "neobvezno"
-      stale_help: "Ova revizija je riješena <b>%{username}</b>."
       claim_help:
         optional: "Možete prisvojiti ovu stavku kako drugi ne bi mogli dodavati osvrte."
         required: "Morate prisvojiti ovu stavku prije nego dodate osvrt na nju."
@@ -3286,8 +3287,6 @@ hr:
         max_views:
           placeholder: maksimum
           aria_label: filtrirajte prema maksimalnom broju pregleda
-        additional_options:
-          label: "Filtrirajte prema broju postova i pregledima teme"
     hamburger_menu: "Navigacijski izbornik"
     new_item: "novo"
     go_back: "idi natrag"
@@ -3437,6 +3436,10 @@ hr:
           other: "Napredak: <strong>%{count}</strong> teme"
         performing: "Izvođenje masovnih operacija, pričekajte…"
         completed: "Masovne operacije uspješno dovršene!"
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} teme"
       none:
         unread: "Nemate nepročitanih tema."
         unseen: "Nemate nepročitanih tema."
@@ -4339,10 +4342,8 @@ hr:
         reply: "Odgovor"
         create: "Kreiraj"
         no_groups_selected: "Nijedna grupa nije dobila pristup; ova će kategorija biti vidljiva samo osoblju."
-        everyone_full_access: 'Ova je kategorija javna, svi mogu vidjeti, odgovarati i stvarati postove. Da biste ograničili dopuštenja, uklonite jedno ili više dopuštenja dodijeljenih grupi "svi".'
         toggle_reply: "Uključi / isključi dozvolu za odgovor"
         toggle_full: "Uključi / isključi dozvolu za stvaranje"
-        inherited: 'Ovo je dopuštenje naslijeđeno od "svih"'
       uncategorized_security_warning: "Ova kategorija je posebna. Namijenjen je kao prostor za čuvanje tema koje nemaju kategoriju; ne može imati sigurnosne postavke."
       uncategorized_general_warning: 'Ova kategorija je posebna. Koristi se kao zadana kategorija za nove teme za koje nije odabrana kategorija. Ako želite spriječiti ovo ponašanje i prisiliti odabir kategorije, <a href="%{settingLink}">onemogućite postavku ovdje</a>. Ako želite promijeniti naziv ili opis, idite na <a href="%{customizeLink}">Prilagodi / Tekstualni sadržaj</a>.'
       pending_permission_change_alert: "Niste dodali %{group} ovoj kategoriji; kliknite ovaj gumb da biste ih dodali."
@@ -4922,7 +4923,20 @@ hr:
         few: "Njegovi %{count} sinonima također će biti izbrisani."
         other: "Njegovi %{count} sinonimi također će biti izbrisani."
       edit_tag: "Uredite naziv i opis oznake"
-      description: "Opis (najviše1000 znakova)"
+      description: "Opis"
+      settings:
+        title: "Postavke"
+        general: "Općenito"
+        localizations: "Lokalizacije"
+        back: "Natrag"
+        name: "Ime"
+        slug: "Puž"
+        name_placeholder: "Naziv oznake"
+        synonyms_subtitle: "Kada se koriste sljedeće oznake, one će biti zamijenjene s %{name}"
+      localization:
+        locale: "Lokalizacija"
+        name: "Ime"
+        description: "Opis"
       sort_by: "Sortiraj po:"
       sort_by_count: "količina"
       sort_by_name: "ime"
@@ -5442,9 +5456,13 @@ hr:
           never: "nikad"
       reports:
         title: "Popis dostupnih izvještaja"
-        meta_doc: "Izvješća su moćan alat koji vam pomaže da shvatite što se događa na vašoj stranici. Mogu vam pomoći u prepoznavanju trendova, uočavanju problema i donošenju odluka na temelju podataka."
         sidebar_title: "Izvještaji"
         back: "Povratak na sva izvješća"
+        group_traffic: "Promet"
+        group_members: "Članovi"
+        group_moderation: "Moderiranje"
+        group_security: "Sigurnost"
+        group_other: "Ostalo"
       config_sections:
         account:
           title: "Račun"
@@ -5469,7 +5487,6 @@ hr:
         preview: "Pregled"
         enabled_for_options:
           everyone: "Svi"
-          staff: "Samo osoblje"
         statuses:
           experimental: "Eksperimentalno"
         impact_roles:
@@ -5515,12 +5532,18 @@ hr:
           title: "Lokalizacija"
           header_description: "Konfigurirajte jezik sučelja svoje zajednice i ostale opcije lokalizacije za svoje članove"
           keywords: "lokacija|jezik|vremenska zona|unicode|ltr"
+        upcoming_changes:
+          title: "Nadolazeće promjene"
         login:
           title: "Prijava i autentifikacija"
           header_description: "Konfigurirajte način na koji se korisnici prijavljuju i autentificiraju, tajne i ključeve, pružatelje usluga OAuth2 i još mnogo toga"
           sub_pages:
             common_settings:
               title: "Postavke"
+            authenticators:
+              title: "Prijave na društvene mreže"
+            discourseconnect:
+              title: "Discourse Connect"
             discourse_id:
               title: "Discourse ID"
         discourse_id:
@@ -5541,7 +5564,6 @@ hr:
               help_text: "Preporučena veličina je 600 x 80 piksela."
             large_icon:
               title: "Kvadratna ikona"
-              description: "Kvadratna verzija slike logotipa pojavljuje se na vrhu administracije, a ujedno je i logotip aplikacije početnog zaslona za mobilne uređaje."
               help_text: "Preporučena veličina je 512 x 512 piksela."
             square_icon_dark:
               required: "Koristiti drugu kvadratnu ikonu za tamni način rada?"
@@ -5586,10 +5608,14 @@ hr:
               help_text: "Koristite sliku širokog pravokutnika. Nemojte koristiti SVG sliku."
             opengraph_image:
               title: "OpenGraph slika"
+              description: "Zadana opengraph slika, koristi se kada stranica nema drugu prikladnu sliku. Ako je ostavljeno prazno, koristit će se large_icon."
             x_summary_large_image:
+              title: "X sažetak velike slike"
+              description: "X kartica 'sažetak velike slike'. Ako se ostavi prazno, generiraju se uobičajeni metapodaci kartice pomoću OpenGraph_image, sve dok to nije ujedno i .svg."
               help_text: "ivjeli"
         fonts:
           title: "Fontovi"
+          header_description: "Konfigurirajte fontove koji se koriste na cijeloj stranici, uključujući osnovni font, font naslova i zadanu veličinu teksta"
           form:
             more_fonts: "Više fontova"
             fewer_fonts: "Manje fontova"
@@ -5603,8 +5629,14 @@ hr:
               description: "Ovu veličinu svaki korisnik može naknadno prilagoditi prema svojim željama."
           backfill_modal:
             title: "Primijenite nove zadane postavke teksta?"
+            description:
+              one: "Ažurirali ste zadanu veličinu teksta. Želite li primijeniti ovu promjenu na %{count} postojećeg korisnika?"
+              few: "Ažurirali ste zadanu veličinu teksta. Želite li primijeniti ovu promjenu na %{count} postojeća korisnika?"
+              other: "Ažurirali ste zadanu veličinu teksta. Želite li primijeniti ovu promjenu na %{count} postojećih korisnika?"
             modal_yes: "Da"
+            modal_no: "Ne, samo ubuduće primijeni promjenu"
         welcome_banner:
+          title: "Banner dobrodošlice"
           header_description: "Konfigurirajte banner koji sadrži traku za pretraživanje koja se prikazuje posjetiteljima vaše stranice."
           form:
             text_color:
@@ -5663,7 +5695,7 @@ hr:
           title: "Izvještaji"
           sub_pages:
             settings:
-              title: "Postavke nadzorne ploče"
+              title: "Postavke"
         badges:
           title: "Značke"
           header_description: "Značke nagrađuju korisnike za njihove aktivnosti, doprinose i postignuća kako bi se prepoznalo, potvrdilo i potaknulo pozitivno ponašanje i angažman unutar zajednice."
@@ -5760,19 +5792,6 @@ hr:
           one: '%{count} rezultat za "%{filter}"'
           few: '%{count} rezultat za "%{filter}"'
           other: '%{count} rezultata za "%{filter}"'
-        result_types:
-          page:
-            one: "Stranica"
-            few: "Stranica"
-            other: "Stranice"
-          theme:
-            one: "Tema"
-            few: "Teme"
-            other: "Teme"
-          component:
-            one: "Komponenta"
-            few: "Komponente"
-            other: "Komponente"
       new_features:
         title: "Što je novo?"
         check_for_updates: "Provjeri ažuriranja"
@@ -5795,23 +5814,6 @@ hr:
           title: "Što je novo?"
           subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."
           learn_more: "Saznajte više..."
-          experimental: "Eksperimentalno"
-          only_experiments: "Prikaži samo eksperimentalne značajke"
-          experiment_enabled: "Uspješno ste uključili eksperimentalnu značajku."
-          experiment_disabled: "Uspješno ste isključili eksperimentalnu značajku."
-          feature_enabled: "Omogućili ste značajku."
-          feature_disabled: "Onemogućili ste značajku."
-          toggled_too_fast: "Prebrzо ste promijenili postavku. Pričekajte nekoliko sekundi prije ponovnog pokušaja."
-          experiment_tooltip:
-            title_disabled: "Isprobajte ovu eksperimentalnu značajku"
-            title_enabled: "Isključite eksperimentalnu značajku"
-            content_disabled: "Isprobajte našu najnoviju značajku koja je u razvoju! Još je u eksperimentalnoj fazi, pa je možemo ukloniti u bilo kojem trenutku. Možete je isključiti bilo kada.<br/><br/>Promjena ove postavke omogućit će značajku za sve korisnike."
-            content_enabled: "Promjenom ove postavke onemogućit ćete značajku za sve korisnike."
-          feature_tooltip:
-            title_disabled: "Isprobajte ovu značajku"
-            title_enabled: "Isključite značajku"
-            content_disabled: "Isprobajte ovu novu značajku! Možete je isključiti bilo kada.<br/><br/>Promjena ove postavke omogućit će značajku za sve korisnike."
-            content_enabled: "Promjenom ove postavke onemogućit ćete značajku za sve korisnike."
         last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
         no_problems: "Nisu pronađeni problemi."
@@ -5969,6 +5971,7 @@ hr:
         save: "Spremi"
         cancel: "Odustani"
         continue: "Nastavi"
+        copy_key: "Kopija"
         revoke: "Povuci"
         undo_revoke: "Poništi opoziv"
         revoked: "Opoziv"
@@ -7330,6 +7333,7 @@ hr:
         field_types:
           text: "Tekst"
           textarea: "Tekstualno polje"
+          date: "Datum"
           confirm: "Potvrda"
           dropdown: "Padajući izbornik"
           multiselect: "Višestruki odabir"

@@ -12,7 +12,6 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
   describe "#execute" do
     before do
       Discourse.redis.del("rss-polling-feed-polled:#{Digest::SHA1.hexdigest(feed_url)}")
-      stub_request(:head, feed_url).to_return(status: 200, body: "")
       stub_request(:get, feed_url).to_return(status: 200, body: raw_feed)
     end
 
@@ -108,7 +107,7 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
     end
 
     it "is not raising error if http request failed" do
-      stub_request(:get, feed_url).to_raise(Excon::Error::HTTPStatus)
+      stub_request(:get, feed_url).to_return(status: 500)
       job.execute(feed_url: feed_url, author_username: author.username)
     end
 
@@ -143,6 +142,23 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
       expect {
         job.execute(feed_url: feed_url, author_username: author.username)
       }.not_to raise_error
+    end
+
+    it "sends API credentials as headers instead of query parameters" do
+      authenticated_url = "#{feed_url}?api_key=test123&api_username=testuser"
+
+      Discourse.redis.del("rss-polling-feed-polled:#{Digest::SHA1.hexdigest(authenticated_url)}")
+
+      stub_request(:get, feed_url).with(
+        headers: {
+          "Api-Key" => "test123",
+          "Api-Username" => "testuser",
+        },
+      ).to_return(status: 200, body: file_from_fixtures("feed.rss", "feed"))
+
+      expect {
+        job.execute(feed_url: authenticated_url, author_username: author.username)
+      }.to change { author.topics.count }.by(1)
     end
   end
 end

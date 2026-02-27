@@ -8,18 +8,23 @@ de:
   site_settings:
     discourse_automation_enabled: "discourse-automation-Plug-in aktivieren"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(leer)"
     models:
       automations:
         validations:
           script_blank: "Skript darf nicht leer sein"
           trigger_blank: "Auslöser darf nicht leer sein"
           script_missing_required_fields: "Dem Skript fehlen erforderliche Felder: %{fields}"
-          trigger_missing_required_fields: "Dem Trigger fehlen erforderliche Felder: %{fields}"
+          trigger_missing_required_fields: "Dem Auslöser fehlen erforderliche Felder: %{fields}"
       fields:
         required_field: Feld `%{name}` muss bei `%{target}:%{target_name}` ausgefüllt sein.
         invalid_field: Die Komponente `%{component}` des Feldes kann nicht bei `%{target}:%{target_name}` verwendet werden.
         invalid_metadata: Daten für `%{field}` sind ungültig oder Komponente `%{component}` ist unbekannt.
     triggerables:
+      post_flag_created:
+        title: Beitragsmeldung erstellt
+        description: Löst eine Automatisierung aus, wenn ein Beitrag gemeldet wird.
       errors:
         custom_fields_or_user_profile_required: "Zumindest eines von „custom_fields“ oder „user_profile“ muss angegeben werden."
       user_badge_granted:
@@ -78,6 +83,24 @@ de:
         title: Nach Benutzeraktualisierung
         description: Wenn ein Benutzer irgendeine Information aktualisiert, wird die Automatisierung ausgelöst
     scriptables:
+      email_on_flagged_post:
+        title: E-Mail über gemeldeten Beitrag
+        description: Sende eine benutzerdefinierte E-Mail, sobald ein Beitrag gemeldet wird.
+        subject: "Gemeldeter Beitrag: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Ein Beitrag wurde gemeldet.
+
+          Thema: {{topic_title}} ({{topic_url}})
+          Beitrag: {{post_url}} (#{{post_number}})
+          Meldungsart: {{flag_type}}
+          Gemeldeter Benutzer: {{flagged_username}}
+          Gemeldet von: {{flagger_username}}
+          Kategorie: {{category}}
+          Schlagwörter: {{tags}}
+
+          --------
+          Auszug aus dem Beitrag:
+          {{post_excerpt}}
       post:
         title: Beitrag erstellen
         description: Einen Beitrag zu einem bestimmten Thema erstellen
@@ -108,6 +131,10 @@ de:
         title: Austausch von Geschenken
         description: Ermöglicht es, Benutzer einer Gruppe anonym zusammenzubringen, um sich gegenseitig ein Geschenk zu schicken.
         doc: Der Austausch von Geschenken erfordert eine bestehende Gruppe mit mindestens 3 Benutzern. Zum gewählten Datum wird jeder Benutzer der Gruppe mit einem Schenkenden und einem Beschenkten gepaart.
+      remove_upload_markup_from_deleted_posts:
+        title: Upload-Verweise in gelöschten Beiträgen entfernen
+        description: Agiert als Systembenutzer und fügt gelöschten Beiträgen eine Revision hinzu, in der die Upload-Verweise entfernt werden. In Verbindung mit dem Job „clean up uploads“ führt dies zur endgültigen Löschung der Uploads in gelöschten Beiträgen. Mit Vorsicht verwenden!
+        edit_reason: Automatisierung hat Upload-Verweise aus gelöschtem Beitrag entfernt
       send_pms:
         title: PN senden
         description: Ermöglicht das Senden von PN (möglicherweise verzögert).
@@ -163,3 +190,4 @@ de:
         description: "Themen nach dem Zufallsprinzip einer Gruppe zuweisen"
       set_topic_timer:
         title: "Themen-Timer einstellen "
+        description: "Themen-Timer für ein Thema festlegen"

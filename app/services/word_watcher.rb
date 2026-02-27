@@ -53,16 +53,13 @@ class WordWatcher
     end
   end
 
-  def self.regexps_for_action(action, engine: :ruby)
-    cached_words_for_action(action)&.to_h do |_, attrs|
-      [word_to_regexp(attrs[:word], engine: engine), attrs]
-    end
+  def self.regexps_for_action(action)
+    cached_words_for_action(action)&.to_h { |_, attrs| [word_to_regexp(attrs[:word]), attrs] }
   end
 
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
-  # hint: non-chrome browsers do not support 'lookbehind'
-  def self.compiled_regexps_for_action(action, engine: :ruby, raise_errors: false)
+  def self.compiled_regexps_for_action(action, raise_errors: false)
     words = cached_words_for_action(action)
     return [] if words.blank?
 
@@ -93,11 +90,7 @@ class WordWatcher
         next if regexp.blank?
 
         # Add word boundaries to the regexp for regular watched words
-        regexp =
-          match_word_regexp(
-            regexp,
-            engine: engine,
-          ) if !SiteSetting.watched_words_regular_expressions?
+        regexp = match_word_regexp(regexp) if !SiteSetting.watched_words_regular_expressions?
 
         # Add case insensitive flag if needed
         begin
@@ -113,13 +106,11 @@ class WordWatcher
       .compact
   end
 
-  def self.serialized_regexps_for_action(action, engine: :ruby)
-    compiled_regexps_for_action(action, engine: engine).map do |r|
-      { r.source => { case_sensitive: !r.casefold? } }
-    end
+  def self.serialized_regexps_for_action(action)
+    compiled_regexps_for_action(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
   end
 
-  def self.word_to_regexp(word, engine: :ruby, match_word: true)
+  def self.word_to_regexp(word, match_word: true)
     if SiteSetting.watched_words_regular_expressions?
       regexp = word
       regexp = "(#{regexp})" if match_word
@@ -133,7 +124,7 @@ class WordWatcher
       # Convert wildcards to regexp
       regexp = regexp.gsub("\\*", '\S*')
 
-      regexp = match_word_regexp(regexp, engine: engine) if match_word
+      regexp = match_word_regexp(regexp) if match_word
       regexp
     end
   end
@@ -283,16 +274,26 @@ class WordWatcher
 
   private_class_method :censor_text_with_regexp
 
-  # Returns a regexp that transforms a regular expression into a regular
-  # expression that matches a whole word.
-  def self.match_word_regexp(regexp, engine: :ruby)
-    if engine == :js
-      "(?:\\P{L}|^)(#{regexp})(?=\\P{L}|$)"
-    elsif engine == :ruby
-      "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)"
-    else
-      raise "unknown regexp engine: #{engine}"
-    end
+  SPACELESS_SCRIPTS = {
+    "Han" => "\\u4E00-\\u9FFF\\u3400-\\u4DBF",
+    "Hiragana" => "\\u3040-\\u309F",
+    "Katakana" => "\\u30A0-\\u30FF",
+    "Hangul" => "\\uAC00-\\uD7AF",
+    "Thai" => "\\u0E00-\\u0E7F",
+    "Lao" => "\\u0E80-\\u0EFF",
+    "Myanmar" => "\\u1000-\\u109F",
+    "Khmer" => "\\u1780-\\u17FF",
+    "Tibetan" => "\\u0F00-\\u0FFF",
+  }.values.join
+
+  WORD_CHARS = "[\\p{L}\\p{M}\\p{N}\\p{Pc}]"
+
+  def self.match_word_regexp(regexp)
+    s = SPACELESS_SCRIPTS
+    w = WORD_CHARS
+    leading = "(?:(?<!#{w})|(?<=[#{s}])|(?=[#{s}]))"
+    trailing = "(?:(?!#{w})|(?=[#{s}])|(?<=[#{s}]))"
+    "#{leading}(#{regexp})#{trailing}"
   end
 
   private_class_method :match_word_regexp

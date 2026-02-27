@@ -530,7 +530,8 @@ class UserNotifications < ActionMailer::Base
 
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
     original_username =
-      notification_data[:original_username] || notification_data[:display_username]
+      notification_data[:original_username] || post&.user&.username ||
+        notification_data[:display_username]
 
     if user.staged && post
       original_subject =
@@ -881,6 +882,6 @@ class UserNotifications < ActionMailer::Base
         .not_suspended
         .where("created_at > ?", date)
         .count
-        .tap { Discourse.redis.setex(key, 1.day, _1) }
+        .tap { Discourse.redis.setex(key, 1.day, it) }
   end
 end

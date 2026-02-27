@@ -6,6 +6,12 @@
 
 cs:
   js:
+    blocks:
+      ghost:
+        status: "Stav"
+        in_location: "v"
+        hidden: "skrytý"
+        failed: "neúspěšný"
     carousel:
       go_to_slide: "Přejít na snímek č. %{index}"
       previous: "Předchozí snímek"
@@ -357,6 +363,8 @@ cs:
     software_update_prompt:
       message: "Aktualizovali jsme tyto stránky. Aby vše fungovalo hladce, <span>obnovte je, prosím.</span>"
       dismiss: "Označit jako přečtené"
+    notifications_tracking:
+      tooltip: "Úroveň oznámení: %{level}"
     back_button: "Zpět"
     welcome_banner:
       header:
@@ -478,6 +486,13 @@ cs:
       title: "Nová a nepřečtená témata"
       pill: "Navrhované"
       pm_title: "Doporučené zprávy"
+    admin_onboarding_banner:
+      launch_in_easy_steps: "Odstartujte v %{step_count} snadných krocích"
+      start_posting:
+        back: "Zpět"
+      spread_the_word:
+        action: "Kopírovat odkaz"
+        copied_to_clipboard: "Odkaz zkopírován do schránky!"
     about:
       edit: "Upravit tuto stránku"
       simple_title: "O tomto webu"
@@ -767,21 +782,13 @@ cs:
       in_reply_to: "v odpovědi na"
       filtered_flagged_by: "Nahlásil"
       unknown:
-        title:
-          one: "Máte nevyřízené revize ze zakázaného pluginu:"
-          few: "Máte nevyřízené revize ze zakázaných pluginů:"
-          many: "Máte nevyřízené revize ze zakázaných pluginů:"
-          other: "Máte nevyřízené revize ze zakázaných pluginů:"
         instruction: "Nelze je správně zobrazit, dokud neaktivujete příslušný plugin. Povolte prosím plugin a obnovte stránku. Případně je můžete ignorovat. <a href='%{url}' target='_blank'>Další informace...</a>"
         reviewable_unknown_source: "%{reviewableType} (neznámý plugin)"
         reviewable_known_source: "%{reviewableType} (z pluginu '%{pluginName}')"
         ignore_all: "Ignorovat vše"
         enable_plugins: "Povolit pluginy"
-        delete_confirm: "Opravdu chcete smazat všechny revize vytvořené zakázanými pluginy?"
-        ignore_success: "Všechny revize vytvořené zakázanými pluginy byly smazány."
       explain:
         why: "vysvětlete, proč tato položka skončila ve frontě"
-        title: "Hodnocení nahlášeného příspěvku"
         formula: "Vzorec"
         subtotal: "Mezisoučet"
         total: "Celkem"
@@ -795,10 +802,8 @@ cs:
           title: "Uživatelé, jejichž nahlášení byla historicky odsouhlasena, dostávají bonus."
         trust_level_bonus:
           name: "úroveň důvěry"
-          title: "Kontrolovatelné položky vytvořené uživateli s vyšší úrovní důvěry mají vyšší skóre."
         type_bonus:
           name: "bonus za psaní"
-          title: "Některým revidovatelným typům mohou redaktoři přidělit bonus, aby měly vyšší prioritu."
       revise_and_reject_post:
         title: "Revidovat"
         reason: "Důvod"
@@ -807,7 +812,6 @@ cs:
         custom_reason: "Uveďte jasný popis důvodu"
         other_reason: "Ostatní..."
         optional: "volitelné"
-      stale_help: "Tuto revizi vyřešil/a <b>%{username}</b>."
       claim_help:
         optional: "Tuto položku si můžete nárokovat, abyste zabránili ostatním v její kontrole."
         required: "Než budete moci položky revidovat, musíte si je nárokovat."
@@ -1017,6 +1021,7 @@ cs:
         target_created: "Příspěvek vytvořen"
         target_created_by: "Příspěvek vytvořil/a %{username} - %{relativeDate}"
         target_deleted: "Příspěvek smazán"
+        target_deleted_by: "Příspěvek smazal/a %{username} · %{relativeDate}"
         flagged: "Nahlášeno"
         flagged_as_by: "Nahlášeno jako %{flagReason} uživatelem %{username} · %{relativeDate}"
         claimed: "Nárokováno"
@@ -3370,8 +3375,10 @@ cs:
       upcoming_changes:
         available:
           title: "Nadcházející změny"
+          description: "K vyzkoušení je k dispozici '%{changeName}'"
         automatically_promoted:
           title: "Nadcházející změny"
+          description: "'%{changeName}' bylo automaticky povoleno"
       dismiss_confirmation:
         body:
           default:
@@ -3436,7 +3443,10 @@ cs:
         membership_request_consolidated: "nové žádosti o členství"
         reaction: "nová reakce"
         votes_released: "hlas byly uvolněn"
+        new_features: "byly vydány nové funkce Discourse"
         admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
+        upcoming_change_available: "nová nadcházející změna '%{changeName}' je k dispozici"
+        upcoming_change_automatically_promoted: "nadcházející změna '%{changeName}' byla automaticky povolena"
     upload_selector:
       change: "Změnit"
       delete: "Smazat"
@@ -3575,8 +3585,6 @@ cs:
         max_views:
           placeholder: maximum
           aria_label: filtrovat podle maximálního počtu zobrazení
-        additional_options:
-          label: "Filtrovat podle počtu příspěvků a zobrazení tématu"
     hamburger_menu: "Navigační nabídka"
     new_item: "nové"
     go_back: "jít zpět"
@@ -3757,6 +3765,11 @@ cs:
         notify: "Upozornit uživatele na tuto změnu."
         performing: "Provádíme hromadné operace, vyčkejte prosím…"
         completed: "Hromadné operace byly úspěšně dokončeny!"
+        error_topic_count:
+          one: "%{count} téma"
+          few: "%{count} témata"
+          many: "%{count} témat"
+          other: "%{count} témat"
       none:
         unread: "Nemáte žádná nepřečtená témata."
         unseen: "Nemáte žádná neshlédnutá témata."
@@ -4428,7 +4441,11 @@ cs:
           edit: "Upravit"
           delete: "Smazat"
         add: "Přidat nový překlad"
-        manage: "Správa překladů (%{count} existujících)"
+        manage:
+          one: "Správa překladů (%{count} existujících)"
+          few: "Správa překladů (%{count} existujících)"
+          many: "Správa překladů (%{count} existujících)"
+          other: "Správa překladů (%{count} existujících)"
         view:
           one: "Zobrazit %{count} překlad"
           few: "Zobrazit %{count} překlady"
@@ -4439,6 +4456,7 @@ cs:
           confirm_delete: "Opravdu chcete smazat překlady pro '%{languageCode}'?"
         success: "Překlady byly úspěšně aktualizovány"
         post_language_selector:
+          title: "Jazyk příspěvku"
           none: "Žádná"
         edit_warning:
           message: "Tento příspěvek je přeložený.<br><br>Chcete upravit původní příspěvek v %{language} nebo upravit tento konkrétní překlad?"
@@ -4674,6 +4692,7 @@ cs:
       general: "Obecné"
       settings: "Nastavení"
       advanced: "Pokročilé"
+      show_advanced: "Pokročilá nastavení"
       topic_template: "Šablona"
       tags: "Štítky"
       localizations: "Lokalizace"
@@ -4723,6 +4742,7 @@ cs:
       style: "Styl"
       icon: "Ikona"
       emoji: "Emotikon"
+      select_emoji: "Vyberte emotikon"
       background_color: "Barva"
       foreground_color: "Barva textu"
       color_validations:
@@ -4740,6 +4760,7 @@ cs:
           emoji: "Emoji"
       color_used: "Používaná barva"
       predefined_colors: "Předdefinované možnosti barev"
+      name_placeholder: "Nejlépe jedno nebo dvě slova"
       color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
       delete_error: "Nastala chyba při odstraňování kategorie."
@@ -4756,10 +4777,9 @@ cs:
         reply: "Odpovědět"
         create: "Vytvořit"
         no_groups_selected: "Nebyl udělen přístup žádným skupinám; tato kategorie bude viditelná pouze pro redaktory."
-        everyone_full_access: 'Tato kategorie je veřejná, každý může vidět, odpovídat a vytvářet příspěvky. Chcete-li omezit oprávnění, odeberte jedno nebo více oprávnění přidělených skupině "everyone",'
+        specific_groups_have_access: "Tato kategorie je soukromá, pouze vybrané skupiny mohou vidět, odpovědět a vytvářet příspěvky."
         toggle_reply: "Přepnout oprávnění Odpovědět"
         toggle_full: "Přepnout oprávnění Vytvořit"
-        inherited: 'Toto povolení je zděděno od „everyone“'
       uncategorized_security_warning: "Toto je speciální kategorie, která je určena pro témata, která nemají žádnou kategorii a nemůže mít nastavení zabezpečení."
       uncategorized_general_warning: 'Toto je speciální kategorie. Používá se jako výchozí kategorie pro nová témata, u kterých není vybrána žádná kategorie. Pokud chcete tomuto chování zabránit a vynutit si výběr kategorie, <a href="%{settingLink}">, zakažte prosím toto nastavení</a>. Pokud chcete změnit název nebo popis, přejděte na <a href="%{customizeLink}">Přizpůsobení/Textový obsah</a>.'
       pending_permission_change_alert: "Do této kategorie jste nepřidali %{group} ; kliknutím na toto tlačítko je přidejte."
@@ -4792,12 +4812,16 @@ cs:
       position_disabled: "Kategorie se zobrazí v pořadí podle aktivity. Chcete-li ovlivnit pořadí kategorií v seznamech, povolte nastavení <a href='%{url}'>\"pevné pozice kategorií\"</a> ."
       minimum_required_tags: "Nejmenší počet požadovaných štítků pro téma:"
       default_slow_mode: 'Povolit "Pomalý režim" pro nová témata v této kategorii.'
+      subcategory_of: "Nadřazená kategorie..."
       none_subcategory_text: "Žádná"
+      subcategory_permissions_warning: "Podkategorie soukromé kategorie nemůže být veřejná."
       visibility:
         title: "Viditelnost"
         public: "Veřejná"
         all_members: "Všichni členové"
         group_restricted: "Soukromá"
+        who_can_see: "Kdo může tuto kategorii vidět"
+        who_can_post: "Kdo může přispívat do této kategorie"
       num_auto_bump_daily: "Počet otevřených témat, která mají být denně automaticky pošťouchnuta:"
       auto_bump_cooldown_days: "Minimální počet dní před opětovným \"pošťouchnutím\" stejného tématu:"
       navigate_to_first_post_after_read: "Přesunout na první příspěvek, jakmile jsou přečtena témata"
@@ -5198,6 +5222,7 @@ cs:
         back: "%{shortcut} Zpět"
         up_down: "%{shortcut} Posunout výběr &uarr; &darr;"
         open: "%{shortcut} Otevři vybrané téma"
+        open_new_window: "%{shortcut} Otevřít vybrané téma v nové záložce/okně"
         next_prev: "%{shortcut} Následující/předchozí výběr"
         go_to_unread_post: "%{shortcut} Přejít na první nepřečtený příspěvek"
       application:
@@ -5400,7 +5425,20 @@ cs:
         other: "Jeho %{count} synonym bude také smazáno."
       edit_tag: "Upravit název a popis štítku"
       edit: "Upravit tento štítek"
-      description: "Popis (max. 1000 znaků)"
+      description: "Popis"
+      settings:
+        title: "Nastavení"
+        general: "Obecné"
+        localizations: "Lokalizace"
+        back: "Zpět"
+        name: "Jméno"
+        slug: "URL"
+        name_placeholder: "Název štítku"
+        synonyms_subtitle: "Pokud jsou použity následující štítky, budou nahrazeny %{name}"
+      localization:
+        locale: "Jazyk"
+        name: "Název"
+        description: "Popis"
       sort_by: "Seřadit dle:"
       sort_by_count: "počtu"
       sort_by_name: "názvu"
@@ -5962,9 +6000,13 @@ cs:
           never: "nikdy"
       reports:
         title: "Seznam dostupných sestav"
-        meta_doc: "Sestavy jsou mocným nástrojem, který vám pomůže pochopit, co se děje na vašich stránkách. Mohou vám pomoci rozpoznat trendy, problémy a činit rozhodnutí na základě dat."
         sidebar_title: "Sestavy"
         back: "Zpět na všechny sestavy"
+        group_traffic: "Provoz"
+        group_members: "Členové"
+        group_moderation: "Moderování"
+        group_security: "Zabezpečení"
+        group_other: "Ostatní"
       config_sections:
         account:
           title: "Účet"
@@ -6007,7 +6049,6 @@ cs:
         enabled_for_options:
           no_one: "Nikdo"
           everyone: "Všichni"
-          staff: "Pouze redakce"
           specific_groups: "Specifické skupiny"
           specific_groups_with_group_names:
             one: "skupina %{groupNames}"
@@ -6031,11 +6072,13 @@ cs:
           no_results: "Vašemu filtru neodpovídají žádné nadcházející změny."
           all: "Vše"
           enabled: "Zapnuto"
+          enabled_for_specific_groups: "Povoleno pro určité skupiny"
           disabled: "Vypnuto"
           impact_type_all: "Všechny typy dopadů"
           impact_type_feature: "Funkce"
           impact_type_other: "Ostatní"
           status_all: "Všechny stavy"
+          status_conceptual: "Koncepční"
           status_experimental: "Experimentální"
           status_alpha: "Alpha"
           status_beta: "Beta"
@@ -6079,6 +6122,7 @@ cs:
           keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
         upcoming_changes:
           title: "Nadcházející změny"
+          header_description: "Seznam chystaných změn ve službě Discourse, které mohou mít vliv na váš web, a experimentální funkce, ke kterým se můžete přihlásit. Můžete filtrovat podle dopadu, typu a stavu.\n\nOpt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude uvolněna pro všechny. Tyto skupiny se stanou irelevantními, jakmile změna přejde do stavu Stálá."
         login:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
@@ -6117,7 +6161,6 @@ cs:
               help_text: "Doporučená velikost je 600 x 80 pixelů."
             large_icon:
               title: "Čtvercová ikona"
-              description: "Čtvercová verze obrázku loga se zobrazuje v horní části administrace a je zároveň logem mobilní aplikace na domovské obrazovce."
               help_text: "Doporučená velikost je 512 x 512 pixelů."
             square_icon_dark:
               required: "Použít pro tmavý režim jinou čtvercovou ikonu?"
@@ -6224,9 +6267,11 @@ cs:
               locale_label: "Jazyk"
             header_new_members:
               label: "Záhlaví pro nové členy"
+              description: "Dostupné proměnné: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte, %{preferred_display_name}!"
             header_logged_in:
               label: "Záhlaví pro přihlášené členy"
+              description: "Dostupné proměnné: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte zpět, %{preferred_display_name}!"
             header_anonymous:
               label: "Záhlaví pro anonymní návštěvníky"
@@ -6305,7 +6350,7 @@ cs:
           header_description: "Sestavy jsou mocným nástrojem, který vám pomůže pochopit, co se děje na vašich stránkách. Mohou vám pomoci rozpoznat trendy, problémy a činit rozhodnutí na základě dat."
           sub_pages:
             settings:
-              title: "Nastavení nástěnky"
+              title: "Nastavení"
         badges:
           title: "Odznaky"
           header_description: "Odznaky odměňují uživatele za jejich aktivity, příspěvky a úspěchy, aby uznaly, potvrdily a podpořily pozitivní chování a zapojení v rámci komunity"
@@ -6460,32 +6505,6 @@ cs:
           few: '%{count} výsledky pro „%{filter}“'
           many: '%{count} výsledků pro „%{filter}“'
           other: '%{count} výsledků pro „%{filter}“'
-        result_types:
-          page:
-            one: "Stránka"
-            few: "Stránky"
-            many: "Stránek"
-            other: "Stránek"
-          report:
-            one: "Sestava"
-            few: "Sestavy"
-            many: "Sestav"
-            other: "Sestav"
-          setting:
-            one: "Nastavení"
-            few: "Nastavení"
-            many: "Nastavení"
-            other: "Nastavení"
-          theme:
-            one: "Téma"
-            few: "Motivy"
-            many: "Motivy"
-            other: "Motivy"
-          component:
-            one: "Komponenta"
-            few: "Komponenty"
-            many: "Komponenty"
-            other: "Komponenty"
       new_features:
         title: "Co je nového?"
         check_for_updates: "Aktualizovat"
@@ -6508,25 +6527,8 @@ cs:
         new_features:
           title: "Co je nového?"
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
-          no_new_features_found: "Při načítání zdroje došlo k chybě. Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>komunitě Discourse Meta</a>."
+          no_new_features_error: "Při načítání zdroje došlo k chybě. Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>komunitě Discourse Meta</a>."
           learn_more: "Více informací..."
-          experimental: "Experimentální"
-          only_experiments: "Zobrazit pouze experimentální funkce"
-          experiment_enabled: "Povolili jste experimentální funkci."
-          experiment_disabled: "Vypnuli jste experimentální funkci."
-          feature_enabled: "Funkci jste povolili."
-          feature_disabled: "Funkci jste zakázali."
-          toggled_too_fast: "Přepínač jste přepnuli příliš rychle. Počkejte prosím několik vteřin před dalším pokusem."
-          experiment_tooltip:
-            title_disabled: "Vyzkoušejte tuto experimentální funkci"
-            title_enabled: "Vypněte experimentální funkci"
-            content_disabled: "Vyzkoušejte naši nejnovější funkci ve vývoji! Je stále v experimentální fázi, takže ji můžeme kdykoli odstranit. Můžete se odhlásit, kdykoli budete chtít.<br/><br/>Přepnutím ji povolíte pro všechny uživatele."
-            content_enabled: "Změna tohoto nastavení vypnete funkci pro všechny uživatele."
-          feature_tooltip:
-            title_disabled: "Vyzkoušejte tuto funkci"
-            title_enabled: "Vypnout funkci"
-            content_disabled: "Vyzkoušejte tuto novou funkci! Můžete ji vypnout, kdykoli budete chtít.<br/><br/>Přepnutím povolíte funkci povolí pro všechny uživatele."
-            content_enabled: "Změna tohoto nastavení vypnete funkci pro všechny uživatele."
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."
@@ -6601,6 +6603,7 @@ cs:
           daily: Denně
           monthly: Měsíčně
           weekly: Týdně
+          value_so_far: "%{value} (zatím)"
           dates: "Období (UTC)"
           groups: "Všechny skupiny"
           disabled: "Tato sestava je zakázána"
@@ -6611,7 +6614,9 @@ cs:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Protokol vyhledávání</a>'
             disabled: 'Přehled trendů vyhledávání je zakázán. Pro shromažďování dat povolte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dotazy na protokol</a>.'
+          average_chart_label: Zobrazují se průměry, nikoli součty
           sort_button: "Seřadit podle %{column}"
+          sort_button_current: "Seřazeno podle %{column}, %{direction}"
           sort_ascending: "vzestupně"
           sort_descending: "sestupně"
           filters:
@@ -6722,6 +6727,7 @@ cs:
         save: "Uložit"
         cancel: "Zrušit"
         continue: "Pokračovat"
+        copy_key: "Kopírovat"
         back: "Zpět na klíče API"
         revoke: "Odvolat"
         undo_revoke: "Zrušit odvolání"
@@ -8003,6 +8009,7 @@ cs:
             change_theme_site_setting: "změnit nastavení webu motivem"
             stop_impersonating: "zastavit impersonaci"
             upcoming_change_toggled: "nadcházející změna přepnuta"
+            upcoming_change_available: "nadcházející změna k dispozici"
             change_site_setting_groups: "změna skupin nastavení webu"
             discourse_id_regenerate_credentials: "obnovit pověření Discourse ID"
         screened_emails:
@@ -8145,6 +8152,7 @@ cs:
           upload: "Nahrát soubor"
           multiselect: "Více možností"
           tagchooser: "Výběr skupiny štítků"
+          composer: "Odpověď v Markdownu"
         validations_modal:
           button_title: "Validace"
           modal_title: "Možnosti validace"
@@ -8639,6 +8647,7 @@ cs:
         field_types:
           text: "Text"
           textarea: "Textová oblast"
+          date: "Datum"
           confirm: "Potvrzení"
           dropdown: "Rozbalovací nabídka"
           multiselect: "Více možností"
@@ -8714,6 +8723,9 @@ cs:
             label: "Nahrát"
             title: "Nahrát obrázky"
         download_file: "Stáhnout"
+        upload_restrictions:
+          extensions: "Přijato: %{extensions}"
+          max_size: "Max: %{size}"
         selectable_avatars:
           title: "Seznam avatarů, ze kterých si uživatelé mohou vybrat"
         table_column_heading:

@@ -37,6 +37,7 @@ import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { trackedArray } from "discourse/lib/tracked-tools";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
@@ -78,6 +79,7 @@ export default class TopicController extends Controller {
   @service modal;
   @service router;
   @service screenTrack;
+  @service scrollState;
   @service site;
   @service siteSettings;
 
@@ -147,6 +149,10 @@ export default class TopicController extends Controller {
   @dependentKeyCompat
   get selectedPostsCount() {
     return this.selectedPostIds.length;
+  }
+
+  get shouldHideScrollableContentAbove() {
+    return this.scrollState.shouldHideContentAbove;
   }
 
   get titleIsVisibleOnHeader() {
@@ -626,7 +632,7 @@ export default class TopicController extends Controller {
   // Called when the topmost visible post on the page changes.
   @action
   async topVisibleChanged(event) {
-    const { post, refresh } = event;
+    const { post, captureAnchor, refresh } = event;
     if (!post) {
       return;
     }
@@ -639,7 +645,7 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      await postStream.prependMore();
+      await postStream.prependMore({ beforePrepend: captureAnchor });
       refresh?.();
     }
   }
@@ -1247,25 +1253,37 @@ export default class TopicController extends Controller {
     if (!this.editingTopic) {
       return;
     }
-    const props = this.get("buffered.buffer");
-    const hasCategoryOrTagChanges =
-      props.category_id !== undefined || props.tags !== undefined;
 
-    try {
-      if (this.editingTopicLocalization) {
-        await this._saveTopicLocalization();
+    return applyBehaviorTransformer(
+      "topic-controller:finished-editing",
+      async ({ context }) => {
+        const props = context.buffered;
+        const hasCategoryOrTagChanges =
+          props.category_id !== undefined || props.tags !== undefined;
+
+        try {
+          if (context.editingTopicLocalization) {
+            await this._saveTopicLocalization();
+          }
+
+          if (hasCategoryOrTagChanges || !context.editingTopicLocalization) {
+            await Topic.update(context.model, props, { fastEdit: true });
+          }
+
+          this.buffered.discardChanges();
+          this._resetTranslationState();
+          this.set("editingTopic", false);
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+      {
+        editingTopic: this.editingTopic,
+        editingTopicLocalization: this.editingTopicLocalization,
+        buffered: this.get("buffered.buffer"),
+        model: this.model,
       }
-
-      if (hasCategoryOrTagChanges || !this.editingTopicLocalization) {
-        await Topic.update(this.model, props, { fastEdit: true });
-      }
-
-      this.buffered.discardChanges();
-      this._resetTranslationState();
-      this.set("editingTopic", false);
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    );
   }
 
   async _saveTopicLocalization() {

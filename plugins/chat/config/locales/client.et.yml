@@ -22,6 +22,12 @@ et:
             chat_channel_status_change: "Vestluskanali staatus muutus"
             chat_channel_delete: "Vestlus on kustutatud"
     chat:
+      edit_category:
+        tab_title: "Vestlus"
+        channel: "Kanal"
+        description: "Kirjeldus"
+        actions: "Tegevused"
+        settings: "Seaded"
       back_to_forum: "Foorum"
       deleted_chat_username: kustutatud
       dates:
@@ -31,6 +37,7 @@ et:
       cancel: "Tühista"
       cancel_reply: "Tühista vastus"
       chat_channels: "Kanalid"
+      pinned: "Esiletõstetud"
       browse_all_channels: "Sirvi kõiki kanaleid"
       channel_settings:
         edit: "Muuda"
@@ -38,6 +45,7 @@ et:
         close_channel: "Sulge kanal"
         open_channel: "Ava kanal"
         archive_channel: "Arhiveeri kanal"
+        notification_settings_context: "Teavitus"
         join: "Liitu"
         leave: "Lahku"
       close: "Sulge"

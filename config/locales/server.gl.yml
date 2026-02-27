@@ -1316,7 +1316,6 @@ gl:
     allowed_crawler_user_agents: "Axentes de usuario de rastreadores web aos que se lles debería permitir o acceso ao sitio. AVISO! AO CONFIGURAR ISTO, VETARÁ TODOS OS RASTREXADORES NON LISTADOS AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensíbel a maiúsculas e minúsculas na cadea de axente de usuario que identifica rastrexadores web que non deberían ter permitido o acceso ao sitio. Non se lle aplica se está definida a listaxe de permitidos."
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents está especificado, este valor aplicarase a todos os rastrexadores (número de segundos de demora entre respostas)"
-    content_security_policy_collect_reports: "Activar a recolección de informes de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restrinxir quen pode incorporar este sitio en iframes mediante CSP. O control de servidores permitidos en <a href='%{base_path}/admin/customize/embedding'>Incorporación</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
     share_links: "Determinar que elementos aparecen no cadro de compartir e en que orde."
@@ -1519,7 +1518,6 @@ gl:
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos necesario para pausar automaticamente un tema co fin de intervilo"
     num_hours_to_close_topic: "Número de horas que se pausa un tema co fin de intervilo."
     auto_respond_to_flag_actions: "Activar a resposta automática ao desfacer unha denuncia."
-    min_first_post_typing_time: "Período mínimo en milisegundos durante o cal un usuario debe escribir na súa primeira publicación; se non chega a este limiar, a publicación pasará automaticamente á cola de moderación. Estabelecer en 0 para desactivar (non recomendado)."
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza para silenciar automaticamente a quen escribe moi rápido"
     reviewable_claiming: "É necesario reclamar o contido revisable antes de poder actuar sobre el?"
     reviewable_default_topics: "Mostrar por defecto o contido revisable agrupado por tema"
@@ -1530,7 +1528,6 @@ gl:
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder a enderezos de correo electrónico entrantes. Exemplo: %%{reply_key}@reply.example.com|respostas+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Utilizar HTML no canto de texto para o correo entrante."
     strip_incoming_email_lines: "Retirar os espazos en branco iniciais e finais de cada liña de correos electrónicos entrantes."
-    disable_emails: "Evita que Discourse envíe calquera clase de correo electrónico. Seleccione «si» para desactivar os correos electrónicos a todos os usuarios. Seleccione «non do equipo» para desactivar os correos electrónicos só para usuarios que non sexan do equipo."
     strip_images_from_short_emails: "Elimina as imaxes de correos electrónicos que teñan un tamaño inferior a 2800 bytes"
     display_name_on_email_from: "Amosar nomes completos nos campos de remitente do correo"
     unsubscribe_via_email: "Permitir aos usuarios darse de baixa dos correos electrónicos ao responder co texto «cancelar subscrición» no asunto ou no corpo da mensaxe"
@@ -1735,10 +1732,6 @@ gl:
       reply_by_email_disabled: "Primeiro debe activar «responder vía correo electrónico» antes de activar esta opción."
       discourse_connect_url_is_empty: "Debe estabelecer un «URL de discourse connect» antes de activar este axuste."
       enable_local_logins_disabled: "Debe activar primeiro «activar inicios de sesión locais» antes de activar esta opción."
-      min_username_length_exists: "Non pode estabelecer que a largura mínima do nome de usuario sexa maior có nome de usuario máis curto (%{username})."
-      min_username_length_range: "O mínimo non pode ser maior que o máximo."
-      max_username_length_exists: "Non pode estabelecer que a largura máxima do nome de usuario sexa menor que o nome de usuario máis longo (%{username})."
-      max_username_length_range: "Non pode estabelecer o máximo por debaixo do mínimo."
       invalid_hex_value: "Os valores das cores deben ser códigos de 6 díxitos hexadecimais."
       empty_selectable_avatars: "Debe subir polo menos dous avatares seleccionables antes de activar esta opción."
       category_search_priority:
@@ -3400,8 +3393,6 @@ gl:
     title: "Entrar en modo seguro"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
-  dev_mode:
-    enter: "Intro"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3524,12 +3515,8 @@ gl:
         title: "Si"
       approve_and_unhide:
         title: "Si"
-      no_action_post:
-        title: "Sen acción"
       delete_post:
         complete: "Publicación eliminada"
-      no_action_user:
-        title: "Sen acción"
       delete_user:
         complete: "Usuario eliminado"
         reason: "Eliminado a través da cola de revisións"

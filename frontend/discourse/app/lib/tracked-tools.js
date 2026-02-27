@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { meta as metaFor } from "@ember/-internals/meta";
+import { tagFor, track, updateTag } from "@glimmer/validator";
+import { meta as metaFor, peekMeta } from "@ember/-internals/meta";
 import { TrackedDescriptor } from "@ember/-internals/metal";
 import { next } from "@ember/runloop";
 import { TrackedArray, TrackedSet } from "@ember-compat/tracked-built-ins";
@@ -187,7 +188,7 @@ export class DeferredTrackedSet {
  *                                         or null/undefined if those values were passed
  * @throws {Error} If value is not an array, TrackedArray, null or undefined
  */
-function ensureTrackedArray(value) {
+function ensureTrackedArray(value, propertyName) {
   if (typeof value === "undefined" || value === null) {
     return value;
   }
@@ -201,7 +202,7 @@ function ensureTrackedArray(value) {
   }
 
   throw new Error(
-    `Expected an array, TrackedArray, null, or undefined, got ${typeof value}. Value received: ${value}`
+    `[${propertyName}]: Expected an array, TrackedArray, null, or undefined, got ${typeof value}. Value received: ${value}`
   );
 }
 
@@ -224,7 +225,7 @@ export function trackedArray(target, key, desc) {
     const originalInitializer = desc.initializer;
     desc.initializer = function () {
       const initialValue = originalInitializer.apply(this);
-      return ensureTrackedArray(initialValue);
+      return ensureTrackedArray(initialValue, key);
     };
   }
 
@@ -236,7 +237,37 @@ export function trackedArray(target, key, desc) {
   });
 
   function trackedArraySetter(value) {
-    set.call(this, ensureTrackedArray(value));
+    set.call(this, ensureTrackedArray(value, key));
+  }
+
+  // Bridge TrackedArray content changes to the classic computed property tag
+  // system. Without this, @computed('prop') only invalidates on reference
+  // changes (this.prop = newArray), not on content mutations like push().
+  //
+  // This manually implements the same bridging that @dependentKeyCompat does
+  // (we can't use @dependentKeyCompat directly because it rejects properties
+  // that are already @tracked). The getter captures the TrackedArray's
+  // collection tag via track(), then updates tagFor(obj, key) so that
+  // @computed properties watching this key see content changes.
+  function trackedArrayGetter() {
+    // Read the value outside track() to avoid a tag cycle. get.call(this)
+    // consumes the property's own tag (tagFor(this, key)) via the tracked
+    // storage. If we captured that inside track() and then called updateTag
+    // on the same tag, it would create a self-referential cycle.
+    const value = get.call(this);
+
+    if (value != null) {
+      // Only capture the TrackedArray's collection tag. TrackedArray's Proxy
+      // get trap for 'length' calls getValue(collection), registering the
+      // collection storage as an autotracking dependency. All mutations
+      // (push, pop, splice, etc.) dirty this same storage via
+      // setValue(collection, null).
+      const propertyTag = tagFor(this, key);
+      const collectionTag = track(() => value.length);
+      updateTag(propertyTag, collectionTag);
+    }
+
+    return value;
   }
 
   // When using EmberObject.create(...), Ember accesses the tracked properties directly
@@ -245,16 +276,88 @@ export function trackedArray(target, key, desc) {
   // https://github.com/emberjs/ember.js/blob/d4f7c5c4075bc5b04736e0e965468bdbe6da135c/packages/%40ember/-internals/metal/lib/tracked.ts#L185
   metaFor(target).writeDescriptors(
     key,
-    new TrackedDescriptor(get, trackedArraySetter)
+    new TrackedDescriptor(trackedArrayGetter, trackedArraySetter)
   );
 
   return {
-    get() {
-      return get.call(this);
-    },
+    get: trackedArrayGetter,
     set: trackedArraySetter,
     enumerable: true,
     configurable: true,
     isTracked: true,
   };
+}
+
+/**
+ * Enumerates all tracked property keys from an object instance.
+ *
+ * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
+ * which are not part of the public API and may change without notice in future Ember versions.
+ *
+ * @param {Object} obj - The object instance to enumerate tracked keys from
+ * @returns {Array<string>} An array of tracked property keys.
+ *                          Returns an empty array if the object has no prototype or no tracked properties.
+ *
+ * @example
+ * class MyClass {
+ *   @tracked name = "Alice";
+ *   @tracked age = 30;
+ *   regularProp = "not tracked";
+ * }
+ *
+ * const instance = new MyClass();
+ * const trackedKeys = enumerateTrackedKeys(instance);
+ * // Returns: ["name", "age"]
+ */
+export function enumerateTrackedKeys(obj) {
+  const prototype = obj?.constructor?.prototype;
+  if (!prototype) {
+    return [];
+  }
+
+  const result = new Set();
+
+  // Walk the prototype chain to collect tracked keys from parent classes too
+  let meta = peekMeta(prototype);
+  while (meta) {
+    const descriptors = meta._descriptors;
+
+    if (descriptors) {
+      for (const [key, desc] of descriptors) {
+        if (desc instanceof TrackedDescriptor) {
+          result.add(key);
+        }
+      }
+    }
+
+    meta = meta.parent;
+  }
+
+  return [...result];
+}
+
+/**
+ * Enumerates all tracked property entries from an object instance.
+ *
+ * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
+ * which are not part of the public API and may change without notice in future Ember versions.
+ *
+ * @param {Object} obj - The object instance to enumerate tracked entries from
+ * @returns {Array<[string, any]>} An array of [key, value] pairs for all tracked properties.
+ *                                  Returns an empty array if the object has no prototype or no tracked properties.
+ *
+ * @example
+ * class MyClass {
+ *   @tracked name = "Alice";
+ *   @tracked age = 30;
+ *   regularProp = "not tracked";
+ * }
+ *
+ * const instance = new MyClass();
+ * const trackedEntries = enumerateTrackedEntries(instance);
+ * // Returns: [["name", "Alice"], ["age", 30]]
+ */
+export function enumerateTrackedEntries(obj) {
+  const keys = enumerateTrackedKeys(obj);
+  return keys.map((key) => [key, obj[key]]);
 }

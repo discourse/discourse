@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -44,8 +45,21 @@ const FIELD_LIST = [
   "subcategory_list_style",
   "read_only_banner",
   "email_in",
+  "email_in_enabled",
   "email_in_allow_strangers",
   "mailinglist_mirror",
+  "allowed_tag_groups",
+  "allowed_tags",
+];
+
+// Additional fields managed through FormKit in the simplified creation flow.
+// The legacy edit-category components manage these directly on the model.
+const SIMPLIFIED_FIELD_LIST = [
+  ...FIELD_LIST,
+  "required_tag_groups",
+  "minimum_required_tags",
+  "allow_global_tags",
+  "default_slow_mode_seconds",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -54,14 +68,17 @@ export default class EditCategoryTabsController extends Controller {
   @service currentUser;
   @service dialog;
   @service site;
+  @service siteSettings;
   @service router;
   @service keyValueStore;
+  @service toasts;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
   @tracked
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked selectedTab = "general";
+  @tracked formApi = null;
   @trackedArray panels = [];
   saving = false;
   deleting = false;
@@ -75,10 +92,23 @@ export default class EditCategoryTabsController extends Controller {
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
   get formData() {
-    const data = getProperties(this.model, ...FIELD_LIST);
+    const simplified = this.siteSettings.enable_simplified_category_creation;
+    const data = getProperties(
+      this.model,
+      ...(simplified ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
+    );
 
-    if (!this.model.styleType) {
+    if (simplified && !this.model.styleType) {
       data.style_type = "icon";
+    }
+
+    if (simplified) {
+      data.required_tag_groups = Array.from(
+        data.required_tag_groups ?? [],
+        (rtg) => ({ ...rtg })
+      );
+      data.category_setting = { ...(this.model.category_setting ?? {}) };
+      data.custom_fields = { ...(this.model.custom_fields ?? {}) };
     }
 
     return data;
@@ -100,7 +130,7 @@ export default class EditCategoryTabsController extends Controller {
     if (saving) {
       return "saving";
     }
-    return id ? "category.save" : "category.create";
+    return id ? "category.save" : "category.create_category";
   }
 
   get baseTitle() {
@@ -110,7 +140,22 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
+    if (this.model.category_type_name) {
+      return i18n("category.create_with_type", {
+        typeName: this.model.category_type_name,
+      });
+    }
+
     return i18n("category.create");
+  }
+
+  get isFormDirty() {
+    return this.formApi?.isDirty ?? false;
+  }
+
+  @action
+  onRegisterFormApi(api) {
+    this.formApi = api;
   }
 
   @action
@@ -121,6 +166,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   validateForm(data, { addError }) {
+    if (!this.siteSettings.enable_simplified_category_creation) {
+      return;
+    }
+
     if (this.selectedTab === "general") {
       return;
     }
@@ -190,7 +239,9 @@ export default class EditCategoryTabsController extends Controller {
       return;
     }
 
-    this.model.setProperties(data);
+    // eslint-disable-next-line no-unused-vars
+    const { visibility, ...categoryData } = data;
+    this.model.setProperties(categoryData);
 
     // If permissions is empty or not set, ensure it's an empty array (public category)
     if (!this.model.permissions || this.model.permissions.length === 0) {
@@ -222,6 +273,11 @@ export default class EditCategoryTabsController extends Controller {
       }
 
       this.set("saving", false);
+
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("saved") },
+      });
 
       if (!this.model.id) {
         this.router.transitionTo(
@@ -283,9 +339,16 @@ export default class EditCategoryTabsController extends Controller {
       this.showAdvancedTabs.toString()
     );
 
-    // Always ensure we're on general tab after toggling
-    next(() => {
-      this.selectedTab = "general";
-    });
+    // When collapsing, reset to general unless current tab is still visible
+    if (!this.showAdvancedTabs && this.selectedTab !== "general") {
+      const primaryTab = registeredEditCategoryTabs.find(
+        (tab) => tab.id === this.selectedTab && tab.primary
+      );
+      if (!primaryTab) {
+        next(() => {
+          this.selectedTab = "general";
+        });
+      }
+    }
   }
 }

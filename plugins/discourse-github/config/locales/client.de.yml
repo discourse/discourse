@@ -11,11 +11,12 @@ de:
         draft: "Entwurf"
         open: "Offen"
         approved: "Genehmigt"
+        merged: "Zusammengeführt"
         closed: "Geschlossen"
   admin_js:
     admin:
       site_settings:
         categories:
-          discourse_github: "Discourse – GitHub"
+          discourse_github: "Discourse GitHub"
   replace_github_link:
     edit_reason: "Github-Link wurde durch einen permanenten Link ersetzt"

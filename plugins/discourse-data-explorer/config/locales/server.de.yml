@@ -6,7 +6,7 @@
 
 de:
   site_settings:
-    data_explorer_enabled: "Aktiviere den Daten-Explorer unter /admin/plugins/explorer"
+    data_explorer_enabled: "Daten-Explorer aktivieren"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -29,7 +29,7 @@ de:
           Hier sind die Ergebnisse:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Daten-Explorer anzeigen</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Abfrage im Daten-Explorer anzeigen</a>
 
           Bericht erstellt um %{created_at} (%{timezone})
       post:
@@ -39,7 +39,7 @@ de:
           Hier sind die Ergebnisse:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Daten-Explorer anzeigen</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Abfrage im Daten-Explorer anzeigen</a>
 
           Bericht erstellt um %{created_at} (%{timezone})
       upload_appendix: "Anhang: [%{filename}|attachment](%{short_url})"

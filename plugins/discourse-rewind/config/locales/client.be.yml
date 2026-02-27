@@ -16,6 +16,8 @@ be:
           title: чытанне часу
         chat_usage:
           messages: паведамленні
+          author: Вы
+          author_others: "%{username}"
         invites:
           title: Запрашэнні
           invitee_posts: паведамленняў створаны

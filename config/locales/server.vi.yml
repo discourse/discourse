@@ -189,7 +189,6 @@ vi:
       cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Bạn không thể tắt siêu dữ liệu hình ảnh dải nếu bật 'hình ảnh tối ưu hóa phương tiện tổng hợp' được bật. Tắt 'đã bật hình ảnh tối ưu hóa phương tiện tổng hợp' trước khi tắt siêu dữ liệu hình ảnh dải."
-      x_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
     conflicting_google_user_id: 'ID Tài khoản Google cho tài khoản này đã thay đổi; cần có sự can thiệp của nhân viên vì lý do an ninh. Vui lòng liên hệ với nhân viên và chỉ họ đến <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong tút của bạn :cry:"
@@ -1241,7 +1240,6 @@ vi:
     max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."
     num_flaggers_to_close_topic: "Số lượng tối thiểu đánh dấu độc nhất để tự động tạm dừng một chủ đề để can thiệp."
     auto_respond_to_flag_actions: "Kích hoạt tính năng trả lời tự động khi xử lý một đánh dấu."
-    min_first_post_typing_time: "Số lượng thời gian tối thiểu theo phần ngàn giây mà thành viên phải nhập trong bài viết đầu tiên, nếu ngưỡng không được đáp ứng sẽ tự động nhập vào hàng chờ duyệt. Đặt là 0 để tắt (không khuyến nghị)"
     reply_by_email_address: "Mẫu để trả lời cho các địa chỉ email đến, ví dụ: %%{reply_key}@reply.example.com hoặc replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Tất cả các ảnh từ email phải có kích cỡ nhỏ hơn 2800 Bytes"
     display_name_on_email_from: "Hiển thị tên đầy đủ trên email từ trường"
@@ -1355,8 +1353,6 @@ vi:
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
-      min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
-      max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
@@ -1380,7 +1376,6 @@ vi:
       exclude_tag: "Loại trừ chủ đề chứa thẻ cụ thể"
       exclude_tags_any: "Loại trừ chủ đề chứa bất kỳ thẻ cụ thể (phân cách bằng dấu phẩy)"
       exclude_tags_all: "Loại trừ chủ đề có chứa tất cả thẻ cụ thể (phân cách bằng dấu cộng)"
-      tags_alias: "Tên gọi khác cho bộ lọc 'tag:'"
       tag_group: "Hiển thị chủ đề chứa thẻ từ một nhóm thẻ cụ thể"
       exclude_tag_group: "Loại trừ chủ đề chứa thẻ từ một nhóm thẻ cụ thể"
       activity_before: "Hiển thị chủ đề có hoạt động cuối cùng trước một ngày cụ thể (YYYY-MM-DD hoặc số ngày trước)"
@@ -2378,8 +2373,6 @@ vi:
       button: "Đăng ký"
     resend_email:
       title: "Gửi lại email kích hoạt"
-  dev_mode:
-    enter: "Nhập"
   wizard:
     step:
       setup:
@@ -2489,12 +2482,8 @@ vi:
         title: "Đồng ý"
       approve_and_unhide:
         title: "Đồng ý"
-      no_action_post:
-        title: "Không có hành động"
       delete_post:
         complete: "Tút đã bị xóa"
-      no_action_user:
-        title: "Không có hành động"
       delete_user:
         complete: "Người dùng đã bị xóa"
   discord:

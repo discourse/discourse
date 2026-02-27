@@ -14,6 +14,7 @@ function getNewCategoryDefaultColors() {
 }
 
 export default class NewCategory extends DiscourseRoute {
+  @service categoryTypeChooser;
   @service router;
 
   controllerName = "edit-category.tabs";
@@ -21,17 +22,8 @@ export default class NewCategory extends DiscourseRoute {
   templateName = "edit-category.tabs";
 
   beforeModel() {
-    if (!this.currentUser) {
-      this.router.replaceWith("/404");
-      return;
-    }
-    if (!this.currentUser.admin) {
-      if (
-        !this.currentUser.moderator ||
-        this.siteSettings.moderators_manage_categories === false
-      ) {
-        this.router.replaceWith("/404");
-      }
+    if (!this.currentUser?.can_create_category) {
+      return this.router.replaceWith("/404");
     }
   }
 
@@ -69,11 +61,22 @@ export default class NewCategory extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 
+    const result = this.categoryTypeChooser.consume();
+    if (result) {
+      controller.model.set("category_type", result.type);
+      controller.model.set("category_type_name", result.typeName);
+      controller.model.set("category_type_schema", result.typeSchema);
+    }
+
     controller.selectedTab = "general";
     controller.parentParams = {};
   }
 
   titleToken() {
+    const typeName = this.controller?.model?.category_type_name;
+    if (typeName) {
+      return i18n("category.create_with_type", { typeName });
+    }
     return i18n("category.create");
   }
 
@@ -87,7 +90,7 @@ export default class NewCategory extends DiscourseRoute {
     return [
       {
         group_id: AUTO_GROUPS.everyone.id,
-        group_name: AUTO_GROUPS.everyone.name,
+        group_name: this.site.groupsById[AUTO_GROUPS.everyone.id].name,
         permission_type: PermissionType.FULL,
       },
     ];

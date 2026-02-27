@@ -241,7 +241,6 @@ sv:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långa för att undvika oavsiktligt hastighetsbegränsande legitima användare."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kan inte inaktivera Radera metadata för bild om 'composer media optimization image enabled' är aktiverat. Inaktivera 'composer media optimization image enabled' innan du inaktiverar Radera metadata för bild."
-      x_summary_large_image_no_svg: "Twitter, sammanfattningsbilder som används för twitter: bildens metadata kan inte vara .svg"
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
@@ -1534,7 +1533,6 @@ sv:
     slow_down_crawler_user_agents: 'Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen "sakta ned sökrobots hastighet". Varje värde måste vara minst 3 tecken långt.'
     slow_down_crawler_rate: "Om slow_down_crawler_user_agents anges kommer denna hastighet att gälla för alla sökrobotar (fördröjning mellan förfrågningarna uttryckt i sekunder)"
     content_security_policy_report_only: "Aktivera enbart rapport över säkerhetspolicy för innehåll (CSP)"
-    content_security_policy_collect_reports: "Aktivera insamling av CSP-överträdelserapporter på /csp_reports"
     content_security_policy_frame_ancestors: "Begränsa vem som kan bädda in denna webbplats i iframes via CSP. Kontrollera tillåtna värdar på <a href='%{base_path}/admin/customize/embedding'>Inbäddning</a>"
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
@@ -1785,7 +1783,6 @@ sv:
     num_flaggers_to_close_topic: "Minsta antal unika flaggare som krävs för att automatiskt pausa ett ämne för ingripande"
     num_hours_to_close_topic: "Antal timmar ett ämne ska pausas för ingripande."
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
-    min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid redigeringen av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
     auto_silence_fast_typers_max_trust_level: "Högsta förtroendenivå för att automatiskt tysta snabba författare"
     auto_silence_first_post_regex: "Skiftlägesokänsligt reguljärt uttryck som, om det godkänns, leder till att användarens första inlägg tystas och skickas till godkännandekön. Till exempel kommer rasande|a[bc]a att tysta alla inlägg som innehåller rasande eller aba eller aca i första inlägget. Gäller bara första inlägget. UTFASAT: Använd Tystnad bevakade ord istället."
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
@@ -1798,7 +1795,6 @@ sv:
     alternative_reply_by_email_addresses: "Lista på alternativa mallar för svar genom inkommen e-post. Exempelvis: %%{reply_key}@svar.exempel.se|replies+%% {reply_key}@exempel.se"
     incoming_email_prefer_html: "Använd HTML istället för text för inkommande e-post."
     strip_incoming_email_lines: "Ta bort ledande och efterföljande blanksteg från varje rad för inkommande e-post."
-    disable_emails: "Förhindra att Discourse skickar några e-postmeddelanden alls. Välj 'ja' för att inaktivera e-postmeddelanden för alla användare. Välj 'icke-personliga' för att inaktivera e-postmeddelanden endast för användare som inte är personal."
     strip_images_from_short_emails: "Rensa bilder från e-post som har mindre storlek än 2 800 bytes."
     display_name_on_email_from: "Visa fullständiga namn på e-postmeddelandens Från-fält."
     unsubscribe_via_email: "Tillåt att användare avprenumererar från e-post genom att skicka ett e-postmeddelande med 'unsubscribe' i ämnesrubriken eller innehållet."
@@ -2063,10 +2059,6 @@ sv:
       reply_by_email_disabled: "Du måste först aktivera 'svara med e-post' innan du aktiverar denna inställning."
       discourse_connect_url_is_empty: "Du måste ange en 'discourse connect url' innan du aktiverar denna inställning."
       enable_local_logins_disabled: "Du måste först 'aktivera lokala inloggningar' innan du aktiverar denna inställning."
-      min_username_length_exists: "Du kan inte ställa in kortast tillåtna längd på användarnamn till att vara längre än det kortaste användarnamnet (%{username})."
-      min_username_length_range: "Du kan inte ställa in minimum till att vara högre än maximum"
-      max_username_length_exists: "Du kan inte ställa in högsta tillåtna längd på användarnamn till att vara kortare än det längsta användarnamnet (%{username})."
-      max_username_length_range: "Du kan inte ställa in maximum till att vara mindre än minimum."
       invalid_hex_value: "Färgvärden måste vara sexsiffriga hexadecimala koder."
       empty_selectable_avatars: "Du måste först ladda upp åtminstone två valbara avatarer innan du aktiverar denna inställning."
       category_search_priority:
@@ -4059,8 +4051,6 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
-  dev_mode:
-    enter: "Retur"
   wizard:
     title: "Discourse-inställningar"
     step:
@@ -4266,8 +4256,6 @@ sv:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      no_action_post:
-        title: "Ingen åtgärd"
       delete_post:
         title: "Radera inlägg"
         complete: "Inlägg raderat"
@@ -4275,8 +4263,6 @@ sv:
         title: "Dölj inlägg"
       restore_post:
         title: "Återställ inlägg"
-      no_action_user:
-        title: "Ingen åtgärd"
       silence_user:
         title: "Tysta användare"
       suspend_user:

@@ -44,6 +44,15 @@ de:
           one: "%{formatted_number} Chat-Nachricht"
           other: "%{formatted_number} Chat-Nachrichten"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanal"
+        description: "Beschreibung"
+        actions: "Aktionen"
+        settings: "Einstellungen"
+        no_channels: "Dieser Kategorie sind keine Chat-Kanäle zugeordnet"
+        no_channels_body: "Du kannst mehrere Kanäle pro Kategorie haben, die basierend auf den Sicherheitseinstellungen der Kategorie für dieselben Mitglieder zugänglich sind. <a href='%{chatBrowseUrl}'>Erstelle einen Chat-Kanal</a>."
+        include_subcategories: "Kanäle in Unterkategorien einbeziehen"
       text_copied: Text in die Zwischenablage kopiert
       link_copied: Link in die Zwischenablage kopiert
       back_to_forum: "Forum"
@@ -61,8 +70,18 @@ de:
       starred: "Mit Sternchen"
       starred_channels: "Kanäle mit Sternchen"
       starred_channels_empty: "Du hast noch keine Kanäle mit einem Sternchen versehen. Markiere Kanäle mit einem Sternchen, um sie hier für schnellen Zugriff zu sehen."
+      pinned_messages:
+        title: "Angeheftete Nachrichten"
+        close: "Angeheftete Nachrichten schließen"
+        pinned_by_you: "Angeheftet von dir"
+        pinned_by_user: "Angeheftet von %{username}"
+      no_pinned_messages: "Keine angehefteten Nachrichten in diesem Kanal."
+      pin_message: "Nachricht anheften"
+      unpin_message: "Nachricht loslösen"
+      pinned: "Angeheftet"
       browse_all_channels: "Alle Kanäle durchsuchen"
       see_in: "Ansehen in"
+      open_channel_menu: "Kanalmenü öffnen"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:
@@ -81,11 +100,15 @@ de:
         unstar_channel: "Sternchen von Kanal entfernen"
         close_channel: "Kanal schließen"
         open_channel: "Kanal öffnen"
+        open_channel_disabled_archived: "Archivierte Kanäle können nicht wieder geöffnet werden."
+        open_channel_disabled_read_only: "Schreibgeschützte Kanäle können nicht wieder geöffnet werden."
         archive_channel: "Kanal archivieren"
         delete_channel: "Kanal löschen"
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
         leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
+        notification_settings: "Benachrichtigungseinstellungen"
+        notification_settings_context: "Benachrichtigungen"
         join: "Beitreten"
         leave: "Verlassen"
         save_label:
@@ -489,6 +512,7 @@ de:
         follow: "Beitreten"
         followed: "Beigetreten"
         mute: "Kanal stummschalten"
+        unmute: "Stummschaltung des Kanals aufgeben"
         threading_enabled: "Aktiviert"
         threading_disabled: "Deaktiviert"
         muted_on: "An"
@@ -596,14 +620,15 @@ de:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
+        chat_settings: "Chat-Einstellungen"
         indefinitely_short: "unbestimmt"
-        indefinitely_long: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten auf unbestimmte Zeit gespeichert werden."
+        indefinitely_long: "Die %{chatSettingsLink} wurden so eingestellt, dass Kanalnachrichten zeitlich unbegrenzt gespeichert werden."
         short:
           one: "%{count} Tag"
           other: "%{count} Tage"
         long:
-          one: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
-          other: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tage aufbewahrt werden."
+          one: "Die %{chatSettingsLink} wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
+          other: "Die %{chatSettingsLink} wurden so eingestellt, dass Kanalnachrichten für %{count} Tage aufbewahrt werden."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."
@@ -735,6 +760,7 @@ de:
           composer_bold: "%{shortcut} Fett (nur Composer)"
           composer_italic: "%{shortcut} Kursiv (nur Composer)"
           composer_code: "%{shortcut} Code (nur Composer)"
+          drawer_toggle: "%{shortcut} Chat-Bereich öffnen/schließen"
           drawer_close: "%{shortcut} Chat-Bereich schließen"
           mark_all_channels_read: "%{shortcut} Alle Kanäle als gelesen markieren"
     topic_statuses:

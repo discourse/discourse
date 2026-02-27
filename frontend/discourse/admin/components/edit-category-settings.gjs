@@ -171,6 +171,11 @@ export default class EditCategorySettings extends buildCategoryPanel(
     this.set("category.moderating_group_ids", groupIds);
   }
 
+  @action
+  onFormCheckboxChange(field, event) {
+    this.form.set(field, event.target.checked);
+  }
+
   <template>
     <section>
       {{#if this.showPositionInput}}
@@ -520,19 +525,24 @@ export default class EditCategorySettings extends buildCategoryPanel(
             {{icon "envelope"}}
             {{i18n "category.email_in"}}
           </label>
-          <TextField
-            @id="category-email-in"
-            @value={{this.category.email_in}}
+          <input
+            type="text"
+            id="category-email-in"
             class="email-in"
+            value={{this.transientData.email_in}}
+            {{on "input" (withEventValue (fn this.form.set "email_in"))}}
           />
-
         </section>
 
         <section class="field email-in-allow-strangers">
           <label class="checkbox-label">
-            <Input
-              @type="checkbox"
-              @checked={{this.category.email_in_allow_strangers}}
+            <input
+              type="checkbox"
+              checked={{this.transientData.email_in_allow_strangers}}
+              {{on
+                "change"
+                (fn this.onFormCheckboxChange "email_in_allow_strangers")
+              }}
             />
             {{i18n "category.email_in_allow_strangers"}}
           </label>
@@ -540,9 +550,13 @@ export default class EditCategorySettings extends buildCategoryPanel(
 
         <section class="field mailinglist-mirror">
           <label class="checkbox-label">
-            <Input
-              @type="checkbox"
-              @checked={{this.category.mailinglist_mirror}}
+            <input
+              type="checkbox"
+              checked={{this.transientData.mailinglist_mirror}}
+              {{on
+                "change"
+                (fn this.onFormCheckboxChange "mailinglist_mirror")
+              }}
             />
             {{i18n "category.mailinglist_mirror"}}
           </label>
@@ -552,7 +566,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
           <PluginOutlet
             @name="category-email-in"
             @connectorTagName="div"
-            @outletArgs={{lazyHash category=this.category}}
+            @outletArgs={{lazyHash category=this.category form=this.form}}
           />
         </span>
       {{/if}}
@@ -574,7 +588,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
     <section>
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{lazyHash category=this.category}}
+        @outletArgs={{lazyHash category=this.category form=this.form}}
       />
     </section>
   </template>

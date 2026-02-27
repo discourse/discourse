@@ -211,6 +211,19 @@ export default class ColorScheme extends EmberObject {
     });
   }
 
+  updateDefaultOnTheme(field, value) {
+    if (!this.id) {
+      return;
+    }
+
+    return ajax(`/admin/color_schemes/${this.id}.json`, {
+      data: JSON.stringify({ color_scheme: { [field]: value } }),
+      type: "PUT",
+      dataType: "json",
+      contentType: "application/json",
+    });
+  }
+
   /** @returns {any} */
   destroy() {
     if (this.id) {

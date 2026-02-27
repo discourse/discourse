@@ -19,7 +19,10 @@ import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import {
+  defineTrackedProperty,
+  trackedArray,
+} from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
@@ -29,6 +32,16 @@ import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
 import Category from "./category";
+
+const pluginTrackedProperties = new Set();
+
+export function _addTrackedTopicProperty(propertyKey) {
+  pluginTrackedProperties.add(propertyKey);
+}
+
+export function clearAddedTrackedTopicProperties() {
+  pluginTrackedProperties.clear();
+}
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -346,6 +359,14 @@ export default class Topic extends RestModel {
     id: this.id,
     topic: this,
   });
+
+  constructor() {
+    super(...arguments);
+
+    pluginTrackedProperties.forEach((propertyKey) => {
+      defineTrackedProperty(this, propertyKey);
+    });
+  }
 
   @discourseComputed("last_read_post_number", "highest_post_number")
   visited(lastReadPostNumber, highestPostNumber) {
@@ -959,14 +980,6 @@ export default class Topic extends RestModel {
   }
 
   updateTags(tags) {
-    // send tag_ids when values are objects
-    if (tags?.every((t) => typeof t === "object")) {
-      return ajax(`/t/${this.id}/tags`, {
-        type: "PUT",
-        data: { tag_ids: tags.map((t) => t.id) },
-      });
-    }
-
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
       data: { tags: tags || [] },

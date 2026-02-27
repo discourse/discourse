@@ -1,8 +1,10 @@
 import { camelCaseToDash } from "discourse/lib/case-converter";
+import {
+  parseAttributesString,
+  serializeAttributes,
+} from "discourse/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 import WrapNodeView from "../components/wrap-node-view";
-import GlimmerNodeView from "../lib/glimmer-node-view";
-import { parseAttributesString, serializeAttributes } from "../lib/wrap-utils";
 
 const toDataAttrs = (data) => {
   if (!data) {
@@ -17,24 +19,17 @@ const toDataAttrs = (data) => {
   return attrs;
 };
 
-const createWrapNodeView =
-  ({ getContext }) =>
-  (node, view, getPos) =>
-    new GlimmerNodeView({
-      node,
-      view,
-      getPos,
-      getContext,
-      component: WrapNodeView,
-      name: "wrap",
-      hasContent: true,
-    });
+const wrapNodeViewDescriptor = {
+  component: WrapNodeView,
+  name: "wrap",
+  hasContent: true,
+};
 
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   nodeViews: {
-    wrap_block: createWrapNodeView,
-    wrap_inline: createWrapNodeView,
+    wrap_block: wrapNodeViewDescriptor,
+    wrap_inline: wrapNodeViewDescriptor,
   },
 
   commands: ({ schema }) => ({

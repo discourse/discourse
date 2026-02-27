@@ -98,6 +98,7 @@ class CategoriesController < ApplicationController
     params.require("position")
 
     if category = Category.find(params["category_id"])
+      guardian.ensure_can_see!(category)
       category.move_to(params["position"].to_i)
       render json: success_json
     else
@@ -126,6 +127,11 @@ class CategoriesController < ApplicationController
     render json: success_json
   end
 
+  def types
+    guardian.ensure_can_create_category!
+    render json: { types: Categories::TypeRegistry.list }
+  end
+
   def show
     guardian.ensure_can_see!(@category)
 
@@ -140,6 +146,7 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
+    category_type = params[:category_type]
 
     if category_params[:description].present? &&
          category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
@@ -164,6 +171,11 @@ class CategoriesController < ApplicationController
 
     if @category.save
       @category.move_to(position.to_i) if position
+
+      if category_type.present? &&
+           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+        Categories::Configure.call(guardian:, params: { category_id: @category.id, category_type: })
+      end
 
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
@@ -336,26 +348,17 @@ class CategoriesController < ApplicationController
   end
 
   def hierarchical_search
-    term = params[:term].to_s.strip
-    page = [1, params[:page].to_i].max
-    only_ids = params[:only].map(&:to_i) if params[:only].present?
-    except_ids = params[:except].map(&:to_i) if params[:except].present?
-
-    categories =
-      CategoryHierarchicalSearch.call(
-        guardian: guardian,
-        params: {
-          term:,
-          only_ids:,
-          except_ids:,
-          limit: MAX_CATEGORIES_LIMIT,
-          offset: (page - 1) * MAX_CATEGORIES_LIMIT,
-        },
-      ).categories
-
-    response = { categories: serialize_data(categories, SiteCategorySerializer, scope: guardian) }
-
-    render_json_dump(response)
+    Category::HierarchicalSearch.call(service_params) do
+      on_success do |categories:|
+        render_json_dump(
+          categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+        )
+      end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
+    end
   end
 
   def search
@@ -403,7 +406,13 @@ class CategoriesController < ApplicationController
     categories = Category.secured(guardian)
 
     if term.present? && words = term.split
-      words.each { |word| categories = categories.where("name ILIKE ?", "%#{word}%") }
+      words.each do |word|
+        categories =
+          categories.where(
+            "#{Category.normalize_sql("name")} ILIKE #{Category.normalize_sql("?")}",
+            "%#{word}%",
+          )
+      end
     end
 
     categories =
@@ -441,7 +450,7 @@ class CategoriesController < ApplicationController
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
         .order(
-          "starts_with(lower(categories.name), #{ActiveRecord::Base.connection.quote(term)}) DESC",
+          "starts_with(#{Category.normalize_sql("categories.name")}, #{Category.normalize_sql(ActiveRecord::Base.connection.quote(term))}) DESC",
           "categories.parent_category_id IS NULL DESC",
           "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
           "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",

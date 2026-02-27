@@ -288,6 +288,18 @@ RSpec.describe SidebarSectionsController do
       )
     end
 
+    it "returns 404 when updating a non-existent section" do
+      sign_in(user)
+
+      put "/sidebar_sections/99999999.json",
+          params: {
+            title: "custom section edited",
+            links: [{ icon: "link", name: "latest", value: "/latest" }],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
     it "doesn't allow to edit other's sections" do
       sidebar_section_2 = Fabricate(:sidebar_section)
       sidebar_url_3 = Fabricate(:sidebar_url, name: "other_tags", value: "/tags")
@@ -411,6 +423,13 @@ RSpec.describe SidebarSectionsController do
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:destroy_public_sidebar_section])
       expect(user_history.subject).to eq("Sidebar section")
+    end
+
+    it "returns 404 when deleting a non-existent section" do
+      sign_in(user)
+      delete "/sidebar_sections/99999999.json"
+
+      expect(response.status).to eq(404)
     end
 
     it "doesn't allow to delete other's sidebar section" do

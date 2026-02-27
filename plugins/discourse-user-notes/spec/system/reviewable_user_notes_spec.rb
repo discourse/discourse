@@ -5,13 +5,12 @@ RSpec.describe "Reviewable User Notes", type: :system do
   fab!(:user)
   fab!(:reviewable_flagged_post)
 
-  let(:review_page) { PageObjects::Pages::RefreshedReview.new }
+  let(:review_page) { PageObjects::Pages::Review.new }
   let(:review_note_form) { PageObjects::Components::ReviewNoteForm.new }
   let(:user_notes_modal) { PageObjects::Modals::Base.new }
 
   before do
     SiteSetting.user_notes_enabled = true
-    SiteSetting.reviewable_ui_refresh = "staff"
     sign_in(admin)
   end
 

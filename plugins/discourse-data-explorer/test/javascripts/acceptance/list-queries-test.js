@@ -8,11 +8,27 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
   needs.settings({ data_explorer_enabled: true });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/explorer/groups.json", () => {
+    server.get("/admin/plugins/discourse-data-explorer.json", () => {
+      return helper.response({
+        id: "discourse-data-explorer",
+        name: "discourse-data-explorer",
+        enabled: true,
+        has_settings: true,
+        humanized_name: "Data Explorer",
+        is_discourse_owned: true,
+        admin_route: {
+          label: "explorer.title",
+          location: "discourse-data-explorer",
+          use_new_show_route: true,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([]);
     });
 
-    server.get("/admin/plugins/explorer/queries", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [
           {
@@ -41,10 +57,10 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
   });
 
   test("renders the page with the list of queries", async function (assert) {
-    await visit("/admin/plugins/explorer");
+    await visit("/admin/plugins/discourse-data-explorer/queries");
 
     assert
-      .dom("div.query-list input.ember-text-field")
+      .dom(".admin-filter-controls__input")
       .hasAttribute(
         "placeholder",
         i18n("explorer.search_placeholder"),
@@ -52,11 +68,11 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
       );
 
     assert
-      .dom("div.query-list button.btn-icon svg.d-icon-plus")
+      .dom(".d-page-subheader .btn-primary")
       .exists("the add query button was rendered");
 
     assert
-      .dom("div.query-list button.btn-icon-text span.d-button-label")
+      .dom(".d-page-subheader .d-page-action-wrapped-button")
       .hasText(i18n("explorer.import.label"), "the import button was rendered");
 
     assert
@@ -64,11 +80,11 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
       .exists({ count: 2 }, "the list of queries was rendered");
 
     assert
-      .dom("div.container table.recent-queries tbody tr:nth-child(1) td a")
+      .dom("div.container table.recent-queries tbody tr:nth-child(1) td")
       .hasText(/^\s*Top 100 Likers/, "The first query was rendered");
 
     assert
-      .dom("div.container table.recent-queries tbody tr:nth-child(2) td a")
+      .dom("div.container table.recent-queries tbody tr:nth-child(2) td")
       .hasText(/^\s*Top 100 Active Topics/, "The second query was rendered");
   });
 });

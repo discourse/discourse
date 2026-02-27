@@ -6,6 +6,11 @@
 
 sl:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        hidden: "skrito"
+        failed: "spodletelo"
     number:
       format:
         separator: ","
@@ -299,6 +304,11 @@ sl:
     suggested_topics:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Nazaj"
+      spread_the_word:
+        copied_to_clipboard: "Povezava je bila kopirana v odložišče!"
     about:
       edit: "Uredi to stran"
       simple_title: "O nas"
@@ -2339,6 +2349,11 @@ sl:
           two: "Napredek: <strong>%{count}</strong> temi"
           few: "Napredek: <strong>%{count}</strong> teme"
           other: "Napredek: <strong>%{count}</strong> tem"
+        error_topic_count:
+          one: "%{count} tema"
+          two: "%{count} temi"
+          few: "%{count} teme"
+          other: "%{count} tem"
       none:
         unread: "Nimate neprebranih tem."
         new: "Nimate novih tem."
@@ -3007,10 +3022,8 @@ sl:
         reply: "Odgovori"
         create: "Ustvari"
         no_groups_selected: "Dostop ni bil odobren nobeni skupini; ta kategorija bo vidna samo osebju."
-        everyone_full_access: 'Ta kategorija je javna, vsi lahko vidijo, odgovarjajo in ustvarjajo objave. Če želite omejiti dovoljenja, odstranite eno ali več dovoljenj, dodeljenih skupini »vsi«.'
         toggle_reply: "Preklopi dovoljenje za odgovor"
         toggle_full: "Preklopi dovoljenje za ustvarjanje"
-        inherited: 'To dovoljenje je podedovano od "vsi"'
       uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je shranjevanju tem, ki nimajo kategorije, zato ne more imeti varnostnih nastavitev."
       uncategorized_general_warning: 'Ta kategorija je posebna. Uporablja se kot privzeta kategorija za nove teme, ki nimajo izbrane kategorije. Če želite onemogočiti takšen način in vsiliti obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če želite spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'
       pending_permission_change_alert: "Niste dodali %{group} v to kategorijo; kliknite ta gumb za dodajanje."
@@ -3464,7 +3477,16 @@ sl:
         two: "Izbrisani bosta tudi njeni %{count} sopomenki."
         few: "Izbrisane bodo tudi njene %{count} sopomenke."
         other: "Izbrisanih bo tudi njenih %{count} sopomenk."
-      description: "Opis (največ 1000 znakov)"
+      description: "Opis"
+      settings:
+        title: "Nastavitve"
+        general: "Splošno"
+        back: "Nazaj"
+        name: "Ime"
+        synonyms_subtitle: "Ko bodo uporabljene naslednje oznake, bodo nadomeščene z %{name}"
+      localization:
+        name: "Ime"
+        description: "Opis"
       sort_by: "Uredi po:"
       sort_by_count: "številu"
       sort_by_name: "imenu"
@@ -3713,6 +3735,11 @@ sl:
       reports:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
+        group_traffic: "Promet"
+        group_members: "Člani"
+        group_moderation: "Moderiranje"
+        group_security: "Varnost"
+        group_other: "Drugo"
       config_sections:
         account:
           title: "Račun"
@@ -3735,7 +3762,6 @@ sl:
         preview: "Predogled"
         enabled_for_options:
           everyone: "Vsi"
-          staff: "Samo osebje"
         impact_roles:
           admins: "Administratorji"
           moderators: "Moderatorji"
@@ -3807,6 +3833,9 @@ sl:
               title: "Dnevniki"
         reports:
           title: "Poročila"
+          sub_pages:
+            settings:
+              title: "Nastavitve"
         badges:
           title: "Značke"
         permalinks:
@@ -3844,12 +3873,6 @@ sl:
         default_value: "Privzeto"
       search:
         title: "Išči"
-        result_types:
-          theme:
-            one: "Videz"
-            two: "Videzi"
-            few: "Videzi"
-            other: "Videzi"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3998,6 +4021,7 @@ sl:
         save: "Shrani"
         cancel: "Prekliči"
         continue: "Nadaljuj"
+        copy_key: "Kopiraj"
         revoke: "Odstrani"
         revoked: "Preklican"
       api:
@@ -4701,6 +4725,7 @@ sl:
           title: "Prikaži na uporabnikovi izkaznici"
         field_types:
           text: "Besedilo"
+          date: "Datum"
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:

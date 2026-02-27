@@ -80,10 +80,15 @@ export default class AdminReportChart extends Component {
             : model.secondary_color,
           borderColor: model.primary_color,
           pointRadius: 3,
-          borderWidth: 1,
+          borderWidth: 2,
           pointBackgroundColor: pointColors,
           pointBorderColor: pointColors,
+          pointStyle: "rectRounded",
+          borderCapStyle: "round",
+          borderJoinStyle: "round",
           segment,
+          tension: 0.4,
+          fill: "origin",
         },
       ],
     };
@@ -96,6 +101,7 @@ export default class AdminReportChart extends Component {
         backgroundColor: "transparent",
         borderWidth: 1,
         pointRadius: 0,
+        fill: false,
       });
     }
 
@@ -105,6 +111,18 @@ export default class AdminReportChart extends Component {
       options: {
         plugins: {
           tooltip: {
+            backgroundColor: getCSSColor("--primary"),
+            titleMarginBottom: 16,
+            footerMarginTop: 16,
+            padding: {
+              left: 20,
+              right: 20,
+              top: 12,
+              bottom: 12,
+            },
+            bodySpacing: 8,
+            cornerRadius: 8,
+            boxPadding: 4,
             callbacks: {
               title: (tooltipItem) =>
                 moment(tooltipItem[0].parsed.x).format("LL"),
@@ -128,9 +146,9 @@ export default class AdminReportChart extends Component {
         },
         responsive: true,
         maintainAspectRatio: false,
-        responsiveAnimationDuration: 0,
+        responsiveAnimationDuration: 300,
         animation: {
-          duration: 0,
+          duration: 300,
         },
         layout: {
           padding: {
@@ -143,6 +161,7 @@ export default class AdminReportChart extends Component {
         scales: {
           y: {
             display: true,
+            grid: { color: getCSSColor("--primary-low") },
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,

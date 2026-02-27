@@ -13,22 +13,30 @@ module DiscourseDataExplorer
                        only: %i[group_reports_index group_reports_show group_reports_run public_run]
 
     def index
-      queries = Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
+      queries =
+        DiscourseDataExplorer::Query
+          .where(hidden: false)
+          .order(:last_run_at, :name)
+          .includes(:groups)
+          .to_a
 
-      database_queries_ids = Query.pluck(:id)
-      Queries.default.each do |params|
+      DiscourseDataExplorer::Queries.default.each do |params|
         attributes = params.last
-        next if database_queries_ids.include?(attributes["id"])
-        query = Query.new
-        query.id = attributes["id"]
-        query.sql = attributes["sql"]
-        query.name = attributes["name"]
-        query.description = attributes["description"]
+        persisted = queries.find { |q| q.id == attributes["id"] }
+
+        # Once a default query has been run, it is also saved in the local db
+        # so we can skip creating a "fake" query for the UI here, and this also
+        # avoids double-ups of the default query in the UI.
+        next if persisted.present?
+
+        query =
+          DiscourseDataExplorer::Query.new(attributes.slice("id", "sql", "name", "description"))
         query.user_id = Discourse::SYSTEM_USER_ID.to_s
+
         queries << query
       end
 
-      render_serialized queries, QuerySerializer, root: "queries"
+      render_serialized(queries, QuerySerializer, root: "queries")
     end
 
     def show
@@ -120,9 +128,8 @@ module DiscourseDataExplorer
     end
 
     def destroy
-      query = Query.where(id: params[:id]).first_or_initialize
+      query = Query.find(params[:id])
       query.update!(hidden: true)
-
       render json: { success: true, errors: [] }
     end
 

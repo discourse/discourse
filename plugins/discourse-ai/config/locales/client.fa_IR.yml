@@ -60,6 +60,8 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      llm_selector:
+        none: "هیچ‌کدام"
       features:
         back: "بازگشت"
         disabled: "(غیرفعال)"
@@ -148,11 +150,22 @@ fa_IR:
         save: "ذخیره"
         remove_parameter: "پاک کردن"
         parameter_required: "مورد نیاز"
+        credential_not_set: "(تنظیم نشده)"
         edit: "ویرایش"
-        test: "اجرا کردن تست"
+        test: "آزمایش کردن"
         delete: "حذف"
         test_modal:
           run: "اجرا کردن تست"
+      secrets:
+        short_title: "اطلاعات ورود"
+        name: "نام"
+        secret: "مقدار"
+        back: "بازگشت"
+        save: "ذخیره"
+        edit: "ویرایش"
+        delete: "حذف"
+        embedding: "جاسازی"
+        tool: "ابزار"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"

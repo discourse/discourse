@@ -674,7 +674,7 @@ export default <template>
         <div class="field">{{i18n "admin.groups.automatic"}}</div>
         <div class="value">{{htmlSafe @controller.automaticGroups}}</div>
       </div>
-      <div class="display-row">
+      <div class="display-row admin-user__custom-groups">
         <div class="field">{{i18n "admin.groups.custom"}}</div>
         <div class="value">
           <GroupChooser

@@ -6,6 +6,11 @@
 
 ko:
   js:
+    blocks:
+      ghost:
+        status: "상태"
+        hidden: "숨김"
+        failed: "실패"
     number:
       format:
         separator: "."
@@ -273,6 +278,11 @@ ko:
       title: "새 글 또는 읽지 않은 글"
       pill: "추천"
       pm_title: "제안된 메시지"
+    admin_onboarding_banner:
+      start_posting:
+        back: "뒤로"
+      spread_the_word:
+        action: "링크 복사"
     about:
       edit: "이 페이지 수정"
       simple_title: "정보"
@@ -469,7 +479,6 @@ ko:
         enable_plugins: "플러그인 사용"
       explain:
         why: "이 항목이 대기열에 있는 이유 설명"
-        title: "검토 가능 점수"
         formula: "공식"
         subtotal: "소계"
         total: "합계"
@@ -483,10 +492,8 @@ ko:
           title: "신고가 수락된 경우 신고자에게 보너스가 주어집니다."
         trust_level_bonus:
           name: "회원 레벨"
-          title: "신뢰 레벨이 더 높은 사용자가 만든 검토 가능 항목은 더 높은 점수를 받습니다."
         type_bonus:
           name: "유형 보너스"
-          title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
       revise_and_reject_post:
         title: "수정"
         reason: "이유"
@@ -495,7 +502,6 @@ ko:
         custom_reason: "이유를 명확하게 설명해 주세요."
         other_reason: "기타..."
         optional: "선택 사항"
-      stale_help: "이 검토 가능 항목은 <b>%{username}</b> 님이 해결했습니다."
       claim_help:
         optional: "다른 사용자가 검토하지 못하도록 이 항목을 독점할 수 있습니다."
         required: "항목을 검토하려면 먼저 항목을 독점해야 합니다."
@@ -2360,8 +2366,6 @@ ko:
         max_views:
           placeholder: 최대
           aria_label: 최대 조회수로 필터링
-        additional_options:
-          label: "게시물 수 및 글 조회수로 필터링"
     new_item: "새로운"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
@@ -2434,6 +2438,8 @@ ko:
           other: "<b>%{count}</b>개의 글에서 태그가 모두 제거됩니다. 계속할까요?"
         progress:
           other: "진행률: <strong>%{count}</strong>개의 글"
+        error_topic_count:
+          other: "%{count}개의 글"
       none:
         unread: "읽지 않은 글이 없습니다."
         unseen: "확인하지 않은 글이 없습니다."
@@ -3097,10 +3103,8 @@ ko:
         reply: "댓글 달기"
         create: "생성"
         no_groups_selected: "액세스 권한이 부여된 그룹이 없습니다. 이 카테고리는 운영진만 볼 수 있습니다."
-        everyone_full_access: '이 카테고리는 공개이며, 누구나 볼 수 있고, 댓글을 작성 하고, 글을 쓸 수 있습니다. 사용 권한을 제한하려면 "everyone" 그룹에 부여된 사용 권한 중 하나 이상을 제거해야 합니다.'
         toggle_reply: "댓글 권한 토글"
         toggle_full: "생성 권한 토글"
-        inherited: '이 권한은 ''everyone''으로부터 상속됩니다'
       uncategorized_security_warning: "특수 카테고리입니다. 카테고리가 없는 주제의 보관 영역으로 사용되므로 보안 설정을 가질 수 없습니다."
       uncategorized_general_warning: '이 카테고리는 특별합니다. 카테고리를 선택하지 않은 새 글의 기본 카테고리로 사용됩니다. 이 동작을 방지하고 범주를 강제로 선택 <a href="%{settingLink}">하려면 여기에서 설정을 비활성화하십시오</a> . 이름이나 설명을 변경하려면 <a href="%{customizeLink}">사용자 정의 / 텍스트 내용으로 이동하십시오</a> .'
       pending_permission_change_alert: "이 카테고리에 %{group} 그룹을 추가하지 않았습니다. 이 버튼을 클릭하여 추가하세요."
@@ -3522,6 +3526,18 @@ ko:
       delete_confirm_synonyms:
         other: "%{count}개의 동의어도 삭제됩니다."
       edit_tag: "태그 이름 및 설명 편집"
+      description: "내용"
+      settings:
+        title: "설정"
+        general: "일반"
+        back: "뒤로"
+        name: "그룹명"
+        slug: "강타"
+        name_placeholder: "태그명"
+        synonyms_subtitle: "다음 태그를 사용하면 %{name} 으로 대체됩니다"
+      localization:
+        name: "그룹명"
+        description: "내용"
       sort_by: "정렬 기준:"
       sort_by_count: "개수"
       sort_by_name: "이름"
@@ -3778,6 +3794,11 @@ ko:
       reports:
         title: "사용 가능한 리포트 목록"
         sidebar_title: "보고서"
+        group_traffic: "트래픽"
+        group_members: "회원"
+        group_moderation: "관리"
+        group_security: "보안"
+        group_other: "기타"
       config_sections:
         account:
           title: "계정"
@@ -3799,7 +3820,6 @@ ko:
         preview: "미리 보기"
         enabled_for_options:
           everyone: "모두"
-          staff: "직원 만"
         impact_roles:
           admins: "관리자"
           moderators: "관리자"
@@ -3887,6 +3907,9 @@ ko:
               title: "로그"
         reports:
           title: "보고서"
+          sub_pages:
+            settings:
+              title: "설정"
         badges:
           title: "배지"
         permalinks:
@@ -3935,17 +3958,6 @@ ko:
         default_value: "기본"
       search:
         title: "검색"
-        result_types:
-          page:
-            other: "페이지"
-          report:
-            other: "보고서"
-          setting:
-            other: "설정"
-          theme:
-            other: "테마"
-          component:
-            other: "구성 요소"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
@@ -4105,6 +4117,7 @@ ko:
         save: "저장"
         cancel: "취소"
         continue: "계속하기"
+        copy_key: "복사"
         revoke: "취소"
         revoked: "해지"
       api:
@@ -5242,6 +5255,7 @@ ko:
           disabled: "검색할 수 없음"
         field_types:
           text: "텍스트"
+          date: "날짜"
           confirm: "확인"
           dropdown: "드롭다운"
           multiselect: "다중 선택"

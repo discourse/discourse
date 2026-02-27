@@ -44,6 +44,10 @@ en:
         other: "Move posts"
       move_post_cancel: "Cancel"
       dont_show_again: "Got it, don't show me this again"
+      confirm_solved_removal_title: "Solution will be removed"
+      confirm_solved_removal: "This change will disable solutions for this topic and remove the accepted solution."
+      confirm_solved_removal_confirm: "Confirm"
+      confirm_solved_removal_cancel: "Cancel"
 
       no_answer:
         title: Has your question been answered?

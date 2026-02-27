@@ -7,6 +7,7 @@
 el:
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
       share:
         toggle_label:
           private: "Ιδιωτική"
@@ -15,15 +16,47 @@ el:
         reading_time:
           title: Χρόνος ανάγνωσης
         chat_usage:
+          title: Δραστηριότητα Συνομιλίας
+          total_messages: Συνολικά Μηνύματα
+          dm_messages: Άμεσα Μηνύματα
+          unique_dm_channels: Συνομιλίες Άμεσων Μηνυμάτων
+          reactions_received: Ληφθείσες Αντιδράσεις
+          avg_message_length: Μέσο Μήκος Μηνύματος
+          favorite_channels: Αγαπημένα Κανάλια
           messages: μηνύματα
+          bot_name: XxRewindBotxX
+          author: Εσείς
+          author_others: "%{username}"
+          channel_title: "#chat-activity"
           status_online: "● σε σύνδεση"
+          message_1:
+            one: "Στείλατε <strong>%{count}</strong> μήνυμα φέτος!"
+            other: "Στείλατε <strong>%{count}</strong> μηνύματα φέτος!"
+          reply_1: "lol awesome B-)"
+          message_2_MF: |
+            Είχατε { dm_count, plural,
+                one {<strong>#</strong> συζήτηση ΑΜ}
+              other {<strong>#</strong> συζητήσεις ΑΜ}
+            } με { channel_count, plural,
+                one {<strong>#</strong> άτομο ή ομάδα}
+              other {<strong>#</strong> διαφορετικά άτομα ή ομάδες}
+            }.
+          reply_2: "cOo0oL :D"
+          message_3:
+            one: "Ο κόσμος λάτρεψε τα μηνύματά σας! Πήρατε <strong>%{count}</strong> αντίδραση ❤️"
+            other: "Ο κόσμος λάτρεψε τα μηνύματά σας! Πήρατε <strong>%{count}</strong> αντιδράσεις ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Το μέσο μήκος των μηνυμάτων σας ήταν <strong>%{length}</strong> χαρακτήρες"
+          message_5: "Τα αγαπημένα σας κανάλια:"
+          dancing_baby_alt: "Μωρό που χορεύει"
         invites:
           title: Προσκλήσεις
           invitee_posts: Δημιουργημένες Αναρτήσεις
-          invitee_likes: Μου αρέσει που αποδόθηκαν
+          invitee_likes: Μου αρέσει που δόθηκαν
           label_invitations_sent: "Οι προσκλήσεις στάλθηκαν:"
+          label_likes_given: "\"Μου αρέσει\" που δόθηκαν:"
         new_user_interactions:
-          likes_given: Μου αρέσει που αποδόθηκαν
+          likes_given: Μου αρέσει που δόθηκαν
           mentions: Επισημάνσεις
         writing_analysis:
           menu_other: Άλλα

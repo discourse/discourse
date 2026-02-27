@@ -6,6 +6,11 @@
 
 bs_BA:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        hidden: "hidden"
+        failed: "neuspješno"
     number:
       format:
         separator: "."
@@ -264,6 +269,9 @@ bs_BA:
       pill: "Povezane Poruke"
     suggested_topics:
       pm_title: "Preporučene Poruke"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Prethodno"
     about:
       edit: "Edit this page"
       simple_title: "O nama"
@@ -385,7 +393,6 @@ bs_BA:
       in_reply_to: "odgovori na"
       explain:
         why: "objasnite zašto je ovaj objekat završio na listi za čekanje"
-        title: "Ocjenjiv Skor"
         formula: "Formula"
         subtotal: "Podsuma"
         total: "Suma"
@@ -399,10 +406,8 @@ bs_BA:
           title: "Korisnicima čije su zastave prethodno bivale usaglašene dobivaju bonus."
         trust_level_bonus:
           name: "nivo povjerenja"
-          title: "Ocjenjivi objekti kreirani od strane korisnika sa višim nivoom povjerenja imaju viši skor."
         type_bonus:
           name: "bonus tip"
-          title: "Neki ocjenjivi tipovi mogu zaprimiti bonus od strane osoblja foruma kako bi tim tipovima podigli prioritet"
       revise_and_reject_post:
         reason: "Reason"
         optional: "opciono"
@@ -1973,6 +1978,10 @@ bs_BA:
         choose_new_tags: "Odaberi nove tagove za ove teme:"
         choose_append_tags: "Odaberi nove oznake kako bi pripojili ovim temama:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} tema"
       none:
         unread: "Nemate nepročitanih tema."
         new: "Nemate novih tema."
@@ -2950,6 +2959,16 @@ bs_BA:
         one: "Pripadajući sinonim će također biti obrisan."
         few: "Pripadajućih %{count} sinonima će također biti obrisano."
         other: "Pripadajućih %{count} sinonima će također biti obrisano."
+      description: "Opis"
+      settings:
+        title: "Postavke"
+        general: "General"
+        back: "Prethodno"
+        name: "Ime"
+        synonyms_subtitle: "U slučaju da se sljedeće oznake koriste, iste će biti zamijenjene sa %{name}"
+      localization:
+        name: "Ime"
+        description: "Opis"
       sort_by: "Sortiraj po:"
       sort_by_count: "brojenje"
       sort_by_name: "ime"
@@ -3141,6 +3160,11 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
+        group_traffic: "Promet"
+        group_members: "Članovi"
+        group_moderation: "Moderacija"
+        group_security: "Security"
+        group_other: "Other"
       config_sections:
         account:
           title: "Račun"
@@ -3162,7 +3186,6 @@ bs_BA:
         preview: "Pregled"
         enabled_for_options:
           everyone: "Svatko"
-          staff: "Samo za urednike i admine"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -3232,6 +3255,9 @@ bs_BA:
               title: "Logs"
         reports:
           title: "Izvještaji"
+          sub_pages:
+            settings:
+              title: "Postavke"
         badges:
           title: "Bedž"
         permalinks:
@@ -3279,15 +3305,6 @@ bs_BA:
         default_value: "Uobičajen"
       search:
         title: "Pretraži"
-        result_types:
-          theme:
-            one: "Izgled"
-            few: "Teme"
-            other: "Teme"
-          component:
-            one: "Komponenta"
-            few: "Komponenti"
-            other: "Komponenti"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3441,6 +3458,7 @@ bs_BA:
         save: "Save"
         cancel: "Odustani"
         continue: "Nastavi"
+        copy_key: "Copy"
         revoke: "Revoke"
       api:
         generate_master: "Generate Master API Key"
@@ -4355,6 +4373,7 @@ bs_BA:
           title: "Prikaži na korisničkoj kartici"
         field_types:
           text: "Poruka"
+          date: "Datum"
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:

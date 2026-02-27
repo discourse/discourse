@@ -282,6 +282,16 @@ uk:
           name: "Почніть з чистого аркуша..."
       name:
         characters: "повинні містити тільки цифри, літери та підкреслення"
+      secret_contracts:
+        invalid_payload: "Таємні контракти повинні бути масивом."
+        invalid_contract: "Секретний контракт за індексом %{index} недійсний."
+        alias_required: "Секретний контракт за індексом %{index} повинен містити псевдонім."
+        alias_too_long: "Секретний псевдонім `%{alias}` занадто довгий."
+        alias_invalid: "Секретний псевдонім `%{alias}` має містити лише цифри, літери та символи підкреслення."
+        alias_not_unique: "Секретний псевдонім `%{alias}` дублюється."
+      secret_bindings:
+        invalid_payload: "Секретні зв'язки повинні бути масивом."
+        secret_not_found: "Вибраний обліковий запис не існує."
     ai_helper:
       errors:
         completion_request_failed: "Щось пішло не так під час спроби надати пропозиції. Будь ласка, спробуйте ще раз."
@@ -652,6 +662,7 @@ uk:
         invalid_seeded_model: "Ви не можете використовувати цю модель із цією функцією"
         invalid_persona_response_format: "Вибрана персона повинна мати формат відповіді з логічними назвами полів «спам»"
         must_select_model: "Спочатку ви повинні вибрати LLM"
+        invalid_llm_id: "Обрана модель LLM недійсна"
       endpoints:
         not_configured: "%{display_name} (не налаштовано)"
         configuration_hint:
@@ -670,12 +681,16 @@ uk:
     embeddings:
       delete_failed: "Ця модель наразі використовується. Спочатку оновіть `ai embeddings selected model`."
       cannot_edit_builtin: "Ви не можете редагувати вбудовану модель."
+      secret_required: "Необхідно вибрати обліковий запис"
+      secret_not_found: "Вибраний обліковий запис не існує"
       configuration:
         disable_embeddings: "Спершу потрібно вимкнути функцію «AI embeddings enabled»."
         choose_model: "Спочатку встановіть 'ai embeddings selected model'."
         model_test_failed: "Нам не вдалося створити тестове вбудовування з цією моделлю. Перевірте, чи правильно налаштовано."
     llm_models:
       missing_provider_param: "%{param} не може бути пустим"
+      secret_required: "Необхідно вибрати обліковий запис"
+      secret_not_found: "Вибраний обліковий запис не існує"
       bedrock_invalid_url: "Будь ласка, заповніть усі поля, щоб використовувати цю модель."
       bedrock_missing_auth: "AWS Bedrock вимагає налаштування або ідентифікатора ключа доступу, або ARN ролі"
     ai_staff_action_logger:

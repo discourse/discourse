@@ -60,8 +60,6 @@ fi:
   inline_oneboxer:
     topic_page_title_post_number: "%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} käyttäjältä %{username}"
-    too_many_urls: "Yhdessä pyynnössä ei voi olla yli 10:tä URL-osoitetta yhdessä tekstiin sidotussa oneboxissa."
-    concurrency_not_allowed: "Samanaikaisia tekstiin sidottuja oneboxing-pyyntöjä ei sallita. Lähetä yksi pyyntö kerrallaan."
   components:
     enabled_filter: "Käytössä"
     disabled_filter: "Pois käytöstä"
@@ -344,7 +342,6 @@ fi:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Käyttäjäagenttien täytyy sisältää vähintään kolme merkkiä aitojen käyttäjien pyyntöjen virheellisen rajoittamisen välttämiseksi."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Et voi lisätä asetukseen mitään seuraavista arvoista: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Et voi poistaa kuvan metatietojen poistoa käytöstä, jos 'composer media optimization image enabled' on käytössä. Poista 'composer media optimization image enabled' käytöstä ennen kuvien metatietojen poiston poistamista käytöstä."
-      x_summary_large_image_no_svg: "Twitterin yhteenvetokuvat, joita käytetään twitter:image-metatiedoissa, eivät voi olla .svg-kuvia."
       tl0_and_anonymous_flag: "Joko \"site contact email\" tai \"email address to report illegal content\" täytyy antaa anonyymeille käyttäjille."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Tämä asetus edellyttää, että \"allow anonymous mode\" -asetus otetaan ensin käyttöön."
     conflicting_google_user_id: 'Tämän tilin Google-tilitunnus on muuttunut. Henkilökunnan toimenpiteet ovat tarpeen tietoturvasyistä. Ota yhteyttä henkilökuntaan ja ohjaa heidät osoitteeseen<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1774,7 +1771,6 @@ fi:
     slow_down_crawler_rate: "Jos slow_down_crawler_user_agents on määritelty, tämä nopeusrajoitus koskee kaikkia hakurobotteja (kuinka monta sekuntia pitää kulua pyyntöjen välillä)"
     content_security_policy: "Ota Content-Security-Policy (CSP) käyttöön. CSP on ylimääräinen suojaustaso, joka auttaa estämään tietyntyyppiset hyökkäykset, kuten Cross Site Scriptingin (XSS) ja tietojen lisäyksen."
     content_security_policy_report_only: "Käytä epäilyttävän sisällön raportointia (Content-Security-Policy-Report-Only)"
-    content_security_policy_collect_reports: "Ota käyttöön CSP-seulontojen kerääminen lokiin kohteessa /csp_reports"
     content_security_policy_frame_ancestors: "Rajoita sitä, ketkä voivat upottaa tämän sivuston iframe-kehyksiin CSP:n kautta. Hallitse sallittuja isäntiä <a href='%{base_path}/admin/customize/embedding'>Upottaminen</a>-sivulla"
     content_security_policy_script_src: "Muut sallitut skriptilähteet. Nykyinen palvelin ja CDN sallitaan oletuksena. Katso <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP) Muut isäntälähteet ohitetaan, koska strict-dynamic on käytössä."
     invalidate_inactive_admin_email_after_days: "Ylläpitäjätilit, jotka eivät ole vierailleet sivustolla näin moneen päivään, joutuvat vahvistamaan sähköpostiosoitteensa uudelleen ennen sisäänkirjautumista. Aseta 0 poistaaksesi käytöstä."
@@ -2075,8 +2071,6 @@ fi:
     num_flaggers_to_close_topic: "Kuinka monta eri merkitsijää tarvitaan, jotta ketju voi mennä tauolle puuttumistoimia odottamaan"
     num_hours_to_close_topic: "Kuinka moneksi tunniksi ketju menee tauolle puuttumistoimia odottamaan."
     auto_respond_to_flag_actions: "Ota käyttöön automaattinen vastaus merkintää poistettaessa."
-    min_first_post_typing_time: "Minimimäärä aikaa millisekunneissa, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti lisätään automaattisesti hyväksyttävien jonoon. Aseta 0 poistaaksesi käytöstä (ei suositella)."
-    fast_typing_threshold: "Vähimmäisaika millisekunteina, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti siirtyy automaattisesti tarkastusjonoon. Matala on 1 sekunti, normaali on 3 sekuntia, korkea on 5 sekuntia."
     auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, jotka eivät täytä \"fast typing threshold\" -rajaa"
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
     auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viestin lähettämiseen hyväksyntäjonoon. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan \"hemmetti\", \"aba\" tai \"aca\". Koskee vain käyttäjän ensimmäistä viestiä. VANHENTUNUT: käytä tämän sijaan tarkkailtujen sanojen hiljennystä."
@@ -2093,7 +2087,6 @@ fi:
     alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %%{reply_key}@reply.esimerkki.fi tai replies+%%{reply_key}@esimerkki.fi"
     incoming_email_prefer_html: "Käytä HTML:ää tekstin sijaan saapuvissa sähköposteissa."
     strip_incoming_email_lines: "Poista saapuvien sähköpostien jokaisen rivin alusta ja lopusta tyhjät merkit."
-    disable_emails: "Estä Discoursea lähettämästä minkäänlaisia sähköposteja. Ota pois sähköpostit kaikilta käyttäjiltä valitsemalla \"yes\" . \"Non-staff\" poistaa sähköpostit vain muilta kuin henkilökunnalta."
     strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2 800 tavua"
     short_email_length: "Määritä enimmäispituus tavuina lyhyeksi luokitellulle sähköpostille kuvien rajoittamista varten. Jos sähköpostin koko ei ylitä tätä asetusta, kaikki sähköpostissa olevat kuvat (kuten avatarit ja emojit) poistetaan."
     display_name_on_email_from: "Näytä sähköpostien lähettäjinä käyttäjien koko nimet"
@@ -2249,7 +2242,6 @@ fi:
     notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille henkilökohtaisilla viesteillä. Poista käytöstä arvolla 0."
     delete_drafts_older_than_n_days: "Poista luonnokset, joita ei ole muutettu yli (n) päivään."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 1, tynkäketjuja ei poisteta koskaan. Jos arvo on 0, ne poistetaan välittömästi."
-    bootstrap_mode_min_users: 'Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen käytöstä ja Aloittaminen-painikkeen poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia) Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/322876">aloitustilan ketjusta Metassa</a>.'
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain henkilökohtaisiin viesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
@@ -2373,7 +2365,6 @@ fi:
     dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
     dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
     dashboard_general_tab_activity_metrics: "Valitse raportit, jotka näytetään aktiivisuusmittareina Yleistä-välilehdellä."
-    gravatar_enabled: "Käytä <a href='https://gravatar.com/'>Gravatar</a>-palvelua käyttäjien avatareille. Tämä estää käyttäjiä vaihtamasta Gravatariin avatareillaan, mutta ei vaikuta käyttäjiin, jotka jo käyttävät sitä."
     gravatar_name: "Määritä Gravatar-palveluntarjoajan nimi. Tätä nimeä käytetään yleensä Gravatar-avatareita sivustolle tarjoavan lähteen tunnistamiseen."
     gravatar_base_url: "Määritä Gravatar-palveluntarjoajan APIn URL-osoite. Tämä asetus on ehdottoman tärkeä muunnettaessa sähköpostiosoitteita Gravatarin URL-osoitteiksi, joihin avatar-kuvat on tallennettu."
     gravatar_login_url: "URL suhteessa gravatar_base_url-osoitteeseen, jolla käyttäjä kirjautuu Gravatar-palveluun."
@@ -2397,7 +2388,7 @@ fi:
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
     show_preview_for_form_templates: "Ota esikatselu käyttöön lomakkemalliominaisuudessa"
     lazy_load_categories_groups: "Käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
-    experimental_auto_grid_images: "Lisää automaattisesti kuvat [grid]-tunnisteisiin, kun 3 tai useampia kuvia ladataan kirjoitustilassa."
+    enable_auto_grid_images: "Lisää automaattisesti kuvat [grid]-tunnisteisiin, kun 3 tai useampia kuvia ladataan kirjoitustilassa."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
     show_user_menu_avatars: "Näytä käyttäjien avatarit käyttäjävalikossa"
     about_page_hidden_groups: "Älä näytä tiettyjen ryhmien jäseniä /about-sivulla."
@@ -2454,12 +2445,6 @@ fi:
       reply_by_email_disabled: "Vastaus sähköpostilla täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
       discourse_connect_url_is_empty: "Sinun täytyy määrittää \"discourse connect url'\" ennen kuin otat tämän asetuksen käyttöön."
       enable_local_logins_disabled: "Paikalliset kirjautumiset täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
-      min_username_length_exists: "Käyttäjätunnuksen vähimmäispituus ei voi olla suurempi kuin lyhin käyttäjätunnus (%{username})."
-      min_group_name_length_exists: "Käyttäjätunnuksen vähimmäispituutta ei voi asettaa lyhintä ryhmän nimeä (%{group_name}) pidemmäksi."
-      min_username_length_range: "Vähimmäisarvo ei voi olla suurempi kuin enimmäisarvo."
-      max_username_length_exists: "Käyttäjätunnuksen enimmäispituus ei voi olla suurempi kuin pisin käyttäjätunnus (%{username})."
-      max_group_name_length_exists: "Käyttäjätunnuksen enimmäispituutta ei voi asettaa pisintä ryhmän nimeä (%{group_name}) lyhyemmäksi."
-      max_username_length_range: "Enimmäisarvo ei voi olla pienempi kuin vähimmäisarvo."
       invalid_hex_value: "Väriarvon täytyy olla kuusinumeroinen heksadesimaalikoodi."
       empty_selectable_avatars: "Sinun täytyy ladata ensin vähintään kaksi valittavaa avataria ennen kuin otat tämän asetuksen käyttöön."
       category_search_priority:
@@ -2518,7 +2503,6 @@ fi:
       exclude_tag: "Jätä pois ketjut tietyllä tunnisteella"
       exclude_tags_any: "Jätä pois ketjut millä tahansa määritetyillä tunnisteilla (pilkuilla erotettuna)"
       exclude_tags_all: "Jätä pois ketjut kaikilla määritetyillä tunnisteilla (plus-merkillä erotettuna)"
-      tags_alias: "Alias \"tag:\"-suodattimelle"
       tag_group: "Näytä ketjut, joilla on tietyn tunnisteiryhmän tunnisteita"
       exclude_tag_group: "Jätä pois ketjut, joilla on tietyn tunnisteiryhmän tunnisteita"
       activity_before: "Näytä ketjut, joissa viimeisin toiminta on ennen tiettyä päivämäärää (VVVV-KK-PP tai päivää sitten)"
@@ -4811,8 +4795,6 @@ fi:
     deprecation_error_label: Aseta Javascriptin vanhentumiset aiheuttamaan virhe
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
-  dev_mode:
-    enter: "Enter"
   wizard:
     title: "Discoursen asennus"
     step:
@@ -5070,8 +5052,6 @@ fi:
       approve_and_unhide:
         title: "Kyllä"
         complete: "Viesti hyväksytty ja näkyvissä"
-      no_action_post:
-        title: "Ei toimintaa"
       delete_post:
         title: "Poista viesti"
         complete: "Viesti poistettu"
@@ -5080,8 +5060,6 @@ fi:
       restore_post:
         title: "Palauta viesti"
         complete: "Viesti palautettu"
-      no_action_user:
-        title: "Ei toimintaa"
       silence_user:
         title: "Hiljennä käyttäjä"
         complete: "Käyttäjä hiljennetty"

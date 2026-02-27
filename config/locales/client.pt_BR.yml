@@ -6,6 +6,12 @@
 
 pt_BR:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "em"
+        hidden: "oculto"
+        failed: "falha"
     number:
       format:
         separator: ","
@@ -402,6 +408,12 @@ pt_BR:
       title: "Tópicos novos e não lidos"
       pill: "Sugestões"
       pm_title: "Mensagens sugeridas"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Voltar"
+      spread_the_word:
+        action: "Copiar link"
+        copied_to_clipboard: "Link copiado para área de transferência!"
     about:
       edit: "Editar esta página"
       simple_title: "Sobre"
@@ -639,19 +651,13 @@ pt_BR:
       in_reply_to: "em resposta a"
       filtered_flagged_by: "Sinalizado(a) por"
       unknown:
-        title:
-          one: "Você tem itens revisáveis pendentes do plugin desativado:"
-          other: "Você tem itens revisáveis pendentes de plugins desativados:"
         instruction: "Eles não podem ser exibidos corretamente até que você ative o plugin relevante. Ative o plugin e atualize a página. Como alternativa, você pode ignorá-los. <a href='%{url}' target='_blank'>Saiba mais...</a>"
         reviewable_unknown_source: "%{reviewableType} (plugin desconhecido)"
         reviewable_known_source: "%{reviewableType} (do plugin '%{pluginName}')"
         ignore_all: "Ignorar tudo"
         enable_plugins: "Ativar plugins"
-        delete_confirm: "Tem certeza de que deseja excluir todas as avaliações criadas por plugins desativados?"
-        ignore_success: "Todas as avaliações criadas por plugins desativados foram excluídas."
       explain:
         why: "explique por que este item foi colocado na fila"
-        title: "Pontuação revisável"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -665,10 +671,8 @@ pt_BR:
           title: "Os(as) usuários(as) com sinalizadores historicamente acordados recebem um bônus."
         trust_level_bonus:
           name: "nível de confiança"
-          title: "Itens revisáveis criados por usuários(as) com nível de confiança mais alto têm uma pontuação maior."
         type_bonus:
           name: "bônus de tipo"
-          title: "Certos tipos revisáveis podem receber um bônus da equipe para aumentar sua prioridade."
       revise_and_reject_post:
         title: "Revisar"
         reason: "Motivo"
@@ -677,7 +681,6 @@ pt_BR:
         custom_reason: "Forneça uma descrição clara do motivo"
         other_reason: "Outro..."
         optional: "opcional"
-      stale_help: "Este revisável foi encerrado por <b>%{username}</b>."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
         required: "Você precisa reivindicar itens antes de poder revisá-los."
@@ -3162,8 +3165,6 @@ pt_BR:
         max_views:
           placeholder: máximo
           aria_label: filtrar por visualizações máximas
-        additional_options:
-          label: "Filtrar por contagem de postagens e visualizações de tópico"
     hamburger_menu: "Menu de navegação"
     new_item: "novo"
     go_back: "voltar"
@@ -3294,6 +3295,9 @@ pt_BR:
           other: "Progresso: <strong>%{count}</strong> tópicos"
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
+        error_topic_count:
+          one: "%{count} tópico"
+          other: "%{count} tópicos"
       none:
         unread: "Você não tem tópicos não lidos."
         unseen: "Você não tem tópicos não vistos."
@@ -4154,10 +4158,8 @@ pt_BR:
         reply: "Responder"
         create: "Criar"
         no_groups_selected: "Nenhum grupo recebeu acesso, esta categoria será visível apenas para a equipe."
-        everyone_full_access: 'Esta categoria é pública, todos(as) podem ver, responder e criar postagens. Para restringir permissões, remova uma ou mais permissões concedidas para o grupo "todos(as)".'
         toggle_reply: "Alternar permissão de resposta"
         toggle_full: "Alternar criação de permissão"
-        inherited: 'Esta permissão é herdada de "todos(as)"'
       uncategorized_security_warning: "Esta categoria é especial. É destinada para tópicos que não têm categoria e não pode ter configurações de segurança."
       uncategorized_general_warning: 'Esta categoria é especial. Ela é usada como a categoria padrão para novos tópicos que não têm uma categoria selecionada. Se quiser evitar este comportamento e forçar a seleção da categoria, <a href="%{settingLink}">desative a configuração aqui</a>. Se você quiser alterar o nome ou a descrição, vá para <a href="%{customizeLink}">Personalização/Conteúdo de texto</a>.'
       pending_permission_change_alert: "Você não adicionou %{group} a esta categoria. Clique neste botão para adicionar."
@@ -4709,7 +4711,20 @@ pt_BR:
         one: "Seu sinônimo também será excluído."
         other: "Seus %{count} sinônimos também serão excluídos."
       edit_tag: "Edite o nome e descrição da etiqueta"
-      description: "Descrição (máximo de 1000 caracteres)"
+      description: "Descrição"
+      settings:
+        title: "Definições"
+        general: "Geral"
+        localizations: "Localizações"
+        back: "Voltar"
+        name: "Nome"
+        slug: "Slug"
+        name_placeholder: "Nome da etiqueta"
+        synonyms_subtitle: "Quando as seguintes etiquetas forem usadas, serão substituídas por %{name}"
+      localization:
+        locale: "Local"
+        name: "Nome"
+        description: "Descrição"
       sort_by: "Ordenar por"
       sort_by_count: "contagem"
       sort_by_name: "nome"
@@ -5212,9 +5227,13 @@ pt_BR:
           never: "nunca"
       reports:
         title: "Lista de relatórios disponíveis"
-        meta_doc: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
         sidebar_title: "Relatórios"
         back: "Voltar para todos os relatórios"
+        group_traffic: "Tráfego"
+        group_members: "Membros"
+        group_moderation: "Moderação"
+        group_security: "Segurança"
+        group_other: "Outras"
       config_sections:
         account:
           title: "Conta"
@@ -5239,7 +5258,6 @@ pt_BR:
         preview: "Pré-visualizar"
         enabled_for_options:
           everyone: "Todos(as)"
-          staff: "Somente equipe"
         statuses:
           experimental: "Experimental"
         impact_roles:
@@ -5310,7 +5328,6 @@ pt_BR:
               help_text: "O tamanho recomendado é 600 x 80 pixels."
             large_icon:
               title: "Ícone quadrado"
-              description: "Uma versão quadrada da imagem do logotipo aparece na parte superior da administração e também é o logotipo do aplicativo na tela inicial do celular."
               help_text: "O tamanho recomendado é 512 x 512 pixels."
             square_icon_dark:
               required: "Usar um ícone quadrado diferente para o modo escuro?"
@@ -5463,7 +5480,7 @@ pt_BR:
           header_description: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
           sub_pages:
             settings:
-              title: "Configurações do painel de controle"
+              title: "Definições"
         badges:
           title: "Emblemas"
           header_description: "Os(as) usuários(as) recebem emblemas como recompensa por suas atividades, contribuições e realizações. Isso é uma forma de reconhecer, validar e incentivar comportamentos positivos e o envolvimento na comunidade"
@@ -5613,22 +5630,6 @@ pt_BR:
         result_count:
           one: '%{count} resultado para "%{filter}"'
           other: '%{count} resultados para "%{filter}"'
-        result_types:
-          page:
-            one: "Página"
-            other: "Páginas"
-          report:
-            one: "Relatório"
-            other: "Relatórios"
-          setting:
-            one: "Configuração"
-            other: "Configurações"
-          theme:
-            one: "Tema"
-            other: "Temas"
-          component:
-            one: "Componente"
-            other: "Componentes"
       new_features:
         title: "Novidades?"
         check_for_updates: "Verificar atualizações"
@@ -5652,15 +5653,6 @@ pt_BR:
           title: "Novidades?"
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
           learn_more: "Saiba mais..."
-          experimental: "Experimental"
-          only_experiments: "Exibir apenas recursos experimentais"
-          experiment_enabled: "Você ativou o recurso experimental."
-          experiment_disabled: "Você desativou o recurso experimental."
-          experiment_tooltip:
-            title_enabled: "Desativar este recurso experimental"
-            content_enabled: "Altere esta opção para desativar este recurso para todos(as) os(as) usuários(as)."
-          feature_tooltip:
-            content_enabled: "Altere esta opção para desativar este recurso para todos(as) os(as) usuários(as)."
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema foi encontrado."
@@ -5842,6 +5834,7 @@ pt_BR:
         save: "Salvar"
         cancel: "Cancelar"
         continue: "Continuar"
+        copy_key: "Copiar"
         back: "Voltar para chaves de API"
         revoke: "Revogar"
         undo_revoke: "Desfazer revogação"
@@ -7636,6 +7629,7 @@ pt_BR:
         field_types:
           text: "Texto"
           textarea: "Área de texto"
+          date: "Data"
           confirm: "Confirmação"
           dropdown: "Menu suspenso"
           multiselect: "Multisseleção"

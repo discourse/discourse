@@ -10,6 +10,7 @@ ja:
       logs:
         staff_actions:
           actions:
+            create_automation: 自動化を作成する
             update_automation: 自動化を更新
             delete_automation: 自動化を削除
     discourse_automation:
@@ -67,8 +68,10 @@ ja:
           fields:
             categories:
               label: カテゴリ
+              description: 通報されたトピックがこれらのカテゴリに含まれる場合にのみトリガーします
             tags:
               label: タグ
+              description: 通報されたトピックにこれらのタグが付いている場合にのみトリガーします
         not_found: 自動化 `%{automation}` のトリガー `%{trigger}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
         user_badge_granted:
           fields:
@@ -279,6 +282,14 @@ ja:
               label: タグ
               description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: メールのテンプレート
+              description: 自動化プレースホルダーをサポートします
+            recipients:
+              label: 受信者
+              description: 通知するユーザーまたはメールアドレス
         not_found: 自動化 `%{automation}` のスクリプト `%{script}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
         zapier_webhook:
           fields:
@@ -428,6 +439,11 @@ ja:
               label: "ユーザーカスタムフィールド名"
         set_topic_timer:
           title: トピックタイマーを設定
+          fields:
+            type:
+              label: タイマータイプ
+            duration:
+              label: タイマー時間
       unnamed_automation: "無題の自動化"
       models:
         script:

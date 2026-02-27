@@ -75,4 +75,41 @@ RSpec.describe TagHashtagDataSource do
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).not_to include("factor")
     end
   end
+
+  context "with content_localization_enabled" do
+    before { SiteSetting.content_localization_enabled = true }
+
+    fab!(:ja_user) { Fabricate(:user, locale: "ja") }
+    let(:ja_guardian) { Guardian.new(ja_user) }
+
+    describe "#search" do
+      it "returns localized tag names" do
+        tag2.update!(locale: "en")
+        Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "要因")
+
+        I18n.with_locale(:ja) do
+          results = described_class.search(ja_guardian, "fact", 5)
+          factor_result = results.find { |r| r.id == tag2.id }
+
+          expect(factor_result).to be_present
+          expect(factor_result.text).to eq("要因")
+        end
+      end
+    end
+
+    describe "#search_without_term" do
+      it "returns localized tag names" do
+        tag2.update!(locale: "en")
+        Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "要因")
+
+        I18n.with_locale(:ja) do
+          results = described_class.search_without_term(ja_guardian, 5)
+          factor_result = results.find { |r| r.id == tag2.id }
+
+          expect(factor_result).to be_present
+          expect(factor_result.text).to eq("要因")
+        end
+      end
+    end
+  end
 end

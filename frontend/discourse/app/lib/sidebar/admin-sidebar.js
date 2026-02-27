@@ -419,7 +419,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       });
     }
 
-    if (siteSettings.experimental_form_templates) {
+    if (siteSettings.enable_form_templates) {
       this.adminNavManager.amendLinksToSection("appearance", [
         {
           name: "admin_customize_form_templates",

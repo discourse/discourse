@@ -176,6 +176,8 @@ tr_TR:
       default_llm:
         title: "Varsayılan LLM modeli"
         description: "Tüm YZ özellikleri için kullanılacak varsayılan LLM modeli. Özellik yapılandırmasında veya kişilikte herhangi bir LLM belirtilmemişse bu model kullanılır. Varsayılan bir LLM belirtilmemişse en son oluşturulan LLM modeli kullanılır."
+      llm_selector:
+        none: "Hiçbiri"
       features:
         short_title: "Özellikler"
         description: "Bunlar, sitenizdeki ziyaretçilerin kullanımına sunulan YZ özellikleridir. Bunlar, belirli kişileri ve LLM'leri kullanacak şekilde yapılandırılabilir ve gruplar tarafından erişim kontrolü sağlanabilir."
@@ -386,7 +388,6 @@ tr_TR:
         overwrite: "Üzerine yaz"
         description: "Açıklama"
         no_llm_selected: "Dil modeli seçilmedi"
-        use_parent_llm: "Kişilik dil modelini kullan"
         max_context_posts: "Maksimum bağlam gönderisi sayısı"
         max_context_posts_help: "Bir kullanıcıya yanıt verirken YZ için bağlam olarak kullanılacak maksimum gönderi sayısı. (varsayılan için boş)"
         vision_enabled: Vizyon etkin
@@ -519,8 +520,9 @@ tr_TR:
         parameter_description: "Parametre açıklaması"
         enum_value: "Numaralandırma değeri"
         add_enum_value: "Numaralandırma değeri ekle"
+        credential_not_set: "(ayarlanmamış)"
         edit: "Düzenle"
-        test: "Testi çalıştır"
+        test: "Test"
         delete: "Sil"
         saved: "Araç kaydedildi"
         confirm_delete: "Bu aracı silmek istediğinizden emin misiniz?"
@@ -528,6 +530,16 @@ tr_TR:
           title: "YZ aracını test edin"
           run: "Testi çalıştır"
           result: "Test sonucu"
+      secrets:
+        short_title: "Kimlik bilgileri"
+        name: "Ad"
+        secret: "Değer"
+        back: "Geri"
+        save: "Kaydet"
+        edit: "Düzenle"
+        delete: "Sil"
+        embedding: "Gömme"
+        tool: "Araç"
       llms:
         short_title: "LLM'ler"
         no_llms: "Henüz LLM yok"
@@ -585,8 +597,8 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-5: "Antropic'in en akıllı modeli"
-          anthropic-claude-sonnet-4-5: "Hız ve maliyetin optimum dengesi"
+          anthropic-claude-opus-4-6: "Antropic'in en akıllı modeli"
+          anthropic-claude-sonnet-4-6: "Hız ve maliyetin optimum dengesi"
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
           open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
@@ -751,12 +763,7 @@ tr_TR:
         provider_fields:
           model_name: "Model adı"
         semantic_search: "Konular (Semantik)"
-        semantic_search_loading: "YZ kullanarak daha fazla sonuç arama"
         semantic_search_results:
-          toggle: "YZ kullanılarak bulunan %{count} sonuç gösteriliyor"
-          toggle_hidden: "YZ kullanılarak bulunan %{count} sonuç gizleniyor"
-          none: "Üzgünüz, YZ aramamız eşleşen konu bulamadı"
-          new: "YZ ile yeni sonuçlar aramaya başlamak için \"ara\" seçeneğine basın"
           unavailable: "YZ sonuçları kullanılamıyor"
         semantic_search_tooltips:
           results_explanation: "Etkinleştirildiğinde ek YZ arama sonuçları aşağıya eklenir."

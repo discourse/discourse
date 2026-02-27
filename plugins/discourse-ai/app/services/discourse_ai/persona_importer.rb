@@ -120,10 +120,12 @@ module DiscourseAi
           t.name = tool_data["name"]
           t.description = tool_data["description"]
           t.parameters = tool_data["parameters"]
+          t.secret_contracts = tool_data["secret_contracts"] || []
           t.script = tool_data["script"]
           t.summary = tool_data["summary"]
           t.created_by ||= Discourse.system_user
           t.save!
+          t.prune_orphan_bindings! if overwrite
         end
 
         map[tool.tool_name] = tool.id

@@ -39,6 +39,10 @@ class UserVisit < ActiveRecord::Base
     counts_by_day_query(start_date, end_date, group_id).count
   end
 
+  def self.desktop_by_day(start_date, end_date, group_id = nil)
+    counts_by_day_query(start_date, end_date, group_id).where(mobile: false).count
+  end
+
   def self.mobile_by_day(start_date, end_date, group_id = nil)
     counts_by_day_query(start_date, end_date, group_id).where(mobile: true).count
   end

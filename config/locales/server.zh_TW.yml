@@ -1125,7 +1125,6 @@ zh_TW:
     allowed_internal_hosts: "Discourse 可以安全抓取以用於 Onebox 與其他用途的內部主機列表"
     allowed_crawler_user_agents: "使用者代理（User Agents）的網路爬蟲（Web Crawlers）將允許存取網站。警告！設置此將取消未列出的所有網路爬蟲者（Web Crawlers）"
     slow_down_crawler_rate: "如果指定了slow_down_crawler_user_agents，則此速率將適用於所有抓取工具（請求之間的延遲秒數）"
-    content_security_policy_collect_reports: "在 /csp_reports 啟用CSP違規報告蒐集"
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
@@ -1288,7 +1287,6 @@ zh_TW:
     num_flaggers_to_close_topic: "要自動終止一個主題的討論並介入時所需的最小數量的獨立標記者"
     num_hours_to_close_topic: "暫停討論話題以進行干預的小時數。"
     auto_respond_to_flag_actions: "啟用自動回覆當加入一個標籤。"
-    min_first_post_typing_time: "使用者發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，貼文將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
     auto_silence_fast_typers_max_trust_level: "自動封鎖輸入過於快速的使用者的最高信任等級"
     reviewable_claiming: "是否需要審核內容後，才能對其進行操作？"
     reviewable_default_topics: "預設值為顯示按討論話題分類的已審核內容"
@@ -1297,7 +1295,6 @@ zh_TW:
     alternative_reply_by_email_addresses: "通過郵件回覆的回覆地址模板，例如：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "電子郵件格式使用HTML而不是純文字（text）檔"
     strip_incoming_email_lines: "從每行傳入電子郵件中刪除前導、尾隨空格。"
-    disable_emails: "防止Discourse發送任何類型的電子郵件。 選擇“是”以禁用所有使用者的電子郵件。選擇“非工作人員”僅為非管理權限帳戶禁用電子郵件。"
     strip_images_from_short_emails: "郵件小於 2800 位元組時去除圖片"
     display_name_on_email_from: "在郵件的來自欄顯示暱稱"
     unsubscribe_via_email: "允許使用者在發送的郵件「退訂」來退訂郵件訂閲，「退訂」可在主題或正文中。"
@@ -1457,10 +1454,6 @@ zh_TW:
       staged_users_disabled: "您必須先啟用「暫存使用者（staged users）」，才能啟用此設定"
       reply_by_email_disabled: "在啟用此設定之前，您必須先啟用「通過電子郵件回覆」設定"
       enable_local_logins_disabled: "在啟用此設定之前，必須先啟用「啟用本地登入（local logins）」設定。"
-      min_username_length_exists: "你不能設比現有使用者名稱短的「最小使用者名稱長度」。"
-      min_username_length_range: "您不能將下限設定的高於上限。"
-      max_username_length_exists: "您不能設置比現有使用者名稱短的「最大使用者名稱長度」。"
-      max_username_length_range: "您不能將上限設定的低於下限。"
       invalid_hex_value: "顏色值必須是6位十六進制代碼（hex codes），例如：紅色，FF0000。"
       allowed_unicode_usernames:
         regex_invalid: "正則表達式無效：%{error}"
@@ -2766,8 +2759,6 @@ zh_TW:
     title: "進入安全模式"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
-  dev_mode:
-    enter: "Enter"
   wizard:
     title: "Discourse 安裝"
     step:
@@ -2892,12 +2883,8 @@ zh_TW:
         title: "是"
       approve_and_unhide:
         title: "是"
-      no_action_post:
-        title: "沒有動作"
       delete_post:
         title: "刪除貼文"
-      no_action_user:
-        title: "沒有動作"
       silence_user:
         title: "使用者靜音"
       delete_user:

@@ -18,11 +18,11 @@ module(
         <template><ChatRetentionReminder @channel={{this.channel}} /></template>
       );
 
-      assert.dom(".chat-retention-reminder").includesText(
-        i18n("chat.retention_reminders.long", {
-          count: this.siteSettings.chat_channel_retention_days,
-        })
-      );
+      assert
+        .dom(".chat-retention-reminder")
+        .includesText(
+          `retain channel messages for ${this.siteSettings.chat_channel_retention_days} days`
+        );
     });
 
     test("@type=short", async function (assert) {

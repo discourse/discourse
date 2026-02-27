@@ -28,6 +28,12 @@ hr:
             chat:
               create_message: "Izradite chat poruku na određenom kanalu."
     chat:
+      edit_category:
+        tab_title: "Čavrljanje"
+        channel: "Kanal"
+        description: "Opis"
+        actions: "Akcije"
+        settings: "Postavke"
       deleted_chat_username: izbrisao
       dates:
         yesterday: "Jučer"
@@ -39,6 +45,7 @@ hr:
       cancel: "Odustani"
       cancel_reply: "Otkaži odgovor"
       chat_channels: "Kanali"
+      pinned: "Zakvačeno"
       move_to_channel:
         title: "Premještanje poruka na kanal"
         instructions:
@@ -51,6 +58,7 @@ hr:
         edit: "Uredi"
         add: "Dodaj"
         leave_channel: "Napusti kanal"
+        notification_settings_context: "Obavijesti"
         join: "Pridružite se"
         leave: "Napustiti"
       channel_archive:

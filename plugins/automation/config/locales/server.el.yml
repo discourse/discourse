@@ -6,7 +6,21 @@
 
 el:
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(κενό)"
+    models:
+      fields:
+        required_field: Το πεδίο `%{name}` πρέπει να συμπληρωθεί στο `%{target}:%{target_name}`.
+        invalid_field: Το πεδίο του στοιχείου `%{component}` δεν είναι χρησιμοποιήσιμο στο `%{target}:%{target_name}`.
+        invalid_metadata: Τα δεδομένα για το πεδίο `%{field}` δεν είναι έγκυρα ή το στοιχείο `%{component}` είναι άγνωστο.
     triggerables:
+      post_flag_created:
+        description: Πυροδοτεί έναν αυτοματισμό όταν γίνεται αναφορά μιας ανάρτησης
+      user_badge_granted:
+        title: Παράσημο χρήστη χορηγήθηκε
+        doc: Πυροδοτεί έναν αυτοματισμό όταν χορηγείται σε έναν χρήστη ένα παράσημο.
+      user_first_logged_in:
+        doc: Πυροδοτεί έναν αυτοματισμό όταν ένας χρήστης συνδέεται για πρώτη φορά.
       api_call:
         title: Κλήση API
       category_created_edited:
@@ -19,7 +33,26 @@ el:
         title: Προσωπικό μήνυμα δημιουργήθηκε
       topic:
         title: Θέμα
+      topic_closed:
+        title: Θέμα έκλεισε
+        description: Πυροδοτεί μια δέσμη ενεργειών όταν ένα θέμα κλείνει.
     scriptables:
+      email_on_flagged_post:
+        subject: "Αναφερόμενη ανάρτηση: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Έχει γίνει αναφορά ανάρτησης
+
+          Θέμα: {{topic_title}} ({{topic_url}})
+          Ανάρτηση: {{post_url}} (#{{post_number}})
+          Είδος αναφοράς: {{flag_type}}
+          Αναφορά προς χρήστη: {{flagged_username}}
+          Αναφορά από χρήστη: {{flagger_username}}
+          Κατηγορία: {{category}}
+          Ετικέτες: {{tags}}
+
+          --------
+          Απόσπασμα ανάρτησης:
+          {{post_excerpt}}
       topic:
         title: Δημιουργήστε ένα θέμα
       flag_post_on_words:

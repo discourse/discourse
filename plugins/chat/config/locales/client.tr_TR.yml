@@ -44,6 +44,12 @@ tr_TR:
           one: "%{formatted_number} sohbet mesajı"
           other: "%{formatted_number} sohbet mesajları"
     chat:
+      edit_category:
+        tab_title: "Sohbet"
+        channel: "Kanal"
+        description: "Açıklama"
+        actions: "Eylemler"
+        settings: "Ayarlar"
       text_copied: Metin panoya kopyalandı
       link_copied: Bağlantı panoya kopyalandı
       back_to_forum: "Forum"
@@ -58,6 +64,7 @@ tr_TR:
       cancel: "İptal et"
       cancel_reply: "Yanıtı iptal et"
       chat_channels: "Kanallar"
+      pinned: "Sabitlendi"
       browse_all_channels: "Tüm kanallara göz atın"
       see_in: "Şurada bak:"
       move_to_channel:
@@ -81,6 +88,7 @@ tr_TR:
         join_channel: "Kanala katıl"
         leave_channel: "Kanaldan ayrıl"
         leave_groupchat_info: "Bu grup sohbetinden ayrıldığınızda, artık bu sohbete erişiminiz olmayacak ve bununla ilgili bildirimler almayacaksınız. Yeniden katılmak için grup sohbetinin bir üyesi tarafından yeniden davet edilmeniz gerekecek."
+        notification_settings_context: "Bildirimler"
         join: "Katıl"
         leave: "Ayrıl"
         save_label:
@@ -578,13 +586,9 @@ tr_TR:
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
       retention_reminders:
         indefinitely_short: "süresiz olarak"
-        indefinitely_long: "Sohbet ayarları, kanal mesajlarını süresiz olarak saklayacak şekilde ayarlandı."
         short:
           one: "%{count} gün"
           other: "%{count} gün"
-        long:
-          one: "Sohbet ayarları, kanal mesajlarını %{count} gün saklayacak şekilde ayarlandı."
-          other: "Sohbet ayarları, kanal mesajlarını %{count} gün saklayacak şekilde ayarlandı."
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."

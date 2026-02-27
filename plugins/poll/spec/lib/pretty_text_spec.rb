@@ -131,6 +131,40 @@ RSpec.describe PrettyText do
     expect(onebox[:preview]).to include("<a href=\"#{post.url}\">poll</a>")
   end
 
+  it "includes poll options when formatting for email" do
+    post = Fabricate(:post, raw: <<~MD)
+      A post with a poll
+
+      [poll type=regular]
+      * Tabs
+      * Spaces
+      * Whatever my cat walks on the keyboard
+      [/poll]
+    MD
+
+    html = PrettyText.format_for_email(post.cooked, post)
+    expect(html).to include("Tabs")
+    expect(html).to include("Spaces")
+    expect(html).to include("Whatever my cat walks on the keyboard")
+    expect(html).to include(I18n.t("poll.email.link_to_poll"))
+  end
+
+  it "includes poll title when formatting for email" do
+    post = Fabricate(:post, raw: <<~MD)
+      [poll]
+      # Best bug fix excuse?
+      * It works on my machine
+      * That is not a bug, it is a feature
+      [/poll]
+    MD
+
+    html = PrettyText.format_for_email(post.cooked, post)
+    expect(html).to include("Best bug fix excuse?")
+    expect(html).to include("It works on my machine")
+    expect(html).to include("That is not a bug, it is a feature")
+    expect(html).to include(I18n.t("poll.email.link_to_poll"))
+  end
+
   it "can reduce excerpts" do
     post = Fabricate(:post, raw: <<~MD)
       A post with a poll

@@ -7,7 +7,9 @@
 id:
   js:
     explorer:
+      default_query: "Asal"
       or: "atau"
+      create: "Buat"
       help:
         label: "Bantuan"
       schema:
@@ -17,7 +19,6 @@ id:
           yes: "Ya"
           no: "Tidak"
       export: "Ekspor"
-      save: "Simpan perubahan"
       edit: "Ubah"
       delete: "Hapus"
       query_groups: "Grup"

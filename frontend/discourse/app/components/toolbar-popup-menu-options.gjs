@@ -33,7 +33,7 @@ export default class ToolbarPopupmenuOptions extends Component {
   }
 
   #convertMenuOption(content) {
-    if (content.condition) {
+    if (content.condition !== false) {
       const label = this.#calculateLabel(content);
       const title = this.#calculateTitle(content);
 

@@ -6,6 +6,12 @@
 
 sr:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "u"
+        hidden: "sakriveno"
+        failed: "neuspešno"
     number:
       format:
         separator: ","
@@ -323,6 +329,9 @@ sr:
       title: "Novi i Nepročitane teme"
       pill: "Predloženo"
       pm_title: "Predložene poruke"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Nazad"
     about:
       edit: "Izmeni ovu stranu"
       simple_title: "O nama"
@@ -574,18 +583,11 @@ sr:
       in_reply_to: "odgovor na"
       filtered_flagged_by: "Markirano od"
       unknown:
-        title:
-          one: "Imate na čekanju stvari za pregled od isključenog dodatka:"
-          few: "Imate stvari na čekanju za pregled od isključenih dodataka:"
-          other: "Imate stvari na čekanju za pregled od isključenih dodataka:"
         instruction: "Ne mogu se pravilno prikazati dok se ne uključi relevantni dodatak. Molimo da uključite dodatak i osvežite stranu. Alternativno, možete ih ignorisati. <a href='%{url}' target='_blank'>Saznajte više...</a>"
         ignore_all: "Ignoriši sve"
         enable_plugins: "Uključi dodatke"
-        delete_confirm: "Да ли сте сигурни да желите да избришете све рецензије направљене од стране онемогућених додатака?"
-        ignore_success: "Све рецензије направљене од стране isključenih додатака су избрисане."
       explain:
         why: "objasnite žašto je ova stavka završila u redu čekanja"
-        title: "Pregledno bodovanje"
         formula: "Formula"
         subtotal: "Međuzbir"
         total: "Ukupno"
@@ -599,10 +601,8 @@ sr:
           title: "Korisnici čiji markeri su bili prihvatani ranije dobijaju bonus."
         trust_level_bonus:
           name: "nivo poverenja"
-          title: "Stakve koje su kreirali korisnici sa visokim nivoom poverenja imaju viši rezultat."
         type_bonus:
           name: "Bonus za tip"
-          title: "Određenim tipovima stvari koji se proveravaju može se dodati bonus od osoblja da bi imale veći prioritet."
       revise_and_reject_post:
         title: "Promeniti"
         reason: "Razlog"
@@ -611,7 +611,6 @@ sr:
         custom_reason: "Dajte jasan opis razloga"
         other_reason: "Ostalo..."
         optional: "opciono"
-      stale_help: "Ovu proveru je uradio <b>%{username}</b>."
       claim_help:
         optional: "Možete tražiti prava da sprečite ostale da ga pregledaju"
         required: "Morate prihvatiti stavke pre nego što ih možete pregledati."
@@ -1877,6 +1876,10 @@ sr:
           one: "Odabrali ste <b>%{count}</b> temu."
           few: "Odabrali ste <b>%{count}</b> tema."
           other: "Odabrali ste <b>%{count}</b> tema."
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} tema"
+          other: "%{count} tema"
       none:
         unread: "Nemate nepročitanih tema."
         new: "Nemate novih tema."
@@ -2445,6 +2448,15 @@ sr:
       selector_remove_filter: "uklonite filter"
       choose_for_topic: "opcione oznake"
       add_synonyms: "Dodaj"
+      description: "Opis"
+      settings:
+        title: "Podešavanje"
+        general: "Opšti"
+        back: "Nazad"
+        name: "Ime foruma"
+      localization:
+        name: "Ime foruma"
+        description: "Opis"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
       upload_instructions: "Jedan po liniji, opciono sa oznakom grupe u formatu 'tag_name, tag_group'."
@@ -2598,6 +2610,10 @@ sr:
         remove_muted_tags_from_latest:
           always: "uvek"
           never: "nikada"
+      reports:
+        group_members: "Članovi"
+        group_security: "Sigurnost"
+        group_other: "Ostalo"
       config_sections:
         community:
           title: "Zajednica"
@@ -2612,7 +2628,6 @@ sr:
         enabled: "Omogućeno"
         enabled_for_options:
           everyone: "Svi"
-          staff: "Samo članovi osoblja"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -2675,6 +2690,10 @@ sr:
           sub_pages:
             logs:
               title: "Logovi"
+        reports:
+          sub_pages:
+            settings:
+              title: "Podešavanje"
         badges:
           title: "Značke"
         emoji:
@@ -2782,6 +2801,7 @@ sr:
         save: "Sačuvaj"
         cancel: "Odustani"
         continue: "Nastavi"
+        copy_key: "Kopija"
         revoke: "Povuci"
       api:
         generate_master: "Generiši glavni API ključ"

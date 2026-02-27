@@ -6,6 +6,12 @@
 
 sk:
   js:
+    blocks:
+      ghost:
+        status: "Stav"
+        in_location: "v"
+        hidden: "skryté"
+        failed: "nepodarilo sa"
     number:
       format:
         separator: ","
@@ -364,6 +370,12 @@ sk:
       title: "Nové a neprečítané témy"
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Späť"
+      spread_the_word:
+        action: "Kopírovať odkaz"
+        copied_to_clipboard: "Odkaz bol skopírovaný do schránky!"
     about:
       edit: "Upraviť túto stránku"
       simple_title: "O fóre"
@@ -644,21 +656,13 @@ sk:
       in_reply_to: "v odpovedi na"
       filtered_flagged_by: "Označené používateľom"
       unknown:
-        title:
-          one: "Máte nespracované kontroly zo zakázaného doplnku:"
-          few: "Máte nespracované kontroly zo zakázaných doplnkov:"
-          many: "Máte nespracované kontroly zo zakázaných doplnkov:"
-          other: "Máte nespracované kontroly zo zakázaných doplnkov:"
         instruction: "Nie je možné ich správne zobraziť, kým nepovolíte príslušný zásuvný modul. Povoľte zásuvný modul a obnovte stránku. Prípadne ich môžete ignorovať. <a href='%{url}' target='_blank'>Ďalšie informácie...</a>"
         reviewable_unknown_source: "%{reviewableType} (neznámy doplnok)"
         reviewable_known_source: "%{reviewableType} (z doplnku '%{pluginName}')"
         ignore_all: "Ignorovať všetko"
         enable_plugins: "Povoliť doplnky"
-        delete_confirm: "Ste si istí, že chcete odstrániť všetky recenzie vytvorené vypnutými zásuvnými modulmi?"
-        ignore_success: "Všetky recenzie vytvorené vypnutými zásuvnými modulmi boli odstránené."
       explain:
         why: "vysvetlite, prečo sa táto položka skončila vo fronte"
-        title: "Kontrolovateľné bodovanie"
         formula: "Vzorec"
         subtotal: "Medzisúčet"
         total: "Celkovo"
@@ -672,10 +676,8 @@ sk:
           title: "Používatelia, ktorých vlajky boli historicky dohodnuté, dostanú bonus."
         trust_level_bonus:
           name: "stupne dôvery"
-          title: "Hodnotiteľné položky vytvorené používateľmi s vyššou úrovňou dôvery majú vyššie skóre."
         type_bonus:
           name: "typ bonusu"
-          title: "Určitým kontrolovateľným typom môže personál prideliť bonus, aby mali vyššiu prioritu."
       revise_and_reject_post:
         title: "Revízia"
         reason: "Dôvod"
@@ -684,7 +686,6 @@ sk:
         custom_reason: "Jasne opíšte dôvod"
         other_reason: "Iné..."
         optional: "nepovinné"
-      stale_help: "Toto preskúmateľné bolo vyriešené <b>%{username}</b>."
       claim_help:
         optional: "Túto položku môžete uplatniť, aby ste zabránili ostatným v jej preskúmaní."
         required: "Predtým, ako ich budete môcť skontrolovať, musíte si uplatniť položky."
@@ -3322,8 +3323,6 @@ sk:
         max_views:
           placeholder: maximum
           aria_label: filtrovať podľa maximálneho počtu zobrazení
-        additional_options:
-          label: "Filtrovať podľa počtu príspevkov a zobrazení tém"
     hamburger_menu: "Navigačné menu"
     new_item: "nový"
     go_back: "späť"
@@ -3492,6 +3491,11 @@ sk:
           other: "Pokrok: <strong>%{count}</strong> témy"
         performing: "Vykonávajú sa hromadné operácie, čakajte…"
         completed: "Hromadné operácie boli úspešne dokončené!"
+        error_topic_count:
+          one: "%{count} téma"
+          few: "%{count} témy"
+          many: "%{count} tém"
+          other: "%{count} tém"
       none:
         unread: "Nemáte neprečítanú tému"
         unseen: "Nemáte žiadne neprečítané témy."
@@ -4432,10 +4436,8 @@ sk:
         reply: "Odpovedať"
         create: "Vytvoriť:"
         no_groups_selected: "Žiadnym skupinám nebolo udelené oprávnenie; táto kategória bude viditeľná iba pre personál."
-        everyone_full_access: 'Táto kategória je verejná, každý ju môže vidieť, odpovedať na ňu a vytvárať príspevky. Ak chcete obmedziť oprávnenia, odstráňte jedno alebo viacero oprávnení udelených skupine "každý".'
         toggle_reply: "Prepnite povolenie Odpovedať"
         toggle_full: "Prepnúť Vytvoriť povolenie"
-        inherited: 'Toto povolenie sa zdedí od „všetkých“'
       uncategorized_security_warning: "Táto kategória je špeciálna. Je určená na uchovávanie tém, ktoré nemajú žiadnu kategóriu; nemôže mať bezpečnostné nastavenia."
       uncategorized_general_warning: 'Táto kategória je špeciálna. Používa sa ako predvolená kategória pre nové témy, ktoré nemajú zvolenú kategóriu. Ak chcete zabrániť tomuto správaniu a vynútiť výber kategórie, <a href="%{settingLink}">vypnite toto nastavenie tu</a>. Ak chcete zmeniť názov alebo popis, prejdite do časti <a href="%{customizeLink}">Prispôsobiť / Obsah textu</a>.'
       pending_permission_change_alert: "Do tejto kategórie ste nepridali %{group} ; kliknutím na toto tlačidlo ich pridáte."
@@ -5046,7 +5048,20 @@ sk:
         many: "Jeho %{count} synoným bude tiež vymazaných."
         other: "Jeho %{count} synonymá budú tiež odstránené."
       edit_tag: "Úprava názvu a popisu značky"
-      description: "Popis (max. 1000 znakov)"
+      description: "Popis"
+      settings:
+        title: "Nastavení"
+        general: "Všeobecné"
+        localizations: "Lokalizácie"
+        back: "Späť"
+        name: "Meno"
+        slug: "Slug"
+        name_placeholder: "Názov značky"
+        synonyms_subtitle: "Ak sa použijú nasledujúce značky, nahradia sa týmito značkami %{name}"
+      localization:
+        locale: "Miestne nastavenie"
+        name: "Meno"
+        description: "Popis"
       sort_by: "Zoradiť podľa:"
       sort_by_count: "počtu"
       sort_by_name: "mena"
@@ -5577,9 +5592,13 @@ sk:
           never: "nikdy"
       reports:
         title: "Zoznam dostupných prehľadov"
-        meta_doc: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
         sidebar_title: "Hlásenia"
         back: "Späť na všetky správy"
+        group_traffic: "Vyťaženie"
+        group_members: "Členovia"
+        group_moderation: "Moderovanie"
+        group_security: "Bezpečnosť"
+        group_other: "Ostatné"
       config_sections:
         account:
           title: "Účet"
@@ -5604,7 +5623,6 @@ sk:
         preview: "Náhľad"
         enabled_for_options:
           everyone: "Každý"
-          staff: "Len pre zamestnancov"
         statuses:
           experimental: "Experimentálne"
         impact_roles:
@@ -5677,7 +5695,6 @@ sk:
               help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
             large_icon:
               title: "Štvorcová ikona"
-              description: "V hornej časti administrácie sa zobrazuje štvorcová verzia loga, ktorá je zároveň logom aplikácie na domovskej obrazovke mobilného telefónu."
               help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
             square_icon_dark:
               required: "Používanie inej štvorcovej ikony pre tmavý režim?"
@@ -5826,7 +5843,7 @@ sk:
           header_description: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
           sub_pages:
             settings:
-              title: "Nastavenia palubnej dosky"
+              title: "Nastavení"
         badges:
           title: "Odznaky"
           header_description: "Odznaky odmeňujú používateľov za ich aktivity, príspevky a úspechy s cieľom uznať, potvrdiť a podporiť pozitívne správanie a angažovanosť v rámci komunity"
@@ -5978,32 +5995,6 @@ sk:
           few: '%{count} výsledokov pre "%{filter}"'
           many: '%{count} výsledokov pre "%{filter}"'
           other: '%{count} výsledky pre "%{filter}"'
-        result_types:
-          page:
-            one: "Stránka"
-            few: "Stránok"
-            many: "Stránok"
-            other: "Stránky"
-          report:
-            one: "Hlásenie"
-            few: "Hlásení"
-            many: "Hlásení"
-            other: "Hlásenia"
-          setting:
-            one: "Nastavenie"
-            few: "Nastavení"
-            many: "Nastavení"
-            other: "Nastavenia"
-          theme:
-            one: "Téma"
-            few: "Témy"
-            many: "Témy"
-            other: "Témy"
-          component:
-            one: "Komponent"
-            few: "Komponenty"
-            many: "Komponenty"
-            other: "Komponenty"
       new_features:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
@@ -6027,15 +6018,6 @@ sk:
           title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           learn_more: "Zistiť viac..."
-          experimental: "Experimentálne"
-          only_experiments: "Zobraziť len experimentálne funkcie"
-          experiment_enabled: "Povolili ste experimentálnu funkciu."
-          experiment_disabled: "Experimentálnu funkciu ste zakázali."
-          experiment_tooltip:
-            title_enabled: "Vypnutie experimentálnej funkcie"
-            content_enabled: "Zmenou tejto funkcie zakážete túto funkciu pre všetkých používateľov."
-          feature_tooltip:
-            content_enabled: "Zmenou tejto funkcie zakážete túto funkciu pre všetkých používateľov."
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -6231,6 +6213,7 @@ sk:
         save: "Uložiť"
         cancel: "Zrušiť"
         continue: "Pokračovať"
+        copy_key: "Kopírovať"
         back: "Späť na kľúče API"
         revoke: "Zrušiť"
         undo_revoke: "Zrušenie odvolania"
@@ -8065,6 +8048,7 @@ sk:
           disabled: "Nedá sa vyhľadať"
         field_types:
           text: "Text"
+          date: "Dátum"
           confirm: "Potvrdenie"
           dropdown: "Zoznam"
           multiselect: "Viacnásobný výber"

@@ -39,10 +39,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
   @action
   setContactGroup(groupIds, { set }) {
     this.contactGroupId = groupIds[0];
-    set(
-      "contactGroupName",
-      this.site.groups.find((group) => group.id === groupIds[0])?.name
-    );
+    set("contactGroupName", this.site.groupsById[groupIds[0]]?.name);
   }
 
   @action

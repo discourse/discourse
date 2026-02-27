@@ -51,6 +51,34 @@ RSpec.describe DiscourseAi::Automation::AiToolAction do
     expect(result).to be_nil
   end
 
+  context "with stalled_topic trigger" do
+    let(:automation) { Fabricate(:automation, script: "ai_tool_action", enabled: true) }
+
+    before do
+      enable_current_plugin
+
+      automation.fields.create!(
+        component: "choices",
+        name: "tool",
+        metadata: {
+          value: context_tool.id,
+        },
+        target: "script",
+      )
+    end
+
+    it "resolves post from topic context" do
+      automation.running_in_background!
+      automation.trigger!(
+        "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
+        "topic" => topic,
+        "placeholders" => {
+          "topic_url" => topic.url,
+        },
+      )
+    end
+  end
+
   context "with LLM configured" do
     fab!(:llm_tool) do
       AiTool.create!(
