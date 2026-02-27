@@ -141,6 +141,16 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(model.display_name).to eq(valid_attrs[:display_name])
       end
 
+      it "stores cache_write_cost" do
+        attrs = valid_attrs.merge(cache_write_cost: 0.25)
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(201)
+        expect(LlmModel.last.cache_write_cost).to eq(0.25)
+        expect(response.parsed_body["ai_llm"]["cache_write_cost"]).to eq(0.25)
+      end
+
       it "stores allowed_attachment_types" do
         attrs = valid_attrs.merge(allowed_attachment_types: %w[pdf docx])
 
