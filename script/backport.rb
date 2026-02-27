@@ -3,7 +3,7 @@
 require "json"
 require "open3"
 
-RunResult = Struct.new(:success, :stdout, :stderr, keyword_init: true)
+RunResult = Data.define(:success, :stdout, :stderr)
 
 def run(*cmd, allow_failure: false)
   puts "Running: #{cmd.join(" ")}"
