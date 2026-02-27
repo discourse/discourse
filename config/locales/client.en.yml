@@ -480,7 +480,6 @@ en:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
 
-
       spread_the_word:
         title: "Spread the Word!"
         description: "Share a link with everyone in your network"
@@ -7442,7 +7441,8 @@ en:
           version: "Version:"
           authors: "Authored by:"
           creator: "Created by:"
-          source_url: "Source"
+          branch: "Branch:"
+          source_url: "Source:"
           enable: "Enable"
           disable: "Disable"
           disabled: "This component has been disabled."
