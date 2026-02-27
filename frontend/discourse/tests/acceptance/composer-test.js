@@ -610,6 +610,52 @@ acceptance(`Composer`, function (needs) {
       .includesText("This is the new text for the post", "updates the post");
   });
 
+  test("Editing only topic title does not call post save", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.show-more-actions");
+    await click(".topic-post[data-post-number='1'] button.edit");
+
+    pretender.handledRequests.length = 0;
+
+    await fillIn("#reply-title", "Updated title only");
+    await click("#reply-control button.create");
+
+    assert.dom(".d-editor-input").doesNotExist("closes the composer");
+
+    const postSaveRequest = pretender.handledRequests.find(
+      (r) => r.method === "PUT" && /\/posts\/\d+$/.test(r.url)
+    );
+    assert.notOk(
+      postSaveRequest,
+      "post.save() is not called when only the title changes"
+    );
+  });
+
+  test("Editing both title and content calls post save", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.show-more-actions");
+    await click(".topic-post[data-post-number='1'] button.edit");
+
+    pretender.handledRequests.length = 0;
+
+    await fillIn("#reply-title", "This is an updated topic title");
+    await fillIn(
+      ".d-editor-input",
+      "This is updated post content with enough characters"
+    );
+    await click("#reply-control button.create");
+
+    assert.dom(".d-editor-input").doesNotExist("closes the composer");
+
+    const postSaveRequest = pretender.handledRequests.find(
+      (r) => r.method === "PUT" && /\/posts\/\d+$/.test(r.url)
+    );
+    assert.ok(
+      postSaveRequest,
+      "post.save() is called when post content changes"
+    );
+  });
+
   test("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post button.show-more-actions");

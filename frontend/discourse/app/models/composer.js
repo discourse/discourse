@@ -1111,6 +1111,9 @@ export default class Composer extends RestModel {
           );
           topicProps.categoryId = topic.get("category.id");
         }
+        if (opts.editReason) {
+          topicProps.edit_reason = opts.editReason;
+        }
         promise = promise.then(() => Topic.update(topic, topicProps));
       } else if (topic.details.can_edit_tags) {
         promise = promise.then(() => topic.updateTags(this.tags));
@@ -1142,8 +1145,16 @@ export default class Composer extends RestModel {
     const cooked = this.getCookedHtml();
     post.setProperties({ cooked, staged: true });
 
+    // skip post save when only topic metadata changed (title/tags/category),
+    // since Topic.update() already handled that above
+    const skipPostSave = !this.replyDirty && post.post_number === 1;
+
     return promise
       .then(() => {
+        if (skipPostSave) {
+          this.clearState();
+          return { target: post, responseJson: { post } };
+        }
         return post.save(props).then((result) => {
           this.clearState();
           return result;
