@@ -33,30 +33,16 @@ class UserNotificationTotalSerializer < ApplicationSerializer
   end
 
   def group_inboxes
-    group_inbox_data =
-      Notification
-        .unread
-        .where(
-          user_id: scope.user.id,
-          notification_type: Notification.types[:group_message_summary],
-        )
-        .pluck(:data)
+    notifications =
+      object.notification_query.list(
+        filter: :unread,
+        types: [Notification.types[:group_message_summary]],
+      )
 
-    results = []
-
-    return results if group_inbox_data.blank?
-
-    group_inbox_data.map do |json|
-      data = JSON.parse(json, symbolize_names: true)
-
-      results << {
-        group_id: data[:group_id],
-        group_name: data[:group_name],
-        count: data[:inbox_count],
-      }
+    notifications.filter_map do |n|
+      data = n.data_hash
+      { group_id: data[:group_id], group_name: data[:group_name], count: data[:inbox_count] }
     end
-
-    results
   end
 
   def new_personal_messages_notifications_count
