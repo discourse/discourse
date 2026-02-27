@@ -15,8 +15,14 @@
 
 DiscourseEvent.on(:upcoming_change_enabled) do |setting_name|
   # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
+  if setting_name == "simple_email_subject"
+    SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: true })
+  end
 end
 
 DiscourseEvent.on(:upcoming_change_disabled) do |setting_name|
   # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
+  if setting_name == "simple_email_subject"
+    SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: false })
+  end
 end

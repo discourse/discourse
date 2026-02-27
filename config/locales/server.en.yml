@@ -1842,6 +1842,7 @@ en:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
     enforce_second_factor_on_external_auth: "Require users to use two-factor authentication (2FA) at all times. When enabled, this will prevent users logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the `enforce_second_factor` setting."
@@ -3304,6 +3305,7 @@ en:
   download_backup_mailer:
     title: "Download Backup Mailer"
     subject_template: "[%{email_prefix}] Site Backup Download"
+    subject_template_improved: "%{email_prefix}: Site backup download"
     text_body_template: |
       Here's the [site backup download](%{backup_file_path}) you requested.
 
@@ -3316,6 +3318,7 @@ en:
   admin_confirmation_mailer:
     title: "Admin Confirmation"
     subject_template: "[%{email_prefix}] Confirm new Admin Account"
+    subject_template_improved: "%{email_prefix}: Confirm new admin account"
     text_body_template: |
       Please confirm that you'd like to add **%{target_username} (%{target_email})** as an administrator for your forum.
 
@@ -3324,6 +3327,7 @@ en:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Email Deliverability Test"
+    subject_template_improved: "%{email_prefix}: Email deliverability test"
     text_body_template: |
       This is a test email from
 
@@ -3343,6 +3347,7 @@ en:
   new_version_mailer:
     title: "New Version Mailer"
     subject_template: "[%{email_prefix}] New Discourse version, update available"
+    subject_template_improved: "%{email_prefix}: New Discourse version, update available"
     text_body_template: |
       Hooray, a new version of [Discourse](https://www.discourse.org) is available!
 
@@ -3358,6 +3363,7 @@ en:
   new_version_mailer_with_notes:
     title: "New Version Mailer with Notes"
     subject_template: "[%{email_prefix}] update available"
+    subject_template_improved: "%{email_prefix}: Update available"
     text_body_template: |
       Hooray, a new version of [Discourse](https://www.discourse.org) is available!
 
@@ -3742,6 +3748,7 @@ en:
     email_reject_insufficient_trust_level:
       title: "Email Reject insufficient Trust Level"
       subject_template: "[%{email_prefix}] Email issue -- Insufficient Trust Level"
+      subject_template_improved: "%{email_prefix}: Email issue -- insufficient trust level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3750,6 +3757,7 @@ en:
     email_reject_user_not_found:
       title: "Email Reject User Not Found"
       subject_template: "[%{email_prefix}] Email issue -- User Not Found"
+      subject_template_improved: "%{email_prefix}: Email issue -- user not found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3758,6 +3766,7 @@ en:
     email_reject_screened_email:
       title: "Email Reject Screened Email"
       subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      subject_template_improved: "%{email_prefix}: Email issue -- blocked email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3765,7 +3774,8 @@ en:
 
     email_reject_not_allowed_email:
       title: "Email Reject Not Allowed Email"
-      subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      subject_template: "[%{email_prefix}] Email issue -- blocked email"
+      subject_template_improved: "%{email_prefix}: Email issue -- blocked email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3774,6 +3784,7 @@ en:
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
       subject_template: "[%{email_prefix}] Email issue -- Inactive User"
+      subject_template_improved: "%{email_prefix}: Email issue -- inactive user"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3782,6 +3793,7 @@ en:
     email_reject_silenced_user:
       title: "Email Reject Silenced User"
       subject_template: "[%{email_prefix}] Email issue -- Silenced User"
+      subject_template_improved: "%{email_prefix}: Email issue -- silenced user"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3790,6 +3802,7 @@ en:
     email_reject_reply_user_not_matching:
       title: "Email Reject User Not Matching"
       subject_template: "[%{email_prefix}] Email issue -- Unexpected Reply Address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unexpected reply address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3798,6 +3811,7 @@ en:
     email_reject_empty:
       title: "Email Reject Empty"
       subject_template: "[%{email_prefix}] Email issue -- No Content"
+      subject_template_improved: "%{email_prefix}: Email issue -- no content"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3808,6 +3822,7 @@ en:
     email_reject_parsing:
       title: "Email Reject Parsing"
       subject_template: "[%{email_prefix}] Email issue -- Content Unrecognized"
+      subject_template_improved: "%{email_prefix}: Email issue -- content unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3816,6 +3831,7 @@ en:
     email_reject_invalid_access:
       title: "Email Reject Invalid Access"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3824,6 +3840,7 @@ en:
     email_reject_strangers_not_allowed:
       title: "Email Reject Strangers Not Allowed"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3832,6 +3849,7 @@ en:
     email_reject_invalid_post:
       title: "Email Reject Invalid Post"
       subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      subject_template_improved: "%{email_prefix}: Email issue -- posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3840,6 +3858,7 @@ en:
     email_reject_invalid_post_specified:
       title: "Email Reject Invalid Post Specified"
       subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      subject_template_improved: "%{email_prefix}: Email issue -- posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3853,6 +3872,7 @@ en:
     email_reject_post_too_short:
       title: "Email Reject Post Too Short"
       subject_template: "[%{email_prefix}] Email issue -- Post too short"
+      subject_template_improved: "%{email_prefix}: Email issue -- post too short"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3861,6 +3881,7 @@ en:
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid post action"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3869,6 +3890,7 @@ en:
     email_reject_reply_key:
       title: "Email Reject Reply Key"
       subject_template: "[%{email_prefix}] Email issue -- Unknown Reply Key"
+      subject_template_improved: "%{email_prefix}: Email issue -- unknown reply key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3877,6 +3899,7 @@ en:
     email_reject_bad_destination_address:
       title: "Email Reject Bad Destination Address"
       subject_template: "[%{email_prefix}] Email issue -- Unknown To: Address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unknown to: address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3893,6 +3916,7 @@ en:
     email_reject_old_destination:
       title: "Email Reject Old Destination"
       subject_template: "[%{email_prefix}] Email issue -- You are trying to reply to an old notification"
+      subject_template_improved: "%{email_prefix}: Email issue -- you are trying to reply to an old notification"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3901,6 +3925,7 @@ en:
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
       subject_template: "[%{email_prefix}] Email issue -- Topic Not Found"
+      subject_template_improved: "%{email_prefix}: Email issue -- topic not found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3909,6 +3934,7 @@ en:
     email_reject_topic_closed:
       title: "Email Reject Topic Closed"
       subject_template: "[%{email_prefix}] Email issue -- Topic Closed"
+      subject_template_improved: "%{email_prefix}: Email issue -- topic closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3917,6 +3943,7 @@ en:
     email_reject_auto_generated:
       title: "Email Reject Auto Generated"
       subject_template: "[%{email_prefix}] Email issue -- Auto Generated Reply"
+      subject_template_improved: "%{email_prefix}: Email issue -- auto generated reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3925,6 +3952,7 @@ en:
     email_reject_unrecognized_error:
       title: "Email Reject Unrecognized Error"
       subject_template: "[%{email_prefix}] Email issue -- Unrecognized Error"
+      subject_template_improved: "%{email_prefix}: Email issue -- unrecognized error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3933,6 +3961,7 @@ en:
     email_reject_attachment:
       title: "Email Attachment Rejected"
       subject_template: "[%{email_prefix}] Email issue -- Attachment Rejected"
+      subject_template_improved: "%{email_prefix}: Email issue -- attachment rejected"
       text_body_template: |
         Unfortunately some attachments in your email message to %{destination} (titled %{former_title}) were rejected.
 
@@ -3944,6 +3973,7 @@ en:
     email_reject_reply_not_allowed:
       title: "Email Reject Reply Not Allowed"
       subject_template: "[%{email_prefix}] Email issue -- Reply Not Allowed"
+      subject_template_improved: "%{email_prefix}: Email issue -- reply not allowed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3951,7 +3981,8 @@ en:
 
     email_reject_reply_to_digest:
       title: "Email Reject Reply To Summary"
-      subject_template: "[%{email_prefix}] Email issue -- Reply to Summary"
+      subject_template: "[%{email_prefix}] Email issue -- Reply To Summary"
+      subject_template_improved: "%{email_prefix}: Email issue -- reply to summary"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3962,6 +3993,7 @@ en:
     email_reject_too_many_recipients:
       title: "Email Reject Too Many Recipients"
       subject_template: "[%{email_prefix}] Email issue -- Too Many Recipients"
+      subject_template_improved: "%{email_prefix}: Email issue -- too many recipients"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3972,6 +4004,7 @@ en:
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
+      subject_template_improved: "%{email_prefix}: Email issue -- POP authentication error"
       text_body_template: |
         Unfortunately, there was an authentication error while polling mails from the POP server.
 
@@ -4109,7 +4142,7 @@ en:
 
     new_user_of_the_month:
       title: "You're a New User of the Month!"
-      subject_template: "You're a New User of the Month!"
+      subject_template: "You're a new user of the month!"
       text_body_template: |
         Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
@@ -4224,6 +4257,7 @@ en:
     user_invited_to_private_message_pm_group:
       title: "User Invited Group to PM"
       subject_template: "[%{email_prefix}] %{username} invited @%{group_name} to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited @%{group_name} to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4234,6 +4268,7 @@ en:
     user_invited_to_private_message_pm:
       title: "User Invited to PM"
       subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4244,6 +4279,7 @@ en:
     user_invited_to_private_message_pm_staged:
       title: "User Invited to PM Staged"
       subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4254,6 +4290,7 @@ en:
     user_invited_to_topic:
       title: "User Invited to Topic"
       subject_template: "[%{email_prefix}] %{username} invited you to '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4265,6 +4302,7 @@ en:
       title: "User Replied"
       preview: "Someone replied to your post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4277,6 +4315,7 @@ en:
     user_replied_pm:
       title: "User Replied PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4290,6 +4329,7 @@ en:
       title: "User Quoted"
       preview: "Someone quoted you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4303,6 +4343,7 @@ en:
       title: "User Linked"
       preview: "Post linked in another topic."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4316,6 +4357,7 @@ en:
       title: "User Mentioned"
       preview: "Someone mentioned you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4328,6 +4370,7 @@ en:
     user_mentioned_pm:
       title: "User Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4340,6 +4383,7 @@ en:
     user_group_mentioned:
       title: "User Group Mentioned"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4352,6 +4396,7 @@ en:
     user_group_mentioned_pm:
       title: "User Group Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4364,6 +4409,7 @@ en:
     user_group_mentioned_pm_group:
       title: "User Group Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4377,6 +4423,7 @@ en:
       title: "User Posted"
       preview: "Someone replied to a topic you are Watching."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4389,6 +4436,7 @@ en:
     user_watching_category_or_tag:
       title: "User Watching Category or Tag"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4401,6 +4449,7 @@ en:
     user_watching_first_post:
       title: "User Watching First Post"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4414,6 +4463,7 @@ en:
       title: "User Posted PM"
       preview: "Someone sent you a PM."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4433,6 +4483,7 @@ en:
     account_suspended:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
+      subject_template_improved: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum until %{suspended_till}.
 
@@ -4441,6 +4492,7 @@ en:
     account_suspended_forever:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
+      subject_template_improved: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum.
 
@@ -4449,6 +4501,7 @@ en:
     account_silenced:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
+      subject_template_improved: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
 
@@ -4457,6 +4510,7 @@ en:
     account_silenced_forever:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
+      subject_template_improved: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum.
 
@@ -4465,6 +4519,7 @@ en:
     account_deleted:
       title: "Account Deleted"
       subject_template: "[%{email_prefix}] Your account has been deleted"
+      subject_template_improved: "Your account has been deleted"
       text_body_template: |
         Hello,
 
@@ -4477,6 +4532,7 @@ en:
     account_exists:
       title: "Account already exists"
       subject_template: "[%{email_prefix}] Account already exists"
+      subject_template_improved: "Account already exists"
       text_body_template: |
         You just tried to create an account at %{site_name}, or tried to change the email of an account to %{email}. However, an account already exists for %{email}.
 
@@ -4489,6 +4545,7 @@ en:
     account_second_factor_disabled:
       title: "Two-Factor Authentication disabled"
       subject_template: "[%{email_prefix}] Two-Factor Authentication disabled"
+      subject_template_improved: "Two-Factor Authentication disabled"
       text_body_template: |
         Two-factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
@@ -4509,6 +4566,7 @@ en:
       popular_posts: "Popular Posts"
       more_new: "New for you"
       subject_template: "[%{email_prefix}] Summary"
+      subject_template_improved: "Summary"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
@@ -4541,6 +4599,7 @@ en:
       title: "Forgot Password"
       preview: "Reset your password."
       subject_template: "[%{email_prefix}] Password reset"
+      subject_template_improved: "Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
@@ -4553,6 +4612,7 @@ en:
       title: "Log in via link"
       preview: "Log in via link."
       subject_template: "[%{email_prefix}] Log in via link"
+      subject_template_improved: "Log in via link"
       text_body_template: |
         Here's your link to log in at [%{site_name}](%{base_url}).
 
@@ -4564,7 +4624,8 @@ en:
     set_password:
       title: "Set Password"
       preview: "Set account password."
-      subject_template: "[%{email_prefix}] Set Password"
+      subject_template: "[%{email_prefix}] Set password"
+      subject_template_improved: "Set password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -4577,6 +4638,7 @@ en:
       title: "Admin Login"
       preview: "Admin login requested."
       subject_template: "[%{email_prefix}] Login"
+      subject_template_improved: "Login"
       text_body_template: |
         Somebody asked to log in to your account on [%{site_name}](%{base_url}).
 
@@ -4588,7 +4650,8 @@ en:
     account_created:
       title: "Account Created"
       preview: "New account created for you."
-      subject_template: "[%{email_prefix}] Your New Account"
+      subject_template: "[%{email_prefix}] Your new account"
+      subject_template_improved: "Your new account"
       text_body_template: |
         A new account was created for you at %{site_name}
 
@@ -4598,6 +4661,7 @@ en:
     confirm_new_email:
       title: "Confirm New Email"
       subject_template: "[%{email_prefix}] Confirm your new email address"
+      subject_template_improved: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4608,6 +4672,7 @@ en:
     confirm_new_email_via_admin:
       title: "Confirm New Email"
       subject_template: "[%{email_prefix}] Confirm your new email address"
+      subject_template_improved: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4618,6 +4683,7 @@ en:
     confirm_old_email:
       title: "Confirm Old Email"
       subject_template: "[%{email_prefix}] Confirm your current email address"
+      subject_template_improved: "Confirm your current email address"
       text_body_template: |
         Before we can change your email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4630,6 +4696,7 @@ en:
     confirm_old_email_add:
       title: "Confirm Old Email (Add)"
       subject_template: "[%{email_prefix}] Confirm your current email address"
+      subject_template_improved: "Confirm your current email address"
       text_body_template: |
         Before we can add a new email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4643,6 +4710,7 @@ en:
       title: "Notify Old Email"
       preview: "Email address updated."
       subject_template: "[%{email_prefix}] Your email address has been changed"
+      subject_template_improved: "Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
         %{site_name} has been changed. If this was done in error, please contact
@@ -4655,6 +4723,7 @@ en:
     notify_old_email_add:
       title: "Notify Old Email (Add)"
       subject_template: "[%{email_prefix}] A new email address has been added"
+      subject_template_improved: "A new email address has been added"
       text_body_template: |
         This is an automated message to let you know that an email address for
         %{site_name} has been added. If this was done in error, please contact
@@ -4696,6 +4765,7 @@ en:
       title: "Signup"
       preview: "Confirm your account."
       subject_template: "[%{email_prefix}] Confirm your new account"
+      subject_template_improved: "Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -4707,6 +4777,7 @@ en:
     activation_reminder:
       title: "Activation Reminder"
       subject_template: "[%{email_prefix}] Reminder to confirm your account"
+      subject_template_improved: "Reminder to confirm your account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -4720,7 +4791,8 @@ en:
     suspicious_login:
       title: "New Login Alert"
       preview: "Verify your device."
-      subject_template: "[%{site_name}] New Login from %{location}"
+      subject_template: "[%{site_name}] New login from %{location}"
+      subject_template_improved: "%{site_name}: New login from %{location}"
       text_body_template: |
         Hello,
 
@@ -4737,6 +4809,7 @@ en:
     post_approved:
       title: "Your post was approved"
       subject_template: "[%{site_name}] Your post was approved"
+      subject_template_improved: "%{site_name}: Your post was approved"
       text_body_template: |
         Hello,
 

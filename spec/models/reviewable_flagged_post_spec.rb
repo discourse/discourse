@@ -261,11 +261,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "sends email when deleting a spammer" do
+      SiteSetting.simple_email_subject = true
       expect { reviewable.perform(moderator, :delete_user) }.to change {
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 
@@ -278,11 +279,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "sends email when deleting and blocking a spammer" do
+      SiteSetting.simple_email_subject = true
       expect { reviewable.perform(moderator, :delete_user_block) }.to change {
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 

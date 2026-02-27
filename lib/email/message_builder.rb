@@ -135,7 +135,13 @@ module Email
         subject = @opts[:add_re_to_subject] ? I18n.t("subject_re") : ""
         subject = "#{subject}#{@template_args[:topic_title]}"
       elsif @opts[:template]
-        subject = I18n.t("#{@opts[:template]}.subject_template", @template_args)
+        subject_key = "#{@opts[:template]}.subject_template"
+
+        if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
+          subject_key += "_improved"
+        end
+
+        subject = I18n.t(subject_key, @template_args)
       else
         subject = @opts[:subject]
       end
