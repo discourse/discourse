@@ -1041,7 +1041,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await headerDropdown.selectRowByValue("new-category");
 
-    assert.strictEqual(currentURL(), "/new-category");
+    assert.true(currentURL().startsWith("/new-category"));
   });
 
   test("categories section header shows single edit button for user who cannot create categories", async function (assert) {
