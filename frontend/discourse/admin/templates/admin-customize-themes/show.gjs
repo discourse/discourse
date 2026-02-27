@@ -65,7 +65,7 @@ export default <template>
       {{else}}
         {{! eslint-disable ember/template-no-invalid-interactive }}
 
-        <h2
+        <h1
           {{on "click" @controller.startEditingName}}
           class="title-button"
           aria-level="2"
@@ -75,7 +75,10 @@ export default <template>
           {{#unless @controller.model.system}}
             {{dIcon "pencil" class="inline-icon"}}
           {{/unless}}
-        </h2>
+        </h1>
+      {{/if}}
+      {{#if @controller.model.description}}
+        <span class="theme-description">{{@controller.model.description}}</span>
       {{/if}}
     </div>
 
@@ -173,9 +176,16 @@ export default <template>
           />
         </div>
       {{/unless}}
-      <div class="metadata control-unit remote-theme-metadata">
+      {{#if @controller.model.system}}
+        <div class="alert alert-info system-theme-info">
+          {{i18n "admin.customize.theme.built_in_description"}}
+        </div>
+      {{/if}}
+      <div
+        class="metadata control-unit remote-theme-metadata admin-config-area-card"
+      >
         {{#if @controller.model.remote_theme}}
-          {{!-- {{#if @controller.model.remote_theme.remote_url}}
+          {{#if @controller.model.remote_theme.remote_url}}
             {{#if @controller.sourceIsHttp}}
               <a class="remote-url" href={{@controller.remoteThemeLink}}>{{i18n
                   "admin.customize.theme.source_url"
@@ -188,7 +198,7 @@ export default <template>
                 {{/if}}
               </div>
             {{/if}}
-          {{/if}} --}}
+          {{/if}}
 
           {{#if @controller.model.remote_theme.about_url}}
             <a
@@ -202,12 +212,6 @@ export default <template>
               class="url license-url"
               href={{@controller.model.remote_theme.license_url}}
             >{{i18n "admin.customize.theme.license"}}{{dIcon "link"}}</a>
-          {{/if}}
-
-          {{#if @controller.model.description}}
-            <span
-              class="theme-description"
-            >{{@controller.model.description}}</span>
           {{/if}}
 
           {{#if @controller.model.remote_theme.authors}}<span
@@ -274,30 +278,7 @@ export default <template>
         {{/if}}
 
         {{#if @controller.model.remote_theme}}
-          {{#if @controller.model.remote_theme.is_git}}
-            {{#if @controller.model.remote_theme.commits_behind}}
-              <DButton
-                @action={{@controller.updateToLatest}}
-                @icon="download"
-                @label="admin.customize.theme.update_to_latest"
-                class="btn-primary"
-              />
-            {{else}}
-              <DButton
-                @action={{@controller.checkForThemeUpdates}}
-                @icon="arrows-rotate"
-                @label="admin.customize.theme.check_for_updates"
-                class="btn-default"
-              />
-            {{/if}}
-
-            <DButton
-              @action={{@controller.changeSource}}
-              @icon="rotate"
-              @label="admin.customize.theme.change_source.button"
-              class="btn-default"
-            />
-
+          <div class="remote-theme-actions">
             <span class="status-message">
               {{#if @controller.updatingRemote}}
                 {{i18n "admin.customize.theme.updating"}}
@@ -327,21 +308,73 @@ export default <template>
                 {{/if}}
               {{/if}}
             </span>
-          {{else}}
-            <span class="status-message">
-              {{icon "circle-info"}}
-              {{i18n "admin.customize.theme.imported_from_archive"}}
-            </span>
-          {{/if}}
+            {{#if @controller.model.remote_theme.is_git}}
+              {{#if @controller.model.remote_theme.commits_behind}}
+                <DButton
+                  @action={{@controller.updateToLatest}}
+                  @icon="download"
+                  @label="admin.customize.theme.update_to_latest"
+                  class="btn-primary"
+                />
+              {{else}}
+                <DButton
+                  @action={{@controller.checkForThemeUpdates}}
+                  @icon="arrows-rotate"
+                  @label="admin.customize.theme.check_for_updates"
+                  class="btn-default"
+                />
+              {{/if}}
+
+              <DButton
+                @action={{@controller.changeSource}}
+                @icon="rotate"
+                @label="admin.customize.theme.change_source.button"
+                class="btn-default"
+              />
+            {{else}}
+              <span class="status-message">
+                {{icon "circle-info"}}
+                {{i18n "admin.customize.theme.imported_from_archive"}}
+              </span>
+            {{/if}}
+          </div>
         {{else if (not @controller.model.system)}}
-          <span class="heading created-by">{{i18n
-              "admin.customize.theme.creator"
-            }}</span>
-          <span>
-            <UserLink @user={{@controller.model.user}}>
-              {{formatUsername @controller.model.user.username}}
-            </UserLink>
+          <span class="created-by">
+            <span class="heading">{{i18n
+                "admin.customize.theme.creator"
+              }}</span>
+            <span>
+              <UserLink @user={{@controller.model.user}}>
+                {{formatUsername @controller.model.user.username}}
+              </UserLink>
+            </span>
           </span>
+        {{/if}}
+        {{#if @controller.showCheckboxes}}
+          <div class="inline-checkboxes">
+            {{#unless @controller.model.component}}
+              <InlineEditCheckbox
+                @action={{@controller.applyDefault}}
+                @labelKey="admin.customize.theme.is_default"
+                @checked={{@controller.model.default}}
+                @modelId={{@controller.model.id}}
+              />
+              <InlineEditCheckbox
+                @action={{@controller.applyUserSelectable}}
+                @labelKey="admin.customize.theme.user_selectable"
+                @checked={{@controller.model.user_selectable}}
+                @modelId={{@controller.model.id}}
+              />
+            {{/unless}}
+            {{#if @controller.model.remote_theme}}
+              <InlineEditCheckbox
+                @action={{@controller.applyAutoUpdateable}}
+                @labelKey="admin.customize.theme.auto_update"
+                @checked={{@controller.model.auto_update}}
+                @modelId={{@controller.model.id}}
+              />
+            {{/if}}
+          </div>
         {{/if}}
       </div>
 

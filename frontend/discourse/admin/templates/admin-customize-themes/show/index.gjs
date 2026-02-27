@@ -377,7 +377,7 @@ export default <template>
   {{/if}}
 
   {{#if @controller.hasThemeableSiteSettings}}
-    <div class="control-unit">
+    <div class="control-unit admin-config-area-card">
       <div class="mini-title">{{i18n
           "admin.customize.theme.theme_site_settings"
         }}</div>
@@ -404,7 +404,7 @@ export default <template>
   {{/if}}
 
   {{#if @controller.hasSettings}}
-    <div class="control-unit theme-settings">
+    <div class="control-unit theme-settings admin-config-area-card">
       <div class="mini-title">{{i18n
           "admin.customize.theme.theme_settings"
         }}</div>
@@ -424,7 +424,7 @@ export default <template>
   {{/if}}
 
   {{#if @controller.hasTranslations}}
-    <div class="control-unit">
+    <div class="control-unit admin-config-area-card">
       <div class="translation-selector-container">
         <span class="mini-title">
           {{i18n "admin.customize.theme.theme_translations"}}
