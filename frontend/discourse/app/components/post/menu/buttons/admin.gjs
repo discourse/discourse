@@ -7,7 +7,7 @@ export default class PostMenuAdminButton extends Component {
       args.post.canManage ||
       args.post.can_wiki ||
       args.post.canEditStaffNotes ||
-      context.currentUser.canChangePostOwner
+      context.currentUser?.canChangePostOwner
     );
   }
 

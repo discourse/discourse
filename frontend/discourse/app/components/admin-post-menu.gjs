@@ -25,7 +25,7 @@ export default class AdminPostMenu extends Component {
   }
 
   get canChangePostOwner() {
-    return this.currentUser.canChangePostOwner;
+    return this.currentUser?.canChangePostOwner;
   }
 
   @action

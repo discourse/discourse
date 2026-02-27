@@ -1758,7 +1758,7 @@ export default class TopicController extends Controller {
   @discourseComputed(
     "selectedPostsCount",
     "selectedPostsUsername",
-    "currentUser.can_change_post_owner"
+    "currentUser.canChangePostOwner"
   )
   canChangeOwner(
     selectedPostsCount,
