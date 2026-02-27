@@ -89,12 +89,34 @@ export default class CategoryDrop extends ComboBoxComponent {
     return this.options.subCategory || false;
   }
 
-  @computed("content.length", "site.lazy_load_categories")
+  @computed(
+    "content.length",
+    "site.lazy_load_categories",
+    "site.categoriesList.[]"
+  )
   get autoFilterable() {
-    return (
-      this.site.lazy_load_categories ||
-      this.content.length >= FILTER_VISIBILITY_THRESHOLD
-    );
+    if (this.site.lazy_load_categories) {
+      return true;
+    }
+
+    if (this.content.length >= FILTER_VISIBILITY_THRESHOLD) {
+      return true;
+    }
+
+    // When there's no parent category context, searching also returns
+    // subcategories. Count all categories (including subcategories) to
+    // determine if the search field is useful.
+    if (!this.options?.parentCategory?.id) {
+      const allCategories = this._filterUncategorized(
+        this.site.categoriesList || []
+      );
+      return (
+        this.shortcuts.length + allCategories.length >=
+        FILTER_VISIBILITY_THRESHOLD
+      );
+    }
+
+    return false;
   }
 
   @computed("value", "selectKit.options.{subCategory,noSubcategories}")
