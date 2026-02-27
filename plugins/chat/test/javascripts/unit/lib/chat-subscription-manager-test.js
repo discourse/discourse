@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
@@ -16,8 +17,12 @@ module(
       this.fabricators = new ChatFabricators(owner);
 
       const messageBus = owner.lookup("service:message-bus");
-      messageBus.subscribe = () => {};
-      messageBus.unsubscribe = () => {};
+      sinon.stub(messageBus, "subscribe");
+      sinon.stub(messageBus, "unsubscribe");
+    });
+
+    hooks.afterEach(function () {
+      sinon.restore();
     });
 
     test("channel manager syncs uploads when matching staged message is sent", function (assert) {
