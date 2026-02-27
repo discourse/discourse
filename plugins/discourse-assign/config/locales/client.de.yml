@@ -129,8 +129,6 @@ de:
       web_hooks:
         assign_event:
           group_name: "Ereignisse zuordnen"
-          assigned: "Wenn ein Benutzer ein Thema zuordnet"
-          unassigned: "Wenn ein Benutzer die Zuordnung eines Themas aufhebt"
     search:
       advanced:
         in:

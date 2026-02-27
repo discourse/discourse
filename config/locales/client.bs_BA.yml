@@ -3147,7 +3147,6 @@ bs_BA:
         categories: "Sve kategorije"
   admin_js:
     settings: "Postavke"
-    reset_filter: "Resetovati"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"

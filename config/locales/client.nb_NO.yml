@@ -3639,6 +3639,7 @@ nb_NO:
         delete: "Slett"
         add: "Legg til påkrevd stikkordgruppe"
         placeholder: "Velg stikkordgruppe…"
+        tag_group: "Stikkordgrupper"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
       create_long: "Opprett en ny kategori"
       slug_placeholder: "(Valgfritt) sammensatte ord for bruk i URL"
@@ -4330,7 +4331,6 @@ nb_NO:
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
-    reset_filter: "Tilbakestill"
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"

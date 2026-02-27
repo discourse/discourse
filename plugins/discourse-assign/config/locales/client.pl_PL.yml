@@ -129,8 +129,6 @@ pl_PL:
       web_hooks:
         assign_event:
           group_name: "Przypisz wydarzenia"
-          assigned: "Gdy użytkownik przypisuje temat"
-          unassigned: "Kiedy użytkownik anuluje przypisanie tematu"
     search:
       advanced:
         in:

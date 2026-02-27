@@ -7,9 +7,7 @@
 be:
   js:
     explorer:
-      default_query: "Прадвызначаная"
       or: "або"
-      create: "стварыць"
       types:
         bool:
           yes: "Так"

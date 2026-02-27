@@ -2104,6 +2104,7 @@ tr_TR:
     mailgun_api_key: "Web kancası mesajlarını doğrulamak için kullanılan Mailgun Gizli API anahtarı."
     sendgrid_verification_key: "Web kancası mesajlarını doğrulamak için kullanılan Sendgrid doğrulama anahtarı."
     mailjet_webhook_token: "Web kancası yükünü doğrulamak için kullanılan token. Web kancasının \"t\" sorgu parametresi olarak geçirilmelidir, örneğin: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Web kancası yükünü doğrulamak için kullanılan token. Web kancasının \"t\" sorgu parametresi olarak geçirilmelidir, örneğin: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Web kancası mesajlarını doğrulamak için kullanılan Mandrill kimlik doğrulama anahtarı."
     postmark_webhook_token: "Web kancası yükünü doğrulamak için kullanılan token. Web kancasının \"t\" sorgu parametresi olarak geçirilmelidir, örneğin: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Web kancası yükünü doğrulamak için kullanılan token. Web kancasının \"t\" sorgu parametresi olarak geçirilmelidir, örneğin: https://example.com/webhook/sparkpost?t=supersecret"

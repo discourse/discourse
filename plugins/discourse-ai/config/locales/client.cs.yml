@@ -38,8 +38,6 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
-      llm_selector:
-        none: "Žádný"
       features:
         back: "Zpět"
         disabled: "(vypnuto)"
@@ -144,22 +142,10 @@ cs:
         save: "Uložit"
         remove_parameter: "Smazat"
         parameter_required: "Povinné"
-        credential_not_set: "(nenastaveno)"
         edit: "Upravit"
-        test: "Test"
         delete: "Smazat"
         test_modal:
           run: "Spustit test"
-      secrets:
-        short_title: "Pověření"
-        name: "Název"
-        secret: "Hodnota"
-        back: "Zpět"
-        save: "Uložit"
-        edit: "Upravit"
-        delete: "Smazat"
-        embedding: "Zabudování"
-        tool: "Nástroj"
       llms:
         display_name: "Název"
         save: "Uložit"
@@ -180,9 +166,6 @@ cs:
         usage:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-6: "Nejinteligentnější model společnosti Anthropic"
-          anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"
         tests:

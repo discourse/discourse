@@ -25,17 +25,9 @@ fa_IR:
           new_name: "آگهی خانه جدید"
           save: "ذخیره"
           delete: "حذف"
-          html: "HTML"
-          categories: "دسته‌بندی‌ها"
-          groups: "گروه‌ها"
           filter_placeholder: "انتخاب آگهی..."
           more_settings: "تنظیمات بیشتر"
           preview: "پیش‌نمایش"
-          back: "آگهی خانه"
-          name: "نام"
-          edit: "ویرایش"
-          tabs:
-            settings: "تنظیم"
           post_bottom:
             title: "بین پست‌ها"
           topic_list_between:

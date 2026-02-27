@@ -37,9 +37,6 @@ ar:
           new_name: "New House Ad"
           save: "حفظ"
           delete: "حذف"
-          html: "HTML"
-          categories: "الفئات"
-          groups: "المجموعات"
           filter_placeholder: "حدِّد الإعلانات..."
           more_settings: "إعدادات إضافية"
           show_to_anons: "العرض للمستخدمين المجهولين"
@@ -49,11 +46,6 @@ ar:
           route_chooser_description: "اختر الصفحات أو المسارات التي يجب عرض هذا الإعلان فيها. اترك هذا الخيار واختيارات الفئات فارغة لعرض الإعلان في كل مكان."
           group_chooser_description: "اختر المجموعات التي يمكنها عرض هذا الإعلان أو اتركها فارغة لعرض الإعلان لجميع المستخدمين الذين سجَّلوا الدخول."
           preview: "معاينة"
-          back: "House Ads"
-          name: "الاسم"
-          edit: "تعديل"
-          tabs:
-            settings: "الإعدادان"
           topic_list_top:
             title: "الإعلانات أعلى قائمة الموضوعات"
             description: "إعلانات لعرضها في أعلى صفحات قائمة الموضوعات"

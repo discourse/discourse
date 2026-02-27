@@ -75,7 +75,6 @@ tr_TR:
       ongoing_event_reminder: "%{title} devam ediyor."
     errors:
       bulk_invite:
-        max_invitees: "İlk %{max_invitees} davetli oluşturuldu. Dosyayı daha küçük parçalara bölmeyi deneyin."
         error: "Bu dosya yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
       models:
         event:

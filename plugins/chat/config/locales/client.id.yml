@@ -27,11 +27,6 @@ id:
             chat:
               create_message: "Buat pesan obrolan di kanal tertentu"
     chat:
-      edit_category:
-        tab_title: "Obrolan"
-        description: "Deskripsi"
-        actions: "Aksi"
-        settings: "Pengaturan"
       text_copied: Teks disalin ke papan klip
       link_copied: Tautan disalin ke papan klip
       deleted_chat_username: dihapus

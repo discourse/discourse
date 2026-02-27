@@ -11,12 +11,10 @@ fi:
         no_semicolons: "Poista puolipisteet kyselystä."
         dirty: "Kysely täytyy tallentaa ennen suorittamista."
     explorer:
-      default_query: "Oletus"
       or: "tai"
       admins_only: "Dataselain on vain ylläpitäjille."
       allow_groups: "Salli ryhmien käyttää tätä kyselyä"
       title: "Dataselain"
-      create: "Luo"
       create_placeholder: "Kyselyn nimi..."
       description_placeholder: "Kirjoita kuvaus tähän"
       import:
@@ -37,9 +35,7 @@ fi:
           null_: "Tyhjä"
       export: "Vie"
       view_json: "Näytä JSON"
-      save: "Tallenna muutokset"
       run: "Suorita"
-      undo: "Hylkää muutokset"
       edit: "Muokkaa"
       delete: "Poista"
       download_json: "JSON"

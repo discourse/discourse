@@ -4233,6 +4233,7 @@ ug:
       create: "يېڭى سەھىپە"
       create_long: "يېڭى سەھىپە قۇرىدۇ"
       save: "سەھىپە ساقلا"
+      unsaved_changes: "ساقلانمىغان ئۆزگەرتىشلىرىڭىز بار"
       slug: "سەھىپە قىسقارتما"
       parent: "ئانا سەھىپە"
       slug_placeholder: "(تاللاشچان) تور ئادرېسىغا ئىشلىتىلىدىغان سىزىقلىق سۆز"
@@ -5381,7 +5382,6 @@ ug:
   admin_js:
     type_to_filter: "كىرگۈزۈلسە سۈزىدۇ…"
     settings: "تەڭشەكلەر"
-    reset_filter: "ئەسلىگە قايتۇر"
     toggle_filters: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     admin:
       title: "Discourse باشقۇرغۇچى"

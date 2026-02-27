@@ -4551,8 +4551,10 @@ ru:
         delete: "Удалить"
         add: "Добавить необходимую группу тегов"
         placeholder: "Выберите группу тегов…"
+        tag_group: "Группа тегов"
       topic_featured_link_allowed: "Разрешить избранные ссылки в этой категории"
       create_long: "Создать новую категорию"
+      unsaved_changes: "У вас есть несохраненные изменения"
       slug_placeholder: "(Необязат.) Слова для URL, разделённые дефисами"
       creation_error: При создании новой категории возникла ошибка.
       save_error: При сохранении категории возникла ошибка.
@@ -5741,7 +5743,6 @@ ru:
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     settings: "Настройки"
-    reset_filter: "Сбросить"
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"

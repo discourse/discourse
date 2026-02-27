@@ -2316,7 +2316,6 @@ id:
         categories: "Semua kategori"
   admin_js:
     settings: "Pengaturan"
-    reset_filter: "Reset"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"

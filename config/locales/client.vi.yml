@@ -4024,11 +4024,13 @@ vi:
         delete: "Xóa"
         add: "Thêm nhóm thẻ bắt buộc"
         placeholder: "Chọn nhóm thẻ…"
+        tag_group: "Nhóm thẻ"
       topic_featured_link_allowed: "Cho phép các liên kết nổi bật trong chuyên mục này"
       delete: "Xóa chuyên mục"
       create: "Chuyên mục mới"
       create_long: "Tạo Chủ đề mới"
       save: "Lưu chuyên mục"
+      unsaved_changes: "Bạn có những thay đổi chưa được lưu"
       slug: "Đường dẫn chuyên mục"
       parent: "Chuyên mục chính"
       slug_placeholder: "(Tùy chọn) các từ sử dụng trong url"
@@ -5155,7 +5157,6 @@ vi:
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
-    reset_filter: "Cài lại"
     toggle_filters: "Bật/tắt bộ lọc thả xuống"
     admin:
       title: "Quản trị Diễn đàn"

@@ -11,11 +11,9 @@ sw:
         no_semicolons: "Ondoa alama ya mkato kwenye swali."
         dirty: "Lazima uhifadhi taarifa kabla ya kutekeleza."
     explorer:
-      default_query: "Halisi"
       or: "au"
       admins_only: "Uwezo wa kupitia taarifa zote unapatikana kwa viongozi tu."
       title: "Utafiti wa Taarifa"
-      create: "Tengeneza"
       create_placeholder: "Jina la ulizo..."
       description_placeholder: "Andika maelezo hapa"
       import:

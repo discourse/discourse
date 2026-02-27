@@ -129,8 +129,6 @@ cs:
       web_hooks:
         assign_event:
           group_name: "Události přidělení"
-          assigned: "Když uživatel přidělí téma"
-          unassigned: "Když uživatel zruší přidělení tématu"
     search:
       advanced:
         in:

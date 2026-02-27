@@ -46,15 +46,6 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
-      edit_category:
-        tab_title: "Czat"
-        channel: "Kanał"
-        description: "Opis"
-        actions: "Akcje"
-        settings: "Ustawienia"
-        no_channels: "Brak kanałów czatu powiązanych z tą kategorią"
-        no_channels_body: "Możesz mieć wiele kanałów w każdej kategorii, dostępnych dla tych samych członków na podstawie ustawień bezpieczeństwa kategorii. <a href='%{chatBrowseUrl}'>Utwórz kanał czatu</a>."
-        include_subcategories: "Uwzględnij kanały podkategorii"
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
       back_to_forum: "Forum"
@@ -72,15 +63,6 @@ pl_PL:
       starred: "Wyróżnione"
       starred_channels: "Wyróżnione kanały"
       starred_channels_empty: "Nie wyróżniono jeszcze żadnego kanału. Wyróżnij kanały, aby je tu zobaczyć i mieć do nich szybki dostęp."
-      pinned_messages:
-        title: "Przypięte wiadomości"
-        close: "Zamknij przypięte wiadomości"
-        pinned_by_you: "Przypięte przez Ciebie"
-        pinned_by_user: "Przypięte przez %{username}"
-      no_pinned_messages: "Żadnych przypiętych wiadomości na tym kanale."
-      pin_message: "Przypnij wiadomość"
-      unpin_message: "Odepnij wiadomość"
-      pinned: "Przypięty"
       browse_all_channels: "Przeglądaj wszystkie kanały"
       see_in: "Zobacz w"
       open_channel_menu: "Otwórz menu kanału"
@@ -106,8 +88,6 @@ pl_PL:
         unstar_channel: "Usuń wyróżnienie kanału"
         close_channel: "Zamknij kanał"
         open_channel: "Otwórz kanał"
-        open_channel_disabled_archived: "Zarchiwizowanych kanałów nie można ponownie otworzyć."
-        open_channel_disabled_read_only: "Kanałów przeznaczonych tylko do odczytu nie można ponownie otworzyć."
         archive_channel: "Archiwizuj kanał"
         delete_channel: "Usuń kanał"
         join_channel: "Dołącz do kanału"
@@ -666,19 +646,12 @@ pl_PL:
           many: "%{commaSeparatedUsernames} i %{count} inni piszą"
           other: "%{commaSeparatedUsernames} i %{count} innych piszą"
       retention_reminders:
-        chat_settings: "Ustawienia czatu"
         indefinitely_short: "nieokreślony"
-        indefinitely_long: "%{chatSettingsLink} zostały ustawione w celu bezterminowego przechowywania wiadomości kanału."
         short:
           one: "%{count} dzień"
           few: "%{count} dni"
           many: "%{count} dni"
           other: "%{count} dni"
-        long:
-          one: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dzień."
-          few: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dni."
-          many: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dni."
-          other: "%{chatSettingsLink} ustawiono tak, aby zachowywać wiadomości kanału przez %{count} dni."
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."

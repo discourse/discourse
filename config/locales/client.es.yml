@@ -4195,11 +4195,13 @@ es:
         delete: "Eliminar"
         add: "Añadir grupo de etiquetas obligado"
         placeholder: "Selecciona un grupo de etiquetas…"
+        tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
       create: "Crear categoría"
       create_long: "Crear una nueva categoría"
       save: "Guardar categoría"
+      unsaved_changes: "Tienes cambios sin guardar"
       slug: "Identificador de URL de la categoría"
       parent: "Categoría padre"
       slug_placeholder: "(Opcional) palabras-separadas-por-guiones para URL"
@@ -5350,7 +5352,6 @@ es:
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
-    reset_filter: "Restablecer"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"

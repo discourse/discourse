@@ -2452,6 +2452,7 @@ ar:
     mailgun_api_key: "مفتاح API السري لمحرك Mailgun والمُستخدَم في التحقُّق من رسائل خطاف الويب"
     sendgrid_verification_key: "مفتاح التحقق Sendgrid المُستخدَم للتحقق من رسائل خطاف الويب."
     mailjet_webhook_token: "الرمز المُستخدَم للتحقق من حمولة خطاف الويب. يجب تمريره في صورة معلمة الاستعلام 't' لخطاف الويب؛ على سبيل المثال: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "الرمز المُستخدَم للتحقق من حمولة خطاف الويب. يجب تمريره في صورة معلمة الاستعلام 't' لخطاف الويب؛ على سبيل المثال: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "مفتاح المصادقة Mandrill المُستخدَم للتحقق من رسائل خطاف الويب."
     postmark_webhook_token: "الرمز المُستخدَم للتحقق من حمولة خطاف الويب. يجب تمريره في صورة معلمة الاستعلام 't' لخطاف الويب؛ على سبيل المثال: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "الرمز المُستخدَم للتحقق من حمولة خطاف الويب. يجب تمريره في صورة معلمة الاستعلام 't' لخطاف الويب؛ على سبيل المثال: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2770,6 +2771,7 @@ ar:
     enable_upcoming_changes: "تمكين التغييرات القادمة"
     fake_upcoming_change: "هذا التغيير الوهمي مزيف ويُستخدم لأغراض الاختبار فقط. لا داعي لترجمة هذه العبارة."
     floating_dismiss_topics_on_mobile: "يعرض زرًا عائمًا باسم \"رفض...\" في نسخة الهاتف المحمول لقائمة الموضوعات، ما يسهل الوصول إليه ويحرر مساحة في الجزء العلوي من قائمة الموضوعات."
+    rename_faq_to_guidelines: "يعيد هذا التغيير تسمية صفحة الأسئلة الشائعة إلى \"الإرشادات\". ستظل صفحة الأسئلة الشائعة متاحة على الرابط /faq. ويستمر إعداد \"رابط الأسئلة الشائعة\" في العمل كما هو."
     enable_simplified_category_creation: "يُفعّل هذا الإعداد إنشاء الفئات بطريقة مبسطة مع تقليل عدد الخيارات وتوفير واجهة أكثر نظافة ووضوحًا."
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."

@@ -17,11 +17,6 @@ vi:
         chat_messages:
           other: "%{formatted_number} tin chat"
     chat:
-      edit_category:
-        tab_title: "Chat"
-        description: "Mô tả"
-        actions: "Hành động"
-        settings: "Cài đặt"
       back_to_forum: "Diễn đàn"
       deleted_chat_username: đã bị xóa
       dates:
@@ -29,7 +24,6 @@ vi:
       create: "Tạo"
       cancel: "Hủy"
       chat_channels: "Các kênh"
-      pinned: "Đã ghim"
       browse_all_channels: "Xem tất cả kênh"
       channel_settings:
         edit: "Sửa"

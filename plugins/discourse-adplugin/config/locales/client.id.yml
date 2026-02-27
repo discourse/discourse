@@ -13,10 +13,3 @@ id:
           settings: "Pengaturan"
           save: "Simpan"
           delete: "Hapus"
-          html: "HTML"
-          categories: "Kategori"
-          groups: "Grup"
-          name: "Nama"
-          edit: "Ubah"
-          tabs:
-            settings: "Pengaturan"

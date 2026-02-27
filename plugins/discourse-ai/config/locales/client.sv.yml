@@ -36,8 +36,6 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
-      llm_selector:
-        none: "Ingen"
       features:
         back: "Tillbaka"
         disabled: "(inaktiverad)"
@@ -123,19 +121,8 @@ sv:
         save: "Spara"
         remove_parameter: "Ta bort"
         parameter_required: "Krävs"
-        credential_not_set: "(inte inställd)"
         edit: "Redigera"
-        test: "Testa"
         delete: "Ta bort"
-      secrets:
-        short_title: "Kontouppgifter"
-        name: "Namn"
-        secret: "Värde"
-        back: "Tillbaka"
-        save: "Spara"
-        edit: "Redigera"
-        delete: "Radera"
-        embedding: "Inbäddning"
       llms:
         display_name: "Namn"
         provider: "Leverantör"

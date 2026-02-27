@@ -13,10 +13,4 @@ be:
           settings: "Налады"
           save: "Захаваць"
           delete: "Выдаліць"
-          categories: "катэгорыі"
-          groups: "Груп"
           preview: "Папярэдні прагляд"
-          name: "Імя"
-          edit: "Рэдагаваць"
-          tabs:
-            settings: "Налады"

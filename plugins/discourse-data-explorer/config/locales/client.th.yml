@@ -7,9 +7,7 @@
 th:
   js:
     explorer:
-      default_query: "ค่าเริ่มต้น"
       or: "หรือ"
-      create: "สร้าง"
       help:
         label: "ช่วยเหลือ"
       schema:

@@ -3781,7 +3781,6 @@ ko:
   admin_js:
     type_to_filter: "필터 입력..."
     settings: "설정"
-    reset_filter: "리셋"
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"

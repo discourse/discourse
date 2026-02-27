@@ -2098,6 +2098,7 @@ nl:
     mailgun_api_key: "Geheime API-sleutel van Mailgun voor het verifiëren van webhookberichten."
     sendgrid_verification_key: "SendGrid-verificatiesleutel die wordt gebruikt om webhookberichten te verifiëren."
     mailjet_webhook_token: "Token dat wordt gebruikt om webhookpayloads te verifiëren. Het moet worden doorgegeven als de queryparameter 't' van de webhook, bijvoorbeeld: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token dat wordt gebruikt om webhookpayloads te verifiëren. Het moet worden doorgegeven als de queryparameter 't' van de webhook, bijvoorbeeld: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill-verificatiesleutel die wordt gebruikt om webhookberichten te verifiëren."
     postmark_webhook_token: "Token dat wordt gebruikt om webhookpayloads te verifiëren. Het moet worden doorgegeven als de queryparameter 't' van de webhook, bijvoorbeeld: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token dat wordt gebruikt om webhookpayloads te verifiëren. Het moet worden doorgegeven als de queryparameter 't' van de webhook, bijvoorbeeld: https://example.com/webhook/sparkpost?t=supersecret"

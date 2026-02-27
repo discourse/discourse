@@ -7,9 +7,7 @@
 sq:
   js:
     explorer:
-      default_query: "Paracaktuar"
       or: "ose"
-      create: "Krijo"
       import:
         label: "Importo"
       help:

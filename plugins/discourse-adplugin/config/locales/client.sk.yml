@@ -26,9 +26,6 @@ sk:
           new_name: "Reklama na nový dom"
           save: "Uložiť"
           delete: "Odstrániť"
-          html: "HTML"
-          categories: "Kategórie"
-          groups: "Skupiny"
           filter_placeholder: "Vybrať reklamy..."
           more_settings: "Ďalšie nastavenia"
           show_to_anons: "Zobraziť anonymným používateľom"
@@ -36,11 +33,6 @@ sk:
           category_chooser_description: "Vyberte kategórie, v ktorých sa má táto reklama zobrazovať, alebo nechajte prázdne, aby sa reklama zobrazovala všade. Nastavenie stránky `no_ads_for_categories` má pred týmto nastavením prednosť."
           group_chooser_description: "Vyberte skupiny, ktoré môžu túto reklamu zobraziť, alebo nechajte prázdne, aby sa reklama zobrazila všetkým prihláseným používateľom."
           preview: "Náhľad"
-          back: "Reklamy na dom"
-          name: "Meno"
-          edit: "Upraviť"
-          tabs:
-            settings: "Nastavení"
           topic_list_top:
             title: "Zoznam tém top reklamy"
             description: "Zobrazenie reklám v hornej časti stránok so zoznamom tém."

@@ -11,12 +11,10 @@ ru:
         no_semicolons: "Удалите точку с запятой из запроса."
         dirty: "Вы должны сохранить запрос перед его выполнением."
     explorer:
-      default_query: "Домашнюю страницу"
       or: "или"
       admins_only: "Исследование данных доступно только для администраторов."
       allow_groups: "Разрешить группам доступ к этому запросу"
       title: "Проводник данных"
-      create: "Создать"
       create_placeholder: "Имя запроса..."
       description_placeholder: "Введите описание"
       import:
@@ -37,10 +35,7 @@ ru:
           null_: "Null"
       export: "Экспорт"
       view_json: "Просмотреть JSON"
-      view: "Вид"
-      save: "Сохранить изменения"
       run: "Выполнить запрос"
-      undo: "Отменить изменения"
       edit: "Изменить"
       delete: "Удалить"
       download_json: "JSON"

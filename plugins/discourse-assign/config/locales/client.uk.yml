@@ -129,8 +129,6 @@ uk:
       web_hooks:
         assign_event:
           group_name: "Призначити події"
-          assigned: "Коли користувач призначає тему"
-          unassigned: "Коли користувач скасовує призначення теми"
     search:
       advanced:
         in:

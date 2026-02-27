@@ -11,12 +11,10 @@ zh_CN:
         no_semicolons: "从查询中移除分号。"
         dirty: "您必须先保存查询，然后才能运行。"
     explorer:
-      default_query: "默认"
       or: "或者"
       admins_only: "数据资源管理器仅供管理员使用。"
       allow_groups: "允许群组访问此查询"
       title: "数据资源管理器"
-      create: "创建"
       create_placeholder: "查询名称…"
       description_placeholder: "在此处输入描述"
       import:
@@ -37,10 +35,7 @@ zh_CN:
           null_: "空"
       export: "导出"
       view_json: "查看 JSON"
-      view: "查看"
-      save: "保存更改"
       run: "运行"
-      undo: "舍弃更改"
       edit: "编辑"
       delete: "删除"
       download_json: "JSON"
@@ -70,8 +65,6 @@ zh_CN:
           invalid: "无效"
           no_such_category: "没有此类类别"
           no_such_group: "没有此类群组"
-          invalid_date: "%{date} 是无效日期"
-          invalid_time: "%{time} 是无效时间"
     group:
       reports: "报告"
     admin:

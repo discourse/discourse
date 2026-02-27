@@ -72,7 +72,6 @@ de:
         description: Wenn die Schlagwörter eines Themas geändert werden, wird die Automatisierung ausgelöst
       topic:
         title: Thema
-        description: Das zugehörige Skript wird nur für das angegebene Thema verwendet. Dies ist beispielsweise für Skripts nützlich, die eine Validierung durchführen
       topic_closed:
         title: Thema geschlossen
         description: Löst ein Skript aus, wenn ein Thema geschlossen wird.

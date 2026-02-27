@@ -3428,7 +3428,6 @@ bg:
         categories: "Всички категории"
   admin_js:
     settings: "Настройки"
-    reset_filter: "Нулиране"
     admin:
       title: "Discourse Админ"
       moderator: "Модератор"

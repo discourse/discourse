@@ -4069,8 +4069,10 @@ it:
         delete: "Cancella"
         add: "Aggiungi il gruppo di etichette richiesto"
         placeholder: "Seleziona un gruppo di etichette…"
+        tag_group: "Gruppo di Etichette"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
       create_long: "Crea una nuova categoria"
+      unsaved_changes: "Hai modifiche non salvate"
       slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
@@ -5168,7 +5170,6 @@ it:
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
-    reset_filter: "Reimposta"
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"

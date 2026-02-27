@@ -4787,11 +4787,13 @@ uk:
         delete: "Вилучити"
         add: "Додайте необхідну групу теґів"
         placeholder: "Вибрати групу тегів…"
+        tag_group: "Група тегів"
       topic_featured_link_allowed: "Дозволити популярні посилання в цьому розділі"
       delete: "Видалити категорію"
       create: "Нова категорія"
       create_long: "Створити розділ"
       save: "Зберегти категорію"
+      unsaved_changes: "Є незбережені зміни"
       slug: "Посилання на розділ"
       parent: "Батьківська категорія"
       slug_placeholder: "(Опція) дефіси в url"
@@ -6080,7 +6082,6 @@ uk:
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
-    reset_filter: "Скинути"
     toggle_filters: "Перемкнути випадаючі фільтри"
     admin:
       title: "Адміністратор Discourse"

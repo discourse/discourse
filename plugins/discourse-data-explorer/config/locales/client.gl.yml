@@ -7,9 +7,7 @@
 gl:
   js:
     explorer:
-      default_query: "Predeterminado"
       or: "ou"
-      create: "Crear"
       import:
         label: "Importar"
       help:

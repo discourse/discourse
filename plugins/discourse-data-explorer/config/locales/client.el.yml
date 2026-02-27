@@ -7,9 +7,7 @@
 el:
   js:
     explorer:
-      default_query: "Προεπιλογή"
       or: "ή"
-      create: "Δημιουργία"
       description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       import:
         label: "Εισαγωγή"
@@ -22,9 +20,6 @@ el:
           yes: "Ναι "
           no: "Όχι"
       export: "Εξαγωγή"
-      view: "Προβολή"
-      save: "Αποθήκευση αλλαγών"
-      undo: "Απόρριψη αλλαγών"
       edit: "Επεξεργασία"
       delete: "Σβήσιμο"
       result_count:

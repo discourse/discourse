@@ -4136,8 +4136,10 @@ nl:
         delete: "Verwijderen"
         add: "Vereiste taggroep toevoegen"
         placeholder: "Selecteer taggroep…"
+        tag_group: "Tag-groep"
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
       create_long: "Nieuwe categorie maken"
+      unsaved_changes: "Je hebt niet-opgeslagen wijzigingen"
       slug_placeholder: "(Optioneel) met streepjes verbonden woorden voor URL"
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
@@ -5236,7 +5238,6 @@ nl:
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
-    reset_filter: "Resetten"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"

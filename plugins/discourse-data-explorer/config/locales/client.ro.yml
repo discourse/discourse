@@ -7,9 +7,7 @@
 ro:
   js:
     explorer:
-      default_query: "Implicit"
       or: "sau"
-      create: "Creează"
       import:
         label: "Importă"
       help:
@@ -21,8 +19,6 @@ ro:
           yes: "Da"
           no: "Nu"
       export: "Exportă"
-      save: "Salvează modificări"
-      undo: "Renunță la modificări"
       edit: "Editează"
       delete: "Șterge"
       query_groups: "Grupuri"

@@ -3722,7 +3722,6 @@ sl:
         categories: "Vse kategorije"
   admin_js:
     settings: "Nastavitve"
-    reset_filter: "Ponastavi"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"

@@ -14,8 +14,6 @@ lv:
       accepted_answer_post_number: "ieraksts %{post_number}"
       topic_status_filter:
         all: "Viss"
-      move_post_cancel: "Atcelt"
-      confirm_solved_removal_cancel: "Atcelt"
     discourse_automation:
       triggerables:
         first_accepted_solution:

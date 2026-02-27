@@ -1396,6 +1396,7 @@ te:
     mailgun_api_key: "వెబ్‌హుక్ సందేశాలను ధృవీకరించడానికి Mailgun సీక్రెట్ API కీ ఉపయోగించబడుతుంది."
     sendgrid_verification_key: "webhook సందేశాలను ధృవీకరించడానికి Sendgrid ధృవీకరణ కీ ఉపయోగించబడుతుంది."
     mailjet_webhook_token: "వెబ్‌హుక్ పేలోడ్‌ని ధృవీకరించడానికి టోకెన్ ఉపయోగించబడింది. ఇది తప్పనిసరిగా webhook యొక్క 't' ప్రశ్న పరామితి వలె పాస్ చేయబడాలి, ఉదాహరణకు: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "వెబ్‌హుక్ పేలోడ్‌ని ధృవీకరించడానికి టోకెన్ ఉపయోగించబడింది. ఇది తప్పనిసరిగా webhook యొక్క 't' ప్రశ్న పరామితి వలె పాస్ చేయబడాలి, ఉదాహరణకు: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "వెబ్‌హుక్ సందేశాలను ధృవీకరించడానికి మాండ్రిల్ ప్రమాణీకరణ కీ ఉపయోగించబడుతుంది."
     postmark_webhook_token: "వెబ్‌హుక్ పేలోడ్‌ని ధృవీకరించడానికి టోకెన్ ఉపయోగించబడింది. ఇది తప్పనిసరిగా webhook యొక్క 't' ప్రశ్న పరామితి వలె పాస్ చేయబడాలి, ఉదాహరణకు: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "వెబ్‌హుక్ పేలోడ్‌ని ధృవీకరించడానికి టోకెన్ ఉపయోగించబడింది. ఇది తప్పనిసరిగా webhook యొక్క 't' ప్రశ్న పరామితి వలె పాస్ చేయబడాలి, ఉదాహరణకు: https://example.com/webhook/sparkpost?t=supersecret"

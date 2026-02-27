@@ -2489,6 +2489,7 @@ ca:
       allow_global_tags_label: "Permet també altres etiquetes"
       required_tag_group:
         delete: "Suprimeix"
+        tag_group: "Grup d'etiquetes"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
       create_long: "Crea una categoria nova"
       slug_placeholder: "(opcional) paraules amb guionets per a url"
@@ -3056,7 +3057,6 @@ ca:
         categories: "Totes les categories"
   admin_js:
     settings: "Configuració"
-    reset_filter: "Restableix"
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"

@@ -11,12 +11,10 @@ fr:
         no_semicolons: "Supprimez les points-virgules de la requête."
         dirty: "Vous devez enregistrer la requête avant de l'exécuter."
     explorer:
-      default_query: "Par défaut"
       or: "ou"
       admins_only: "L'explorateur de données n'est disponible que pour les administrateurs."
       allow_groups: "Autoriser les groupes à accéder à cette requête"
       title: "Explorateur de données"
-      create: "Créer"
       create_placeholder: "Nom de la requête…"
       description_placeholder: "Saisissez une description ici"
       import:
@@ -37,9 +35,7 @@ fr:
           null_: "Nul"
       export: "Exporter"
       view_json: "Afficher JSON"
-      save: "Enregistrer les modifications"
       run: "Exécuter"
-      undo: "Annuler les modifications"
       edit: "Modifier"
       delete: "Supprimer"
       download_json: "JSON"

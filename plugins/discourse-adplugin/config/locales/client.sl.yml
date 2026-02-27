@@ -16,11 +16,4 @@ sl:
           settings: "Nastavitve"
           save: "Shrani"
           delete: "Izbriši"
-          html: "HTML"
-          categories: "Kategorije"
-          groups: "Skupine"
           preview: "Predogled"
-          name: "Ime"
-          edit: "Uredi"
-          tabs:
-            settings: "Nastavitve"

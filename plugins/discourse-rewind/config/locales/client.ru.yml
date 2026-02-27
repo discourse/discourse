@@ -15,8 +15,6 @@ ru:
       placeholder: Перемотка Discourse
       title: Rewind
       viewing_other_user: "Вы просматриваете отчет <strong>%{username}'s</strong> Discourse Rewind."
-      cannot_view_rewind: >
-        Вы не можете просмотреть этот отчет Discourse Rewind. Возможно, владелец не опубликовал его публично?<br><br> $> _<br><br>
       preferences:
         enable_rewind: "Включите функцию Discourse Rewind. Это позволит отображать сводку событий за конец года в вашем профиле и на вашем аватаре."
         share_publicly: "Поделитесь сводкой Discourse Rewind с другими участниками форума. Любой участник форума сможет просмотреть вашу сводку Discourse Rewind."

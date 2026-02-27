@@ -3868,6 +3868,7 @@ pt:
       allow_global_tags_label: "Permita também outras tags"
       required_tag_group:
         delete: "Eliminar"
+        tag_group: "Grupo de tags"
       topic_featured_link_allowed: "Permitir hiperligações em destaque nesta categoria"
       create_long: "Criar uma nova categoria"
       slug_placeholder: "(Opcional) palavras com travessão no URL"
@@ -4521,7 +4522,6 @@ pt:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
-    reset_filter: "Repor"
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"

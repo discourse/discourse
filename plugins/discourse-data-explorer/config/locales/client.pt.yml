@@ -11,11 +11,9 @@ pt:
         no_semicolons: "Remova os pontos e vírgulas da consulta."
         dirty: "Deve guardar a consulta antes de executar."
     explorer:
-      default_query: "Predefinição"
       or: "ou"
       admins_only: "O explorador de dados está disponível apenas para os administradores."
       title: "Explorador de Dados"
-      create: "Criar"
       create_placeholder: "Nome da consulta..."
       import:
         label: "Importar"

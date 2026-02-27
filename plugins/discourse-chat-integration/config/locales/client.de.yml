@@ -16,7 +16,6 @@ de:
       settings: "Einstellungen"
       no_providers: "Du musst Provider in den Plug-in-Einstellungen aktivieren"
       channels_with_errors: "Das letzte Versenden von Nachrichten ist bei einigen Kanälen dieses Providers fehlgeschlagen. Klicke auf das/die Fehlersymbol(e), um mehr zu erfahren."
-      channel_exception: "Ein unbekannter Fehler ist aufgetreten, als zuletzt eine Nachricht an diesen Kanal gesendet wurde."
       group_mention_template: "Erwähnungen von: @%{name}"
       group_message_template: "Nachrichten an: @%{name}"
       choose_group: "(wähle eine Gruppe)"
@@ -33,7 +32,6 @@ de:
         topic: "Thema"
         send: "Test-Nachricht senden"
         close: "Schließen"
-        error: "Ein unbekannter Fehler ist beim Senden der Nachricht aufgetreten. Bitte überprüfe die Website-Protokolle für weitere Informationen."
         success: "Nachricht erfolgreich versendet"
       type:
         normal: Normal

@@ -1980,7 +1980,6 @@ be:
         categories: "Усе катэгорыі"
   admin_js:
     settings: "Налады"
-    reset_filter: "Скінуць"
     admin:
       moderator: "Мадэратар"
       tags:

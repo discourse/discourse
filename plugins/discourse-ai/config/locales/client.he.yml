@@ -216,8 +216,6 @@ he:
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
         description: "מודל המש״ג (LLM) לשימוש כברירת מחדל לכל יכולות הבינה המלאכותית. אם לא צוין מש״ג בהגדרות היכולת או הדמות ייעשה שימוש בזה. אם לא צוין מש״ג כברירת מחדל, ייעשה שימוש במש״ג האחרון שנוצר."
-      llm_selector:
-        none: "ללא"
       features:
         short_title: "יכולות"
         description: "אלו יכולות בינה מלאכותית שזמינות למבקרים באתר שלך. אפשר להגדיר אותן להשתמש בדמויות וב־LLMים (מש״גים) מסוימים ואפשר לשלוט בגישה אליהן על ידי קבוצות."
@@ -598,9 +596,7 @@ he:
         parameter_description: "תיאור משתנה"
         enum_value: "ערך מונה"
         add_enum_value: "הוספת ערך מונה"
-        credential_not_set: "(לא מוגדר)"
         edit: "עריכה"
-        test: "נסיון"
         delete: "מחיקה"
         saved: "הכלי נשמר"
         confirm_delete: "למחוק את הכלי הזה?"
@@ -608,16 +604,6 @@ he:
           title: "כלי בדיקת בינה מלאכותית"
           run: "הרצת בדיקה"
           result: "תוצאת הבדיקה"
-      secrets:
-        short_title: "פרטי גישה"
-        name: "שם"
-        secret: "ערך"
-        back: "חזרה"
-        save: "שמירה"
-        edit: "עריכה"
-        delete: "מחיקה"
-        embedding: "שילוב (embedding)"
-        tool: "כלי"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -678,11 +664,8 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-6: "המודל החכם ביותר של Anthropic"
-          anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-pro: "המודל החכם ביותר של Google"
-          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"

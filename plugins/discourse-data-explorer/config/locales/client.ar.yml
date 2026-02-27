@@ -11,12 +11,10 @@ ar:
         no_semicolons: "أزِل الفواصل المنقوطة من الاستعلام."
         dirty: "يجب عليك حفظ الاستعلام قبل التشغيل."
     explorer:
-      default_query: "افتراضي"
       or: "أو"
       admins_only: "مستكشف البيانات متاح للمسؤولين فقط."
       allow_groups: "السماح للمجموعات بالوصول إلى هذا الاستعلام"
       title: "مستكشف البيانات"
-      create: "إنشاء"
       create_placeholder: "اسم الاستعلام..."
       description_placeholder: "أدخِل وصفًا هنا"
       import:
@@ -37,10 +35,7 @@ ar:
           null_: "فارغ"
       export: "تصدير"
       view_json: "عرض JSON"
-      view: "اعرض"
-      save: "حفظ التغييرات"
       run: "تشغيل"
-      undo: "تجاهل التغييرين"
       edit: "تعديل"
       delete: "حذف"
       download_json: "JSON"

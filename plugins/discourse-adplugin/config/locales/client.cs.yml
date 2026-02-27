@@ -23,11 +23,4 @@ cs:
           settings: "Nastavení"
           save: "Uložit"
           delete: "Smazat"
-          html: "HTML"
-          categories: "Kategorie"
-          groups: "Skupiny"
           preview: "Náhled"
-          name: "Jméno"
-          edit: "Upravit"
-          tabs:
-            settings: "Nastavení"

@@ -185,8 +185,6 @@ pt_BR:
       default_llm:
         title: "Modelo de LLM padrão"
         description: "O modelo de LLM padrão a ser usado para todos os recursos de IA. Será usado se nenhum LLM for especificado na persona ou configuração de recurso. Se nenhum LLM for especificado, será usado o LLM criado mais recentemente."
-      llm_selector:
-        none: "Nenhum"
       features:
         short_title: "Recursos"
         description: "Estes recursos de IA estão disponíveis para quem acessar o seu site. Podem ser configurados para usar LLMs e personas específicas, além de poder ter o acesso controlado por grupos."
@@ -551,9 +549,7 @@ pt_BR:
         parameter_description: "Descrição do parâmetro"
         enum_value: "Valor da enumeração"
         add_enum_value: "Adicionar valor da enumeração"
-        credential_not_set: "(não configurado)"
         edit: "Editar"
-        test: "Testar"
         delete: "Excluir"
         saved: "Ferramenta salva"
         confirm_delete: "Tem certeza de que deseja excluir esta ferramenta?"
@@ -561,16 +557,6 @@ pt_BR:
           title: "Ferramenta de IA de teste"
           run: "Executar teste"
           result: "Resultado do teste"
-      secrets:
-        short_title: "Credenciais"
-        name: "Nome"
-        secret: "Valor"
-        back: "Voltar"
-        save: "Salvar"
-        edit: "Editar"
-        delete: "Excluir"
-        embedding: "Incorporar"
-        tool: "Ferramenta"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"
@@ -628,10 +614,7 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-6: "Modelo mais inteligente da Anthropic"
-          anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
           anthropic-claude-haiku-4-5: "Rápido e econômico"
-          open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"

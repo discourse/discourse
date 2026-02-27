@@ -5138,11 +5138,13 @@ ar:
         delete: "حذف"
         add: "إضافة مجموعة الوسوم المطلوبة"
         placeholder: "تحديد مجموعة الوسوم…"
+        tag_group: "مجموعة الوسوم"
       topic_featured_link_allowed: "السماح بالروابط المميَّزة في هذه الفئة."
       delete: "احذف الفئة"
       create: "فئة جديدة"
       create_long: "إنشاء فئة جديدة"
       save: "احفظ الفئة"
+      unsaved_changes: "لديك تغييرات غير محفوظة"
       slug: "مسار الفئة"
       parent: "الفئة الرئيسية"
       slug_placeholder: "(اختياري) كلمات مفصولة بشرطة لعنوان URL"
@@ -6484,7 +6486,6 @@ ar:
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
-    reset_filter: "إعادة التعيين"
     toggle_filters: "تبديل عوامل تصفية القائمة المنسدلة"
     admin:
       title: "مسؤول Discourse"
@@ -7029,6 +7030,7 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
+          no_new_features_error: "حدث خطأ أثناء تحميل الموجز. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة في <a href='%{url}' target='_blank'>مجتمع Discourse Meta</a>."
           learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"

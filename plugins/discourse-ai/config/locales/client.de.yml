@@ -14,7 +14,6 @@ de:
               search: "Ermöglicht KI-Suche"
               stream_completion: "Ermöglicht das Streamen von KI-Persona-Vervollständigungen"
               update_personas: "Ermöglicht die Aktualisierung von KI-Personas"
-              manage_artifacts: "Ermöglicht die Verwaltung von KI-Artefakten (auflisten, anzeigen, erstellen, aktualisieren, löschen)"
       site_settings:
         categories:
           discourse_ai: "Discourse KI"
@@ -45,9 +44,6 @@ de:
             create_ai_embedding: "KI-Einbettung erstellen"
             update_ai_embedding: "KI-Einbettung aktualisieren"
             delete_ai_embedding: "KI-Einbettung löschen"
-            create_ai_secret: "KI-Geheimschlüssel erstellen"
-            update_ai_secret: "KI-Geheimschlüssel aktualisieren"
-            delete_ai_secret: "KI-Geheimschlüssel löschen"
             update_ai_spam_settings: "KI-Spam-Einstellungen aktualisieren"
   js:
     discourse_automation:
@@ -229,9 +225,6 @@ de:
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder Persona kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
-      llm_selector:
-        none: "Keiner"
-        saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
         description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
@@ -326,7 +319,6 @@ de:
           image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
-          chat_thread_titles: "Titel von Chat-Threads"
           setting_groups:
             access_permissions: "Zugriff & Berechtigungen"
             enabled_features: "Aktivierte Funktionen"
@@ -506,7 +498,6 @@ de:
         overwrite: "Überschreiben"
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
-        use_parent_llm: "Verwende das Sprachmodell der Persona"
         max_context_posts: "Max. Kontext-Beiträge"
         max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
         vision_enabled: Sehen aktiviert
@@ -641,14 +632,7 @@ de:
         parameter_description: "Parameterbeschreibung"
         enum_value: "Aufzählungswert"
         add_enum_value: "Aufzählungswert hinzufügen"
-        secret_alias: "Alias für Anmeldedaten"
-        secret_alias_help: "Alias, auf den in Skripten über secrets.get(\"alias_name\") verwiesen wird. Verwende Buchstaben, Zahlen und Unterstriche."
-        secret_credential: "Anmeldedaten"
-        add_secret_contract: "Anmeldedaten hinzufügen"
-        remove_secret_contract: "Anmeldedaten entfernen"
-        credential_not_set: "(nicht festgelegt)"
         edit: "Bearbeiten"
-        test: "Testen"
         delete: "Löschen"
         saved: "Tool gespeichert"
         confirm_delete: "Bist du sicher, dass du dieses Tool löschen willst?"
@@ -656,31 +640,6 @@ de:
           title: "KI-Tool testen"
           run: "Test ausführen"
           result: "Testergebnis"
-      secrets:
-        short_title: "Anmeldedaten"
-        description: "Verwalte Authentifizierungsdaten, die von allen LLMs, Einbettungen und Tools gemeinsam genutzt werden."
-        name: "Name"
-        secret: "Wert"
-        select_secret: "Wähle Anmeldedaten aus …"
-        create_new: "Neue Anmeldedaten"
-        add_secret: "Anmeldedaten hinzufügen"
-        saved: "Anmeldedaten gespeichert"
-        confirm_delete: "Bist du sicher, dass du diese Anmeldedaten löschen möchtest?"
-        delete_failed_in_use: "Diese Anmeldedaten werden derzeit verwendet und können nicht gelöscht werden."
-        no_secrets: "Noch keine Anmeldedaten"
-        new_title: "Neue Anmeldedaten"
-        edit_title: "Anmeldedaten bearbeiten"
-        back: "Zurück"
-        save: "Speichern"
-        edit: "Bearbeiten"
-        delete: "Löschen"
-        used_by: "Verwendet von"
-        not_used: "Nicht in Verwendung"
-        embedding: "Einbettung"
-        cannot_delete_in_use: "Diese Anmeldedaten können nicht gelöscht werden. Sie werden verwendet von:"
-        tool: "Tool"
-        modal:
-          title: "Neue Anmeldedaten erstellen"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -746,20 +705,8 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-6: "Das intelligenteste Modell von Anthropic"
-          anthropic-claude-sonnet-4-6: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-3-pro: "Googles intelligentestes Modell"
-          google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
-          open_ai-gpt-5-2: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten."
-          open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
-          open_router-deepseek-deepseek-v3-2: "DeepSeeks neuestes Hochleistungsmodell"
-          open_router-moonshotai-kimi-k2-5: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
-          open_router-x-ai-grok-4-fast: "Das Vorzeigemodell von xAI mit Bildverarbeitung"
-          open_router-minimax-minimax-m2-5: "Das multimodale Modell von MiniMax mit großem Kontext"
-          open_router-z-ai-glm-5: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
-          open_router-arcee-ai-trinity-large-preview-free: "Kostenloses Open-Source-Modell von Arcee AI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
           title: "Konfigurierte LLMs"
@@ -814,7 +761,6 @@ de:
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
           enable_native_tool: "Aktiviere native Tool-Unterstützung"
           disable_native_tools: "Native Tool-Unterstützung deaktivieren (XML-basierte Tools verwenden)"
-          disable_native_structured_output: "Deaktiviere die native strukturierte Ausgabe (verwende stattdessen das Vorausfüllen von Assistenznachrichten, erforderlich für Claude 3.x und älter)"
           provider_order: "Anbieterreihenfolge (kommagetrennte Liste)"
           provider_quantizations: "Reihenfolge der Provider-Quantisierungen (kommagetrennte Liste, z. B.: fp16,fp8)"
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
@@ -829,7 +775,6 @@ de:
           prompt_caching_never: "Niemals - Keine zwischengespeicherten Aufforderungen verwenden"
           prompt_caching_tool_results: "Tool-Ergebnisse - Zwischenspeichern, wenn Tool-Ergebnisse vorhanden sind (empfohlen)"
           prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
-          effort: "Anstrengungsgrad"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -942,14 +887,11 @@ de:
           model_name: "Modellname"
         semantic_search: "Themen (semantisch)"
         semantic_search_results:
-          toggle: "KI-Ergebnisse"
           unavailable: "KI-Ergebnisse nicht verfügbar"
           zero_results_expanded: "Keine Ergebnisse gefunden, es werden %{count} KI-Ergebnisse angezeigt"
         semantic_search_tooltips:
           results_explanation: "Wenn diese Funktion aktiviert ist, werden zusätzliche KI-Suchergebnisse unten hinzugefügt."
           invalid_sort: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
-          not_submitted: "Führe eine Suche aus, um KI-Ergebnisse zu sehen."
-          no_results: "Für diese Suche wurden keine KI-Ergebnisse gefunden."
         semantic_search_unavailable_tooltip: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
         ai_generated_result: "Suchergebnis mit KI gefunden"
         quick_search:

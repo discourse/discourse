@@ -33,9 +33,6 @@ es:
           new_name: "Nueva publicidad interna"
           save: "Guardar"
           delete: "Eliminar"
-          html: "HTML"
-          categories: "Categorías"
-          groups: "Grupos"
           filter_placeholder: "Seleccionar anuncios..."
           more_settings: "Más ajustes"
           show_to_anons: "Mostrar a usuarios anónimos"
@@ -43,11 +40,6 @@ es:
           category_chooser_description: "Elige las categorías en las que debe mostrarse este anuncio o déjalo vacío para mostrar el anuncio en todas partes. El ajuste del sitio «no_ads_for_categories» tiene prioridad sobre este ajuste."
           group_chooser_description: "Elige los grupos que pueden ver este anuncio o déjalo vacío para mostrar el anuncio a todos los usuarios registrados."
           preview: "Vista previa"
-          back: "Publicidad interna"
-          name: "Nombre"
-          edit: "Editar"
-          tabs:
-            settings: "Ajustes"
           topic_list_top:
             title: "Anuncios destacados de la lista de temas"
             description: "Anuncios a mostrar en la parte superior de las listas de temas."

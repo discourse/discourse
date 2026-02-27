@@ -3333,6 +3333,12 @@ ur:
         delete_topics_count:
           one: "موضوع حذف کریں"
           other: "موضوعات حذف کریں"
+        delete_posts_count:
+          one: "پوسٹ حذف کریں"
+          other: "پوسٹس حذف کریں"
+        delete_posts_confirmation:
+          one: "کیا آپ واقعی %{count} پوسٹ حذف کرنا چاہتے ہیں؟"
+          other: "کیا آپ واقعی %{count} پوسٹس حذف کرنا چاہتے ہیں؟"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام بغیر پڑھے ہوئے بر خاست کریں"
         dismiss_read_with_selected:
@@ -3910,6 +3916,7 @@ ur:
         actions: "حجمی عوامل"
     post:
       accessible_heading: "پوسٹ منجانب %{username} %{date}"
+      heading_anchor: "ہیڈنگ لنک"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
       quote_reply_shortcut: "اقتباس (یا q دبائیں)"
@@ -4236,8 +4243,10 @@ ur:
         delete: "مٹائیں"
         add: "مطلوبہ دہجی گروپ شامل کریں"
         placeholder: "دہجی گروپ کا انتخاب"
+        tag_group: "ٹیگ گروپ"
       topic_featured_link_allowed: "اس زمرہ میں نمایاں رابطوں کو اجازت دیں"
       create_long: "نیا زمرہ بنائیں"
+      unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
       slug_placeholder: "(اختیاری) URL کے لئے ڈیش دار الفاظ"
       creation_error: زمرہ بنانے کے دوران ایک خرابی کا سامنا کرنا پڑا۔
       save_error: زمرہ محفوظ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔
@@ -5337,7 +5346,6 @@ ur:
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
-    reset_filter: "رِی سَیٹ"
     admin:
       title: "ڈِسکورس منتظم"
       moderator: "نگران"

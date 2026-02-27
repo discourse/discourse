@@ -73,7 +73,6 @@ zh_CN:
         closed: "该频道已关闭，无法编辑或删除任何消息"
         read_only: "该频道为只读频道，无法编辑或删除任何消息"
       user_cannot_send_message: "您目前无法发送消息。"
-      user_not_in_channel: "您必须是本频道的会员。"
       rate_limit_exceeded: "超过了 30 秒内可发送的聊天消息的上限"
       auto_silence_from_flags: "聊天消息被举报的分数高到足以将用户禁言。"
       channel_cannot_be_archived: "目前无法归档该频道，必须将其关闭或打开才能归档。"
@@ -241,8 +240,6 @@ zh_CN:
           other: "[%{site_name}] 新消息"
         watched_thread:
           other: "[%{site_name}] %{channel} 中有新对话消息"
-        watched_threads:
-          other: "[%{site_name}] %{channel} 和其他 %{count} 个频道中的新对话消息"
         chat_dm_1:
           other: "[%{site_name}] 来自 %{name} 的新消息"
         chat_dm_2: "[%{site_name}] 来自 %{name_1} 和 %{name_2} 的新消息"

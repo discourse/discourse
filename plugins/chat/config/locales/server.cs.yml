@@ -73,7 +73,6 @@ cs:
         closed: "Kanál je uzavřen, žádné zprávy nelze upravovat ani mazat"
         read_only: "Kanál je pouze pro čtení, žádné zprávy nelze upravovat ani mazat"
       user_cannot_send_message: "Momentálně nelze odesílat zprávy."
-      user_not_in_channel: "Musíte být členem tohoto kanálu."
       rate_limit_exceeded: "Překročení limitu zpráv chatu, které lze odeslat během 30 sekund."
       auto_silence_from_flags: "Zpráva v chatu nahlášená dostatečně vysokým skóre, aby uživatele ztišila."
       channel_cannot_be_archived: "Kanál nelze v tuto chvíli archivovat, musí být buď uzavřen, nebo otevřen pro archivaci."

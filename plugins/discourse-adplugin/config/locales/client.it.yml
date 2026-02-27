@@ -26,9 +26,6 @@ it:
           new_name: "Nuovi annunci interni"
           save: "Salva"
           delete: "Elimina"
-          html: "HTML"
-          categories: "Categorie"
-          groups: "Gruppi"
           filter_placeholder: "Seleziona annunci..."
           more_settings: "Altre Impostazioni"
           show_to_anons: "Mostra agli utenti anonimi"
@@ -36,11 +33,6 @@ it:
           category_chooser_description: "Scegli le categorie in cui visualizzare questo annuncio o lascia vuoto per mostrare l'annuncio ovunque. L'impostazione del sito \"no_ads_for_categories\" ha la priorità su questa impostazione."
           group_chooser_description: "Scegli i gruppi che possono visualizzare questo annuncio o lascia vuoto per mostrare l'annuncio a tutti gli utenti che hanno effettuato l'accesso."
           preview: "Anteprima"
-          back: "Annunci interni"
-          name: "Nome"
-          edit: "Modifica"
-          tabs:
-            settings: "Impostazioni"
           topic_list_top:
             title: "Annunci in cima all'elenco argomenti"
             description: "Annunci da mostrare in cima alle pagine con gli elenchi di argomenti."

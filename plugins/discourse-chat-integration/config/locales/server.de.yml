@@ -51,8 +51,6 @@ de:
     chat_integration_flowdock_excerpt_length: "Auszugslänge für Flowdock-Beiträge"
     chat_integration_groupme_enabled: "Aktiviere den Chat-Integration-Provider für Groupme"
     chat_integration_groupme_excerpt_length: "Auszugslänge für Groupme-Beiträge"
-    chat_integration_groupme_bot_ids: "*erforderlich* Bot-IDs getrennt durch „,“ (Komma), falls mehrere vorhanden sind"
-    chat_integration_groupme_instance_names: " *erforderlich* Name des GroupMe-Chats getrennt durch „,“ (Komma), falls mehrere vorhanden sind (gleiche Reihenfolge wie Bot-IDs)"
     chat_integration_teams_enabled: "Aktiviere den Chat-Integration-Provider für Microsoft Teams"
     chat_integration_teams_excerpt_length: "Auszugslänge für „Microsoft Teams“-Beiträge"
     chat_integration_powerautomate_enabled: "„Microsoft Power Automate“-Integrationsanbieter aktivieren"
@@ -93,10 +91,8 @@ de:
         create:
           created: "Regel erfolgreich erstellt"
           updated: "Regel erfolgreich aktualisiert"
-          error: "Entschuldige, ein Fehler ist beim Erstellen dieser Regel aufgetreten."
         delete:
           success: "Regel erfolgreich gelöscht"
-          error: "Leider ist beim Löschen dieser Regel ein Fehler aufgetreten. Führe `/discourse status` aus, um eine Liste der Regeln einzusehen."
         not_found:
           tag: "Das Schlagwort *%{name}* kann nicht gefunden werden."
           category: "Die Kategorie *%{name}* kann nicht gefunden werden. Verfügbare Kategorien: *%{list}*"
@@ -158,10 +154,8 @@ de:
         create:
           created: "Regel erfolgreich erstellt"
           updated: "Regel erfolgreich aktualisiert"
-          error: "Entschuldige, ein Fehler ist beim Erstellen dieser Regel aufgetreten."
         delete:
           success: "Regel erfolgreich gelöscht"
-          error: "Entschuldige, ein Fehler ist beim Löschen dieser Regel aufgetreten. Führe <code>/status</code> aus für eine Liste der Regeln."
         not_found:
           tag: "Das Schlagwort <b>%{name}</b> kann nicht gefunden werden."
           category: "Die Kategorie <b>%{name}</b> kann nicht gefunden werden. Verfügbare Kategorien: <b>%{list}</b>"
@@ -192,10 +186,8 @@ de:
         create:
           created: "Regel erfolgreich erstellt"
           updated: "Regel erfolgreich aktualisiert"
-          error: "Entschuldige, ein Fehler ist beim Erstellen dieser Regel aufgetreten."
         delete:
           success: "Regel erfolgreich gelöscht"
-          error: "Leider ist beim Löschen dieser Regel ein Fehler aufgetreten. Führe `/discourse status` aus, um eine Liste der Regeln einzusehen."
         not_found:
           tag: "Das Schlagwort *%{name}* kann nicht gefunden werden."
           category: "Die Kategorie *%{name}* kann nicht gefunden werden. Verfügbare Kategorien: *%{list}*"

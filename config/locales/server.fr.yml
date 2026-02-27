@@ -2104,6 +2104,7 @@ fr:
     mailgun_api_key: "Clé d'API secrète de Mailgun utilisée pour vérifier les messages du webhook."
     sendgrid_verification_key: "Clé de vérification Sendgrid utilisée pour vérifier les messages du webhook."
     mailjet_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Clé d'authentification Mandrill utilisée pour vérifier les messages du webhook."
     postmark_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/sparkpost?t=supersecret"
