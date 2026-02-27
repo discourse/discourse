@@ -12,73 +12,147 @@ export default class ChatSubscriptionsManager extends Service {
   @service chat;
   @service dialog;
   @service router;
+  @service chatChannelNoticesManager;
 
-  _globalLastIds = {};
+  _channelCallbacks = new Map();
 
-  startChannelsSubscriptions(messageBusIds) {
-    this._startNewChannelSubscription(messageBusIds.new_channel);
-    this._startChannelUpdatesSubscription(messageBusIds.channel_updates);
+  startChannelsSubscriptions(messageBusIds, channels) {
+    this._startPerChannelSubscriptions(channels);
     this._startUserStateSubscription(messageBusIds.user_state);
   }
 
   stopChannelsSubscriptions() {
-    this._stopNewChannelSubscription();
-    this._stopChannelUpdatesSubscription();
+    this._stopPerChannelSubscriptions();
     this._stopUserStateSubscription();
   }
 
-  _startChannelUpdatesSubscription(lastId) {
-    this._globalLastIds["/chat/channel-updates"] = lastId;
-    this.messageBus.subscribe(
-      "/chat/channel-updates",
-      this._onChannelUpdate,
-      lastId
-    );
+  subscribeToChannel(channel) {
+    if (this._channelCallbacks.has(channel.id)) {
+      return;
+    }
+    this._subscribeToChannel(channel);
   }
 
-  _stopChannelUpdatesSubscription() {
-    this.messageBus.unsubscribe("/chat/channel-updates", this._onChannelUpdate);
+  unsubscribeFromChannel(channel) {
+    this._unsubscribeFromChannel(channel);
   }
 
-  @bind
-  _onChannelUpdate(busData, _globalId, messageId) {
-    this._checkForGap("/chat/channel-updates", messageId);
+  _startPerChannelSubscriptions(channels) {
+    channels?.forEach((channel) => this._subscribeToChannel(channel));
+  }
 
-    switch (busData.type) {
-      case "edits":
-        this._onChannelEdits(busData);
-        break;
-      case "status":
-        this._onChannelStatus(busData);
-        break;
-      case "metadata":
-        this._onChannelMetadata(busData);
-        break;
-      case "archive_status":
-        this._onChannelArchiveStatusUpdate(busData);
-        break;
-      case "new_messages":
-        this._onNewMessages(busData);
-        break;
-      case "new_mentions":
-        this._onNewMentions(busData);
-        break;
-      case "kick":
-        this._onKickFromChannel(busData);
-        break;
+  _stopPerChannelSubscriptions() {
+    for (const [channelId, callback] of this._channelCallbacks) {
+      this.messageBus.unsubscribe(`/chat/${channelId}`, callback);
+    }
+    this._channelCallbacks.clear();
+  }
+
+  _subscribeToChannel(channel) {
+    if (this._channelCallbacks.has(channel.id)) {
+      return;
+    }
+
+    const busChannel = `/chat/${channel.id}`;
+    let lastId = channel.channelMessageBusLastId;
+    const callback = (busData, _globalId, messageId) => {
+      // Gap detection runs synchronously, before any microtask from the
+      // view-time ChatChannelSubscriptionManager can update channelMessageBusLastId.
+      if (lastId >= 0 && messageId !== lastId + 1) {
+        this.chat.flagDesync(
+          `${busChannel}: expected ${lastId + 1}, got ${messageId}`
+        );
+      }
+      lastId = messageId;
+
+      this._onPerChannelMessage(channel.id, busData, messageId);
+    };
+
+    this._channelCallbacks.set(channel.id, callback);
+    this.messageBus.subscribe(busChannel, callback, lastId);
+  }
+
+  _unsubscribeFromChannel(channel) {
+    const callback = this._channelCallbacks.get(channel.id);
+    if (callback) {
+      this.messageBus.unsubscribe(`/chat/${channel.id}`, callback);
+      this._channelCallbacks.delete(channel.id);
     }
   }
 
-  _onChannelArchiveStatusUpdate(busData) {
+  @bind
+  _onPerChannelMessage(channelId, busData, messageId) {
     this.chatChannelsManager
-      .find(busData.chat_channel_id, { fetchIfNotFound: false })
+      .find(channelId, { fetchIfNotFound: false })
       .then((channel) => {
         if (!channel) {
           return;
         }
 
-        channel.archive = ChatChannelArchive.create(busData);
+        channel.channelMessageBusLastId = messageId;
+
+        switch (busData.type) {
+          case "sent":
+            this._onSentForTracking(channel, busData);
+            break;
+          case "new_messages":
+            this._onNewMessages(busData);
+            break;
+          case "edits":
+            this._onChannelEdits(channel, busData);
+            break;
+          case "status":
+            this._onChannelStatus(channel, busData);
+            break;
+          case "metadata":
+            this._onChannelMetadata(channel, busData);
+            break;
+          case "archive_status":
+            this._onChannelArchiveStatusUpdate(channel, busData);
+            break;
+        }
       });
+  }
+
+  _onSentForTracking(channel, busData) {
+    const message = busData.chat_message;
+    if (!message) {
+      return;
+    }
+
+    channel.lastMessage = message;
+    const user = message.user;
+    if (user.id === this.currentUser.id) {
+      channel.currentUserMembership.lastReadMessageId = message.id;
+    } else {
+      if (this.currentUser.ignored_users.includes(user.username)) {
+        channel.currentUserMembership.lastReadMessageId = message.id;
+      } else {
+        if (
+          message.id > (channel.currentUserMembership.lastReadMessageId || 0)
+        ) {
+          channel.tracking.unreadCount++;
+        }
+
+        if (busData.chat_message.thread_id && channel.threadingEnabled) {
+          channel.threadsManager
+            .find(channel.id, busData.chat_message.thread_id)
+            .then((thread) => {
+              if (thread?.currentUserMembership) {
+                channel.threadsManager.markThreadUnread(
+                  busData.chat_message.thread_id,
+                  busData.chat_message.created_at
+                );
+                this._updateActiveLastViewedAt(channel);
+              }
+            });
+        }
+      }
+    }
+  }
+
+  _onChannelArchiveStatusUpdate(channel, busData) {
+    channel.archive = ChatChannelArchive.create(busData);
   }
 
   _onNewMentions(busData) {
@@ -131,59 +205,10 @@ export default class ChatSubscriptionsManager extends Service {
 
   _onNewMessages(busData) {
     switch (busData.payload_type) {
-      case "channel":
-        this._onNewChannelMessage(busData);
-        break;
       case "thread":
         this._onNewThreadMessage(busData);
         break;
     }
-  }
-
-  _onNewChannelMessage(busData) {
-    this.chatChannelsManager
-      .find(busData.channel_id, { fetchIfNotFound: false })
-      .then((channel) => {
-        if (!channel) {
-          return;
-        }
-
-        channel.lastMessage = busData.message;
-        const user = busData.message.user;
-        if (user.id === this.currentUser.id) {
-          // User sent message, update tracking state to no unread
-          channel.currentUserMembership.lastReadMessageId =
-            channel.lastMessage.id;
-        } else {
-          // Ignored user sent message, update tracking state to no unread
-          if (this.currentUser.ignored_users.includes(user.username)) {
-            channel.currentUserMembership.lastReadMessageId =
-              channel.lastMessage.id;
-          } else {
-            if (
-              channel.lastMessage.id >
-              (channel.currentUserMembership.lastReadMessageId || 0)
-            ) {
-              channel.tracking.unreadCount++;
-            }
-
-            // Thread should be considered unread if not already.
-            if (busData.thread_id && channel.threadingEnabled) {
-              channel.threadsManager
-                .find(channel.id, busData.thread_id)
-                .then((thread) => {
-                  if (thread?.currentUserMembership) {
-                    channel.threadsManager.markThreadUnread(
-                      busData.thread_id,
-                      busData.message.created_at
-                    );
-                    this._updateActiveLastViewedAt(channel);
-                  }
-                });
-            }
-          }
-        }
-      });
   }
 
   _onNewThreadMessage(busData) {
@@ -208,7 +233,6 @@ export default class ChatSubscriptionsManager extends Service {
             thread.lastMessageId = busData.message.id;
 
             if (busData.message.user.id === this.currentUser.id) {
-              // Thread should no longer be considered unread.
               if (thread.currentUserMembership) {
                 channel.threadsManager.unreadThreadOverview.delete(
                   parseInt(busData.thread_id, 10)
@@ -217,7 +241,6 @@ export default class ChatSubscriptionsManager extends Service {
                   busData.message.id;
               }
             } else {
-              // Ignored user sent message, update tracking state to no unread
               if (
                 this.currentUser.ignored_users.includes(
                   busData.message.user.username
@@ -228,7 +251,6 @@ export default class ChatSubscriptionsManager extends Service {
                     busData.message.id;
                 }
               } else {
-                // Message from other user. Increment unread for thread tracking state.
                 if (
                   thread.currentUserMembership &&
                   busData.message.id >
@@ -258,8 +280,6 @@ export default class ChatSubscriptionsManager extends Service {
       });
   }
 
-  // If the user is currently looking at this channel via activeChannel, we don't want the unread
-  // indicator to show in the sidebar for unread threads (since that is based on the lastViewedAt).
   _updateActiveLastViewedAt(channel) {
     if (this.chat.activeChannel?.id === channel.id) {
       channel.updateLastViewedAt();
@@ -272,7 +292,7 @@ export default class ChatSubscriptionsManager extends Service {
     }
 
     const channel = `/chat/user-state/${this.currentUser.id}`;
-    this._globalLastIds[channel] = lastId;
+    this._userStateLastId = lastId;
     this.messageBus.subscribe(channel, this._onUserState, lastId);
   }
 
@@ -289,7 +309,13 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _onUserState(busData, _globalId, messageId) {
-    this._checkForGap(`/chat/user-state/${this.currentUser.id}`, messageId);
+    const channel = `/chat/user-state/${this.currentUser.id}`;
+    if (this._userStateLastId >= 0 && messageId !== this._userStateLastId + 1) {
+      this.chat.flagDesync(
+        `${channel}: expected ${this._userStateLastId + 1}, got ${messageId}`
+      );
+    }
+    this._userStateLastId = messageId;
 
     switch (busData.type) {
       case "tracking_state":
@@ -300,6 +326,21 @@ export default class ChatSubscriptionsManager extends Service {
         break;
       case "has_threads":
         this._onUserHasThreads(busData);
+        break;
+      case "new_mentions":
+        this._onNewMentions(busData);
+        break;
+      case "kick":
+        this._onKickFromChannel(busData);
+        break;
+      case "new_channel":
+        this._onNewChannelMessage(busData);
+        break;
+      case "notice":
+        this._onNotice(busData);
+        break;
+      case "self_flagged":
+        this._onSelfFlagged(busData);
         break;
     }
   }
@@ -366,26 +407,7 @@ export default class ChatSubscriptionsManager extends Service {
     });
   }
 
-  _startNewChannelSubscription(lastId) {
-    this._globalLastIds["/chat/new-channel"] = lastId;
-    this.messageBus.subscribe(
-      "/chat/new-channel",
-      this._onNewChannelSubscription,
-      lastId
-    );
-  }
-
-  _stopNewChannelSubscription() {
-    this.messageBus.unsubscribe(
-      "/chat/new-channel",
-      this._onNewChannelSubscription
-    );
-  }
-
-  @bind
-  _onNewChannelSubscription(data, _globalId, messageId) {
-    this._checkForGap("/chat/new-channel", messageId);
-
+  _onNewChannelMessage(data) {
     const channel = this.chatChannelsManager.store(data.channel);
     channel.meta = data.channel.meta;
     channel.currentUserMembership = data.channel.current_user_membership;
@@ -398,56 +420,46 @@ export default class ChatSubscriptionsManager extends Service {
     }
 
     this.chatChannelsManager.follow(channel);
+    this._subscribeToChannel(channel);
   }
 
-  _onChannelMetadata(busData) {
+  _onNotice(busData) {
+    this.chatChannelNoticesManager.handleNotice(busData);
+  }
+
+  _onSelfFlagged(busData) {
     this.chatChannelsManager
-      .find(busData.chat_channel_id, { fetchIfNotFound: false })
+      .find(busData.channel_id, { fetchIfNotFound: false })
       .then((channel) => {
-        if (channel) {
-          channel.membershipsCount = busData.memberships_count;
-          this.appEvents.trigger("chat:refresh-channel-members");
+        if (!channel) {
+          return;
+        }
+
+        const message = channel.messagesManager.findMessage(
+          busData.chat_message_id
+        );
+        if (message) {
+          message.userFlagStatus = busData.user_flag_status;
         }
       });
   }
 
-  _onChannelEdits(busData) {
-    this.chatChannelsManager
-      .find(busData.chat_channel_id, { fetchIfNotFound: false })
-      .then((channel) => {
-        if (channel) {
-          channel.title = busData.name;
-          channel.description = busData.description;
-          channel.slug = busData.slug;
-        }
-      });
+  _onChannelMetadata(channel, busData) {
+    channel.membershipsCount = busData.memberships_count;
+    this.appEvents.trigger("chat:refresh-channel-members");
   }
 
-  _onChannelStatus(busData) {
-    this.chatChannelsManager
-      .find(busData.chat_channel_id, { fetchIfNotFound: false })
-      .then((channel) => {
-        if (channel) {
-          channel.status = busData.status;
-
-          // it is not possible for the user to set their last read message id
-          // if the channel has been archived, because all the messages have
-          // been deleted. we don't want them seeing the blue dot anymore so
-          // just completely reset the unreads
-          if (busData.status === CHANNEL_STATUSES.archived) {
-            channel.tracking.reset();
-          }
-        }
-      });
+  _onChannelEdits(channel, busData) {
+    channel.title = busData.name;
+    channel.description = busData.description;
+    channel.slug = busData.slug;
   }
 
-  _checkForGap(channel, messageId) {
-    const lastId = this._globalLastIds[channel];
-    if (lastId >= 0 && messageId !== lastId + 1) {
-      this.chat.flagDesync(
-        `${channel}: expected ${lastId + 1}, got ${messageId}`
-      );
+  _onChannelStatus(channel, busData) {
+    channel.status = busData.status;
+
+    if (busData.status === CHANNEL_STATUSES.archived) {
+      channel.tracking.reset();
     }
-    this._globalLastIds[channel] = messageId;
   }
 }

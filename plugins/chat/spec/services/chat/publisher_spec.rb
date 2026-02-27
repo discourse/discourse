@@ -210,24 +210,13 @@ describe Chat::Publisher do
     let(:staged_id) { 999 }
 
     context "when the message is not a thread reply" do
-      it "publishes to the CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL" do
+      it "publishes only the sent message to the channel" do
         messages =
-          MessageBus.track_publish(described_class::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL) do
+          MessageBus.track_publish("/chat/#{channel.id}") do
             described_class.publish_new!(channel, message_1, staged_id)
           end
-        expect(messages.first.data).to eq(
-          {
-            type: "new_messages",
-            payload_type: "channel",
-            channel_id: channel.id,
-            thread_id: nil,
-            message:
-              Chat::MessageSerializer.new(
-                message_1,
-                { scope: Guardian.new(nil), root: false },
-              ).as_json,
-          },
-        )
+        expect(messages.length).to eq(1)
+        expect(messages.first.data["type"]).to eq("sent")
       end
 
       it "calls MessageBus with the correct permissions" do
@@ -252,12 +241,13 @@ describe Chat::Publisher do
       context "if threading_enabled is false for the channel" do
         before { channel.update!(threading_enabled: false) }
 
-        it "publishes to the CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL" do
+        it "publishes only the sent message to the channel" do
           messages =
-            MessageBus.track_publish(described_class::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL) do
+            MessageBus.track_publish("/chat/#{channel.id}") do
               described_class.publish_new!(channel, message_1, staged_id)
             end
-          expect(messages).not_to be_empty
+          expect(messages.length).to eq(1)
+          expect(messages.first.data["type"]).to eq("sent")
         end
 
         it "calls MessageBus with the correct permissions" do
@@ -271,25 +261,20 @@ describe Chat::Publisher do
       context "if threading_enabled is true for the channel" do
         before { channel.update!(threading_enabled: true) }
 
-        it "publishes to the CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL" do
+        it "publishes new_messages to the per-channel topic" do
           messages =
-            MessageBus.track_publish(described_class::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL) do
+            MessageBus.track_publish("/chat/#{channel.id}") do
               described_class.publish_new!(channel, message_1, staged_id)
             end
-          expect(messages.first.data).to eq(
-            {
-              type: "new_messages",
-              payload_type: "thread",
-              channel_id: channel.id,
-              thread_id: thread.id,
-              force_thread: false,
-              message:
-                Chat::MessageSerializer.new(
-                  message_1,
-                  { scope: Guardian.new(nil), root: false },
-                ).as_json,
-            },
+          new_messages = messages.select { |m| m.data["type"] == "new_messages" }
+          expect(new_messages.first.data).to include(
+            "type" => "new_messages",
+            "payload_type" => "thread",
+            "channel_id" => channel.id,
+            "thread_id" => thread.id,
+            "force_thread" => false,
           )
+          expect(new_messages.first.data["message"]).to be_present
         end
 
         it "calls MessageBus with the correct permissions" do

@@ -38,27 +38,9 @@ module Chat
         serialize_message_with_type(chat_message, :sent).merge(staged_id: staged_id),
       )
 
-      if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel, chat_message)
-        MessageBus.publish(
-          CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
-          {
-            type: "new_messages",
-            payload_type: "channel",
-            channel_id: chat_channel.id,
-            thread_id: chat_message.thread_id,
-            message:
-              Chat::MessageSerializer.new(
-                chat_message,
-                { scope: anonymous_guardian, root: false },
-              ).as_json,
-          },
-          permissions(chat_channel),
-        )
-      end
-
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel, chat_message)
-        MessageBus.publish(
-          CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+        publish_to_channel!(
+          chat_channel,
           {
             type: "new_messages",
             payload_type: "thread",
@@ -71,7 +53,6 @@ module Chat
                 { scope: anonymous_guardian, root: false },
               ).as_json,
           },
-          permissions(chat_channel),
         )
 
         publish_thread_original_message_metadata!(chat_message.thread)
@@ -213,21 +194,19 @@ module Chat
     def self.publish_flag!(chat_message, user, reviewable, score)
       message_bus_targets = calculate_publish_targets(chat_message.chat_channel, chat_message)
 
-      # Publish to user who created flag
-      publish_to_targets!(
-        message_bus_targets,
-        chat_message.chat_channel,
+      # Publish to user who created flag via user-state channel
+      MessageBus.publish(
+        user_state_message_bus_channel(user.id),
         {
           type: :self_flagged,
           user_flag_status: score.status_for_database,
           chat_message_id: chat_message.id,
-        },
-        permissions: {
-          user_ids: [user.id],
-        },
+          channel_id: chat_message.chat_channel.id,
+        }.as_json,
+        user_ids: [user.id],
       )
 
-      # Publish flag with link to reviewable to staff
+      # Publish flag with link to reviewable to staff (stays on per-channel)
       publish_to_targets!(
         message_bus_targets,
         chat_message.chat_channel,
@@ -336,13 +315,11 @@ module Chat
 
     def self.publish_new_mention(user_id, chat_channel_id, chat_message_id)
       MessageBus.publish(
-        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+        user_state_message_bus_channel(user_id),
         { type: "new_mentions", message_id: chat_message_id, channel_id: chat_channel_id }.as_json,
         user_ids: [user_id],
       )
     end
-
-    NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
 
     def self.publish_new_channel(chat_channel, user_ids)
       Chat::UserChatChannelMembership
@@ -359,8 +336,8 @@ module Chat
               ).as_json
 
             MessageBus.publish(
-              NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
-              serialized_channel,
+              user_state_message_bus_channel(membership.user.id),
+              { type: "new_channel" }.merge(serialized_channel).as_json,
               user_ids: [membership.user.id],
             )
           end
@@ -368,18 +345,18 @@ module Chat
     end
 
     def self.publish_kick_users(channel_id, user_ids)
-      MessageBus.publish(
-        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
-        { type: "kick", channel_id: channel_id },
-        user_ids: user_ids,
-      )
+      user_ids.each do |uid|
+        MessageBus.publish(
+          user_state_message_bus_channel(uid),
+          { type: "kick", channel_id: channel_id }.as_json,
+          user_ids: [uid],
+        )
+      end
     end
 
-    CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL = "/chat/channel-updates"
-
     def self.publish_chat_channel_edit(chat_channel, acting_user)
-      MessageBus.publish(
-        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+      publish_to_channel!(
+        chat_channel,
         {
           type: "edits",
           chat_channel_id: chat_channel.id,
@@ -387,27 +364,24 @@ module Chat
           description: chat_channel.description,
           slug: chat_channel.slug,
         },
-        permissions(chat_channel),
       )
     end
 
     def self.publish_channel_status(chat_channel)
-      MessageBus.publish(
-        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+      publish_to_channel!(
+        chat_channel,
         { type: "status", chat_channel_id: chat_channel.id, status: chat_channel.status },
-        permissions(chat_channel),
       )
     end
 
     def self.publish_chat_channel_metadata(chat_channel)
-      MessageBus.publish(
-        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+      publish_to_channel!(
+        chat_channel,
         {
           type: "metadata",
           chat_channel_id: chat_channel.id,
           memberships_count: chat_channel.user_count,
         },
-        permissions(chat_channel),
       )
     end
 
@@ -418,8 +392,8 @@ module Chat
       archive_topic_id:,
       total_messages:
     )
-      MessageBus.publish(
-        CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
+      publish_to_channel!(
+        chat_channel,
         {
           type: "archive_status",
           chat_channel_id: chat_channel.id,
@@ -429,7 +403,6 @@ module Chat
           total_messages: total_messages,
           archive_topic_id: archive_topic_id,
         },
-        group_ids: [Group::AUTO_GROUPS[:staff]],
       )
     end
 
@@ -466,7 +439,11 @@ module Chat
         payload[:data] = data
       end
 
-      MessageBus.publish("/chat/#{channel_id}", payload, user_ids: [user_id])
+      MessageBus.publish(
+        user_state_message_bus_channel(user_id),
+        payload.as_json,
+        user_ids: [user_id],
+      )
     end
 
     private

@@ -118,7 +118,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
             .as_json
             .dig(:structured_channel, :meta, :message_bus_last_ids)
             .keys,
-        ).to eq(%i[channel_updates new_channel user_state])
+        ).to eq(%i[user_state])
       end
 
       it "calls MessageBus.last_ids with all the required channels for each public and DM chat chat channel" do
@@ -126,8 +126,6 @@ RSpec.describe Chat::StructuredChannelSerializer do
           .expects(:last_ids)
           .with do |*args|
             [
-              Chat::Publisher::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
-              Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
               Chat::Publisher.user_state_message_bus_channel(user1.id),
               Chat::Publisher.root_message_bus_channel(channel1.id),
               Chat::Publisher.root_message_bus_channel(channel2.id),

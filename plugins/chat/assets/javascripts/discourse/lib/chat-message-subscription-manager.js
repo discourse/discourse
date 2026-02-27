@@ -79,9 +79,6 @@ export default class ChatMessageSubscriptionManager {
       case "restore":
         this.handleRestoreMessage(busData);
         break;
-      case "self_flagged":
-        this.handleSelfFlaggedMessage(busData);
-        break;
       case "flag":
         this.handleFlaggedMessage(busData);
         break;
@@ -181,13 +178,6 @@ export default class ChatMessageSubscriptionManager {
       const newMessage = ChatMessage.create(this.channel, data.chat_message);
       newMessage.manager = this.messagesManager;
       this.messagesManager.addMessages([newMessage]);
-    }
-  }
-
-  handleSelfFlaggedMessage(data) {
-    const message = this.messagesManager.findMessage(data.chat_message_id);
-    if (message) {
-      message.userFlagStatus = data.user_flag_status;
     }
   }
 

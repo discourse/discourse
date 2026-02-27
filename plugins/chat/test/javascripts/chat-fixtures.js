@@ -242,8 +242,6 @@ export const chatChannels = {
     (item) => item.chat_channel
   ),
   message_bus_last_ids: {
-    channel_updates: 0,
-    new_channel: 0,
     user_state: 0,
   },
 };

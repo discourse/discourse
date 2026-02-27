@@ -1,12 +1,9 @@
 import { tracked } from "@glimmer/tracking";
-import { service } from "@ember/service";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 import ChatMessageSubscriptionManager from "./chat-message-subscription-manager";
 
 export default class ChatChannelSubscriptionManager extends ChatMessageSubscriptionManager {
-  @service chatChannelNoticesManager;
-
   @tracked _channel;
 
   constructor(context, channel, { onNewMessage } = {}) {
@@ -39,9 +36,6 @@ export default class ChatChannelSubscriptionManager extends ChatMessageSubscript
     switch (busData.type) {
       case "update_thread_original_message":
         this.handleThreadOriginalMessageUpdate(busData);
-        break;
-      case "notice":
-        this.handleNotice(busData);
         break;
       case "pin":
         this.handlePinMessage(busData);
@@ -111,10 +105,6 @@ export default class ChatChannelSubscriptionManager extends ChatMessageSubscript
           channelOriginalMessage.thread = thread;
         }
       });
-  }
-
-  handleNotice(data) {
-    this.chatChannelNoticesManager.handleNotice(data);
   }
 
   handleThreadOriginalMessageUpdate(data) {

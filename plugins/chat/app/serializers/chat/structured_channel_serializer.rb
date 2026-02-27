@@ -58,11 +58,7 @@ module Chat
     end
 
     def meta
-      last_ids = {
-        channel_updates:
-          chat_message_bus_last_ids[Chat::Publisher::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL],
-        new_channel: chat_message_bus_last_ids[Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL],
-      }
+      last_ids = {}
 
       if !scope.anonymous?
         user_state_last_id =
@@ -79,10 +75,7 @@ module Chat
     def chat_message_bus_last_ids
       @chat_message_bus_last_ids ||=
         begin
-          message_bus_channels = [
-            Chat::Publisher::CHANNEL_UPDATES_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
-          ]
+          message_bus_channels = []
 
           if !scope.anonymous?
             message_bus_channels.push(Chat::Publisher.user_state_message_bus_channel(scope.user.id))
