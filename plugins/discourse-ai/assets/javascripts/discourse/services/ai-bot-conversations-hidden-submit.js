@@ -1,7 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import { tracked } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { getUploadMarkdown } from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
