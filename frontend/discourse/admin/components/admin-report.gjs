@@ -634,13 +634,20 @@ export default class AdminReport extends Component {
               <div class="chart__filters">
                 {{#if this.isChartMode}}
 
-                  <div class="chart-groupings">
+                  <div
+                    class="chart-groupings"
+                    role="tablist"
+                    aria-label={{i18n
+                      "admin.dashboard.reports.chart_group_period"
+                    }}
+                  >
                     {{#each this.chartGroupings as |chartGrouping|}}
                       <DButton
                         @label={{chartGrouping.label}}
                         @action={{fn this.changeGrouping chartGrouping.id}}
                         @disabled={{chartGrouping.disabled}}
                         class={{chartGrouping.class}}
+                        role="tab"
                       />
                     {{/each}}
                   </div>

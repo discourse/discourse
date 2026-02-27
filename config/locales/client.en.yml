@@ -6566,6 +6566,7 @@ en:
           daily: Daily
           monthly: Monthly
           weekly: Weekly
+          chart_group_period: "Select a period"
           value_so_far: "%{value} (so far)"
           dates: "Dates (UTC)"
           groups: "All groups"
