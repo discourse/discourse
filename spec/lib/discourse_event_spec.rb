@@ -75,6 +75,27 @@ RSpec.describe DiscourseEvent do
     end
   end
 
+  describe "#trigger" do
+    it "continues executing subsequent handlers when one raises" do
+      results = []
+      handler_1 = proc { results << :first }
+      handler_2 = proc { raise "boom" }
+      handler_3 = proc { results << :third }
+
+      DiscourseEvent.on(:test_event, &handler_1)
+      DiscourseEvent.on(:test_event, &handler_2)
+      DiscourseEvent.on(:test_event, &handler_3)
+
+      DiscourseEvent.trigger(:test_event)
+
+      expect(results).to eq(%i[first third])
+    ensure
+      DiscourseEvent.off(:test_event, &handler_1)
+      DiscourseEvent.off(:test_event, &handler_2)
+      DiscourseEvent.off(:test_event, &handler_3)
+    end
+  end
+
   it "allows using kwargs" do
     begin
       handler =
