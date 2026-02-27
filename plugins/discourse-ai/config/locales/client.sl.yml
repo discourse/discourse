@@ -34,8 +34,6 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
-      llm_selector:
-        none: "Brez"
       features:
         back: "Nazaj"
         disabled: "(onemogočeno)"
@@ -126,18 +124,8 @@ sl:
         save: "Shrani"
         remove_parameter: "Odstrani"
         parameter_required: "Zahtevano"
-        credential_not_set: "(ni nastavljeno)"
         edit: "Uredi"
         delete: "Izbriši"
-      secrets:
-        short_title: "Poverilnice"
-        name: "Ime"
-        secret: "Stanje"
-        back: "Nazaj"
-        save: "Shrani"
-        edit: "Uredi"
-        delete: "Izbriši"
-        embedding: "Vdelovanje"
       llms:
         display_name: "Ime"
         save: "Shrani"

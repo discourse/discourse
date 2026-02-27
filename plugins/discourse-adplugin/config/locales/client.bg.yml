@@ -13,11 +13,4 @@ bg:
           settings: "Настройки"
           save: "Запази "
           delete: "Изтрий"
-          html: "HTML"
-          categories: "Категории"
-          groups: "Групи"
           preview: "Преглед"
-          name: "Име"
-          edit: "Редактирай"
-          tabs:
-            settings: "Настройки"

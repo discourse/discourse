@@ -178,7 +178,7 @@ export default class AdminFlagItem extends Component {
               @title={{i18n "admin.config_areas.flags.more_options.title"}}
               @icon="ellipsis-vertical"
               @onRegisterApi={{this.onRegisterApi}}
-              @class="btn-default"
+              @triggerClass="btn-default"
             >
               <:content>
                 <DropdownMenu as |dropdown|>

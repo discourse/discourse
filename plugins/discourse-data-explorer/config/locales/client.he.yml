@@ -11,12 +11,10 @@ he:
         no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
         dirty: "עליך לשמור את השאילתה בטרם ההרצה."
     explorer:
-      default_query: "ברירת מחדל"
       or: "או"
       admins_only: "דפדפן הנתונים זמין למנהלים בלבד."
       allow_groups: "לאפשר לקבוצות לגשת לשאילתה הזאת"
       title: "דפדפן נתונים"
-      create: "יצירה"
       create_placeholder: "שם השאילתה…"
       description_placeholder: "יש להקליד תיאור כאן"
       import:
@@ -37,10 +35,7 @@ he:
           null_: "ריק"
       export: "ייצוא"
       view_json: "הצגת JSON"
-      view: "תצוגה"
-      save: "שמירת השינויים"
       run: "הרצה"
-      undo: "התעלמות מהשינויים"
       edit: "עריכה"
       delete: "מחיקה"
       download_json: "JSON"

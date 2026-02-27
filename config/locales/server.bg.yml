@@ -865,6 +865,7 @@ bg:
     strip_images_from_short_emails: "Премахни от имейлите по-малките от 2800 байта изображения"
     sendgrid_verification_key: "Ключ за проверка на Sendgrid, използван за проверка на съобщенията на Webhook."
     mailjet_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Ключ за удостоверение Mandrill, който се използва за проверка на webhook съобщения"
     postmark_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/sparkpost?t=supersecret"

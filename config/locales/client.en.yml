@@ -4662,11 +4662,19 @@ en:
         delete: "Delete"
         add: "Add required tag group"
         placeholder: "Select tag group…"
+        min_count: "Tag count"
+        tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
       create: "New category"
+      create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      choose_type:
+        title: "Choose category type"
+        requires_plugin: "Requires plugin"
+      create_category: "Create category"
       save: "Save category"
+      unsaved_changes: "You have unsaved changes"
       slug: "Category slug"
       parent: "Parent category"
       slug_placeholder: "(Optional) dashed-words for url"
@@ -5929,7 +5937,7 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset"
+    reset_filter: "Reset filter"
     toggle_filters: "Toggle dropdown filters"
 
     admin:

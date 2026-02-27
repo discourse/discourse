@@ -2845,7 +2845,6 @@ lv:
         categories: "Visas sadaļas"
   admin_js:
     settings: "Iestatījumi"
-    reset_filter: "Atlikt"
     admin:
       title: "Discourse administrators"
       moderator: "Moderators"

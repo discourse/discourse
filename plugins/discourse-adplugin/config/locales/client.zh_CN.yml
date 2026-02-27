@@ -37,9 +37,6 @@ zh_CN:
           new_name: "新建自家广告"
           save: "保存"
           delete: "删除"
-          html: "HTML"
-          categories: "类别"
-          groups: "群组"
           filter_placeholder: "选择广告…"
           more_settings: "更多设置"
           show_to_anons: "向匿名用户显示"
@@ -49,11 +46,6 @@ zh_CN:
           route_chooser_description: "选择应显示此广告的页面/路由。将此设置和类别选择留空会在任何地方显示广告。"
           group_chooser_description: "选择可以查看此广告的群组或留空以向所有登录用户显示广告。"
           preview: "预览"
-          back: "自家广告"
-          name: "名称"
-          edit: "编辑"
-          tabs:
-            settings: "设置"
           topic_list_top:
             title: "话题列表顶部广告"
             description: "在话题列表页面顶部显示的广告。"

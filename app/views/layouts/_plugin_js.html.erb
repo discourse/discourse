@@ -11,6 +11,12 @@
     <% else %>
       <%= preload_script asset[:name] %>
     <% end %>
+
+    <%= preload_script asset[:name], attrs: {
+          "data-discourse-plugin": asset[:plugin].metadata.name,
+          "data-official": asset[:plugin].metadata.official?,
+          "data-preinstalled": asset[:plugin].preinstalled?,
+        } %>
   <%- end %>
 
   <%- plugin_assets.flat_map { it[:imports] }.compact.uniq.each do |import| %>

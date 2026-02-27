@@ -11,12 +11,10 @@ pt_BR:
         no_semicolons: "Remover os pontos e vírgulas da consulta."
         dirty: "Você precisa salvar a consulta antes de executar."
     explorer:
-      default_query: "Padrão"
       or: "ou"
       admins_only: "O explorador de dados só está disponível para administradores."
       allow_groups: "Permitir que grupos acessem esta consulta"
       title: "Explorador de Dados"
-      create: "Criar"
       create_placeholder: "Nome da consulta…"
       description_placeholder: "Insira uma descrição aqui"
       import:
@@ -37,9 +35,7 @@ pt_BR:
           null_: "Nulo"
       export: "Exportar"
       view_json: "Visualizar JSON"
-      save: "Salvar alterações"
       run: "Executar"
-      undo: "Descartar alterações"
       edit: "Editar"
       delete: "Excluir"
       download_json: "JSON"

@@ -11,12 +11,10 @@ sl:
         no_semicolons: "Odstranite podpičja iz poizvedbe."
         dirty: "Pred zagonom morate poizvedbo shraniti."
     explorer:
-      default_query: "Privzeto"
       or: "ali"
       admins_only: "Raziskovalec podatkov je na voljo samo skrbnikom."
       allow_groups: "Dovoli skupinam dostop do te poizvedbe"
       title: "Raziskovalec podatkov"
-      create: "Ustvari"
       create_placeholder: "Ime poizvedbe..."
       description_placeholder: "Vnesite opis tukaj"
       import:

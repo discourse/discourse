@@ -2401,7 +2401,6 @@ sw:
         categories: "Kategoria Zote"
   admin_js:
     settings: "Mipangilio"
-    reset_filter: "Weka/Anzisha Upya"
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"

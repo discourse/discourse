@@ -19,7 +19,7 @@ de:
       cannot_view_rewind_gibberish: >
         [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Bootstrapping anomaly log...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
       cannot_view_rewind: >
-        Du kannst diesen Discourse-Rückblick-Bericht nicht anzeigen.  Vielleicht hat der Eigentümer ihn nicht öffentlich freigegeben?<br><br> $> _<br><br>
+        Du kannst diesen Discourse-Rückblick-Bericht nicht anzeigen. Vielleicht hat der Eigentümer ihn nicht öffentlich freigegeben?<br><br> $> _<br><br>
       preferences:
         enable_rewind: "Discourse-Rückblick aktivieren. Dadurch wird die Jahresübersicht deiner Aktivitäten in deinem Profil und auf deinem Avatar angezeigt."
         share_publicly: "Discourse-Rückblick mit anderen Forenmitgliedern teilen. Jedes Forenmitglied kann deinen Discourse-Rückblick ansehen."
@@ -115,8 +115,6 @@ de:
         chat_usage:
           title: Chat-Aktivität
           total_messages: Nachrichten gesamt
-          dm_messages: Direktnachrichten
-          unique_dm_channels: Unterhaltungen in Direktnachrichten
           reactions_received: Erhaltene Reaktionen
           avg_message_length: Ø Nachrichtenlänge
           favorite_channels: Lieblingskanäle

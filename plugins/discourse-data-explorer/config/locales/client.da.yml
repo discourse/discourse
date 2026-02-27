@@ -11,12 +11,10 @@ da:
         no_semicolons: "Fjern semikoloner fra forespørgslen."
         dirty: "Du skal gemme forespørgslen, før du kører den."
     explorer:
-      default_query: "Standard"
       or: "eller"
       admins_only: "Data explorer er kun tilgængelige for administratorer."
       allow_groups: "Tillad grupper at få adgang til denne forespørgsel"
       title: "Data Udforsker"
-      create: "Opret"
       create_placeholder: "Navn på forespørgsel..."
       description_placeholder: "Indtast en beskrivelse her"
       import:
@@ -33,7 +31,6 @@ da:
           no: "Nej"
           null_: "Null"
       export: "Eksporter"
-      save: "Gem ændringer"
       run: "Kør"
       edit: "Rediger"
       delete: "Slet"

@@ -14,7 +14,6 @@ pl_PL:
               search: "Umożliwia wyszukiwanie AI"
               stream_completion: "Umożliwia strumieniowe uzupełnianie osobowości AI"
               update_personas: "Umożliwia aktualizację osobowości AI"
-              manage_artifacts: "Umożliwia zarządzanie artefaktami AI (listowanie, przeglądanie, tworzenie, aktualizowanie, usuwanie)"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -45,9 +44,6 @@ pl_PL:
             create_ai_embedding: "Utwórz osadzanie AI"
             update_ai_embedding: "Zaktualizuj osadzanie AI"
             delete_ai_embedding: "Usuń osadzanie AI"
-            create_ai_secret: "Utwórz sekret AI"
-            update_ai_secret: "Zaktualizuj sekret AI"
-            delete_ai_secret: "Usuń sekret AI"
             update_ai_spam_settings: "Zaktualizuj ustawienia spamu AI"
   js:
     discourse_automation:
@@ -229,9 +225,6 @@ pl_PL:
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub osobowości nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
-      llm_selector:
-        none: "Brak"
-        saved: "Domyślny model LLM został pomyślnie zaktualizowany"
       features:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych person i LLM, a dostęp do nich może być kontrolowany przez grupy."
@@ -332,7 +325,6 @@ pl_PL:
           image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
-          chat_thread_titles: "Tytuły wątków czatu"
           setting_groups:
             access_permissions: "Dostęp i uprawnienia"
             enabled_features: "Włączone funkcje"
@@ -524,7 +516,6 @@ pl_PL:
         overwrite: "Zastąp"
         description: "Opis"
         no_llm_selected: "Nie wybrano modelu językowego"
-        use_parent_llm: "Użyj modelu językowego persony"
         max_context_posts: "Maksymalny kontekst postów"
         max_context_posts_help: "Maksymalna liczba postów do wykorzystania jako kontekst dla sztucznej inteligencji podczas odpowiadania użytkownikowi. (domyślnie puste)"
         vision_enabled: Wizja włączona
@@ -661,14 +652,7 @@ pl_PL:
         parameter_description: "Opis parametru"
         enum_value: "Wartość enum"
         add_enum_value: "Dodaj wartość enum"
-        secret_alias: "Alias poświadczeń"
-        secret_alias_help: "Alias odwoływany ze skryptów za pomocą secrets.get(\"alias_name\"). Użyj liter, cyfr i podkreśleń."
-        secret_credential: "Poświadczenie"
-        add_secret_contract: "Dodaj poświadczenie"
-        remove_secret_contract: "Usuń poświadczenie"
-        credential_not_set: "(nie ustawiono)"
         edit: "Edytuj"
-        test: "Sprawdź"
         delete: "Usuń"
         saved: "Narzędzie zapisane"
         confirm_delete: "Czy na pewno chcesz usunąć to narzędzie?"
@@ -676,31 +660,6 @@ pl_PL:
           title: "Przetestuj narzędzie AI"
           run: "Przeprowadź test"
           result: "Wynik testu"
-      secrets:
-        short_title: "Poświadczenia"
-        description: "Zarządzaj poświadczeniami uwierzytelniania współdzielonymi przez LLM, osadzenia i narzędzia."
-        name: "Nazwa"
-        secret: "Wartość"
-        select_secret: "Wybierz poświadczenie..."
-        create_new: "Nowe poświadczenie"
-        add_secret: "Dodaj poświadczenie"
-        saved: "Zapisano poświadczenie"
-        confirm_delete: "Czy na pewno chcesz usunąć to poświadczenie?"
-        delete_failed_in_use: "To poświadczenie jest obecnie używane i nie można go usunąć."
-        no_secrets: "Brak jeszcze poświadczeń"
-        new_title: "Nowe poświadczenie"
-        edit_title: "Edytuj poświadczenie"
-        back: "Poprzednia"
-        save: "Zapisz"
-        edit: "Edytuj"
-        delete: "Usuń"
-        used_by: "Używane przez"
-        not_used: "Nieużywane"
-        embedding: "Osadzanie"
-        cannot_delete_in_use: "Tego poświadczenia nie można usunąć, ponieważ jest ono używane przez:"
-        tool: "Narzędzie"
-        modal:
-          title: "Utwórz nowe poświadczenie"
       llms:
         short_title: "LLMs"
         no_llms: "Nie ma jeszcze LLM"
@@ -768,20 +727,8 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-6: "Najbardziej inteligentny model Anthropic"
-          anthropic-claude-sonnet-4-6: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
           google-gemini-3-pro: "Najinteligentniejszy model Google"
-          google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
-          open_ai-gpt-5-2: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
-          open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami"
-          open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
-          open_router-deepseek-deepseek-v3-2: "Najnowszy, wysokowydajny model firmy DeepSeek"
-          open_router-moonshotai-kimi-k2-5: "Multimodalny model Moonshot z funkcjami wizyjnymi"
-          open_router-x-ai-grok-4-fast: "Flagowy model xAI z wizją"
-          open_router-minimax-minimax-m2-5: "Multimodalny model MiniMax z dużym kontekstem"
-          open_router-z-ai-glm-5: "Multimodalny model Z-AI z wizją"
-          open_router-arcee-ai-trinity-large-preview-free: "Darmowy model open-source od Arcee AI"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
           title: "Skonfigurowane LLM"
@@ -836,7 +783,6 @@ pl_PL:
           disable_system_prompt: "Wyłącz wiadomość systemową w promptach"
           enable_native_tool: "Włącz obsługę natywnych narzędzi"
           disable_native_tools: "Wyłącz obsługę narzędzi natywnych (użyj narzędzi opartych na XML)"
-          disable_native_structured_output: "Wyłącz natywne, strukturalne wyjście (zamiast tego użyj funkcji wstępnego wypełniania wiadomości asystenta, wymaganej w przypadku Claude 3.x i starszych wersji)"
           provider_order: "Kolejność dostawców (lista rozdzielona przecinkami)"
           provider_quantizations: "Kolejność kwantyzacji dostawców (lista rozdzielona przecinkami, np.: fp16,fp8)"
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
@@ -851,7 +797,6 @@ pl_PL:
           prompt_caching_never: "Nigdy – nie używaj buforowania błyskawicznego"
           prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
           prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
-          effort: "Poziom wysiłku"
       related_topics:
         title: "Powiązane tematy"
         pill: "Powiązane"
@@ -966,14 +911,11 @@ pl_PL:
           model_name: "Nazwa modelu"
         semantic_search: "Tematy (semantyczne)"
         semantic_search_results:
-          toggle: "Wyniki AI"
           unavailable: "Wyniki AI są niedostępne"
           zero_results_expanded: "Znaleziono zero wyników, pokazano %{count} wyników AI"
         semantic_search_tooltips:
           results_explanation: "Po włączeniu tej opcji poniżej zostaną dodane dodatkowe wyniki wyszukiwania AI."
           invalid_sort: "Aby wyświetlić wyniki AI, wyniki wyszukiwania muszą być sortowane według trafności"
-          not_submitted: "Prześlij wyszukiwanie, aby włączyć wyniki AI"
-          no_results: "Nie znaleziono wyników AI dla tego wyszukiwania"
         semantic_search_unavailable_tooltip: "Aby wyświetlić wyniki AI, wyniki wyszukiwania muszą być sortowane według trafności"
         ai_generated_result: "Wynik wyszukiwania znaleziony przy użyciu AI"
         quick_search:

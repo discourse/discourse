@@ -26,9 +26,6 @@ tr_TR:
           new_name: "Yeni Şirket İçi Reklam"
           save: "Kaydet"
           delete: "Sil"
-          html: "HTML"
-          categories: "Kategoriler"
-          groups: "Gruplar"
           filter_placeholder: "Reklamları seçin..."
           more_settings: "Daha Fazla Ayar"
           show_to_anons: "Anonim kullanıcılara göster"
@@ -36,11 +33,6 @@ tr_TR:
           category_chooser_description: "Bu reklamın gösterileceği kategorileri seçin veya reklamı her yerde göstermek için boş bırakın. `no_ads_for_categories` site ayarının bu ayar üzerinde önceliği vardır."
           group_chooser_description: "Bu reklamı görüntüleyebilecek grupları seçin veya reklamı oturum açmış tüm kullanıcılara göstermek için boş bırakın."
           preview: "Ön izle"
-          back: "Şirket İçi Reklamlar"
-          name: "Ad"
-          edit: "Düzenle"
-          tabs:
-            settings: "Ayarlar"
           topic_list_top:
             title: "Konu listesi üstü reklamları"
             description: "Konu listesi sayfalarının en üstünde gösterilecek reklamlar."

@@ -6,6 +6,12 @@ RSpec.describe DiscourseSubscriptions::HooksController do
     SiteSetting.discourse_subscriptions_enabled = true
   end
 
+  it "rejects webhooks when webhook secret is blank" do
+    SiteSetting.discourse_subscriptions_webhook_secret = ""
+    post "/s/hooks.json", params: "{}", headers: { HTTP_STRIPE_SIGNATURE: "t=1,v1=abc" }
+    expect(response.status).to eq 403
+  end
+
   it "constructs a webhook event" do
     payload = "we-want-a-shrubbery"
     headers = { HTTP_STRIPE_SIGNATURE: "stripe-webhook-signature" }

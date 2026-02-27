@@ -5,8 +5,11 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
+import {
+  parseAttributesString,
+  serializeFromForm,
+} from "discourse/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
-import { parseAttributesString, serializeFromForm } from "../lib/wrap-utils";
 
 /**
  * @typedef WrapAttributesModalArgs

@@ -2726,7 +2726,6 @@ et:
         categories: "Kõik kategooriad"
   admin_js:
     settings: "Sätted"
-    reset_filter: "Nulli"
     admin:
       title: "Discourse'i adminn"
       moderator: "Moderaator"

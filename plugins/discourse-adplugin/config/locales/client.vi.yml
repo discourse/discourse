@@ -21,11 +21,4 @@ vi:
           settings: "Cài đặt"
           save: "Lưu lại"
           delete: "Xóa"
-          html: "HTML"
-          categories: "Danh mục"
-          groups: "Nhóm"
           preview: "Xem trước"
-          name: "Tên"
-          edit: "Sửa"
-          tabs:
-            settings: "Cài đặt"
