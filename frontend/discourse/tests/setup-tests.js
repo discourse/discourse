@@ -5,6 +5,7 @@ import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { getOwner } from "@ember/owner";
+import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
@@ -321,6 +322,14 @@ export default function setupTests(config) {
     testCleanup(getOwner(app), app);
 
     sinon.restore();
+
+    // Destroy the previous Application so its entire dependency graph
+    // (ApplicationInstance, container, registry, services, etc.) can be GC'd.
+    // Without this, every test leaks an Application which is never torn down.
+    run(() => {
+      app.destroy();
+    });
+
     resetPretender();
     clearPresenceState();
 
