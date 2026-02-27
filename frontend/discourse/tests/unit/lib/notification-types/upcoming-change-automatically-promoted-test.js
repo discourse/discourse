@@ -115,14 +115,38 @@ module(
       );
     });
 
-    test("linkHref", function (assert) {
-      const notification = getNotification();
+    test("linkHref with a single change", function (assert) {
+      const notification = getNotification({
+        upcoming_change_names: ["enable_feature_x"],
+      });
       const director = createRenderDirector(
         notification,
         "upcoming_change_automatically_promoted",
         this.siteSettings
       );
-      assert.strictEqual(director.linkHref, "/admin/config/upcoming-changes");
+      assert.strictEqual(
+        director.linkHref,
+        "/admin/config/upcoming-changes?changeNamesFilter=enable_feature_x"
+      );
+    });
+
+    test("linkHref with multiple changes", function (assert) {
+      const notification = getNotification({
+        upcoming_change_names: [
+          "enable_feature_x",
+          "enable_feature_y",
+          "enable_feature_z",
+        ],
+      });
+      const director = createRenderDirector(
+        notification,
+        "upcoming_change_automatically_promoted",
+        this.siteSettings
+      );
+      assert.strictEqual(
+        director.linkHref,
+        "/admin/config/upcoming-changes?changeNamesFilter=enable_feature_x,enable_feature_y,enable_feature_z"
+      );
     });
 
     test("icon", function (assert) {

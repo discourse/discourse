@@ -33,7 +33,7 @@ class UpcomingChanges::NotifyPromotion
   try do
     step :log_promotion
     model :existing_notifications, optional: true
-    model :records
+    model :bulk_notification_new_records
     step :notify_admins
     step :create_event
     step :trigger_discourse_event
@@ -84,7 +84,7 @@ class UpcomingChanges::NotifyPromotion
     )
   end
 
-  def fetch_records(params:, existing_notifications:)
+  def fetch_bulk_notification_new_records(params:, existing_notifications:)
     existing_by_user = existing_notifications.to_a.index_by(&:user_id)
     params.admin_user_ids.map do |admin_id|
       {
@@ -99,10 +99,10 @@ class UpcomingChanges::NotifyPromotion
     end
   end
 
-  def notify_admins(params:, records:, existing_notifications:)
+  def notify_admins(params:, bulk_notification_new_records:, existing_notifications:)
     Notification.transaction do
       existing_notifications.delete_all if existing_notifications.any?
-      Notification::Action::BulkCreate.call(records:)
+      Notification::Action::BulkCreate.call(records: bulk_notification_new_records)
     end
   end
 

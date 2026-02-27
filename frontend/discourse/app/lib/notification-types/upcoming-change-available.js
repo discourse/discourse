@@ -38,7 +38,12 @@ export default class extends NotificationTypeBase {
   }
 
   get linkHref() {
-    return getURL("/admin/config/upcoming-changes");
+    const data = this.notification.data;
+    const names = data.upcoming_change_names || [data.upcoming_change_name];
+
+    return getURL(
+      `/admin/config/upcoming-changes?changeNamesFilter=${names.join(",")}`
+    );
   }
 
   get icon() {

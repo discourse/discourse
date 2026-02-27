@@ -33,13 +33,13 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
       )
     existing_by_user = existing_notifications.to_a.index_by(&:user_id)
 
-    records =
+    bulk_notification_new_records =
       all_admins.map do |admin|
         {
           user_id: admin.id,
           notification_type: Notification.types[:upcoming_change_available],
           data:
-            UpcomingChanges::NotificationDataMerger.call(
+            UpcomingChanges::Action::NotificationDataMerger.call(
               existing_notification: existing_by_user[admin.id],
               new_change_name: change_name,
             ).to_json,
@@ -48,7 +48,7 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
 
     Notification.transaction do
       existing_notifications.delete_all if existing_notifications.any?
-      Notification::Action::BulkCreate.call(records:)
+      Notification::Action::BulkCreate.call(records: bulk_notification_new_records)
     end
   end
 
