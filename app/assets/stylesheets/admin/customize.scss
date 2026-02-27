@@ -189,11 +189,15 @@
 
     .metadata {
       .heading {
-        font-weight: bold;
+        font-weight: 600;
       }
 
+      .authors,
+      .theme-url,
+      .branch,
+      .version,
       .created-by {
-        margin-bottom: var(--space-2);
+        font-size: var(--font-down-1);
       }
 
       .git-name {
@@ -221,6 +225,10 @@
     .control-unit {
       margin-bottom: var(--space-6);
 
+      .inline-checkboxes {
+        margin-bottom: var(--space-4);
+      }
+
       .overridden .setting-label {
         margin-left: var(--space-4);
       }
@@ -247,10 +255,6 @@
       &.remote-theme-metadata {
         display: flex;
         flex-direction: column;
-      }
-
-      .remote-theme-actions {
-        margin-bottom: var(--space-4);
       }
     }
 
@@ -571,7 +575,7 @@
   .status-message {
     display: block;
     font-size: var(--font-down-1);
-    margin: var(--space-2) 0;
+    margin-bottom: var(--space-2);
   }
 
   .removable-list {

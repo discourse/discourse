@@ -7410,6 +7410,8 @@ en:
           discard: "Discard"
           stay: "Stay"
           css_html: "Custom Code"
+          metadata: "Metadata"
+          basic_info: "Basic Info"
           edit_css_html: "Edit Code"
           edit_css_html_help: "You have not edited any code yet."
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"

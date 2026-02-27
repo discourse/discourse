@@ -28,11 +28,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
     return errorMessage && !updating;
   }
 
-  @discourseComputed("model.component", "model.remote_theme")
-  showCheckboxes() {
-    return !this.model.component || this.model.remote_theme;
-  }
-
   @discourseComputed(
     "model.remote_theme.remote_url",
     "model.remote_theme.local_version",
