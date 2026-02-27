@@ -63,8 +63,8 @@ module Jobs
 
     def update_revision(revision)
       if revision.modifications["raw"] || revision.modifications["cooked"]
-        revision.modifications["raw"].map! { |raw| update_raw(raw) }
-        revision.modifications["cooked"].map! { |cooked| update_cooked(cooked) }
+        revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
+        revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
         revision.save!
       end
     rescue => e
