@@ -164,7 +164,7 @@ export default <template>
   {{#unless
     (or @controller.model.system @controller.model.remote_theme.is_git)
   }}
-    <div class="control-unit">
+    <div class="control-unit admin-config-area-card">
       <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
       {{#if @controller.model.hasEditedFields}}
         <div class="description">{{i18n
@@ -188,7 +188,7 @@ export default <template>
       />
     </div>
 
-    <div class="control-unit">
+    <div class="control-unit admin-config-area-card">
       <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
       {{#if @controller.model.uploads}}
         <ul class="removable-list">
@@ -227,7 +227,7 @@ export default <template>
   {{/unless}}
 
   {{#if (and @controller.extraFiles.length (not @controller.model.system))}}
-    <div class="control-unit extra-files">
+    <div class="control-unit extra-files admin-config-area-card">
       <div class="mini-title">{{i18n "admin.customize.theme.extra_files"}}</div>
       {{! template-lint-disable no-nested-interactive }}
       <details>
