@@ -203,6 +203,21 @@ class LlmModel < ActiveRecord::Base
       vllm: {
         disable_system_prompt: :checkbox,
         disable_native_tools: :checkbox,
+        enable_thinking: :checkbox,
+        reasoning_effort: {
+          type: :enum,
+          values: %w[default none minimal low medium high xhigh],
+          default: "default",
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :reasoning_effort,
+        },
+        disable_top_p: {
+          type: :checkbox,
+          hidden_if: :reasoning_effort,
+        },
+        disable_streaming: :checkbox,
       },
       ollama: {
         disable_system_prompt: :checkbox,
