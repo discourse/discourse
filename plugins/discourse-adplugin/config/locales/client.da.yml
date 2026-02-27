@@ -19,11 +19,4 @@ da:
           settings: "Indstillinger"
           save: "Gem"
           delete: "Slet"
-          html: "HTML"
-          categories: "Kategorier"
-          groups: "Grupper"
           preview: "Forhåndsvisning"
-          name: "Navn"
-          edit: "Rediger"
-          tabs:
-            settings: "Indstillinger"

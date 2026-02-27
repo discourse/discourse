@@ -48,12 +48,6 @@ ar:
           many: "رسالة دردشة"
           other: "رسالة دردشة"
     chat:
-      edit_category:
-        tab_title: "الدردشة"
-        channel: "القناة"
-        description: "الوصف"
-        actions: "الإجراءات"
-        settings: "الإعدادان"
       text_copied: تم نسخ النص إلى الحافظة
       link_copied: تم نسخ الرابط إلى الحافظة
       back_to_forum: "المنتدى"
@@ -71,7 +65,6 @@ ar:
       starred: "مميز بنجمة"
       starred_channels: "القنوات المميزة بنجمة"
       starred_channels_empty: "لا توجد قنوات مميّزة بنجمة حتى الآن. أضِف نجمة إلى القنوات التي تهمك لتظهر هنا ويسهل الوصول إليها."
-      pinned: "مثبَّت"
       browse_all_channels: "استعراض كل القنوات"
       see_in: "رؤيتها في"
       open_channel_menu: "افتح قائمة القناة"

@@ -10,8 +10,6 @@ cs:
       sort_options:
         votes: "Hlasy"
     topic_voting:
-      notification_label:
-        vote_released: "Hlas vrácen"
       title: "Hlasování o tématu"
       reached_limit: "Došly vám hlasy. Odeberte jiný hlas."
       list_votes: "Seznam vašich hlasů"

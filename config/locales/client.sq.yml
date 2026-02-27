@@ -3953,7 +3953,6 @@ sq:
         categories: "Të gjitha kategoritë"
   admin_js:
     settings: "Rregullimet"
-    reset_filter: "Rivendosni"
     admin:
       title: "Administrator"
       moderator: "Moderator"

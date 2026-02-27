@@ -11,12 +11,10 @@ hu:
         no_semicolons: "Pontosvesszők eltávolítása a lekérdezésből."
         dirty: "Futtatás előtt el kell mentenie a lekérdezést."
     explorer:
-      default_query: "Alapértelmezett"
       or: "vagy"
       admins_only: "Az adatfelfedező csak az adminok számára érhető el."
       allow_groups: "Engedélyezés csoportok számára, hogy hozzáférjenek ehhez a lekérdezéshez"
       title: "Adatfelfedező"
-      create: "Létrehozás"
       create_placeholder: "Lekérdezés neve…"
       description_placeholder: "Adjon meg egy leírást"
       import:
@@ -36,10 +34,7 @@ hu:
           no: "Nem"
           null_: "Null"
       export: "Exportálás"
-      view: "Megtekintés"
-      save: "Módosítások mentése"
       run: "Futtatás"
-      undo: "Változások elvetése"
       edit: "Szerkesztés"
       delete: "Törlés"
       download_json: "JSON"

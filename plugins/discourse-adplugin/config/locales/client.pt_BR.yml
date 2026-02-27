@@ -26,9 +26,6 @@ pt_BR:
           new_name: "Novo Anúncio Interno"
           save: "Salvar"
           delete: "Excluir"
-          html: "HTML"
-          categories: "Categorias"
-          groups: "Grupos"
           filter_placeholder: "Selecionar anúncios…"
           more_settings: "Mais Configurações"
           show_to_anons: "Mostrar para usuários(as) anônimos(as)"
@@ -36,11 +33,6 @@ pt_BR:
           category_chooser_description: "Escolha as categorias nas quais este anúncio deve ser exibido ou deixe vazio para exibir em todos os lugares. A configuração do site \"no_ads_for_categories\" tem prioridade em relação a esta configuração."
           group_chooser_description: "Escolha os grupos que podem visualizar este anúncio ou deixe vazio para exibir o anúncio a todos(as) os(as) usuários(as) que entraram com a conta."
           preview: "Pré-visualizar"
-          back: "Anúncios Internos"
-          name: "Nome"
-          edit: "Editar"
-          tabs:
-            settings: "Definições"
           topic_list_top:
             title: "Principais anúncios da lista de tópicos"
             description: "Anúncios para mostrar no topo das páginas da lista de tópicos."

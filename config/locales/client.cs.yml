@@ -4722,6 +4722,7 @@ cs:
       create: "Přidat kategorii"
       create_long: "Vytvořit novou kategorii"
       save: "Uložit kategorii"
+      unsaved_changes: "Máte neuložené změny"
       slug: "URL kategorie"
       parent: "Nadřazená kategorie"
       slug_placeholder: "(Nepovinné) slova s pomlčkou pro URL"
@@ -5986,7 +5987,6 @@ cs:
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
-    reset_filter: "obnovit výchozí"
     toggle_filters: "Přepnout rozbalovací filtry"
     admin:
       title: "Administrátor"

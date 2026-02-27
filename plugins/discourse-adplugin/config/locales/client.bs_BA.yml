@@ -25,17 +25,9 @@ bs_BA:
           new_name: "Novi Kućni Oglas"
           save: "Sačuvaj"
           delete: "Delete"
-          html: "HTML"
-          categories: "Kategorije"
-          groups: "Grupa"
           filter_placeholder: "Izaberi oglase ..."
           more_settings: "Više Postavka"
           preview: "Pregled"
-          back: "Kućni oglasi"
-          name: "Ime"
-          edit: "Izmijeni"
-          tabs:
-            settings: "Postavke"
           topic_list_top:
             title: "Top topic list top ads"
             description: "Oglasi koji se prikazuju na vrhu liste tema."

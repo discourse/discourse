@@ -4395,6 +4395,7 @@ sk:
         placeholder: "Vybrať skupinu značiek…"
       topic_featured_link_allowed: "Povoliť odporúčané odkazy v tejto kategórii"
       create_long: "Vytvoriť novú kategóriu"
+      unsaved_changes: "Máte neuložené zmeny"
       slug_placeholder: "(Voliteľné) pomlčkou-prerušované-slová pre url"
       creation_error: Nastala chyba počas vytvárania kategórie.
       save_error: Nastala chyba počas ukladania kategórie
@@ -5579,7 +5580,6 @@ sk:
   admin_js:
     type_to_filter: "Filtrovať..."
     settings: "Nastavenia"
-    reset_filter: "Resetovať"
     admin:
       title: "Administrátor Discourse"
       moderator: "Moderátor"

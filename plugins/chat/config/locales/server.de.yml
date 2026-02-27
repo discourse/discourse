@@ -8,7 +8,6 @@ de:
   site_settings:
     chat_separate_sidebar_mode: "Zeige separate Seitenleisten-Modi für Forum und Chat."
     chat_enabled: "Chat aktivieren."
-    chat_pinned_messages: "Angeheftete Nachrichten in Chat-Kanälen aktivieren."
     enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Beachte, dass Administratoren und Moderatoren immer auf den Chat zugreifen können."
     chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
@@ -24,7 +23,6 @@ de:
     chat_archive_destination_topic_status: "Der Status, den das Zielthema haben soll, sobald eine Kanalarchivierung abgeschlossen ist. Dies gilt nur, wenn das Zielthema ein neues Thema ist und kein vorhandenes."
     direct_message_enabled_groups: "Benutzern in diesen Gruppen erlauben, persönliche Benutzer-zu-Benutzer-Chats zu erstellen. Hinweis: Teammitglieder können immer persönliche Chats erstellen und Benutzer können auf persönliche Chats antworten, die von Benutzern initiiert wurden, die die Berechtigung haben, sie zu erstellen."
     chat_message_flag_allowed_groups: "Benutzer in diesen Gruppen dürfen Chat-Nachrichten melden. Beachte, dass Administratoren und Moderatoren immer Chatnachrichten melden können."
-    chat_pinning_messages_allowed_groups: "Benutzer in diesen Gruppen dürfen Chatnachrichten in Kanälen, auf die sie Zugriff haben, anheften. Administratoren und Moderatoren können Chatnachrichten immer anheften. Jedes Mitglied eines Gruppenchats oder einer DN kann Nachrichten dort anheften."
     max_mentions_per_chat_message: "Maximale Anzahl von @name-Benachrichtigungen, die ein Benutzer in einer Chat-Nachricht verwenden kann."
     chat_max_direct_message_users: "Benutzer können nicht mehr als diese Anzahl anderer Benutzer hinzufügen, wenn sie eine neue Direktnachricht erstellen. Auf 0 setzen, um nur Nachrichten an sich selbst zuzulassen. Teammitglieder sind von dieser Einstellung ausgenommen."
     chat_allow_archiving_channels: "Dem Team erlauben, Nachrichten zu einem Thema zu archivieren, wenn sie einen Kanal schließen."
@@ -75,7 +73,6 @@ de:
         closed: "Der Kanal ist geschlossen, es können keine Nachrichten bearbeitet oder gelöscht werden"
         read_only: "Der Kanal ist schreibgeschützt, es können keine Nachrichten bearbeitet oder gelöscht werden"
       user_cannot_send_message: "Du kannst derzeit keine Nachrichten senden."
-      user_not_in_channel: "Du musst Mitglied in diesem Kanal sein."
       rate_limit_exceeded: "Das Limit der Chat-Nachrichten, die innerhalb von 30 Sekunden gesendet werden können, wurde überschritten"
       auto_silence_from_flags: "Chat-Nachricht wurde mit einer Punktzahl markiert, die hoch genug ist, um den Benutzer stummzuschalten."
       channel_cannot_be_archived: "Der Kanal kann zu diesem Zeitpunkt nicht archiviert werden, er muss entweder geschlossen oder geöffnet sein."
@@ -107,9 +104,6 @@ de:
       thread_invalid_for_channel: "Der Thread ist nicht Teil des bereitgestellten Kanals."
       thread_does_not_match_parent: "Der Thread stimmt nicht mit der übergeordneten Nachricht überein."
       invalid_direct_message: "Du bist nicht berechtigt, diese Direktnachricht zu erstellen."
-      pin_limit_reached: "Dieser Kanal hat die maximale Anzahl angehefteter Nachrichten erreicht (%{limit})."
-      message_already_pinned: "Diese Nachricht ist bereits angeheftet."
-      message_not_pinned: "Diese Nachricht ist nicht angeheftet."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
@@ -262,19 +256,14 @@ de:
         watched_thread:
           one: "[%{site_name}] Neue Thread-Nachricht in %{channel}"
           other: "[%{site_name}] Neue Thread-Nachrichten in %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen Kanal"
-          other: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen Kanälen"
         chat_dm_1:
           one: "[%{site_name}] Neue Nachricht von %{name}"
           other: "[%{site_name}] Neue Nachrichten von %{name}"
         chat_dm_2: "[%{site_name}] Neue Nachrichten von %{name_1} und %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Neue Nachrichten von %{name} und in %{count} anderen Kanälen"
         chat_channel_1:
           one: "[%{site_name}] Neue Nachricht in %{channel}"
           other: "[%{site_name}] Neue Nachrichten in %{channel}"
         chat_channel_2: "[%{site_name}] Neue Nachrichten in %{channel_1} und %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Neue Nachrichten in %{channel} und %{count} anderen Kanälen"
         chat_channel_and_dm: "[%{site_name}] Neue Nachrichten in %{channel} und von %{name}"
       unsubscribe: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link} oder %{unsubscribe_link}, um dich abzumelden."
       unsubscribe_no_link: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link}."

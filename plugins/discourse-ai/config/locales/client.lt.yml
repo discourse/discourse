@@ -145,8 +145,6 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
-      llm_selector:
-        none: "Nieko"
       features:
         back: "Atgal"
         settings_save_error: "Kai kurių nustatymų išsaugoti nepavyko."
@@ -327,18 +325,7 @@ lt:
         remove_parameter: "Pašalinti"
         parameter_required: "Privalomi"
         edit: "Redaguoti"
-        test: "Bandymas"
         delete: "Pašalinti"
-      secrets:
-        short_title: "Įgaliojimai"
-        name: "Vardas"
-        secret: "Reikšmė"
-        back: "Atgal"
-        save: "Saugoti"
-        edit: "Redaguoti"
-        delete: "Pašalinti"
-        embedding: "Įterpimai"
-        tool: "Įrankis"
       llms:
         display_name: "Vardas"
         save: "Saugoti"

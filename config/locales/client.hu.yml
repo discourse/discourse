@@ -4259,6 +4259,7 @@ hu:
       create: "Új kategória"
       create_long: "Új kategória létrehozása"
       save: "Kategória mentése"
+      unsaved_changes: "Nem mentett módosításai vannak"
       slug: "Kategória URL-végződés"
       parent: "Szülő kategória"
       slug_placeholder: "(Nem kötelező) kötőjeles-szavak a webcímhez"
@@ -5432,7 +5433,6 @@ hu:
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
-    reset_filter: "Alaphelyzetbe állítás"
     toggle_filters: "Legördülő szűrők be- és kikapcsolása"
     admin:
       title: "Discourse Adminisztrátor"

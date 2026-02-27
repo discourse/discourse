@@ -6,7 +6,6 @@
 
 pl_PL:
   site_settings:
-    discourse_local_dates_enabled: "Włącz wtyczkę „discourse-local-dates”. Dzięki temu użytkownicy będą mogli używać „[data]” we wpisach, aby wyświetlać czytelnikom daty w ich lokalnej strefie czasowej."
     discourse_local_dates_default_formats: "Najczęściej używane formaty dat, zobacz: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>format linii w momentjs</a>"
     discourse_local_dates_default_timezones: "Domyślna lista stref czasowych, musi być prawidłową <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>strefą</a>"
     discourse_local_dates_email_format: "Format używany do wyświetlania daty w wiadomościach e-mail, przykłady: „LLLL”, „llll” lub „RRRR-MM-DDTHH:mm:ss[Z]”. Zobacz: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>format ciągu momentjs</a>"

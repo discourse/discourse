@@ -2602,7 +2602,6 @@ sr:
         categories: "Sve kategorije"
   admin_js:
     settings: "Podešavanja"
-    reset_filter: "Reset"
     admin:
       title: "Administrator"
       moderator: "Moderator"

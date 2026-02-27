@@ -11,12 +11,10 @@ ko:
         no_semicolons: "쿼리에서 세미콜론을 제거하십시오."
         dirty: "실행하기 전에 쿼리를 저장해야합니다."
     explorer:
-      default_query: "기본"
       or: "또는"
       admins_only: "데이터 탐색기는 관리자 만 사용할 수 있습니다."
       allow_groups: "그룹이이 쿼리에 액세스하도록 허용"
       title: "데이터 탐색기"
-      create: "만들기"
       create_placeholder: "검색어 이름 ..."
       description_placeholder: "여기에 설명을 입력하세요"
       import:

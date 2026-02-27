@@ -9,7 +9,6 @@ cs:
   site_settings:
     solved_enabled: "Zapnout plugin \"vyřešeno\", povolit uživatelům zvolit řešení témat"
     allow_solved_on_all_topics: "Povolit uživatelům výběr řešení pro všechna témata (pokud není zaškrtnuto, lze povolit řešení pro jednotlivé kategorie nebo štítky)."
-    allow_solved_in_groups: "Povolit označování řešení ve skupinových zprávách pro tyto skupiny."
     accept_all_solutions_trust_level: "Minimální důvěryhodnost požadovaná pro schválení řešení jakéhokoliv tématu (i když není OP)"
     accept_all_solutions_allowed_groups: "Skupiny, které mohou přijímat řešení na jakékoli téma (i když nejsou OP). Správci a moderátoři jsou vždy povoleni."
     empty_box_on_unsolved: "Zobrazit prázdný box vedle nevyřešených témat"

@@ -22,16 +22,9 @@ th:
           settings: "การตั้งค่า"
           save: "บันทึก"
           delete: "ลบ"
-          html: "HTML"
-          categories: "หมวดหมู่"
-          groups: "กลุ่ม"
           filter_placeholder: "เลือกโฆษณา ..."
           more_settings: "การตั้งค่าเพิ่มเติม"
           preview: "แสดงตัวอย่าง"
-          name: "ชื่อ"
-          edit: "แก้ไข"
-          tabs:
-            settings: "การตั้งค่า"
           topic_list_top:
             title: "หัวข้อรายการโฆษณายอดนิยม"
             description: "โฆษณาที่จะแสดงที่ด้านบนสุดของหน้ารายการหัวข้อ"

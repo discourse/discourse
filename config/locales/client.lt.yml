@@ -3406,6 +3406,7 @@ lt:
       allow_global_tags_label: "Taip pat leiskite kitas žymas"
       required_tag_group:
         delete: "Pašalinti"
+        tag_group: "Žymų grupė"
       topic_featured_link_allowed: "Leisti svarbiausias šios kategorijos nuorodas"
       create_long: "Sukurti naują kategoriją"
       slug_placeholder: "(Pasirinktinai) brūkšniniai žodžiai skirti URL"
@@ -4125,7 +4126,6 @@ lt:
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
-    reset_filter: "Atstatyti"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"

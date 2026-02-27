@@ -16,8 +16,6 @@ es:
       title: Rebobinar
       loading: "Reticulando splines..."
       viewing_other_user: "Estás viendo el informe de Discourse Rebobina de <strong>%{username}</strong> ."
-      cannot_view_rewind: >
-        No puedes ver este reporte de Discourse Rebobina. Quizás su propietario no lo ha compartido públicamente? <br><br> $> _<br><br>
       preferences:
         enable_rewind: "Activa Discourse Rebobina. Esto muestra el resumen de actividades de fin de año en tu perfil y en tu avatar."
         share_publicly: "Comparte el resumen de Discourse Rebobina con otros miembros del foro. Cualquier miembro del foro podrá ver tu resumen de Discourse Rebobina."

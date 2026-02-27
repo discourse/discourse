@@ -43,12 +43,6 @@ ja:
         chat_messages:
           other: "%{formatted_number} チャットメッセージ"
     chat:
-      edit_category:
-        tab_title: "チャット"
-        channel: "チャンネル"
-        description: "説明"
-        actions: "アクション"
-        settings: "設定"
       text_copied: テキストをクリップボードにコピーしました
       link_copied: リンクをクリップボードにコピーしました
       back_to_forum: "フォーラム"
@@ -66,7 +60,6 @@ ja:
       starred: "スター付き"
       starred_channels: "スター付きのチャンネル"
       starred_channels_empty: "まだどのチャンネルにもスターを設定していません。チャンネルにスターを設定すると、ここで素早くアクセスできます。"
-      pinned: "固定"
       browse_all_channels: "すべてのチャンネルを閲覧する"
       see_in: "表示:"
       open_channel_menu: "チャンネルメニューを開く"

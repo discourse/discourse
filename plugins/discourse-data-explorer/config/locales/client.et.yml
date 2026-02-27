@@ -7,10 +7,8 @@
 et:
   js:
     explorer:
-      default_query: "Vaikimisi"
       or: "või"
       title: "Andmete eksportija"
-      create: "Loo"
       create_placeholder: "Päringu nimi..."
       import:
         label: "Impordi"

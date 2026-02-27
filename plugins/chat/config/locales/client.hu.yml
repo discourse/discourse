@@ -44,12 +44,6 @@ hu:
           one: "%{formatted_number} csevegőüzenet"
           other: "%{formatted_number} csevegőüzenet"
     chat:
-      edit_category:
-        tab_title: "Csevegés"
-        channel: "Csatorna"
-        description: "Leírás"
-        actions: "Műveletek"
-        settings: "Beállítások"
       text_copied: Szöveg vágólapra másolva
       link_copied: Hivatkozás vágólapra másolva
       back_to_forum: "Fórum"
@@ -67,7 +61,6 @@ hu:
       starred: "Csillagozott"
       starred_channels: "Csillagozott csatornák"
       starred_channels_empty: "Még nem csillagozott meg egyetlen csatornát sem. Csillagozd meg a csatornákat, hogy itt lásd őket a gyors hozzáférés érdekében."
-      pinned: "Kiemelt"
       browse_all_channels: "Összes csatorna tallózása"
       see_in: "Lásd itt"
       open_channel_menu: "Csatornamenü megnyitása"

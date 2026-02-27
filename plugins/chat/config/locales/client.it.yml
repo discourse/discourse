@@ -44,12 +44,6 @@ it:
           one: "%{formatted_number} messaggio di chat"
           other: "%{formatted_number} messaggi di chat"
     chat:
-      edit_category:
-        tab_title: "Chat"
-        channel: "Canale"
-        description: "Descrizione"
-        actions: "Azioni"
-        settings: "Impostazioni"
       text_copied: Testo copiato negli appunti
       link_copied: Link copiato negli appunti
       back_to_forum: "Forum"
@@ -64,7 +58,6 @@ it:
       cancel: "Annulla"
       cancel_reply: "Annulla risposta"
       chat_channels: "Canali"
-      pinned: "Appuntato"
       browse_all_channels: "Sfoglia tutti i canali"
       see_in: "Da' un'occhiata"
       move_to_channel:

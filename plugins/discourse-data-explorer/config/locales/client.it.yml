@@ -11,12 +11,10 @@ it:
         no_semicolons: "Rimuovi i punti e virgola dalla query."
         dirty: "È necessario salvare la query prima di eseguirla."
     explorer:
-      default_query: "Predefinito"
       or: "o"
       admins_only: "Data explorer è disponibile solo per gli amministratori."
       allow_groups: "Consenti ai gruppi di accedere a questa query"
       title: "Data Explorer"
-      create: "Crea"
       create_placeholder: "Nome query..."
       description_placeholder: "Inserisci una descrizione qui"
       import:
@@ -37,9 +35,7 @@ it:
           null_: "Null"
       export: "Esporta"
       view_json: "Visualizza JSON"
-      save: "Salva le modifiche"
       run: "Esegui"
-      undo: "Annulla modifiche"
       edit: "Modifica"
       delete: "Elimina"
       download_json: "JSON"

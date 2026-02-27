@@ -11,12 +11,10 @@ sk:
         no_semicolons: "Odstráňte z dotazu bodkočiarky."
         dirty: "Pred spustením musíte dotaz uložiť."
     explorer:
-      default_query: "Predvolené"
       or: "alebo"
       admins_only: "Prieskumník údajov je dostupný iba administrátorom."
       allow_groups: "Povolenie prístupu skupín k tomuto dotazu"
       title: "Prieskumník údajov"
-      create: "Vytvoriť"
       create_placeholder: "Názov dotazu..."
       description_placeholder: "Sem zadajte popis"
       import:
@@ -37,9 +35,7 @@ sk:
           null_: "Null"
       export: "Exportovať"
       view_json: "Zobraziť JSON"
-      save: "Uloženie zmien"
       run: "Spustiť"
-      undo: "Zahodenie zmien"
       edit: "Upraviť"
       delete: "Odstrániť"
       download_json: "JSON"
