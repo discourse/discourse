@@ -9,10 +9,7 @@ import ThemeTranslation from "discourse/admin/components/theme-translation";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
@@ -21,81 +18,6 @@ import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <div class="metadata control-unit">
-    {{#if @controller.model.remote_theme}}
-      <div class="control-unit">
-        {{#if @controller.model.remote_theme.is_git}}
-          {{#if @controller.model.remote_theme.commits_behind}}
-            <DButton
-              @action={{@controller.updateToLatest}}
-              @icon="download"
-              @label="admin.customize.theme.update_to_latest"
-              class="btn-primary"
-            />
-          {{else}}
-            <DButton
-              @action={{@controller.checkForThemeUpdates}}
-              @icon="arrows-rotate"
-              @label="admin.customize.theme.check_for_updates"
-              class="btn-default"
-            />
-          {{/if}}
-
-          <DButton
-            @action={{@controller.changeSource}}
-            @icon="rotate"
-            @label="admin.customize.theme.change_source.button"
-            class="btn-default"
-          />
-
-          <span class="status-message">
-            {{#if @controller.updatingRemote}}
-              {{i18n "admin.customize.theme.updating"}}
-            {{else}}
-              {{#if @controller.model.remote_theme.commits_behind}}
-                {{#if @controller.hasOverwrittenHistory}}
-                  {{i18n "admin.customize.theme.has_overwritten_history"}}
-                {{else}}
-                  {{i18n
-                    "admin.customize.theme.commits_behind"
-                    count=@controller.model.remote_theme.commits_behind
-                  }}
-                {{/if}}
-                {{#if @controller.model.remote_theme.github_diff_link}}
-                  <a href={{@controller.model.remote_theme.github_diff_link}}>
-                    {{i18n "admin.customize.theme.compare_commits"}}
-                  </a>
-                {{/if}}
-              {{else}}
-                {{#unless @controller.showRemoteError}}
-                  {{i18n "admin.customize.theme.up_to_date"}}
-                  {{formatDate
-                    @controller.model.remote_theme.updated_at
-                    leaveAgo="true"
-                  }}
-                {{/unless}}
-              {{/if}}
-            {{/if}}
-          </span>
-        {{else}}
-          <span class="status-message">
-            {{icon "circle-info"}}
-            {{i18n "admin.customize.theme.imported_from_archive"}}
-          </span>
-        {{/if}}
-      </div>
-    {{else if (not @controller.model.system)}}
-      <span class="heading created-by">{{i18n
-          "admin.customize.theme.creator"
-        }}</span>
-      <span>
-        <UserLink @user={{@controller.model.user}}>
-          {{formatUsername @controller.model.user.username}}
-        </UserLink>
-      </span>
-    {{/if}}
-  </div>
-
   {{#if @controller.showCheckboxes}}
     <div class="control-unit">
       {{#unless @controller.model.component}}
@@ -124,145 +46,148 @@ export default <template>
   {{/if}}
 
   {{#unless @controller.model.component}}
-    <section
-      class="form-horizontal theme settings control-unit theme-settings__light-color-scheme"
-    >
-      <div class="row setting">
-        <div class="setting-label">
-          {{i18n "admin.customize.theme.color_scheme"}}
-        </div>
-
-        <div class="setting-value">
-          <div class="color-palette-input-group">
-            <ColorPalettePicker
-              @content={{@controller.colorSchemes}}
-              @value={{@controller.colorSchemeId}}
-              @icon="paintbrush"
-              @options={{hash
-                filterable=true
-                translatedNone=(i18n
-                  "admin.customize.theme.default_light_scheme"
-                )
-              }}
-            />
+    <div class="control-unit">
+      <section
+        class="form-horizontal theme settings theme-settings__light-color-scheme"
+      >
+        <div class="row setting">
+          <div class="setting-label">
+            {{i18n "admin.customize.theme.color_scheme"}}
           </div>
 
-          <div class="desc">{{i18n "admin.customize.theme.color_scheme_select"}}
+          <div class="setting-value">
+            <div class="color-palette-input-group">
+              <ColorPalettePicker
+                @content={{@controller.colorSchemes}}
+                @value={{@controller.colorSchemeId}}
+                @icon="paintbrush"
+                @options={{hash
+                  filterable=true
+                  translatedNone=(i18n
+                    "admin.customize.theme.default_light_scheme"
+                  )
+                }}
+              />
+            </div>
 
-            {{#if @controller.colorSchemeId}}
-              <LinkTo
-                @route="adminConfig.colorPalettes.show"
-                @model={{@controller.colorSchemeId}}
-              >
-                {{i18n "admin.customize.theme.edit_colors"}}
-              </LinkTo>
+            <div class="desc">{{i18n
+                "admin.customize.theme.color_scheme_select"
+              }}
+
+              {{#if @controller.colorSchemeId}}
+                <LinkTo
+                  @route="adminConfig.colorPalettes.show"
+                  @model={{@controller.colorSchemeId}}
+                >
+                  {{i18n "admin.customize.theme.edit_colors"}}
+                </LinkTo>
+              {{/if}}
+            </div>
+          </div>
+
+          <div class="setting-controls">
+            {{#if @controller.lightColorSchemeChanged}}
+              <DButton
+                @action={{@controller.changeLightScheme}}
+                @icon="check"
+                class="ok submit-light-edit"
+              />
+              <DButton
+                @action={{@controller.cancelChangeLightScheme}}
+                @icon="xmark"
+                class="cancel cancel-light-edit"
+              />
             {{/if}}
           </div>
         </div>
-
-        <div class="setting-controls">
-          {{#if @controller.lightColorSchemeChanged}}
-            <DButton
-              @action={{@controller.changeLightScheme}}
-              @icon="check"
-              class="ok submit-light-edit"
-            />
-            <DButton
-              @action={{@controller.cancelChangeLightScheme}}
-              @icon="xmark"
-              class="cancel cancel-light-edit"
-            />
-          {{/if}}
-        </div>
-      </div>
-    </section>
-    <section
-      class="form-horizontal theme settings control-unit theme-settings__dark-color-scheme"
-    >
-      <div class="row setting">
-        <div class="setting-label">
-          {{i18n "admin.customize.theme.dark_color_scheme"}}
-        </div>
-
-        <div class="setting-value">
-          <div class="color-palette-input-group">
-            <ColorPalettePicker
-              @content={{@controller.colorSchemes}}
-              @value={{@controller.darkColorSchemeId}}
-              @icon="paintbrush"
-              @options={{hash
-                filterable=true
-                translatedNone=(i18n
-                  "admin.customize.theme.default_light_scheme"
-                )
-              }}
-            />
+      </section>
+      <section
+        class="form-horizontal theme settings theme-settings__dark-color-scheme"
+      >
+        <div class="row setting">
+          <div class="setting-label">
+            {{i18n "admin.customize.theme.dark_color_scheme"}}
           </div>
 
-          <div class="desc">
-            {{i18n "admin.customize.theme.dark_color_scheme_select"}}
+          <div class="setting-value">
+            <div class="color-palette-input-group">
+              <ColorPalettePicker
+                @content={{@controller.colorSchemes}}
+                @value={{@controller.darkColorSchemeId}}
+                @icon="paintbrush"
+                @options={{hash
+                  filterable=true
+                  translatedNone=(i18n
+                    "admin.customize.theme.default_light_scheme"
+                  )
+                }}
+              />
+            </div>
 
-            {{#if @controller.darkColorSchemeId}}
-              <LinkTo
-                @route="adminConfig.colorPalettes.show"
-                @model={{@controller.darkColorSchemeId}}
-              >
-                {{i18n "admin.customize.theme.edit_colors"}}
-              </LinkTo>
+            <div class="desc">
+              {{i18n "admin.customize.theme.dark_color_scheme_select"}}
+
+              {{#if @controller.darkColorSchemeId}}
+                <LinkTo
+                  @route="adminConfig.colorPalettes.show"
+                  @model={{@controller.darkColorSchemeId}}
+                >
+                  {{i18n "admin.customize.theme.edit_colors"}}
+                </LinkTo>
+              {{/if}}
+            </div>
+          </div>
+          <div class="setting-controls">
+            {{#if @controller.darkColorSchemeChanged}}
+              <DButton
+                @action={{@controller.changeDarkScheme}}
+                @icon="check"
+                class="ok submit-dark-edit"
+              />
+              <DButton
+                @action={{@controller.cancelChangeDarkScheme}}
+                @icon="xmark"
+                class="cancel cancel-dark-edit"
+              />
             {{/if}}
           </div>
         </div>
-        <div class="setting-controls">
-          {{#if @controller.darkColorSchemeChanged}}
-            <DButton
-              @action={{@controller.changeDarkScheme}}
-              @icon="check"
-              class="ok submit-dark-edit"
-            />
-            <DButton
-              @action={{@controller.cancelChangeDarkScheme}}
-              @icon="xmark"
-              class="cancel cancel-dark-edit"
-            />
-          {{/if}}
-        </div>
-      </div>
-    </section>
-  {{/unless}}
-
-  {{#if @controller.model.component}}
-    <section
-      class="form-horizontal theme settings control-unit relative-theme-selector parent-themes-setting"
-    >
-      <div class="row setting">
-        <ThemeSettingRelativesSelector
-          @setting={{@controller.relativesSelectorSettingsForComponent}}
-          @model={{@controller.model}}
-          class="theme-setting"
-        />
-      </div>
-    </section>
-  {{else}}
-    <section
-      class="form-horizontal theme settings control-unit relative-theme-selector included-components-setting"
-    >
-      <div class="row setting">
-        <PluginOutlet
-          @name="admin-customize-theme-included-components-setting"
-          @outletArgs={{lazyHash
-            setting=@controller.relativesSelectorSettingsForTheme
-            model=@controller.model
-          }}
+      </section>
+      {{#if @controller.model.component}}
+        <section
+          class="form-horizontal theme settings control-unit relative-theme-selector parent-themes-setting"
         >
-          <ThemeSettingRelativesSelector
-            @setting={{@controller.relativesSelectorSettingsForTheme}}
-            @model={{@controller.model}}
-            class="theme-setting"
-          />
-        </PluginOutlet>
-      </div>
-    </section>
-  {{/if}}
+          <div class="row setting">
+            <ThemeSettingRelativesSelector
+              @setting={{@controller.relativesSelectorSettingsForComponent}}
+              @model={{@controller.model}}
+              class="theme-setting"
+            />
+          </div>
+        </section>
+      {{else}}
+        <section
+          class="form-horizontal theme settings control-unit relative-theme-selector included-components-setting"
+        >
+          <div class="row setting">
+            <PluginOutlet
+              @name="admin-customize-theme-included-components-setting"
+              @outletArgs={{lazyHash
+                setting=@controller.relativesSelectorSettingsForTheme
+                model=@controller.model
+              }}
+            >
+              <ThemeSettingRelativesSelector
+                @setting={{@controller.relativesSelectorSettingsForTheme}}
+                @model={{@controller.model}}
+                class="theme-setting"
+              />
+            </PluginOutlet>
+          </div>
+        </section>
+      {{/if}}
+    </div>
+  {{/unless}}
 
   {{#unless
     (or @controller.model.system @controller.model.remote_theme.is_git)

@@ -7,29 +7,31 @@ import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
+import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <div class="show-current-style admin-customize-themes-show">
-    <div class="back-to-themes-and-components">
-      <LinkTo
-        @route={{if
+  <div class="back-to-themes-and-components">
+    <LinkTo
+      @route={{if
+        @controller.model.component
+        "adminConfig.customize.components"
+        "adminConfig.customize.themes"
+      }}
+    >
+      {{icon "angle-left"}}
+      {{i18n
+        (if
           @controller.model.component
-          "adminConfig.customize.components"
-          "adminConfig.customize.themes"
-        }}
-      >
-        {{icon "angle-left"}}
-        {{i18n
-          (if
-            @controller.model.component
-            "admin.config_areas.themes_and_components.components.back"
-            "admin.config_areas.themes_and_components.themes.back"
-          )
-        }}
-      </LinkTo>
-    </div>
+          "admin.config_areas.themes_and_components.components.back"
+          "admin.config_areas.themes_and_components.themes.back"
+        )
+      }}
+    </LinkTo>
+  </div>
+  <div class="show-current-style admin-customize-themes-show">
 
     <span>
       <PluginOutlet
@@ -165,7 +167,6 @@ export default <template>
           />
         </div>
       {{/unless}}
-
       <div class="metadata control-unit remote-theme-metadata">
         {{#if @controller.model.remote_theme}}
           {{!-- {{#if @controller.model.remote_theme.remote_url}}
@@ -244,6 +245,77 @@ export default <template>
                 }}</span>
               {{@controller.model.remote_theme.theme_version}}</span>{{/if}}
         {{/if}}
+
+        {{#if @controller.model.remote_theme}}
+          {{#if @controller.model.remote_theme.is_git}}
+            {{#if @controller.model.remote_theme.commits_behind}}
+              <DButton
+                @action={{@controller.updateToLatest}}
+                @icon="download"
+                @label="admin.customize.theme.update_to_latest"
+                class="btn-primary"
+              />
+            {{else}}
+              <DButton
+                @action={{@controller.checkForThemeUpdates}}
+                @icon="arrows-rotate"
+                @label="admin.customize.theme.check_for_updates"
+                class="btn-default"
+              />
+            {{/if}}
+
+            <DButton
+              @action={{@controller.changeSource}}
+              @icon="rotate"
+              @label="admin.customize.theme.change_source.button"
+              class="btn-default"
+            />
+
+            <span class="status-message">
+              {{#if @controller.updatingRemote}}
+                {{i18n "admin.customize.theme.updating"}}
+              {{else}}
+                {{#if @controller.model.remote_theme.commits_behind}}
+                  {{#if @controller.hasOverwrittenHistory}}
+                    {{i18n "admin.customize.theme.has_overwritten_history"}}
+                  {{else}}
+                    {{i18n
+                      "admin.customize.theme.commits_behind"
+                      count=@controller.model.remote_theme.commits_behind
+                    }}
+                  {{/if}}
+                  {{#if @controller.model.remote_theme.github_diff_link}}
+                    <a href={{@controller.model.remote_theme.github_diff_link}}>
+                      {{i18n "admin.customize.theme.compare_commits"}}
+                    </a>
+                  {{/if}}
+                {{else}}
+                  {{#unless @controller.showRemoteError}}
+                    {{i18n "admin.customize.theme.up_to_date"}}
+                    {{formatDate
+                      @controller.model.remote_theme.updated_at
+                      leaveAgo="true"
+                    }}
+                  {{/unless}}
+                {{/if}}
+              {{/if}}
+            </span>
+          {{else}}
+            <span class="status-message">
+              {{icon "circle-info"}}
+              {{i18n "admin.customize.theme.imported_from_archive"}}
+            </span>
+          {{/if}}
+        {{else if (not @controller.model.system)}}
+          <span class="heading created-by">{{i18n
+              "admin.customize.theme.creator"
+            }}</span>
+          <span>
+            <UserLink @user={{@controller.model.user}}>
+              {{formatUsername @controller.model.user.username}}
+            </UserLink>
+          </span>
+        {{/if}}
       </div>
 
       {{#if @controller.model.system}}
@@ -251,7 +323,6 @@ export default <template>
           {{i18n "admin.customize.theme.built_in_description"}}
         </div>
       {{/if}}
-
       {{outlet}}
     {{/if}}
   </div>
