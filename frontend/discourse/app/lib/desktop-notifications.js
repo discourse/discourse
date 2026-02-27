@@ -24,6 +24,14 @@ export function clearDesktopNotificationHandlers() {
   desktopNotificationHandlers = [];
 }
 
+let desktopNotificationFilters = [];
+function registerDesktopNotificationFilter(filter) {
+  desktopNotificationFilters.push(filter);
+}
+function clearDesktopNotificationFilters() {
+  desktopNotificationFilters = [];
+}
+
 // Called from an initializer
 function init(messageBus) {
   liveEnabled = false;
@@ -144,6 +152,10 @@ function canUserReceiveNotifications(user) {
 
 // Call-in point from message bus
 async function onNotification(data, siteSettings, user, appEvents) {
+  if (desktopNotificationFilters.some((filter) => filter(data) === false)) {
+    return;
+  }
+
   const showNotifications = canUserReceiveNotifications(user) && liveEnabled;
 
   if (showNotifications) {
@@ -238,4 +250,6 @@ export {
   confirmNotification,
   disable,
   canUserReceiveNotifications,
+  registerDesktopNotificationFilter,
+  clearDesktopNotificationFilters,
 };

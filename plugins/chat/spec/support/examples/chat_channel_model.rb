@@ -67,9 +67,13 @@ RSpec.shared_examples "a chat channel model" do
         event_name: :chat_channel_status_change,
         params: [{ channel: private_category_channel, old_status: "open", new_status: "closed" }],
       )
-      expect(messages.first.channel).to eq("/chat/channel-status")
+      expect(messages.first.channel).to eq("/chat/#{private_category_channel.id}")
       expect(messages.first.data).to eq(
-        { chat_channel_id: private_category_channel.id, status: "closed" },
+        {
+          "type" => "status",
+          "chat_channel_id" => private_category_channel.id,
+          "status" => "closed",
+        },
       )
       expect(private_category_channel.reload.closed?).to eq(true)
 
@@ -110,9 +114,13 @@ RSpec.shared_examples "a chat channel model" do
         event_name: :chat_channel_status_change,
         params: [{ channel: private_category_channel, old_status: "closed", new_status: "open" }],
       )
-      expect(messages.first.channel).to eq("/chat/channel-status")
+      expect(messages.first.channel).to eq("/chat/#{private_category_channel.id}")
       expect(messages.first.data).to eq(
-        { chat_channel_id: private_category_channel.id, status: "open" },
+        {
+          "type" => "status",
+          "chat_channel_id" => private_category_channel.id,
+          "status" => "open",
+        },
       )
       expect(private_category_channel.reload.open?).to eq(true)
 
@@ -149,9 +157,13 @@ RSpec.shared_examples "a chat channel model" do
           { channel: private_category_channel, old_status: "open", new_status: "read_only" },
         ],
       )
-      expect(messages.first.channel).to eq("/chat/channel-status")
+      expect(messages.first.channel).to eq("/chat/#{private_category_channel.id}")
       expect(messages.first.data).to eq(
-        { chat_channel_id: private_category_channel.id, status: "read_only" },
+        {
+          "type" => "status",
+          "chat_channel_id" => private_category_channel.id,
+          "status" => "read_only",
+        },
       )
       expect(private_category_channel.reload.read_only?).to eq(true)
 
@@ -203,9 +215,13 @@ RSpec.shared_examples "a chat channel model" do
           { channel: private_category_channel, old_status: "read_only", new_status: "archived" },
         ],
       )
-      expect(messages.first.channel).to eq("/chat/channel-status")
+      expect(messages.first.channel).to eq("/chat/#{private_category_channel.id}")
       expect(messages.first.data).to eq(
-        { chat_channel_id: private_category_channel.id, status: "archived" },
+        {
+          "type" => "status",
+          "chat_channel_id" => private_category_channel.id,
+          "status" => "archived",
+        },
       )
       expect(private_category_channel.reload.archived?).to eq(true)
 

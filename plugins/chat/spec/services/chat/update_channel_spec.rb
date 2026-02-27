@@ -29,7 +29,7 @@ RSpec.describe Chat::UpdateChannel do
     context "when a valid user provides valid params" do
       let(:message) do
         MessageBus
-          .track_publish(Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL) { result }
+          .track_publish(Chat::Publisher.root_message_bus_channel(channel.id)) { result }
           .first
       end
 
@@ -49,10 +49,11 @@ RSpec.describe Chat::UpdateChannel do
       it "publishes a MessageBus message" do
         expect(message.data).to eq(
           {
-            chat_channel_id: channel.id,
-            name: "cool channel",
-            description: "a channel description",
-            slug: "snail",
+            "type" => "edits",
+            "chat_channel_id" => channel.id,
+            "name" => "cool channel",
+            "description" => "a channel description",
+            "slug" => "snail",
           },
         )
       end

@@ -34,7 +34,7 @@ export default class Chat extends Service {
   cook = null;
   presenceChannel = null;
   isNetworkUnreliable = false;
-
+  needsResync = false;
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
 
   @tracked _activeMessage = null;
@@ -115,54 +115,22 @@ export default class Chat extends Service {
   }
 
   @bind
+  flagDesync(reason) {
+    if (this.needsResync) {
+      return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[chat] MessageBus desync detected: ${reason}. Will reload on next focus.`
+    );
+    this.needsResync = true;
+  }
+
+  @bind
   onPresenceChangeCallback(present) {
-    if (present) {
-      // NOTE: channels is more than a simple array, it also contains
-      // tracking and membership data, see Chat::StructuredChannelSerializer
-      this.chatApi.listCurrentUserChannels().then((channelsView) => {
-        this.chatSubscriptionsManager.stopChannelsSubscriptions();
-        this.chatSubscriptionsManager.startChannelsSubscriptions(
-          channelsView.meta.message_bus_last_ids
-        );
-
-        this.chatChannelsManager.userHasThreads =
-          channelsView.has_threads ?? false;
-
-        [
-          ...channelsView.public_channels,
-          ...channelsView.direct_message_channels,
-        ].forEach((channelObject) => {
-          this.chatChannelsManager
-            .find(channelObject.id, { fetchIfNotFound: false })
-            .then((channel) => {
-              if (!channel) {
-                return;
-              }
-              // NOTE: We need to do something here for thread tracking
-              // state as well on presence change, otherwise we will be back in
-              // the same place as the channels were.
-              //
-              // At some point it would likely be better to just fetch an
-              // endpoint that gives you all channel tracking state and the
-              // thread tracking state for the current channel.
-
-              // ensures we have the latest message bus ids
-              channel.meta.message_bus_last_ids =
-                channelObject.meta.message_bus_last_ids;
-
-              const state = channelsView.tracking.channel_tracking[channel.id];
-              channel.tracking.unreadCount = state.unread_count;
-              channel.tracking.mentionCount = state.mention_count;
-              channel.tracking.watchedThreadsUnreadCount =
-                state.watched_threads_unread_count;
-
-              channel.currentUserMembership =
-                channelObject.current_user_membership;
-
-              this.chatSubscriptionsManager.startChannelSubscription(channel);
-            });
-        });
-      });
+    if (present && this.needsResync) {
+      window.location.reload();
     }
   }
 
@@ -213,17 +181,14 @@ export default class Chat extends Service {
   }
 
   setupWithPreloadedChannels(channelsView) {
-    this.chatSubscriptionsManager.startChannelsSubscriptions(
-      channelsView.meta.message_bus_last_ids
-    );
     this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
 
     this.chatChannelsManager.userHasThreads = channelsView.has_threads ?? false;
 
-    [
+    const allChannels = [
       ...channelsView.public_channels,
       ...channelsView.direct_message_channels,
-    ].forEach((channelObject) => {
+    ].map((channelObject) => {
       const storedChannel = this.chatChannelsManager.store(channelObject);
 
       if (channelsView.unread_thread_overview?.[storedChannel.id]) {
@@ -231,8 +196,14 @@ export default class Chat extends Service {
           channelsView.unread_thread_overview[storedChannel.id];
       }
 
-      return this.chatChannelsManager.follow(storedChannel);
+      this.chatChannelsManager.follow(storedChannel);
+      return storedChannel;
     });
+
+    this.chatSubscriptionsManager.startChannelsSubscriptions(
+      channelsView.meta.message_bus_last_ids,
+      allChannels
+    );
 
     this.chatTrackingStateManager.setupWithPreloadedState(
       channelsView.tracking

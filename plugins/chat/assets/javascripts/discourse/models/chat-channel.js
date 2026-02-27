@@ -76,8 +76,6 @@ export default class ChatChannel {
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
-  pendingOptimisticPins = new Set();
-  pendingOptimisticUnpins = new Set();
 
   @tracked _currentUserMembership;
   @tracked _lastMessage;

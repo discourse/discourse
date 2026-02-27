@@ -3,36 +3,33 @@
 RSpec.describe Jobs::Chat::KickUsersFromChannel do
   fab!(:channel, :chat_channel)
 
-  it "publishes the correct MessageBus message" do
-    message =
-      MessageBus
-        .track_publish(Chat::Publisher.kick_users_message_bus_channel(channel.id)) do
-          described_class.new.execute(channel_id: channel.id, user_ids: [1, 2, 3])
-        end
-        .first
+  it "publishes the correct MessageBus messages to each user" do
+    messages =
+      MessageBus.track_publish do
+        described_class.new.execute(channel_id: channel.id, user_ids: [1, 2, 3])
+      end
 
-    expect(message.user_ids).to eq([1, 2, 3])
+    kick_messages = messages.select { |m| m.data["type"] == "kick" }
+    expect(kick_messages.length).to eq(3)
+    expect(kick_messages.map(&:user_ids).flatten).to contain_exactly(1, 2, 3)
   end
 
   it "does nothing if the channel is deleted" do
     channel_id = channel.id
     channel.trash!
-    message =
-      MessageBus
-        .track_publish(Chat::Publisher.kick_users_message_bus_channel(channel.id)) do
-          described_class.new.execute(channel_id: channel_id, user_ids: [1, 2, 3])
-        end
-        .first
-    expect(message).to be_nil
+    messages =
+      MessageBus.track_publish do
+        described_class.new.execute(channel_id: channel_id, user_ids: [1, 2, 3])
+      end
+
+    kick_messages = messages.select { |m| m.data["type"] == "kick" }
+    expect(kick_messages).to be_empty
   end
 
   it "does nothing if no user_ids are provided" do
-    message =
-      MessageBus
-        .track_publish(Chat::Publisher.kick_users_message_bus_channel(channel.id)) do
-          described_class.new.execute(channel_id: channel.id)
-        end
-        .first
-    expect(message).to be_nil
+    messages = MessageBus.track_publish { described_class.new.execute(channel_id: channel.id) }
+
+    kick_messages = messages.select { |m| m.data["type"] == "kick" }
+    expect(kick_messages).to be_empty
   end
 end

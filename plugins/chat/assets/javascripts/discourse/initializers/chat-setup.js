@@ -150,10 +150,14 @@ class ChatSetupInit {
 
       this.chatService.loadChannels();
 
-      const chatNotificationManager = owner.lookup(
-        "service:chat-notification-manager"
-      );
-      chatNotificationManager.start();
+      api.registerDesktopNotificationFilter((data) => {
+        if (data.channel_id === this.chatService.activeChannel?.id) {
+          const session = owner.lookup("service:session");
+          if (session.hasFocus) {
+            return false;
+          }
+        }
+      });
 
       if (!this._registeredDocumentTitleCountCallback) {
         api.addDocumentTitleCounter(this.documentTitleCountCallback);

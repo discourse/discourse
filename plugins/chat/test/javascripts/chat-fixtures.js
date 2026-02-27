@@ -33,8 +33,7 @@ export const directMessageChannels = [
       allow_channel_wide_mentions: true,
       last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
   },
@@ -68,8 +67,7 @@ export const directMessageChannels = [
       allow_channel_wide_mentions: true,
       last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
   },
@@ -114,8 +112,7 @@ export const chatChannels = {
         following: true,
       },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
     {
@@ -133,8 +130,7 @@ export const chatChannels = {
         following: true,
       },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
     {
@@ -152,8 +148,7 @@ export const chatChannels = {
         following: true,
       },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
     {
@@ -171,8 +166,7 @@ export const chatChannels = {
         following: true,
       },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
     {
@@ -190,8 +184,7 @@ export const chatChannels = {
         following: true,
       },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
     {
@@ -209,8 +202,7 @@ export const chatChannels = {
         following: true,
       },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
     {
@@ -228,8 +220,7 @@ export const chatChannels = {
         following: true,
       },
       message_bus_last_ids: {
-        new_mentions: 0,
-        new_messages: 0,
+        notifications: 0,
       },
     },
   ],
@@ -251,11 +242,7 @@ export const chatChannels = {
     (item) => item.chat_channel
   ),
   message_bus_last_ids: {
-    channel_metadata: 0,
-    channel_edits: 0,
-    channel_status: 0,
-    new_channel: 0,
-    user_tracking_state: 0,
+    user_state: 0,
   },
 };
 

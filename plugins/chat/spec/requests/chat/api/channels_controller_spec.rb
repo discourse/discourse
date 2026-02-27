@@ -579,7 +579,7 @@ RSpec.describe Chat::Api::ChannelsController do
 
       it "publishes an update" do
         messages =
-          MessageBus.track_publish("/chat/channel-edits") do
+          MessageBus.track_publish("/chat/#{channel.id}") do
             put "/chat/api/channels/#{channel.id}",
                 params: {
                   channel: {
@@ -590,10 +590,10 @@ RSpec.describe Chat::Api::ChannelsController do
 
         message = messages[0]
         channel.reload
-        expect(message.data[:chat_channel_id]).to eq(channel.id)
-        expect(message.data[:name]).to eq(channel.name)
-        expect(message.data[:slug]).to eq(channel.slug)
-        expect(message.data[:description]).to eq(channel.description)
+        expect(message.data["chat_channel_id"]).to eq(channel.id)
+        expect(message.data["name"]).to eq(channel.name)
+        expect(message.data["slug"]).to eq(channel.slug)
+        expect(message.data["description"]).to eq(channel.description)
       end
 
       it "returns a valid chat channel" do
