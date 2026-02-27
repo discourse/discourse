@@ -37,6 +37,46 @@ index cd68afe479229ed77b4e4c93759aa90913cdc49c..6e7d71bbeb28f18259fa8afb48ef7827
    registerHandler = function registerHandler(type, callback) {
      let nextHandler = HANDLERS[type] || (() => {});
      HANDLERS[type] = (message, options) => {
+diff --git a/dist/packages/@glimmer/validator/index.js b/dist/packages/@glimmer/validator/index.js
+index 1119353624a19235372b59453c040d2a342aad69..7d109a6cf38145c5edc92bd5acb12a7ee9a00893 100644
+--- a/dist/packages/@glimmer/validator/index.js
++++ b/dist/packages/@glimmer/validator/index.js
+@@ -576,7 +576,7 @@ class TrackedMap {
+     return existing && this.#options.equals(existing, value) || (this.#dirtyStorageFor(key), existing || DIRTY_TAG(this.#collection), this.#vals.set(key, value)), this;
+   }
+   delete(key) {
+-    return !this.#vals.has(key) || (this.#dirtyStorageFor(key), DIRTY_TAG(this.#collection), this.#storages.delete(key), this.#vals.delete(key));
++    return !!this.#vals.has(key) && (this.#dirtyStorageFor(key), DIRTY_TAG(this.#collection), this.#storages.delete(key), this.#vals.delete(key));
+   }
+   clear() {
+     0 !== this.#vals.size && (this.#storages.forEach(s => DIRTY_TAG(s)), this.#storages.clear(), DIRTY_TAG(this.#collection), this.#vals.clear());
+@@ -711,7 +711,7 @@ class TrackedSet {
+     return this.#dirtyStorageFor(value), this.#vals.add(value), this;
+   }
+   delete(value) {
+-    return !this.#vals.has(value) || (this.#dirtyStorageFor(value), DIRTY_TAG(this.#collection), this.#storages.delete(value), this.#vals.delete(value));
++    return !!this.#vals.has(value) && (this.#dirtyStorageFor(value), DIRTY_TAG(this.#collection), this.#storages.delete(value), this.#vals.delete(value));
+   }
+   // **** ALL SETTERS ****
+   clear() {
+@@ -758,7 +758,7 @@ class TrackedWeakMap {
+     return existing && this.#options.equals(existing, value) || (this.#dirtyStorageFor(key), this.#vals.set(key, value)), this;
+   }
+   delete(key) {
+-    return !this.#vals.has(key) || (this.#dirtyStorageFor(key), this.#storages.delete(key), this.#vals.delete(key));
++    return !!this.#vals.has(key) && (this.#dirtyStorageFor(key), this.#storages.delete(key), this.#vals.delete(key));
+   }
+   get [Symbol.toStringTag]() {
+     return this.#vals[Symbol.toStringTag];
+@@ -810,7 +810,7 @@ class TrackedWeakSet {
+     this.#vals.add(value), this.#dirtyStorageFor(value)), this;
+   }
+   delete(value) {
+-    return !this.#vals.has(value) || (this.#dirtyStorageFor(value), this.#storages.delete(value), this.#vals.delete(value));
++    return !!this.#vals.has(value) && (this.#dirtyStorageFor(value), this.#storages.delete(value), this.#vals.delete(value));
+   }
+   get [Symbol.toStringTag]() {
+     return this.#vals[Symbol.toStringTag];
 diff --git a/dist/packages/shared-chunks/array-CVk-fNjW.js b/dist/packages/shared-chunks/array-CVk-fNjW.js
 index c5a84d367d2d2643b395afffb103b7a2136eb5e9..08bce6a08b93dd13b77c099d57e4836f5a0638fe 100644
 --- a/dist/packages/shared-chunks/array-CVk-fNjW.js

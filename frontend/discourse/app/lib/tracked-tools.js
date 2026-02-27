@@ -1,8 +1,13 @@
+import { setCustomTagFor } from "@glimmer/manager";
 import { tracked } from "@glimmer/tracking";
-import { tagFor, track, updateTag } from "@glimmer/validator";
+import { dirtyTagFor, tagFor, track, updateTag } from "@glimmer/validator";
 import { meta as metaFor, peekMeta } from "@ember/-internals/meta";
 import { TrackedDescriptor } from "@ember/-internals/metal";
-import { trackedArray, trackedSet } from "@ember/reactive/collections";
+import {
+  trackedArray,
+  trackedObject,
+  trackedSet,
+} from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 
 /**
@@ -18,6 +23,39 @@ export function defineTrackedProperty(target, key, value) {
     key,
     tracked(target, key, { enumerable: true, value })
   );
+}
+
+/**
+ * Creates a tracked object that bridges Ember's native autotracking system with
+ * the classic `@computed` / `@discourseComputed` dependent key chain observation.
+ *
+ * Ember's native `trackedObject()` only dirties internal Cell tags on property set,
+ * which are invisible to `@computed("obj.prop")` chains that use `tagFor()` from
+ * `TRACKED_TAGS`. It also uses data descriptors on its Proxy target, which causes
+ * Ember's `setupMandatorySetter` to install a mandatory setter that blocks all
+ * subsequent direct property assignments.
+ *
+ * This wrapper:
+ * 1. Registers `setCustomTagFor` so `tagForProperty()` bypasses `setupMandatorySetter`
+ * 2. Intercepts `set` to also call `dirtyTagFor()` for classic chain tag invalidation
+ *
+ * @param {Object} obj - The object to wrap in a tracked proxy.
+ * @returns {Proxy} A proxy that supports both native autotracking and classic `@computed` chains.
+ */
+export function trackedObjectWithComputedSupport(obj) {
+  const inner = trackedObject(obj);
+
+  const outer = new Proxy(inner, {
+    set(target, prop, value) {
+      const result = Reflect.set(target, prop, value);
+      dirtyTagFor(outer, prop);
+      return result;
+    },
+  });
+
+  setCustomTagFor(outer, (_obj, key) => tagFor(outer, key));
+
+  return outer;
 }
 
 class ResettableTrackedState {
