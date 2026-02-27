@@ -171,7 +171,9 @@ class TagUser < ActiveRecord::Base
       builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
     end
 
-    if user_id = opts[:user_id]
+    if user_ids = opts[:user_ids]
+      builder.where("tu.user_id IN (:user_ids)", user_ids: user_ids)
+    elsif user_id = opts[:user_id]
       builder.where("tu.user_id = :user_id", user_id: user_id)
     end
 
@@ -206,7 +208,9 @@ class TagUser < ActiveRecord::Base
       builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
     end
 
-    if user_id = opts[:user_id]
+    if user_ids = opts[:user_ids]
+      builder.where("tu.user_id IN (:user_ids)", user_ids: user_ids)
+    elsif user_id = opts[:user_id]
       builder.where("tu.user_id = :user_id", user_id: user_id)
     end
 
