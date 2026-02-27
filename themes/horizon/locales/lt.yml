@@ -5,3 +5,15 @@
 # https://translate.discourse.org/
 
 lt:
+  solved: "Išspresta"
+  posted: "paskelbta"
+  like_count:
+    one: "%{count} patinka"
+    few: "%{count} patinka"
+    many: "%{count} patinka"
+    other: "%{count} patinka"
+  reply_count:
+    one: "%{count} atsakymas"
+    few: "%{count} atsakymai"
+    many: "%{count} atsakymai"
+    other: "%{count} atsakymai"

@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 sl:
+  js:
+    discourse_math:
+      edit_modal:
+        apply: "Uporabi"
+      insert_modal:
+        insert: "Dodaj"

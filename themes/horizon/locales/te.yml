@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 te:
+  posted: "పోస్ట్ చేయబడింది"
+  like_count:
+    one: "%{count} ఇష్టం"
+    other: "%{count} ఇష్టాలు"
+  reply_count:
+    one: "%{count} ప్రత్యుత్తరం"
+    other: "%{count} ప్రత్యుత్తరాలు"

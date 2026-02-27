@@ -37,6 +37,7 @@ pl_PL:
     house_ads_after_nth_post: 'Jeżeli wybrano wyświetlanie reklam pomiędzy wpisami, wyświetlaj je co N wpisów, gdzie N to ta liczba.'
     house_ads_frequency: "Jeśli reklamy innych sieci zostały skonfigurowane, by pokazywać się w slocie na reklamy, ta wartość pozwala na ustalenie – w procentach – jak często będą wyświetlane"
     ads_txt: "Zawartość pliku ads.txt. Więcej szczegółów znajdziesz na <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>tej stronie pomocy Google AdSense</a>."
+    ad_plugin_routes_enabled: "Włącz kierowanie trasą dla reklam własnych"
     dfp_publisher_id: "Wpisz kod sieci Menedżera reklam Google (wcześniej nazywany DFP), który znajduje się w ustawieniach sieci. UWAGA: Konieczne będzie zaktualizowanie ustawienia „skrypt bezpieczeństwa zasad src”. Zobacz <a href='https://meta.discourse.org/t/33734' target='_blank'>ten temat,</a> aby uzyskać najnowsze instrukcje."
     dfp_publisher_id_mobile: "(Opcjonalnie) jeśli chcesz użyć innego publisher id Ad Managera dla mobilnej wersji swojej strony, to umieść je tutaj. Pozostaw to pole puste, by użyć dfp_publisher_id na urządzeniach mobilnych."
     dfp_through_trust_level: "Pokaż reklamy swoim użytkownikom na podstawie poziomu zaufania. Użytkownicy z poziomem zaufania wyższym niż ta wartość, nie zobaczą reklam."

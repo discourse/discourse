@@ -2247,6 +2247,7 @@ sk:
     mailgun_api_key: "Mailgun Secret API kľúč používaný na overenie správ webhooku."
     sendgrid_verification_key: "Overovací kľúč Sendgrid používaný na overovanie správ webhook."
     mailjet_webhook_token: "Token používaný na overenie payload webového háku. Musí byť odovzdaný ako parameter dotazu 't' webového háku, napríklad: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token používaný na overenie payload webového háku. Musí byť odovzdaný ako parameter dotazu 't' webového háku, napríklad: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Autentizačný kľúč Mandrill používaný na overovanie správ webhook."
     postmark_webhook_token: "Token používaný na overenie užitočného zaťaženia webhooku. Musí sa odovzdať ako parameter dopytu \"t\" webhooku, napríklad: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token používaný na overenie obsahu webhooku. Musí sa odovzdať ako parameter dopytu „t“ webhooku, napríklad: https://example.com/webhook/sparkpost?t=supersecret"

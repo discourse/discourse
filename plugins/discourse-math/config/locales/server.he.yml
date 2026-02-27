@@ -8,3 +8,9 @@ he:
   site_settings:
     discourse_math_enabled: "הפעלת תוסף המתמטיקה של Discourse (תוספת של עיבוד מיוחד של בלוקים מסוג $ ומסוג $$)"
     discourse_math_provider: "ספק עיבוד התמטיקה כבררת מחדל"
+    discourse_math_enable_latex_delimiters: "הפעלת מפרידים בסגנון LaTeX‏: ‎\\(…\\)‎ עבור מתמטיקה פנימית בשורה וב־‎\\[…\\]‎ עבור מקטע מתמטיקה"
+    discourse_math_mathjax_output: "תבנית פלט MathJax‏ (MathJax בלבד)"
+    discourse_math_enable_menu: "הפעלת תפריט הקשר (MathJax בלבד)"
+    discourse_math_enable_accessibility: "הפעלת תכונות נגישות (MathJax עם תפריט בלבד)"
+    discourse_math_zoom_on_click: "הגדלה של 175% בלחיצה עם Alt (MathJax עם תפריט בלבד)"
+    discourse_math_enable_asciimath: "הפעלת asciiimath (יוסיף עיבוד מיוחד לקלט המופרד באחוזים, נתמך רק עם MathJax)"

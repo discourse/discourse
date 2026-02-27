@@ -3333,6 +3333,12 @@ ur:
         delete_topics_count:
           one: "موضوع حذف کریں"
           other: "موضوعات حذف کریں"
+        delete_posts_count:
+          one: "پوسٹ حذف کریں"
+          other: "پوسٹس حذف کریں"
+        delete_posts_confirmation:
+          one: "کیا آپ واقعی %{count} پوسٹ حذف کرنا چاہتے ہیں؟"
+          other: "کیا آپ واقعی %{count} پوسٹس حذف کرنا چاہتے ہیں؟"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام بغیر پڑھے ہوئے بر خاست کریں"
         dismiss_read_with_selected:
@@ -3910,6 +3916,7 @@ ur:
         actions: "حجمی عوامل"
     post:
       accessible_heading: "پوسٹ منجانب %{username} %{date}"
+      heading_anchor: "ہیڈنگ لنک"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
       quote_reply_shortcut: "اقتباس (یا q دبائیں)"

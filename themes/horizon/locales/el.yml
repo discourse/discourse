@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 el:
+  solved: "Λύθηκε"
+  posted: "ανάρτησε"
+  vote_count:
+    one: "%{count} ψήφος"
+    other: "%{count} ψήφοι"
+  like_count:
+    one: "%{count} «μου αρέσει»"
+    other: "%{count} «μου αρέσει»"
+  reply_count:
+    one: "%{count} απάντηση"
+    other: "%{count} απαντήσεις"

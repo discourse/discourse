@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 lv:
+  posted: "ierakstīts"
+  reply_count:
+    zero: "%{count} atbildes"
+    one: "%{count} atbilde"
+    other: "%{count} atbildes"

@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 sw:
+  js:
+    discourse_math:
+      edit_modal:
+        apply: "Tumia"
+      insert_modal:
+        insert: "Weka"

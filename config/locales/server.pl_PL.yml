@@ -19,7 +19,7 @@ pl_PL:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Styczeń
     - Luty
     - Marzec
@@ -2310,6 +2310,7 @@ pl_PL:
     mailgun_api_key: "Klucz Mailgun Secret API używany do weryfikacji wiadomości webhook."
     sendgrid_verification_key: "Klucz weryfikacyjny Sendgrid używany do weryfikacji wiadomości webhook."
     mailjet_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Klucz uwierzytelniania Mandrill używany do weryfikowania wiadomości webhook."
     postmark_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/sparkpost?t=supersecret"

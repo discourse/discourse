@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 bg:
+  posted: "публикувано"
+  vote_count:
+    one: "%{count} глас"
+    other: "%{count} гласа"
+  reply_count:
+    one: "%{count} отговор"
+    other: "%{count} отговора"

@@ -15,3 +15,4 @@ cs:
       delete_confirm: "Opravdu chcete odstranit tuto poznámku k uživateli?"
       show_post: "Zobrazit příspěvek"
       show_flag: "Zobrazit nahlášení"
+      copy_reviewable_note: "Zkopírovat poznámku do „Poznámky uživatele“ na profilu uživatele %{username}?"

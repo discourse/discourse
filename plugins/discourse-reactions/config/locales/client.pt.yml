@@ -19,7 +19,7 @@ pt:
         react_with: "Reagir a esta publicação com: %{reaction}"
         remove_reaction: "Remover esta %{reaction} reação"
       main_reaction:
-        add: "Gostar desta publicação"
+        add: "Gostar desta mensagem"
         remove: "Remover este gosto"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

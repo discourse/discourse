@@ -350,6 +350,7 @@ ja:
       bulk_invite: "一括招待"
       close_event: "イベントを終了"
       open_event: "イベントを開く"
+      destroy_event: "イベントを破棄"
       invitees_modal:
         title_invited: "イベントへの参加"
         title_participated: "参加したユーザーのリスト"
@@ -422,6 +423,12 @@ ja:
             private:
               title: "非公開"
               description: "非公開イベントは招待されたユーザーのみが参加できます。"
+      composer:
+        name_placeholder: "イベント"
+        end_date_placeholder: "終了日を設定"
+        location_placeholder: "場所または URL を追加"
+        max_attendees_placeholder: "最大参加者数を設定"
+        description_placeholder: "イベントの説明を追加"
       builder_modal:
         custom_fields:
           label: "カスタムフィールド"
@@ -491,6 +498,7 @@ ja:
           label: "招待されたグループ"
         status:
           label: "ステータス"
+        delete_confirmation_message: "このイベントを削除しますか？"
       invite_user_or_group:
         title: "ユーザーまたはグループに通知する"
         invite: "送信"

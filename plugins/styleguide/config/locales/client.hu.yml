@@ -85,6 +85,8 @@ hu:
           title: "Bejegyzés Lista"
           empty_example: "<PostList /> üres állapot"
           populated_example: "<PostList /> népszerű"
+        post_oneboxes:
+          title: "Oneboxok közzététele"
         topic_map:
           title: "Téma térkép"
         site_header:

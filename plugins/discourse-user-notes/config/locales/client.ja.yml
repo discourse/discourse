@@ -15,3 +15,4 @@ ja:
       delete_confirm: "このユーザーメモを削除してもよろしいですか？"
       show_post: "投稿を表示"
       show_flag: "通報を表示"
+      copy_reviewable_note: "%{username} プロフィールの「ユーザーメモ」にメモをコピーしますか？"

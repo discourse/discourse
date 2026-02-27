@@ -115,6 +115,7 @@ el:
           name: "Αναζήτηση"
         ai_helper:
           setting_groups:
+            access_permissions: "Πρόσβαση & Δικαιώματα"
             automation: "Αυτοματισμός"
         translation:
           post_raw_translator: "Μεταφραστής ακατέργαστης ανάρτησης"
