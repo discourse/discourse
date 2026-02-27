@@ -269,6 +269,7 @@ export default class User extends RestModel.extend(Evented) {
   @filterBy("groups", "has_messages", true) groupsWithMessages;
   @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
   @alias("can_edit_tags") canEditTags;
+  @alias("can_change_post_owner") canChangePostOwner;
 
   numGroupsToDisplay = 2;
 
