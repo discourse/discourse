@@ -917,17 +917,11 @@ class Group < ActiveRecord::Base
 
       if added_user_ids.present?
         if self.primary_group?
-          # Match User#match_primary_group_changes: update flair when it was
-          # tracking the old primary group (including both being nil).
-          # Must run before primary_group_id update to compare against old value.
           User
             .where(id: added_user_ids)
             .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
             .update_all(flair_group_id: self.id)
 
-          # Match User#match_primary_group_changes: replace title if it matched
-          # the old primary group's title. Must run before primary_group_id update.
-          # Runs even when self.title is nil — clears stale titles to NULL.
           DB.exec(<<~SQL, user_ids: added_user_ids, new_title: self.title)
               UPDATE users u
               SET title = :new_title
@@ -1044,23 +1038,17 @@ class Group < ActiveRecord::Base
   def bulk_remove(user_ids)
     return false if user_ids.blank?
 
-    # Load before deletion — needed for post-delete side effects and event dispatch.
     group_users_to_remove = group_users.includes(:user).where(user_id: user_ids).to_a
     return true if group_users_to_remove.empty?
 
     removed_user_ids = group_users_to_remove.map(&:user_id)
 
     Group.transaction do
-      # Use delete_all to bypass N per-record AR callbacks (after_destroy, after_commit).
       group_users.where(user_id: removed_user_ids).delete_all
 
-      # Replicate after_destroy :remove_primary_and_flair_group in bulk.
       User.where(primary_group_id: self.id, id: removed_user_ids).update_all(primary_group_id: nil)
       User.where(flair_group_id: self.id, id: removed_user_ids).update_all(flair_group_id: nil)
 
-      # Replicate after_destroy :grant_other_available_title.
-      # Fast path: bulk-clear title for users with no other title-granting group (1 query).
-      # Since group_users rows are already deleted above, the NOT EXISTS is clean.
       if self.title.present?
         DB.exec(<<~SQL, user_ids: removed_user_ids, title: self.title)
             UPDATE users u
@@ -1075,8 +1063,6 @@ class Group < ActiveRecord::Base
               )
           SQL
 
-        # Slow path: for any users still holding the old title, they have another titled
-        # group — find and apply the best remaining title per-user.
         User
           .where(id: removed_user_ids, title: self.title)
           .find_each { |user| user.update_attribute(:title, user.next_best_title) }
@@ -1089,13 +1075,10 @@ class Group < ActiveRecord::Base
         .find_each { |user| Promotion.recalculate(user, use_previous_trust_level: true) }
     end
 
-    # Replicate after_commit :decrease_group_user_count — one recalc instead of N decrements.
     recalculate_user_count
 
-    # Notify affected users to refresh their category lists.
     bulk_publish_category_updates(group_users_to_remove.map(&:user))
 
-    # DiscourseEvent and webhook dispatch (in-memory, no extra DB queries).
     group_users_to_remove.each do |group_user|
       trigger_user_removed_event(group_user.user)
       enqueue_user_removed_from_group_webhook_events(group_user)
