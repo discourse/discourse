@@ -69,13 +69,6 @@ class PrivateMessageTopicTrackingState extends Service {
   }
 
   lookupCount(type, opts = {}) {
-    // Consume the modification counter so callers re-evaluate when existing
-    // entries are updated. Ember's native trackedMap() only dirties the
-    // collection tag on new key insertion, not on updates to existing keys.
-    // Since this method iterates via values() (which consumes the collection
-    // tag), updates to existing entries would otherwise go unnoticed.
-    this.statesModificationCounter;
-
     const typeFilterFn = type === "new" ? this._isNew : this._isUnread;
     const inbox = opts.inboxFilter || this.inbox;
     let filterFn;

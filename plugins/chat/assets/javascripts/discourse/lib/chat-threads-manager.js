@@ -43,15 +43,10 @@ export default class ChatThreadsManager {
   }
 
   markThreadUnread(threadId, lastReplyCreatedAt) {
-    const id = parseInt(threadId, 10);
-
-    // Delete first to ensure the collection tag is dirtied. Ember's native
-    // trackedMap().set() only dirties the collection tag for new key insertions,
-    // not for updates to existing keys. Getters that iterate via .values()
-    // (like unreadThreadsCountSinceLastViewed) consume the collection tag, so
-    // they would miss updates to existing entries without this workaround.
-    this.unreadThreadOverview.delete(id);
-    this.unreadThreadOverview.set(id, new Date(lastReplyCreatedAt));
+    this.unreadThreadOverview.set(
+      parseInt(threadId, 10),
+      new Date(lastReplyCreatedAt)
+    );
   }
 
   @cached
