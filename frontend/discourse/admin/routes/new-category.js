@@ -17,9 +17,9 @@ export default class NewCategory extends DiscourseRoute {
   @service categoryTypeChooser;
   @service router;
 
-  controllerName = "edit-category.tabs";
-
-  templateName = "edit-category.tabs";
+  deactivate() {
+    this.categoryTypeChooser.reset();
+  }
 
   beforeModel() {
     if (!this.currentUser?.can_create_category) {
@@ -58,31 +58,11 @@ export default class NewCategory extends DiscourseRoute {
     });
   }
 
-  setupController(controller) {
-    super.setupController(...arguments);
-
-    const result = this.categoryTypeChooser.consume();
-    if (result) {
-      controller.model.set("category_type", result.type);
-      controller.model.set("category_type_name", result.typeName);
-      controller.model.set("category_type_schema", result.typeSchema);
-    }
-
-    controller.selectedTab = "general";
-    controller.parentParams = {};
-  }
-
   titleToken() {
-    const typeName = this.controller?.model?.category_type_name;
-    if (typeName) {
-      return i18n("category.create_with_type", { typeName });
-    }
     return i18n("category.create");
   }
 
   groupPermissions() {
-    // Override this function if you want different groupPermissions from a plugin.
-    // If your plugin override fails, permissions will fallback to defaultGroupPermissions
     return this.defaultGroupPermissions();
   }
 
