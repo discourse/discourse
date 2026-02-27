@@ -15,7 +15,6 @@
 # or out of the change, since that overrides the automatic promotion.
 class UpcomingChanges::NotifyPromotion
   include Service::Base
-  include UpcomingChanges::NotificationDataMerger
 
   params do
     attribute :setting_name, :symbol
@@ -82,25 +81,27 @@ class UpcomingChanges::NotifyPromotion
       notification_type: Notification.types[:upcoming_change_automatically_promoted],
       user_id: params.admin_user_ids,
       read: false,
-    ).to_a
+    )
   end
 
   def fetch_records(params:, existing_notifications:)
-    existing_by_user = existing_notifications.index_by(&:user_id)
+    existing_by_user = existing_notifications.to_a.index_by(&:user_id)
     params.admin_user_ids.map do |admin_id|
       {
         user_id: admin_id,
         notification_type: Notification.types[:upcoming_change_automatically_promoted],
-        data: merge_change_data(existing_by_user[admin_id], params.setting_name).to_json,
+        data:
+          UpcomingChanges::Action::NotificationDataMerger.call(
+            existing_notification: existing_by_user[admin_id],
+            new_change_name: params.setting_name,
+          ).to_json,
       }
     end
   end
 
   def notify_admins(params:, records:, existing_notifications:)
     Notification.transaction do
-      if existing_notifications.any?
-        Notification.where(id: existing_notifications.map(&:id)).delete_all
-      end
+      existing_notifications.delete_all if existing_notifications.any?
       Notification::Action::BulkCreate.call(records:)
     end
   end

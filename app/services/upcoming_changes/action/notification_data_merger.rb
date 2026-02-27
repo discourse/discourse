@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
-module UpcomingChanges::NotificationDataMerger
-  private
+# Consolidates upcoming change notification data for both available and promoted changes.
+# We do this so admins are not overwhelmed by many separate notifications for upcoming changes
+# being available or promoted in cases like deployments where this is possible.
+#
+# Used in UpcomingChanges::Action::NotifyAdminsOfAvailableChange and UpcomingChanges::NotifyPromotion,
+# and only unread notifications sare considered for merging.
+class UpcomingChanges::Action::NotificationDataMerger < Service::ActionBase
+  option :existing_notification
+  option :new_change_name
 
-  def merge_change_data(existing_notification, new_change_name)
+  def call
     if existing_notification
       existing_data = JSON.parse(existing_notification.data, symbolize_names: true)
       names =
