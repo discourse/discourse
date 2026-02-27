@@ -5,7 +5,6 @@ module Reports::MobileVisits
 
   class_methods do
     def report_mobile_visits(report)
-      report.modes = [Report::MODES[:stacked_chart]]
       basic_report_about report, UserVisit, :mobile_by_day, report.start_date, report.end_date
       report.total = UserVisit.where(mobile: true).count
       report.prev30Days =

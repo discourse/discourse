@@ -66,6 +66,7 @@ class Report
     top_users_by_likes_received_from_inferior_trust_level
     top_users_by_likes_received_from_a_variety_of_people
     user_to_user_private_messages
+    mobile_visits
   ]
 
   include Reports::AssociatedAccountsByProvider
