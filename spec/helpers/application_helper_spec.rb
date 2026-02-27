@@ -114,31 +114,26 @@ RSpec.describe ApplicationHelper do
         helper.preload_script(
           "plugins/my-plugin",
           attrs: {
-            "data-discourse-plugin": "my-plugin",
+            "data-plugin-name": "my-plugin",
             "data-preinstalled": "true",
             "data-official": "true",
           },
         )
-      expect(result).to include('data-discourse-plugin="my-plugin"')
+      expect(result).to include('data-plugin-name="my-plugin"')
       expect(result).to include('data-preinstalled="true"')
       expect(result).to include('data-official="true"')
     end
 
     it "does not include extra attrs when none are provided" do
       result = helper.preload_script("start-discourse")
-      expect(result).not_to include("data-discourse-plugin")
+      expect(result).not_to include("data-plugin-name")
       expect(result).not_to include("data-preinstalled")
       expect(result).not_to include("data-official")
     end
 
     it "escapes attr values" do
       result =
-        helper.preload_script(
-          "plugins/test",
-          attrs: {
-            "data-discourse-plugin": "<script>xss</script>",
-          },
-        )
+        helper.preload_script("plugins/test", attrs: { "data-plugin-name": "<script>xss</script>" })
       expect(result).not_to include("<script>xss</script>")
       expect(result).to include("&lt;script&gt;xss&lt;/script&gt;")
     end
@@ -148,7 +143,7 @@ RSpec.describe ApplicationHelper do
         helper.preload_script(
           "plugins/my-plugin",
           attrs: {
-            "data-discourse-plugin": "my-plugin",
+            "data-plugin-name": "my-plugin",
             "data-preinstalled": "false",
             "data-official": "false",
           },
