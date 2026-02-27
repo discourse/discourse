@@ -6,6 +6,11 @@
 
 et:
   js:
+    blocks:
+      ghost:
+        status: "Staatus"
+        hidden: "peidetud"
+        failed: "ebaõnnestunud"
     number:
       format:
         separator: "."
@@ -245,6 +250,9 @@ et:
       title: "Uued ja lugemata teemad"
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Tagasi"
     about:
       edit: "Muuda seda lehekülge"
       simple_title: "Teave"
@@ -2548,6 +2556,15 @@ et:
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
+      description: "Kirjeldus"
+      settings:
+        title: "Seaded"
+        general: "Üldine"
+        back: "Tagasi"
+        name: "Nimi"
+      localization:
+        name: "Nimi"
+        description: "Kirjeldus"
       sort_by: "Järjesta:"
       sort_by_count: "üldarv"
       sort_by_name: "nimi"
@@ -2717,6 +2734,12 @@ et:
         remove_muted_tags_from_latest:
           always: "alati"
           never: "mitte kunagi"
+      reports:
+        group_traffic: "Liiklus"
+        group_members: "Liikmed"
+        group_moderation: "Modereerimine"
+        group_security: "Turve"
+        group_other: "Muu"
       config_sections:
         account:
           title: "Konto"
@@ -2801,6 +2824,10 @@ et:
           sub_pages:
             logs:
               title: "Logid"
+        reports:
+          sub_pages:
+            settings:
+              title: "Seaded"
         badges:
           title: "Märgised"
         permalinks:
@@ -2846,13 +2873,6 @@ et:
         default_value: "Vaikimisi"
       search:
         title: "Otsi"
-        result_types:
-          theme:
-            one: "Kujundusteema"
-            other: "Kujundused"
-          component:
-            one: "Komponent"
-            other: "Komponendid"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -3722,6 +3742,7 @@ et:
           title: "Kuva kasutaja profiilil"
         field_types:
           text: "Tekst"
+          date: "Kuupäev"
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:

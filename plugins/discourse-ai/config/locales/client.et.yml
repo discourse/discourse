@@ -109,6 +109,7 @@ et:
         remove_parameter: "Eemalda"
         parameter_required: "Nõutud"
         edit: "Muuda"
+        test: "Proovi"
         delete: "Kustuta"
       secrets:
         name: "Nimi"

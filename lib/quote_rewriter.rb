@@ -62,6 +62,10 @@ class QuoteRewriter
       .each do |aside|
         next unless div = aside.at_css("div.title")
 
+        if aside["data-display-name"] == old_display_name
+          aside["data-display-name"] = new_display_name
+        end
+
         div.children.each do |child|
           if child.text?
             content = child.content

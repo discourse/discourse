@@ -13,7 +13,7 @@
 }
 
 .--radio-cards {
-  width: var(--form-kit-large-input);
+  width: var(--form-kit-max-input);
 
   @include viewport.until(sm) {
     width: 100%;

@@ -64,6 +64,7 @@ pt_BR:
       cancel: "Cancelar"
       cancel_reply: "Cancelar resposta"
       chat_channels: "Canais"
+      pinned: "Fixado"
       browse_all_channels: "Navegar por todos os canais"
       see_in: "Veja em"
       move_to_channel:

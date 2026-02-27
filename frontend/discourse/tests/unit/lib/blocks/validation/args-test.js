@@ -1,0 +1,2822 @@
+import Component from "@glimmer/component";
+import { module, test } from "qunit";
+import { block } from "discourse/blocks";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { BlockError } from "discourse/lib/blocks/-internals/error";
+import {
+  validateArgName,
+  validateArgValue,
+  validateArrayItemType,
+} from "discourse/lib/blocks/-internals/validation/args";
+import {
+  validateArgsSchema,
+  validateBlockArgs,
+} from "discourse/lib/blocks/-internals/validation/block-args";
+import {
+  runCustomValidation,
+  validateConstraints,
+  validateConstraintsSchema,
+} from "discourse/lib/blocks/-internals/validation/constraints";
+
+module("Unit | Lib | blocks/validation/args", function () {
+  module("validateArgsSchema", function () {
+    test("accepts valid schema with all types", function (assert) {
+      const schema = {
+        title: { type: "string", required: true },
+        count: { type: "number", default: 5 },
+        enabled: { type: "boolean" },
+        tags: { type: "array", itemType: "string" },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts null/undefined schema", function (assert) {
+      assert.strictEqual(validateArgsSchema(null, "test-block"), undefined);
+      assert.strictEqual(
+        validateArgsSchema(undefined, "test-block"),
+        undefined
+      );
+    });
+
+    test("throws for missing type property", function (assert) {
+      const schema = {
+        title: { required: true },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /missing required "type" property/
+      );
+    });
+
+    test("throws for invalid type", function (assert) {
+      const schema = {
+        title: { type: "invalid" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid type "invalid"/
+      );
+    });
+
+    test("throws for unknown schema properties", function (assert) {
+      const schema = {
+        title: { type: "string", unknownProp: true },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /unknown properties: "unknownProp"/
+      );
+    });
+
+    test("throws for itemType on non-array type", function (assert) {
+      const schema = {
+        title: { type: "string", itemType: "string" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /"itemType" is only valid for array type/
+      );
+    });
+
+    test("throws for invalid itemType", function (assert) {
+      const schema = {
+        tags: { type: "array", itemType: "object" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid itemType "object"/
+      );
+    });
+
+    test("throws for non-boolean required", function (assert) {
+      const schema = {
+        title: { type: "string", required: "yes" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "required" value/
+      );
+    });
+
+    test("throws for pattern on non-string type", function (assert) {
+      const schema = {
+        count: { type: "number", pattern: /^\d+$/ },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /"pattern" is only valid for string type/
+      );
+    });
+
+    test("throws for non-RegExp pattern", function (assert) {
+      const schema = {
+        name: { type: "string", pattern: "^[a-z]+$" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "pattern" value. Must be a RegExp/
+      );
+    });
+
+    test("accepts valid pattern on string type", function (assert) {
+      const schema = {
+        name: { type: "string", pattern: /^[a-z][a-z0-9-]*$/ },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default value not matching pattern", function (assert) {
+      const schema = {
+        name: {
+          type: "string",
+          pattern: /^[a-z][a-z0-9-]*$/,
+          default: "Invalid_Name",
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*does not match required pattern/
+      );
+    });
+
+    test("throws for required with default - contradictory options", function (assert) {
+      const schema = {
+        title: { type: "string", required: true, default: "Hello" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has both "required: true" and "default".*contradictory/
+      );
+    });
+
+    test("throws for default value with wrong type - string expected", function (assert) {
+      const schema = {
+        title: { type: "string", default: 123 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be a string/
+      );
+    });
+
+    test("throws for default value with wrong type - number expected", function (assert) {
+      const schema = {
+        count: { type: "number", default: "five" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be a number/
+      );
+    });
+
+    test("throws for default value with wrong type - boolean expected", function (assert) {
+      const schema = {
+        enabled: { type: "boolean", default: "true" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be a boolean/
+      );
+    });
+
+    test("throws for default value with wrong type - array expected", function (assert) {
+      const schema = {
+        tags: { type: "array", default: "tag1,tag2" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be an array/
+      );
+    });
+
+    test("throws for default array with wrong item types", function (assert) {
+      const schema = {
+        tags: { type: "array", itemType: "string", default: ["valid", 123] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be a string/
+      );
+    });
+
+    test("accepts valid default values", function (assert) {
+      const schema = {
+        title: { type: "string", default: "Hello" },
+        count: { type: "number", default: 42 },
+        enabled: { type: "boolean", default: true },
+        tags: { type: "array", itemType: "string", default: ["a", "b"] },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for min on non-number type", function (assert) {
+      const schema = {
+        title: { type: "string", min: 0 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "min" but type is "string".*only valid for number type/
+      );
+    });
+
+    test("throws for max on non-number type", function (assert) {
+      const schema = {
+        title: { type: "string", max: 100 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "max" but type is "string".*only valid for number type/
+      );
+    });
+
+    test("throws for integer on non-number type", function (assert) {
+      const schema = {
+        title: { type: "string", integer: true },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "integer" but type is "string".*only valid for number type/
+      );
+    });
+
+    test("throws for non-number min value", function (assert) {
+      const schema = {
+        count: { type: "number", min: "0" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "min" value.*Must be a number/
+      );
+    });
+
+    test("throws for non-number max value", function (assert) {
+      const schema = {
+        count: { type: "number", max: "100" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "max" value.*Must be a number/
+      );
+    });
+
+    test("throws for non-boolean integer value", function (assert) {
+      const schema = {
+        count: { type: "number", integer: "true" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "integer" value.*Must be a boolean/
+      );
+    });
+
+    test("throws for min greater than max", function (assert) {
+      const schema = {
+        count: { type: "number", min: 100, max: 0 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has min \(100\) greater than max \(0\)/
+      );
+    });
+
+    test("accepts valid min/max/integer on number type", function (assert) {
+      const schema = {
+        count: { type: "number", min: 0, max: 100 },
+        page: { type: "number", min: 1, integer: true },
+        percentage: { type: "number", min: 0, max: 1 },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default value below min", function (assert) {
+      const schema = {
+        count: { type: "number", min: 0, default: -5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at least 0/
+      );
+    });
+
+    test("throws for default value above max", function (assert) {
+      const schema = {
+        count: { type: "number", max: 100, default: 150 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at most 100/
+      );
+    });
+
+    test("throws for non-integer default with integer constraint", function (assert) {
+      const schema = {
+        count: { type: "number", integer: true, default: 5.5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be an integer/
+      );
+    });
+
+    test("throws for minLength on non-string/array type", function (assert) {
+      const schema = {
+        count: { type: "number", minLength: 1 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "minLength" but type is "number".*only valid for string or array type/
+      );
+    });
+
+    test("throws for maxLength on non-string/array type", function (assert) {
+      const schema = {
+        enabled: { type: "boolean", maxLength: 10 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "maxLength" but type is "boolean".*only valid for string or array type/
+      );
+    });
+
+    test("throws for non-integer minLength value", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 1.5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "minLength" value.*Must be a non-negative integer/
+      );
+    });
+
+    test("throws for negative minLength value", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: -1 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "minLength" value.*Must be a non-negative integer/
+      );
+    });
+
+    test("throws for non-integer maxLength value", function (assert) {
+      const schema = {
+        title: { type: "string", maxLength: "10" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "maxLength" value.*Must be a non-negative integer/
+      );
+    });
+
+    test("throws for minLength greater than maxLength", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 10, maxLength: 5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has minLength \(10\) greater than maxLength \(5\)/
+      );
+    });
+
+    test("accepts valid minLength/maxLength on string type", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 1, maxLength: 100 },
+        name: { type: "string", minLength: 0 },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid minLength/maxLength on array type", function (assert) {
+      const schema = {
+        tags: { type: "array", minLength: 1, maxLength: 10 },
+        items: { type: "array", minLength: 0 },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for enum on non-string/number type", function (assert) {
+      const schema = {
+        enabled: { type: "boolean", enum: [true, false] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "enum" but type is "boolean".*only valid for string or number type/
+      );
+    });
+
+    test("throws for enum that is not an array", function (assert) {
+      const schema = {
+        size: { type: "string", enum: "small" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "enum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for empty enum array", function (assert) {
+      const schema = {
+        size: { type: "string", enum: [] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "enum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for enum with wrong value types - string", function (assert) {
+      const schema = {
+        size: { type: "string", enum: ["small", 123] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /enum contains invalid value.*All values must be strings/
+      );
+    });
+
+    test("throws for enum with wrong value types - number", function (assert) {
+      const schema = {
+        priority: { type: "number", enum: [1, 2, "high"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /enum contains invalid value.*All values must be numbers/
+      );
+    });
+
+    test("accepts valid string enum", function (assert) {
+      const schema = {
+        size: { type: "string", enum: ["small", "medium", "large"] },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid number enum", function (assert) {
+      const schema = {
+        priority: { type: "number", enum: [1, 2, 3, 5, 8] },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default value not in enum - string", function (assert) {
+      const schema = {
+        size: {
+          type: "string",
+          enum: ["small", "medium", "large"],
+          default: "huge",
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be one of/
+      );
+    });
+
+    test("throws for default value not in enum - number", function (assert) {
+      const schema = {
+        priority: { type: "number", enum: [1, 2, 3], default: 5 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be one of/
+      );
+    });
+
+    test("throws for default string below minLength", function (assert) {
+      const schema = {
+        title: { type: "string", minLength: 5, default: "Hi" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at least 5 characters/
+      );
+    });
+
+    test("throws for default string above maxLength", function (assert) {
+      const schema = {
+        code: { type: "string", maxLength: 3, default: "TOOLONG" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be at most 3 characters/
+      );
+    });
+
+    test("throws for default array below minLength", function (assert) {
+      const schema = {
+        tags: { type: "array", minLength: 2, default: ["one"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must have at least 2 items/
+      );
+    });
+
+    test("throws for default array above maxLength", function (assert) {
+      const schema = {
+        tags: { type: "array", maxLength: 2, default: ["a", "b", "c"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must have at most 2 items/
+      );
+    });
+
+    test("throws for itemEnum on non-array type", function (assert) {
+      const schema = {
+        size: { type: "string", itemEnum: ["sm", "md", "lg"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "itemEnum" but type is "string".*only valid for array type/
+      );
+    });
+
+    test("throws for itemEnum that is not an array", function (assert) {
+      const schema = {
+        sizes: { type: "array", itemEnum: "small" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "itemEnum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for empty itemEnum array", function (assert) {
+      const schema = {
+        sizes: { type: "array", itemEnum: [] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "itemEnum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for itemEnum with wrong value types when itemType specified", function (assert) {
+      const schema = {
+        sizes: { type: "array", itemType: "string", itemEnum: ["sm", 123] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /itemEnum contains invalid value.*All values must be strings/
+      );
+    });
+
+    test("accepts valid string itemEnum", function (assert) {
+      const schema = {
+        sizes: {
+          type: "array",
+          itemType: "string",
+          itemEnum: ["sm", "md", "lg"],
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid number itemEnum", function (assert) {
+      const schema = {
+        priorities: { type: "array", itemType: "number", itemEnum: [1, 2, 3] },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default array with value not in itemEnum", function (assert) {
+      const schema = {
+        sizes: {
+          type: "array",
+          itemType: "string",
+          itemEnum: ["sm", "md", "lg"],
+          default: ["sm", "xl"],
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be one of/
+      );
+    });
+
+    test("accepts object type without properties", function (assert) {
+      const schema = {
+        metadata: { type: "object" },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts object type with properties schema", function (assert) {
+      const schema = {
+        user: {
+          type: "object",
+          properties: {
+            name: { type: "string", required: true },
+            age: { type: "number" },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts nested object properties", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          properties: {
+            user: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+              },
+            },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for properties on non-object type", function (assert) {
+      const schema = {
+        title: { type: "string", properties: { foo: { type: "string" } } },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "properties" but type is "string".*only valid for object type/
+      );
+    });
+
+    test("throws for non-object properties value", function (assert) {
+      const schema = {
+        data: { type: "object", properties: "invalid" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "properties" value.*Must be an object/
+      );
+    });
+
+    test("throws for array properties value", function (assert) {
+      const schema = {
+        data: { type: "object", properties: [{ type: "string" }] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "properties" value.*Must be an object/
+      );
+    });
+
+    test("throws for invalid property name in properties", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          properties: {
+            "123invalid": { type: "string" },
+          },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /property name "123invalid" is invalid/
+      );
+    });
+
+    test("throws for invalid property schema within properties", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          properties: {
+            name: { type: "invalid" },
+          },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid type "invalid"/
+      );
+    });
+
+    test("accepts valid default object value", function (assert) {
+      const schema = {
+        config: {
+          type: "object",
+          default: { key: "value" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid default object with properties validation", function (assert) {
+      const schema = {
+        user: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            age: { type: "number" },
+          },
+          default: { name: "John", age: 30 },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default object with invalid property type", function (assert) {
+      const schema = {
+        user: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+          },
+          default: { name: 123 },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be a string/
+      );
+    });
+
+    test("throws for non-object default value on object type", function (assert) {
+      const schema = {
+        config: { type: "object", default: "invalid" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be an object/
+      );
+    });
+
+    test("accepts instanceOf with function (class constructor)", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: { type: "object", instanceOf: MyClass },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts instanceOf with model string", function (assert) {
+      const schema = {
+        user: { type: "object", instanceOf: "model:user" },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for instanceOf on non-object type", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: { type: "string", instanceOf: MyClass },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOf" but type is "string".*only valid for object type/
+      );
+    });
+
+    test("throws for instanceOf with invalid string format", function (assert) {
+      const schema = {
+        data: { type: "object", instanceOf: "invalid-format" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "instanceOf" value.*Must be a class constructor or a "model:\*" string/
+      );
+    });
+
+    test("throws for both instanceOf and properties together", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: {
+          type: "object",
+          instanceOf: MyClass,
+          properties: { name: { type: "string" } },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOf" and "properties".*mutually exclusive/
+      );
+    });
+
+    test("accepts instanceOfName with instanceOf", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: {
+          type: "object",
+          instanceOf: MyClass,
+          instanceOfName: "MyClass",
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for instanceOfName without instanceOf", function (assert) {
+      const schema = {
+        data: { type: "object", instanceOfName: "MyClass" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOfName" but no "instanceOf".*only valid when "instanceOf" is also specified/
+      );
+    });
+
+    test("throws for non-string instanceOfName", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: { type: "object", instanceOf: MyClass, instanceOfName: 123 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "instanceOfName" value.*Must be a string/
+      );
+    });
+
+    test("throws for instanceOfName with model string instanceOf", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          instanceOf: "model:user",
+          instanceOfName: "User",
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOfName" with a "model:\*" instanceOf.*only valid for class references/
+      );
+    });
+  });
+
+  module("validateArgName", function () {
+    test("accepts valid arg names", function (assert) {
+      assert.true(validateArgName("title", { entityName: "test-block" }));
+      assert.true(validateArgName("myArg", { entityName: "test-block" }));
+      assert.true(validateArgName("arg123", { entityName: "test-block" }));
+      assert.true(validateArgName("my_arg", { entityName: "test-block" }));
+    });
+
+    test("throws for reserved arg name: id", function (assert) {
+      assert.throws(
+        () => validateArgName("id", { entityName: "test-block" }),
+        /reserved/i
+      );
+    });
+
+    test("throws for reserved arg name: children", function (assert) {
+      assert.throws(
+        () => validateArgName("children", { entityName: "test-block" }),
+        /reserved/i
+      );
+    });
+
+    test("throws for reserved arg name: conditions", function (assert) {
+      assert.throws(
+        () => validateArgName("conditions", { entityName: "test-block" }),
+        /reserved/i
+      );
+    });
+
+    test("throws for underscore-prefixed arg names", function (assert) {
+      assert.throws(
+        () => validateArgName("_private", { entityName: "test-block" }),
+        /invalid/i,
+        "underscore-prefixed names don't match required format"
+      );
+    });
+
+    test("throws for invalid arg name format", function (assert) {
+      assert.throws(
+        () => validateArgName("123invalid", { entityName: "test-block" }),
+        /invalid/i
+      );
+    });
+  });
+
+  module("validateArgValue", function () {
+    test("returns null for undefined value", function (assert) {
+      const result = validateArgValue(
+        undefined,
+        { type: "string" },
+        "title",
+        "test-block"
+      );
+      assert.strictEqual(result, null);
+    });
+
+    test("validates string type", function (assert) {
+      assert.strictEqual(
+        validateArgValue("hello", { type: "string" }, "title", "test-block"),
+        null
+      );
+
+      assert.true(
+        validateArgValue(
+          123,
+          { type: "string" },
+          "title",
+          "test-block"
+        )?.message.includes("must be a string")
+      );
+    });
+
+    test("validates string with pattern - valid value", function (assert) {
+      assert.strictEqual(
+        validateArgValue(
+          "valid-name",
+          { type: "string", pattern: /^[a-z][a-z0-9-]*$/ },
+          "name",
+          "test-block"
+        ),
+        null
+      );
+    });
+
+    test("validates string with pattern - invalid value", function (assert) {
+      const result = validateArgValue(
+        "Invalid_Name",
+        { type: "string", pattern: /^[a-z][a-z0-9-]*$/ },
+        "name",
+        "test-block"
+      );
+      assert.true(result?.message.includes("does not match required pattern"));
+    });
+
+    test("validates string with minLength constraint", function (assert) {
+      const schema = { type: "string", minLength: 3 };
+
+      assert.strictEqual(
+        validateArgValue("abc", schema, "title", "test-block"),
+        null,
+        "exact minLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue("abcdef", schema, "title", "test-block"),
+        null,
+        "above minLength passes"
+      );
+
+      assert.true(
+        validateArgValue("ab", schema, "title", "test-block")?.message.includes(
+          "must be at least 3 characters"
+        ),
+        "below minLength fails"
+      );
+    });
+
+    test("validates string with maxLength constraint", function (assert) {
+      const schema = { type: "string", maxLength: 5 };
+
+      assert.strictEqual(
+        validateArgValue("abcde", schema, "title", "test-block"),
+        null,
+        "exact maxLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue("abc", schema, "title", "test-block"),
+        null,
+        "below maxLength passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          "abcdef",
+          schema,
+          "title",
+          "test-block"
+        )?.message.includes("must be at most 5 characters"),
+        "above maxLength fails"
+      );
+    });
+
+    test("validates string with enum constraint", function (assert) {
+      const schema = { type: "string", enum: ["small", "medium", "large"] };
+
+      assert.strictEqual(
+        validateArgValue("small", schema, "size", "test-block"),
+        null,
+        "valid enum value passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue("large", schema, "size", "test-block"),
+        null,
+        "another valid enum value passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          "huge",
+          schema,
+          "size",
+          "test-block"
+        )?.message.includes('must be one of: "small", "medium", "large"'),
+        "invalid enum value fails"
+      );
+    });
+
+    test("suggests closest match for invalid enum string value", function (assert) {
+      const schema = { type: "string", enum: ["sm", "md", "lg", "xl", "2xl"] };
+
+      const result = validateArgValue("small", schema, "min", "test-block");
+
+      assert.true(
+        result?.message.includes('did you mean "sm"'),
+        "suggests closest match for typo"
+      );
+    });
+
+    test("validates number type", function (assert) {
+      assert.strictEqual(
+        validateArgValue(42, { type: "number" }, "count", "test-block"),
+        null
+      );
+
+      assert.true(
+        validateArgValue(
+          "42",
+          { type: "number" },
+          "count",
+          "test-block"
+        )?.message.includes("must be a number")
+      );
+
+      assert.true(
+        validateArgValue(
+          NaN,
+          { type: "number" },
+          "count",
+          "test-block"
+        )?.message.includes("must be a number")
+      );
+    });
+
+    test("validates number with min constraint", function (assert) {
+      const schema = { type: "number", min: 0 };
+
+      assert.strictEqual(
+        validateArgValue(0, schema, "count", "test-block"),
+        null,
+        "min boundary passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(100, schema, "count", "test-block"),
+        null,
+        "above min passes"
+      );
+
+      assert.true(
+        validateArgValue(-1, schema, "count", "test-block")?.message.includes(
+          "must be at least 0"
+        ),
+        "below min fails"
+      );
+    });
+
+    test("validates number with max constraint", function (assert) {
+      const schema = { type: "number", max: 100 };
+
+      assert.strictEqual(
+        validateArgValue(100, schema, "count", "test-block"),
+        null,
+        "max boundary passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(0, schema, "count", "test-block"),
+        null,
+        "below max passes"
+      );
+
+      assert.true(
+        validateArgValue(101, schema, "count", "test-block")?.message.includes(
+          "must be at most 100"
+        ),
+        "above max fails"
+      );
+    });
+
+    test("validates number with integer constraint", function (assert) {
+      const schema = { type: "number", integer: true };
+
+      assert.strictEqual(
+        validateArgValue(42, schema, "count", "test-block"),
+        null,
+        "integer passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(0, schema, "count", "test-block"),
+        null,
+        "zero passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(-5, schema, "count", "test-block"),
+        null,
+        "negative integer passes"
+      );
+
+      assert.true(
+        validateArgValue(3.14, schema, "count", "test-block")?.message.includes(
+          "must be an integer"
+        ),
+        "float fails"
+      );
+    });
+
+    test("validates number with combined constraints", function (assert) {
+      const schema = { type: "number", min: 1, max: 10, integer: true };
+
+      assert.strictEqual(
+        validateArgValue(5, schema, "page", "test-block"),
+        null,
+        "valid value passes"
+      );
+
+      assert.true(
+        validateArgValue(0, schema, "page", "test-block")?.message.includes(
+          "must be at least 1"
+        ),
+        "below min fails"
+      );
+
+      assert.true(
+        validateArgValue(11, schema, "page", "test-block")?.message.includes(
+          "must be at most 10"
+        ),
+        "above max fails"
+      );
+
+      assert.true(
+        validateArgValue(5.5, schema, "page", "test-block")?.message.includes(
+          "must be an integer"
+        ),
+        "non-integer fails"
+      );
+    });
+
+    test("validates number with enum constraint", function (assert) {
+      const schema = { type: "number", enum: [1, 2, 3, 5, 8] };
+
+      assert.strictEqual(
+        validateArgValue(1, schema, "priority", "test-block"),
+        null,
+        "valid enum value passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(8, schema, "priority", "test-block"),
+        null,
+        "another valid enum value passes"
+      );
+
+      assert.true(
+        validateArgValue(4, schema, "priority", "test-block")?.message.includes(
+          "must be one of: 1, 2, 3, 5, 8"
+        ),
+        "invalid enum value fails"
+      );
+    });
+
+    test("validates boolean type", function (assert) {
+      assert.strictEqual(
+        validateArgValue(true, { type: "boolean" }, "enabled", "test-block"),
+        null
+      );
+
+      assert.true(
+        validateArgValue(
+          "true",
+          { type: "boolean" },
+          "enabled",
+          "test-block"
+        )?.message.includes("must be a boolean")
+      );
+    });
+
+    test("validates array type", function (assert) {
+      assert.strictEqual(
+        validateArgValue(["a", "b"], { type: "array" }, "tags", "test-block"),
+        null
+      );
+
+      assert.true(
+        validateArgValue(
+          "not-an-array",
+          { type: "array" },
+          "tags",
+          "test-block"
+        )?.message.includes("must be an array")
+      );
+    });
+
+    test("validates array itemType", function (assert) {
+      assert.strictEqual(
+        validateArgValue(
+          ["a", "b", "c"],
+          { type: "array", itemType: "string" },
+          "tags",
+          "test-block"
+        ),
+        null
+      );
+
+      assert.true(
+        validateArgValue(
+          ["a", 123, "c"],
+          { type: "array", itemType: "string" },
+          "tags",
+          "test-block"
+        )?.message.includes("must be a string")
+      );
+    });
+
+    test("validates array with minLength constraint", function (assert) {
+      const schema = { type: "array", minLength: 2 };
+
+      assert.strictEqual(
+        validateArgValue(["a", "b"], schema, "tags", "test-block"),
+        null,
+        "exact minLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(["a", "b", "c"], schema, "tags", "test-block"),
+        null,
+        "above minLength passes"
+      );
+
+      assert.true(
+        validateArgValue(["a"], schema, "tags", "test-block")?.message.includes(
+          "must have at least 2 items"
+        ),
+        "below minLength fails"
+      );
+    });
+
+    test("validates array with maxLength constraint", function (assert) {
+      const schema = { type: "array", maxLength: 3 };
+
+      assert.strictEqual(
+        validateArgValue(["a", "b", "c"], schema, "tags", "test-block"),
+        null,
+        "exact maxLength passes"
+      );
+
+      assert.strictEqual(
+        validateArgValue(["a"], schema, "tags", "test-block"),
+        null,
+        "below maxLength passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          ["a", "b", "c", "d"],
+          schema,
+          "tags",
+          "test-block"
+        )?.message.includes("must have at most 3 items"),
+        "above maxLength fails"
+      );
+    });
+
+    test("validates array with combined constraints", function (assert) {
+      const schema = {
+        type: "array",
+        minLength: 1,
+        maxLength: 5,
+        itemType: "string",
+      };
+
+      assert.strictEqual(
+        validateArgValue(["a", "b", "c"], schema, "tags", "test-block"),
+        null,
+        "valid array passes"
+      );
+
+      assert.true(
+        validateArgValue([], schema, "tags", "test-block")?.message.includes(
+          "must have at least 1 items"
+        ),
+        "empty array fails"
+      );
+
+      assert.true(
+        validateArgValue(
+          ["a", "b", "c", "d", "e", "f"],
+          schema,
+          "tags",
+          "test-block"
+        )?.message.includes("must have at most 5 items"),
+        "too many items fails"
+      );
+
+      assert.true(
+        validateArgValue(
+          ["a", 123, "c"],
+          schema,
+          "tags",
+          "test-block"
+        )?.message.includes("must be a string"),
+        "wrong item type fails"
+      );
+    });
+
+    test("validates array with itemEnum constraint - valid values", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "string",
+        itemEnum: ["home", "topic", "category", "user"],
+      };
+
+      assert.strictEqual(
+        validateArgValue(["home", "topic"], schema, "pages", "test-block"),
+        null,
+        "valid itemEnum values pass"
+      );
+
+      assert.strictEqual(
+        validateArgValue([], schema, "pages", "test-block"),
+        null,
+        "empty array passes"
+      );
+    });
+
+    test("validates array with itemEnum constraint - invalid value", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "string",
+        itemEnum: ["home", "topic", "category", "user"],
+      };
+
+      const result = validateArgValue(
+        ["home", "invalid", "topic"],
+        schema,
+        "pages",
+        "test-block"
+      );
+
+      assert.true(
+        result?.message.includes('pages[1]" must be one of'),
+        "error includes indexed arg name"
+      );
+      assert.true(
+        result?.message.includes('"home", "topic", "category", "user"'),
+        "error lists valid values"
+      );
+    });
+
+    test("suggests closest match for invalid itemEnum value", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "string",
+        itemEnum: ["home", "topic", "category", "user"],
+      };
+
+      const result = validateArgValue(
+        ["homepage"],
+        schema,
+        "pages",
+        "test-block"
+      );
+
+      assert.true(
+        result?.message.includes('did you mean "home"'),
+        "suggests closest match for typo"
+      );
+    });
+
+    test("validates object type - valid plain object", function (assert) {
+      assert.strictEqual(
+        validateArgValue(
+          { key: "value" },
+          { type: "object" },
+          "data",
+          "test-block"
+        ),
+        null
+      );
+    });
+
+    test("validates object type - rejects null", function (assert) {
+      assert.true(
+        validateArgValue(
+          null,
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.message.includes("must be an object, got null")
+      );
+    });
+
+    test("validates object type - rejects array", function (assert) {
+      assert.true(
+        validateArgValue(
+          [],
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.message.includes("must be an object, got array")
+      );
+    });
+
+    test("validates object type - rejects string", function (assert) {
+      assert.true(
+        validateArgValue(
+          "string",
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.message.includes("must be an object, got string")
+      );
+    });
+
+    test("validates object type - rejects number", function (assert) {
+      assert.true(
+        validateArgValue(
+          123,
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.message.includes("must be an object, got number")
+      );
+    });
+
+    test("validates object with properties schema - valid object", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          age: { type: "number" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          { name: "John", age: 30 },
+          schema,
+          "user",
+          "test-block"
+        ),
+        null
+      );
+    });
+
+    test("validates object with properties schema - allows extra properties", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          { name: "John", extra: "allowed" },
+          schema,
+          "user",
+          "test-block"
+        ),
+        null,
+        "extra properties not in schema are allowed"
+      );
+    });
+
+    test("validates object with properties schema - missing required property", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string", required: true },
+        },
+      };
+
+      assert.true(
+        validateArgValue({}, schema, "user", "test-block")?.message.includes(
+          '"user.name" is required'
+        )
+      );
+    });
+
+    test("validates object with properties schema - invalid property type", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+        },
+      };
+
+      assert.true(
+        validateArgValue(
+          { name: 123 },
+          schema,
+          "user",
+          "test-block"
+        )?.message.includes('"user.name" must be a string')
+      );
+    });
+
+    test("validates nested object properties", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          address: {
+            type: "object",
+            properties: {
+              city: { type: "string", required: true },
+            },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          { address: { city: "NYC" } },
+          schema,
+          "user",
+          "test-block"
+        ),
+        null,
+        "valid nested object passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          { address: {} },
+          schema,
+          "user",
+          "test-block"
+        )?.message.includes('"user.address.city" is required'),
+        "missing nested required property fails"
+      );
+
+      assert.true(
+        validateArgValue(
+          { address: { city: 123 } },
+          schema,
+          "user",
+          "test-block"
+        )?.message.includes('"user.address.city" must be a string'),
+        "invalid nested property type fails"
+      );
+    });
+
+    test("validates object property with array type", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          tags: { type: "array", itemType: "string" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue({ tags: ["a", "b"] }, schema, "data", "test-block"),
+        null,
+        "valid array property passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          { tags: "invalid" },
+          schema,
+          "data",
+          "test-block"
+        )?.message.includes('"data.tags" must be an array'),
+        "non-array value for array property fails"
+      );
+    });
+
+    test("validates instanceOf with direct class reference - valid", function (assert) {
+      class MyClass {}
+      const instance = new MyClass();
+      const schema = { type: "object", instanceOf: MyClass };
+
+      assert.strictEqual(
+        validateArgValue(instance, schema, "data", "test-block"),
+        null,
+        "valid instance passes"
+      );
+    });
+
+    test("validates instanceOf with direct class reference - invalid", function (assert) {
+      class MyClass {}
+      class OtherClass {}
+      const instance = new OtherClass();
+      // Use instanceOfName to get a reliable class name in error message
+      // (class names can be mangled by bundlers or minifiers)
+      const schema = {
+        type: "object",
+        instanceOf: MyClass,
+        instanceOfName: "MyClass",
+      };
+
+      assert.true(
+        validateArgValue(
+          instance,
+          schema,
+          "data",
+          "test-block"
+        )?.message.includes("must be an instance of MyClass"),
+        "wrong instance type fails"
+      );
+    });
+
+    test("validates instanceOf with direct class reference - plain object fails", function (assert) {
+      class MyClass {}
+      // Use instanceOfName to get a reliable class name in error message
+      const schema = {
+        type: "object",
+        instanceOf: MyClass,
+        instanceOfName: "MyClass",
+      };
+
+      assert.true(
+        validateArgValue({}, schema, "data", "test-block")?.message.includes(
+          "must be an instance of MyClass"
+        ),
+        "plain object fails instanceOf check"
+      );
+    });
+
+    test("validates instanceOf without instanceOfName uses generic fallback", function (assert) {
+      class MyClass {}
+      // Without instanceOfName, error message uses generic fallback
+      // (because class names can be mangled by bundlers or minifiers)
+      const schema = { type: "object", instanceOf: MyClass };
+
+      assert.true(
+        validateArgValue({}, schema, "data", "test-block")?.message.includes(
+          "must match the required class type"
+        ),
+        "uses generic fallback without instanceOfName"
+      );
+    });
+
+    test("validates instanceOf with model string - valid RestModel with __type", function (assert) {
+      // Create a mock that passes instanceof RestModel check
+      const RestModel = require("discourse/models/rest").default;
+      const mockModel = Object.create(RestModel.prototype);
+      mockModel.__type = "user";
+
+      const schema = { type: "object", instanceOf: "model:user" };
+
+      assert.strictEqual(
+        validateArgValue(mockModel, schema, "data", "test-block"),
+        null,
+        "RestModel instance with matching __type passes"
+      );
+    });
+
+    test("validates instanceOf with model string - wrong __type fails", function (assert) {
+      const RestModel = require("discourse/models/rest").default;
+      const mockModel = Object.create(RestModel.prototype);
+      mockModel.__type = "post";
+
+      const schema = { type: "object", instanceOf: "model:user" };
+
+      assert.true(
+        validateArgValue(
+          mockModel,
+          schema,
+          "data",
+          "test-block"
+        )?.message.includes("must be an instance of user model"),
+        "RestModel with wrong __type fails"
+      );
+    });
+
+    test("validates instanceOf with model string - plain object fails", function (assert) {
+      const plainObject = { __type: "user", name: "test" };
+      const schema = { type: "object", instanceOf: "model:user" };
+
+      assert.true(
+        validateArgValue(
+          plainObject,
+          schema,
+          "data",
+          "test-block"
+        )?.message.includes("must be an instance of user model"),
+        "plain object fails even with matching __type"
+      );
+    });
+  });
+
+  module("validateArrayItemType", function () {
+    test("validates string items", function (assert) {
+      assert.strictEqual(
+        validateArrayItemType("hello", "string", "tags", 0, "test-block"),
+        null
+      );
+
+      assert.true(
+        validateArrayItemType(
+          123,
+          "string",
+          "tags",
+          0,
+          "test-block"
+        )?.message.includes('tags[0]" must be a string')
+      );
+    });
+
+    test("validates number items", function (assert) {
+      assert.strictEqual(
+        validateArrayItemType(42, "number", "ids", 0, "test-block"),
+        null
+      );
+
+      assert.true(
+        validateArrayItemType(
+          "42",
+          "number",
+          "ids",
+          1,
+          "test-block"
+        )?.message.includes('ids[1]" must be a number')
+      );
+    });
+
+    test("validates boolean items", function (assert) {
+      assert.strictEqual(
+        validateArrayItemType(true, "boolean", "flags", 0, "test-block"),
+        null
+      );
+
+      assert.true(
+        validateArrayItemType(
+          1,
+          "boolean",
+          "flags",
+          2,
+          "test-block"
+        )?.message.includes('flags[2]" must be a boolean')
+      );
+    });
+  });
+
+  module("validateBlockArgs", function () {
+    test("validates required args are present", function (assert) {
+      @block("required-args-block", {
+        args: {
+          title: { type: "string", required: true },
+        },
+      })
+      class RequiredArgsBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: {} }, RequiredArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError);
+        assert.true(error.message.includes("missing required args.title"));
+        assert.strictEqual(error.path, "args.title");
+      }
+    });
+
+    test("validates arg types", function (assert) {
+      @block("typed-args-block", {
+        args: {
+          count: { type: "number" },
+        },
+      })
+      class TypedArgsBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: { count: "not-a-number" } }, TypedArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError);
+        assert.true(error.message.includes("must be a number"));
+        assert.strictEqual(error.path, "args.count");
+      }
+    });
+
+    test("passes for valid args", function (assert) {
+      @block("valid-args-block", {
+        args: {
+          title: { type: "string", required: true },
+          count: { type: "number" },
+        },
+      })
+      class ValidArgsBlock extends Component {}
+
+      assert.strictEqual(
+        validateBlockArgs(
+          { args: { title: "Hello", count: 5 } },
+          ValidArgsBlock
+        ),
+        undefined
+      );
+    });
+
+    test("throws when args provided but no schema declared", function (assert) {
+      @block("no-schema-block")
+      class NoSchemaBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: { anything: "goes" } }, NoSchemaBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError);
+        assert.true(error.message.includes("does not declare an args schema"));
+        assert.strictEqual(error.path, "args");
+      }
+    });
+
+    test("passes when no args and no schema", function (assert) {
+      @block("no-args-no-schema-block")
+      class NoArgsNoSchemaBlock extends Component {}
+
+      assert.strictEqual(
+        validateBlockArgs({ args: {} }, NoArgsNoSchemaBlock),
+        undefined
+      );
+      assert.strictEqual(validateBlockArgs({}, NoArgsNoSchemaBlock), undefined);
+    });
+
+    test("throws for unknown args not declared in schema", function (assert) {
+      @block("known-args-block", {
+        args: {
+          title: { type: "string" },
+        },
+      })
+      class KnownArgsBlock extends Component {}
+
+      try {
+        validateBlockArgs(
+          { args: { title: "valid", unknownArg: "bad" } },
+          KnownArgsBlock
+        );
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError);
+        assert.true(error.message.includes('unknown args "unknownArg"'));
+        assert.strictEqual(error.path, "args.unknownArg");
+      }
+    });
+
+    test("suggests correct arg name for typos", function (assert) {
+      @block("typo-args-block", {
+        args: {
+          showDescription: { type: "boolean" },
+        },
+      })
+      class TypoArgsBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: { shoDescription: true } }, TypoArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError);
+        assert.true(error.message.includes("shoDescription"));
+        assert.true(error.message.includes('did you mean "showDescription"'));
+        assert.strictEqual(error.path, "args.shoDescription");
+      }
+    });
+
+    test("typo in required arg produces unknown arg error with suggestion, not missing required error", function (assert) {
+      @block("typo-required-args-block", {
+        args: {
+          name: { type: "string", required: true },
+        },
+      })
+      class TypoRequiredArgsBlock extends Component {}
+
+      try {
+        // Typo: "nam" instead of "name"
+        validateBlockArgs({ args: { nam: "test" } }, TypoRequiredArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError);
+        // Should say "unknown" not "missing required"
+        assert.true(
+          error.message.includes("unknown"),
+          "error should mention unknown arg"
+        );
+        assert.false(
+          error.message.includes("missing required"),
+          "error should NOT mention missing required"
+        );
+        assert.true(
+          error.message.includes('did you mean "name"'),
+          "error should suggest the correct arg name"
+        );
+        assert.strictEqual(error.path, "args.nam");
+      }
+    });
+
+    test("validates nested object arg with correct error path", function (assert) {
+      @block("nested-object-block", {
+        args: {
+          user: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+            },
+          },
+        },
+      })
+      class NestedObjectBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: { user: { name: 123 } } }, NestedObjectBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError, "should be BlockError");
+        assert.true(
+          error.message.includes("must be a string"),
+          `message should mention type error, got: ${error.message}`
+        );
+        assert.strictEqual(
+          error.path,
+          "args.user.name",
+          "error path should include nested property"
+        );
+      }
+    });
+  });
+
+  module("validateConstraintsSchema", function () {
+    test("accepts valid constraints", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", "tag"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.strictEqual(
+        validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        undefined
+      );
+    });
+
+    test("accepts null/undefined constraints", function (assert) {
+      assert.strictEqual(
+        validateConstraintsSchema(null, {}, "test-block"),
+        undefined
+      );
+      assert.strictEqual(
+        validateConstraintsSchema(undefined, {}, "test-block"),
+        undefined
+      );
+    });
+
+    test("throws for unknown constraint type", function (assert) {
+      const constraints = {
+        invalidConstraint: ["id", "tag"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /unknown constraint type "invalidConstraint"/
+      );
+    });
+
+    test("suggests similar constraint type for typos", function (assert) {
+      const constraints = {
+        atleastOne: ["id", "tag"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /did you mean "atLeastOne"/
+      );
+    });
+
+    test("throws if constraint value is not an array", function (assert) {
+      const constraints = {
+        atLeastOne: "id",
+      };
+      const argsSchema = {
+        id: { type: "number" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /must be an array of arg names/
+      );
+    });
+
+    test("throws if constraint has fewer than 2 args", function (assert) {
+      const constraints = {
+        atLeastOne: ["id"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /must reference at least 2 args/
+      );
+    });
+
+    test("throws if constraint references unknown arg", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", "unknownArg"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /references unknown arg "unknownArg"/
+      );
+    });
+
+    test("suggests similar arg name for typos in constraint", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", "tagh"],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+        tag: { type: "string" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /did you mean "tag"/
+      );
+    });
+
+    test("throws if constraint contains non-string value", function (assert) {
+      const constraints = {
+        atLeastOne: ["id", 123],
+      };
+      const argsSchema = {
+        id: { type: "number" },
+      };
+
+      assert.throws(
+        () => validateConstraintsSchema(constraints, argsSchema, "test-block"),
+        /contains non-string value/
+      );
+    });
+
+    module("vacuous constraint detection", function () {
+      test("atLeastOne is vacuous when arg has default", function (assert) {
+        const constraints = {
+          atLeastOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number", default: 1 },
+          tag: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /atLeastOne.*is always true because "id" has a default value/
+        );
+      });
+
+      test("exactlyOne is vacuous when multiple args have defaults", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number", default: 1 },
+          tag: { type: "string", default: "foo" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /exactlyOne.*is always false because multiple args have default values/
+        );
+      });
+
+      test("exactlyOne is valid when only one arg has default", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number", default: 1 },
+          tag: { type: "string" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("allOrNone is vacuous when some but not all have defaults", function (assert) {
+        const constraints = {
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          width: { type: "number", default: 100 },
+          height: { type: "number" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /allOrNone.*is always false because only some args have defaults/
+        );
+      });
+
+      test("allOrNone is valid when all have defaults", function (assert) {
+        const constraints = {
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          width: { type: "number", default: 100 },
+          height: { type: "number", default: 200 },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("allOrNone is valid when none have defaults", function (assert) {
+        const constraints = {
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          width: { type: "number" },
+          height: { type: "number" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+    });
+
+    module("requires constraint schema validation", function () {
+      test("accepts valid requires constraint", function (assert) {
+        const constraints = {
+          requires: { dependent: "required" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("accepts requires with multiple dependencies", function (assert) {
+        const constraints = {
+          requires: { params: "pages", config: "enabled" },
+        };
+        const argsSchema = {
+          params: {},
+          pages: { type: "array" },
+          config: {},
+          enabled: { type: "boolean" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("throws for requires that is not an object", function (assert) {
+        const constraints = {
+          requires: ["dependent", "required"],
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /must be an object mapping dependent args to required args/
+        );
+      });
+
+      test("throws for requires that is null", function (assert) {
+        const constraints = {
+          requires: null,
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /must be an object mapping dependent args to required args/
+        );
+      });
+
+      test("throws for requires referencing unknown dependent arg", function (assert) {
+        const constraints = {
+          requires: { unknownArg: "required" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /references unknown arg "unknownArg"/
+        );
+      });
+
+      test("suggests similar arg name for typo in dependent arg", function (assert) {
+        const constraints = {
+          requires: { dependant: "required" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /did you mean "dependent"/
+        );
+      });
+
+      test("throws for requires referencing unknown required arg", function (assert) {
+        const constraints = {
+          requires: { dependent: "unknownRequired" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /references unknown arg "unknownRequired"/
+        );
+      });
+
+      test("suggests similar arg name for typo in required arg", function (assert) {
+        const constraints = {
+          requires: { dependent: "reqiured" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /did you mean "required"/
+        );
+      });
+
+      test("throws for requires with non-string value", function (assert) {
+        const constraints = {
+          requires: { dependent: 123 },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /value for "dependent" must be a string arg name/
+        );
+      });
+    });
+
+    module("incompatible constraint detection", function () {
+      test("exactlyOne + allOrNone on same args is an error", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+          allOrNone: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number" },
+          tag: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /"exactlyOne" and "allOrNone" conflict/
+        );
+      });
+
+      test("exactlyOne + atLeastOne on same args is an error", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+          atLeastOne: ["id", "tag"],
+        };
+        const argsSchema = {
+          id: { type: "number" },
+          tag: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /"atLeastOne" is redundant with "exactlyOne"/
+        );
+      });
+
+      test("different constraints on different args is valid", function (assert) {
+        const constraints = {
+          exactlyOne: ["id", "tag"],
+          allOrNone: ["width", "height"],
+        };
+        const argsSchema = {
+          id: { type: "number" },
+          tag: { type: "string" },
+          width: { type: "number" },
+          height: { type: "number" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+    });
+  });
+
+  module("validateConstraints", function () {
+    module("atLeastOne", function () {
+      test("passes when one arg is provided", function (assert) {
+        const constraints = { atLeastOne: ["id", "tag"] };
+        const args = { id: 123 };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when multiple args are provided", function (assert) {
+        const constraints = { atLeastOne: ["id", "tag"] };
+        const args = { id: 123, tag: "foo" };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when no args are provided", function (assert) {
+        const constraints = { atLeastOne: ["id", "tag"] };
+        const args = {};
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('at least one of "id", "tag"'));
+        assert.true(error.includes("must be provided"));
+      });
+    });
+
+    module("exactlyOne", function () {
+      test("passes when exactly one arg is provided", function (assert) {
+        const constraints = { exactlyOne: ["id", "tag"] };
+        const args = { id: 123 };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when no args are provided", function (assert) {
+        const constraints = { exactlyOne: ["id", "tag"] };
+        const args = {};
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('exactly one of "id", "tag"'));
+        assert.true(error.includes("but got none"));
+      });
+
+      test("fails when multiple args are provided", function (assert) {
+        const constraints = { exactlyOne: ["id", "tag"] };
+        const args = { id: 123, tag: "foo" };
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('exactly one of "id", "tag"'));
+        assert.true(error.includes("but got 2"));
+      });
+    });
+
+    module("allOrNone", function () {
+      test("passes when all args are provided", function (assert) {
+        const constraints = { allOrNone: ["width", "height"] };
+        const args = { width: 100, height: 200 };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when no args are provided", function (assert) {
+        const constraints = { allOrNone: ["width", "height"] };
+        const args = {};
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when some but not all args are provided", function (assert) {
+        const constraints = { allOrNone: ["width", "height"] };
+        const args = { width: 100 };
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('"width", "height"'));
+        assert.true(error.includes("must be provided together or not at all"));
+        assert.true(error.includes('missing "height"'));
+      });
+    });
+
+    module("requires", function () {
+      test("passes when dependent arg not provided", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = {};
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when both dependent and required args provided", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = { params: { categoryId: 5 }, pages: ["CATEGORY_PAGES"] };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when only required arg provided without dependent", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = { pages: ["CATEGORY_PAGES"] };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when dependent provided but required missing", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = { params: { categoryId: 5 } };
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('"params" requires "pages"'));
+        assert.true(error.includes("to be specified"));
+      });
+
+      test("validates multiple requires dependencies", function (assert) {
+        const constraints = {
+          requires: { params: "pages", config: "enabled" },
+        };
+
+        assert.strictEqual(
+          validateConstraints(
+            constraints,
+            { params: {}, pages: [], config: {}, enabled: true },
+            "test-block"
+          ),
+          null,
+          "all dependencies satisfied"
+        );
+
+        const error = validateConstraints(
+          constraints,
+          { params: {}, pages: [], config: {} },
+          "test-block"
+        );
+        assert.true(
+          error.includes('"config" requires "enabled"'),
+          "fails when one dependency unsatisfied"
+        );
+      });
+    });
+
+    test("accepts null/undefined constraints", function (assert) {
+      assert.strictEqual(validateConstraints(null, {}, "test-block"), null);
+      assert.strictEqual(
+        validateConstraints(undefined, {}, "test-block"),
+        null
+      );
+    });
+
+    test("validates multiple constraints", function (assert) {
+      const constraints = {
+        atLeastOne: ["a", "b"],
+        allOrNone: ["x", "y"],
+      };
+      const args = { a: 1, x: 10 };
+
+      const error = validateConstraints(constraints, args, "test-block");
+      assert.true(error.includes('missing "y"'));
+    });
+  });
+
+  module("runCustomValidation", function () {
+    test("returns null when validate returns undefined", function (assert) {
+      const validateFn = () => undefined;
+
+      assert.strictEqual(runCustomValidation(validateFn, {}), null);
+    });
+
+    test("returns null when validate returns null", function (assert) {
+      const validateFn = () => null;
+
+      assert.strictEqual(runCustomValidation(validateFn, {}), null);
+    });
+
+    test("returns array with single error when validate returns string", function (assert) {
+      const validateFn = () => "min must be less than max";
+
+      const errors = runCustomValidation(validateFn, {});
+      assert.deepEqual(errors, ["min must be less than max"]);
+    });
+
+    test("returns array when validate returns array of strings", function (assert) {
+      const validateFn = () => ["error 1", "error 2"];
+
+      const errors = runCustomValidation(validateFn, {});
+      assert.deepEqual(errors, ["error 1", "error 2"]);
+    });
+
+    test("filters out non-string and empty values from array", function (assert) {
+      const validateFn = () => ["valid error", "", 123, null, "another error"];
+
+      const errors = runCustomValidation(validateFn, {});
+      assert.deepEqual(errors, ["valid error", "another error"]);
+    });
+
+    test("returns null for empty array", function (assert) {
+      const validateFn = () => [];
+
+      assert.strictEqual(runCustomValidation(validateFn, {}), null);
+    });
+
+    test("returns null for non-function validateFn", function (assert) {
+      assert.strictEqual(runCustomValidation(null, {}), null);
+      assert.strictEqual(runCustomValidation(undefined, {}), null);
+      assert.strictEqual(runCustomValidation("not a function", {}), null);
+    });
+
+    test("passes args to validate function", function (assert) {
+      let receivedArgs;
+      const validateFn = (args) => {
+        receivedArgs = args;
+        return null;
+      };
+
+      const testArgs = { min: 5, max: 10 };
+      runCustomValidation(validateFn, testArgs);
+
+      assert.strictEqual(receivedArgs, testArgs);
+    });
+
+    test("can validate args relationships", function (assert) {
+      const validateFn = (args) => {
+        if (args.min > args.max) {
+          return "min must be less than or equal to max";
+        }
+      };
+
+      assert.strictEqual(
+        runCustomValidation(validateFn, { min: 5, max: 10 }),
+        null
+      );
+      assert.deepEqual(runCustomValidation(validateFn, { min: 15, max: 10 }), [
+        "min must be less than or equal to max",
+      ]);
+    });
+  });
+
+  module("@block decorator with constraints", function () {
+    test("stores constraints in block metadata", function (assert) {
+      @block("constraint-metadata-block", {
+        args: {
+          itemId: { type: "number" },
+          tag: { type: "string" },
+        },
+        constraints: {
+          atLeastOne: ["itemId", "tag"],
+        },
+      })
+      class ConstraintMetadataBlock extends Component {}
+
+      assert.deepEqual(getBlockMetadata(ConstraintMetadataBlock).constraints, {
+        atLeastOne: ["itemId", "tag"],
+      });
+    });
+
+    test("stores validate function in block metadata", function (assert) {
+      const validateFn = (args) => {
+        if (args.min > args.max) {
+          return "min must be less than max";
+        }
+      };
+
+      @block("validate-fn-block", {
+        args: {
+          min: { type: "number" },
+          max: { type: "number" },
+        },
+        validate: validateFn,
+      })
+      class ValidateFnBlock extends Component {}
+
+      assert.strictEqual(
+        getBlockMetadata(ValidateFnBlock).validate,
+        validateFn,
+        "validate function is stored"
+      );
+    });
+
+    test("throws at decoration time for invalid constraints", function (assert) {
+      assert.throws(() => {
+        @block("invalid-constraint-block", {
+          args: {
+            itemId: { type: "number" },
+          },
+          constraints: {
+            unknownConstraint: ["itemId", "other"],
+          },
+        })
+        class InvalidConstraintBlock extends Component {}
+        return InvalidConstraintBlock;
+      }, /unknown constraint type/);
+    });
+  });
+});

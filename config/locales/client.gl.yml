@@ -6,6 +6,11 @@
 
 gl:
   js:
+    blocks:
+      ghost:
+        status: "Estado"
+        hidden: "agochado"
+        failed: "fallou"
     number:
       format:
         separator: ","
@@ -243,6 +248,9 @@ gl:
       pill: "Mensaxes relacionadas"
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Volver"
     about:
       edit: "Editar esta páxina"
       simple_title: "Verbo de"
@@ -364,7 +372,6 @@ gl:
       in_reply_to: "en resposta a"
       explain:
         why: "explica por que este elemento acabou na fila de espera"
-        title: "Puntuación revisábel"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -378,10 +385,8 @@ gl:
           title: "Os usuarios con alertas que fosen repetidamente aceptadas reciben unha bonificación."
         trust_level_bonus:
           name: "nivel de confianza"
-          title: "Os elementos revisábeis creados por usuarios con maior nivel de confianza teñen unha puntuación superior."
         type_bonus:
           name: "tipo de bonificación"
-          title: "O equipo pode asignar unha bonificación a certos tipos revisábeis para facelos de maior prioridade."
       revise_and_reject_post:
         reason: "Motivo"
         optional: "opcional"
@@ -3192,6 +3197,18 @@ gl:
       delete_confirm_synonyms:
         one: "Tamén se eliminará o seu sinónimo."
         other: "Tamén se eliminarán os seus %{count} sinónimos."
+      description: "Descrición"
+      settings:
+        title: "Configuración"
+        general: "Xeral"
+        back: "Volver"
+        name: "Nome"
+        slug: "Localizador abreviado"
+        name_placeholder: "Nome da etiqueta"
+        synonyms_subtitle: "Cando se usen as seguintes etiquetas, substituílas por %{name}"
+      localization:
+        name: "Nome"
+        description: "Descrición"
       sort_by: "Ordenar por:"
       sort_by_count: "número"
       sort_by_name: "nome"
@@ -3399,6 +3416,11 @@ gl:
       reports:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
+        group_traffic: "Tráfico"
+        group_members: "Membros"
+        group_moderation: "Moderación"
+        group_security: "Seguranza"
+        group_other: "Outro"
       config_sections:
         account:
           title: "Conta"
@@ -3420,7 +3442,6 @@ gl:
         preview: "Visualizar"
         enabled_for_options:
           everyone: "Todos"
-          staff: "Soamente ao equipo"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -3500,6 +3521,9 @@ gl:
               title: "Rexistros"
         reports:
           title: "Informes"
+          sub_pages:
+            settings:
+              title: "Configuración"
         badges:
           title: "Insignias"
         permalinks:
@@ -3549,13 +3573,6 @@ gl:
         default_value: "Predeterminado"
       search:
         title: "Buscar"
-        result_types:
-          theme:
-            one: "Tema"
-            other: "Temas"
-          component:
-            one: "Compoñente"
-            other: "Compoñentes"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -4782,6 +4799,7 @@ gl:
           title: "Amosar na tarxeta de usuario"
         field_types:
           text: "Texto"
+          date: "Data"
           confirm: "Confirmación"
           dropdown: "Despregábel"
       site_text:

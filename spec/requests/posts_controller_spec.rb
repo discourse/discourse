@@ -2385,6 +2385,36 @@ RSpec.describe PostsController do
       expect(response.status).to eq(400)
     end
 
+    context "when diff generation exceeds the comparison budget" do
+      let(:diff_error) do
+        ONPDiff::DiffLimitExceeded.new(
+          comparisons_used: 1,
+          comparison_budget: 0,
+          left_size: 1,
+          right_size: 1,
+        )
+      end
+
+      before { ONPDiff.any_instance.stubs(:compose).raises(diff_error) }
+
+      it "returns a 422 error for a specific revision endpoint" do
+        sign_in(admin)
+        get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t("errors.diff_too_complex"))
+      end
+
+      it "returns a 422 error for the latest revision endpoint" do
+        sign_in(admin)
+        post_revision
+        get "/posts/#{post.id}/revisions/latest.json"
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t("errors.diff_too_complex"))
+      end
+    end
+
     context "when edit history is not visible to the public" do
       before { SiteSetting.edit_history_visible_to_public = false }
 

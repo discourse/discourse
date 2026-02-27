@@ -6,6 +6,12 @@
 
 pt:
   js:
+    blocks:
+      ghost:
+        status: "Estado"
+        in_location: "em"
+        hidden: "escondido"
+        failed: "falhado"
     number:
       format:
         separator: "."
@@ -409,6 +415,8 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     admin_onboarding_banner:
+      start_posting:
+        back: "Anterior"
       spread_the_word:
         action: "Copiar hiperligação"
     about:
@@ -649,19 +657,13 @@ pt:
       in_reply_to: "Em resposta a"
       filtered_flagged_by: "Sinalizado por"
       unknown:
-        title:
-          one: "Tem revisões pendentes de um plugin desativado:"
-          other: "Tem revisões pendentes de plugins desativados:"
         instruction: "Não podem ser exibidos corretamente até que ative o plugin relevante. Por favor, ative o plugin e atualize a página. Alternativamente, pode ignorá-los. <a href='%{url}' target='_blank'>Saiba mais...</a>"
         reviewable_unknown_source: "%{reviewableType} (plugin desconhecido)"
         reviewable_known_source: "%{reviewableType} (do plugin '%{pluginName}')"
         ignore_all: "Ignora tudo"
         enable_plugins: "Ativar os plugins"
-        delete_confirm: "Tem a certeza de que pretende eliminar todas as avaliações criadas por plugins desativados?"
-        ignore_success: "Todas as avaliações criadas por plugins desativados foram eliminadas."
       explain:
         why: "explique por que este item acabou na fila"
-        title: "Pontuação passível de revisão"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -675,10 +677,8 @@ pt:
           title: "Os utilizadores com um histórico de sinalizações concordantes obtêm um bónus."
         trust_level_bonus:
           name: "nível de confiança"
-          title: "Os itens para revisão criados por utilizadores de nível de confiança superior têm uma pontuação mais elevada."
         type_bonus:
           name: "tipo de bónus"
-          title: "Determinado tipo de revisões podem receber um bónus por parte da equipa para terem uma prioridade mais elevada."
       revise_and_reject_post:
         title: "Rever"
         reason: "Motivo"
@@ -687,7 +687,6 @@ pt:
         custom_reason: "Dê uma descrição clara do motivo"
         other_reason: "Outro..."
         optional: "opcional"
-      stale_help: "Esta revisão foi resolvida por <b>%{username}</b>."
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
         required: "Deve reivindicar items antes de as poder rever."
@@ -3665,7 +3664,9 @@ pt:
           edit: "Editar"
           delete: "Eliminar"
         add: "Adicionar nova tradução"
-        manage: "Gerir traduções (existentes: %{count})"
+        manage:
+          one: "Gerir traduções (existentes: %{count})"
+          other: "Gerir traduções (existentes: %{count})"
         view:
           one: "Ver %{count} idioma traduzido"
           other: "Ver %{count} idiomas traduzidos"
@@ -4306,6 +4307,19 @@ pt:
       delete_confirm_synonyms:
         one: "Seu sinônimo também será excluído."
         other: "Seus %{count} sinônimos também serão excluídos."
+      description: "Descrição"
+      settings:
+        title: "Configurações"
+        general: "Geral"
+        localizations: "Localizações"
+        back: "Anterior"
+        name: "Nome"
+        slug: "Slug"
+        synonyms_subtitle: "Quando as tags seguintes forem usadas, elas serão substituídas por %{name}"
+      localization:
+        locale: "Idioma"
+        name: "Nome"
+        description: "Descrição"
       sort_by: "Ordenar por:"
       sort_by_count: "contagem"
       sort_by_name: "nome"
@@ -4521,6 +4535,11 @@ pt:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         back: "Voltar para todos os relatórios"
+        group_traffic: "Tráfego"
+        group_members: "Membros"
+        group_moderation: "Moderação"
+        group_security: "Segurança"
+        group_other: "Outro"
       config_sections:
         account:
           title: "Conta"
@@ -4544,7 +4563,6 @@ pt:
         preview: "Pré-visualização"
         enabled_for_options:
           everyone: "Todos"
-          staff: "Apenas Pessoal"
         statuses:
           experimental: "Experimental"
         impact_roles:
@@ -4664,6 +4682,9 @@ pt:
               title: "Logs"
         reports:
           title: "Relatórios"
+          sub_pages:
+            settings:
+              title: "Configurações"
         badges:
           title: "Crachás"
         permalinks:
@@ -4712,13 +4733,6 @@ pt:
         site_setting_warning: 'Esta definição é gerida pelo tema predefinido para o seu site (%{defaultThemeName}). Pode modificá-la na <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">página de edição do tema</a>.'
       search:
         title: "Pesquisar"
-        result_types:
-          theme:
-            one: "Tema"
-            other: "Temas"
-          component:
-            one: "Componente"
-            other: "Componentes"
       new_features:
         title: "O que é novo?"
         check_for_updates: "Procurar por atualizações"
@@ -4739,18 +4753,6 @@ pt:
         new_features:
           title: "O que é novo?"
           learn_more: "Saiba mais..."
-          experimental: "Experimental"
-          only_experiments: "Mostrar apenas as funcionalidades experimentais"
-          experiment_enabled: "Ativou a funcionalidade experimental."
-          experiment_disabled: "Desativou a funcionalidade experimental."
-          feature_enabled: "Ativou a funcionalidade."
-          feature_disabled: "Desativou a funcionalidade."
-          experiment_tooltip:
-            title_disabled: "Teste esta funcionalidade experimental"
-            title_enabled: "Desativar a funcionalidade experimental"
-          feature_tooltip:
-            title_disabled: "Teste esta funcionalidade"
-            title_enabled: "Desativar funcionalidade"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
@@ -5797,6 +5799,7 @@ pt:
           disabled: "Não apresentado no formulário de registo"
         field_types:
           text: "Texto"
+          date: "Data"
           confirm: "Confirmação"
           dropdown: "Lista pendente"
       site_text:

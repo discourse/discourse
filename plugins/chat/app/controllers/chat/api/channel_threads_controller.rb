@@ -44,6 +44,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       end
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
+      on_failed_policy(:original_message_not_deleted) { raise Discourse::NotFound }
       on_model_not_found(:thread) { raise Discourse::NotFound }
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_contract do |contract|

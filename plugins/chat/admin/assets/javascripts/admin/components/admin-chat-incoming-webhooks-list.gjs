@@ -49,8 +49,8 @@ export default class AdminChatIncomingWebhooksList extends Component {
   }
 
   <template>
-    <table class="d-admin-table">
-      <thead>
+    <table class="d-table">
+      <thead class="d-table__header">
         <th>{{i18n "chat.incoming_webhooks.name"}}</th>
         <th>{{i18n "chat.incoming_webhooks.emoji"}}</th>
         <th>{{i18n "chat.incoming_webhooks.username"}}</th>
@@ -61,39 +61,39 @@ export default class AdminChatIncomingWebhooksList extends Component {
       <tbody>
         {{#each this.sortedWebhooks as |webhook|}}
           <tr
-            class="d-admin-row__content incoming-chat-webhooks-row"
+            class="d-table__row incoming-chat-webhooks-row"
             data-webhook-id={{webhook.id}}
           >
-            <td class="d-admin-row__overview">
-              <div class="d-admin-row__overview-name">
+            <td class="d-table__cell --overview">
+              <div class="d-table__overview-name">
                 {{webhook.name}}
               </div>
-              <div class="d-admin-row__overview-about">
+              <div class="d-table__overview-about">
                 {{webhook.description}}
               </div>
             </td>
-            <td class="d-admin-row__detail">
-              <div class="d-admin-row__mobile-label">
+            <td class="d-table__cell --detail">
+              <div class="d-table__mobile-label">
                 {{i18n "chat.incoming_webhooks.emoji"}}
               </div>
               {{replaceEmoji webhook.emoji}}
             </td>
-            <td class="d-admin-row__detail">
-              <div class="d-admin-row__mobile-label">
+            <td class="d-table__cell --detail">
+              <div class="d-table__mobile-label">
                 {{i18n "chat.incoming_webhooks.username"}}
               </div>
               {{webhook.username}}
             </td>
-            <td class="d-admin-row__detail">
-              <div class="d-admin-row__mobile-label">
+            <td class="d-table__cell --detail">
+              <div class="d-table__mobile-label">
                 {{i18n "chat.incoming_webhooks.channel"}}
               </div>
               <ChannelTitle @channel={{webhook.chat_channel}} />
             </td>
             <td
-              class="d-admin-row__controls incoming-chat-webhooks-row__controls"
+              class="d-table__cell --controls incoming-chat-webhooks-row__controls"
             >
-              <div class="d-admin-row__controls-options">
+              <div class="d-table__cell-actions">
                 <LinkTo
                   @route="adminPlugins.show.discourse-chat-incoming-webhooks.edit"
                   @model={{webhook.id}}

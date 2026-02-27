@@ -6,6 +6,11 @@
 
 lv:
   js:
+    blocks:
+      ghost:
+        status: "Statuss"
+        hidden: "paslēpts"
+        failed: "neizdevies"
     number:
       format:
         separator: ","
@@ -254,6 +259,9 @@ lv:
       pill: "Saistītās ziņas"
     suggested_topics:
       pm_title: "Ieteiktās ziņas"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Atpakaļ"
     about:
       simple_title: "Par"
       title: "Par %{title}"
@@ -353,7 +361,6 @@ lv:
       in_reply_to: "atbildot uz"
       explain:
         why: "paskaidrojiet, kāpēc šis vienums netika apstrādāts"
-        title: "Pārskatāms vērtējums"
         formula: "Formula"
         subtotal: "Starpsumma"
         total: "Kopā"
@@ -367,14 +374,11 @@ lv:
           title: "Lietotājiem, kuru karogi vēsturiski ir saskaņoti, tiek piešķirti bonusi."
         trust_level_bonus:
           name: "uzticības līmenis"
-          title: "Pārskatāmiem vienumiem, ko izveidojuši augstāka uzticamības līmeņa lietotāji, ir augstāks rādītājs."
         type_bonus:
           name: "tipa bonuss"
-          title: "Atsevišķiem pārskatāmiem veidiem darbinieki var piešķirt prēmiju, lai tie būtu augstāka prioritāte."
       revise_and_reject_post:
         reason: "Iemesls"
         optional: "pēc izvēles"
-      stale_help: "Šo pārskatāmo jautājumu ir atrisinājis <b>%{username}</b>."
       claim_help:
         optional: "Jūs varat pieprasīt šo vienumu, lai citi to nevarētu pārskatīt."
         required: "Jums ir jāpieprasa vienumi, pirms jūs varat tos pārskatīt."
@@ -2681,6 +2685,15 @@ lv:
       tags: "Tagi"
       add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
+      description: "Apraksts"
+      settings:
+        title: "Iestatījumi"
+        general: "Vispārīgi"
+        back: "Atpakaļ"
+        name: "Vārds"
+      localization:
+        name: "Vārds"
+        description: "Apraksts"
       sort_by: "Kārtot pēc:"
       sort_by_count: "skaita"
       sort_by_name: "vārda"
@@ -2840,6 +2853,11 @@ lv:
         remove_muted_tags_from_latest:
           always: "vienmēr"
           never: "nekad"
+      reports:
+        group_traffic: "Datu plūsma"
+        group_members: "Dalībnieki"
+        group_security: "Drošība"
+        group_other: "Citi"
       config_sections:
         account:
           title: "Konts"
@@ -2857,7 +2875,6 @@ lv:
         preview: "Priekšskatījums"
         enabled_for_options:
           everyone: "Ikviens"
-          staff: "Tikai darbiniekiem"
         impact_roles:
           admins: "Administratori"
           moderators: "Moderātori"
@@ -2923,6 +2940,10 @@ lv:
           sub_pages:
             logs:
               title: "Žurnāls"
+        reports:
+          sub_pages:
+            settings:
+              title: "Iestatījumi"
         badges:
           title: "Žetoni"
         permalinks:
@@ -2964,11 +2985,6 @@ lv:
         default_value: "Noklusējums"
       search:
         title: "Meklēt"
-        result_types:
-          theme:
-            zero: "Dizaini"
-            one: "Tēma"
-            other: "Dizaini"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"
@@ -3741,6 +3757,7 @@ lv:
           title: "Parādīt leitotāja kartē"
         field_types:
           text: "Teksts"
+          date: "Datums"
           confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:

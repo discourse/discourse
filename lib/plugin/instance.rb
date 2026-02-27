@@ -400,6 +400,10 @@ class Plugin::Instance
     reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
+  def register_category_type(klass)
+    Categories::TypeRegistry.register(klass, plugin_identifier: self.metadata.name)
+  end
+
   def register_problem_check(klass)
     DiscoursePluginRegistry.register_problem_check(klass, self)
   end
@@ -617,6 +621,11 @@ class Plugin::Instance
   def commit_url
     return if commit_hash.blank?
     "#{git_repo.url}/commit/#{commit_hash}"
+  end
+
+  def preinstalled?
+    return @preinstalled if defined?(@preinstalled)
+    @preinstalled = !File.exist?(File.join(directory, ".git"))
   end
 
   def git_repo

@@ -26,6 +26,18 @@ Fabricator(:event, from: "DiscoursePostEvent::Event") do
   original_ends_at { |attrs| attrs[:original_ends_at] }
 end
 
+Fabricator(:private_event, from: :event) do
+  transient :group
+
+  post do |attrs|
+    group = attrs[:group] || Fabricate(:group)
+    category = Fabricate(:private_category, group:)
+    user = attrs[:user] || Fabricate(:user, admin: true, refresh_auto_groups: true)
+    topic = Fabricate(:topic, user:, category:)
+    Fabricate(:post, user:, topic:)
+  end
+end
+
 Fabricator(:event_date, from: "DiscoursePostEvent::EventDate") do
   event
 

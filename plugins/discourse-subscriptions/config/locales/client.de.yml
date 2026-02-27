@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_subscriptions: "Discourse – Abonnements"
+          discourse_subscriptions: "Discourse Abonnements"
   site_settings:
     discourse_subscriptions_enabled: Aktiviere das Discourse-Subscriptions-Plug-in.
     discourse_subscriptions_extra_nav_subscribe: Zeige die Schaltfläche „Abonnieren“ in der Hauptnavigation

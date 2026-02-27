@@ -6,6 +6,11 @@
 
 ro:
   js:
+    blocks:
+      ghost:
+        status: "Stare"
+        hidden: "ascuns"
+        failed: "eșuată"
     number:
       format:
         separator: "."
@@ -437,6 +442,8 @@ ro:
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
     admin_onboarding_banner:
+      start_posting:
+        back: "Înapoi"
       spread_the_word:
         action: "Copiază legătură"
     about:
@@ -635,11 +642,8 @@ ro:
         reviewable_known_source: "%{reviewableType} (din modulul „%{pluginName}”)"
         ignore_all: "Ignoră tot"
         enable_plugins: "Activează module"
-        delete_confirm: "Sigur vrei să ștergi toate revizuirile create de modulele dezactivate?"
-        ignore_success: "Toate revizuirile create de modulele dezactivate au fost șterse."
       explain:
         why: "explică de ce acest element a ajuns în coada de așteptare"
-        title: "Scor ce poate fi revizuit"
         formula: "Formulă"
         subtotal: "Subtotal"
         total: "Total"
@@ -653,14 +657,11 @@ ro:
           title: "Utilizatorilor ale căror semnalări au fost agreate de-a lungul istoriei li se acordă un bonus."
         trust_level_bonus:
           name: "nivel de încredere"
-          title: "Elementele care pot fi revizuite create de utilizatorii cu nivel mai înalt de încredere au un scor mai mare."
         type_bonus:
           name: "introdu bonus"
-          title: "Anumite tipuri care pot fi revizuite pot primi un bonus de către echipă pentru a le face o prioritate mai mare."
       revise_and_reject_post:
         reason: "Motiv"
         optional: "opțional"
-      stale_help: "Această examinare a fost rezolvată de <b>%{username}</b>."
       claim_help:
         optional: "Poți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
         required: "Trebuie să revendici elementele înainte de a le putea revizui."
@@ -2505,8 +2506,6 @@ ro:
           placeholder: minim
         max_views:
           placeholder: maxim
-        additional_options:
-          label: "Filtrează după numărul de mesaje postate și vizualizări de subiecte"
     hamburger_menu: "Meniu de navigare"
     new_item: "nou"
     go_back: "înapoi"
@@ -3601,7 +3600,17 @@ ro:
         few: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
         other: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
       delete_confirm_no_topics: "Ești sigur că vrei să ștergi această etichetă?"
-      description: "Descriere (max. 1 000 de caractere)"
+      description: "Descriere"
+      settings:
+        title: "Setări"
+        general: "General"
+        localizations: "Localizări"
+        back: "Înapoi"
+        name: "Nume"
+      localization:
+        locale: "Locală"
+        name: "Nume"
+        description: "Descriere"
       sort_by: "Sortat după:"
       sort_by_count: "contor"
       sort_by_name: "nume"
@@ -3885,6 +3894,11 @@ ro:
           never: "niciodată"
       reports:
         sidebar_title: "Rapoarte"
+        group_traffic: "Trafic"
+        group_members: "Membri"
+        group_moderation: "Moderare"
+        group_security: "Securitate"
+        group_other: "Altele"
       config_sections:
         account:
           title: "Cont"
@@ -3914,7 +3928,6 @@ ro:
         enabled_for_options:
           no_one: "Nimeni"
           everyone: "Toată lumea"
-          staff: "Doar pentru personal"
           specific_groups: "Grupuri specifice"
           specific_groups_with_group_names:
             one: "grupul %{groupNames}"
@@ -4084,7 +4097,7 @@ ro:
           title: "Rapoarte"
           sub_pages:
             settings:
-              title: "Setări panou de control"
+              title: "Setări"
         badges:
           title: "Insigne"
           header_description: "Insignele recompensează utilizatorii pentru activitățile, contribuțiile și realizările lor pentru a recunoaște, valida și încuraja comportamentul pozitiv și implicarea în cadrul comunității"
@@ -4204,27 +4217,6 @@ ro:
           one: 'Un rezultat pentru „%{filter}”'
           few: '%{count} rezultate pentru „%{filter}”'
           other: '%{count} de rezultate pentru „%{filter}”'
-        result_types:
-          page:
-            one: "Pagină"
-            few: "Pagini"
-            other: "Pagini"
-          report:
-            one: "Raport"
-            few: "Rapoarte"
-            other: "Rapoarte"
-          setting:
-            one: "Setare"
-            few: "Opțiuni"
-            other: "Opțiuni"
-          theme:
-            one: "Temă"
-            few: "Teme"
-            other: "Teme"
-          component:
-            one: "Componentă"
-            few: "Componente"
-            other: "Componente"
       new_features:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
@@ -4243,15 +4235,6 @@ ro:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
           learn_more: "Află mai multe..."
-          experimental: "Experimental"
-          only_experiments: "Afișează doar caracteristici experimentale"
-          experiment_enabled: "Ai activat funcționalitatea experimentală."
-          experiment_disabled: "Ai dezactivat funcționalitatea experimentală."
-          experiment_tooltip:
-            title_enabled: "Dezactivează funcționalitatea experimentală"
-            content_enabled: "Modificând aceasta va dezactiva funcționalitatea pentru toți utilizatorii."
-          feature_tooltip:
-            content_enabled: "Modificând aceasta va dezactiva funcționalitatea pentru toți utilizatorii."
         last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
         no_problems: "Nu a apărut nicio problemă."
@@ -5464,6 +5447,7 @@ ro:
         field_types:
           text: "Text"
           textarea: "Zonă text"
+          date: "Dată"
           confirm: "Confirmare"
           dropdown: "Meniu derulant"
       site_text:

@@ -6,6 +6,12 @@
 
 fr:
   js:
+    blocks:
+      ghost:
+        status: "Statut"
+        in_location: "dans"
+        hidden: "masqué"
+        failed: "échec"
     number:
       format:
         separator: ","
@@ -295,9 +301,13 @@ fr:
     back_button: "Retour"
     welcome_banner:
       header:
+        new_members: "Bienvenue, %{preferred_display_name}!"
         logged_in_members: "Bienvenue, %{preferred_display_name} !"
         anonymous_members: "Bienvenue sur %{site_name} !"
       search_placeholder: "Recherche"
+    impersonation:
+      notice: "Vous endossez l'identité de %{username}"
+      stop: "Cesser d'endosser l'identité"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Il se peut que votre site ne fonctionne pas, car un thème ou un composant comporte des erreurs. Consultez la console du navigateur pour obtenir plus d'informations."
@@ -402,6 +412,8 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
+      start_posting:
+        back: "Retour"
       spread_the_word:
         action: "Copier le lien"
         copied_to_clipboard: "Lien copié dans le presse-papiers!"
@@ -640,19 +652,13 @@ fr:
       in_reply_to: "en réponse à"
       filtered_flagged_by: "Signalé par"
       unknown:
-        title:
-          one: "Vous avez des éléments en attente de révision provenant d'une extension désactivée :"
-          other: "Vous avez des éléments en attente de révision provenant d'extensions désactivées :"
         instruction: "Ils ne peuvent pas s'afficher correctement tant que vous n'avez pas activé l'extension correspondante. Veuillez l'activer et actualiser la page. Vous pouvez également les ignorer. <a href='%{url}' target='_blank'>En savoir plus...</a>"
         reviewable_unknown_source: "%{reviewableType} (extension inconnue)"
         reviewable_known_source: "%{reviewableType} (de l'extension « %{pluginName} »)"
         ignore_all: "Ignorer tout"
         enable_plugins: "Activer les extensions"
-        delete_confirm: "Voulez-vous vraiment supprimer tous les avis créés par les extensions désactivées ?"
-        ignore_success: "Tous les avis créés par des extensions désactivées ont été supprimés."
       explain:
         why: "expliquer pourquoi cet élément s'est retrouvé dans la file d'attente"
-        title: "Notation de l'élément à examiner"
         formula: "Formule"
         subtotal: "Sous-total"
         total: "Total"
@@ -666,10 +672,8 @@ fr:
           title: "Les utilisateurs dont les signalements ont généralement été approuvés obtiennent un bonus."
         trust_level_bonus:
           name: "niveau de confiance"
-          title: "Les éléments à examiner créés par des utilisateurs au niveau de confiance plus élevé ont un score plus élevé."
         type_bonus:
           name: "indiquer le bonus"
-          title: "Certains types d'éléments à examiner peuvent se voir attribuer un bonus par les responsables pour en élever la priorité."
       revise_and_reject_post:
         title: "Réviser"
         reason: "Raison"
@@ -678,7 +682,6 @@ fr:
         custom_reason: "Donnez une description claire de la raison"
         other_reason: "Autre..."
         optional: "facultatif"
-      stale_help: "Cet élément a fait l'objet d'une décision prise par <b>%{username}</b>."
       claim_help:
         optional: "Vous pouvez vous réserver cet élément pour empêcher d'autres responsables de l'examiner."
         required: "Vous devez réserver un élément avant de l'examiner."
@@ -3134,8 +3137,6 @@ fr:
         max_views:
           placeholder: maximum
           aria_label: filtrer par nombre de vues maximal
-        additional_options:
-          label: "Filtrer par nombre de messages et vues par sujet"
     hamburger_menu: "Menu de navigation"
     new_item: "nouveau"
     go_back: "retour"
@@ -4693,7 +4694,20 @@ fr:
         one: "Son synonyme sera aussi supprimé."
         other: "Ses %{count} synonymes seront aussi supprimés."
       edit_tag: "Modifier le nom et la description de l'étiquette"
-      description: "Description (maximum 1000 caractères)"
+      description: "Description"
+      settings:
+        title: "Paramètres"
+        general: "Général"
+        localizations: "Localisations"
+        back: "Retour"
+        name: "Nom"
+        slug: "Identifiant"
+        name_placeholder: "Nom de l'étiquette"
+        synonyms_subtitle: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par %{name}"
+      localization:
+        locale: "Paramètre régional"
+        name: "Nom"
+        description: "Description"
       sort_by: "Trier par :"
       sort_by_count: "nombre"
       sort_by_name: "nom"
@@ -5196,9 +5210,13 @@ fr:
           never: "jamais"
       reports:
         title: "Liste des rapports disponibles"
-        meta_doc: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
+        group_traffic: "Trafic"
+        group_members: "Membres"
+        group_moderation: "Modération"
+        group_security: "Sécurité"
+        group_other: "Autre"
       config_sections:
         account:
           title: "Compte"
@@ -5223,7 +5241,6 @@ fr:
         preview: "Aperçu"
         enabled_for_options:
           everyone: "Tout le monde"
-          staff: "Responsables seulement"
         statuses:
           experimental: "Expérimental"
         impact_roles:
@@ -5296,7 +5313,6 @@ fr:
               help_text: "La taille recommandée est de 600 x 80 pixels."
             large_icon:
               title: "Icône carrée"
-              description: "Une version carrée de l'image du logo apparaît en haut de l'interface d'administration et constitue également le logo de l'application sur l'écran d'accueil mobile."
               help_text: "La taille recommandée est de 512 x 512 pixels."
             square_icon_dark:
               required: "Utiliser une icône carrée différente pour le mode sombre ?"
@@ -5447,7 +5463,7 @@ fr:
           header_description: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
           sub_pages:
             settings:
-              title: "Paramètres du tableau de bord"
+              title: "Paramètres"
         badges:
           title: "Badges"
           header_description: "Les badges récompensent les utilisateurs pour leurs activités, leurs contributions et leurs réalisations afin de reconnaître, de valider et d'encourager les comportements et les interactions positives au sein de la communauté"
@@ -5597,22 +5613,6 @@ fr:
         result_count:
           one: '%{count} résultat pour « %{filter} »'
           other: '%{count} résultats pour « %{filter} »'
-        result_types:
-          page:
-            one: "Page"
-            other: "Pages"
-          report:
-            one: "Rapport"
-            other: "Rapports"
-          setting:
-            one: "Paramètre"
-            other: "Paramètres"
-          theme:
-            one: "Thème"
-            other: "Thèmes"
-          component:
-            one: "Composant"
-            other: "Composants"
       new_features:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
@@ -5636,15 +5636,6 @@ fr:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
           learn_more: "En savoir plus…"
-          experimental: "Expérimental"
-          only_experiments: "Afficher uniquement les fonctionnalités expérimentales"
-          experiment_enabled: "Vous avez activé la fonctionnalité expérimentale."
-          experiment_disabled: "Vous avez désactivé la fonctionnalité expérimentale."
-          experiment_tooltip:
-            title_enabled: "Désactiver la fonctionnalité expérimentale"
-            content_enabled: "La modification de cette option désactivera la fonctionnalité pour tous les utilisateurs."
-          feature_tooltip:
-            content_enabled: "La modification de cette option désactivera la fonctionnalité pour tous les utilisateurs."
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."
@@ -5765,8 +5756,8 @@ fr:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
               logged_on_users: "Utilisateurs connectés"
-              members: "Propriétaires, membres et modérateurs de groupes"
-              staff: "Propriétaires et modérateurs de groupes"
+              members: "Propriétaires et membres du groupe, et modérateurs"
+              staff: "Propriétaires du groupe et modérateurs"
               owners: "Propriétaires du groupe"
               description: "Les administrateurs peuvent voir tous les groupes."
             members_visibility_levels:
@@ -7621,6 +7612,7 @@ fr:
         field_types:
           text: "Texte"
           textarea: "Zone de texte"
+          date: "Date"
           confirm: "Confirmation"
           dropdown: "Menu déroulant"
           multiselect: "Sélection multiple"

@@ -6,6 +6,12 @@
 
 de:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "in"
+        hidden: "versteckt"
+        failed: "fehlgeschlagen"
     carousel:
       go_to_slide: "Gehe zu Folie %{index}"
       previous: "Vorherige Folie"
@@ -297,6 +303,7 @@ de:
     skip_to_top: "Zum Seitenanfang springen"
     skip_user_nav: "Zum Profilinhalt springen"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
+    emails_are_disabled_no_smtp: "Die ausgehende E-Mail-Kommunikation ist deaktiviert, weil kein SMTP-Server konfiguriert wurde. Es können keinerlei E-Mails verschickt werden."
     emails_are_disabled_non_staff: "Ausgehende E-Mails wurden für Benutzer, die nicht zum Team gehören, deaktiviert."
     software_update_prompt:
       message: "Wir haben diese Website aktualisiert. <span>Bitte aktualisiere</span>, damit alles reibungslos funktioniert."
@@ -328,6 +335,8 @@ de:
       theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plug-in '%{name}'"
       unknown_source: "Eines deiner Themes oder Plug-ins"
+    dev_tools:
+      disable_dev_tools: "Entwicklertools deaktivieren"
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -417,20 +426,33 @@ de:
       pill: "Empfohlen"
       pm_title: "Vorgeschlagene Nachrichten"
     admin_onboarding_banner:
+      launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
+      skipped: "Die Checkliste für das Onboarding von Administratoren wurde übersprungen. Um sie wieder zu aktivieren, suche in den Website-Einstellungen nach „enable site owner onboarding“."
+      congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
+      invite_collaborators:
+        title: "Mitstreiter einladen"
+        description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
+        action: "Einladung erstellen"
       start_posting:
+        title: "Beginne mit dem Erstellen von Beiträgen"
         description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
+        action: "Fragen zum Einstieg"
+        back: "Zurück"
         icebreakers:
           fun_facts:
             title: "Was sind ein paar interessante Fakten über dich?"
             body: "Hallo zusammen! Ich freue mich, diese neue Community hier zu starten. Zum Auftakt lasst uns doch eine interessante Kleinigkeit über uns teilen. Ich mache den Anfang: Ich liebe es, zu wandern und neue Wege zu erkunden! Was ist eine interessante Kleinigkeit über dich?"
           coolest_thing_you_have_seen_today:
             title: "Was ist das Coolste, das du heute gesehen hast?"
+            body: "Was war das Coolste, das du heute gesehen oder erlebt hast? Das kann alles sein, von einem wunderschönen Sonnenuntergang bis hin zu einer netten Geste. Ich fange mal an: Ich habe einen Hund gesehen, der einer älteren Person beim Überqueren der Straße geholfen hat!"
           introduce_yourself:
             title: "Stell dich vor"
+            body: "Willkommen in der Community! Lasst uns einander kennenlernen. Bitte stelle dich vor und erzähle ein wenig über deine Interessen. Ich fange an: Ich habe eine Leidenschaft für Technik und liebe es, mein Wissen weiterzugeben!"
           what_is_your_favorite_food:
             title: "Was ist dein Lieblingsessen?"
             body: "Teile dein Lieblingsessen mit der Community! Ich fange an: Ich liebe Pizza, besonders mit extra viel Käse und Peperoni."
       spread_the_word:
+        title: "Mach deine Community bekannt!"
         description: "Teile einen Link mit deinem Netzwerk"
         action: "Link kopieren"
         copied_to_clipboard: "Link in die Zwischenablage kopiert!"
@@ -608,6 +630,10 @@ de:
         other_drafts:
           one: "+%{count} anderer Entwurf"
           other: "+%{count} andere Entwürfe"
+    embed_mode:
+      storage_access_prompt: "Hast du bereits ein Konto bei %{site_name}? Erlaube den Zugriff auf deine Sitzung, um als angemeldeter Benutzer zu kommentieren."
+      allow_access: "Zugriff erlauben"
+      continue_as_guest: "Als Gast fortfahren"
     topic_count_all:
       one: "Zeige %{count} neues Thema"
       other: "Zeige %{count} neue Themen"
@@ -667,24 +693,25 @@ de:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"
       back_to_queue: "Zurück zur Warteschlange"
+      editing_post: "Beitrag wird bearbeitet …"
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
       filtered_flagged_by: "Gemeldet von"
       unknown:
         title:
-          one: "Du hast ausstehende Überprüfungen von einem deaktivierten Plug-in:"
-          other: "Du hast ausstehende Überprüfungen von deaktivierten Plug-ins:"
+          one: "Du hast ausstehende Elemente in der Warteschlange zur Überprüfung von einem deaktivierten Plug-in:"
+          other: "Du hast ausstehende Elemente in der Warteschlange zur Überprüfung von diesen deaktivierten Plug-ins:"
         instruction: "Sie können erst dann richtig angezeigt werden, wenn du das entsprechende Plug-in aktivierst. Bitte aktiviere das Plug-in und aktualisiere die Seite. Alternativ kannst du sie auch ignorieren. <a href='%{url}' target='_blank'>Mehr erfahren …</a>"
         reviewable_unknown_source: "%{reviewableType} (unbekanntes Plug-in)"
         reviewable_known_source: "%{reviewableType} (von dem Plug-in '%{pluginName}')"
         ignore_all: "Alle ignorieren"
         enable_plugins: "Plug-ins aktivieren"
-        delete_confirm: "Bist du sicher, dass du alle Bewertungen löschen willst, die von deaktivierten Plug-ins erstellt wurden?"
-        ignore_success: "Alle Bewertungen, die von deaktivierten Plug-ins erstellt wurden, wurden gelöscht."
+        delete_confirm: "Bist du sicher, dass du alle Elemente aus der Warteschlange zur Überprüfung löschen willst, die von deaktivierten Plug-ins erstellt wurden?"
+        ignore_success: "Alle Elemente in der Warteschlange zur Überprüfung, die von deaktivierten Plug-ins erstellt wurden, wurden gelöscht."
       explain:
         why: "erkläre, warum dieses Element in der Warteschlange gelandet ist"
-        title: "Überprüfbares Scoring"
+        title: "Scoring für das zu überprüfende Element"
         formula: "Formel"
         subtotal: "Zwischensumme"
         total: "Gesamt"
@@ -698,10 +725,10 @@ de:
           title: "Benutzer, deren Meldungen in der Vergangenheit zugestimmt wurde, erhalten einen Bonus."
         trust_level_bonus:
           name: "Vertrauensstufe"
-          title: "Überprüfbare Elemente, die von Benutzern höherer Vertrauensstufen angelegt wurden, haben einen höheren Score."
+          title: "Meldungen, die von Benutzern höherer Vertrauensstufen erstellt wurden, haben einen höheren Score."
         type_bonus:
           name: "Bonustyp"
-          title: "Bestimmte überprüfbare Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
+          title: "Bestimmte Meldungs-Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
       revise_and_reject_post:
         title: "Überarbeiten"
         reason: "Grund"
@@ -710,7 +737,7 @@ de:
         custom_reason: "Gib eine klare Beschreibung des Grundes an"
         other_reason: "Sonstiges …"
         optional: "optional"
-      stale_help: "Diese Überprüfung wurde von <b>%{username}</b> gelöst."
+      stale_help: "Dieses Element wurde durch <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
@@ -718,9 +745,9 @@ de:
         claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
         automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
-        title: "Dieses Thema reservieren"
+        title: "Dieses Thema übernehmen"
       unclaim:
-        help: "Diese Reservierung entfernen"
+        help: "Diese Übernahme entfernen"
       awaiting_approval: "Wartet auf Genehmigung"
       delete: "Löschen"
       settings:
@@ -885,10 +912,10 @@ de:
           title: "Beitrag"
           noun: "Beitrag"
         reviewable_ai_chat_message:
-          title: "von KI gemeldete Chatnachricht"
+          title: "KI-gemeldete Chat-Nachricht"
           noun: "Chat-Nachricht"
         reviewable_ai_post:
-          title: "von KI gemeldeter Beitrag"
+          title: "KI-gemeldeter Beitrag"
           noun: "Beitrag"
         reviewable_post_voting_comment:
           title: "Gemeldeter Kommentar"
@@ -911,7 +938,7 @@ de:
         flagged_as_by: "Gemeldet als %{flagReason} von %{username} · %{relativeDate}"
         claimed: "Übernommen"
         claimed_by: "Übernommen von %{username} · %{relativeDate}"
-        unclaimed_by: "Abgegeben von %{username} · %{relativeDate}"
+        unclaimed_by: "Übernahme entfernt von %{username} · %{relativeDate}"
         reviewed: "Überprüft"
         approved_by: "Genehmigt von %{username} · %{relativeDate}"
         rejected_by: "Abgelehnt von %{username} · %{relativeDate}"
@@ -2035,7 +2062,7 @@ de:
         first_time_and_daily: "Für das erste „Gefällt mir“ sowie maximal täglich"
         first_time: "Nur für das erste „Gefällt mir“ eines Beitrags"
         never: "Nie"
-      notify_on_linked_posts: "Benachrichtige mich, wenn jemand einen Link zu einem meiner Beiträge teilt"
+      notify_on_linked_posts: "Mich benachrichtigen, wenn jemand einen Link zu einem meiner Beiträge teilt"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
         unless_emailed: "sofern noch nicht gesendet"
@@ -2095,7 +2122,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
-        generating_link: "Link wird generiert..."
+        generating_link: "Link wird generiert …"
         groups: "Gruppen"
         topic: "Thema"
         sent: "Erstellt/Zuletzt gesendet"
@@ -2713,7 +2740,7 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
-      read_only: "nur Lesen"
+      read_only: "schreibgeschützt"
       read_only_description: "Du hast in dieser Kategorie nur Leserechte, daher kannst du sie nicht auswählen."
     timezone_input:
       ambiguous_ist: "IST ist zweideutig, bitte wähle eine bestimmte Zeitzone (z. B. Asien/Kolkata)"
@@ -2803,8 +2830,8 @@ de:
         original_content: "Original-Beitrag"
         translation_preview: "Übersetzungsvorschau"
         original: "Original"
-        translation: "Übersetzen"
-        no_translation_yet: "Fang an zu tippen, um eine Vorschau der Übersetzung zu sehen..."
+        translation: "Übersetzung"
+        no_translation_yet: "Fang an zu tippen, um eine Vorschau der Übersetzung zu sehen …"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
         show_raw_markdown: "Rohversion anzeigen"
       group_mentioned_limit:
@@ -2916,6 +2943,7 @@ de:
       upload_description: "gib hier eine Beschreibung des Uploads ein"
       olist_title: "Nummerierte Liste"
       ulist_title: "Liste mit Aufzählungszeichen"
+      list_title: "Listen"
       list_item: "Listenelement"
       toggle_direction: "Schreibrichtung wechseln"
       apply_wrap_title: "Wrap anwenden"
@@ -2938,7 +2966,7 @@ de:
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
       show_toolbar: "Editor-Werkzeugleiste anzeigen"
       hide_toolbar: "Editor-Werkzeugleiste ausblenden"
-      peek_mode_toggle: "Editior-Position umschalten"
+      peek_mode_toggle: "Editor-Position umschalten"
       modal_ok: "OK"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       create_message_error: "Entschuldige, es gab einen Fehler beim Erstellen der Nachricht. Bitte versuche es noch einmal."
@@ -3286,8 +3314,6 @@ de:
         max_views:
           placeholder: Maximum
           aria_label: nach maximaler Anzahl von Aufrufen filtern
-        additional_options:
-          label: "Nach Beitragsanzahl und Themenaufrufen filtern"
     hamburger_menu: "Navigationsmenü"
     new_item: "neu"
     go_back: "zurückgehen"
@@ -3456,7 +3482,7 @@ de:
           unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
-          generic: "Hier gibt es nichts zu sehen... Schau bald wieder vorbei!"
+          generic: "Hier gibt es nichts zu sehen … Schau bald wieder vorbei!"
     topic_bulk_actions:
       dismiss:
         name: "Verwerfen"
@@ -3499,7 +3525,7 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_long: "Erstelle ein neues Thema"
+      create_long: "Neues Thema erstellen"
       create_group: "Neues Thema und Entwürfe"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -3939,7 +3965,7 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
       localizations:
         title_edit_warning:
-          message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagwörter und den Titel in %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
+          message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagwörter und den Titel auf %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
           action_original: "Original bearbeiten"
           action_translation: "Übersetzten Thementitel bearbeiten"
         editing_translation: "Übersetzung nach %{language} bearbeiten"
@@ -3984,8 +4010,8 @@ de:
       load_more_posts_below: "Darunter weitere Beiträge laden"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
       sr_load_more_replies: "Weitere eingebettete Antworten laden"
-      loading_more_posts_above: "Weitere Beiträge werden darüber geladen..."
-      loading_more_posts_below: "Weitere Beiträge werden darunter geladen..."
+      loading_more_posts_above: "Weitere Beiträge werden darüber geladen …"
+      loading_more_posts_below: "Weitere Beiträge werden darunter geladen …"
       loading_complete: "Laden abgeschlossen"
       sr_date: "Beitragsdatum"
       sr_expand_replies:
@@ -4041,7 +4067,9 @@ de:
           edit: "Bearbeiten"
           delete: "Löschen"
         add: "Neue Übersetzung hinzufügen"
-        manage: "Übersetzungen verwalten (%{count} vorhanden)"
+        manage:
+          one: "Übersetzungen verwalten (%{count} vorhanden)"
+          other: "Übersetzungen verwalten (%{count} vorhanden)"
         view:
           one: "%{count} übersetzte Sprachvariante anzeigen"
           other: "%{count} übersetzte Sprachvarianten anzeigen"
@@ -4352,6 +4380,9 @@ de:
         reply: "Antworten"
         create: "Erstellen"
         no_groups_selected: "Es wurde keinen Gruppen Zugriff gewährt. Diese Kategorie ist nur für das Team sichtbar."
+        everyone_full_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe „%{everyone_group}“ erteilt wurden, um die Berechtigungen einzuschränken.'
+        everyone_reply_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen und auf Themen antworten. Entferne die Gruppe „%{everyone_group}“, um die Berechtigungen einzuschränken.'
+        everyone_see_access: 'Diese Kategorie ist öffentlich, jeder kann die Beiträge sehen. Entferne die Gruppe „%{everyone_group}“, um die Berechtigungen einzuschränken.'
         specific_groups_have_access: "Diese Kategorie ist privat. Nur die ausgewählten Gruppen können Beiträge sehen, beantworten und erstellen."
         all_parent_groups_used: "Alle Gruppen aus der übergeordneten Kategorie sind hinzugefügt worden. Um weitere Gruppen hinzuzufügen, füge sie zuerst der übergeordneten Kategorie hinzu."
         toggle_reply: "Antwortberechtigung umschalten"
@@ -4390,7 +4421,7 @@ de:
       position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
-      subcategory_of: "Unterkategorie von..."
+      subcategory_of: "Unterkategorie von …"
       none_subcategory_text: "Keiner"
       subcategory_permissions_warning: "Eine Unterkategorie einer privaten Kategorie kann nicht öffentlich sein."
       visibility:
@@ -4914,13 +4945,19 @@ de:
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
       synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
+      synonyms_inline: "Diese Synonyme werden durch %{base_tag_name} ersetzt:"
       save: "Name und Beschreibung des Schlagwortes speichern"
       tag_groups_info:
         one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
         other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
+      tag_groups_info_prefix:
+        one: "Dieses Schlagwort gehört zur Gruppe: "
+        other: "Dieses Schlagwort gehört zu diesen Gruppen: "
       category_restrictions:
         one: "Es kann nur in dieser Kategorie verwendet werden:"
         other: "Es kann nur in folgenden Kategorien verwendet werden:"
+      restricted_to: "Beschränkt auf"
+      no_synonyms: "Dieses Schlagwort hat keine Synonyme."
       edit_synonyms: "Synonyme bearbeiten"
       add_synonyms_label: "Synonyme hinzufügen:"
       add_synonyms: "Hinzufügen"
@@ -4940,7 +4977,34 @@ de:
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
       edit_tag: "Name und Beschreibung des Schlagwortes bearbeiten"
       edit: "Dieses Schlagwort bearbeiten"
-      description: "Beschreibung (max. 1000 Zeichen)"
+      description: "Beschreibung"
+      settings:
+        title: "Einstellungen"
+        edit_title: "Schlagwort bearbeiten: %{name}"
+        edit_tag_prefix: "Schlagwort bearbeiten:"
+        select_tag: "Schlagwort zum Bearbeiten auswählen"
+        general: "Allgemein"
+        localizations: "Lokalisierungen"
+        back: "Zurück"
+        name: "Name"
+        slug: "Sprechender Name für URL"
+        name_placeholder: "Name des Schlagworts"
+        slug_placeholder: "Sprechender Name des Schlagwortes (optional, wird automatisch aus dem Namen generiert)"
+        saved: "Schlagwort-Einstellungen gespeichert"
+        no_synonyms: "Für dieses Schlagwort sind keine Synonyme definiert."
+        add_synonym_placeholder: "Suche nach Schlagwörtern, die als Synonyme hinzugefügt werden sollen..."
+        synonyms_subtitle: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch %{name} ersetzt"
+        save: "Schlagwort speichern"
+        delete: "Schlagwort löschen"
+        synonyms_hint: "Wenn diese Schlagwörter verwendet werden, werden sie durch %{baseTagName} ersetzt."
+        add_synonyms_confirm: "Jede Stelle, die aktuell %{synonymNames} verwendet, wird auf %{tagName} umgestellt. Bist du sicher, dass du diese Änderung vornehmen möchtest?"
+      localization:
+        hint: "Füge Übersetzungen hinzu, um Schlagwort-Namen für Benutzer in verschiedenen Sprachen anzuzeigen."
+        locale: "Gebietsschema"
+        name: "Name"
+        description: "Beschreibung"
+        add: "Übersetzung hinzufügen"
+        remove: "Übersetzung entfernen"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
       sort_by_name: "Name"
@@ -5459,7 +5523,7 @@ de:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
     reset_filter: "Zurücksetzen"
-    toggle_filters: "Dropdowns zum Filtern anzeigen/ ausblenden"
+    toggle_filters: "Dropdowns zum Filtern anzeigen/ausblenden"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5472,9 +5536,16 @@ de:
           never: "nie"
       reports:
         title: "Verfügbare Berichte"
-        meta_doc: "Berichte sind ein leistungsfähiges Instrument, das dir hilft zu verstehen, was auf deiner Website passiert. Sie können dir helfen, Trends zu erkennen, Probleme aufzudecken und Entscheidungen auf der Grundlage von Daten zu treffen."
         sidebar_title: "Berichte"
         back: "Zurück zu alle Berichte"
+        group_engagement: "Aktivität & Wachstum"
+        group_traffic: "Traffic"
+        group_members: "Mitglieder"
+        group_content: "Inhalte & Community-Status"
+        group_moderation: "Moderation"
+        group_security: "Sicherheit"
+        group_other: "Sonstiges"
+        legacy_warning: "Dies ist ein älterer Bericht. Er wird demnächst nicht mehr verfügbar sein. Wenn du Hilfe bei der Suche nach einem Ersatz benötigst, wenden dich bitte an den Support."
       config_sections:
         account:
           title: "Konto"
@@ -5497,7 +5568,7 @@ de:
         plugin: "Plug-in"
         metadata: "Metadaten"
         enabled: "Aktiviert"
-        enabled_for: "Aktiviert für..."
+        enabled_for: "Aktiviert für …"
         show_image: "Bild anzeigen"
         edit_groups: "Gruppenweise Aktivierung bearbeiten"
         groups_updated: "Gruppen aktualisiert!"
@@ -5506,7 +5577,8 @@ de:
         no_changes_to_save: "Keine Änderungen zu speichern"
         select_groups: "Gruppen auswählen …"
         opt_in_groups: "Gruppenweise Aktivierung"
-        opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „dauerhaft“ erreicht."
+        show_related_settings: "Verwandte Einstellungen anzeigen..."
+        opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „stabil“ erreicht."
         enabled_for_throttle: "Du hast zu schnell geändert, für wen diese Änderung aktiviert ist. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
         change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
         change_disabled: "Du hast diese Änderung deaktiviert"
@@ -5541,7 +5613,7 @@ de:
           all: "Gesamt"
           enabled_all: "Alle Aktivierungszustände"
           enabled: "Aktiviert"
-          enabled_for_staff: "Für Team-Mitglieder aktiviert"
+          enabled_for_staff: "Für %{staffGroupName} aktiviert"
           enabled_for_specific_groups: "Für bestimmte Gruppen aktiviert"
           disabled: "Deaktiviert"
           impact_type_all: "Alle Änderungstypen"
@@ -5613,7 +5685,7 @@ de:
             logins_30_days: "Anmeldungen (30 Tage)"
           regenerate_credentials: "Anmeldedaten neu generieren"
           regenerate_confirm: "Bist du sicher, dass du deine Discourse ID-Anmeldedaten neu generieren willst? Dadurch wird ein neues Client-Geheimnis generiert. Die Erneuerung der Anmeldedaten ist normalerweise nicht erforderlich, kann aber für mehr Sicherheit nützlich sein."
-          description: "Discourse ID ist einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt."
+          description: "Discourse ID ist ein Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt."
           learn_more: "Mehr erfahren"
           regenerate_success: "Die Anmeldedaten wurden erfolgreich neu generiert."
         logo:
@@ -5631,7 +5703,7 @@ de:
               help_text: "Die empfohlene Größe ist 600 x 80 Pixel."
             large_icon:
               title: "Quadratisches Symbol"
-              description: "Eine quadratische Version des Logos erscheint oben in der Verwaltung und ist auch das Logo für den mobilen Startbildschirm der App."
+              description: "Eine quadratische Version des Logos erscheint oben auf der Seite und ist auch das Logo der mobilen App."
               help_text: "Die empfohlene Größe ist 512 x 512 Pixel."
             square_icon_dark:
               required: "Ein anderes quadratisches Symbol für den dunklen Modus verwenden?"
@@ -5708,7 +5780,7 @@ de:
           saved: "Die Einstellungen für das Willkommensbanner wurden erfolgreich gespeichert."
           form:
             enabled_themes:
-              label: "In Themes aktiviert..."
+              label: "In Themes aktiviert …"
               description: "Wähle aus, welche Themes das Banner anzeigen sollen. Nur aktive Themes werden angezeigt."
               select_label: "Themes auswählen"
             background_image:
@@ -5757,7 +5829,7 @@ de:
             search_placeholder:
               label: "Platzhalter für die Suche"
               description: "Platzhaltertext für das Suchfeld im Willkommensbanner."
-              placeholder: "Themen suchen..."
+              placeholder: "Themen suchen …"
         navigation:
           title: "Navigation"
           header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Administrator-Seitenleiste."
@@ -5819,7 +5891,7 @@ de:
           header_description: "Berichte sind ein leistungsfähiges Instrument, das dir hilft zu verstehen, was auf deiner Website passiert. Sie können dir helfen, Trends zu erkennen, Probleme aufzudecken und Entscheidungen auf der Grundlage von Daten zu treffen."
           sub_pages:
             settings:
-              title: "Dashboard-Einstellungen"
+              title: "Einstellungen"
         badges:
           title: "Abzeichen"
           header_description: "Abzeichen belohnen Benutzer für ihre Aktivitäten, Beiträge und Leistungen, um positives Verhalten sowie Engagement in der Community anzuerkennen, zu bestätigen und zu fördern"
@@ -5975,22 +6047,6 @@ de:
         result_count:
           one: '%{count} Ergebnis für „%{filter}“'
           other: '%{count} Ergebnisse für „%{filter}“'
-        result_types:
-          page:
-            one: "Seite"
-            other: "Seiten"
-          report:
-            one: "Bericht"
-            other: "Berichte"
-          setting:
-            one: "Einstellung"
-            other: "Einstellungen"
-          theme:
-            one: "Theme"
-            other: "Themes"
-          component:
-            one: "Komponente"
-            other: "Komponenten"
       new_features:
         title: "Was ist neu?"
         check_for_updates: "Nach Aktualisierungen suchen"
@@ -6013,25 +6069,9 @@ de:
         new_features:
           title: "Was ist neu?"
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
+          no_new_features_found: "Es gibt keine Einträge im Feed oder der ausgewählte Filter hat keine Ergebnisse zurückgegeben. Du kannst frühere Ankündigungen neuer Funktionen in der <a href='%{url}' target='_blank'>Discourse Meta Community</a> sehen."
           no_new_features_error: "Es gab einen Fehler beim Laden des Feeds. Du kannst frühere Ankündigungen neuer Funktionen in der <a href='%{url}' target='_blank'>Discourse Meta Community</a> sehen."
           learn_more: "Mehr erfahren …"
-          experimental: "Experimentell"
-          only_experiments: "Nur experimentelle Funktionen anzeigen"
-          experiment_enabled: "Du hast die experimentelle Funktion aktiviert."
-          experiment_disabled: "Du hast die experimentelle Funktion deaktiviert."
-          feature_enabled: "Du hast die Funktion aktiviert."
-          feature_disabled: "Du hast die Funktion deaktiviert."
-          toggled_too_fast: "Du hast den Umschalter zu schnell betätigt. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
-          experiment_tooltip:
-            title_disabled: "Probiere diese experimentelle Funktion aus"
-            title_enabled: "Experimentelle Funktion ausschalten"
-            content_disabled: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiv."
-            content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
-          feature_tooltip:
-            title_disabled: "Probiere diese Funktion aus"
-            title_enabled: "Deaktiviere diese Funktion"
-            content_disabled: "Teste diese neue Funktion! Du kannst sie jederzeit wieder deaktivieren, wenn du möchtest.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiviert."
-            content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -6217,6 +6257,7 @@ de:
         cancel: "Abbrechen"
         continue: "Weiter"
         copy_key: "Kopieren"
+        key_copied_to_clipboard: "API-Schlüssel in die Zwischenablage kopiert"
         back: "Zurück zu API-Schlüsseln"
         revoke: "Widerrufen"
         undo_revoke: "Widerruf rückgängig machen"
@@ -6657,7 +6698,7 @@ de:
             description: "Einstellungen, die es Themes ermöglichen, mehr Kontrolle über das gesamte Website-Erlebnis zu haben, indem sie eine kleine Teilmenge der wichtigsten Website-Einstellungen überschreiben."
           themes:
             title: "Themes"
-            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
+            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Benutzer verändern."
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
@@ -6875,7 +6916,7 @@ de:
           body: "Nachrichtentext"
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
-          search_templates: "Nach Vorlagennamen filtern ..."
+          search_templates: "Nach Vorlagennamen filtern …"
           no_templates_found: "Keine Vorlage entspricht deinen Filtern."
           edit: "Bearbeiten"
           back: "Zurück zu Vorlagen"
@@ -7879,8 +7920,8 @@ de:
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
             description:
-              one: "Lösche %{count} Beitrag von @%{username}..."
-              other: "Lösche %{count} Beiträge von @%{username}..."
+              one: "Lösche %{count} Beitrag von @%{username} …"
+              other: "Lösche %{count} Beiträge von @%{username} …"
           confirmation:
             title: "Alle Beiträge von @%{username} löschen"
             description: |
@@ -8078,6 +8119,7 @@ de:
         field_types:
           text: "Text"
           textarea: "Textbereich"
+          date: "Datum"
           confirm: "Bestätigung"
           dropdown: "Drop-down-Liste"
           multiselect: "Mehrfachauswahl"

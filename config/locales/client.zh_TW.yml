@@ -6,6 +6,11 @@
 
 zh_TW:
   js:
+    blocks:
+      ghost:
+        status: "狀態"
+        in_location: "在"
+        failed: "失敗"
     number:
       format:
         separator: "."
@@ -367,6 +372,8 @@ zh_TW:
       pill: "建議"
       pm_title: "推薦訊息"
     admin_onboarding_banner:
+      start_posting:
+        back: "上一步"
       spread_the_word:
         action: "複製連結"
     about:
@@ -579,18 +586,13 @@ zh_TW:
       in_reply_to: "回覆給"
       filtered_flagged_by: "檢舉者"
       unknown:
-        title:
-          other: "您有停用外掛程式的待審核項目："
         instruction: "在您啟用相關外掛程式之前，它們無法正常顯示。請啟用外掛程式並刷新頁面。或者，您也可以忽略它們。<a href='%{url}' target='_blank'>瞭解更多...</a>"
         reviewable_unknown_source: "%{reviewableType} (未知外掛程式)"
         reviewable_known_source: "%{reviewableType} (來自 '%{pluginName}' 外掛程式)"
         ignore_all: "忽略全部"
         enable_plugins: "啟用外掛程式"
-        delete_confirm: "您確定要刪除所有由禁用外掛程式建立的評論嗎？"
-        ignore_success: "所有由禁用外掛程式建立的評論已被刪除。"
       explain:
         why: "解釋為什麼這個項目結束在隊列"
-        title: "可審閱的評分"
         formula: "公式"
         subtotal: "小計"
         total: "總計"
@@ -604,10 +606,8 @@ zh_TW:
           title: "紀錄上已經同意的標誌的用戶將獲得獎勵。"
         trust_level_bonus:
           name: "信任等級"
-          title: "由信任等級較高的使用者建立的可審閱項目的分數較高。"
         type_bonus:
           name: "類型獎金"
-          title: "某些可審查類型可由工作人員指定加分，使其具有較高的優先順序。"
       revise_and_reject_post:
         title: "修訂"
         reason: "原因"
@@ -616,7 +616,6 @@ zh_TW:
         custom_reason: "清楚說明原因"
         other_reason: "其他..."
         optional: "選擇性"
-      stale_help: "此可審查問題已由 <b>%{username}</b>解決。"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
         required: "您必須先審核項目才能查看它們。"
@@ -2825,8 +2824,6 @@ zh_TW:
         max_views:
           placeholder: 最大值
           aria_label: 按最大瀏覽量過濾
-        additional_options:
-          label: "依發表次數和主題瀏覽次數篩選"
     new_item: "新增"
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
@@ -4223,7 +4220,17 @@ zh_TW:
       delete_confirm_synonyms:
         other: "其 %{count} 同義詞也將被刪除。"
       edit_tag: "編輯標記名稱和描述"
-      description: "說明（最多 1000 個字元）"
+      description: "描述"
+      settings:
+        title: "設定"
+        general: "一般"
+        back: "上一步"
+        name: "名稱"
+        slug: "縮寫"
+        name_placeholder: "標記名稱"
+      localization:
+        name: "名稱"
+        description: "描述"
       sort_by: "排序方式："
       sort_by_count: "總數"
       sort_by_name: "名稱"
@@ -4639,9 +4646,13 @@ zh_TW:
           never: "永不"
       reports:
         title: "可見報告列表"
-        meta_doc: "報告是幫助您了解網站上所發生事情的有力工具。它們可以幫助您了解趨勢、發現問題並根據數據做出決策。"
         sidebar_title: "報告"
         back: "返回到所有報告"
+        group_traffic: "流量"
+        group_members: "成員"
+        group_moderation: "管理"
+        group_security: "安全性"
+        group_other: "其他"
       config_sections:
         account:
           title: "帳號"
@@ -4666,7 +4677,6 @@ zh_TW:
         preview: "預覽"
         enabled_for_options:
           everyone: "所有使用者"
-          staff: "只限工作人員"
         statuses:
           experimental: "實驗性"
         impact_roles:
@@ -4729,7 +4739,6 @@ zh_TW:
               help_text: "建議尺寸為 600 x 80 像素。"
             large_icon:
               title: "方形圖示"
-              description: "方形版本的標誌圖片會出現在管理頂端，同時也是行動首頁應用程式的標誌。"
               help_text: "建議尺寸為 512 x 512 像素。"
             square_icon_dark:
               required: "暗黑模式下使用不同的方形圖示嗎？"
@@ -4850,6 +4859,9 @@ zh_TW:
         reports:
           title: "報告"
           header_description: "報告是幫助您了解網站上所發生事情的有力工具。它們可以幫助您了解趨勢、發現問題並根據數據做出決策。"
+          sub_pages:
+            settings:
+              title: "設定"
         badges:
           title: "徽章"
           header_description: "徽章可獎勵使用者的活動、貢獻和成就，以表揚、確認和鼓勵社群內的正面行為和參與。"
@@ -4946,17 +4958,6 @@ zh_TW:
         default_value: "預設"
       search:
         title: "搜索"
-        result_types:
-          page:
-            other: "頁面"
-          report:
-            other: "報告"
-          setting:
-            other: "設定"
-          theme:
-            other: "佈景主題"
-          component:
-            other: "元件"
       new_features:
         title: "有什麼最新消息？"
         check_for_updates: "檢查更新"
@@ -4980,15 +4981,6 @@ zh_TW:
           title: "有什麼最新消息？"
           subtitle: "我們一直在發布新功能和改進。此頁面涵蓋了重點，但您可以單擊「了解更多」以查看詳細的版本說明。"
           learn_more: "了解更多..."
-          experimental: "實驗性"
-          only_experiments: "僅顯示實驗性功能"
-          experiment_enabled: "您已啟用實驗性功能。"
-          experiment_disabled: "您已停用實驗性功能。"
-          experiment_tooltip:
-            title_enabled: "關閉實驗性功能"
-            content_enabled: "更改此項將為所有使用者禁用該功能。"
-          feature_tooltip:
-            content_enabled: "更改此項將為所有使用者禁用該功能。"
         last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
         no_problems: "未發現任何問題。"
@@ -6827,6 +6819,7 @@ zh_TW:
           disabled: "不可搜尋"
         field_types:
           text: "文字"
+          date: "日期"
           confirm: "確認"
           dropdown: "下拉"
           multiselect: "多選"

@@ -25,6 +25,7 @@ export default class DiscourseAdplugin extends Component {
         @category={{this.category.slug}}
         @indexNumber={{this.index}}
         @childTagName="td"
+        @colspan="5"
       />
     </tr>
   </template>

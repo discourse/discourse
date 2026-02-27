@@ -39,8 +39,11 @@ ar:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "ماذا تريد أن تفعل بهذا التعليق؟"
         no_action_comment:
           title: "التي لم يتم اتخاذ إجراء بشأنها"
+          description: "اترك التعليق كما هو."
         agree_and_keep_comment:
           title: "إبقاء التعليق"
           description: "الموافقة على البلاغ والاحتفاظ بالتعليق دون تغيير"

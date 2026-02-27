@@ -8,6 +8,8 @@ ar:
   site_settings:
     discourse_automation_enabled: "تفعيل المكوِّن الإضافي discourse-automation"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(فارغ)"
     models:
       automations:
         validations:
@@ -20,6 +22,9 @@ ar:
         invalid_field: لا يمكن استخدام المكوّن %{component} الخاص بالحقل على %{target}:%{target_name}.
         invalid_metadata: بيانات الحقل `%{field}` غير صالحة أو المكوِّن `%{component}` غير معروف.
     triggerables:
+      post_flag_created:
+        title: إنشاء بلاغ على منشور
+        description: تُفعّل الأتمتة تلقائيًا عندما يُقدَّم بلاغ على منشور
       errors:
         custom_fields_or_user_profile_required: "يجب إدخال مشغِّل واحد على الأقل من بين‎ 'custom_fields' ‎أو‎ 'user_profile'."
       user_badge_granted:
@@ -67,6 +72,9 @@ ar:
         description: سيتم تشغيل الأتمتة عند تغيير وسوم أحد الموضوعات.
       topic:
         title: الموضوع
+      topic_closed:
+        title: تم إغلاق الموضوع
+        description: يشغّل البرنامج النصي عند إغلاق الموضوع.
       after_post_cook:
         title: بعد معالجة المنشور
         description: عند معالجة محتوى المنشور، سيتم تشغيل الأتمتة
@@ -74,6 +82,24 @@ ar:
         title: بعد تحديث المستخدم
         description: عندما يقوم المستخدم بتحديث أي معلومات، سيتم تشغيل الأتمتة
     scriptables:
+      email_on_flagged_post:
+        title: إرسال بريد إلكتروني عند وجود بلاغ على منشور
+        description: إرسال بريد إلكتروني مخصص عند إنشاء بلاغ على أي منشور
+        subject: "المنشور المُبلّغ عنه: %{topic_title} بواسطة (%{flagger_username})"
+        default_template: |-
+          تم الإبلاغ عن منشور.
+
+          الموضوع: {{topic_title}} ({{topic_url}})
+          المنشور: {{post_url}} (#{{post_number}})
+          نوع البلاغ: {{flag_type}}
+          المستخدم المُبلِّغ عنه: {{flagged_username}}
+          المُبلِّغ: {{flagger_username}}
+          الفئة: {{category}}
+          الوسوم: {{tags}}
+
+          --------
+          مقتطف من المنشور:
+          {{post_excerpt}}
       post:
         title: إنشاء منشور
         description: إنشاء منشور في الموضوع المحدَّد
@@ -104,6 +130,10 @@ ar:
         title: تبادل الهدايا
         description: يسمح بإقران مستخدمي المجموعة بشكلٍٍ مجهول لإرسال هدية لبعضهم البعض.
         doc: يتطلَّب تبادل الهدايا وجود مجموعة حالية تضم 3 مستخدمين على الأقل. سيتم إقران كل مستخدم في المجموعة بمُرسل هدايا واحد ومستقبل هدايا واحد في التاريخ المختار.
+      remove_upload_markup_from_deleted_posts:
+        title: إزالة علامات التحميل من المنشورات المحذوفة
+        description: يعمل هذا الخيار كمستخدم نظام، ويضيف نسخةً معدلةً إلى المنشورات المحذوفة التي أُزيلت منها علامات التحميل. وبالتزامن مع مهمة "تنظيف التحميلات"، يؤدي ذلك إلى حذف التحميلات نهائيًا من المنشورات المحذوفة. يُرجى توخي الحذر عند الاستخدام!
+        edit_reason: أزالت الأتمتة علامات التحميل من المنشور المحذوف
       send_pms:
         title: إرسال رسائل شخصية
         description: يسمح بإرسال الرسائل الشخصية (ربما تتأخر).
@@ -159,3 +189,4 @@ ar:
         description: "تعيين الموضوعات عشوائيًا إلى مجموعة"
       set_topic_timer:
         title: "تعيين مؤقِّت للموضوع"
+        description: "تعيين مؤقت لموضوع معين"

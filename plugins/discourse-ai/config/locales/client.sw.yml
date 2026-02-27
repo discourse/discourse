@@ -103,6 +103,7 @@ sw:
         remove_parameter: "Ondoa"
         parameter_required: "Muhimu na Inahitajika"
         edit: "Hariri"
+        test: "Majaribio"
         delete: "Futa"
       secrets:
         name: "Jina"

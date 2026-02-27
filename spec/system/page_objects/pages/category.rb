@@ -64,7 +64,11 @@ module PageObjects
       end
 
       def save_settings
-        find("#save-category").click
+        if page.has_css?(".admin-changes-banner", wait: 0)
+          find(".admin-changes-banner .btn-primary").click
+        else
+          find("#save-category").click
+        end
         self
       end
 
@@ -103,6 +107,11 @@ module PageObjects
 
       def toggle_checkbox(label_text)
         find("label.checkbox-label", text: label_text).click
+        self
+      end
+
+      def toggle_form_container(title)
+        find(".form-kit__container", text: title).find("label.d-toggle-switch__label").click
         self
       end
 

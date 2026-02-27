@@ -388,6 +388,31 @@ RSpec.describe Admin::StaffActionLogsController do
         get "/admin/logs/staff_action_logs/#{UserHistory.last.id}/diff.json"
         expect(response.status).to eq(200)
       end
+
+      it "falls back when diff generation exceeds the comparison budget" do
+        theme = Fabricate(:theme)
+        theme.set_field(target: :mobile, name: :scss, value: "body {.up}")
+        original_json =
+          ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
+        theme.set_field(target: :mobile, name: :scss, value: "body {.down}")
+        record = StaffActionLogger.new(Discourse.system_user).log_theme_change(original_json, theme)
+
+        ONPDiff
+          .any_instance
+          .stubs(:compose)
+          .raises(
+            ONPDiff::DiffLimitExceeded.new(
+              comparisons_used: 1,
+              comparison_budget: 0,
+              left_size: 1,
+              right_size: 1,
+            ),
+          )
+
+        get "/admin/logs/staff_action_logs/#{record.id}/diff.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["side_by_side"]).to include(I18n.t("errors.diff_too_complex"))
+      end
     end
 
     context "when logged in as a moderator" do

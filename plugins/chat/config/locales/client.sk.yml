@@ -66,6 +66,7 @@ sk:
       cancel: "Zrušiť"
       cancel_reply: "Zrušiť odpoveď"
       chat_channels: "Kanály"
+      pinned: "Pripnutý"
       browse_all_channels: "Prehľadávať všetky kanály"
       see_in: "Vidieť v"
       move_to_channel:
