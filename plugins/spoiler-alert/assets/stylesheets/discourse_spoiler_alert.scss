@@ -14,6 +14,11 @@
 .spoiler-blurred {
   @include unselectable;
   cursor: pointer;
+
+  // Allow text selection in cooked post content for quoting
+  .cooked & {
+    user-select: text;
+  }
   filter: blur(0.5em);
 
   a,
