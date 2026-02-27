@@ -142,10 +142,6 @@
   }
 
   .show-current-style {
-    display: inline-block;
-    vertical-align: top;
-    max-width: var(--admin-content-max-width);
-
     .title {
       font-family: var(--heading-font-family);
       font-size: var(--font-up-2-rem);

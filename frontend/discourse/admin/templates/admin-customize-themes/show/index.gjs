@@ -260,15 +260,37 @@ export default <template>
             model=@controller.model
           }}
         >
-          <ThemeSettingRelativesSelector
-            @setting={{@controller.relativesSelectorSettingsForTheme}}
-            @model={{@controller.model}}
-            class="theme-setting"
-          />
-        </PluginOutlet>
-      </div>
-    </section>
-  {{/if}}
+          <div class="row setting">
+            <ThemeSettingRelativesSelector
+              @setting={{@controller.relativesSelectorSettingsForComponent}}
+              @model={{@controller.model}}
+              class="theme-setting"
+            />
+          </div>
+        </section>
+      {{else}}
+        <section
+          class="form-horizontal theme settings control-unit relative-theme-selector included-components-setting"
+        >
+          <div class="row setting">
+            <PluginOutlet
+              @name="admin-customize-theme-included-components-setting"
+              @outletArgs={{lazyHash
+                setting=@controller.relativesSelectorSettingsForTheme
+                model=@controller.model
+              }}
+            >
+              <ThemeSettingRelativesSelector
+                @setting={{@controller.relativesSelectorSettingsForTheme}}
+                @model={{@controller.model}}
+                class="theme-setting"
+              />
+            </PluginOutlet>
+          </div>
+        </section>
+      {{/if}}
+    </div>
+  {{/unless}}
 
   {{#unless
     (or @controller.model.system @controller.model.remote_theme.is_git)
