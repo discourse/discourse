@@ -4544,6 +4544,7 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        diff_too_complex: "The diff is too complex to display. Please try viewing individual smaller edits."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"

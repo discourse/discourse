@@ -37,6 +37,7 @@ export default class History extends Component {
   @tracked viewMode = this.site.mobileView ? "inline" : "side_by_side";
   @tracked bodyDiff;
   @tracked initialLoad = true;
+  @tracked error;
 
   constructor() {
     super(...arguments);
@@ -180,19 +181,21 @@ export default class History extends Component {
 
   async refresh(postId, postVersion) {
     this.loading = true;
+    this.error = null;
     try {
       const result = await Post.loadRevision(postId, postVersion);
       this.postRevision = result;
+      if (result.diff_error) {
+        this.error = i18n("post.revisions.diff_too_complex");
+      }
     } catch (error) {
-      this.args.closeModal();
-      this.dialog.alert(error.jqXHR.responseJSON.errors[0]);
+      this.error =
+        error.jqXHR?.responseJSON?.errors?.[0] || i18n("generic_error");
 
       const postStream = this.args.model.post?.topic?.postStream;
-      if (!postStream) {
-        return;
+      if (postStream) {
+        postStream.triggerChangedPost(postId, this.args.model);
       }
-
-      postStream.triggerChangedPost(postId, this.args.model);
     } finally {
       this.loading = false;
       this.initialLoad = false;
@@ -366,6 +369,9 @@ export default class History extends Component {
       class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
     >
       <:body>
+        {{#if this.error}}
+          <div class="alert alert-error">{{this.error}}</div>
+        {{/if}}
         <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
           <Revision
             @model={{this.postRevision}}
