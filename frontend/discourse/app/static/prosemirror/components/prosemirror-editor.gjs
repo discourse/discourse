@@ -2,13 +2,13 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import "../extensions/register-default";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { baseKeymap } from "prosemirror-commands";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
@@ -86,8 +86,8 @@ export default class ProsemirrorEditor extends Component {
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
-  /** @type {TrackedArray<GlimmerNodeView>} */
-  glimmerNodeViews = new TrackedArray();
+  /** @type {Array<GlimmerNodeView>} */
+  glimmerNodeViews = trackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */
   #destructor;
