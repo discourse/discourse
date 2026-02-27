@@ -92,7 +92,7 @@ module(
         director.description,
         i18n(
           "notifications.upcoming_changes.automatically_promoted.description_many",
-          { changeName: "Enable Feature X", count: 3 }
+          { changeName: "Enable Feature X", otherChangeCount: 3 }
         )
       );
     });

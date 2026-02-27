@@ -34,7 +34,7 @@ export default class extends NotificationTypeBase {
 
     return i18n(
       "notifications.upcoming_changes.automatically_promoted.description_many",
-      { changeName: names[0], count: count - 1 }
+      { changeName: names[0], otherChangeCount: count - 1 }
     );
   }
 

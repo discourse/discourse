@@ -3379,16 +3379,12 @@ en:
           title: "Upcoming changes"
           description: "'%{changeName}' is available for preview"
           description_two: "'%{changeName1}' and '%{changeName2}' are available for preview"
-          description_many:
-            one: "'%{changeName}' and %{count} more change are available for preview"
-            other: "'%{changeName}' and %{count} more changes are available for preview"
+          description_many: "'%{changeName}' and %{otherChangeCount} more changes are available for preview"
         automatically_promoted:
           title: "Upcoming changes"
           description: "'%{changeName}' has been automatically enabled"
           description_two: "'%{changeName1}' and '%{changeName2}' were automatically enabled"
-          description_many:
-            one: "'%{changeName}' and %{count} more change was automatically enabled"
-            other: "'%{changeName}' and %{count} more changes were automatically enabled"
+          description_many: "'%{changeName}' and %{otherChangeCount} more changes were automatically enabled"
       dismiss_confirmation:
         body:
           default:

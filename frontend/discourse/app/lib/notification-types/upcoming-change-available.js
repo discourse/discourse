@@ -33,7 +33,7 @@ export default class extends NotificationTypeBase {
 
     return i18n("notifications.upcoming_changes.available.description_many", {
       changeName: names[0],
-      count: count - 1,
+      otherChangeCount: count - 1,
     });
   }
 
