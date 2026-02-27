@@ -2,12 +2,15 @@
 
 RSpec.describe DiscourseGamification::Solutions do
   fab!(:category)
-  fab!(:topic) { Fabricate(:topic, category: category) }
+  fab!(:topic) { Fabricate(:topic_with_op, category: category) }
   fab!(:question_user, :user)
   fab!(:answer_user, :user)
   fab!(:answer_post) { Fabricate(:post, topic: topic, user: answer_user) }
 
-  before { SiteSetting.solution_score_value = 5 }
+  before do
+    SiteSetting.allow_solved_on_all_topics = true
+    SiteSetting.solution_score_value = 5
+  end
 
   it "is enabled when score value is positive" do
     expect(described_class).to be_enabled
@@ -24,19 +27,34 @@ RSpec.describe DiscourseGamification::Solutions do
     it "scores accepted answers correctly" do
       freeze_time DateTime.parse("2024-01-01 12:00")
 
-      DiscourseSolved.accept_answer!(answer_post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: answer_post.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
 
       expect(query_results).to contain_exactly(
         have_attributes(user_id: answer_user.id, date: Time.current.beginning_of_day, points: 5.0),
       )
 
-      DiscourseSolved.unaccept_answer!(answer_post, topic:)
+      DiscourseSolved::UnacceptAnswer.call!(
+        params: {
+          post_id: answer_post.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
       expect(query_results).to be_empty
     end
 
     it "doesn't score self-accepted answers" do
       topic.update!(user: answer_user)
-      DiscourseSolved.accept_answer!(answer_post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: answer_post.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
 
       expect(query_results).to be_empty
     end

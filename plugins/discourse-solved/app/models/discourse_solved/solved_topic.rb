@@ -5,13 +5,30 @@ module DiscourseSolved
     self.table_name = "discourse_solved_solved_topics"
 
     belongs_to :topic, class_name: "Topic"
-    belongs_to :answer_post, class_name: "Post", foreign_key: "answer_post_id"
+    belongs_to :answer_post, -> { with_deleted }, class_name: "Post", foreign_key: "answer_post_id"
     belongs_to :accepter, class_name: "User", foreign_key: "accepter_user_id"
     belongs_to :topic_timer, dependent: :destroy
 
     validates :topic_id, presence: true
     validates :answer_post_id, presence: true
     validates :accepter_user_id, presence: true
+
+    before_create :auto_close_topic_timer
+
+    private
+
+    def auto_close_topic_timer
+      hours = topic.solved_auto_close_hours
+      return if hours.zero? || topic.closed?
+
+      self.topic_timer =
+        topic.set_or_create_timer(
+          TopicTimer.types[:silent_close],
+          nil,
+          based_on_last_post: true,
+          duration_minutes: hours * 60,
+        )
+    end
   end
 end
 

@@ -5,6 +5,8 @@ describe UserCardSerializer do
   let(:serializer) { described_class.new(user, scope: Guardian.new, root: false) }
 
   describe "accepted_answers" do
+    before { SiteSetting.allow_solved_on_all_topics = true }
+
     it "uses DiscourseSolved::Queries.solved_count" do
       allow(DiscourseSolved::Queries).to receive(:solved_count).with(user.id).and_return(42)
       expect(serializer.as_json[:accepted_answers]).to eq(42)
@@ -17,7 +19,12 @@ describe UserCardSerializer do
       topic = Fabricate(:topic)
       Fabricate(:post, topic:)
       post = Fabricate(:post, topic:, user:)
-      DiscourseSolved.accept_answer!(post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: post.id,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
 
       expect(serializer.as_json[:accepted_answers]).to eq(1)
     end

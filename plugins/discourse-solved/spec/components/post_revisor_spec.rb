@@ -38,7 +38,7 @@ describe PostRevisor do
 
     before do
       SiteSetting.solved_enabled = true
-      DiscourseSolved.accept_answer!(reply, admin)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: admin.guardian)
       topic.reload
     end
 
@@ -86,7 +86,7 @@ describe PostRevisor do
 
     it "unaccepts the answer when the solved tag is removed" do
       SiteSetting.enable_solved_tags = solved_tag.name
-      DiscourseSolved.accept_answer!(reply, admin)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: admin.guardian)
 
       described_class.new(post).revise!(admin, tags: [])
       expect(topic.reload.solved).to be_nil
@@ -106,7 +106,7 @@ describe PostRevisor do
       topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
       post = Fabricate(:post, topic: topic)
       reply = Fabricate(:post, topic: topic, post_number: 2)
-      DiscourseSolved.accept_answer!(reply, admin)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: admin.guardian)
 
       described_class.new(post).revise!(admin, { category_id: category.id })
       topic.reload
@@ -119,7 +119,7 @@ describe PostRevisor do
       topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
       post = Fabricate(:post, topic: topic)
       reply = Fabricate(:post, topic: topic, post_number: 2)
-      DiscourseSolved.accept_answer!(reply, admin)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: admin.guardian)
 
       described_class.new(post).revise!(admin, tags: [])
       topic.reload
@@ -132,7 +132,7 @@ describe PostRevisor do
       topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
       post = Fabricate(:post, topic: topic)
       reply = Fabricate(:post, topic: topic, post_number: 2)
-      DiscourseSolved.accept_answer!(reply, admin)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: admin.guardian)
 
       described_class.new(post).revise!(admin, { category_id: category.id, tags: [] })
       expect(topic.reload.solved).to be_nil

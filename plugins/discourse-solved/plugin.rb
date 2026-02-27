@@ -19,6 +19,7 @@ register_asset "stylesheets/mobile/solutions.scss", :mobile
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
+  MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
 end
 
 require_relative "lib/discourse_solved/engine"
@@ -27,152 +28,6 @@ after_initialize do
   register_category_type(DiscourseSolved::CategoryType)
 
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
-
-  module ::DiscourseSolved
-    def self.accept_answer!(post, acting_user, topic: nil)
-      topic ||= post.topic
-
-      DistributedMutex.synchronize("discourse_solved_toggle_answer_#{topic.id}") do
-        solved = topic.solved
-
-        ActiveRecord::Base.transaction do
-          if previous_accepted_post_id = solved&.answer_post_id
-            UserAction.where(
-              action_type: UserAction::SOLVED,
-              target_post_id: previous_accepted_post_id,
-            ).destroy_all
-            solved.destroy!
-          else
-            UserAction.log_action!(
-              action_type: UserAction::SOLVED,
-              user_id: post.user_id,
-              acting_user_id: acting_user.id,
-              target_post_id: post.id,
-              target_topic_id: post.topic_id,
-            )
-          end
-
-          solved =
-            DiscourseSolved::SolvedTopic.new(topic:, answer_post: post, accepter: acting_user)
-
-          if acting_user.id != post.user_id && notify_solved?(recipient: post.user, acting_user:)
-            Notification.create!(
-              notification_type: Notification.types[:custom],
-              user_id: post.user_id,
-              topic_id: post.topic_id,
-              post_number: post.post_number,
-              data: {
-                message: "solved.accepted_notification",
-                display_username: acting_user.username,
-                topic_title: topic.title,
-                title: "solved.notification.title",
-              }.to_json,
-            )
-          end
-
-          if SiteSetting.notify_on_staff_accept_solved && acting_user.id != topic.user_id &&
-               notify_solved?(recipient: topic.user, acting_user:)
-            Notification.create!(
-              notification_type: Notification.types[:custom],
-              user_id: topic.user_id,
-              topic_id: post.topic_id,
-              post_number: post.post_number,
-              data: {
-                message: "solved.accepted_notification",
-                display_username: acting_user.username,
-                topic_title: topic.title,
-                title: "solved.notification.title",
-              }.to_json,
-            )
-          end
-
-          auto_close_hours = 0
-          if topic&.category.present?
-            auto_close_hours = topic.category.custom_fields["solved_topics_auto_close_hours"].to_i
-            auto_close_hours = 175_200 if auto_close_hours > 175_200 # 20 years
-          end
-
-          auto_close_hours = SiteSetting.solved_topics_auto_close_hours if auto_close_hours == 0
-
-          if (auto_close_hours > 0) && !topic.closed
-            topic_timer =
-              topic.set_or_create_timer(
-                TopicTimer.types[:silent_close],
-                nil,
-                based_on_last_post: true,
-                duration_minutes: auto_close_hours * 60,
-              )
-            solved.topic_timer = topic_timer
-
-            MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
-          end
-
-          solved.save!
-        end
-
-        if WebHook.active_web_hooks(:accepted_solution).exists?
-          payload = WebHook.generate_payload(:post, post)
-          WebHook.enqueue_solved_hooks(:accepted_solution, post, payload)
-        end
-
-        accepted_answer = topic.reload.accepted_answer_post_info
-
-        message = { type: :accepted_solution, accepted_answer: }
-
-        DiscourseEvent.trigger(:accepted_solution, post)
-
-        secure_audience = topic.secure_audience_publish_messages
-        # MessageBus.publish will raise an error if user_ids or group_ids are an empty array.
-        if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
-          MessageBus.publish("/topic/#{topic.id}", message, secure_audience)
-        end
-
-        accepted_answer
-      end
-    end
-
-    def self.unaccept_answer!(post, topic: nil)
-      topic ||= post.topic
-      topic ||= Topic.unscoped.find_by(id: post.topic_id)
-      return if topic.nil?
-      return if topic.solved.nil?
-      return if topic.solved.answer_post_id != post.id
-
-      DistributedMutex.synchronize("discourse_solved_toggle_answer_#{topic.id}") do
-        solved = topic.solved
-
-        ActiveRecord::Base.transaction do
-          UserAction.where(action_type: UserAction::SOLVED, target_post_id: post.id).destroy_all
-          Notification.find_by(
-            notification_type: Notification.types[:custom],
-            user_id: post.user_id,
-            topic_id: post.topic_id,
-            post_number: post.post_number,
-          )&.destroy!
-          solved.destroy!
-        end
-
-        if WebHook.active_web_hooks(:unaccepted_solution).exists?
-          payload = WebHook.generate_payload(:post, post)
-          WebHook.enqueue_solved_hooks(:unaccepted_solution, post, payload)
-        end
-
-        DiscourseEvent.trigger(:unaccepted_solution, post)
-        MessageBus.publish("/topic/#{topic.id}", type: :unaccepted_solution)
-      end
-    end
-
-    def self.notify_solved?(recipient:, acting_user:)
-      !UserCommScreener.new(
-        acting_user_id: acting_user.id,
-        target_user_ids: recipient.id,
-      ).ignoring_or_muting_actor?(recipient.id)
-    end
-
-    def self.skip_db?
-      defined?(GlobalSetting.skip_db?) && GlobalSetting.skip_db?
-    end
-  end
 
   reloadable_patch do
     ::Guardian.prepend(DiscourseSolved::GuardianExtensions)
@@ -275,12 +130,19 @@ after_initialize do
   add_to_serializer(:user_summary, :solved_count) { object.solved_count }
   add_to_serializer(:post, :can_accept_answer) { scope.can_accept_answer?(topic, object) }
   add_to_serializer(:post, :can_unaccept_answer) do
-    scope.can_accept_answer?(topic, object) && accepted_answer
+    scope.can_unaccept_answer?(topic, object) && accepted_answer
   end
   add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
-  on(:post_destroyed) { |post| DiscourseSolved.unaccept_answer!(post) }
+  on(:post_destroyed) do |post|
+    DiscourseSolved::UnacceptAnswer.call(
+      params: {
+        post_id: post.id,
+      },
+      guardian: Discourse.system_user.guardian,
+    )
+  end
 
   on(:filter_auto_bump_topics) do |_category, filters|
     filters.push(
@@ -317,7 +179,14 @@ after_initialize do
       if !new_allowed
         if topic.solved.present?
           post = topic.solved.answer_post
-          DiscourseSolved.unaccept_answer!(post, topic: topic) if post
+          if post
+            DiscourseSolved::UnacceptAnswer.call(
+              params: {
+                post_id: post.id,
+              },
+              guardian: Discourse.system_user.guardian,
+            )
+          end
         end
       end
     end
