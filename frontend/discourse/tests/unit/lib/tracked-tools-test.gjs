@@ -11,6 +11,7 @@ import {
   enumerateTrackedEntries,
   enumerateTrackedKeys,
   isTrackedArray,
+  trackedObjectWithComputedSupport,
 } from "discourse/lib/tracked-tools";
 
 module("Unit | tracked-tools", function () {
@@ -875,6 +876,117 @@ module("Unit | tracked-tools", function () {
         { firstName: "Alice", lastName: "Smith" },
         "entries can be converted back to object"
       );
+    });
+  });
+
+  module("trackedObjectWithComputedSupport", function () {
+    test("basic get and set", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ name: "Alice", age: 30 });
+
+      assert.strictEqual(obj.name, "Alice");
+      assert.strictEqual(obj.age, 30);
+
+      obj.name = "Bob";
+      obj.age = 25;
+
+      assert.strictEqual(obj.name, "Bob");
+      assert.strictEqual(obj.age, 25);
+    });
+
+    test("autotracking with @cached getter", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ count: 0 });
+      let evaluations = 0;
+
+      class Reader {
+        @cached
+        get doubleCount() {
+          evaluations++;
+          return obj.count * 2;
+        }
+      }
+
+      const reader = new Reader();
+      assert.strictEqual(reader.doubleCount, 0);
+      assert.strictEqual(evaluations, 1);
+
+      obj.count = 5;
+      assert.strictEqual(reader.doubleCount, 10);
+      assert.strictEqual(evaluations, 2);
+
+      // Reading again without changes should not re-evaluate
+      assert.strictEqual(reader.doubleCount, 10);
+      assert.strictEqual(evaluations, 2);
+    });
+
+    test("@computed chain observation recomputes on property change", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ title: "original" });
+      let computeCount = 0;
+
+      class Observer {
+        obj = obj;
+
+        @computed("obj.title")
+        get display() {
+          computeCount++;
+          return `Title: ${this.obj.title}`;
+        }
+      }
+
+      const observer = new Observer();
+      assert.strictEqual(observer.display, "Title: original");
+      assert.strictEqual(computeCount, 1);
+
+      // Changing a property observed by @computed should trigger recomputation
+      obj.title = "updated";
+      assert.strictEqual(observer.display, "Title: updated");
+      assert.strictEqual(computeCount, 2);
+    });
+
+    test("no mandatory setter assertion on property assignment", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ title: "original" });
+
+      class Observer {
+        obj = obj;
+
+        @computed("obj.title")
+        get display() {
+          return this.obj.title;
+        }
+      }
+
+      const observer = new Observer();
+
+      // Force chain tag setup by reading the @computed property
+      assert.strictEqual(observer.display, "original");
+
+      // This assignment would throw a mandatory setter assertion without the fix,
+      // because setupMandatorySetter would have installed a throwing setter on the
+      // Proxy target's data descriptor. If the fix doesn't work, this line throws.
+      obj.title = "updated";
+
+      assert.strictEqual(obj.title, "updated");
+      assert.strictEqual(observer.display, "updated");
+    });
+
+    test("Object.keys returns expected keys", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ a: 1, b: 2, c: 3 });
+      assert.deepEqual(Object.keys(obj).sort(), ["a", "b", "c"]);
+    });
+
+    test("new properties can be added", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ existing: true });
+
+      obj.newProp = "hello";
+      assert.strictEqual(obj.newProp, "hello");
+      assert.true(obj.existing);
+    });
+
+    test("delete operator works", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ a: 1, b: 2 });
+
+      delete obj.a;
+      assert.strictEqual(obj.a, undefined);
+      assert.deepEqual(Object.keys(obj), ["b"]);
     });
   });
 });
