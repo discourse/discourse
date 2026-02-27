@@ -595,7 +595,7 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-container {
-  margin-top: var(--space-4);
+  // margin-top: var(--space-4); // why we need this? we alrdy have main cont top apdding
   margin-bottom: var(--space-4);
 
   .admin-section {
@@ -1271,7 +1271,6 @@ a.inline-editable-field {
 @import "admin/admin_report_counters";
 @import "admin/admin_report_chart";
 @import "admin/admin_report_radar";
-@import "admin/admin_report_stacked_chart";
 @import "admin/admin_report_stacked_line_chart";
 @import "admin/admin_report_table";
 @import "admin/admin_report_inline_table";

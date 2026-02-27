@@ -1,6 +1,17 @@
 @use "lib/viewport";
 
 .admin-report {
+  .select-kit {
+    @include viewport.from(sm) {
+      width: auto;
+      max-width: 250px;
+    }
+
+    @include viewport.until(sm) {
+      width: 100% !important;
+    }
+  }
+
   .conditional-loading-section {
     &.is-loading {
       margin: 0;
@@ -10,9 +21,7 @@
   .header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--content-border-color);
     margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
   }
 
   .header .breadcrumb {
@@ -76,115 +85,6 @@
     .icon {
       font-size: var(--font-up-1);
       font-weight: 700;
-    }
-  }
-
-  .body {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .main {
-    flex: 1;
-    min-width: 0; // allow chart.js to shrink below intrinsic width
-  }
-
-  .main .report-alert {
-    margin: 0;
-    text-align: center;
-    padding: 3em;
-    border: 1px solid transparent;
-
-    a {
-      color: var(--primary-high);
-    }
-
-    .d-icon {
-      color: var(--primary-medium);
-      font-size: var(--font-up-5);
-      display: block;
-      margin: 0.25em auto;
-    }
-
-    &.no-data,
-    &.rate-limited {
-      background: var(--secondary);
-      border-color: var(--primary-low);
-      color: var(--primary);
-    }
-
-    &.rate-limited .d-icon {
-      color: var(--danger);
-    }
-
-    &.timeout,
-    &.exception {
-      border-color: var(--danger-low);
-      color: var(--danger);
-    }
-  }
-
-  .average-chart {
-    font-style: italic;
-    text-align: center;
-    color: var(--primary-high);
-    margin-bottom: 1em;
-    line-height: var(--line-height-medium);
-  }
-
-  .filters {
-    display: flex;
-    margin-left: 1em;
-    flex-direction: column;
-    width: 220px;
-
-    .modes {
-      margin: 0 0 1em 0;
-      padding: 0;
-      list-style: none;
-
-      .mode {
-        display: inline-flex;
-        flex: 1 0 0px;
-
-        .mode-btn.is-current {
-          color: var(--tertiary);
-        }
-      }
-    }
-
-    .chart-groupings {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 1fr);
-      gap: 0.5em;
-      margin-bottom: 1em;
-
-      .chart-grouping.active {
-        background: var(--tertiary);
-        color: var(--secondary);
-      }
-    }
-
-    .control {
-      margin-bottom: 1em;
-    }
-
-    .control .label {
-      font-weight: 700;
-      width: 100%;
-    }
-
-    .control .input,
-    .control .select-kit {
-      width: 100%;
-
-      .export-csv-btn {
-        width: 100%;
-      }
-
-      .refresh-report-btn {
-        width: 100%;
-      }
     }
   }
 

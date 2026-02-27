@@ -4,18 +4,82 @@ import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import Chart from "./chart";
 
+function getCSSColor(varName) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(varName)
+    .trim();
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+const emptyTooltipPlugin = {
+  id: "emptyTooltipPlugin",
+  beforeDraw(chart) {
+    const tooltip = chart.tooltip;
+    if (!tooltip || tooltip.opacity === 0) {
+      return;
+    }
+    const allZero = tooltip.dataPoints?.every((dp) => !dp.parsed.y);
+    if (allZero) {
+      tooltip.opacity = 0;
+    }
+  },
+};
+
+const gradientPlugin = {
+  id: "gradientPlugin",
+  beforeDatasetsDraw(chart) {
+    const { ctx } = chart;
+    chart.data.datasets.forEach((dataset, datasetIndex) => {
+      if (!dataset._baseColor) {
+        return;
+      }
+      const meta = chart.getDatasetMeta(datasetIndex);
+      if (!meta.data.length) {
+        return;
+      }
+
+      const gradients = meta.data.map((bar) => {
+        const { x, y, width, base } = bar.getProps(
+          ["x", "y", "width", "base"],
+          true
+        );
+        if (!x || !y || !width || !base) {
+          return;
+        }
+        const gradient = ctx.createLinearGradient(
+          x - width / 2,
+          y,
+          x + width / 2,
+          base
+        );
+        gradient.addColorStop(0, dataset._baseColor);
+        gradient.addColorStop(1, hexToRgba(dataset._baseColor, 0.7));
+        return gradient;
+      });
+
+      dataset.backgroundColor = gradients;
+    });
+  },
+};
+
 export default class AdminReportStackedChart extends Component {
   get chartConfig() {
-    const { model } = this.args;
+    const { model, options } = this.args;
 
-    const options = this.args.options || {};
-    options.hiddenLabels ??= [];
+    const chartOptions = options || {};
+    chartOptions.hiddenLabels ??= [];
 
     const chartData = makeArray(model.chartData || model.data).map(
       (series) => ({
         label: series.label,
         color: series.color,
-        data: Report.collapse(model, series.data),
+        data: Report.collapse(model, series.data, chartOptions.chartGrouping),
         req: series.req,
       })
     );
@@ -27,32 +91,106 @@ export default class AdminReportStackedChart extends Component {
         stack: "pageviews-stack",
         data: series.data,
         backgroundColor: series.color,
-        hidden: options.hiddenLabels.includes(series.req),
+        _baseColor: series.color, // Store for gradient plugin
+        hidden: chartOptions.hiddenLabels.includes(series.req),
+        borderRadius: 2,
+        maxBarThickness: 30,
       })),
     };
+
+    // max Y value so chart remains constant when data changes
+    const stackedTotals = [];
+    for (let i = 0; i < chartData[0].data.length; i++) {
+      let total = 0;
+      for (const value of chartData) {
+        total += value.data[i]?.y || 0;
+      }
+      stackedTotals.push(total);
+    }
+    const maxStackedValue = Math.max(...stackedTotals);
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
     return {
       type: "bar",
       data,
+      plugins: [gradientPlugin, emptyTooltipPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        responsiveAnimationDuration: 0,
         hover: { mode: "index" },
         animation: {
-          duration: 0,
+          duration: prefersReducedMotion ? 0 : 300,
         },
         plugins: {
+          legend: {
+            display: true,
+            position: "bottom",
+            onClick: (e, legendItem, legend) => {
+              const index = legendItem.datasetIndex;
+              const ci = legend.chart;
+              const req = chartData[index].req;
+
+              if (ci.isDatasetVisible(index)) {
+                ci.hide(index);
+                if (!chartOptions.hiddenLabels.includes(req)) {
+                  chartOptions.hiddenLabels.push(req);
+                }
+              } else {
+                ci.show(index);
+                chartOptions.hiddenLabels = chartOptions.hiddenLabels.filter(
+                  (l) => l !== req
+                );
+              }
+            },
+            labels: {
+              usePointStyle: true,
+              pointStyle: "rectRounded",
+              padding: 25,
+              boxWidth: 10,
+              boxHeight: 10,
+              generateLabels: (chart) => {
+                const textColor = getCSSColor("--primary-high");
+                return chart.data.datasets.map((dataset, i) => {
+                  const isVisible = chart.isDatasetVisible(i);
+                  return {
+                    text: dataset.label,
+                    fontColor: textColor,
+                    fillStyle: isVisible ? dataset._baseColor : "transparent",
+                    strokeStyle: dataset._baseColor,
+                    lineWidth: 2,
+                    hidden: false,
+                    datasetIndex: i,
+                    pointStyle: "rectRounded",
+                  };
+                });
+              },
+            },
+          },
           tooltip: {
             mode: "index",
             intersect: false,
+            backgroundColor: getCSSColor("--primary"),
+            titleMarginBottom: 16,
+            footerMarginTop: 16,
+            padding: {
+              left: 20,
+              right: 20,
+              top: 12,
+              bottom: 12,
+            },
+            bodySpacing: 8,
+            cornerRadius: 8,
+            boxPadding: 4,
             callbacks: {
               beforeFooter: (tooltipItem) => {
                 const total = tooltipItem.reduce(
                   (sum, item) => sum + parseInt(item.parsed.y || 0, 10),
                   0
                 );
-                return `= ${total}`;
+                return `Total: ${total}`;
               },
               title: (tooltipItem) =>
                 moment(tooltipItem[0].parsed.x).format("LL"),
@@ -72,25 +210,32 @@ export default class AdminReportStackedChart extends Component {
           y: {
             stacked: true,
             display: true,
+            max: maxStackedValue,
+            grid: {
+              color: getCSSColor("--primary-very-low"),
+            },
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
               maxRotation: 25,
-              minRotation: 25,
+              minRotation: 0,
             },
           },
           x: {
             stacked: true,
             display: true,
+
             grid: { display: false },
             type: "time",
             time: {
-              unit: Report.unitForDatapoints(data.labels.length),
+              unit: chartOptions.chartGrouping
+                ? Report.unitForGrouping(chartOptions.chartGrouping)
+                : Report.unitForDatapoints(data.labels.length),
             },
             ticks: {
               sampleSize: 5,
               maxRotation: 50,
-              minRotation: 50,
+              minRotation: 0,
             },
           },
         },

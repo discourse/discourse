@@ -165,7 +165,9 @@ export default class AdminReportChart extends Component {
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
+              maxRotation: 25,
               minRotation: 0,
+              stepSize: 1,
               precision: 0,
             },
           },
