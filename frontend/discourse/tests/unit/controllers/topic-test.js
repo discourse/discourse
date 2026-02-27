@@ -353,7 +353,9 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("canChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", { can_change_post_owner: false });
+    const currentUser = this.store.createRecord("user", {
+      can_change_post_owner: false,
+    });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
@@ -369,7 +371,10 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(controller.canChangeOwner, "false when no posts are selected");
 
     controller.selectedPostIds.push(1);
-    assert.false(controller.canChangeOwner, "false when can_change_post_owner is false");
+    assert.false(
+      controller.canChangeOwner,
+      "false when can_change_post_owner is false"
+    );
 
     currentUser.set("can_change_post_owner", true);
     assert.true(
