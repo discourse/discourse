@@ -2397,21 +2397,21 @@ RSpec.describe PostsController do
 
       before { ONPDiff.any_instance.stubs(:compose).raises(diff_error) }
 
-      it "returns a 422 error for a specific revision endpoint" do
+      it "returns an empty diff and an error flag for a specific revision endpoint" do
         sign_in(admin)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
 
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(I18n.t("errors.diff_too_complex"))
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body["diff_error"]).to eq(true)
       end
 
-      it "returns a 422 error for the latest revision endpoint" do
+      it "returns an empty diff and an error flag for the latest revision endpoint" do
         sign_in(admin)
         post_revision
         get "/posts/#{post.id}/revisions/latest.json"
 
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(I18n.t("errors.diff_too_complex"))
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body["diff_error"]).to eq(true)
       end
     end
 
