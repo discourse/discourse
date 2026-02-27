@@ -313,6 +313,25 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(result["category_slug"]).to eq("test-category")
     end
 
+    it "can get a category" do
+      tool.update!(
+        script: "function invoke(params) { return discourse.getCategory(params.category_id); }",
+      )
+      runner =
+        described_class.new(
+          parameters: {
+            category_id: category.id,
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+      expect(result["id"]).to eq(category.id)
+      expect(result["name"]).to eq("Test Category")
+      expect(result["slug"]).to eq("test-category")
+    end
+
     it "can set category on a topic by slug" do
       new_category = Fabricate(:category, slug: "new-category")
       tool.update!(script: <<~JS)
@@ -654,6 +673,17 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
           )
         expect(result["success"]).to eq(true)
         expect(result["topic_id"]).to be_present
+      end
+
+      it "allows user to createCategory" do
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createCategory({ name: "New Category", description: "A new category" }); }',
+            {},
+          )
+        expect(result["success"]).to eq(true)
+        expect(result["category_id"]).to be_present
+        expect(Category.find(result["category_id"]).name).to eq("New Category")
       end
 
       it "allows user to createPost in a permitted topic" do

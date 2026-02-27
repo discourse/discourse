@@ -164,6 +164,7 @@ module DiscourseAi
           },
           getPost: _discourse_get_post,
           getTopic: _discourse_get_topic,
+          getCategory: _discourse_get_category,
           getUser: _discourse_get_user,
           getPersona: function(name) {
             const personaDetails = _discourse_get_persona(name);
@@ -205,6 +206,13 @@ module DiscourseAi
           },
           createTopic: function(params) {
             const result = _discourse_create_topic(params);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
+          createCategory: function(params) {
+            const result = _discourse_create_category(params);
             if (result.error) {
               throw new Error(result.error);
             }
@@ -560,6 +568,19 @@ module DiscourseAi
         )
 
         mini_racer_context.attach(
+          "_discourse_get_category",
+          ->(category_id_or_name) do
+            in_attached_function do
+              category = resolve_category(category_id_or_name)
+              return nil if category.nil?
+              recursive_as_json(
+                CategorySerializer.new(category, scope: system_guardian, root: false),
+              )
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
           "_discourse_get_user",
           ->(user_id_or_username) do
             in_attached_function do
@@ -758,6 +779,52 @@ module DiscourseAi
                 }
               rescue => e
                 { error: "Failed to create topic: #{e.message}" }
+              end
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_create_category",
+          ->(params) do
+            in_attached_function do
+              params = params.symbolize_keys
+              name = params[:name]
+              description = params[:description]
+              color = params[:color] || "FFFFFF"
+              text_color = params[:text_color] || "000000"
+              parent_category_id = params[:parent_category_id]
+              username = params[:username]
+
+              return { error: "Missing required parameter: name" } if name.blank?
+
+              user, guardian = resolve_guardian(username)
+              return { error: "User not found: #{username}" } if user.nil?
+              return { error: "Permission denied" } unless guardian.can_create?(Category)
+
+              begin
+                category =
+                  Category.new(
+                    name: name,
+                    description: description,
+                    color: color,
+                    text_color: text_color,
+                    parent_category_id: parent_category_id,
+                    user: user,
+                  )
+
+                if category.save
+                  {
+                    success: true,
+                    category_id: category.id,
+                    category_name: category.name,
+                    category_slug: category.slug,
+                  }
+                else
+                  { error: category.errors.full_messages.join(", ") }
+                end
+              rescue => e
+                { error: "Failed to create category: #{e.message}" }
               end
             end
           end,
