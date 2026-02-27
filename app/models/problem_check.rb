@@ -86,6 +86,7 @@ class ProblemCheck
     ProblemCheck::Ram,
     ProblemCheck::S3BackupConfig,
     ProblemCheck::S3Cdn,
+    ProblemCheck::S3Credentials,
     ProblemCheck::S3UploadConfig,
     ProblemCheck::SidekiqCheck,
     ProblemCheck::SubfolderEndsInSlash,

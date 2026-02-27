@@ -99,8 +99,7 @@ class GlobalSetting
     (
       @use_s3 ||=
         begin
-          if s3_bucket && s3_region &&
-               (s3_use_iam_profile || (s3_access_key_id && s3_secret_access_key))
+          if s3_bucket.present? && s3_region.present?
             :true
           else
             :false

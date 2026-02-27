@@ -18,10 +18,8 @@ module FileStore
     end
 
     def self.s3_options_from_site_settings
-      {
-        client_options: S3Helper.s3_options(SiteSetting),
-        bucket: SiteSetting.Upload.s3_upload_bucket,
-      }
+      creds = SiteAwsCredentials.instance
+      { client_options: creds.to_sdk_options, bucket: creds.bucket }
     end
 
     def self.s3_options_from_env
