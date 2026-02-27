@@ -20,7 +20,11 @@ export default class SearchTextField extends TextField {
 
   @on("didInsertElement")
   becomeFocused() {
-    applySearchAutocomplete(this.element, this.siteSettings, getOwner(this));
+    this._autocompleteModifiers = applySearchAutocomplete(
+      this.element,
+      this.siteSettings,
+      getOwner(this)
+    );
 
     const $searchInput = $(this.element);
     if (!this.hasAutofocus) {
@@ -30,5 +34,10 @@ export default class SearchTextField extends TextField {
     // at the top of the page
     $(window).scrollTop(0);
     $searchInput.focus();
+  }
+
+  @on("willDestroyElement")
+  teardown() {
+    this._autocompleteModifiers?.forEach((m) => m.cleanup());
   }
 }
