@@ -10,6 +10,7 @@ en:
       group_not_found: "Group not found for policy"
       no_policy: "No policy exists for post"
       staff_only: "Policies may only apply to staff posts"
+      no_policy_permission: "You do not have permission to modify policy markup in this post."
     error:
       no_permission: "Not authorized"
   reports:

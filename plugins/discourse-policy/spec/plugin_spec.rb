@@ -88,6 +88,33 @@ describe DiscoursePolicy do
     end
   end
 
+  describe "policy validation" do
+    fab!(:policy_group, :group)
+    fab!(:moderator)
+    fab!(:another_user, :user)
+
+    let(:policy_raw) { <<~MD }
+        [policy group=#{policy_group.name}]
+        I agree
+        [/policy]
+      MD
+
+    before do
+      Jobs.run_immediately!
+      SiteSetting.create_policy_allowed_groups = "#{policy_group.id}"
+    end
+
+    it "blocks unauthorized users from modifying policy blocks" do
+      policy_group.add(moderator)
+      post = create_post(raw: "Original content", user: moderator)
+
+      result = post.revise(another_user, { raw: policy_raw })
+
+      expect(result).to eq(false)
+      expect(post.errors[:base]).to include(I18n.t("discourse_policy.errors.no_policy_permission"))
+    end
+  end
+
   describe "current user serializer extensions" do
     let(:serializer) { CurrentUserSerializer.new(user1, scope: Guardian.new(user1)) }
 
