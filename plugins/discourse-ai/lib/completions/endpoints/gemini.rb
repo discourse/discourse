@@ -33,7 +33,16 @@ module DiscourseAi
 
           model_params[:topP] = model_params.delete(:top_p) if model_params[:top_p]
 
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
+          thinking_enabled =
+            %w[minimal low medium high].include?(llm_model.lookup_custom_param("thinking_level")) ||
+              llm_model.lookup_custom_param("enable_thinking")
+
+          if thinking_enabled
+            model_params.delete(:temperature)
+          elsif llm_model.lookup_custom_param("disable_temperature")
+            model_params.delete(:temperature)
+          end
+
           model_params.delete(:topP) if llm_model.lookup_custom_param("disable_top_p")
 
           model_params
@@ -101,7 +110,10 @@ module DiscourseAi
             end
           end
 
-          if llm_model.lookup_custom_param("enable_thinking")
+          thinking_level = llm_model.lookup_custom_param("thinking_level")
+          if %w[minimal low medium high].include?(thinking_level)
+            payload[:generationConfig][:thinkingConfig] = { thinkingLevel: thinking_level }
+          elsif llm_model.lookup_custom_param("enable_thinking")
             thinking_tokens = llm_model.lookup_custom_param("thinking_tokens").to_i
             thinking_tokens = thinking_tokens.clamp(0, 24_576)
             payload[:generationConfig][:thinkingConfig] = { thinkingBudget: thinking_tokens }

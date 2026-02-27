@@ -43,8 +43,10 @@ module DiscourseAi
 
           options = { model: mapped_model, max_tokens: max_tokens }
 
-          # reasoning has even higher token limits
-          if llm_model.lookup_custom_param("enable_reasoning")
+          if llm_model.lookup_custom_param("adaptive_thinking")
+            options[:thinking] = { type: "adaptive" }
+            options[:max_tokens] = 32_000
+          elsif llm_model.lookup_custom_param("enable_reasoning")
             reasoning_tokens =
               llm_model.lookup_custom_param("reasoning_tokens").to_i.clamp(1024, 32_768)
 
@@ -58,7 +60,7 @@ module DiscourseAi
 
           # effort parameter
           effort = llm_model.lookup_custom_param("effort")
-          options[:output_config] = { effort: effort } if %w[low medium high].include?(effort)
+          options[:output_config] = { effort: effort } if %w[low medium high max].include?(effort)
 
           options
         end

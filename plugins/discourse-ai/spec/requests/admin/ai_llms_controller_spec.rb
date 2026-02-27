@@ -279,6 +279,45 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(response.status).to eq(201)
         expect(created_model.lookup_custom_param("disable_system_prompt")).to eq(true)
       end
+
+      it "casts hash-form checkbox fields to booleans" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "anthropic",
+                   provider_params: {
+                     enable_reasoning: "true",
+                     adaptive_thinking: "false",
+                   },
+                 ),
+             }
+
+        expect(response.status).to eq(201)
+        created_model = LlmModel.last
+        expect(created_model.provider_params["enable_reasoning"]).to eq(true)
+        expect(created_model.provider_params["adaptive_thinking"]).to eq(false)
+      end
+
+      it "sanitizes dependent params when parent is inactive" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "anthropic",
+                   provider_params: {
+                     enable_reasoning: false,
+                     adaptive_thinking: true,
+                     reasoning_tokens: 10_000,
+                   },
+                 ),
+             }
+
+        expect(response.status).to eq(201)
+        created_model = LlmModel.last
+        expect(created_model.provider_params["adaptive_thinking"]).to be_nil
+        expect(created_model.provider_params["reasoning_tokens"]).to be_nil
+      end
     end
   end
 
