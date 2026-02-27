@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -136,6 +137,12 @@ export default class EditCategoryTabsController extends Controller {
     if (this.model.id) {
       return i18n("category.edit_dialog_title", {
         categoryName: this.model.name,
+      });
+    }
+
+    if (this.model.category_type_name) {
+      return i18n("category.create_with_type", {
+        typeName: this.model.category_type_name,
       });
     }
 
@@ -332,9 +339,16 @@ export default class EditCategoryTabsController extends Controller {
       this.showAdvancedTabs.toString()
     );
 
-    // Always ensure we're on general tab after toggling
-    next(() => {
-      this.selectedTab = "general";
-    });
+    // When collapsing, reset to general unless current tab is still visible
+    if (!this.showAdvancedTabs && this.selectedTab !== "general") {
+      const primaryTab = registeredEditCategoryTabs.find(
+        (tab) => tab.id === this.selectedTab && tab.primary
+      );
+      if (!primaryTab) {
+        next(() => {
+          this.selectedTab = "general";
+        });
+      }
+    }
   }
 }

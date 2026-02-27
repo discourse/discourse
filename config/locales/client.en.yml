@@ -4667,7 +4667,11 @@ en:
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
       create: "New category"
+      create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      choose_type:
+        title: "Choose category type"
+        requires_plugin: "Requires plugin"
       create_category: "Create category"
       save: "Save category"
       unsaved_changes: "You have unsaved changes"
