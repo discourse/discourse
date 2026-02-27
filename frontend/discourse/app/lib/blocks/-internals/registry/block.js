@@ -74,12 +74,12 @@ const blockRegistry = new Map();
  * Cache for resolved factory functions.
  * Once a factory is resolved, the result is stored here to avoid re-resolving.
  *
- * This is a TrackedMap so that components calling `tryResolveBlock()` will
+ * This is a tracked map so that components calling `tryResolveBlock()` will
  * automatically re-render when a factory they depend on finishes resolving.
- * TrackedMap tracks per-key, so only components waiting on specific blocks
+ * The tracked map tracks per-key, so only components waiting on specific blocks
  * are invalidated.
  *
- * @type {TrackedMap<string, BlockClass>}
+ * @type {Map<string, BlockClass>}
  */
 const resolvedFactoryCache = trackedMap();
 
