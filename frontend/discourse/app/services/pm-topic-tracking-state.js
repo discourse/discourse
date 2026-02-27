@@ -266,7 +266,7 @@ class PrivateMessageTopicTrackingState extends Service {
     let newState = data;
 
     if (oldState && !deepEqual(oldState, newState)) {
-      newState = deepMerge(oldState, newState);
+      newState = deepMerge({ ...oldState }, newState);
     }
 
     this.states.set(topicId, newState);
