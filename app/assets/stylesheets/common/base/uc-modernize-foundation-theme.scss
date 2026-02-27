@@ -63,7 +63,10 @@
       .user-menu-tab,
       .--with-description,
       .chat-message-react-btn,
-      .profile-tab-btn
+      .profile-tab-btn,
+      .back-button,
+      .composer-actions-btn,
+      .language-switcher-trigger
     ) {
       padding-block: 0;
       height: var(--button-height);
@@ -72,7 +75,7 @@
   }
 
   .btn.no-text.btn-icon {
-    &:not(.user-menu-tab, .user-menu-tab-active, .dropdown-select-box-header) {
+    &:not(.user-menu-tab, .user-menu-tab-active, .composer-actions-btn) {
       width: var(--button-height);
     }
   }
@@ -80,10 +83,6 @@
   .container.posts .topic-navigation .btn-toggle-localized-content.--active {
     --d-button-default-icon-color: var(--tertiary);
     --d-button-default-icon-color--hover: var(--tertiary);
-  }
-
-  .select-kit.dropdown-select-box.composer-actions .select-kit-header .d-icon {
-    padding: 0;
   }
 
   .discourse-reactions-counter .reactions-counter {
@@ -267,10 +266,9 @@
   }
 
   // Select Kit
-  .select-kit .select-kit-header,
+  .select-kit .select-kit-header:not(.composer-actions-btn),
   .d-date-input .date-picker {
     height: var(--button-height);
-    border: var(--d-button-default-border);
   }
 
   .select-kit.is-expanded .select-kit-filter.is-expanded {
@@ -328,6 +326,9 @@
 
   .extra-info-wrapper .title-wrapper {
     font-size: var(--font-down-1);
+
+    --category-badge-title-color: var(--primary-800);
+    --tag-text-color: var(--primary-800);
   }
 
   .header-sidebar-toggle button,
