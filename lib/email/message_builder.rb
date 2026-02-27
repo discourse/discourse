@@ -20,6 +20,10 @@ module Email
         hostname: Discourse.current_hostname,
       }.merge!(@opts)
 
+      if @opts[:recipient_user].present?
+        @template_args[:recipient_username] = @opts[:recipient_user].username
+      end
+
       if @opts[:template].present? && I18n.exists?("#{@opts[:template]}.preview")
         @template_args[:email_preview] ||= I18n.t("#{@opts[:template]}.preview", @template_args)
       end
