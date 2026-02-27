@@ -83,7 +83,7 @@ def update_plugin(plugin)
     end
   end
 
-  `git -C '#{plugin_path}' fetch origin --tags --force`
+  `git -C '#{plugin_path}' fetch origin --tags --force --prune --quiet`
 
   upstream_branch =
     `git -C '#{plugin_path}' for-each-ref --format='%(upstream:short)' $(git -C '#{plugin_path}' symbolic-ref -q HEAD)`.strip
