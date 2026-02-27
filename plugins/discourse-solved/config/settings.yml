@@ -41,14 +41,6 @@ discourse_solved:
     client: true
   notify_on_staff_accept_solved:
     default: false
-  ignore_solved_topics_in_assigned_reminder:
-    default: false
-  assignment_status_on_solve:
-    type: string
-    default: ""
-  assignment_status_on_unsolve:
-    type: string
-    default: ""
   disable_solved_education_message:
     default: false
   accept_solutions_topic_author:
