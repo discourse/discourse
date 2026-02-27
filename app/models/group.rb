@@ -927,7 +927,8 @@ class Group < ActiveRecord::Base
 
           # Match User#match_primary_group_changes: replace title if it matched
           # the old primary group's title. Must run before primary_group_id update.
-          DB.exec(<<~SQL, user_ids: added_user_ids, new_title: self.title) if self.title.present?
+          # Runs even when self.title is nil — clears stale titles to NULL.
+          DB.exec(<<~SQL, user_ids: added_user_ids, new_title: self.title)
               UPDATE users u
               SET title = :new_title
               WHERE u.id IN (:user_ids)
