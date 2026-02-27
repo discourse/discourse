@@ -4,7 +4,8 @@ class DiscourseSolved::BuildSchemaMarkup
   include Service::Base
 
   def self.html_for(topic_id:, guardian:)
-    call(params: { topic_id: topic_id }, guardian: guardian)[:html]
+    result = call(params: { topic_id: topic_id }, guardian: guardian)
+    result.success? ? result[:html] : ""
   end
 
   params { attribute :topic_id, :integer }
