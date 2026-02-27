@@ -52,11 +52,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @readOnly("model.settings") settings;
   @readOnly("model.themeable_site_settings") themeSiteSettings;
 
-  @discourseComputed("model.component", "model.remote_theme")
-  showCheckboxes() {
-    return !this.model.component || this.model.remote_theme;
-  }
-
   @discourseComputed("model.theme_fields.[]")
   extraFiles() {
     return this.model.theme_fields

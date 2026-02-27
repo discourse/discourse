@@ -1,7 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import InlineEditCheckbox from "discourse/admin/components/inline-edit-checkbox";
 import ThemeSettingEditor from "discourse/admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "discourse/admin/components/theme-setting-relatives-selector";
 import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
@@ -18,35 +17,8 @@ import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  {{#if @controller.showCheckboxes}}
-    <div class="control-unit">
-      {{#unless @controller.model.component}}
-        <InlineEditCheckbox
-          @action={{@controller.applyDefault}}
-          @labelKey="admin.customize.theme.is_default"
-          @checked={{@controller.model.default}}
-          @modelId={{@controller.model.id}}
-        />
-        <InlineEditCheckbox
-          @action={{@controller.applyUserSelectable}}
-          @labelKey="admin.customize.theme.user_selectable"
-          @checked={{@controller.model.user_selectable}}
-          @modelId={{@controller.model.id}}
-        />
-      {{/unless}}
-      {{#if @controller.model.remote_theme}}
-        <InlineEditCheckbox
-          @action={{@controller.applyAutoUpdateable}}
-          @labelKey="admin.customize.theme.auto_update"
-          @checked={{@controller.model.auto_update}}
-          @modelId={{@controller.model.id}}
-        />
-      {{/if}}
-    </div>
-  {{/if}}
-
   {{#unless @controller.model.component}}
-    <div class="control-unit">
+    <div class="control-unit admin-config-area-card">
       <section
         class="form-horizontal theme settings theme-settings__light-color-scheme"
       >
@@ -276,7 +248,7 @@ export default <template>
   {{/if}}
 
   {{#if @controller.hasThemeableSiteSettings}}
-    <div class="control-unit">
+    <div class="control-unit admin-config-area-card">
       <div class="mini-title">{{i18n
           "admin.customize.theme.theme_site_settings"
         }}</div>
@@ -303,7 +275,7 @@ export default <template>
   {{/if}}
 
   {{#if @controller.hasSettings}}
-    <div class="control-unit theme-settings">
+    <div class="control-unit theme-settings admin-config-area-card">
       <div class="mini-title">{{i18n
           "admin.customize.theme.theme_settings"
         }}</div>
@@ -323,7 +295,7 @@ export default <template>
   {{/if}}
 
   {{#if @controller.hasTranslations}}
-    <div class="control-unit">
+    <div class="control-unit admin-config-area-card">
       <div class="translation-selector-container">
         <span class="mini-title">
           {{i18n "admin.customize.theme.theme_translations"}}
