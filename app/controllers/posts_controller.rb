@@ -492,8 +492,6 @@ class PostsController < ApplicationController
     render_json_dump(
       PostRevisionSerializer.new(find_post_revision_from_params, scope: guardian, root: false),
     )
-  rescue ONPDiff::DiffLimitExceeded
-    render_json_error(I18n.t("errors.diff_too_complex"), status: 422)
   end
 
   def latest_revision

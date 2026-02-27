@@ -37,6 +37,7 @@ export default class History extends Component {
   @tracked viewMode = this.site.mobileView ? "inline" : "side_by_side";
   @tracked bodyDiff;
   @tracked initialLoad = true;
+  @tracked error;
 
   constructor() {
     super(...arguments);
@@ -53,10 +54,10 @@ export default class History extends Component {
   get loadPreviousDisabled() {
     return (
       this.loading ||
-      !this.postRevision.previous_revision ||
-      (!this.postRevision.previous_revision &&
-        this.postRevision.current_revision <=
-          this.postRevision.previous_revision)
+      !this.postRevision?.previous_revision ||
+      (!this.postRevision?.previous_revision &&
+        this.postRevision?.current_revision <=
+          this.postRevision?.previous_revision)
     );
   }
 
@@ -86,7 +87,7 @@ export default class History extends Component {
 
   get previousVersion() {
     return this.postRevision?.current_version
-      ? this.postRevision.current_version - 1
+      ? this.postRevision?.current_version - 1
       : null;
   }
 
@@ -132,10 +133,10 @@ export default class History extends Component {
 
   get previousTagChanges() {
     const previousArray = customTagArray(
-      this.postRevision.tags_changes?.previous
+      this.postRevision?.tags_changes?.previous
     );
     const currentSet = new Set(
-      customTagArray(this.postRevision.tags_changes?.current)
+      customTagArray(this.postRevision?.tags_changes?.current)
     );
 
     return previousArray.map((name) => ({
@@ -146,10 +147,10 @@ export default class History extends Component {
 
   get currentTagChanges() {
     const previousSet = new Set(
-      customTagArray(this.postRevision.tags_changes?.previous)
+      customTagArray(this.postRevision?.tags_changes?.previous)
     );
     const currentArray = customTagArray(
-      this.postRevision.tags_changes?.current
+      this.postRevision?.tags_changes?.current
     );
 
     return currentArray.map((name) => ({
@@ -159,7 +160,7 @@ export default class History extends Component {
   }
 
   get createdAtDate() {
-    return moment(this.postRevision.created_at).format("LLLL");
+    return moment(this.postRevision?.created_at).format("LLLL");
   }
 
   get displayEdit() {
@@ -180,19 +181,21 @@ export default class History extends Component {
 
   async refresh(postId, postVersion) {
     this.loading = true;
+    this.error = null;
     try {
       const result = await Post.loadRevision(postId, postVersion);
       this.postRevision = result;
+      if (result.diff_error) {
+        this.error = i18n("post.revisions.diff_too_complex");
+      }
     } catch (error) {
-      this.args.closeModal();
-      this.dialog.alert(error.jqXHR.responseJSON.errors[0]);
+      this.error =
+        error.jqXHR?.responseJSON?.errors?.[0] || i18n("generic_error");
 
       const postStream = this.args.model.post?.topic?.postStream;
-      if (!postStream) {
-        return;
+      if (postStream) {
+        postStream.triggerChangedPost(postId, this.args.model);
       }
-
-      postStream.triggerChangedPost(postId, this.args.model);
     } finally {
       this.loading = false;
       this.initialLoad = false;
@@ -236,7 +239,7 @@ export default class History extends Component {
 
   get editButtonLabel() {
     return `post.revisions.controls.${
-      this.postRevision.wiki ? "edit_wiki" : "edit_post"
+      this.postRevision?.wiki ? "edit_wiki" : "edit_post"
     }`;
   }
 
@@ -261,7 +264,7 @@ export default class History extends Component {
   get previousCategory() {
     if (this.postRevision?.category_id_changes?.previous) {
       let category = Category.findById(
-        this.postRevision.category_id_changes.previous
+        this.postRevision?.category_id_changes.previous
       );
       return categoryBadgeHTML(category, {
         allowUncategorized: true,
@@ -273,7 +276,7 @@ export default class History extends Component {
   get currentCategory() {
     if (this.postRevision?.category_id_changes?.current) {
       let category = Category.findById(
-        this.postRevision.category_id_changes.current
+        this.postRevision?.category_id_changes.current
       );
       return categoryBadgeHTML(category, {
         allowUncategorized: true,
@@ -302,33 +305,33 @@ export default class History extends Component {
 
   @action
   loadFirstVersion() {
-    this.refresh(this.postRevision.post_id, this.postRevision.first_revision);
+    this.refresh(this.postRevision?.post_id, this.postRevision?.first_revision);
   }
 
   @action
   loadPreviousVersion() {
     this.refresh(
-      this.postRevision.post_id,
-      this.postRevision.previous_revision
+      this.postRevision?.post_id,
+      this.postRevision?.previous_revision
     );
   }
 
   @action
   loadNextVersion() {
-    this.refresh(this.postRevision.post_id, this.postRevision.next_revision);
+    this.refresh(this.postRevision?.post_id, this.postRevision?.next_revision);
   }
 
   @action
   loadLastVersion() {
     return this.refresh(
-      this.postRevision.post_id,
-      this.postRevision.last_revision
+      this.postRevision?.post_id,
+      this.postRevision?.last_revision
     );
   }
 
   @action
   hideVersion() {
-    this.hide(this.postRevision.post_id, this.postRevision.current_revision);
+    this.hide(this.postRevision?.post_id, this.postRevision?.current_revision);
   }
 
   @action
@@ -336,7 +339,7 @@ export default class History extends Component {
     this.dialog.yesNoConfirm({
       message: i18n("post.revisions.controls.destroy_confirm"),
       didConfirm: () => {
-        Post.permanentlyDeleteRevisions(this.postRevision.post_id).then(() => {
+        Post.permanentlyDeleteRevisions(this.postRevision?.post_id).then(() => {
           this.args.closeModal();
         });
       },
@@ -345,7 +348,7 @@ export default class History extends Component {
 
   @action
   showVersion() {
-    this.show(this.postRevision.post_id, this.postRevision.current_revision);
+    this.show(this.postRevision?.post_id, this.postRevision?.current_revision);
   }
 
   @action
@@ -356,7 +359,7 @@ export default class History extends Component {
 
   @action
   revertToVersion() {
-    this.revert(this.args.model.post, this.postRevision.current_revision);
+    this.revert(this.args.model.post, this.postRevision?.current_revision);
   }
 
   <template>
@@ -366,59 +369,66 @@ export default class History extends Component {
       class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
     >
       <:body>
+        {{#if this.error}}
+          <div class="alert alert-error">{{this.error}}</div>
+        {{/if}}
         <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
-          <Revision
-            @model={{this.postRevision}}
-            @previousCategory={{this.previousCategory}}
-            @currentCategory={{this.currentCategory}}
-            @displayInline={{this.displayInline}}
-            @displaySideBySide={{this.displaySideBySide}}
-            @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
-            @viewMode={{this.viewMode}}
-          />
-          <Revisions
-            @model={{this.postRevision}}
-            @hiddenClasses={{this.hiddenClasses}}
-            @mobileView={{this.site.mobileView}}
-            @userChanges={{this.user_changes}}
-            @previousCategory={{this.previousCategory}}
-            @currentCategory={{this.currentCategory}}
-            @previousTagChanges={{this.previousTagChanges}}
-            @currentTagChanges={{this.currentTagChanges}}
-            @bodyDiffHTML={{this.bodyDiffHTML}}
-            @bodyDiff={{this.bodyDiff}}
-            @calculateBodyDiff={{this.calculateBodyDiff}}
-            @titleDiff={{this.titleDiff}}
-            @viewMode={{this.viewMode}}
-          />
+          {{#if this.postRevision}}
+            <Revision
+              @model={{this.postRevision}}
+              @previousCategory={{this.previousCategory}}
+              @currentCategory={{this.currentCategory}}
+              @displayInline={{this.displayInline}}
+              @displaySideBySide={{this.displaySideBySide}}
+              @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
+              @viewMode={{this.viewMode}}
+            />
+            <Revisions
+              @model={{this.postRevision}}
+              @hiddenClasses={{this.hiddenClasses}}
+              @mobileView={{this.site.mobileView}}
+              @userChanges={{this.user_changes}}
+              @previousCategory={{this.previousCategory}}
+              @currentCategory={{this.currentCategory}}
+              @previousTagChanges={{this.previousTagChanges}}
+              @currentTagChanges={{this.currentTagChanges}}
+              @bodyDiffHTML={{this.bodyDiffHTML}}
+              @bodyDiff={{this.bodyDiff}}
+              @calculateBodyDiff={{this.calculateBodyDiff}}
+              @titleDiff={{this.titleDiff}}
+              @viewMode={{this.viewMode}}
+            />
+          {{/if}}
         </ConditionalLoadingSpinner>
       </:body>
       <:footer>
         {{#if @model.editPost}}
-          <TopicFooter
-            @model={{this.postRevision}}
-            @loadFirstVersion={{this.loadFirstVersion}}
-            @loadPreviousVersion={{this.loadPreviousVersion}}
-            @loadNextVersion={{this.loadNextVersion}}
-            @loadLastVersion={{this.loadLastVersion}}
-            @displayEdit={{this.displayEdit}}
-            @editPost={{this.editPost}}
-            @editButtonLabel={{this.editButtonLabel}}
-            @revertToVersion={{this.revertToVersion}}
-            @hideVersion={{this.hideVersion}}
-            @showVersion={{this.showVersion}}
-            @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
-            @loading={{this.loading}}
-            @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
-            @loadFirstDisabled={{this.loadFirstDisabled}}
-            @loadPreviousDisabled={{this.loadPreviousDisabled}}
-            @displayRevisions={{this.displayRevisions}}
-            @revisionsText={{this.revisionsText}}
-            @loadNextDisabled={{this.loadNextDisabled}}
-            @loadLastDisabled={{this.loadLastDisabled}}
-            @revertToRevisionText={{this.revertToRevisionText}}
-            @isStaff={{this.currentUser.staff}}
-          />
+          {{#if this.postRevision}}
+            <TopicFooter
+              @model={{this.postRevision}}
+              @loadFirstVersion={{this.loadFirstVersion}}
+              @loadPreviousVersion={{this.loadPreviousVersion}}
+              @loadNextVersion={{this.loadNextVersion}}
+              @loadLastVersion={{this.loadLastVersion}}
+              @displayEdit={{this.displayEdit}}
+              @editPost={{this.editPost}}
+              @editButtonLabel={{this.editButtonLabel}}
+              @revertToVersion={{this.revertToVersion}}
+              @hideVersion={{this.hideVersion}}
+              @showVersion={{this.showVersion}}
+              @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
+              @loading={{this.loading}}
+              @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
+              @loadFirstDisabled={{this.loadFirstDisabled}}
+              @loadPreviousDisabled={{this.loadPreviousDisabled}}
+              @displayRevisions={{this.displayRevisions}}
+              @revisionsText={{this.revisionsText}}
+              @loadNextDisabled={{this.loadNextDisabled}}
+              @loadLastDisabled={{this.loadLastDisabled}}
+              @revertToRevisionText={{this.revertToRevisionText}}
+              @isStaff={{this.currentUser.staff}}
+            />
+          {{/if}}
         {{/if}}
       </:footer>
     </DModal>
