@@ -12,6 +12,35 @@ RSpec.describe GroupUser do
 
       expect do group_user.destroy! end.to change { group.reload.user_count }.from(1).to(0)
     end
+
+    it "enqueues DeleteInaccessibleNotifications when destroyed" do
+      group.add(user)
+
+      group.group_users.find_by(user_id: user.id).destroy!
+
+      expect_job_enqueued(
+        job: :delete_inaccessible_notifications,
+        args: {
+          user_id: user.id,
+          group_id: group.id,
+        },
+      )
+    end
+
+    it "does not enqueue cleanup when user is being destroyed" do
+      group.add(user)
+      user.destroy!
+
+      expect(
+        job_enqueued?(
+          job: :delete_inaccessible_notifications,
+          args: {
+            user_id: user.id,
+            group_id: group.id,
+          },
+        ),
+      ).to eq(false)
+    end
   end
 
   it "correctly sets notification level" do

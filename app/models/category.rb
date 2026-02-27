@@ -141,6 +141,7 @@ class Category < ActiveRecord::Base
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
   after_commit :clear_site_cache
+  after_commit :cleanup_notifications_after_permission_change, on: :update
 
   after_save_commit :index_search
 
@@ -731,6 +732,7 @@ class Category < ActiveRecord::Base
 
   def apply_permissions
     if @permissions
+      @permissions_changed = true
       category_groups.destroy_all
       @permissions.each do |group_id, permission_type|
         category_groups.build(group_id: group_id, permission_type: permission_type)
@@ -1180,6 +1182,13 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def cleanup_notifications_after_permission_change
+    return unless @permissions_changed
+    @permissions_changed = false
+
+    Jobs.enqueue(:delete_inaccessible_notifications, category_id: id)
+  end
 
   def run_plugin_category_update_param_callbacks
     DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, opts|

@@ -19,22 +19,20 @@ class NotificationsController < ApplicationController
 
     guardian.ensure_can_see_notifications!(user)
 
-    if notification_types = params[:filter_by_types]&.split(",").presence
-      notification_types.map! do |type|
+    if types = params[:filter_by_types]&.split(",").presence
+      types.map! do |type|
         Notification.types[type.to_sym] ||
           (raise Discourse::InvalidParameters.new("invalid notification type: #{type}"))
       end
     end
 
+    query = NotificationQuery.new(user:, guardian: current_user.guardian)
+
     if params[:recent].present?
       limit = fetch_limit_from_params(default: 15, max: INDEX_LIMIT)
-
-      include_reviewables = false
-
-      notifications =
-        Notification.prioritized_list(current_user, count: limit, types: notification_types)
-      # notification_types is blank for the "all notifications" user menu tab
-      include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
+      notifications = query.list(limit:, types:, prioritized: true)
+      # types is blank for the "all notifications" user menu tab
+      include_reviewables = types.blank? && guardian.can_see_review_queue?
 
       if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
         if current_user.bump_last_seen_notification!
@@ -55,10 +53,6 @@ class NotificationsController < ApplicationController
         end
       end
 
-      notifications =
-        Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
-      notifications = Notification.filter_disabled_badge_notifications(notifications)
-
       notifications = Notification.populate_acting_user(notifications)
 
       json = {
@@ -77,32 +71,19 @@ class NotificationsController < ApplicationController
     else
       limit = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
       offset = params[:offset].to_i
+      filter = params[:filter]
 
-      notifications =
-        Notification.where(user_id: user.id).visible.includes(:topic).order(created_at: :desc)
-
-      notifications = notifications.where(read: true) if params[:filter] == "read"
-
-      notifications = notifications.where(read: false) if params[:filter] == "unread"
-
-      total_rows = notifications.dup.count
-      notifications = notifications.offset(offset).limit(limit)
-      notifications =
-        Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
-      notifications = Notification.filter_disabled_badge_notifications(notifications)
-
+      notifications = query.list(limit:, offset:, filter:)
       notifications = Notification.populate_acting_user(notifications)
+
+      total_rows_notifications = query.total_count(filter:)
+
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
-        total_rows_notifications: total_rows,
+        total_rows_notifications:,
         seen_notification_id: user.seen_notification_id,
         load_more_notifications:
-          notifications_path(
-            username: user.username,
-            offset: offset + limit,
-            limit: limit,
-            filter: params[:filter],
-          ),
+          notifications_path(username: user.username, offset: offset + limit, limit:, filter:),
       )
     end
   end
