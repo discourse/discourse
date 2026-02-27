@@ -24,9 +24,6 @@ nl:
     assign_allowed_on_groups: "Gebruikers in deze groepen mogen topics toewijzen en kunnen topics toegewezen krijgen."
     enable_assign_status: "Voeg een aanpasbaar statusveld toe aan elke toewijzing."
     assign_statuses: "Lijst van beschikbare statussen voor elke toewijzing. De eerste status is de standaardstatus die wordt toegepast op elke nieuwe toewijzing."
-    ignore_solved_topics_in_assigned_reminder: "Voorkom dat toewijzingsherinneringen opgeloste topics bevatten. Alleen relevant bij gebruik van de plug-in discourse-assign."
-    assignment_status_on_solve: "Wanneer een topic is opgelost, alle toewijzingen bijwerken naar deze status"
-    assignment_status_on_unsolve: "Wanneer een topic niet is opgelost, alle toewijzingen bijwerken naar deze status"
     errors:
       assign_statuses:
         too_few: "Er moeten minimaal twee verschillende statussen beschikbaar zijn."

@@ -23,9 +23,6 @@ he:
     assign_allowed_on_groups: "משתמשים בקבוצות אלה רשאים להקצות נושאים וניתן להקצות להם נושאים."
     enable_assign_status: "הוספת שדה מצב מותאם לכל משימה."
     assign_statuses: "רשימת המצבים הזמינים לכל משימה. המצב הראשון הוא מצב ברירת המחדל שחל על כל משימה חדשה."
-    ignore_solved_topics_in_assigned_reminder: "למנוע מתזכורות למשימות לכלול נושאים פתורים. תקף רק בעת שימוש בתוסף discourse-assign."
-    assignment_status_on_solve: "כאשר נושא נפתר לעדכן את כל ההקצאות למצב הזה"
-    assignment_status_on_unsolve: "כאשר נושא סומן כלא פתור לעדכן את כל ההקצאות למצב הזה"
     errors:
       assign_statuses:
         too_few: "חייבים להיות לפחות שני מצבים זמינים."

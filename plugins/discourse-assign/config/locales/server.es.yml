@@ -25,9 +25,6 @@ es:
     assign_allowed_on_groups: "Los usuarios de estos grupos pueden asignar temas y se les pueden asignar temas."
     enable_assign_status: "Añade un campo de estado personalizable a cada asignación."
     assign_statuses: "Lista de estados disponibles para cada asignación. El primer estado es el que se aplica por defecto a cada nueva asignación."
-    ignore_solved_topics_in_assigned_reminder: "Evita que los recordatorios de asignaciones incluyan temas resueltos. Solo es relevante cuando se utiliza el plugin de asignación de Discourse."
-    assignment_status_on_solve: "Cuando se resuelve un tema actualiza todas las asignaciones a este estado"
-    assignment_status_on_unsolve: "Cuando un tema está sin resolver actualiza todas las asignaciones a este estado"
     errors:
       assign_statuses:
         too_few: "Debe haber al menos dos estados diferentes disponibles."

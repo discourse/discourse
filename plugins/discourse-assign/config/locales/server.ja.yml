@@ -25,9 +25,6 @@ ja:
     assign_allowed_on_groups: "これらのグループのユーザーはトピックを割り当てたり、割り当てられたりすることができます。"
     enable_assign_status: "カスタマイズ可能なステータスフィールドをすべての割り当てに追加します。"
     assign_statuses: "各割り当てに利用できるステータスのリスト。最初のステータスは、すべての新しい割り当てに適用されるデフォルトのステータスです。"
-    ignore_solved_topics_in_assigned_reminder: "割り当てのリマインダーに解決済みのトピックが含まれないようにします。discourse-assign プラグインを使用している場合にのみ関連します。"
-    assignment_status_on_solve: "トピックが解決したら、すべての割り当てをこのステータスに更新する"
-    assignment_status_on_unsolve: "トピックが未解決の場合、すべての割り当てを子のステータスに更新する"
     errors:
       assign_statuses:
         too_few: "少なくとも 2 つのステータスが利用可能である必要があります。"

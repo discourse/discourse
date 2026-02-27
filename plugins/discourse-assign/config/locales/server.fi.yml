@@ -24,9 +24,6 @@ fi:
     assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaa aiheita, ja heille voidaan osoittaa aiheita."
     enable_assign_status: "Lisää mukautettava tilakenttä jokaiseen osoitukseen."
     assign_statuses: "Luettelo kullekin osoitukselle käytettävissä olevista tiloista. Ensimmäinen tila on oletustila, jota käytetään jokaiselle uudelle osoitukselle."
-    ignore_solved_topics_in_assigned_reminder: "Estä osoitusten muistutuksia sisällyttämästä ratkaistuja ketjuja. Olennainen vain käytettäessä discourse-assign-lisäosaa."
-    assignment_status_on_solve: "Kun ketju on ratkaistu, päivitä kaikki osoitukset tähän tilaan"
-    assignment_status_on_unsolve: "Kun ketju on ratkaisematon, päivitä kaikki osoitukset tähän tilaan"
     errors:
       assign_statuses:
         too_few: "Käytettävissä täytyy olla vähintään kaksi eri tilaa."

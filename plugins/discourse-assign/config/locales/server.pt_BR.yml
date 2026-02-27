@@ -24,9 +24,6 @@ pt_BR:
     assign_allowed_on_groups: "Usuários(as) nestes grupos têm permissão para atribuir tópicos e podem receber atribuição de tópicos."
     enable_assign_status: "Adicione um campo de status personalizável a cada atribuição."
     assign_statuses: "Lista de status disponíveis para cada atribuição. O primeiro é o status padrão aplicado a cada nova atribuição."
-    ignore_solved_topics_in_assigned_reminder: "Evite lembretes de atribuições de inclusão de tópicos resolvidos. Aplica-se apenas ao usar o plugin discourse-assign."
-    assignment_status_on_solve: "Quando um tópico for solucionado, atualizar todas as atribuições para este status"
-    assignment_status_on_unsolve: "Quando um tópico não for solucionado, atualizar todas as atribuições para este status"
     errors:
       assign_statuses:
         too_few: "Deve haver pelo menos dois status diferentes disponíveis."
