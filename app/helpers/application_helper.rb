@@ -159,12 +159,12 @@ module ApplicationHelper
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: {})
+  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     extra_attrs =
-      attrs.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }.join(" ")
+      attrs&.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }&.join(" ")
     extra_attrs = " #{extra_attrs}" if extra_attrs.present?
 
     add_resource_preload_list(url, "script")

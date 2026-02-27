@@ -7,19 +7,23 @@
 
   <%- plugin_assets.each do |asset| %>
     <% if asset[:type_module] %>
-      <link rel="modulepreload" href="<%= script_asset_path(asset[:name]) %>" nonce="<%= csp_nonce_placeholder %>" data-plugin-name="<%= asset[:plugin].directory_name %>">
+      <link
+        rel="modulepreload"
+        href="<%= script_asset_path(asset[:name]) %>"
+        nonce="<%= csp_nonce_placeholder %>"
+        data-plugin-name="<%= asset[:plugin].directory_name %>"
+        <%= tag.attributes **asset[:plugin_attributes] %>
+      >
     <% else %>
-      <%= preload_script asset[:name] %>
+      <%= preload_script asset[:name], attrs: asset[:plugin_attributes] %>
     <% end %>
-
-    <%= preload_script asset[:name], attrs: {
-          "data-discourse-plugin": asset[:plugin].metadata.name,
-          "data-official": asset[:plugin].metadata.official?,
-          "data-preinstalled": asset[:plugin].preinstalled?,
-        } %>
   <%- end %>
 
   <%- plugin_assets.flat_map { it[:imports] }.compact.uniq.each do |import| %>
-    <link rel="modulepreload" href="<%= script_asset_path(import) %>" nonce="<%= csp_nonce_placeholder %>">
+    <link
+      rel="modulepreload"
+      href="<%= script_asset_path(import) %>"
+      nonce="<%= csp_nonce_placeholder %>"
+    >
   <%- end %>
 <%- end %>

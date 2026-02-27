@@ -509,6 +509,14 @@ module Discourse
       end
     end
 
+    assets.each do |asset|
+      asset[:plugin_attributes] = {
+        "data-discourse-plugin": asset[:plugin].metadata.name,
+        "data-official": asset[:plugin].metadata.official?,
+        "data-preinstalled": asset[:plugin].preinstalled?,
+      }
+    end
+
     assets
   end
 
