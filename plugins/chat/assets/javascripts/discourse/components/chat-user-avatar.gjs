@@ -57,7 +57,6 @@ export default class ChatUserAvatar extends Component {
           class="chat-user-avatar__container"
           href={{this.userPath}}
           data-user-card={{@user.username}}
-          data-auto-update-card={{this.isFullPageActive}}
         >
           {{this.avatar}}
         </a>

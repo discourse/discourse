@@ -12,3 +12,8 @@ el:
         open: "Ξεκίνημα"
         approved: "Εγκρίθηκε "
         closed: "Κλειστή"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse GitHub"

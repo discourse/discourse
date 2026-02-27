@@ -70,10 +70,15 @@ class Patreon::PatreonWebhookController < ApplicationController
   private
 
   def valid_signature?
+    secret = SiteSetting.patreon_webhook_secret
+    return false if secret.blank?
+
     signature = request.headers["X-Patreon-Signature"]
     digest = OpenSSL::Digest.new("MD5")
 
-    signature ==
-      OpenSSL::HMAC.hexdigest(digest, SiteSetting.patreon_webhook_secret, request.raw_post)
+    ActiveSupport::SecurityUtils.secure_compare(
+      signature.to_s,
+      OpenSSL::HMAC.hexdigest(digest, secret, request.raw_post),
+    )
   end
 end

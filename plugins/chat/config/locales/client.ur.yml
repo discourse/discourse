@@ -64,6 +64,7 @@ ur:
       cancel: "منسوخ"
       cancel_reply: "جواب منسوخ کریں"
       chat_channels: "چینلز"
+      pinned: "پِن ہوا"
       browse_all_channels: "تمام چینلز کو براؤز کریں"
       see_in: "میں دیکھیں"
       move_to_channel:

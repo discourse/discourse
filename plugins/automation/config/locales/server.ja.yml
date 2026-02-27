@@ -8,6 +8,8 @@ ja:
   site_settings:
     discourse_automation_enabled: "discourse-automation プラグインを有効にする"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(空)"
     models:
       automations:
         validations:
@@ -20,6 +22,9 @@ ja:
         invalid_field: フィールドのコンポーネント `%{component}` は `%{target}:%{target_name}` では使用できません。
         invalid_metadata: '`%{field}` のデータが無効であるか、コンポーネント `%{component}` が不明です。'
     triggerables:
+      post_flag_created:
+        title: 投稿の通報が作成された
+        description: 投稿が通報されると自動化がトリガーされます
       errors:
         custom_fields_or_user_profile_required: "少なくとも 'custom_fields' または 'user_profile' のいずれかを指定する必要があります。"
       user_badge_granted:
@@ -67,6 +72,9 @@ ja:
         description: トピックのタグが変更されると、自動化がトリガーされます
       topic:
         title: トピック
+      topic_closed:
+        title: トピックをクローズ
+        description: トピックがクローズされるとスクリプトをトリガーします。
       after_post_cook:
         title: 投稿のクック処理後
         description: 投稿内容がクックされると、自動化がトリガーされます。
@@ -74,6 +82,24 @@ ja:
         title: ユーザー更新後
         description: ユーザーが情報を更新すると、自動化がトリガーされます
     scriptables:
+      email_on_flagged_post:
+        title: 通報された投稿のメール
+        description: 投稿に通報が作成されるたびにカスタムメールを送信します
+        subject: "通報された投稿: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          投稿が通報されました。
+
+          トピック: {{topic_title}} ({{topic_url}})
+          投稿: {{post_url}} (#{{post_number}})
+          通報タイプ: {{flag_type}}
+          通報されたユーザー: {{flagged_username}}
+          通報者: {{flagger_username}}
+          カテゴリ: {{category}}
+          タグ: {{tags}}
+
+          --------
+          投稿の抜粋:
+          {{post_excerpt}}
       post:
         title: 投稿を作成する
         description: 指定されたトピックで投稿を作成します
@@ -104,6 +130,10 @@ ja:
         title: ギフト交換
         description: グループの 2 人のユーザーが匿名で互いにギフトを贈ることができます。
         doc: ギフト交換には、3 人以上のユーザーがいる既存のグループが必要です。選択した日に、一方がギフトを贈る側、もう一方がギフトを受ける側として、グループの各ユーザーがペアリングされます。
+      remove_upload_markup_from_deleted_posts:
+        title: 削除された投稿のアップロードマークアップを削除
+        description: システムユーザーとして、アップロードマークアップが削除された削除済みの投稿にリビジョンを追加します。'clean up uploads' ジョブと合わせて、これにより、削除された投稿のアップロードが完全に削除されます。使用には注意してください！
+        edit_reason: 自動化により、削除済みの投稿からアップロードマークアップが削除されました
       send_pms:
         title: PM を送信する
         description: PM の送信を許可します（遅延の可能性があります）。
@@ -159,3 +189,4 @@ ja:
         description: "グループにトピックをランダムに割り当てます"
       set_topic_timer:
         title: "トピックタイマーを設定"
+        description: "トピックにトピックタイマーを設定します"

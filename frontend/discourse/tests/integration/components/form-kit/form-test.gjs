@@ -179,6 +179,32 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     }, 0);
   });
 
+  test("@onRegisterApi - isDirty", async function (assert) {
+    let formApi;
+    const model = { foo: 1 };
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form @data={{model}} @onRegisterApi={{registerApi}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.false(formApi.isDirty, "form is not dirty initially");
+
+    await formKit().field("foo").fillIn("2");
+
+    assert.true(formApi.isDirty, "form is dirty after a change");
+
+    await formApi.reset();
+
+    assert.false(formApi.isDirty, "form is not dirty after reset");
+  });
+
   test("@data", async function (assert) {
     await render(
       <template>

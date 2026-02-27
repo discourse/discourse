@@ -64,6 +64,7 @@ fr:
       cancel: "Annuler"
       cancel_reply: "Annuler la réponse"
       chat_channels: "Canaux"
+      pinned: "Épinglé"
       browse_all_channels: "Parcourir tous les canaux"
       see_in: "Voir dans"
       move_to_channel:

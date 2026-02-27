@@ -9,7 +9,7 @@ zh_CN:
     discourse_automation_enabled: "启用 discourse-automation 插件"
   discourse_automation:
     staff_action_logs:
-      empty_value: "(空)"
+      empty_value: "（空）"
     models:
       automations:
         validations:
@@ -23,8 +23,8 @@ zh_CN:
         invalid_metadata: '`%{field}` 的数据无效或组件 `%{component}` 未知。'
     triggerables:
       post_flag_created:
-        title: 帖子被举报
-        description: 帖子被标记时触发自动操作
+        title: 帖子举报已创建
+        description: 帖子被举报时触发自动化
       errors:
         custom_fields_or_user_profile_required: "必须提供至少一个 'custom_fields' 或 'user_profile'。"
       user_badge_granted:
@@ -74,8 +74,8 @@ zh_CN:
         title: 话题
         description: 关联的脚本将仅用于指定的话题，这对于执行验证的脚本十分有用
       topic_closed:
-        title: 主题已关闭
-        description: 当主题关闭时触发脚本。
+        title: 话题已关闭
+        description: 当话题关闭时触发脚本。
       after_post_cook:
         title: 处理帖子后
         description: 当帖子内容被处理时，将触发自动化
@@ -84,19 +84,19 @@ zh_CN:
         description: 当用户更新任何信息时，将触发自动操作
     scriptables:
       email_on_flagged_post:
-        title: 关于标记帖子的电子邮件
-        description: 在帖子上创建标志时发送自定义电子邮件
-        subject: "已标记帖子： %{topic_title} (%{flagger_username})"
+        title: 针对被举报帖子的电子邮件
+        description: 在帖子上创建举报时发送自定义电子邮件
+        subject: "被举报的帖子：%{topic_title} (%{flagger_username})"
         default_template: |-
-          帖子已被标记。
+          一个帖子已被举报。
 
-          主题： {{topic_title}} ({{topic_url}})
-          帖子： {{post_url}} (#{{post_number}})
-          标记类型： {{flag_type}}
-          标记用户： {{flagged_username}}
-          标记人： {{flagger_username}}
-          分类： {{category}}
-          标签： {{tags}}
+          话题：{{topic_title}} ({{topic_url}})
+          帖子：{{post_url}} (#{{post_number}})
+          举报类型：{{flag_type}}
+          被举报的用户：{{flagged_username}}
+          举报人：{{flagger_username}}
+          类别：{{category}}
+          标签：{{tags}}
 
           --------
           帖子摘要：
@@ -132,9 +132,9 @@ zh_CN:
         description: 允许以匿名方式配对群组中的用户以互相发送礼物。
         doc: 礼物交换需要一个至少包含 3 个用户的现有群组。在选定日期，该群组的每个用户都将与一名赠送者和一名受赠者配对。
       remove_upload_markup_from_deleted_posts:
-        title: 删除已删除帖子中的上传标记
-        description: 作为系统用户，为已删除的帖子添加修改，删除上传标记。结合 "清理上传 "工作，可永久删除已删除帖子中的上传内容。谨慎使用！
-        edit_reason: 自动化程序移除了已删除帖子中的上传标记
+        title: 移除已删除帖子中的上传标记
+        description: 作为系统用户，为上传标记已被移除的已删除帖子添加修订。结合 'clean up uploads' 作业，可以永久删除已删除帖子中的上传内容。谨慎使用！
+        edit_reason: 自动化移除了已删除帖子中的上传标记
       send_pms:
         title: 发送 PM
         description: 允许发送 PM（可能存在延迟）。
@@ -190,4 +190,4 @@ zh_CN:
         description: "向群组随机指定话题"
       set_topic_timer:
         title: "设置话题计时器"
-        description: "为主题设置主题计时器"
+        description: "为话题设置话题计时器"

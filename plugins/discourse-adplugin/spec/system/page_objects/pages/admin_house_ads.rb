@@ -24,18 +24,16 @@ module PageObjects
       end
 
       def click_ad(name)
-        find(".house-ads-table tr.d-admin-row__content", text: name).find(
-          ".house-ads-table__edit",
-        ).click
+        find(".house-ads-table tr.d-table__row", text: name).find(".house-ads-table__edit").click
         self
       end
 
       def has_ad_listed?(name)
-        has_css?(".house-ads-table tr.d-admin-row__content", text: name)
+        has_css?(".house-ads-table tr.d-table__row", text: name)
       end
 
       def has_no_ad_listed?(name)
-        has_no_css?(".house-ads-table tr.d-admin-row__content", text: name)
+        has_no_css?(".house-ads-table tr.d-table__row", text: name)
       end
 
       def click_delete

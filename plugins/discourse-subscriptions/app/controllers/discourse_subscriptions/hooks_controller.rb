@@ -20,6 +20,8 @@ module DiscourseSubscriptions
         sig_header = request.env["HTTP_STRIPE_SIGNATURE"]
         webhook_secret = SiteSetting.discourse_subscriptions_webhook_secret
 
+        return head :forbidden if webhook_secret.blank?
+
         event = ::Stripe::Webhook.construct_event(payload, sig_header, webhook_secret)
       rescue JSON::ParserError => e
         return render_json_error e.message

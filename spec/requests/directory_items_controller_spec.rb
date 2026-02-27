@@ -219,8 +219,8 @@ RSpec.describe DirectoryItemsController do
 
     it "orders users by user fields" do
       group.add(walter_white)
-      field1 = Fabricate(:user_field, searchable: true)
-      field2 = Fabricate(:user_field, searchable: true)
+      field1 = Fabricate(:user_field, searchable: true, show_on_profile: true)
+      field2 = Fabricate(:user_field, searchable: true, show_on_profile: true)
 
       user_fields = [
         { user: walter_white, field: field1, value: "Yellow", order: 1 },
@@ -262,8 +262,8 @@ RSpec.describe DirectoryItemsController do
     end
 
     it "searches users by user field value" do
-      field1 = Fabricate(:user_field, searchable: true)
-      field2 = Fabricate(:user_field, searchable: true)
+      field1 = Fabricate(:user_field, searchable: true, show_on_profile: true)
+      field2 = Fabricate(:user_field, searchable: true, show_on_profile: true)
 
       user_fields = [
         { user: walter_white, field: field1, value: "Yellow", order: 1 },
@@ -304,7 +304,7 @@ RSpec.describe DirectoryItemsController do
     end
 
     it "filters users by user field value" do
-      field = Fabricate(:user_field, searchable: true)
+      field = Fabricate(:user_field, searchable: true, show_on_profile: true)
 
       users = Fabricate.times(30, :user)
       users.each do |user|
@@ -335,6 +335,54 @@ RSpec.describe DirectoryItemsController do
       expect(json["meta"]["total_rows_directory_items"]).to eq(30)
     end
 
+    it "does not expose private user fields to anonymous users" do
+      public_field = Fabricate(:user_field, show_on_profile: true)
+      private_field = Fabricate(:user_field, show_on_profile: false, show_on_user_card: false)
+
+      UserCustomField.create!(
+        user_id: evil_trout.id,
+        name: "user_field_#{public_field.id}",
+        value: "public_value",
+      )
+      UserCustomField.create!(
+        user_id: evil_trout.id,
+        name: "user_field_#{private_field.id}",
+        value: "secret_value",
+      )
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            user_field_ids: "#{public_field.id}|#{private_field.id}",
+          }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      et_entry = json["directory_items"].find { |i| i["user"]["username"] == "eviltrout" }
+      user_fields = et_entry["user"]["user_fields"]
+
+      expect(user_fields).to have_key(public_field.id.to_s)
+      expect(user_fields).not_to have_key(private_field.id.to_s)
+    end
+
+    it "exposes private user fields to staff" do
+      sign_in(Fabricate(:admin))
+      private_field = Fabricate(:user_field, show_on_profile: false, show_on_user_card: false)
+
+      UserCustomField.create!(
+        user_id: evil_trout.id,
+        name: "user_field_#{private_field.id}",
+        value: "secret_value",
+      )
+
+      get "/directory_items.json", params: { period: "all", user_field_ids: private_field.id.to_s }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      et_entry = json["directory_items"].find { |i| i["user"]["username"] == "eviltrout" }
+      expect(et_entry["user"]["user_fields"]).to have_key(private_field.id.to_s)
+    end
+
     it "checks group permissions" do
       group.update!(visibility_level: Group.visibility_levels[:members])
 
@@ -362,7 +410,7 @@ RSpec.describe DirectoryItemsController do
 
   context "when searching by name" do
     it "searches users by custom field 'Music' ignoring the default 20 user limit" do
-      field = Fabricate(:user_field, searchable: true)
+      field = Fabricate(:user_field, searchable: true, show_on_profile: true)
       users = Fabricate.times(100, :user)
 
       users

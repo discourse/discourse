@@ -12,6 +12,7 @@ import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
+import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -38,6 +39,7 @@ import {
 } from "discourse/lib/uploads";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import { parseAttributesString } from "discourse/lib/wrap-utils";
 import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
@@ -49,8 +51,6 @@ import Composer, {
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
-import WrapAttributesModal from "discourse/static/prosemirror/components/wrap-attributes-modal";
-import { parseAttributesString } from "discourse/static/prosemirror/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {

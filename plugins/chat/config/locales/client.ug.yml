@@ -65,6 +65,7 @@ ug:
       cancel_reply: "جاۋابتىن ۋازكەچ"
       chat_channels: "قانال"
       starred: "يۇلتۇزلانغان"
+      pinned: "چوققىلاندى"
       browse_all_channels: "بارلىق قانالغا كۆز يۈگۈرتىدۇ"
       see_in: "قاراڭ"
       move_to_channel:

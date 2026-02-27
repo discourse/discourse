@@ -11,5 +11,7 @@ ja:
         other: "返信中"
       editing:
         other: "編集中"
+      translating:
+        other: "翻訳中"
       replying_to_topic:
         other: "返信中"

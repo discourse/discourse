@@ -6,6 +6,22 @@
 
 pl_PL:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        conditions: "Warunki"
+        arguments: "Argumenty"
+        container_args: "Argumenty kontenera"
+        in_location: "w"
+        hidden: "ukryty"
+        not_registered: "niezarejestrowany"
+        no_visible_children: "brak widocznych podrzędnych"
+        failed: "nieudany"
+      ghost_reasons:
+        optional_missing_hint: "Ten opcjonalny blok nie jest renderowany, ponieważ nie jest zarejestrowany."
+        no_visible_children_hint: "Ten blok kontenera nie jest renderowany, ponieważ żaden z jego elementów podrzędnych nie jest widoczny."
+        condition_failed_hint: "Ten blok nie został wyrenderowany, ponieważ jego warunki nie zostały spełnione."
+        head_hidden_tail_hint: "Ten blok nie jest renderowany, ponieważ w kontenerze `head` najpierw został renderowany inny blok."
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -353,6 +369,7 @@ pl_PL:
     skip_to_top: "Przejdź do góry"
     skip_user_nav: "Przejdź do treści profilu"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
+    emails_are_disabled_no_smtp: "Wszystkie wiadomości wychodzące są wyłączone, ponieważ nie skonfigurowano serwera SMTP. Nie można wysyłać żadnych wiadomości e-mail."
     emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
@@ -378,12 +395,27 @@ pl_PL:
     broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
+    broken_block_alert: "Wykryto błąd konfiguracji bloku. Szczegóły znajdziesz w konsoli przeglądarki."
+    broken_block_factory_alert: "Nie udało się załadować bloku. Niektóre elementy interfejsu użytkownika mogą nie wyświetlać się poprawnie."
     critical_deprecation:
       notice: "<b>[Uwaga administratora]</b> %{source} zawiera kod, który wymaga aktualizacji. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>dowiedz się więcej</em></a>)"
       theme_source: "Motyw <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Wtyczka „%{name}”"
       unknown_source: "Jeden z Twoich motywów lub wtyczek"
+    dev_tools:
+      drag_to_move: "Przeciągnij, aby przesunąć"
+      toggle_plugin_outlet_debug: "Przełącz debugowanie wyjścia wtyczki"
+      toggle_block_debug: "Przełącz debugowanie bloku"
+      block_debug:
+        outlet_boundaries: "Granice wyjścia"
+        visual_overlay: "Nakładka wizualna"
+        ghost_blocks: "Bloki duchów"
+        condition_debugging: "Debugowanie warunków"
+      toggle_safe_mode: "Przełącz tryb awaryjny"
+      toggle_verbose_localization: "Przełącz szczegółową lokalizację"
+      toggle_mobile_view: "Przełącz widok mobilny"
+      disable_dev_tools: "Wyłącz narzędzia programistyczne"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -492,6 +524,13 @@ pl_PL:
         title: "Rozpocznij publikowanie"
         description: "Daj ludziom temat do wspólnej rozmowy"
         action: "Pomysły na przełamanie lodów"
+        choose_option: "Jak chcesz zacząć?"
+        predefined_topics: "Szablony przełamujące lody"
+        predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
+        predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
+        use_predefined: "Przeglądaj szablony"
+        start_with_this: "Zacznij od tego"
+        back: "Wstecz"
         icebreakers:
           fun_facts:
             title: "Jakie są ciekawostki na Twój temat?"
@@ -718,6 +757,10 @@ pl_PL:
           few: "+%{count} inne szkice"
           many: "+%{count} innych szkiców"
           other: "+%{count} innych szkiców"
+    embed_mode:
+      storage_access_prompt: "Masz już konto %{site_name} ? Zezwól na dostęp do swojej sesji, aby móc komentować jako Ty."
+      allow_access: "Zezwól na dostęp"
+      continue_as_guest: "Kontynuuj jako gość"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -796,20 +839,20 @@ pl_PL:
       filtered_flagged_by: "Oflagowany przez"
       unknown:
         title:
-          one: "Masz oczekujące recenzje z wyłączonej wtyczki:"
-          few: "Masz oczekujące recenzje z wyłączonych wtyczek:"
-          many: "Masz oczekujące recenzje z wyłączonych wtyczek:"
-          other: "Masz oczekujące recenzje z wyłączonych wtyczek:"
+          one: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonej wtyczki:"
+          few: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonych wtyczek:"
+          many: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonych wtyczek:"
+          other: "Masz elementy oczekujące na sprawdzenie w kolejce z wyłączonych wtyczek:"
         instruction: "Nie można ich poprawnie wyświetlić, dopóki nie włączysz odpowiedniej wtyczki. Włącz wtyczkę i odśwież stronę. Alternatywnie możesz je zignorować. <a href='%{url}' target='_blank'>Dowiedz się więcej...</a>"
         reviewable_unknown_source: "%{reviewableType} (nieznana wtyczka)"
         reviewable_known_source: "%{reviewableType} (z wtyczki '%{pluginName}')"
         ignore_all: "Ignoruj wszystko"
         enable_plugins: "Włącz wtyczki"
-        delete_confirm: "Czy na pewno chcesz usunąć wszystkie recenzje utworzone przez wyłączone wtyczki?"
-        ignore_success: "Wszystkie recenzje utworzone przez wyłączone wtyczki zostały usunięte."
+        delete_confirm: "Czy na pewno chcesz usunąć wszystkie elementy kolejki recenzji utworzone przez wyłączone wtyczki?"
+        ignore_success: "Wszystkie elementy kolejki recenzji utworzone przez wyłączone wtyczki zostały usunięte."
       explain:
         why: "wyjaśnij, dlaczego ten element znalazł się w kolejce"
-        title: "Przeglądalna ocena"
+        title: "Punktacja elementów kolejki recenzji"
         formula: "Formuła"
         subtotal: "Suma częściowa"
         total: "Łącznie"
@@ -823,10 +866,10 @@ pl_PL:
           title: "Użytkownicy, których flagi były wcześniej uzgodnione, otrzymują bonus."
         trust_level_bonus:
           name: "Poziom zaufania"
-          title: "Przedmioty, które można przeglądać, tworzone przez użytkowników o wyższym poziomie zaufania, mają wyższy wynik."
+          title: "Flagi utworzone przez użytkowników o wyższym poziomie zaufania mają wyższy wynik."
         type_bonus:
           name: "bonus typu"
-          title: "Niektóre rodzaje przeglądalne mogą otrzymać premię od pracowników, aby nadać im wyższy priorytet."
+          title: "Niektórym typom flag personel może przypisać premię, aby nadać im wyższy priorytet."
       revise_and_reject_post:
         title: "Sprawdź"
         reason: "Powód"
@@ -835,7 +878,7 @@ pl_PL:
         custom_reason: "Podaj jasny opis przyczyny"
         other_reason: "Inny..."
         optional: "opcjonalnie"
-      stale_help: "Wiadomość została już zweryfikowana przez <b>%{username}</b>."
+      stale_help: "Ten element został rozwiązany przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz przejąć tę pozycję, aby uniemożliwić innym jego sprawdzenie."
         required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
@@ -3222,6 +3265,7 @@ pl_PL:
       upload_description: "tutaj wpisz opis przesłania"
       olist_title: "Lista numerowana"
       ulist_title: "Lista wypunktowana"
+      list_title: "Listy"
       list_item: "Element listy"
       toggle_direction: "Przełącz kierunek"
       apply_wrap_title: "Zastosuj zawijanie"
@@ -3622,8 +3666,6 @@ pl_PL:
         max_views:
           placeholder: maksimum
           aria_label: filtrować według maksymalnych wyświetleń
-        additional_options:
-          label: "Filtruj według liczby wpisów i wyświetleń tematu"
     hamburger_menu: "Menu nawigacyjne"
     new_item: "nowy"
     go_back: "wróć"
@@ -3706,8 +3748,8 @@ pl_PL:
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Zastrzeż tematy"
         relist_topics: "Odśwież listę tematów"
-        reset_bump_dates: "Zresetuj daty ważności"
-        defer: "Oznacz jako nieprzeczytane"
+        reset_bump_dates: "Zresetuj datę podbicia"
+        defer: "Oznacz jako nieprzeczytany"
         delete: "Usuń tematy"
         delete_topics_count:
           one: "Usuń temat"
@@ -3725,13 +3767,13 @@ pl_PL:
           many: "Czy na pewno chcesz usunąć %{count} wpisów?"
           other: "Czy na pewno chcesz usunąć %{count} wpisów?"
         dismiss: "Wyczyść"
-        dismiss_read: "Wyczyść nieprzeczytane"
+        dismiss_read: "Odrzuć wszystkie nieprzeczytane"
         dismiss_read_with_selected:
-          one: "Odrzuć %{count} nieprzeczytane"
+          one: "Odrzuć %{count} nieprzeczytany"
           few: "Odrzuć %{count} nieprzeczytane"
           many: "Odrzuć %{count} nieprzeczytanych"
           other: "Odrzuć %{count} nieprzeczytanych"
-        dismiss_button: "Wyczyść…"
+        dismiss_button: "Odrzuć…"
         dismiss_button_with_selected:
           one: "Odrzuć (%{count})…"
           few: "Odrzuć (%{count})…"
@@ -4497,7 +4539,11 @@ pl_PL:
           edit: "Edytuj"
           delete: "Usuń"
         add: "Dodaj nowe tłumaczenie"
-        manage: "Zarządzaj tłumaczeniami (istniejące: %{count})"
+        manage:
+          one: "Zarządzaj tłumaczeniami (istniejące: %{count})"
+          few: "Zarządzaj tłumaczeniami (istniejące: %{count})"
+          many: "Zarządzaj tłumaczeniami (istniejące: %{count})"
+          other: "Zarządzaj tłumaczeniami (istniejące: %{count})"
         view:
           one: "Wyświetl %{count} przetłumaczone ustawienia regionalne"
           few: "Wyświetl %{count} przetłumaczone ustawienia regionalne"
@@ -5439,17 +5485,25 @@ pl_PL:
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
       synonyms: "Synonimy"
       synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."
+      synonyms_inline: "Synonimy te zostaną zastąpione przez %{base_tag_name}:"
       save: "Zapisz nazwę i opis tagu"
       tag_groups_info:
         one: 'Ten tag należy do grupy "%{tag_groups}”.'
         few: "Ten tag należy do następujących grup: %{tag_groups}."
         many: "Ten tag należy do następujących grup: %{tag_groups}."
         other: "Ten tag należy do następujących grup: %{tag_groups}."
+      tag_groups_info_prefix:
+        one: "Ten tag należy do grupy "
+        few: "Te tagi należą do grupy: "
+        many: "Te tagi należą do grupy: "
+        other: "Te tagi należą do grupy: "
       category_restrictions:
         one: "Można go używać tylko w tej kategorii:"
         few: "Można go używać tylko w tych kategoriach:"
         many: "Można go używać tylko w tych kategoriach:"
         other: "Można go używać tylko w tych kategoriach:"
+      restricted_to: "Ograniczone do"
+      no_synonyms: "Ten tag nie ma synonimów."
       edit_synonyms: "Edytuj synonimy"
       add_synonyms_label: "Dodaj synonimy:"
       add_synonyms: "Dodaj"
@@ -5475,7 +5529,34 @@ pl_PL:
         other: "Jego %{count} synonimów również zostanie usuniętych."
       edit_tag: "Edytuj nazwę tagu i opis"
       edit: "Edytuj ten tag"
-      description: "Opis (maks. 1000 znaków)"
+      description: "Opis"
+      settings:
+        title: "Ustawienia"
+        edit_title: "Edytuj tag: %{name}"
+        edit_tag_prefix: "Edytuj tag:"
+        select_tag: "Wybierz tag do edycji"
+        general: "Ogólne"
+        localizations: "Języki"
+        back: "Wstecz"
+        name: "Nazwa"
+        slug: "Identyfikator tekstowy"
+        name_placeholder: "Nazwa tagu"
+        slug_placeholder: "Identyfikator tekstowy tagu (opcjonalny, generowany automatycznie z nazwy)"
+        saved: "Zapisane ustawienia tagów"
+        no_synonyms: "Dla tego tagu nie zdefiniowano synonimów."
+        add_synonym_placeholder: "Wyszukaj tagi, które chcesz dodać jako synonimy..."
+        synonyms_subtitle: "W przypadku użycia następujących tagów zostaną one zastąpione przez %{name}"
+        save: "Zapisz tag"
+        delete: "Usuń tag"
+        synonyms_hint: "W przypadku użycia powyższych tagów zostaną one zastąpione przez %{baseTagName}."
+        add_synonyms_confirm: "Każde miejsce, w którym obecnie używany jest kod %{synonymNames} , zostanie zmienione na kod %{tagName} . Czy na pewno chcesz wprowadzić tę zmianę?"
+      localization:
+        hint: "Dodaj lokalizacje, aby wyświetlać różne nazwy tagów użytkownikom w różnych językach."
+        locale: "Ustawienia regionalne"
+        name: "Nazwa"
+        description: "Opis"
+        add: "Dodaj lokalizację"
+        remove: "Usuń lokalizację"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
       sort_by_name: "nazwa"
@@ -6039,9 +6120,16 @@ pl_PL:
           never: "nigdy"
       reports:
         title: "Lista dostępnych zgłoszeń"
-        meta_doc: "Raporty to potężne narzędzie, które pomoże Ci zrozumieć, co dzieje się w Twojej witrynie. Mogą pomóc Ci zidentyfikować trendy, zauważyć problemy i podejmować decyzje w oparciu o dane."
         sidebar_title: "Zgłoszenia"
         back: "Powrót do wszystkich raportów"
+        group_engagement: "Zaangażowanie"
+        group_traffic: "Ruch"
+        group_members: "Członkowie"
+        group_content: "Treść i zdrowie"
+        group_moderation: "Moderacja"
+        group_security: "Bezpieczeństwo"
+        group_other: "Inne"
+        legacy_warning: "To jest starszy raport. Wkrótce zostanie wycofany. Jeśli potrzebujesz pomocy w znalezieniu zamiennika, skontaktuj się z pomocą techniczną."
       config_sections:
         account:
           title: "Konto"
@@ -6086,7 +6174,7 @@ pl_PL:
         enabled_for_options:
           no_one: "Nikt"
           everyone: "Wszyscy"
-          staff: "Wyłącznie dla zespołu"
+          staff: "Tylko %{staffGroupName}"
           specific_groups: "Określone grupy"
           specific_groups_with_group_names:
             one: "grupa %{groupNames}"
@@ -6111,7 +6199,7 @@ pl_PL:
           all: "Wszystkie"
           enabled_all: "Wszystkie włączone stany"
           enabled: "Włączona"
-          enabled_for_staff: "Włączone dla personelu"
+          enabled_for_staff: "Włączone dla %{staffGroupName}"
           enabled_for_specific_groups: "Włączone dla określonych grup"
           disabled: "Wyłączone"
           impact_type_all: "Wszystkie rodzaje uderzeń"
@@ -6201,7 +6289,7 @@ pl_PL:
               help_text: "Zalecany rozmiar to 600 x 80 pikseli."
             large_icon:
               title: "Kwadratowa ikona"
-              description: "Kwadratowa wersja obrazu logo jest wyświetlana u góry panelu administracyjnego i stanowi również logo aplikacji na ekranie głównym urządzenia mobilnego."
+              description: "Kwadratowa wersja obrazu logo znajduje się u góry witryny i jest jednocześnie logo aplikacji mobilnej."
               help_text: "Zalecany rozmiar to 512 x 512 pikseli."
             square_icon_dark:
               required: "Użyć innej ikony kwadratowej dla trybu ciemnego?"
@@ -6391,7 +6479,7 @@ pl_PL:
           header_description: "Raporty to potężne narzędzie, które pomoże Ci zrozumieć, co dzieje się w Twojej witrynie. Mogą pomóc Ci zidentyfikować trendy, zauważyć problemy i podejmować decyzje w oparciu o dane."
           sub_pages:
             settings:
-              title: "Ustawienia panelu"
+              title: "Ustawienia"
         badges:
           title: "Odznaki"
           header_description: "Odznaki nagradzają użytkowników za ich aktywność, wkład i osiągnięcia, aby rozpoznawać, potwierdzać i zachęcać do pozytywnych zachowań i zaangażowania w społeczności"
@@ -6549,32 +6637,6 @@ pl_PL:
           few: '%{count} wyniki dla "%{filter}"'
           many: '%{count} wyników dla "%{filter}"'
           other: '%{count} wyników dla "%{filter}"'
-        result_types:
-          page:
-            one: "Strona"
-            few: "Strony"
-            many: "Stron"
-            other: "Stron"
-          report:
-            one: "Zgłoszenie"
-            few: "Zgłoszenia"
-            many: "Zgłoszeń"
-            other: "Zgłoszeń"
-          setting:
-            one: "Ustawienie"
-            few: "Ustawienia"
-            many: "Ustawień"
-            other: "Ustawień"
-          theme:
-            one: "Motyw"
-            few: "Motywy"
-            many: "Motywy"
-            other: "Motywy"
-          component:
-            one: "Komponent"
-            few: "Komponenty"
-            many: "Komponenty"
-            other: "Komponenty"
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
@@ -6598,25 +6660,8 @@ pl_PL:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
           no_new_features_found: "Brak elementów w kanale lub wybrany filtr nie zwrócił żadnych wyników. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
-          no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w społeczności Discourse Meta <a href='%{url}' target='_blank'></a>."
+          no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
           learn_more: "Dowiedz się więcej..."
-          experimental: "Eksperymentalne"
-          only_experiments: "Pokaż tylko funkcje eksperymentalne"
-          experiment_enabled: "Włączono funkcję eksperymentalną."
-          experiment_disabled: "Wyłączono funkcję eksperymentalną."
-          feature_enabled: "Włączyłeś tę funkcję."
-          feature_disabled: "Wyłączyłeś tę funkcję."
-          toggled_too_fast: "Przełączyłeś przełącznik zbyt szybko. Odczekaj kilka sekund przed ponowną próbą."
-          experiment_tooltip:
-            title_disabled: "Wypróbuj tę eksperymentalną funkcję"
-            title_enabled: "Wyłącz funkcję eksperymentalną"
-            content_disabled: "Wypróbuj naszą najnowszą, rozwijaną funkcję! Jest jeszcze w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz zrezygnować, kiedy tylko chcesz.<br/><br/>Zmiana tej opcji spowoduje włączenie tej funkcji dla wszystkich użytkowników."
-            content_enabled: "Zmiana tej opcji spowoduje wyłączenie funkcji dla wszystkich użytkowników."
-          feature_tooltip:
-            title_disabled: "Wypróbuj tę funkcję"
-            title_enabled: "Wyłącz funkcję"
-            content_disabled: "Wypróbuj tę nową funkcję! Możesz z niej zrezygnować, kiedy tylko chcesz.<br/><br/>Zmiana tej opcji spowoduje włączenie tej funkcji dla wszystkich użytkowników."
-            content_enabled: "Zmiana tej opcji spowoduje wyłączenie funkcji dla wszystkich użytkowników."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -8728,6 +8773,7 @@ pl_PL:
         field_types:
           text: "Tekst"
           textarea: "Obszar tekstowy"
+          date: "Data"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"

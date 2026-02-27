@@ -64,18 +64,6 @@ export default class UpsertCategorySettings extends Component {
     return this.args.transientData?.category_setting;
   }
 
-  get requireTopicApproval() {
-    return this.categorySetting?.require_topic_approval;
-  }
-
-  get requireReplyApproval() {
-    return this.categorySetting?.require_reply_approval;
-  }
-
-  get autoCloseBasedOnLastPost() {
-    return this.args.transientData?.auto_close_based_on_last_post;
-  }
-
   get numAutoBumpDaily() {
     return this.categorySetting?.num_auto_bump_daily;
   }
@@ -109,21 +97,6 @@ export default class UpsertCategorySettings extends Component {
   }
 
   @action
-  onRequireTopicApprovalChange(event) {
-    this.#updateCategorySetting("require_topic_approval", event.target.checked);
-  }
-
-  @action
-  onRequireReplyApprovalChange(event) {
-    this.#updateCategorySetting("require_reply_approval", event.target.checked);
-  }
-
-  @action
-  onAutoCloseBasedOnLastPostChange(event) {
-    this.args.form.set("auto_close_based_on_last_post", event.target.checked);
-  }
-
-  @action
   onNumAutoBumpDailyChange(value) {
     this.#updateCategorySetting("num_auto_bump_daily", value);
   }
@@ -144,7 +117,7 @@ export default class UpsertCategorySettings extends Component {
       <@form.Field
         @name="slug"
         @title={{i18n "category.slug"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Input
@@ -157,7 +130,7 @@ export default class UpsertCategorySettings extends Component {
         <@form.Field
           @name="position"
           @title={{i18n "category.position"}}
-          @format="large"
+          @format="max"
           as |field|
         >
           <field.Input type="number" min="0" />
@@ -171,7 +144,7 @@ export default class UpsertCategorySettings extends Component {
           (i18n "category.subcategory_num_featured_topics")
           (i18n "category.num_featured_topics")
         }}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Input type="number" min="1" />
@@ -180,7 +153,7 @@ export default class UpsertCategorySettings extends Component {
       <@form.Field
         @name="search_priority"
         @title={{i18n "category.search_priority.label"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Custom>
@@ -199,7 +172,7 @@ export default class UpsertCategorySettings extends Component {
         <@form.Field
           @name="allow_badges"
           @title={{i18n "category.allow_badges_label"}}
-          @format="large"
+          @format="max"
           as |field|
         >
           <field.Checkbox />
@@ -210,7 +183,7 @@ export default class UpsertCategorySettings extends Component {
         <@form.Field
           @name="topic_featured_link_allowed"
           @title={{i18n "category.topic_featured_link_allowed"}}
-          @format="large"
+          @format="max"
           as |field|
         >
           <field.Checkbox />
@@ -220,7 +193,7 @@ export default class UpsertCategorySettings extends Component {
       <@form.Field
         @name="navigate_to_first_post_after_read"
         @title={{i18n "category.navigate_to_first_post_after_read"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Checkbox />
@@ -229,7 +202,7 @@ export default class UpsertCategorySettings extends Component {
       <@form.Field
         @name="all_topics_wiki"
         @title={{i18n "category.all_topics_wiki"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Checkbox />
@@ -238,7 +211,7 @@ export default class UpsertCategorySettings extends Component {
       <@form.Field
         @name="allow_unlimited_owner_edits_on_first_post"
         @title={{i18n "category.allow_unlimited_owner_edits_on_first_post"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Checkbox />
@@ -255,27 +228,23 @@ export default class UpsertCategorySettings extends Component {
           </@form.Container>
         {{/if}}
 
-        <@form.Container>
-          <label class="checkbox-label">
-            <input
-              type="checkbox"
-              checked={{this.requireTopicApproval}}
-              {{on "change" this.onRequireTopicApprovalChange}}
-            />
-            {{i18n "category.require_topic_approval"}}
-          </label>
-        </@form.Container>
+        <@form.Object @name="category_setting" as |object|>
+          <object.Field
+            @name="require_topic_approval"
+            @title={{i18n "category.require_topic_approval"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </object.Field>
 
-        <@form.Container>
-          <label class="checkbox-label">
-            <input
-              type="checkbox"
-              checked={{this.requireReplyApproval}}
-              {{on "change" this.onRequireReplyApprovalChange}}
-            />
-            {{i18n "category.require_reply_approval"}}
-          </label>
-        </@form.Container>
+          <object.Field
+            @name="require_reply_approval"
+            @title={{i18n "category.require_reply_approval"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </object.Field>
+        </@form.Object>
 
         <@form.Container @title={{i18n "category.default_slow_mode"}}>
           <RelativeTimePicker
@@ -292,15 +261,15 @@ export default class UpsertCategorySettings extends Component {
             @hiddenIntervals={{this.hiddenRelativeIntervals}}
             @onChange={{this.onAutoCloseDurationChange}}
           />
-          <label class="checkbox-label">
-            <input
-              type="checkbox"
-              checked={{this.autoCloseBasedOnLastPost}}
-              {{on "change" this.onAutoCloseBasedOnLastPostChange}}
-            />
-            {{i18n "topic.auto_close.based_on_last_post"}}
-          </label>
         </@form.Container>
+
+        <@form.Field
+          @name="auto_close_based_on_last_post"
+          @title={{i18n "topic.auto_close.based_on_last_post"}}
+          as |field|
+        >
+          <field.Checkbox />
+        </@form.Field>
 
         <@form.Container @title={{i18n "category.num_auto_bump_daily"}}>
           <input
@@ -328,7 +297,7 @@ export default class UpsertCategorySettings extends Component {
           <@form.Field
             @name="email_in"
             @title={{i18n "category.email_in"}}
-            @format="large"
+            @format="max"
             as |field|
           >
             <field.Input @maxlength="255" />
@@ -337,7 +306,7 @@ export default class UpsertCategorySettings extends Component {
           <@form.Field
             @name="email_in_allow_strangers"
             @title={{i18n "category.email_in_allow_strangers"}}
-            @format="large"
+            @format="max"
             as |field|
           >
             <field.Checkbox />
@@ -346,7 +315,7 @@ export default class UpsertCategorySettings extends Component {
           <@form.Field
             @name="mailinglist_mirror"
             @title={{i18n "category.mailinglist_mirror"}}
-            @format="large"
+            @format="max"
             as |field|
           >
             <field.Checkbox />
@@ -373,7 +342,11 @@ export default class UpsertCategorySettings extends Component {
 
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{lazyHash category=@category form=@form}}
+        @outletArgs={{lazyHash
+          category=@category
+          form=@form
+          transientData=@transientData
+        }}
       />
     </@form.Section>
   </template>

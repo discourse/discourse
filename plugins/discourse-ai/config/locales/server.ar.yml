@@ -8,24 +8,56 @@ ar:
   activerecord:
     attributes:
       llm_model:
+        name: "معرِّف النموذج"
         max_prompt_tokens: "نافذة السياق"
+  dashboard:
+    problem:
+      ai_llm_status:
+        zero: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> بحاجة إلى الاهتمام. في آخر ساعة، تعذر الرد في %{failed_calls} من أصل %{total_calls} من المرات."
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> بحاجة إلى الاهتمام. في آخر ساعة، تعذر الرد في %{failed_calls} من أصل %{total_calls} من المرات."
+        two: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> بحاجة إلى الاهتمام. في آخر ساعتين، تعذر الرد في %{failed_calls} من أصل %{total_calls} من المرات."
+        few: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> بحاجة إلى الاهتمام. في آخر %{count} ساعات، تعذر الرد في %{failed_calls} من أصل %{total_calls} من المرات."
+        many: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> بحاجة إلى الاهتمام. في آخر %{count} ساعة، تعذر الرد في %{failed_calls} من أصل %{total_calls} من المرات."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> بحاجة إلى الاهتمام. في آخر %{count} ساعة، تعذر الرد في %{failed_calls} من أصل %{total_calls} من المرات."
+      ai_credit_soft_limit: "يتبقى لنموذج %{model_name} نسبة %{percentage_remaining}% فقط من الرصيد. سيتم إعادة تعيين الرصيد في %{reset_date}. <a href='%{url}'>عرض نماذج الذكاء الاصطناعي</a>"
+      ai_credit_hard_limit: "استُنفد رصيد الذكاء الاصطناعي لنموذج %{model_name}. ستصبح ميزات الذكاء الاصطناعي غير متاحة حتى %{reset_date}. <a href='%{url}'>عرض نماذج الذكاء الاصطناعي</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "إضافة المنشور إلى قائمة انتظار المراجعة"
         review_hide: "إضافة منشور إلى قائمة انتظار المراجعة وإخفاء منشور"
+        review_delete: "إضافة المنشور إلى قائمة انتظار المراجعة وحذف المنشور"
+        review_delete_silence: "إضافة المنشور إلى قائمة انتظار المراجعة، وحذف المنشور، وكتم المستخدم"
         spam: "الإبلاغ كمحتوى عشوائي وإخفاء المنشور"
         spam_silence: "الإبلاغ عن المحتوى العشوائي، إخفاء المنشور وكتم المستخدم"
     scriptables:
+      ai_tool_action:
+        title: إجراء أداة الذكاء الاصطناعي
+        description: تشغيل أداة الذكاء الاصطناعي عند تفعيل الأتمتة
       llm_persona_triage:
         title: فرز المنشورات باستخدام شخصيات الذكاء الاصطناعي
         description: "الرد على المنشورات باستخدام شخصية محددة من شخصيات الذكاء الاصطناعي"
       llm_triage:
         title: فرز المنشورات باستخدام الذكاء الاصطناعي
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
+        flagged_post: |
+          <div>الاستجابة من النموذج:</div>
+          <p>%{llm_response}</p>
+          <b>تم تفعيلها بواسطة قاعدة <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
+        notify_author_pm:
+          subject: "تمت إزالة منشورك مؤقتًا للمراجعة."
+          body: |
+            مرحبًا @%{username}،
+
+            تم إزالة منشورك في "%{topic_title}" مؤقتًا ووضعه في قائمة انتظار المراجعة ليطلع عليه أحد المشرفين. إذا تم الموافقة عليه، سيتم استعادته تلقائيًا.
+
+            المرجع: %{post_url}
       llm_report:
         title: التقرير الدوري باستخدام الذكاء الاصطناعي
         description: "تقرير دوري قائم على نموذج اللغة الكبير"
+      llm_tagger:
+        title: وسم الموضوعات باستخدام الذكاء الاصطناعي
+        description: "وسم الموضوعات تلقائيًا باستخدام الذكاء الاصطناعي"
   site_settings:
     discourse_ai_enabled: "تفعيل المكوِّن الإضافي Discourse AI."
     ai_default_llm_model: "نموذج اللغة الكبير الافتراضي المستخدم لجميع ميزات الذكاء الاصطناعي"
@@ -58,6 +90,8 @@ ar:
     ai_nsfw_flag_threshold_sexy: "الحد الأدنى للصورة المصنَّفة كمحتوى جنسي ليتم اعتبارها غير آمنة لبيئة العمل."
     ai_nsfw_models: "النماذج المراد استخدامها في الاستدلال على المحتوى غير الآمن لبيئة العمل."
     ai_spam_detection_enabled: "تفعيل وحدة اكتشاف المحتوى العشوائي بالذكاء الاصطناعي"
+    ai_spam_detection_max_post_count: "الحد الأقصى لعدد المنشورات التي يمكن للمستخدم نشرها قبل أن يتوقف فحصها للكشف عن البريد العشوائي"
+    ai_spam_detection_max_trust_level: "الحد الأعلى لمستوى ثقة المستخدمين الذي تُجرى عنده مراقبة البريد العشوائي"
     ai_openai_api_key: "مفتاح API الخاص بـ OpenAI. يُستخدم فقط لإنشاء الصور وتحريرها. لاستخدام GPT، استخدم تبويب إعدادات نموذج اللغة الكبير"
     ai_helper_enabled: "تفعيل مساعد الذكاء الاصطناعي"
     composer_ai_helper_allowed_groups: "سيرى المستخدمون في هذه المجموعات زر مساعد الذكاء الاصطناعي في أداة الإنشاء."
@@ -66,6 +100,7 @@ ar:
     ai_helper_automatic_chat_thread_title: "تعيين عناوين سلسلة الدردشة تلقائيًا بناءً على محتويات السلسلة."
     ai_helper_enabled_features: "حدِّد الميزات التي تريد تفعيلها في مساعد الذكاء الاصطناعي."
     post_ai_helper_allowed_groups: "مجموعات المستخدمين المسموح لها بالوصول إلى ميزات مساعد الذكاء الاصطناعي في المنشورات"
+    ai_helper_post_illustrator_persona: "الشخصية المراد استخدامها لميزة توضيح المنشور الخاصة بمساعد الذكاء الاصطناعي. ملاحظة: يجب عليك أيضًا إنشاء أداة لإنشاء الصور (المسؤول > المكوّنات الإضافية > Discourse AI > الأدوات) لكي تعمل هذه الميزة."
     ai_embeddings_selected_model: "استخدم النموذج المُحدَّد لتوليد التضمينات."
     ai_embeddings_generate_for_pms: "إنشاء تضمينات للرسائل الشخصية."
     ai_embeddings_semantic_related_topics_enabled: "استخدام البحث الدلالي للموضوعات ذات الصلة."
@@ -75,6 +110,8 @@ ar:
     ai_embeddings_semantic_search_use_hyde: "استخدم HyDE للبحث الدلالي الكامل للصفحة. يقوم نموذج اللغة الكبير (LLM) بإنشاء منشور افتراضي من مصطلح البحث الذي أدخله المستخدم للمساعدة على إيجاد التطابقات."
     ai_embeddings_semantic_quick_search_enabled: "تفعيل خيار البحث الدلالي في قائمة البحث المنبثقة."
     ai_embeddings_semantic_related_include_closed_topics: "تضمين الموضوعات المغلقة في نتائج البحث الدلالي"
+    ai_embeddings_semantic_related_age_penalty: "طبق معامل خفض القيمة بناءً على العمر الأسي للمواضيع ضمن نتائج البحث الدلالي؛ علمًا بأن القيمة 0.0 ترمز لغياب الخفض، والقيمة 0.3 تعكس ميلًا هينًا للمحتوى الذي نُشر حديثًا، في حين تشير القيمة 1.0 وما فوقها إلى ميل شديد نحو الحداثة."
+    ai_embeddings_semantic_related_age_time_scale: "النطاق الزمني المقدر بالأيام والمستخدم في احتساب معامل خفض القيمة بناءً على العمر؛ فالمواضيع التي تظل غير نشطة طوال هذه المدة تخضع لخفض قدره 50% تقريبًا في حال ضبط الخفض عند 1.0. يمكن تعيين القيمة 365 لاعتماد مقياس سنوي، أو القيمة 90 لاعتماد مقياس ربع سنوي."
     ai_embeddings_per_post_enabled: إنشاء التضمينات لكل منشور
     ai_summarization_enabled: "تفعيل ميزة التلخيص"
     ai_summarization_persona: "الشخصية المستخدمة لميزة التلخيص"
@@ -82,10 +119,15 @@ ar:
     ai_summary_gists_enabled: "إنشاء ملخصات قصيرة لأحدث الردود في الموضوعات تلقائيًا"
     ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المطلوب ملؤها في الساعة."
     ai_bot_enabled: "تفعيل وحدة روبوت الذكاء الاصطناعي"
+    ai_bot_enabled_llms: "نماذج اللغات الكبيرة المتوفرة للاختيار لإدارة محادثات روبوتات الذكاء الاصطناعي"
     ai_bot_allowed_groups: "عندما يتمكن GPT Bot من الوصول إلى الرسالة الخاصة، فإنه سيرد على أعضاء هذه المجموعات."
     ai_bot_debugging_allowed_groups: "السماح لهذه المجموعات برؤية زر تصحيح الأخطاء في المنشورات التي تعرض طلب الذكاء الاصطناعي الأولي والرد"
     ai_bot_public_sharing_allowed_groups: "السماح لهذه المجموعات بمشاركة رسائل الذكاء الاصطناعي الشخصية مع العامة عبر رابط فريد متاح بشكلٍ علني. ملاحظة: إذا كان موقعك يتطلَّب تسجيل الدخول، فستتطلب المشاركة تسجيل الدخول أيضًا."
+    ai_bot_add_to_header: "عرض زر في الرأس لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
+    ai_bot_add_to_community_section: "عرض رابط في قسم المجتمع في الشريط الجانبي لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
     ai_bot_github_access_token: "رمز وصول GitHub للاستخدام مع أدوات الذكاء الاصطناعي من GitHub (مطلوب لدعم البحث)"
+    ai_discover_enabled: "تفعيل ميزة البحث الاكتشافي"
+    ai_discover_persona: "الشخصية المستخدمة في ميزة البحث الاكتشافي"
     ai_google_custom_search_api_key: "مفتاح API لواجهة API الخاصة ببحث Google المخصَّص، راجع: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "معرّف CX لواجهة برمجة تطبيقات البحث المخصص من Google"
     ai_discord_search_enabled: "تفعيل ميزة البحث في Discord"
@@ -94,8 +136,15 @@ ar:
     ai_discord_search_mode: "حدد وضع البحث الذي تريد استخدامه للبحث في Discord"
     ai_discord_search_persona: "الشخصية المستخدمة في بحث Discord."
     ai_discord_allowed_guilds: "مجتمعات (خوادم) Discord التي يُصرح للروبوت بالبحث فيها"
+    ai_translation_enabled: "تفعيل ميزة الترجمة بالذكاء الاصطناعي"
     ai_translation_backfill_limit_to_public_content: "عند التفعيل، سيتم ترجمة المحتوى في الفئات العامة فقط. عند التعطيل، سيتم أيضًا إرسال المحتوى في الرسائل الجماعية الخاصة والفئات الخاصة للترجمة."
+    ai_translation_include_bot_content: "عند التفعيل، سيتم أيضًا إرسال المحتوى المكتوب بواسطة الروبوتات (معرفات المستخدم أقل من 0) للترجمة."
+    ai_translation_max_post_length: "الحد الأقصى لعدد الأحرف في المنشور ليتم ترجمته. المنشورات التي تتجاوز هذا الحد لن تُترجم."
     ai_translation_backfill_max_age_days: "الحد الأقصى لعمر المنشور والموضوع الذي سيتم ترجمته. المنشورات والموضوعات الأقدم من ذلك لن تُترجم. القيمة 0 تمنع الترجمة الرجعية، لكنها لن تمنع ترجمة المنشورات الجديدة."
+    ai_translation_backfill_hourly_rate: "يحدد هذا الخيار عدد المنشورات والموضوعات التي تُترجم كل ساعة أثناء إعادة ملء البيانات السابقة. ضع القيمة 0 لإيقاف الترجمة التلقائية للمحتوى الحالي."
+    ai_translation_max_tokens_multiplier: "مُضاعف تحديد الحد الأقصى لعدد الرموز المخصصة للاستخدام في الترجمة؛ حيث يتم ضبط الحد الأقصى لعدد الرموز تلقائيًا ليعادل من مرتين إلى خمس مراتٍ عدد حروف المنشور تقريبًا، علمًا بأنه يمكن موازنة هذا المُضاعف لإتاحة المجال لنماذج التفكير أو الاستدلال التي تتطلب استهلاك قدر أكبر من الرموز."
+    ai_usage_rollup_after_days: "المدة الزمنية بالأيام للاحتفاظ ببيانات استهلاك الذكاء الاصطناعي التفصيلية لكل طلب قبل تحويلها إلى ملخصات يومية مجمعة؛ علمًا بأن تعيين القيمة عند 0 سيؤدي إلى إيقاف ميزة التجميع."
+    ai_audit_logs_purge_after_days: "حذف سجلات تدقيق واجهة AI API الأقدم من هذه المدة المحددة بالأيام؛ حيث يتم تعيين المهلة تلقائيًا عند 6 أشهر تقريبًا، ويمكنك وضع القيمة 0 لضمان بقاء السجلات مخزنة دائمًا."
   reviewables:
     reasons:
       flagged_by_toxicity: أبلغ المكوِّن الإضافي الذي يعمل بالذكاء الاصطناعي عن هذا بعد تصنيفه كمحتوى مسيء.
@@ -219,10 +268,18 @@ ar:
           name: "سعر الصرف"
         stock_quote:
           name: "أسعار الأسهم (AlphaVantage)"
+        image_generation_category:
+          name: "جارٍ إنشاء الصورة..."
         image_generation_custom:
           name: "مخصَّصة"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "ابدأ من لا شيء..."
       name:
@@ -230,6 +287,11 @@ ar:
     ai_helper:
       errors:
         completion_request_failed: "حدث خطأ في أثناء محاولة تقديم اقتراحات. يُرجى إعادة المحاولة."
+        no_illustrator_persona: "لم يتم تكوين شخصية مُوضِّح المنشورات. يرجى التحقق من إعدادات موقعك."
+        no_image_generation_tool: "يجب أن تتضمن شخصية مُوضِّح المنشورات أداة لإنشاء الصور. يرجى تكوين أداة إنشاء الصور لهذه الشخصية في لوحة المسؤول."
+        no_image_generated: "فشل إنشاء الصورة. يرجى المحاولة مرة أخرى أو التحقق من إعدادات الأداة."
+        llm_model_not_configured: "لا يوجد نموذج لغة مُهيأ لإنشاء الصور. يرجى إعداد نموذج لغة افتراضي في إعدادات الموقع."
+        unknown_error: "حدث خطأ غير متوقع أثناء إنشاء الصور المصغرة. يرجى المحاولة مرة أخرى."
       prompts:
         translate: الترجمة إلى %{language}
         generate_titles: اقتراح عناوين للموضوعات
@@ -262,6 +324,7 @@ ar:
     ai_bot:
       reply_error: "عذرًا، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
+      thinking: "التفكير"
       personas:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
         cannot_delete_system_persona: "لا يمكن حذف شخصيات النظام، يُرجى إيقافها بدلًا من ذلك"
@@ -329,6 +392,7 @@ ar:
           description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في إنشاء جداول Markdown"
         post_illustrator:
           name: "مُوضِّح المنشورات"
+          description: "تنشئ صورًا بغرض توضيح المنشورات باستخدام أدوات إنشاء الصور المتاحة"
         proofreader:
           name: "مدقق لغوي"
           description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في تدقيق النصوص"
@@ -365,12 +429,16 @@ ar:
         report_runner:
           name: "مشغّل التقارير"
           description: "الشخصية الافتراضية المستخدمة في البرنامج النصي لأتمتة التقارير"
+        discover:
+          name: "اكتشف"
+          description: "الشخصية الافتراضية المستخدمة في ميزة الاكتشافات (البحث التكميلي)"
       topic_not_found: "الملخص غير متوفر، الموضوع غير موجود!"
       summarizing: "جارٍ تلخيص الموضوع"
       searching: "جارٍ البحث عن: '%{query}'"
       tool_options:
         researcher:
           researcher_llm:
+            name: "نموذج اللغة الكبير"
             description: "نموذج اللغة المستخدم في البحث (افتراضيًا يستخدم نموذج اللغة الكبير الخاص بالشخصية الحالية)"
           max_tokens_per_batch:
             name: "الحد الأقصى من الرموز لكل دفعة"
@@ -416,6 +484,10 @@ ar:
           base_query:
             name: "استعلام البحث الأساسي"
             description: "استعلام أساسي لاستخدامه عند البحث. على سبيل المثال، #urgent سيضيف #urgent إلى استعلام البحث ويقتصر على الموضوعات التي تحتوي على الفئة أو الوسم العاجل."
+        flag_post:
+          flag_type:
+            name: "نوع البلاغ"
+            description: "يتحكم فيما إذا كان سيتم مراجعة المنشور، أو إخفاؤه، أو حذفه، أو اعتباره بريدًا عشوائيًا."
       tool_summary:
         read_artifact: "قراءة أداة ويب"
         update_artifact: "تحديث أداة ويب"
@@ -424,6 +496,7 @@ ar:
         github_search_files: "ملفات بحث GitHub"
         github_search_code: "البحث عن رمز برمجي على GitHub"
         github_file_content: "محتوى ملف GitHub"
+        github_diff: "الفروقات في GitHub"
         random_picker: "منتقي عشوائي"
         categories: "إدراج الفئات"
         flag_post: "الإبلاغ عن المنشور"
@@ -452,8 +525,10 @@ ar:
         github_search_code: "البحث عن رمز برمجي في مستودع GitHub"
         github_search_files: "البحث عن ملفات في مستودع GitHub"
         github_file_content: "استعادة محتوى ملفات من مستودع GitHub"
+        github_diff: "استرجاع فروقات طلب سحب أو التزام في GitHub"
         random_picker: "اختر رقمًا عشوائيًا أو عنصرًا عشوائيًا من القائمة"
         categories: "إدراج جميع الفئات المرئية بشكلٍ عام في المنتدى"
+        flag_post: "أبلغ عن المنشور الحالي لمراجعته من قبل فريق العمل"
         search: "البحث في جميع الموضوعات العامة في المنتدى"
         tags: "إدراج جميع الوسوم في المنتدى"
         time: "البحث عن الوقت في مناطق زمنية مختلفة"
@@ -480,6 +555,7 @@ ar:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "تم استعادة محتوى %{file_paths} من %{repo_name}@%{branch}"
         random_picker: "الاختيار من %{options}، تم اختيار: %{result}"
+        flag_post: "الإبلاغ عن المنشور %{post_id} (flag_post: %{flag_post})"
         read: "القراءة: <a href='%{url}'>%{title}</a>"
         time: "الوقت في المنطقة الزمنية %{timezone} هو %{time}"
         summarize: "تم تلخيص <a href='%{url}'>%{title}</a>"
@@ -549,6 +625,15 @@ ar:
         continue_conversation:
           title: "محادثة الاستكشاف: البحث عن %{query}"
           raw: "في أثناء بحثي عن %{query}، قدّمت لي المعلومات التالية:\n\n%{context}\n\nدعنا نُتابع المحادثة."
+      flag_post:
+        errors:
+          no_context: "لا يتوفر سياق للمنشور لتقديم بلاغ عنه."
+          no_reason: "يجب تحديد سبب للإبلاغ عن المنشور."
+          invalid_flag_type: "نوع البلاغ الذي اخترته غير صالح."
+        skipped: "كان الحكم خاطئًا؛ لم يتم إنشاء أي بلاغ."
+        already_flagged: "تم الإبلاغ عن المنشور بالفعل وهو قيد المراجعة."
+        flagged: "تم الإبلاغ عن المنشور للمراجعة."
+        reason: "قام روبوت الذكاء الاصطناعي بالإبلاغ عن هذا المنشور.\n\nالسبب: %{reason}"
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
@@ -608,13 +693,22 @@ ar:
       configuration:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
+        model_test_failed: "لقد فشلنا في إنشاء اختبار تضمين باستخدام هذا النموذج. تأكَّد من صحة إعداداته."
     llm_models:
       missing_provider_param: "لا يمكن ترك %{param} فارغة"
       bedrock_invalid_url: "يُرجى ملء جميع الحقول لاستخدام هذا النموذج."
+      bedrock_missing_auth: "يتطلب AWS Bedrock إما تكوين معرّف مفتاح الوصول أو معرّف ARN للدور"
     ai_staff_action_logger:
       updated: "تاريخ التحديث"
       set: "تعيين"
       removed: "تمت إزالتها"
+    translation:
+      errors:
+        disabled: "لم يتم تكوين ميزة الترجمة بالذكاء الاصطناعي بالكامل بعد."
+        all_posts_translated: "تمت ترجمة جميع المنشورات في هذا الموضوع مسبقًا."
+    llm_credit_allocation:
+      limit_exceeded_user: "لقد تم استنفاد حد رصيد الذكاء الاصطناعي لهذا اليوم في هذا المجتمع. يمكنك المحاولة مجددًا بعد %{reset_time}، أو التواصل مع مسؤول الموقع لمزيد من المعلومات."
+      limit_exceeded_admin: "لقد وصلت إلى حد رصيد الذكاء الاصطناعي المخصص لك. يرجى المحاولة مرة أخرى بعد %{reset_time}."
     errors:
       quota_exceeded: "لقد تجاوزت الحصة المُخصَّصة لهذا النموذج. يُرجى إعادة المحاولة بعد %{relative_time}."
       quota_required: "يجب عليك تحديد الحد الأقصى للرموز أو الاستخدامات لهذا النموذج"

@@ -141,13 +141,15 @@ export default class AdminReports extends Component {
       pluginGroups.get(pluginName).push(report);
     }
 
-    for (const [pluginName, pluginReportsList] of pluginGroups) {
-      groupedReports.push({
+    const sortedPluginGroups = [...pluginGroups.entries()]
+      .map(([pluginName, pluginReportsList]) => ({
         key: `plugin-${pluginName}`,
         name: pluginReportsList[0].plugin_display_name || pluginName,
         reports: pluginReportsList,
-      });
-    }
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    groupedReports.push(...sortedPluginGroups);
 
     return groupedReports;
   }

@@ -1,7 +1,10 @@
 import { camelCaseToDash } from "discourse/lib/case-converter";
+import {
+  parseAttributesString,
+  serializeAttributes,
+} from "discourse/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 import WrapNodeView from "../components/wrap-node-view";
-import { parseAttributesString, serializeAttributes } from "../lib/wrap-utils";
 
 const toDataAttrs = (data) => {
   if (!data) {

@@ -2010,6 +2010,9 @@ email:
   mailjet_webhook_token:
     default: ""
     secret: true
+  mailpace_webhook_token:
+    default: ""
+    secret: true
   mandrill_authentication_key:
     default: ""
     secret: true
@@ -2850,6 +2853,12 @@ onebox:
     type: list
     secret: true
     list_type: secret
+  reddit_onebox_client_id:
+    default: ""
+    secret: true
+  reddit_onebox_client_secret:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:

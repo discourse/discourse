@@ -27,6 +27,7 @@ module Chat
     model :thread
     policy :invalid_access
     policy :threading_enabled_for_channel
+    policy :original_message_not_deleted
     model :membership, optional: true
     model :participants, optional: true
 
@@ -46,6 +47,11 @@ module Chat
 
     def threading_enabled_for_channel(thread:)
       thread.channel.threading_enabled || thread.force
+    end
+
+    def original_message_not_deleted(thread:, guardian:)
+      thread.original_message.deleted_at.blank? ||
+        guardian.can_moderate_chat?(thread.channel.chatable)
     end
 
     def fetch_membership(thread:, guardian:)
