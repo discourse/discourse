@@ -353,7 +353,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("canChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", { admin: false });
+    const currentUser = this.store.createRecord("user", { can_change_post_owner: false });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
@@ -369,53 +369,18 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(controller.canChangeOwner, "false when no posts are selected");
 
     controller.selectedPostIds.push(1);
-    assert.false(controller.canChangeOwner, "false when not admin");
+    assert.false(controller.canChangeOwner, "false when can_change_post_owner is false");
 
-    currentUser.set("admin", true);
+    currentUser.set("can_change_post_owner", true);
     assert.true(
       controller.canChangeOwner,
-      "true when admin and one post is selected"
+      "true when can_change_post_owner and one post is selected"
     );
 
     controller.selectedPostIds.push(2);
     assert.false(
       controller.canChangeOwner,
-      "false when admin but more than 1 user"
-    );
-  });
-
-  test("modCanChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", { moderator: false });
-    const model = topicWithStream.call(this, {
-      posts: [
-        { id: 1, username: "gary" },
-        { id: 2, username: "lili" },
-      ],
-      stream: [1, 2],
-    });
-    model.set("currentUser", currentUser);
-
-    const siteSettings = getOwner(this).lookup("service:site-settings");
-    siteSettings.moderators_change_post_ownership = true;
-
-    const controller = getOwner(this).lookup("controller:topic");
-    controller.setProperties({ model, currentUser });
-
-    assert.false(controller.canChangeOwner, "false when no posts are selected");
-
-    controller.selectedPostIds.push(1);
-    assert.false(controller.canChangeOwner, "false when not moderator");
-
-    currentUser.set("moderator", true);
-    assert.true(
-      controller.canChangeOwner,
-      "true when moderator and one post is selected"
-    );
-
-    controller.selectedPostIds.push(2);
-    assert.false(
-      controller.canChangeOwner,
-      "false when moderator but more than 1 user"
+      "false when can_change_post_owner but more than 1 user"
     );
   });
 

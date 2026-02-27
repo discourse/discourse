@@ -142,7 +142,7 @@ describe "Post menu", type: :system do
       before { SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}" }
 
       it "displays the admin button when the group is allowed" do
-        sign_in(user)
+        sign_in(allowed_group_user)
 
         topic_page.visit_topic(post.topic)
 
@@ -151,7 +151,7 @@ describe "Post menu", type: :system do
       end
       it "does not display the admin button when the group is not allowed" do
         SiteSetting.change_post_ownership_allowed_groups = ""
-        sign_in(user)
+        sign_in(allowed_group_user)
 
         topic_page.visit_topic(post.topic)
 
