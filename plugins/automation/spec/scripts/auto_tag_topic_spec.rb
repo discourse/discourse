@@ -75,4 +75,10 @@ describe "AutoTagTopic" do
       end
     end
   end
+
+  context "with a topic" do
+    it "exits early with no error" do
+      expect { automation.trigger!("topic" => topic) }.to_not raise_error
+    end
+  end
 end
