@@ -976,7 +976,7 @@ export default class SelectKit extends Component {
       this.cleanupFloatingUi?.();
       this.cleanupFloatingUi = autoUpdate(
         this.getHeader(),
-        this._mainElement(),
+        this._bodyElement(),
         () => this.updateFloatingUiPosition()
       );
     } else {
