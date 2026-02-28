@@ -19,7 +19,8 @@ class QunitRunner
 
     @standalone_mode = false
 
-    @parallel = ENV["QUNIT_PARALLEL"]
+    parallel_env = ENV["QUNIT_PARALLEL"]
+    @parallel = parallel_env ? [parallel_env.to_i, 3].min.to_s : nil
     @seed = ENV["QUNIT_SEED"]
     @theme_name = ENV["THEME_NAME"]
     @theme_url = ENV["THEME_URL"]
