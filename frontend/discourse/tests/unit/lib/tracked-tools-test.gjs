@@ -1,15 +1,17 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
 import { settled } from "@ember/test-helpers";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import {
+  autoTrackedArray,
   dedupeTracked,
   DeferredTrackedSet,
   enumerateTrackedEntries,
   enumerateTrackedKeys,
-  trackedArray,
+  isTrackedArray,
+  trackedObjectWithComputedSupport,
 } from "discourse/lib/tracked-tools";
 
 module("Unit | tracked-tools", function () {
@@ -125,16 +127,39 @@ module("Unit | tracked-tools", function () {
     assert.deepEqual([...player.letters], ["a", "b", "c", "d", "e", "f"]);
   });
 
-  module("@trackedArray", function () {
+  module("isTrackedArray", function () {
+    test("returns true for trackedArray() instances", function (assert) {
+      assert.true(isTrackedArray(trackedArray()), "empty tracked array");
+      assert.true(
+        isTrackedArray(trackedArray([1, 2, 3])),
+        "tracked array with data"
+      );
+    });
+
+    test("returns false for plain arrays", function (assert) {
+      assert.false(isTrackedArray([]), "empty array");
+      assert.false(isTrackedArray([1, 2, 3]), "array with data");
+    });
+
+    test("returns false for null, undefined, and non-array values", function (assert) {
+      assert.false(isTrackedArray(null), "null");
+      assert.false(isTrackedArray(undefined), "undefined");
+      assert.false(isTrackedArray(42), "number");
+      assert.false(isTrackedArray("string"), "string");
+      assert.false(isTrackedArray({}), "plain object");
+    });
+  });
+
+  module("@autoTrackedArray", function () {
     test("initializes with an array", function (assert) {
       class TestClass {
-        @trackedArray items = ["a", "b", "c"];
+        @autoTrackedArray items = ["a", "b", "c"];
       }
 
       const instance = new TestClass();
       assert.true(
-        instance.items instanceof TrackedArray,
-        "should wrap initial array in TrackedArray"
+        isTrackedArray(instance.items),
+        "should wrap initial array in tracked array"
       );
       assert.deepEqual(
         Array.from(instance.items),
@@ -145,7 +170,7 @@ module("Unit | tracked-tools", function () {
 
     test("accepts null as initial value", function (assert) {
       class TestClass {
-        @trackedArray items = null;
+        @autoTrackedArray items = null;
       }
 
       const instance = new TestClass();
@@ -158,7 +183,7 @@ module("Unit | tracked-tools", function () {
 
     test("accepts undefined as initial value", function (assert) {
       class TestClass {
-        @trackedArray items;
+        @autoTrackedArray items;
       }
 
       const instance = new TestClass();
@@ -171,15 +196,15 @@ module("Unit | tracked-tools", function () {
 
     test("handles setting regular arrays", function (assert) {
       class TestClass {
-        @trackedArray items;
+        @autoTrackedArray items;
       }
 
       const instance = new TestClass();
       instance.items = ["x", "y", "z"];
 
       assert.true(
-        instance.items instanceof TrackedArray,
-        "should wrap new array in TrackedArray"
+        isTrackedArray(instance.items),
+        "should wrap new array in tracked array"
       );
       assert.deepEqual(
         Array.from(instance.items),
@@ -188,19 +213,19 @@ module("Unit | tracked-tools", function () {
       );
     });
 
-    test("accepts TrackedArray instances directly", function (assert) {
+    test("accepts tracked array instances directly", function (assert) {
       class TestClass {
-        @trackedArray items = [];
+        @autoTrackedArray items = [];
       }
 
       const instance = new TestClass();
-      const trackedArr = new TrackedArray(["foo", "bar"]);
+      const trackedArr = trackedArray(["foo", "bar"]);
       instance.items = trackedArr;
 
       assert.strictEqual(
         instance.items,
         trackedArr,
-        "should use the provided TrackedArray instance"
+        "should use the provided tracked array instance"
       );
       assert.deepEqual(
         Array.from(instance.items),
@@ -211,7 +236,7 @@ module("Unit | tracked-tools", function () {
 
     test("allows setting to null", function (assert) {
       class TestClass {
-        @trackedArray items = ["initial"];
+        @autoTrackedArray items = ["initial"];
       }
 
       const instance = new TestClass();
@@ -222,7 +247,7 @@ module("Unit | tracked-tools", function () {
 
     test("allows setting to undefined", function (assert) {
       class TestClass {
-        @trackedArray items = ["initial"];
+        @autoTrackedArray items = ["initial"];
       }
 
       const instance = new TestClass();
@@ -237,7 +262,7 @@ module("Unit | tracked-tools", function () {
 
     test("throws error for invalid values", function (assert) {
       class TestClass {
-        @trackedArray items = [];
+        @autoTrackedArray items = [];
       }
 
       const instance = new TestClass();
@@ -270,7 +295,7 @@ module("Unit | tracked-tools", function () {
     test("tracks changes to array contents", function (assert) {
       class TestClass {
         evaluationsCount = 0;
-        @trackedArray items = ["a"];
+        @autoTrackedArray items = ["a"];
 
         @cached
         get itemCount() {
@@ -320,7 +345,7 @@ module("Unit | tracked-tools", function () {
     test("invalidates @computed when TrackedArray contents are mutated", function (assert) {
       class TestClass {
         computeCount = 0;
-        @trackedArray items = ["a"];
+        @autoTrackedArray items = ["a"];
 
         @computed("items")
         get itemCount() {
@@ -364,7 +389,7 @@ module("Unit | tracked-tools", function () {
     test("invalidates @computed with .[] dependent key on mutations", function (assert) {
       class TestClass {
         computeCount = 0;
-        @trackedArray items = [];
+        @autoTrackedArray items = [];
 
         @computed("items.[]")
         get itemCount() {
@@ -386,9 +411,9 @@ module("Unit | tracked-tools", function () {
       assert.strictEqual(instance.computeCount, 2, "computed re-evaluated");
     });
 
-    test("@computed works with null @trackedArray value", function (assert) {
+    test("@computed works with null @autoTrackedArray value", function (assert) {
       class TestClass {
-        @trackedArray items = null;
+        @autoTrackedArray items = null;
 
         @computed("items")
         get hasItems() {
@@ -493,10 +518,10 @@ module("Unit | tracked-tools", function () {
       assert.false(result.includes("regularProp"), "excludes regular property");
     });
 
-    test("includes @trackedArray properties", function (assert) {
+    test("includes @autoTrackedArray properties", function (assert) {
       class TestClass {
         @tracked name = "test";
-        @trackedArray items = ["a", "b", "c"];
+        @autoTrackedArray items = ["a", "b", "c"];
         regularProp = "regular";
       }
 
@@ -504,7 +529,10 @@ module("Unit | tracked-tools", function () {
       const result = enumerateTrackedKeys(instance);
 
       assert.true(result.includes("name"), "includes @tracked property");
-      assert.true(result.includes("items"), "includes @trackedArray property");
+      assert.true(
+        result.includes("items"),
+        "includes @autoTrackedArray property"
+      );
       assert.false(result.includes("regularProp"), "excludes regular property");
     });
 
@@ -691,10 +719,10 @@ module("Unit | tracked-tools", function () {
       assert.strictEqual(obj.regularProp, undefined);
     });
 
-    test("includes @trackedArray properties", function (assert) {
+    test("includes @autoTrackedArray properties", function (assert) {
       class TestClass {
         @tracked name = "test";
-        @trackedArray items = ["a", "b", "c"];
+        @autoTrackedArray items = ["a", "b", "c"];
         regularProp = "regular";
       }
 
@@ -703,7 +731,7 @@ module("Unit | tracked-tools", function () {
 
       const obj = Object.fromEntries(result);
       assert.strictEqual(obj.name, "test");
-      assert.true(obj.items instanceof TrackedArray);
+      assert.true(isTrackedArray(obj.items));
       assert.deepEqual(Array.from(obj.items), ["a", "b", "c"]);
       assert.strictEqual(obj.regularProp, undefined);
     });
@@ -848,6 +876,117 @@ module("Unit | tracked-tools", function () {
         { firstName: "Alice", lastName: "Smith" },
         "entries can be converted back to object"
       );
+    });
+  });
+
+  module("trackedObjectWithComputedSupport", function () {
+    test("basic get and set", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ name: "Alice", age: 30 });
+
+      assert.strictEqual(obj.name, "Alice");
+      assert.strictEqual(obj.age, 30);
+
+      obj.name = "Bob";
+      obj.age = 25;
+
+      assert.strictEqual(obj.name, "Bob");
+      assert.strictEqual(obj.age, 25);
+    });
+
+    test("autotracking with @cached getter", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ count: 0 });
+      let evaluations = 0;
+
+      class Reader {
+        @cached
+        get doubleCount() {
+          evaluations++;
+          return obj.count * 2;
+        }
+      }
+
+      const reader = new Reader();
+      assert.strictEqual(reader.doubleCount, 0);
+      assert.strictEqual(evaluations, 1);
+
+      obj.count = 5;
+      assert.strictEqual(reader.doubleCount, 10);
+      assert.strictEqual(evaluations, 2);
+
+      // Reading again without changes should not re-evaluate
+      assert.strictEqual(reader.doubleCount, 10);
+      assert.strictEqual(evaluations, 2);
+    });
+
+    test("@computed chain observation recomputes on property change", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ title: "original" });
+      let computeCount = 0;
+
+      class Observer {
+        obj = obj;
+
+        @computed("obj.title")
+        get display() {
+          computeCount++;
+          return `Title: ${this.obj.title}`;
+        }
+      }
+
+      const observer = new Observer();
+      assert.strictEqual(observer.display, "Title: original");
+      assert.strictEqual(computeCount, 1);
+
+      // Changing a property observed by @computed should trigger recomputation
+      obj.title = "updated";
+      assert.strictEqual(observer.display, "Title: updated");
+      assert.strictEqual(computeCount, 2);
+    });
+
+    test("no mandatory setter assertion on property assignment", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ title: "original" });
+
+      class Observer {
+        obj = obj;
+
+        @computed("obj.title")
+        get display() {
+          return this.obj.title;
+        }
+      }
+
+      const observer = new Observer();
+
+      // Force chain tag setup by reading the @computed property
+      assert.strictEqual(observer.display, "original");
+
+      // This assignment would throw a mandatory setter assertion without the fix,
+      // because setupMandatorySetter would have installed a throwing setter on the
+      // Proxy target's data descriptor. If the fix doesn't work, this line throws.
+      obj.title = "updated";
+
+      assert.strictEqual(obj.title, "updated");
+      assert.strictEqual(observer.display, "updated");
+    });
+
+    test("Object.keys returns expected keys", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ a: 1, b: 2, c: 3 });
+      assert.deepEqual(Object.keys(obj).sort(), ["a", "b", "c"]);
+    });
+
+    test("new properties can be added", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ existing: true });
+
+      obj.newProp = "hello";
+      assert.strictEqual(obj.newProp, "hello");
+      assert.true(obj.existing);
+    });
+
+    test("delete operator works", function (assert) {
+      const obj = trackedObjectWithComputedSupport({ a: 1, b: 2 });
+
+      delete obj.a;
+      assert.strictEqual(obj.a, undefined);
+      assert.deepEqual(Object.keys(obj), ["b"]);
     });
   });
 });

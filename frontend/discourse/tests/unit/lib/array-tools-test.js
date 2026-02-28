@@ -1,4 +1,4 @@
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { module, test } from "qunit";
 import {
   addUniqueValuesToArray,
@@ -8,6 +8,7 @@ import {
   removeValuesFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
+import { isTrackedArray } from "discourse/lib/tracked-tools";
 
 module("Unit | Lib | array-tools", function () {
   module("addUniqueValueToArray()", function () {
@@ -40,7 +41,7 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("works with TrackedArray and preserves instance", function (assert) {
-      const tracked = new TrackedArray([1]);
+      const tracked = trackedArray([1]);
       const result = addUniqueValueToArray(tracked, 2);
 
       assert.strictEqual(
@@ -170,11 +171,11 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("preserves TrackedArray instance and appends only missing entries", function (assert) {
-      const tracked = new TrackedArray([1, 2]);
+      const tracked = trackedArray([1, 2]);
       const result = addUniqueValuesToArray(tracked, [2, 3, 4, 3]);
 
       assert.strictEqual(result, undefined, "function returns void");
-      assert.true(tracked instanceof TrackedArray, "still a TrackedArray");
+      assert.true(isTrackedArray(tracked), "still a TrackedArray");
       assert.deepEqual(
         Array.from(tracked),
         [1, 2, 3, 4],
@@ -301,7 +302,7 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("removes all occurrences from a TrackedArray", function (assert) {
-      const tracked = new TrackedArray([1, 2, 3, 2, 4]);
+      const tracked = trackedArray([1, 2, 3, 2, 4]);
       const result = removeValueFromArray(tracked, 2);
 
       assert.strictEqual(
@@ -398,7 +399,7 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("works with TrackedArray and maintains same instance", function (assert) {
-      const tracked = new TrackedArray([1, 2, 3, 4, 5, 2, 4]);
+      const tracked = trackedArray([1, 2, 3, 4, 5, 2, 4]);
       const result = removeValuesFromArray(tracked, [2, 4]);
 
       assert.strictEqual(result, tracked, "same TrackedArray instance");
@@ -611,10 +612,10 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("returns TrackedArray when input is TrackedArray", function (assert) {
-      const tracked = new TrackedArray([1, 2, 2, 3, 3, 3]);
+      const tracked = trackedArray([1, 2, 2, 3, 3, 3]);
       const result = uniqueItemsFromArray(tracked);
 
-      assert.true(result instanceof TrackedArray, "result is a TrackedArray");
+      assert.true(isTrackedArray(result), "result is a TrackedArray");
       assert.deepEqual(Array.from(result), [1, 2, 3], "deduplicated correctly");
       assert.notStrictEqual(
         result,

@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -79,7 +79,7 @@ export default class EditCategoryTabsController extends Controller {
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked selectedTab = "general";
   @tracked formApi = null;
-  @trackedArray panels = [];
+  @autoTrackedArray panels = [];
   saving = false;
   deleting = false;
   showTooltip = false;

@@ -5,12 +5,12 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -36,7 +36,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -225,12 +225,12 @@ export default class User extends RestModel.extend(Evented) {
   @tracked do_not_disturb_until;
   @tracked status;
   @tracked dismissed_banner_key;
-  @trackedArray associated_accounts;
-  @trackedArray ignored_usernames;
-  @trackedArray ignored_users;
-  @trackedArray secondary_emails;
-  @trackedArray sidebar_sections;
-  @trackedArray unconfirmed_emails;
+  @autoTrackedArray associated_accounts;
+  @autoTrackedArray ignored_usernames;
+  @autoTrackedArray ignored_users;
+  @autoTrackedArray secondary_emails;
+  @autoTrackedArray sidebar_sections;
+  @autoTrackedArray unconfirmed_emails;
 
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
@@ -1390,7 +1390,7 @@ User.reopenClass({
         responses.set("count", responses.get("count") + stat.get("count"));
       });
 
-    const result = new TrackedArray();
+    const result = trackedArray();
     result.push(...stats.filter((stat) => !stat.isResponse));
 
     let insertAt = 0;

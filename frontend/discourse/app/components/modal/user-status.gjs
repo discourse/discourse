@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
@@ -20,7 +20,7 @@ export default class UserStatusModal extends Component {
   @service currentUser;
   @service dialog;
 
-  status = new TrackedObject({ ...this.args.model.status });
+  status = trackedObject({ ...this.args.model.status });
   timeShortcuts = this.#buildTimeShortcuts();
   _itsatrap = new ItsATrap();
 

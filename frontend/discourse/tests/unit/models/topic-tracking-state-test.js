@@ -456,9 +456,9 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("establishChannels - /destroy MessageBus channel payloads processed", async function (assert) {
-    sinon.stub(DiscourseURL, "router").value({
+    sinon.stub(DiscourseURL, "router").get(() => ({
       currentRoute: { parent: { name: "topic", params: { id: 111 } } },
-    });
+    }));
     sinon.stub(DiscourseURL, "redirectTo");
 
     const trackingState = this.store.createRecord("topic-tracking-state", {

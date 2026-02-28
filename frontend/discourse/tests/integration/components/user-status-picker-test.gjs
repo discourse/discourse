@@ -1,5 +1,5 @@
+import { trackedObject } from "@ember/reactive/collections";
 import { click, fillIn, render } from "@ember/test-helpers";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import UserStatusPicker from "discourse/components/user-status-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -13,7 +13,7 @@ module("Integration | Component | user-status-picker", function (hooks) {
   });
 
   test("it renders current status", async function (assert) {
-    const status = new TrackedObject({
+    const status = trackedObject({
       emoji: "tooth",
       description: "off to dentist",
     });
@@ -29,14 +29,14 @@ module("Integration | Component | user-status-picker", function (hooks) {
   });
 
   test("it focuses the input on insert", async function (assert) {
-    const status = new TrackedObject({});
+    const status = trackedObject({});
     await render(<template><UserStatusPicker @status={{status}} /></template>);
 
     assert.dom(".user-status-description").isFocused();
   });
 
   test("it picks emoji", async function (assert) {
-    const status = new TrackedObject({
+    const status = trackedObject({
       emoji: "tooth",
       description: "off to dentist",
     });
@@ -52,7 +52,7 @@ module("Integration | Component | user-status-picker", function (hooks) {
   });
 
   test("it sets default emoji when user starts typing a description", async function (assert) {
-    const status = new TrackedObject({});
+    const status = trackedObject({});
 
     await render(<template><UserStatusPicker @status={{status}} /></template>);
 

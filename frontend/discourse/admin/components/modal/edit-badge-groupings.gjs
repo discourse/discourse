@@ -7,14 +7,14 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 export default class EditBadgeGroupings extends Component {
   @service dialog;
   @service store;
 
-  @trackedArray workingCopy = this.args.model.badgeGroupings.map((o) =>
+  @autoTrackedArray workingCopy = this.args.model.badgeGroupings.map((o) =>
     this.store.createRecord("badge-grouping", o)
   );
 

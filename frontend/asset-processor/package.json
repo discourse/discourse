@@ -25,7 +25,7 @@
     "discourse": "workspace:0.0.0",
     "discourse-plugins": "workspace:1.0.0",
     "ember-cli-htmlbars": "^7.0.0",
-    "ember-source": "~6.6.0",
+    "ember-source": "~6.10.0",
     "ember-this-fallback": "^0.4.0",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
     "magic-string": "^0.30.21",
@@ -41,7 +41,7 @@
     "terser": "^5.44.1"
   },
   "engines": {
-    "node": ">= 18",
+    "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^10"

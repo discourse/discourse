@@ -1,8 +1,8 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import {
@@ -37,7 +37,7 @@ export default class ProsemirrorTextManipulation {
   /** @type {AutocompleteHandler} */
   autocompleteHandler;
   /** @type {ToolbarState} */
-  state = new TrackedObject({});
+  state = trackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
 

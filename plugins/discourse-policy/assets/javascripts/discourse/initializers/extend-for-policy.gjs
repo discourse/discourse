@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import PostPolicy from "../components/post-policy";
@@ -100,8 +100,8 @@ export default {
         "model:post",
         (Superclass) =>
           class extends Superclass {
-            @trackedArray policy_accepted_by = [];
-            @trackedArray policy_not_accepted_by = [];
+            @autoTrackedArray policy_accepted_by = [];
+            @autoTrackedArray policy_not_accepted_by = [];
           }
       );
 

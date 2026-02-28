@@ -2,12 +2,12 @@
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { equal } from "@ember/object/computed";
+import { trackedArray } from "@ember/reactive/collections";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
@@ -38,8 +38,8 @@ export default class Group extends RestModel {
     return ajax("/groups/check-name", { data: { group_name: name } });
   }
 
-  @trackedArray members = [];
-  @trackedArray requesters = [];
+  @autoTrackedArray members = [];
+  @autoTrackedArray requesters = [];
 
   user_count = 0;
   limit = null;
@@ -435,7 +435,7 @@ export default class Group extends RestModel {
       data: { offset, filters },
     }).then((results) => {
       return EmberObject.create({
-        logs: new TrackedArray(
+        logs: trackedArray(
           results["logs"].map((log) => GroupHistory.create(log))
         ),
         all_loaded: results["all_loaded"],
@@ -462,7 +462,7 @@ export default class Group extends RestModel {
       Site.current().updateCategory(category);
     });
 
-    return new TrackedArray(
+    return trackedArray(
       result.posts.map((p) => {
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);

@@ -2,10 +2,10 @@ import { cached } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
@@ -15,7 +15,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
@@ -87,8 +87,8 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
-  @trackedArray categories = [];
-  @trackedArray groups = [];
+  @autoTrackedArray categories = [];
+  @autoTrackedArray groups = [];
 
   @alias("is_readonly") isReadOnly;
 
@@ -201,7 +201,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    return new TrackedArray(postActionTypes.filter((type) => type.is_flag));
+    return trackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
   collectUserFields(fields) {

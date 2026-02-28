@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -16,7 +16,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { MultiCache } from "discourse/lib/multi-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { removeAccents } from "discourse/lib/utilities";
 import PermissionType from "discourse/models/permission-type";
@@ -486,9 +486,9 @@ export default class Category extends RestModel {
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
   @tracked allowed_tags;
-  @trackedArray available_groups;
-  @trackedArray permissions;
-  @trackedArray required_tag_groups;
+  @autoTrackedArray available_groups;
+  @autoTrackedArray permissions;
+  @autoTrackedArray required_tag_groups;
 
   init() {
     super.init(...arguments);
@@ -503,7 +503,7 @@ export default class Category extends RestModel {
     if (this.group_permissions) {
       this.permissions = this.group_permissions.map((elem) => {
         removeValueFromArray(this.available_groups, elem.group_name);
-        return new TrackedObject(elem);
+        return trackedObject(elem);
       });
     }
   }
@@ -865,7 +865,7 @@ export default class Category extends RestModel {
   }
 
   addPermission(permission) {
-    addUniqueValueToArray(this.permissions, new TrackedObject(permission));
+    addUniqueValueToArray(this.permissions, trackedObject(permission));
     removeValueFromArray(this.available_groups, permission.group_name);
   }
 

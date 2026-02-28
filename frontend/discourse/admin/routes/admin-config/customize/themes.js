@@ -1,4 +1,4 @@
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import Theme from "discourse/admin/models/theme";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -13,7 +13,7 @@ export default class AdminConfigThemesAndComponentsThemesRoute extends Discourse
   async model(params) {
     const data = await ajax("/admin/config/customize/themes");
     return {
-      themes: new TrackedArray(
+      themes: trackedArray(
         data.themes.map((theme) =>
           // TODO(osama) MEGA HACK. remove the __type and __state properties when
           // we have rebuilt the theme "show" page and stopped requiring all
