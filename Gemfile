@@ -119,6 +119,8 @@ gem "digest", require: false
 
 gem "goldiloader"
 
+gem "jmespath"
+
 group :test do
   gem "capybara", require: false
   gem "webmock", require: false
