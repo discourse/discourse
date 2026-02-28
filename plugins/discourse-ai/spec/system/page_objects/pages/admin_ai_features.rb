@@ -15,7 +15,7 @@ module PageObjects
         select.find("option[value='enabled']").select_option
       end
 
-      def toggle_disabled
+      def toggle_not_enabled
         select = page.find("#{FEATURES_PAGE} .ai-features__controls .d-select")
         select.find("option[value='not enabled']").select_option
       end
