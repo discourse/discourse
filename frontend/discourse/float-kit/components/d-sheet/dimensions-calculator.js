@@ -62,6 +62,7 @@ const WEBKIT_MOBILE_THRESHOLD = 716;
 /**
  * @typedef {Object} SheetDimensions
  * @property {AxisDimensions} view - Dimensions of the view element.
+ * @property {AxisDimensions} scroll - Dimensions of the scroll viewport.
  * @property {AxisDimensions} content - Dimensions of the content element.
  * @property {DetentMarkerDimension[]} detentMarkers - Computed dimensions for each detent marker.
  * @property {ProgressEntry[]} [progressValueAtDetents] - Progress entries at each detent.
@@ -234,13 +235,15 @@ export default class DimensionCalculator {
   #parseInitialDimensions(context) {
     const { view, content } = this.elements;
     const { travelProp, crossProp } = context;
+    const viewDimensions = parseDimensionsFromStyle(
+      window.getComputedStyle(view),
+      travelProp,
+      crossProp
+    );
 
     return {
-      view: parseDimensionsFromStyle(
-        window.getComputedStyle(view),
-        travelProp,
-        crossProp
-      ),
+      view: viewDimensions,
+      scroll: viewDimensions,
       content: parseDimensionsFromStyle(
         window.getComputedStyle(content),
         travelProp,

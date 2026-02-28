@@ -189,6 +189,7 @@ export default class DScrollView extends Component {
 
   configureController() {
     this.controller.axis = this.args.axis ?? "y";
+    this.controller.pageScroll = this.args.pageScroll ?? false;
     this.controller.safeArea = this.args.safeArea ?? "visual-viewport";
     this.controller.scrollAnimationSettings = this.args
       .scrollAnimationSettings ?? { skip: "auto" };

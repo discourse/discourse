@@ -102,6 +102,8 @@ export default class Controller {
    */
   @tracked backdrop = null;
 
+  @tracked bleedingBackgroundPresent = false;
+
   /**
    * Whether the sheet is currently presented.
    * @type {boolean}
@@ -1751,6 +1753,11 @@ export default class Controller {
    */
   applyInertOutside() {
     this.sheetRegistry?.updateInertOutside(this, this.inertOutside);
+  }
+
+  @action
+  setBleedingBackgroundPresent(value) {
+    this.bleedingBackgroundPresent = value;
   }
 
   /**
