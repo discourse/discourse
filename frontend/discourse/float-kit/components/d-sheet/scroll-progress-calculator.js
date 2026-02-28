@@ -35,7 +35,8 @@ export default class ScrollProgressCalculator {
       return null;
     }
 
-    const isHorizontal = tracks === "left" || tracks === "right";
+    const isHorizontal =
+      tracks === "left" || tracks === "right" || tracks === "horizontal";
     const scrollPosition = isHorizontal
       ? scrollContainer.scrollLeft
       : scrollContainer.scrollTop;
