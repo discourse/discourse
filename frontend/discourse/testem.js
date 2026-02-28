@@ -222,7 +222,7 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
-  parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
+  parallel: Math.min(parseInt(process.env.QUNIT_PARALLEL || 1, 10), 3),
   socket_server_options: {
     maxHttpBufferSize: 1e8, // 100MB
   },

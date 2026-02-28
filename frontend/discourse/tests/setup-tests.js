@@ -52,8 +52,13 @@ import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
 
 const REPORT_MEMORY = false;
+const PROFILE_PHASES = true;
 let cancelled = false;
 let started = false;
+let testStartDurations = [];
+let testDoneDurations = [];
+let testTotalDurations = [];
+let testStartTimestamp;
 
 function createApplication(config, settings) {
   const app = Application.create(config);
@@ -194,6 +199,34 @@ function reportMemoryUsageAfterTests() {
   });
 }
 
+function reportPhaseTimings() {
+  if (!PROFILE_PHASES) {
+    return;
+  }
+  QUnit.done(() => {
+    const avg = (arr) =>
+      arr.length
+        ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1)
+        : "N/A";
+    const p = (arr, pct) => {
+      if (!arr.length) {
+        return "N/A";
+      }
+      const sorted = [...arr].sort((a, b) => a - b);
+      return sorted[Math.floor(sorted.length * pct)].toFixed(1);
+    };
+
+    const msg = [
+      `[Phase Profiling] ${testStartDurations.length} tests`,
+      `  testStart  - avg: ${avg(testStartDurations)}ms, P50: ${p(testStartDurations, 0.5)}ms, P90: ${p(testStartDurations, 0.9)}ms, P99: ${p(testStartDurations, 0.99)}ms`,
+      `  testDone   - avg: ${avg(testDoneDurations)}ms, P50: ${p(testDoneDurations, 0.5)}ms, P90: ${p(testDoneDurations, 0.9)}ms, P99: ${p(testDoneDurations, 0.99)}ms`,
+      `  total test - avg: ${avg(testTotalDurations)}ms, P50: ${p(testTotalDurations, 0.5)}ms, P90: ${p(testTotalDurations, 0.9)}ms, P99: ${p(testTotalDurations, 0.99)}ms`,
+    ].join("\n");
+
+    writeSummaryLine(msg);
+  });
+}
+
 function writeSummaryLine(message) {
   // eslint-disable-next-line no-console
   console.log(`\n${message}\n`);
@@ -252,6 +285,8 @@ export default function setupTests(config) {
 
   let app;
   QUnit.testStart(function (ctx) {
+    const testStartBegin = PROFILE_PHASES ? performance.now() : 0;
+
     let settings = resetSettings();
 
     resetThemeSettings();
@@ -316,9 +351,19 @@ export default function setupTests(config) {
     sinon.stub(scrollManager, "unbindScrolling");
 
     disableLoadMoreObserver();
+
+    if (PROFILE_PHASES) {
+      testStartDurations.push(performance.now() - testStartBegin);
+      testStartTimestamp = performance.now();
+    }
   });
 
   QUnit.testDone(function () {
+    if (PROFILE_PHASES) {
+      testTotalDurations.push(performance.now() - testStartTimestamp);
+    }
+    const testDoneBegin = PROFILE_PHASES ? performance.now() : 0;
+
     testCleanup(getOwner(app), app);
 
     sinon.restore();
@@ -329,12 +374,6 @@ export default function setupTests(config) {
     run(() => {
       app.destroy();
     });
-
-    // Break RSVP promise chains that retain the destroyed app. The test
-    // framework's setupContext calls application.boot(), creating RSVP
-    // promises whose _result holds the app even after resolution.
-    app._bootPromise = null;
-    app._bootResolver = null;
 
     resetPretender();
     clearPresenceState();
@@ -360,6 +399,10 @@ export default function setupTests(config) {
     // Release the app reference so the destroyed app isn't retained
     // by this closure until the next test creates a new one.
     app = null;
+
+    if (PROFILE_PHASES) {
+      testDoneDurations.push(performance.now() - testDoneBegin);
+    }
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
@@ -388,6 +431,7 @@ export default function setupTests(config) {
 
   setupToolbar();
   reportMemoryUsageAfterTests();
+  reportPhaseTimings();
   patchFailedAssertion();
   if (!window.Testem) {
     // Running in a dev server - svg sprites are available
