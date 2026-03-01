@@ -55,13 +55,17 @@ export default class Handle extends SheetActionBase {
     return this.sheet?.isPresented ?? false;
   }
 
+  get root() {
+    return this.targetRoot ?? this.sheet?.rootComponent;
+  }
+
   /**
    * Execute the configured action on the sheet.
    */
   executeAction() {
     switch (this.actionType) {
       case "dismiss":
-        this.sheet?.close();
+        this.root.dismiss();
         break;
       case "step":
         this.executeStepAction();
