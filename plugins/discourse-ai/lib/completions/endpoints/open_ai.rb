@@ -25,8 +25,15 @@ module DiscourseAi
             model_params[:stop] = model_params.delete(:stop_sequences)
           end
 
-          model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
+          if reasoning_effort
+            model_params.delete(:temperature)
+            model_params.delete(:top_p)
+          else
+            model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
+            if llm_model.lookup_custom_param("disable_temperature")
+              model_params.delete(:temperature)
+            end
+          end
 
           model_params
         end
@@ -63,7 +70,9 @@ module DiscourseAi
         def reasoning_effort
           return @reasoning_effort if defined?(@reasoning_effort)
           @reasoning_effort = llm_model.lookup_custom_param("reasoning_effort")
-          @reasoning_effort = nil if !%w[minimal low medium high].include?(@reasoning_effort)
+          @reasoning_effort = nil if !%w[none minimal low medium high xhigh].include?(
+            @reasoning_effort,
+          )
           @reasoning_effort
         end
 
