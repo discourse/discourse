@@ -1309,6 +1309,121 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       # Verify that tool_choice: "echo" is present
       expect(parsed_body.dig(:tool_choice, :name)).to eq("echo")
     end
+
+    it "skips tool_choice and injects guidance when thinking is enabled" do
+      model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [type: :user, id: "user1", content: "echo hello"],
+          tools: [echo_tool],
+          tool_choice: "echo",
+        )
+
+      response_body = {
+        id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+        type: "message",
+        role: "assistant",
+        model: "claude-3-haiku-20240307",
+        content: [
+          {
+            type: "tool_use",
+            id: "toolu_bdrk_014CMjxtGmKUtGoEFPgc7PF7",
+            name: "echo",
+            input: {
+              text: "hello",
+            },
+          },
+        ],
+        stop_reason: "end_turn",
+        stop_sequence: nil,
+        usage: {
+          input_tokens: 345,
+          output_tokens: 65,
+        },
+      }.to_json
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: response_body)
+
+      llm.generate(prompt, user: Discourse.system_user)
+
+      expect(parsed_body).not_to have_key(:tool_choice)
+      last_message = parsed_body[:messages].last
+      expect(last_message[:role]).to eq("user")
+      expect(last_message[:content]).to include("'echo' tool")
+    end
+
+    it "appends guidance as a text block when last user message has array content" do
+      model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [
+            { type: :user, id: "user1", content: "echo hello" },
+            {
+              type: :tool_call,
+              id: "call_1",
+              name: "echo",
+              content: { arguments: { text: "hello" } }.to_json,
+            },
+            { type: :tool, id: "call_1", name: "echo", content: "hello" },
+          ],
+          tools: [echo_tool],
+          tool_choice: "echo",
+        )
+
+      response_body = {
+        id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+        type: "message",
+        role: "assistant",
+        model: "claude-3-haiku-20240307",
+        content: [
+          {
+            type: "tool_use",
+            id: "toolu_014CMjxtGmKUtGoEFPgc7PF7",
+            name: "echo",
+            input: {
+              text: "hello again",
+            },
+          },
+        ],
+        stop_reason: "end_turn",
+        stop_sequence: nil,
+        usage: {
+          input_tokens: 345,
+          output_tokens: 65,
+        },
+      }.to_json
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: response_body)
+
+      llm.generate(prompt, user: Discourse.system_user)
+
+      expect(parsed_body).not_to have_key(:tool_choice)
+      last_message = parsed_body[:messages].last
+      expect(last_message[:role]).to eq("user")
+      expect(last_message[:content]).to be_an(Array)
+      expect(last_message[:content].first[:type]).to eq("tool_result")
+      guidance_block = last_message[:content].last
+      expect(guidance_block[:type]).to eq("text")
+      expect(guidance_block[:text]).to include("'echo' tool")
+    end
   end
 
   describe "structured output via output_config" do

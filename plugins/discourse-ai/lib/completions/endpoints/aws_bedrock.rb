@@ -120,19 +120,6 @@ module DiscourseAi
           end
         end
 
-        def apply_tool_choice(payload, dialect, prompt)
-          return if dialect.tool_choice.blank?
-          if dialect.tool_choice != :none
-            payload[:tool_choice] = { type: "tool", name: prompt.tool_choice }
-          end
-          # tool_choice: {type: "none"} not supported on Bedrock — handled by apply_tool_choice_none
-        end
-
-        def apply_tool_choice_none(payload, dialect)
-          no_tool_text = dialect.no_more_tool_calls_text_user
-          payload[:messages] << { role: "user", content: no_tool_text } if no_tool_text.present?
-        end
-
         def prepare_request(payload)
           headers = { "content-type" => "application/json", "Accept" => "*/*" }
           region = llm_model.lookup_custom_param("region")
