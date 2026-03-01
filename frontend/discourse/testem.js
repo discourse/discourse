@@ -240,7 +240,7 @@ module.exports = {
       "--remote-debugging-port=4201",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
+      "--js-flags=--expose-gc --max_old_space_size=4096",
     ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
@@ -253,7 +253,7 @@ module.exports = {
       "--remote-debugging-port=4201",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
+      "--js-flags=--expose-gc --max_old_space_size=4096",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },
