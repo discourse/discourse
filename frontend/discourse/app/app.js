@@ -74,21 +74,25 @@ async function loadPluginFromModulePreload(link) {
     if (DEBUG) {
       if (!dialogContent) {
         const style = document.createElement("style");
-        style.innerText = `
+        style.innerHTML = `
           #discourse-error-dialog {
-            --color: #e04e39;
+            --error-color: #e04e39;
 
-            background: light-dark(var(--color), #141414);
+            background: light-dark(var(--error-color), #161616);
             border-radius: 16px;
-            border: 1px solid light-dark(var(--color), #242424);
+            border: 1px solid light-dark(var(--error-color), #242424);
             box-shadow: 0 8px 16px 8px light-dark(#aaa, #111);
-            color: light-dark(#fff, var(--color));
+            color: light-dark(#fff, var(--error-color));
+            display: flex;
+            flex-direction: column;
             font-family: monospace;
             font-size: 13px;
+            overflow: hidden;
             padding: 0;
+            max-height: 90vh;
 
-            &::before {
-              background: #111 linear-gradient(-45deg, transparent 6px, var(--color) 6px, var(--color) 12px, transparent 12px);
+            > div::before {
+              background: #111 linear-gradient(-45deg, transparent 6px, var(--error-color) 6px, var(--error-color) 12px, transparent 12px);
               background-position: 6px;
               background-repeat: repeat-x;
               background-size: 18px 8px;
@@ -117,6 +121,7 @@ async function loadPluginFromModulePreload(link) {
 
             ul {
               margin: 0;
+              overflow-y: scroll;
             }
 
             li {
@@ -139,9 +144,10 @@ async function loadPluginFromModulePreload(link) {
         const dialog = document.createElement("dialog");
         dialog.id = "discourse-error-dialog";
 
-        const heading = document.createElement("h1");
-        heading.innerText = "Plugin Error";
-        dialog.append(heading);
+        const heading = document.createElement("div");
+        const title = document.createElement("h1");
+        title.innerText = "Plugin Error";
+        heading.append(title);
 
         const tomster = document.createElement("model-viewer");
         tomster.src = "tomster-compressed.glb";
@@ -152,7 +158,9 @@ async function loadPluginFromModulePreload(link) {
         tomster.setAttribute("auto-rotate-delay", 1500);
         tomster.setAttribute("rotation-per-second", "400%");
         tomster.setAttribute("camera-orbit", "60deg 75deg 105%");
-        dialog.append(tomster);
+        heading.append(tomster);
+
+        dialog.append(heading);
 
         dialogContent = document.createElement("ul");
         dialog.append(dialogContent);
