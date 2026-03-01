@@ -74,6 +74,18 @@ after_initialize do
 
   add_to_serializer(:user_card, :vote_count) { object.vote_count }
 
+  add_to_serializer(:topic_list_item, :topic_vote_count) do
+    if SiteSetting.post_voting_topic_vote_count_mode == "total"
+      object.posts.sum(:qa_vote_count)
+    else
+      object.first_post&.qa_vote_count || 0
+    end
+  end
+
+  add_to_serializer(:topic_list_item, :include_topic_vote_count?) do
+    SiteSetting.post_voting_serialize_topic_votes_count && object.is_post_voting?
+  end
+
   add_to_class(:topic_view, :user_voted_posts) do |user|
     @user_voted_posts ||= {}
 
