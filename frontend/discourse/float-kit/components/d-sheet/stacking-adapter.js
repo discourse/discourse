@@ -8,6 +8,7 @@
  */
 
 import { createTweenFunction } from "./animation";
+import { EVENTS } from "./state-machine-events";
 
 /**
  * Adapter for managing sheet stacking within a registry.
@@ -198,7 +199,7 @@ export default class StackingAdapter {
   notifyParentPositionMachineNext() {
     const parentSheet = this.getParentSheet();
     if (parentSheet) {
-      parentSheet.sendToPositionMachine("NEXT");
+      parentSheet.sendToPositionMachine(EVENTS.NEXT);
     }
   }
 

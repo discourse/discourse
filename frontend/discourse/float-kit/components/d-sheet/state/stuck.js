@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for stuck state machines (front and back).
  * Tracks whether sheet is stuck at detent boundaries.
@@ -53,7 +55,7 @@ export default class StuckState {
    * @returns {void}
    */
   startFront() {
-    this.#frontMachine.send("STUCK_START");
+    this.#frontMachine.send(EVENTS.STUCK_START);
   }
 
   /**
@@ -61,7 +63,7 @@ export default class StuckState {
    * @returns {void}
    */
   endFront() {
-    this.#frontMachine.send("STUCK_END");
+    this.#frontMachine.send(EVENTS.STUCK_END);
   }
 
   /**
@@ -69,7 +71,7 @@ export default class StuckState {
    * @returns {void}
    */
   startBack() {
-    this.#backMachine.send("STUCK_START");
+    this.#backMachine.send(EVENTS.STUCK_START);
   }
 
   /**
@@ -77,7 +79,7 @@ export default class StuckState {
    * @returns {void}
    */
   endBack() {
-    this.#backMachine.send("STUCK_END");
+    this.#backMachine.send(EVENTS.STUCK_END);
   }
 
   /**

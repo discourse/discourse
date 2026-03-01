@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for scroll container touch state machine.
  * Tracks whether touch is ongoing or ended.
@@ -37,7 +39,7 @@ export default class TouchState {
    * @returns {void}
    */
   start() {
-    this.#machine.send("TOUCH_START");
+    this.#machine.send(EVENTS.TOUCH_START);
   }
 
   /**
@@ -45,6 +47,6 @@ export default class TouchState {
    * @returns {void}
    */
   end() {
-    this.#machine.send("TOUCH_END");
+    this.#machine.send(EVENTS.TOUCH_END);
   }
 }

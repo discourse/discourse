@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for elements ready state machine.
  * Tracks whether DOM elements have been registered.
@@ -38,7 +40,7 @@ export default class ElementsState {
    * @returns {void}
    */
   markRegistered() {
-    this.#machine.send("ELEMENTS_REGISTERED");
+    this.#machine.send(EVENTS.ELEMENTS_REGISTERED);
   }
 
   /**
@@ -46,6 +48,6 @@ export default class ElementsState {
    * @returns {void}
    */
   reset() {
-    this.#machine.send("RESET");
+    this.#machine.send(EVENTS.RESET);
   }
 }

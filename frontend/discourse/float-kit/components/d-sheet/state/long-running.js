@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for long-running operation state machine.
  * Tracks whether a long-running operation is in progress.
@@ -37,7 +39,7 @@ export default class LongRunningState {
    * @returns {void}
    */
   start() {
-    this.#machine.send("TO_TRUE");
+    this.#machine.send(EVENTS.TO_TRUE);
   }
 
   /**
@@ -45,6 +47,6 @@ export default class LongRunningState {
    * @returns {void}
    */
   end() {
-    this.#machine.send("TO_FALSE");
+    this.#machine.send(EVENTS.TO_FALSE);
   }
 }

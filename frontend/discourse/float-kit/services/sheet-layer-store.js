@@ -183,9 +183,7 @@ export default class SheetLayerStore extends Service {
     const activeElement = document.activeElement;
 
     focusState.focusWasInsideOnClose =
-      !!viewElement &&
-      !!activeElement &&
-      viewElement.contains(activeElement);
+      !!viewElement && !!activeElement && viewElement.contains(activeElement);
 
     this.layerFocusState.set(sheetId, focusState);
   }
@@ -199,9 +197,7 @@ export default class SheetLayerStore extends Service {
     const activeElement = document.activeElement;
     const focusWasInside =
       focusState.focusWasInsideOnClose ||
-      (!!viewElement &&
-        !!activeElement &&
-        viewElement.contains(activeElement));
+      (!!viewElement && !!activeElement && viewElement.contains(activeElement));
 
     focusState.focusWasInsideOnClose = false;
     this.layerFocusState.set(sheetId, focusState);
@@ -249,7 +245,7 @@ export default class SheetLayerStore extends Service {
       return;
     }
 
-    if (!sheet.state.openness.isOpen) {
+    if (!sheet.canAcceptDismissRequest) {
       return;
     }
 
@@ -286,7 +282,7 @@ export default class SheetLayerStore extends Service {
       return;
     }
 
-    if (!sheet.state.openness.isOpen) {
+    if (!sheet.canAcceptDismissRequest) {
       return;
     }
 
@@ -551,5 +547,4 @@ export default class SheetLayerStore extends Service {
     this.#cleanupClickOutsideListener();
     this.#cleanupEscapeKeyListener();
   }
-
 }
