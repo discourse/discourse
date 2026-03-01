@@ -227,7 +227,7 @@ module.exports = {
     maxHttpBufferSize: 1e8, // 100MB
   },
   browser_start_timeout: 120,
-  browser_disconnect_timeout: 30,
+  browser_disconnect_timeout: 60,
   browser_args: {
     Chromium: [
       // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
