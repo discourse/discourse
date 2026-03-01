@@ -15,7 +15,7 @@ Rails.application.config.assets.paths.push(
 )
 
 Rails.application.config.assets.paths.push(
-  *Discourse.plugins.map { |p| "#{Rails.root}/app/assets/generated/#{p.directory_name}" },
+  *Discourse.plugins.map { |p| "#{Rails.root}/app/assets/generated/#{p.directory_name}/" },
 )
 
 # These paths are added automatically by propshaft, but we don't want them
@@ -25,7 +25,4 @@ Rails.application.config.assets.excluded_paths.push(
   "#{Rails.root}/app/assets/stylesheets",
 )
 
-# We don't need/want most of Propshaft's preprocessing. Only keep the JS sourcemap handler
-Rails.application.config.assets.compilers.filter! do |type, compiler|
-  type == "text/javascript" && compiler == Propshaft::Compiler::SourceMappingUrls
-end
+Rails.application.config.assets.compilers = []

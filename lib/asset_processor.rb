@@ -120,6 +120,7 @@ class AssetProcessor
 
     source = load_or_build_processor_source
 
+    ctx.eval("globalThis.ROLLUP_PLUGIN_COMPILER = #{ENV["ROLLUP_PLUGIN_COMPILER"].to_json}")
     ctx.eval(source, filename: "asset-processor.js")
 
     ctx

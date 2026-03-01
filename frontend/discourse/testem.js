@@ -315,6 +315,12 @@ if (themeTestPages) {
     "/assets/plugins/": {
       target,
     },
+    "/assets/js/plugins/": {
+      target,
+    },
+    "/assets/map/plugins/": {
+      target,
+    },
     "/plugins/": {
       target,
     },

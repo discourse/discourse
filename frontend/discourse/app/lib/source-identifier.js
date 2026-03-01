@@ -54,6 +54,7 @@ export default function identifySource(error) {
   // Order matters: check more specific patterns (_admin) before general ones
   const patterns = [];
 
+  // legacy
   if (DEBUG) {
     patterns.push(
       /assets\/plugins\/([\w-]+)_admin\.js/, // Admin UI Development (no fingerprinting)
@@ -62,10 +63,14 @@ export default function identifySource(error) {
     );
   }
 
+  // legacy
   patterns.push(
     /assets\/plugins\/_?([\w-]+)-[0-9a-f]+_admin(?:\.(?:br|gz))?\.js/, // Admin UI Production (with fingerprints)
     /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.(?:br|gz))?\.js/ // Production (with fingerprints)
   );
+
+  // new paths (ROLLUP_PLUGIN_COMPILER)
+  patterns.push(/assets\/(?:js|br|gz)\/plugins\/([\w-]+)_/);
 
   for (const pattern of patterns) {
     plugin = stack.match(pattern)?.[1];

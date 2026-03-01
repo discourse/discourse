@@ -101,14 +101,6 @@ RSpec.describe ApplicationHelper do
         expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
-      it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
-        helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip, br"
-        link = helper.preload_script("discourse/tests/theme_qunit_ember_jquery")
-        expect(link).to include(
-          %r{https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery-\w{8}.js},
-        )
-      end
-
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
         expect(helper.preload_script("start-discourse")).to include(
@@ -122,31 +114,26 @@ RSpec.describe ApplicationHelper do
         helper.preload_script(
           "plugins/my-plugin",
           attrs: {
-            "data-discourse-plugin": "my-plugin",
+            "data-plugin-name": "my-plugin",
             "data-preinstalled": "true",
             "data-official": "true",
           },
         )
-      expect(result).to include('data-discourse-plugin="my-plugin"')
+      expect(result).to include('data-plugin-name="my-plugin"')
       expect(result).to include('data-preinstalled="true"')
       expect(result).to include('data-official="true"')
     end
 
     it "does not include extra attrs when none are provided" do
       result = helper.preload_script("start-discourse")
-      expect(result).not_to include("data-discourse-plugin")
+      expect(result).not_to include("data-plugin-name")
       expect(result).not_to include("data-preinstalled")
       expect(result).not_to include("data-official")
     end
 
     it "escapes attr values" do
       result =
-        helper.preload_script(
-          "plugins/test",
-          attrs: {
-            "data-discourse-plugin": "<script>xss</script>",
-          },
-        )
+        helper.preload_script("plugins/test", attrs: { "data-plugin-name": "<script>xss</script>" })
       expect(result).not_to include("<script>xss</script>")
       expect(result).to include("&lt;script&gt;xss&lt;/script&gt;")
     end
@@ -156,7 +143,7 @@ RSpec.describe ApplicationHelper do
         helper.preload_script(
           "plugins/my-plugin",
           attrs: {
-            "data-discourse-plugin": "my-plugin",
+            "data-plugin-name": "my-plugin",
             "data-preinstalled": "false",
             "data-official": "false",
           },

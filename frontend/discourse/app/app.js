@@ -18,6 +18,7 @@ import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-inje
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
 
+import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import require from "require";
@@ -53,10 +54,138 @@ async function loadThemeFromModulePreload(link) {
   }
 }
 
-export async function loadThemes() {
+let dialogContent;
+
+async function loadPluginFromModulePreload(link) {
+  const pluginName = link.dataset.pluginName;
+  try {
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/plugins/${pluginName}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      error
+    );
+
+    if (DEBUG) {
+      if (!dialogContent) {
+        const style = document.createElement("style");
+        style.innerHTML = `
+          #discourse-error-dialog {
+            --error-color: #e04e39;
+
+            background: light-dark(var(--error-color), #161616);
+            border-radius: 16px;
+            border: 1px solid light-dark(var(--error-color), #242424);
+            box-shadow: 0 8px 16px 8px light-dark(#aaa, #111);
+            color: light-dark(#fff, var(--error-color));
+            display: flex;
+            flex-direction: column;
+            font-family: monospace;
+            font-size: 13px;
+            overflow: hidden;
+            padding: 0;
+            max-height: 90vh;
+
+            > div::before {
+              background: #111 linear-gradient(-45deg, transparent 6px, var(--error-color) 6px, var(--error-color) 12px, transparent 12px);
+              background-position: 6px;
+              background-repeat: repeat-x;
+              background-size: 18px 8px;
+              content: "";
+              display: block;
+              height: 8px;
+              width: 100%;
+            }
+
+            model-viewer {
+              display: inline-block;
+              height: 128px;
+              margin-left: auto;
+              vertical-align: middle;
+              width: 96px;
+            }
+
+            h1 {
+              display: inline-block;
+              font-family: system-ui, sans-serif;
+              font-size: 28px;
+              margin: 0 0 0 16px;
+              vertical-align: middle;
+              width: calc(100% - 96px - 16px * 2);
+            }
+
+            ul {
+              margin: 0;
+              overflow-y: scroll;
+            }
+
+            li {
+              background: #0003;
+              border-radius: 8px;
+              list-style: none;
+              margin: 0 16px 16px;
+              padding: 16px 16px 32px;
+            }
+          }
+        `;
+        document.body.append(style);
+
+        const script = document.createElement("script");
+        script.type = "module";
+        script.src =
+          "https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js";
+        document.body.append(script);
+
+        const dialog = document.createElement("dialog");
+        dialog.id = "discourse-error-dialog";
+
+        const heading = document.createElement("div");
+        const title = document.createElement("h1");
+        title.innerText = "Plugin Error";
+        heading.append(title);
+
+        const tomster = document.createElement("model-viewer");
+        tomster.src = "tomster-compressed.glb";
+        tomster.setAttribute("camera-controls", true);
+        tomster.setAttribute("touch-action", "pan-y");
+        tomster.setAttribute("interaction-prompt", "none");
+        tomster.setAttribute("auto-rotate", "true");
+        tomster.setAttribute("auto-rotate-delay", 1500);
+        tomster.setAttribute("rotation-per-second", "400%");
+        tomster.setAttribute("camera-orbit", "60deg 75deg 105%");
+        heading.append(tomster);
+
+        dialog.append(heading);
+
+        dialogContent = document.createElement("ul");
+        dialog.append(dialogContent);
+
+        document.body.append(dialog);
+        dialog.showModal();
+      }
+
+      const errorElement = document.createElement("li");
+      errorElement.innerText += `❌ Failed to load plugin ${link.dataset.pluginName} from ${link.href}\n${error.message}`;
+      dialogContent.append(errorElement);
+    }
+  }
+}
+
+export async function loadThemesAndPlugins() {
   const promises = [
-    ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
-  ].map(loadThemeFromModulePreload);
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+    ].map(loadThemeFromModulePreload),
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
+    ].map(loadPluginFromModulePreload),
+  ];
+
   await Promise.all(promises);
 }
 

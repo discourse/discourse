@@ -460,21 +460,60 @@ module Discourse
 
     plugins.each do |plugin|
       if plugin.js_asset_exists?
-        assets << { name: "plugins/#{plugin.directory_name}", plugin: plugin }
+        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+          assets << {
+            name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main"),
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
+            plugin: plugin,
+            type_module: true,
+            importmap_name: "discourse/plugins/#{plugin.directory_name}",
+          }
+        else
+          assets << { name: "plugins/#{plugin.directory_name}", plugin: plugin }
+        end
       end
 
       if plugin.extra_js_asset_exists?
-        assets << { name: "plugins/#{plugin.directory_name}_extra", plugin: plugin }
+        assets << {
+          name: "plugins/#{plugin.directory_name}_extra",
+          plugin: plugin,
+          type_module: false,
+        }
       end
 
       if args[:include_admin_asset] && plugin.admin_js_asset_exists?
-        assets << { name: "plugins/#{plugin.directory_name}_admin", plugin: plugin }
+        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+          assets << {
+            name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin"),
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
+            plugin: plugin,
+            type_module: true,
+          }
+        else
+          assets << { name: "plugins/#{plugin.directory_name}_admin", plugin: plugin }
+        end
       end
 
       if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
            plugin.test_js_asset_exists?
-        assets << { name: "plugins/test/#{plugin.directory_name}_tests", plugin: plugin }
+        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+          assets << {
+            name: Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test"),
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
+            plugin: plugin,
+            type_module: true,
+          }
+        else
+          assets << { name: "plugins/test/#{plugin.directory_name}_tests", plugin: plugin }
+        end
       end
+    end
+
+    assets.each do |asset|
+      asset[:plugin_attributes] = {
+        "data-official": !!asset[:plugin].metadata&.official?,
+        "data-preinstalled": asset[:plugin].preinstalled?,
+      }
     end
 
     assets
