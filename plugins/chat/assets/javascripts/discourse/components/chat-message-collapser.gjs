@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
-import lightbox from "discourse/lib/lightbox";
+import applyLightbox from "discourse/lib/lightbox";
 import { escapeExpression, optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -15,9 +16,21 @@ export default class ChatMessageCollapser extends Component {
   @service siteSettings;
 
   lightbox = modifier((element) => {
-    if (this.args.uploads.length > 0) {
-      lightbox(element);
-    }
+    let cancelled = false;
+
+    schedule("afterRender", () => {
+      if (cancelled || this.args.uploads.length === 0 || !element.isConnected) {
+        return;
+      }
+
+      if (element.querySelector(".lightbox")) {
+        applyLightbox(element);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   });
 
   get hasUploads() {
@@ -38,6 +51,15 @@ export default class ChatMessageCollapser extends Component {
         name
       )}</span>`
     );
+  }
+
+  get uploadsRenderContext() {
+    return [
+      {
+        signature: uploadSignature(this.args.uploads),
+        uploads: this.args.uploads,
+      },
+    ];
   }
 
   get cookedBodies() {
@@ -171,11 +193,13 @@ export default class ChatMessageCollapser extends Component {
           @header={{this.uploadsHeader}}
           @onToggle={{@onToggleCollapse}}
         >
-          <div class="chat-uploads" {{this.lightbox}}>
-            {{#each @uploads as |upload|}}
-              <ChatUpload @upload={{upload}} />
-            {{/each}}
-          </div>
+          {{#each this.uploadsRenderContext key="signature" as |uploadContext|}}
+            <div class="chat-uploads" {{this.lightbox}}>
+              {{#each uploadContext.uploads key="@index" as |upload|}}
+                <ChatUpload @upload={{upload}} />
+              {{/each}}
+            </div>
+          {{/each}}
         </Collapser>
       {{else}}
         {{#each this.cookedBodies as |cooked|}}
@@ -248,6 +272,21 @@ function hasImageOnebox(elements) {
 
 function hasUploads(uploads) {
   return uploads?.length > 0;
+}
+
+function uploadSignature(uploads = []) {
+  return uploads
+    .map((upload) => {
+      return [
+        upload.id,
+        upload.url,
+        upload.thumbnail?.url,
+        upload.short_path,
+        upload.width,
+        upload.height,
+      ].join(":");
+    })
+    .join("|");
 }
 
 function imagePredicate(e) {
