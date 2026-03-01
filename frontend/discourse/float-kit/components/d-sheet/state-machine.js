@@ -7,6 +7,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
  * @property {Symbol} id - Unique identifier for the subscription
  * @property {string} timing - When to invoke callback ("immediate", "before-paint", "after-paint")
  * @property {string|string[]} state - State pattern(s) to match
+ * @property {string|string[]} [transition] - Message type(s) that triggered the transition
  * @property {function(Object): void} callback - Function to call when state matches
  * @property {function(): boolean|boolean} guard - Guard condition
  */
@@ -317,6 +318,7 @@ class StateMachine {
    * @param {Object} options - Subscription options
    * @param {string} options.timing - "immediate", "before-paint", or "after-paint"
    * @param {string|string[]} options.state - State pattern(s) to match
+   * @param {string|string[]} [options.transition] - Message type(s) that triggered the transition
    * @param {Function} options.callback - Function to call when state matches
    * @param {Function|boolean} [options.guard] - Optional guard condition
    * @param {string} [options.type] - "enter" (default) or "exit"
@@ -332,9 +334,16 @@ class StateMachine {
    *
    * // Later: unsubscribe();
    */
-  subscribe({ timing, state, callback, guard = true, type = TYPE.ENTER }) {
+  subscribe({
+    timing,
+    state,
+    transition = null,
+    callback,
+    guard = true,
+    type = TYPE.ENTER,
+  }) {
     const id = Symbol();
-    const subscription = { id, timing, state, callback, guard };
+    const subscription = { id, timing, state, transition, callback, guard };
 
     if (type === TYPE.EXIT) {
       this.#exitActions.push(subscription);
@@ -1188,13 +1197,14 @@ class StateMachine {
   #dispatchExitActions(message, exitedStates) {
     for (const sub of this.#exitActions) {
       const wasExited = this.#didExitState(sub, exitedStates);
+      const transitionMatches = this.#matchesTransition(sub, message);
       const guardPasses =
         typeof sub.guard === "function" ? sub.guard() : sub.guard;
 
       DEBUG.log(
-        `notifySubscribers: exit action for state="${sub.state}", wasExited=${wasExited}, guardPasses=${guardPasses}`
+        `notifySubscribers: exit action for state="${sub.state}", wasExited=${wasExited}, transitionMatches=${transitionMatches}, guardPasses=${guardPasses}`
       );
-      if (wasExited && guardPasses) {
+      if (wasExited && transitionMatches && guardPasses) {
         DEBUG.log(`notifySubscribers: FIRING exit callback for "${sub.state}"`);
         sub.callback(message);
       }
@@ -1210,13 +1220,14 @@ class StateMachine {
   #dispatchEntryActions(message, enteredStates) {
     for (const sub of this.#entryActions) {
       const wasEntered = this.#didEnterState(sub, enteredStates);
+      const transitionMatches = this.#matchesTransition(sub, message);
       const guardPasses =
         typeof sub.guard === "function" ? sub.guard() : sub.guard;
 
       DEBUG.log(
-        `notifySubscribers: entry action for state="${sub.state}", wasEntered=${wasEntered}, guardPasses=${guardPasses}`
+        `notifySubscribers: entry action for state="${sub.state}", wasEntered=${wasEntered}, transitionMatches=${transitionMatches}, guardPasses=${guardPasses}`
       );
-      if (wasEntered && guardPasses) {
+      if (wasEntered && transitionMatches && guardPasses) {
         DEBUG.log(
           `notifySubscribers: FIRING entry callback for "${sub.state}"`
         );
@@ -1235,7 +1246,7 @@ class StateMachine {
     let afterPaintSubs = null;
 
     for (const sub of this.#subscriptions) {
-      if (!this.#evaluateSubscriptionConditions(sub)) {
+      if (!this.#evaluateSubscriptionConditions(sub, message)) {
         continue;
       }
 
@@ -1255,7 +1266,7 @@ class StateMachine {
     if (beforePaintSubs) {
       schedule("afterRender", () => {
         for (const sub of beforePaintSubs) {
-          if (this.#evaluateSubscriptionConditions(sub)) {
+          if (this.#evaluateSubscriptionConditions(sub, message)) {
             sub.callback(message);
           }
         }
@@ -1266,7 +1277,7 @@ class StateMachine {
       schedule("afterRender", () => {
         requestAnimationFrame(() => {
           for (const sub of afterPaintSubs) {
-            if (this.#evaluateSubscriptionConditions(sub)) {
+            if (this.#evaluateSubscriptionConditions(sub, message)) {
               sub.callback(message);
             }
           }
@@ -1281,16 +1292,34 @@ class StateMachine {
    * @param {Subscription} sub - Subscription to evaluate
    * @returns {boolean} Whether conditions are met
    */
-  #evaluateSubscriptionConditions(sub) {
+  #evaluateSubscriptionConditions(sub, message) {
     let stateMatches;
     if (Array.isArray(sub.state)) {
       stateMatches = sub.state.some((s) => this.matches(s));
     } else {
       stateMatches = this.matches(sub.state);
     }
+    const transitionMatches = this.#matchesTransition(sub, message);
     const guardPasses =
       typeof sub.guard === "function" ? sub.guard() : sub.guard;
-    return stateMatches && guardPasses;
+    return stateMatches && transitionMatches && guardPasses;
+  }
+
+  #matchesTransition(sub, message) {
+    if (!sub.transition) {
+      return true;
+    }
+
+    const messageType = message?.type;
+    if (!messageType) {
+      return false;
+    }
+
+    if (Array.isArray(sub.transition)) {
+      return sub.transition.includes(messageType);
+    }
+
+    return sub.transition === messageType;
   }
 
   /**

@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for openness state machine (main open/close lifecycle).
  * Includes nested scroll, move, and swipe states.
@@ -118,7 +120,7 @@ export default class OpennessState {
    */
   scrollStart() {
     if (!this.isScrollOngoing) {
-      this.#machine.send("SCROLL_START");
+      this.#machine.send(EVENTS.SCROLL_START);
     }
   }
 
@@ -129,7 +131,7 @@ export default class OpennessState {
    */
   scrollEnd() {
     if (this.isScrollOngoing) {
-      this.#machine.send("SCROLL_END");
+      this.#machine.send(EVENTS.SCROLL_END);
     }
   }
 
@@ -139,7 +141,7 @@ export default class OpennessState {
    * @returns {void}
    */
   swipeStart() {
-    this.#machine.send("SWIPE_START");
+    this.#machine.send(EVENTS.SWIPE_START);
   }
 
   /**
@@ -148,7 +150,7 @@ export default class OpennessState {
    * @returns {void}
    */
   swipeEnd() {
-    this.#machine.send("SWIPE_END");
+    this.#machine.send(EVENTS.SWIPE_END);
   }
 
   /**
@@ -157,7 +159,7 @@ export default class OpennessState {
    * @returns {void}
    */
   completeAnimation() {
-    this.#machine.send("NEXT");
+    this.#machine.send(EVENTS.NEXT);
   }
 
   /**
@@ -166,7 +168,7 @@ export default class OpennessState {
    * @returns {void}
    */
   moveStart() {
-    this.#machine.send("MOVE_START");
+    this.#machine.send(EVENTS.MOVE_START);
   }
 
   /**
@@ -175,7 +177,7 @@ export default class OpennessState {
    * @returns {void}
    */
   moveEnd() {
-    this.#machine.send("MOVE_END");
+    this.#machine.send(EVENTS.MOVE_END);
   }
 
   /**
@@ -185,7 +187,7 @@ export default class OpennessState {
    * @returns {void}
    */
   beginStep(detent) {
-    this.#machine.send({ type: "STEP", detent });
+    this.#machine.send({ type: EVENTS.STEP, detent });
   }
 
   /**
@@ -195,7 +197,14 @@ export default class OpennessState {
    * @returns {void}
    */
   readyToOpen(skipOpening) {
-    this.#machine.send({ type: "READY_TO_OPEN", skipOpening });
+    this.#machine.send({ type: EVENTS.READY_TO_OPEN, skipOpening });
+  }
+
+  flushComplete() {
+    this.#machine.send({
+      machine: "openness:closed.status",
+      type: "",
+    });
   }
 
   /**

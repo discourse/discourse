@@ -6,6 +6,7 @@ import SkipState from "./state/skip";
 import StagingState from "./state/staging";
 import StuckState from "./state/stuck";
 import TouchState from "./state/touch";
+import { EVENTS, MACHINE_NAMES } from "./state-machine-events";
 import StateMachineGroup from "./state-machine-group";
 import { GUARDS, POSITION_MACHINES, SHEET_MACHINES } from "./states";
 
@@ -37,7 +38,7 @@ export default class StateHelper {
      * @type {OpennessState}
      */
     this.openness = new OpennessState(
-      this.#sheetMachines.getMachine("openness")
+      this.#sheetMachines.getMachine(MACHINE_NAMES.OPENNESS)
     );
 
     /**
@@ -45,7 +46,7 @@ export default class StateHelper {
      * @type {StagingState}
      */
     this.staging = new StagingState(
-      this.#sheetMachines.getMachine("staging"),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.STAGING),
       this.openness
     );
 
@@ -54,7 +55,7 @@ export default class StateHelper {
      * @type {PositionState}
      */
     this.position = new PositionState(
-      this.#positionMachines.getMachine("position")
+      this.#positionMachines.getMachine(MACHINE_NAMES.POSITION)
     );
 
     /**
@@ -62,7 +63,7 @@ export default class StateHelper {
      * @type {TouchState}
      */
     this.touch = new TouchState(
-      this.#sheetMachines.getMachine("scrollContainerTouch")
+      this.#sheetMachines.getMachine(MACHINE_NAMES.SCROLL_CONTAINER_TOUCH)
     );
 
     /**
@@ -70,8 +71,8 @@ export default class StateHelper {
      * @type {StuckState}
      */
     this.stuck = new StuckState(
-      this.#sheetMachines.getMachine("frontStuck"),
-      this.#sheetMachines.getMachine("backStuck")
+      this.#sheetMachines.getMachine(MACHINE_NAMES.FRONT_STUCK),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.BACK_STUCK)
     );
 
     /**
@@ -79,7 +80,7 @@ export default class StateHelper {
      * @type {ElementsState}
      */
     this.elements = new ElementsState(
-      this.#sheetMachines.getMachine("elementsReady")
+      this.#sheetMachines.getMachine(MACHINE_NAMES.ELEMENTS_READY)
     );
 
     /**
@@ -87,8 +88,8 @@ export default class StateHelper {
      * @type {SkipState}
      */
     this.skip = new SkipState(
-      this.#sheetMachines.getMachine("skipOpening"),
-      this.#sheetMachines.getMachine("skipClosing")
+      this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_OPENING),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_CLOSING)
     );
 
     /**
@@ -96,7 +97,7 @@ export default class StateHelper {
      * @type {LongRunningState}
      */
     this.longRunning = new LongRunningState(
-      this.#sheetMachines.getMachine("longRunning")
+      this.#sheetMachines.getMachine(MACHINE_NAMES.LONG_RUNNING)
     );
   }
 
@@ -160,16 +161,22 @@ export default class StateHelper {
    */
   #getMachine(name) {
     const mapping = {
-      openness: () => this.#sheetMachines.getMachine("openness"),
-      staging: () => this.#sheetMachines.getMachine("staging"),
-      position: () => this.#positionMachines.getMachine("position"),
-      touch: () => this.#sheetMachines.getMachine("scrollContainerTouch"),
-      longRunning: () => this.#sheetMachines.getMachine("longRunning"),
-      skipOpening: () => this.#sheetMachines.getMachine("skipOpening"),
-      skipClosing: () => this.#sheetMachines.getMachine("skipClosing"),
-      backStuck: () => this.#sheetMachines.getMachine("backStuck"),
-      frontStuck: () => this.#sheetMachines.getMachine("frontStuck"),
-      elementsReady: () => this.#sheetMachines.getMachine("elementsReady"),
+      openness: () => this.#sheetMachines.getMachine(MACHINE_NAMES.OPENNESS),
+      staging: () => this.#sheetMachines.getMachine(MACHINE_NAMES.STAGING),
+      position: () => this.#positionMachines.getMachine(MACHINE_NAMES.POSITION),
+      touch: () =>
+        this.#sheetMachines.getMachine(MACHINE_NAMES.SCROLL_CONTAINER_TOUCH),
+      longRunning: () =>
+        this.#sheetMachines.getMachine(MACHINE_NAMES.LONG_RUNNING),
+      skipOpening: () =>
+        this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_OPENING),
+      skipClosing: () =>
+        this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_CLOSING),
+      backStuck: () => this.#sheetMachines.getMachine(MACHINE_NAMES.BACK_STUCK),
+      frontStuck: () =>
+        this.#sheetMachines.getMachine(MACHINE_NAMES.FRONT_STUCK),
+      elementsReady: () =>
+        this.#sheetMachines.getMachine(MACHINE_NAMES.ELEMENTS_READY),
     };
     return mapping[name]?.();
   }
@@ -179,16 +186,20 @@ export default class StateHelper {
    * @returns {void}
    */
   cleanup() {
-    this.#sheetMachines.getMachine("openness").cleanup();
-    this.#sheetMachines.getMachine("staging").cleanup();
-    this.#positionMachines.getMachine("position").cleanup();
-    this.#sheetMachines.getMachine("scrollContainerTouch").cleanup();
-    this.#sheetMachines.getMachine("longRunning").cleanup();
-    this.#sheetMachines.getMachine("skipOpening").cleanup();
-    this.#sheetMachines.getMachine("skipClosing").cleanup();
-    this.#sheetMachines.getMachine("backStuck").cleanup();
-    this.#sheetMachines.getMachine("frontStuck").cleanup();
-    this.#sheetMachines.getMachine("elementsReady").cleanup();
+    for (const machine of [
+      this.#sheetMachines.getMachine(MACHINE_NAMES.OPENNESS),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.STAGING),
+      this.#positionMachines.getMachine(MACHINE_NAMES.POSITION),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.SCROLL_CONTAINER_TOUCH),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.LONG_RUNNING),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_OPENING),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_CLOSING),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.BACK_STUCK),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.FRONT_STUCK),
+      this.#sheetMachines.getMachine(MACHINE_NAMES.ELEMENTS_READY),
+    ]) {
+      machine.cleanup();
+    }
   }
 
   /**
@@ -199,7 +210,9 @@ export default class StateHelper {
    * @returns {boolean} Whether any transition occurred
    */
   sendToPosition(message, context = {}) {
-    return this.#positionMachines.getMachine("position").send(message, context);
+    return this.#positionMachines
+      .getMachine(MACHINE_NAMES.POSITION)
+      .send(message, context);
   }
 
   /**
@@ -207,7 +220,7 @@ export default class StateHelper {
    * @returns {void}
    */
   advancePositionAuto() {
-    this.#positionMachines.getMachine("position").send("");
+    this.#positionMachines.getMachine(MACHINE_NAMES.POSITION).send("");
   }
 
   /**
@@ -215,7 +228,7 @@ export default class StateHelper {
    * @returns {void}
    */
   flushClosedStatus() {
-    this.#sheetMachines.getMachine("openness").send({
+    this.#sheetMachines.getMachine(MACHINE_NAMES.OPENNESS).send({
       machine: "openness:closed.status",
       type: "",
     });
@@ -226,6 +239,6 @@ export default class StateHelper {
    * @returns {void}
    */
   broadcastOpen() {
-    this.#sheetMachines.send({ type: "OPEN" });
+    this.#sheetMachines.send({ type: EVENTS.OPEN });
   }
 }

@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for staging/animation state machine.
  * Tracks animation phases: none, opening, open, stepping, closing, going-down, going-up.
@@ -104,7 +106,7 @@ export default class StagingState {
    * Signal that opening preparation is complete, transitioning to the opening phase.
    */
   openPrepared() {
-    this.#machine.send("OPEN_PREPARED", {
+    this.#machine.send(EVENTS.OPEN_PREPARED, {
       opennessState: this.#openness.current,
     });
   }
@@ -115,7 +117,7 @@ export default class StagingState {
    * @param {boolean} [skipClosing=false] - Whether to skip the closing animation
    */
   actuallyClose(skipClosing = false) {
-    this.#machine.send("ACTUALLY_CLOSE", {
+    this.#machine.send(EVENTS.ACTUALLY_CLOSE, {
       opennessState: this.#openness.current,
       skipClosing,
     });
@@ -125,7 +127,7 @@ export default class StagingState {
    * Trigger the step animation between detents.
    */
   actuallyStep() {
-    this.#machine.send("ACTUALLY_STEP", {
+    this.#machine.send(EVENTS.ACTUALLY_STEP, {
       opennessState: this.#openness.current,
     });
   }
@@ -134,14 +136,14 @@ export default class StagingState {
    * Advance the staging machine to its next state via the NEXT message.
    */
   advance() {
-    this.#machine.send("NEXT");
+    this.#machine.send(EVENTS.NEXT);
   }
 
   /**
    * Trigger the going-down animation phase.
    */
   goDown() {
-    this.#machine.send("GO_DOWN", {
+    this.#machine.send(EVENTS.GO_DOWN, {
       opennessState: this.#openness.current,
     });
   }
@@ -150,7 +152,7 @@ export default class StagingState {
    * Trigger the going-up animation phase.
    */
   goUp() {
-    this.#machine.send("GO_UP", {
+    this.#machine.send(EVENTS.GO_UP, {
       opennessState: this.#openness.current,
     });
   }

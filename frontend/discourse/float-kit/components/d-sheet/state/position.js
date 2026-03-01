@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for position state machine.
  * Tracks sheet position in stack: out, front, covered.
@@ -99,7 +101,7 @@ export default class PositionState {
    * @returns {void}
    */
   goOut() {
-    this.#machine.send("GO_OUT");
+    this.#machine.send(EVENTS.GO_OUT);
   }
 
   /**
@@ -108,7 +110,7 @@ export default class PositionState {
    * @returns {void}
    */
   advance() {
-    this.#machine.send("NEXT");
+    this.#machine.send(EVENTS.NEXT);
   }
 
   /**
@@ -117,7 +119,7 @@ export default class PositionState {
    * @returns {void}
    */
   goToFrontIdle() {
-    this.#machine.send("GOTO_front");
+    this.#machine.send(EVENTS.GOTO_FRONT);
   }
 
   /**
@@ -126,7 +128,7 @@ export default class PositionState {
    * @returns {void}
    */
   goToCoveredIdle() {
-    this.#machine.send("GOTO_idle");
+    this.#machine.send(EVENTS.GOTO_IDLE);
   }
 
   /**
@@ -136,7 +138,7 @@ export default class PositionState {
    * @returns {void}
    */
   readyToGoFront(skipOpening) {
-    this.#machine.send("READY_TO_GO_FRONT", { skipOpening });
+    this.#machine.send(EVENTS.READY_TO_GO_FRONT, { skipOpening });
   }
 
   /**
@@ -145,7 +147,7 @@ export default class PositionState {
    * @returns {void}
    */
   readyToGoOut() {
-    this.#machine.send("READY_TO_GO_OUT");
+    this.#machine.send(EVENTS.READY_TO_GO_OUT);
   }
 
   /**

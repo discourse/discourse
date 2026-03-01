@@ -1,3 +1,5 @@
+import { EVENTS } from "../state-machine-events";
+
 /**
  * Namespace for skip animation state machines.
  * Tracks whether opening/closing animations should be skipped.
@@ -45,7 +47,7 @@ export default class SkipState {
    * @returns {void}
    */
   enableOpening() {
-    this.#openingMachine.send("TO_TRUE");
+    this.#openingMachine.send(EVENTS.TO_TRUE);
   }
 
   /**
@@ -53,7 +55,7 @@ export default class SkipState {
    * @returns {void}
    */
   disableOpening() {
-    this.#openingMachine.send("TO_FALSE");
+    this.#openingMachine.send(EVENTS.TO_FALSE);
   }
 
   /**
@@ -61,7 +63,7 @@ export default class SkipState {
    * @returns {void}
    */
   enableClosing() {
-    this.#closingMachine.send("TO_TRUE");
+    this.#closingMachine.send(EVENTS.TO_TRUE);
   }
 
   /**
@@ -69,6 +71,6 @@ export default class SkipState {
    * @returns {void}
    */
   disableClosing() {
-    this.#closingMachine.send("TO_FALSE");
+    this.#closingMachine.send(EVENTS.TO_FALSE);
   }
 }

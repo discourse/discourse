@@ -1,6 +1,7 @@
 import { guidFor } from "@ember/object/internals";
 import Service from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import { EVENTS } from "discourse/float-kit/components/d-sheet/state-machine-events";
 
 /**
  * Service for managing sheet stacks.
@@ -122,13 +123,13 @@ export default class SheetStackRegistry extends Service {
         positionState?.matches("covered.status:going-down") ||
         positionState?.matches("covered.status:going-up")
       ) {
-        parentSheet.sendToPositionMachine("NEXT");
-        parentSheet.sendToPositionMachine("GOTO_front");
+        parentSheet.sendToPositionMachine(EVENTS.NEXT);
+        parentSheet.sendToPositionMachine(EVENTS.GOTO_FRONT);
       } else if (
         positionState?.matches("covered.status:idle") ||
         positionState?.matches("covered.status:indeterminate")
       ) {
-        parentSheet.sendToPositionMachine("GOTO_front");
+        parentSheet.sendToPositionMachine(EVENTS.GOTO_FRONT);
       }
     }
   }
@@ -270,7 +271,7 @@ export default class SheetStackRegistry extends Service {
     }
 
     parentSheet.sendToPositionMachine({
-      type: "READY_TO_GO_DOWN",
+      type: EVENTS.READY_TO_GO_DOWN,
       skipOpening: options.skipOpening || false,
     });
   }
@@ -290,7 +291,7 @@ export default class SheetStackRegistry extends Service {
       return;
     }
 
-    parentSheet.sendToPositionMachine("READY_TO_GO_UP");
+    parentSheet.sendToPositionMachine(EVENTS.READY_TO_GO_UP);
   }
 
   /**
@@ -314,12 +315,12 @@ export default class SheetStackRegistry extends Service {
       positionState?.matches("covered.status:going-down") ||
       positionState?.matches("covered.status:going-up")
     ) {
-      parentSheet.sendToPositionMachine("NEXT");
-      parentSheet.sendToPositionMachine("GOTO_front");
+      parentSheet.sendToPositionMachine(EVENTS.NEXT);
+      parentSheet.sendToPositionMachine(EVENTS.GOTO_FRONT);
     } else if (positionState?.matches("covered.status:idle")) {
-      parentSheet.sendToPositionMachine("GO_UP");
+      parentSheet.sendToPositionMachine(EVENTS.GO_UP);
     } else if (positionState?.matches("covered.status:indeterminate")) {
-      parentSheet.sendToPositionMachine("GOTO_front");
+      parentSheet.sendToPositionMachine(EVENTS.GOTO_FRONT);
     }
   }
 

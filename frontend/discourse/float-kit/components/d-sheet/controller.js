@@ -16,7 +16,9 @@ import FocusManagement from "./focus-management";
 import ObserverManager from "./observer-manager";
 import ScrollProgressCalculator from "./scroll-progress-calculator";
 import StackingAdapter from "./stacking-adapter";
+import { buildStateEffects } from "./state-effects";
 import StateHelper from "./state-helper";
+import { EVENTS } from "./state-machine-events";
 import ThemeColorAdapter from "./theme-color-adapter";
 import TimeoutManager from "./timeout-manager";
 import { TouchHandler } from "./touch-handler";
@@ -506,219 +508,9 @@ export default class Controller {
   /**
    * Subscription definitions for state machines.
    *
-   * @type {Array<{machine: string, state: string, timing?: string, callback?: Function, handler?: string, guard?: Function, type?: string}>}
+   * @type {Array<{machine: string, state: string, timing?: string, callback?: Function, handler?: string, guard?: Function, type?: string, transition?: string | string[]}>}
    */
-  #subscriptionDefinitions = [
-    {
-      machine: "staging",
-      state: "opening",
-      timing: "after-paint",
-      callback: () => {
-        requestAnimationFrame(() => {
-          this.state.openness.readyToOpen(false);
-        });
-      },
-    },
-    {
-      machine: "staging",
-      state: "closing",
-      timing: "after-paint",
-      callback: () => {
-        this.handleStateTransition({ type: "READY_TO_CLOSE" });
-      },
-    },
-    {
-      machine: "openness",
-      state: "opening",
-      timing: "before-paint",
-      handler: "handleOpening",
-    },
-    {
-      machine: "elementsReady",
-      state: "true",
-      timing: "immediate",
-      guard: () => this.state.openness.current === "opening",
-      callback: () => this.#startOpeningAnimation(),
-    },
-    {
-      machine: "openness",
-      state: "open",
-      guard: () => {
-        const msg = this.state.openness.lastProcessedMessage;
-        return ["NEXT", "PREPARED", "STEP", "READY_TO_OPEN"].includes(
-          msg?.type
-        );
-      },
-      callback: (message) => this.handleOpen(message),
-    },
-    { machine: "openness", state: "closing", handler: "handleClosing" },
-    {
-      machine: "openness",
-      state: "closed.status:pending",
-      handler: "handleClosedPending",
-    },
-    {
-      machine: "openness",
-      state: "closed.status:safe-to-unmount",
-      handler: "handleClosedSafeToUnmount",
-    },
-    {
-      machine: "openness",
-      state: "closed.status:flushing-to-preparing-opening",
-      timing: "before-paint",
-      callback: () => {
-        this.timeoutManager.clear("pendingFlush");
-        this.state.flushClosedStatus();
-      },
-    },
-    {
-      machine: "openness",
-      state: "closed.status:flushing-to-preparing-open",
-      timing: "before-paint",
-      callback: () => {
-        this.timeoutManager.clear("pendingFlush");
-        this.state.flushClosedStatus();
-      },
-    },
-    {
-      machine: "openness",
-      state: "closed.status:preparing-opening",
-      timing: "after-paint",
-      callback: () => {
-        this.state.beginEnterAnimation(false);
-      },
-    },
-    {
-      machine: "openness",
-      state: "closed.status:preparing-open",
-      timing: "after-paint",
-      callback: () => {
-        this.state.beginEnterAnimation(true);
-      },
-    },
-    {
-      machine: "position",
-      state: "covered.status:going-down",
-      callback: () => {
-        this.coveredCount++;
-        this.stackingAdapter?.updateStackingIndexWithPositionValue();
-        this.state.staging.goDown();
-      },
-    },
-    {
-      machine: "position",
-      state: "covered.status:idle",
-      callback: () => {
-        if (
-          this.state.staging.matches("going-down") ||
-          this.state.staging.matches("go-down")
-        ) {
-          this.state.staging.advance();
-        }
-      },
-    },
-    {
-      machine: "position",
-      state: "covered.status:going-up",
-      callback: () => this.state.staging.goUp(),
-    },
-    {
-      machine: "position",
-      state: "covered.status:indeterminate",
-      callback: () => {
-        this.coveredCount--;
-        this.stackingAdapter?.updateStackingIndexWithPositionValue();
-
-        if (this.state.staging.matches("going-up")) {
-          this.state.staging.advance();
-        }
-
-        if (this.coveredCount === 0) {
-          this.state.position.goToFrontIdle();
-        } else {
-          this.state.position.goToCoveredIdle();
-        }
-      },
-    },
-    {
-      machine: "position",
-      state: "covered.status:come-back",
-      timing: "immediate",
-      callback: () => {
-        this.state.advancePositionAuto();
-      },
-    },
-    {
-      machine: "openness",
-      state: "open.scroll:ongoing",
-      callback: () => {
-        const currentProgress =
-          this.dimensions?.progressValueAtDetents?.[this.activeDetent]?.exact ??
-          0;
-        this.progressSmoother = this.createProgressSmoother(currentProgress);
-      },
-    },
-    {
-      machine: "staging",
-      state: "none",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("none"),
-    },
-    {
-      machine: "staging",
-      state: "opening",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("opening"),
-    },
-    {
-      machine: "staging",
-      state: "open",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("open"),
-    },
-    {
-      machine: "staging",
-      state: "stepping",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("stepping"),
-    },
-    {
-      machine: "staging",
-      state: "closing",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("closing"),
-    },
-    {
-      machine: "staging",
-      state: "go-down",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("go-down"),
-    },
-    {
-      machine: "staging",
-      state: "going-down",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("going-down"),
-    },
-    {
-      machine: "staging",
-      state: "going-up",
-      timing: "immediate",
-      callback: () => this.stackingAdapter?.updateStagingInStack("going-up"),
-    },
-    {
-      machine: "touch",
-      state: "ongoing",
-      timing: "immediate",
-      callback: () => this.touchHandler.handleScrollStart(),
-    },
-    {
-      machine: "touch",
-      state: "ended",
-      timing: "immediate",
-      callback: () => this.touchHandler.handleScrollEnd(),
-    },
-  ];
+  #subscriptionDefinitions = [];
 
   /**
    * Initialize the controller with helpers.
@@ -747,6 +539,7 @@ export default class Controller {
     this.animationTravel = new AnimationTravel(this);
     /** @type {ThemeColorAdapter} */
     this.themeColorAdapter = new ThemeColorAdapter();
+    this.#subscriptionDefinitions = buildStateEffects(this);
     this.setupSubscriptions();
   }
 
@@ -840,6 +633,7 @@ export default class Controller {
       this.state.subscribe(def.machine, {
         timing: def.timing || "immediate",
         state: def.state,
+        transition: def.transition,
         guard: def.guard,
         callback: def.callback || ((msg) => this[def.handler](msg)),
         type: def.type,
@@ -1041,6 +835,16 @@ export default class Controller {
     }
 
     return false;
+  }
+
+  /**
+   * Whether the sheet can currently accept dismiss requests.
+   * Used by layer-level escape/click-outside handling.
+   *
+   * @type {boolean}
+   */
+  get canAcceptDismissRequest() {
+    return this.state.openness.isOpen || this.state.openness.isOpening;
   }
 
   /**
@@ -1315,6 +1119,10 @@ export default class Controller {
     this.animationTravel.animateToDetent(this.targetDetent);
   }
 
+  startOpeningAnimation() {
+    this.#startOpeningAnimation();
+  }
+
   /**
    * Send ELEMENTS_REGISTERED if all required elements are now present.
    * Used by register methods to signal readiness for deferred animations.
@@ -1354,7 +1162,7 @@ export default class Controller {
     this.updateTravelStatus("idleInside");
     this.applyInertOutside();
 
-    if (message?.type !== "STEP") {
+    if (message?.type !== EVENTS.STEP) {
       this.executeAutoFocusOnPresent();
     }
 
@@ -1364,7 +1172,7 @@ export default class Controller {
 
     this.#setupIntersectionObserver();
 
-    if (message?.type === "STEP") {
+    if (message?.type === EVENTS.STEP) {
       this.handleStepMessage(message);
     }
   }
@@ -1443,7 +1251,7 @@ export default class Controller {
     this.stackingAdapter.notifyBelowSheets(0);
 
     requestAnimationFrame(() => {
-      this.handleStateTransition({ type: "NEXT" });
+      this.handleStateTransition({ type: EVENTS.NEXT });
     });
   }
 
@@ -2168,16 +1976,15 @@ export default class Controller {
    */
   @action
   close() {
-    this.handleStateTransition({ type: "CLOSE" });
-    this.#evaluateCloseMessage();
+    this.handleStateTransition({ type: EVENTS.CLOSE });
   }
 
   /**
    * Evaluates whether a CLOSE request can proceed to actual closing.
    *
-   * @private
+   * Triggered by openness evaluateCloseMessage CLOSE transitions.
    */
-  #evaluateCloseMessage() {
+  evaluateCloseMessage() {
     if (!this.state.openness.isOpen) {
       return;
     }
@@ -2200,7 +2007,7 @@ export default class Controller {
     }
 
     this.state.staging.actuallyClose();
-    this.handleStateTransition({ type: "ACTUALLY_CLOSE" });
+    this.handleStateTransition({ type: EVENTS.ACTUALLY_CLOSE });
   }
 
   /**
@@ -2226,7 +2033,7 @@ export default class Controller {
 
     const nextDetent = this.detentManager.calculateStep("up");
     if (nextDetent !== null) {
-      this.handleStateTransition({ type: "STEP", detent: nextDetent });
+      this.handleStateTransition({ type: EVENTS.STEP, detent: nextDetent });
     }
   }
 
@@ -2242,7 +2049,7 @@ export default class Controller {
 
     const prevDetent = this.detentManager.calculateStep("down");
     if (prevDetent !== null) {
-      this.handleStateTransition({ type: "STEP", detent: prevDetent });
+      this.handleStateTransition({ type: EVENTS.STEP, detent: prevDetent });
     }
   }
 
@@ -2258,7 +2065,7 @@ export default class Controller {
     }
 
     if (this.detentManager.isValidDetent(detent)) {
-      this.handleStateTransition({ type: "STEP", detent });
+      this.handleStateTransition({ type: EVENTS.STEP, detent });
     }
   }
 
