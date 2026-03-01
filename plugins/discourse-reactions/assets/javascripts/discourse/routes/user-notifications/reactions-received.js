@@ -1,4 +1,4 @@
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import DiscourseRoute from "discourse/routes/discourse";
 import CustomReaction, {
   PAGE_SIZE,
@@ -23,7 +23,7 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
       }
     );
 
-    return new TrackedArray(
+    return trackedArray(
       list.map((reaction) => CustomReaction.flattenForPostList(reaction))
     );
   }

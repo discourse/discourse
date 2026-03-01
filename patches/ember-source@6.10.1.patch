@@ -1,0 +1,135 @@
+diff --git a/dist/packages/@ember/-internals/deprecations/index.js b/dist/packages/@ember/-internals/deprecations/index.js
+index 3f9a21b0b95101fc27171dbe5a6289522e9a2447..56954e3acbe98151f546f2423999f3e5f9f41783 100644
+--- a/dist/packages/@ember/-internals/deprecations/index.js
++++ b/dist/packages/@ember/-internals/deprecations/index.js
+@@ -123,7 +123,7 @@ function deprecateUntil(message, deprecation) {
+   if (deprecation.isRemoved) {
+     throw new Error(`The API deprecated by ${options.id} was removed in ember-source ${options.until}. The message was: ${message}. Please see ${options.url} for more details.`);
+   }
+-  (isDevelopingApp() && !(deprecation.test) && deprecate(message, deprecation.test, options));
++  (true && !(deprecation.test) && deprecate(message, deprecation.test, options));
+ }
+ 
+ export { DEPRECATIONS, deprecateUntil, emberVersionGte, isRemoved };
+diff --git a/dist/packages/@ember/debug/lib/deprecate.js b/dist/packages/@ember/debug/lib/deprecate.js
+index 5fd3d1f2965e61aff195e2e6b4a55d4d1c542c13..0c496872b3d9d579c6ad9d2348687291608e3d1c 100644
+--- a/dist/packages/@ember/debug/lib/deprecate.js
++++ b/dist/packages/@ember/debug/lib/deprecate.js
+@@ -50,7 +50,7 @@ let missingOptionsDeprecation;
+ let missingOptionsIdDeprecation;
+ let missingOptionDeprecation = () => '';
+ let deprecate = () => {};
+-if (isDevelopingApp()) {
++if (true) {
+   registerHandler = function registerHandler(handler) {
+     registerHandler$1('deprecate', handler);
+   };
+diff --git a/dist/packages/@ember/debug/lib/handlers.js b/dist/packages/@ember/debug/lib/handlers.js
+index cd68afe479229ed77b4e4c93759aa90913cdc49c..6e7d71bbeb28f18259fa8afb48ef78279f25c531 100644
+--- a/dist/packages/@ember/debug/lib/handlers.js
++++ b/dist/packages/@ember/debug/lib/handlers.js
+@@ -3,7 +3,7 @@ import { isDevelopingApp } from '@embroider/macros';
+ let HANDLERS = {};
+ let registerHandler = function registerHandler(_type, _callback) {};
+ let invoke = () => {};
+-if (isDevelopingApp()) {
++if (true) {
+   registerHandler = function registerHandler(type, callback) {
+     let nextHandler = HANDLERS[type] || (() => {});
+     HANDLERS[type] = (message, options) => {
+diff --git a/dist/packages/@glimmer/validator/index.js b/dist/packages/@glimmer/validator/index.js
+index 1119353624a19235372b59453c040d2a342aad69..8b1b069800dd981a994c9033995fe0c3a00c3672 100644
+--- a/dist/packages/@glimmer/validator/index.js
++++ b/dist/packages/@glimmer/validator/index.js
+@@ -530,16 +530,17 @@ class TrackedMap {
+   }
+   // **** ALL GETTERS ****
+   entries() {
+-    return consumeTag(this.#collection), this.#vals.entries();
++    return this[Symbol.iterator]();
+   }
+   keys() {
+     return consumeTag(this.#collection), this.#vals.keys();
+   }
+   values() {
+-    return consumeTag(this.#collection), this.#vals.values();
++    let iterator = this[Symbol.iterator]();
++    return { next() { let { value, done } = iterator.next(); return { value: done ? void 0 : value[1], done }; }, [Symbol.iterator]() { return this; } };
+   }
+   forEach(fn) {
+-    consumeTag(this.#collection), this.#vals.forEach(fn);
++    for (let [key, value] of this) fn(value, key, this);
+   }
+   get size() {
+     return consumeTag(this.#collection), this.#vals.size;
+@@ -565,6 +566,9 @@ class TrackedMap {
+           done: false
+         };
+         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
++      },
++      [Symbol.iterator]() {
++        return this;
+       }
+     };
+   }
+@@ -572,11 +576,11 @@ class TrackedMap {
+     return this.#vals[Symbol.toStringTag];
+   }
+   set(key, value) {
+-    let existing = this.#vals.get(key);
+-    return existing && this.#options.equals(existing, value) || (this.#dirtyStorageFor(key), existing || DIRTY_TAG(this.#collection), this.#vals.set(key, value)), this;
++    let existing = this.#vals.has(key);
++    return existing && this.#options.equals(this.#vals.get(key), value) || (this.#dirtyStorageFor(key), existing || DIRTY_TAG(this.#collection), this.#vals.set(key, value)), this;
+   }
+   delete(key) {
+-    return !this.#vals.has(key) || (this.#dirtyStorageFor(key), DIRTY_TAG(this.#collection), this.#storages.delete(key), this.#vals.delete(key));
++    return !!this.#vals.has(key) && (this.#dirtyStorageFor(key), DIRTY_TAG(this.#collection), this.#storages.delete(key), this.#vals.delete(key));
+   }
+   clear() {
+     0 !== this.#vals.size && (this.#storages.forEach(s => DIRTY_TAG(s)), this.#storages.clear(), DIRTY_TAG(this.#collection), this.#vals.clear());
+@@ -711,7 +715,7 @@ class TrackedSet {
+     return this.#dirtyStorageFor(value), this.#vals.add(value), this;
+   }
+   delete(value) {
+-    return !this.#vals.has(value) || (this.#dirtyStorageFor(value), DIRTY_TAG(this.#collection), this.#storages.delete(value), this.#vals.delete(value));
++    return !!this.#vals.has(value) && (this.#dirtyStorageFor(value), DIRTY_TAG(this.#collection), this.#storages.delete(value), this.#vals.delete(value));
+   }
+   // **** ALL SETTERS ****
+   clear() {
+@@ -754,11 +758,11 @@ class TrackedWeakMap {
+     return consumeTag(this.#storageFor(key)), this.#vals.has(key);
+   }
+   set(key, value) {
+-    let existing = this.#vals.get(key);
+-    return existing && this.#options.equals(existing, value) || (this.#dirtyStorageFor(key), this.#vals.set(key, value)), this;
++    let existing = this.#vals.has(key);
++    return existing && this.#options.equals(this.#vals.get(key), value) || (this.#dirtyStorageFor(key), this.#vals.set(key, value)), this;
+   }
+   delete(key) {
+-    return !this.#vals.has(key) || (this.#dirtyStorageFor(key), this.#storages.delete(key), this.#vals.delete(key));
++    return !!this.#vals.has(key) && (this.#dirtyStorageFor(key), this.#storages.delete(key), this.#vals.delete(key));
+   }
+   get [Symbol.toStringTag]() {
+     return this.#vals[Symbol.toStringTag];
+@@ -810,7 +814,7 @@ class TrackedWeakSet {
+     this.#vals.add(value), this.#dirtyStorageFor(value)), this;
+   }
+   delete(value) {
+-    return !this.#vals.has(value) || (this.#dirtyStorageFor(value), this.#storages.delete(value), this.#vals.delete(value));
++    return !!this.#vals.has(value) && (this.#dirtyStorageFor(value), this.#storages.delete(value), this.#vals.delete(value));
+   }
+   get [Symbol.toStringTag]() {
+     return this.#vals[Symbol.toStringTag];
+diff --git a/dist/packages/shared-chunks/array-CVk-fNjW.js b/dist/packages/shared-chunks/array-CVk-fNjW.js
+index c5a84d367d2d2643b395afffb103b7a2136eb5e9..08bce6a08b93dd13b77c099d57e4836f5a0638fe 100644
+--- a/dist/packages/shared-chunks/array-CVk-fNjW.js
++++ b/dist/packages/shared-chunks/array-CVk-fNjW.js
+@@ -67,7 +67,7 @@ const EMPTY_ARRAY = Object.freeze([]);
+ // Ideally, we'd use MutableArray.detect but for unknown reasons this causes
+ // the node tests to fail strangely.
+ function isMutableArray(obj) {
+-  return obj != null && typeof obj.replace === 'function';
++  return obj != null && typeof obj.replace === 'function' && !Array.isArray(obj);
+ }
+ function replace(array, start, deleteCount, items = EMPTY_ARRAY) {
+   if (isMutableArray(array)) {

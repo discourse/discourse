@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
+import { trackedArray } from "@ember/reactive/collections";
 import { isNone } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
@@ -36,9 +36,7 @@ export default class Invite extends EmberObject {
       data,
     });
 
-    result.invites = new TrackedArray(
-      result.invites.map((i) => Invite.create(i))
-    );
+    result.invites = trackedArray(result.invites.map((i) => Invite.create(i)));
 
     return EmberObject.create(result);
   }

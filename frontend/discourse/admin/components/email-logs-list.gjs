@@ -12,7 +12,7 @@ import TextField from "discourse/components/text-field";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 export default class EmailLogsList extends Component {
@@ -21,7 +21,7 @@ export default class EmailLogsList extends Component {
   @tracked filterValues = {};
   @tracked initialized = false;
   @tracked loadMoreEnabled = false;
-  @trackedArray model;
+  @autoTrackedArray model;
 
   sortWithAddressFilter = (addresses) => {
     if (!Array.isArray(addresses) || addresses.length === 0) {

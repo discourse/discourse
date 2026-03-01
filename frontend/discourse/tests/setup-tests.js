@@ -5,6 +5,7 @@ import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { getOwner } from "@ember/owner";
+import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
@@ -51,8 +52,13 @@ import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
 
 const REPORT_MEMORY = false;
+const PROFILE_PHASES = true;
 let cancelled = false;
 let started = false;
+let testStartDurations = [];
+let testDoneDurations = [];
+let testTotalDurations = [];
+let testStartTimestamp;
 
 function createApplication(config, settings) {
   const app = Application.create(config);
@@ -193,6 +199,34 @@ function reportMemoryUsageAfterTests() {
   });
 }
 
+function reportPhaseTimings() {
+  if (!PROFILE_PHASES) {
+    return;
+  }
+  QUnit.done(() => {
+    const avg = (arr) =>
+      arr.length
+        ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1)
+        : "N/A";
+    const p = (arr, pct) => {
+      if (!arr.length) {
+        return "N/A";
+      }
+      const sorted = [...arr].sort((a, b) => a - b);
+      return sorted[Math.floor(sorted.length * pct)].toFixed(1);
+    };
+
+    const msg = [
+      `[Phase Profiling] ${testStartDurations.length} tests`,
+      `  testStart  - avg: ${avg(testStartDurations)}ms, P50: ${p(testStartDurations, 0.5)}ms, P90: ${p(testStartDurations, 0.9)}ms, P99: ${p(testStartDurations, 0.99)}ms`,
+      `  testDone   - avg: ${avg(testDoneDurations)}ms, P50: ${p(testDoneDurations, 0.5)}ms, P90: ${p(testDoneDurations, 0.9)}ms, P99: ${p(testDoneDurations, 0.99)}ms`,
+      `  total test - avg: ${avg(testTotalDurations)}ms, P50: ${p(testTotalDurations, 0.5)}ms, P90: ${p(testTotalDurations, 0.9)}ms, P99: ${p(testTotalDurations, 0.99)}ms`,
+    ].join("\n");
+
+    writeSummaryLine(msg);
+  });
+}
+
 function writeSummaryLine(message) {
   // eslint-disable-next-line no-console
   console.log(`\n${message}\n`);
@@ -251,6 +285,8 @@ export default function setupTests(config) {
 
   let app;
   QUnit.testStart(function (ctx) {
+    const testStartBegin = PROFILE_PHASES ? performance.now() : 0;
+
     let settings = resetSettings();
 
     resetThemeSettings();
@@ -315,12 +351,30 @@ export default function setupTests(config) {
     sinon.stub(scrollManager, "unbindScrolling");
 
     disableLoadMoreObserver();
+
+    if (PROFILE_PHASES) {
+      testStartDurations.push(performance.now() - testStartBegin);
+      testStartTimestamp = performance.now();
+    }
   });
 
   QUnit.testDone(function () {
+    if (PROFILE_PHASES) {
+      testTotalDurations.push(performance.now() - testStartTimestamp);
+    }
+    const testDoneBegin = PROFILE_PHASES ? performance.now() : 0;
+
     testCleanup(getOwner(app), app);
 
     sinon.restore();
+
+    // Destroy the previous Application so its entire dependency graph
+    // (ApplicationInstance, container, registry, services, etc.) can be GC'd.
+    // Without this, every test leaks an Application which is never torn down.
+    run(() => {
+      app.destroy();
+    });
+
     resetPretender();
     clearPresenceState();
 
@@ -341,6 +395,20 @@ export default function setupTests(config) {
     MessageBus.unsubscribe("*");
     localStorage.clear();
     enableLoadMoreObserver();
+
+    // Release the app reference so the destroyed app isn't retained
+    // by this closure until the next test creates a new one.
+    app = null;
+
+    // Force garbage collection to prevent memory accumulation across tests.
+    // Without this, Ember 6.10's tracked collections and autotracking tags
+    // accumulate faster than V8's heuristic GC can reclaim them, causing
+    // OOM in CI's parallel browser setup after ~1000 tests.
+    globalThis.gc?.();
+
+    if (PROFILE_PHASES) {
+      testDoneDurations.push(performance.now() - testDoneBegin);
+    }
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
@@ -369,6 +437,7 @@ export default function setupTests(config) {
 
   setupToolbar();
   reportMemoryUsageAfterTests();
+  reportPhaseTimings();
   patchFailedAssertion();
   if (!window.Testem) {
     // Running in a dev server - svg sprites are available

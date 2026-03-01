@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import User from "discourse/models/user";
 
 export const REACTIONS = { add: "add", remove: "remove" };
@@ -12,7 +12,7 @@ export default class ChatMessageReaction {
   @tracked count;
   @tracked reacted;
   @tracked emoji;
-  @trackedArray users;
+  @autoTrackedArray users;
 
   constructor(args = {}) {
     this.count = args.count;

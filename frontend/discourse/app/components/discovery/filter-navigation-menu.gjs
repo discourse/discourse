@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
@@ -71,7 +71,7 @@ export default class FilterNavigationMenu extends Component {
   lastSuggestionInput = "";
   suggestionRequestId = 0;
 
-  trackedMenuListData = new TrackedObject({
+  trackedMenuListData = trackedObject({
     suggestions: [],
     selectedIndex: null,
     selectItem: this.selectItem,

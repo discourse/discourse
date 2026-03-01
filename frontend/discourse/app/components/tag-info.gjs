@@ -6,11 +6,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { and, reads } from "@ember/object/computed";
+import { trackedArray } from "@ember/reactive/collections";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -117,7 +117,7 @@ export default class TagInfo extends Component {
         this.set("tagInfo", result);
         this.set(
           "tagInfo.synonyms",
-          new TrackedArray(
+          trackedArray(
             result.synonyms.map((s) => this.store.createRecord("tag", s))
           )
         );

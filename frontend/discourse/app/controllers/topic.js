@@ -36,7 +36,7 @@ import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -90,8 +90,8 @@ export default class TopicController extends Controller {
   @tracked translationLocale = null;
   @tracked translationTitle = null;
   @tracked editingTopicLocalization = false;
-  @trackedArray bookmarks = [];
-  @trackedArray selectedPostIds = [];
+  @autoTrackedArray bookmarks = [];
+  @autoTrackedArray selectedPostIds = [];
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
 

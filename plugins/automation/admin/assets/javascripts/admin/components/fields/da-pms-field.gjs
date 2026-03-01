@@ -2,9 +2,9 @@ import { Input } from "@ember/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -129,9 +129,9 @@ export default class PmsField extends BaseField {
 
     // a hack to prevent warnings about modifying multiple times in the same runloop
     next(() => {
-      this.args.field.metadata.value = new TrackedArray(
+      this.args.field.metadata.value = trackedArray(
         (this.args.field.metadata.value || []).map((pm) => {
-          return new TrackedObject(pm);
+          return trackedObject(pm);
         })
       );
     });
@@ -150,7 +150,7 @@ export default class PmsField extends BaseField {
   @action
   insertPM() {
     this.args.field.metadata.value.push(
-      new TrackedObject({
+      trackedObject({
         title: "",
         raw: "",
         delay: 0,
