@@ -265,8 +265,8 @@ en:
             ui_settings: "UI Settings"
             integrations: "Integrations"
         nav:
-          configured: "Configured"
-          unconfigured: "Unconfigured"
+          enabled: "Enabled"
+          not_enabled: "Not Enabled"
         filters:
           all: "All"
           text: "Search features, personas, LLMs, or groups..."
