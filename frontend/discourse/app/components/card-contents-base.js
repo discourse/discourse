@@ -207,6 +207,14 @@ export default class CardContentsBase extends Component {
           left: 10,
         },
         maxWidth: "unset",
+        fallbackPlacements: [
+          "right-start",
+          "left-start",
+          "top-start",
+          "bottom-start",
+        ],
+        crossAxisShift: false,
+        shiftBeforeVisibilityOptimizer: true,
       });
     } else {
       this._menuInstance = await this.menu.show(target, {
