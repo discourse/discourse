@@ -440,7 +440,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     end
 
     it "handles uploads correctly in topic style messages (and times)" do
-      freeze_time 1.month.ago
+      freeze_time 31.days.ago
 
       # Use Discourse's upload format in the post raw content
       upload_markdown = "![test|658x372](#{image_upload1.short_url})"
@@ -457,7 +457,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
       upload2_markdown = "![test|658x372](#{image_upload2.short_url})"
 
-      freeze_time 1.month.from_now
+      freeze_time 31.days.from_now
 
       post2_with_upload =
         Fabricate(
@@ -533,7 +533,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     end
 
     it "handles uploads correctly in topic style messages (and times)" do
-      freeze_time 1.month.ago
+      freeze_time 31.days.ago
 
       # Use Discourse's upload format in the post raw content
       upload_markdown = "![test1|658x372](#{image_upload1.short_url})"
@@ -551,7 +551,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       long_title = "A" * 40
       upload2_markdown = "![#{long_title}|658x372](#{image_upload2.short_url})"
 
-      freeze_time 1.month.from_now
+      freeze_time 31.days.from_now
 
       post2_with_upload =
         Fabricate(
