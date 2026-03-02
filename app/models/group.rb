@@ -882,7 +882,7 @@ class Group < ActiveRecord::Base
   end
 
   def bulk_add(user_ids)
-    return if user_ids.blank?
+    return [] if user_ids.blank?
 
     added_user_ids = nil
 
@@ -952,7 +952,7 @@ class Group < ActiveRecord::Base
       )
     end
 
-    self
+    added_user_ids
   end
 
   def bulk_remove(user_ids)
