@@ -85,7 +85,7 @@ export default class AiTagSuggester extends Component {
 
       if (this.tagSelectorHasValues) {
         this.suggestions = this.suggestions.filter(
-          (s) => !model.get("tags").some((t) => t.id === s.id)
+          (s) => !this.model.get("tags").some((t) => t.id === s.id)
         );
       }
 
