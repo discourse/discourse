@@ -60,26 +60,18 @@ class UpcomingChanges::List
         .flatten
         .compact
         .uniq
-
     groups = Group.where(id: group_ids).pluck(:id, :name).to_h
 
     upcoming_changes.each do |setting|
-      group_ids_for_setting = SiteSetting.site_setting_group_ids[setting[:setting]]
-      setting[:groups] = groups.values_at(*group_ids_for_setting).join(
-        ",",
-      ) if group_ids_for_setting.present?
+      enabled_for, setting_groups =
+        UpcomingChanges.enabled_for_with_groups(
+          setting[:setting],
+          setting[:value],
+          groups,
+        ).values_at(:enabled_for, :setting_groups)
 
-      setting[:upcoming_change][:enabled_for] = if !setting[:value]
-        "no_one"
-      elsif setting[:groups].blank?
-        "everyone"
-      else
-        if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
-          "staff"
-        else
-          "groups"
-        end
-      end
+      setting[:upcoming_change][:enabled_for] = enabled_for
+      setting[:groups] = setting_groups
     end
   end
 
