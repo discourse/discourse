@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
-import { equal } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { classNameBindings } from "@ember-decorators/component";
 
@@ -26,7 +26,10 @@ export function buildCategoryPanel(tab) {
     `:edit-category-tab-${tab}`
   )
   class BuiltCategoryPanel extends EditCategoryPanel {
-    @equal("selectedTab", tab) activeTab;
+    @computed("selectedTab")
+    get activeTab() {
+      return this.selectedTab === tab;
+    }
   }
   return BuiltCategoryPanel;
 }

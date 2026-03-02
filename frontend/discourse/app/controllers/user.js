@@ -1,11 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { compare, isEmpty } from "@ember/utils";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
@@ -19,20 +17,67 @@ export default class UserController extends Controller {
 
   @controller("user-notifications") userNotifications;
 
-  @setting("moderators_view_emails") canModeratorsViewEmails;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
 
-  @equal("router.currentRouteName", "user.summary") isSummaryRoute;
-  @or("model.can_ignore_user", "model.can_mute_user") canMuteOrIgnoreUser;
-  @gt("model.number_of_flags_given", 0) hasGivenFlags;
-  @gt("model.number_of_flags", 0) hasFlags;
-  @gt("model.number_of_deleted_posts", 0) hasDeletedPosts;
-  @gt("model.number_of_silencings", 0) hasBeenSilenced;
-  @gt("model.number_of_suspensions", 0) hasBeenSuspended;
-  @gt("model.warnings_received_count", 0) hasReceivedWarnings;
-  @gt("model.number_of_rejected_posts", 0) hasRejectedPosts;
-  @equal("model.trust_level", 0) isTrustLevelZero;
-  @or("isTrustLevelZero", "model.trust_level") hasTrustLevel;
-  @or(
+  @computed("router.currentRouteName")
+  get isSummaryRoute() {
+    return this.router?.currentRouteName === "user.summary";
+  }
+
+  @computed("model.can_ignore_user", "model.can_mute_user")
+  get canMuteOrIgnoreUser() {
+    return this.model?.can_ignore_user || this.model?.can_mute_user;
+  }
+
+  @computed("model.number_of_flags_given")
+  get hasGivenFlags() {
+    return this.model?.number_of_flags_given > 0;
+  }
+
+  @computed("model.number_of_flags")
+  get hasFlags() {
+    return this.model?.number_of_flags > 0;
+  }
+
+  @computed("model.number_of_deleted_posts")
+  get hasDeletedPosts() {
+    return this.model?.number_of_deleted_posts > 0;
+  }
+
+  @computed("model.number_of_silencings")
+  get hasBeenSilenced() {
+    return this.model?.number_of_silencings > 0;
+  }
+
+  @computed("model.number_of_suspensions")
+  get hasBeenSuspended() {
+    return this.model?.number_of_suspensions > 0;
+  }
+
+  @computed("model.warnings_received_count")
+  get hasReceivedWarnings() {
+    return this.model?.warnings_received_count > 0;
+  }
+
+  @computed("model.number_of_rejected_posts")
+  get hasRejectedPosts() {
+    return this.model?.number_of_rejected_posts > 0;
+  }
+
+  @computed("model.trust_level")
+  get isTrustLevelZero() {
+    return this.model?.trust_level === 0;
+  }
+
+  @computed("isTrustLevelZero", "model.trust_level")
+  get hasTrustLevel() {
+    return this.isTrustLevelZero || this.model?.trust_level;
+  }
+
+  @computed(
     "hasGivenFlags",
     "hasFlags",
     "hasDeletedPosts",
@@ -41,15 +86,43 @@ export default class UserController extends Controller {
     "hasReceivedWarnings",
     "hasRejectedPosts"
   )
-  showStaffCounters;
-  @and(
+  get showStaffCounters() {
+    return (
+      this.hasGivenFlags ||
+      this.hasFlags ||
+      this.hasDeletedPosts ||
+      this.hasBeenSilenced ||
+      this.hasBeenSuspended ||
+      this.hasReceivedWarnings ||
+      this.hasRejectedPosts
+    );
+  }
+
+  @computed(
     "model.featured_topic",
     "siteSettings.allow_featured_topic_on_user_profiles"
   )
-  showFeaturedTopic;
-  @not("model.isBasic") linkWebsite;
-  @and("model.can_be_deleted", "model.can_delete_all_posts") canDeleteUser;
-  @readOnly("router.currentRoute.parent.name") currentParentRoute;
+  get showFeaturedTopic() {
+    return (
+      this.model?.featured_topic &&
+      this.siteSettings?.allow_featured_topic_on_user_profiles
+    );
+  }
+
+  @computed("model.isBasic")
+  get linkWebsite() {
+    return !this.model?.isBasic;
+  }
+
+  @computed("model.can_be_deleted", "model.can_delete_all_posts")
+  get canDeleteUser() {
+    return this.model?.can_be_deleted && this.model?.can_delete_all_posts;
+  }
+
+  @computed("router.currentRoute.parent.name")
+  get currentParentRoute() {
+    return this.router?.currentRoute?.parent?.name;
+  }
 
   @computed("model.username")
   get viewingSelf() {

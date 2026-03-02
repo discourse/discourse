@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
@@ -23,10 +22,25 @@ import { i18n } from "discourse-i18n";
 export default class ShareTopicModal extends Component {
   @service modal;
 
-  @readOnly("model.topic") topic;
-  @readOnly("model.post") post;
-  @readOnly("model.category") category;
-  @readOnly("model.allowInvites") allowInvites;
+  @computed("model.topic")
+  get topic() {
+    return this.model?.topic;
+  }
+
+  @computed("model.post")
+  get post() {
+    return this.model?.post;
+  }
+
+  @computed("model.category")
+  get category() {
+    return this.model?.category;
+  }
+
+  @computed("model.allowInvites")
+  get allowInvites() {
+    return this.model?.allowInvites;
+  }
 
   didInsertElement() {
     this._showRestrictedGroupWarning();

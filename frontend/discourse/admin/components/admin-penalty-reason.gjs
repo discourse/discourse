@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { action, computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import TextField from "discourse/components/text-field";
@@ -25,7 +24,10 @@ export default class AdminPenaltyReason extends Component {
     CUSTOM_REASON_KEY,
   ];
 
-  @equal("selectedReason", CUSTOM_REASON_KEY) isCustomReason;
+  @computed("selectedReason")
+  get isCustomReason() {
+    return this.selectedReason === CUSTOM_REASON_KEY;
+  }
 
   @computed("reasonKeys")
   get reasons() {

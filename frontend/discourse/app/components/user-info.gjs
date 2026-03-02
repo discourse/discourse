@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
@@ -20,7 +19,14 @@ export default class UserInfo extends Component {
   includeLink = true;
   includeAvatar = true;
 
-  @alias("user.username") dataUsername;
+  @computed("user.username")
+  get dataUsername() {
+    return this.user?.username;
+  }
+
+  set dataUsername(value) {
+    set(this, "user.username", value);
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);

@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
@@ -25,11 +24,18 @@ export default class SecondFactorController extends Controller {
   errorMessage = null;
   newUsername = null;
 
-  @alias("model.second_factor_backup_enabled") backupEnabled;
-
   secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   totps = [];
   security_keys = [];
+
+  @computed("model.second_factor_backup_enabled")
+  get backupEnabled() {
+    return this.model?.second_factor_backup_enabled;
+  }
+
+  set backupEnabled(value) {
+    set(this, "model.second_factor_backup_enabled", value);
+  }
 
   get isCurrentUser() {
     return this.currentUser?.id === this.model.id;

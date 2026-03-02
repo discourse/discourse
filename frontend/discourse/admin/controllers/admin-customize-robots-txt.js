@@ -2,10 +2,8 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { not } from "@ember/object/computed";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
-import { propertyEqual } from "discourse/lib/computed";
 import { deepEqual } from "discourse/lib/object";
 
 export default class AdminCustomizeRobotsTxtController extends Controller {
@@ -18,7 +16,10 @@ export default class AdminCustomizeRobotsTxtController extends Controller {
     return deepEqual(this.model?.robots_txt, this.get("buffered.robots_txt"));
   }
 
-  @not("model.overridden") resetDisabled;
+  @computed("model.overridden")
+  get resetDisabled() {
+    return !this.model?.overridden;
+  }
 
   @cached
   @dependentKeyCompat

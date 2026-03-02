@@ -1,13 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
@@ -51,8 +50,15 @@ export default class LoginPageController extends Controller {
   @tracked flash;
   @tracked flashType;
 
-  @setting("enable_local_logins") canLoginLocal;
-  @setting("enable_local_logins_via_email") canLoginLocalWithEmail;
+  @computed("siteSettings.enable_local_logins")
+  get canLoginLocal() {
+    return this.siteSettings.enable_local_logins;
+  }
+
+  @computed("siteSettings.enable_local_logins_via_email")
+  get canLoginLocalWithEmail() {
+    return this.siteSettings.enable_local_logins_via_email;
+  }
 
   get isAwaitingApproval() {
     return (

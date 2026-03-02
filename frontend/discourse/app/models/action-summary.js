@@ -1,12 +1,15 @@
-import { or } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import RestModel from "discourse/models/rest";
 
 export default class ActionSummary extends RestModel {
-  @or("can_undo", "can_act") canToggle;
-
   // Remove it
+  @computed("can_undo", "can_act")
+  get canToggle() {
+    return this.can_undo || this.can_act;
+  }
+
   removeAction() {
     this.setProperties({
       acted: false,

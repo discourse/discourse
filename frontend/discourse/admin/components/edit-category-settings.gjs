@@ -2,8 +2,8 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { and, empty } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
@@ -11,7 +11,6 @@ import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
-import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
@@ -22,12 +21,25 @@ import { i18n } from "discourse-i18n";
 export default class EditCategorySettings extends buildCategoryPanel(
   "settings"
 ) {
-  @setting("email_in") emailInEnabled;
-  @setting("fixed_category_positions") showPositionInput;
+  @computed("siteSettings.email_in")
+  get emailInEnabled() {
+    return this.siteSettings.email_in;
+  }
 
-  @and("category.show_subcategory_list", "isParentCategory")
-  showSubcategoryListStyle;
-  @empty("category.sort_order") isDefaultSortOrder;
+  @computed("siteSettings.fixed_category_positions")
+  get showPositionInput() {
+    return this.siteSettings.fixed_category_positions;
+  }
+
+  @computed("category.show_subcategory_list", "isParentCategory")
+  get showSubcategoryListStyle() {
+    return this.category?.show_subcategory_list && this.isParentCategory;
+  }
+
+  @computed("category.sort_order.length")
+  get isDefaultSortOrder() {
+    return isEmpty(this.category?.sort_order);
+  }
 
   @computed(
     "category.isParent",
