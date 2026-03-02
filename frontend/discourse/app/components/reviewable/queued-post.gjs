@@ -20,11 +20,11 @@ export default class ReviewableQueuedPost extends Component {
   @service modal;
 
   get quotedTopicId() {
-    return this.args.reviewable.topic_id ?? this.args.reviewable.topic?.id;
+    return this.args.reviewable.topic_id;
   }
 
   get quoteTitle() {
-    return `${i18n("review.in_reply_to")} #${this.args.reviewable.reply_to_post_number}`;
+    return `#${this.args.reviewable.reply_to_post_number}`;
   }
 
   get quotedPostContext() {
