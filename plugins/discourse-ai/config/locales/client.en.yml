@@ -266,7 +266,7 @@ en:
             integrations: "Integrations"
         nav:
           enabled: "Enabled"
-          not_enabled: "Not Enabled"
+          not_enabled: "Not enabled"
         filters:
           all: "All"
           text: "Search features, personas, LLMs, or groups..."
