@@ -456,6 +456,18 @@ export default class AiLlmEditorForm extends Component {
           </inputGroup.Field>
 
           <inputGroup.Field
+            @name="output_cost"
+            @title={{i18n "discourse_ai.llms.cost_output"}}
+            @tooltip={{i18n "discourse_ai.llms.hints.cost_output"}}
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            as |field|
+          >
+            <field.Input @type="number" step="any" min="0" lang="en" />
+          </inputGroup.Field>
+        </form.InputGroup>
+
+        <form.InputGroup as |inputGroup|>
+          <inputGroup.Field
             @name="cached_input_cost"
             @title={{i18n "discourse_ai.llms.cost_cached_input"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_cached_input"}}
@@ -469,16 +481,6 @@ export default class AiLlmEditorForm extends Component {
             @name="cache_write_cost"
             @title={{i18n "discourse_ai.llms.cost_cache_write"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_cache_write"}}
-            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
-            as |field|
-          >
-            <field.Input @type="number" step="any" min="0" lang="en" />
-          </inputGroup.Field>
-
-          <inputGroup.Field
-            @name="output_cost"
-            @title={{i18n "discourse_ai.llms.cost_output"}}
-            @tooltip={{i18n "discourse_ai.llms.hints.cost_output"}}
             @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
             as |field|
           >
