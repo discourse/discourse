@@ -222,6 +222,7 @@ export default class DToast extends Component<DToastSignature> {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <DSheet.Root
       @presented={{this.presented}}
       @onPresentedChange={{this.handlePresentedChange}}

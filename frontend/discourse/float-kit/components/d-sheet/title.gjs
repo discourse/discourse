@@ -1,4 +1,4 @@
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
  * Renders the title heading of a sheet, linked via ID for accessibility.

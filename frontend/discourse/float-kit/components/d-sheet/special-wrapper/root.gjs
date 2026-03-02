@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import concatClass from "discourse/helpers/concat-class";
 import { capabilities } from "discourse/services/capabilities";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { scrollTrapModifier } from "../scroll-trap-modifier";
 
 export default class DSheetSpecialWrapperRoot extends Component {

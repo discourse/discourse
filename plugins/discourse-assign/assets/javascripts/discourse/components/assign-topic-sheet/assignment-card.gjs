@@ -1,10 +1,10 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import concatClass from "discourse/helpers/concat-class";
-import DButton from "discourse/components/d-button";
 import formatUsername from "discourse/helpers/format-username";
 import DiscourseURL from "discourse/lib/url";
 import { eq, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 function navigateToAssignment(topic, assignment) {
@@ -21,11 +21,7 @@ const AssignmentCard = <template>
   <div
     class={{concatClass
       "assignment-card"
-      (if
-        (or @assignment.username @assignment.groupName)
-        ""
-        "--unassigned"
-      )
+      (if (or @assignment.username @assignment.groupName) "" "--unassigned")
     }}
   >
     <div class="assignment-card__header">
@@ -41,7 +37,9 @@ const AssignmentCard = <template>
               @{{formatUsername @assignment.username}}
             </span>
           {{else if @assignment.groupName}}
-            <span class="assignment-card__username">{{@assignment.groupName}}</span>
+            <span
+              class="assignment-card__username"
+            >{{@assignment.groupName}}</span>
           {{else}}
             <span class="assignment-card__unassigned">
               {{i18n "discourse_assign.unassigned"}}
@@ -49,14 +47,19 @@ const AssignmentCard = <template>
           {{/if}}
         {{else}}
           <span class="assignment-card__title">
-            {{i18n "discourse_assign.post_number" number=@assignment.postNumber}}
+            {{i18n
+              "discourse_assign.post_number"
+              number=@assignment.postNumber
+            }}
           </span>
           {{#if @assignment.username}}
             <span class="assignment-card__username">
               @{{formatUsername @assignment.username}}
             </span>
           {{else if @assignment.groupName}}
-            <span class="assignment-card__username">{{@assignment.groupName}}</span>
+            <span
+              class="assignment-card__username"
+            >{{@assignment.groupName}}</span>
           {{/if}}
         {{/if}}
       </button>

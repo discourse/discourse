@@ -4,11 +4,11 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import { trustHTML } from "@ember/template";
 import DBottomSheet from "discourse/float-kit/components/d-bottom-sheet";
 import DCard from "discourse/float-kit/components/d-card";
 import DStack from "discourse/float-kit/components/d-stack";
+import DButton from "discourse/ui-kit/d-button";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
@@ -40,6 +40,7 @@ export default class Sheets extends Component {
 
   @action
   exampleToastAction() {
+    // eslint-disable-next-line no-alert
     alert("exampleToastAction");
   }
 
@@ -75,7 +76,7 @@ export default class Sheets extends Component {
   }
 
   colorStyle(color) {
-    return htmlSafe(`--color: ${color}`);
+    return trustHTML(`--color: ${color}`);
   }
 
   <template>

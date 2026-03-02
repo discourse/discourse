@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 /**
  * Header component for the sheet, providing left/right action slots and a title.

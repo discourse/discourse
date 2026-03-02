@@ -21,6 +21,7 @@ export default class SheetActionBase extends Component {
   /**
    * Handles click events with configurable behavior via the onPress arg.
    * Optionally forces focus and runs the configured action.
+   * Calls onClick afterward to match trigger API parity.
    *
    * @param {MouseEvent} event - The native click event
    */
@@ -35,12 +36,12 @@ export default class SheetActionBase extends Component {
       event.currentTarget?.focus({ preventScroll: true });
     }
 
-    if (!behavior.runAction) {
-      return;
+    if (behavior.runAction) {
+      this.beforeExecuteAction(event);
+      this.executeAction();
     }
 
-    this.beforeExecuteAction(event);
-    this.executeAction();
+    this.args.onClick?.(event);
   };
 
   /**

@@ -1,5 +1,5 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DScrollContent = <template>
   <div

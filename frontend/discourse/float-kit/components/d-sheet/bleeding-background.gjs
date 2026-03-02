@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
  * Renders a bleeding background div for the d-sheet that extends behind the sheet content.
