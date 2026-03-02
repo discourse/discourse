@@ -1,25 +1,13 @@
-import Component from "@glimmer/component";
-import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
-import highlightSyntax from "discourse/lib/highlight-syntax";
+import HighlightedCode from "discourse/components/highlighted-code";
+import deprecated from "discourse/lib/deprecated";
 
-export default class HighlightedCode extends Component {
-  @service session;
-  @service siteSettings;
+deprecated(
+  'Importing HighlightedCode from "discourse/admin/components/highlighted-code" is deprecated. Use "discourse/components/highlighted-code" instead.',
+  {
+    id: "discourse.admin-highlighted-code-import",
+    since: "2026.3.0",
+    dropFrom: "2027.1.0",
+  }
+);
 
-  highlight = modifier(async (element) => {
-    const code = document.createElement("code");
-    code.classList.add(`lang-${this.args.lang}`);
-    code.textContent = this.args.code;
-
-    const pre = document.createElement("pre");
-    pre.appendChild(code);
-
-    element.replaceChildren(pre);
-    await highlightSyntax(pre, this.siteSettings, this.session);
-  });
-
-  <template>
-    <div {{this.highlight}}></div>
-  </template>
-}
+export default HighlightedCode;
