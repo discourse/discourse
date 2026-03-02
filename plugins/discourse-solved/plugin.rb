@@ -207,12 +207,26 @@ after_initialize do
 
   register_html_builder("server:before-head-close-crawler") do |controller|
     topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
-    DiscourseSolved::BuildSchemaMarkup.html_for(topic_id: topic_id, guardian: controller.guardian)
+    result =
+      DiscourseSolved::BuildSchemaMarkup.call(
+        params: {
+          topic_id: topic_id,
+        },
+        guardian: controller.guardian,
+      )
+    result[:html] if result.success?
   end
 
   register_html_builder("server:before-head-close") do |controller|
     topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
-    DiscourseSolved::BuildSchemaMarkup.html_for(topic_id: topic_id, guardian: controller.guardian)
+    result =
+      DiscourseSolved::BuildSchemaMarkup.call(
+        params: {
+          topic_id: topic_id,
+        },
+        guardian: controller.guardian,
+      )
+    result[:html] if result.success?
   end
 
   Report.add_report("accepted_solutions") do |report|

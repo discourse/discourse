@@ -72,26 +72,4 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
       end
     end
   end
-
-  describe ".html_for" do
-    fab!(:user)
-    fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:post) { Fabricate(:post, topic: topic, user: user, like_count: 1) }
-    let(:guardian) { Guardian.new(user) }
-
-    before do
-      SiteSetting.allow_solved_on_all_topics = true
-      SiteSetting.solved_add_schema_markup = "always"
-    end
-
-    it "returns the schema markup HTML" do
-      html = described_class.html_for(topic_id: topic.id, guardian: guardian)
-      expect(html).to include('"@type":"QAPage"')
-    end
-
-    it "returns an empty string when the service exits early" do
-      html = described_class.html_for(topic_id: nil, guardian: guardian)
-      expect(html).to eq("")
-    end
-  end
 end
