@@ -16,7 +16,7 @@
   --d-button-default-text-color: var(--primary-900);
   --d-button-default-icon-color: var(--primary-900);
   --d-badge-card-background-color: var(--secondary);
-  --d-table-border-top-height: 0px;
+  --d-table-border-top-height: 1px;
   --category-boxes-text-alignment: left;
   --d-topic-list-data-font-size: var(--font-down-1);
   --d-topic-list-header-text-color: var(--primary-900);
@@ -375,40 +375,6 @@
   .category-boxes-with-topics .category-box-inner {
     border: var(--d-category-border-box-width) solid var(--content-border-color);
     border-radius: var(--d-border-radius);
-  }
-
-  // Eliminate grey background
-  .search-container .search-header,
-  .search-container .search-filters,
-  .search-container .search-bar,
-  .d-admin-filter,
-  .search-container .search-filters .search-advanced-filters,
-  .reviewable-filters,
-  .admin-site-settings-filter-controls,
-  .admin-site-settings-filter-controls .controls,
-  .admin-site-settings-filter-controls .search.controls {
-    background: unset;
-    background-color: unset;
-  }
-
-  // Misc Spacing
-  .d-admin-filter,
-  .reviewable-filters,
-  .admin-site-settings-filter-controls .controls {
-    padding: 0;
-  }
-
-  .search-container .search-header {
-    padding: var(--space-6);
-    border: 1px solid var(--content-border-color);
-  }
-
-  .admin-nav .nav-stacked {
-    margin: 0;
-  }
-
-  .admin-filter-controls {
-    margin-block: 0;
   }
 
   // Full Calendar

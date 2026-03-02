@@ -159,10 +159,6 @@ tbody tr {
   }
 }
 
-.topic-list-header tr {
-  border-bottom: var(--table-border-width) solid var(--table-border-color);
-}
-
 // https://en.wikipedia.org/wiki/Ruby_character
 ruby > rt {
   font-size: 72%; // ~10px with 14px base

@@ -227,14 +227,10 @@
 }
 
 .reviewable-filters {
-  background-color: var(--primary-very-low);
   padding: var(--space-4) var(--space-6);
   margin-bottom: var(--space-4);
-
-  .topic-filter .btn {
-    display: flex;
-    width: auto;
-  }
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
 
   .score-filter {
     width: 5em;
