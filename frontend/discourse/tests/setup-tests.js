@@ -404,8 +404,13 @@ export default function setupTests(config) {
     // Periodically force garbage collection to prevent memory accumulation.
     // Ember 6.10's tracked collections accumulate faster than V8's heuristic
     // GC reclaims them, causing OOM after ~1000 tests in parallel browsers.
-    if (++testCount % 50 === 0) {
+    // Minor GC (scavenge) every 10 tests is cheap and cleans young generation.
+    // Full GC every 200 tests reclaims tenured objects that survived scavenges.
+    ++testCount;
+    if (testCount % 200 === 0) {
       globalThis.gc?.();
+    } else if (testCount % 10 === 0) {
+      globalThis.gc?.({ type: "minor" });
     }
 
     if (PROFILE_PHASES) {
