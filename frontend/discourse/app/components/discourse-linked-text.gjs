@@ -10,7 +10,7 @@ export default class DiscourseLinkedText extends Component {
   @computed("text", "textParams")
   get translatedText() {
     if (this.text) {
-      return i18n(...arguments);
+      return i18n(this.text);
     }
   }
 
