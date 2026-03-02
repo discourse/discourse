@@ -14,7 +14,7 @@ import AiFeaturesList from "./ai-features-list";
 
 const ALL = "all";
 const ENABLED = "enabled";
-const NOTENABLED = "not enabled";
+const NOT_ENABLED = "not enabled";
 
 export default class AiFeatures extends Component {
   @service adminPluginNavManager;
