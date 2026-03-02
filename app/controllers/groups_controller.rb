@@ -422,21 +422,19 @@ class GroupsController < ApplicationController
       uniq_users = users.uniq
 
       if uniq_users.length > 1
-        already_in_group = usernames_already_in_group.to_set
-        new_users = uniq_users.reject { |u| already_in_group.include?(u.username) }
+        added_user_ids = group.bulk_add(uniq_users.map(&:id))
 
-        group.bulk_add(uniq_users.map(&:id))
+        if added_user_ids.any?
+          added_id_set = added_user_ids.to_set
+          new_users = uniq_users.select { |u| added_id_set.include?(u.id) }
 
-        if new_users.any?
-          new_user_ids = new_users.map(&:id)
-          now = Time.now
-
-          GroupUser.bulk_set_category_notifications(group, new_user_ids)
-          GroupUser.bulk_set_tag_notifications(group, new_user_ids)
+          GroupUser.bulk_set_category_notifications(group, added_user_ids)
+          GroupUser.bulk_set_tag_notifications(group, added_user_ids)
 
           new_users.each { |user| group.trigger_user_added_event(user, false) }
           group.bulk_publish_category_updates(new_users)
 
+          now = Time.now
           GroupHistory.insert_all(
             new_users.map do |user|
               {
