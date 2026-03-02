@@ -8,6 +8,7 @@ export default class AdminEmailTemplatesEditRoute extends Route {
   }
 
   setupController(controller, emailTemplate) {
+    controller.resetTextarea();
     controller.setProperties({ emailTemplate, saved: false });
     scrollTop();
   }

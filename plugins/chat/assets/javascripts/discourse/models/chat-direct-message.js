@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import User from "discourse/models/user";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
@@ -9,7 +9,7 @@ export default class ChatDirectMessage {
   }
 
   @tracked group;
-  @trackedArray users;
+  @autoTrackedArray users;
 
   type = CHATABLE_TYPES.directMessageChannel;
 

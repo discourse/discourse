@@ -1,7 +1,7 @@
+import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -322,14 +322,14 @@ function initialize(api) {
     "model:bookmark",
     (Superclass) =>
       class extends Superclass {
-        @discourseComputed("assigned_to_user")
-        assignedToUserPath(assignedToUser) {
-          return assignedToUserPath(assignedToUser);
+        @computed("assigned_to_user")
+        get assignedToUserPath() {
+          return assignedToUserPath(this.assigned_to_user);
         }
 
-        @discourseComputed("assigned_to_group")
-        assignedToGroupPath(assignedToGroup) {
-          return assignedToGroupPath(assignedToGroup);
+        @computed("assigned_to_group")
+        get assignedToGroupPath() {
+          return assignedToGroupPath(this.assigned_to_group);
         }
       }
   );

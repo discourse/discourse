@@ -1,12 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DTextarea from "discourse/components/d-textarea";
 import ShareSource from "discourse/components/share-source";
-import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -19,25 +18,25 @@ export default class SharePanel extends Component {
   @alias("panel.model.topic") topic;
   @alias("panel.model.topic.category.read_restricted") privateCategory;
 
-  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
-  sources(topic) {
+  @computed("topic.{isPrivateMessage,invisible,category}")
+  get sources() {
     const privateContext =
       this.siteSettings.login_required ||
-      (topic && topic.isPrivateMessage) ||
-      (topic && topic.invisible) ||
+      (this.topic && this.topic?.isPrivateMessage) ||
+      (this.topic && this.topic?.invisible) ||
       this.privateCategory;
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
   }
 
-  @discourseComputed("type", "topic.title")
-  shareTitle(type, topicTitle) {
-    topicTitle = escapeExpression(topicTitle);
+  @computed("type", "topic.title")
+  get shareTitle() {
+    const topicTitle = escapeExpression(this.topic?.title);
     return i18n("share.topic_html", { topicTitle });
   }
 
-  @discourseComputed("panel.model.shareUrl", "topic.shareUrl")
-  shareUrl(forcedShareUrl, shareUrl) {
-    shareUrl = forcedShareUrl || shareUrl;
+  @computed("panel.model.shareUrl", "topic.shareUrl")
+  get shareUrl() {
+    let shareUrl = this.panel?.model?.shareUrl || this.topic?.shareUrl;
 
     if (isEmpty(shareUrl)) {
       return;
