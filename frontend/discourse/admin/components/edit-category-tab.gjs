@@ -21,7 +21,7 @@ export default class EditCategoryTab extends Component {
 
   @discourseComputed("tab")
   tabClassName(tab) {
-    return "edit-category-" + tab;
+    return `edit-category-${tab}`;
   }
 
   @discourseComputed("tab", "tabTitle")

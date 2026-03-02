@@ -23,6 +23,11 @@ export default class CategoryTypeChooser extends Service {
     this._setupComplete = true;
   }
 
+  currentSelection() {
+    return this._selection;
+  }
+
+  // TODO (martin) Might get rid of this...see notes in admin/routes/new-category/tabs
   consume() {
     const selection = this._selection;
     this._selection = null;

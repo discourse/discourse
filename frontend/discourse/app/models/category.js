@@ -829,8 +829,8 @@ export default class Category extends RestModel {
         ...(this.siteSettings.content_localization_enabled && {
           category_localizations: this.localizations,
         }),
-        ...(!id && this.category_type
-          ? { category_type: this.category_type }
+        ...(!id && this.category_types
+          ? { category_type: Object.keys(this.category_types)[0] }
           : {}),
         ...this._pluginSaveProperties(),
       }),
@@ -886,6 +886,14 @@ export default class Category extends RestModel {
         this.permissions[i].permission_type = type;
       }
     });
+  }
+
+  isType(type) {
+    return Object.keys(this.category_types).includes(type);
+  }
+
+  typeMetadata(type) {
+    return this.category_types[type];
   }
 
   @discourseComputed("topics")

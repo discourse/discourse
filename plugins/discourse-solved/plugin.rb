@@ -24,7 +24,7 @@ end
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
-  register_category_type(DiscourseSolved::CategoryType)
+  register_category_type(DiscourseSolved::Categories::Types::Support)
 
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 

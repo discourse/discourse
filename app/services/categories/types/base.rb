@@ -4,6 +4,7 @@ module Categories
   module Types
     class Base
       class << self
+        # Every category type must have a unique type_id.
         def type_id(id = nil)
           if id
             @type_id = id.to_sym
@@ -12,9 +13,21 @@ module Categories
           end
         end
 
+        # Returns true if the category provided is of this type,
+        # based on settings, category attributes, etc.
+        def category_matches?(category)
+          raise NotImplementedError
+        end
+
+        # Use this to enable any related plugin for the category type,
+        # since we register category types without the plugin being enabled.
         def enable_plugin
         end
 
+        # Configure any site settings that are specific to this category type.
+        # The configuration schema must be defined for this, as it is also used
+        # to show related settings in the UI for the category creator based
+        # on type.
         def configure_site_settings(category, configuration_values: {})
           configuration_schema[:site_settings]&.each do |setting_name, default_value|
             value = configuration_values.fetch(setting_name.to_s, default_value)
@@ -22,13 +35,18 @@ module Categories
           end
         end
 
+        # Configure any category-specific settings or custom fields that are
+        # specific to this category type.
         def configure_category(category, configuration_values: {})
         end
 
+        # TODO (martin) Add docs for the schema/maybe a schema validator?
         def configuration_schema
           {}
         end
 
+        # Used as an extension point to limit access to a category type
+        # based on certain conditions, mostly for Discourse hosting.
         def available?
           true
         end
@@ -42,7 +60,7 @@ module Categories
             id: type_id,
             name: I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize),
             description: I18n.t("category_types.#{type_id}.description", default: ""),
-            icon: icon,
+            icon:,
             available: available?,
             configuration_schema: resolved_configuration_schema,
           }

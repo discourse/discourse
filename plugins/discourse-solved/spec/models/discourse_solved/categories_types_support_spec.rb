@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe DiscourseSolved::CategoryType do
+RSpec.describe DiscourseSolved::Categories::Types::Support do
   fab!(:category)
 
   describe ".enable_plugin" do
