@@ -343,6 +343,82 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     )
   end
 
+  it "accepts xhigh as reasoning_effort for responses API" do
+    model.update!(provider_params: { reasoning_effort: "xhigh" })
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user)
+
+    expect(parsed_body[:reasoning]).to include(effort: "xhigh", summary: "auto")
+  end
+
+  it "accepts none as reasoning_effort for responses API" do
+    model.update!(provider_params: { reasoning_effort: "none" })
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user)
+
+    expect(parsed_body[:reasoning]).to include(effort: "none", summary: "auto")
+  end
+
+  it "strips temperature and top_p when reasoning_effort is set" do
+    model.update!(provider_params: { reasoning_effort: "high" })
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user, { temperature: 0.7, top_p: 0.9 })
+
+    expect(parsed_body).not_to have_key(:temperature)
+    expect(parsed_body).not_to have_key(:top_p)
+  end
+
   it "uses reasoning object format for responses API" do
     model.update!(provider_params: { reasoning_effort: "minimal" })
 

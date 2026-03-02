@@ -3,7 +3,14 @@
 require_relative "endpoint_compliance"
 
 class VllmMock < EndpointMock
-  def response(content)
+  def response(content, tool_call: false)
+    message_content =
+      if tool_call
+        { tool_calls: [content] }
+      else
+        { content: content }
+      end
+
     {
       id: "cmpl-6sZfAb30Rnv9Q7ufzFwvQsMpjZh8S",
       object: "chat.completion",
@@ -15,7 +22,7 @@ class VllmMock < EndpointMock
         total_tokens: 499,
       },
       choices: [
-        { message: { role: "assistant", content: content }, finish_reason: "stop", index: 0 },
+        { message: { role: "assistant" }.merge(message_content), finish_reason: "stop", index: 0 },
       ],
     }
   end
@@ -23,16 +30,25 @@ class VllmMock < EndpointMock
   def stub_response(prompt, response_text, tool_call: false)
     WebMock
       .stub_request(:post, "https://test.dev/v1/chat/completions")
-      .with(body: model.default_options.merge(messages: prompt).to_json)
-      .to_return(status: 200, body: JSON.dump(response(response_text)))
+      .with(body: request_body(prompt, tool_call: tool_call))
+      .to_return(status: 200, body: JSON.dump(response(response_text, tool_call: tool_call)))
   end
 
-  def stream_line(delta, finish_reason: nil)
+  def stream_line(delta, finish_reason: nil, tool_call: false)
+    message_content =
+      if tool_call
+        { tool_calls: [delta] }
+      else
+        { content: delta }
+      end
+
     +"data: " << {
       id: "cmpl-#{SecureRandom.hex}",
+      object: "chat.completion.chunk",
       created: 1_681_283_881,
       model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
-      choices: [{ delta: { content: delta } }],
+      choices: [{ delta: message_content }],
+      finish_reason: finish_reason,
       index: 0,
     }.to_json
   end
@@ -41,9 +57,9 @@ class VllmMock < EndpointMock
     chunks =
       deltas.each_with_index.map do |_, index|
         if index == (deltas.length - 1)
-          stream_line(deltas[index], finish_reason: "stop_sequence")
+          stream_line(deltas[index], finish_reason: "stop_sequence", tool_call: tool_call)
         else
-          stream_line(deltas[index])
+          stream_line(deltas[index], tool_call: tool_call)
         end
       end
 
@@ -51,14 +67,70 @@ class VllmMock < EndpointMock
 
     WebMock
       .stub_request(:post, "https://test.dev/v1/chat/completions")
-      .with(
-        body:
-          model
-            .default_options
-            .merge(messages: prompt, stream: true, stream_options: { include_usage: true })
-            .to_json,
-      )
+      .with(body: request_body(prompt, stream: true, tool_call: tool_call))
       .to_return(status: 200, body: chunks)
+  end
+
+  def tool_deltas
+    [
+      { id: tool_id, function: {} },
+      { id: tool_id, function: { name: "get_weather", arguments: "" } },
+      { id: tool_id, function: { arguments: "" } },
+      { id: tool_id, function: { arguments: "{" } },
+      { id: tool_id, function: { arguments: " \"location\": \"Sydney\"" } },
+      { id: tool_id, function: { arguments: " ,\"unit\": \"c\" }" } },
+    ]
+  end
+
+  def tool_response
+    {
+      id: tool_id,
+      function: {
+        name: "get_weather",
+        arguments: { location: "Sydney", unit: "c" }.to_json,
+      },
+    }
+  end
+
+  def tool_id
+    "tool_0"
+  end
+
+  def tool_payload
+    {
+      type: "function",
+      function: {
+        name: "get_weather",
+        description: "Get the weather in a city",
+        parameters: {
+          type: "object",
+          properties: {
+            location: {
+              type: "string",
+              description: "the city name",
+            },
+            unit: {
+              type: "string",
+              description: "the unit of measurement celcius c or fahrenheit f",
+              enum: %w[c f],
+            },
+          },
+          required: %w[location unit],
+        },
+      },
+    }
+  end
+
+  def request_body(prompt, stream: false, tool_call: false)
+    model
+      .default_options
+      .merge(messages: prompt)
+      .tap do |b|
+        b[:stream] = true if stream
+        b[:tools] = [tool_payload] if tool_call
+        b[:stream_options] = { include_usage: true } if stream
+      end
+      .to_json
   end
 end
 
@@ -92,6 +164,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
 
   describe "tool support" do
     it "is able to invoke XML tools correctly" do
+      llm_model.update!(provider_params: { "disable_native_tools" => true })
+
       xml = <<~XML
         <function_calls>
         <invoke>
@@ -249,6 +323,167 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
     log = AiApiAuditLog.order(:id).last
     expect(log.request_tokens).to eq(46)
     expect(log.response_tokens).to eq(26)
+  end
+
+  describe "enable_thinking" do
+    it "sends chat_template_kwargs when enable_thinking is set" do
+      llm_model.update!(provider_params: { "enable_thinking" => true })
+
+      stub =
+        stub_request(:post, "https://test.dev/v1/chat/completions").with(
+          body: hash_including("chat_template_kwargs" => { "enable_thinking" => true }),
+        ).to_return(
+          status: 200,
+          body: {
+            choices: [{ message: { role: "assistant", content: "hello" } }],
+            usage: {
+              prompt_tokens: 10,
+              completion_tokens: 5,
+            },
+          }.to_json,
+        )
+
+      llm.generate("say hello", user: Discourse.system_user)
+
+      expect(stub).to have_been_requested
+    end
+
+    it "does not send chat_template_kwargs when enable_thinking is not set" do
+      stub =
+        stub_request(:post, "https://test.dev/v1/chat/completions")
+          .with { |request| !JSON.parse(request.body).key?("chat_template_kwargs") }
+          .to_return(
+            status: 200,
+            body: {
+              choices: [{ message: { role: "assistant", content: "hello" } }],
+              usage: {
+                prompt_tokens: 10,
+                completion_tokens: 5,
+              },
+            }.to_json,
+          )
+
+      llm.generate("say hello", user: Discourse.system_user)
+
+      expect(stub).to have_been_requested
+    end
+  end
+
+  describe "stream_options" do
+    it "includes stream_options with include_usage in streaming mode" do
+      stub =
+        stub_request(:post, "https://test.dev/v1/chat/completions").with(
+          body: hash_including("stream_options" => { "include_usage" => true }),
+        ).to_return(
+          status: 200,
+          body:
+            +"data: #{({ choices: [{ delta: { content: "hello" } }] }).to_json}\n\ndata: [DONE]",
+        )
+
+      llm.generate("say hello", user: Discourse.system_user) { |_| }
+
+      expect(stub).to have_been_requested
+    end
+  end
+
+  describe "reasoning_content" do
+    it "returns Thinking and content for non-streaming response with output_thinking" do
+      body = {
+        choices: [
+          {
+            message: {
+              role: "assistant",
+              content: "The answer is 4.",
+              reasoning_content: "Let me think step by step: 2+2=4",
+            },
+          },
+        ],
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 20,
+        },
+      }
+
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: body.to_json,
+      )
+
+      result = llm.generate("what is 2+2?", user: Discourse.system_user, output_thinking: true)
+
+      expect(result).to be_an(Array)
+      expect(result.length).to eq(2)
+
+      thinking = result[0]
+      expect(thinking).to be_a(DiscourseAi::Completions::Thinking)
+      expect(thinking.message).to eq("Let me think step by step: 2+2=4")
+      expect(thinking.partial?).to eq(false)
+
+      expect(result[1]).to eq("The answer is 4.")
+    end
+
+    it "omits Thinking when output_thinking is false" do
+      body = {
+        choices: [
+          {
+            message: {
+              role: "assistant",
+              content: "The answer is 4.",
+              reasoning_content: "Let me think step by step: 2+2=4",
+            },
+          },
+        ],
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 20,
+        },
+      }
+
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: body.to_json,
+      )
+
+      result = llm.generate("what is 2+2?", user: Discourse.system_user)
+
+      expect(result).to eq("The answer is 4.")
+    end
+
+    it "streams Thinking partials followed by content" do
+      chunks = []
+
+      chunks << "data: #{({ choices: [{ delta: { role: "assistant", reasoning_content: "Let me " } }] }).to_json}\n\n"
+      chunks << "data: #{({ choices: [{ delta: { reasoning_content: "think." } }] }).to_json}\n\n"
+      chunks << "data: #{({ choices: [{ delta: { content: "The answer" } }] }).to_json}\n\n"
+      chunks << "data: #{({ choices: [{ delta: { content: " is 4." } }], usage: { prompt_tokens: 10, completion_tokens: 20 } }).to_json}\n\n"
+      chunks << "data: [DONE]\n\n"
+
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: chunks.join,
+      )
+
+      partials = []
+      llm.generate("what is 2+2?", user: Discourse.system_user, output_thinking: true) do |partial|
+        partials << partial
+      end
+
+      thinking_partials = partials.select { |p| p.is_a?(DiscourseAi::Completions::Thinking) }
+      text_partials = partials.select { |p| p.is_a?(String) }
+
+      expect(thinking_partials.length).to eq(3)
+
+      expect(thinking_partials[0].message).to eq("Let me ")
+      expect(thinking_partials[0].partial?).to eq(true)
+
+      expect(thinking_partials[1].message).to eq("think.")
+      expect(thinking_partials[1].partial?).to eq(true)
+
+      expect(thinking_partials[2].message).to eq("Let me think.")
+      expect(thinking_partials[2].partial?).to eq(false)
+
+      expect(text_partials.join).to eq("The answer is 4.")
+    end
   end
 
   describe "#perform_completion!" do

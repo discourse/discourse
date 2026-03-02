@@ -110,6 +110,64 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubFileContent do
       end
     end
 
+    context "when file content contains invalid UTF-8 bytes" do
+      let(:invalid_utf8_tool) do
+        described_class.new(
+          { repo_name: "discourse/discourse-ai", file_paths: ["lib/binary.dat"], branch: "main" },
+          bot_user: nil,
+          llm: llm,
+        )
+      end
+
+      before do
+        binary_payload = +"line1\nabc\xFF\xFEdef\nline3\n"
+        binary_payload.force_encoding(Encoding::ASCII_8BIT)
+
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/binary.dat?ref=main",
+        ).to_return(status: 200, body: { content: Base64.strict_encode64(binary_payload) }.to_json)
+      end
+
+      it "normalizes content before truncating" do
+        result = nil
+
+        expect { result = invalid_utf8_tool.invoke }.not_to raise_error
+        expect(result[:file_contents]).to include("File Path: lib/binary.dat:")
+        expect(result[:file_contents]).to include("abcdef")
+        expect(result[:file_contents]).to be_valid_encoding
+        expect(result[:file_contents].encoding).to eq(Encoding::UTF_8)
+      end
+    end
+
+    context "when file content contains unicode characters" do
+      let(:unicode_tool) do
+        described_class.new(
+          { repo_name: "discourse/discourse-ai", file_paths: ["lib/unicode.txt"], branch: "main" },
+          bot_user: nil,
+          llm: llm,
+        )
+      end
+
+      before do
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/unicode.txt?ref=main",
+        ).to_return(
+          status: 200,
+          body: { content: Base64.strict_encode64("bonjour é\nこんにちは\n") }.to_json,
+        )
+      end
+
+      it "preserves valid UTF-8 content" do
+        result = unicode_tool.invoke
+
+        expect(result[:file_contents]).to include("File Path: lib/unicode.txt:")
+        expect(result[:file_contents]).to include("bonjour é")
+        expect(result[:file_contents]).to include("こんにちは")
+      end
+    end
+
     context "when repo_name is invalid" do
       let(:invalid_tool) do
         described_class.new(

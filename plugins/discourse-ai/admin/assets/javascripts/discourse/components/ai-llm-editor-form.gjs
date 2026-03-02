@@ -15,9 +15,13 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { eq, gt } from "discourse/truth-helpers";
+import { eq, gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
+import {
+  isProviderParamHidden,
+  normalizeProviderParams,
+} from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiSecretSelector from "./ai-secret-selector";
 import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
@@ -184,26 +188,7 @@ export default class AiLlmEditorForm extends Component {
   @action
   metaProviderParams(provider) {
     const params = this.args.llms.resultSetMeta.provider_params[provider] || {};
-
-    return Object.entries(params).reduce((acc, [field, value]) => {
-      if (typeof value === "string") {
-        acc[field] = { type: value };
-      } else if (typeof value === "object") {
-        if (value.values) {
-          value = { ...value };
-          value.values = value.values.map((v) => ({ id: v, name: v }));
-        }
-
-        acc[field] = {
-          type: value.type || "text",
-          values: value.values || [],
-          default: value.default ?? undefined,
-        };
-      } else {
-        acc[field] = { type: "text" }; // fallback
-      }
-      return acc;
-    }, {});
+    return normalizeProviderParams(params);
   }
 
   @action
@@ -294,6 +279,11 @@ export default class AiLlmEditorForm extends Component {
           .catch(popupAjaxError);
       },
     });
+  }
+
+  @action
+  isProviderParamHidden(params, providerParamsData) {
+    return isProviderParamHidden(params, providerParamsData);
   }
 
   @action
@@ -389,36 +379,40 @@ export default class AiLlmEditorForm extends Component {
               (get (this.metaProviderParams data.provider) name)
               as |params|
             }}
-              <object.Field
-                @name={{name}}
-                @title={{i18n
-                  (concat "discourse_ai.llms.provider_fields." name)
-                }}
-                @format="large"
-                as |field|
-              >
-                {{#if (eq params.type "enum")}}
-                  <field.Select @includeNone={{false}} as |select|>
-                    {{#each params.values as |option|}}
-                      <select.Option
-                        @value={{option.id}}
-                      >{{option.name}}</select.Option>
-                    {{/each}}
-                  </field.Select>
-                {{else if (eq params.type "checkbox")}}
-                  <field.Checkbox />
-                {{else if (eq params.type "secret")}}
-                  <field.Custom>
-                    <AiSecretSelector
-                      @value={{field.value}}
-                      @secrets={{this.availableSecrets}}
-                      @onChange={{field.set}}
-                    />
-                  </field.Custom>
-                {{else}}
-                  <field.Input @type={{params.type}} />
-                {{/if}}
-              </object.Field>
+              {{#if
+                (not (this.isProviderParamHidden params providerParamsData))
+              }}
+                <object.Field
+                  @name={{name}}
+                  @title={{i18n
+                    (concat "discourse_ai.llms.provider_fields." name)
+                  }}
+                  @format="large"
+                  as |field|
+                >
+                  {{#if (eq params.type "enum")}}
+                    <field.Select @includeNone={{false}} as |select|>
+                      {{#each params.values as |option|}}
+                        <select.Option
+                          @value={{option.id}}
+                        >{{option.name}}</select.Option>
+                      {{/each}}
+                    </field.Select>
+                  {{else if (eq params.type "checkbox")}}
+                    <field.Checkbox />
+                  {{else if (eq params.type "secret")}}
+                    <field.Custom>
+                      <AiSecretSelector
+                        @value={{field.value}}
+                        @secrets={{this.availableSecrets}}
+                        @onChange={{field.set}}
+                      />
+                    </field.Custom>
+                  {{else}}
+                    <field.Input @type={{params.type}} />
+                  {{/if}}
+                </object.Field>
+              {{/if}}
             {{/let}}
           {{/each}}
         </form.Object>

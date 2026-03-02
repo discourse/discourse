@@ -90,7 +90,7 @@ module DiscourseAi
 
             if response_code == "200"
               file_data = JSON.parse(body)
-              content = Base64.decode64(file_data["content"])
+              content = ensure_utf8(Base64.decode64(file_data["content"].to_s))
               snippet =
                 extract_requested_content(
                   content,
@@ -121,6 +121,7 @@ module DiscourseAi
                   "#{label}:\n#{entry[:content]}"
                 end
                 .join("\n")
+            blob = ensure_utf8(blob)
             truncated_blob = truncate(blob, max_length: 20_000, percent_length: 0.3, llm: llm)
             result[:file_contents] = truncated_blob
           end
@@ -194,6 +195,16 @@ module DiscourseAi
           return start_line.to_s if start_line == end_line || end_line.nil?
 
           "#{start_line}-#{end_line}"
+        end
+
+        def ensure_utf8(text)
+          return "" if text.nil?
+
+          result = text.dup
+          result.force_encoding(Encoding::UTF_8)
+          return result if result.valid_encoding?
+
+          result.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: "")
         end
       end
     end

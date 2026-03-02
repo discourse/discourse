@@ -220,6 +220,7 @@ module DiscourseAi
             :vision_enabled,
             :input_cost,
             :cached_input_cost,
+            :cache_write_cost,
             :output_cost,
             allowed_attachment_types: [],
           )
@@ -237,16 +238,41 @@ module DiscourseAi
 
           if received_prov_params.present?
             received_prov_params.each do |pname, value|
-              if extra_field_names[pname.to_sym] == :checkbox
+              field_def = extra_field_names[pname.to_sym]
+              is_checkbox =
+                field_def == :checkbox || (field_def.is_a?(Hash) && field_def[:type] == :checkbox)
+              if is_checkbox
                 received_prov_params[pname] = ActiveModel::Type::Boolean.new.cast(value)
               end
             end
+
+            sanitize_dependent_params!(received_prov_params, extra_field_names)
 
             permitted[:provider_params] = received_prov_params.permit!
           end
         end
 
         permitted
+      end
+
+      def sanitize_dependent_params!(prov_params, field_definitions)
+        prov_params.each do |pname, _value|
+          field_def = field_definitions[pname.to_sym]
+          next unless field_def.is_a?(Hash) && field_def[:depends_on]
+
+          deps = Array(field_def[:depends_on])
+          parent_inactive =
+            deps.any? do |dep|
+              parent_val = prov_params[dep.to_s]
+              parent_val.nil? || parent_val == false || parent_val == "false" ||
+                parent_val == "default" || parent_val == ""
+            end
+
+          if parent_inactive
+            default = field_def[:default]
+            prov_params[pname] = default || nil
+          end
+        end
       end
 
       def ai_llm_logger_fields

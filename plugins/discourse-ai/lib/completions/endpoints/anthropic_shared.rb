@@ -6,8 +6,21 @@ module DiscourseAi
       module AnthropicShared
         def normalize_model_params(model_params)
           model_params = model_params.dup
-          model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
+
+          thinking_enabled =
+            llm_model.lookup_custom_param("adaptive_thinking") ||
+              llm_model.lookup_custom_param("enable_reasoning")
+
+          if thinking_enabled
+            model_params.delete(:temperature)
+            model_params.delete(:top_p)
+          else
+            model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
+            if llm_model.lookup_custom_param("disable_temperature")
+              model_params.delete(:temperature)
+            end
+          end
+
           model_params
         end
 
@@ -77,10 +90,6 @@ module DiscourseAi
           payload[:system] = prompt.system_prompt if prompt.system_prompt.present? &&
             !payload[:system]
 
-          if dialect.tool_choice == :none && prompt.has_tools?
-            apply_tool_choice_none(payload, dialect)
-          end
-
           if model_params[:response_format].present?
             response_format = model_params[:response_format].deep_symbolize_keys
             if supports_native_structured_output?
@@ -102,14 +111,32 @@ module DiscourseAi
           return if dialect.tool_choice.blank?
           if dialect.tool_choice == :none
             payload[:tool_choice] = { type: "none" }
+          elsif thinking_enabled?(payload)
+            inject_force_tool_guidance(payload, prompt.tool_choice)
           else
             payload[:tool_choice] = { type: "tool", name: prompt.tool_choice }
           end
         end
 
-        def apply_tool_choice_none(payload, dialect)
-          # No-op for Anthropic API (uses native tool_choice: {type: "none"})
-          # Bedrock overrides this to inject a user message workaround
+        def thinking_enabled?(payload)
+          thinking = payload[:thinking]
+          thinking.present? && %w[enabled adaptive].include?(thinking[:type].to_s)
+        end
+
+        def inject_force_tool_guidance(payload, tool_name)
+          guidance =
+            "Important: You must respond by calling the '#{tool_name}' tool immediately. " \
+              "Do not respond with text."
+          last_msg = payload[:messages]&.last
+          if last_msg && last_msg[:role] == "user"
+            if last_msg[:content].is_a?(String)
+              last_msg[:content] = last_msg[:content] + "\n\n#{guidance}"
+            elsif last_msg[:content].is_a?(Array)
+              last_msg[:content] << { type: "text", text: guidance }
+            end
+          else
+            payload[:messages] << { role: "user", content: guidance }
+          end
         end
       end
     end

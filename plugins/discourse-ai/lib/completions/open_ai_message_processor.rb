@@ -130,9 +130,9 @@ module DiscourseAi::Completions
       prompt_tokens = usage[:prompt_tokens].to_i
       completion_tokens = usage[:completion_tokens].to_i
 
-      @prompt_tokens ||= prompt_tokens - cached_tokens
-      @completion_tokens ||= completion_tokens if completion_tokens.positive?
-      @cache_read_tokens ||= cached_tokens
+      @prompt_tokens = prompt_tokens - cached_tokens
+      @completion_tokens = completion_tokens if completion_tokens.positive?
+      @cache_read_tokens = cached_tokens
     end
   end
 end
