@@ -15,7 +15,8 @@ export default class CategoryTypeCards extends Component {
     this.categoryTypeChooser.choose(
       type.id,
       type.name,
-      type.configuration_schema
+      type.configuration_schema,
+      type.title
     );
     this.router.transitionTo("newCategory.tabs", "general");
   }
