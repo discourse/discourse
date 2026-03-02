@@ -78,9 +78,9 @@ async function loadPluginFromModulePreload(link) {
           #discourse-error-dialog {
             --error-color: #e04e39;
 
-            background: light-dark(var(--error-color), #161616);
+            background: light-dark(var(--error-color), #1e1e1e);
             border-radius: 16px;
-            border: 1px solid light-dark(var(--error-color), #242424);
+            border: 1px solid light-dark(var(--error-color), #2a2a2a);
             box-shadow: 0 8px 16px 8px light-dark(#aaa, #111);
             color: light-dark(#fff, var(--error-color));
             display: flex;
@@ -91,9 +91,9 @@ async function loadPluginFromModulePreload(link) {
             padding: 0;
             max-height: 90vh;
 
-            > div::before {
+            &::before {
               background: #111 linear-gradient(-45deg, transparent 6px, var(--error-color) 6px, var(--error-color) 12px, transparent 12px);
-              background-position: 6px;
+              background-position: 4px;
               background-repeat: repeat-x;
               background-size: 18px 8px;
               content: "";
@@ -102,21 +102,21 @@ async function loadPluginFromModulePreload(link) {
               width: 100%;
             }
 
-            model-viewer {
-              display: inline-block;
-              height: 128px;
-              margin-left: auto;
-              vertical-align: middle;
-              width: 96px;
+            > div {
+              align-items: center;
+              display: flex;
+              flex-wrap: wrap;
+              margin: 16px 16px 0;
             }
 
             h1 {
-              display: inline-block;
+              flex-grow: 1;
               font-family: system-ui, sans-serif;
               font-size: 28px;
-              margin: 0 0 0 16px;
-              vertical-align: middle;
-              width: calc(100% - 96px - 16px * 2);
+            }
+
+            img {
+              height: 100px;
             }
 
             ul {
@@ -125,7 +125,7 @@ async function loadPluginFromModulePreload(link) {
             }
 
             li {
-              background: #0003;
+              background: #0004;
               border-radius: 8px;
               list-style: none;
               margin: 0 16px 16px;
@@ -135,12 +135,6 @@ async function loadPluginFromModulePreload(link) {
         `;
         document.body.append(style);
 
-        const script = document.createElement("script");
-        script.type = "module";
-        script.src =
-          "https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js";
-        document.body.append(script);
-
         const dialog = document.createElement("dialog");
         dialog.id = "discourse-error-dialog";
 
@@ -149,15 +143,8 @@ async function loadPluginFromModulePreload(link) {
         title.innerText = "Plugin Error";
         heading.append(title);
 
-        const tomster = document.createElement("model-viewer");
-        tomster.src = "tomster-compressed.glb";
-        tomster.setAttribute("camera-controls", true);
-        tomster.setAttribute("touch-action", "pan-y");
-        tomster.setAttribute("interaction-prompt", "none");
-        tomster.setAttribute("auto-rotate", "true");
-        tomster.setAttribute("auto-rotate-delay", 1500);
-        tomster.setAttribute("rotation-per-second", "400%");
-        tomster.setAttribute("camera-orbit", "60deg 75deg 105%");
+        const tomster = document.createElement("img");
+        tomster.src = "images/fishy-tomster.webp";
         heading.append(tomster);
 
         dialog.append(heading);
