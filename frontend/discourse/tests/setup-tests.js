@@ -59,6 +59,7 @@ let testStartDurations = [];
 let testDoneDurations = [];
 let testTotalDurations = [];
 let testStartTimestamp;
+let testCount = 0;
 
 function createApplication(config, settings) {
   const app = Application.create(config);
@@ -400,11 +401,12 @@ export default function setupTests(config) {
     // by this closure until the next test creates a new one.
     app = null;
 
-    // Force garbage collection to prevent memory accumulation across tests.
-    // Without this, Ember 6.10's tracked collections and autotracking tags
-    // accumulate faster than V8's heuristic GC can reclaim them, causing
-    // OOM in CI's parallel browser setup after ~1000 tests.
-    globalThis.gc?.();
+    // Periodically force garbage collection to prevent memory accumulation.
+    // Ember 6.10's tracked collections accumulate faster than V8's heuristic
+    // GC reclaims them, causing OOM after ~1000 tests in parallel browsers.
+    if (++testCount % 50 === 0) {
+      globalThis.gc?.();
+    }
 
     if (PROFILE_PHASES) {
       testDoneDurations.push(performance.now() - testDoneBegin);
