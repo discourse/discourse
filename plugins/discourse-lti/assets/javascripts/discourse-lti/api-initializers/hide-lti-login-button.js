@@ -1,5 +1,5 @@
+import { computed } from "@ember/object";
 import { apiInitializer } from "discourse/lib/api";
-import discourseComputed from "discourse/lib/decorators";
 import { findAll } from "discourse/models/login-method";
 
 export default apiInitializer((api) => {
@@ -9,8 +9,8 @@ export default apiInitializer((api) => {
     "component:login-buttons",
     (Superclass) =>
       class extends Superclass {
-        @discourseComputed
-        buttons() {
+        @computed
+        get buttons() {
           return super.buttons.filter((m) => m.name !== "lti");
         }
       }

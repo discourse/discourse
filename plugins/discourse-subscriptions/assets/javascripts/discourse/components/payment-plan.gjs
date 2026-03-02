@@ -1,11 +1,10 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import formatCurrency from "../helpers/format-currency";
 
@@ -13,14 +12,14 @@ const RECURRING = "recurring";
 
 @tagName("")
 export default class PaymentPlan extends Component {
-  @discourseComputed("selectedPlan")
-  selectedClass(planId) {
-    return planId === this.plan.id ? "btn-primary" : "";
+  @computed("selectedPlan")
+  get selectedClass() {
+    return this.selectedPlan === this.plan.id ? "btn-primary" : "";
   }
 
-  @discourseComputed("plan.type")
-  recurringPlan(type) {
-    return type === RECURRING;
+  @computed("plan.type")
+  get recurringPlan() {
+    return this.plan?.type === RECURRING;
   }
 
   @action

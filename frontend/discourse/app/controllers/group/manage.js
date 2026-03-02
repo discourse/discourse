@@ -1,9 +1,9 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse/lib/decorators";
+import { computed } from "@ember/object";
 
 export default class GroupManageController extends Controller {
-  @discourseComputed("model.automatic")
-  tabs(automatic) {
+  @computed("model.automatic")
+  get tabs() {
     const defaultTabs = [
       { route: "group.manage.profile", title: "groups.manage.profile.title" },
       {
@@ -28,7 +28,7 @@ export default class GroupManageController extends Controller {
       title: "groups.manage.logs.title",
     });
 
-    if (!automatic) {
+    if (!this.model?.automatic) {
       if (this.siteSettings.enable_smtp) {
         defaultTabs.splice(2, 0, {
           route: "group.manage.email",

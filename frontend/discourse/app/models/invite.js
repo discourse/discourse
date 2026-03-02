@@ -1,10 +1,9 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
@@ -81,23 +80,25 @@ export default class Invite extends EmberObject {
       .catch(popupAjaxError);
   }
 
-  @discourseComputed("invite_key")
-  shortKey(key) {
-    return key.slice(0, 4) + "...";
+  @computed("invite_key")
+  get shortKey() {
+    return this.invite_key.slice(0, 4) + "...";
   }
 
-  @discourseComputed("groups")
-  groupIds(groups) {
-    return groups ? groups.map((group) => group.id) : [];
+  @computed("groups")
+  get groupIds() {
+    return this.groups ? this.groups.map((group) => group.id) : [];
   }
 
-  @discourseComputed("topics.firstObject")
-  topic(topicData) {
-    return topicData ? Topic.create(topicData) : null;
+  @computed("topics.firstObject")
+  get topic() {
+    return this.topics?.firstObject
+      ? Topic.create(this.topics?.firstObject)
+      : null;
   }
 
-  @discourseComputed("email", "domain")
-  emailOrDomain(email, domain) {
-    return email || domain;
+  @computed("email", "domain")
+  get emailOrDomain() {
+    return this.email || this.domain;
   }
 }

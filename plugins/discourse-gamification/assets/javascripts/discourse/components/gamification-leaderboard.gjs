@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -12,7 +12,6 @@ import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -66,30 +65,30 @@ export default class GamificationLeaderboard extends Component {
     this.set("period", default_leaderboard_period);
   }
 
-  @discourseComputed("model.reason")
-  isNotReady(reason) {
-    return reason !== undefined;
+  @computed("model.reason")
+  get isNotReady() {
+    return this.model?.reason !== undefined;
   }
 
-  @discourseComputed("model.users")
-  currentUserRanking() {
+  @computed("model.users")
+  get currentUserRanking() {
     const user = this.model.personal;
     return user || null;
   }
 
-  @discourseComputed("model.users")
-  winners(users) {
-    return users.slice(0, 3);
+  @computed("model.users")
+  get winners() {
+    return this.model?.users?.slice(0, 3);
   }
 
-  @discourseComputed("model.users.[]")
-  ranking(users) {
-    users.forEach((user) => {
+  @computed("model.users.[]")
+  get ranking() {
+    this.model?.users.forEach((user) => {
       if (user.id === this.currentUser?.id) {
         user.isCurrentUser = "true";
       }
     });
-    return users.slice(3);
+    return this.model?.users.slice(3);
   }
 
   @action

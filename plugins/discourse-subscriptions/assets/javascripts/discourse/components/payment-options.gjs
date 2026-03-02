@@ -1,17 +1,18 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import PaymentPlan from "./payment-plan";
 
 @tagName("")
 export default class PaymentOptions extends Component {
-  @discourseComputed("plans")
-  orderedPlans(plans) {
-    if (plans) {
-      return plans.sort((a, b) => (a.unit_amount > b.unit_amount ? 1 : -1));
+  @computed("plans")
+  get orderedPlans() {
+    if (this.plans) {
+      return this.plans.sort((a, b) =>
+        a.unit_amount > b.unit_amount ? 1 : -1
+      );
     }
   }
 

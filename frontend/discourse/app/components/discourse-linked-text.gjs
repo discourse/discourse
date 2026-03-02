@@ -1,16 +1,16 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("span")
 export default class DiscourseLinkedText extends Component {
-  @discourseComputed("text", "textParams")
-  translatedText(text) {
-    if (text) {
-      return i18n(...arguments);
+  @computed("text", "textParams")
+  get translatedText() {
+    if (this.text) {
+      return i18n(this.text);
     }
   }
 

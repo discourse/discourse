@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
@@ -9,7 +9,7 @@ import ReviewableField from "discourse/components/reviewable-field";
 import rawDate from "discourse/helpers/raw-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
@@ -18,14 +18,14 @@ export default class ReviewableUser extends Component {
   @service modal;
   @service store;
 
-  @discourseComputed("reviewable.user_fields")
-  userFields(fields) {
-    return this.site.collectUserFields(fields);
+  @computed("reviewable.user_fields")
+  get userFields() {
+    return this.site.collectUserFields(this.reviewable?.user_fields);
   }
 
-  @discourseComputed("reviewable.payload")
-  isScrubbed(payload) {
-    return !!payload?.scrubbed_by;
+  @computed("reviewable.payload")
+  get isScrubbed() {
+    return !!this.reviewable?.payload?.scrubbed_by;
   }
 
   @action

@@ -1,12 +1,11 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteTextEdit extends Controller {
@@ -27,14 +26,14 @@ export default class AdminSiteTextEdit extends Controller {
     });
   }
 
-  @discourseComputed("buffered.value", "siteText.value")
-  saveDisabled(value) {
-    return this.siteText.value === value;
+  @computed("buffered.value", "siteText.value")
+  get saveDisabled() {
+    return this.siteText.value === this.get("buffered.value"); // TODO (devxp) we need a buffered proxy that works with tracked properties
   }
 
-  @discourseComputed("siteText.status")
-  isOutdated(status) {
-    return status === "outdated";
+  @computed("siteText.status")
+  get isOutdated() {
+    return this.siteText?.status === "outdated";
   }
 
   @action
@@ -126,8 +125,11 @@ export default class AdminSiteTextEdit extends Controller {
       .catch(popupAjaxError);
   }
 
-  @discourseComputed("buffered.value", "siteText.interpolation_keys")
-  interpolationKeysWithStatus(value, keys) {
-    return computeInterpolationKeysWithStatus(value, keys);
+  @computed("buffered.value", "siteText.interpolation_keys")
+  get interpolationKeysWithStatus() {
+    return computeInterpolationKeysWithStatus(
+      this.get("buffered.value"),
+      this.siteText.interpolation_keys
+    );
   }
 }

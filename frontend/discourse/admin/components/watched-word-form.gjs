@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { empty, equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -10,7 +10,6 @@ import WatchedWord from "discourse/admin/models/watched-word";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import WatchedWords from "discourse/select-kit/components/watched-words";
 import { i18n } from "discourse-i18n";
@@ -30,9 +29,9 @@ export default class WatchedWordForm extends Component {
   @equal("actionKey", "tag") canTag;
   @equal("actionKey", "link") canLink;
 
-  @discourseComputed("siteSettings.watched_words_regular_expressions")
-  placeholderKey(watchedWordsRegularExpressions) {
-    if (watchedWordsRegularExpressions) {
+  @computed("siteSettings.watched_words_regular_expressions")
+  get placeholderKey() {
+    if (this.siteSettings?.watched_words_regular_expressions) {
       return "admin.watched_words.form.placeholder_regexp";
     } else {
       return "admin.watched_words.form.placeholder";
@@ -53,8 +52,8 @@ export default class WatchedWordForm extends Component {
     });
   }
 
-  @discourseComputed("words.[]")
-  isUniqueWord(words) {
+  @computed("words.[]")
+  get isUniqueWord() {
     const existingWords = this.filteredContent || [];
     const filtered = existingWords.filter(
       (content) => content.action === this.actionKey
@@ -62,11 +61,11 @@ export default class WatchedWordForm extends Component {
 
     const duplicate = filtered.find((content) => {
       if (content.case_sensitive === true) {
-        return words.includes(content.word);
+        return this.words?.includes(content.word);
       } else {
-        return words
-          .map((w) => w.toLowerCase())
-          .includes(content.word.toLowerCase());
+        return this.words
+          ?.map((w) => w.toLowerCase())
+          ?.includes(content.word.toLowerCase());
       }
     });
 

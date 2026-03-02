@@ -35,7 +35,7 @@ function addonFmt(str, formats) {
   @method propertyEqual
   @params {String} p1 the first property
   @params {String} p2 the second property
-  @return {Function} discourseComputedProperty function
+  @return {Function} computedProperty function
 **/
 
 export function propertyEqual(p1, p2) {
@@ -50,7 +50,7 @@ export function propertyEqual(p1, p2) {
   @method propertyNotEqual
   @params {String} p1 the first property
   @params {String} p2 the second property
-  @return {Function} discourseComputedProperty function
+  @return {Function} computedProperty function
 **/
 export function propertyNotEqual(p1, p2) {
   return computed(p1, p2, function () {
@@ -76,7 +76,7 @@ export function propertyLessThan(p1, p2) {
   @method computedI18n
   @params {String} properties* to format
   @params {String} format the i18n format string
-  @return {Function} discourseComputedProperty function
+  @return {Function} computedProperty function
 **/
 export function computedI18n(...args) {
   const format = args.pop();
@@ -92,7 +92,7 @@ export { computedI18n as i18n };
 
   @method htmlSafe
   @params {String} properties* to htmlify
-  @return {Function} discourseComputedProperty function
+  @return {Function} computedProperty function
 **/
 export function htmlSafe(...args) {
   return computed(...args, {
@@ -110,7 +110,7 @@ export function htmlSafe(...args) {
   @method fmt
   @params {String} properties* to format
   @params {String} format the format string
-  @return {Function} discourseComputedProperty function
+  @return {Function} computedProperty function
 **/
 export function fmt(...args) {
   const format = args.pop();
@@ -126,7 +126,7 @@ export function fmt(...args) {
   @method url
   @params {String} properties* to format
   @params {String} format the format string for the URL
-  @return {Function} discourseComputedProperty function returning a URL
+  @return {Function} computedProperty function returning a URL
 **/
 export function url(...args) {
   const format = args.pop();
@@ -141,7 +141,7 @@ export function url(...args) {
   @method endWith
   @params {String} properties* to check
   @params {String} substring the substring
-  @return {Function} discourseComputedProperty function
+  @return {Function} computedProperty function
 **/
 export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);

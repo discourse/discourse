@@ -1,6 +1,6 @@
+import { computed } from "@ember/object";
 import { equal, or } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { escapeExpression, postUrl } from "discourse/lib/utilities";
@@ -98,14 +98,17 @@ export default class UserAction extends RestModel {
   @or("messageSentType", "messageReceivedType") isPM;
   @or("postType", "replyType") postReplyType;
 
-  @discourseComputed("category_id")
-  category() {
+  @computed("category_id")
+  get category() {
     return Category.findById(this.category_id);
   }
 
-  @discourseComputed("action_type")
-  descriptionKey(action) {
-    if (action === null || UserAction.TO_SHOW.includes(action)) {
+  @computed("action_type")
+  get descriptionKey() {
+    if (
+      this.action_type === null ||
+      UserAction.TO_SHOW.includes(this.action_type)
+    ) {
       if (this.isPM) {
         return this.sameUser ? "sent_by_you" : "sent_by_user";
       } else {
@@ -134,44 +137,44 @@ export default class UserAction extends RestModel {
     }
   }
 
-  @discourseComputed("username")
-  sameUser(username) {
-    return username === this.currentUser?.get("username");
+  @computed("username")
+  get sameUser() {
+    return this.username === this.currentUser?.get("username");
   }
 
-  @discourseComputed("target_username")
-  targetUser(targetUsername) {
-    return targetUsername === this.currentUser?.get("username");
+  @computed("target_username")
+  get targetUser() {
+    return this.target_username === this.currentUser?.get("username");
   }
 
-  @discourseComputed("target_username")
-  targetUserUrl(username) {
-    return userPath(username);
+  @computed("target_username")
+  get targetUserUrl() {
+    return userPath(this.target_username);
   }
 
-  @discourseComputed("username")
-  usernameLower(username) {
-    return username.toLowerCase();
+  @computed("username")
+  get usernameLower() {
+    return this.username.toLowerCase();
   }
 
-  @discourseComputed("usernameLower")
-  userUrl(usernameLower) {
-    return userPath(usernameLower);
+  @computed("usernameLower")
+  get userUrl() {
+    return userPath(this.usernameLower);
   }
 
-  @discourseComputed()
-  postUrl() {
+  @computed()
+  get postUrl() {
     return postUrl(this.slug, this.topic_id, this.post_number);
   }
 
-  @discourseComputed()
-  replyUrl() {
+  @computed()
+  get replyUrl() {
     return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
   }
 
-  @discourseComputed("title")
-  titleHtml(title) {
-    return title && emojiUnescape(escapeExpression(title));
+  @computed("title")
+  get titleHtml() {
+    return this.title && emojiUnescape(escapeExpression(this.title));
   }
 
   addChild(action) {
@@ -203,7 +206,7 @@ export default class UserAction extends RestModel {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "childGroups",
     "childGroups.likes.items",
     "childGroups.likes.items.[]",
@@ -214,7 +217,7 @@ export default class UserAction extends RestModel {
     "childGroups.bookmarks.items",
     "childGroups.bookmarks.items.[]"
   )
-  children() {
+  get children() {
     const g = this.childGroups;
     let rval = [];
     if (g) {

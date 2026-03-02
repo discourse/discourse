@@ -1,11 +1,10 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import RecalculateScoresForm from "discourse/plugins/discourse-gamification/discourse/components/modal/recalculate-scores-form";
 
@@ -16,10 +15,12 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
 
   creatingNew = false;
 
-  @discourseComputed("model.leaderboards.@each.updatedAt")
-  sortedLeaderboards(leaderboards) {
+  @computed("model.leaderboards.@each.updatedAt")
+  get sortedLeaderboards() {
     return (
-      leaderboards?.sort((a, b) => compare(b?.updatedAt, a?.updatedAt)) || []
+      this.model?.leaderboards?.sort((a, b) =>
+        compare(b?.updatedAt, a?.updatedAt)
+      ) || []
     );
   }
 
