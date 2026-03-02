@@ -3,7 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
@@ -14,7 +14,7 @@ export default class UserStream extends RestModel {
   @tracked loaded = false;
   @tracked loading = false;
   @tracked itemsLoaded = 0;
-  @trackedArray content = [];
+  @autoTrackedArray content = [];
 
   @url(
     "itemsLoaded",

@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 export default class GroupAssigned extends Controller {
   @service router;
@@ -16,7 +16,7 @@ export default class GroupAssigned extends Controller {
   @tracked filterName = "";
   @tracked loading = false;
   @tracked offset = 0;
-  @trackedArray members = [];
+  @autoTrackedArray members = [];
 
   @discourseComputed("router.currentRoute.queryParams.order")
   order(order) {
