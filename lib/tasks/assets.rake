@@ -83,7 +83,9 @@ def brotli(path)
 end
 
 def concurrent?
-  if ENV["SPROCKETS_CONCURRENT"] == "1"
+  if ENV["SPROCKETS_CONCURRENT"] == "0"
+    yield(Proc.new { |&block| block.call })
+  else
     concurrent_compressors = []
     executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
 
@@ -94,8 +96,6 @@ def concurrent?
     )
 
     concurrent_compressors.each(&:wait!)
-  else
-    yield(Proc.new { |&block| block.call })
   end
 end
 

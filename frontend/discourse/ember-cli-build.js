@@ -182,8 +182,7 @@ module.exports = function (defaults) {
         cache: isProduction
           ? false
           : {
-              type: "memory",
-              maxGenerations: 1,
+              type: "filesystem",
             },
         entry: {
           "assets/media-optimization-bundle.js": {

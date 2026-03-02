@@ -75,7 +75,8 @@ module TurboTests
 
       subprocess_opts = { record_runtime: @use_runtime_info }
 
-      start_multisite_subprocess(@files, **subprocess_opts)
+      @multisite_enabled = files_contain_multisite_tests?(@files)
+      start_multisite_subprocess(@files, **subprocess_opts) if @multisite_enabled
 
       tests_in_groups.each_with_index do |tests, process_id|
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
@@ -105,6 +106,10 @@ module TurboTests
     end
 
     protected
+
+    def files_contain_multisite_tests?(files)
+      files.any? { |file| File.read(file).include?(":multisite") }
+    end
 
     def check_for_migrations
       config =
@@ -309,7 +314,8 @@ module TurboTests
               )
             end
 
-            break if exited == @num_processes + 1
+            expected_exits = @multisite_enabled ? @num_processes + 1 : @num_processes
+            break if exited == expected_exits
           else
             STDERR.puts("Unhandled message in main process: #{message}")
           end

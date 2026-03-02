@@ -8,6 +8,7 @@ require "socket"
 require "uri"
 require "net/http"
 require "securerandom"
+require "etc"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
@@ -19,7 +20,7 @@ class QunitRunner
 
     @standalone_mode = false
 
-    @parallel = ENV["QUNIT_PARALLEL"]
+    @parallel = ENV["QUNIT_PARALLEL"] || [Etc.nprocessors / 2, 2].max.to_s
     @seed = ENV["QUNIT_SEED"]
     @theme_name = ENV["THEME_NAME"]
     @theme_url = ENV["THEME_URL"]
