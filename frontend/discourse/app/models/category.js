@@ -16,7 +16,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { MultiCache } from "discourse/lib/multi-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { removeAccents } from "discourse/lib/utilities";
 import PermissionType from "discourse/models/permission-type";
@@ -486,9 +486,9 @@ export default class Category extends RestModel {
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
   @tracked allowed_tags;
-  @trackedArray available_groups;
-  @trackedArray permissions;
-  @trackedArray required_tag_groups;
+  @autoTrackedArray available_groups;
+  @autoTrackedArray permissions;
+  @autoTrackedArray required_tag_groups;
 
   init() {
     super.init(...arguments);

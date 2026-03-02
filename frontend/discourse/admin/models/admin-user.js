@@ -4,7 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -32,7 +32,7 @@ export default class AdminUser extends User {
 
   adminUserView = true;
 
-  @trackedArray groups;
+  @autoTrackedArray groups;
 
   @or("active", "staged") canViewProfile;
   @gt("bounce_score", 0) canResetBounceScore;

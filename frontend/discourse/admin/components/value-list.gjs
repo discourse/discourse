@@ -13,12 +13,12 @@ import {
 } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
 @classNames("value-list")
 export default class ValueList extends Component {
-  @trackedArray collection = null;
+  @autoTrackedArray collection = null;
 
   @empty("newValue") inputInvalid;
 

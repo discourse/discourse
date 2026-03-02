@@ -9,7 +9,7 @@ import {
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
@@ -39,9 +39,9 @@ class Theme extends RestModel {
     return json;
   }
 
-  @trackedArray childThemes;
-  @trackedArray parentThemes;
-  @trackedArray theme_fields;
+  @autoTrackedArray childThemes;
+  @autoTrackedArray parentThemes;
+  @autoTrackedArray theme_fields;
 
   @or("default", "user_selectable") isActive;
   @gt("remote_theme.commits_behind", 0) isPendingUpdates;

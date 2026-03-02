@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UserAction from "discourse/models/user-action";
 
 export default class UserPostsStream extends EmberObject {
@@ -12,7 +12,7 @@ export default class UserPostsStream extends EmberObject {
   @tracked lastLoadedUrl;
   @tracked loaded = false;
   @tracked loading = false;
-  @trackedArray content = [];
+  @autoTrackedArray content = [];
 
   @url("user.username_lower", "filter", "itemsLoaded", "/posts/%@/%@?offset=%@")
   url;

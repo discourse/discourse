@@ -8,14 +8,14 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { GROUP_VISIBILITY_LEVELS } from "discourse/lib/constants";
 import discourseComputed, { debounce } from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 export default class GroupIndexController extends Controller {
   @service currentUser;
   @service dialog;
 
-  @trackedArray bulkSelection = null;
+  @autoTrackedArray bulkSelection = null;
 
   queryParams = ["order", "asc", "filter"];
   order = null;

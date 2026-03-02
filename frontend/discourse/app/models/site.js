@@ -15,7 +15,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
@@ -87,8 +87,8 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
-  @trackedArray categories = [];
-  @trackedArray groups = [];
+  @autoTrackedArray categories = [];
+  @autoTrackedArray groups = [];
 
   @alias("is_readonly") isReadOnly;
 

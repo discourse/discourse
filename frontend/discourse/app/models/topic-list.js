@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -126,7 +126,7 @@ export default class TopicList extends RestModel {
   @service session;
 
   @tracked loadingBefore = false;
-  @trackedArray topics;
+  @autoTrackedArray topics;
 
   @notEmpty("more_topics_url") canLoadMore;
 

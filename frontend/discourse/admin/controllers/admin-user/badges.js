@@ -13,7 +13,7 @@ import {
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
 
@@ -23,8 +23,8 @@ export default class AdminUserBadgesController extends Controller {
 
   @tracked loading;
   @tracked selectedBadgeId;
-  @trackedArray badges;
-  @trackedArray expandedBadges = [];
+  @autoTrackedArray badges;
+  @autoTrackedArray expandedBadges = [];
 
   @alias("adminUser.model") user;
   @empty("availableBadges") noAvailableBadges;

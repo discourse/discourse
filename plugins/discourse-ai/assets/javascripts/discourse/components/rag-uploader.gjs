@@ -13,7 +13,7 @@ import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress";
@@ -25,7 +25,7 @@ export default class RagUploader extends Component {
   @tracked term = null;
   @tracked filteredUploads = null;
   @tracked ragIndexingStatuses = null;
-  @trackedArray ragUploads = null;
+  @autoTrackedArray ragUploads = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "discourse-ai-rag-uploader",
