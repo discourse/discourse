@@ -112,6 +112,15 @@ export default class EditCategoryTabsController extends Controller {
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
     }
 
+    Object.values(this.model.category_types).forEach((typeMetadata) => {
+      // TODO (martin) Need to use the actual value here if it exists not just the default
+      typeMetadata.configuration_schema.category_custom_fields?.forEach(
+        (field) => {
+          data.custom_fields[field.key] = field.default;
+        }
+      );
+    });
+
     return data;
   }
 

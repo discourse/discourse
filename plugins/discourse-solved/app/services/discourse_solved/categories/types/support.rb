@@ -33,7 +33,7 @@ module DiscourseSolved
                 notify_on_staff_accept_solved: true,
                 empty_box_on_unsolved: true,
               },
-              category_settings: {
+              category_custom_fields: {
                 solved_topics_auto_close_hours: {
                   default: 48,
                   type: :integer,
@@ -44,6 +44,10 @@ module DiscourseSolved
                       "discourse_solved.category_type.solved_topics_auto_close_hours.description",
                     ),
                 },
+              },
+              # TODO (martin) Maybe more things from plugins need to move into this dedicated model?
+              # For now we do need a distinction between the two, not sure if this will be used at all yet.
+              category_settings: {
               },
             }
           end

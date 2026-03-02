@@ -72,11 +72,11 @@ module Categories
           schema = configuration_schema
           return [] if schema.blank?
 
-          entries = []
+          entries = { site_settings: [], category_settings: [], category_custom_fields: [] }
 
           schema[:site_settings]&.each do |setting_name, target_value|
             meta = SiteSetting.setting_metadata_hash(setting_name)
-            entries << {
+            entries[:site_settings] << {
               key: setting_name.to_s,
               default: target_value,
               type: meta[:type],
@@ -86,7 +86,17 @@ module Categories
           end
 
           schema[:category_settings]&.each do |field_name, config|
-            entries << {
+            entries[:category_settings] << {
+              key: field_name.to_s,
+              default: config[:default],
+              type: config[:type].to_s,
+              label: config[:label],
+              description: config[:description],
+            }
+          end
+
+          schema[:category_custom_fields]&.each do |field_name, config|
+            entries[:category_custom_fields] << {
               key: field_name.to_s,
               default: config[:default],
               type: config[:type].to_s,

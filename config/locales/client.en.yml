@@ -4674,6 +4674,10 @@ en:
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      type_settings_schema:
+        category_settings: "Category settings"
+        category_custom_fields: "Category settings"
+        site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
         requires_plugin: "Requires plugin"
