@@ -990,9 +990,7 @@ class Group < ActiveRecord::Base
     end
 
     if self.grant_trust_level.present? && !self.grant_trust_level.zero?
-      User
-        .where(id: removed_user_ids)
-        .find_each { |user| Promotion.recalculate(user, use_previous_trust_level: true) }
+      Jobs.enqueue(:bulk_recalculate_trust_level, user_ids: removed_user_ids)
     end
 
     recalculate_user_count
