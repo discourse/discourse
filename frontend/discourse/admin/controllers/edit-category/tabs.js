@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import getURL from "discourse/lib/get-url";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -212,7 +213,11 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   isLeavingForm(transition) {
-    return !transition.targetName.startsWith("editCategory.tabs");
+    const name = transition.targetName;
+    return (
+      !name.startsWith("editCategory.tabs") &&
+      !name.startsWith("newCategory.tabs")
+    );
   }
 
   _wouldLoseAccess(category = this.model) {
@@ -347,6 +352,13 @@ export default class EditCategoryTabsController extends Controller {
       if (!primaryTab) {
         next(() => {
           this.selectedTab = "general";
+          if (this.router.currentRouteName?.startsWith("newCategory")) {
+            DiscourseURL.routeTo(getURL("/new-category/general"));
+          } else if (this.parentParams?.slug) {
+            DiscourseURL.routeTo(
+              getURL(`/c/${this.parentParams.slug}/edit/general`)
+            );
+          }
         });
       }
     }
