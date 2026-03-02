@@ -38,6 +38,9 @@ class UpcomingChanges::Action::TrackAddedChanges < Service::ActionBase
              change_name,
              SiteSetting.promote_upcoming_changes_on_status.to_sym,
            )
+          Rails.logger.info(
+            "Notifying admins about available change #{change_name} from TrackAddedChanges",
+          )
           notified =
             UpcomingChanges::Action::NotifyAdminsOfAvailableChange.call(change_name:, all_admins:)
           notified_changes << change_name if notified

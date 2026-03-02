@@ -314,5 +314,42 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
         end
       end
     end
+
+    context "when a change jumps directly to the promotion status" do
+      let(:show_user_menu_avatars_status) { :stable }
+
+      before do
+        SiteSetting.promote_upcoming_changes_on_status = "stable"
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: :show_user_menu_avatars,
+          event_data: {
+            "previous_value" => nil,
+            "new_value" => "experimental",
+          },
+        )
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: :enable_upload_debug_mode,
+          event_data: {
+            "previous_value" => nil,
+            "new_value" => "experimental",
+          },
+        )
+      end
+
+      it "does not send an upcoming_change_available notification" do
+        expect { result }.not_to change {
+          Notification
+            .where(notification_type: Notification.types[:upcoming_change_available])
+            .where("data::text LIKE ?", "%show_user_menu_avatars%")
+            .count
+        }
+      end
+
+      it "does not include the change in notified_changes" do
+        expect(result[:notified_changes]).not_to include(:show_user_menu_avatars)
+      end
+    end
   end
 end
