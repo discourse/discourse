@@ -112,6 +112,16 @@ export default class EditCategoryTabsController extends Controller {
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
     }
 
+    if (simplified) {
+      const schema = this.model?.category_type_schema ?? [];
+
+      for (const entry of schema) {
+        if (entry.default !== undefined && data[entry.key] === undefined) {
+          data[entry.key] = entry.default;
+        }
+      }
+    }
+
     return data;
   }
 

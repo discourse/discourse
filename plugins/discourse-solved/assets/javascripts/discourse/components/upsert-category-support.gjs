@@ -2,24 +2,8 @@ import Component from "@glimmer/component";
 import { eq } from "discourse/truth-helpers";
 
 export default class UpsertCategorySupport extends Component {
-  constructor() {
-    super(...arguments);
-    this.applyDefaults();
-  }
-
   get schema() {
     return this.args.category?.category_type_schema ?? [];
-  }
-
-  applyDefaults() {
-    for (const entry of this.schema) {
-      if (
-        entry.default !== undefined &&
-        this.args.transientData?.[entry.key] === undefined
-      ) {
-        this.args.form.set(entry.key, entry.default);
-      }
-    }
   }
 
   <template>
