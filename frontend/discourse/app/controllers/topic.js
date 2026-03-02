@@ -1767,16 +1767,11 @@ export default class TopicController extends Controller {
     "selectedPostsUsername",
     "currentUser.canChangePostOwner"
   )
-  canChangeOwner(
-    selectedPostsCount,
-    selectedPostsUsername,
-    canChangePostOwner
-  ) {
+  get canChangeOwner() {
     return (
-      !!canChangePostOwner &&
-      selectedPostsCount > 0 &&
-      selectedPostsUsername !== undefined
-
+      !!this.currentUser?.canChangePostOwner &&
+      this.selectedPostsCount > 0 &&
+      this.selectedPostsUsername !== undefined
     );
   }
 
