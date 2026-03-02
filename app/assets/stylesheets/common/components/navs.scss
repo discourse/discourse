@@ -99,10 +99,10 @@
     }
 
     &.active {
-      position: relative;
       color: var(--primary);
       background-color: var(--d-selected);
       font-weight: bold;
+      font-weight: var(--d-sidebar-active-font-weight);
     }
   }
 
