@@ -27,7 +27,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { normalize } from "discourse/select-kit/lib/input-utils";
 import {
   applyContentPluginApiCallbacks,
@@ -185,8 +185,8 @@ export default class SelectKit extends Component {
   @protoProp labelProperty = null;
   @protoProp titleProperty = null;
   @protoProp langProperty = null;
-  @trackedArray mainCollection = null;
-  @trackedArray errorsCollection = null;
+  @autoTrackedArray mainCollection = null;
+  @autoTrackedArray errorsCollection = null;
 
   init() {
     super.init(...arguments);

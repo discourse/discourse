@@ -8,7 +8,10 @@ import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import { resettableTracked, trackedArray } from "discourse/lib/tracked-tools";
+import {
+  autoTrackedArray,
+  resettableTracked,
+} from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
@@ -16,7 +19,7 @@ export default class FormTemplateFieldUpload extends Component {
   @service appEvents;
 
   @resettableTracked uploadValue = this.args.value || "";
-  @trackedArray uploadedFiles = [];
+  @autoTrackedArray uploadedFiles = [];
   fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
 
   uppyUpload = new UppyUpload(getOwner(this), {

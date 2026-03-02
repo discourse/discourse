@@ -18,7 +18,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { optionalRequire } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -57,7 +57,7 @@ export default class PollUiBuilderModal extends Component {
   @tracked pollType = REGULAR_POLL_TYPE;
   @tracked publicPoll = this.siteSettings.poll_default_public;
   @tracked showAdvanced = false;
-  @trackedArray pollOptions = [new TrackedObject({ value: "" })];
+  @autoTrackedArray pollOptions = [new TrackedObject({ value: "" })];
 
   get showNumber() {
     return this.showAdvanced || this.isNumber;

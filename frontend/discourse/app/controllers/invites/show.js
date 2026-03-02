@@ -10,7 +10,7 @@ import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
@@ -22,7 +22,7 @@ export default class InvitesShowController extends Controller {
   @tracked accountPassword;
   @tracked accountUsername;
   @tracked isDeveloper;
-  @trackedArray rejectedEmails = [];
+  @autoTrackedArray rejectedEmails = [];
 
   queryParams = ["t"];
   nameValidationHelper = new NameValidationHelper(this);
