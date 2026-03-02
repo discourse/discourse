@@ -359,12 +359,6 @@ module PostGuardian
   end
 
   def can_change_post_owner?
-    puts("!!!!!!!!!!!!!!!")
-    puts("#{SiteSetting.change_post_ownership_allowed_groups_map}")
-    puts("#{@user.groups.pluck(:id)}")
-    puts(@user.in_any_groups?(SiteSetting.change_post_ownership_allowed_groups_map))
-    puts("!!!!!!!!!!!!!!!")
-
     return true if is_admin?
     return true if SiteSetting.moderators_change_post_ownership && is_staff?
     return true if @user.in_any_groups?(SiteSetting.change_post_ownership_allowed_groups_map)
