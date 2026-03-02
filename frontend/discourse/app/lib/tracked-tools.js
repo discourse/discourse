@@ -288,6 +288,9 @@ export function autoTrackedArray(target, key, desc) {
   };
 }
 
+/** @deprecated Use `autoTrackedArray` instead. */
+export { autoTrackedArray as trackedArray };
+
 /**
  * Enumerates all tracked property keys from an object instance.
  *
