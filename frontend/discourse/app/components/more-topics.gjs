@@ -1,13 +1,9 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import { modifier } from "ember-modifier";
 import BrowseMore from "discourse/components/more-topics/browse-more";
 import concatClass from "discourse/helpers/concat-class";
-import { applyValueTransformer } from "discourse/lib/transformer";
-import { eq, gt } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 
 export let registeredTabs = [];
 
@@ -16,88 +12,23 @@ export function clearRegisteredTabs() {
 }
 
 export default class MoreTopics extends Component {
-  @service currentUser;
-  @service keyValueStore;
+  @service moreTopicsTabs;
 
-  @tracked selectedTab = this.initialTab;
-
-  get initialTab() {
-    let savedId = this.keyValueStore.get(
-      `more-topics-preference-${this.context}`
-    );
-
-    // Fallback to the old setting
-    savedId ||= this.keyValueStore.get("more-topics-list-preference");
-
-    return (
-      (savedId && this.tabs.find((tab) => tab.id === savedId)) || this.tabs[0]
-    );
-  }
-
-  get activeTab() {
-    return this.tabs.find((tab) => tab === this.selectedTab) || this.tabs[0];
-  }
-
-  get context() {
-    return this.args.topic.get("isPrivateMessage") ? "pm" : "topic";
-  }
-
-  @cached
-  get tabs() {
-    const defaultTabs = registeredTabs.filter((tab) =>
-      tab.condition({ topic: this.args.topic, context: this.context })
-    );
-
-    return applyValueTransformer("more-topics-tabs", defaultTabs, {
-      currentContext: this.context,
-      user: this.currentUser,
-      topic: this.args.topic,
-    });
-  }
-
-  @action
-  selectTab(tab) {
-    this.selectedTab = tab;
-    this.keyValueStore.set({
-      key: `more-topics-preference-${this.context}`,
-      value: tab.id,
-    });
-  }
-
-  @action
-  isActiveTab(tab) {
-    return tab?.id === this.selectedTab?.id;
-  }
+  syncTopic = modifier((_, [topic]) => {
+    this.moreTopicsTabs.setup(topic);
+    return () => this.moreTopicsTabs.teardown();
+  });
 
   <template>
-    <div class="more-topics__container">
-      {{#if (gt this.tabs.length 1)}}
-        <div class="row">
-          <ul class="nav nav-pills">
-            {{#each this.tabs as |tab|}}
-              <li>
-                <DButton
-                  @action={{fn this.selectTab tab}}
-                  @translatedLabel={{tab.name}}
-                  @translatedTitle={{tab.name}}
-                  @icon={{tab.icon}}
-                  class={{if (this.isActiveTab tab) "active"}}
-                  tabindex={{if (this.isActiveTab tab) -1 0}}
-                />
-              </li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
-
-      {{#if this.activeTab}}
+    <div class="more-topics__container" {{this.syncTopic @topic}}>
+      {{#if this.moreTopicsTabs.selectedTab}}
         <div
           class={{concatClass
             "more-topics__lists"
-            (if (eq this.tabs.length 1) "single-list")
+            (if (eq this.moreTopicsTabs.tabs.length 1) "single-list")
           }}
         >
-          <this.activeTab.component @topic={{@topic}} />
+          <this.moreTopicsTabs.selectedTab.component @topic={{@topic}} />
         </div>
 
         {{#if @topic.suggestedTopics.length}}
