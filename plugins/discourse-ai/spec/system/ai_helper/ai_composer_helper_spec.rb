@@ -409,11 +409,26 @@ RSpec.describe "AI Composer helper", type: :system do
       topic_page.visit_topic(topic)
       page.find(".edit-topic", visible: false).click
       page.find(".ai-tag-suggester-trigger").click
-      tag1_css = ".ai-tag-suggester-content btn[data-name='#{video.name}']"
-      tag2_css = ".ai-tag-suggester-content btn[data-name='#{music.name}']"
+      tag1_css = ".ai-suggestions-menu button[data-name='#{video.name}']"
+      tag2_css = ".ai-suggestions-menu button[data-name='#{music.name}']"
 
       expect(page).to have_no_css(tag1_css)
       expect(page).to have_no_css(tag2_css)
+    end
+
+    it "shows filtered suggestions when topic already has tags" do
+      response =
+        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      page.find(".ai-tag-suggester-trigger").click
+
+      wait_for { ai_suggestion_dropdown.has_dropdown? }
+
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{video.name}']")
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{music.name}']")
     end
 
     it "removes applied tag suggestions from the dropdown" do
