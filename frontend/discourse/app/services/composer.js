@@ -447,24 +447,6 @@ export default class ComposerService extends Service {
             label: "composer.code_title",
           })
         );
-
-        options.push(
-          this._setupPopupMenuOption({
-            name: "apply-unordered-list",
-            action: "applyUnorderedList",
-            icon: "list-ul",
-            label: "composer.ulist_title",
-          })
-        );
-
-        options.push(
-          this._setupPopupMenuOption({
-            name: "apply-ordered-list",
-            action: "applyOrderedList",
-            icon: "list-ol",
-            label: "composer.olist_title",
-          })
-        );
       }
 
       options.push(
@@ -1065,19 +1047,6 @@ export default class ComposerService extends Service {
   @action
   applyFormatCode() {
     this.toolbarEvent.formatCode();
-  }
-
-  @action
-  applyUnorderedList() {
-    this.toolbarEvent.applyList("* ", "list_item");
-  }
-
-  @action
-  applyOrderedList() {
-    this.toolbarEvent.applyList(
-      (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-      "list_item"
-    );
   }
 
   save(force, options = {}) {

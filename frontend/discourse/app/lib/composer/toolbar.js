@@ -330,28 +330,28 @@ export default class Toolbar extends ToolbarBase {
         perform: (e) => e.formatCode(),
         active: ({ state }) => state.inCode || state.inCodeBlock,
       });
-
-      this.addButton({
-        id: "list",
-        group: "extras",
-        active: ({ state }) => {
-          return this.getListPopupMenuOptions().some((option) =>
-            option.active({ state })
-          );
-        },
-        icon: ({ state }) => {
-          return (
-            this.getListPopupMenuOptions().find((option) =>
-              option.active({ state })
-            )?.icon || "list-ul"
-          );
-        },
-        title: "composer.list_title",
-        popupMenu: {
-          options: () => this.getListPopupMenuOptions(),
-        },
-      });
     }
+
+    this.addButton({
+      id: "list",
+      group: "extras",
+      active: ({ state }) => {
+        return this.getListPopupMenuOptions().some((option) =>
+          option.active({ state })
+        );
+      },
+      icon: ({ state }) => {
+        return (
+          this.getListPopupMenuOptions().find((option) =>
+            option.active({ state })
+          )?.icon || "list-ul"
+        );
+      },
+      title: "composer.list_title",
+      popupMenu: {
+        options: () => this.getListPopupMenuOptions(),
+      },
+    });
 
     if (this.siteSettings.support_mixed_text_direction) {
       this.addButton({
