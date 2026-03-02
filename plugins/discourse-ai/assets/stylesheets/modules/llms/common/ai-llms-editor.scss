@@ -65,6 +65,15 @@
   }
 }
 
+.ai-secret-list-editor__table {
+  @include viewport.until(md) {
+    .ai-secret-list__usage {
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+  }
+}
+
 .ai-llms-list-editor__templates {
   &-list {
     display: grid;
