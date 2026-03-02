@@ -137,4 +137,9 @@
   .ai-llm-list__description {
     max-width: 80%;
   }
+
+  .ai-secret-list-editor__table .ai-secret-list__usage {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
 }
