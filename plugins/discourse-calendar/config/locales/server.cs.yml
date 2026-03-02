@@ -77,7 +77,6 @@ cs:
       ongoing_event_reminder: "%{title} probíhá."
     errors:
       bulk_invite:
-        max_invitees: "Bylo vytvořeno prvních %{max_invitees} pozvánek. Zkuste soubor rozdělit na menší části."
         error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
       models:
         event:

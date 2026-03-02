@@ -17,9 +17,9 @@ zh_CN:
       loading: "正在重构样条曲线…"
       viewing_other_user: "您正在查看 <strong>%{username}</strong> 的 Discourse 回顾。"
       cannot_view_rewind_gibberish: >
-        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Bootstrapping anomaly log...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
+        [访问被拒绝:: REWIND 运行失败]<br><br> 引导异常日志...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
       cannot_view_rewind: >
-        您无法查看此 Discourse 回顾报告。也许所有者尚未公开分享？<br><br> $> _<br><br>
+        您无法查看此 Discourse Rewind 报告。也许所有者尚未公开分享？<br><br> $> _<br><br>
       preferences:
         enable_rewind: "启用 Discourse 回顾。这将在您的个人资料中和您的头像上显示年终活动总结。"
         share_publicly: "与其他论坛成员分享 Discourse 回顾总结。任何论坛成员都可以查看您的 Discourse 回顾总结。"
@@ -105,8 +105,6 @@ zh_CN:
         chat_usage:
           title: 聊天活动
           total_messages: 消息总数
-          dm_messages: 直接消息
-          unique_dm_channels: 直接消息对话
           reactions_received: 收到的回应
           avg_message_length: 平均消息长度
           favorite_channels: 最喜欢的频道

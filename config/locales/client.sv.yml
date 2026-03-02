@@ -3449,6 +3449,7 @@ sv:
         delete: "Radera"
         add: "Lägg till obligatorisk tagg-grupp"
         placeholder: "Välj tagg-grupp…"
+        tag_group: "Tagg-grupp"
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
       create_long: "Skapa en ny kategori"
       slug_placeholder: "(Valfritt) streckade ord för url"
@@ -4360,7 +4361,6 @@ sv:
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
-    reset_filter: "Återställ"
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"

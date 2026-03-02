@@ -3476,6 +3476,7 @@ da:
         delete: "Slet"
         add: "Tilføj obligatorisk mærkegruppe"
         placeholder: "Vælg mærkegruppe…"
+        tag_group: "Mærkegruppe"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       create_long: "Opret en ny kategori"
       slug_placeholder: "(Valgfri) gennemstregede-ord for URL"
@@ -4328,7 +4329,6 @@ da:
   admin_js:
     type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
-    reset_filter: "Nulstil"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"

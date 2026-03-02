@@ -4548,6 +4548,7 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        diff_too_complex: "The diff is too complex to display. Please try viewing individual smaller edits."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -4671,7 +4672,11 @@ en:
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
       create: "New category"
+      create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      choose_type:
+        title: "Choose category type"
+        requires_plugin: "Requires plugin"
       create_category: "Create category"
       save: "Save category"
       unsaved_changes: "You have unsaved changes"
@@ -8622,6 +8627,9 @@ en:
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"
         interpolation_keys: "Available interpolation keys:"
+        interpolation_key_insert: "Click to insert"
+        interpolation_key_used: "Already used"
+        interpolation_key_invalid: "Unknown key — will not be interpolated"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."

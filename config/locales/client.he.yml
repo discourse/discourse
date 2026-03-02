@@ -4655,11 +4655,13 @@ he:
         delete: "הסרה"
         add: "הוספת קבוצת תגיות נדרשת"
         placeholder: "בחירת קבוצת תגיות…"
+        tag_group: "קבוצת תגיות"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: "מחיקת קטגוריה"
       create: "קטגוריה חדשה"
       create_long: "יצירת קטגוריה חדשה"
       save: "שמירת קטגוריה"
+      unsaved_changes: "יש שינויים שלא נשמרו"
       slug: "כתובת ייצוגית לקטגוריה"
       parent: "קטגוריית הורה"
       slug_placeholder: "(רשות) מילים-מחוברות-במקפים-ככתובת"
@@ -5901,7 +5903,6 @@ he:
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
-    reset_filter: "איפוס"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"

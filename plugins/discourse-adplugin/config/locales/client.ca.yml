@@ -26,17 +26,9 @@ ca:
           new_name: "Nou anunci propi"
           save: "Desa"
           delete: "Suprimeix"
-          html: "HTML"
-          categories: "Categories"
-          groups: "Grups"
           filter_placeholder: "Selecciona anuncis ..."
           more_settings: "Més paràmetres"
           preview: "Previsualitza"
-          back: "Anuncis propis"
-          name: "Nom"
-          edit: "Edita"
-          tabs:
-            settings: "Configuració"
           topic_list_top:
             title: "Anuncis principals en la llista de temes"
             description: "Anuncis que es mostraran a la part superior de les pàgines de la llista de temes."

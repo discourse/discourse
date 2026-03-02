@@ -11,12 +11,10 @@ tr_TR:
         no_semicolons: "Noktalı virgülleri sorgudan kaldırın."
         dirty: "Çalıştırmadan önce sorguyu kaydetmeniz gerekir."
     explorer:
-      default_query: "Varsayılan"
       or: "veya"
       admins_only: "Veri gezgini yalnızca yöneticiler tarafından kullanılabilir."
       allow_groups: "Grupların bu sorguya erişmesine izin ver"
       title: "Veri Gezgini"
-      create: "Oluştur"
       create_placeholder: "Sorgu adı ..."
       description_placeholder: "Buraya bir açıklama girin"
       import:
@@ -37,9 +35,7 @@ tr_TR:
           null_: "Boş"
       export: "Dışa Aktar"
       view_json: "JSON'u görüntüle"
-      save: "Değişiklikleri kaydet"
       run: "Çalıştır"
-      undo: "Değişiklikleri sil"
       edit: "Düzenle"
       delete: "Sil"
       download_json: "JSON"

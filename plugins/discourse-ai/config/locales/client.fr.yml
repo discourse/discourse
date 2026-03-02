@@ -176,8 +176,6 @@ fr:
       default_llm:
         title: "Modèle LLM par défaut"
         description: "Le modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA. Cela sera utilisé si aucun LLM n'est spécifié dans la configuration des fonctionnalités ou dans le personnage. Si aucun LLM par défaut n'est spécifié, le dernier LLM créé sera utilisé."
-      llm_selector:
-        none: "Jamais"
       features:
         short_title: "Fonctionnalités"
         description: "Il s'agit des fonctionnalités d'IA disponibles pour les visiteurs de votre site. Elles peuvent être configurées pour utiliser des personnages IA et des LLM spécifiques, et leur accès peut être contrôlé par des groupes."
@@ -520,9 +518,7 @@ fr:
         parameter_description: "Description du paramètre"
         enum_value: "Valeur d'énumération"
         add_enum_value: "Ajouter une valeur d'énumération"
-        credential_not_set: "(non défini)"
         edit: "Modifier"
-        test: "Test"
         delete: "Supprimer"
         saved: "Outil enregistré"
         confirm_delete: "Voulez-vous vraiment supprimer cet outil ?"
@@ -530,16 +526,6 @@ fr:
           title: "Tester l'outil d'IA"
           run: "Lancer le test"
           result: "Résultat du test"
-      secrets:
-        short_title: "Identifiants"
-        name: "Nom"
-        secret: "Valeur"
-        back: "Retour"
-        save: "Enregistrer"
-        edit: "Modifier"
-        delete: "Supprimer"
-        embedding: "Intégration"
-        tool: "Outil"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"
@@ -597,10 +583,7 @@ fr:
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-6: "Le modèle le plus intelligent d'Anthropic"
-          anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
-          open_ai-gpt-5-nano: "Le modèle GPT-5 le plus rapide et le plus économique"
         preseeded_model_description: "Modèle open source préconfiguré utilisant %{model}"
         configured:
           title: "LLM configurés"

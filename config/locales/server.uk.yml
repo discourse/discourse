@@ -2307,6 +2307,7 @@ uk:
     mailgun_api_key: "Ключ API Mailgun Secret, який використовується для перевірки повідомлень webhook."
     sendgrid_verification_key: "Ключ перевірки Sendgrid, який використовується для перевірки повідомлень webhook."
     mailjet_webhook_token: "Маркер, який використовується для перевірки корисного навантаження вебхуку. Його потрібно передати як параметр запиту «t» вебхука, наприклад: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Маркер, який використовується для перевірки корисного навантаження вебхуку. Його потрібно передати як параметр запиту «t» вебхуку, наприклад: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Ключ автентифікації Mandrill, який використовується для перевірки повідомлень webhook."
     postmark_webhook_token: "Маркер, який використовується для перевірки корисного навантаження вебхуку. Його потрібно передати як параметр запиту «t» вебхуку, наприклад: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Маркер, який використовується для перевірки корисного навантаження вебхуку. Його потрібно передати як параметр запиту «t» вебхуку, наприклад: https://example.com/webhook/sparkpost?t=supersecret"

@@ -4072,8 +4072,10 @@ fi:
         delete: "Poista"
         add: "Lisää pakollinen tunnisteryhmä"
         placeholder: "Valitse tunnisteryhmä…"
+        tag_group: "Tunnisteryhmä"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       create_long: "Luo uusi alue"
+      unsaved_changes: "Sinulla on tallentamattomia muutoksia"
       slug_placeholder: "(Valinnainen) väliviivoilla erotettuja sanoja URL-osoitetta varten"
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
@@ -5171,7 +5173,6 @@ fi:
   admin_js:
     type_to_filter: "Kirjoita suodattaaksesi…"
     settings: "Asetukset"
-    reset_filter: "Palauta"
     admin:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"

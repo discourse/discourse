@@ -57,6 +57,39 @@ RSpec.describe Admin::EmailTemplatesController do
         expect(template["can_revert"]).to eq(false)
       end
 
+      it "returns interpolation_keys for each email template" do
+        get "/admin/email/templates.json"
+        expect(response.status).to eq(200)
+
+        templates = response.parsed_body["email_templates"]
+        template = templates.find { |t| t["id"] == "user_notifications.admin_login" }
+
+        expect(template["interpolation_keys"]).to eq(
+          %w[base_url email_prefix email_token site_name],
+        )
+      end
+
+      it "returns interpolation_keys from body when subject is pluralized" do
+        get "/admin/email/templates.json"
+        expect(response.status).to eq(200)
+
+        templates = response.parsed_body["email_templates"]
+        template = templates.find { |t| t["id"] == "system_messages.pending_users_reminder" }
+
+        expect(template["interpolation_keys"]).to eq(%w[base_url])
+      end
+
+      it "returns empty interpolation_keys for templates without any keys" do
+        get "/admin/email/templates.json"
+        expect(response.status).to eq(200)
+
+        templates = response.parsed_body["email_templates"]
+        template =
+          templates.find { |t| t["id"] == "system_messages.download_remote_images_disabled" }
+
+        expect(template["interpolation_keys"]).to eq([])
+      end
+
       it "includes custom email template keys added via modifier" do
         custom_keys = %w[custom.email_template_one custom.email_template_two]
 
@@ -230,6 +263,25 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
+              )
+            }",
+          ]
+        end
+
+        include_examples "invalid email template"
+      end
+
+      context "when body contains malformed interpolation keys" do
+        let(:email_subject) { "%{email_prefix} Foo" }
+        let(:email_body) { "Hello %{user.username}" }
+
+        let(:expected_errors) do
+          [
+            "<b>Body</b>: #{
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "user.username",
                 count: 1,
               )
             }",

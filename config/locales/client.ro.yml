@@ -3158,6 +3158,7 @@ ro:
         delete: "Șterge"
       topic_featured_link_allowed: "Permite link-uri promovate în această categorie."
       create_long: "Creează o categorie nouă"
+      unsaved_changes: "Ai modificări nesalvate"
       slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
@@ -3882,7 +3883,6 @@ ro:
   admin_js:
     type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"
-    reset_filter: "Resetare"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"

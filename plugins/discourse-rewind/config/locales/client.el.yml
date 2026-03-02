@@ -18,8 +18,6 @@ el:
         chat_usage:
           title: Δραστηριότητα Συνομιλίας
           total_messages: Συνολικά Μηνύματα
-          dm_messages: Άμεσα Μηνύματα
-          unique_dm_channels: Συνομιλίες Άμεσων Μηνυμάτων
           reactions_received: Ληφθείσες Αντιδράσεις
           avg_message_length: Μέσο Μήκος Μηνύματος
           favorite_channels: Αγαπημένα Κανάλια

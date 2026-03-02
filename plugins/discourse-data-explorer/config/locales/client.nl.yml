@@ -11,12 +11,10 @@ nl:
         no_semicolons: "Verwijder de puntkomma's uit de query."
         dirty: "Je moet de query opslaan voordat je deze uitvoert."
     explorer:
-      default_query: "Standaard"
       or: "of"
       admins_only: "De gegevensverkenner is alleen beschikbaar voor beheerders."
       allow_groups: "Groepen hebben toegang tot deze query"
       title: "Gegevensverkenner"
-      create: "Maken"
       create_placeholder: "Querynaam..."
       description_placeholder: "Voer hier een beschrijving in"
       import:
@@ -37,9 +35,7 @@ nl:
           null_: "Null"
       export: "Exporteren"
       view_json: "JSON weergeven"
-      save: "Wijzigingen opslaan"
       run: "Uitvoeren"
-      undo: "Wijzigingen negeren"
       edit: "Bewerken"
       delete: "Verwijderen"
       download_json: "JSON"

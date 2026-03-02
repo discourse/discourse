@@ -4302,8 +4302,10 @@ hr:
         delete: "Pobriši"
         add: "Dodajte potrebnu grupu oznaka"
         placeholder: "Odaberite grupu oznaka"
+        tag_group: "Grupa oznaka"
       topic_featured_link_allowed: "Dopusti istaknute poveznice u ovoj kategoriji"
       create_long: "Stvorite novu kategoriju"
+      unsaved_changes: "Imate nespremljene promjene"
       slug_placeholder: "(Neobavezno) spojene-riječi za url"
       creation_error: Dogodila se greška pri stvaranju kategorije.
       save_error: Dogodila se greška pri spremanju kategorije.
@@ -5443,7 +5445,6 @@ hr:
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"
-    reset_filter: "Resetirati"
     admin:
       title: "Administrator"
       moderator: "Moderator"

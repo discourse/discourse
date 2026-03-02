@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
+import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -12,9 +13,11 @@ export default class AdminSiteTextEdit extends Controller {
   @service dialog;
 
   @tracked siteText;
-
   saved = false;
   queryParams = ["locale"];
+
+  #activeTextarea = null;
+  #lastCursorPos = null;
 
   @cached
   @dependentKeyCompat
@@ -32,6 +35,52 @@ export default class AdminSiteTextEdit extends Controller {
   @discourseComputed("siteText.status")
   isOutdated(status) {
     return status === "outdated";
+  }
+
+  @action
+  trackTextarea(event) {
+    this.#activeTextarea = event.target;
+  }
+
+  @action
+  saveCursorPos() {
+    const textarea = this.#activeTextarea;
+    if (textarea) {
+      this.#lastCursorPos = {
+        start: textarea.selectionStart,
+        end: textarea.selectionEnd,
+      };
+    }
+  }
+
+  resetTextarea() {
+    this.#activeTextarea = null;
+    this.#lastCursorPos = null;
+  }
+
+  @action
+  registerTextarea(element) {
+    this.#activeTextarea = element.querySelector("textarea") ?? element;
+  }
+
+  @action
+  insertInterpolationKey(key) {
+    const textarea = this.#activeTextarea;
+    if (!textarea) {
+      return;
+    }
+
+    const token = `%{${key}}`;
+    const start = this.#lastCursorPos?.start ?? textarea.value.length;
+    const end = this.#lastCursorPos?.end ?? textarea.value.length;
+
+    textarea.focus();
+    textarea.setSelectionRange(start, end);
+    document.execCommand("insertText", false, token);
+
+    const newPos = textarea.selectionStart;
+    this.#lastCursorPos = { start: newPos, end: newPos };
+    this.buffered.set("value", textarea.value);
   }
 
   @action
@@ -77,7 +126,8 @@ export default class AdminSiteTextEdit extends Controller {
       .catch(popupAjaxError);
   }
 
-  get interpolationKeys() {
-    return this.siteText.interpolation_keys.join(", ");
+  @discourseComputed("buffered.value", "siteText.interpolation_keys")
+  interpolationKeysWithStatus(value, keys) {
+    return computeInterpolationKeysWithStatus(value, keys);
   }
 }

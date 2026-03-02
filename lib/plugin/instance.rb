@@ -400,6 +400,10 @@ class Plugin::Instance
     reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
+  def register_category_type(klass)
+    Categories::TypeRegistry.register(klass, plugin_identifier: self.metadata.name)
+  end
+
   def register_problem_check(klass)
     DiscoursePluginRegistry.register_problem_check(klass, self)
   end

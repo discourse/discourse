@@ -11,11 +11,9 @@ ur:
         no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"
         dirty: "چلانے سے پہلے آپ کا کمانڈ کو محفوظ کرنا لازمی ہے۔"
     explorer:
-      default_query: "ڈِیفالٹ"
       or: "یا"
       admins_only: "ڈیٹا ایکسپلورر صرف منتظمین کو دستیاب ہے۔"
       title: "ڈیٹا ایکسپلورر"
-      create: "بنائیں"
       create_placeholder: "ڈیٹا کمانڈ کا نام..."
       description_placeholder: "یہاں تفصیل درج کریں"
       import:
@@ -32,8 +30,6 @@ ur:
           no: "نہیں"
           null_: "خالی"
       export: "برآمد"
-      view: "مشاهده"
-      save: "تبدیلیاں محفوظ کریں"
       run: "چلائیں"
       edit: "ترمیم کریں"
       delete: "مٹائیں"

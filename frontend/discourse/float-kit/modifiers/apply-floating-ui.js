@@ -31,6 +31,10 @@ export default class FloatKitApplyFloatingUi extends Modifier {
 
   @bind
   async update() {
+    if (this.instance.trigger?.isConnected === false) {
+      return;
+    }
+
     await updatePosition(
       this.instance.trigger,
       this.instance.content,
