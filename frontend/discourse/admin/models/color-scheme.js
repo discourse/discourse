@@ -4,7 +4,7 @@ import { not } from "@ember/object/computed";
 import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { ajax } from "discourse/lib/ajax";
 import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 class ColorSchemes extends LegacyArrayLikeObject {
@@ -50,7 +50,7 @@ export default class ColorScheme extends EmberObject {
 
   @tracked name;
   @tracked user_selectable;
-  @trackedArray colors;
+  @autoTrackedArray colors;
 
   @not("id") newRecord;
 

@@ -7,9 +7,7 @@
 te:
   js:
     explorer:
-      default_query: "అప్రమేయ"
       or: "లేదా"
-      create: "సృష్టించండి"
       help:
         label: "సహాయం"
       types:

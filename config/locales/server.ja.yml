@@ -2067,6 +2067,7 @@ ja:
     mailgun_api_key: "Webhook メッセージを検証するために使用される Mailgun Secret API キー。"
     sendgrid_verification_key: "Webhook メッセージの検証に使用される Sendgrid 検証キー。"
     mailjet_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Webhook メッセージの検証に使用される Mandrill 認証キー。"
     postmark_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2385,6 +2386,7 @@ ja:
     enable_upcoming_changes: "次回の変更を有効にする"
     fake_upcoming_change: "これは実際の次回の変更ではありません。テストを目的としているため、この文字列の翻訳は不要です。"
     floating_dismiss_topics_on_mobile: "モバイル版では、アクセスの簡易性とトピックリストの上部のスペースを空けるために「閉じる...」フローティングボタンを表示する"
+    rename_faq_to_guidelines: "この変更によって FAQ ページの名前が「ガイドライン」に変更されます。FAQ ページは引き続き /faq で利用できます。'faq url' 設定はこれまで通り機能します。"
     enable_simplified_category_creation: "より少ないオプションとクリーンなインターフェースによって、シンプルなカテゴリ作成フローを実現します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"

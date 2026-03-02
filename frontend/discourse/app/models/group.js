@@ -6,7 +6,7 @@ import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
@@ -37,8 +37,8 @@ export default class Group extends RestModel {
     return ajax("/groups/check-name", { data: { group_name: name } });
   }
 
-  @trackedArray members = [];
-  @trackedArray requesters = [];
+  @autoTrackedArray members = [];
+  @autoTrackedArray requesters = [];
 
   user_count = 0;
   limit = null;

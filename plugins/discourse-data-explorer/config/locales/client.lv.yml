@@ -7,9 +7,7 @@
 lv:
   js:
     explorer:
-      default_query: "Noklusējums"
       or: "vai"
-      create: "Izveidot"
       import:
         label: "Importēt"
       help:

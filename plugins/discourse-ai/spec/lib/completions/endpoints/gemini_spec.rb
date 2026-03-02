@@ -302,6 +302,127 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
   end
 
+  it "correctly configures thinking level when set" do
+    model.update!(provider_params: { enable_thinking: true, thinking_level: "high" })
+
+    response = gemini_mock.response("Using thinking level").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate("Hello", user: user)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "high" })
+  end
+
+  it "thinking_level takes priority over enable_thinking" do
+    model.update!(
+      provider_params: {
+        enable_thinking: true,
+        thinking_level: "medium",
+        thinking_tokens: "10000",
+      },
+    )
+
+    response = gemini_mock.response("Thinking level priority").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate("Hello", user: user)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "medium" })
+  end
+
+  it "does not add thinking config when thinking_level is default" do
+    model.update!(provider_params: { thinking_level: "default" })
+
+    response = gemini_mock.response("No thinking config").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate("Hello", user: user)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
+  end
+
+  it "strips temperature when thinking_level is set" do
+    model.update!(provider_params: { enable_thinking: true, thinking_level: "high" })
+
+    response = gemini_mock.response("Stripped temp").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate("Hello", user: user, temperature: 0.5)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :temperature)).to be_nil
+  end
+
+  it "strips temperature when enable_thinking is set" do
+    model.update!(provider_params: { enable_thinking: "true", thinking_tokens: "10000" })
+
+    response = gemini_mock.response("Stripped temp").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate("Hello", user: user, temperature: 0.5)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :temperature)).to be_nil
+  end
+
   # by default gemini is meant to use AUTO mode, however new experimental models
   # appear to require this to be explicitly set
   it "Explicitly specifies tool config" do

@@ -7,9 +7,7 @@
 zh_TW:
   js:
     explorer:
-      default_query: "預設"
       or: "或"
-      create: "創建"
       import:
         label: "匯入"
       help:

@@ -8,7 +8,7 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
@@ -38,9 +38,9 @@ class Theme extends RestModel {
     return json;
   }
 
-  @trackedArray childThemes;
-  @trackedArray parentThemes;
-  @trackedArray theme_fields;
+  @autoTrackedArray childThemes;
+  @autoTrackedArray parentThemes;
+  @autoTrackedArray theme_fields;
 
   @or("default", "user_selectable") isActive;
   @gt("remote_theme.commits_behind", 0) isPendingUpdates;
@@ -211,12 +211,15 @@ class Theme extends RestModel {
 
   setField(target, name, value, upload_id, type_id) {
     this.set("changed", true);
+
+    // Normalize JS field target/name consistently with getField()
+    if (target === "common" && name === "js") {
+      target = "extra_js";
+      name = JS_FILENAME;
+    }
+
     let themeFields = this.themeFields;
     let field = { name, target, value, upload_id, type_id };
-    if (field.name === "js" && target === "common") {
-      field.target = "extra_js";
-      field.name = JS_FILENAME;
-    }
 
     // slow path for uploads and so on
     if (type_id && type_id > 1) {

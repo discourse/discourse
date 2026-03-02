@@ -6,6 +6,12 @@
 
 tr_TR:
   js:
+    blocks:
+      ghost:
+        status: "Durum"
+        in_location: "içinde"
+        hidden: "gizli"
+        failed: "başarısız"
     number:
       format:
         separator: "."
@@ -401,6 +407,8 @@ tr_TR:
       pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
+      start_posting:
+        back: "Geri"
       spread_the_word:
         action: "Bağlantıyı kopyala"
         copied_to_clipboard: "Bağlantı panoya kopyalandı!"
@@ -4064,8 +4072,10 @@ tr_TR:
         delete: "Sil"
         add: "Gerekli etiket grubu ekleyin"
         placeholder: "Etiket grubu seç…"
+        tag_group: "Etiket grubu"
       topic_featured_link_allowed: "Bu kategoride öne çıkan bağlantılara izin ver"
       create_long: "Yeni bir kategori oluştur"
+      unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
       slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
@@ -5163,7 +5173,6 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
-    reset_filter: "Sıfırla"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -5602,15 +5611,6 @@ tr_TR:
           title: "Yenilikler"
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
           learn_more: "Daha fazla bilgi edinin..."
-          experimental: "Deneysel"
-          only_experiments: "Yalnızca deneysel özellikleri göster"
-          experiment_enabled: "Deneysel özelliği etkinleştirdiniz."
-          experiment_disabled: "Deneysel özelliği devre dışı bıraktınız."
-          experiment_tooltip:
-            title_enabled: "Deneysel özelliği kapat"
-            content_enabled: "Bunu değiştirmek özelliği tüm kullanıcılar için devre dışı bırakır."
-          feature_tooltip:
-            content_enabled: "Bunu değiştirmek özelliği tüm kullanıcılar için devre dışı bırakır."
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."

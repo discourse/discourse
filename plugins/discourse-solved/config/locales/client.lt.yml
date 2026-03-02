@@ -16,9 +16,6 @@ lt:
       topic_status_filter:
         all: "visi"
         solved: "išspresta"
-      move_post_cancel: "Atšaukti"
-      confirm_solved_removal_confirm: "Patvirtinti"
-      confirm_solved_removal_cancel: "Atšaukti"
     discourse_automation:
       triggerables:
         first_accepted_solution:

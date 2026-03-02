@@ -10,8 +10,8 @@
       border: none;
       padding: 0;
 
-      &.d-admin-row__llms,
-      &.d-admin-row__features {
+      &.ai-persona-list__llms,
+      &.ai-persona-list__features {
         padding-block: 0;
 
         .--card-label {
@@ -93,7 +93,7 @@
       display: none;
     }
 
-    .d-admin-row__content {
+    .d-table__row {
       display: grid;
       grid-template-rows: auto 1fr auto auto;
       grid-template-columns: 1fr auto;
@@ -101,7 +101,7 @@
       padding: var(--space-2) var(--space-4) var(--space-4);
       border-radius: var(--d-border-radius);
 
-      .d-admin-row__overview,
+      .d-table__cell.--overview,
       .ai-persona-list__name-with-description {
         display: contents;
       }
@@ -126,12 +126,12 @@
         margin: var(--space-2) 0;
       }
 
-      .d-admin-row__controls {
+      .d-table__cell.--controls {
         grid-row: 1;
         grid-column: 2;
       }
 
-      .d-admin-row__features {
+      .ai-persona-list__features {
         grid-row: 4;
         grid-column: 1 / span 2;
         padding: 0;
@@ -141,7 +141,7 @@
         }
       }
 
-      .d-admin-row__llms {
+      .ai-persona-list__llms {
         grid-row: 3;
         grid-column: 1 / span 2;
         padding: 0;
@@ -191,7 +191,7 @@
     }
   }
 
-  .d-admin-row__row-feature-list {
+  .ai-persona-list__feature-list {
     color: var(--primary-medium);
   }
 }

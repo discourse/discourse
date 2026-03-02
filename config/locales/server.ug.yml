@@ -2101,6 +2101,7 @@ ug:
     mailgun_api_key: "تور ئىلمىكى ئۇچۇرىنى دەلىللەشكە ئىشلىتىدىغان Mailgun بىخەتەرلىك API ئاچقۇچى."
     sendgrid_verification_key: "تور ئىلمىكى ئۇچۇرىنى دەلىللەشكە ئىشلىتىدىغان Sendgrid دەلىللەش ئاچقۇچى."
     mailjet_webhook_token: "تور ئىلمىكىنىڭ يۈكىنى دەلىللەشكە ئىشلىتىدىغان پەرمان تاختىسى. ئۇ چوقۇم تور ئىلمىكىنىڭ «t» سۈرۈشتۈرۈشىنىڭ پارامېتىرى بولۇپ يوللىنىدۇ، مەسىلەن: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "تور ئىلمىكىنىڭ يۈكىنى دەلىللەشكە ئىشلىتىدىغان پەرمان تاختىسى. ئۇ چوقۇم تور ئىلمىكىنىڭ «t» سۈرۈشتۈرۈشىنىڭ پارامېتىرى بولۇپ يوللىنىدۇ، مەسىلەن: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "تور ئىلمىكى ئۇچۇرىنى دەلىللەشكە ئىشلىتىدىغان Sendgrid سالاھىيەت دەلىللەش ئاچقۇچى."
     postmark_webhook_token: "تور ئىلمىكىنىڭ يۈكىنى دەلىللەشكە ئىشلىتىدىغان پەرمان تاختىسى. ئۇ چوقۇم تور ئىلمىكىنىڭ «t» سۈرۈشتۈرۈشىنىڭ پارامېتىرى بولۇپ يوللىنىدۇ، مەسىلەن: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "تور ئىلمىكىنىڭ يۈكىنى دەلىللەشكە ئىشلىتىدىغان پەرمان تاختىسى. ئۇ چوقۇم تور ئىلمىكىنىڭ «t» سۈرۈشتۈرۈشىنىڭ پارامېتىرى بولۇپ يوللىنىدۇ، مەسىلەن: https://example.com/webhook/sparkpost?t=supersecret"

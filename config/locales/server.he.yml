@@ -2281,6 +2281,7 @@ he:
     mailgun_api_key: "מפתח API סודי של Mailgun לאימות של הודעות webhook."
     sendgrid_verification_key: "מפתח התיקוף של Sendgrid משמש לתיקוף הודעות התליה."
     mailjet_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "מפתח האימות של Mandrill משמש לאימות הודעות התליה."
     postmark_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/sparkpost?t=supersecret"

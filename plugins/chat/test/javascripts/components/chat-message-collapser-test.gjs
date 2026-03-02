@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
@@ -246,6 +246,50 @@ module(
       await click(".chat-message-collapser-closed");
       assert.dom(".chat-uploads").isVisible();
       assert.dom(".chat-img-upload").isVisible();
+    });
+
+    test("rebinds lightbox when upload data changes", async function (assert) {
+      this.set("cooked", imageTextCooked);
+      this.set("uploads", [
+        {
+          original_filename: "tomtom.png",
+          url: "/images/d-logo-sketch-small.png",
+          short_path: "/uploads/short-url/one",
+          width: 16,
+          height: 16,
+        },
+      ]);
+
+      await render(
+        <template>
+          <ChatMessageCollapser
+            @cooked={{this.cooked}}
+            @uploads={{this.uploads}}
+          />
+        </template>
+      );
+
+      await click(".chat-img-upload");
+      await waitFor(".pswp--open");
+      assert.dom(".pswp--open").exists("opens for initial upload");
+      await click(".pswp__button--close");
+      await waitFor(".pswp--open", { count: 0 });
+
+      this.set("uploads", [
+        {
+          original_filename: "tomtom-new.png",
+          url: "/images/avatar.png",
+          short_path: "/uploads/short-url/two",
+          width: 16,
+          height: 16,
+        },
+      ]);
+
+      await click(".chat-img-upload");
+      await waitFor(".pswp--open");
+      assert.dom(".pswp--open").exists("opens after uploads update");
+      await click(".pswp__button--close");
+      await waitFor(".pswp--open", { count: 0 });
     });
   }
 );

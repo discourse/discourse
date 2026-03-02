@@ -97,7 +97,6 @@ de:
     ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
     post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
     ai_helper_post_illustrator_persona: "Die Persona, die für die Funktion „Beitrag illustrieren“ des KI-Helfers verwendet werden soll. Hinweis: Du musst auch ein Tool zur Bilderzeugung erstellen (Administration > Plug-ins > KI > Tools), damit diese Funktion funktioniert."
-    ai_helper_chat_thread_title_persona: "Die Persona, die zum Generieren von Chat-Thread-Titeln verwendet wird."
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
     ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
     ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
@@ -117,7 +116,6 @@ de:
     ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
-    ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Wenn der GPT-Bot Zugriff auf die PN hat, wird er den Mitgliedern dieser Gruppen antworten."
     ai_bot_debugging_allowed_groups: "Erlaube diesen Gruppen, eine Debug-Schaltfläche in Beiträgen zu sehen, der die rohe KI-Anfrage und -Antwort anzeigt."
     ai_bot_public_sharing_allowed_groups: "Erlaube diesen Gruppen, persönliche KI-Nachrichten über einen eindeutigen, öffentlich zugänglichen Link mit der Öffentlichkeit zu teilen. Hinweis: Wenn für deine Website eine Anmeldung erforderlich ist, ist auch zum Ansehen des geteilten Inhalts eine Anmeldung erforderlich."
@@ -278,14 +276,6 @@ de:
           name: "Von vorne beginnen …"
       name:
         characters: "darf nur Zahlen, Buchstaben und Unterstriche enthalten"
-      secret_bindings:
-        secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
-      secret_runtime:
-        alias_not_declared: "Der Alias „%{alias}“ ist für dieses Tool nicht definiert."
-        missing_binding: "Der Alias „%{alias}“ ist erforderlich, aber nicht mit Anmeldedaten verknüpft."
-        missing_required_aliases: "Für folgende Aliase fehlen erforderliche Verknüpfungen zu Anmeldedaten: %{aliases}."
-        secret_not_found: "Der Alias \"%{alias}\" ist mit nicht vorhandenen Anmeldedaten verknüpft."
-        unknown_error: "Die angeforderte Anmeldedaten konnten nicht ermittelt werden."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
@@ -320,7 +310,6 @@ de:
       flag_reason: "Als Spam gemeldet von <a href='%{url}'>Discourse KI</a>"
       silence_reason: "Benutzer automatisch stummgeschaltet durch <a href='%{url}'>Discourse KI</a>"
       invalid_error_type: "Ungültiger Fehlertyp angegeben"
-      unexpected: "Ein unerwarteter Fehler ist aufgetreten"
       bot_user_update_failed: "Aktualisierung des Spam-Scan-Bot-Benutzers fehlgeschlagen"
       configuration_missing: "Die Konfiguration der KI-Spamerkennung fehlt. Füge die Konfiguration in „Administration > Plug-ins > Discourse KI > Spam“ hinzu, bevor du sie aktivierst."
       logging_subject: "Spam-Erkennung"
@@ -435,9 +424,6 @@ de:
         discover:
           name: "Entdecken"
           description: "Standard-Persona, die in der Entdeckungsfunktion verwendet wird (ergänzende Suche)"
-        chat_thread_titler:
-          name: "Chat-Thread-Titelgenerator"
-          description: "Standard-Persona für die automatische Generierung von Chat-Thread-Titeln"
       topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
       summarizing: "Thema zusammenfassen"
       searching: "Suche nach: „%{query}“"
@@ -638,7 +624,6 @@ de:
         invalid_seeded_model: "Du kannst dieses Modell nicht mit dieser Funktion verwenden"
         invalid_persona_response_format: "Die ausgewählte Persona muss ein Antwortformat mit einem booleschen Feld namens „spam“ haben."
         must_select_model: "Du musst zuerst ein LLM auswählen"
-        invalid_llm_id: "Das ausgewählte LLM-Modell ist nicht gültig"
       endpoints:
         not_configured: "%{display_name} (nicht konfiguriert)"
         configuration_hint:
@@ -653,18 +638,12 @@ de:
     embeddings:
       delete_failed: "Dieses Modell wird derzeit verwendet. Aktualisiere zuerst `ai embeddings selected model`."
       cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
-      secret_required: "Es müssen Anmeldedaten gewählt werden"
-      secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht"
       configuration:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
         model_test_failed: "Es ist uns nicht gelungen, mit diesem Modell eine Testeinbettung zu generieren. Überprüfe, ob es richtig konfiguriert ist."
-    secrets:
-      delete_failed_in_use: "Diese Anmeldedaten werden derzeit von einem oder mehreren LLM, Einbettungen oder Tools verwendet und können nicht gelöscht werden."
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
-      secret_required: "Es müssen Anmeldedaten gewählt werden"
-      secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht"
       bedrock_invalid_url: "Bitte fülle alle Felder aus, um dieses Modell zu verwenden."
       bedrock_missing_auth: "Für AWS Bedrock muss entweder die Zugangsschlüssel-ID oder die Rollen ARN konfiguriert werden"
     ai_staff_action_logger:
@@ -689,13 +668,6 @@ de:
       persona_disabled: Die angegebene Persona ist deaktiviert. Überprüfe die Parameter persona_name oder persona_id.
       no_default_llm: Die Persona muss eine default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
-      custom_tool_definition_too_large: "Jede benutzerdefinierte Werkzeugdefinition darf höchstens %{max} Bytes groß sein."
-      invalid_stream_param: "Der Parameter %{key} ist ungültig: %{details}"
-      expected_array: "erwartet ein Array"
-      expected_object: "erwartet ein Objekt"
-      stream_reply_max_resume_rounds_reached: Die maximale Anzahl an Wiederholungsrunden mit benutzerdefinierten Werkzeugen wurde erreicht (%{max}).
-      stream_reply_state_too_large: "Der Stream-Zustand ist zu groß, um ihn zu behalten (maximal %{max} Bytes)."
-      stream_reply_unexpected_error: Beim Streaming der Antwort ist ein unerwarteter Fehler aufgetreten.
       prompt_message_length: Die Nachricht %{idx} hat die 1000-Zeichen-Grenze überschritten.
       persona_already_exists: Eine Persona mit dem Namen %{name} existiert bereits.
       custom_tool_exists:

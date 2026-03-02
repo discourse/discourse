@@ -6,6 +6,12 @@
 
 it:
   js:
+    blocks:
+      ghost:
+        status: "Stato"
+        in_location: "in"
+        hidden: "nascosto"
+        failed: "non riuscito"
     number:
       format:
         separator: ","
@@ -401,6 +407,8 @@ it:
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
+      start_posting:
+        back: "Indietro"
       spread_the_word:
         action: "Copia link"
         copied_to_clipboard: "Link copiato negli appunti!"
@@ -4061,8 +4069,10 @@ it:
         delete: "Cancella"
         add: "Aggiungi il gruppo di etichette richiesto"
         placeholder: "Seleziona un gruppo di etichette…"
+        tag_group: "Gruppo di Etichette"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
       create_long: "Crea una nuova categoria"
+      unsaved_changes: "Hai modifiche non salvate"
       slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
@@ -5160,7 +5170,6 @@ it:
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
-    reset_filter: "Reimposta"
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
@@ -5599,15 +5608,6 @@ it:
           title: "Cosa c'è di nuovo?"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
           learn_more: "Scopri di più..."
-          experimental: "Sperimentale"
-          only_experiments: "Mostra solo le funzionalità sperimentali"
-          experiment_enabled: "Hai attivato la funzionalità sperimentale."
-          experiment_disabled: "Hai disattivato la funzionalità sperimentale."
-          experiment_tooltip:
-            title_enabled: "Disattiva la funzionalità sperimentale"
-            content_enabled: "Modificando questa impostazione, la funzionalità verrà disabilitata per tutti gli utenti."
-          feature_tooltip:
-            content_enabled: "Modificando questa impostazione, la funzionalità verrà disabilitata per tutti gli utenti."
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."

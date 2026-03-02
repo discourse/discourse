@@ -1,14 +1,15 @@
 import { cached, tracked } from "@glimmer/tracking";
+import { computed } from "@ember/object";
 import { run } from "@ember/runloop";
 import { settled } from "@ember/test-helpers";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import {
+  autoTrackedArray,
   dedupeTracked,
   DeferredTrackedSet,
   enumerateTrackedEntries,
   enumerateTrackedKeys,
-  trackedArray,
 } from "discourse/lib/tracked-tools";
 
 module("Unit | tracked-tools", function () {
@@ -124,10 +125,10 @@ module("Unit | tracked-tools", function () {
     assert.deepEqual([...player.letters], ["a", "b", "c", "d", "e", "f"]);
   });
 
-  module("@trackedArray", function () {
+  module("@autoTrackedArray", function () {
     test("initializes with an array", function (assert) {
       class TestClass {
-        @trackedArray items = ["a", "b", "c"];
+        @autoTrackedArray items = ["a", "b", "c"];
       }
 
       const instance = new TestClass();
@@ -144,7 +145,7 @@ module("Unit | tracked-tools", function () {
 
     test("accepts null as initial value", function (assert) {
       class TestClass {
-        @trackedArray items = null;
+        @autoTrackedArray items = null;
       }
 
       const instance = new TestClass();
@@ -157,7 +158,7 @@ module("Unit | tracked-tools", function () {
 
     test("accepts undefined as initial value", function (assert) {
       class TestClass {
-        @trackedArray items;
+        @autoTrackedArray items;
       }
 
       const instance = new TestClass();
@@ -170,7 +171,7 @@ module("Unit | tracked-tools", function () {
 
     test("handles setting regular arrays", function (assert) {
       class TestClass {
-        @trackedArray items;
+        @autoTrackedArray items;
       }
 
       const instance = new TestClass();
@@ -189,7 +190,7 @@ module("Unit | tracked-tools", function () {
 
     test("accepts TrackedArray instances directly", function (assert) {
       class TestClass {
-        @trackedArray items = [];
+        @autoTrackedArray items = [];
       }
 
       const instance = new TestClass();
@@ -210,7 +211,7 @@ module("Unit | tracked-tools", function () {
 
     test("allows setting to null", function (assert) {
       class TestClass {
-        @trackedArray items = ["initial"];
+        @autoTrackedArray items = ["initial"];
       }
 
       const instance = new TestClass();
@@ -221,7 +222,7 @@ module("Unit | tracked-tools", function () {
 
     test("allows setting to undefined", function (assert) {
       class TestClass {
-        @trackedArray items = ["initial"];
+        @autoTrackedArray items = ["initial"];
       }
 
       const instance = new TestClass();
@@ -236,7 +237,7 @@ module("Unit | tracked-tools", function () {
 
     test("throws error for invalid values", function (assert) {
       class TestClass {
-        @trackedArray items = [];
+        @autoTrackedArray items = [];
       }
 
       const instance = new TestClass();
@@ -269,7 +270,7 @@ module("Unit | tracked-tools", function () {
     test("tracks changes to array contents", function (assert) {
       class TestClass {
         evaluationsCount = 0;
-        @trackedArray items = ["a"];
+        @autoTrackedArray items = ["a"];
 
         @cached
         get itemCount() {
@@ -314,6 +315,92 @@ module("Unit | tracked-tools", function () {
         ["a", "b"],
         "array contains correct items"
       );
+    });
+
+    test("invalidates @computed when TrackedArray contents are mutated", function (assert) {
+      class TestClass {
+        computeCount = 0;
+        @autoTrackedArray items = ["a"];
+
+        @computed("items")
+        get itemCount() {
+          this.computeCount++;
+          return this.items?.length ?? 0;
+        }
+      }
+
+      const instance = new TestClass();
+      assert.strictEqual(instance.itemCount, 1, "initial count is correct");
+      assert.strictEqual(instance.computeCount, 1, "computed evaluated once");
+
+      // In-place mutation via push
+      instance.items.push("b");
+      assert.strictEqual(
+        instance.itemCount,
+        2,
+        "computed invalidated after push"
+      );
+      assert.strictEqual(instance.computeCount, 2, "computed re-evaluated");
+
+      // In-place mutation via splice
+      instance.items.splice(0, 1);
+      assert.strictEqual(
+        instance.itemCount,
+        1,
+        "computed invalidated after splice"
+      );
+      assert.strictEqual(instance.computeCount, 3, "computed re-evaluated");
+
+      // Reference change still works
+      instance.items = ["x", "y", "z"];
+      assert.strictEqual(
+        instance.itemCount,
+        3,
+        "computed invalidated after reference change"
+      );
+      assert.strictEqual(instance.computeCount, 4, "computed re-evaluated");
+    });
+
+    test("invalidates @computed with .[] dependent key on mutations", function (assert) {
+      class TestClass {
+        computeCount = 0;
+        @autoTrackedArray items = [];
+
+        @computed("items.[]")
+        get itemCount() {
+          this.computeCount++;
+          return this.items?.length ?? 0;
+        }
+      }
+
+      const instance = new TestClass();
+      assert.strictEqual(instance.itemCount, 0, "initial count is correct");
+      assert.strictEqual(instance.computeCount, 1, "computed evaluated once");
+
+      instance.items.push("a");
+      assert.strictEqual(
+        instance.itemCount,
+        1,
+        "computed invalidated after push"
+      );
+      assert.strictEqual(instance.computeCount, 2, "computed re-evaluated");
+    });
+
+    test("@computed works with null @autoTrackedArray value", function (assert) {
+      class TestClass {
+        @autoTrackedArray items = null;
+
+        @computed("items")
+        get hasItems() {
+          return this.items != null && this.items.length > 0;
+        }
+      }
+
+      const instance = new TestClass();
+      assert.false(instance.hasItems, "no items when null");
+
+      instance.items = ["a"];
+      assert.true(instance.hasItems, "has items after setting array");
     });
   });
 
@@ -406,10 +493,10 @@ module("Unit | tracked-tools", function () {
       assert.false(result.includes("regularProp"), "excludes regular property");
     });
 
-    test("includes @trackedArray properties", function (assert) {
+    test("includes @autoTrackedArray properties", function (assert) {
       class TestClass {
         @tracked name = "test";
-        @trackedArray items = ["a", "b", "c"];
+        @autoTrackedArray items = ["a", "b", "c"];
         regularProp = "regular";
       }
 
@@ -417,7 +504,10 @@ module("Unit | tracked-tools", function () {
       const result = enumerateTrackedKeys(instance);
 
       assert.true(result.includes("name"), "includes @tracked property");
-      assert.true(result.includes("items"), "includes @trackedArray property");
+      assert.true(
+        result.includes("items"),
+        "includes @autoTrackedArray property"
+      );
       assert.false(result.includes("regularProp"), "excludes regular property");
     });
 
@@ -604,10 +694,10 @@ module("Unit | tracked-tools", function () {
       assert.strictEqual(obj.regularProp, undefined);
     });
 
-    test("includes @trackedArray properties", function (assert) {
+    test("includes @autoTrackedArray properties", function (assert) {
       class TestClass {
         @tracked name = "test";
-        @trackedArray items = ["a", "b", "c"];
+        @autoTrackedArray items = ["a", "b", "c"];
         regularProp = "regular";
       }
 

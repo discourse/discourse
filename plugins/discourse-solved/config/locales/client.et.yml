@@ -22,8 +22,6 @@ et:
       topic_status_filter:
         all: "kõik"
         solved: "lahendatud"
-      move_post_cancel: "Loobu"
-      confirm_solved_removal_cancel: "Loobu"
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"

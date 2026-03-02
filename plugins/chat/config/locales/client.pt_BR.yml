@@ -44,12 +44,6 @@ pt_BR:
           one: "%{formatted_number} mensagem de chat"
           other: "%{formatted_number} mensagens de chat"
     chat:
-      edit_category:
-        tab_title: "Chat"
-        channel: "Canal"
-        description: "Descrição"
-        actions: "Ações"
-        settings: "Definições"
       text_copied: Texto copiado para área de transferência
       link_copied: Link copiado para área de transferência
       back_to_forum: "Fórum"
@@ -64,7 +58,6 @@ pt_BR:
       cancel: "Cancelar"
       cancel_reply: "Cancelar resposta"
       chat_channels: "Canais"
-      pinned: "Fixado"
       browse_all_channels: "Navegar por todos os canais"
       see_in: "Veja em"
       move_to_channel:

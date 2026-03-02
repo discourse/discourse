@@ -34,8 +34,6 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
-      llm_selector:
-        none: "Няма"
       features:
         back: "Назад"
         disabled: "(адключана)"
@@ -109,14 +107,6 @@ be:
         parameter_required: "абавязковыя"
         edit: "Рэдагаваць"
         delete: "Выдаліць"
-      secrets:
-        name: "Імя"
-        secret: "значэнне"
-        back: "Назад"
-        save: "Захаваць"
-        edit: "Рэдагаваць"
-        delete: "Выдаліць"
-        embedding: "узаемадзеянне"
       llms:
         display_name: "Імя"
         save: "Захаваць"

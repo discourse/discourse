@@ -1,8 +1,10 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { and, reads } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -31,8 +33,9 @@ export default class TagInfo extends Component {
   @service router;
   @service siteSettings;
 
+  @tracked tagInfo = null;
+
   loading = false;
-  tagInfo = null;
   newSynonyms = null;
   showEditControls = false;
   editing = false;
@@ -62,12 +65,24 @@ export default class TagInfo extends Component {
     });
   }
 
-  @computed("tagInfo.tag_group_names", "tagInfo.categories", "tagInfo.synonyms")
+  // Bridge TrackedArray content changes to the classic tag system. `@tracked tagInfo` lets the getter invalidate when
+  // tagInfo is reassigned (reload). Consuming `synonyms.length` captures the TrackedArray's collection tag so the
+  // getter also invalidates on in-place mutations (push/splice/remove).
+  @dependentKeyCompat
+  get synonyms() {
+    const synonyms = this.tagInfo?.synonyms;
+    if (synonyms) {
+      synonyms.length;
+    }
+    return synonyms;
+  }
+
+  @computed("tagInfo.tag_group_names", "tagInfo.categories", "synonyms")
   get nothingToShow() {
     return (
       isEmpty(this.tagInfo?.tag_group_names) &&
       isEmpty(this.tagInfo?.categories) &&
-      isEmpty(this.tagInfo?.synonyms)
+      isEmpty(this.synonyms)
     );
   }
 
@@ -133,7 +148,7 @@ export default class TagInfo extends Component {
     ajax(`/tag/${id}/synonyms/${synonym.id}.json`, {
       type: "DELETE",
     })
-      .then(() => removeValueFromArray(this.tagInfo.synonyms, synonym))
+      .then(() => removeValueFromArray(this.synonyms, synonym))
       .catch(popupAjaxError);
   }
 
@@ -148,7 +163,7 @@ export default class TagInfo extends Component {
       didConfirm: () => {
         return tag
           .destroyRecord()
-          .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
+          .then(() => removeValueFromArray(this.synonyms, tag))
           .catch(popupAjaxError);
       },
     });
@@ -202,11 +217,11 @@ export default class TagInfo extends Component {
         ? i18n("tagging.delete_confirm_no_topics")
         : i18n("tagging.delete_confirm", { count: numTopics });
 
-    if (this.tagInfo.synonyms.length > 0) {
+    if (this.synonyms?.length > 0) {
       confirmText +=
         " " +
         i18n("tagging.delete_confirm_synonyms", {
-          count: this.tagInfo.synonyms.length,
+          count: this.synonyms.length,
         });
     }
 
@@ -358,7 +373,7 @@ export default class TagInfo extends Component {
             {{/if}}
           {{/if~}}
         </div>
-        {{#if this.tagInfo.synonyms}}
+        {{#if this.synonyms}}
           <div class="synonyms-list">
             <h3>{{i18n "tagging.synonyms"}}</h3>
             <div>{{htmlSafe
@@ -367,7 +382,7 @@ export default class TagInfo extends Component {
                 )
               }}</div>
             <div class="tag-list">
-              {{#each this.tagInfo.synonyms as |tag|}}
+              {{#each this.synonyms as |tag|}}
                 <div class="tag-box">
                   {{discourseTag tag.name pmOnly=tag.pmOnly tagName="div"}}
                   {{#if this.editSynonymsMode}}

@@ -36,6 +36,7 @@ export function _clearSnapshots() {
   showFullTitle: false,
   preventHeaderFocus: true,
   customStyle: true,
+  btnCustomClasses: "composer-actions-btn",
 })
 export default class ComposerActions extends DropdownSelectBoxComponent {
   @service dialog;

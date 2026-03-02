@@ -1,4 +1,4 @@
-import { array, concat, fn } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
@@ -9,7 +9,6 @@ import PickFilesButton from "discourse/components/pick-files-button";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
-import getURL from "discourse/lib/get-url";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
@@ -88,8 +87,8 @@ export default <template>
             <ConditionalLoadingSpinner @condition={{@controller.loading}} />
 
             <div class="container discourse-data-explorer-query-list">
-              <table class="d-admin-table recent-queries">
-                <thead class="heading-container">
+              <table class="d-table recent-queries">
+                <thead class="d-table__header heading-container">
                   <th class="col heading name">
                     <div
                       role="button"
@@ -149,40 +148,42 @@ export default <template>
                 </thead>
                 <tbody>
                   {{#each filteredQueries as |query|}}
-                    <tr class="d-admin-row__content query-row">
-                      <td class="d-admin-row__overview">
-                        <a
-                          class="query-link"
-                          href={{getURL
-                            (concat
-                              "/admin/plugins/discourse-data-explorer/queries/"
-                              query.id
-                            )
-                          }}
+                    <tr class="d-table__row query-row">
+                      <td class="d-table__cell --overview">
+                        <LinkTo
+                          class="d-table__overview-link"
+                          @route="adminPlugins.show.explorer.details"
+                          @model={{query.id}}
                         >
-                          <strong class="query-name">{{query.name}}</strong>
-                          {{#if query.is_default}}
-                            <span class="query-badge">{{i18n
-                                "explorer.default_query"
-                              }}</span>
-                          {{/if}}
+                          <div
+                            class="d-table__overview-name query-name"
+                          >{{query.name}}
+                            {{#if query.is_default}}
+                              <span class="query-badge">{{i18n
+                                  "explorer.default_query"
+                                }}</span>
+                            {{/if}}
+                          </div>
                           <div class="query-desc">{{query.description}}</div>
-                        </a>
+                        </LinkTo>
                       </td>
-                      <td class="d-admin-row__detail query-created-by">
-                        <div class="d-admin-row__mobile-label">
+                      <td class="d-table__cell --detail query-created-by">
+                        <div class="d-table__mobile-label">
                           {{i18n "explorer.query_user"}}
                         </div>
                         {{#if query.username}}
                           <div>
-                            <a href="/u/{{query.username}}/activity">
-                              <span>{{query.username}}</span>
-                            </a>
+                            <LinkTo
+                              @route="user.summary"
+                              @model={{query.username}}
+                            >
+                              {{query.username}}
+                            </LinkTo>
                           </div>
                         {{/if}}
                       </td>
-                      <td class="d-admin-row__detail query-group-names">
-                        <div class="d-admin-row__mobile-label">
+                      <td class="d-table__cell --detail query-group-names">
+                        <div class="d-table__mobile-label">
                           {{i18n "explorer.query_groups"}}
                         </div>
                         <div class="group-names">
@@ -194,8 +195,8 @@ export default <template>
                           {{/unless}}
                         </div>
                       </td>
-                      <td class="d-admin-row__detail query-created-at">
-                        <div class="d-admin-row__mobile-label">
+                      <td class="d-table__cell --detail query-created-at">
+                        <div class="d-table__mobile-label">
                           {{i18n "explorer.query_time"}}
                         </div>
                         {{#if query.last_run_at}}

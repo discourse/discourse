@@ -39,7 +39,10 @@ export default class EditCategoryTab extends Component {
 
   @computed("params.slug", "params.parentSlug")
   get fullSlug() {
-    const slugPart = this.params?.parentSlug && this.params?.slug ? `${this.params?.parentSlug}/${this.params?.slug}` : this.params?.slug;
+    const slugPart =
+      this.params?.parentSlug && this.params?.slug
+        ? `${this.params?.parentSlug}/${this.params?.slug}`
+        : this.params?.slug;
     return getURL(`/c/${slugPart}/edit/${this.tab}`);
   }
 
@@ -47,7 +50,9 @@ export default class EditCategoryTab extends Component {
   select(event) {
     event?.preventDefault();
     this.set("selectedTab", this.tab);
-    if (!this.newCategory) {
+    if (this.newCategory) {
+      DiscourseURL.routeTo(getURL(`/new-category/${this.tab}`));
+    } else {
       DiscourseURL.routeTo(this.fullSlug);
     }
   }

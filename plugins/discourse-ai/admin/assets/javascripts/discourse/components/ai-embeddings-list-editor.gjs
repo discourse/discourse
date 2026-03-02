@@ -44,8 +44,8 @@ export default class AiEmbeddingsListEditor extends Component {
         </DPageSubheader>
 
         {{#if this.hasEmbeddingElements}}
-          <table class="d-admin-table">
-            <thead>
+          <table class="d-table">
+            <thead class="d-table__header">
               <tr>
                 <th>{{i18n "discourse_ai.embeddings.display_name"}}</th>
                 <th>{{i18n "discourse_ai.embeddings.provider"}}</th>
@@ -54,16 +54,16 @@ export default class AiEmbeddingsListEditor extends Component {
             </thead>
             <tbody>
               {{#each @embeddings.content as |embedding|}}
-                <tr class="ai-embeddings-list__row d-admin-row__content">
-                  <td class="d-admin-row__overview">
+                <tr class="ai-embeddings-list__row d-table__row">
+                  <td class="d-table__cell --overview">
                     <div class="ai-embeddings-list__name">
                       <strong>
                         {{embedding.display_name}}
                       </strong>
                     </div>
                   </td>
-                  <td class="d-admin-row__detail">
-                    <div class="d-admin-row__mobile-label">
+                  <td class="d-table__cell --detail">
+                    <div class="d-table__mobile-label">
                       {{i18n "discourse_ai.embeddings.provider"}}
                     </div>
                     {{i18n
@@ -72,7 +72,7 @@ export default class AiEmbeddingsListEditor extends Component {
                       )
                     }}
                   </td>
-                  <td class="d-admin-row__controls">
+                  <td class="d-table__cell --controls">
                     {{#if embedding.seeded}}
                       <DTooltip
                         class="ai-embeddings-list__edit-disabled-tooltip"

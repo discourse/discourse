@@ -16,10 +16,6 @@ ja:
       title: Rewind
       loading: "網目状のスプライン..."
       viewing_other_user: "<strong>%{username}</strong> の Discourse Rewind レポートを表示中です。"
-      cannot_view_rewind_gibberish: >
-        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Bootstrapping anomaly log...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
-      cannot_view_rewind: >
-        この Discourse Rewind レポートを表示できません。オーナーが公開していない可能性があります。<br><br> $> _<br><br>
       preferences:
         enable_rewind: "Discourse Rewind を有効にする。これにより、プロフィールとアバターに年末のアクティビティの要約が表示されます。"
         share_publicly: "Discourse Rewind サマリーを他のフォーラムメンバーを共有する。すべてのフォーラムメンバーがあなたの Discourse Rewind サマリーを閲覧できるようになります。"

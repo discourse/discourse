@@ -16,7 +16,6 @@ zh_CN:
       settings: "设置"
       no_providers: "您需要在插件设置中启用一些提供商"
       channels_with_errors: "上次发送消息时，此提供商的一些频道失败。点击错误图标了解详情。"
-      channel_exception: "上次向此频道发送消息时发生未知错误。"
       group_mention_template: "提及：@%{name}"
       group_message_template: "发送消息给：@%{name}"
       choose_group: "（选择一个群组）"
@@ -33,7 +32,6 @@ zh_CN:
         topic: "话题"
         send: "发送测试信息"
         close: "关闭"
-        error: "发送消息时遇到未知错误。检查站点日志了解详情。"
         success: "消息已成功发送"
       type:
         normal: 正常

@@ -7,6 +7,10 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedSettings extends Component {
+  static shouldRender(args, context) {
+    return !context.siteSettings.enable_simplified_category_creation;
+  }
+
   @service siteSettings;
 
   @tracked

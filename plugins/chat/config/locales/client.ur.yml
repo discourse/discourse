@@ -44,12 +44,6 @@ ur:
           one: "%{formatted_number} چیٹ پیغام"
           other: "%{formatted_number} چیٹ کے پیغامات"
     chat:
-      edit_category:
-        tab_title: "گفتگو"
-        channel: "چَینل"
-        description: "تفصیل"
-        actions: "عمل"
-        settings: "سیٹِنگ"
       text_copied: متن کلپ بورڈ پر کاپی ہوا
       link_copied: رابطہ کلپ بورڈ پر کاپی ہوا
       back_to_forum: "فورم"
@@ -64,7 +58,6 @@ ur:
       cancel: "منسوخ"
       cancel_reply: "جواب منسوخ کریں"
       chat_channels: "چینلز"
-      pinned: "پِن ہوا"
       browse_all_channels: "تمام چینلز کو براؤز کریں"
       see_in: "میں دیکھیں"
       move_to_channel:

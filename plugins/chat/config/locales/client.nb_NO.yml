@@ -12,17 +12,11 @@ nb_NO:
           always: "Alltid"
           never: "Aldri"
     chat:
-      edit_category:
-        channel: "Kanal"
-        description: "Beskrivelse"
-        actions: "Handlinger"
-        settings: "Innstillinger"
       deleted_chat_username: slettet
       dates:
         yesterday: "I går"
       create: "Opprett"
       cancel: "Avbryt"
-      pinned: "Fastsatt"
       channel_settings:
         edit: "Endre"
         add: "Legg til"

@@ -140,9 +140,7 @@ export default class DNavigation extends Component {
     "router.currentRoute.queryParams",
     "skipCategoriesNavItem"
   )
-  get navItems(
-    
-  ) {
+  get navItems() {
     return NavItem.buildList(this.category, {
       filterType: this.filterType,
       noSubcategories: this.noSubcategories,

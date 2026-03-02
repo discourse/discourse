@@ -13,7 +13,6 @@ uk:
     openid_connect_authorize_scope: "Області видимості, надіслані до кінцевої точки авторизації. Вони повинні містити «openid»."
     openid_connect_rp_initiated_logout: "Перенаправляти користувача до end_session_endpoint після виходу з системи. Має підтримуватися вашим постачальником ідентифікаційних даних та бути включеним до документа виявлення."
     openid_connect_rp_initiated_logout_redirect: "(необов’язково) post_logout_redirect_uri, який буде передано кінцевій точці виходу з системи. Якщо його надано, його потрібно зареєструвати у постачальника ідентифікаційних даних."
-    openid_connect_rp_initiated_logout_include_client_id: "(необов’язково) Додайте client_id (параметр openid_connect_client_id) як параметр запиту до кінцевої точки виходу з системи"
     openid_connect_token_scope: "Області видимості, що надсилаються під час запиту кінцевої точки токена. Офіційна специфікація цього не вимагає."
     openid_connect_error_redirects: "Якщо error_reason містить перший параметр, користувач буде перенаправлений на URL-адресу в другому параметрі"
     openid_connect_allow_association_change: "Дозволити користувачам відключати та повторно підключати свої облікові записи Discourse від постачальника OpenID Connect"

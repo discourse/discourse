@@ -19,11 +19,4 @@ nb_NO:
           settings: "Innstillinger"
           save: "Lagre"
           delete: "Slett"
-          html: "HTML"
-          categories: "Kategorier"
-          groups: "Grupper"
           preview: "Forhåndsvis"
-          name: "Navn"
-          edit: "Rediger"
-          tabs:
-            settings: "Innstillinger"

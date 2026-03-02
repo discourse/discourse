@@ -503,10 +503,10 @@ en:
         description: "Give people something to talk about together"
         action: "Icebreaker ideas"
         choose_option: "How would you like to start?"
-        predefined_topics: "Pre-defined Topics"
-        predefined_topics_subtitle: "Break the ice with one of the following conversation starters. <br/> Pick one and customize it to your liking:"
+        predefined_topics: "Icebreaker templates"
+        predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
-        use_predefined: "Use pre-defined Topics"
+        use_predefined: "Browse templates"
         start_with_this: "Start with this"
         back: "Back"
         icebreakers:
@@ -3378,9 +3378,13 @@ en:
         available:
           title: "Upcoming changes"
           description: "'%{changeName}' is available for preview"
+          description_two: "'%{changeName1}' and '%{changeName2}' are available for preview"
+          description_many: "'%{changeName}' and %{otherChangeCount} more changes are available for preview"
         automatically_promoted:
           title: "Upcoming changes"
           description: "'%{changeName}' has been automatically enabled"
+          description_two: "'%{changeName1}' and '%{changeName2}' were automatically enabled"
+          description_many: "'%{changeName}' and %{otherChangeCount} more changes were automatically enabled"
       dismiss_confirmation:
         body:
           default:
@@ -3442,8 +3446,8 @@ en:
         votes_released: "vote was released"
         new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
-        upcoming_change_available: "new upcoming change '%{changeName}' is available"
-        upcoming_change_automatically_promoted: "upcoming change '%{changeName}' has been automatically enabled"
+        upcoming_change_available: "new upcoming changes are available"
+        upcoming_change_automatically_promoted: "upcoming changes have been automatically enabled"
 
     upload_selector:
       change: "Change"
@@ -4544,6 +4548,7 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        diff_too_complex: "The diff is too complex to display. Please try viewing individual smaller edits."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -4662,11 +4667,19 @@ en:
         delete: "Delete"
         add: "Add required tag group"
         placeholder: "Select tag group…"
+        min_count: "Tag count"
+        tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
       create: "New category"
+      create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      choose_type:
+        title: "Choose category type"
+        requires_plugin: "Requires plugin"
+      create_category: "Create category"
       save: "Save category"
+      unsaved_changes: "You have unsaved changes"
       slug: "Category slug"
       parent: "Parent category"
       slug_placeholder: "(Optional) dashed-words for url"
@@ -5929,7 +5942,7 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset"
+    reset_filter: "Reset filter"
     toggle_filters: "Toggle dropdown filters"
 
     admin:
@@ -6490,23 +6503,6 @@ en:
           no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           learn_more: "Learn more..."
-          experimental: "Experimental"
-          only_experiments: "Only show experimental features"
-          experiment_enabled: "You have enabled the experimental feature."
-          experiment_disabled: "You have disabled the experimental feature."
-          feature_enabled: "You have enabled the feature."
-          feature_disabled: "You have disabled the feature."
-          toggled_too_fast: "You have switched the toggle too fast. Please wait a few seconds before trying again."
-          experiment_tooltip:
-            title_disabled: "Try this experimental feature"
-            title_enabled: "Turn off experimental feature"
-            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
-            content_enabled: "Changing this will disable the feature for all users."
-          feature_tooltip:
-            title_disabled: "Try this feature"
-            title_enabled: "Turn off feature"
-            content_disabled: "Give this new feature a spin! You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
-            content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
         refresh_problems: "Refresh"
@@ -8631,6 +8627,9 @@ en:
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"
         interpolation_keys: "Available interpolation keys:"
+        interpolation_key_insert: "Click to insert"
+        interpolation_key_used: "Already used"
+        interpolation_key_invalid: "Unknown key — will not be interpolated"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
