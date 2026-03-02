@@ -1,22 +1,22 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 
 @tagName("")
 export default class DiscourseTagBound extends Component {
-  @discourseComputed("tagRecord.name")
-  tagClass(name) {
-    return "tag-" + name;
+  @computed("tagRecord.name")
+  get tagClass() {
+    return "tag-" + this.tagRecord?.name;
   }
 
-  @discourseComputed("tagRecord.slug", "tagRecord.id")
-  href(slug, id) {
-    if (id) {
-      const slugForUrl = slug || `${id}-tag`;
-      return getURL(`/tag/${slugForUrl}/${id}`);
+  @computed("tagRecord.slug", "tagRecord.id")
+  get href() {
+    if (this.tagRecord?.id) {
+      const slugForUrl = this.tagRecord?.slug || `${this.tagRecord?.id}-tag`;
+      return getURL(`/tag/${slugForUrl}/${this.tagRecord?.id}`);
     }
     // fallback for tags without id
     return getURL("/tag/" + this.tagRecord.name);

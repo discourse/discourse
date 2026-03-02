@@ -44,6 +44,60 @@ import handleDescriptor from "discourse/lib/handle-descriptor";
 import isDescriptor from "discourse/lib/is-descriptor";
 import macroAlias from "discourse/lib/macro-alias";
 
+/**
+ * A decorator that creates computed properties with dependent keys.
+ * This decorator allows you to define computed properties that automatically
+ * update when their dependent properties change.
+ *
+ * @deprecated Use `@tracked` properties with native getters or the standard `@computed`
+ * decorator from `@ember/object` instead.
+ *
+ * @param {...(string|PropertyDescriptor)} params - Either dependent property keys as strings,
+ * or a property descriptor when used without arguments
+ * @returns {PropertyDescriptor|Function} A property descriptor or decorator function
+ *
+ * @example
+ * // Usage with dependent keys
+ * class MyComponent {
+ *   @discourseComputed('firstName', 'lastName')
+ *   fullName(firstName, lastName) {
+ *     return `${firstName} ${lastName}`;
+ *   }
+ * }
+ *
+ * @example
+ * // Usage without arguments
+ * class MyComponent {
+ *   @discourseComputed
+ *   currentTime() {
+ *     return new Date();
+ *   }
+ * }
+ *
+ * @example
+ * // Recommended alternative with @computed from @ember/object
+ * import { computed } from '@ember/object';
+ *
+ * class MyComponent {
+ *   @computed('firstName', 'lastName')
+ *   get fullName() {
+ *     return `${this.firstName} ${this.lastName}`;
+ *   }
+ * }
+ *
+ * @example
+ * // Recommended alternative with @tracked properties
+ * import { tracked } from '@glimmer/tracking';
+ *
+ * class MyComponent {
+ *   @tracked firstName;
+ *   @tracked lastName;
+ *
+ *   get fullName() {
+ *     return `${this.firstName} ${this.lastName}`;
+ *   }
+ * }
+ */
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
   if (isDescriptor(params[params.length - 1])) {

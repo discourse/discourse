@@ -1,13 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
+import { computed } from "@ember/object";
 import { or } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import NotificationsButton from "discourse/select-kit/components/notifications-button";
@@ -63,42 +63,44 @@ export default class GroupsFormInteractionFields extends Component {
 
   watchingNotificationLevel = NotificationLevels.WATCHING;
 
-  @discourseComputed(
-    "model.default_notification_level",
-    "watchingNotificationLevel"
-  )
-  defaultNotificationLevel(
-    defaultNotificationLevel,
-    watchingNotificationLevel
-  ) {
-    if (Object.values(NotificationLevels).includes(defaultNotificationLevel)) {
-      return defaultNotificationLevel;
+  @computed("model.default_notification_level", "watchingNotificationLevel")
+  get defaultNotificationLevel() {
+    if (
+      Object.values(NotificationLevels).includes(
+        this.model?.default_notification_level
+      )
+    ) {
+      return this.model?.default_notification_level;
     }
-    return watchingNotificationLevel;
+    return this.watchingNotificationLevel;
   }
 
-  @discourseComputed(
-    "siteSettings.email_in",
-    "model.automatic",
-    "currentUser.admin"
-  )
-  showEmailSettings(emailIn, automatic, isAdmin) {
-    return emailIn && isAdmin && !automatic;
+  @computed("siteSettings.email_in", "model.automatic", "currentUser.admin")
+  get showEmailSettings() {
+    return (
+      this.siteSettings?.email_in &&
+      this.currentUser?.admin &&
+      !this.model?.automatic
+    );
   }
 
-  @discourseComputed(
+  @computed(
     "model.isCreated",
     "model.can_admin_group",
     "currentUser.can_create_group"
   )
-  canAdminGroup(isCreated, canAdmin, canCreate) {
-    return (!isCreated && canCreate) || (isCreated && canAdmin);
+  get canAdminGroup() {
+    return (
+      (!this.model?.isCreated && this.currentUser?.can_create_group) ||
+      (this.model?.isCreated && this.model?.can_admin_group)
+    );
   }
 
-  @discourseComputed("membersVisibilityLevel")
-  membersVisibilityPrivate(membersVisibilityLevel) {
+  @computed("membersVisibilityLevel")
+  get membersVisibilityPrivate() {
     return (
-      membersVisibilityLevel !== this.visibilityLevelOptions.firstObject.value
+      this.membersVisibilityLevel !==
+      this.visibilityLevelOptions.firstObject.value
     );
   }
 

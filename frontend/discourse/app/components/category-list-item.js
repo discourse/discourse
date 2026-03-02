@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 const LIST_TYPE = {
@@ -14,19 +14,19 @@ export default class CategoryListItem extends Component {
   category = null;
   listType = LIST_TYPE.NORMAL;
 
-  @discourseComputed("category.isHidden", "category.hasMuted", "listType")
-  isHidden(isHiddenCategory, hasMuted, listType) {
+  @computed("category.isHidden", "category.hasMuted", "listType")
+  get isHidden() {
     return (
-      (isHiddenCategory && listType === LIST_TYPE.NORMAL) ||
-      (!hasMuted && listType === LIST_TYPE.MUTED)
+      (this.category?.isHidden && this.listType === LIST_TYPE.NORMAL) ||
+      (!this.category?.hasMuted && this.listType === LIST_TYPE.MUTED)
     );
   }
 
-  @discourseComputed("category.isMuted", "listType")
-  isMuted(isMutedCategory, listType) {
+  @computed("category.isMuted", "listType")
+  get isMuted() {
     return (
-      (isMutedCategory && listType === LIST_TYPE.NORMAL) ||
-      (!isMutedCategory && listType === LIST_TYPE.MUTED)
+      (this.category?.isMuted && this.listType === LIST_TYPE.NORMAL) ||
+      (!this.category?.isMuted && this.listType === LIST_TYPE.MUTED)
     );
   }
 
@@ -38,9 +38,9 @@ export default class CategoryListItem extends Component {
     return this.category.newTopicsCount;
   }
 
-  @discourseComputed("category.path")
-  slugPath(categoryPath) {
-    return categoryPath.substring("/c/".length);
+  @computed("category.path")
+  get slugPath() {
+    return this.category?.path?.substring("/c/".length);
   }
 
   applyValueTransformer(name, value, context) {
