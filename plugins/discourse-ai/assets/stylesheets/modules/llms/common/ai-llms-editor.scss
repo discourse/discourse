@@ -21,6 +21,25 @@
 .ai-llm-editor {
   padding-left: 0.5em;
 
+  @include viewport.from(sm) {
+    .form-kit__field-input-number .form-kit__container-content {
+      min-width: 14em;
+    }
+  }
+
+  @include viewport.until(sm) {
+    .form-kit__input-group {
+      flex-flow: column;
+      gap: 1.5em;
+    }
+
+    .form-kit__input,
+    .form-kit__input-group > :not(:first-child) .form-kit__control-input,
+    .form-kit__input-group > :not(:last-child) .form-kit__control-input {
+      border-radius: var(--d-input-border-radius);
+    }
+  }
+
   .ai-llm-editor-tests {
     &__failure {
       color: var(--danger);
