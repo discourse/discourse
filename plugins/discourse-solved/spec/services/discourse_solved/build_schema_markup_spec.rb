@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSolved::BuildSchemaMarkup do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:topic_id) }
+  end
+
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
@@ -16,7 +20,7 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
     context "when topic_id is nil" do
       let(:params) { { topic_id: nil } }
 
-      it { is_expected.to fail_to_find_a_model(:topic) }
+      it { is_expected.to fail_a_contract }
     end
 
     context "when accepted answers are not allowed on the topic" do
