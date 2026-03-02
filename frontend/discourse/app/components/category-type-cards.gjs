@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryTypeCards extends Component {
@@ -31,7 +31,7 @@ export default class CategoryTypeCards extends Component {
           {{on "click" (fn this.selectType type)}}
         >
           <span class="category-type-cards__card-icon">
-            {{icon type.icon}}
+            {{emoji type.icon alt="" skipTitle=true}}
           </span>
           <span class="category-type-cards__card-name">
             {{type.name}}

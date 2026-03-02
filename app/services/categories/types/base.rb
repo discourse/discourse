@@ -34,7 +34,7 @@ module Categories
         end
 
         def icon
-          "comments"
+          "memo"
         end
 
         def metadata
