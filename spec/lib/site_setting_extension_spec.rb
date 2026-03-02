@@ -817,6 +817,19 @@ RSpec.describe SiteSettingExtension do
       settings.all_settings(include_hidden: true)
       expect(called).to eq(1)
     end
+
+    it "calls the site_setting_result modifier for each setting" do
+      plugin = Plugin::Instance.new
+      plugin.register_modifier(:site_setting_result) do |opts|
+        opts[:custom_attribute] = "test_value" if opts[:setting] == :other_setting
+        opts
+      end
+
+      result = settings.all_settings
+      other_setting = result.find { |s| s[:setting] == :other_setting }
+
+      expect(other_setting[:custom_attribute]).to eq("test_value")
+    end
   end
 
   describe "global override" do
