@@ -297,7 +297,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get canUpdate() {
-    if (this.setting.themeable || this.setting.disabled) {
+    if (this.isDisabled) {
       return false;
     }
 
@@ -425,7 +425,7 @@ export default class SiteSettingComponent extends Component {
       class="row setting
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
-        {{if this.setting.disabled 'disabled'}}"
+        {{if this.isDisabled 'disabled'}}"
       ...attributes
     >
       <div class="setting-label">
