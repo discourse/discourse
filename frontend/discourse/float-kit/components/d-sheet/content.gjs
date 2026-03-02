@@ -3,9 +3,9 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ContentTag from "./content-tag";
 import scrollListenerModifier from "./scroll-listener-modifier";
 
@@ -35,7 +35,7 @@ export default class Content extends Component {
     const currentDetent = detents[index];
     const prevDetent = index > 0 ? detents[index - 1] : "0px";
 
-    return htmlSafe(
+    return trustHTML(
       `--d-sheet-marker-prev: ${prevDetent}; --d-sheet-marker-current: ${currentDetent}; --d-sheet-marker-index: ${index};`
     );
   }

@@ -1,5 +1,5 @@
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import SheetActionBase from "./sheet-action-base";
 
 /**
@@ -17,6 +17,7 @@ import SheetActionBase from "./sheet-action-base";
  *   - { forceFocus?: boolean, runAction?: boolean }
  *   - Or function receiving event with changeDefault method
  *   Default: { forceFocus: true, runAction: true }
+ * @param {Function} onClick - Called after onPress behavior/action handling
  */
 export default class Trigger extends SheetActionBase {
   /**

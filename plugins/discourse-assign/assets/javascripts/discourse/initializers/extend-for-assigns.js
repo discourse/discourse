@@ -11,7 +11,6 @@ import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
 import AssignButton from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
-import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import PostAssignmentsDisplay from "../components/post-assignments-display";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
 import {

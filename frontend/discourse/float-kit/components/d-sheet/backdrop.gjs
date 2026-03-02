@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import effect from "discourse/float-kit/helpers/effect";
-import concatClass from "discourse/helpers/concat-class";
 import { capabilities } from "discourse/services/capabilities";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import Outlet from "./outlet";
 
 const DEFAULT_BACKDROP_TRAVEL_ANIMATION = {

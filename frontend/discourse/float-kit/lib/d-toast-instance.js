@@ -1,6 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { setOwner } from "@ember/owner";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { TOAST } from "discourse/float-kit/lib/constants";
 import deprecated from "discourse/lib/deprecated";

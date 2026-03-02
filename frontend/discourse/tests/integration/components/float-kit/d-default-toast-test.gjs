@@ -141,9 +141,7 @@ module("Integration | Component | FloatKit | DDefaultToast", function (hooks) {
       </template>
     );
 
-    assert
-      .dom(".fk-d-default-toast__title")
-      .doesNotExist("it omits the title");
+    assert.dom(".fk-d-default-toast__title").doesNotExist("it omits the title");
   });
 
   test("message", async function (assert) {

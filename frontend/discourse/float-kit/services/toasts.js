@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import Service from "@ember/service";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DToastInstance from "discourse/float-kit/lib/d-toast-instance";

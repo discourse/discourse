@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DSheet from "discourse/float-kit/components/d-sheet";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /** @type {string[]} Default detent stops for the bottom sheet view. */
 const DETENTS = ["66vh"];

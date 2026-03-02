@@ -15,14 +15,6 @@ import Row from "discourse/plugins/styleguide/discourse/components/styleguide/co
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 const ToastCustomComponent = <template>
-  <style>
-    .my-custom-component {
-      background-color: var(--secondary);
-      padding: var(--space-4);
-      border-radius: var(--d-border-radius-large);
-      box-shadow: var(--shadow-card);
-    }
-  </style>
   <div class="my-custom-component" ...attributes>
     My custom component with foo:
     {{@toast.options.data.foo}}
@@ -57,10 +49,10 @@ export default class Toasts extends Component {
 
   @action
   showToast(theme) {
-    let action;
+    let toastAction;
 
     if (this.action) {
-      action = {
+      toastAction = {
         label: "Ok",
         onClick: () => {
           // eslint-disable-next-line no-alert
@@ -90,7 +82,7 @@ export default class Toasts extends Component {
         title: this.title,
         message: this.message,
         icon: this.icon,
-        action,
+        action: toastAction,
         cancel,
       },
     });
@@ -122,7 +114,6 @@ export default class Toasts extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-potential-path-strings }}
     <StyleguideExample @title="Toasts service">
       <StyleguideComponent @tag="default">
         <:actions>
