@@ -284,6 +284,11 @@ describe "Admin upcoming changes", type: :system do
       expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
         Group::AUTO_GROUPS[:staff].to_s,
       )
+
+      upcoming_changes_page.visit
+      expect(upcoming_changes_page.change_item(:enable_upload_debug_mode).enabled_for).to eq(
+        Group.find(Group::AUTO_GROUPS[:staff]).name,
+      )
     end
   end
 end

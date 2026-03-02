@@ -181,4 +181,28 @@ module UpcomingChanges
       }
     end
   end
+
+  def self.enabled_for_with_groups(setting_name, setting_value, upcoming_change_selected_groups)
+    group_ids_for_setting = SiteSetting.site_setting_group_ids[setting_name]
+    setting_groups =
+      upcoming_change_selected_groups.values_at(*group_ids_for_setting).join(
+        ",",
+      ) if group_ids_for_setting.present?
+
+    enabled_for =
+      if !setting_value
+        "no_one"
+      elsif setting_groups.blank?
+        "everyone"
+      else
+        if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
+          # Have to do this because the staff auto group name is localized
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
+      end
+
+    { enabled_for:, setting_groups: }
+  end
 end
