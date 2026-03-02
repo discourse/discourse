@@ -143,7 +143,7 @@ export default class AdminEmailTemplatesEditController extends Controller {
   )
   get interpolationKeysWithStatus() {
     return computeInterpolationKeysWithStatus(
-      `${this.buffered.subject || ""} ${this.buffered.body || ""}`,
+      `${this.get("buffered.subject") || ""} ${this.get("buffered.body") || ""}`,
       this.emailTemplate.interpolation_keys
     );
   }

@@ -128,7 +128,7 @@ export default class AdminSiteTextEdit extends Controller {
   @computed("buffered.value", "siteText.interpolation_keys")
   get interpolationKeysWithStatus() {
     return computeInterpolationKeysWithStatus(
-      this.buffered.value,
+      this.get("buffered.value"),
       this.siteText.interpolation_keys
     );
   }
