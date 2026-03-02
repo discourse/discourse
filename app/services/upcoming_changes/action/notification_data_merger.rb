@@ -5,7 +5,7 @@
 # being available or promoted in cases like deployments where this is possible.
 #
 # Used in UpcomingChanges::Action::NotifyAdminsOfAvailableChange and UpcomingChanges::NotifyPromotion,
-# and only unread notifications sare considered for merging.
+# and only unread notifications are considered for merging.
 class UpcomingChanges::Action::NotificationDataMerger < Service::ActionBase
   option :existing_notification
   option :new_change_name

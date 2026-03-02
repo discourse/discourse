@@ -100,7 +100,7 @@ class UpcomingChanges::NotifyPromotion
   end
 
   def notify_admins(params:, bulk_notification_new_records:, existing_notifications:)
-    merge_with_existing = existing_notifications.exists?
+    merge_with_existing = existing_notifications.to_a.any?
 
     Notification.transaction do
       existing_notifications.delete_all if merge_with_existing
