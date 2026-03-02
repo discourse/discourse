@@ -6,8 +6,7 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
 
     fab!(:user)
     fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:first_post) { Fabricate(:post, topic: topic, user: user, like_count: 1) }
-
+    fab!(:post) { Fabricate(:post, topic: topic, user: user, like_count: 1) }
     let(:guardian) { Guardian.new(user) }
     let(:params) { { topic_id: topic.id } }
     let(:dependencies) { { guardian: guardian } }
@@ -20,28 +19,22 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
       it { is_expected.to fail_to_find_a_model(:topic) }
     end
 
-    context "when schema markup is disabled" do
-      before { SiteSetting.solved_add_schema_markup = "never" }
-
-      it { is_expected.to fail_a_policy(:schema_markup_enabled) }
-    end
-
     context "when accepted answers are not allowed on the topic" do
       before { SiteSetting.allow_solved_on_all_topics = false }
 
       it { is_expected.to fail_a_policy(:accepted_answers_allowed) }
     end
 
-    context "when topic has no first post" do
-      before { first_post.destroy! }
+    context "when schema markup is disabled" do
+      before { SiteSetting.solved_add_schema_markup = "never" }
 
-      it { is_expected.to fail_to_find_a_model(:first_post) }
+      it { is_expected.to fail_a_policy(:schema_markup_enabled) }
     end
 
     context "when setting is 'answered only' and there is no accepted answer" do
       before { SiteSetting.solved_add_schema_markup = "answered only" }
 
-      it { is_expected.to fail_a_policy(:has_answer_if_required) }
+      it { is_expected.to fail_a_policy(:schema_markup_enabled) }
     end
 
     context "when setting is 'always' and there is no accepted answer" do
@@ -83,8 +76,7 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
   describe ".html_for" do
     fab!(:user)
     fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:first_post) { Fabricate(:post, topic: topic, user: user, like_count: 1) }
-
+    fab!(:post) { Fabricate(:post, topic: topic, user: user, like_count: 1) }
     let(:guardian) { Guardian.new(user) }
 
     before do
