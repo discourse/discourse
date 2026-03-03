@@ -531,6 +531,26 @@ SQL
   def self.ensure_consistency!(topic_id = nil)
     update_post_action_cache(topic_id:)
     update_last_read_post_number(topic_id:)
+    update_bookmarked(topic_id:)
+  end
+
+  def self.update_bookmarked(topic_id: nil)
+    DB.exec(<<~SQL, topic_id:)
+      UPDATE topic_users tu
+      SET bookmarked = false
+      WHERE tu.bookmarked = true
+      #{"AND tu.topic_id = :topic_id" if topic_id}
+      AND NOT EXISTS (
+        SELECT 1
+        FROM bookmarks b
+        LEFT JOIN posts p ON p.id = b.bookmarkable_id AND b.bookmarkable_type = 'Post'
+        WHERE b.user_id = tu.user_id
+        AND (
+             (b.bookmarkable_type = 'Topic' AND b.bookmarkable_id = tu.topic_id)
+          OR (b.bookmarkable_type = 'Post' AND p.topic_id = tu.topic_id AND p.deleted_at IS NULL)
+        )
+      )
+    SQL
   end
 
   def self.update_last_read_post_number(topic_id: nil)
