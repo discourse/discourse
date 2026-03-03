@@ -30,6 +30,14 @@ class Plugin::JsCompiler
     )
   rescue AssetProcessor::TranspileError => e
     message = "[PLUGIN #{@plugin_name}] Compile error: #{e.message}"
-    { "main.js": { "code" => "throw new Error(#{message.to_json});\n", "map" => nil } }
+    {
+      "#{@filename_prefix}main#{@filename_suffix}.js" => {
+        "name" => "main",
+        "imports" => [],
+        "isEntry" => true,
+        "code" => "throw new Error(#{message.to_json});\n",
+        "map" => nil,
+      },
+    }
   end
 end

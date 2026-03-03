@@ -15,8 +15,8 @@ module Plugin
     end
 
     def self.digested_logical_path_for(plugin_name, entrypoint_name)
-      entrypoint_filename = read_manifest(plugin_name)[entrypoint_name]["fileName"]
-      "js/plugins/#{entrypoint_filename.delete_suffix(".js")}"
+      manifest_entry = read_manifest(plugin_name)[entrypoint_name]
+      "js/plugins/#{manifest_entry["fileName"].delete_suffix(".js")}" if manifest_entry
     end
 
     def self.import_paths_for(plugin_name, entrypoint_name)
