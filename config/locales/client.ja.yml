@@ -4021,11 +4021,13 @@ ja:
         delete: "削除"
         add: "必須タググループを追加する"
         placeholder: "タググループを選択…"
+        tag_group: "タググループ"
       topic_featured_link_allowed: "このカテゴリに注目のリンクを許可する"
       delete: "カテゴリを削除する"
       create: "新しいカテゴリ"
       create_long: "新しいカテゴリを作成する"
       save: "カテゴリを保存する"
+      unsaved_changes: "保存されていない変更があります"
       slug: "カテゴリのスラッグ"
       parent: "親カテゴリ"
       slug_placeholder: "(オプション) URL 用のダッシュ区切りの語"
@@ -5147,7 +5149,6 @@ ja:
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
-    reset_filter: "リセット"
     toggle_filters: "ドロップダウンのフィルタを切り替える"
     admin:
       title: "Discourse の管理者"
@@ -5677,6 +5678,7 @@ ja:
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
+          no_new_features_error: "フィードを読み込み中にエラーが発生しました。以前の新機能の発表は <a href='%{url}' target='_blank'>Discover Meta コミュニティー</a>をご覧ください。"
           learn_more: "もっと詳しく..."
         last_checked: "最終チェック"
         refresh_problems: "更新"

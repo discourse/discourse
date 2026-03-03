@@ -11,11 +11,9 @@ nb_NO:
         no_semicolons: "Fjern semikolonene fra spørringen."
         dirty: "Du må lagre spørringen før du kjører den."
     explorer:
-      default_query: "Forvalg"
       or: "eller"
       admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
       title: "Datautforsker"
-      create: "Opprett"
       create_placeholder: "Spørringsnavn…"
       import:
         label: "Importer"

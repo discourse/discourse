@@ -10,7 +10,7 @@ import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import discourseLater from "discourse/lib/later";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import userPresent, {
   onPresenceChange,
   removeOnPresenceChange,
@@ -135,7 +135,7 @@ class PresenceChannel extends EmberObject.extend(Evented) {
 }
 
 class PresenceChannelState extends EmberObject.extend(Evented) {
-  @trackedArray users;
+  @autoTrackedArray users;
 
   init({ name, presenceService }) {
     super.init(...arguments);

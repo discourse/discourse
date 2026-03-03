@@ -52,22 +52,16 @@
   }
 
   .more-topics__list {
-    .topic-list-header::after {
-      content: "";
-      display: block;
-      height: 12px;
-    }
-
     .topic-list-body {
       border-top: none;
+    }
 
-      .topic-list-item {
-        &:first-child td {
-          padding-top: 0;
-        }
+    .topic-list-header:has(.nav-pills) {
+      th.topic-list-data {
+        padding-bottom: 0;
 
-        &:last-of-type {
-          border-bottom: none;
+        &:first-of-type {
+          padding-left: 0;
         }
       }
     }

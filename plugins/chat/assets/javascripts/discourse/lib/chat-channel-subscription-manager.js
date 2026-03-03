@@ -119,10 +119,14 @@ export default class ChatChannelSubscriptionManager {
     stagedMessage.error = null;
     stagedMessage.id = data.chat_message.id;
     stagedMessage.staged = false;
+    stagedMessage.message = data.chat_message.message;
     stagedMessage.excerpt = data.chat_message.excerpt;
     stagedMessage.channel = channel;
     stagedMessage.createdAt = new Date(data.chat_message.created_at);
     stagedMessage.cooked = data.chat_message.cooked;
+    stagedMessage.uploads = cloneJSON(data.chat_message.uploads || []);
+    stagedMessage.streaming = data.chat_message.streaming;
+    stagedMessage.edited = data.chat_message.edited;
 
     return stagedMessage;
   }

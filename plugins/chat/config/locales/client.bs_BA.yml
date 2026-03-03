@@ -12,16 +12,11 @@ bs_BA:
           always: "Uvijek"
           never: "Nikad"
     chat:
-      edit_category:
-        description: "Opis"
-        actions: "Akcije"
-        settings: "Postavke"
       deleted_chat_username: obrisano
       dates:
         yesterday: "Yesterday"
       create: "napravi"
       cancel: "Odustani"
-      pinned: "Zakačena"
       channel_settings:
         edit: "Edit"
         add: "Add"

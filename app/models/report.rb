@@ -141,7 +141,8 @@ class Report
                 :filters,
                 :available_filters,
                 :legacy,
-                :default_group_by
+                :default_group_by,
+                :y_axis_title
 
   def self.default_days
     30
@@ -270,6 +271,7 @@ class Report
       json[:prev30Days] = self.prev30Days if self.prev30Days
       json[:limit] = self.limit if self.limit
       json[:default_group_by] = self.default_group_by if self.default_group_by
+      json[:y_axis_title] = self.y_axis_title if self.y_axis_title
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(

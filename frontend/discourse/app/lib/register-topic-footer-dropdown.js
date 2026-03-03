@@ -24,7 +24,7 @@ export function registerTopicFooterDropdown(dropdown) {
     // css class appended to the button
     classNames: [],
 
-    // discourseComputed properties which should force a button state refresh
+    // computed properties which should force a button state refresh
     // eg: ["topic.bookmarked", "topic.category_id"]
     dependentKeys: [],
 

@@ -1459,6 +1459,31 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe "recipient_username" do
+    fab!(:user)
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:response) { Fabricate(:basic_reply, topic: topic) }
+    fab!(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
+
+    it "includes recipient_username in notification emails" do
+      TranslationOverride.upsert!(
+        I18n.locale,
+        "user_notifications.user_mentioned.text_body_template",
+        "Hello %{recipient_username}, %{username} mentioned you on %{topic_title}",
+      )
+
+      mail =
+        UserNotifications.user_mentioned(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+      expect(mail.body.to_s).to include("Hello #{user.username}")
+    end
+  end
+
   # notification emails derived from templates are translated into the user's locale
   shared_context "with notification derived from template" do
     let(:user) { Fabricate(:user, locale: locale) }

@@ -18,26 +18,4 @@ uk:
     report_generator:
       private_message:
         title: "Запланований звіт для %{query_name}"
-        body: |
-          Привіт %{recipient_name}, ваш звіт Data Explorer готовий.
-
-          Ім’я запиту:
-          %{query_name}
-
-          Ось результати:
-          %{table}
-
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Перегляд запиту в Data Explorer</a>
-
-          Звіт створено о %{created_at} (%{timezone})
-      post:
-        body: |
-          ### Запланований звіт для %{query_name}
-
-          Ось результати:
-          %{table}
-
-          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Перегляд запиту в Data Explorer</a>
-
-          Звіт створено за адресою %{created_at} (%{timezone})
       upload_appendix: "Додаток: [%{filename}|вкладення](%{short_url})"

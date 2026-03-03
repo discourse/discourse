@@ -1811,6 +1811,7 @@ sv:
     mailgun_api_key: "Mailgun Secret API-nyckel att använda för att verifiera webhook-meddelanden."
     sendgrid_verification_key: "Verifieringsnyckel för Sendgrid som används för att verifiera webhook-meddelanden."
     mailjet_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill-autentiseringsnyckel som används för att verifiera webhook-meddelanden."
     postmark_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/sparkpost?t=supersecret"

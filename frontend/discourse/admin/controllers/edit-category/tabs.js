@@ -1,14 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, getProperties } from "@ember/object";
+import { action, computed, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import getURL from "discourse/lib/get-url";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -79,7 +79,7 @@ export default class EditCategoryTabsController extends Controller {
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked selectedTab = "general";
   @tracked formApi = null;
-  @trackedArray panels = [];
+  @autoTrackedArray panels = [];
   saving = false;
   deleting = false;
   showTooltip = false;
@@ -114,23 +114,23 @@ export default class EditCategoryTabsController extends Controller {
     return data;
   }
 
-  @discourseComputed("saving", "deleting")
-  deleteDisabled(saving, deleting) {
-    return deleting || saving || false;
+  @computed("saving", "deleting")
+  get deleteDisabled() {
+    return this.deleting || this.saving || false;
   }
 
-  @discourseComputed("name")
-  categoryName(name) {
-    name = name || "";
+  @computed("name")
+  get categoryName() {
+    const name = this.name || "";
     return name.trim().length > 0 ? name : i18n("preview");
   }
 
-  @discourseComputed("saving", "model.id")
-  saveLabel(saving, id) {
-    if (saving) {
+  @computed("saving", "model.id")
+  get saveLabel() {
+    if (this.saving) {
       return "saving";
     }
-    return id ? "category.save" : "category.create_category";
+    return this.model?.id ? "category.save" : "category.create_category";
   }
 
   get baseTitle() {
@@ -212,7 +212,11 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   isLeavingForm(transition) {
-    return !transition.targetName.startsWith("editCategory.tabs");
+    const name = transition.targetName;
+    return (
+      !name.startsWith("editCategory.tabs") &&
+      !name.startsWith("newCategory.tabs")
+    );
   }
 
   _wouldLoseAccess(category = this.model) {
@@ -347,6 +351,13 @@ export default class EditCategoryTabsController extends Controller {
       if (!primaryTab) {
         next(() => {
           this.selectedTab = "general";
+          if (this.router.currentRouteName?.startsWith("newCategory")) {
+            DiscourseURL.routeTo(getURL("/new-category/general"));
+          } else if (this.parentParams?.slug) {
+            DiscourseURL.routeTo(
+              getURL(`/c/${this.parentParams.slug}/edit/general`)
+            );
+          }
         });
       }
     }

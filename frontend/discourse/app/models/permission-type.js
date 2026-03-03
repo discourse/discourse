@@ -1,5 +1,4 @@
-import EmberObject from "@ember/object";
-import discourseComputed from "discourse/lib/decorators";
+import EmberObject, { computed } from "@ember/object";
 import { i18n } from "discourse-i18n";
 
 export function buildPermissionDescription(id) {
@@ -16,8 +15,8 @@ export default class PermissionType extends EmberObject {
     3: "readonly",
   };
 
-  @discourseComputed("id")
-  description(id) {
-    return buildPermissionDescription(id);
+  @computed("id")
+  get description() {
+    return buildPermissionDescription(this.id);
   }
 }

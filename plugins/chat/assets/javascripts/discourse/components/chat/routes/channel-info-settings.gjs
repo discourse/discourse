@@ -124,12 +124,18 @@ export default class ChatRouteChannelInfoSettings extends Component {
     return this.args.channel.currentUserMembership.muted;
   }
 
+  get shouldRenderMuteSection() {
+    return this.args.channel.currentUserMembership.following;
+  }
+
   get shouldRenderChannelWideMentionsAvailable() {
     return this.args.channel.isCategoryChannel;
   }
 
   get shouldRenderNotificationsLevelSection() {
-    return !this.isChannelMuted;
+    return (
+      this.args.channel.currentUserMembership.following && !this.isChannelMuted
+    );
   }
 
   get autoJoinAvailable() {
@@ -137,6 +143,15 @@ export default class ChatRouteChannelInfoSettings extends Component {
       this.siteSettings.max_chat_auto_joined_users > 0 &&
       this.args.channel.isCategoryChannel &&
       this.args.channel.isOpen
+    );
+  }
+
+  get shouldRenderSettingsSection() {
+    return (
+      this.args.channel.isOpen &&
+      (this.shouldRenderMuteSection ||
+        this.shouldRenderNotificationsLevelSection ||
+        this.toggleThreadingDirectMessage)
     );
   }
 
@@ -403,17 +418,19 @@ export default class ChatRouteChannelInfoSettings extends Component {
             </form.section>
           {{/if}}
 
-          {{#if @channel.isOpen}}
+          {{#if this.shouldRenderSettingsSection}}
             <form.section @title={{this.settingsSectionTitle}} as |section|>
-              <section.row @label={{this.muteSectionLabel}}>
-                <:action>
-                  <DToggleSwitch
-                    @state={{@channel.currentUserMembership.muted}}
-                    class="c-channel-settings__mute-switch"
-                    {{on "click" this.onToggleMuted}}
-                  />
-                </:action>
-              </section.row>
+              {{#if this.shouldRenderMuteSection}}
+                <section.row @label={{this.muteSectionLabel}}>
+                  <:action>
+                    <DToggleSwitch
+                      @state={{@channel.currentUserMembership.muted}}
+                      class="c-channel-settings__mute-switch"
+                      {{on "click" this.onToggleMuted}}
+                    />
+                  </:action>
+                </section.row>
+              {{/if}}
 
               {{#if this.shouldRenderNotificationsLevelSection}}
                 <section.row @label={{this.notificationsLevelLabel}}>

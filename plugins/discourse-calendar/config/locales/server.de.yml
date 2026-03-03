@@ -8,7 +8,6 @@ de:
   reports:
     currently_away:
       title: Derzeit abwesende Benutzer
-      description: "Benutzer, die aktuell im Urlaub oder abwesend sind. Diese können nach Gruppenmitgliedschaft gefiltert werden."
       labels:
         username: Benutzername
   discourse_automation:
@@ -78,7 +77,6 @@ de:
       ongoing_event_reminder: "%{title} ist im Gange."
     errors:
       bulk_invite:
-        max_invitees: "Die ersten %{max_invitees} eingeladenen Personen wurden erstellt. Versuche, die Datei in kleinere Teile aufzuteilen."
         error: "Beim Hochladen dieser Datei ist ein Fehler aufgetreten. Bitte versuche es später noch einmal."
       models:
         event:

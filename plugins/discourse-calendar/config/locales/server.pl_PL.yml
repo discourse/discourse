@@ -8,7 +8,6 @@ pl_PL:
   reports:
     currently_away:
       title: Użytkownicy aktualnie nieobecni
-      description: "Użytkownicy, którzy aktualnie są na urlopie lub nie mają urlopu, można ich filtrować według grup."
       labels:
         username: Nazwa użytkownika
   discourse_automation:
@@ -78,7 +77,6 @@ pl_PL:
       ongoing_event_reminder: "%{title} trwa."
     errors:
       bulk_invite:
-        max_invitees: "Pierwsze %{max_invitees} osób zostało utworzonych. Spróbuj podzielić plik na mniejsze części."
         error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
       models:
         event:

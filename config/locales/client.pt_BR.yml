@@ -4115,8 +4115,10 @@ pt_BR:
         delete: "Excluir"
         add: "Adicionar grupo de tags necessário"
         placeholder: "Selecionar grupo de etiquetas…"
+        tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       create_long: "Criar uma nova categoria"
+      unsaved_changes: "Você tem alterações não salvas"
       slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
@@ -5214,7 +5216,6 @@ pt_BR:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
-    reset_filter: "Redefinir"
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"

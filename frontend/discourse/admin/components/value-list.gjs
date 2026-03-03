@@ -2,7 +2,7 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { empty, reads } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
@@ -11,14 +11,13 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
 @classNames("value-list")
 export default class ValueList extends Component {
-  @trackedArray collection = null;
+  @autoTrackedArray collection = null;
 
   @empty("newValue") inputInvalid;
 
@@ -44,9 +43,9 @@ export default class ValueList extends Component {
     );
   }
 
-  @discourseComputed("choices.[]", "collection.[]")
-  filteredChoices(choices, collection) {
-    return makeArray(choices).filter((i) => !collection.includes(i));
+  @computed("choices.[]", "collection.[]")
+  get filteredChoices() {
+    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
   }
 
   keyDown(event) {
@@ -143,9 +142,9 @@ export default class ValueList extends Component {
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
   }
 
-  @discourseComputed("collection")
-  showUpDownButtons(collection) {
-    return collection.length - 1 ? true : false;
+  @computed("collection")
+  get showUpDownButtons() {
+    return this.collection.length - 1 ? true : false;
   }
 
   _splitValues(values, delimiter) {

@@ -6,7 +6,6 @@ import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
-import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   getBlockEntry,
@@ -45,8 +44,8 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
   test("modifyClass works with native class Ember objects", function (assert) {
     class NativeTestThingy extends EmberObject {
-      @discourseComputed
-      prop() {
+      @computed
+      get prop() {
         return "howdy";
       }
     }

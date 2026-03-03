@@ -225,8 +225,6 @@ ja:
       default_llm:
         title: "デフォルトの LLM モデル"
         description: "すべての AI 機能に使用するデフォルトの LLM モデル。これは、機能の構成またはペルソナで LLM が指定されていない場合に使用されます。デフォルトの LLM が指定されていない場合、最後に作成された LLM が使用されます。"
-      llm_selector:
-        none: "なし"
       features:
         short_title: "機能"
         description: "これらは、サイトの訪問者が使用できる AI 機能です。これらは、特定のペルソナと LLM を使用するために構成することができ、グループごとにアクセスを制御できます。"
@@ -624,9 +622,7 @@ ja:
         parameter_description: "パラメーターの説明"
         enum_value: "列挙型値"
         add_enum_value: "列挙型値を追加"
-        credential_not_set: "(未設定)"
         edit: "編集"
-        test: "テスト"
         delete: "削除"
         saved: "ツールが保存されました"
         confirm_delete: "このツールを削除してもよろしいですか？"
@@ -634,16 +630,6 @@ ja:
           title: "AI ツールのテスト"
           run: "テストを実行"
           result: "テストの結果"
-      secrets:
-        short_title: "資格情報"
-        name: "名前"
-        secret: "値"
-        back: "戻る"
-        save: "保存"
-        edit: "編集"
-        delete: "削除"
-        embedding: "埋め込み"
-        tool: "ツール"
       llms:
         short_title: "LLM"
         no_llms: "まだ LLM がありません"
@@ -708,8 +694,6 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-6: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
           google-gemini-3-pro: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"

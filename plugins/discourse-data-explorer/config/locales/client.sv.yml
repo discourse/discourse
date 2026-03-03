@@ -11,12 +11,10 @@ sv:
         no_semicolons: "Ta bort semikolon från sökningen."
         dirty: "Du måste spara sökningen innan du kör."
     explorer:
-      default_query: "Standard"
       or: "eller"
       admins_only: "Datautforskaren är endast tillgänglig för administratörer."
       allow_groups: "Tillåt att grupper går till denna sökning"
       title: "Datautforskaren"
-      create: "Skapa"
       create_placeholder: "Sökningsnamn..."
       description_placeholder: "Ange en beskrivning här"
       import:
@@ -36,7 +34,6 @@ sv:
           no: "Nej"
           null_: "Tomt"
       export: "Exportera"
-      save: "Spara ändringar"
       run: "Kör"
       edit: "Redigera"
       delete: "Ta bort"

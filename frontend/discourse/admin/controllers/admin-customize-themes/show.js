@@ -1,10 +1,9 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { match } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminCustomizeThemesShowController extends Controller {
@@ -13,28 +12,29 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
 
-  @discourseComputed(
-    "model.remote_theme.remote_url",
-    "model.remote_theme.branch"
-  )
-  remoteThemeLink(remoteThemeUrl, remoteThemeBranch) {
-    return remoteThemeBranch
-      ? `${remoteThemeUrl.replace(/\.git$/, "")}/tree/${remoteThemeBranch}`
-      : remoteThemeUrl;
+  @computed("model.remote_theme.remote_url", "model.remote_theme.branch")
+  get remoteThemeLink() {
+    return this.model?.remote_theme?.branch
+      ? `${this.model?.remote_theme?.remote_url?.replace(/\.git$/, "")}/tree/${this.model?.remote_theme?.branch}`
+      : this.model?.remote_theme?.remote_url;
   }
 
-  @discourseComputed("model.remoteError", "updatingRemote")
-  showRemoteError(errorMessage, updating) {
-    return errorMessage && !updating;
+  @computed("model.remoteError", "updatingRemote")
+  get showRemoteError() {
+    return this.model?.remoteError && !this.updatingRemote;
   }
 
-  @discourseComputed(
+  @computed(
     "model.remote_theme.remote_url",
     "model.remote_theme.local_version",
     "model.remote_theme.commits_behind"
   )
-  finishInstall(remoteUrl, localVersion, commitsBehind) {
-    return remoteUrl && !localVersion && !commitsBehind;
+  get finishInstall() {
+    return (
+      this.model?.remote_theme?.remote_url &&
+      !this.model?.remote_theme?.local_version &&
+      !this.model?.remote_theme?.commits_behind
+    );
   }
 
   @action
