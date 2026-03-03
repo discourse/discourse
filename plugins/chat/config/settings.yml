@@ -9,6 +9,7 @@ chat:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/397571"
   enable_public_channels:
     default: true
     client: true
