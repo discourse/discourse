@@ -1,8 +1,8 @@
 diff --git a/dist/packages/@ember/-internals/deprecations/index.js b/dist/packages/@ember/-internals/deprecations/index.js
-index 3f9a21b0b95101fc27171dbe5a6289522e9a2447..56954e3acbe98151f546f2423999f3e5f9f41783 100644
+index 3e6a1bf2f97f8d675dc32a66bd72eaacb8eb7303..1a25870eab55f7dc991cac427b1fad0b9a6412cb 100644
 --- a/dist/packages/@ember/-internals/deprecations/index.js
 +++ b/dist/packages/@ember/-internals/deprecations/index.js
-@@ -123,7 +123,7 @@ function deprecateUntil(message, deprecation) {
+@@ -113,7 +113,7 @@ function deprecateUntil(message, deprecation) {
    if (deprecation.isRemoved) {
      throw new Error(`The API deprecated by ${options.id} was removed in ember-source ${options.until}. The message was: ${message}. Please see ${options.url} for more details.`);
    }
