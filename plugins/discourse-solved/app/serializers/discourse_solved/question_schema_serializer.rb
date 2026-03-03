@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
+  # attributes are camelCase as the Q&A schema spec requires it
   attributes :name, :text, :upvoteCount, :answerCount, :datePublished, :author
 
   def serializable_hash
