@@ -90,10 +90,10 @@ module DiscourseAi
         # 2. Need translation to other supported locales (excluding their own locale)
         # 3. Don't have PostLocalization records for those target locales yet
         # 4. Are not deleted and have content
-        topic
-          .posts
-          .secured(guardian)
-          .where("user_id > 0")
+        posts = topic.posts.secured(guardian)
+        posts =
+          posts.where("posts.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
+        posts
           .where.not(raw: "")
           .where(deleted_at: nil)
           .where.not(locale: nil)
