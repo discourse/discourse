@@ -1,12 +1,12 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 
 export default class Tooltip extends Service {
-  registeredTooltips = trackedSet();
+  registeredTooltips = new TrackedSet();
 
   /**
    * Render a tooltip

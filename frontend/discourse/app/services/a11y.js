@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedMap } from "@ember/reactive/collections";
 import { cancel } from "@ember/runloop";
 import Service from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 
@@ -79,13 +79,13 @@ export default class A11y extends Service {
      * Map of screen reader announcements by type
      * @type {TrackedMap<string, string>}
      */
-    #messages = trackedMap();
+    #messages = new TrackedMap();
 
     /**
      * Map of announcement clear timers by type
      * @type {TrackedMap<string, EmberRunTimer>}
      */
-    #timers = trackedMap();
+    #timers = new TrackedMap();
 
     /**
      * Sets an announcement message with auto-clearing

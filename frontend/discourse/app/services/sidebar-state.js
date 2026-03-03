@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
@@ -27,10 +27,10 @@ export default class SidebarState extends Service {
   @tracked forcingSidebarPanel = null;
 
   panels = panels;
-  activeExpandedSections = trackedSet();
-  collapsedSections = trackedSet();
+  activeExpandedSections = new TrackedSet();
+  collapsedSections = new TrackedSet();
   previousState = {};
-  #hiders = trackedSet();
+  #hiders = new TrackedSet();
 
   get sidebarHidden() {
     return this.#hiders.size > 0;

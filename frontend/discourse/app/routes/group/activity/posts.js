@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -21,7 +21,7 @@ export function buildGroupPage(type) {
         categoryId,
       });
 
-      return trackedArray(posts);
+      return new TrackedArray(posts);
     }
 
     setupController(controller, model) {

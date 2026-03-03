@@ -1,5 +1,5 @@
-import { trackedArray } from "@ember/reactive/collections";
 import Route from "@ember/routing/route";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ColorScheme from "discourse/admin/models/color-scheme";
 import Theme from "discourse/admin/models/theme";
 import { ajax } from "discourse/lib/ajax";
@@ -17,7 +17,9 @@ export default class AdminConfigColorPalettesIndexRoute extends Route {
       : null;
     controller.set(
       "model",
-      trackedArray(model.palettes.map((palette) => ColorScheme.create(palette)))
+      new TrackedArray(
+        model.palettes.map((palette) => ColorScheme.create(palette))
+      )
     );
     controller.set("defaultTheme", defaultTheme);
 

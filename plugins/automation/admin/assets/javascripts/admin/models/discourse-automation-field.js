@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedObject } from "@ember/reactive/collections";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 export default class DiscourseAutomationField {
   static create(template, target, json = {}) {
@@ -27,16 +27,16 @@ export default class DiscourseAutomationField {
     }
 
     field.isRequired = template.is_required;
-    field.extra = trackedObject(template.extra);
+    field.extra = new TrackedObject(template.extra);
     return field;
   }
 
   @tracked acceptsPlaceholders = false;
   @tracked component;
-  @tracked extra = trackedObject();
+  @tracked extra = new TrackedObject();
   @tracked isDisabled = false;
   @tracked isRequired = false;
-  @tracked metadata = trackedObject();
+  @tracked metadata = new TrackedObject();
   @tracked name;
   @tracked targetType;
   @tracked targetName;

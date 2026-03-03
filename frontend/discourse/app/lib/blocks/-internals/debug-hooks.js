@@ -13,7 +13,7 @@
  * @module discourse/lib/blocks/-internals/debug-hooks
  */
 
-import { trackedMap } from "@ember/reactive/collections";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 
 /**
@@ -50,7 +50,7 @@ class DebugHooks {
    *
    * @type {TrackedMap<string, Function|null>}
    */
-  #callbacks = trackedMap(
+  #callbacks = new TrackedMap(
     Object.values(DEBUG_CALLBACK).map((key) => [key, null])
   );
 

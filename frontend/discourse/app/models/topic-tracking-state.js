@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
-import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { deepEqual, deepMerge } from "discourse/lib/object";
@@ -62,7 +62,7 @@ export default class TopicTrackingState extends EmberObject {
   @tracked filterTagName;
   @tracked filterTagId;
   @tracked filter;
-  states = trackedMap();
+  states = new TrackedMap();
   stateChangeCallbacks = {};
   _trackedTopicLimit = 4000;
 
@@ -342,7 +342,7 @@ export default class TopicTrackingState extends EmberObject {
    * @method resetTracking
    */
   resetTracking() {
-    this.newIncoming = trackedArray();
+    this.newIncoming = new TrackedArray();
     this.incomingCount = 0;
   }
 
@@ -353,7 +353,7 @@ export default class TopicTrackingState extends EmberObject {
    */
   clearIncoming(topicIds) {
     const toRemove = new Set(topicIds);
-    this.newIncoming = trackedArray(
+    this.newIncoming = new TrackedArray(
       this.newIncoming.filter((topicId) => !toRemove.has(topicId))
     );
     this.incomingCount = this.newIncoming.length;
@@ -375,7 +375,7 @@ export default class TopicTrackingState extends EmberObject {
    * @param {Number} opts.tagId - The ID of the tag to filter by.
    */
   trackIncoming(filter, { tagId } = {}) {
-    this.newIncoming = trackedArray();
+    this.newIncoming = new TrackedArray();
 
     let category, tagName;
 

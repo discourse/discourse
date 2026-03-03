@@ -1,6 +1,6 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
-import { trackedMap } from "@ember/reactive/collections";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
@@ -81,7 +81,7 @@ const blockRegistry = new Map();
  *
  * @type {TrackedMap<string, BlockClass>}
  */
-const resolvedFactoryCache = trackedMap();
+const resolvedFactoryCache = new TrackedMap();
 
 /**
  * Tracks in-flight resolution promises to prevent duplicate concurrent attempts.

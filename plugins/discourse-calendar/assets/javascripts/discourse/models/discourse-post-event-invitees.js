@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedArray } from "@ember/reactive/collections";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import User from "discourse/models/user";
 import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
 
@@ -21,7 +21,7 @@ export default class DiscoursePostEventInvitees {
   }
 
   set invitees(invitees = []) {
-    this._invitees = trackedArray(
+    this._invitees = new TrackedArray(
       invitees.map((i) => DiscoursePostEventInvitee.create(i))
     );
   }
@@ -31,7 +31,7 @@ export default class DiscoursePostEventInvitees {
   }
 
   set suggestedUsers(suggestedUsers = []) {
-    this._suggestedUsers = trackedArray(
+    this._suggestedUsers = new TrackedArray(
       suggestedUsers.map((su) => User.create(su))
     );
   }

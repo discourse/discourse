@@ -1,4 +1,4 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
@@ -139,7 +139,7 @@ class LinkToolbarPluginView {
     };
 
     if (!this.#linkToolbar) {
-      this.#linkState = trackedObject(attrs);
+      this.#linkState = new TrackedObject(attrs);
 
       this.#linkToolbar = new LinkToolbar({
         editLink: () => this.#openLinkEditor(),

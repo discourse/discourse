@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
-import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DecoratedHtml, {
   applyHtmlDecorators,
@@ -36,7 +36,7 @@ export default class PostCookedHtml extends Component {
   @service currentUser;
 
   #pendingDecoratorCleanup = [];
-  #decoratorState = this.args.decoratorState || trackedMap();
+  #decoratorState = this.args.decoratorState || new TrackedMap();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -66,7 +66,7 @@ export default class PostCookedHtml extends Component {
         if (this.#decoratorState.has(decorator)) {
           decoratorState = this.#decoratorState.get(decorator);
         } else {
-          decoratorState = trackedMap();
+          decoratorState = new TrackedMap();
           this.#decoratorState.set(decorator, decoratorState);
         }
 

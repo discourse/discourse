@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { trackedArray } from "@ember/reactive/collections";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -93,7 +93,7 @@ export default class ChatMessage {
         ? ChatMessage.create(channel, args.in_reply_to ?? args.replyToMsg)
         : null);
     this.reactions = this.#initChatMessageReactionModel(args.reactions);
-    this.uploads = trackedArray(args.uploads || []);
+    this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
