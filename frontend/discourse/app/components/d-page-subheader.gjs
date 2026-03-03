@@ -39,7 +39,7 @@ export default class DPageSubheader extends Component {
                 @identifier="d-page-subheader-mobile-actions"
                 @title={{i18n "more_options"}}
                 @icon="ellipsis-vertical"
-                class="btn-small"
+                class="btn-small btn-default"
               >
                 <:content>
                   <DropdownMenu class="d-page-subheader__mobile-actions">
