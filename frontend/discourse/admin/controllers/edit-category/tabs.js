@@ -92,33 +92,36 @@ export default class EditCategoryTabsController extends Controller {
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
   get formData() {
-    const simplified = this.siteSettings.enable_simplified_category_creation;
+    const enableSimplifiedCategoryCreation =
+      this.siteSettings.enable_simplified_category_creation;
     const data = getProperties(
       this.model,
-      ...(simplified ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
+      ...(enableSimplifiedCategoryCreation ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
     );
 
-    if (simplified && !this.model.styleType) {
-      data.style_type = "icon";
-    }
+    if (enableSimplifiedCategoryCreation) {
+      if (!this.model.styleType) {
+        data.style_type = "icon";
+      }
 
-    if (simplified) {
       data.required_tag_groups = Array.from(
         data.required_tag_groups ?? [],
         (rtg) => ({ ...rtg })
       );
       data.category_setting = { ...(this.model.category_setting ?? {}) };
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
-    }
 
-    Object.values(this.model.category_types).forEach((typeMetadata) => {
-      // TODO (martin) Need to use the actual value here if it exists not just the default
-      typeMetadata.configuration_schema.category_custom_fields?.forEach(
-        (field) => {
-          data.custom_fields[field.key] = field.default;
-        }
-      );
-    });
+      if (this.siteSettings.enable_category_type_setup) {
+        Object.values(this.model.category_types).forEach((typeMetadata) => {
+          // TODO (martin) Need to use the actual value here if it exists not just the default
+          typeMetadata.configuration_schema.category_custom_fields?.forEach(
+            (field) => {
+              data.custom_fields[field.key] = field.default;
+            }
+          );
+        });
+      }
+    }
 
     return data;
   }
