@@ -615,8 +615,8 @@ class GroupsController < ApplicationController
     if users.length > 1
       in_group_ids =
         GroupUser.where(group_id: group.id, user_id: users.map(&:id)).pluck(:user_id).to_set
-      actually_in_group = users.select { |u| in_group_ids.include?(u.id) }
-      skipped_users = users.reject { |u| in_group_ids.include?(u.id) }.map(&:username)
+      actually_in_group, skipped_users = users.partition { |u| in_group_ids.include?(u.id) }
+      skipped_users = skipped_users.map(&:username)
 
       if actually_in_group.any?
         group.bulk_remove(actually_in_group.map(&:id))
