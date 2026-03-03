@@ -270,6 +270,49 @@ describe DiscourseAi::Translation::TranslationController do
         end
       end
 
+      it "excludes bot posts by default" do
+        bot_post = Fabricate(:post, topic: topic, user: Discourse.system_user, locale: "en")
+        post1.update!(locale: "en")
+        SiteSetting.content_localization_supported_locales = "en|es"
+
+        expect_enqueued_with(
+          job: Jobs::DetectTranslatePost,
+          args: {
+            post_id: post1.id,
+            force: true,
+          },
+        ) { post "/discourse-ai/translate/topics/#{topic.id}" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["scheduled_posts"]).to eq(1)
+      end
+
+      it "includes bot posts when ai_translation_include_bot_content is true" do
+        SiteSetting.ai_translation_include_bot_content = true
+        bot_post = Fabricate(:post, topic: topic, user: Discourse.system_user, locale: "en")
+        post1.update!(locale: "en")
+        SiteSetting.content_localization_supported_locales = "en|es"
+
+        expect_enqueued_with(
+          job: Jobs::DetectTranslatePost,
+          args: {
+            post_id: post1.id,
+            force: true,
+          },
+        ) do
+          expect_enqueued_with(
+            job: Jobs::DetectTranslatePost,
+            args: {
+              post_id: bot_post.id,
+              force: true,
+            },
+          ) { post "/discourse-ai/translate/topics/#{topic.id}" }
+        end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["scheduled_posts"]).to eq(2)
+      end
+
       it "ignores posts that already have translations" do
         post1.update!(locale: "en")
         post2.update!(locale: "en")

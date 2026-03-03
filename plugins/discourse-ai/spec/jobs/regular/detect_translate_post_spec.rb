@@ -59,10 +59,25 @@ describe Jobs::DetectTranslatePost do
     job.execute({ post_id: post.id })
   end
 
-  it "skips bot posts" do
+  it "skips bot posts by default" do
     post.update!(user: Discourse.system_user)
     DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).never
     DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+    job.execute({ post_id: post.id })
+  end
+
+  it "translates bot posts when force is true" do
+    post.update!(user: Discourse.system_user)
+    DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).once
+
+    job.execute({ post_id: post.id, force: true })
+  end
+
+  it "translates bot posts when ai_translation_include_bot_content is true" do
+    SiteSetting.ai_translation_include_bot_content = true
+    post.update!(user: Discourse.system_user)
+    DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).once
 
     job.execute({ post_id: post.id })
   end
