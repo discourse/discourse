@@ -50,3 +50,15 @@ index c5a84d367d2d2643b395afffb103b7a2136eb5e9..08bce6a08b93dd13b77c099d57e4836f
  }
  function replace(array, start, deleteCount, items = EMPTY_ARRAY) {
    if (isMutableArray(array)) {
+diff --git a/dist/packages/shared-chunks/index-BSGulCPg.js b/dist/packages/shared-chunks/index-BSGulCPg.js
+index f9682cbf39c54edc8f299679c5f2b8e5780de030..20523222efd57ed5f59e56a51a10707acc790afe 100644
+--- a/dist/packages/shared-chunks/index-BSGulCPg.js
++++ b/dist/packages/shared-chunks/index-BSGulCPg.js
+@@ -5206,7 +5206,6 @@ class ClassicRootState {
+         nextSibling: null
+       }), layout, dynamicScope);
+       let result = this.result = iterator.sync();
+-      associateDestroyableChild(owner, result);
+       this.render = errorLoopTransaction(() => {
+         if (isDestroying(result) || isDestroyed(result)) return;
+         return result.rerender({
