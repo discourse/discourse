@@ -22,7 +22,7 @@ be:
               one: байт
               few: байты
               many: байтаў
-              other: байтаў
+              other: байта
             gb: ГБ
             kb: КБ
             mb: МБ
@@ -1499,281 +1499,281 @@ be:
         when: "Калі:"
       auto_close:
         title: "Аўтаматычна закрываць тэму"
-        error: "Калі ласка, увядзіце карэктнае значэнне."
-      auto_close_title: "Настройка аўтаматычнага закрыцця"
+        error: "Увядзіце карэктнае значэнне."
+      auto_close_title: "Налады аўтаматычнага закрыцця"
       timeline:
         back: "Назад"
       progress:
-        title: прасоўванне па тэме
+        title: прагрэс у тэме
         jump_prompt_or: "або"
       notifications:
         reasons:
-          "3_6": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай катэгорыяй."
-          "3_5": "Вы будзеце атрымліваць апавяшчэнні, таму што вы аўтаматычна пачалі сачыць за гэтай тэмай."
-          "3_2": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
-          "3_1": "Вы будзеце атрымліваць апавяшчэнні, таму што вы стварылі гэтую тэму."
-          "3": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
-          "0_7": "Вы ігнаруеце ўсе паведамленні ў гэтай катэгорыі."
-          "0_2": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
-          "0": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
+          "3_6": "Вы будзеце атрымліваць апавяшчэнні, бо назіраеце за гэтай катэгорыяй."
+          "3_5": "Вы будзеце атрымліваць апавяшчэнні, бо аўтаматычна пачалі назіраць за гэтай тэмай."
+          "3_2": "Вы будзеце атрымліваць апавяшчэнні, бо назіраеце за гэтай тэмай."
+          "3_1": "Вы будзеце атрымліваць апавяшчэнні, бо вы стварылі гэту тэму."
+          "3": "Вы будзеце атрымліваць апавяшчэнні, бо назіраеце за гэтай тэмай."
+          "0_7": "Вы ігнаруеце ўсе апавяшчэнні ў гэтай катэгорыі."
+          "0_2": "Вы ігнаруеце ўсе апавяшчэнні ў гэтай тэме."
+          "0": "Вы ігнаруеце ўсе апавяшчэнні ў гэтай тэме."
         watching_pm:
-          title: "сачыць"
+          title: "Пад назіраннем"
         watching:
-          title: "сачыць"
+          title: "Пад назіраннем"
         tracking_pm:
-          title: "Сачыць"
+          title: "Адсочваецца"
         tracking:
-          title: "Сачыць"
+          title: "Адсочваецца"
         muted_pm:
-          title: "ігнараваць"
+          title: "Адключана"
         muted:
-          title: "ігнараваць"
+          title: "Адключана"
       actions:
-        title: "загалоўкі....................."
-        recover: "Адмяніць выдаленне тэмы"
+        title: "Дзеянні"
+        recover: "Адрабіць выдаленне тэмы"
         delete: "Выдаліць тэму"
         open: "Адкрыць тэму"
         close: "Закрыць тэму"
-        multi_select: "Абраць запісы ..."
-        pin: "Замацаваць тэму ..."
-        unpin: "Адмацаваць тэму ..."
+        multi_select: "Выбраць допісы…"
+        pin: "Замацаваць тэму…"
+        unpin: "Адмацаваць тэму…"
         unarchive: "Разархіваваць тэму"
-        archive: "Заархіваваць тэму"
-        reset_read: "Скінуць дадзеныя аб прочитанисть"
+        archive: "Архіваваць тэму"
+        reset_read: "Скінуць даныя аб прачытанні"
         make_private: "Стварыць асабістае паведамленне"
-        reset_bump_date: "Скінуць Dump дату"
+        reset_bump_date: "Скінуць дату павышэння"
       feature:
         pin: "Замацаваць тэму"
         unpin: "Адмацаваць тэму"
       reply:
         title: "Адказаць"
-        help: "пачаць складаць адказ на гэтую тэму"
+        help: "пачаць складаць адказ на гэту тэму"
       share:
-        help: "Распаўсюдзіць спасылку на гэтую тэму"
+        help: "абагуліць спасылку на гэту тэму"
       print:
-        title: "друк"
+        title: "Друк"
       flag_topic:
-        title: "Пазначыць"
-        success_message: "privately flag this topic for attention or send a private notification about it..."
+        title: "Паскардзіцца"
+        success_message: "Вы паспяхова паскардзіліся на гэту тэму."
       invite_private:
         group_name: "назва групы"
       invite_reply:
-        username_placeholder: "username"
+        username_placeholder: "імя карыстальніка"
         email_placeholder: "name@example.com"
       filters:
         n_posts:
-          one: "%{count} запіс"
-          few: "%{count}запісаў"
-          many: "%{count}запісаў"
-          other: "%{count}запісаў"
-        cancel: "прыбраць фільтр"
+          one: "%{count} допіс"
+          few: "%{count} допісы"
+          many: "%{count} допісаў"
+          other: "%{count} допісу"
+        cancel: "Выдаліць фільтр"
       split_topic:
-        title: "Перанос новай тэмы"
-        action: "перанесці ў новай тэмы"
-        radio_label: "пачаць новую тэму"
-        error: "Пры пераносе паведамленняў да новай тэмы адбылася памылка."
+        title: "Перамясціць у новую тэму"
+        action: "перамясціць ў новую тэму"
+        radio_label: "Новая тэма"
+        error: "Пры перамяшчэнні допісаў у новую тэму адбылася памылка."
       merge_topic:
-        title: "Перанос наяўнай тэмы"
-        action: "перанесці наяўнай тэмы"
-        error: "Пры пераносе паведамленняў да гэтай тэмы адбылася памылка."
+        title: "Перамясціць у існуючую тэму"
+        action: "перамясціць у існуючую тэму"
+        error: "Пры перамяшчэнні допісаў у гэту тэму адбылася памылка."
       move_to_new_message:
-        radio_label: "новае паведамленне"
+        radio_label: "Новае паведамленне"
       publish_page:
-        public: "грамадскага"
+        public: "Публічная"
       change_timestamp:
-        action: "змяніць метку часу"
+        action: "змяніць пазнаку часу"
     post_list:
       title: "Апошнія паведамленні"
     post:
       quote_edit: "Рэдагаваць"
-      quote_share: "Падзяліцца тэмай"
-      edit_reason: "прычына: "
+      quote_share: "Абагуліць"
+      edit_reason: "Прычына: "
       localizations:
         table:
           actions: "Дзеянні"
           edit: "Рэдагаваць"
           delete: "Выдаліць"
       errors:
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+        upload_not_authorized: "Файл, які вы спрабуеце загрузіць, не аўтарызаваны (аўтарызаваныя пашырэнні: %{authorized_extensions})."
       controls:
         like_action: "Падабайка"
-        like: "упадабаць гэты пост"
+        like: "упадабаць гэты допіс"
         edit_action: "Рэдагаваць"
-        flag_action: "Пазначыць"
-        share_action: "Падзяліцца"
-        more: "Болей"
-        admin_action: "адміністратар"
+        flag_action: "Паскардзіцца"
+        share_action: "Абагуліць"
+        more: "Яшчэ"
+        admin_action: "Адміністратар"
         delete_topic: "выдаліць тэму"
       actions:
         people:
           like:
-            one: "гэта спадабалася"
-            few: "гэта спадабалася"
-            many: "гэта спадабалася"
-            other: "гэта спадабалася"
+            one: "упадабаў(-ла)"
+            few: "упадабалі"
+            many: "упадабалі"
+            other: "упадабалі"
         by_you:
           notify_moderators: "Вы пазначылі гэта для мадэрацыі"
       revisions:
         controls:
-          first: "Першая рэвізія"
-          previous: "Папярэдняя рэвізія"
-          next: "Наступная рэвізія"
-          last: "Апошняя рэвізія"
-          hide: " Схаваць рэвізію"
-          show: "Паказаць рэвізію"
+          first: "Першая версія"
+          previous: "Папярэдняя версія"
+          next: "Наступная версія"
+          last: "Апошняя версія"
+          hide: "Схаваць версію"
+          show: "Паказаць версію"
         displays:
           inline:
-            title: "Адлюстраваць паведамленне з улучанымі дадаткамі і выдаленнямі."
+            title: "Паказаць атрыманы вынік з дададзенымі і выдаленымі элементамі ў радку"
           side_by_side_markdown:
-            title: "Паказаць непасрэдныя адрозненні побач"
+            title: "Паказаць адрозненні ў крыніцах побач"
       bookmarks:
-        name: "Імя"
-        options: "Налады"
+        name: "Назва"
+        options: "Параметры"
     category:
-      none: "(па-за катэгорыямі)"
+      none: "(без катэгорыі)"
       all: "Усе катэгорыі"
-      choose: "Абраць"
+      choose: "катэгорыя&hellip;"
       edit: "Рэдагаваць"
-      view: "Прагляд тэм па катэгорыям"
+      view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
       settings: "Налады"
       topic_template: "Шаблон"
       tags: "Тэгі"
       localization:
-        name: "імя"
+        name: "Назва"
         description: "Апісанне"
-        remove: "выдаліць"
+        remove: "Выдаліць"
       required_tag_group:
         delete: "Выдаліць"
-      create_long: "стварыць катэгорыю"
-      creation_error: Пры стварэнні катэгорыі адбылася памылка.
-      save_error: У выпадку захавання катэгорыі адбылася памылка.
-      description: "апісанне"
-      icon: "Абразка"
-      emoji: "Emoji"
-      background_color: "колер"
+      create_long: "Стварыць новую катэгорыю"
+      creation_error: Падчас стварэння катэгорыі адбылася памылка.
+      save_error: Падчас захавання катэгорыі адбылася памылка.
+      description: "Апісанне"
+      icon: "Значок"
+      emoji: "Эмодзі"
+      background_color: "Колер"
       color_validations:
         cant_be_empty: "не можа быць пустым"
       styles:
-        icon: "Абразка"
-        emoji: "Emoji"
+        icon: "Значок"
+        emoji: "Эмодзі"
         options:
-          icon: "Абразка"
-          emoji: "Emoji"
+          icon: "Значок"
+          emoji: "Эмодзі"
       color_placeholder: "Любы вэб-колер"
-      delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
+      delete_confirm: "Вы ўпэўнены, што хочаце выдаліць гэту катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
-      already_used: "Гэты колер ўжо выкарыстоўваецца іншы катэгорыяй"
+      already_used: "Гэты колер ужо выкарыстоўваецца іншай катэгорыяй"
       security: "Бяспека"
       permissions:
         group: "Група"
-        see: "бачыць"
-        reply: "Адказаць"
-        create: "Стварыць"
-      email_in: "Custom incoming email address:"
-      allow_badges_label: "Дазволіць ўзнагароджваць значкамі ў гэтай катэгорыі"
+        see: "Праглядаць"
+        reply: "Адказваць"
+        create: "Ствараць"
+      email_in: "Карыстальніцкі адрас уваходнай электроннай пошты:"
+      allow_badges_label: "Дазволіць узнагароды значкамі ў гэтай катэгорыі"
       review_group_name: "назва групы"
-      this_year: "гэтага года"
+      this_year: "гэты год"
       none_subcategory_text: "Няма"
       visibility:
         public: "Публічная"
         group_restricted: "Прыватная"
       notifications:
         watching:
-          title: "сачыць"
+          title: "Пад назіраннем"
         tracking:
-          title: "Сачыць"
+          title: "Адсочваецца"
         muted:
-          title: "ігнаруемай"
+          title: "Адключана"
       search_priority:
         options:
-          ignore: "ігнараваць"
+          ignore: "Ігнараваць"
       sort_options:
-        default: "тыпова"
-        likes: "перавагі"
-        views: "прагляды"
-        posts: "паведамленні"
-        activity: "актыўнасць"
-        category: "катэгорыя"
-        created: "створаны"
+        default: "прадвызначана"
+        likes: "Падабайкі"
+        views: "Прагляды"
+        posts: "Допісы"
+        activity: "Актыўнасць"
+        category: "Катэгорыя"
+        created: "Створана"
       settings_sections:
         general: "Агульныя"
         moderation: "Мадэрацыя"
         email: "Электронная пошта"
     flagging:
-      action: "Пазначыць запіс"
+      action: "Паскардзіцца на допіс"
       take_action_options:
         default:
-          title: "схаваць паведамленне"
+          title: "Схаваць допіс"
         suspend:
-          title: "прыпыніць карыстальніка"
+          title: "Прыпыніць карыстальніка"
         silence:
-          title: "Silence Карыстальнік"
-      notify_action: "паведамленне"
-      delete_spammer: "выдаліць спамера"
+          title: "Заглушыць карыстальніка"
+      notify_action: "Паведамленне"
+      delete_spammer: "Выдаліць спамера"
       yes_delete_spammer: "Так, выдаліць спамера"
       notify_moderators_textarea_label: "Паведамленне для мадэратараў"
     flagging_topic:
-      notify_action: "паведамленне"
+      notify_action: "Паведамленне"
     topic_map:
-      title: "Рэзюмэ запісу"
-      views: "прагляды"
-      read: счытванне
+      title: "Зводка тэмы"
+      views: "Прагляды"
+      read: прачытаныя
     topic_statuses:
       pinned:
-        title: "замацаваныя"
-    posts: "паведамленні"
+        title: "Замацаваныя"
+    posts: "Допісы"
     pending_posts:
-      label: "чакаецца"
-    original_post: "першы паведамленне"
-    views: "прагляды"
-    replies: "адказы"
-    activity: "актыўнасць"
-    likes: "перавагі"
+      label: "У чаканні"
+    original_post: "Арыгінальны допіс"
+    views: "Прагляды"
+    replies: "Адказы"
+    activity: "Актыўнасць"
+    likes: "Падабайкі"
     likes_lowercase:
       one: "падабайка"
-      few: "перавагі"
-      many: "перавагі"
-      other: "перавагі"
+      few: "падабайкі"
+      many: "падабаек"
+      other: "падабайкі"
     users: "Карыстальнікі"
     users_lowercase:
       one: "карыстальнік"
       few: "карыстальнікі"
       many: "карыстальнікі"
-      other: "карыстальнікі"
+      other: "карыстальніка"
     category_title: "Катэгорыя"
     categories_list: "Спіс катэгорый"
     filters:
       filter:
         button:
-          label: "Filter"
+          label: "Фільтр"
       latest:
         title: "Апошнія"
-        help: "тэмы са свежымі паведамленнямі"
+        help: "тэмы са свежымі допісамі"
       read:
-        title: "прачытаныя"
-        help: "тэмы, якія вы прачыталі ў парадку, у якім Вы іх чыталі ў апошні раз"
+        title: "Прачытаныя"
+        help: "тэмы, якія вы прачыталі, у парадку прачытання"
       categories:
         title: "Катэгорыі"
         title_in: "Катэгорыя - %{categoryName}"
-        help: "усе тэмы згрупаваныя па катэгорыях"
+        help: "усе тэмы, згрупаваныя па катэгорыях"
       unread:
         title: "Непрачытаныя"
       new:
-        lower_title: "новая"
-        title: "Новая"
-        all: "Усё"
-        topics: "тэмы"
+        lower_title: "новыя"
+        title: "Новыя"
+        all: "Усе"
+        topics: "Тэмы"
         replies: "Адказы"
       posted:
-        help: "тэмы, у якія Вы дапісвалі"
+        help: "тэмы, у якіх ёсць вашы допісы"
       bookmarks:
-        title: "закладкі"
+        title: "Закладкі"
       category:
         title: "%{CategoryName}"
-        help: "Апошнія тэмы ў катэгорыі %{categoryName}"
+        help: "апошнія тэмы ў катэгорыі %{categoryName}"
       top:
-        title: "Топ тэмаў"
+        title: "Топ тэм"
         all:
           title: "За ўвесь час"
         yearly:

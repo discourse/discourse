@@ -260,6 +260,7 @@ de:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    diff_too_complex: "Die Unterschiede sind zu komplex, um sicher berechnet zu werden. Bitte versuche es mit kleineren Änderungen."
     messages:
       invalid_locale: "%{invalid_locale} ist keine gültige Sprachvariante"
       too_long_validation:

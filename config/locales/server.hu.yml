@@ -4998,6 +4998,7 @@ hu:
   dev_mode:
     title: "Fejlesztői mód"
     enable_rack_mini_profiler: "Engedélyezze a Rack Mini Profiler 1 órás megőrzését a munkamenet-változások között"
+    enter: "Belépés a Fejlesztői módba"
   wizard:
     title: "Discourse telepítő"
     step:

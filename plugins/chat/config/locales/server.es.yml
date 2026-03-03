@@ -109,7 +109,12 @@ es:
       actions:
         no_action_message:
           title: "Ninguna acción"
+          description: "Deja el mensaje tal como está."
+        delete_message:
+          title: "Eliminar mensaje"
+          description: "Eliminar el mensaje de forma permanente."
         restore_message:
+          title: "Restaurar mensaje"
           description: "Restaura el mensaje para que los usuarios puedan verlo."
         agree:
           title: "De acuerdo..."
@@ -136,6 +141,8 @@ es:
         disagree_and_restore:
           title: "No aceptar y restaurar el mensaje"
           description: "Restaura el mensaje para que todos los usuarios puedan verlo."
+        disagree:
+          title: "Mantener mensaje"
         ignore:
           title: "Ignorar reporte"
       direct_messages:
