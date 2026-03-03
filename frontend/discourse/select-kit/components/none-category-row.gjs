@@ -1,20 +1,20 @@
+import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import dirSpan from "discourse/helpers/dir-span";
-import discourseComputed from "discourse/lib/decorators";
 import CategoryRowComponent from "discourse/select-kit/components/category-row";
 
 @classNames("none category-row")
 export default class NoneCategoryRow extends CategoryRowComponent {
-  @discourseComputed("category")
-  badgeForCategory(category) {
+  @computed("category")
+  get badgeForCategory() {
     return htmlSafe(
-      categoryBadgeHTML(category, {
+      categoryBadgeHTML(this.category, {
         link: false,
         allowUncategorized: true,
         hideParent: true,
-        ancestors: category?.predecessors,
+        ancestors: this.category?.predecessors,
       })
     );
   }

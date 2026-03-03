@@ -1,12 +1,12 @@
 import { sort } from "@ember/object/computed";
 import Service, { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 export default class AdminUserFields extends Service {
   @service store;
 
-  @trackedArray userFields = [];
+  @autoTrackedArray userFields = [];
 
   @sort("userFields", "fieldSortOrder") sortedUserFields;
 

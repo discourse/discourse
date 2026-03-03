@@ -1,5 +1,5 @@
+import { computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { cook } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
@@ -19,13 +19,13 @@ export default class PendingPost extends RestModel {
     });
   }
 
-  @discourseComputed("username")
-  userUrl(username) {
-    return userPath(username.toLowerCase());
+  @computed("username")
+  get userUrl() {
+    return userPath(this.username.toLowerCase());
   }
 
-  @discourseComputed("category_id")
-  category() {
+  @computed("category_id")
+  get category() {
     return Category.findById(this.category_id);
   }
 }

@@ -2,7 +2,7 @@ import extractValue from "discourse/lib/extract-value";
 
 export default function decoratorAlias(fn, errorMessage) {
   return function (...params) {
-    // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
+    // determine if user called as @decorator('blah', 'blah') or @decorator
     if (params.length === 0) {
       throw new Error(errorMessage);
     } else {

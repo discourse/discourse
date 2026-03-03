@@ -1,16 +1,16 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ProductItem from "./product-item";
 
 @tagName("")
 export default class ProductList extends Component {
-  @discourseComputed("products")
-  emptyProducts(products) {
-    return isEmpty(products);
+  @computed("products")
+  get emptyProducts() {
+    return isEmpty(this.products);
   }
 
   <template>

@@ -1,12 +1,11 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { isObject } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -28,28 +27,30 @@ export default class AdminEmailTemplatesEditController extends Controller {
     });
   }
 
-  @discourseComputed("buffered.body", "buffered.subject")
-  saveDisabled(body, subject) {
+  @computed("buffered.body", "buffered.subject")
+  get saveDisabled() {
+    // TODO (devxp) we need a buffered proxy that works with tracked properties
     return (
-      this.emailTemplate.body === body && this.emailTemplate.subject === subject
+      this.emailTemplate.body === this.get("buffered.body") &&
+      this.emailTemplate.subject === this.get("buffered.subject")
     );
   }
 
-  @discourseComputed("buffered")
-  hasMultipleSubjects(buffered) {
-    if (buffered.getProperties("subject")["subject"]) {
+  @computed("buffered")
+  get hasMultipleSubjects() {
+    if (this.buffered.getProperties("subject")["subject"]) {
       return false;
     } else {
-      return buffered.getProperties("id")["id"];
+      return this.buffered.getProperties("id")["id"];
     }
   }
 
-  @discourseComputed("buffered")
-  hasMultipleBodyTemplates(buffered) {
-    if (!isObject(buffered.getProperties("body")["body"])) {
+  @computed("buffered")
+  get hasMultipleBodyTemplates() {
+    if (!isObject(this.buffered.getProperties("body")["body"])) {
       return false;
     } else {
-      return buffered.getProperties("id")["id"];
+      return this.buffered.getProperties("id")["id"];
     }
   }
 
@@ -135,15 +136,15 @@ export default class AdminEmailTemplatesEditController extends Controller {
     });
   }
 
-  @discourseComputed(
+  @computed(
     "buffered.subject",
     "buffered.body",
     "emailTemplate.interpolation_keys"
   )
-  interpolationKeysWithStatus(subject, body, keys) {
+  get interpolationKeysWithStatus() {
     return computeInterpolationKeysWithStatus(
-      `${subject || ""} ${body || ""}`,
-      keys
+      `${this.get("buffered.subject") || ""} ${this.get("buffered.body") || ""}`,
+      this.emailTemplate.interpolation_keys
     );
   }
 }

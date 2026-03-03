@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { duration } from "discourse/lib/formatter";
 
 // should be kept in sync with 'UserSummary::MAX_BADGES'
@@ -11,37 +11,40 @@ export default class UserSummaryController extends Controller {
 
   @alias("userController.model") user;
 
-  @discourseComputed("model.badges.length")
-  moreBadges(badgesLength) {
-    return badgesLength >= MAX_BADGES;
+  @computed("model.badges.length")
+  get moreBadges() {
+    return this.model?.badges?.length >= MAX_BADGES;
   }
 
-  @discourseComputed("model.time_read")
-  timeRead(timeReadSeconds) {
-    return duration(timeReadSeconds, { format: "tiny" });
+  @computed("model.time_read")
+  get timeRead() {
+    return duration(this.model?.time_read, { format: "tiny" });
   }
 
-  @discourseComputed("model.time_read")
-  timeReadMedium(timeReadSeconds) {
-    return duration(timeReadSeconds, { format: "medium" });
+  @computed("model.time_read")
+  get timeReadMedium() {
+    return duration(this.model?.time_read, { format: "medium" });
   }
 
-  @discourseComputed("model.time_read", "model.recent_time_read")
-  showRecentTimeRead(timeRead, recentTimeRead) {
-    return timeRead !== recentTimeRead && recentTimeRead !== 0;
+  @computed("model.time_read", "model.recent_time_read")
+  get showRecentTimeRead() {
+    return (
+      this.model?.time_read !== this.model?.recent_time_read &&
+      this.model?.recent_time_read !== 0
+    );
   }
 
-  @discourseComputed("model.recent_time_read")
-  recentTimeRead(recentTimeReadSeconds) {
-    return recentTimeReadSeconds > 0
-      ? duration(recentTimeReadSeconds, { format: "tiny" })
+  @computed("model.recent_time_read")
+  get recentTimeRead() {
+    return this.model?.recent_time_read > 0
+      ? duration(this.model?.recent_time_read, { format: "tiny" })
       : null;
   }
 
-  @discourseComputed("model.recent_time_read")
-  recentTimeReadMedium(recentTimeReadSeconds) {
-    return recentTimeReadSeconds > 0
-      ? duration(recentTimeReadSeconds, { format: "medium" })
+  @computed("model.recent_time_read")
+  get recentTimeReadMedium() {
+    return this.model?.recent_time_read > 0
+      ? duration(this.model?.recent_time_read, { format: "medium" })
       : null;
   }
 }

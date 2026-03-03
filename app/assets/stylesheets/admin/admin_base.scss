@@ -86,12 +86,6 @@ $mobile-breakpoint: 700px;
 .admin-contents {
   position: relative;
 
-  .nav-stacked {
-    @media screen and (width <= 700px) {
-      margin: 0;
-    }
-  }
-
   .row::before,
   .row::after {
     display: table;
@@ -708,14 +702,12 @@ $mobile-breakpoint: 700px;
 .admin-controls {
   display: flex;
   align-items: center;
-  background: var(--primary-low);
 
   .admin-actions {
     margin-left: auto;
   }
 
   nav {
-    background-color: var(--primary-low);
     width: 100%;
     display: inline-flex;
     position: relative;
@@ -784,9 +776,8 @@ $mobile-breakpoint: 700px;
   }
 
   .controls {
-    background: var(--primary-low);
     width: 100%;
-    padding: 10px;
+    padding-bottom: var(--space-2);
     display: flex;
     align-items: center;
 
@@ -903,7 +894,7 @@ $mobile-breakpoint: 700px;
   }
 
   .nav-stacked {
-    background-color: inherit;
+    margin: 0;
 
     a.active {
       color: var(--primary);
