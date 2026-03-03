@@ -181,6 +181,8 @@ module DiscourseChatIntegration::Provider::SlackProvider
 
     unless response.kind_of? Net::HTTPSuccess
       raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key:
+                                                            "chat_integration.provider.slack.errors.auth_error",
                                                           request: uri,
                                                           response_code: response.code,
                                                           response_body: response.body,
@@ -190,11 +192,14 @@ module DiscourseChatIntegration::Provider::SlackProvider
     json = JSON.parse(response.body)
 
     unless json["ok"] == true
-      if json.key?("error") &&
-           (json["error"] == ("channel_not_found") || json["error"] == ("is_archived"))
-        error_key = "chat_integration.provider.slack.errors.channel_not_found"
-      else
-        error_key = nil
+      if json.key?("error")
+        if json["error"] == "channel_not_found" || json["error"] == "is_archived"
+          error_key = "chat_integration.provider.slack.errors.channel_not_found"
+        elsif json["error"] == "invalid_auth"
+          error_key = "chat_integration.provider.slack.errors.auth_error"
+        else
+          error_key = nil
+        end
       end
       raise DiscourseChatIntegration::ProviderError.new info: {
                                                           error_key: error_key,

@@ -119,7 +119,7 @@ en:
 
   dashboard:
     problem:
-      channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/chat-integration'>the chat integration section</a> to find out more."
+      channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/discourse-chat-integration'>the chat integration section</a> to find out more."
 
   discourse_automation:
     scriptables:
