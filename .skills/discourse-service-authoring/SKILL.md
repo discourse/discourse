@@ -77,7 +77,7 @@ Review the service against these structural rules. List every violation found.
 - `transaction` wraps ONLY DB writes that must succeed or fail together. Side effects (webhooks, events, MessageBus) live outside.
 - `lock` wraps ONLY steps vulnerable to concurrent modification. Side effects are idempotent and MUST live outside the lock.
 - No `return if`/`return unless` at the top of step methods — use `only_if` wrappers. Guard clauses in `only_if` predicate methods use bare `return` (not `return false`).
-- NEVER have an utility methods in a service, use model or step instead
+- NEVER have an utility methods in a service, use model, step or a dedicated action instead
 - NEVER rate limiting in the service — if necessary, it belongs in the controller via `before_action`
 - NEVER use an optional model steps just to store a value for condition checks
 - `create` over `new` + separate `save!` in model steps
