@@ -11,8 +11,6 @@ module Reports::Visits
       report.icon = "user"
 
       if SiteSetting.reporting_improvements
-        report.modes = [Report::MODES[:stacked_chart]]
-        report.default_group_by = "weekly"
 
         report_visits_stacked(report, group_filter)
       else
