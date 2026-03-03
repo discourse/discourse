@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Provider navigation", type: :system do
+RSpec.describe "Provider navigation" do
   fab!(:admin)
 
   before do
