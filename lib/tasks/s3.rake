@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 def brotli_s3_path(path)
+  return path.sub(%r{^assets/js/}, "assets/br/").sub(/\.br$/, "") if path.start_with?("assets/js/")
+
   ext = File.extname(path)
   "#{path[0..-ext.length]}br#{ext}"
 end
 
 def gzip_s3_path(path)
+  return path.sub(%r{^assets/js/}, "assets/gz/").sub(/\.gz$/, "") if path.start_with?("assets/js/")
+
   ext = File.extname(path)
   "#{path[0..-ext.length]}gz#{ext}"
 end
