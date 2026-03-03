@@ -5,12 +5,13 @@ import { optionalRequire } from "discourse/lib/utilities";
 export default {
   name: "chat-plugin-decorators",
 
-  initializeWithPluginApi(api, siteSettings) {
+  initializeWithPluginApi(api, siteSettings, currentUser) {
     api.decorateChatMessage(
       (element) => {
         applyLocalDates(
           element.querySelectorAll(".discourse-local-date"),
-          siteSettings
+          siteSettings,
+          currentUser?.user_option?.timezone
         );
       },
       {
@@ -41,8 +42,9 @@ export default {
   initialize(container) {
     if (container.lookup("service:chat").userCanChat) {
       const siteSettings = container.lookup("service:site-settings");
+      const currentUser = container.lookup("service:current-user");
       withPluginApi((api) => {
-        this.initializeWithPluginApi(api, siteSettings);
+        this.initializeWithPluginApi(api, siteSettings, currentUser);
       });
     }
   },
