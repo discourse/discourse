@@ -74,6 +74,8 @@ module DiscourseAi
              !current_user.in_any_groups?(ai_discover_persona.allowed_group_ids.to_a)
           raise Discourse::InvalidAccess.new
         end
+
+        raise Discourse::InvalidAccess if guardian.is_silenced?
       end
     end
   end
