@@ -1373,6 +1373,11 @@ acceptance(
     });
     needs.mobileView();
     needs.settings({ navigation_menu: "sidebar" });
+    needs.pretender((server, helper) => {
+      server.get("/categories/hierarchical_search", () => {
+        return helper.response({ categories: [] });
+      });
+    });
 
     test("hamburger closes when header dropdown navigates to a new page", async function (assert) {
       await visit("/");
