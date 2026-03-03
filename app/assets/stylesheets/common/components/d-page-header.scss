@@ -81,6 +81,10 @@ $mobile-breakpoint: 700px;
     display: flex;
     align-items: center;
     margin-bottom: var(--space-2);
+
+    &:not(:has(*)) {
+      display: none;
+    }
   }
 }
 

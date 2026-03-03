@@ -1,6 +1,11 @@
 @use "lib/viewport";
 
 .uc-enable-simplified-category-creation {
+  .d-page-header__title-row {
+    line-height: var(--line-height-medium);
+    gap: var(--space-4);
+  }
+
   .edit-category-tab-security {
     .alert {
       --permission-table-max-width: var(--form-kit-max-input);
@@ -28,6 +33,10 @@
     width: 100%;
     margin: 0 auto;
 
+    h1 {
+      font-size: var(--font-up-3);
+    }
+
     .form-kit {
       padding-bottom: 6em; // space for save footer
     }
@@ -53,8 +62,6 @@
     }
 
     .--radio-cards {
-      width: var(--form-kit-max-input);
-
       .form-kit__container-title {
         max-width: var(--form-kit-max-input);
         width: 100%;
