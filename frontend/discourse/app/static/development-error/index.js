@@ -30,6 +30,6 @@ export function addError(error, pluginName, path) {
   }
 
   const errorElement = document.createElement("li");
-  errorElement.innerText += `❌ Failed to load plugin ${pluginName} from ${path}\n${error.message}`;
+  errorElement.innerText += `❌ Failed to load plugin ${pluginName} from ${path}\n${String(error)}`;
   dialogContent.append(errorElement);
 }
