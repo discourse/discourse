@@ -12,21 +12,12 @@
 
 html.discourse-no-touch {
   .btn-default {
-    .d-icon {
-      color: var(--primary-medium);
-    }
-
-    &:hover,
-    &.btn-hover,
-    &:focus {
-      .d-icon {
-        color: var(--secondary);
-      }
-    }
+    --d-button-default-icon-color: var(--primary-medium);
+    --d-button-default-icon-color--hover: var(--secondary);
   }
 
-  .btn-primary .d-icon {
-    color: var(--secondary);
+  .btn-primary {
+    --d-button-primary-icon-color: var(--secondary);
   }
 
   .btn-icon.ok,
@@ -199,15 +190,6 @@ html {
   a[data-clicks]::before,
   a[data-clicks]::after {
     color: var(--primary-high);
-  }
-
-  // Post controls
-  .topic-admin-menu,
-  .timeline-controls {
-    .btn .d-icon {
-      // admin wrenches
-      color: var(--primary-medium);
-    }
   }
 
   nav.post-controls {
