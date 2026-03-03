@@ -352,8 +352,11 @@ module("Unit | Controller | topic", function (hooks) {
     );
   });
 
-  test("canChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", { admin: false });
+  test("admin canChangeOwner", function (assert) {
+    const currentUser = this.store.createRecord("user", {
+      admin: false,
+      can_change_post_owner: false,
+    });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
@@ -372,6 +375,9 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(controller.canChangeOwner, "false when not admin");
 
     currentUser.set("admin", true);
+    // For admin, can_change_post_owner will be set on the model
+    currentUser.set("can_change_post_owner", true);
+
     assert.true(
       controller.canChangeOwner,
       "true when admin and one post is selected"
@@ -384,8 +390,11 @@ module("Unit | Controller | topic", function (hooks) {
     );
   });
 
-  test("modCanChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", { moderator: false });
+  test("moderator canChangeOwner", function (assert) {
+    const currentUser = this.store.createRecord("user", {
+      moderator: false,
+      can_change_post_owner: false,
+    });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
@@ -407,6 +416,9 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(controller.canChangeOwner, "false when not moderator");
 
     currentUser.set("moderator", true);
+    // For a moderator, can_change_post_owner would be set on the model
+    currentUser.set("can_change_post_owner", true);
+
     assert.true(
       controller.canChangeOwner,
       "true when moderator and one post is selected"
@@ -416,6 +428,43 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(
       controller.canChangeOwner,
       "false when moderator but more than 1 user"
+    );
+  });
+
+  test("canChangeOwner", function (assert) {
+    const currentUser = this.store.createRecord("user", {
+      can_change_post_owner: false,
+    });
+    const model = topicWithStream.call(this, {
+      posts: [
+        { id: 1, username: "gary" },
+        { id: 2, username: "lili" },
+      ],
+      stream: [1, 2],
+    });
+    model.set("currentUser", currentUser);
+
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model, currentUser });
+
+    assert.false(controller.canChangeOwner, "false when no posts are selected");
+
+    controller.selectedPostIds.push(1);
+    assert.false(
+      controller.canChangeOwner,
+      "false when can_change_post_owner is false"
+    );
+
+    currentUser.set("can_change_post_owner", true);
+    assert.true(
+      controller.canChangeOwner,
+      "true when can_change_post_owner and one post is selected"
+    );
+
+    controller.selectedPostIds.push(2);
+    assert.false(
+      controller.canChangeOwner,
+      "false when can_change_post_owner but more than 1 user"
     );
   });
 

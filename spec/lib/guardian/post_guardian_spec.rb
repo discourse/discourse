@@ -583,10 +583,25 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(moderator).can_change_post_owner?).to be_truthy
     end
 
-    it "returns true for a moderator when not allowed" do
+    it "returns false for a moderator when not allowed" do
       SiteSetting.moderators_change_post_ownership = false
 
       expect(Guardian.new(moderator).can_change_post_owner?).to be_falsey
+    end
+
+    describe "with allowed groups" do
+      fab!(:allowed_group, :group)
+      fab!(:allowed_group_user) { Fabricate(:user, groups: [allowed_group]) }
+
+      before { SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}" }
+
+      it "returns true for user in allowed group" do
+        expect(Guardian.new(allowed_group_user).can_change_post_owner?).to be_truthy
+      end
+
+      it "returns false for user not in allowed group" do
+        expect(Guardian.new(user).can_change_post_owner?).to be_falsy
+      end
     end
   end
 

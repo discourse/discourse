@@ -590,7 +590,7 @@ module("Integration | Component | Post", function (hooks) {
   });
 
   test("change owner", async function (assert) {
-    this.currentUser.admin = true;
+    this.currentUser.can_change_post_owner = true;
 
     await renderComponent(this.post, {
       changePostOwner: () => assert.step("change post owner called"),

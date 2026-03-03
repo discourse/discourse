@@ -134,6 +134,31 @@ describe "Post menu", type: :system do
       topic_page.click_post_action_button(post, :admin)
       expect(topic_page).to have_post_admin_menu
     end
+
+    describe "with change_post_ownership_allowed_groups" do
+      fab!(:allowed_group, :group)
+      fab!(:allowed_group_user) { Fabricate(:user, groups: [allowed_group]) }
+
+      before { SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}" }
+
+      it "displays the admin button when the group is allowed" do
+        sign_in(allowed_group_user)
+
+        topic_page.visit_topic(post.topic)
+
+        expect(topic_page).to have_post_action_button(post, :admin)
+        expect(topic_page).to have_post_action_button(post2, :admin)
+      end
+      it "does not display the admin button when the group is not allowed" do
+        SiteSetting.change_post_ownership_allowed_groups = ""
+        sign_in(allowed_group_user)
+
+        topic_page.visit_topic(post.topic)
+
+        expect(topic_page).to have_no_post_action_button(post, :admin)
+        expect(topic_page).to have_no_post_action_button(post2, :admin)
+      end
+    end
   end
 
   describe "bookmark" do

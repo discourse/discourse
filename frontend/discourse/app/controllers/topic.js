@@ -1763,17 +1763,13 @@ export default class TopicController extends Controller {
   }
 
   @computed(
-    "currentUser.admin",
-    "currentUser.staff",
-    "siteSettings.moderators_change_post_ownership",
     "selectedPostsCount",
-    "selectedPostsUsername"
+    "selectedPostsUsername",
+    "currentUser.canChangePostOwner"
   )
   get canChangeOwner() {
     return (
-      (this.currentUser?.admin ||
-        (this.siteSettings?.moderators_change_post_ownership &&
-          this.currentUser?.staff)) &&
+      !!this.currentUser?.canChangePostOwner &&
       this.selectedPostsCount > 0 &&
       this.selectedPostsUsername !== undefined
     );
