@@ -86,7 +86,7 @@ export default class ProsemirrorEditor extends Component {
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
-  /** @type {Array<GlimmerNodeView>} */
+  /** @type {TrackedArray<GlimmerNodeView>} */
   glimmerNodeViews = trackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */

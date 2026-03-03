@@ -48,7 +48,7 @@ class DebugHooks {
    * Tracked callback registry for debug hooks.
    * Using TrackedMap enables reactivity when callbacks are set/cleared.
    *
-   * @type {Map<string, Function|null>}
+   * @type {TrackedMap<string, Function|null>}
    */
   #callbacks = trackedMap(
     Object.values(DEBUG_CALLBACK).map((key) => [key, null])
