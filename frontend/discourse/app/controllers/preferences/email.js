@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
-import { empty, or } from "@ember/object/computed";
-import { propertyEqual } from "discourse/lib/computed";
+import { isEmpty } from "@ember/utils";
+import { deepEqual } from "discourse/lib/object";
 import { emailValid } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -15,12 +15,26 @@ export default class EmailController extends Controller {
   newEmail = null;
   successMessage = null;
 
-  @empty("newEmail") newEmailEmpty;
+  @computed("newEmail.length")
+  get newEmailEmpty() {
+    return isEmpty(this.newEmail);
+  }
 
-  @or("saving", "newEmailEmpty", "taken", "unchanged", "invalidEmail")
-  saveDisabled;
+  @computed("saving", "newEmailEmpty", "taken", "unchanged", "invalidEmail")
+  get saveDisabled() {
+    return (
+      this.saving ||
+      this.newEmailEmpty ||
+      this.taken ||
+      this.unchanged ||
+      this.invalidEmail
+    );
+  }
 
-  @propertyEqual("newEmailLower", "oldEmail") unchanged;
+  @computed("newEmailLower", "oldEmail")
+  get unchanged() {
+    return deepEqual(this.newEmailLower, this.oldEmail);
+  }
 
   @computed("newEmail")
   get newEmailLower() {

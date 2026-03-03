@@ -3,9 +3,9 @@ import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
@@ -13,10 +13,10 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
-import { propertyNotEqual } from "discourse/lib/computed";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import { deepEqual } from "discourse/lib/object";
 import { cook } from "discourse/lib/text";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
@@ -41,11 +41,6 @@ export default class LocalDatesCreate extends Component {
   fromSelected = null;
   toSelected = null;
 
-  @notEmpty("date") fromFilled;
-  @notEmpty("toDate") toFilled;
-  @propertyNotEqual("currentUserTimezone", "options.timezone")
-  timezoneIsDifferentFromUserTimezone;
-
   init() {
     super.init(...arguments);
 
@@ -59,6 +54,21 @@ export default class LocalDatesCreate extends Component {
       timezone: this.currentUserTimezone,
       date: moment().format(this.dateFormat),
     });
+  }
+
+  @computed("date.length")
+  get fromFilled() {
+    return !isEmpty(this.date);
+  }
+
+  @computed("toDate.length")
+  get toFilled() {
+    return !isEmpty(this.toDate);
+  }
+
+  @computed("currentUserTimezone", "options.timezone")
+  get timezoneIsDifferentFromUserTimezone() {
+    return !deepEqual(this.currentUserTimezone, this.options?.timezone);
   }
 
   didInsertElement() {

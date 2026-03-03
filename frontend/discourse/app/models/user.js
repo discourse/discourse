@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { computed, get, getProperties } from "@ember/object";
+import EmberObject, { computed, get, getProperties, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
@@ -18,7 +17,6 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import { url } from "discourse/lib/computed";
 import {
   AUTO_GROUPS,
   INTERFACE_COLOR_MODES,
@@ -254,24 +252,95 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("treat_as_new_topic_start_date") treat_as_new_topic_start_date;
   @userOption("composition_mode") composition_mode;
 
-  @gt("private_messages_stats.all", 0) hasPMs;
-  @gt("private_messages_stats.mine", 0) hasStartedPMs;
-  @gt("private_messages_stats.unread", 0) hasUnreadPMs;
-  @url("id", "username_lower", "/admin/users/%@1/%@2") adminPath;
-  @equal("trust_level", 0) isBasic;
-  @equal("trust_level", 3) isRegular;
-  @equal("trust_level", 4) isLeader;
-  @or("staff", "isLeader") canManageTopic;
-  @alias("sidebar_category_ids") sidebarCategoryIds;
-  @alias("sidebar_sections") sidebarSections;
-  @mapBy("sidebarTags", "name") sidebarTagNames;
-  @filterBy("groups", "has_messages", true) groupsWithMessages;
-  @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
-  @alias("can_edit_tags") canEditTags;
-
   numGroupsToDisplay = 2;
 
   statusManager = new UserStatusManager(this);
+
+  @computed("private_messages_stats.all")
+  get hasPMs() {
+    return this.private_messages_stats?.all > 0;
+  }
+
+  @computed("private_messages_stats.mine")
+  get hasStartedPMs() {
+    return this.private_messages_stats?.mine > 0;
+  }
+
+  @computed("private_messages_stats.unread")
+  get hasUnreadPMs() {
+    return this.private_messages_stats?.unread > 0;
+  }
+
+  @computed("id", "username_lower")
+  get adminPath() {
+    return getURL(`/admin/users/${this.id}/${this.username_lower}`);
+  }
+
+  @computed("trust_level")
+  get isBasic() {
+    return this.trust_level === 0;
+  }
+
+  @computed("trust_level")
+  get isRegular() {
+    return this.trust_level === 3;
+  }
+
+  @computed("trust_level")
+  get isLeader() {
+    return this.trust_level === 4;
+  }
+
+  @computed("staff", "isLeader")
+  get canManageTopic() {
+    return this.staff || this.isLeader;
+  }
+
+  @computed("sidebar_category_ids")
+  get sidebarCategoryIds() {
+    return this.sidebar_category_ids;
+  }
+
+  set sidebarCategoryIds(value) {
+    set(this, "sidebar_category_ids", value);
+  }
+
+  @dependentKeyCompat
+  get sidebarSections() {
+    return this.sidebar_sections;
+  }
+
+  set sidebarSections(value) {
+    this.sidebar_sections = value;
+  }
+
+  @computed("sidebarTags.@each.name")
+  get sidebarTagNames() {
+    return this.sidebarTags?.map?.((item) => item.name) ?? [];
+  }
+
+  @computed("groups.@each.has_messages")
+  get groupsWithMessages() {
+    return this.groups?.filter?.((item) => item.has_messages === true) ?? [];
+  }
+
+  @computed("can_pick_theme_with_custom_homepage")
+  get canPickThemeWithCustomHomepage() {
+    return this.can_pick_theme_with_custom_homepage;
+  }
+
+  set canPickThemeWithCustomHomepage(value) {
+    set(this, "can_pick_theme_with_custom_homepage", value);
+  }
+
+  @computed("can_edit_tags")
+  get canEditTags() {
+    return this.can_edit_tags;
+  }
+
+  set canEditTags(value) {
+    set(this, "can_edit_tags", value);
+  }
 
   @computed("user_option.composition_mode")
   get useRichEditor() {

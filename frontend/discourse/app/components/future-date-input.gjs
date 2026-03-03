@@ -3,7 +3,7 @@ import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { and, empty, equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import DatePickerFuture from "discourse/components/date-picker-future";
 import icon from "discourse/helpers/d-icon";
@@ -25,10 +25,6 @@ export default class FutureDateInput extends Component {
   selection = null;
   includeDateTime = true;
 
-  @equal("selection", "custom") isCustom;
-  @and("includeDateTime", "isCustom") displayDateAndTimePicker;
-  @empty("_date") timeInputDisabled;
-
   displayLabel = null;
   labelClasses = null;
   userTimezone = null;
@@ -39,6 +35,21 @@ export default class FutureDateInput extends Component {
   init() {
     super.init(...arguments);
     this.userTimezone = this.currentUser.user_option.timezone;
+  }
+
+  @computed("selection")
+  get isCustom() {
+    return this.selection === "custom";
+  }
+
+  @computed("includeDateTime", "isCustom")
+  get displayDateAndTimePicker() {
+    return this.includeDateTime && this.isCustom;
+  }
+
+  @computed("_date.length")
+  get timeInputDisabled() {
+    return isEmpty(this._date);
   }
 
   didReceiveAttrs() {

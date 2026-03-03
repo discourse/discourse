@@ -4,7 +4,6 @@ import Component from "@ember/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed, set } from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
@@ -103,8 +102,6 @@ export default class ReviewableItem extends Component {
   @tracked disabled = false;
   @tracked activeTab = "timeline";
 
-  @alias("reviewable.claimed_by.automatic") autoClaimed;
-
   updating = null;
   editing = false;
   _updates = null;
@@ -119,6 +116,15 @@ export default class ReviewableItem extends Component {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
+  }
+
+  @computed("reviewable.claimed_by.automatic")
+  get autoClaimed() {
+    return this.reviewable?.claimed_by?.automatic;
+  }
+
+  set autoClaimed(value) {
+    set(this, "reviewable.claimed_by.automatic", value);
   }
 
   @computed(

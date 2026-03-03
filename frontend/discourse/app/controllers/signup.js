@@ -3,13 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { setting } from "discourse/lib/computed";
 import { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -69,9 +67,20 @@ export default class SignupPageController extends Controller {
     showValidationOnInit: false,
   });
 
-  @notEmpty("authOptions") hasAuthOptions;
-  @setting("enable_local_logins") canCreateLocal;
-  @setting("require_invite_code") requireInviteCode;
+  @computed("authOptions.length")
+  get hasAuthOptions() {
+    return !isEmpty(this.authOptions);
+  }
+
+  @computed("siteSettings.enable_local_logins")
+  get canCreateLocal() {
+    return this.siteSettings.enable_local_logins;
+  }
+
+  @computed("siteSettings.require_invite_code")
+  get requireInviteCode() {
+    return this.siteSettings.require_invite_code;
+  }
 
   @dependentKeyCompat
   get userFields() {

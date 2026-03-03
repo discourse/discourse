@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
@@ -12,7 +13,12 @@ export default class ScreenedIpAddress extends EmberObject {
     );
   }
 
-  @equal("action_name", "block") isBlocked;
+  @tracked action_name;
+
+  @dependentKeyCompat
+  get isBlocked() {
+    return this.action_name === "block";
+  }
 
   @computed("action_name")
   get actionName() {

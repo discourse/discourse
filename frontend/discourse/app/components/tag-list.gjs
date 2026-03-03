@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { sort } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import discourseTag from "discourse/helpers/discourse-tag";
+import { arraySortedByProperties } from "discourse/lib/array-tools";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -14,7 +14,10 @@ import { i18n } from "discourse-i18n";
 export default class TagList extends Component {
   isPrivateMessage = false;
 
-  @sort("tags", "sortProperties") sortedTags;
+  @computed("tags", "sortProperties")
+  get sortedTags() {
+    return arraySortedByProperties(this.tags, this.sortProperties);
+  }
 
   @computed("titleKey")
   get title() {

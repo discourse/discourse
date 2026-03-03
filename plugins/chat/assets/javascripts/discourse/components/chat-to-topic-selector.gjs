@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { computed } from "@ember/object";
-import { alias, equal } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
@@ -24,18 +23,45 @@ export default class ChatToTopicSelector extends Component {
   newMessageSelection = NEW_MESSAGE_SELECTION;
   selection = null;
 
-  @equal("selection", NEW_TOPIC_SELECTION) newTopic;
-  @equal("selection", EXISTING_TOPIC_SELECTION) existingTopic;
-  @equal("selection", NEW_MESSAGE_SELECTION) newMessage;
-  @alias("site.can_create_tag") canAddTags;
-  @alias("site.can_tag_pms") canTagMessages;
-
   topicTitle = null;
   categoryId = null;
   tags = null;
   selectedTopicId = null;
   chatMessageIds = null;
   chatChannelId = null;
+
+  @computed("selection")
+  get newTopic() {
+    return this.selection === NEW_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get existingTopic() {
+    return this.selection === EXISTING_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get newMessage() {
+    return this.selection === NEW_MESSAGE_SELECTION;
+  }
+
+  @computed("site.can_create_tag")
+  get canAddTags() {
+    return this.site?.can_create_tag;
+  }
+
+  set canAddTags(value) {
+    set(this, "site.can_create_tag", value);
+  }
+
+  @computed("site.can_tag_pms")
+  get canTagMessages() {
+    return this.site?.can_tag_pms;
+  }
+
+  set canTagMessages(value) {
+    set(this, "site.can_tag_pms", value);
+  }
 
   @computed()
   get newTopicInstruction() {

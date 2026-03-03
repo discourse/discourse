@@ -1,12 +1,14 @@
 import { computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
 export const MAX_MESSAGE_LENGTH = 500;
 
 export default class PostActionType extends RestModel {
-  @equal("name_key", "illegal") isIllegal;
+  @computed("name_key")
+  get isIllegal() {
+    return this.name_key === "illegal";
+  }
 
   @computed()
   get translatedDescription() {

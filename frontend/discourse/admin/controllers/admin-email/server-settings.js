@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-observers */
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { empty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -17,13 +17,18 @@ export default class AdminEmailIndexController extends Controller {
 
     @property sendTestEmailDisabled
   **/
-  @empty("testEmailAddress") sendTestEmailDisabled;
 
   /**
     Clears the 'sentTestEmail' property on successful send.
 
     @method testEmailAddressChanged
   **/
+
+  @computed("testEmailAddress.length")
+  get sendTestEmailDisabled() {
+    return isEmpty(this.testEmailAddress);
+  }
+
   @observes("testEmailAddress")
   testEmailAddressChanged() {
     this.set("sentTestEmail", false);

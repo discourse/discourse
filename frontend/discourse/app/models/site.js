@@ -1,12 +1,14 @@
-import { cached } from "@glimmer/tracking";
-import EmberObject, { computed, get } from "@ember/object";
+import { cached, tracked } from "@glimmer/tracking";
+import EmberObject, { computed, get, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import { removeValueFromArray } from "discourse/lib/array-tools";
+import {
+  arraySortedByProperties,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -86,19 +88,23 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
+  @tracked topicCountDesc = ["topic_count:desc"];
   @autoTrackedArray categories = [];
   @autoTrackedArray groups = [];
 
-  @alias("is_readonly") isReadOnly;
-
-  @sort("categories", "topicCountDesc") categoriesByCount;
-
   #siteInitialized = false;
 
-  init() {
-    super.init(...arguments);
+  @computed("is_readonly")
+  get isReadOnly() {
+    return this.is_readonly;
+  }
 
-    this.topicCountDesc = ["topic_count:desc"];
+  set isReadOnly(value) {
+    set(this, "is_readonly", value);
+  }
+
+  get categoriesByCount() {
+    return arraySortedByProperties(this.categories, this.topicCountDesc);
   }
 
   get groupsById() {

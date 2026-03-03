@@ -1,22 +1,37 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import { setting } from "discourse/lib/computed";
 import getUrl from "discourse/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class AdminReportStorageStats extends Component {
-  @setting("backup_location") backupLocation;
+  @computed("siteSettings.backup_location")
+  get backupLocation() {
+    return this.siteSettings.backup_location;
+  }
 
-  @alias("model.data.backups") backupStats;
+  @computed("model.data.backups")
+  get backupStats() {
+    return this.model?.data?.backups;
+  }
 
-  @alias("model.data.uploads") uploadStats;
+  set backupStats(value) {
+    set(this, "model.data.backups", value);
+  }
+
+  @computed("model.data.uploads")
+  get uploadStats() {
+    return this.model?.data?.uploads;
+  }
+
+  set uploadStats(value) {
+    set(this, "model.data.uploads", value);
+  }
 
   @computed("backupStats")
   get showBackupStats() {

@@ -1,7 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
-import { alias, and, equal, readOnly } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
@@ -35,12 +34,41 @@ export default class extends Controller {
   @tracked group;
   @tracked tagId;
 
-  @alias("group.name") groupFilter;
-  @and("user.viewingSelf", "currentUser.can_send_private_messages") showNewPM;
-  @equal("currentParentRouteName", "userPrivateMessages.group") isGroup;
-  @readOnly("user.viewingSelf") viewingSelf;
-  @readOnly("router.currentRoute.parent.name") currentParentRouteName;
-  @readOnly("site.can_tag_pms") pmTaggingEnabled;
+  @computed("group.name")
+  get groupFilter() {
+    return this.group?.name;
+  }
+
+  set groupFilter(value) {
+    set(this, "group.name", value);
+  }
+
+  @computed("user.viewingSelf", "currentUser.can_send_private_messages")
+  get showNewPM() {
+    return (
+      this.user?.viewingSelf && this.currentUser?.can_send_private_messages
+    );
+  }
+
+  @computed("currentParentRouteName")
+  get isGroup() {
+    return this.currentParentRouteName === "userPrivateMessages.group";
+  }
+
+  @computed("user.viewingSelf")
+  get viewingSelf() {
+    return this.user?.viewingSelf;
+  }
+
+  @computed("router.currentRoute.parent.name")
+  get currentParentRouteName() {
+    return this.router?.currentRoute?.parent?.name;
+  }
+
+  @computed("site.can_tag_pms")
+  get pmTaggingEnabled() {
+    return this.site?.can_tag_pms;
+  }
 
   get bulkSelectHelper() {
     return this.userTopicsList.bulkSelectHelper;

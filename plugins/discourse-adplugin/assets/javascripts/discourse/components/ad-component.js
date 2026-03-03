@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { alias, or } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { throwAjaxError } from "discourse/lib/ajax-error";
@@ -13,26 +12,7 @@ import {
 export default class AdComponent extends Component {
   @service router;
   @service session;
-
-  @or(
-    "router.currentRoute.attributes.category.id",
-    "router.currentRoute.parent.attributes.category_id"
-  )
-  currentCategoryId;
-  @or(
-    "router.currentRoute.attributes.category.slug",
-    "router.currentRoute.parent.attributes.category.slug"
-  )
-  currentCategorySlug;
   // Server needs to compute this in case hidden tags are being used.
-  @alias("router.currentRoute.parent.attributes.tags_disable_ads")
-  topicTagsDisableAds;
-  @or(
-    "router.currentRoute.attributes.category.read_restricted",
-    "router.currentRoute.parent.attributes.category.read_restricted"
-  )
-  isRestrictedCategory;
-  @alias("router.currentRoute.name") currentRouteName;
 
   _impressionId = null;
   _clickTracked = false;
@@ -40,6 +20,57 @@ export default class AdComponent extends Component {
   _handleAdClick = () => {
     this.trackClick();
   };
+
+  @computed(
+    "router.currentRoute.attributes.category.id",
+    "router.currentRoute.parent.attributes.category_id"
+  )
+  get currentCategoryId() {
+    return (
+      this.router?.currentRoute?.attributes?.category?.id ||
+      this.router?.currentRoute?.parent?.attributes?.category_id
+    );
+  }
+
+  @computed(
+    "router.currentRoute.attributes.category.slug",
+    "router.currentRoute.parent.attributes.category.slug"
+  )
+  get currentCategorySlug() {
+    return (
+      this.router?.currentRoute?.attributes?.category?.slug ||
+      this.router?.currentRoute?.parent?.attributes?.category?.slug
+    );
+  }
+
+  @computed("router.currentRoute.parent.attributes.tags_disable_ads")
+  get topicTagsDisableAds() {
+    return this.router?.currentRoute?.parent?.attributes?.tags_disable_ads;
+  }
+
+  set topicTagsDisableAds(value) {
+    set(this, "router.currentRoute.parent.attributes.tags_disable_ads", value);
+  }
+
+  @computed(
+    "router.currentRoute.attributes.category.read_restricted",
+    "router.currentRoute.parent.attributes.category.read_restricted"
+  )
+  get isRestrictedCategory() {
+    return (
+      this.router?.currentRoute?.attributes?.category?.read_restricted ||
+      this.router?.currentRoute?.parent?.attributes?.category?.read_restricted
+    );
+  }
+
+  @computed("router.currentRoute.name")
+  get currentRouteName() {
+    return this.router?.currentRoute?.name;
+  }
+
+  set currentRouteName(value) {
+    set(this, "router.currentRoute.name", value);
+  }
 
   @computed(
     "router.currentRoute.attributes.__type",

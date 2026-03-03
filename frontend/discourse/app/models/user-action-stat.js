@@ -1,10 +1,13 @@
 import { computed } from "@ember/object";
-import { i18n } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
+import { i18n } from "discourse-i18n";
 
 export default class UserActionStat extends RestModel {
-  @i18n("action_type", "user_action_groups.%@") description;
+  @computed("action_type")
+  get description() {
+    return i18n(`user_action_groups.${this.action_type}`);
+  }
 
   @computed("action_type")
   get isPM() {

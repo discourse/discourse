@@ -1,11 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, empty } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { compare } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import AdminUser from "discourse/admin/models/admin-user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -26,10 +25,21 @@ export default class AdminUserBadgesController extends Controller {
   @autoTrackedArray badges;
   @autoTrackedArray expandedBadges = [];
 
-  @alias("adminUser.model") user;
-  @empty("availableBadges") noAvailableBadges;
-
   badgeSortOrder = ["granted_at:desc"];
+
+  @computed("adminUser.model")
+  get user() {
+    return this.adminUser?.model;
+  }
+
+  set user(value) {
+    set(this, "adminUser.model", value);
+  }
+
+  @computed("availableBadges.length")
+  get noAvailableBadges() {
+    return isEmpty(this.availableBadges);
+  }
 
   @dependentKeyCompat
   get sortedBadges() {

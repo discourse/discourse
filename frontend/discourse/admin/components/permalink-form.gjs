@@ -8,7 +8,6 @@ import { tagName } from "@ember-decorators/component";
 import Permalink from "discourse/admin/models/permalink";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
-import { fmt } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
@@ -20,10 +19,13 @@ export default class PermalinkForm extends Component {
   formSubmitted = false;
   permalinkType = "topic_id";
 
-  @fmt("permalinkType", "admin.permalink.%@") permalinkTypePlaceholder;
-
   action = null;
   permalinkTypeValue = null;
+
+  @computed("permalinkType")
+  get permalinkTypePlaceholder() {
+    return `admin.permalink.${this.permalinkType}`;
+  }
 
   @computed
   get permalinkTypes() {

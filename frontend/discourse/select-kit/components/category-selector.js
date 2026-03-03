@@ -1,5 +1,4 @@
 import EmberObject, { action, computed } from "@ember/object";
-import { mapBy } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
@@ -21,14 +20,17 @@ export default class CategorySelector extends MultiSelectComponent {
   categories = null;
   blockedCategories = null;
 
-  @mapBy("categories", "id") value;
-
   init() {
     super.init(...arguments);
 
     if (!this.blockedCategories) {
       this.set("blockedCategories", []);
     }
+  }
+
+  @computed("categories.@each.id")
+  get value() {
+    return this.categories?.map?.((item) => item.id) ?? [];
   }
 
   @computed("categories.[]", "blockedCategories.[]")
