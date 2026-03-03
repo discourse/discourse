@@ -2620,6 +2620,8 @@ RSpec.describe PostAlerter do
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,
     sends a group_smtp_email instead" do
       NotificationEmailer.enable
+      SiteSetting.simple_email_subject = true
+      SiteSetting.email_subject = "%{site_name}: %{topic_title}"
 
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
@@ -2653,7 +2655,7 @@ RSpec.describe PostAlerter do
       expect(email.from).to eq([SiteSetting.notification_email])
       expect(email.to).to contain_exactly(group_user1.user.email)
       expect(email.cc).to eq(nil)
-      expect(email.subject).to eq("[Discourse] [PM] #{topic.title}")
+      expect(email.subject).to eq("Discourse: #{topic.title}")
     end
 
     it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do
