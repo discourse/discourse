@@ -17,7 +17,12 @@ class RemoteThemeSerializer < ApplicationSerializer
              :authors,
              :theme_version,
              :minimum_discourse_version,
-             :maximum_discourse_version
+             :maximum_discourse_version,
+             :has_private_key
+
+  def has_private_key
+    object.private_key.present?
+  end
 
   # ActiveModelSerializer has some pretty nutty logic where it tries to find
   # the path here from action dispatch, tell it not to
