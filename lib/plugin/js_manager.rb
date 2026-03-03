@@ -78,7 +78,7 @@ module Plugin
           [
             *tree.keys,
             *tree.values,
-            Theme::BASE_COMPILER_VERSION,
+            AssetProcessor::BASE_COMPILER_VERSION,
             AssetProcessor.new.ember_version,
             minify?.to_s,
           ].join,
