@@ -451,7 +451,7 @@ class GroupsController < ApplicationController
           new_users.each { |user| group.notify_added_to_group(user) } if notify
         end
       else
-        uniq_users.each { |user| add_user_to_group(group, user, notify) }
+        add_user_to_group(group, uniq_users.first, notify)
       end
 
       emails.each do |email|
@@ -643,7 +643,7 @@ class GroupsController < ApplicationController
           removed_users << user.username
           GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
         else
-          if group.users.exclude? user
+          if group.users.exclude?(user)
             skipped_users << user.username
           else
             raise Discourse::InvalidParameters
