@@ -28,19 +28,19 @@ module DiscourseReactions
     end
 
     def delete
-      return if DiscourseReactions::Reaction.where(post_id: @post.id).by_user(@user).count != 0
-      read = true
-      Notification
-        .where(
+      return if DiscourseReactions::Reaction.where(post_id: @post.id).by_user(@user).exists?
+
+      notifications =
+        Notification.where(
           topic_id: @post.topic_id,
           user_id: @post.user_id,
           post_number: @post.post_number,
           notification_type: Notification.types[:reaction],
         )
-        .each do |notification|
-          read = false unless notification.read
-          notification.destroy
-        end
+
+      read = !notifications.where(read: false).exists?
+      notifications.delete_all
+
       refresh_notification(read)
     end
 
