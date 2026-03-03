@@ -461,6 +461,13 @@ ar:
           runs_today: "%{count} اليوم"
           runs_this_week: "%{count} هذا الاسبوع"
           runs_this_month: "%{count} هذا الشهر"
+          recent_errors:
+            zero: "%{count} خطأ مؤخرًا"
+            one: "خطأ واحد مؤخرًا"
+            two: "خطآن مؤخرًا"
+            few: "%{count} أخطاء مؤخرًا"
+            many: "%{count} خطأ مؤخرًا"
+            other: "%{count} خطأ مؤخرًا"
           runs:
             label: عدد مرات التشغيل
           name:

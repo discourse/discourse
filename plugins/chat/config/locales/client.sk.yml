@@ -46,6 +46,12 @@ sk:
           many: "%{formatted_number} správ v chate"
           other: "%{formatted_number} správy v chate"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanál"
+        description: "Popis"
+        actions: "Akcie"
+        settings: "Nastavení"
       text_copied: Text bol skopírovaný do schránky
       link_copied: Odkaz bol skopírovaný do schránky
       back_to_forum: "fórum"
@@ -60,6 +66,7 @@ sk:
       cancel: "Zrušiť"
       cancel_reply: "Zrušiť odpoveď"
       chat_channels: "Kanály"
+      pinned: "Pripnutý"
       browse_all_channels: "Prehľadávať všetky kanály"
       see_in: "Vidieť v"
       move_to_channel:

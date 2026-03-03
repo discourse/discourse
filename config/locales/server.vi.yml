@@ -1270,7 +1270,6 @@ vi:
     max_daily_gravatar_crawls: "Giới hạn số lần Discourse sẽ kiểm tra Gravatar mới trong một ngày"
     enable_user_directory: "Cung cấp một chỉ mục thành viên để duyệt xem"
     anonymous_account_duration_minutes: "Để bảo vệ danh tính tạo ra một tài khoản ẩn danh mới mỗi N phút cho mỗi người dùng. Ví dụ: nếu đặt là 600, ngay sau khi 600 phút trôi qua kể từ bài viết cuối cùng VÀ lập tức tạo ra một tài khoản ẩn danh mới cho thành viên."
-    hide_user_profiles_from_public: "Vô hiệu hóa thẻ thành viên, hồ sơ và chỉ mục người dùng với các thành viên ẩn danh."
     log_personal_messages_views: "Ghi nhật ký lượt xem tin nhắn cá nhân của Admin cho người dùng / nhóm khác."
     ignored_users_count_message_threshold: "Thông báo cho người kiểm duyệt nếu một người dùng cụ thể bị bỏ qua bởi nhiều người dùng khác này."
     ignored_users_message_gap_days: "Phải đợi bao lâu trước khi thông báo lại cho người kiểm duyệt về một người dùng đã bị nhiều người khác bỏ qua."

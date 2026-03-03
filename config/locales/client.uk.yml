@@ -9,9 +9,19 @@ uk:
     blocks:
       ghost:
         status: "Статус"
+        conditions: "Умови"
+        arguments: "Аргументи"
+        container_args: "Аргументи контейнера"
         in_location: "в"
         hidden: "приховано"
+        not_registered: "не зареєстровано"
+        no_visible_children: "немає видимих потомків"
         failed: "помилка"
+      ghost_reasons:
+        optional_missing_hint: "Цей необов'язковий блок не відображається, оскільки він не зареєстрований."
+        no_visible_children_hint: "Цей блок контейнера не рендериться, оскільки жоден з його дочірніх блоків не є видимим."
+        condition_failed_hint: "Цей блок не відтворюється, оскільки його умови не виконані."
+        head_hidden_tail_hint: "Цей блок не відтворюється, оскільки інший блок був відтворений спочатку в контейнері `head`."
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -359,6 +369,7 @@ uk:
     skip_to_top: "Перейти до початку"
     skip_user_nav: "Перейти до вмісту профілю"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
+    emails_are_disabled_no_smtp: "Вся вихідна електронна пошта вимкнена, оскільки не налаштовано SMTP-сервер. Електронні листи будь-якого типу не можуть бути надіслані."
     emails_are_disabled_non_staff: "Надсилання листів електронною поштою було вимкнено для користувачів, які не є членами команди обслуговування."
     software_update_prompt:
       message: "Ми оновили сайт, <span>, будь ласка, оновіть</span> , щоб все працювало безперебійно."
@@ -384,12 +395,27 @@ uk:
     broken_page_change_alert: "Обробник onPageChange викликав помилку. Зверніться до інструментів розробника браузера для отримання додаткової інформації."
     broken_plugin_alert: "Викликано плагіном '%{name}'"
     broken_transformer_alert: "Сталася помилка. Ваш сайт може працювати неправильно."
+    broken_block_alert: "Виявлено помилку конфігурації блоку. Перегляньте консоль браузера для отримання детальної інформації."
+    broken_block_factory_alert: "Не вдалося завантажити блок. Деякі елементи інтерфейсу можуть відображатися неправильно."
     critical_deprecation:
       notice: "<b>[Повідомлення адміністратора]</b> %{source} містить код, який потребує оновлення. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>дізнатися більше</em></a>)"
       theme_source: "Тема <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Плагін '%{name}'"
       unknown_source: "Одна з ваших тем або плагінів"
+    dev_tools:
+      drag_to_move: "Перетягніть, щоб перемістити"
+      toggle_plugin_outlet_debug: "Переключити налагодження розетки плагіна"
+      toggle_block_debug: "Переключити налагодження блоків"
+      block_debug:
+        outlet_boundaries: "Зовнішні межі"
+        visual_overlay: "Візуальне накладення"
+        ghost_blocks: "Блоки-привиди"
+        condition_debugging: "Налагодження умов"
+      toggle_safe_mode: "Увімкнути/вимкнути безпечний режим"
+      toggle_verbose_localization: "Увімкнути/вимкнути детальну локалізацію"
+      toggle_mobile_view: "Переключити мобільний перегляд"
+      disable_dev_tools: "Вимкнути інструменти для розробників"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіо)"
@@ -498,6 +524,12 @@ uk:
         title: "Розпочати публікацію"
         description: "Дайте людям щось, про що можна поговорити разом"
         action: "Ідеї-криголами"
+        choose_option: "З чого б ви хотіли почати?"
+        predefined_topics: "Шаблони криголамів"
+        predefined_topics_subtitle: "Дайте новим учасникам тему для обговорення, виберіть шаблон для редагування та створіть свій власний."
+        predefined_topics_description: "Виберіть з колекції тем для початку розмови, щоб розпочати обговорення"
+        use_predefined: "Переглянути шаблони"
+        start_with_this: "Почніть з цього"
         back: "Назад"
         icebreakers:
           fun_facts:
@@ -3238,6 +3270,7 @@ uk:
       upload_description: "введіть опис завантаження"
       olist_title: "Нумерований список"
       ulist_title: "Маркований список"
+      list_title: "Списки"
       list_item: "Елемент списку"
       toggle_direction: "Змінити напрямок"
       apply_wrap_title: "Застосувати загортання"
@@ -3498,8 +3531,6 @@ uk:
         votes_released: "голосування опубліковано"
         new_features: "випущено нові функції дискурсу"
         admin_problems: "нова порада на інформаційній панелі вашого сайту"
-        upcoming_change_available: "доступна нова майбутня зміна '%{changeName}'"
-        upcoming_change_automatically_promoted: "майбутню зміну '%{changeName}' було автоматично ввімкнено"
     upload_selector:
       change: "Змінити"
       delete: "Видалити"
@@ -6097,11 +6128,14 @@ uk:
         title: "Список доступних звітів"
         sidebar_title: "Звіти"
         back: "Назад до всіх звітів"
+        group_engagement: "Залучення"
         group_traffic: "Трафік"
         group_members: "Учасники"
+        group_content: "Контент і здоров'я"
         group_moderation: "Модерація"
         group_security: "Безпека"
         group_other: "Інше"
+        legacy_warning: "Це застарілий звіт. Незабаром його буде вилучено. Якщо вам потрібна допомога в пошуку заміни, зверніться до служби підтримки."
       config_sections:
         account:
           title: "Обліковий запис"
@@ -6146,6 +6180,7 @@ uk:
         enabled_for_options:
           no_one: "Ніхто"
           everyone: "Усі"
+          staff: "тільки %{staffGroupName}"
           specific_groups: "Конкретна(і) група(и)"
           specific_groups_with_group_names:
             one: "група %{groupNames}"
@@ -6170,6 +6205,7 @@ uk:
           all: "Всі"
           enabled_all: "Усі увімкнені стани"
           enabled: "Включено"
+          enabled_for_staff: "Увімкнено для %{staffGroupName}"
           enabled_for_specific_groups: "Увімкнено для певних груп"
           disabled: "Вимкнено"
           impact_type_all: "Всі види впливу"
@@ -6259,6 +6295,7 @@ uk:
               help_text: "Рекомендований розмір - 600 x 80 пікселів."
             large_icon:
               title: "Квадратна іконка"
+              description: "Квадратна версія зображення логотипу відображається у верхній частині сайту та також є логотипом мобільного додатку."
               help_text: "Рекомендований розмір становить 512 х 512 пікселів."
             square_icon_dark:
               required: "Використовувати інший квадратний значок для темного режиму?"
@@ -8763,6 +8800,7 @@ uk:
         more_than_50_results: "Знайдено понад 50 результатів. Будь ласка виправте параметри пошуку."
         no_results: "Відповідних текстів на сайті не знайдено"
         interpolation_keys: "Доступні ключі інтерполяції:"
+        interpolation_key_used: "Вже використано"
         outdated:
           title: "Цей переклад застарів"
           description: "Переклад за замовчуванням для цього ключа змінився після створення цього перевизначення. Будь ласка, перевірте нижче, чи ваш переклад відповідає будь-яким змінам, які були внесені до оригіналу."

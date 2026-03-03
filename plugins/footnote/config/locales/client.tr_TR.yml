@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse Dipnotları"
   js:
     footnote:
+      title: "Dipnotlar"
       add: "Dipnot ekle"

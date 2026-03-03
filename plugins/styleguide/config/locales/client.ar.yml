@@ -85,6 +85,8 @@ ar:
           title: "قائمة المنشورات"
           empty_example: "<PostList /> حالة فارغة"
           populated_example: "<PostList /> حالة ممتلئة"
+        post_oneboxes:
+          title: "لوحات معاينة المنشورات"
         topic_map:
           title: "خريطة الموضوع"
         site_header:

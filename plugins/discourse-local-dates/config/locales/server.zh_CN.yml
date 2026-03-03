@@ -6,6 +6,7 @@
 
 zh_CN:
   site_settings:
+    discourse_local_dates_enabled: "启用“discourse-local-dates”插件。这样，用户就可以在文章中使用“[date]”来向读者显示其本地时区的日期。"
     discourse_local_dates_default_formats: "常用的日期时间格式，请参阅：<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs 字符串格式</a>"
     discourse_local_dates_default_timezones: "时区的默认列表，必须是有效的<a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>时区</a>"
     discourse_local_dates_email_format: "用于在电子邮件中显示日期的格式，示例：'LLLL'、'llll' 或 'YYYY-MM-DDTHH:mm:ss[Z]'。请参阅：<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs 字符串格式</a>"

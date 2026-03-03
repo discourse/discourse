@@ -41,6 +41,8 @@ tr_TR:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "İlk %{minutes} dakikadan sonra bir anketi değiştiremezsiniz."
       cannot_edit_named_poll_with_votes: "İlk %{minutes} dakikadan sonra <strong>${name}</strong> adlı anketi değiştiremezsiniz."
+    dynamic_poll:
+      enabled_hint: "Seçenekler eklenebilir veya kaldırılabilir."
     no_poll_with_this_name: "Bu gönderiyle ilişkili <strong>%{name}</strong> adlı bir anket yok."
     post_is_deleted: "Silinen bir gönderi üzerinde işlem yapılamaz."
     user_cant_post_in_topic: "Oy veremezsiniz çünkü bu konuda gönderi paylaşamazsınız."

@@ -117,3 +117,6 @@ hu:
     review:
       transcript:
         view: "Korábbi üzenetek átirata"
+      types:
+        reviewable_post_voting_comment:
+          title: "Megjelölt bejegyzéshez tartozó szavazó hozzászólás"

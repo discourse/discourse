@@ -7,9 +7,11 @@
 tr_TR:
   admin_js:
     admin:
+      calendar: "Takvim ve Etkinlikler"
       site_settings:
         categories:
           discourse_post_event: "Discourse Etkinliği"
+          discourse_calendar: "Takvim ve Etkinlikler"
   js:
     notifications:
       titles:
@@ -34,6 +36,7 @@ tr_TR:
         header_title: "Tatiller"
         pick_region_description: "Bir bölge seçerek o bölgenin tatil günlerini görebilirsiniz."
         disabled_holidays_description: "Devre dışı bırakılan tatiller personel tatil takviminin dışında tutulur."
+        header_description: "Bir bölge seçerek o bölgedeki tatil günlerini görüntüleyin. Devre dışı bırakılan tatil günleri personel tatil takviminden çıkarılacaktır."
       date: "Tarih"
       add_to_calendar: "Google Takvim'e Ekle"
       toggle_timezone_offset_title: "Saat dilimi farkını değiştir"
@@ -42,6 +45,7 @@ tr_TR:
         title: "Bölge"
         none: "Hiçbiri"
         use_current_region: "Geçerli Bölgeyi Kullan"
+        select_region: "Bir bölge seçin..."
         names:
           ae: "Birleşik Arap Emirlikleri"
           ar: "Arjantin"
@@ -347,6 +351,7 @@ tr_TR:
       bulk_invite: "Toplu Davet"
       close_event: "Etkinliği kapat"
       open_event: "Etkinliği aç"
+      destroy_event: "Etkinliği yok et"
       invitees_modal:
         title_invited: "Etkinlik Katılımı"
         title_participated: "Katılan kullanıcıların listesi"
@@ -412,6 +417,7 @@ tr_TR:
         event:
           expired: "Süresi doldu"
           closed: "Kapalı"
+          full: "Tam dolu"
           status:
             standalone:
               title: "Bağımsız"
@@ -422,6 +428,12 @@ tr_TR:
             private:
               title: "Özel"
               description: "Özel bir etkinliğe yalnızca davet edilen kullanıcılar katılabilir."
+      composer:
+        name_placeholder: "Etkinlik"
+        end_date_placeholder: "Bitiş tarihini ayarla"
+        location_placeholder: "Konum veya URL ekle"
+        max_attendees_placeholder: "Maksimum katılımcı sayısını belirle"
+        description_placeholder: "Etkinlik açıklaması ekle"
       builder_modal:
         custom_fields:
           label: "Özel Alanlar"
@@ -469,6 +481,9 @@ tr_TR:
         minimal:
           label: "Minimal etkinlik"
           checkbox_label: "Giden/Gitmeyen düğmelerini ve davetlilerin durumunu gizle"
+        max_attendees:
+          label: "Maksimum katılımcı sayısı"
+          placeholder: "Sınır yok"
         allow_chat:
           label: "Sohbet entegrasyonu"
           checkbox_label: "Etkinliğe özel sohbet kanalı oluşturun ve yönetin"
@@ -488,6 +503,7 @@ tr_TR:
           label: "Davet edilen gruplar"
         status:
           label: "Durum"
+        delete_confirmation_message: "Bu etkinliği silmek ister misiniz?"
       invite_user_or_group:
         title: "Kullanıcıları veya grupları bilgilendir"
         invite: "Gönder"

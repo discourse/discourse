@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 sr:
+  js:
+    discourse_math:
+      edit_modal:
+        apply: "Primeni"

@@ -366,6 +366,9 @@ el:
           runs_today: "%{count} σήμερα"
           runs_this_week: "%{count} αυτή την εβδομάδα"
           runs_this_month: "%{count} αυτό τον μήνα"
+          recent_errors:
+            one: "%{count} σφάλμα πρόσφατα"
+            other: "%{count} σφάλματα πρόσφατα"
           runs:
             label: Εκτελέσεις
           name:

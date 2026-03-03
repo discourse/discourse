@@ -2962,8 +2962,6 @@ vi:
         votes_released: "đã trả lượt bình chọn"
         new_features: "tính năng mới của Discourse đã ra mắt"
         admin_problems: "Lời khuyên mới trên bảng điều khiển"
-        upcoming_change_available: "thay đổi mới sắp tới '%{changeName}' hiện đã có sẵn"
-        upcoming_change_automatically_promoted: "thay đổi sắp tới '%{changeName}' đã được kích hoạt tự động"
     upload_selector:
       change: "Thay đổi"
       delete: "Xóa"

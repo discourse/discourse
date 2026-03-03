@@ -6,9 +6,14 @@
 
 hu:
   accepted_answer: "Elfogadott válasz"
+  category_types:
+    support:
+      name: "Támogatás"
+      title: "támogatás"
   site_settings:
     solved_enabled: "Solved plugin engedélyezése, hogy a felhasználók kiválaszthassák a megoldást a témához"
     allow_solved_on_all_topics: "A felhasználók kiválaszthatják a megoldásokat az összes témában (ha nincs bejelölve, akkor a megoldások kategóriánként vagy címkénként kapcsolhatók be)"
+    allow_solved_in_groups: "Megoldások megjelölésének engedélyezése a csoportüzenetekben ezeknek a csoportoknak."
     accept_all_solutions_trust_level: "Szükséges minimum bizalmi szint a megoldások elfogadásához bármelyik témában (even when not OP)"
     accept_all_solutions_allowed_groups: "Csoportok, amelyek bármilyen témában elfogadhatnak megoldásokat (még akkor is, ha nem OP). Adminok és moderátorok mindig engedélyezettek."
     empty_box_on_unsolved: "Egy üres doboz megjelenítése a megoldatlan témák mellett"
@@ -16,9 +21,6 @@ hu:
     solved_topics_auto_close_hours: "Automatikusan zárja le a témát (n) órával az utolsó válasz után, miután a témát megoldották. Állítsa 0-ra az automatikus lezárás letiltásához."
     show_filter_by_solved_status: "Legördülő menü megjelenítése a témalista megoldási állapot szerinti szűréséhez."
     notify_on_staff_accept_solved: "Értesítés küldése a téma létrehozójának, ha egy bejegyzést a stáb megoldásként jelöl meg."
-    ignore_solved_topics_in_assigned_reminder: "Megakadályozhatja, hogy a feladatokra vonatkozó emlékeztetők megoldott témákat is tartalmazzanak. Csak a discourse-assign plugin használata esetén releváns."
-    assignment_status_on_solve: "Ha egy téma megoldódott, az összes hozzárendelés erre az állapotra frissítése"
-    assignment_status_on_unsolve: "Ha egy téma megoldatlan, az összes hozzárendelés erre az állapotra frissítése"
     disable_solved_education_message: "Oktatási üzenet letiltása a megoldott témáknál."
     accept_solutions_topic_author: "Engedélyezés, hogy a téma szerzője elfogadjon egy megoldást."
     solved_add_schema_markup: "QAPage sémaleíró hozzáadása a HTML-hez."
@@ -30,6 +32,7 @@ hu:
   reports:
     accepted_solutions:
       title: "Elfogadott megoldások"
+      description: "Egy adott dátumtartományban naponta hány témára fogadtak el megoldást, opcionális kategóriaszűrővel és egy 30 napos összehasonlítási összeggel."
       xaxis: "Nap"
       yaxis: "Összesen"
   solved:

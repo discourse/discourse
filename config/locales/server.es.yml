@@ -805,6 +805,10 @@ es:
         other: "No se puede eliminar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}."
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el número de temas es %{count}."
     uncategorized_description: "Temas que no necesitan una categoría o no encajan en ninguna de las categorías existentes."
+  category_types:
+    discussion:
+      name: "Debate"
+      title: "debate"
   trust_levels:
     admin: "Administrador"
     staff: "Personal"
@@ -1128,11 +1132,14 @@ es:
       every_month: "cada mes"
       every_six_months: "cada seis meses"
   user_api_key:
+    title: 'Autorizar a "%{application_name}"'
     authorize: "Autorizar"
     deny: "Cancelar"
     read: "leer"
     read_write: "lectura/escritura"
     logged_in_as: "Sesión iniciada como"
+    permissions_header: 'Esto permitirá a "%{application_name}" hacer lo siguiente:'
+    redirect_warning: "Si lo autorizas, se te redireccionará a"
     instructions: 'Acabamos de generar una nueva clave API de usuario para que uses con «%{application_name}». Pega la siguiente clave en tu aplicación:'
     otp_description: '¿Te gustaría permitir a «%{application_name}» acceder a este sitio?'
     otp_confirmation:
@@ -2177,7 +2184,6 @@ es:
     group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
     allow_anonymous_mode: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear publicaciones o temas en todo el sitio. Véase también «allow_anonymous_likes»."
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
-    hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
     hide_new_user_profiles: "Oculta los perfiles de usuarios de nivel de confianza 1 o inferior al público y a los usuarios de nivel de confianza 1 hasta que publiquen por primera vez. Esta característica está desactivada incondicionalmente en los sitios must_approve_users y invite_only."
     allow_users_to_hide_profile: "Permitir a los usuarios ocultar su perfil y presencia"
     hide_user_activity_tab: "Ocultar la pestaña de actividad en los perfiles de usuario, excepto para el Administrador y para mí."
@@ -2745,6 +2751,7 @@ es:
         updating_user_ids: "Actualizando identificadores de usuario…"
         deleting_source_user: "Eliminando usuario de origen…"
   user:
+    anonymized: "[eliminado debido a la anonimización del usuario]"
     deactivated: "Ha sido desactivado debido a muchos correod electrónicos rechazados a «%{email}»."
     deactivated_by_staff: "Desactivado por el personal"
     deactivated_by_inactivity:
@@ -3729,6 +3736,7 @@ es:
         %{respond_instructions}
     user_replied:
       title: "Usuario respondió"
+      preview: "Alguien ha respondido a tu publicación."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3751,6 +3759,7 @@ es:
         %{respond_instructions}
     user_quoted:
       title: "Usuario citado"
+      preview: "Alguien ha citado tu publicación."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3762,6 +3771,7 @@ es:
         %{respond_instructions}
     user_linked:
       title: "Usuario enlazado"
+      preview: "Publicación enlazada desde otro tema."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3773,6 +3783,7 @@ es:
         %{respond_instructions}
     user_mentioned:
       title: "Usuario mencionado"
+      preview: "Alguien te ha mencionado en una publicación."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3861,6 +3872,7 @@ es:
         %{respond_instructions}
     user_posted_pm:
       title: "Usuario envió un MP"
+      preview: "Alguien te ha enviado un mensaje personal."
       subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3949,6 +3961,7 @@ es:
       preheader: "Un breve resumen desde %{since}"
     forgot_password:
       title: "Olvidé la contraseña"
+      preview: "Restablece tu contraseña."
       subject_template: "[%{email_prefix}] restablecer contraseña"
       text_body_template: |
         Alguien ha pedido restablecer tu contraseña en [%{site_name}](%{base_url}).
@@ -4037,6 +4050,7 @@ es:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
+      preview: "Dirección de correo electrónico actualizada."
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"
       text_body_template: "Este es un mensaje automatizado para comunicarte que tu correo electrónico para \nel sitio %{site_name} ha sido modificado. Si esto fue un error, ponte en contacto con un \nadministrador del sitio.\n\nTu correo electrónico fue modificado por:\n\n%{new_email}\n"
     notify_old_email_add:
@@ -4051,6 +4065,7 @@ es:
         %{new_email}
     signup_after_approval:
       title: "Entrar después de ser aprobado"
+      preview: "Nueva cuenta aprobada."
       subject_template: "¡Tu solicitud fue aprobada en %{site_name}!"
       text_body_template: |
         ¡Te damos la bienvenida a %{site_name}!
@@ -4901,6 +4916,8 @@ es:
     deprecation_error_label: Hacer que las depreciaciones de Javascript produzcan un error
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
+  dev_mode:
+    title: "Modo de desarrollo"
   wizard:
     title: "Instalación de Discourse"
     step:
@@ -4957,6 +4974,8 @@ es:
       pr_summary: "%{commits} commits cambiaron %{changed_files} archivos con %{additions} adiciones y %{deletions} eliminaciones"
       no_description: "Contribuye al desarrollo de %{repo} creando una cuenta en GitHub."
       pr_title:
+        default: "Pull request"
+        draft: "Borrador de pull request"
         closed: "Pull request cerrado"
       status_date:
         open: "abierto"
@@ -4978,6 +4997,7 @@ es:
       confirm_body: "¡Bien! Se han activado las notificaciones."
       custom: "Notificación de %{username} en %{site_title}"
   staff_action_logs:
+    redacted: "[contenido no visible]"
     json_too_long: "Valores no registrados porque superan los límites de longitud de columna"
     not_found: "no encontrado"
     unknown: "desconocido"
@@ -5156,9 +5176,13 @@ es:
       reject_and_delete:
         title: "Rechazar y eliminar la publicación"
         complete: "Publicación rechazada y eliminada."
+      reject_and_delete_standalone:
+        title: "No, eliminar publicación"
       reject_and_keep_deleted:
         title: "Mantener publicación eliminada"
         complete: "La publicación se ha rechazado y se ha mantenido eliminada."
+      reject_and_keep_deleted_standalone:
+        title: "No, mantener la publicación eliminada"
       scrub:
         title: Borrar registro
       approve_and_restore:
@@ -5257,6 +5281,10 @@ es:
       reserved_id: "tiene una palabra clave reservada como id: %{id}"
       unsafe_description: "tiene una descripción HTML no segura"
       invalid_tag_group: "tiene un grupo de etiquetas no válido: %{tag_group_name}"
+  discourse_id:
+    already_registered: "Este sitio ya está registrado con Discourse ID"
+    errors:
+      regenerate_failed: "Error al regenerar las credenciales. Inténtalo de nuevo más tarde."
   activemodel:
     errors:
       <<: *errors

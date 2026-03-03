@@ -10,6 +10,9 @@ hu:
       sort_options:
         votes: "Szavazatok"
     topic_voting:
+      notification_label:
+        vote_released: "Visszaadott szavazat"
+      title: "Témaszavazás"
       reached_limit: "Kifogytál a szavazatokból, törölj egy korábbi szavazatot!"
       list_votes: "Szavazataid listázása"
       votes_nav_help: "legtöbb szavazatot kapott témák"
@@ -20,6 +23,9 @@ hu:
       voted_title: "Szavazott"
       voting_closed_title: "Lezárva"
       voting_limit: "Korlát"
+      see_votes: "%{count}/%{max} szavazatod maradt"
+      locked: "Zárva"
+      locked_description: "Növeld a bizalmi szinted a szavazáshoz"
       votes:
         one: "%{count} szavazat"
         other: "%{count} szavazat"
@@ -27,7 +33,24 @@ hu:
         one: "Szavazás"
         other: "Szavazás"
       remove_vote: "Szavazat eltávolítása"
+      no_votes_title_self: "Még nem szavaztál egyetlen témára sem"
+      no_votes_title_others: "%{username} még nem szavazott egyetlen témára sem"
     filters:
       votes:
         title: "Szavazatok"
         help: "legtöbb szavazatot kapott témák"
+      my_votes:
+        title: "Szavazataim"
+        help: "témák, amelyekre szavaztál"
+    search:
+      most_votes: "Legtöbb szavazat"
+      advanced:
+        vote:
+          count:
+            label: "Minimális szavazatszám"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Téma szavazási esemény"
+          topic_upvote: "Amikor egy felhasználó szavaz egy témában"
+          topic_unvote: "Amikor egy felhasználó visszavonja a szavazatát egy témában"

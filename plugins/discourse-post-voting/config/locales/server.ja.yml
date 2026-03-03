@@ -51,9 +51,24 @@ ja:
         agree_and_delete:
           title: "コメントを削除"
           description: "ユーザーが閲覧できないようにコメントを削除します。"
+        agree_and_suspend:
+          title: "ユーザーを凍結する"
+          description: "通報に同意し、ユーザーを凍結します。"
+        agree_and_silence:
+          title: "ユーザーを投稿禁止にする"
+          description: "通報に同意し、ユーザーを投稿禁止にします。"
         disagree_and_restore:
           title: "却下してコメントを復元"
           description: "すべてのユーザーが閲覧できるようにコメントを復元します。"
+        disagree:
+          title: "コメントを保持"
+          description: "通報を却下してコメントを未変更のままにします。"
+        ignore:
+          title: "通報を無視する"
+          description: "対応せずにキューから削除します。"
+        delete_and_agree:
+          title: "通報を無視してコメントを削除する"
+          description: "キューから削除して通報を無視し、そのコメントを削除します。"
   post_action_types:
     vote:
       title: "投票"
@@ -100,10 +115,17 @@ ja:
             title: "コメントを削除"
             description: "ユーザーが閲覧できないようにコメントを削除します。"
           delete_and_agree:
+            title: "通報を無視してコメントを削除する"
             description: "キューから削除して通報を無視し、そのコメントを削除します。"
           disagree_and_restore:
             title: "却下してコメントを復元"
             description: "すべてのユーザーが閲覧できるようにコメントを復元します。"
+          disagree:
+            title: "コメントを保持"
+            description: "通報を却下してコメントを未変更のままにします。"
+          ignore:
+            title: "通報を無視する"
+            description: "対応せずにキューから削除します。"
         transcript:
           view: "前のコメントのトランスクリプトを表示"
       reviewable_score_types:

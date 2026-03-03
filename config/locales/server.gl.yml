@@ -1595,7 +1595,6 @@ gl:
     enable_category_group_moderation: "Permitirlles aos grupos moderar contido en categorías específicas"
     group_in_subject: "Estabelece %%{optional_pm} no asunto do correo electrónico co nome do primeiro grupo en MP, véxase: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personaliza o formato do asunto para correos estándar</a>"
     anonymous_account_duration_minutes: "Para protexer o anonimato, crear unha nova conta anónima cada N minutos para cada usuario. Exemplo: se se estabelece en 600, así que pasen 600 minutos desde a última publicación E o usuario cambie a anónimo, crearase unha nova conta anónima."
-    hide_user_profiles_from_public: "Desactivar tarxetas de usuario, perfís de usuario e directorio de usuarios para usuarios anónimos."
     allow_users_to_hide_profile: "Permitirlles aos usuarios agochar o seu perfil e presenza"
     allow_featured_topic_on_user_profiles: "Permitir aos usuarios salientar unha ligazón a un tema da súa tarxeta de usuario e perfil."
     show_inactive_accounts: "Permitir aos usuarios coa sesión iniciada ver os perfís de contas inactivas."

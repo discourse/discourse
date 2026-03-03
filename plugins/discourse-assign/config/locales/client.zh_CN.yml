@@ -129,6 +129,8 @@ zh_CN:
       web_hooks:
         assign_event:
           group_name: "指定事件"
+          assigned: "当用户指定主题时"
+          unassigned: "当用户取消指定主题时"
     search:
       advanced:
         in:

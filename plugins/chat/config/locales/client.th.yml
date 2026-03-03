@@ -12,11 +12,16 @@ th:
           always: "เสมอ"
           never: "ไม่เคย"
     chat:
+      edit_category:
+        description: "รายละเอียด"
+        actions: "การกระทำ"
+        settings: "การตั้งค่า"
       deleted_chat_username: ลบ
       dates:
         yesterday: "เมื่อวาน"
       create: "สร้าง"
       cancel: "ยกเลิก"
+      pinned: "ปักหมุดแล้ว"
       channel_settings:
         edit: "แก้ไข"
         add: "เพิ่ม"

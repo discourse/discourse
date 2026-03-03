@@ -2142,7 +2142,6 @@ ja:
     allow_likes_in_anonymous_mode: "サイトを匿名で閲覧しているユーザーが投稿に「いいね！」できるようにするには、この設定を有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックに「いいね！」する際に、自分の ID を非表示にすることを選択できます。この設定には `allow_anonymous_mode` 設定が有効になっている必要があります。"
     anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ。この設定には `allow anonymous mode` 設定が有効になっている必要があります。"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
-    hide_user_profiles_from_public: "匿名ユーザーのユーザーカード、ユーザープロファイル、およびユーザーディレクトリを無効にする。"
     hide_new_user_profiles: "信頼レベル 1 以下のユーザープロファイルは、そのユーザーが初めて投稿するまで一般ユーザーと信頼レベル 1 のユーザーに対して非表示になります。この機能は must_approve_users と invite_only サイトでは無条件に無効になります。"
     allow_users_to_hide_profile: "ユーザーがプロファイルとプレゼンスを非表示することを許可する"
     hide_user_activity_tab: "管理者と自分以外のユーザープロファイルでアクティビティタブを非表示にします。"

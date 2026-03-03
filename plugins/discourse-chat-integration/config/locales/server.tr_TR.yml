@@ -51,6 +51,8 @@ tr_TR:
     chat_integration_flowdock_excerpt_length: "Flowdock gönderisi alıntı uzunluğu"
     chat_integration_groupme_enabled: "Groupme sohbet entegrasyon sağlayıcısını etkinleştirin"
     chat_integration_groupme_excerpt_length: "Groupme gönderisi alıntı uzunluğu"
+    chat_integration_groupme_bot_ids: "*gerekli* Birden fazla varsa ‘,’ ile ayrılmış bot kimlikleri"
+    chat_integration_groupme_instance_names: " *gerekli* GroupMe sohbetinin adı, birden fazla varsa ‘,’ ile ayrılmış (Bot Kimlikleri ile aynı sırayla)"
     chat_integration_teams_enabled: "Microsoft Teams sohbet tümleştirme sağlayıcısını etkinleştirin"
     chat_integration_teams_excerpt_length: "Microsoft Team gönderisi alıntı uzunluğu"
     chat_integration_powerautomate_enabled: "Microsoft Power Automate entegrasyon sağlayıcısını etkinleştirin"
@@ -91,8 +93,10 @@ tr_TR:
         create:
           created: "Kural başarıyla oluşturuldu"
           updated: "Kural başarıyla güncellendi"
+          error: "Üzgünüz, bu kuralı oluştururken bir hata oluştu."
         delete:
           success: "Kural başarıyla silindi"
+          error: "Üzgünüz, bu kuralı silerken bir hata oluştu. Kuralların listesini görmek için `/discourse status` komutunu çalıştırın."
         not_found:
           tag: "*%{name}* etiketi bulunamadı."
           category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"
@@ -154,8 +158,10 @@ tr_TR:
         create:
           created: "Kural başarıyla oluşturuldu"
           updated: "Kural başarıyla güncellendi"
+          error: "Üzgünüz, bu kuralı oluştururken bir hata oluştu."
         delete:
           success: "Kural başarıyla silindi"
+          error: "Üzgünüz, bu kuralı silerken bir hata oluştu. Kuralların listesini görmek için <code>/status</code> komutunu çalıştırın."
         not_found:
           tag: "<b>%{name}</b> etiketi bulunamadı."
           category: "<b>%{name}</b> kategorisi bulunamadı. Mevcut kategoriler: <b>%{list}</b>"
@@ -186,8 +192,10 @@ tr_TR:
         create:
           created: "Kural başarıyla oluşturuldu"
           updated: "Kural başarıyla güncellendi"
+          error: "Üzgünüz, bu kuralı oluştururken bir hata oluştu."
         delete:
           success: "Kural başarıyla silindi"
+          error: "Üzgünüz, bu kuralı silerken bir hata oluştu. Kuralların listesini görmek için `/discourse status` komutunu çalıştırın."
         not_found:
           tag: "*%{name}* etiketi bulunamadı."
           category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"

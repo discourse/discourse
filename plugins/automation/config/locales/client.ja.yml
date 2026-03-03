@@ -456,6 +456,8 @@ ja:
           runs_today: "今日 %{count} 回"
           runs_this_week: "今週 %{count} 回"
           runs_this_month: "今月 %{count} 回"
+          recent_errors:
+            other: "最近 %{count} 件のエラーが発生しました"
           runs:
             label: 実行
           name:

@@ -5,3 +5,15 @@
 # https://translate.discourse.org/
 
 sl:
+  solved: "Rešeno"
+  posted: "objavljeno"
+  like_count:
+    one: "%{count} všeček"
+    two: "%{count} všečka"
+    few: "%{count} všečke"
+    other: "%{count} všečkov"
+  reply_count:
+    one: "%{count} odgovor"
+    two: "%{count} odgovora"
+    few: "%{count} odgovori"
+    other: "%{count} odgovorov"

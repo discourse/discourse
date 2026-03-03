@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 en_GB:
+  admin_js:
+    admin:
+      adplugin:
+        house_ads:
+          categories: "Categories"

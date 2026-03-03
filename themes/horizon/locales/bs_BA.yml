@@ -5,3 +5,13 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  solved: "Riješeno"
+  posted: "zadnja objava"
+  vote_count:
+    one: "%{count} glas"
+    few: "%{count} glasova"
+    other: "%{count} glasova"
+  reply_count:
+    one: "%{count} odgovor"
+    few: "%{count} odgovora"
+    other: "%{count} odgovora"

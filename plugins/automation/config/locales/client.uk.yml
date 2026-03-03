@@ -459,6 +459,11 @@ uk:
           runs_today: "%{count} сьогодні"
           runs_this_week: "%{count} цього тижня"
           runs_this_month: "%{count} цього місяця"
+          recent_errors:
+            one: "нещодавно виникла %{count} помилка"
+            few: "нещодавно виникли %{count} помилки"
+            many: "Нещодавно виникли %{count} помилки"
+            other: "Нещодавно виникли %{count} помилки"
           runs:
             label: Запуски
           name:

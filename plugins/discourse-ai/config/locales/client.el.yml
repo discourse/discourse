@@ -92,6 +92,8 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      llm_selector:
+        none: "Κανένα"
       features:
         back: "Πίσω"
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
@@ -194,8 +196,19 @@ el:
         save: "Αποθήκευση"
         remove_parameter: "Αφαίρεση"
         parameter_required: "Απαιτείται"
+        credential_not_set: "(δεν έχει οριστεί)"
+        edit: "Επεξεργασία"
+        test: "Δοκιμή"
+        delete: "Σβήσιμο"
+      secrets:
+        short_title: "Διαπιστευτήρια"
+        name: "Όνομα"
+        secret: "Τιμή"
+        back: "Πίσω"
+        save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: "Σβήσιμο"
+        embedding: "Ενσωμάτωση"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"

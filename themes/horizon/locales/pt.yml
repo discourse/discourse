@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 pt:
+  solved: "Resolvido"
+  posted: "publicou"
+  vote_count:
+    one: "%{count} voto"
+    other: "%{count} votos"
+  like_count:
+    one: "%{count} curtiu"
+    other: "%{count} curtiram"
+  reply_count:
+    one: "%{count} resposta"
+    other: "%{count} respostas"

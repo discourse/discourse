@@ -3445,8 +3445,6 @@ cs:
         votes_released: "hlas byly uvolněn"
         new_features: "byly vydány nové funkce Discourse"
         admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
-        upcoming_change_available: "nová nadcházející změna '%{changeName}' je k dispozici"
-        upcoming_change_automatically_promoted: "nadcházející změna '%{changeName}' byla automaticky povolena"
     upload_selector:
       change: "Změnit"
       delete: "Smazat"

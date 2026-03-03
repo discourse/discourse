@@ -353,6 +353,7 @@ uk:
       bulk_invite: "Масове запрошення"
       close_event: "Закрити подію"
       open_event: "Відкрити подію"
+      destroy_event: "Знищити подію"
       invitees_modal:
         title_invited: "Участь у Події"
         title_participated: "Список користувачів, які брали участь"
@@ -437,6 +438,12 @@ uk:
             private:
               title: "Приватні"
               description: "До закритої події можуть приєднатися лише запрошені користувачі."
+      composer:
+        name_placeholder: "Подія"
+        end_date_placeholder: "Встановіть дату закінчення"
+        location_placeholder: "Додати місцезнаходження або URL-адресу"
+        max_attendees_placeholder: "Встановити максимальну кількість відвідувачів"
+        description_placeholder: "Додати опис події"
       builder_modal:
         custom_fields:
           label: "Користувацькі поля"
@@ -506,6 +513,7 @@ uk:
           label: "Запрошені групи"
         status:
           label: "Статус"
+        delete_confirmation_message: "Видалити цю подію?"
       invite_user_or_group:
         title: "Сповістити користувача(ів) або групу(и)"
         invite: "Надіслати"

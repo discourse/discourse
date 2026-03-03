@@ -18,6 +18,7 @@ tr_TR:
         title: "Şablonlar (metin alanı içinde)"
         insert_template: "%{shortcut} Şablon ekle"
     templates:
+      filter_hint: "Anahtar kelimeye göre filtrele..."
       insert_template: "Şablon ekle"
       close_templates: "Şablon seçiciyi kapat"
       copy: "Şablonu kopyala"

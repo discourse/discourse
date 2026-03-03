@@ -8,5 +8,11 @@ tr_TR:
   js:
     user_notes:
       title: "Kullanıcı notları"
+      attach: "Kullanıcı notu ekle"
       attach_note_description: "Bu kullanıcı hakkında bir not ekleyin. Bu not yalnızca personel tarafından görülebilir."
+      remove: "Kullanıcı notunu kaldır"
+      show: "Kullanıcı notları (%{count})"
       delete_confirm: "Bu kullanıcı notunu silmek istediğinizden emin misiniz?"
+      show_post: "Gönderiyi göster"
+      show_flag: "Bayrağı göster"
+      copy_reviewable_note: "Notu %{username}''nın profilindeki 'Kullanıcı Notu'na kopyala?"

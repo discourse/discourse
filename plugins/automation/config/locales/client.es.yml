@@ -280,6 +280,10 @@ es:
               label: Etiquetas
               description: Opcional, solo se activará si la publicación tiene alguna de estas etiquetas
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Plantilla de email
         not_found: No se ha podido encontrar el script «%{script}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
         zapier_webhook:
           fields:
@@ -429,6 +433,11 @@ es:
               label: "Nombre del campo personalizado del usuario"
         set_topic_timer:
           title: Establecer temporizador de tema
+          fields:
+            type:
+              label: Tipo de temporizador
+            duration:
+              label: Duración del temporizador
       unnamed_automation: "Automatización sin nombre"
       models:
         script:

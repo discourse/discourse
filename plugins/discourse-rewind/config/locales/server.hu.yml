@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    discourse_rewind_enabled: "Engedélyezd a Discourse Rewind funkciót, hogy egy szórakoztató év végi összefoglalót készíthess a tagok közösségi tevékenységeiről."
+  discourse_rewind:
+    report_failed: "Nem sikerült létrehozni a Discourse Rewind jelentést."
+    invalid_year: "A visszatekerés csak januárban vagy decemberben generálható."
+    user_not_found: "A felhasználó nem található, vagy nem tekinthető meg."
+    reports_not_cached: "A jelentések még nem készültek el. Kérjük, frissítse az oldalt."
+    report_not_found: "Jelentés nem található."
+    cannot_share_when_profile_hidden: "A Rewind megosztásához engedélyezned kell másoknak a nyilvános profilod megtekintését."

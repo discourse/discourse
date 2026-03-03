@@ -40,6 +40,11 @@ sq:
       chat_channels_count: "Kanalet e bisedës"
       chat_users_count: "Përdoruesit e bisedës"
     chat:
+      edit_category:
+        tab_title: "Biseda"
+        description: "Përshkrimi"
+        actions: "Veprimet"
+        settings: "Rregullimet"
       text_copied: Teksti u kopjua në memo
       link_copied: Linku u kopjua në memo
       back_to_forum: "Forumi"
@@ -52,6 +57,7 @@ sq:
       bot: "bot"
       create: "Krijo"
       cancel: "Anulo"
+      pinned: "E përzgjedhur"
       channel_settings:
         edit: "Redakto"
         add: "Shto"

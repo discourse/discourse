@@ -22,9 +22,16 @@ zh_TW:
           settings: "設定"
           save: "儲存"
           delete: "刪除"
+          html: "HTML"
+          categories: "分類"
+          groups: "群組"
           filter_placeholder: "選擇廣告..."
           more_settings: "更多設置"
           preview: "預覽"
+          name: "名稱"
+          edit: "編輯"
+          tabs:
+            settings: "設定"
           topic_list_top:
             title: "主題列表頂部廣告"
             description: "顯示在主題列表頁面頂部的廣告。"

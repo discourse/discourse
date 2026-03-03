@@ -85,24 +85,80 @@ hu:
             year: Éves
         payment_button: Előfizetés
         success: Köszönjük! Előfizetését létrehoztuk.
+        incomplete: A fizetés nem fejeződött be. Az előfizetésed a fizetés teljesítése után fog frissülni.
+        validate:
+          payment_options:
+            required: Kérjük, válasszon egy előfizetési csomagot.
       user:
         payments:
+          id: Fizetési azonosító
+          amount: Összeg
           created_at: Létrehozott
+        payments_help: Nincsenek kifizetések
         plans:
           product: Név
+        subscriptions_help: Nincsenek aktív előfizetései.
         subscriptions:
+          id: Előfizetés-azonosító
           status: Állapot
+          discounted: Kedvezményes
+          renews: Megújítás
           update_card:
+            heading: "Előfizetéshez tartozó kártya frissítése: %{sub_id}"
             single: "Frissítés"
           created_at: Létrehozott
           cancel: mégse
+          cancelled: lemondott
+          operations:
+            destroy:
+              confirm: Biztosan lemondja ezt az előfizetést?
       subscribe:
+        title: Előfizetés
+        view_past: Korábbi vásárlások megtekintése
+        no_products: Jelenleg nincsenek elérhető termékek.
+        unauthenticated: Jelentkezzen be vagy hozzon létre egy fiókot a feliratkozáshoz.
+        invalid_coupon: Érvénytelen kuponkódot adott meg. Kérjük, próbálja újra.
+        invalid_cardholder_name: Kártyatulajdonos nevének megadása kötelező.
+        invalid_cardholder_country: Az ország megadása kötelező.
+        invalid_cardholder_state: Az állam megadása kötelező.
+        invalid_cardholder_province: A tartomány megadása kötelező.
+        transaction_error: Hiba történt a fizetés feldolgozása során. Kérjük, próbálja újra.
+        card:
+          title: Fizetés
+        customer:
+          title: Ügyféladatok
+        promo_code: Kupon
+        buttons:
+          subscribe: Előfizetés
+        purchased: Megvásárolva
+        go_to_billing: Ugrás a Számlázáshoz
+        already_purchased: Nagyon köszönjük, hogy előzetesen megvásárolta ezt a terméket!
+        cardholder_name: Kártyatulajdonos neve
         cardholder_address:
+          line1: Utca, házszám
           city: Város
+          state: Állam
+          province: Tartomány
+          country: Ország
+          postal_code: Irányítószám
         countries:
+          AF: "Afganisztán"
+          AX: "Åland-szigetek"
+          AL: "Albánia"
+          DZ: "Algéria"
+          AS: "Amerikai Szamoa"
+          AD: "Andorra"
+          AO: "Angola"
+          AI: "Anguilla"
+          AQ: "Antarktisz"
+          AG: "Antigua és Barbuda"
           AR: "Argentína"
+          AM: "Örményország"
+          AW: "Aruba"
           AU: "Ausztrália"
           AT: "Ausztria"
+          AZ: "Azerbajdzsán"
+          BS: "Bahamák"
           BH: "Bahrein"
           BD: "Banglades"
           BB: "Barbados"
@@ -183,6 +239,7 @@ hu:
           LU: "Luxemburg"
           MY: "Malajzia"
           MX: "Mexikó"
+          MC: "Monaco"
           MN: "Mongólia"
           ME: "Montenegró"
           MS: "Montserrat"
@@ -252,22 +309,75 @@ hu:
           SZ: "Szváziföld"
           SE: "Svédország"
           CH: "Svájc"
+          SY: "Szíriai Arab Köztársaság"
+          TW: "Tajvan, Kína tartomány"
+          TJ: "Tádzsikisztán"
+          TZ: "Tanzánia Egyesült Köztársasága"
           TH: "Thaiföld"
+          TL: "Kelet-Timor"
+          TG: "Togo"
+          TK: "Tokelau"
+          TO: "Tonga"
+          TT: "Trinidad és Tobago"
           TN: "Tunézia"
           TR: "Törökország"
+          TM: "Türkmenisztán"
+          TC: "Turks- és Caicos-szigetek"
+          TV: "Tuvalu"
+          UG: "Uganda"
           UA: "Ukrajna"
+          AE: "Egyesült Arab Emírségek"
           GB: "Egyesült Királyság"
           US: "Egyesült Államok"
+          UM: "Egyesült Államok külvárosi szigetei"
+          UY: "Uruguay"
+          UZ: "Üzbegisztán"
+          VU: "Vanuatu"
+          VE: "Venezuela, Bolivári Köztársaság"
+          VN: "Vietnám"
+          VG: "Brit Virgin-szigetek"
+          VI: "Virgin-szigetek, Egyesült Államok"
+          WF: "Wallis és Futuna"
+          EH: "Nyugat-Szahara"
+          YE: "Jemen"
+          ZM: "Zambia"
+          ZW: "Zimbabwe"
       billing:
+        name: Teljes név
         email: E-mail
+        phone: Telefonszám
+      confirmation:
+        amount: Összeg
+        last4: Kártyaszám
+      buttons:
+        make_payment: Fizetés
+        confirm_payment: Fizetés megerősítése
+        success: Visszalépés
       admin:
+        unconfigured: 'A Stripe nincs megfelelően konfigurálva. További információkért lásd a Discourse Meta oldalt.'
+        on_meta: Diskurzus előfizetések a Meta oldalon
         dashboard:
           title: Vezérlőpult
           table:
             head:
               user: Felhasználó
+              payment_intent: Fizetési azonosító
+              receipt_email: Nyugta e-mailben
+              amount: Összeg
         products:
+          title: Termékek
+          operations:
+            create: Új termék létrehozása
+            update: Termék frissítése
+            new: Új termék
+            destroy:
+              confirm: Biztosan törli ezt a terméket?
           product:
+            product_id: Termékazonosító
+            name: Termék neve
+            statement_descriptor: Utasításleíró
+            statement_descriptor_help: További információk egy termékről, amelyek megjelennek az ügyfél hitelkártya-kimutatásán.
+            plan_help: Hozzon létre egy árképzési tervet, hogy előfizethessen az ügyfeleknek erre a termékre.
             description: Leírás
             repurchaseable: Újravásárolható?
             repurchase_help: A termék és a kapcsolódó csomagok többszöri megvásárlásának engedélyezése

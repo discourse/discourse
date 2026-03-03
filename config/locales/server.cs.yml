@@ -2270,7 +2270,6 @@ cs:
     group_in_subject: "Nastavit %%{optional_pm} v předmětu e-mailu podle názvu první skupiny v SZ, viz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Přizpůsobit formát předmětu pro standardní e-maily</a>"
     allow_anonymous_mode: "Povolit uživatelům možnost přepnout se při odesílání příspěvků do anonymního režimu. Po aktivaci mohou uživatelé při vytváření příspěvků nebo témat na webu zvolit skrytí své identity. Viz také `allow anonymous likes`."
     anonymous_account_duration_minutes: "Pro ochranu anonymity vytvářet pro každého uživatele každých N minut nový anonymní účet. Příklad: pokud je nastaveno na 600, jakmile od posledního příspěvku uplyne 600 minut A ZÁROVEŇ se uživatel přepne na anonymního uživatele, vytvoří se nový anonymní účet."
-    hide_user_profiles_from_public: "Zakázat uživatelské karty, uživatelské profily a adresář uživatelů pro nepřihlášené uživatele."
     hide_new_user_profiles: "Skrýt profily uživatelů s úrovní důvěryhodnosti 1 nebo nižší před veřejností a uživatelům s úrovní důvěryhodnosti 1 důvěřovat, dokud poprvé nepřispějí. Tato funkce je bezpodmínečně zakázána na stránkách s nastavením 'must_approve_users' a 'invite_only'."
     allow_users_to_hide_profile: "Umožnit uživatelům skrýt svůj profil a přítomnost"
     hide_user_activity_tab: "Skrýt kartu Aktivita v uživatelském profilu pro jiné uživatele, než jsou správci a vlastníci profilu."

@@ -8,24 +8,52 @@ tr_TR:
   activerecord:
     attributes:
       llm_model:
+        name: "Model Kimliği"
         max_prompt_tokens: "Bağlam penceresi"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> dikkat gerektiriyor. Son bir saat içinde, %{total_calls} çağrının %{failed_calls}'ında yanıt veremedi."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> dikkat gerektiriyor. Son %{count} saat içinde, %{total_calls} çağrının %{failed_calls}'ında yanıt veremedi."
+      ai_credit_soft_limit: "%{model_name} modelinin kalan kredisi yalnızca %{percentage_remaining}%‘dir. Krediler %{reset_date} tarihinde sıfırlanacaktır. <a href='%{url}'>AI modellerini görüntüle</a>"
+      ai_credit_hard_limit: "%{model_name} için AI krediniz bitti. AI özellikleri %{reset_date} tarihine kadar kullanılamayacaktır. <a href='%{url}'>AI modellerini görüntüle</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "Gönderiyi inceleme kuyruğuna ekleyin"
         review_hide: "Gönderiyi inceleme kuyruğuna ekleyin ve gönderiyi gizleyin"
+        review_delete: "Yazıyı inceleme kuyruğuna ekle ve yazıyı sil"
+        review_delete_silence: "Yazıyı inceleme kuyruğuna ekle, yazıyı sil ve kullanıcıyı sustur"
         spam: "Spam olarak işaretleyin ve gönderiyi gizleyin"
         spam_silence: "Spam olarak işaretleyin, gönderiyi gizleyin ve kullanıcıyı susturun"
     scriptables:
+      ai_tool_action:
+        title: Yapay Zeka aracı eylemi
+        description: Otomasyon tetiklendiğinde bir AI aracını çalıştırın
       llm_persona_triage:
         title: YZ Kişiliğini kullanarak gönderileri sınıflandırın
         description: "Gönderilere belirli bir YZ kişiliği kullanarak yanıt verin"
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
+        flagged_post: |
+          <div>Modelin yanıtı:</div>
+          <p>%{llm_response}</p>
+          <b><a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> kuralı tarafından tetiklendi.</b>
+        notify_author_pm:
+          subject: "Gönderiniz inceleme için geçici olarak kaldırılmıştır."
+          body: |
+            Merhaba %{username},
+
+            "%{topic_title}" başlıklı gönderiniz geçici olarak kaldırılmış ve moderatörün incelemesi için inceleme kuyruğuna alınmıştır. Onaylanırsa, otomatik olarak geri yüklenecektir.
+
+            Referans: %{post_url}
       llm_report:
         title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"
+      llm_tagger:
+        title: AI kullanarak konuları etiketleyin
+        description: "AI kullanarak konuları otomatik olarak etiketleyin"
   site_settings:
     discourse_ai_enabled: "Discourse YZ eklentisini etkinleştirin."
     ai_default_llm_model: "Tüm YZ özellikleri için kullanılacak varsayılan LLM modeli"
@@ -58,6 +86,8 @@ tr_TR:
     ai_nsfw_flag_threshold_sexy: "Seksi olarak sınıflandırılan bir görüntünün NSFW olarak değerlendirilmesi için eşik."
     ai_nsfw_models: "NSFW çıkarımı için kullanılacak modeller."
     ai_spam_detection_enabled: "YZ spam algılama modülünü etkinleştirin"
+    ai_spam_detection_max_post_count: "Bir kullanıcının spam taramasına tabi tutulmadan sahip olabileceği maksimum gönderi sayısı"
+    ai_spam_detection_max_trust_level: "Spam taraması için kullanıcıların maksimum güven seviyesi"
     ai_openai_api_key: "OpenAI API'si için API anahtarı. SADECE görüntü oluşturma ve düzenleme için kullanılır. GPT için LLM yapılandırma sekmesini kullanın"
     ai_helper_enabled: "YZ yardımcısını etkinleştirin."
     composer_ai_helper_allowed_groups: "Bu gruplardaki kullanıcılar, bestecide YZ yardımcı düğmesini görür."
@@ -66,6 +96,8 @@ tr_TR:
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
     ai_helper_enabled_features: "YZ yardımcıda etkinleştirilecek özellikleri seçin."
     post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcı özelliklerine erişmesine izin verilen kullanıcı grupları"
+    ai_helper_post_illustrator_persona: "AI yardımcısının resimleme özelliği için kullanılacak persona. Not: Bu özelliğin çalışması için bir resim oluşturma aracı da oluşturmanız gerekir (Yönetici > Eklentiler > Discourse AI > Araçlar)."
+    ai_helper_chat_thread_title_persona: "Sohbet dizisi başlıklarını oluşturmak için kullanılacak persona."
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
     ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
     ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
@@ -75,6 +107,8 @@ tr_TR:
     ai_embeddings_semantic_search_use_hyde: "Anlamsal tam sayfa arama için HyDE'ı kullanın. Eşleşmelere yardımcı olmak için kullanıcı arama teriminden varsayımsal bir gönderi oluşturmak için bir LLM kullanır."
     ai_embeddings_semantic_quick_search_enabled: "Arama menüsü açılır penceresinde semantik arama seçeneğini etkinleştirin."
     ai_embeddings_semantic_related_include_closed_topics: "Kapalı konuları semantik arama sonuçlarına dâhil edin"
+    ai_embeddings_semantic_related_age_penalty: "Anlamsal arama sonuçlarındaki konulara üstel yaş cezası uygulayın. 0,0 = ceza yok, 0,3 = son zamanlarda aktif olan içeriğe hafif bir eğilim, 1,0+ = güçlü güncellik eğilimi."
+    ai_embeddings_semantic_related_age_time_scale: "Yaş cezası hesaplaması için gün cinsinden zaman ölçeği. Bu kadar gün boyunca etkin olmayan konular, ceza=1,0 ile ~%50 ceza alır. Yıllık ölçek için 365, üç aylık ölçek için 90 kullanın."
     ai_embeddings_per_post_enabled: Her gönderi için yerleştirmeler oluşturun
     ai_summarization_enabled: "Özetleme özelliğini etkinleştirin"
     ai_summarization_persona: "Özetleme özelliği için kullanılacak kişilik"
@@ -82,10 +116,16 @@ tr_TR:
     ai_summary_gists_enabled: "Konulardaki son yanıtların kısa özetlerini otomatik olarak oluşturun"
     ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
     ai_bot_enabled: "YZ Bot modülünü etkinleştirin."
+    ai_bot_enabled_llms: "AI bot konuşmaları için seçilebilecek LLM'ler"
+    ai_bot_enable_chat_warning: "PM sohbeti başlatıldığında bir uyarı göster. Çeviri dizesini düzenleyerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "GPT Botunun Kişisel Mesaja erişimi olduğunda, bu grupların üyelerine yanıt verir."
     ai_bot_debugging_allowed_groups: "Bu grupların gönderilerde ham YZ talebini ve yanıtını görüntüleyen bir hata ayıklama düğmesi görmesine izin verin"
     ai_bot_public_sharing_allowed_groups: "Bu grupların, herkese açık benzersiz bir bağlantı aracılığıyla YZ kişisel mesajlarını herkese açık şekilde paylaşmasına izin verin. Not: Siteniz giriş yapılmasını gerektiriyorsa paylaşımlar da giriş yapılmasını gerektirir."
+    ai_bot_add_to_header: "AI Bot ile özel mesaj başlatmak için başlıkta bir düğme göster"
+    ai_bot_add_to_community_section: "Kenar çubuğundaki topluluk bölümünde, AI Bot ile özel mesajlaşmaya başlamak için bir bağlantı gösterin."
     ai_bot_github_access_token: "GitHub AI araçlarıyla kullanım için GitHub erişim token'ı (arama desteği için gereklidir)"
+    ai_discover_enabled: "Keşif arama özelliğini etkinleştir"
+    ai_discover_persona: "Keşif arama özelliği için kullanılacak persona"
     ai_google_custom_search_api_key: "Google Özel Arama API'sı için API anahtarı bkz.: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google Özel Arama API'sı için CX"
     ai_discord_search_enabled: "Discord arama özelliğini etkinleştirir"
@@ -94,8 +134,15 @@ tr_TR:
     ai_discord_search_mode: "Discord araması için kullanılacak arama modunu seçin"
     ai_discord_search_persona: "Discord araması için kullanılacak kişilik."
     ai_discord_allowed_guilds: "Botun arama yapmasına izin verilen Discord loncaları (sunucular)"
+    ai_translation_enabled: "AI çeviri özelliğini etkinleştirin"
     ai_translation_backfill_limit_to_public_content: "Etkinleştirildiğinde, yalnızca herkese açık kategorilerdeki içerikler çevrilir. Devre dışı bırakıldığında, grup kişisel mesajları ve özel kategorilerdeki içerikler de çeviri için gönderilir."
+    ai_translation_include_bot_content: "Etkinleştirildiğinde, botlar tarafından yazılan içerikler (kullanıcı kimlikleri 0'ın altında) da çeviriye gönderilecektir."
+    ai_translation_max_post_length: "Çevrilecek bir gönderinin maksimum karakter sayısı. Bu uzunluktan daha uzun gönderiler çevrilmeyecektir."
     ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."
+    ai_translation_backfill_hourly_rate: "Doldurma işlemleri sırasında saat başına çevrilecek gönderi ve konu sayısı. Mevcut içeriklerin çevirilerinin otomatik olarak doldurulmasını devre dışı bırakmak için 0 olarak ayarlayın."
+    ai_translation_max_tokens_multiplier: "Çeviri için kullanılacak maksimum token sayısını belirleyen çarpan. Varsayılan olarak, maksimum token sayısını gönderideki karakter sayısının yaklaşık iki ila beş katı olarak ayarlıyoruz. Bu çarpan, daha fazla token kullanacak düşünme veya akıl yürütme modellerine izin vermek için ayarlanabilir."
+    ai_usage_rollup_after_days: "Günlük toplamlara aktarılmadan önce istek başına AI kullanım istatistiklerinin saklanacağı gün sayısı. Toplamları devre dışı bırakmak için 0 olarak ayarlayın."
+    ai_audit_logs_purge_after_days: "Bu kadar gün öncesine ait AI API denetim günlüklerini sil. Varsayılan değer yaklaşık 6 aydır. Süresiz olarak saklamak için 0 olarak ayarlayın."
   reviewables:
     reasons:
       flagged_by_toxicity: YZ eklentisi, toksik olarak sınıflandırdıktan sonra buna bayrak ekledi.
@@ -215,14 +262,29 @@ tr_TR:
           name: "Döviz kuru"
         stock_quote:
           name: "Hisse senedi fiyat teklifi (AlphaVantage)"
+        image_generation_category:
+          name: "Görüntü oluşturma..."
         image_generation_custom:
           name: "Özel"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Boştan başla..."
       name:
         characters: "yalnızca rakam, harf ve alt çizgi içermeli"
+      secret_contracts:
+        invalid_payload: "Gizli sözleşmeler bir dizi olmalıdır."
+        invalid_contract: "Dizin %{index}'deki gizli sözleşme geçersizdir."
+        alias_required: "Dizin %{index}'deki gizli sözleşme bir takma ad içermelidir."
+        alias_too_long: "Gizli takma ad `%{alias}` çok uzun."
+        alias_invalid: "Gizli takma ad `%{alias}` yalnızca rakamlar, harfler ve alt çizgiler içermelidir."
+        alias_not_unique: "Gizli takma ad `%{alias}` yineleniyor."
     ai_helper:
       errors:
         completion_request_failed: "Öneriler sunulmaya çalışılırken bir şeyler ters gitti. Lütfen tekrar deneyin."

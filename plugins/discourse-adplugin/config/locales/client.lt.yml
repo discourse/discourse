@@ -20,6 +20,13 @@ lt:
           settings: "Nustatymai"
           save: "Saugoti"
           delete: "Pašalinti"
+          html: "HTML"
+          categories: "Kategorijos"
+          groups: "Grupės"
           category_chooser_description_with_routes: "Pasirinkite kategorijas, kuriose turėtų būti rodomas šis skelbimas. Palikite šį ir nukreipimo pasirinkimus tuščius, kad skelbimas būtų rodomas visur. Svetainės nustatymas „no_ads_for_categories“ turi pirmenybę prieš šį nustatymą."
           route_chooser_description: "Pasirinkite puslapius / maršrutus, kuriuose turėtų būti rodomas šis skelbimas. Palikite šį ir kategorijos pasirinkimus tuščius, kad skelbimas būtų rodomas visur."
           preview: "Peržiūrėti"
+          name: "Vardas"
+          edit: "Redaguoti"
+          tabs:
+            settings: "Nustatymai"

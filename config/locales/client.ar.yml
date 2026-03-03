@@ -3730,8 +3730,6 @@ ar:
         votes_released: "صدَر التصويت"
         new_features: "تم إطلاق ميزات جديدة في Discourse"
         admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
-        upcoming_change_available: "التغيير الجديد القادم '%{changeName}' متاح الآن"
-        upcoming_change_automatically_promoted: "تم تفعيل التغيير القادم '%{changeName}' تلقائيًا"
     upload_selector:
       change: "تغيير"
       delete: "حذف"

@@ -44,6 +44,13 @@ es:
           one: "%{formatted_number} mensaje de chat"
           other: "%{formatted_number} mensajes de chat"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Canal"
+        description: "Descripción"
+        actions: "Acciones"
+        settings: "Ajustes"
+        no_channels: "No hay canales de chat asociados a esta categoría"
       text_copied: Texto copiado en el portapapeles
       link_copied: Enlace copiado en el portapapeles
       back_to_forum: "Foro"
@@ -58,6 +65,13 @@ es:
       cancel: "Cancelar"
       cancel_reply: "Cancelar respuesta"
       chat_channels: "Canales"
+      starred: "Favoritos"
+      starred_channels: "Canales favoritos"
+      starred_channels_empty: "Todavía no has añadido ningún canal a favoritos. Los canales favoritos aparecerán aquí para que accedas a ellos más rápido."
+      pinned_messages:
+        title: "Mensajes anclados"
+        close: "Cerrar mensajes anclados."
+      pinned: "Anclado"
       browse_all_channels: "Examinar todos los canales"
       see_in: "Ver en"
       move_to_channel:
@@ -74,6 +88,8 @@ es:
         title: "Ajustes del canal"
         edit: "Editar"
         add: "Añadir"
+        star_channel: "Añadir canal a favoritos"
+        unstar_channel: "Quitar canal de favoritos"
         close_channel: "Cerrar canal"
         open_channel: "Abrir canal"
         archive_channel: "Archivar canal"
@@ -81,6 +97,7 @@ es:
         join_channel: "Unirse al canal"
         leave_channel: "Abandonar canal"
         leave_groupchat_info: "Al abandonar este chat de grupo, dejarás de tener acceso al mismo y no recibirás notificaciones relacionadas con él. Para volver a unirte, deberás ser invitado de nuevo por un miembro del chat de grupo."
+        notification_settings: "Ajustes de notificación"
         notification_settings_context: "Notificaciones"
         join: "Unirse"
         leave: "Abandonar"
@@ -240,6 +257,7 @@ es:
       chat_notifications_title: "Notificaciones de chat"
       only_chat_push_notifications:
         title: "Enviar solo notificaciones de chat"
+      personalization_title: "Personalización"
       ignore_channel_wide_mention:
         title: "Ignorar las menciones de todo el canal"
       show_thread_title_prompts:
@@ -325,6 +343,8 @@ es:
         yesterday: Ayer
       search_view:
         filter_placeholder: Buscar en mensajes
+        sr_instructions: "Pulsa intro o espacio para abrir el mensaje. Usa el tabulador para navegar entre los resultados."
+        results_list_label: "Resultados de la búsqueda de mensajes"
       members_view:
         filter_placeholder: Buscar miembros
         add_member: Añadir miembro
@@ -367,6 +387,8 @@ es:
         slug_description: Se utiliza un slug del canal en la URL en lugar del nombre del canal
         name: Nombre del canal
         slug: Slug del canal (opcional)
+        emoji: Emoji del canal (opcional)
+        reset_emoji: Quitar emoji
       channel_edit_description_modal:
         title: Editar descripción
         input_placeholder: Añade una descripción
@@ -431,6 +453,9 @@ es:
         types:
           category: "Categoría"
           topic: "Tema"
+        emoji:
+          label: "Emoji del canal (opcional)"
+          reset: "Quitar emoji"
       reviewable:
         type: "Mensaje de chat"
         message_in_channel: "Canal"
@@ -498,6 +523,8 @@ es:
           export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
       search:
         short_title: Buscar
+        title: Buscar chat
+        aria_label: "Cambiar a la búsqueda de chat"
         no_results: "No se encontró ningún resultado"
         sort:
           relevance: "Relevancia"
@@ -578,7 +605,9 @@ es:
           one: "%{commaSeparatedUsernames} y %{count} más está escribiendo"
           other: "%{commaSeparatedUsernames} y %{count} más están escribiendo"
       retention_reminders:
+        chat_settings: "Los ajustes de chat"
         indefinitely_short: "indefinidamente"
+        indefinitely_long: "%{chatSettingsLink} están configurados para conservar los mensajes del canal indefinidamente."
         short:
           one: "%{count} día"
           other: "%{count} días"
@@ -713,6 +742,7 @@ es:
           composer_bold: "%{shortcut} Negrita (solo compositor)"
           composer_italic: "%{shortcut} Cursiva (solo compositor)"
           composer_code: "%{shortcut} Código (solo compositor)"
+          drawer_toggle: "%{shortcut} Abrir/cerrar navegación de chat"
           drawer_close: "%{shortcut} Cerrar cajón del chat"
           mark_all_channels_read: "%{shortcut} Marcar todos los canales como leídos"
     topic_statuses:
@@ -739,6 +769,7 @@ es:
           title: Chat
     sidebar:
       start_new_dm:
+        text: Crear un nuevo mensaje directo
         title: Crear un chat personal
       panels:
         chat:

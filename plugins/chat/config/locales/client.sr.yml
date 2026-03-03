@@ -16,10 +16,15 @@ sr:
           actions:
             chat_auto_remove_membership: "Članstva su automatski uklonjena s kanala"
     chat:
+      edit_category:
+        description: "Opis"
+        actions: "Akcije"
+        settings: "Podešavanje"
       dates:
         yesterday: "Juče"
       all_loaded: "Prikaz svih poruka"
       cancel: "Odustani"
+      pinned: "Zakvačeno"
       channel_settings:
         edit: "Izmeni"
         add: "Dodaj"

@@ -19,7 +19,7 @@ zh_CN:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - 1 月
     - 2 月
     - 3 月
@@ -766,6 +766,10 @@ zh_CN:
         other: "无法删除此类别，因为它有 %{count} 个话题。时间最久的话题是 %{topic_link}。"
       topic_exists_no_oldest: "无法删除此类别，因为话题数量为 %{count}。"
     uncategorized_description: "不需要类别或不适合任何其他现有类别的话题。"
+  category_types:
+    discussion:
+      name: "讨论"
+      title: "讨论"
   trust_levels:
     admin: "管理员"
     staff: "管理人员"
@@ -2154,7 +2158,7 @@ zh_CN:
     allow_likes_in_anonymous_mode: "启用此设置，允许匿名浏览您的站点的用户为帖子点赞。激活后，用户在为帖子或话题点赞时可以选择隐藏其身份。此设置需要先启用 `allow anonymous mode`。"
     anonymous_posting_allowed_groups: "可以启用匿名发帖的群组。此设置需要启用 `allow anonymous mode` 设置。"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
-    hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
+    hide_user_profiles_from_public: "禁用匿名用户的用户卡和用户配置文件。用户目录中仍将提供汇总的统计数据。"
     hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户个人资料，并隐藏信任级别 1 的用户，直到他们首次发帖。此功能在 must_approve_users 和 invite_only 网站上无条件禁用。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
     hide_user_activity_tab: "隐藏用户个人资料中的活动标签页，管理员和自己除外。"
