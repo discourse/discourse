@@ -763,6 +763,58 @@ def run_jobs
   Jobs::Weekly.new.execute({})
 end
 
+desc "Rebake all uncooked posts in priority order (polls, events, quotes, uploads, remaining)"
+task "import:rebake_uncooked_posts", [:threads] => :environment do |_task, args|
+  thread_count = (args[:threads] || 1).to_i
+  thread_count = 1 if thread_count < 1
+
+  # Reserve 2 connections: 1 for the main thread, 1 for the producer thread
+  max_threads = ActiveRecord::Base.connection_pool.size - 2
+  if thread_count > max_threads
+    puts "Warning: thread count #{thread_count} exceeds available connection pool slots (#{max_threads}). Capping to #{max_threads}."
+    thread_count = max_threads
+  end
+
+  total = 0
+
+  puts "Rebaking uncooked posts with polls..."
+  total +=
+    import_rebake_posts(
+      Post.where("EXISTS (SELECT 1 FROM polls WHERE polls.post_id = posts.id)"),
+      thread_count:,
+    )
+
+  begin
+    puts "\nRebaking uncooked posts with events..."
+    total +=
+      import_rebake_posts(
+        Post.where(
+          "EXISTS (SELECT 1 FROM discourse_post_event_events WHERE discourse_post_event_events.id = posts.id)",
+        ),
+        thread_count:,
+      )
+  rescue ActiveRecord::StatementInvalid
+    puts "  Skipped (discourse_post_event_events table does not exist)"
+  end
+
+  puts "\nRebaking uncooked posts with quotes..."
+  total += import_rebake_posts(Post.where("raw LIKE '%[quote=%'"), thread_count:)
+
+  puts "\nRebaking uncooked posts with uploads..."
+  total +=
+    import_rebake_posts(
+      Post.where(
+        "EXISTS (SELECT 1 FROM upload_references WHERE upload_references.target_type = 'Post' AND upload_references.target_id = posts.id)",
+      ),
+      thread_count:,
+    )
+
+  puts "\nRebaking remaining uncooked posts..."
+  total += import_rebake_posts(Post.all, thread_count:)
+
+  log "Done! #{total} posts rebaked."
+end
+
 desc "Rebake posts that contain polls"
 task "import:rebake_uncooked_posts_with_polls" => :environment do
   log "Rebaking posts with polls"
@@ -797,25 +849,85 @@ task "import:rebake_uncooked_posts_with_tag", [:tag_name] => :environment do |_t
   import_rebake_posts(posts)
 end
 
-def import_rebake_posts(posts)
+def import_rebake_posts(posts, thread_count: 1)
   Jobs.run_immediately!
   OptimizedImage.lock_per_machine = false
 
   posts = posts.where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
 
   max_count = posts.count
-  current_count = 0
+  return 0 if max_count == 0
 
-  ids = posts.pluck(:id)
-  # work randomly so you can run this job from lots of consoles if needed
-  ids.shuffle!
+  if thread_count <= 1
+    current_count = 0
 
-  ids.each do |id|
-    # may have been cooked in interim
-    post = posts.where(id: id).first
-    post.rebake! if post
+    ids = posts.pluck(:id)
+    ids.shuffle!
 
-    current_count += 1
-    print "\r%7d / %7d" % [current_count, max_count]
+    ids.each do |id|
+      post = posts.where(id: id).first
+      post.rebake! if post
+
+      current_count += 1
+      print "\r%7d / %7d" % [current_count, max_count]
+    end
+
+    puts
+    max_count
+  else
+    queue = SizedQueue.new(1000)
+    threads = []
+
+    threads << Thread.new do
+      posts.pluck(:id).shuffle.each { |id| queue << id }
+      queue.close
+    end
+
+    status_queue = Queue.new
+    status_thread =
+      Thread.new do
+        error_count = 0
+        current_count = 0
+
+        while !(status = status_queue.pop).nil?
+          error_count += 1 if !status
+          current_count += 1
+
+          if error_count > 0
+            print "\r%7d / %7d (%d %s)" %
+                    [current_count, max_count, error_count, error_count == 1 ? "error" : "errors"]
+          else
+            print "\r%7d / %7d" % [current_count, max_count]
+          end
+        end
+
+        puts
+      end
+
+    thread_count.times do
+      threads << Thread.new do
+        Jobs.run_immediately!
+
+        while (id = queue.pop)
+          begin
+            post =
+              Post
+                .where(id: id)
+                .where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
+                .first
+            post.rebake! if post
+            status_queue << true
+          rescue StandardError
+            status_queue << false
+          end
+        end
+      end
+    end
+
+    threads.each(&:join)
+    status_queue.close
+    status_thread.join
+
+    max_count
   end
 end
