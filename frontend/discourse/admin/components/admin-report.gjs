@@ -191,10 +191,6 @@ export default class AdminReport extends Component {
     );
   }
 
-  get showTitle() {
-    return !this.siteSettings.reporting_improvements;
-  }
-
   @action
   changeGrouping(grouping) {
     this.refreshReport({ chartGrouping: grouping });
@@ -567,45 +563,43 @@ export default class AdminReport extends Component {
           {{/if}}
           {{#if this.showHeader}}
             <div class="header">
-              {{#if this.showTitle}}
-                {{#unless this.showNotFoundError}}
-                  <DPageSubheader
-                    @titleLabel={{this.model.title}}
-                    @titleUrl={{this.model.reportUrl}}
-                    @descriptionLabel={{unless
-                      this.showDescriptionInTooltip
-                      this.model.description
-                    }}
-                    @learnMoreUrl={{this.model.description_link}}
-                  />
+              {{#unless this.showNotFoundError}}
+                <DPageSubheader
+                  @titleLabel={{this.model.title}}
+                  @titleUrl={{this.model.reportUrl}}
+                  @descriptionLabel={{unless
+                    this.showDescriptionInTooltip
+                    this.model.description
+                  }}
+                  @learnMoreUrl={{this.model.description_link}}
+                />
 
-                  {{#if this.showDescriptionInTooltip}}
-                    {{#if this.model.description}}
-                      <DTooltip
-                        @interactive={{this.model.description_link.length}}
-                      >
-                        <:trigger>
-                          {{icon "circle-question"}}
-                        </:trigger>
-                        <:content>
-                          {{#if this.model.description_link}}
-                            <a
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              href={{this.model.description_link}}
-                              class="info"
-                            >
-                              {{this.model.description}}
-                            </a>
-                          {{else}}
-                            <span>{{this.model.description}}</span>
-                          {{/if}}
-                        </:content>
-                      </DTooltip>
-                    {{/if}}
+                {{#if this.showDescriptionInTooltip}}
+                  {{#if this.model.description}}
+                    <DTooltip
+                      @interactive={{this.model.description_link.length}}
+                    >
+                      <:trigger>
+                        {{icon "circle-question"}}
+                      </:trigger>
+                      <:content>
+                        {{#if this.model.description_link}}
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={{this.model.description_link}}
+                            class="info"
+                          >
+                            {{this.model.description}}
+                          </a>
+                        {{else}}
+                          <span>{{this.model.description}}</span>
+                        {{/if}}
+                      </:content>
+                    </DTooltip>
                   {{/if}}
-                {{/unless}}
-              {{/if}}
+                {{/if}}
+              {{/unless}}
 
               {{#if this.shouldDisplayTrend}}
                 <div class="trend {{this.model.trend}}">
