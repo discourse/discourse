@@ -70,7 +70,7 @@ export default class GroupIndexController extends Controller {
 
   @computed("order", "asc", "filter")
   get memberParams() {
-    return { order: this.order, asc: this.asc || "", filter: this.filter };
+    return { order: this.order, asc: this.asc, filter: this.filter };
   }
 
   @computed("model")
