@@ -836,13 +836,27 @@ export default class Category extends RestModel {
         ...(this.siteSettings.content_localization_enabled && {
           category_localizations: this.localizations,
         }),
-        ...(!id && this.category_types
-          ? { category_type: Object.keys(this.category_types)[0] }
-          : {}),
+        ...this._categoryTypeSaveProperties(id),
         ...this._pluginSaveProperties(),
       }),
       type: id ? "PUT" : "POST",
     });
+  }
+
+  _categoryTypeSaveProperties(id) {
+    if (!this.siteSettings.enable_category_type_setup) {
+      return {};
+    }
+
+    const props = {
+      category_type_site_settings: this.category_type_site_settings,
+    };
+
+    if (!id && this.category_types) {
+      props.category_type = Object.keys(this.category_types)[0];
+    }
+
+    return props;
   }
 
   _pluginSaveProperties() {
@@ -899,7 +913,7 @@ export default class Category extends RestModel {
     return Object.keys(this.category_types).includes(type);
   }
 
-  typeMetadata(type) {
+  getType(type) {
     return this.category_types[type];
   }
 

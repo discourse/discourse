@@ -15,6 +15,8 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
   end
 
   describe ".configure_site_settings" do
+    fab!(:admin)
+
     before do
       SiteSetting.show_filter_by_solved_status = false
       SiteSetting.notify_on_staff_accept_solved = false
@@ -22,7 +24,7 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
     end
 
     it "enables sensible defaults for support categories" do
-      described_class.configure_site_settings(category)
+      described_class.configure_site_settings(category, guardian: admin.guardian)
 
       expect(SiteSetting.show_filter_by_solved_status).to eq(true)
       expect(SiteSetting.notify_on_staff_accept_solved).to eq(true)
@@ -32,6 +34,7 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
     it "uses provided configuration_values over defaults" do
       described_class.configure_site_settings(
         category,
+        guardian: admin.guardian,
         configuration_values: {
           "show_filter_by_solved_status" => false,
           "empty_box_on_unsolved" => false,
@@ -57,13 +60,13 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
     it "allows accepting answers on the category" do
       expect(Guardian.new(admin).can_accept_answer?(topic, reply)).to eq(false)
 
-      described_class.configure_category(category)
+      described_class.configure_category(category, guardian: admin.guardian)
 
       expect(Guardian.new(admin).can_accept_answer?(topic, reply)).to eq(true)
     end
 
     it "sets default auto-close hours" do
-      described_class.configure_category(category)
+      described_class.configure_category(category, guardian: admin.guardian)
 
       expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("48")
     end
@@ -71,6 +74,7 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
     it "uses provided configuration_values for auto-close hours" do
       described_class.configure_category(
         category,
+        guardian: admin.guardian,
         configuration_values: {
           "solved_topics_auto_close_hours" => 72,
         },

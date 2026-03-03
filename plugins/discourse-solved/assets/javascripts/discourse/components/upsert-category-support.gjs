@@ -2,11 +2,43 @@ import Component from "@glimmer/component";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+const SchemaFormField = <template>
+  {{#if (eq @entry.type "bool")}}
+    <@formObject.Field
+      @name={{@entry.key}}
+      @title={{@entry.label}}
+      @helpText={{@entry.description}}
+      @format="large"
+      as |field|
+    >
+      <field.Checkbox />
+    </@formObject.Field>
+  {{else if (eq @entry.type "integer")}}
+    <@formObject.Field
+      @name={{@entry.key}}
+      @title={{@entry.label}}
+      @description={{@entry.description}}
+      @format="large"
+      as |field|
+    >
+      <field.Input @type="number" />
+    </@formObject.Field>
+  {{else}}
+    <@formObject.Field
+      @name={{@entry.key}}
+      @title={{@entry.label}}
+      @description={{@entry.description}}
+      @format="large"
+      as |field|
+    >
+      <field.Input />
+    </@formObject.Field>
+  {{/if}}
+</template>;
+
 export default class UpsertCategorySupport extends Component {
   get schema() {
-    return (
-      this.args.category?.typeMetadata("support")?.configuration_schema ?? []
-    );
+    return this.args.category?.getType("support")?.configuration_schema ?? [];
   }
 
   <template>
@@ -17,38 +49,11 @@ export default class UpsertCategorySupport extends Component {
       <@form.Section
         @title={{i18n "category.type_settings_schema.site_settings"}}
       >
-
-        {{#each this.schema.site_settings as |entry|}}
-          {{#if (eq entry.type "bool")}}
-            <@form.Field
-              @name={{entry.key}}
-              @title={{entry.label}}
-              @format="large"
-              as |field|
-            >
-              <field.Checkbox />
-            </@form.Field>
-          {{else if (eq entry.type "integer")}}
-            <@form.Field
-              @name={{entry.key}}
-              @title={{entry.label}}
-              @format="large"
-              as |field|
-            >
-              <field.Input @type="number" />
-            </@form.Field>
-          {{else}}
-            <@form.Field
-              @name={{entry.key}}
-              @title={{entry.label}}
-              @format="large"
-              as |field|
-            >
-              <field.Input />
-            </@form.Field>
-          {{/if}}
-        {{/each}}
-
+        <@form.Object @name="category_type_site_settings" as |siteSettings|>
+          {{#each this.schema.site_settings as |entry|}}
+            <SchemaFormField @entry={{entry}} @formObject={{siteSettings}} />
+          {{/each}}
+        </@form.Object>
       </@form.Section>
 
       <@form.Section
@@ -56,34 +61,7 @@ export default class UpsertCategorySupport extends Component {
       >
         <@form.Object @name="custom_fields" as |customFields|>
           {{#each this.schema.category_custom_fields as |entry|}}
-            {{#if (eq entry.type "bool")}}
-              <customFields.Field
-                @name={{entry.key}}
-                @title={{entry.label}}
-                @format="large"
-                as |field|
-              >
-                <field.Checkbox />
-              </customFields.Field>
-            {{else if (eq entry.type "integer")}}
-              <customFields.Field
-                @name={{entry.key}}
-                @title={{entry.label}}
-                @format="large"
-                as |field|
-              >
-                <field.Input @type="number" />
-              </customFields.Field>
-            {{else}}
-              <customFields.Field
-                @name={{entry.key}}
-                @title={{entry.label}}
-                @format="large"
-                as |field|
-              >
-                <field.Input />
-              </customFields.Field>
-            {{/if}}
+            <SchemaFormField @entry={{entry}} @formObject={{customFields}} />
           {{/each}}
         </@form.Object>
       </@form.Section>

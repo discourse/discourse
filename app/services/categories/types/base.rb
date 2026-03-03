@@ -24,20 +24,9 @@ module Categories
         def enable_plugin
         end
 
-        # Configure any site settings that are specific to this category type.
-        # The configuration schema must be defined for this, as it is also used
-        # to show related settings in the UI for the category creator based
-        # on type.
-        def configure_site_settings(category, configuration_values: {})
-          configuration_schema[:site_settings]&.each do |setting_name, default_value|
-            value = configuration_values.fetch(setting_name.to_s, default_value)
-            SiteSetting.public_send("#{setting_name}=", value)
-          end
-        end
-
         # Configure any category-specific settings or custom fields that are
         # specific to this category type.
-        def configure_category(category, configuration_values: {})
+        def configure_category(category, guardian:, configuration_values: {})
         end
 
         # TODO (martin) Add docs for the schema/maybe a schema validator?
@@ -55,6 +44,21 @@ module Categories
           "memo"
         end
 
+        # Configure any site settings that are specific to this category type.
+        # The configuration schema must be defined for this, as it is also used
+        # to show related settings in the UI for the category creator based
+        # on type.
+        #
+        # This SHOULD NOT be overridden by category types.
+        def configure_site_settings(category, guardian:, configuration_values: {})
+          # TODO (martin) Maybe use SiteSetting::Update here?
+          configuration_schema[:site_settings]&.each do |setting_name, default_value|
+            value = configuration_values.fetch(setting_name.to_s, default_value)
+            SiteSetting.set_and_log(setting_name, value, guardian.user)
+          end
+        end
+
+        # Used when serializing the category configuration schema to the client.
         def metadata
           name = I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize)
           {
@@ -81,6 +85,7 @@ module Categories
             entries[:site_settings] << {
               key: setting_name.to_s,
               default: target_value,
+              current: SiteSetting.public_send(setting_name),
               type: meta[:type],
               label: meta[:humanized_name],
               description: meta[:description],
