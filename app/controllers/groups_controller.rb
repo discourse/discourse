@@ -282,7 +282,7 @@ class GroupsController < ApplicationController
 
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    dir = (params[:asc] && params[:asc].present?) ? "ASC" : "DESC"
+    dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
     order = "NOT group_users.owner"
 
     if params[:requesters]
