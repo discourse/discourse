@@ -337,8 +337,6 @@ he:
           enable_translations: "הפעלת תרגומים אוטומטיים"
         stats:
           title: "סטטיסטיקת תרגום"
-          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
-          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
           eta_minutes:
             one: "דקה"
@@ -741,7 +739,6 @@ he:
           disable_streaming: "השבתת השלמות מוזרמות (המרת בקשות מוזרמות לבקשות שאינן מוזרמות)"
           reasoning_effort: "מאמץ נימוק (תקף רק על מודלים של נימוק)"
           enable_reasoning: "הפעלת נימוק (תקף רק על מודלים עם אפשרות נימוק)"
-          enable_thinking: "הפעלת חשיבה (רק במודלים תקפים לדוגמה: flash 2.5)"
           thinking_tokens: "כמות אסימונים המשמשים לחשיבה"
           reasoning_tokens: "כמות אסימונים המשמשים לנימוק"
           disable_temperature: "השבתת טמפרטורה (חלק ממודלי החשיבה אינם תומכים בטמפרטורה)"

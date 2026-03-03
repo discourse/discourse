@@ -20,6 +20,17 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
     });
   }
 
+  get visiblePrimaryTabs() {
+    return registeredEditCategoryTabs.filter(
+      (tab) =>
+        tab.primary && this.evaluateTabCondition(tab, this.args.controller)
+    );
+  }
+
+  get hasPrimaryTabs() {
+    return this.visiblePrimaryTabs.length > 0;
+  }
+
   <template>
     {{#if (and @controller.site.desktopView @controller.model.id)}}
       <BackButton
@@ -50,6 +61,19 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
             @params={{@controller.parentParams}}
             @tab="general"
           />
+          {{#each registeredEditCategoryTabs as |pluginTab|}}
+            {{#if pluginTab.primary}}
+              {{#if (this.evaluateTabCondition pluginTab @controller)}}
+                <EditCategoryTab
+                  @panels={{@controller.panels}}
+                  @selectedTab={{@controller.selectedTab}}
+                  @params={{@controller.parentParams}}
+                  @tab={{pluginTab.id}}
+                  @tabTitle={{pluginTab.name}}
+                />
+              {{/if}}
+            {{/if}}
+          {{/each}}
           <EditCategoryTab
             @panels={{@controller.panels}}
             @selectedTab={{@controller.selectedTab}}
@@ -93,15 +117,33 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
           {{/if}}
 
           {{#each registeredEditCategoryTabs as |pluginTab|}}
-            {{#if (this.evaluateTabCondition pluginTab @controller)}}
-              <EditCategoryTab
-                @panels={{@controller.panels}}
-                @selectedTab={{@controller.selectedTab}}
-                @params={{@controller.parentParams}}
-                @tab={{pluginTab.id}}
-                @tabTitle={{pluginTab.name}}
-              />
-            {{/if}}
+            {{#unless pluginTab.primary}}
+              {{#if (this.evaluateTabCondition pluginTab @controller)}}
+                <EditCategoryTab
+                  @panels={{@controller.panels}}
+                  @selectedTab={{@controller.selectedTab}}
+                  @params={{@controller.parentParams}}
+                  @tab={{pluginTab.id}}
+                  @tabTitle={{pluginTab.name}}
+                />
+              {{/if}}
+            {{/unless}}
+          {{/each}}
+        {{else if this.hasPrimaryTabs}}
+          <EditCategoryTab
+            @panels={{@controller.panels}}
+            @selectedTab={{@controller.selectedTab}}
+            @params={{@controller.parentParams}}
+            @tab="general"
+          />
+          {{#each this.visiblePrimaryTabs as |pluginTab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @selectedTab={{@controller.selectedTab}}
+              @params={{@controller.parentParams}}
+              @tab={{pluginTab.id}}
+              @tabTitle={{pluginTab.name}}
+            />
           {{/each}}
         {{/if}}
       </:tabs>

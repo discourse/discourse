@@ -48,7 +48,15 @@ export function OK(resp = {}, headers = {}) {
 const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 
-export let fixturesByUrl;
+export let fixturesByUrl = {};
+
+function replacesFixturesByUrl(newFixtures) {
+  for (const member of Object.keys(fixturesByUrl)) {
+    delete fixturesByUrl[member];
+  }
+
+  Object.assign(fixturesByUrl, newFixtures);
+}
 
 const instance = new Pretender();
 
@@ -71,7 +79,7 @@ export function applyDefaultHandlers(pretender) {
     if (m && m[1] !== "create") {
       let result = requirejs(e).default.call(pretender, helpers);
       if (m[1] === "fixture") {
-        fixturesByUrl = result;
+        replacesFixturesByUrl(result);
       }
     }
   });
@@ -577,7 +585,7 @@ export function applyDefaultHandlers(pretender) {
 
     // The request sends `permissions` as an object (e.g. {everyone: 1})
     // but the real server never echoes it back. Remove it because the
-    // Category model expects `permissions` to be an array (@trackedArray).
+    // Category model expects `permissions` to be an array (@autoTrackedArray).
     delete category.permissions;
 
     return response({ category });

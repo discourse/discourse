@@ -10,7 +10,6 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import discourseComputed from "discourse/lib/decorators";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { i18n } from "discourse-i18n";
 
@@ -35,18 +34,18 @@ export default class SelectKitFilter extends Component {
     );
   }
 
-  @discourseComputed(
+  @computed(
     "selectKit.options.filterPlaceholder",
     "selectKit.options.translatedFilterPlaceholder",
     "selectKit.options.allowAny"
   )
-  placeholder(placeholder, translatedPlaceholder) {
-    if (isPresent(translatedPlaceholder)) {
-      return translatedPlaceholder;
+  get placeholder() {
+    if (isPresent(this.selectKit?.options?.translatedFilterPlaceholder)) {
+      return this.selectKit?.options?.translatedFilterPlaceholder;
     }
 
-    if (isPresent(placeholder)) {
-      return i18n(placeholder);
+    if (isPresent(this.selectKit?.options?.filterPlaceholder)) {
+      return i18n(this.selectKit?.options?.filterPlaceholder);
     }
 
     return i18n(

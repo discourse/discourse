@@ -127,7 +127,7 @@ export default class ApiKeyItem extends Component {
             @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
             @icon="ellipsis-vertical"
             @onRegisterApi={{this.onRegisterApi}}
-            @class="btn-default"
+            @triggerClass="btn-default"
           >
             <:content>
               <DropdownMenu as |dropdown|>

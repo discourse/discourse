@@ -2010,6 +2010,9 @@ email:
   mailjet_webhook_token:
     default: ""
     secret: true
+  mailpace_webhook_token:
+    default: ""
+    secret: true
   mandrill_authentication_key:
     default: ""
     secret: true
@@ -2677,6 +2680,10 @@ security:
   moderators_change_post_ownership:
     client: true
     default: false
+  change_post_ownership_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
   moderators_view_emails:
     client: true
     default: false
@@ -4226,7 +4233,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
   rename_faq_to_guidelines:
@@ -4236,7 +4243,7 @@ experimental:
     area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "experimental"
+      status: "alpha"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   experimental_tag_settings_page:
     default: false
@@ -4248,7 +4255,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
   impersonate_without_logout:
@@ -4256,7 +4263,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
@@ -4305,3 +4312,7 @@ experimental:
       status: "experimental"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
+  enable_category_type_setup:
+    default: false
+    hidden: true
+    client: true

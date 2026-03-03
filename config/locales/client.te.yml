@@ -6,6 +6,11 @@
 
 te:
   js:
+    blocks:
+      ghost:
+        status: "స్థితి"
+        in_location: "లో"
+        failed: "విఫలం"
     number:
       format:
         separator: "."
@@ -289,6 +294,9 @@ te:
       title: "కొత్త & చదవని విషయాలు"
       pill: "సూచించినవి"
       pm_title: "సూచించిన సందేశాలు"
+    admin_onboarding_banner:
+      start_posting:
+        back: "వెనుకకు"
     about:
       edit: "ఈ పేజీని సవరించండి"
       simple_title: "మా సంఘం గురించి"
@@ -4330,7 +4338,6 @@ te:
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
-    reset_filter: "రీసెట్ చేయండి"
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"

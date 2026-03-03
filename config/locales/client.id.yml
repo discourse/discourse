@@ -6,6 +6,10 @@
 
 id:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        failed: "gagal"
     number:
       format:
         separator: ","
@@ -250,6 +254,8 @@ id:
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
     admin_onboarding_banner:
+      start_posting:
+        back: "Kembali"
       spread_the_word:
         copied_to_clipboard: "Tautan disalin ke papan klip!"
     about:
@@ -2310,7 +2316,6 @@ id:
         categories: "Semua kategori"
   admin_js:
     settings: "Pengaturan"
-    reset_filter: "Reset"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"

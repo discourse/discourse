@@ -6,6 +6,12 @@
 
 nb_NO:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "i"
+        hidden: "skjult"
+        failed: "feilet"
     number:
       format:
         separator: "."
@@ -291,6 +297,9 @@ nb_NO:
       title: "Nye og uleste emner"
       pill: "Foreslåtte"
       pm_title: "Anbefalte meldinger"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Forrige"
     about:
       edit: "Endre denne siden"
       simple_title: "Om"
@@ -3630,6 +3639,7 @@ nb_NO:
         delete: "Slett"
         add: "Legg til påkrevd stikkordgruppe"
         placeholder: "Velg stikkordgruppe…"
+        tag_group: "Stikkordgrupper"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
       create_long: "Opprett en ny kategori"
       slug_placeholder: "(Valgfritt) sammensatte ord for bruk i URL"
@@ -4321,7 +4331,6 @@ nb_NO:
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
-    reset_filter: "Tilbakestill"
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"

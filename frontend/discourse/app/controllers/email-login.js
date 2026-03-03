@@ -1,9 +1,8 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
@@ -16,9 +15,11 @@ export default class EmailLoginController extends Controller {
 
   lockImageUrl = getURL("/images/lock.svg");
 
-  @discourseComputed("model")
-  secondFactorRequired(model) {
-    return model.security_key_required || model.second_factor_required;
+  @computed("model")
+  get secondFactorRequired() {
+    return (
+      this.model.security_key_required || this.model.second_factor_required
+    );
   }
 
   @action

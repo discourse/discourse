@@ -374,8 +374,6 @@ de:
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
-          complete_language_detection_description: "Alle %{total} geeigneten Beiträge wurden auf ihre Sprache hin überprüft."
-          incomplete_language_detection_description: "%{done} von %{total} geeigneten Beiträgen wurden auf ihre Sprache hin überprüft."
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
           backfill_message: "<a href='%{settingsUrl}'>Die Einstellungen für die rückwirkende Übersetzung</a> sind so konfiguriert, dass alle Beiträge nach %{date} übersetzt werden – dies wird voraussichtlich %{eta} dauern."
           eta_minutes:
@@ -822,7 +820,6 @@ de:
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
           reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
           enable_reasoning: "Argumentation aktivieren (nur für Argumentationsmodelle anwendbar)"
-          enable_thinking: "Denken aktivieren (nur bei entsprechenden Modellen, z.B.: Flash 2.5)"
           thinking_tokens: "Anzahl der zum Denken verwendeten Token"
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"

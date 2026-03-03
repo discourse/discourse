@@ -59,6 +59,7 @@
     "orderedmap": "^2.1.1",
     "photoswipe": "5.4.4",
     "pikaday": "^1.8.2",
+    "picomatch": "^4.0.3",
     "pretty-text": "workspace:1.0.0",
     "prosemirror-codemark": "^0.4.2",
     "prosemirror-commands": "^1.7.1",
@@ -92,9 +93,9 @@
     "@embroider/macros": "^1.16.12",
     "@embroider/router": "^2.1.8",
     "@embroider/webpack": "^4.1.0",
-    "@floating-ui/dom": "^1.7.4",
+    "@floating-ui/dom": "^1.7.5",
     "@glimmer/component": "^2.0.0",
-    "@swc/core": "^1.15.7",
+    "@swc/core": "^1.15.13",
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
@@ -157,7 +158,7 @@
     "xss": "^1.0.15"
   },
   "engines": {
-    "node": ">= 18",
+    "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^10"

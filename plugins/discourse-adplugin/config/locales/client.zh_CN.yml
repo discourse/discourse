@@ -37,9 +37,13 @@ zh_CN:
           new_name: "新建自家广告"
           save: "保存"
           delete: "删除"
+          confirm_delete: "您确定要删除此广告吗？"
           html: "HTML"
           categories: "类别"
+          routes: "路由"
           groups: "群组"
+          description: "创建并管理您自己的广告，使其在您的网站各个位置展示。"
+          get_started: "目前还没有房屋广告。"
           filter_placeholder: "选择广告…"
           more_settings: "更多设置"
           show_to_anons: "向匿名用户显示"
@@ -53,6 +57,7 @@ zh_CN:
           name: "名称"
           edit: "编辑"
           tabs:
+            ads: "广告"
             settings: "设置"
           topic_list_top:
             title: "话题列表顶部广告"

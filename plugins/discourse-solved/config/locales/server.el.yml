@@ -6,6 +6,10 @@
 
 el:
   accepted_answer: "Αποδεκτή Απάντηση"
+  category_types:
+    support:
+      name: "Υποστήριξη"
+      title: "υποστήριξη"
   site_settings:
     solved_enabled: "Ενεργοποιήστε το πρόσθετο solved, επιτρέψτε στους χρήστες να επιλέγουν λύσεις για θέματα"
     accept_all_solutions_trust_level: "Απαιτείται ελάχιστο επίπεδο εμπιστοσύνης για αποδοχή λύσεων σε οποιοδήποτε θέμα (ακόμη και όταν δεν είναι OP)"

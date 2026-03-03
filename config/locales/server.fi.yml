@@ -2175,7 +2175,6 @@ fi:
     group_in_subject: "Aseta %%{optional_pm} sähköpostin aiheessa ensimmäisen ryhmän nimeksi yksityisviestissä, katso: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_mode: "Ota käyttöön valinta, jolla käyttäjät voivat vaihtaa anonyymiin tilaan viestin julkaisua varten. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä luodessaan viestejä tai ketjuja sivustolla. Katso myös \"allow anonymous likes\"."
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo käyttäjälle uusi anonyymi tili N minuutin välein. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."
-    hide_user_profiles_from_public: "Älä näytä käyttäjäkortteja, käyttäjäprofiileita tai käyttäjähakemistoa anonyymeille käyttäjille."
     hide_new_user_profiles: "Piilota luottamustason 1 tai alempien tasojen käyttäjäprofiilit yleisöltä ja luottamustason 1 käyttäjiltä, kunnes he lähettävät ensimmäisen viestinsä. Tämä ominaisuus on poistettu käytöstä ehdoitta must_approve_users- ja invite_only-sivustoilla."
     allow_users_to_hide_profile: "Salli käyttäjien piilottaa profiilinsa ja läsnäolonsa"
     hide_user_activity_tab: "Piilota toimintavälilehti käyttäjäprofiileista, paitsi ylläpitäjältä ja itseltä."

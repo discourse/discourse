@@ -654,7 +654,6 @@ it:
           disable_streaming: "Disabilita i completamenti dello streaming (converti le richieste di streaming in richieste non di streaming)"
           reasoning_effort: "Sforzo di ragionamento (applicabile solo ai modelli di ragionamento)"
           enable_reasoning: "Abilita ragionamento (applicabile solo ai modelli di ragionamento)"
-          enable_thinking: "Abilita pensiero (solo sui modelli applicabili, es. flash 2.5)"
           thinking_tokens: "Numero di token utilizzati per il pensiero"
           reasoning_tokens: "Numero di token utilizzati per il ragionamento"
           disable_temperature: "Disattiva la temperatura (alcuni modelli di pensiero non supportano la temperatura)"

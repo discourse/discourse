@@ -382,8 +382,6 @@ pl_PL:
           enable_translations: "Włącz automatyczne tłumaczenia"
         stats:
           title: "Statystyki tłumaczeń"
-          complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
-          incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
           backfill_message: "<a href='%{settingsUrl}'>Ustawienia uzupełniania</a> są skonfigurowane tak, aby tłumaczyć wszystkie posty po %{date} — szacuje się, że zajmie to %{eta}."
           eta_minutes:
@@ -844,7 +842,9 @@ pl_PL:
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
           reasoning_effort: "Wysiłek rozumowania (dotyczy tylko modeli rozumowania)"
           enable_reasoning: "Włącz wnioskowanie (dotyczy tylko modeli wnioskowania)"
-          enable_thinking: "Włącz myślenie (tylko w odpowiednich modelach, np. Flash 2.5)"
+          adaptive_thinking: "Włącz myślenie adaptacyjne (zalecane dla modeli Claude 4.6)"
+          enable_thinking: "Włącz myślenie (modele Gemini 2.5 – wykorzystuje budżet tokenów)"
+          thinking_level: "Poziom myślenia (modele Gemini 3 – kontrolują głębokość rozumowania)"
           thinking_tokens: "Liczba żetonów użytych do myślenia"
           reasoning_tokens: "Liczba tokenów użytych do wnioskowania"
           disable_temperature: "Wyłącz temperaturę (niektóre modele nie obsługują temperatury)"

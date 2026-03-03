@@ -8,6 +8,7 @@ zh_CN:
   reports:
     currently_away:
       title: 用户目前离开
+      description: "目前正在休假或离职的用户，可以按群组进行筛选。"
       labels:
         username: 用户名
   discourse_automation:

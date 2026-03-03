@@ -286,6 +286,7 @@ en:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    diff_too_complex: "The diff is too complex to compute safely. Please try smaller edits."
     messages:
       invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
@@ -892,6 +893,13 @@ en:
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
+
+  category_types:
+    discussion:
+      name: "Discussion"
+      title: "discussion"
+      description: "All the essentials for paragraph-based conversation."
+
   trust_levels:
     admin: "Admin"
     staff: "Staff"
@@ -1908,6 +1916,7 @@ en:
     moderators_manage_categories: "Allow moderators to create and manage categories"
     moderators_manage_groups: "Allow moderators to create and manage groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
+    change_post_ownership_allowed_groups: "Allow users in these groups to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -2342,6 +2351,7 @@ en:
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
     mailjet_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
     postmark_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2429,7 +2439,7 @@ en:
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
-    hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
+    hide_user_profiles_from_public: "Disable user cards and user profiles for anonymous users. Aggregated stats will still be available in the user directory."
     hide_new_user_profiles: "Hide trust level 1 or lower user profiles from the public and trust level 1 users until they post for the first time. This feature is disabled unconditionally on must_approve_users and invite_only sites."
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
     hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."

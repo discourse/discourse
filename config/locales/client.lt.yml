@@ -6,6 +6,12 @@
 
 lt:
   js:
+    blocks:
+      ghost:
+        status: "Statusas"
+        in_location: "į"
+        hidden: "paslėptas"
+        failed: "nepavyko"
     carousel:
       go_to_slide: "Eiti į skaidrę %{index}"
       previous: "Ankstesnė skaidrė"
@@ -343,6 +349,8 @@ lt:
       pill: "Siūloma"
       pm_title: "Rekomenduojamos žinutės"
     admin_onboarding_banner:
+      start_posting:
+        back: "Atgal"
       spread_the_word:
         action: "Nukopijuoti nuorodą"
         copied_to_clipboard: "Nuoroda nukopijuota į iškarpinę!"
@@ -3398,6 +3406,7 @@ lt:
       allow_global_tags_label: "Taip pat leiskite kitas žymas"
       required_tag_group:
         delete: "Pašalinti"
+        tag_group: "Žymų grupė"
       topic_featured_link_allowed: "Leisti svarbiausias šios kategorijos nuorodas"
       create_long: "Sukurti naują kategoriją"
       slug_placeholder: "(Pasirinktinai) brūkšniniai žodžiai skirti URL"
@@ -4117,7 +4126,6 @@ lt:
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
-    reset_filter: "Atstatyti"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"

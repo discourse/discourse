@@ -6,6 +6,12 @@
 
 da:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "i"
+        hidden: "skjult"
+        failed: "fejlet"
     number:
       format:
         separator: "."
@@ -397,6 +403,8 @@ da:
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
     admin_onboarding_banner:
+      start_posting:
+        back: "Tilbage"
       spread_the_word:
         action: "Kopiér link"
     about:
@@ -3468,6 +3476,7 @@ da:
         delete: "Slet"
         add: "Tilføj obligatorisk mærkegruppe"
         placeholder: "Vælg mærkegruppe…"
+        tag_group: "Mærkegruppe"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       create_long: "Opret en ny kategori"
       slug_placeholder: "(Valgfri) gennemstregede-ord for URL"
@@ -4320,7 +4329,6 @@ da:
   admin_js:
     type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
-    reset_filter: "Nulstil"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -4576,7 +4584,6 @@ da:
         new_features:
           title: "Hvad er nyt?"
           learn_more: "Lær mere..."
-          experimental: "Eksperimentel"
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
         no_problems: "Ingen problemer fundet."

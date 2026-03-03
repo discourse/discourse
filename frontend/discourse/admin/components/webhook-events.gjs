@@ -16,7 +16,7 @@ import LoadMore from "discourse/components/load-more";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -29,7 +29,7 @@ export default class WebhookEvents extends Component {
   @tracked events = [];
   @tracked pingEnabled = true;
   @tracked redeliverEnabled = true;
-  @trackedArray incomingEventIds = [];
+  @autoTrackedArray incomingEventIds = [];
 
   @readOnly("incomingEventIds.length") incomingCount;
   @gt("incomingCount", 0) hasIncoming;

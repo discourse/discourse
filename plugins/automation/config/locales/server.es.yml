@@ -8,6 +8,8 @@ es:
   site_settings:
     discourse_automation_enabled: "Activar el plugin discourse-automation"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(vacío)"
     models:
       automations:
         validations:
@@ -67,6 +69,9 @@ es:
         description: Cuando se cambien las etiquetas de un tema, se activará la automatización.
       topic:
         title: Tema
+      topic_closed:
+        title: Al cerrar un tema
+        description: Activa un script cuando se cierra un tema.
       after_post_cook:
         title: Después de cocinar la publicación
         description: Cuando se cocine el contenido de una publicación se activará la automatización

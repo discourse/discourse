@@ -533,6 +533,32 @@ describe PostRevisor do
         expect(post.revisions.count).to eq(1)
       end
 
+      it "creates a new version when diff computation exceeds the comparison budget" do
+        SiteSetting.editing_grace_period = 1.minute
+        SiteSetting.editing_grace_period_max_diff = 1_000
+
+        post = Fabricate(:post, raw: "hello world")
+        revisor = PostRevisor.new(post)
+
+        ONPDiff
+          .any_instance
+          .stubs(:short_diff)
+          .raises(
+            ONPDiff::DiffLimitExceeded.new(
+              comparisons_used: 2_000_001,
+              comparison_budget: 2_000_000,
+              left_size: 11,
+              right_size: 12,
+            ),
+          )
+
+        revisor.revise!(post.user, { raw: "hello world!" }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+      end
+
       it "creates a new version when the post is flagged" do
         SiteSetting.editing_grace_period = 1.minute
 
@@ -1044,11 +1070,11 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
     end
 
-    it "revises and tracks changes of topic archetypes" do
+    it "revises and tracks changes of topic archetypes for staff" do
       new_archetype = Archetype.banner
       result =
         post_revisor.revise!(
-          post.user,
+          admin,
           { archetype: new_archetype },
           revised_at: post.updated_at + 10.minutes,
         )
@@ -1058,6 +1084,19 @@ describe PostRevisor do
       expect(post.topic.archetype).to eq(new_archetype)
       expect(post.revisions.first.modifications["archetype"][1]).to eq(new_archetype)
       expect(post_revisor.raw_changed?).to eq(false)
+    end
+
+    it "does not allow regular users to change topic archetype to banner" do
+      result =
+        post_revisor.revise!(
+          post.user,
+          { archetype: Archetype.banner },
+          revised_at: post.updated_at + 10.minutes,
+        )
+
+      expect(result).to eq(false)
+      post.reload
+      expect(post.topic.archetype).to eq(Archetype.default)
     end
 
     it "revises and tracks changes of topic tags" do

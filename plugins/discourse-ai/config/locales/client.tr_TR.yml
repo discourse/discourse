@@ -654,7 +654,6 @@ tr_TR:
           disable_streaming: "Akış tamamlamalarını devre dışı bırak (akışı akış dışı taleplere dönüştür)"
           reasoning_effort: "Muhakeme eforu (yalnızca muhakeme modelleri için)"
           enable_reasoning: "Muhakemeyi etkinleştirin (yalnızca muhakeme modelleri için geçerlidir)"
-          enable_thinking: "Düşünmeyi etkinleştir (yalnızca uygulanabilir modellerde, ör.: flash 2.5)"
           thinking_tokens: "Düşünmek için kullanılan token sayısı"
           reasoning_tokens: "Muhakeme için kullanılan token sayısı"
           disable_temperature: "Sıcaklığı devre dışı bırakın (bazı düşünme modelleri sıcaklığı desteklemez)"

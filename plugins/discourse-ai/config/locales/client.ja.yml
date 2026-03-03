@@ -364,8 +364,6 @@ ja:
           enable_translations: "自動翻訳を有効にする"
         stats:
           title: "翻訳の統計"
-          complete_language_detection_description: "全 %{total} 件の対象投稿の言語が検出されました。"
-          incomplete_language_detection_description: "全 %{total} 件中 %{done} 件の対象投稿の言語が検出されました。"
           backfill_disabled: "バックフィルは無効です。新しい投稿のみが翻訳されます。"
           backfill_message: "%{date} 以降のすべての投稿を翻訳するように<a href='%{settingsUrl}'>バックフィル設定</a>が構成されています。これには %{eta} かかることが予測されます。"
           eta_minutes:
@@ -773,7 +771,6 @@ ja:
           disable_streaming: "ストリーミングの補完を無効にする (ストリーミングを非ストリーミングリクエストに変換する)"
           reasoning_effort: "Reasoning effort (推論モデルにのみ適用)"
           enable_reasoning: "推論を有効にする (推論モデルにのみ適用)"
-          enable_thinking: "思考を有効にする (flash 2.5 などの該当するモデルのみ)"
           thinking_tokens: "思考に使用されるトークンの数"
           reasoning_tokens: "推論に使用されるトークンの数"
           disable_temperature: "Temperature を無効にする (一部の試行モデルは Temperature をサポートしていません)"

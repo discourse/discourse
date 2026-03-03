@@ -685,7 +685,6 @@ pt_BR:
           disable_streaming: "Desativar conclusões de transmissão (converter transmissão em pedidos que não forem desse tipo)"
           reasoning_effort: "Esforço de raciocínio (aplicável apenas a modelos de raciocínio)"
           enable_reasoning: "Ativar raciocínio (aplicável apenas a modelos de raciocínio)"
-          enable_thinking: "Ativar pensamento (aplicável apenas a modelos como, por exemplo, flash 2.5)"
           thinking_tokens: "Quantidade de tokens usados para pensamento"
           reasoning_tokens: "Quantidade de tokens usados para raciocínio"
           disable_temperature: "Desativar temperatura (alguns modelos de pensamento não são compatíveis com temperatura)"

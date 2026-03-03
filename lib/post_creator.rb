@@ -266,8 +266,17 @@ class PostCreator
   end
 
   def trigger_after_events
-    DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user) unless @opts[:topic_id]
-    DiscourseEvent.trigger(:post_created, @post, @opts, @user)
+    begin
+      DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user) unless @opts[:topic_id]
+    rescue => e
+      Discourse.warn_exception(e, message: "Error in 'topic_created' event handler")
+    end
+
+    begin
+      DiscourseEvent.trigger(:post_created, @post, @opts, @user)
+    rescue => e
+      Discourse.warn_exception(e, message: "Error in 'post_created' event handler")
+    end
   end
 
   def self.track_post_stats

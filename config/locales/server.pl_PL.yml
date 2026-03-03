@@ -19,7 +19,7 @@ pl_PL:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Styczeń
     - Luty
     - Marzec
@@ -300,6 +300,7 @@ pl_PL:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
+    diff_too_complex: "Różnica jest zbyt złożona, aby obliczyć ją bezpiecznie. Spróbuj wprowadzić mniejsze zmiany."
     messages:
       invalid_locale: "%{invalid_locale} to nieprawidłowe ustawienia regionalne"
       too_long_validation:
@@ -918,6 +919,11 @@ pl_PL:
         other: "Nie można usunąć tej kategorii, bo zawiera %{count} tematów. Najstarszy temat to %{topic_link}."
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
     uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
+  category_types:
+    discussion:
+      name: "Dyskusja"
+      title: "dyskusja"
+      description: "Wszystko, co niezbędne do prowadzenia konwersacji w oparciu o akapity."
   trust_levels:
     admin: "Administracja"
     staff: "Zespół"
@@ -1865,6 +1871,8 @@ pl_PL:
     max_oneboxes_per_post: "Ustaw maksymalną liczbę oneboxów, które można umieścić w jednym poście. Oneboxy zapewniają podgląd powiązanej treści bezpośrednio w poście."
     facebook_app_access_token: "Token wygenerowany z Twojego identyfikatora aplikacji Facebook i sekret. Używany do generowania osadzonych oneboxów z serwisu Instagram."
     github_onebox_access_tokens: "Mapowanie organizacji lub użytkownika GitHub na token dostępu GitHub, który jest używany do generowania oneboxów GitHub dla prywatnych repozytoriów, commitów, pull requestów, zgłoszeń i zawartości plików. Bez tego tylko publiczne adresy URL GitHub będą miały onebox."
+    reddit_onebox_client_id: "Identyfikator klienta OAuth API Reddit używany do uwierzytelniania skrzynek Reddit. Utwórz aplikację typu „skrypt” na stronie reddit.com/prefs/apps, aby uzyskać dane uwierzytelniające."
+    reddit_onebox_client_secret: "Klucz klienta OAuth API Reddit używany do uwierzytelniania skrzynek OneBox w Reddit. Znajduje się w aplikacji typu „skrypt” utworzonej na stronie reddit.com/prefs/apps."
     logo: "Obraz logo w lewym górnym rogu witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku kształtu większym niż 3: 1. Jeśli pole pozostanie puste, wyświetlony zostanie tekst tytułu witryny."
     logo_small: "Mały obraz logo w lewym górnym rogu witryny, widoczny podczas przewijania w dół. Użyj kwadratowego obrazu 120 × 120. Jeśli pole pozostanie puste, wyświetlony zostanie glif domowy."
     digest_logo: "Alternatywne logo użyte w górnej części podsumowania e-mail witryny. Użyj szerokiego obrazu prostokąta. Nie używaj obrazu SVG. Jeśli pole pozostanie puste, zostanie użyty obraz z ustawienia „logo”."
@@ -2307,6 +2315,7 @@ pl_PL:
     mailgun_api_key: "Klucz Mailgun Secret API używany do weryfikacji wiadomości webhook."
     sendgrid_verification_key: "Klucz weryfikacyjny Sendgrid używany do weryfikacji wiadomości webhook."
     mailjet_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Klucz uwierzytelniania Mandrill używany do weryfikowania wiadomości webhook."
     postmark_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2381,7 +2390,7 @@ pl_PL:
     allow_likes_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom anonimowo przeglądającym Twoją witrynę polubienie postów. Po aktywacji użytkownicy mogą ukryć swoją tożsamość podczas polubienia postów lub tematów w witrynie. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
     anonymous_posting_allowed_groups: "Grupy, które mogą zezwalać na anonimowe publikowanie. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
-    hide_user_profiles_from_public: "Wyłącz karty użytkownika, profile użytkowników i katalog użytkowników dla użytkowników anonimowych."
+    hide_user_profiles_from_public: "Wyłącz karty i profile użytkowników dla użytkowników anonimowych. Zagregowane statystyki będą nadal dostępne w katalogu użytkowników."
     hide_new_user_profiles: "Ukryj profile użytkowników poziomu zaufania 1 lub niższego przed innymi i użytkownikami poziomu zaufania 1, dopóki nie opublikują po raz pierwszy. Ta funkcja jest bezwarunkowo wyłączona w witrynach must_approve_users i invite_only."
     allow_users_to_hide_profile: "Zezwalaj użytkownikom na ukrywanie swojego profilu i statusu dostępności."
     hide_user_activity_tab: "Ukryj kartę aktywności na profilach użytkowników z wyjątkiem administratora i siebie."

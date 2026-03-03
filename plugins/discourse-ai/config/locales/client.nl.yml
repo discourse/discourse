@@ -654,7 +654,6 @@ nl:
           disable_streaming: "Streamingvoltooiingen uitschakelen (streaming- naar niet-streaming-verzoeken converteren)"
           reasoning_effort: "Redeneringsinspanning (alleen van toepassing op redeneringsmodellen)"
           enable_reasoning: "Redeneren inschakelen (alleen van toepassing op redeneringsmodellen)"
-          enable_thinking: "Denken inschakelen (alleen op toepasselijke modellen, bijvoorbeeld: flash 2.5)"
           thinking_tokens: "Aantal tokens dat wordt gebruikt voor denken"
           reasoning_tokens: "Aantal tokens dat wordt gebruikt voor redeneren"
           disable_temperature: "Temperatuur uitschakelen (sommige denkmodellen ondersteunen geen temperatuur)"

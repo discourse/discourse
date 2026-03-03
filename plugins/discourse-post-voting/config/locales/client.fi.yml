@@ -117,3 +117,6 @@ fi:
     review:
       transcript:
         view: "Näytä aiempien viestien transkriptio"
+      types:
+        reviewable_post_voting_comment:
+          title: "Liputettu viestiäänestyskommentti"

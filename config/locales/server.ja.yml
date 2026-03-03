@@ -2067,6 +2067,7 @@ ja:
     mailgun_api_key: "Webhook メッセージを検証するために使用される Mailgun Secret API キー。"
     sendgrid_verification_key: "Webhook メッセージの検証に使用される Sendgrid 検証キー。"
     mailjet_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Webhook メッセージの検証に使用される Mandrill 認証キー。"
     postmark_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Webhook ペイロードの検証に使用されるトークン。webhook の 't' クエリパラメーターとして渡される必要があります。例: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2141,7 +2142,6 @@ ja:
     allow_likes_in_anonymous_mode: "サイトを匿名で閲覧しているユーザーが投稿に「いいね！」できるようにするには、この設定を有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックに「いいね！」する際に、自分の ID を非表示にすることを選択できます。この設定には `allow_anonymous_mode` 設定が有効になっている必要があります。"
     anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ。この設定には `allow anonymous mode` 設定が有効になっている必要があります。"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
-    hide_user_profiles_from_public: "匿名ユーザーのユーザーカード、ユーザープロファイル、およびユーザーディレクトリを無効にする。"
     hide_new_user_profiles: "信頼レベル 1 以下のユーザープロファイルは、そのユーザーが初めて投稿するまで一般ユーザーと信頼レベル 1 のユーザーに対して非表示になります。この機能は must_approve_users と invite_only サイトでは無条件に無効になります。"
     allow_users_to_hide_profile: "ユーザーがプロファイルとプレゼンスを非表示することを許可する"
     hide_user_activity_tab: "管理者と自分以外のユーザープロファイルでアクティビティタブを非表示にします。"
@@ -2385,6 +2385,7 @@ ja:
     enable_upcoming_changes: "次回の変更を有効にする"
     fake_upcoming_change: "これは実際の次回の変更ではありません。テストを目的としているため、この文字列の翻訳は不要です。"
     floating_dismiss_topics_on_mobile: "モバイル版では、アクセスの簡易性とトピックリストの上部のスペースを空けるために「閉じる...」フローティングボタンを表示する"
+    rename_faq_to_guidelines: "この変更によって FAQ ページの名前が「ガイドライン」に変更されます。FAQ ページは引き続き /faq で利用できます。'faq url' 設定はこれまで通り機能します。"
     enable_simplified_category_creation: "より少ないオプションとクリーンなインターフェースによって、シンプルなカテゴリ作成フローを実現します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"

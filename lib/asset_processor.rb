@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AssetProcessor
+  BASE_COMPILER_VERSION = 102
+
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
 
@@ -16,6 +18,10 @@ class AssetProcessor
   @ctx_init = Mutex.new
 
   class TranspileError < StandardError
+  end
+
+  def self.booted?
+    !!@ctx
   end
 
   def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
@@ -120,6 +126,7 @@ class AssetProcessor
 
     source = load_or_build_processor_source
 
+    ctx.eval("globalThis.ROLLUP_PLUGIN_COMPILER = #{ENV["ROLLUP_PLUGIN_COMPILER"].to_json}")
     ctx.eval(source, filename: "asset-processor.js")
 
     ctx
@@ -166,6 +173,10 @@ class AssetProcessor
     transpile_error = TranspileError.new(message)
     transpile_error.set_backtrace(e.backtrace)
     raise transpile_error
+  end
+
+  def self.ember_version
+    v8_call("emberVersion")
   end
 
   def initialize(skip_module: false)
@@ -224,9 +235,5 @@ class AssetProcessor
 
   def post_css(css:, map:, source_map_file:)
     self.class.v8_call("postCss", css, map, source_map_file, fetch_result_call: "getPostCssResult")
-  end
-
-  def ember_version
-    self.class.v8_call("emberVersion")
   end
 end

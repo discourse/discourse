@@ -6,6 +6,11 @@
 
 bs_BA:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        hidden: "hidden"
+        failed: "neuspješno"
     number:
       format:
         separator: "."
@@ -264,6 +269,9 @@ bs_BA:
       pill: "Povezane Poruke"
     suggested_topics:
       pm_title: "Preporučene Poruke"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Prethodno"
     about:
       edit: "Edit this page"
       simple_title: "O nama"
@@ -3139,7 +3147,6 @@ bs_BA:
         categories: "Sve kategorije"
   admin_js:
     settings: "Postavke"
-    reset_filter: "Resetovati"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"

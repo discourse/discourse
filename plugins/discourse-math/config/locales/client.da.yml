@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 da:
+  js:
+    discourse_math:
+      edit_modal:
+        apply: "Anvend"
+      insert_modal:
+        insert: "Indsæt"

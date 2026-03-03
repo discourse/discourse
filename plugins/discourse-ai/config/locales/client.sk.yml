@@ -660,7 +660,6 @@ sk:
           disable_streaming: "Zakázať dokončenie streamovania (konvertovať požiadavky na streamovanie na požiadavky bez streamovania)"
           reasoning_effort: "Úsilie pri zdôvodňovaní (platí len pre modely zdôvodňovania)"
           enable_reasoning: "Umožniť zdôvodňovanie (platí len pre modely zdôvodňovania)"
-          enable_thinking: "Povolenie myslenia (len v príslušných modeloch, napr.: flash 2.5)"
           thinking_tokens: "Počet tokenov použitých na premýšľanie"
           reasoning_tokens: "Počet tokenov použitých na uvažovanie"
           disable_temperature: "Zakázať teplotu (niektoré modely myslenia teplotu nepodporujú)"

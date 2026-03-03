@@ -583,10 +583,25 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(moderator).can_change_post_owner?).to be_truthy
     end
 
-    it "returns true for a moderator when not allowed" do
+    it "returns false for a moderator when not allowed" do
       SiteSetting.moderators_change_post_ownership = false
 
       expect(Guardian.new(moderator).can_change_post_owner?).to be_falsey
+    end
+
+    describe "with allowed groups" do
+      fab!(:allowed_group, :group)
+      fab!(:allowed_group_user) { Fabricate(:user, groups: [allowed_group]) }
+
+      before { SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}" }
+
+      it "returns true for user in allowed group" do
+        expect(Guardian.new(allowed_group_user).can_change_post_owner?).to be_truthy
+      end
+
+      it "returns false for user not in allowed group" do
+        expect(Guardian.new(user).can_change_post_owner?).to be_falsy
+      end
     end
   end
 
@@ -902,16 +917,6 @@ RSpec.describe PostGuardian do
         SiteSetting.delete_all_posts_max = 10
         expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_truthy
       end
-    end
-
-    it "is false if user is at or above trust level 2" do
-      tl2_user = Fabricate(:user, trust_level: TrustLevel[2], created_at: 1.day.ago)
-      expect(Guardian.new(admin).can_delete_all_posts?(tl2_user)).to be_falsey
-    end
-
-    it "is true if user is below trust level 2" do
-      tl1_user = Fabricate(:user, trust_level: TrustLevel[1], created_at: 1.day.ago)
-      expect(Guardian.new(admin).can_delete_all_posts?(tl1_user)).to be_truthy
     end
   end
 

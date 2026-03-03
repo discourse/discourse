@@ -654,7 +654,6 @@ fr:
           disable_streaming: "Désactiver les complétions de streaming (convertir les requêtes de streaming en requêtes non-streaming)"
           reasoning_effort: "Effort de raisonnement (applicable uniquement aux modèles de raisonnement)"
           enable_reasoning: "Activer le raisonnement (applicable uniquement aux modèles de raisonnement)"
-          enable_thinking: "Activer la réflexion (uniquement sur les modèles applicables, p. ex., flash 2.5)"
           thinking_tokens: "Nombre de jetons utilisés pour réfléchir"
           reasoning_tokens: "Nombre de jetons utilisés pour le raisonnement"
           disable_temperature: "Désactiver la température (certains modèles ne prennent pas en charge la température)"

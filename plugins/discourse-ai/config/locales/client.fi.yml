@@ -654,7 +654,6 @@ fi:
           disable_streaming: "Poista suoratoistovalmistumiset käytöstä (muunna suoratoistopyynnöt ei-suoratoistopyynnöiksi)"
           reasoning_effort: "Päättelytoiminta (koskee vain päättelymalleja)"
           enable_reasoning: "Ota päättely käyttöön (koskee vain päättelymalleja)"
-          enable_thinking: "Ota ajattelu käyttöön (vain sovellettavissa malleissa, esim.: flash 2.5)"
           thinking_tokens: "Ajatteluun käytettyjen saneiden määrä"
           reasoning_tokens: "Päättelyyn käytettyjen saneiden määrä"
           disable_temperature: "Poista lämpötila käytöstä (jotkin ajattelumallit eivät tue lämpötilaa)"

@@ -6,6 +6,11 @@
 
 lv:
   js:
+    blocks:
+      ghost:
+        status: "Statuss"
+        hidden: "paslēpts"
+        failed: "neizdevies"
     number:
       format:
         separator: ","
@@ -254,6 +259,9 @@ lv:
       pill: "Saistītās ziņas"
     suggested_topics:
       pm_title: "Ieteiktās ziņas"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Atpakaļ"
     about:
       simple_title: "Par"
       title: "Par %{title}"
@@ -2837,7 +2845,6 @@ lv:
         categories: "Visas sadaļas"
   admin_js:
     settings: "Iestatījumi"
-    reset_filter: "Atlikt"
     admin:
       title: "Discourse administrators"
       moderator: "Moderators"

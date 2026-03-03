@@ -6,6 +6,13 @@
 
 ug:
   js:
+    blocks:
+      ghost:
+        status: "ھالەت"
+        conditions: "شەرت"
+        in_location: "دا"
+        hidden: "يوشۇرۇن"
+        failed: "مەغلۇب بولدى"
     carousel:
       go_to_slide: "%{index}-سىيرىلمىغا يۆتكەل"
       previous: "ئالدىنقى سىيرىلما"
@@ -326,6 +333,8 @@ ug:
       theme_source: "ئۆرنەك <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "قىستۇرما «%{name}»"
       unknown_source: "ئۆرنەك ياكى قىستۇرمىڭىزدىن بىرى"
+    dev_tools:
+      drag_to_move: "سۆرەپ يۆتكە"
     s3:
       regions:
         ap_northeast_1: "ئاسىيا تىنچ ئوكيان (توكيو)"
@@ -415,6 +424,11 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      invite_collaborators:
+        action: "تەكلىپ قۇر"
+      start_posting:
+        title: "يوللاشنى باشلا"
+        back: "كەينى"
       spread_the_word:
         action: "ئۇلانما كۆچۈر"
         copied_to_clipboard: "ئۇلانما چاپلاش تاختىسىغا كۆچۈرۈلدى!"
@@ -4225,6 +4239,7 @@ ug:
       create: "يېڭى سەھىپە"
       create_long: "يېڭى سەھىپە قۇرىدۇ"
       save: "سەھىپە ساقلا"
+      unsaved_changes: "ساقلانمىغان ئۆزگەرتىشلىرىڭىز بار"
       slug: "سەھىپە قىسقارتما"
       parent: "ئانا سەھىپە"
       slug_placeholder: "(تاللاشچان) تور ئادرېسىغا ئىشلىتىلىدىغان سىزىقلىق سۆز"
@@ -5373,7 +5388,6 @@ ug:
   admin_js:
     type_to_filter: "كىرگۈزۈلسە سۈزىدۇ…"
     settings: "تەڭشەكلەر"
-    reset_filter: "ئەسلىگە قايتۇر"
     toggle_filters: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     admin:
       title: "Discourse باشقۇرغۇچى"
@@ -5863,19 +5877,6 @@ ug:
           title: "يېڭىلىق?"
           subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «مول بىلىم» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
           learn_more: "مول بىلىم…"
-          experimental: "تەجرىبە"
-          only_experiments: "پەقەت تەجرىبە ئىقتىدارلىرىنىلا كۆرسىتىدۇ"
-          experiment_enabled: "تەجرىبە ئىقتىدارىنى قوزغاتتىڭىز."
-          experiment_disabled: "تەجرىبە ئىقتىدارىنى چەكلىدىڭىز."
-          feature_enabled: "ئىقتىدارنى قوزغاتتىڭىز."
-          feature_disabled: "ئىقتىدارنى چەكلىدىڭىز."
-          experiment_tooltip:
-            title_enabled: "تەجرىبە ئىقتىدارىنى تاقايدۇ"
-            content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."
-          feature_tooltip:
-            title_disabled: "بۇ ئىقتىدارنى سىناڭ"
-            title_enabled: "ئىقتىدارنى تاقايدۇ"
-            content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."
         last_checked: "ئاخىرقى تەكشۈرۈلگەن ۋاقىت"
         refresh_problems: "يېڭىلا"
         no_problems: "ھېچقانداق مەسىلە بايقالمىدى."

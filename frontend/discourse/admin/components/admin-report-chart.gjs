@@ -161,6 +161,11 @@ export default class AdminReportChart extends Component {
         scales: {
           y: {
             display: true,
+            title: {
+              display: true,
+              text: model.y_axis_title,
+            },
+
             grid: { color: getCSSColor("--primary-low") },
             ticks: {
               callback: (label) => number(label),

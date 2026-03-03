@@ -10,7 +10,7 @@ import GroupSelector from "discourse/components/group-selector";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Group from "discourse/models/group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -23,7 +23,7 @@ export default class PostEventBulkInvite extends Component {
 
   @tracked bulkInviteDisabled = true;
   @tracked flash = null;
-  @trackedArray
+  @autoTrackedArray
   bulkInvites = [
     EmberObject.create({ identifier: null, attendance: "unknown" }),
   ];

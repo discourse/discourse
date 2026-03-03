@@ -13,6 +13,7 @@ tr_TR:
     openid_connect_authorize_scope: "Yetkilendirme uç noktasına gönderilen kapsamlar. Bu, \"openid\" içermelidir."
     openid_connect_rp_initiated_logout: "Çıkış yaptıktan sonra kullanıcıyı end_session_endpoint'e yönlendirin. Kimlik sağlayıcınız tarafından desteklenmeli ve keşif belgesine dahil edilmelidir."
     openid_connect_rp_initiated_logout_redirect: "(isteğe bağlı) Çıkış yap uç noktasına iletilecek olan post_logout_redirect_uri. Sağlanmışsa kimlik sağlayıcı ile kayıtlı olmalıdır."
+    openid_connect_rp_initiated_logout_include_client_id: "(isteğe bağlı) client_id (openid_connect_client_id ayarı) değerini, oturum kapatma uç noktasına sorgu parametresi olarak ekleyin."
     openid_connect_token_scope: "Belirteç uç noktası talep edilirken gönderilen kapsamlar. Resmi spesifikasyon bunu gerektirmez."
     openid_connect_error_redirects: "Geri arama error_reason ilk parametreyi içeriyorsa kullanıcı ikinci parametredeki URL'ye yönlendirilir"
     openid_connect_allow_association_change: "Kullanıcıların Discourse hesaplarının bağlantısını OpenID Connect sağlayıcısından kesmelerine ve yeniden bağlamalarına izin verin"
