@@ -429,8 +429,6 @@ acceptance(
     test("adopts private parent permissions when sub has partial public permissions", async function (assert) {
       await visit("/c/partial-group/edit/general");
 
-      // Parent (support, id=6) only allows custom_group — no everyone.
-      // Sub has everyone=READONLY which the parent doesn't allow → must adopt parent permissions.
       const categoryChooser = selectKit(".category-chooser");
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(6);
