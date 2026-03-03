@@ -767,7 +767,7 @@ RSpec.describe GroupsController do
       expect(response.parsed_body["members"].map { |u| u["id"] }).to eq([other_user.id, user.id])
       expect(response.parsed_body["owners"].map { |u| u["id"] }).to eq([other_user.id])
 
-      get "/groups/#{group.name}/members.json?order=added_at&asc=1"
+      get "/groups/#{group.name}/members.json?order=added_at&asc=true"
 
       expect(response.parsed_body["members"].map { |u| u["id"] }).to eq([user.id, other_user.id])
       expect(response.parsed_body["owners"].map { |u| u["id"] }).to eq([other_user.id])
