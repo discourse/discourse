@@ -63,9 +63,9 @@ RSpec.describe Categories::Types::Base do
         end
 
       schema = test_type.send(:resolved_configuration_schema)
-      expect(schema.length).to eq(1)
+      expect(schema.keys).to eq(%i[site_settings category_settings category_custom_fields])
 
-      entry = schema.first
+      entry = schema[:site_settings].first
       expect(entry[:key]).to eq("title")
       expect(entry[:default]).to eq("My Forum")
       expect(entry[:type]).to be_present
@@ -83,9 +83,9 @@ RSpec.describe Categories::Types::Base do
         end
 
       schema = test_type.send(:resolved_configuration_schema)
-      expect(schema.length).to eq(1)
+      expect(schema.keys).to eq(%i[site_settings category_settings category_custom_fields])
 
-      entry = schema.first
+      entry = schema[:category_settings].first
       expect(entry[:key]).to eq("my_field")
       expect(entry[:default]).to eq(42)
       expect(entry[:type]).to eq("integer")

@@ -316,6 +316,10 @@
             "string",
             "null"
           ]
+        },
+        "category_types": {
+          "type": "array",
+          "items": {}
         }
       },
       "required": [

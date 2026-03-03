@@ -37,8 +37,7 @@ class CategorySerializer < SiteCategorySerializer
              :style_type,
              :emoji,
              :icon,
-             :category_types,
-             :primary_category_type
+             :category_types
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
   has_many :category_localizations, serializer: CategoryLocalizationSerializer, embed: :objects
@@ -156,9 +155,5 @@ class CategorySerializer < SiteCategorySerializer
       return []
     end
     object.category_types
-  end
-
-  def primary_category_type
-    object.category_types.first
   end
 end
