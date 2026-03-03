@@ -102,12 +102,14 @@ class Auth::Result
   end
 
   def apply_associated_attributes!
-    if authenticator&.provides_groups? && !associated_groups.nil?
+    if (authenticator&.provides_groups? || SiteSetting.jmespath_group_mapping_enabled) &&
+         !associated_groups.nil?
       associated_group_ids = []
+      jmespath_linkages = []
 
       associated_groups.uniq.each do |associated_group|
         begin
-          associated_group =
+          associated_group_record =
             AssociatedGroup.find_or_create_by(
               name: associated_group[:name],
               provider_id: associated_group[:id],
@@ -117,8 +119,23 @@ class Auth::Result
           retry
         end
 
-        associated_group_ids.push(associated_group.id)
+        associated_group_ids.push(associated_group_record.id)
+
+        # JMESPath groups use the group name as both id and name, whereas OAuth provider
+        # groups use external IDs, so we can distinguish them.
+        if SiteSetting.jmespath_group_mapping_enabled &&
+             associated_group[:id] == associated_group[:name]
+          discourse_group = Group.find_by(name: associated_group[:name])
+          if discourse_group
+            jmespath_linkages << {
+              group_id: discourse_group.id,
+              associated_group_id: associated_group_record.id,
+            }
+          end
+        end
       end
+
+      jmespath_linkages.each { |linkage| GroupAssociatedGroup.find_or_create_by(linkage) }
 
       user.update(associated_group_ids: associated_group_ids)
       AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")

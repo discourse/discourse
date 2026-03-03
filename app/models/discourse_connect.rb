@@ -178,7 +178,10 @@ class DiscourseConnect < DiscourseConnectBase
 
     sso_record.save!
 
-    apply_group_rules(sso_record.user) if sso_record.user
+    if sso_record.user
+      extract_jmespath_groups if SiteSetting.jmespath_group_mapping_enabled
+      apply_group_rules(sso_record.user)
+    end
 
     sso_record && sso_record.user
   end
@@ -201,6 +204,22 @@ class DiscourseConnect < DiscourseConnectBase
         remove_user_from_groups(user, to_be_removed) if to_be_removed.present?
       end
     end
+  end
+
+  def extract_jmespath_groups
+    payload_data = self.to_h
+    matched_groups =
+      Auth::JmesPathGroupExtractor.extract_groups_from_discourse_connect(payload_data)
+
+    return if matched_groups.empty?
+
+    group_names = matched_groups.map { |g| g[:name] }.join(",")
+    self.add_groups =
+      if add_groups.present?
+        [add_groups, group_names].join(",")
+      else
+        group_names
+      end
   end
 
   def apply_group_rules(user)
