@@ -75,7 +75,7 @@ module DiscourseAi
           raise Discourse::InvalidAccess.new
         end
 
-        raise Discourse::InvalidAccess if current_user.silenced? || current_user.suspended?
+        raise Discourse::InvalidAccess if guardian.is_silenced?
       end
     end
   end
