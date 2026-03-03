@@ -8,8 +8,6 @@ module DiscourseNarrativeBot
     requires_login
 
     def generate
-      immutable_for(24.hours)
-
       %i[date user_id].each do |key|
         raise Discourse::InvalidParameters.new("#{key} must be present") if params[key].blank?
       end
