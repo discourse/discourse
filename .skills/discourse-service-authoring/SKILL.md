@@ -59,7 +59,7 @@ Write the service, controller, update all callers, and remove dead code.
 - Write model improvements first (associations, constants, extracted methods)
 - Write the service class
 - Write the controller integration
-- Update ALL callers to use the service directly — specs, import scripts, dev tools, event handlers, other plugins. Non-controller callers use `Service.call!` (bang version). Update test `before` blocks with any site settings the service's policy requires.
+- Update ALL callers to use the service directly — specs, import scripts, dev tools, event handlers, other plugins. Update test `before` blocks with any site settings the service's policy requires.
 - Remove dead code: if a helper method is no longer called by any production code after extraction, delete it.
 - When converting serializers to AMS, update ALL callers (controllers, services, publishers) and remove any wrapper methods that just delegated to the old serializer.
 
