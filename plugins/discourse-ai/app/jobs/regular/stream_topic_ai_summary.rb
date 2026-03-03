@@ -8,7 +8,8 @@ module Jobs
       return unless topic = Topic.find_by(id: args[:topic_id])
       return unless user = User.find_by(id: args[:user_id])
 
-      strategy = DiscourseAi::Summarization.topic_summary(topic)
+      locale = args[:locale].presence || SiteSetting.default_locale
+      strategy = DiscourseAi::Summarization.topic_summary(topic, locale:)
       return if strategy.nil? || !Guardian.new(user).can_see_summary?(topic)
 
       guardian = Guardian.new(user)
