@@ -40,7 +40,7 @@ RSpec.describe Categories::TypeRegistry do
     it "returns metadata including the discussion type" do
       discussion = described_class.list.find { |t| t[:id] == :discussion }
 
-      expect(discussion).to include(icon: "comments", available: true)
+      expect(discussion).to include(icon: "memo", available: true)
     end
   end
 
