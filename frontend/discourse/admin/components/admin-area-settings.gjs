@@ -15,11 +15,14 @@ import { i18n } from "discourse-i18n";
 export default class AdminAreaSettings extends Component {
   @tracked settings = [];
   @tracked loading = false;
-  @tracked showBreadcrumb = this.args.showBreadcrumb ?? true;
 
   constructor() {
     super(...arguments);
     this.#loadSettings();
+  }
+
+  get showBreadcrumb() {
+    return this.args.showBreadcrumb ?? true;
   }
 
   get showSettings() {

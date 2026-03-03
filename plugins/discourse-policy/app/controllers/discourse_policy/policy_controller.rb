@@ -49,8 +49,6 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
   end
 
   def not_accepted
-    @post = Post.find(params[:post_id])
-
     # Check if user has permission to see group members
     groups = @post.post_policy.groups
     return render_json_error(I18n.t("discourse_policy.errors.group_not_found")) if groups.blank?
@@ -91,6 +89,8 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
     @post = Post.find_by(id: params[:post_id])
 
     raise Discourse::NotFound if !@post
+
+    raise Discourse::NotFound if !guardian.can_see?(@post)
 
     return render_json_error(I18n.t("discourse_policy.errors.no_policy")) if !@post.post_policy
 

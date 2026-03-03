@@ -141,7 +141,11 @@ export default class ChatMessage extends Component {
   }
 
   get shouldRenderOpenEmojiPickerButton() {
-    return this.chat.userCanInteractWithChat && this.site.desktopView;
+    return (
+      this.args.interactive !== false &&
+      this.chat.userCanInteractWithChat &&
+      this.site.desktopView
+    );
   }
 
   get secondaryActionsIsExpanded() {
@@ -339,7 +343,7 @@ export default class ChatMessage extends Component {
   }
 
   _setActiveMessage() {
-    if (this.args.disableMouseEvents) {
+    if (this.args.disableMouseEvents || this.args.interactive === false) {
       return;
     }
 
@@ -396,6 +400,10 @@ export default class ChatMessage extends Component {
 
   @action
   onLongPressEnd(element, event) {
+    if (this.args.interactive === false) {
+      return;
+    }
+
     if (event.target.tagName === "IMG") {
       return;
     }
@@ -429,6 +437,10 @@ export default class ChatMessage extends Component {
 
   get hideUserInfo() {
     const message = this.args.message;
+
+    if (message.pinned) {
+      return false;
+    }
 
     const previousMessage = message.previousMessage;
 
@@ -561,6 +573,7 @@ export default class ChatMessage extends Component {
           (if @message.deletedAt "-deleted")
           (if @message.selected "-selected")
           (if @message.error "-errored")
+          (if (eq @interactive false) "-not-interactive")
           (if this.showThreadIndicator "has-thread-indicator")
           (if this.hideUserInfo "-user-info-hidden")
           (if this.hasReply "has-reply")
@@ -579,6 +592,8 @@ export default class ChatMessage extends Component {
         }}
         ...attributes
       >
+        {{yield to="top"}}
+
         {{#if this.show}}
           {{#if this.pane.selectingMessages}}
             <Input
@@ -627,6 +642,7 @@ export default class ChatMessage extends Component {
                 <ChatMessageInfo
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
+                  @context={{@context}}
                   @threadContext={{this.threadContext}}
                   @dateMode={{@dateMode}}
                 />

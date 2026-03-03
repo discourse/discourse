@@ -201,6 +201,22 @@ RSpec.describe Chat::TrashMessage do
           end
         end
 
+        context "when message is pinned" do
+          fab!(:pin) do
+            Fabricate(
+              :chat_pinned_message,
+              chat_message: message,
+              chat_channel: message.chat_channel,
+            )
+          end
+
+          it "destroys the pin" do
+            pin_id = pin.id
+            expect { result }.to change { Chat::PinnedMessage.count }.by(-1)
+            expect(Chat::PinnedMessage.find_by(id: pin_id)).to be_nil
+          end
+        end
+
         context "when message is already deleted" do
           before { message.trash! }
 

@@ -10,10 +10,6 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigAreasAboutYourOrganization extends Component {
   @service toasts;
 
-  companyName = this.args.yourOrganization.companyName.value;
-  governingLaw = this.args.yourOrganization.governingLaw.value;
-  cityForDisputes = this.args.yourOrganization.cityForDisputes.value;
-
   @cached
   get data() {
     return {

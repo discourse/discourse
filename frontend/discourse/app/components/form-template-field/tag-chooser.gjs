@@ -89,23 +89,23 @@ export default class TagChooserField extends Component {
   }
 
   @action
-  handleSelectedTagIds(event) {
+  handleSelectedTagNames(event) {
     return Array.from(event.target.selectedOptions)
-      .map((option) => parseInt(option.value, 10))
-      .filter((id) => !isNaN(id));
+      .map((option) => option.value)
+      .filter((name) => name !== "");
   }
 
   @action
   handleInput(event) {
-    const selectedTagIds = this.handleSelectedTagIds(event);
-    const validTagIds = this.formattedChoices.map((choice) => choice.id);
-    const filteredTagIds = selectedTagIds.filter((tagId) =>
-      validTagIds.includes(tagId)
+    const selectedTagNames = this.handleSelectedTagNames(event);
+    const validTagNames = this.formattedChoices.map((choice) => choice.name);
+    const filteredTagNames = selectedTagNames.filter((name) =>
+      validTagNames.includes(name)
     );
     const existingSelectedTagIds = this.selectedTags.map((t) => this._tagId(t));
 
-    const selectedTags = filteredTagIds.map((tagId) =>
-      this.formattedChoices.find((choice) => choice.id === tagId)
+    const selectedTags = filteredTagNames.map((name) =>
+      this.formattedChoices.find((choice) => choice.name === name)
     );
 
     set(
@@ -167,7 +167,7 @@ export default class TagChooserField extends Component {
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
           <option
-            value={{choice.id}}
+            value={{choice.name}}
             selected={{this.isSelected choice.id}}
           >{{choice.display}}</option>
         {{/each}}

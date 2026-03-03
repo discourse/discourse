@@ -72,7 +72,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
         before do
           cached_report = { data: "cached top words", identifier: "top-words" }
           DiscourseRewind::FetchReportsHelper.cache_single_report(
-            current_user.username,
+            current_user.id,
             2021,
             "TopWords",
             cached_report,
@@ -94,7 +94,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
         before do
           cached_report = { data: "cached reading time", identifier: "reading-time" }
           DiscourseRewind::FetchReportsHelper.cache_single_report(
-            current_user.username,
+            current_user.id,
             2021,
             "ReadingTime",
             cached_report,
@@ -115,7 +115,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
         before do
           cached_report = { data: "cached reactions", identifier: "reactions" }
           DiscourseRewind::FetchReportsHelper.cache_single_report(
-            current_user.username,
+            current_user.id,
             2021,
             "Reactions",
             cached_report,
@@ -148,7 +148,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
 
           cached =
             DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
-              current_user.username,
+              current_user.id,
               2021,
               "TopWords",
             )
@@ -169,7 +169,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
 
           cached =
             DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
-              current_user.username,
+              current_user.id,
               2021,
               "Reactions",
             )
@@ -217,7 +217,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
           before do
             cached_report = { data: "other user report", identifier: "top-words" }
             DiscourseRewind::FetchReportsHelper.cache_single_report(
-              other_user.username,
+              other_user.id,
               2021,
               "TopWords",
               cached_report,
@@ -248,7 +248,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
             before do
               cached_report = { data: "other user report", identifier: "top-words" }
               DiscourseRewind::FetchReportsHelper.cache_single_report(
-                other_user.username,
+                other_user.id,
                 2021,
                 "TopWords",
                 cached_report,

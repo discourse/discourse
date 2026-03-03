@@ -22,10 +22,10 @@ acceptance("Search - Mobile", function (needs) {
       .dom(".search-results .fps-topic")
       .doesNotExist("no results by default");
 
-    await click(".advanced-filters summary");
+    await click(".advanced-filters__toggle");
 
     assert
-      .dom(".advanced-filters[open]")
+      .dom(".advanced-filters.--is-expanded")
       .exists("it should expand advanced search filters");
 
     await fillIn(".search-query", "consectetur");
@@ -34,7 +34,7 @@ acceptance("Search - Mobile", function (needs) {
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
 
     assert
-      .dom(".advanced-filters[open]")
+      .dom(".advanced-filters.--is-expanded")
       .doesNotExist("it should collapse advanced search filters");
 
     await click(".search-cta");

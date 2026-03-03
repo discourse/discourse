@@ -1,11 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { computedI18n, setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
@@ -22,11 +21,11 @@ export default class AdminBackupsIndexController extends Controller {
     return getURL("/admin/backups/settings?filter=allow_restore");
   }
 
-  @discourseComputed("status.allowRestore", "status.isOperationRunning")
-  restoreTitle(allowRestore, isOperationRunning) {
-    if (!allowRestore) {
+  @computed("status.allowRestore", "status.isOperationRunning")
+  get restoreTitle() {
+    if (!this.status?.allowRestore) {
       return "admin.backups.operations.restore.is_disabled_title";
-    } else if (isOperationRunning) {
+    } else if (this.status?.isOperationRunning) {
       return "admin.backups.operations.is_running";
     } else {
       return "admin.backups.operations.restore.title";
@@ -43,8 +42,8 @@ export default class AdminBackupsIndexController extends Controller {
     }
   }
 
-  @discourseComputed("status.isOperationRunning")
-  deleteTitle() {
+  @computed("status.isOperationRunning")
+  get deleteTitle() {
     if (this.status.isOperationRunning) {
       return "admin.backups.operations.is_running";
     }

@@ -18,6 +18,7 @@ import FKControlPassword from "discourse/form-kit/components/fk/control/password
 import FKControlQuestion from "discourse/form-kit/components/fk/control/question";
 import FKControlRadioGroup from "discourse/form-kit/components/fk/control/radio-group";
 import FKControlSelect from "discourse/form-kit/components/fk/control/select";
+import FKControlTagChooser from "discourse/form-kit/components/fk/control/tag-chooser";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
 import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
@@ -110,6 +111,7 @@ export default class FKField extends Component {
             Toggle=(this.componentFor FKControlToggle field)
             Menu=(this.componentFor FKControlMenu field)
             Select=(this.componentFor FKControlSelect field)
+            TagChooser=(this.componentFor FKControlTagChooser field)
             Input=(this.componentFor FKControlInput field)
             RadioGroup=(this.componentFor FKControlRadioGroup field)
             Calendar=(this.componentFor FKControlCalendar field)

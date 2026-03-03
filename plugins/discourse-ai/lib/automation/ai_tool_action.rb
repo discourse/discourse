@@ -4,7 +4,7 @@ module DiscourseAi
   module Automation
     module AiToolAction
       def self.handle(post:, tool_id:, llm_model_id: nil, automation: nil)
-        tool = ::AiTool.find_by(id: tool_id, enabled: true)
+        tool = ::AiTool.includes(:secret_bindings).find_by(id: tool_id, enabled: true)
         return if !tool
 
         llm =

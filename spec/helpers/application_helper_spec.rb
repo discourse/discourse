@@ -101,20 +101,55 @@ RSpec.describe ApplicationHelper do
         expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
-      it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
-        helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip, br"
-        link = helper.preload_script("discourse/tests/theme_qunit_ember_jquery")
-        expect(link).to include(
-          %r{https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery-\w{8}.js},
-        )
-      end
-
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
         expect(helper.preload_script("start-discourse")).to include(
           %r{https://s3-asset-cdn.example.com/assets/start-discourse-\w{8}.js},
         )
       end
+    end
+
+    it "includes extra attrs when provided" do
+      result =
+        helper.preload_script(
+          "plugins/my-plugin",
+          attrs: {
+            "data-plugin-name": "my-plugin",
+            "data-preinstalled": "true",
+            "data-official": "true",
+          },
+        )
+      expect(result).to include('data-plugin-name="my-plugin"')
+      expect(result).to include('data-preinstalled="true"')
+      expect(result).to include('data-official="true"')
+    end
+
+    it "does not include extra attrs when none are provided" do
+      result = helper.preload_script("start-discourse")
+      expect(result).not_to include("data-plugin-name")
+      expect(result).not_to include("data-preinstalled")
+      expect(result).not_to include("data-official")
+    end
+
+    it "escapes attr values" do
+      result =
+        helper.preload_script("plugins/test", attrs: { "data-plugin-name": "<script>xss</script>" })
+      expect(result).not_to include("<script>xss</script>")
+      expect(result).to include("&lt;script&gt;xss&lt;/script&gt;")
+    end
+
+    it "renders preinstalled and official as false for non-preinstalled plugins" do
+      result =
+        helper.preload_script(
+          "plugins/my-plugin",
+          attrs: {
+            "data-plugin-name": "my-plugin",
+            "data-preinstalled": "false",
+            "data-official": "false",
+          },
+        )
+      expect(result).to include('data-preinstalled="false"')
+      expect(result).to include('data-official="false"')
     end
   end
 
@@ -663,6 +698,33 @@ RSpec.describe ApplicationHelper do
         SiteSetting.logo = Fabricate(:upload, url: "/images/d-logo-sketch.svg")
 
         expect(helper.crawlable_meta_data).not_to include("twitter:image")
+      end
+    end
+
+    context "with opengraph image dimensions" do
+      it "includes og:image:width and og:image:height when provided" do
+        result =
+          helper.crawlable_meta_data(image: "some-image.png", image_width: 1024, image_height: 768)
+        expect(result).to include('<meta property="og:image:width" content="1024" />')
+        expect(result).to include('<meta property="og:image:height" content="768" />')
+      end
+
+      it "does not include og:image dimensions when not provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png")
+        expect(result).not_to include("og:image:width")
+        expect(result).not_to include("og:image:height")
+      end
+    end
+
+    context "with opengraph image type" do
+      it "includes og:image:type when provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png", image_type: "image/png")
+        expect(result).to include('<meta property="og:image:type" content="image/png" />')
+      end
+
+      it "does not include og:image:type when not provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png")
+        expect(result).not_to include("og:image:type")
       end
     end
 

@@ -1,6 +1,8 @@
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
+import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
 import DButton from "discourse/components/d-button";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import SaveControls from "discourse/components/save-controls";
@@ -36,17 +38,19 @@ export default <template>
     {{/if}}
 
     <ExpandingTextArea
+      {{didInsert @controller.registerTextarea}}
       {{on "input" (withEventValue (fn (mut @controller.buffered.value)))}}
+      {{on "focusin" @controller.trackTextarea}}
+      {{on "focusout" @controller.saveCursorPos}}
       value={{@controller.buffered.value}}
       rows="1"
       class="site-text-value"
     />
 
-    {{#if @controller.siteText.has_interpolation_keys}}
-      <div class="desc">{{i18n "admin.site_text.interpolation_keys"}}
-        {{@controller.interpolationKeys}}
-      </div>
-    {{/if}}
+    <AdminInterpolationKeys
+      @keys={{@controller.interpolationKeysWithStatus}}
+      @onInsertKey={{@controller.insertInterpolationKey}}
+    />
 
     <SaveControls
       @model={{@controller.siteText}}

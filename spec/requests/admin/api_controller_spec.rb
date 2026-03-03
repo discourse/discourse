@@ -498,7 +498,7 @@ RSpec.describe Admin::ApiController do
           end,
         ).to be_truthy
 
-        expect(scopes["users"].find { _1["key"] == "update" }["urls"]).to contain_exactly(
+        expect(scopes["users"].find { it["key"] == "update" }["urls"]).to contain_exactly(
           "/users/:username (PUT)",
           "/users/:username/preferences/badge_title (PUT)",
           "/users/:username/preferences/avatar/pick (PUT)",

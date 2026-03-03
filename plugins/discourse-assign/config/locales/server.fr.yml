@@ -24,6 +24,8 @@ fr:
     assign_allowed_on_groups: "Les utilisateurs de ces groupes sont autorisés à attribuer des sujets et peuvent se voir attribuer des sujets."
     enable_assign_status: "Ajouter un champ de statut personnalisable à chaque attribution."
     assign_statuses: "Liste des statuts disponibles pour chaque attribution. Le premier statut est le statut par défaut appliqué à chaque nouvelle attribution."
+    assignment_status_on_solve: "Lorsqu'un sujet est résolu, mettre à jour toutes les attributions ayant ce statut"
+    assignment_status_on_unsolve: "Lorsqu'un sujet n'est pas résolu, mettre à jour toutes les attributions ayant ce statut"
     errors:
       assign_statuses:
         too_few: "Il doit y avoir au moins deux statuts différents disponibles."

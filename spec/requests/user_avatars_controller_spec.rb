@@ -17,6 +17,70 @@ RSpec.describe UserAvatarsController do
     end
   end
 
+  describe "#proxy_avatar cache eviction" do
+    let(:proxy_path) { UserAvatarsController::PROXY_PATH }
+
+    before { FileUtils.rm_rf(proxy_path) }
+
+    after { FileUtils.rm_rf(proxy_path) }
+
+    it "evicts oldest cached files in batch when the cache grows beyond the limit" do
+      FileUtils.mkdir_p(proxy_path)
+
+      old_files =
+        5.times.map do |i|
+          path = "#{proxy_path}/old_file_#{i}.png"
+          File.write(path, "old_data_#{i}")
+          path
+        end
+      old_files.each_with_index { |f, i| FileUtils.touch(f, mtime: Time.now - (10 - i).days) }
+
+      stub_request(:get, "https://avatars.discourse-cdn.com/v3/letter/a/aaaaaa/360.png").to_return(
+        body: "image",
+      )
+
+      stub_const(UserAvatarsController, "PROXY_CACHE_MAX_ENTRIES", 5) do
+        stub_const(UserAvatarsController, "PROXY_CACHE_EVICT_COUNT", 2) do
+          get "/letter_avatar_proxy/v3/letter/a/aaaaaa/360.png"
+        end
+      end
+      expect(response.status).to eq(200)
+
+      remaining = Dir.glob("#{proxy_path}/*")
+      expect(remaining.length).to eq(4)
+      expect(File.exist?(old_files[0])).to eq(false)
+      expect(File.exist?(old_files[1])).to eq(false)
+      expect(File.exist?(old_files[2])).to eq(true)
+      expect(File.exist?(old_files[4])).to eq(true)
+
+      new_file_sha =
+        Digest::SHA1.hexdigest("https://avatars.discourse-cdn.com/v3/letter/a/aaaaaa/360.png")
+      expect(File.exist?("#{proxy_path}/#{new_file_sha}.png")).to eq(true)
+    end
+
+    it "renders blank avatar when send_file fails because the cached file vanished" do
+      url = "https://avatars.discourse-cdn.com/v3/letter/b/bbbbbb/360.png"
+      sha = Digest::SHA1.hexdigest(url)
+      path = "#{proxy_path}/#{sha}.png"
+
+      FileUtils.mkdir_p(proxy_path)
+      File.write(path, "image")
+
+      allow_any_instance_of(UserAvatarsController).to receive(
+        :send_file,
+      ).and_wrap_original do |original, *args|
+        raise ActionController::MissingFile, "Cannot read file #{path}" if args.first == path
+
+        original.call(*args)
+      end
+
+      get "/letter_avatar_proxy/v3/letter/b/bbbbbb/360.png"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Last-Modified"]).to eq(Time.new(1990, 01, 01).httpdate)
+    end
+  end
+
   describe "#show" do
     context "when invalid" do
       after { FileUtils.rm(Discourse.store.path_for(upload)) }

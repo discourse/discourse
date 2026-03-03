@@ -50,9 +50,32 @@ acceptance("Search - Anonymous", function (needs) {
       });
     });
 
-    server.get("/tag/important/notifications", () => {
+    server.get("/tag/:tag_id/notifications.json", () => {
       return helper.response({
         tag_notification: { id: 1, name: "important", notification_level: 2 },
+      });
+    });
+
+    server.get("/tag/:tag_id/l/latest.json", (request) => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: parseInt(request.params.tag_id, 10),
+              name: "important",
+              slug: "important",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
       });
     });
   });
@@ -146,7 +169,8 @@ acceptance("Search - Anonymous", function (needs) {
 
   test("initial options - tag search scope", async function (assert) {
     const contextSelector = ".search-menu .results .search-menu-assistant-item";
-    await visit("/tag/important");
+    // canonical URL format: /tag/:tag_slug/:tag_id
+    await visit("/tag/important/1");
     await click("#search-button");
 
     assert
@@ -807,13 +831,15 @@ acceptance("Search - with tagging enabled", function (needs) {
       return helper.response(searchFixtures["search/query"]);
     });
 
-    server.get("/tag/dev/notifications", () => {
+    // canonical format: /tag/:tag_id
+    server.get("/tag/:tag_id/notifications.json", () => {
       return helper.response({
         tag_notification: { id: 1, name: "dev", notification_level: 2 },
       });
     });
 
-    server.get("/tags/c/bug/1/dev/l/latest.json", () => {
+    // canonical format: /tags/c/:category/:category_id/:tag_slug/:tag_id
+    server.get("/tags/c/bug/1/dev/1/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -827,6 +853,7 @@ acceptance("Search - with tagging enabled", function (needs) {
             {
               id: 1,
               name: "dev",
+              slug: "dev",
               topic_count: 1,
             },
           ],
@@ -895,7 +922,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   });
 
   test("initial options - search history - tag context", async function (assert) {
-    await visit("/tags/c/bug/dev");
+    await visit("/tags/c/bug/1/dev/1");
     await click("#search-button");
 
     assert
@@ -904,7 +931,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   });
 
   test("initial options - tag search scope - shows category / tag combination shortcut when both are present", async function (assert) {
-    await visit("/tags/c/bug/dev");
+    await visit("/tags/c/bug/1/dev/1");
     await click("#search-button");
 
     assert
@@ -919,7 +946,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   });
 
   test("initial options - tag and category search scope - updates tag / category combination search suggestion when typing", async function (assert) {
-    await visit("/tags/c/bug/dev");
+    await visit("/tags/c/bug/1/dev/1");
     await click("#search-button");
     await fillIn("#icon-search-input", "foo bar");
 

@@ -179,6 +179,61 @@ RSpec.describe UpcomingChanges::Toggle do
         end
       end
 
+      context "when disallow_enabled_for_groups is true" do
+        before do
+          SiteSetting.enable_upcoming_changes = true
+          mock_upcoming_change_metadata(
+            enable_form_templates: {
+              impact: "feature,all_members",
+              status: :experimental,
+              impact_type: "feature",
+              impact_role: "all_members",
+              disallow_enabled_for_groups: true,
+            },
+          )
+        end
+
+        context "when toggling on with existing groups" do
+          let(:enabled) { true }
+
+          fab!(:site_setting_group) do
+            Fabricate(:site_setting_group, name: "enable_form_templates", group_ids: "1|2")
+          end
+
+          before { SiteSetting.enable_form_templates = false }
+
+          it "clears the SiteSettingGroup record" do
+            expect { result }.to change {
+              SiteSettingGroup.where(name: "enable_form_templates").count
+            }.from(1).to(0)
+          end
+        end
+
+        context "when toggling off with existing groups" do
+          let(:enabled) { false }
+
+          fab!(:site_setting_group) do
+            Fabricate(:site_setting_group, name: "enable_form_templates", group_ids: "1|2")
+          end
+
+          before { SiteSetting.enable_form_templates = true }
+
+          it "clears the SiteSettingGroup record" do
+            expect { result }.to change {
+              SiteSettingGroup.where(name: "enable_form_templates").count
+            }.from(1).to(0)
+          end
+        end
+
+        context "when toggling with no existing groups" do
+          let(:enabled) { true }
+
+          before { SiteSetting.enable_form_templates = false }
+
+          it { is_expected.to run_successfully }
+        end
+      end
+
       context "when enable_upcoming_changes is enabled" do
         before { SiteSetting.enable_upcoming_changes = true }
 

@@ -19,6 +19,12 @@
 .search-container {
   background: var(--d-content-background);
 
+  &:has(.advanced-filters.--is-expanded) {
+    .search-info {
+      border-top: none;
+    }
+  }
+
   @include viewport.from(sm) {
     .search-cta {
       flex: 1 1 0;
@@ -26,10 +32,8 @@
   }
 
   .search-header {
-    background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
-
     @include search-page-spacing;
+    padding-bottom: 0;
   }
 
   .warning {
@@ -56,7 +60,6 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    background: var(--primary-very-low);
     gap: 0.5em 1em;
 
     @include viewport.from(sm) {
@@ -88,6 +91,10 @@
   .search-advanced {
     position: relative;
 
+    .fps-result-entries {
+      padding-top: var(--space-4);
+    }
+
     .search-actions,
     .search-title,
     .search-bar {
@@ -96,6 +103,7 @@
 
     .search-results {
       @include search-page-spacing;
+      padding-top: 0;
 
       @include viewport.until(md) {
         padding: 1rem 0.5rem 1rem 0.25rem;
@@ -105,11 +113,14 @@
     .search-info {
       display: flex;
       flex-wrap: wrap;
-      padding: 1em 10%;
-      border-bottom: 1px solid var(--content-border-color);
+      margin: 0 10%;
+      padding-block: var(--space-4);
+      background: var(--secondary); // needs background for bulk select sticky
+      border-top: 1px solid var(--content-border-color);
 
       @include viewport.until(lg) {
-        padding: 0.5em 0;
+        padding: 1rem 1rem 0 1rem;
+        margin: 0;
       }
 
       &.bulk-select-visible {
@@ -182,43 +193,25 @@
   }
 
   .search-filters {
-    background: var(--primary-very-low);
-    display: flex;
-    flex-direction: column;
+    padding-top: var(--space-4);
 
-    details.advanced-filters,
-    details.search-advanced-additional-options {
-      > summary {
-        margin-top: 1em;
-        color: var(--tertiary);
-        cursor: pointer;
-        padding-top: 0.25em;
-        padding-bottom: 0.25em;
-
-        &:focus-visible {
-          outline: 2px solid transparent;
-          background-color: var(--tertiary-very-low);
-        }
-      }
-
-      &[open] > summary {
-        color: var(--primary);
-        margin-bottom: 1em;
-
-        &:focus-visible {
-          background-color: var(--tertiary-very-low);
-        }
-      }
-
-      .control-label {
-        font-weight: bold;
-        color: var(--primary-high);
-      }
+    .advanced-filters:not(.--is-expanded) {
+      padding-bottom: var(--space-4);
     }
 
-    details.search-advanced-additional-options {
-      > summary {
-        font-size: var(--font-down-1);
+    .advanced-filters__toggle {
+      gap: var(--space-1);
+
+      .badge-notification {
+        background: var(--tertiary);
+        top: 0;
+      }
+
+      &:hover {
+        .badge-notification {
+          background: var(--secondary);
+          color: var(--primary-high);
+        }
       }
     }
 
@@ -227,10 +220,20 @@
     .multi-select {
       width: 100%;
       min-width: 100%;
+
+      .d-date-input,
+      input[type="number"],
+      .select-kit {
+        margin-bottom: 0;
+      }
     }
 
     .search-advanced-filters {
-      background: var(--primary-very-low);
+      margin-top: var(--space-4);
+      border: 1px solid var(--content-border-color);
+      padding: var(--space-6);
+      border-radius: var(--d-border-radius);
+      min-width: 0;
 
       .second-search-button {
         display: flex;
@@ -271,8 +274,14 @@
       }
 
       .count-group {
+        .controls {
+          display: flex;
+          align-items: center;
+        }
+
         input[type="number"] {
-          width: 8em;
+          flex: 1 1 auto;
+          min-width: 0;
         }
 
         .d-icon {
@@ -286,7 +295,6 @@
 
 .fps-invalid {
   margin-top: 1em;
-  margin-bottom: 1em;
 }
 
 .search-category {
@@ -330,7 +338,7 @@
 
     .bulk-select {
       position: absolute;
-      left: 0.75em;
+      left: var(--space-1);
       top: 0.75em;
       padding: 0.25em 0.5em;
 
@@ -476,6 +484,14 @@
     .fps-tag-item {
       margin-bottom: 1.5em;
       display: block;
+    }
+  }
+}
+
+@include viewport.from(lg) {
+  .search-page {
+    .powered-by-discourse {
+      margin: 0 10% 0 calc(10% - var(--space-2));
     }
   }
 }

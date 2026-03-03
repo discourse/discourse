@@ -282,7 +282,7 @@ class GroupsController < ApplicationController
 
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    dir = (params[:asc] && params[:asc].present?) ? "ASC" : "DESC"
+    dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
     order = "NOT group_users.owner"
 
     if params[:requesters]
@@ -609,6 +609,9 @@ class GroupsController < ApplicationController
     params.require(:reason)
 
     group = find_group(:name)
+
+    raise Discourse::InvalidAccess unless group.allow_membership_requests?
+    raise Discourse::InvalidAccess if group.users.exists?(id: current_user.id)
 
     begin
       GroupRequest.create!(group: group, user: current_user, reason: params[:reason])

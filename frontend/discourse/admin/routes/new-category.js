@@ -14,11 +14,12 @@ function getNewCategoryDefaultColors() {
 }
 
 export default class NewCategory extends DiscourseRoute {
+  @service categoryTypeChooser;
   @service router;
 
-  controllerName = "edit-category.tabs";
-
-  templateName = "edit-category.tabs";
+  deactivate() {
+    this.categoryTypeChooser.reset();
+  }
 
   beforeModel() {
     if (!this.currentUser?.can_create_category) {
@@ -57,20 +58,11 @@ export default class NewCategory extends DiscourseRoute {
     });
   }
 
-  setupController(controller) {
-    super.setupController(...arguments);
-
-    controller.selectedTab = "general";
-    controller.parentParams = {};
-  }
-
   titleToken() {
     return i18n("category.create");
   }
 
   groupPermissions() {
-    // Override this function if you want different groupPermissions from a plugin.
-    // If your plugin override fails, permissions will fallback to defaultGroupPermissions
     return this.defaultGroupPermissions();
   }
 
@@ -78,7 +70,7 @@ export default class NewCategory extends DiscourseRoute {
     return [
       {
         group_id: AUTO_GROUPS.everyone.id,
-        group_name: AUTO_GROUPS.everyone.name,
+        group_name: this.site.groupsById[AUTO_GROUPS.everyone.id].name,
         permission_type: PermissionType.FULL,
       },
     ];

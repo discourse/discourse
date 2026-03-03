@@ -117,7 +117,17 @@ gl:
         remove_parameter: "Retirar"
         parameter_required: "Obrigatorio"
         edit: "Editar"
+        test: "Proba"
         delete: "Eliminar"
+      secrets:
+        short_title: "Acreditacións"
+        name: "Nome"
+        secret: "Valor"
+        back: "Volver"
+        save: "Gardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        embedding: "Incorporando"
       llms:
         display_name: "Nome"
         provider: "Fornecedor"

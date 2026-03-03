@@ -7,6 +7,9 @@ export default {
       api.addValueTransformerName(
         "discourse-calendar-event-more-menu-should-show-participants"
       );
+      api.addValueTransformerName(
+        "discourse-calendar-upcoming-events-show-cross-category"
+      );
     });
   },
 };

@@ -775,8 +775,6 @@ et:
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
-      min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
-      max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
   search:
     within_post: "postituse nr%{post_number} tegi %{username}"
     types:
@@ -1100,12 +1098,8 @@ et:
         title: "Jah"
       approve_and_unhide:
         title: "Jah"
-      no_action_post:
-        title: "Tegevust pole"
       delete_post:
         complete: "Postitus kustutatud"
-      no_action_user:
-        title: "Tegevust pole"
       delete_user:
         complete: "Kasutaja kustutatud"
   fallback_username: "kasutaja"

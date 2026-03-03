@@ -49,7 +49,7 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
       get "/admin/plugins/gamification/score_events.json?user_id=#{current_user.id}"
       expect(response.status).to eq(200)
       expect(response.parsed_body["events"].length).to eq(2)
-      expect(response.parsed_body["events"].map { _1["points"] }.sum).to eq(24)
+      expect(response.parsed_body["events"].map { it["points"] }.sum).to eq(24)
     end
 
     it "returns users and their calculated scores for a specific user and date" do

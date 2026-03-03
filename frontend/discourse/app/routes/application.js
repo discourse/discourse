@@ -5,6 +5,7 @@ import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
 import deprecated from "discourse/lib/deprecated";
+import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
@@ -170,6 +171,11 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   showLogin(props = {}) {
+    if (EmbedMode.enabled) {
+      window.open(getURL("/login"), "_blank");
+      return;
+    }
+
     const t = this.router.transitionTo("login");
     t.wantsTo = true;
     return t.then(() =>
@@ -181,6 +187,11 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   showCreateAccount(props = {}) {
+    if (EmbedMode.enabled) {
+      window.open(getURL("/signup"), "_blank");
+      return;
+    }
+
     const t = this.router.transitionTo("signup");
     t.wantsTo = true;
     return t.then(() =>

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef, no-unused-vars */
-const apiKey = "YOUR_OPENAI_API_KEY";
+const apiKey = secrets.get("openai_api_key");
 
 function invoke(params) {
   const prompt = params.prompt;

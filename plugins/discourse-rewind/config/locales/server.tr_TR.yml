@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  site_settings:
+    discourse_rewind_enabled: "Topluluk üyelerinin yıl sonu etkinliklerinin eğlenceli bir özetini görmek için Discourse Rewind özelliğini etkinleştirin."
+  discourse_rewind:
+    report_failed: "Discourse Rewind raporu oluşturulamadı."
+    invalid_year: "Geri sarma işlemi yalnızca Ocak veya Aralık aylarında gerçekleştirilebilir."
+    user_not_found: "Kullanıcı bulunamadı veya görüntülenemiyor."
+    reports_not_cached: "Raporlar henüz oluşturulmadı. Lütfen sayfayı yenileyin."
+    report_not_found: "Rapor bulunamadı."
+    cannot_share_when_profile_hidden: "Rewind'ı paylaşmak için başkalarının genel profilinizi görüntülemesine izin vermelisiniz."

@@ -2,18 +2,6 @@
 RSpec.describe ContentSecurityPolicy do
   after { DiscoursePluginRegistry.reset! }
 
-  describe "report-uri" do
-    it "is enabled by SiteSetting" do
-      SiteSetting.content_security_policy_collect_reports = true
-      report_uri = parse(policy)["report-uri"].first
-      expect(report_uri).to eq("http://test.localhost/csp_reports")
-
-      SiteSetting.content_security_policy_collect_reports = false
-      report_uri = parse(policy)["report-uri"]
-      expect(report_uri).to eq(nil)
-    end
-  end
-
   describe "base-uri" do
     it "is set to self" do
       base_uri = parse(policy)["base-uri"]
@@ -49,12 +37,6 @@ RSpec.describe ContentSecurityPolicy do
     it "does not set worker-src" do
       worker_src = parse(policy)["worker-src"]
       expect(worker_src).to eq(nil)
-    end
-
-    it 'includes "report-sample" when report collection is enabled' do
-      SiteSetting.content_security_policy_collect_reports = true
-      script_srcs = parse(policy)["script-src"]
-      expect(script_srcs).to include("'report-sample'")
     end
   end
 

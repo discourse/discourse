@@ -1942,6 +1942,43 @@ RSpec.describe PostsController do
         end
       end
 
+      context "when topic is in slow mode" do
+        fab!(:slow_topic) { Fabricate(:topic, slow_mode_seconds: 86_400) }
+
+        it "enforces slow mode even when auto_track is false" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the first reply in slow mode",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(200)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the second reply in slow mode bypassing",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t(:slow_mode_enabled))
+        end
+
+        it "does not create a TopicUser record when auto_track is false" do
+          post "/posts.json",
+               params: {
+                 raw: "this is a reply with auto_track false",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(200)
+          expect(TopicUser.find_by(user: user, topic: slow_topic)).to be_nil
+        end
+      end
+
       context "when `enable_user_status` site setting is enabled" do
         fab!(:user_to_mention, :user)
 
@@ -2346,6 +2383,36 @@ RSpec.describe PostsController do
     it "throws an exception when revision is < 2" do
       get "/posts/#{post.id}/revisions/1.json"
       expect(response.status).to eq(400)
+    end
+
+    context "when diff generation exceeds the comparison budget" do
+      let(:diff_error) do
+        ONPDiff::DiffLimitExceeded.new(
+          comparisons_used: 1,
+          comparison_budget: 0,
+          left_size: 1,
+          right_size: 1,
+        )
+      end
+
+      before { ONPDiff.any_instance.stubs(:compose).raises(diff_error) }
+
+      it "returns an empty diff and an error flag for a specific revision endpoint" do
+        sign_in(admin)
+        get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body["diff_error"]).to eq(true)
+      end
+
+      it "returns an empty diff and an error flag for the latest revision endpoint" do
+        sign_in(admin)
+        post_revision
+        get "/posts/#{post.id}/revisions/latest.json"
+
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body["diff_error"]).to eq(true)
+      end
     end
 
     context "when edit history is not visible to the public" do

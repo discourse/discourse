@@ -33,6 +33,7 @@ module DiscourseAi
           description: tool.description,
           tool_name: tool.tool_name,
           parameters: tool.parameters,
+          secret_contracts: tool.secret_contracts,
           summary: tool.summary,
           script: tool.script,
         }

@@ -27,7 +27,7 @@ module Chat
     end
 
     model :channel
-    policy :can_view_channel
+    policy :can_join_channel
     model :users, optional: true
     step :send_invite_notifications
 
@@ -37,8 +37,8 @@ module Chat
       ::Chat::Channel.find_by(id: params.channel_id)
     end
 
-    def can_view_channel(guardian:, channel:)
-      guardian.can_preview_chat_channel?(channel)
+    def can_join_channel(guardian:, channel:)
+      guardian.can_join_chat_channel?(channel)
     end
 
     def fetch_users(params:)

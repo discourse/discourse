@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse/lib/decorators";
+import { computed } from "@ember/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class AdminReportsShowController extends Controller {
@@ -15,15 +15,15 @@ export default class AdminReportsShowController extends Controller {
   filters = null;
   chart_grouping = null;
 
-  @discourseComputed("model.type")
-  reportOptions(type) {
+  @computed("model.type")
+  get reportOptions() {
     let options = { table: { perPage: 50, limit: 50 } };
 
-    if (type === "top_referred_topics") {
+    if (this.model?.type === "top_referred_topics") {
       options.table.limit = 10;
     }
 
-    if (type === "site_traffic") {
+    if (this.model?.type === "site_traffic") {
       options.stackedChart = {
         hiddenLabels: ["page_view_other", "page_view_crawler"],
       };

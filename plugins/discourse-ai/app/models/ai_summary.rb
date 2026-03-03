@@ -31,7 +31,7 @@ class AiSummary < ActiveRecord::Base
         ],
       )
       .first
-      .then { AiSummary.find_by(id: _1["id"]) }
+      .then { AiSummary.find_by(id: it["id"]) }
   end
 
   def self.build_sha(joined_ids)

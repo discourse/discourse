@@ -23,7 +23,19 @@ task "assets:precompile:build" do
   end
 end
 
-task "assets:precompile:before": %w[environment assets:precompile:build]
+task "assets:precompile:build_plugins": "environment" do
+  if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+    Plugin::JsManager.new.compile!
+  else
+    puts "Skipping plugin JS compilation, set ROLLUP_PLUGIN_COMPILER=1 to enable"
+  end
+end
+
+task "assets:precompile:before": %w[
+       environment
+       assets:precompile:build
+       assets:precompile:build_plugins
+     ]
 
 task "assets:precompile:css" => "environment" do
   if ENV["DONT_PRECOMPILE_CSS"] == "1" || ENV["SKIP_DB_AND_REDIS"] == "1"
@@ -152,7 +164,7 @@ task "assets:precompile:compress_js": "environment" do
 end
 
 task "assets:precompile:asset_processor": "environment" do
-  AssetProcessor.build_production_asset_processor
+  AssetProcessor.load_or_build_processor_source
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task

@@ -6,7 +6,7 @@
 
 tr_TR:
   site_settings:
-    data_explorer_enabled: "Veri gezginini şuradan etkinleştirin: /admin/plugins/explorer"
+    data_explorer_enabled: "Veri gezginiyi etkinleştir"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -26,20 +26,20 @@ tr_TR:
           Sorgu adı:
           %{query_name}
 
-          İşte sonuçlar:
+          Sonuçlar şunlardır:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Sorguyu Veri Gezgininde görüntüleyin</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Sorguyu Data Explorer'da görüntüle</a>
 
-          Rapor oluşturulma zamanı: %{created_at} (%{timezone})
+          Rapor %{created_at} (%{timezone}) tarihinde oluşturuldu.
       post:
         body: |
-          ### %{query_name} için planlanan rapor
+          ### %{query_name} için planlanmış rapor
 
-          İşte sonuçlar:
+          Sonuçlar şunlardır:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Sorguyu Veri Gezgininde görüntüleyin</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Veri Gezgini'nde sorguyu görüntüle</a>
 
-          Rapor oluşturulma zamanı: %{created_at} (%{timezone})
+          Rapor %{created_at} (%{timezone}) tarihinde oluşturuldu.
       upload_appendix: "Ek: [%{filename}|ek](%{short_url})"

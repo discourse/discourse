@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 cs:
-  site_settings:
-    data_explorer_enabled: "Povolit Data Explorer v /admin/plugins/explorer"

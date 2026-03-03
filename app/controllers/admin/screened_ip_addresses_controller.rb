@@ -56,7 +56,12 @@ class Admin::ScreenedIpAddressesController < Admin::StaffController
 
   def allowed_params
     params.require(:ip_address)
-    params.permit(:ip_address, :action_name)
+    permitted = params.permit(:ip_address, :action_name)
+    if permitted[:action_name].present? &&
+         !ScreenedIpAddress.actions.has_key?(permitted[:action_name].to_sym)
+      raise Discourse::InvalidParameters.new(:action_name)
+    end
+    permitted
   end
 
   def fetch_screened_ip_address

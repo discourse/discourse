@@ -5,6 +5,7 @@
     var(--space-4);
 }
 
+body.has-full-page-chat .sidebar-wrapper,
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
   @include viewport.until(lg) {
@@ -35,6 +36,13 @@
 
   .dropdown-menu__item .sidebar-section-link {
     border-radius: 0;
+  }
+}
+
+.sidebar-hamburger-dropdown {
+  .sidebar-new-topic-button__wrapper {
+    width: 100%;
+    margin: 0 0 var(--space-2);
   }
 }
 

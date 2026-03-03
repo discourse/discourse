@@ -67,27 +67,18 @@ class Tags::BulkCreate
     raw_tag_names.each do |raw_name|
       next if raw_name.blank?
 
-      normalized_input = raw_name.strip
-      normalized_input = normalized_input.downcase if SiteSetting.force_lowercase_tags
-      normalized_input = normalized_input.gsub(/[[:space:]]+/, "-")
-
-      if normalized_input.length > SiteSetting.max_tag_length
-        results[:failed][raw_name] = I18n.t(
-          "tags.bulk_create.tag_too_long",
-          count: SiteSetting.max_tag_length,
-        )
-        next
-      end
-
-      tag_name = DiscourseTagging.clean_tag(raw_name)
+      tag_name = DiscourseTagging.clean_tag(raw_name, truncate: false)
 
       if tag_name.blank?
         results[:failed][raw_name] = I18n.t("tags.bulk_create.invalid_name")
         next
       end
 
-      if tag_name != normalized_input
-        results[:failed][raw_name] = I18n.t("tags.bulk_create.invalid_name")
+      if tag_name.length > SiteSetting.max_tag_length
+        results[:failed][raw_name] = I18n.t(
+          "tags.bulk_create.tag_too_long",
+          count: SiteSetting.max_tag_length,
+        )
         next
       end
 

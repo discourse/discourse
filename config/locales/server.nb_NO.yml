@@ -1005,8 +1005,6 @@ nb_NO:
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
       invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
-      min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
-      max_username_length_range: "Du kan ikke sette maksimum under minimum."
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1280,8 +1278,6 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
-  dev_mode:
-    enter: "Angi"
   wizard:
     title: "Discourse-oppsett"
     step:
@@ -1374,12 +1370,8 @@ nb_NO:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      no_action_post:
-        title: "Ingen handling"
       delete_post:
         complete: "Post slettet"
-      no_action_user:
-        title: "Ingen handling"
       delete_user:
         complete: "Bruker slettet"
   fallback_username: "bruker"

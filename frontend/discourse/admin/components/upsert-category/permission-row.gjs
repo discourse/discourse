@@ -53,9 +53,15 @@ export default class UpsertCategoryPermissionRow extends Component {
     );
   }
 
+  get everyoneGroupName() {
+    return this.args.everyonePermission?.group_name;
+  }
+
   get replyTooltip() {
     return this.replyDisabled
-      ? i18n("category.permissions.inherited")
+      ? i18n("category.permissions.inherited", {
+          everyone_group: this.everyoneGroupName,
+        })
       : i18n("category.permissions.toggle_reply");
   }
 
@@ -69,7 +75,9 @@ export default class UpsertCategoryPermissionRow extends Component {
 
   get createTooltip() {
     return this.createDisabled
-      ? i18n("category.permissions.inherited")
+      ? i18n("category.permissions.inherited", {
+          everyone_group: this.everyoneGroupName,
+        })
       : i18n("category.permissions.toggle_full");
   }
 

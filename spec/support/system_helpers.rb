@@ -380,4 +380,8 @@ module SystemHelpers
   def tap_screen_at(x, y)
     page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
+
+  def html_translation_to_text(html_translation)
+    Nokogiri.HTML5(html_translation).at("body").inner_text
+  end
 end

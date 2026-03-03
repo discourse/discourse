@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse 脚注"
   js:
     footnote:
+      title: "脚注"
       add: "脚注を追加"

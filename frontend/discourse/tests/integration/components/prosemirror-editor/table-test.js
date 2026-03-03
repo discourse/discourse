@@ -23,6 +23,11 @@ module(
         `<blockquote><div class="md-table"><table><thead><tr><th>Header 1</th><th>Header 2</th></tr></thead><tbody><tr><td>Cell 1</td><td>Cell 2</td></tr></tbody></table></div></blockquote>`,
         `> \n> | Header 1 | Header 2 |\n> |----|----|\n> | Cell 1 | Cell 2 |\n\n`,
       ],
+      "table with br in cells": [
+        `| Line1<br>Line2 | Cell 2 |\n| --- | --- |\n| Cell 3 | Cell 4 |`,
+        `<div class="md-table"><table><thead><tr><th>Line1<br>Line2</th><th>Cell 2</th></tr></thead><tbody><tr><td>Cell 3</td><td>Cell 4</td></tr></tbody></table></div>`,
+        `| Line1<br>Line2 | Cell 2 |\n|----|----|\n| Cell 3 | Cell 4 |\n\n`,
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         this.siteSettings.rich_editor = true;

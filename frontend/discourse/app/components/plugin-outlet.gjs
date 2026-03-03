@@ -12,8 +12,8 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { helperContext } from "discourse/lib/helpers";
+import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import {
-  buildArgsWithDeprecations,
   connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";

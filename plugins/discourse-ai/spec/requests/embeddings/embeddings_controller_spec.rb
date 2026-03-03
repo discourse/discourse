@@ -89,6 +89,64 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
           end
         end
       end
+
+      it "applies per-IP rate limiting for anonymous users" do
+        stub_const(described_class, :MAX_SEARCHES_PER_MINUTE, 1) do
+          query = "test #{SecureRandom.hex}"
+          stub_embedding(query)
+          get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false",
+              env: {
+                "REMOTE_ADDR" => "1.2.3.4",
+              }
+          expect(response.status).to eq(200)
+
+          query = "test #{SecureRandom.hex}"
+          stub_embedding(query)
+          get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false",
+              env: {
+                "REMOTE_ADDR" => "1.2.3.4",
+              }
+          expect(response.status).to eq(429)
+
+          query = "test #{SecureRandom.hex}"
+          stub_embedding(query)
+          get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false",
+              env: {
+                "REMOTE_ADDR" => "5.6.7.8",
+              }
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "applies a global anonymous rate limit across all IPs" do
+        stub_const(described_class, :MAX_SEARCHES_PER_MINUTE, 100) do
+          stub_const(described_class, :MAX_ANON_SEARCHES_PER_MINUTE, 2) do
+            query = "test #{SecureRandom.hex}"
+            stub_embedding(query)
+            get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false",
+                env: {
+                  "REMOTE_ADDR" => "1.2.3.4",
+                }
+            expect(response.status).to eq(200)
+
+            query = "test #{SecureRandom.hex}"
+            stub_embedding(query)
+            get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false",
+                env: {
+                  "REMOTE_ADDR" => "5.6.7.8",
+                }
+            expect(response.status).to eq(200)
+
+            query = "test #{SecureRandom.hex}"
+            stub_embedding(query)
+            get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false",
+                env: {
+                  "REMOTE_ADDR" => "9.10.11.12",
+                }
+            expect(response.status).to eq(429)
+          end
+        end
+      end
     end
 
     it "returns results correctly when performing a non Hyde search" do
@@ -338,6 +396,86 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
         100.times { get "/discourse-ai/embeddings/quick-search.json?q=#{query}" }
 
         expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  context "when anonymous quick search rate limiting" do
+    fab!(:vector_def, :open_ai_embedding_def)
+
+    before do
+      enable_current_plugin
+      SiteSetting.min_search_term_length = 3
+      SiteSetting.ai_embeddings_selected_model = vector_def.id
+      SiteSetting.ai_embeddings_semantic_quick_search_enabled = true
+      RateLimiter.enable
+    end
+
+    def stub_embedding(query)
+      embedding = [0.049382] * 1536
+      EmbeddingsGenerationStubs.openai_service(
+        vector_def.lookup_custom_param("model_name"),
+        query,
+        embedding,
+      )
+    end
+
+    it "applies per-IP rate limiting for anonymous users" do
+      semantic_search = instance_double(DiscourseAi::Embeddings::SemanticSearch)
+      allow(DiscourseAi::Embeddings::SemanticSearch).to receive(:new).and_return(semantic_search)
+      allow(semantic_search).to receive(:cached_query?).and_return(false)
+      allow(semantic_search).to receive(:search_for_topics).and_return([])
+
+      stub_const(described_class, :MAX_SEARCHES_PER_MINUTE, 1) do
+        query = "test_query1"
+        get "/discourse-ai/embeddings/quick-search.json?q=#{query}",
+            env: {
+              "REMOTE_ADDR" => "1.2.3.4",
+            }
+        expect(response.status).to eq(200)
+
+        query = "test_query2"
+        get "/discourse-ai/embeddings/quick-search.json?q=#{query}",
+            env: {
+              "REMOTE_ADDR" => "1.2.3.4",
+            }
+        expect(response.status).to eq(429)
+
+        query = "test_query3"
+        get "/discourse-ai/embeddings/quick-search.json?q=#{query}",
+            env: {
+              "REMOTE_ADDR" => "5.6.7.8",
+            }
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it "applies a global anonymous rate limit across all IPs" do
+      semantic_search = instance_double(DiscourseAi::Embeddings::SemanticSearch)
+      allow(DiscourseAi::Embeddings::SemanticSearch).to receive(:new).and_return(semantic_search)
+      allow(semantic_search).to receive(:cached_query?).and_return(false)
+      allow(semantic_search).to receive(:search_for_topics).and_return([])
+
+      stub_const(described_class, :MAX_SEARCHES_PER_MINUTE, 100) do
+        stub_const(described_class, :MAX_ANON_SEARCHES_PER_MINUTE, 2) do
+          get "/discourse-ai/embeddings/quick-search.json?q=test_q1",
+              env: {
+                "REMOTE_ADDR" => "1.2.3.4",
+              }
+          expect(response.status).to eq(200)
+
+          get "/discourse-ai/embeddings/quick-search.json?q=test_q2",
+              env: {
+                "REMOTE_ADDR" => "5.6.7.8",
+              }
+          expect(response.status).to eq(200)
+
+          get "/discourse-ai/embeddings/quick-search.json?q=test_q3",
+              env: {
+                "REMOTE_ADDR" => "9.10.11.12",
+              }
+          expect(response.status).to eq(429)
+        end
       end
     end
   end

@@ -105,6 +105,8 @@ cs:
         chat_usage:
           title: Aktivita chatu
           total_messages: Celkem zpráv
+          dm_messages: Soukromé zprávy
+          unique_dm_channels: Konverzace v soukromých zprávách
           reactions_received: Přijaté reakce
           avg_message_length: Průměrná délka zprávy
           favorite_channels: Oblíbené kanály

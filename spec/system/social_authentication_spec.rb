@@ -575,6 +575,22 @@ shared_examples "social authentication scenarios" do
       end
     end
   end
+
+  context "when the provider returns an error" do
+    before { SiteSetting.enable_google_oauth2_logins = true }
+
+    it "shows the unauthorized error message" do
+      visit("/auth/failure?message=unauthorized")
+
+      expect(page).to have_css(".alert-error", text: I18n.t("login.omniauth_error.unauthorized"))
+    end
+
+    it "shows the request_error message" do
+      visit("/auth/failure?message=request_error")
+
+      expect(page).to have_css(".alert-error", text: I18n.t("login.omniauth_error.request_error"))
+    end
+  end
 end
 
 describe "Social authentication", type: :system do

@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import { currentThemeId, HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
 
 export default class OnboardingStep extends Component {
@@ -26,6 +27,12 @@ export default class OnboardingStep extends Component {
 
   get icon() {
     throw new Error("Icon is required for OnboardingStep");
+  }
+
+  get btnClass() {
+    return currentThemeId() === HORIZON_THEME_ID
+      ? "btn-default"
+      : "btn-primary";
   }
 
   @action
@@ -53,9 +60,9 @@ export default class OnboardingStep extends Component {
       </div>
 
       <div class="onboarding-step__description">
-        <span>
+        <div class="onboarding-step__text">
           {{i18n (concat this.i18nKey this.name ".description")}}
-        </span>
+        </div>
       </div>
 
       <div class="onboarding-step__action">
@@ -63,7 +70,7 @@ export default class OnboardingStep extends Component {
           @icon={{this.icon}}
           @label={{concat this.i18nKey this.name ".action"}}
           @action={{this.performAction}}
-          class="btn btn-default"
+          class={{this.btnClass}}
         />
       </div>
     </div>

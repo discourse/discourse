@@ -147,7 +147,7 @@ module("Unit | Utility | ai-errors", function (hooks) {
       const payload = {
         error_type: "credit_limit_exceeded",
         details: {
-          reset_time_relative: "in 2 hours",
+          reset_time_relative: "2h",
         },
       };
 
@@ -158,7 +158,7 @@ module("Unit | Utility | ai-errors", function (hooks) {
       // Convert htmlSafe string to regular string for testing
       const messageStr = callArgs.message.toString();
       assert.true(
-        messageStr.includes("in 2 hours"),
+        messageStr.includes("2h"),
         "Message should include relative time"
       );
 

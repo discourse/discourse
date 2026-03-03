@@ -1,8 +1,8 @@
 /* eslint-disable ember/no-classic-components */
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -12,7 +12,6 @@ import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
@@ -22,8 +21,6 @@ import { i18n } from "discourse-i18n";
 export default class TagGroupsForm extends Component {
   @service dialog;
   @service site;
-
-  @tracked model;
 
   // All but the "everyone" group
   allGroups = this.site.groups.filter(
@@ -38,8 +35,9 @@ export default class TagGroupsForm extends Component {
     });
   }
 
-  @discourseComputed("buffered.permissions")
-  selectedGroupIds(permissions) {
+  @computed("buffered.permissions")
+  get selectedGroupIds() {
+    const permissions = this.get("buffered.permissions"); // TODO (devxp) we need a buffered proxy that works with tracked properties
     if (!permissions) {
       return [];
     }

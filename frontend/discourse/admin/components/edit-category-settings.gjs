@@ -1,7 +1,7 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
@@ -13,7 +13,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -30,17 +29,23 @@ export default class EditCategorySettings extends buildCategoryPanel(
   showSubcategoryListStyle;
   @empty("category.sort_order") isDefaultSortOrder;
 
-  @discourseComputed(
+  @computed(
     "category.isParent",
     "category.parent_category_id",
     "transientData.parent_category_id"
   )
-  isParentCategory(isParent, parentCategoryId, transientParentCategoryId) {
-    return isParent || !(parentCategoryId || transientParentCategoryId);
+  get isParentCategory() {
+    return (
+      this.category?.isParent ||
+      !(
+        this.category?.parent_category_id ||
+        this.transientData?.parent_category_id
+      )
+    );
   }
 
-  @discourseComputed
-  availableSubcategoryListStyles() {
+  @computed
+  get availableSubcategoryListStyles() {
     return [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
       {
@@ -62,8 +67,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     ];
   }
 
-  @discourseComputed("category.id", "category.custom_fields")
-  availableViews(categoryId, customFields) {
+  @computed("category.id", "category.custom_fields")
+  get availableViews() {
     const views = [
       { name: i18n("filters.hot.title"), value: "hot" },
       { name: i18n("filters.latest.title"), value: "latest" },
@@ -71,8 +76,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     ];
 
     const context = {
-      categoryId,
-      customFields,
+      categoryId: this.category?.id,
+      customFields: this.category?.custom_fields,
     };
 
     return applyMutableValueTransformer(
@@ -82,8 +87,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     );
   }
 
-  @discourseComputed
-  availableTopPeriods() {
+  @computed
+  get availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
       (p) => {
         return { name: i18n(`filters.top.${p}.title`), value: p };
@@ -91,15 +96,15 @@ export default class EditCategorySettings extends buildCategoryPanel(
     );
   }
 
-  @discourseComputed
-  availableListFilters() {
+  @computed
+  get availableListFilters() {
     return ["all", "none"].map((p) => {
       return { name: i18n(`category.list_filters.${p}`), value: p };
     });
   }
 
-  @discourseComputed
-  searchPrioritiesOptions() {
+  @computed
+  get searchPrioritiesOptions() {
     const options = [];
 
     Object.entries(SEARCH_PRIORITIES).forEach((entry) => {
@@ -114,8 +119,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
     return options;
   }
 
-  @discourseComputed
-  availableSorts() {
+  @computed
+  get availableSorts() {
     return applyMutableValueTransformer("category-sort-orders", [
       "likes",
       "op_likes",
@@ -130,27 +135,27 @@ export default class EditCategorySettings extends buildCategoryPanel(
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  @discourseComputed("category.sort_ascending")
-  sortAscendingOption(sortAscending) {
-    if (sortAscending === "false") {
+  @computed("category.sort_ascending")
+  get sortAscendingOption() {
+    if (this.category?.sort_ascending === "false") {
       return false;
     }
-    if (sortAscending === "true") {
+    if (this.category?.sort_ascending === "true") {
       return true;
     }
-    return sortAscending;
+    return this.category?.sort_ascending;
   }
 
-  @discourseComputed
-  sortAscendingOptions() {
+  @computed
+  get sortAscendingOptions() {
     return [
       { name: i18n("category.sort_ascending"), value: true },
       { name: i18n("category.sort_descending"), value: false },
     ];
   }
 
-  @discourseComputed
-  hiddenRelativeIntervals() {
+  @computed
+  get hiddenRelativeIntervals() {
     return ["mins"];
   }
 
@@ -169,6 +174,11 @@ export default class EditCategorySettings extends buildCategoryPanel(
   @action
   onCategoryModeratingGroupsChange(groupIds) {
     this.set("category.moderating_group_ids", groupIds);
+  }
+
+  @action
+  onFormCheckboxChange(field, event) {
+    this.form.set(field, event.target.checked);
   }
 
   <template>
@@ -520,19 +530,24 @@ export default class EditCategorySettings extends buildCategoryPanel(
             {{icon "envelope"}}
             {{i18n "category.email_in"}}
           </label>
-          <TextField
-            @id="category-email-in"
-            @value={{this.category.email_in}}
+          <input
+            type="text"
+            id="category-email-in"
             class="email-in"
+            value={{this.transientData.email_in}}
+            {{on "input" (withEventValue (fn this.form.set "email_in"))}}
           />
-
         </section>
 
         <section class="field email-in-allow-strangers">
           <label class="checkbox-label">
-            <Input
-              @type="checkbox"
-              @checked={{this.category.email_in_allow_strangers}}
+            <input
+              type="checkbox"
+              checked={{this.transientData.email_in_allow_strangers}}
+              {{on
+                "change"
+                (fn this.onFormCheckboxChange "email_in_allow_strangers")
+              }}
             />
             {{i18n "category.email_in_allow_strangers"}}
           </label>
@@ -540,9 +555,13 @@ export default class EditCategorySettings extends buildCategoryPanel(
 
         <section class="field mailinglist-mirror">
           <label class="checkbox-label">
-            <Input
-              @type="checkbox"
-              @checked={{this.category.mailinglist_mirror}}
+            <input
+              type="checkbox"
+              checked={{this.transientData.mailinglist_mirror}}
+              {{on
+                "change"
+                (fn this.onFormCheckboxChange "mailinglist_mirror")
+              }}
             />
             {{i18n "category.mailinglist_mirror"}}
           </label>
@@ -552,7 +571,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
           <PluginOutlet
             @name="category-email-in"
             @connectorTagName="div"
-            @outletArgs={{lazyHash category=this.category}}
+            @outletArgs={{lazyHash category=this.category form=this.form}}
           />
         </span>
       {{/if}}
@@ -574,7 +593,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
     <section>
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{lazyHash category=this.category}}
+        @outletArgs={{lazyHash category=this.category form=this.form}}
       />
     </section>
   </template>

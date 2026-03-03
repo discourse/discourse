@@ -7,34 +7,34 @@ module DiscourseRewind
     REWIND_REPORT_VERSION = "2"
     CACHE_DURATION = Rails.env.development? ? 10.seconds : 3.days
 
-    def cache_key(username, year)
-      "rewind:#{username}:#{year}:v#{REWIND_REPORT_VERSION}"
+    def cache_key(user_id, year)
+      "rewind:#{user_id}:#{year}:v#{REWIND_REPORT_VERSION}"
     end
 
-    def single_report_cache_key(username, year, name)
-      "rewind:#{username}:#{year}:#{name}:v#{REWIND_REPORT_VERSION}"
+    def single_report_cache_key(user_id, year, name)
+      "rewind:#{user_id}:#{year}:#{name}:v#{REWIND_REPORT_VERSION}"
     end
 
-    def load_reports_from_cache(username, year)
-      reports = Discourse.redis.get(cache_key(username, year))
+    def load_reports_from_cache(user_id, year)
+      reports = Discourse.redis.get(cache_key(user_id, year))
       return nil if !reports
       MultiJson.load(reports, symbolize_keys: true)
     end
 
-    def load_single_report_from_cache(username, year, name)
-      report = Discourse.redis.get(single_report_cache_key(username, year, name))
+    def load_single_report_from_cache(user_id, year, name)
+      report = Discourse.redis.get(single_report_cache_key(user_id, year, name))
       return nil if !report
       MultiJson.load(report, symbolize_keys: true)
     end
 
     # NOTE: This only caches the first INITIAL_REPORT_COUNT reports.
-    def cache_reports(username, year, reports)
-      Discourse.redis.setex(cache_key(username, year), CACHE_DURATION, MultiJson.dump(reports))
+    def cache_reports(user_id, year, reports)
+      Discourse.redis.setex(cache_key(user_id, year), CACHE_DURATION, MultiJson.dump(reports))
     end
 
-    def cache_single_report(username, year, name, report)
+    def cache_single_report(user_id, year, name, report)
       Discourse.redis.setex(
-        single_report_cache_key(username, year, name),
+        single_report_cache_key(user_id, year, name),
         CACHE_DURATION,
         MultiJson.dump(report),
       )

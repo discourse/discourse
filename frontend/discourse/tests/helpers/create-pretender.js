@@ -48,7 +48,15 @@ export function OK(resp = {}, headers = {}) {
 const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 
-export let fixturesByUrl;
+export let fixturesByUrl = {};
+
+function replacesFixturesByUrl(newFixtures) {
+  for (const member of Object.keys(fixturesByUrl)) {
+    delete fixturesByUrl[member];
+  }
+
+  Object.assign(fixturesByUrl, newFixtures);
+}
 
 const instance = new Pretender();
 
@@ -71,7 +79,7 @@ export function applyDefaultHandlers(pretender) {
     if (m && m[1] !== "create") {
       let result = requirejs(e).default.call(pretender, helpers);
       if (m[1] === "fixture") {
-        fixturesByUrl = result;
+        replacesFixturesByUrl(result);
       }
     }
   });
@@ -107,13 +115,20 @@ export function applyDefaultHandlers(pretender) {
     return response(json);
   });
 
-  pretender.get("/tags", () => {
+  pretender.get("/tags.json", () => {
     return response({
       tags: [
-        { id: 123, name: "eviltrout", text: "eviltrout", count: 1 },
+        {
+          id: 123,
+          name: "eviltrout",
+          slug: "eviltrout",
+          text: "eviltrout",
+          count: 1,
+        },
         {
           id: 234,
           name: "planned",
+          slug: "planned",
           text: "planned",
           count: 7,
           pm_only: false,
@@ -121,6 +136,7 @@ export function applyDefaultHandlers(pretender) {
         {
           id: 345,
           name: "private",
+          slug: "private",
           text: "private",
           count: 0,
           pm_only: true,
@@ -133,15 +149,17 @@ export function applyDefaultHandlers(pretender) {
             name: "Ford Cars",
             tags: [
               {
-                id: "Escort",
+                id: 456,
                 name: "Escort",
+                slug: "escort",
                 text: "Escort",
                 count: 1,
                 pm_only: false,
               },
               {
-                id: "focus",
+                id: 457,
                 name: "focus",
+                slug: "focus",
                 text: "focus",
                 count: 3,
                 pm_only: false,
@@ -153,15 +171,17 @@ export function applyDefaultHandlers(pretender) {
             name: "Honda Cars",
             tags: [
               {
-                id: "civic",
+                id: 458,
                 name: "civic",
+                slug: "civic",
                 text: "civic",
                 count: 4,
                 pm_only: false,
               },
               {
-                id: "accord",
+                id: 459,
                 name: "accord",
+                slug: "accord",
                 text: "accord",
                 count: 2,
                 pm_only: false,
@@ -173,15 +193,17 @@ export function applyDefaultHandlers(pretender) {
             name: "Makes",
             tags: [
               {
-                id: "ford",
+                id: 460,
                 name: "ford",
+                slug: "ford",
                 text: "ford",
                 count: 5,
                 pm_only: false,
               },
               {
-                id: "honda",
+                id: 461,
                 name: "honda",
+                slug: "honda",
                 text: "honda",
                 count: 6,
                 pm_only: false,
@@ -563,7 +585,7 @@ export function applyDefaultHandlers(pretender) {
 
     // The request sends `permissions` as an object (e.g. {everyone: 1})
     // but the real server never echoes it back. Remove it because the
-    // Category model expects `permissions` to be an array (@trackedArray).
+    // Category model expects `permissions` to be an array (@autoTrackedArray).
     delete category.permissions;
 
     return response({ category });

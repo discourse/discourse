@@ -264,4 +264,13 @@
   .chat-message-reaction-list .chat-message-react-btn {
     visibility: hidden;
   }
+
+  &.-not-interactive {
+    .chat-message-content a,
+    .chat-message-reaction-list,
+    .chat-message-thread-indicator,
+    .chat-message-info__date {
+      pointer-events: none;
+    }
+  }
 }

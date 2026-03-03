@@ -75,4 +75,22 @@ describe "AutoTagTopic" do
       end
     end
   end
+
+  context "with a topic" do
+    context "when tags list is empty" do
+      it "exits early with no error" do
+        expect { automation.trigger!("topic" => topic) }.to_not raise_error
+      end
+    end
+
+    context "when there are tags" do
+      before { automation.upsert_field!("tags", "tags", { value: %w[tag1 tag2] }) }
+
+      it "works" do
+        automation.trigger!("topic" => topic)
+
+        expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])
+      end
+    end
+  end
 end

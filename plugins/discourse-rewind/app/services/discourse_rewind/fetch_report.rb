@@ -47,10 +47,10 @@ module DiscourseRewind
       return if !report_class
 
       report_name = report_class.name.demodulize
-      report = load_single_report_from_cache(for_user.username, year, report_name)
+      report = load_single_report_from_cache(for_user.id, year, report_name)
       if !report
         report = report_class.call(date:, user: for_user)
-        cache_single_report(for_user.username, year, report_name, report.as_json)
+        cache_single_report(for_user.id, year, report_name, report.as_json)
       end
       report
     end

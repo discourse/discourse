@@ -352,7 +352,7 @@ RSpec.describe LlmCreditAllocation do
       allocation = Fabricate(:llm_credit_allocation)
       formatted = allocation.formatted_reset_time
 
-      expect(formatted).to match(/\d{1,2}:\d{2}[ap]m on \w+ \d{1,2}, \d{4}/)
+      expect(formatted).to eq(I18n.l(allocation.next_reset_at, format: :long))
     end
 
     it "returns empty string when next_reset_at is nil" do
@@ -369,7 +369,7 @@ RSpec.describe LlmCreditAllocation do
       allocation = Fabricate(:llm_credit_allocation)
       relative = allocation.relative_reset_time
 
-      expect(relative).to match(/in .+/)
+      expect(relative).to be_present
     end
 
     it "returns empty string when next_reset_at is nil" do

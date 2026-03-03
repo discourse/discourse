@@ -40,7 +40,7 @@ class Service::ContractBase
 
   def to_hash
     attributes.symbolize_keys.deep_transform_values do
-      _1.is_a?(Service::ContractBase) ? _1.to_hash : _1
+      it.is_a?(Service::ContractBase) ? it.to_hash : it
     end
   end
 
@@ -59,7 +59,7 @@ class Service::ContractBase
   end
 
   def nested_attributes
-    @attributes.each_value.select { _1.type.is_a?(Service::NestedContractType) && _1.value }
+    @attributes.each_value.select { it.type.is_a?(Service::NestedContractType) && it.value }
   end
 
   def validate_nested(attribute)

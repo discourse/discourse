@@ -70,14 +70,14 @@ RSpec.describe DiscourseDiff do
   describe "side_by_side_html" do
     it "returns two empty divs when no content is diffed" do
       expect(DiscourseDiff.new("", "").side_by_side_html).to eq(
-        "<div class=\"revision-content\"></div><div class=\"revision-content\"></div>",
+        "<div class=\"revision-content --previous\"></div><div class=\"revision-content --current\"></div>",
       )
     end
 
     it "returns the diffed content on both sides when there is no difference" do
       before = after = "<p>this is a paragraph</p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content\"><p>this is a paragraph</p></div><div class=\"revision-content\"><p>this is a paragraph</p></div>",
+        "<div class=\"revision-content --previous\"><p>this is a paragraph</p></div><div class=\"revision-content --current\"><p>this is a paragraph</p></div>",
       )
     end
 
@@ -85,7 +85,7 @@ RSpec.describe DiscourseDiff do
       before = "<p>this is a paragraph</p>"
       after = "<p>this is a great paragraph</p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content\"><p>this is a paragraph</p></div><div class=\"revision-content\"><p>this is a <ins>great </ins>paragraph</p></div>",
+        "<div class=\"revision-content --previous\"><p>this is a paragraph</p></div><div class=\"revision-content --current\"><p>this is a <ins>great </ins>paragraph</p></div>",
       )
     end
 
@@ -94,7 +94,7 @@ RSpec.describe DiscourseDiff do
       after = "<p>this is one great paragraph</p><p>here is another</p>"
       got = DiscourseDiff.new(before, after).side_by_side_html
       expect(got).to eq(
-        "<div class=\"revision-content\"><p>this is one paragraph</p><p>here is <del>yet </del>another</p></div><div class=\"revision-content\"><p>this is one <ins>great </ins>paragraph</p><p>here is another</p></div>",
+        "<div class=\"revision-content --previous\"><p>this is one paragraph</p><p>here is <del>yet </del>another</p></div><div class=\"revision-content --current\"><p>this is one <ins>great </ins>paragraph</p><p>here is another</p></div>",
       )
     end
 
@@ -102,7 +102,7 @@ RSpec.describe DiscourseDiff do
       before = "<p>this is a great paragraph</p>"
       after = "<p>this is a paragraph</p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content\"><p>this is a <del>great </del>paragraph</p></div><div class=\"revision-content\"><p>this is a paragraph</p></div>",
+        "<div class=\"revision-content --previous\"><p>this is a <del>great </del>paragraph</p></div><div class=\"revision-content --current\"><p>this is a paragraph</p></div>",
       )
     end
 
@@ -110,7 +110,7 @@ RSpec.describe DiscourseDiff do
       before = "<p>this is the first paragraph</p>"
       after = "<p>this is the first paragraph</p><p>this is the second paragraph</p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content\"><p>this is the first paragraph</p></div><div class=\"revision-content\"><p>this is the first paragraph</p><p class=\"diff-ins\">this is the second paragraph</p></div>",
+        "<div class=\"revision-content --previous\"><p>this is the first paragraph</p></div><div class=\"revision-content --current\"><p>this is the first paragraph</p><p class=\"diff-ins\">this is the second paragraph</p></div>",
       )
     end
 
@@ -118,7 +118,7 @@ RSpec.describe DiscourseDiff do
       before = "<p>this is the first paragraph</p><p>this is the second paragraph</p>"
       after = "<p>this is the second paragraph</p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content\"><p class=\"diff-del\">this is the first paragraph</p><p>this is the second paragraph</p></div><div class=\"revision-content\"><p>this is the second paragraph</p></div>",
+        "<div class=\"revision-content --previous\"><p class=\"diff-del\">this is the first paragraph</p><p>this is the second paragraph</p></div><div class=\"revision-content --current\"><p>this is the second paragraph</p></div>",
       )
     end
 
@@ -126,7 +126,7 @@ RSpec.describe DiscourseDiff do
       before = "<p>'</p>"
       after = "<p></p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content\"><p><del>&#39;</del></p></div><div class=\"revision-content\"><p></p></div>",
+        "<div class=\"revision-content --previous\"><p><del>&#39;</del></p></div><div class=\"revision-content --current\"><p></p></div>",
       )
     end
 
@@ -134,7 +134,7 @@ RSpec.describe DiscourseDiff do
       before = "<p data-attr='Some \"quoted\" string'></p>"
       after = "<p data-attr='Some \"quoted\" string'></p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div><div class=\"revision-content\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div>",
+        "<div class=\"revision-content --previous\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div><div class=\"revision-content --current\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div>",
       )
     end
   end
@@ -150,14 +150,14 @@ RSpec.describe DiscourseDiff do
       before = ""
       after = "<img src=\"//domain.com/image.png>\""
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td></td><td class=\"diff-ins\">&lt;img src=&quot;//domain.com/image.png&gt;&quot;</td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous\"></td><td class=\"--current diff-ins\">&lt;img src=&quot;//domain.com/image.png&gt;&quot;</td></tr></table>",
       )
     end
 
     it "returns the diffed content on both columns when there is no difference" do
       before = after = "this is a paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td>this is a paragraph</td><td>this is a paragraph</td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous\">this is a paragraph</td><td class=\"--current\">this is a paragraph</td></tr></table>",
       )
     end
 
@@ -165,7 +165,7 @@ RSpec.describe DiscourseDiff do
       before = "this is a paragraph"
       after = "this is a great paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td class=\"diff-del\">this is a paragraph</td><td class=\"diff-ins\">this is a <ins>great </ins>paragraph</td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is a paragraph</td><td class=\"--current diff-ins\">this is a <ins>great </ins>paragraph</td></tr></table>",
       )
     end
 
@@ -173,7 +173,7 @@ RSpec.describe DiscourseDiff do
       before = "this is a great paragraph"
       after = "this is a paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td class=\"diff-del\">this is a <del>great </del>paragraph</td><td class=\"diff-ins\">this is a paragraph</td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is a <del>great </del>paragraph</td><td class=\"--current diff-ins\">this is a paragraph</td></tr></table>",
       )
     end
 
@@ -181,7 +181,7 @@ RSpec.describe DiscourseDiff do
       before = "this is the first paragraph"
       after = "this is the first paragraph\nthis is the second paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td class=\"diff-del\">this is the first paragraph</td><td class=\"diff-ins\">this is the first paragraph<ins>\nthis is the second paragraph</ins></td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is the first paragraph</td><td class=\"--current diff-ins\">this is the first paragraph<ins>\nthis is the second paragraph</ins></td></tr></table>",
       )
     end
 
@@ -189,7 +189,7 @@ RSpec.describe DiscourseDiff do
       before = "this is the first paragraph\nthis is the second paragraph"
       after = "this is the second paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td class=\"diff-del\">this is the first paragraph\n</td><td></td></tr><tr><td>this is the second paragraph</td><td>this is the second paragraph</td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is the first paragraph\n</td><td class=\"--current\"></td></tr><tr><td class=\"--previous\">this is the second paragraph</td><td class=\"--current\">this is the second paragraph</td></tr></table>",
       )
     end
   end

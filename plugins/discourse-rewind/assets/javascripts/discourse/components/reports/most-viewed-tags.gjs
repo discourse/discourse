@@ -48,7 +48,7 @@ export default class MostViewedTags extends Component {
                 "folder-wrapper"
                 (if (eq this.openedTag data.name) "--opened" "")
               }}
-              href={{getURL (concat "/tag/" data.name)}}
+              href={{getURL (concat "/tag/" data.slug "/" data.tag_id)}}
               {{on "click" (fn this.handleFolderClick data.name)}}
             >
               <span class="folder-tab"></span>

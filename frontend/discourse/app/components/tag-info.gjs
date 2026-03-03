@@ -1,9 +1,12 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { and, reads } from "@ember/object/computed";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -21,7 +24,6 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
 
@@ -29,9 +31,11 @@ import { i18n } from "discourse-i18n";
 export default class TagInfo extends Component {
   @service dialog;
   @service router;
+  @service siteSettings;
+
+  @tracked tagInfo = null;
 
   loading = false;
-  tagInfo = null;
   newSynonyms = null;
   showEditControls = false;
   editing = false;
@@ -42,34 +46,52 @@ export default class TagInfo extends Component {
   @reads("currentUser.staff") canAdminTag;
   @and("canEditTags", "showEditControls") editSynonymsMode;
 
-  @discourseComputed("tagInfo.tag_group_names")
-  tagGroupsInfo(tagGroupNames) {
+  get useSettingsPage() {
+    return this.siteSettings.experimental_tag_settings_page;
+  }
+
+  @computed("tagInfo.tag_group_names")
+  get tagGroupsInfo() {
     return i18n("tagging.tag_groups_info", {
-      count: tagGroupNames.length,
-      tag_groups: tagGroupNames.join(", "),
+      count: this.tagInfo?.tag_group_names?.length,
+      tag_groups: this.tagInfo?.tag_group_names?.join(", "),
     });
   }
 
-  @discourseComputed("tagInfo.categories")
-  categoriesInfo(categories) {
+  @computed("tagInfo.categories")
+  get categoriesInfo() {
     return i18n("tagging.category_restrictions", {
-      count: categories.length,
+      count: this.tagInfo?.categories?.length,
     });
   }
 
-  @discourseComputed(
-    "tagInfo.tag_group_names",
-    "tagInfo.categories",
-    "tagInfo.synonyms"
-  )
-  nothingToShow(tagGroupNames, categories, synonyms) {
-    return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
+  // Bridge TrackedArray content changes to the classic tag system. `@tracked tagInfo` lets the getter invalidate when
+  // tagInfo is reassigned (reload). Consuming `synonyms.length` captures the TrackedArray's collection tag so the
+  // getter also invalidates on in-place mutations (push/splice/remove).
+  @dependentKeyCompat
+  get synonyms() {
+    const synonyms = this.tagInfo?.synonyms;
+    if (synonyms) {
+      synonyms.length;
+    }
+    return synonyms;
   }
 
-  @discourseComputed("newTagName")
-  updateDisabled(newTagName) {
+  @computed("tagInfo.tag_group_names", "tagInfo.categories", "synonyms")
+  get nothingToShow() {
+    return (
+      isEmpty(this.tagInfo?.tag_group_names) &&
+      isEmpty(this.tagInfo?.categories) &&
+      isEmpty(this.synonyms)
+    );
+  }
+
+  @computed("newTagName")
+  get updateDisabled() {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    newTagName = newTagName ? newTagName.replace(filterRegexp, "").trim() : "";
+    const newTagName = this.newTagName
+      ? this.newTagName.replace(filterRegexp, "").trim()
+      : "";
     return newTagName.length === 0;
   }
 
@@ -89,8 +111,9 @@ export default class TagInfo extends Component {
       return;
     }
     this.set("loading", true);
+    const findArgs = this.tag.id || this.tag.name;
     return this.store
-      .find("tag-info", this.tag.name)
+      .find("tag-info", findArgs)
       .then((result) => {
         this.set("tagInfo", result);
         this.set(
@@ -119,12 +142,13 @@ export default class TagInfo extends Component {
   }
 
   @action
-  unlinkSynonym(tag, event) {
+  unlinkSynonym(synonym, event) {
     event?.preventDefault();
-    ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.name}`, {
+    const id = this.tagInfo.id;
+    ajax(`/tag/${id}/synonyms/${synonym.id}.json`, {
       type: "DELETE",
     })
-      .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
+      .then(() => removeValueFromArray(this.synonyms, synonym))
       .catch(popupAjaxError);
   }
 
@@ -139,7 +163,7 @@ export default class TagInfo extends Component {
       didConfirm: () => {
         return tag
           .destroyRecord()
-          .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
+          .then(() => removeValueFromArray(this.synonyms, tag))
           .catch(popupAjaxError);
       },
     });
@@ -161,6 +185,7 @@ export default class TagInfo extends Component {
     this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
       .update({
+        slug: this.tag.slug,
         name: this.newTagName,
         description: this.newTagDescription,
       })
@@ -174,7 +199,8 @@ export default class TagInfo extends Component {
             description: this.newTagDescription,
           });
           if (oldTagName !== updatedTag.name) {
-            this.router.transitionTo("tag.show", updatedTag.name);
+            const slugForUrl = updatedTag.slug || `${updatedTag.id}-tag`;
+            this.router.transitionTo("tag.show", slugForUrl, updatedTag.id);
           }
         }
       })
@@ -191,11 +217,11 @@ export default class TagInfo extends Component {
         ? i18n("tagging.delete_confirm_no_topics")
         : i18n("tagging.delete_confirm", { count: numTopics });
 
-    if (this.tagInfo.synonyms.length > 0) {
+    if (this.synonyms?.length > 0) {
       confirmText +=
         " " +
         i18n("tagging.delete_confirm_synonyms", {
-          count: this.tagInfo.synonyms.length,
+          count: this.synonyms.length,
         });
     }
 
@@ -215,14 +241,13 @@ export default class TagInfo extends Component {
   @action
   addSynonyms() {
     this.dialog.confirm({
-      message: htmlSafe(
-        i18n("tagging.add_synonyms_explanation", {
-          count: this.newSynonyms.length,
-          tag_name: this.tagInfo.name,
-        })
-      ),
+      message: i18n("tagging.add_synonyms_explanation", {
+        count: this.newSynonyms.length,
+        tag_name: this.tagInfo.name,
+      }),
       didConfirm: () => {
-        return ajax(`/tag/${this.tagInfo.name}/synonyms`, {
+        const id = this.tagInfo.id;
+        return ajax(`/tag/${id}/synonyms.json`, {
           type: "POST",
           data: {
             tags: this.newSynonyms.map((t) =>
@@ -298,12 +323,25 @@ export default class TagInfo extends Component {
             <div class="tag-name-wrapper">
               {{discourseTag this.tagInfo.name tagName="div"}}
               {{#if this.canEditTags}}
-                <a
-                  href
-                  {{on "click" this.edit}}
-                  class="edit-tag"
-                  title={{i18n "tagging.edit_tag"}}
-                >{{icon "pencil"}}</a>
+                {{#if this.useSettingsPage}}
+                  <LinkTo
+                    @route="tag.edit.tab"
+                    @models={{array
+                      this.tagInfo.slug
+                      this.tagInfo.id
+                      "general"
+                    }}
+                    class="edit-tag"
+                    title={{i18n "tagging.edit_tag"}}
+                  >{{icon "gear"}}</LinkTo>
+                {{else}}
+                  <a
+                    href
+                    {{on "click" this.edit}}
+                    class="edit-tag"
+                    title={{i18n "tagging.edit_tag"}}
+                  >{{icon "pencil"}}</a>
+                {{/if}}
               {{/if}}
             </div>
             {{#if this.tagInfo.description}}
@@ -335,7 +373,7 @@ export default class TagInfo extends Component {
             {{/if}}
           {{/if~}}
         </div>
-        {{#if this.tagInfo.synonyms}}
+        {{#if this.synonyms}}
           <div class="synonyms-list">
             <h3>{{i18n "tagging.synonyms"}}</h3>
             <div>{{htmlSafe
@@ -344,7 +382,7 @@ export default class TagInfo extends Component {
                 )
               }}</div>
             <div class="tag-list">
-              {{#each this.tagInfo.synonyms as |tag|}}
+              {{#each this.synonyms as |tag|}}
                 <div class="tag-box">
                   {{discourseTag tag.name pmOnly=tag.pmOnly tagName="div"}}
                   {{#if this.editSynonymsMode}}
@@ -405,13 +443,24 @@ export default class TagInfo extends Component {
           />
 
           <div class="tag-actions">
-            <DButton
-              @action={{this.toggleEditControls}}
-              @icon="gear"
-              @label="tagging.edit_synonyms"
-              id="edit-synonyms"
-              class="btn-default"
-            />
+            {{#if this.useSettingsPage}}
+              <LinkTo
+                @route="tag.edit.tab"
+                @models={{array this.tagInfo.slug this.tagInfo.id "general"}}
+                class="btn btn-default"
+              >
+                {{icon "gear"}}
+                {{i18n "tagging.settings"}}
+              </LinkTo>
+            {{else}}
+              <DButton
+                @action={{this.toggleEditControls}}
+                @icon="gear"
+                @label="tagging.edit_synonyms"
+                id="edit-synonyms"
+                class="btn-default"
+              />
+            {{/if}}
             {{#if this.canAdminTag}}
               <DButton
                 @action={{this.deleteTag}}

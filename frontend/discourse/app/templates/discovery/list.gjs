@@ -43,12 +43,14 @@ export default <template>
           @loadMore={{@controller.model.subcategoryList.loadMore}}
         />
       {{/if}}
-      {{#if (and @controller.showTagInfo @controller.model.tag)}}
-        <TagInfo
-          @tag={{@controller.model.tag}}
-          @list={{@controller.model.list}}
-        />
-      {{/if}}
+      {{#unless @controller.siteSettings.experimental_tag_settings_page}}
+        {{#if (and @controller.model.tag @controller.showTagInfo)}}
+          <TagInfo
+            @tag={{@controller.model.tag}}
+            @list={{@controller.model.list}}
+          />
+        {{/if}}
+      {{/unless}}
     </:header>
 
     <:list>

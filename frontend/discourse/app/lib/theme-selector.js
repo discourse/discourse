@@ -2,6 +2,10 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
+// Matches CORE_THEMES in app/models/theme.rb
+export const FOUNDATION_THEME_ID = -1;
+export const HORIZON_THEME_ID = -2;
+
 const keySelector = "meta[name=discourse_theme_id]";
 const COOKIE_NAME = "theme_ids";
 const COOKIE_EXPIRY_DAYS = 365;

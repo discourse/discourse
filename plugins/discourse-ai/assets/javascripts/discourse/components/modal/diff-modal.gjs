@@ -28,10 +28,9 @@ export default class ModalDiffModal extends Component {
 
   @tracked loading = false;
   @tracked finalResult = "";
-  @tracked escapedSelectedText = escapeExpression(this.args.model.selectedText);
-  @tracked diffStreamer = new DiffStreamer(this.args.model.selectedText);
   @tracked suggestion = "";
-  @tracked
+  escapedSelectedText = escapeExpression(this.args.model.selectedText);
+  diffStreamer = new DiffStreamer(this.args.model.selectedText);
   smoothStreamer = new SmoothStreamer(
     () => this.suggestion,
     (newValue) => (this.suggestion = newValue)

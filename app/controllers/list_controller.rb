@@ -386,15 +386,13 @@ class ListController < ApplicationController
     route_params = { format: "json" }
 
     if @category.present?
-      slug_path = @category.slug_path
-
-      route_params[:category_slug_path_with_id] = (slug_path + [@category.id.to_s]).join("/")
+      route_params[:category_slug_path_with_id] = [*@category.slug_path, @category.id].join("/")
     end
 
-    route_params[:username] = UrlHelper.encode_component(params[:username]) if params[
-      :username
-    ].present?
-    route_params[:period] = params[:period] if params[:period].present?
+    %i[username group_name groupname period].each do |key|
+      route_params[key] = params[key] if params[key].present?
+    end
+
     route_params
   end
 
@@ -474,8 +472,11 @@ class ListController < ApplicationController
 
     opts = opts.dup
 
-    if SiteSetting.unicode_usernames && opts[:group_name]
-      opts[:group_name] = UrlHelper.encode_component(opts[:group_name])
+    if SiteSetting.unicode_usernames
+      %i[username group_name groupname].each do |key|
+        page_params[key] = UrlHelper.encode_component(page_params[key]) if page_params[key]
+        opts[key] = UrlHelper.encode_component(opts[key]) if opts[key]
+      end
     end
 
     opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
@@ -486,9 +487,9 @@ class ListController < ApplicationController
     # encoded username are encoded again which we do not want. As such, we unencode the path once when unicode usernames
     # have been enabled.
     if SiteSetting.unicode_usernames
-      uri = URI.parse(url)
-      uri.path = UrlHelper.unencode(uri.path)
-      url = uri.to_s
+      path, query = url.split("?", 2)
+      path = UrlHelper.unencode(path)
+      url = query ? "#{path}?#{query}" : path
     end
 
     url

@@ -628,6 +628,15 @@ RSpec.describe InvitesController do
   end
 
   describe "#create-multiple" do
+    it "requires to be logged in" do
+      post "/invites/create-multiple.json",
+           params: {
+             email: %w[test@example.com test1@example.com],
+           }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
     it "fails if you are not admin" do
       sign_in(Fabricate(:user))
       post "/invites/create-multiple.json",
@@ -817,8 +826,9 @@ RSpec.describe InvitesController do
     fab!(:invite) { Fabricate(:invite, invited_by: admin, email: "test@example.com") }
 
     it "requires to be logged in" do
-      put "/invites/#{invite.id}", params: { email: "test2@example.com" }
-      expect(response.status).to eq(400)
+      put "/invites/#{invite.id}.json", params: { email: "test2@example.com" }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
     context "while logged in" do

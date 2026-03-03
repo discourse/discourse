@@ -7,6 +7,10 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class AssignSettings extends Component {
+  static shouldRender(args, context) {
+    return !context.siteSettings.enable_simplified_category_creation;
+  }
+
   @action
   onChangeSetting(event) {
     this.set(

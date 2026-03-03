@@ -1,12 +1,11 @@
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { compare, isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
@@ -48,8 +47,8 @@ export default class ProfileController extends Controller {
     );
   }
 
-  @discourseComputed("model.user_fields.@each.value")
-  userFields() {
+  @computed("model.user_fields.@each.value")
+  get userFields() {
     let siteUserFields = this.site.user_fields;
     if (isEmpty(siteUserFields)) {
       return;
@@ -75,14 +74,14 @@ export default class ProfileController extends Controller {
       });
   }
 
-  @discourseComputed("currentUser.needs_required_fields_check")
-  showEnforcedRequiredFieldsNotice(needsRequiredFieldsCheck) {
-    return needsRequiredFieldsCheck;
+  @computed("currentUser.needs_required_fields_check")
+  get showEnforcedRequiredFieldsNotice() {
+    return this.currentUser?.needs_required_fields_check;
   }
 
-  @discourseComputed("model.user_option.default_calendar")
-  canChangeDefaultCalendar(defaultCalendar) {
-    return defaultCalendar !== "none_selected";
+  @computed("model.user_option.default_calendar")
+  get canChangeDefaultCalendar() {
+    return this.model?.user_option?.default_calendar !== "none_selected";
   }
 
   @action

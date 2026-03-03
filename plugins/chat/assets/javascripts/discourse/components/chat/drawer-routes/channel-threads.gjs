@@ -16,7 +16,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
     return htmlSafe(
       i18n("chat.threads.list") +
         " - " +
-        replaceEmoji(this.args.model.channel.title)
+        replaceEmoji(this.args.model.channel.escapedTitle)
     );
   }
 
@@ -39,10 +39,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
 
         {{#if this.chatStateManager.isDrawerExpanded}}
           <div class="chat-drawer-content">
-            <ChatThreadList
-              @channel={{@model.channel}}
-              @includeHeader={{false}}
-            />
+            <ChatThreadList @channel={{@model.channel}} />
           </div>
         {{/if}}
       {{/if}}

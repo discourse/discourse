@@ -10,6 +10,10 @@
   top: 0;
   left: 0;
   z-index: z("composer", "content");
+
+  // dynamically overridden by the component
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .chat-message-actions {

@@ -70,7 +70,7 @@ export default class Revisions extends Component {
     >
       {{#if @model.locale_changes}}
         <div class="row revision__locale">
-          <div class="revision-content">
+          <div class="revision-content --previous">
             <div class={{if @model.locale_changes.previous "diff-del"}}>
               {{icon "globe"}}
               {{this.previousLocale}}
@@ -81,7 +81,7 @@ export default class Revisions extends Component {
             &rarr;&nbsp;
           {{/if}}
 
-          <div class="revision-content">
+          <div class="revision-content --current">
             <div class={{if @model.locale_changes.current "diff-ins"}}>
               {{icon "globe"}}
               {{this.currentLocale}}
@@ -141,7 +141,7 @@ export default class Revisions extends Component {
       {{/if}}
       {{#if @model.tags_changes}}
         <div class="row -tag-revisions">
-          <span class="tag-revision__wrapper">
+          <span class="tag-revision__wrapper --previous">
             {{discourseTags
               this.fakePreviousTagsTopic
               tagClasses=this.previousTagClassesMap
@@ -152,7 +152,7 @@ export default class Revisions extends Component {
             &rarr;&nbsp;
           {{/if}}
 
-          <span class="tag-revision__wrapper">
+          <span class="tag-revision__wrapper --current">
             {{discourseTags
               this.fakeCurrentTagsTopic
               tagClasses=this.currentTagClassesMap

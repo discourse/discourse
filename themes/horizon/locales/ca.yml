@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 ca:
+  solved: "Solucionat"
+  posted: "publicat"
+  vote_count:
+    one: " %{count} vot"
+    other: "%{count} vots"
+  like_count:
+    one: "%{count} 'm'agrada'"
+    other: "%{count} 'm'agrada'"
+  reply_count:
+    one: "%{count} resposta"
+    other: "%{count} respostes"

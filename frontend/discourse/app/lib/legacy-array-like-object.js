@@ -5,15 +5,15 @@
  * already existing classes that previously used the ArrayProxy mixin. It should not
  * be used in new development.
  *
- * For new code, use a standard class with tracked properties and @trackedArray for the content property.
+ * For new code, use a standard class with tracked properties and @autoTrackedArray for the content property.
  * Example:
  *
  *   import { tracked } from '@glimmer/tracking';
- *   import { trackedArray } from "discourse/lib/tracked-tools";
+ *   import { autoTrackedArray } from "discourse/lib/tracked-tools";
  *
  *   class MyArrayWrapper {
  *     @tracked someProp;
- *     @trackedArray content = [];
+ *     @autoTrackedArray content = [];
  *   }
  *
  * This approach provides reactivity and array capabilities without legacy proxy patterns.

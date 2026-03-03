@@ -59,6 +59,11 @@ on(:before_session_destroy) do |data|
 
   params << ["id_token_hint", token]
 
+  if SiteSetting.openid_connect_rp_initiated_logout_include_client_id &&
+       SiteSetting.openid_connect_client_id.present?
+    params << ["client_id", SiteSetting.openid_connect_client_id]
+  end
+
   post_logout_redirect = SiteSetting.openid_connect_rp_initiated_logout_redirect.presence
   params << ["post_logout_redirect_uri", post_logout_redirect] if post_logout_redirect
 

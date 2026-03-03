@@ -160,6 +160,27 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
     end
   end
 
+  describe "#validate_before_create" do
+    it "raises InvalidAccess if the bookmarkable is blank" do
+      expect { registered_bookmarkable.validate_before_create(guardian, nil) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+    end
+
+    it "raises InvalidAccess if the user is not a member of the bookmarkable group" do
+      non_member_guardian = Guardian.new(Fabricate(:user))
+      expect {
+        registered_bookmarkable.validate_before_create(non_member_guardian, query_group4)
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "does not raise if the user is a member of the bookmarkable group" do
+      expect {
+        registered_bookmarkable.validate_before_create(guardian, query_group1)
+      }.not_to raise_error
+    end
+  end
+
   describe "#can_see?" do
     it "returns false if the user is not a member of the group from which they created the bookmark" do
       expect(registered_bookmarkable.can_see?(guardian, bookmark1)).to eq(true) # Query 1, Group 0

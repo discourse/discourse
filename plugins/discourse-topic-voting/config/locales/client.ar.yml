@@ -10,6 +10,7 @@ ar:
       sort_options:
         votes: "الأصوات"
     topic_voting:
+      title: "التصويت على الموضوع"
       reached_limit: "لم يعُد بإمكانك التصويت الآن، يُرجى إزالة صوت حالي!"
       list_votes: "قائمة بأصواتك"
       votes_nav_help: "الموضوعات الأكثر تصويتًا"
@@ -20,6 +21,9 @@ ar:
       voted_title: "تم التصويت"
       voting_closed_title: "مغلق"
       voting_limit: "الحد"
+      see_votes: "لديك %{count}/%{max} من الأصوات المتبقية"
+      locked: "مغلق"
+      locked_description: "زد مستوى الثقة لديك لتتمكن من التصويت"
       votes:
         zero: "%{count} من الأصوات"
         one: "صوت واحد %{count}"

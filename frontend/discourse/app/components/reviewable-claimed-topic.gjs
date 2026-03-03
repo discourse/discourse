@@ -14,10 +14,6 @@ export default class ReviewableClaimedTopic extends Component {
     return this.siteSettings.reviewable_claiming !== "disabled";
   }
 
-  get isRefresh() {
-    return this.siteSettings.reviewable_ui_refresh;
-  }
-
   @action
   async unclaim() {
     try {
@@ -49,23 +45,17 @@ export default class ReviewableClaimedTopic extends Component {
     {{#if this.enabled}}
       <div class="reviewable-claimed-topic">
         {{#if @claimedBy.user}}
-
           <DButton
             @icon="xmark"
             @action={{this.unclaim}}
-            @title={{unless this.isRefresh "review.unclaim.help"}}
-            @label={{if this.isRefresh "review.unclaim.help"}}
+            @label="review.unclaim.help"
             class="btn-default unclaim"
           />
         {{else}}
           <DButton
             @icon="user-plus"
-            @title={{if
-              this.isRefresh
-              "review.claim_help.optional"
-              "review.claim.title"
-            }}
-            @label={{if this.isRefresh "review.claim.title"}}
+            @title="review.claim_help.optional"
+            @label="review.claim.title"
             @action={{this.claim}}
             class="btn-default claim"
           />

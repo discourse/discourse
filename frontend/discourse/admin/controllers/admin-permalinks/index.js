@@ -8,7 +8,7 @@ import Permalink from "discourse/admin/models/permalink";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -18,7 +18,7 @@ export default class AdminPermalinksIndexController extends Controller {
 
   @tracked loading = false;
   @tracked filter = null;
-  @trackedArray model;
+  @autoTrackedArray model;
 
   get showSearch() {
     return !!(this.model.length || this.filter);

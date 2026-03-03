@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+if ENV["RUN_PITCHFORK"] != "0"
+  STDERR.puts "[bin/unicorn] Running bin/pitchfork. Use RUN_PITCHFORK=0 to run unicorn instead."
+  exec File.expand_path("pitchfork", __dir__), *ARGV
+end
+
 require "pathname"
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", Pathname.new(__FILE__).realpath)
-
-STDERR.puts <<~MESSAGE if defined?(Bundler)
-    WARNING: Using `bundle exec` to start the server is unnecessary, and will make startup slower. Use `bin/rails s` or `bin/unicorn`.
-  MESSAGE
 
 require "rubygems"
 require "bundler/setup"

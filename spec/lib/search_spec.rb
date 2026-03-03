@@ -1420,6 +1420,24 @@ RSpec.describe Search do
         results = Search.execute("Example Site Title", search_context: post.topic)
         expect(results.posts.map(&:id)).to eq([post.id])
       end
+
+      describe "searching for author's real name" do
+        before { topic.user.update!(name: "Jane Searcher") }
+
+        it "does not find posts when the enable_names site setting is disabled" do
+          SiteSetting.enable_names = false
+
+          results = Search.execute("Jane Searcher", search_context: topic)
+          expect(results.posts).to be_empty
+        end
+
+        it "finds posts when the enable_names site setting is enabled" do
+          SiteSetting.enable_names = true
+
+          results = Search.execute("Jane Searcher", search_context: topic)
+          expect(results.posts.map(&:id)).to include(post.id)
+        end
+      end
     end
 
     context "when searching the OP" do
@@ -1653,6 +1671,16 @@ RSpec.describe Search do
       search = Search.execute("monkey #test")
 
       expect(search.posts).to eq([ignored_category.topic.first_post])
+    end
+
+    it "matches categories with accented names using category: filter" do
+      accented_category =
+        Fabricate(:category_with_definition, name: "Éditions", slug: "publications")
+      topic_in_accented = Fabricate(:topic, category: accented_category)
+      post_in_accented = Fabricate(:post, topic: topic_in_accented, raw: "snow monkey")
+
+      search = Search.execute("monkey category:Editions")
+      expect(search.posts.map(&:id)).to include(post_in_accented.id)
     end
 
     describe "with child categories" do
@@ -3281,7 +3309,7 @@ RSpec.describe Search do
 
       before do
         described_class.advanced_order(:chars, enabled: method(:enabled?)) do
-          _1.reorder("MAX(LENGTH(posts.raw)) DESC")
+          it.reorder("MAX(LENGTH(posts.raw)) DESC")
         end
       end
 

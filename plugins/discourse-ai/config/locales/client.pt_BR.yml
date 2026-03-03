@@ -419,7 +419,6 @@ pt_BR:
         overwrite: "Sobrescrever"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
-        use_parent_llm: "Usar modelo de linguagem de personas"
         max_context_posts: "Máximo de postagens de contexto"
         max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
         vision_enabled: Visão ativada
@@ -552,8 +551,9 @@ pt_BR:
         parameter_description: "Descrição do parâmetro"
         enum_value: "Valor da enumeração"
         add_enum_value: "Adicionar valor da enumeração"
+        credential_not_set: "(não configurado)"
         edit: "Editar"
-        test: "Executar teste"
+        test: "Testar"
         delete: "Excluir"
         saved: "Ferramenta salva"
         confirm_delete: "Tem certeza de que deseja excluir esta ferramenta?"
@@ -561,6 +561,16 @@ pt_BR:
           title: "Ferramenta de IA de teste"
           run: "Executar teste"
           result: "Resultado do teste"
+      secrets:
+        short_title: "Credenciais"
+        name: "Nome"
+        secret: "Valor"
+        back: "Voltar"
+        save: "Salvar"
+        edit: "Editar"
+        delete: "Excluir"
+        embedding: "Incorporar"
+        tool: "Ferramenta"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"
@@ -618,8 +628,8 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-5: "Modelo mais inteligente da Anthropic"
-          anthropic-claude-sonnet-4-5: "Equilíbrio ideal entre custo e velocidade"
+          anthropic-claude-opus-4-6: "Modelo mais inteligente da Anthropic"
+          anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
           anthropic-claude-haiku-4-5: "Rápido e econômico"
           open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
@@ -675,7 +685,6 @@ pt_BR:
           disable_streaming: "Desativar conclusões de transmissão (converter transmissão em pedidos que não forem desse tipo)"
           reasoning_effort: "Esforço de raciocínio (aplicável apenas a modelos de raciocínio)"
           enable_reasoning: "Ativar raciocínio (aplicável apenas a modelos de raciocínio)"
-          enable_thinking: "Ativar pensamento (aplicável apenas a modelos como, por exemplo, flash 2.5)"
           thinking_tokens: "Quantidade de tokens usados para pensamento"
           reasoning_tokens: "Quantidade de tokens usados para raciocínio"
           disable_temperature: "Desativar temperatura (alguns modelos de pensamento não são compatíveis com temperatura)"
@@ -784,12 +793,7 @@ pt_BR:
         provider_fields:
           model_name: "Nome do modelo"
         semantic_search: "Tópicos (semântica)"
-        semantic_search_loading: "Pesquisando mais resultados usando IA"
         semantic_search_results:
-          toggle: "Mostrando %{count} resultados encontrados usando IA"
-          toggle_hidden: "Ocultando %{count} resultados encontrados usando IA"
-          none: "Desculpe, nossa Pesquisa com IA não achou tópicos correspondentes"
-          new: "Aperte \"Pesquisar\"' para começar a procurar resultados novos com a IA"
           unavailable: "Resultados de IA indisponíveis"
         semantic_search_tooltips:
           results_explanation: "Ao ativar esta opção, os resultados de pesquisa com IA são adicionados abaixo."

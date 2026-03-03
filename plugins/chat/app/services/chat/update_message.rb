@@ -28,10 +28,12 @@ module Chat
 
     params do
       attribute :message_id, :string
+      attribute :channel_id, :integer
       attribute :message, :string
       attribute :upload_ids, :array
 
       validates :message_id, presence: true
+      validates :channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
 
       after_validation do
@@ -85,7 +87,7 @@ module Chat
           user: :user_status,
         )
         .includes(uploads: { optimized_videos: :optimized_upload })
-        .find_by(id: params.message_id)
+        .find_by(id: params.message_id, chat_channel_id: params.channel_id)
     end
 
     def fetch_membership(guardian:, message:)

@@ -489,7 +489,10 @@ class Guardian
     return false if anonymous?
     return true if is_admin?
     return can_see_emails? if entity == "screened_email"
-    return entity != "user_list" if is_moderator? && (entity != "user_archive" || entity_id.nil?)
+
+    if is_moderator? && (entity != "user_archive" || entity_id.nil?)
+      return %w[staff_action screened_ip screened_url report user_archive].include?(entity)
+    end
 
     # Regular users can only export their archives
     return false unless entity == "user_archive"
@@ -611,10 +614,6 @@ class Guardian
   def can_lazy_load_categories?
     SiteSetting.lazy_load_categories_groups_map.include?(Group::AUTO_GROUPS[:everyone]) ||
       @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
-  end
-
-  def can_see_reviewable_ui_refresh?
-    !SiteSetting.force_old_reviewable_ui
   end
 
   def is_me?(other)

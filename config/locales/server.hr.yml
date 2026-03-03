@@ -1380,7 +1380,6 @@ hr:
     num_flaggers_to_close_topic: "Minimalan broj jedinstvenih označavača koji je potreban za automatsko pauziranje teme radi intervencije"
     num_hours_to_close_topic: "Broj sati za pauziranje teme za intervenciju."
     auto_respond_to_flag_actions: "Omogući automatski odgovor pri uklanjanju oznake."
-    min_first_post_typing_time: "Minimalno vrijeme u milisekundama koje korisnik mora upisati tijekom prve objave, ako prag nije dostignut, objava će automatski ući u red čekanja za odobrenje. Postavite na 0 za onemogućavanje (ne preporučuje se)"
     auto_silence_fast_typers_max_trust_level: "Maksimalna razina povjerenja za automatsko utišavanje brzih tipkača"
     auto_silence_first_post_regex: "Regularni izraz koji ne razlikuje velika i mala slova koji će, ako se proslijedi, utišati prvu objavu korisnika i poslati je u red čekanja za odobrenje. Primjer: raging|a[bc]a , uzrokovat će prvo utišavanje svih postova koji sadrže raging ili aba ili aca. Odnosi se samo na prvi post. ZASTARJELO: Umjesto toga koristite utišavanje promatranih riječi."
     reviewable_claiming: "Treba li potraživati sadržaj koji se može pregledati prije nego što se na njega može djelovati?"
@@ -2751,8 +2750,6 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
-  dev_mode:
-    enter: "Unesi"
   wizard:
     step:
       setup:
@@ -2855,13 +2852,9 @@ hr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      no_action_post:
-        title: "Nema akcije"
       delete_post:
         title: "Izbrišite objavu"
         complete: "Post izbrisan"
-      no_action_user:
-        title: "Nema akcije"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

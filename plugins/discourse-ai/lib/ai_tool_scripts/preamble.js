@@ -109,7 +109,18 @@
  *      raw (string): The raw Markdown content for the post.
  *    Returns: void
  *
- * 6. discourse
+ * 6. secrets
+ *    Accesses credentials bound to this tool by alias.
+ *
+ *    secrets.get(alias): Returns the credential value bound to `alias`.
+ *    Parameters:
+ *      alias (string): Alias defined in the tool's credential contract.
+ *    Returns: string
+ *    Throws: Error if alias is undeclared, alias is unbound, or credential is missing.
+ *    Example:
+ *      const apiKey = secrets.get("openai_api_key");
+ *
+ * 7. discourse
  *    Interacts with Discourse specific features. Access is generally performed as the SystemUser.
  *
  *    discourse.baseUrl: The base URL of the Discourse site (e.g., "https://meta.discourse.org").
@@ -200,7 +211,7 @@
  *    Example:
  *      discourse.setCustomField("post", context.post_id, "ai_processed", Date.now().toString());
  *
- * 7. context
+ * 8. context
  *    An object containing information about the environment where the tool is being run.
  *    Tools can be invoked from multiple contexts - understanding where your tool is running
  *    helps you access the right data and take appropriate actions.

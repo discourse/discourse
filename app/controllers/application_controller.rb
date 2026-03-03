@@ -53,6 +53,7 @@ class ApplicationController < ActionController::Base
   after_action :add_readonly_header
   after_action :perform_refresh_session
   after_action :conditionally_allow_site_embedding
+
   after_action :ensure_vary_header
   after_action :add_noindex_header,
                if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
@@ -759,7 +760,7 @@ class ApplicationController < ActionController::Base
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
   def is_valid_destination_url?(url)
-    url.present? && url != path("/") && NO_DESTINATION_COOKIE.none? { url.start_with? path(_1) }
+    url.present? && url != path("/") && NO_DESTINATION_COOKIE.none? { url.start_with? path(it) }
   end
 
   def destination_url

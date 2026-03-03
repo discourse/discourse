@@ -1,7 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -9,9 +7,13 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 export default class CreateTopicButton extends Component {
   @service router;
 
-  @tracked label = this.args.label ?? "topic.create";
+  get label() {
+    return this.args.label ?? "topic.create";
+  }
 
-  btnId = this.args.btnId ?? "create-topic";
+  get btnId() {
+    return this.args.btnId ?? "create-topic";
+  }
 
   get btnTypeClass() {
     return this.args.btnTypeClass || "btn-default";
@@ -38,20 +40,15 @@ export default class CreateTopicButton extends Component {
 
   <template>
     {{#if @canCreateTopic}}
-      <DButton
+      <TopicDraftsDropdown
         @action={{@action}}
-        @icon="far-pen-to-square"
         @label={{this.label}}
-        id={{this.btnId}}
-        class={{this.btnClasses}}
+        @btnId={{this.btnId}}
+        @btnClasses={{this.btnClasses}}
+        @btnTypeClass={{this.btnTypeClass}}
+        @showDrafts={{@showDrafts}}
+        ...attributes
       />
-
-      {{#if @showDrafts}}
-        <TopicDraftsDropdown
-          @disabled={{false}}
-          @btnTypeClass={{this.btnTypeClass}}
-        />
-      {{/if}}
     {{/if}}
   </template>
 }

@@ -224,7 +224,7 @@ describe "Unified new topic list", type: :system do
 
       context "when the /new topic list is scoped to a tag" do
         it "shows new topics and replies with the tag" do
-          visit("/tag/#{tag.name}/l/new")
+          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
           expect(topic_list).to have_topics(count: 2)
           [new_reply_with_tag, new_topic_with_tag].each do |topic|
             expect(topic_list).to have_topic(topic)
@@ -239,7 +239,7 @@ describe "Unified new topic list", type: :system do
         end
 
         it "shows only new topics with the tag when the user switches to the Topics tab" do
-          visit("/tag/#{tag.name}/l/new")
+          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
           tabs_toggle.topics_tab.click
 
           expect(topic_list).to have_topics(count: 1)
@@ -252,11 +252,11 @@ describe "Unified new topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(page).to have_current_path("/tag/#{tag.name}/l/new?subset=topics")
+          expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
         end
 
         it "shows only topics with new replies with the tag when the user switches to the Replies tab" do
-          visit("/tag/#{tag.name}/l/new")
+          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
 
           tabs_toggle.replies_tab.click
 
@@ -270,17 +270,17 @@ describe "Unified new topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(page).to have_current_path("/tag/#{tag.name}/l/new?subset=replies")
+          expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
         end
 
         it "respects the subset query param and activates the appropriate tab" do
-          visit("/tag/#{tag.name}/l/new?subset=topics")
+          visit("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          visit("/tag/#{tag.name}/l/new?subset=replies")
+          visit("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_active
@@ -290,7 +290,7 @@ describe "Unified new topic list", type: :system do
         it "live-updates the counts shown on the tabs" do
           Fabricate(:post, topic: Fabricate(:topic, tags: [tag]))
 
-          visit("/tag/#{tag.name}/l/new")
+          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
 
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(2)

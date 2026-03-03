@@ -129,6 +129,8 @@ tr_TR:
       web_hooks:
         assign_event:
           group_name: "Etkinlik Ata"
+          assigned: "Bir kullanıcı bir konu atadığında"
+          unassigned: "Bir kullanıcı bir konuyu atamayı kaldırdığında"
     search:
       advanced:
         in:

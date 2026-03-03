@@ -1,27 +1,34 @@
+import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import RestModel from "discourse/models/rest";
 
 export default class Tag extends RestModel {
-  // Use tag name instead of numeric id as the primary key
-  // since backend tag routes use tag name in the URL path
-  primaryKey = "name";
-
   @readOnly("pm_only") pmOnly;
 
-  @discourseComputed("count", "pm_count")
-  totalCount(count, pmCount) {
-    return pmCount ? count + pmCount : count;
+  @computed("slug", "id")
+  get url() {
+    if (this.id) {
+      const slugForUrl = this.slug || `${this.id}-tag`;
+      return getURL(`/tag/${slugForUrl}/${this.id}`);
+    }
+    // fallback for tags without id (legacy)
+    return getURL(`/tag/${this.name}`);
   }
 
-  @discourseComputed("id", "name")
-  searchContext(id, name) {
+  @computed("count", "pm_count")
+  get totalCount() {
+    return this.pm_count ? this.count + this.pm_count : this.count;
+  }
+
+  @computed("id", "name")
+  get searchContext() {
     return {
       type: "tag",
-      id,
+      id: this.id,
       /** @type Tag */
       tag: this,
-      name,
+      name: this.name,
     };
   }
 }

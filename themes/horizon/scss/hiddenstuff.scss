@@ -3,13 +3,14 @@
 .sidebar__panel-switch-button,
 .notifications-button-footer .reason .text,
 .pinned-button .reason .text,
-.more-topics__browse-more {
+.more-topics__browse-more,
+.topic-list-layout-trigger {
   display: none;
 }
 
 @include viewport.from(md) {
   .horizon-new-topic-button-enabled {
-    .list-controls #create-topic {
+    .list-controls .d-combo-button {
       display: none;
     }
   }

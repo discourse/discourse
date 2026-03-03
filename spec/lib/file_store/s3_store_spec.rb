@@ -518,6 +518,8 @@ RSpec.describe FileStore::S3Store do
           FileStore::S3Store.visibility_tagging_option_value(secure: false),
         )
 
+        expect(copy_api_request[:context].params[:tagging_directive]).to eq("REPLACE")
+
         expect(bucket.find_object(source)).to be_present
         expect(bucket.find_object(destination)).to be_present
       end
@@ -551,6 +553,8 @@ RSpec.describe FileStore::S3Store do
         expect(copy_api_request[:context].params[:tagging]).to eq(
           FileStore::S3Store.visibility_tagging_option_value(secure: true),
         )
+
+        expect(copy_api_request[:context].params[:tagging_directive]).to eq("REPLACE")
 
         expect(bucket.find_object(source)).to be_present
         expect(bucket.find_object(destination)).to be_present

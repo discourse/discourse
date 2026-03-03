@@ -1,14 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import discourseComputed from "discourse/lib/decorators";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -26,9 +25,9 @@ export default class GroupManageEmailSettings extends Component {
     );
   }
 
-  @discourseComputed("smtpSettingsValid", "group.smtp_enabled")
-  emailSettingsValid(smtpSettingsValid, smtpEnabled) {
-    return !smtpEnabled || smtpSettingsValid;
+  @computed("smtpSettingsValid", "group.smtp_enabled")
+  get emailSettingsValid() {
+    return !this.group?.smtp_enabled || this.smtpSettingsValid;
   }
 
   _anySmtpFieldsFilled() {

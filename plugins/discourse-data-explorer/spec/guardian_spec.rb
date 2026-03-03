@@ -35,6 +35,30 @@ describe Guardian do
     end
   end
 
+  describe "#user_can_access_query?" do
+    it "is true when the user is an admin" do
+      expect(Guardian.new(admin).user_can_access_query?(make_query)).to eq(true)
+    end
+
+    it "is false when the query has no group assignments" do
+      expect(Guardian.new(user).user_can_access_query?(make_query)).to eq(false)
+    end
+
+    it "is true when the user is a member of a group assigned to the query" do
+      query = make_query(["#{group.id}"])
+      group.add(user)
+
+      expect(Guardian.new(user).user_can_access_query?(query)).to eq(true)
+    end
+
+    it "is false when the user is not a member of any group assigned to the query" do
+      other_group = Fabricate(:group)
+      query = make_query(["#{other_group.id}"])
+
+      expect(Guardian.new(user).user_can_access_query?(query)).to eq(false)
+    end
+  end
+
   describe "#group_and_user_can_access_query?" do
     it "is true if the user is an admin" do
       expect(Guardian.new(admin).group_and_user_can_access_query?(group, make_query)).to eq(true)

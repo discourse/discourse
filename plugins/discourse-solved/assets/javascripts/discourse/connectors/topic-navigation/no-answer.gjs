@@ -1,9 +1,10 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { later } from "@ember/runloop";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { cancel } from "@ember/runloop";
+import { service } from "@ember/service";
 import TopicNavigationPopup from "discourse/components/topic-navigation-popup";
 import { isTesting } from "discourse/lib/environment";
+import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
 
 const ONE_WEEK = 7 * 24 * 60 * 60 * 1000; // milliseconds
@@ -11,19 +12,21 @@ const MAX_DURATION_WITH_NO_ANSWER = ONE_WEEK;
 const DISPLAY_DELAY = isTesting() ? 0 : 2000;
 const CONFETTI_PARTICLE_COUNT = 50;
 
-@tagName("")
 export default class NoAnswer extends Component {
   static shouldRender(args, context) {
     return !context.site.mobileView;
   }
 
-  init() {
-    super.init(...arguments);
-    this.setProperties({
-      oneWeek: ONE_WEEK,
-      show: false,
-      showConfetti: false,
-    });
+  @service appEvents;
+  @service currentUser;
+
+  @tracked show = false;
+  @tracked showConfetti = false;
+
+  oneWeek = ONE_WEEK;
+
+  constructor() {
+    super(...arguments);
 
     this.appEvents.on(
       "discourse-solved:solution-toggled",
@@ -31,11 +34,8 @@ export default class NoAnswer extends Component {
       this.hidePopup
     );
 
-    later(() => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-      const topic = this.topic;
+    this._delayTimer = discourseLater(() => {
+      const topic = this.args.outletArgs.topic;
       const currentUser = this.currentUser;
 
       // show notice if:
@@ -52,13 +52,15 @@ export default class NoAnswer extends Component {
           (post) => post.user_id !== currentUser.id && post.can_accept_answer
         )
       ) {
-        this.set("show", true);
+        this.show = true;
       }
     }, DISPLAY_DELAY);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    cancel(this._delayTimer);
 
     this.appEvents.off(
       "discourse-solved:solution-toggled",
@@ -72,10 +74,10 @@ export default class NoAnswer extends Component {
       return;
     }
 
-    this.set("show", false);
+    this.show = false;
 
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      this.set("showConfetti", true);
+      this.showConfetti = true;
     }
   }
 

@@ -264,6 +264,30 @@ module("Unit | Utility | url", function (hooks) {
     );
   });
 
+  test("routeTo redirects server-side-only URLs on subfolder setup", async function (assert) {
+    setPrefix("/forum");
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+
+    DiscourseURL.routeTo("/forum/uploads/short-url/test.csv.gz");
+    assert.true(
+      DiscourseURL.redirectTo.calledWith(
+        "/forum/uploads/short-url/test.csv.gz"
+      ),
+      "uploads short-url on subfolder is redirected to server"
+    );
+
+    DiscourseURL.redirectTo.resetHistory();
+
+    DiscourseURL.routeTo("/forum/secure-uploads/original/1X/test.pdf");
+    assert.true(
+      DiscourseURL.redirectTo.calledWith(
+        "/forum/secure-uploads/original/1X/test.pdf"
+      ),
+      "secure-uploads on subfolder is redirected to server"
+    );
+  });
+
   test("anchor handling", async function (assert) {
     sinon.stub(DiscourseURL, "jumpToElement");
     sinon.stub(DiscourseURL, "replaceState");

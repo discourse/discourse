@@ -29,8 +29,11 @@ ur:
         all: "تمام"
         solved: "حل شدہ"
         unsolved: "غیر حل شدہ"
+      no_solved_topics_title: "آپ نے ابھی تک کسی موضوع کو حل نہیں کیا ہے"
+      no_solved_topics_body: "جب آپ کسی موضوع پر مددگار جواب فراہم کرتے ہیں، تو آپ کے جواب کو حاملِ موضوع یا عملے کی طرف سے حل کے طور پر منتخب کیا جا سکتا ہے۔"
       move_post_cancel: "منسوخ کریں"
-      confirm_category_change_solution_cancel: "منسوخ کریں"
+      confirm_solved_removal_confirm: "تصدیق کریں"
+      confirm_solved_removal_cancel: "منسوخ کریں"
     topic_statuses:
       solved:
         help: "اِس ٹاپک کا حل ہے"

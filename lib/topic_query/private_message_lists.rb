@@ -125,9 +125,8 @@ class TopicQuery
 
       list =
         list.joins(
-          "JOIN topic_tags tt ON tt.topic_id = topics.id
-                        JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'",
-        )
+          "JOIN topic_tags tt ON tt.topic_id = topics.id JOIN tags t ON t.id = tt.tag_id",
+        ).where("t.name = ?", @options[:tags][0])
 
       create_list(:private_messages, {}, list)
     end

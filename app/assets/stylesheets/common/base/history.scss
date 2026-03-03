@@ -313,15 +313,13 @@
   }
 
   .hidden-revision-previous .row {
-    div:nth-of-type(1),
-    td:nth-of-type(1) {
+    .--previous {
       opacity: 0.5;
     }
   }
 
   .hidden-revision-current .row {
-    div:nth-of-type(2),
-    td:nth-of-type(2) {
+    .--current {
       opacity: 0.5;
     }
   }

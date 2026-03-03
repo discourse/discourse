@@ -55,10 +55,10 @@ pl_PL:
         other: "Przenieś wpisy"
       move_post_cancel: "Anuluj"
       dont_show_again: "Rozumiem, nie pokazuj mi tego ponownie"
-      confirm_category_change_solution_title: "Rozwiązanie zostanie usunięte"
-      confirm_category_change_solution: "Nowa kategoria nie ma włączonych rozwiązań. Zmiana kategorii spowoduje usunięcie zaakceptowanego rozwiązania z tego tematu."
-      confirm_category_change_solution_confirm: "Zmień kategorię"
-      confirm_category_change_solution_cancel: "Anuluj"
+      confirm_solved_removal_title: "Rozwiązanie zostanie usunięte"
+      confirm_solved_removal: "Ta zmiana spowoduje wyłączenie rozwiązań dla tego tematu i usunięcie zaakceptowanego rozwiązania."
+      confirm_solved_removal_confirm: "Potwierdź"
+      confirm_solved_removal_cancel: "Anuluj"
       no_answer:
         title: Czy odpowiedź na twoje pytanie została udzielona?
         description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."

@@ -6,6 +6,10 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigUpcomingChangesRoute extends DiscourseRoute {
   @service currentUser;
 
+  queryParams = {
+    changeNamesFilter: { replace: true },
+  };
+
   titleToken() {
     return i18n("admin.config.upcoming_changes.title");
   }
