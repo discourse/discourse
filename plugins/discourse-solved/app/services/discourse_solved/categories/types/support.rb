@@ -18,10 +18,15 @@ module DiscourseSolved
           def configure_category(category, configuration_values: {})
             category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
 
-            configuration_schema[:category_settings]&.each do |field_name, config|
+            configuration_schema[:category_custom_fields]&.each do |field_name, config|
               value = configuration_values.fetch(field_name.to_s, config[:default])
               category.custom_fields[field_name.to_s] = value
             end
+
+            # TODO (martin) Handle category_settings here
+
+            # TODO (martin) Also handle site_settings here??
+
             category.save_custom_fields
             DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
           end
