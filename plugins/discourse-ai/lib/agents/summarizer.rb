@@ -14,7 +14,7 @@ module DiscourseAi
 
           - Only include the summary, without any additional commentary.
           - You understand and generate Discourse forum Markdown; including links, _italics_, **bold**.
-          - Maintain the original language of the text being summarized.
+          - Generate the summary in {user_language}.
           - Aim for summaries to be 400 words or less.
           - Each post is formatted as "<POST_NUMBER>) <USERNAME> <MESSAGE>"
           - Cite specific noteworthy posts using the format [DESCRIPTION]({resource_url}/POST_NUMBER)
@@ -39,7 +39,7 @@ module DiscourseAi
       def examples
         [
           [
-            "Here are the posts inside <input></input> XML tags:\n\n<input>1) user1 said: I love Mondays 2) user2 said: I hate Mondays</input>\n\nGenerate a concise, coherent summary of the text above maintaining the original language.",
+            "Here are the posts inside <input></input> XML tags:\n\n<input>1) user1 said: I love Mondays 2) user2 said: I hate Mondays</input>\n\nGenerate a concise, coherent summary of the text above.",
             {
               summary:
                 "Two users are sharing their feelings toward Mondays. [user1]({resource_url}/1) hates them, while [user2]({resource_url}/2) loves them.",

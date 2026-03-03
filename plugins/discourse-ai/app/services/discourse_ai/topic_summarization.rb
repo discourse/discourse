@@ -3,8 +3,8 @@
 module DiscourseAi
   # A cache layer on top of our topic summarization engine. Also handle permissions.
   class TopicSummarization
-    def self.for(topic, user)
-      new(DiscourseAi::Summarization.topic_summary(topic), user)
+    def self.for(topic, user, locale: nil)
+      new(DiscourseAi::Summarization.topic_summary(topic, locale:), user)
     end
 
     def initialize(summarizer, user)

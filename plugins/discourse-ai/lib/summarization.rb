@@ -3,7 +3,7 @@
 module DiscourseAi
   module Summarization
     class << self
-      def topic_summary(topic, llm_model: nil)
+      def topic_summary(topic, locale: nil, llm_model: nil)
         return nil if !SiteSetting.ai_summarization_enabled
         if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summarization_agent)).blank?
           return nil
@@ -16,6 +16,7 @@ module DiscourseAi
         DiscourseAi::Summarization::FoldContent.new(
           build_bot(agent_klass, llm_model),
           DiscourseAi::Summarization::Strategies::TopicSummary.new(topic),
+          locale:,
         )
       end
 
