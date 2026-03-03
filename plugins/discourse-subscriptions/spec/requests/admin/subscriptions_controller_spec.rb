@@ -123,6 +123,17 @@ RSpec.describe DiscourseSubscriptions::Admin::SubscriptionsController do
         }
       end
 
+      it "does not refund when refund param is the string 'false'" do
+        ::Stripe::Subscription
+          .expects(:cancel)
+          .with("sub_12345")
+          .returns(plan: { product: "pr_34578" }, customer: "c_123")
+        ::Stripe::Subscription.expects(:retrieve).with("sub_12345").never
+        ::Stripe::Refund.expects(:create).never
+
+        delete "/s/admin/subscriptions/sub_12345.json", params: { refund: "false" }
+      end
+
       it "refunds if params[:refund] present" do
         ::Stripe::Subscription
           .expects(:cancel)
