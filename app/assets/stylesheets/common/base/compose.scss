@@ -852,11 +852,13 @@ html.composer-open:not(.has-full-page-chat) {
 // especially while the software keyboard is visible, so we top-anchor it here
 // and shift it using transform
 .ipados-device {
-  #reply-control {
-    // the two properties below are equivalent to bottom: 0
-    top: calc(var(--composer-vh, 1vh) * 100);
-    transform: translateY(-100%);
-    bottom: unset;
+  body:not(.peek-mode-active) {
+    #reply-control {
+      // the two properties below are equivalent to bottom: 0
+      top: calc(var(--composer-vh, 1vh) * 100);
+      transform: translateY(-100%);
+      bottom: unset;
+    }
   }
 }
 
