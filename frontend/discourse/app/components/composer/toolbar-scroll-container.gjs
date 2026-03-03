@@ -59,7 +59,7 @@ export default class ToolbarScrollContainer extends Component {
   }
 
   <template>
-    <div class="d-editor-button-bar-wrap">
+    <div class="d-editor-button-bar__wrap">
       {{#if this.hasLeftScroll}}
         {{! template-lint-disable no-pointer-down-event-binding }}
         <button
