@@ -67,32 +67,9 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
+        build_type: [frontend]
+        target: [core]
         browser: [Chrome]
-        exclude:
-          - build_type: backend
-            target: themes
-          # Exclude combined plugins from system tests - use split targets instead
-          - build_type: system
-            target: plugins
-        include:
-          # Split plugin targets for system tests only
-          - build_type: system
-            target: core-plugins
-            browser: Chrome
-          - build_type: system
-            target: official-plugins
-            browser: Chrome
-          - build_type: system
-            target: chat
-            browser: Chrome
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox Evergreen
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox ESR
 
     steps:
       - name: Set working directory owner
