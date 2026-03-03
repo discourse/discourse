@@ -10,6 +10,7 @@ ar:
       logs:
         staff_actions:
           actions:
+            create_automation: إنشاء أتمتة
             update_automation: تحديث الأتمتة
             delete_automation: حذف الأتمتة
     discourse_automation:
@@ -72,8 +73,10 @@ ar:
           fields:
             categories:
               label: الفئات
+              description: تُشغل فقط عندما يكون الموضوع المُبلّغ عنه ضمن هذه الفئات
             tags:
               label: الوسوم
+              description: تُشغل فقط عندما يحتوي الموضوع المُبلغ عنه على أي من هذه الوسوم
         not_found: تعذَّر العثور على المشغِّل `%{trigger}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
         user_badge_granted:
           fields:
@@ -284,6 +287,14 @@ ar:
               label: الوسوم
               description: اختياري، لن يتم تشغيله إلا إذا كان المنشور يحتوي على أي هذه الوسوم
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: قالب البريد الإلكتروني
+              description: يدعم عناصر نائبة للأتمتة
+            recipients:
+              label: المستلمون
+              description: المستخدمون أو عناوين البريد الإلكتروني لإرسال الإشعار إليهم
         not_found: تعذَّر العثور على البرنامج النصي `%{script}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
         zapier_webhook:
           fields:
@@ -433,6 +444,11 @@ ar:
               label: "اسم الحقل المخصَّص للمستخدم"
         set_topic_timer:
           title: تعيين مؤقِّت للموضوع
+          fields:
+            type:
+              label: نوع المؤقت
+            duration:
+              label: مدة المؤقت
       unnamed_automation: "أتمتة دون اسم"
       models:
         script:

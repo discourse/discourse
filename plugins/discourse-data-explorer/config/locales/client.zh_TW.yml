@@ -19,7 +19,6 @@ zh_TW:
           yes: "是"
           no: "否"
       export: "匯出"
-      save: "儲存變更"
       edit: "編輯"
       delete: "刪除"
       result_count:

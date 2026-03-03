@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 ja:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Adplugin の自社広告インプレッション
+      description: "自社広告インプレッションレポート"
+    ad_plugin_ad_impressions:
+      title: Adplugin の広告インプレッション
+      description: "広告インプレッションレポート"
+    ad_plugin_impressions_by_user:
+      title: 広告プラグインのユーザー別インプレッション
+      description: "ユーザー別にグループ化された広告インプレッション"
+    ad_plugin_click_through_rate:
+      title: Adplugin のコンバージョンパフォーマンス
+      description: "広告およびプレースメント別の広告パフォーマンスレポート"
+    ad_plugin_click_through_rate_by_placement:
+      title: Adplugin のプレースメント別パフォーマンス
+      description: "プレースメント別の広告パフォーマンスレポート"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Adplugin の広告タイプ別パフォーマンス
+      description: "広告タイプ別の広告パフォーマンスレポート"
+  errors:
+    already_clicked: "クリックはすでに記録済みです"
   site_settings:
     discourse_adplugin_enabled: discourse-adplugin を有効にします。
     no_ads_for_personal_messages: "個人メッセージを表示するときに広告を表示しない"

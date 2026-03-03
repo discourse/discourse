@@ -20,7 +20,6 @@ export default class AdminSearch extends Component {
 
   @tracked filter = this.args.initialFilter ?? "";
   @tracked searchResults = [];
-  @tracked showFilters = true;
   @tracked loading = false;
   @tracked dataReady = false;
 

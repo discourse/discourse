@@ -12,6 +12,8 @@ ja:
     github_linkback_access_token: 'バックリンクを投稿するユーザー用とバッジを付与するためのコミット数/貢献数をカウントするための有効なアクセストークン。トークンの取得方法については、<a href="https://meta.discourse.org/t/99895">こちら</a>をご覧ください。'
     github_linkback_maximum_links: "1 つの投稿から作成できるリンクバックの最大数。投稿に複数のリンクが含まれる場合は、何も作成されません。"
     github_permalinks_enabled: "GitHub パーマリンクの上書きを有効にする"
+    github_pr_status_enabled: "Onebox に GitHub プルリクエストのステータスを表示する (下書き、オープン、承認済み、マージ済み、クローズ)"
+    github_webhook_secret: "GitHub webhook の署名検証用のシークレットトークン。GitHub の webhook 設定でこの値を構成します。"
     github_permalinks_exclude: "パーマリンクの上書きから除外する必要のあるファイル名またはディレクトリ。ファイル名のみ、またはフルパス（user/repository/optional-directory/filename）を指定します"
     github_badges_enabled: "GitHub バッジを有効にする"
     github_badges_repos: "貢献とコミットをスキャンする GitHub リポジトリの URL"

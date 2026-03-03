@@ -19,7 +19,6 @@ vi:
           yes: "Đồng ý"
           no: "Không"
       export: "Xuất"
-      save: "Lưu thay đổi"
       edit: "Sửa"
       delete: "Xóa"
       result_count:

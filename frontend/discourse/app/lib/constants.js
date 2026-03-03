@@ -26,6 +26,8 @@ export const CATEGORY_STYLE_TYPES = { square: 0, icon: 1, emoji: 2 };
 
 export const CATEGORY_TEXT_COLORS = ["FFFFFF", "000000"];
 
+// NOTE: Group names are changed based on the site's locale, see
+// Group.refresh_automatic_group! for more details
 export const AUTO_GROUPS = {
   everyone: { id: 0, automatic: true, name: "everyone" },
   admins: { id: 1, automatic: true, name: "admins" },

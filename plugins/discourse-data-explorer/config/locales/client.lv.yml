@@ -19,7 +19,6 @@ lv:
           yes: "Jā"
           no: "Nē"
       export: "Eksportēt"
-      save: "Saglabāt izmaiņas"
       edit: "Labot"
       delete: "Dzēst"
       query_groups: "Grupas"

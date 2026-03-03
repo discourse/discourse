@@ -15,7 +15,6 @@ ug:
           yes: "ھەئە"
           no: "ياق"
       export: "چىقار"
-      save: "ئۆزگەرتىشنى ساقلا"
       edit: "تەھرىر"
       delete: "ئۆچۈر"
       result_count:

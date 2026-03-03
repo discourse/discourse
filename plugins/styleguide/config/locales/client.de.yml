@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          styleguide: "Discourse – Styleguide"
+          styleguide: "Discourse Styleguide"
   js:
     styleguide:
       title: "Styleguide"

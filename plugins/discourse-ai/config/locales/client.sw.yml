@@ -34,8 +34,6 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
-      llm_selector:
-        none: "Hakuna"
       features:
         back: "Iliyopita"
         disabled: "(imezuiwa)"
@@ -104,14 +102,6 @@ sw:
         parameter_required: "Muhimu na Inahitajika"
         edit: "Hariri"
         delete: "Futa"
-      secrets:
-        name: "Jina"
-        secret: "Thamani"
-        back: "Iliyopita"
-        save: "Hifadhi"
-        edit: "Hariri"
-        delete: "Futa"
-        embedding: "Ambatanisha"
       llms:
         display_name: "Jina"
         provider: "Mkimu"

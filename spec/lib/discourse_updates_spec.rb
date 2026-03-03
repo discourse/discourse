@@ -277,41 +277,6 @@ RSpec.describe DiscourseUpdates do
       expect(result[1]["title"]).to eq("Bells")
     end
 
-    it "correctly shows features with correct boolean site settings" do
-      features_with_versions = [
-        {
-          "emoji" => "🤾",
-          "title" => "Bells",
-          "created_at" => 2.days.ago,
-          "related_site_setting" => "enable_mobile_theme",
-        },
-        {
-          "emoji" => "🙈",
-          "title" => "Whistles",
-          "created_at" => 3.days.ago,
-          "related_site_setting" => "default_theme_id",
-        },
-        {
-          "emoji" => "🙈",
-          "title" => "Confetti",
-          "created_at" => 4.days.ago,
-          "related_site_setting" => "wrong value",
-        },
-      ]
-
-      Discourse.redis.set("new_features", MultiJson.dump(features_with_versions))
-      DiscourseUpdates.last_installed_version = "2.7.0.beta2"
-      result = DiscourseUpdates.new_features
-
-      expect(result.length).to eq(3)
-      expect(result[0]["setting_enabled"]).to eq(true)
-      expect(result[0]["related_site_setting"]).to eq("enable_mobile_theme")
-      expect(result[1]["setting_enabled"]).to eq(false)
-      expect(result[1]["related_site_setting"]).to be_nil
-      expect(result[2]["setting_enabled"]).to eq(false)
-      expect(result[2]["related_site_setting"]).to be_nil
-    end
-
     it "correctly shows features when related plugins are installed" do
       Discourse.stubs(:plugins_by_name).returns({ "discourse-ai" => true })
 

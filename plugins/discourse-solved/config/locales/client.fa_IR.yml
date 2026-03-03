@@ -28,9 +28,6 @@ fa_IR:
         solved: "حل شده"
         unsolved: "حل نشده"
       no_solved_topics_title_others: "%{username} هنوز هیچ موضوعی را حل نکرده است"
-      move_post_cancel: "لغو"
-      confirm_solved_removal_confirm: "تایید"
-      confirm_solved_removal_cancel: "لغو"
       notification:
         title: "نوشته شما به عنوان راه حل مشخص شد"
     topic_statuses:

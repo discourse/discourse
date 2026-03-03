@@ -106,6 +106,10 @@ export default class AdComponent extends Component {
   didInsertElement() {
     super.didInsertElement?.(...arguments);
 
+    if (this.colspan && this.element) {
+      this.element.setAttribute("colspan", this.colspan);
+    }
+
     if (!this.get("showAd")) {
       return;
     }

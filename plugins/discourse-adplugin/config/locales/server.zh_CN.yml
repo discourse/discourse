@@ -7,23 +7,23 @@
 zh_CN:
   reports:
     ad_plugin_house_ads_performance:
-      title: 广告插件房屋广告展示次数
-      description: "房屋广告展示次数报告"
+      title: 广告插件自家广告展示次数
+      description: "自家广告展示次数报告"
     ad_plugin_ad_impressions:
       title: 广告插件广告展示次数
       description: "广告展示次数报告"
     ad_plugin_impressions_by_user:
-      title: 用户的广告插件曝光量
-      description: "按用户分组的广告曝光量"
+      title: 按用户的广告插件展示次数
+      description: "按用户分组的广告展示次数"
     ad_plugin_click_through_rate:
-      title: 广告插件转化率
-      description: "按广告和位置分列的广告效果报告"
+      title: 广告插件转化效果
+      description: "按广告和展示位置的广告效果报告"
     ad_plugin_click_through_rate_by_placement:
-      title: 按展示位置划分的广告效果
-      description: "按展示位置划分的广告效果报告"
+      title: 按展示位置的广告插件效果
+      description: "按展示位置的广告效果报告"
     ad_plugin_click_through_rate_by_ad_type:
-      title: 按广告类型划分的广告效果
-      description: "按广告类型划分的广告效果报告"
+      title: 按广告类型的广告插件效果
+      description: "按广告类型的广告效果报告"
   errors:
     already_clicked: "点击已录制"
   site_settings:
@@ -114,7 +114,7 @@ zh_CN:
     amazon_mobile_post_bottom_ad_height_code: "输入广告高度（移动版）"
     amazon_nth_post_code: "每 N 条帖子后显示一个广告，其中 N 是此值。"
     carbonads_serve_id: "您的 Carbon Ads 投放 ID"
-    carbonads_placement: "您的 Carbon Ads 展示位置"
+    carbonads_placement: "您的 Carbon 广告展示位置"
     carbonads_through_trust_level: "按照信任级别向用户展示广告。信任级别高于此值的用户不会看到广告。"
     carbonads_exclude_groups: "广告将不会向这些群组的成员显示"
     carbonads_topic_list_top_enabled: "在话题列表上方显示广告"

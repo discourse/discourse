@@ -19,7 +19,6 @@ ro:
           yes: "Da"
           no: "Nu"
       export: "Exportă"
-      save: "Salvează modificări"
       edit: "Editează"
       delete: "Șterge"
       query_groups: "Grupuri"

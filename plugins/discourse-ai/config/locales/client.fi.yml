@@ -176,8 +176,6 @@ fi:
       default_llm:
         title: "Oletusarvoinen LLM-malli"
         description: "Oletusarvoinen LLM-malli, jota käytetään kaikissa tekoälyominaisuuksissa. Tätä käytetään, jos LLM:ää ei ole määritetty ominaisuuden määrityksissä tai persoonassa. Jos oletusarvoista LLM:ää ei ole määritetty, viimeksi luotua LLM:ää käytetääb."
-      llm_selector:
-        none: "Ei valittu"
       features:
         short_title: "Ominaisuudet"
         description: "Nämä ovat sivustosi kävijöiden käytettävissä olevat tekoälyominaisuudet. Ne voidaan määrittää käyttämään tiettyjä persoonia ja LLM:iä, ja niiden käyttöoikeuksia voi hallita ryhmäkohtaisesti."
@@ -388,7 +386,6 @@ fi:
         overwrite: "Korvaa"
         description: "Kuvaus"
         no_llm_selected: "Kielimallia ei ole valittu"
-        use_parent_llm: "Käytä persoonan kielimallia"
         max_context_posts: "Kontekstiviestien enimmäismäärä"
         max_context_posts_help: "Kontekstina käytettävien viestien enimmäismäärä, kun tekoäly vastaa käyttäjälle (käytä oletusta jättämällä tyhjäksi)"
         vision_enabled: Näkö käytössä
@@ -522,7 +519,6 @@ fi:
         enum_value: "Enum-arvo"
         add_enum_value: "Lisää enum-arvo"
         edit: "Muokkaa"
-        test: "Suorita testi"
         delete: "Poista"
         saved: "Työkalu tallennettu"
         confirm_delete: "Oletko varma, että haluat poistaa tämän työkalun?"
@@ -530,15 +526,6 @@ fi:
           title: "Testaa tekoälytyökalua"
           run: "Suorita testi"
           result: "Testin tulos"
-      secrets:
-        short_title: "Tunnistetiedot"
-        name: "Nimi"
-        secret: "Arvo"
-        back: "Takaisin"
-        save: "Tallenna"
-        edit: "Muokkaa"
-        delete: "Poista"
-        embedding: "Upottaminen"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"
@@ -596,10 +583,7 @@ fi:
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-5: "Anthropicin älykkäin malli"
-          anthropic-claude-sonnet-4-5: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
           anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
-          open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
         configured:
           title: "Määritetyt LLM:t"
@@ -762,12 +746,7 @@ fi:
         provider_fields:
           model_name: "Mallin nimi"
         semantic_search: "Ketjut (semanttinen)"
-        semantic_search_loading: "Haetaan lisää tuloksia tekoälyllä"
         semantic_search_results:
-          toggle: "Näytetään %{count} tulosta, jotka löydettiin tekoälyllä"
-          toggle_hidden: "Piilotetaan %{count} tulosta, jotka löydettiin tekoälyllä"
-          none: "Tekoälyhakumme ei valitettavasti löytänyt vastaavia aiheita"
-          new: "Aloita uusien tulosten etsiminen tekoälyllä painamalla hakupainiketta"
           unavailable: "Tekoälytuloksia ei ole saatavilla"
         semantic_search_tooltips:
           results_explanation: "Kun tämä on käytössä, alle lisätään ylimääräisiä tekoälyhakutuloksia."

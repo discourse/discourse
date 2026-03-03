@@ -829,6 +829,9 @@ export default class Category extends RestModel {
         ...(this.siteSettings.content_localization_enabled && {
           category_localizations: this.localizations,
         }),
+        ...(!id && this.category_type
+          ? { category_type: this.category_type }
+          : {}),
         ...this._pluginSaveProperties(),
       }),
       type: id ? "PUT" : "POST",

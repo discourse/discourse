@@ -504,6 +504,7 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_tags" do
+    fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 
@@ -577,9 +578,30 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
+
+    it "does not send notifications" do
+      fab_tag3 = Fabricate(:tag)
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      TopicUser.change(
+        topic_watcher,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
+      expect do
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic.id],
+          type: "change_tags",
+          tag_ids: [fab_tag3.id],
+        ).perform!
+      end.to not_change { Notification.where(user: topic_watcher).count }
+    end
   end
 
   describe "append_tags" do
+    fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
     fab!(:tag3, :tag)
@@ -604,11 +626,11 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.tags).to contain_exactly(tag1, tag2, tag3)
       end
 
-      it "keeps existing tags when appending empty array" do
+      it "is a no-op when appending empty array" do
         topic_ids =
           TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tag_ids: []).perform!
 
-        expect(topic_ids).to eq([topic.id])
+        expect(topic_ids).to eq([])
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
@@ -651,17 +673,36 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
+
+    it "does not send notifications" do
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      TopicUser.change(
+        topic_watcher,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
+      expect do
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic.id],
+          type: "append_tags",
+          tag_ids: [tag3.id],
+        ).perform!
+      end.to not_change { Notification.where(user: topic_watcher).count }
+    end
   end
 
   describe "remove_tags" do
+    fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      TopicTag.create!(topic: topic, tag: tag1)
-      TopicTag.create!(topic: topic, tag: tag2)
+      topic.tags = [tag1, tag2]
     end
 
     context "when the user can edit the topic" do
@@ -683,8 +724,22 @@ RSpec.describe TopicsBulkAction do
         topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
 
         expect(topic_ids).to eq([])
-        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
+    end
+
+    it "does not send notifications" do
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      TopicUser.change(
+        topic_watcher,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
+      expect do
+        TopicsBulkAction.new(Fabricate(:admin), [topic.id], type: "remove_tags").perform!
+      end.to not_change { Notification.where(user: topic_watcher).count }
     end
   end
 end

@@ -99,7 +99,6 @@ pl_PL:
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
     ai_helper_post_illustrator_persona: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
-    ai_helper_chat_thread_title_persona: "Persona używana do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
     ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
@@ -119,7 +118,6 @@ pl_PL:
     ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
     ai_bot_enabled: "Włącz moduł bota AI."
     ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
-    ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można to pominąć, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Gdy bot GPT uzyska dostęp do PW, odpowie członkom tych grup."
     ai_bot_debugging_allowed_groups: "Zezwól tym grupom na wyświetlanie przycisku debugowania w postach, który wyświetla surowe żądanie i odpowiedź AI"
     ai_bot_public_sharing_allowed_groups: "Zezwól tym grupom na udostępnianie osobistych wiadomości AI publicznie za pośrednictwem unikalnego, publicznie dostępnego linku. Uwaga: jeśli Twoja witryna wymaga logowania, udostępnianie również będzie wymagało logowania."
@@ -316,7 +314,6 @@ pl_PL:
       flag_reason: "Oznaczono jako spam przez <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Użytkownik wyciszony automatycznie przez <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Podano nieprawidłowy typ błędu"
-      unexpected: "Wystąpił nieoczekiwany błąd"
       bot_user_update_failed: "Nie udało się zaktualizować użytkownika bota skanującego spam"
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
@@ -431,9 +428,6 @@ pl_PL:
         discover:
           name: "Odkrywaj"
           description: "Domyślna osobowość używana w funkcji odkrywania (bezpłatne wyszukiwanie)"
-        chat_thread_titler:
-          name: "Tytułowanie wątku czatu"
-          description: "Domyślna persona umożliwiająca automatyczne generowanie tytułów wątków czatu"
       topic_not_found: "Podsumowanie niedostępne, nie znaleziono tematu!"
       summarizing: "Podsumowanie tematu"
       searching: "Wyszukiwanie: '%{query}'"
@@ -652,7 +646,6 @@ pl_PL:
         invalid_seeded_model: "Nie można używać tego modelu z tą funkcją"
         invalid_persona_response_format: "Wybrana osoba musi mieć format odpowiedzi z polem logicznym o nazwie „spam”"
         must_select_model: "Najpierw musisz wybrać LLM"
-        invalid_llm_id: "Wybrany model LLM jest nieprawidłowy"
       endpoints:
         not_configured: "%{display_name} (nie skonfigurowano)"
         configuration_hint:
@@ -671,18 +664,12 @@ pl_PL:
     embeddings:
       delete_failed: "Ten model jest obecnie używany. Najpierw zaktualizuj „wybrany model osadzania sztucznej inteligencji”."
       cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
-      secret_required: "Należy wybrać poświadczenie"
-      secret_not_found: "Wybrane poświadczenie nie istnieje"
       configuration:
         disable_embeddings: "Najpierw musisz wyłączyć opcję „włączone osadzanie sztucznej inteligencji”."
         choose_model: "Najpierw ustaw „osadzenia sztucznej inteligencji wybrane modele”."
         model_test_failed: "Nie udało nam się wygenerować testowego osadzenia z tym modelem. Sprawdź, czy jest poprawnie skonfigurowany."
-    secrets:
-      delete_failed_in_use: "To poświadczenie jest obecnie używane przez co najmniej jeden program LLM lub osadzenia i nie można go usunąć."
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
-      secret_required: "Należy wybrać poświadczenie"
-      secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
       bedrock_missing_auth: "AWS Bedrock wymaga skonfigurowania Access Key ID lub Role ARN"
     ai_staff_action_logger:

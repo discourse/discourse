@@ -216,8 +216,6 @@ he:
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
         description: "מודל המש״ג (LLM) לשימוש כברירת מחדל לכל יכולות הבינה המלאכותית. אם לא צוין מש״ג בהגדרות היכולת או הדמות ייעשה שימוש בזה. אם לא צוין מש״ג כברירת מחדל, ייעשה שימוש במש״ג האחרון שנוצר."
-      llm_selector:
-        none: "ללא"
       features:
         short_title: "יכולות"
         description: "אלו יכולות בינה מלאכותית שזמינות למבקרים באתר שלך. אפשר להגדיר אותן להשתמש בדמויות וב־LLMים (מש״גים) מסוימים ואפשר לשלוט בגישה אליהן על ידי קבוצות."
@@ -337,8 +335,6 @@ he:
           enable_translations: "הפעלת תרגומים אוטומטיים"
         stats:
           title: "סטטיסטיקת תרגום"
-          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
-          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
           eta_minutes:
             one: "דקה"
@@ -467,7 +463,6 @@ he:
         overwrite: "לדרוס"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
-        use_parent_llm: "להשתמש במודל שפה עם פיצול אישיות"
         max_context_posts: "כמות מרבית של פוסטים להקשר"
         max_context_posts_help: "הכמות המרבית של פוסטים לשימוש כהקשר לבינה המלאכותית בעת מענה למשתמש (ריק לברירת מחדל)"
         vision_enabled: ראייה מופעלת
@@ -602,7 +597,6 @@ he:
         enum_value: "ערך מונה"
         add_enum_value: "הוספת ערך מונה"
         edit: "עריכה"
-        test: "הרצת בדיקה"
         delete: "מחיקה"
         saved: "הכלי נשמר"
         confirm_delete: "למחוק את הכלי הזה?"
@@ -610,15 +604,6 @@ he:
           title: "כלי בדיקת בינה מלאכותית"
           run: "הרצת בדיקה"
           result: "תוצאת הבדיקה"
-      secrets:
-        short_title: "פרטי גישה"
-        name: "שם"
-        secret: "ערך"
-        back: "חזרה"
-        save: "שמירה"
-        edit: "עריכה"
-        delete: "מחיקה"
-        embedding: "שילוב (embedding)"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -679,11 +664,8 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-5: "המודל החכם ביותר של Anthropic"
-          anthropic-claude-sonnet-4-5: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-pro: "המודל החכם ביותר של Google"
-          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -744,7 +726,6 @@ he:
           thinking_tokens: "כמות אסימונים המשמשים לחשיבה"
           reasoning_tokens: "כמות אסימונים המשמשים לנימוק"
           disable_temperature: "השבתת טמפרטורה (חלק ממודלי החשיבה אינם תומכים בטמפרטורה)"
-          effort: "רמת מאמץ (Claude Opus 4.5 בלבד)"
       related_topics:
         title: "נושאים קשורים"
         pill: "קשורים"
@@ -848,12 +829,7 @@ he:
         provider_fields:
           model_name: "שם המודל"
         semantic_search: "נושאים (סמנטיקה)"
-        semantic_search_loading: "מתבצע חיפוש אחר תוצאות נוספות עם בינה מלאכותית"
         semantic_search_results:
-          toggle: "מוצגות %{count} תוצאות שנמצאו באמצעות בינה מלאכותית"
-          toggle_hidden: "מוסתרות %{count} תוצאות שנמצאו באמצעות בינה מלאכותית"
-          none: "חיפוש הבינה המלאכותית שלנו לא מצא נושאים, עמך הסליחה"
-          new: "יש ללחוץ על ‚חיפוש’ כדי להתחיל לחפש תוצאות חדשות עם בינה מלאכותית"
           unavailable: "תוצאות בינה מלאכותית לא זמינות"
         semantic_search_tooltips:
           invalid_sort: "יש לסדר את תוצאות החיפוש לפי רלוונטיות להצגת תוצאות בינה מלאכותית"

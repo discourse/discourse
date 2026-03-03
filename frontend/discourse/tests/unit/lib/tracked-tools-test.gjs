@@ -1,4 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
+import { computed } from "@ember/object";
 import { run } from "@ember/runloop";
 import { settled } from "@ember/test-helpers";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
@@ -314,6 +315,92 @@ module("Unit | tracked-tools", function () {
         ["a", "b"],
         "array contains correct items"
       );
+    });
+
+    test("invalidates @computed when TrackedArray contents are mutated", function (assert) {
+      class TestClass {
+        computeCount = 0;
+        @trackedArray items = ["a"];
+
+        @computed("items")
+        get itemCount() {
+          this.computeCount++;
+          return this.items?.length ?? 0;
+        }
+      }
+
+      const instance = new TestClass();
+      assert.strictEqual(instance.itemCount, 1, "initial count is correct");
+      assert.strictEqual(instance.computeCount, 1, "computed evaluated once");
+
+      // In-place mutation via push
+      instance.items.push("b");
+      assert.strictEqual(
+        instance.itemCount,
+        2,
+        "computed invalidated after push"
+      );
+      assert.strictEqual(instance.computeCount, 2, "computed re-evaluated");
+
+      // In-place mutation via splice
+      instance.items.splice(0, 1);
+      assert.strictEqual(
+        instance.itemCount,
+        1,
+        "computed invalidated after splice"
+      );
+      assert.strictEqual(instance.computeCount, 3, "computed re-evaluated");
+
+      // Reference change still works
+      instance.items = ["x", "y", "z"];
+      assert.strictEqual(
+        instance.itemCount,
+        3,
+        "computed invalidated after reference change"
+      );
+      assert.strictEqual(instance.computeCount, 4, "computed re-evaluated");
+    });
+
+    test("invalidates @computed with .[] dependent key on mutations", function (assert) {
+      class TestClass {
+        computeCount = 0;
+        @trackedArray items = [];
+
+        @computed("items.[]")
+        get itemCount() {
+          this.computeCount++;
+          return this.items?.length ?? 0;
+        }
+      }
+
+      const instance = new TestClass();
+      assert.strictEqual(instance.itemCount, 0, "initial count is correct");
+      assert.strictEqual(instance.computeCount, 1, "computed evaluated once");
+
+      instance.items.push("a");
+      assert.strictEqual(
+        instance.itemCount,
+        1,
+        "computed invalidated after push"
+      );
+      assert.strictEqual(instance.computeCount, 2, "computed re-evaluated");
+    });
+
+    test("@computed works with null @trackedArray value", function (assert) {
+      class TestClass {
+        @trackedArray items = null;
+
+        @computed("items")
+        get hasItems() {
+          return this.items != null && this.items.length > 0;
+        }
+      }
+
+      const instance = new TestClass();
+      assert.false(instance.hasItems, "no items when null");
+
+      instance.items = ["a"];
+      assert.true(instance.hasItems, "has items after setting array");
     });
   });
 

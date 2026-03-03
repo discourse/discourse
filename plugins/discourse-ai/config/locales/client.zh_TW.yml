@@ -36,8 +36,6 @@ zh_TW:
             canned_reply:
               label: "回覆"
     discourse_ai:
-      llm_selector:
-        none: "無"
       features:
         back: "上一步"
         disabled: "(停用)"
@@ -115,19 +113,9 @@ zh_TW:
         remove_parameter: "移除"
         parameter_required: "必要設定"
         edit: "編輯"
-        test: "執行測試"
         delete: "刪除"
         test_modal:
           run: "執行測試"
-      secrets:
-        short_title: "憑證"
-        name: "名稱"
-        secret: "價值"
-        back: "上一步"
-        save: "儲存"
-        edit: "編輯"
-        delete: "刪除"
-        embedding: "嵌入"
       llms:
         display_name: "名稱"
         save: "儲存"

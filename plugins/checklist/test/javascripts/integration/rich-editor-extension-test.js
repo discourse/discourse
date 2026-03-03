@@ -43,7 +43,7 @@ module(
       ],
       "handles checkboxes in lists": [
         "* [ ] unchecked list item\n* [x] checked list item",
-        `<ul data-tight="true"><li><p>${unchecked} unchecked list item</p></li><li><p>${checked} checked list item</p></li></ul>`,
+        `<ul data-tight="true"><li class="has-checkbox"><p>${unchecked} unchecked list item</p></li><li class="has-checkbox"><p>${checked} checked list item</p></li></ul>`,
         "* [ ] unchecked list item\n* [x] checked list item",
       ],
       "handles checkboxes with formatting": [
@@ -51,13 +51,8 @@ module(
         `<p>${unchecked} <em>italics</em> and ${checked} <strong>bold</strong></p>`,
         "[ ] *italics* and [x] **bold**",
       ],
-      "does not render escaped opening bracket as checkbox": [
+      "does not render escaped checkbox": [
         "\\[x] not a checkbox",
-        "<p>[x] not a checkbox</p>",
-        "\\[x\\] not a checkbox",
-      ],
-      "does not render escaped closing bracket as checkbox": [
-        "[x\\] not a checkbox",
         "<p>[x] not a checkbox</p>",
         "\\[x\\] not a checkbox",
       ],
@@ -65,6 +60,16 @@ module(
         "\\[x] escaped [x] real",
         `<p>[x] escaped ${checked} real</p>`,
         "\\[x\\] escaped [x] real",
+      ],
+      "preserves checkbox state in ordered lists": [
+        "1. [ ] unchecked\n2. [x] checked",
+        `<ol data-tight="true"><li><p>${unchecked} unchecked</p></li><li><p>${checked} checked</p></li></ol>`,
+        "1. [ ] unchecked\n2. [x] checked",
+      ],
+      "handles nested list with checkboxes": [
+        "* [ ] parent\n  * [x] child",
+        `<ul data-tight="true"><li class="has-checkbox"><p>${unchecked} parent</p><ul data-tight="true"><li class="has-checkbox"><p>${checked} child</p></li></ul></li></ul>`,
+        "* [ ] parent\n  * [x] child",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {

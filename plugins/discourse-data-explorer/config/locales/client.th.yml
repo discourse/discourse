@@ -17,7 +17,6 @@ th:
           yes: "ใช่"
           no: "ไม่ใช่"
       export: "ส่งออก"
-      save: "บันทึกการเปลี่ยนแปลง"
       edit: "แก้ไข"
       delete: "ลบ"
       query_groups: "กลุ่ม"

@@ -13,7 +13,6 @@ sr:
           yes: "Da"
           no: "Ne"
       export: "Izvoz"
-      save: "Sačuvaj izmene"
       edit: "Izmeni"
       delete: "Obriši"
       query_groups: "Grupe"

@@ -70,8 +70,6 @@ function inOptionsForUsers() {
       // Messages
       "all",
       "private",
-      // Search scope
-      "title",
     ],
     "inOptionsForUsers"
   );
@@ -85,6 +83,8 @@ function inOptionsForAll() {
       "pinned",
       "wiki",
       "images",
+      // Search scope
+      "title",
     ],
     "inOptionsForAll"
   );

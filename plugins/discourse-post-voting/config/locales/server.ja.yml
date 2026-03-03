@@ -34,8 +34,11 @@ ja:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "コメントをどうしますか？"
         no_action_comment:
           title: "未対応"
+          description: "コメントをそのままにします。"
         agree_and_keep_comment:
           title: "コメントを保持"
           description: "通報に同意し、コメントを変更しないままにします。"

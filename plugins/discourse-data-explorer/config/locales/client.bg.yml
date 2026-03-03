@@ -19,7 +19,6 @@ bg:
           yes: "Да"
           no: "Не"
       export: "Експорт "
-      save: "Запази промените"
       edit: "Редактирай"
       delete: "Изтрий"
       result_count:

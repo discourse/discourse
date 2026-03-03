@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { tagFor, track, updateTag } from "@glimmer/validator";
 import { meta as metaFor, peekMeta } from "@ember/-internals/meta";
 import { TrackedDescriptor } from "@ember/-internals/metal";
 import { next } from "@ember/runloop";
@@ -239,19 +240,47 @@ export function trackedArray(target, key, desc) {
     set.call(this, ensureTrackedArray(value, key));
   }
 
+  // Bridge TrackedArray content changes to the classic computed property tag
+  // system. Without this, @computed('prop') only invalidates on reference
+  // changes (this.prop = newArray), not on content mutations like push().
+  //
+  // This manually implements the same bridging that @dependentKeyCompat does
+  // (we can't use @dependentKeyCompat directly because it rejects properties
+  // that are already @tracked). The getter captures the TrackedArray's
+  // collection tag via track(), then updates tagFor(obj, key) so that
+  // @computed properties watching this key see content changes.
+  function trackedArrayGetter() {
+    // Read the value outside track() to avoid a tag cycle. get.call(this)
+    // consumes the property's own tag (tagFor(this, key)) via the tracked
+    // storage. If we captured that inside track() and then called updateTag
+    // on the same tag, it would create a self-referential cycle.
+    const value = get.call(this);
+
+    if (value != null) {
+      // Only capture the TrackedArray's collection tag. TrackedArray's Proxy
+      // get trap for 'length' calls getValue(collection), registering the
+      // collection storage as an autotracking dependency. All mutations
+      // (push, pop, splice, etc.) dirty this same storage via
+      // setValue(collection, null).
+      const propertyTag = tagFor(this, key);
+      const collectionTag = track(() => value.length);
+      updateTag(propertyTag, collectionTag);
+    }
+
+    return value;
+  }
+
   // When using EmberObject.create(...), Ember accesses the tracked properties directly
   // through internal references, bypassing the getter/setter defined in this decorator.
   // To work around this, we are using Ember lower level APIs to override the stored references.
   // https://github.com/emberjs/ember.js/blob/d4f7c5c4075bc5b04736e0e965468bdbe6da135c/packages/%40ember/-internals/metal/lib/tracked.ts#L185
   metaFor(target).writeDescriptors(
     key,
-    new TrackedDescriptor(get, trackedArraySetter)
+    new TrackedDescriptor(trackedArrayGetter, trackedArraySetter)
   );
 
   return {
-    get() {
-      return get.call(this);
-    },
+    get: trackedArrayGetter,
     set: trackedArraySetter,
     enumerable: true,
     configurable: true,

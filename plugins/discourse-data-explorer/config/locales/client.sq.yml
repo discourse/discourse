@@ -17,7 +17,6 @@ sq:
           yes: "Po"
           no: "Jo"
       export: "Eksporto"
-      save: "Ruaj ndryshimet"
       edit: "Redaktoni"
       delete: "Fshij"
       result_count:

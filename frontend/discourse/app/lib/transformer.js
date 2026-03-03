@@ -1,11 +1,11 @@
 import { DEBUG } from "@glimmer/env";
 import { capitalize } from "@ember/string";
 import { isTesting } from "discourse/lib/environment";
-import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   BEHAVIOR_TRANSFORMERS,
   VALUE_TRANSFORMERS,
-} from "discourse/lib/transformer/registry";
+} from "discourse/lib/registry/transformers";
+import { consolePrefix } from "discourse/lib/source-identifier";
 
 const CORE_TRANSFORMER = "CORE";
 const PLUGIN_TRANSFORMER = "PLUGIN";
@@ -28,7 +28,7 @@ let skipApplyExceptionOnTests = false;
  *
  * Some checks are performed to ensure there are no repeated names between the multiple transformer types.
  *
- * The list can be edited in `discourse/lib/transformer/registry`
+ * The list can be edited in `discourse/lib/registry/transformers`
  */
 let validTransformerNames = new Map();
 

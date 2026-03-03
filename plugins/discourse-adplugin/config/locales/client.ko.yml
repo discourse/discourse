@@ -26,17 +26,9 @@ ko:
           new_name: "새 집 광고"
           save: "저장"
           delete: "삭제"
-          html: "HTML"
-          categories: "카테고리"
-          groups: "그룹"
           filter_placeholder: "광고 선택 ..."
           more_settings: "자세한 설정"
           preview: "미리 보기"
-          back: "하우스 광고"
-          name: "그룹명"
-          edit: "편집"
-          tabs:
-            settings: "설정"
           topic_list_top:
             title: "주제 목록 인기 광고"
             description: "주제 목록 페이지 상단에 게재 할 광고"

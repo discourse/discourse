@@ -113,6 +113,14 @@ ja:
             persona_id:
               label: "ペルソナ"
               description: "レポートの生成に使用する AI ペルソナ"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "AI ツール"
+              description: "自動化がトリガーされたときに実行する AI ツール"
+            llm_model:
+              label: "LLM モデル"
+              description: "llm.generate() を使用するツールの言語モデル (オプション)"
         llm_persona_triage:
           fields:
             persona:
@@ -159,6 +167,15 @@ ja:
             flag_post:
               label: "投稿を通報"
               description: "投稿を通報 (迷惑またはレビュー対象)"
+            notify_author_pm:
+              label: "PM で作成者に通知する"
+              description: "作成者の投稿がキューに追加されて削除された場合に、その作成者に個人メッセージを送信します"
+            notify_author_pm_user:
+              label: "PM 送信者"
+              description: "PM を送信するユーザー (デフォルトはシステム)"
+            notify_author_pm_message:
+              label: "PM の内容"
+              description: "作成者に送信するオプションのカスタムメッセージ"
             include_personal_messages:
               label: "個人メッセージを含める"
               description: "個人メッセージのスキャンとトリアージも行う"
@@ -171,17 +188,48 @@ ja:
             max_output_tokens:
               label: "最大出力トークン"
               description: "指定すると、モデルが生成できるトークンの最大数に上限が設定されます。LLM の最大出力トークン制限に従います。"
+        llm_tagger:
+          tag_mode:
+            manual: "特定のタグリストを使用する (下で構成)"
+            discover: "AI にあらゆるサイトタグの発見と使用を任せる"
+          fields:
+            tagger_persona:
+              label: "AI ペルソナ"
+              description: "トピックの分析とタグ付けに使用する AI ペルソナ"
+            tag_mode:
+              label: "タグ選択モード"
+              description: "AI によるタグの選択方法を選択します"
+            available_tags:
+              label: "利用可能なタグ"
+              description: "AI が選択できるタグ (手動モードでのみ使用)"
+            confidence_threshold:
+              label: "信頼しきい値"
+              description: "提案タグを適用するために必要な最低信頼度 (0～100)"
+            max_tags_per_post:
+              label: "投稿当たりの最大タグ数"
+              description: "1 つの投稿に適用可能なタグの最大数"
+            max_post_tokens:
+              label: "最大投稿トークン"
+              description: "分析する投稿コンテンツのトークンの最大数"
+            allow_restricted_tags:
+              label: "制限されたタグを許可する"
+              description: "権限や表示状態が制限されたタグを AI が提案して適用することを許可します。"
+            max_posts_for_context:
+              label: "コンテキストの最大投稿数"
+              description: "分析コンテキストに含めるトピックの最大投稿数 (デフォルト: 5)"
+            allow_system_posts:
+              label: "システム投稿を許可する"
+              description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
       default_llm:
         title: "デフォルトの LLM モデル"
         description: "すべての AI 機能に使用するデフォルトの LLM モデル。これは、機能の構成またはペルソナで LLM が指定されていない場合に使用されます。デフォルトの LLM が指定されていない場合、最後に作成された LLM が使用されます。"
-      llm_selector:
-        none: "なし"
       features:
         short_title: "機能"
         description: "これらは、サイトの訪問者が使用できる AI 機能です。これらは、特定のペルソナと LLM を使用するために構成することができ、グループごとにアクセスを制御できます。"
         back: "戻る"
+        settings_save_error: "一部の設定を保存できませんでした。"
         disabled: "(無効)"
         persona:
           other: "ペルソナ:"
@@ -199,6 +247,11 @@ ja:
           bot: "チャットボット"
           name: "ボット"
           description: "個人メッセージ、フォーラム、およびチャットで質問への回答とユーザーの支援を行えるチャットボット"
+          setting_groups:
+            settings: "基本設定"
+            access_control: "アクセス制御"
+            ui_settings: "UI 設定"
+            integrations: "統合"
         nav:
           configured: "構成済み"
           unconfigured: "未構成"
@@ -213,20 +266,31 @@ ja:
           description: "訪問者がトピックを要約できる要約ボタンを使用可能にします"
           topic_summaries: "トピックの要約"
           gists: "トピックリストの短い要約"
+          setting_groups:
+            settings: "基本設定"
+            gists: "要点"
+            backfill: "バックフィル"
         search:
           name: "検索"
           description: "クエリに対して AI が生成した回答を提供することで、検索エクスペリエンスを強化します"
           discoveries: "発見"
+          setting_groups:
+            settings: "基本設定"
         embeddings:
           name: "埋め込み"
           description: "テキストのセマンティック表現を生成することで、関連トピックや AI 検索などの機能を強化します"
           hyde: "HyDE"
           setting_groups:
+            model_settings: "モデル設定"
             related_topics: "関連トピック"
+            semantic_search: "セマンティック検索"
         discord:
           name: "Discord 統合"
           description: "Discord チャンネルを検索する機能を追加します"
           search: "Discord 検索"
+          setting_groups:
+            settings: "基本設定"
+            discord_configuration: "Discord の構成"
         inference:
           name: "推論された概念"
           description: "トピックと投稿を関心分野 / ラベルに分類します。"
@@ -234,6 +298,9 @@ ja:
           match_concepts: "概念の照合"
           deduplicate_concepts: "概念の重複排除"
           setting_groups:
+            settings: "基本設定"
+            topic_criteria: "トピック基準"
+            post_criteria: "投稿基準"
             personas: "ペルソナ"
         ai_helper:
           name: "ヘルパー"
@@ -250,6 +317,8 @@ ja:
           translator: "翻訳ツール"
           post_illustrator: "イラスト投稿ツール"
           setting_groups:
+            access_permissions: "アクセスと権限"
+            enabled_features: "有効な機能"
             automation: "自動化"
             personas: "ペルソナ"
         translation:
@@ -259,8 +328,14 @@ ja:
           post_raw_translator: "投稿の生の翻訳ツール"
           topic_title_translator: "トピックタイトルの翻訳ツール"
           short_text_translator: "短いテキストの翻訳ツール"
+          schedule_untranslated: "翻訳スケジュール"
+          schedule_topic_success:
+            other: "%{count} 件の未翻訳投稿の翻訳をスケジュールしました。"
+          schedule_topic_error: "翻訳をスケジュールできませんでした。もう一度お試しください。"
           setting_groups:
+            settings: "基本設定"
             personas: "ペルソナ"
+            backfill_and_limits: "バックフィルと制限"
         spam:
           name: "迷惑"
           description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"
@@ -279,10 +354,16 @@ ja:
       translations:
         title: "翻訳"
         description: "フォーラムのすべてのコンテンツをユーザーの優先言語に自動的に翻訳します"
+        supported_locales: "サポートされている言語"
+        supported_locales_description: "このサイト設定では、訪問者も投稿の翻訳に貢献できます。"
         admin_actions:
           translation_settings: "翻訳の設定"
           localization_settings: "ローカリゼーションの設定"
+          enable_translations: "自動翻訳を有効にする"
         stats:
+          title: "翻訳の統計"
+          backfill_disabled: "バックフィルは無効です。新しい投稿のみが翻訳されます。"
+          backfill_message: "%{date} 以降のすべての投稿を翻訳するように<a href='%{settingsUrl}'>バックフィル設定</a>が構成されています。これには %{eta} かかることが予測されます。"
           eta_minutes:
             other: "%{count} 分"
           eta_hours:
@@ -290,8 +371,19 @@ ja:
           eta_days:
             other: "%{count} 日"
         progress_chart:
+          title: "翻訳の進捗状況"
+          data_label: "%{percentage}%"
+          tooltip_translated: "全 %{total} 件中 %{done} 件の %{language} 以外の投稿が翻訳されました"
           bar_done:
             other: "投稿 %{count} 件"
+        translations_menu:
+          translate:
+            label: "投稿を翻訳する"
+            title: "この投稿をサポートされているすべての言語に翻訳する"
+            confirm: "これにより、この投稿の既存の翻訳が更新されます。よろしいですか？"
+            success: "投稿は翻訳に送信されました"
+        credit_limit_warning: "クレジット制限により翻訳は一時停止されています。クレジットが %{reset_time} にリセットされたら再開します。"
+        credit_limit_warning_no_time: "クレジット制限により翻訳は一時停止されています。クレジットがリセットされたら再開します。"
       spam:
         short_title: "迷惑"
         title: "迷惑処理の構成"
@@ -317,7 +409,10 @@ ja:
           post_url_label: "投稿の URL または ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 または投稿 ID"
           result: "結果"
+          reason: "推論"
           llm: "LLM"
+          scan_history: "スキャン履歴"
+          sent_message: "送信したメッセージ"
           system_prompt: "システムプロンプト"
           scan_log: "スキャンログ"
           run: "テストを実行"
@@ -340,6 +435,7 @@ ja:
         feature: "機能"
         usage_count: "使用回数"
         model: "モデル"
+        credits_remaining: "クレジット残量"
         models_breakdown: "モデルごとの使用状況"
         users_breakdown: "ユーザーごとの使用状況"
         all_features: "すべての機能"
@@ -349,6 +445,8 @@ ja:
         request_tokens: "リクエストトークン"
         response_tokens: "レスポンストークン"
         net_request_tokens: "ネットリクエストトークン"
+        cache_read_tokens: "キャッシュ読み取りトークン"
+        cache_write_tokens: "キャッシュ書き込みトークン"
         cached_tokens: "キャッシュされたトークン"
         cached_request_tokens: "キャッシュされたリクエストトークン"
         total_spending: "推定コスト"
@@ -356,12 +454,18 @@ ja:
         no_models: "モデル使用状況データが見つかりません"
         no_features: "機能使用状況データが見つかりません"
         total: "総合"
+        included_in_plan: "プランに含まれる"
+        included_models: "含まれる使用量"
+        billed_models: "請求される使用量"
+        cost: "料金"
         subheader_description: "トークンは、LLM がテキストを理解して生成するために使用する基本単位であり、使用状況データがコストに影響する可能性があります"
         stat_tooltips:
           total_requests: "Discourse を通じて LLM に行われたすべてのリクエスト"
           total_tokens: "LLM のプロンプトに使用されるすべてのトークン"
           request_tokens: "ユーザーが述べることを LLM が理解しようとする際に使用されるトークン"
           response_tokens: "LLM がプロンプトに応答する際に使用されるトークン"
+          cache_read_tokens: "LLM がパフォーマンスとコストを最適化するためにキャッシュから再利用する、過去に処理されたリクエストトークン"
+          cache_write_tokens: "以降での再利用に備えてキャッシュに書き込まれたリクエストトークン"
           cached_tokens: "LLM がパフォーマンスとコストを最適化するために再利用する、過去に処理されたリクエストトークン"
           total_spending: "LLM 構成設定に追加された指定のコストメトリクスに基づいて LLM が使用する全トークンの累積コスト"
         periods:
@@ -369,6 +473,7 @@ ja:
           last_week: "先週"
           last_month: "先月"
           custom: "カスタム..."
+        credit_allocations: "クレジットの割り当て"
       ai_persona:
         ai_tools: "ツール"
         tool_strategies:
@@ -384,7 +489,6 @@ ja:
         overwrite: "上書き"
         description: "説明"
         no_llm_selected: "言語モデルは選択されていません"
-        use_parent_llm: "ペルソナの言語モデルを使用する"
         max_context_posts: "最大コンテキスト投稿数"
         max_context_posts_help: "AI がユーザーに返答するときにコンテキストとして使用する投稿の最大数。(デフォルトの場合は空白)"
         vision_enabled: ビジョン対応
@@ -394,6 +498,8 @@ ja:
           low: 低品質 - 最も安い (256x256)
           medium: 中品質 (512x512)
           high: 高品質 - 最も遅い (1024x1024)
+        show_thinking: 思考中を示す
+        show_thinking_help: エンドユーザーに言語モデルの内部的な思考とツールの呼び出しを表示します。
         mentionable: メンションを許可
         mentionable_help: 有効にすると、許可されているグループのユーザーは投稿内でこのユーザーをメンションでき、AI はこのペルソナとして返答します。
         user: ユーザー
@@ -517,7 +623,6 @@ ja:
         enum_value: "列挙型値"
         add_enum_value: "列挙型値を追加"
         edit: "編集"
-        test: "テストを実行"
         delete: "削除"
         saved: "ツールが保存されました"
         confirm_delete: "このツールを削除してもよろしいですか？"
@@ -525,15 +630,6 @@ ja:
           title: "AI ツールのテスト"
           run: "テストを実行"
           result: "テストの結果"
-      secrets:
-        short_title: "資格情報"
-        name: "名前"
-        secret: "値"
-        back: "戻る"
-        save: "保存"
-        edit: "編集"
-        delete: "削除"
-        embedding: "埋め込み"
       llms:
         short_title: "LLM"
         no_llms: "まだ LLM がありません"
@@ -547,9 +643,12 @@ ja:
         url: "モデルをホストするサービスの URL"
         api_key: "モデルをホストするサービスの API キー"
         vision_enabled: "ビジョン対応"
+        allowed_attachment_types: "許可される添付ファイル"
+        attachment_types_placeholder: "拡張子を選択または入力 (pdf、txt、docxなど)"
         ai_bot_user: "AI ボットユーザー"
         cost_input: "入力コスト"
         cost_cached_input: "キャッシュ入力コスト"
+        cost_cache_write: "キャッシュ書き込みコスト"
         cost_output: "出力コスト"
         save: "保存"
         edit: "編集"
@@ -577,6 +676,11 @@ ja:
           max_tokens_required: "最大使用量が設定されていない場合は設定する必要があります"
           max_usages_help: "このグループの各ユーザーが指定された期間内に AI モデルを使用できる最大回数。この使用量制限はグループ全体で共有されるのではなく、ユーザーごとに追跡されます。"
           max_usages_required: "最大トークンが設定されていない場合は設定する必要があります"
+        credit_allocation:
+          credits_remaining: "クレジット残り %{remaining} / %{total} (%{percentage}%)"
+          soft_limit_warning: "このモデルの今日の AI クレジット残量は %{percentage}% です"
+          hard_limit_warning: "このモデルの AI クレジットがなくなりました。このモデルを使用する AI 機能は %{reset_date} まで利用できません"
+          next_reset: "クレジットは %{time} にリセットされます"
         usage:
           ai_bot: "AI ボット"
           ai_helper: "ヘルパー (%{persona})"
@@ -590,9 +694,8 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-5: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-5: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
+          google-gemini-3-pro: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -609,6 +712,7 @@ ja:
           title: "テストを実行"
           running: "テストを実行中…"
           success: "成功！"
+          invalid_config: "まず構成内の次のエラーを修正します:"
           failure: "モデルに接続しようとした際に、次のエラーが返されました: %{error}"
         hints:
           max_prompt_tokens: "1 つのリクエストでモデルが処理できるトークンの最大数"
@@ -616,7 +720,10 @@ ja:
           display_name: "サイトのインターフェース全体でこのモデルを参照するために使用される名前。"
           name: "これを API 呼び出しに含めて、使用するモデルを指定します"
           vision_enabled: "有効にすると、AI は画像を理解しようとします。ビジョンのサポートに使用されているモデルに応じます。Anthropic、Google、および OpenAI の最新モデルでサポートされています。"
+          allowed_attachment_types: "モデルに転送する添付ファイルの種類を選択します。添付ファイルを許可しない場合は空白のままにします。画像はビジョンで制御されます。"
           cost_input: "このモデルの 100 万トークン当たりの入力コスト"
+          cost_cached_input: "このモデルの 100 万トークン当たりのキャッシュされた入力コスト (プロンプトキャッシュから読み取る場合)"
+          cost_cache_write: "このモデルの 100 万トークン当たりのキャッシュ書き込みコスト (プロンプトキャッシュから書き込む場合)"
           cost_output: "このモデルの 100 万トークン当たりの出力コスト"
           cost_measure: "$/100 万トークン"
         providers:
@@ -633,9 +740,11 @@ ja:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "カスタム"
         provider_fields:
           access_key_id: "AWS Bedrock アクセスキー ID"
+          role_arn: "AWS Bedrock のロール ARN"
           region: "AWS Bedrock リージョン"
           organization: "オプションの OpenAI 組織 ID"
           disable_system_prompt: "プロンプトでシステムメッセージを無効にする"
@@ -651,6 +760,10 @@ ja:
           reasoning_tokens: "推論に使用されるトークンの数"
           disable_temperature: "Temperature を無効にする (一部の試行モデルは Temperature をサポートしていません)"
           disable_top_p: "Top P を無効にする (一部の試行モデルは Top P をサポートしていません)"
+          prompt_caching: "プロンプトキャッシュモード"
+          prompt_caching_never: "なし - プロンプトキャッシュを使用しない"
+          prompt_caching_tool_results: "ツールの結果 - ツールの結果が存在する場合にキャッシュする (推奨)"
+          prompt_caching_always: "常時 - 常にプロンプトキャッシュを使用する"
       related_topics:
         title: "関連トピック"
         pill: "関連"
@@ -701,6 +814,13 @@ ja:
           credits: "AI によるキャプション"
           save_caption: "保存"
         no_content_error: "先に AI アクションを実行するコンテンツを追加してください"
+      errors:
+        credit_limit_dialog:
+          title: "AI クレジットの上限に達しました"
+          message_user: "このコミュニティーは今日の AI クレジット上限に達しました。%{reset_time} 以降にもう一度お試しいただくか、詳細についてサイト管理者にお問い合わせください。"
+          message_without_time_user: "このコミュニティーは今日の AI クレジット上限に達しました。上限がリセットされるまで応答を利用できません。詳細についてサイト管理者にお問い合わせください。"
+          message_admin: "ご利用のプランの AI クレジット上限に達しました。%{reset_time} に上限がリセットされるまで応答は利用できません。"
+          message_without_time_admin: "ご利用のプランの AI クレジット上限に達しました。 上限がリセットされるまで応答は利用できません。"
       reviewables:
         model_used: "使用モデル:"
         accuracy: "精度:"
@@ -754,13 +874,9 @@ ja:
         provider_fields:
           model_name: "モデル名"
         semantic_search: "トピック (セマンティック)"
-        semantic_search_loading: "AI を使ってさらに多くの結果を検索中"
         semantic_search_results:
-          toggle: "AI で見つかった %{count} 件の結果を表示中"
-          toggle_hidden: "AI で見つかった %{count} 件の結果を非表示"
-          none: "AI 検索ではどのトピックも一致しませんでした"
-          new: "「検索」を押すと、AI が新しい結果を検索し始めます"
           unavailable: "AI の結果は利用できません"
+          zero_results_expanded: "結果は見つかりませんでした。%{count} 件の AI 結果が表示されています"
         semantic_search_tooltips:
           results_explanation: "有効にすると、追加の AI 検索結果が下に追加されます。"
           invalid_sort: "AI 結果を表示するには、検索結果を関連性で並べ替える必要があります"
@@ -793,6 +909,8 @@ ja:
           copy_response: "返答をコピー"
           request_tokens: "リクエストトークン:"
           response_tokens: "レスポンストークン:"
+          cache_read_tokens: "キャッシュ読み取りトークン:"
+          cache_write_tokens: "キャッシュ書き込みトークン:"
           request: "リクエスト"
           response: "応答"
           next_log: "次へ"
@@ -874,7 +992,19 @@ ja:
         topic:
           title: "トピックの要約"
           close: "要約パネルを閉じる"
+          regenerate_ai_summaries: "AI 要約を再生成する"
+          regen_modal_description: "このトピックに対して再生成する AI 要約の種類を選択します。"
+          bulk_regen_description: "選択されたトピックに対して再生成する AI 要約の種類を選択します。"
+          regenerate_gists_option: "短い要約 (要点)"
           regenerate_summaries_option: "トピックの要約"
+          regenerate_gists_success:
+            other: "%{count} 件の短い要約を再生成しました"
+          regenerate_gists_error:
+            other: "%{count} 件の短い要約の再生成に失敗しました"
+          regenerate_topic_summary_success:
+            other: "%{count} 件のトピック要約を再生成しました"
+          regenerate_topic_summary_error:
+            other: "%{count} 件のトピック要約の再生成に失敗しました"
         topic_list_layout:
           button:
             compact: "コンパクト"
@@ -888,6 +1018,7 @@ ja:
         loading_convo: "会話を読み込み中"
         collapse: "折りたたむ"
         timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
+        user_setting: "発見の AI 検索を有効にする"
         tooltip:
           header: "AI 搭載の検索"
           content: "%{model} による自然言語検索"

@@ -176,8 +176,6 @@ nl:
       default_llm:
         title: "Standaard LLM-model"
         description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of persona. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
-      llm_selector:
-        none: "Geen"
       features:
         short_title: "Functies"
         description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke persona's en LLM's en de toegang kan per groep worden beheerd."
@@ -388,7 +386,6 @@ nl:
         overwrite: "Overschrijven"
         description: "Beschrijving"
         no_llm_selected: "Geen taalmodel geselecteerd"
-        use_parent_llm: "Taalmodel van persona gebruiken"
         max_context_posts: "Maximaal aantal contextberichten"
         max_context_posts_help: "Het maximale aantal berichten dat als context voor de AI kan worden gebruikt bij het reageren op een gebruiker. (Leeg voor standaardinstelling)"
         vision_enabled: Zicht ingeschakeld
@@ -522,7 +519,6 @@ nl:
         enum_value: "Enumwaarde"
         add_enum_value: "Enumwaarde toevoegen"
         edit: "Bewerken"
-        test: "Test uitvoeren"
         delete: "Verwijderen"
         saved: "Tool opgeslagen"
         confirm_delete: "Weet je zeker dat je deze tool wilt verwijderen?"
@@ -530,15 +526,6 @@ nl:
           title: "AI-tool testen"
           run: "Test uitvoeren"
           result: "Testresultaat"
-      secrets:
-        short_title: "Aanmeldgegevens"
-        name: "Naam"
-        secret: "Waarde"
-        back: "Terug"
-        save: "Opslaan"
-        edit: "Bewerken"
-        delete: "Verwijderen"
-        embedding: "Insluiting"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -596,10 +583,7 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-5: "Het intelligentste model van Antropic"
-          anthropic-claude-sonnet-4-5: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
-          open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"
@@ -762,12 +746,7 @@ nl:
         provider_fields:
           model_name: "Modelnaam"
         semantic_search: "Topics (semantisch)"
-        semantic_search_loading: "Zoeken naar meer resultaten met behulp van AI"
         semantic_search_results:
-          toggle: "%{count} resultaten gevonden met AI worden weergegeven"
-          toggle_hidden: "%{count} resultaten gevonden met AI zijn verborgen"
-          none: "Sorry, AI zoeken heeft geen overeenkomende topics gevonden"
-          new: "Druk op 'Zoeken' om nieuwe resultaten te zoeken met AI"
           unavailable: "AI-resultaten niet beschikbaar"
         semantic_search_tooltips:
           results_explanation: "Als dit is ingeschakeld, worden hieronder extra AI-zoekresultaten toegevoegd."

@@ -14,11 +14,9 @@ nb_NO:
       or: "eller"
       admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
       title: "Datautforsker"
-      create: "Opprett ny"
       create_placeholder: "Spørringsnavn…"
       import:
         label: "Importer"
-        modal: "Importer en spørring"
       help:
         label: "Hjelp"
       schema:
@@ -29,11 +27,8 @@ nb_NO:
           no: "Nei"
           null_: "Null"
       export: "Eksporter"
-      save: "Lagre endringer"
-      undo: "Forkast endringer"
       edit: "Rediger"
       delete: "Slett"
-      recover: "Angre sletting av spørring"
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
@@ -43,7 +38,6 @@ nb_NO:
       query_groups: "Grupper"
       query_description: "Beskrivelse"
       explain_label: "Inkluder spørringsplan?"
-      save_params: "Sett forvalg"
       reset_params: "Tilbakestill"
       search_placeholder: "Søk…"
     group:

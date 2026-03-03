@@ -1331,6 +1331,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, only: %i[index create update destroy]
     post "categories/reorder" => "categories#reorder"
+    get "categories/types" => "categories#types"
     get "categories/find" => "categories#find"
     post "categories/search" => "categories#search"
     get "categories/hierarchical_search" => "categories#hierarchical_search"
@@ -1357,6 +1358,8 @@ Discourse::Application.routes.draw do
           format: "html",
         }
     get "/new-category" => "categories#show", :constraints => { format: "html" }
+    get "/new-category/setup" => "categories#show", :constraints => { format: "html" }
+    get "/new-category/:tab" => "categories#show", :constraints => { format: "html" }
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", :format => :rss
     scope path: "c/*category_slug_path_with_id" do

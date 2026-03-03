@@ -34,8 +34,6 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
-      llm_selector:
-        none: "Không"
       features:
         back: "Quay lại"
         disabled: "(vô hiệu hóa)"
@@ -123,15 +121,6 @@ vi:
         parameter_required: "Bắt buộc"
         edit: "Sửa"
         delete: "Xóa"
-      secrets:
-        short_title: "Thông tin đăng nhập"
-        name: "Tên"
-        secret: "Giá trị"
-        back: "Quay lại"
-        save: "Lưu lại"
-        edit: "Sửa"
-        delete: "Xóa"
-        embedding: "Nhúng"
       llms:
         display_name: "Tên"
         save: "Lưu lại"
@@ -202,12 +191,7 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
-        semantic_search_loading: "Tìm kiếm thêm kết quả bằng AI"
         semantic_search_results:
-          toggle: "Xem %{count} kết quả tìm thấy bằng AI"
-          toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
-          none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
-          new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
           unavailable: "Kết quả AI không khả dụng"
           zero_results_expanded: "Không tìm thấy kết quả, hiển thị %{count} kết quả AI"
         semantic_search_tooltips:

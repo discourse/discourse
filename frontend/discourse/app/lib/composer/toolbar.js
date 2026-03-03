@@ -1,5 +1,5 @@
 // @ts-check
-import { action } from "@ember/object";
+import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { translateModKey } from "discourse/lib/utilities";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
@@ -134,6 +134,10 @@ export class ToolbarBase {
 
     // Popup menu option item shortcut bindings and title text.
     if (buttonAttrs.popupMenu) {
+      // Default action passes toolbarEvent to option.action
+      buttonAttrs.popupMenu.action ??= (option) =>
+        option.action(this.context.newToolbarEvent());
+
       buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
           const shortcutKeyTranslated = translateModKey(
@@ -181,6 +185,8 @@ export class ToolbarBase {
  * Standard editor toolbar with default buttons
  */
 export default class Toolbar extends ToolbarBase {
+  #listOptions;
+
   constructor(opts) {
     super(opts);
 
@@ -269,7 +275,8 @@ export default class Toolbar extends ToolbarBase {
 
                 return false;
               },
-              action: this.onHeadingMenuAction.bind(this),
+              action: (toolbarEvent) =>
+                toolbarEvent.applyHeading(headingLevel, "heading"),
             });
           }
           headingOptions.push({
@@ -281,11 +288,10 @@ export default class Toolbar extends ToolbarBase {
             showActiveIcon: true,
             shortcut: "Alt+0",
             active: ({ state }) => state?.inParagraph,
-            action: this.onHeadingMenuAction.bind(this),
+            action: (toolbarEvent) => toolbarEvent.applyHeading(0, "heading"),
           });
           return headingOptions;
         },
-        action: this.onHeadingMenuAction.bind(this),
       },
     });
 
@@ -326,27 +332,24 @@ export default class Toolbar extends ToolbarBase {
       });
 
       this.addButton({
-        id: "bullet",
-        group: "extras",
-        icon: "list-ul",
-        shortcut: "Shift+8",
-        title: "composer.ulist_title",
-        perform: (e) => e.applyList("* ", "list_item"),
-        active: ({ state }) => state.inBulletList,
-      });
-
-      this.addButton({
         id: "list",
         group: "extras",
-        icon: "list-ol",
-        shortcut: "Shift+7",
-        title: "composer.olist_title",
-        perform: (e) =>
-          e.applyList(
-            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-            "list_item"
-          ),
-        active: ({ state }) => state.inOrderedList,
+        active: ({ state }) => {
+          return this.getListPopupMenuOptions().some((option) =>
+            option.active({ state })
+          );
+        },
+        icon: ({ state }) => {
+          return (
+            this.getListPopupMenuOptions().find((option) =>
+              option.active({ state })
+            )?.icon || "list-ul"
+          );
+        },
+        title: "composer.list_title",
+        popupMenu: {
+          options: () => this.getListPopupMenuOptions(),
+        },
       });
     }
 
@@ -362,16 +365,46 @@ export default class Toolbar extends ToolbarBase {
     }
   }
 
-  @action
-  onHeadingMenuAction(menuItem) {
-    let level;
+  getListPopupMenuOptions() {
+    this.#listOptions ??= [
+      {
+        name: "list-bullet",
+        icon: "list-ul",
+        label: "composer.ulist_title",
+        shortcut: "Shift+8",
+        showActiveIcon: true,
+        active: ({ state }) => state?.inBulletList,
+        action: (toolbarEvent) => {
+          if (
+            !toolbarEvent.commands?.toggleBulletList ||
+            !toolbarEvent.commands.toggleBulletList()
+          ) {
+            toolbarEvent.applyList("* ", "list_item");
+          }
+        },
+      },
+      {
+        name: "list-ordered",
+        icon: "list-ol",
+        label: "composer.olist_title",
+        shortcut: "Shift+7",
+        showActiveIcon: true,
+        active: ({ state }) => state?.inOrderedList,
+        action: (toolbarEvent) => {
+          if (
+            !toolbarEvent.commands?.toggleOrderedList ||
+            !toolbarEvent.commands.toggleOrderedList()
+          ) {
+            toolbarEvent.applyList(
+              (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+              "list_item"
+            );
+          }
+        },
+      },
+      ...customPopupMenuOptions.filter((option) => option.menu === "list"),
+    ];
 
-    if (menuItem.name === "heading-paragraph") {
-      level = 0;
-    } else {
-      level = parseInt(menuItem.name.split("-")[1], 10);
-    }
-
-    this.context.newToolbarEvent().applyHeading(level, "heading");
+    return this.#listOptions;
   }
 }

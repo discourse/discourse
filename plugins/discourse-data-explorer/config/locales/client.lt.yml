@@ -19,7 +19,6 @@ lt:
           yes: "Taip"
           no: "Ne"
       export: "Eksportuoti"
-      save: "Išsaugoti pakeitimus"
       edit: "Redaguoti"
       delete: "Pašalinti"
       show_table: "Lentelė"

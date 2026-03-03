@@ -84,14 +84,14 @@ export default class ComposerActionTitle extends Component {
     let editTitle = `
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
       ${userAvatar}
-      <span class="username">${userLink.anchor}</span>
+      <span class="username">${escape(userLink.anchor)}</span>
     `;
 
     if (originalUser) {
       editTitle += `
         ${iconHTML("share", { class: "reply-to-glyph" })}
         ${originalUser.avatar}
-        <span class="original-username">${originalUser.username}</span>
+        <span class="original-username">${escape(originalUser.username)}</span>
       `;
     }
 

@@ -6,6 +6,11 @@
 
 th:
   js:
+    blocks:
+      ghost:
+        status: "สถานะ"
+        hidden: "ถูกซ่อน"
+        failed: "ล้มเหลว"
     number:
       format:
         separator: "."
@@ -233,6 +238,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
+    admin_onboarding_banner:
+      start_posting:
+        back: "กลับ"
     about:
       simple_title: "เกี่ยวกับ"
       title: "เกี่ยวกับ %{title}"
@@ -2388,6 +2396,16 @@ th:
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
+      description: "รายละเอียด"
+      settings:
+        title: "การตั้งค่า"
+        general: "ทั่วไป"
+        back: "กลับ"
+        name: "ชื่อ"
+        name_placeholder: "ชื่อแท็ก"
+      localization:
+        name: "ชื่อ"
+        description: "รายละเอียด"
       sort_by: "เรียงโดย:"
       sort_by_count: "นับ"
       sort_by_name: "ชื่อ"
@@ -2542,6 +2560,11 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
+      reports:
+        group_traffic: "การจราจร"
+        group_members: "สมาชิก"
+        group_security: "ความปลอดภัย"
+        group_other: "อื่นๆ"
       config_sections:
         account:
           title: "บัญชี"
@@ -2615,6 +2638,10 @@ th:
           title: "กลุ่ม"
         backups:
           title: "สำรอง"
+        reports:
+          sub_pages:
+            settings:
+              title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
         permalinks:
@@ -2643,11 +2670,6 @@ th:
         default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
-        result_types:
-          setting:
-            other: "การตั้งค่า"
-          theme:
-            other: "ธีม"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -3300,6 +3322,7 @@ th:
           title: "แสดงในข้อมูลสาธารณะ"
         field_types:
           text: "ข้อความ"
+          date: "วันที่"
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:

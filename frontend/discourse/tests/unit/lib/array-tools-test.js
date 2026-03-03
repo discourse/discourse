@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import {
   addUniqueValuesToArray,
   addUniqueValueToArray,
+  arraySortedByProperties,
   removeValueFromArray,
   removeValuesFromArray,
   uniqueItemsFromArray,
@@ -427,6 +428,98 @@ module("Unit | Lib | array-tools", function () {
       const twice = removeValuesFromArray(once, [1, 2]);
       assert.strictEqual(twice, once, "same reference returned");
       assert.deepEqual(twice, [3], "second call is a no-op");
+    });
+  });
+
+  module("arraySortedByProperties()", function () {
+    test("sorts by a single ascending property", function (assert) {
+      const input = [{ name: "Charlie" }, { name: "Alice" }, { name: "Bob" }];
+      const result = arraySortedByProperties(input, ["name"]);
+
+      assert.deepEqual(
+        result.map((o) => o.name),
+        ["Alice", "Bob", "Charlie"]
+      );
+    });
+
+    test("sorts by a single descending property", function (assert) {
+      const input = [{ age: 10 }, { age: 30 }, { age: 20 }];
+      const result = arraySortedByProperties(input, ["age:desc"]);
+
+      assert.deepEqual(
+        result.map((o) => o.age),
+        [30, 20, 10]
+      );
+    });
+
+    test("sorts by multiple properties with mixed directions", function (assert) {
+      const input = [
+        { group: "B", score: 3 },
+        { group: "A", score: 1 },
+        { group: "A", score: 2 },
+        { group: "B", score: 1 },
+      ];
+      const result = arraySortedByProperties(input, [
+        "group:asc",
+        "score:desc",
+      ]);
+
+      assert.deepEqual(
+        result.map((o) => `${o.group}${o.score}`),
+        ["A2", "A1", "B3", "B1"]
+      );
+    });
+
+    test("supports dot-notation paths", function (assert) {
+      const input = [
+        { badge: { type_id: 3 } },
+        { badge: { type_id: 1 } },
+        { badge: { type_id: 2 } },
+      ];
+      const result = arraySortedByProperties(input, ["badge.type_id"]);
+
+      assert.deepEqual(
+        result.map((o) => o.badge.type_id),
+        [1, 2, 3]
+      );
+    });
+
+    test("returns empty array for non-array input", function (assert) {
+      assert.deepEqual(arraySortedByProperties(null, ["name"]), []);
+      assert.deepEqual(arraySortedByProperties(undefined, ["name"]), []);
+      assert.deepEqual(arraySortedByProperties("string", ["name"]), []);
+    });
+
+    test("does not mutate the original array", function (assert) {
+      const input = [{ v: 3 }, { v: 1 }, { v: 2 }];
+      const snapshot = input.map((o) => o.v);
+      arraySortedByProperties(input, ["v"]);
+
+      assert.deepEqual(
+        input.map((o) => o.v),
+        snapshot
+      );
+    });
+
+    test("handles empty sort definitions", function (assert) {
+      const input = [{ v: 3 }, { v: 1 }];
+      const result = arraySortedByProperties(input, []);
+
+      assert.deepEqual(
+        result.map((o) => o.v),
+        [3, 1],
+        "order is preserved when no sort definitions provided"
+      );
+    });
+
+    test("defaults to ascending when no direction specified", function (assert) {
+      const input = [{ v: 2 }, { v: 1 }, { v: 3 }];
+      const result = arraySortedByProperties(input, ["v"]);
+
+      assert.deepEqual(
+        result.map((o) => o.v),
+        [1, 2, 3]
+      );
     });
   });
 

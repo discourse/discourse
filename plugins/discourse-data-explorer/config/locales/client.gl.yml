@@ -19,7 +19,6 @@ gl:
           yes: "Si"
           no: "Non"
       export: "Exportar"
-      save: "Gardar os cambios"
       edit: "Editar"
       delete: "Eliminar"
       query_groups: "Grupos"

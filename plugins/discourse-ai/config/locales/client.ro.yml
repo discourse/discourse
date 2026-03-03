@@ -57,8 +57,6 @@ ro:
       default_llm:
         title: "Model LLM implicit"
         description: "Modelul LLM implicit de utilizat pentru toate funcțiile IA. Acesta va fi utilizat dacă nu este specificat niciun LLM în configurația funcționalității sau în personaj. Dacă nu este specificat niciun LLM implicit, se va utiliza ultimul LLM creat."
-      llm_selector:
-        none: "Nimic"
       features:
         back: "Înapoi"
         disabled: "(dezactivat)"
@@ -97,8 +95,6 @@ ro:
           enable_translations: "Activează traducerile automate"
         stats:
           title: "Statistici traducere"
-          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
-          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
           backfill_disabled: "Completarea este dezactivată, doar postările noi vor fi traduse."
           eta_minutes:
             one: "un minut"
@@ -165,19 +161,9 @@ ro:
         remove_parameter: "Elimină"
         parameter_required: "Necesare"
         edit: "Editează"
-        test: "Rulează test"
         delete: "Șterge"
         test_modal:
           run: "Rulează test"
-      secrets:
-        short_title: "Date de conectare"
-        name: "Nume"
-        secret: "Valoare"
-        back: "Înapoi"
-        save: "Salvează"
-        edit: "Editează"
-        delete: "Șterge"
-        embedding: "Înglobare"
       llms:
         display_name: "Nume"
         provider: "Furnizor"
@@ -201,9 +187,6 @@ ro:
           ai_helper: "Ajutor (%{persona})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-5: "Cel mai inteligent model de la Anthropic"
-          open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5"
         next:
           title: "Următorul"
         tests:
@@ -215,7 +198,6 @@ ro:
           fake: "Personalizat"
         provider_fields:
           role_arn: "Rol ARN AWS Bedrock"
-          effort: "Nivel de efort (doar Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Anulează"

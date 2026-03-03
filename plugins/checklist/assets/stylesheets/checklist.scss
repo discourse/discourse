@@ -83,8 +83,7 @@ ul li.has-checkbox {
 }
 
 .ProseMirror {
-  // TODO(renato): this is temporary, we should use `has-checkbox` instead
-  li:has(p:first-of-type > span.chcklst-box) {
+  ul > li.has-checkbox {
     list-style-type: none;
 
     .chcklst-box:first-of-type {

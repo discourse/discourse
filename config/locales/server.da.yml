@@ -1345,7 +1345,6 @@ da:
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
-    content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
@@ -1472,7 +1471,6 @@ da:
     cooldown_hours_until_reflag: "Hvor lang tid brugerne skal vente, indtil de kan genanmelde et indlæg"
     reply_by_email_address: "Skabelon for e-mail-adressen i formularen, for eksempel: %%{reply_key}@reply.myforum.com."
     incoming_email_prefer_html: "Brug HTML i stedet for tekst til indgående e-mail."
-    disable_emails: "Forhindre Discourse i at sende nogen form for e-mails. Vælg 'ja' for at deaktivere e-mails for alle brugere. Vælg 'ikke-personale' for at deaktivere e-mails for ikke-personale brugere."
     strip_images_from_short_emails: "Undlad at inkludere billeder fra emails som fylder mindre end 2800 Bytes"
     display_name_on_email_from: "Vis fulde navne på emails fra felter"
     unsubscribe_via_email: "Tillad brugere at afmelde sig fra emails ved at sende en email med \"unsubscribe\" i emne eller indholdsfeltet"
@@ -1582,8 +1580,6 @@ da:
       invalid_alternative_reply_by_email_addresses: "Alle værdier skal indeholde '%{reply_key}' og være forskellige fra notifikations e-mail."
       pop3_polling_authentication_failed: "POP3 godkendelse mislykkedes. Kontroller venligst dine pop3 legitimationsoplysninger."
       reply_by_email_address_is_empty: "Du skal angive en 'svar via email-adresse', før du aktiverer svar via e-mail."
-      min_username_length_range: "Du kan ikke sætte minimum til mere end maksimum."
-      max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       invalid_hex_value: "Farveværdier skal være 6-cifrede hexadecimale koder."
       empty_selectable_avatars: "Du skal først overføre mindst to valgbare avatarer før du aktiverer denne indstilling."
     placeholder:
@@ -3098,8 +3094,6 @@ da:
     title: "Gå ind i fejlsikret tilstand"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
-  dev_mode:
-    enter: "Enter"
   wizard:
     title: "Discourse Opsætning"
     step:
@@ -3230,13 +3224,9 @@ da:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      no_action_post:
-        title: "Ingen handling"
       delete_post:
         title: "Slet indlæg"
         complete: "Indlæg slettet"
-      no_action_user:
-        title: "Ingen handling"
       delete_user:
         title: "Slet bruger"
         complete: "Bruger slettet"

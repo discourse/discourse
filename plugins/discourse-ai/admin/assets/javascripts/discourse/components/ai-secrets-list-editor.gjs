@@ -40,8 +40,8 @@ export default class AiSecretsListEditor extends Component {
         </DPageSubheader>
 
         {{#if this.hasSecrets}}
-          <table class="d-admin-table ai-secret-list-editor__table">
-            <thead>
+          <table class="d-table ai-secret-list-editor__table">
+            <thead class="d-table__header">
               <tr>
                 <th>{{i18n "discourse_ai.secrets.name"}}</th>
                 <th>{{i18n "discourse_ai.secrets.used_by"}}</th>
@@ -52,13 +52,13 @@ export default class AiSecretsListEditor extends Component {
               {{#each @secrets.content as |secret|}}
                 <tr
                   data-secret-id={{secret.id}}
-                  class="ai-secret-list__row d-admin-row__content"
+                  class="ai-secret-list__row d-table__row"
                 >
-                  <td class="d-admin-row__overview">
+                  <td class="d-table__cell --overview">
                     <strong>{{secret.name}}</strong>
                   </td>
-                  <td class="d-admin-row__detail ai-secret-list__usage">
-                    <div class="d-admin-row__mobile-label">
+                  <td class="d-table__cell --detail ai-secret-list__usage">
+                    <div class="d-table__mobile-label">
                       {{i18n "discourse_ai.secrets.used_by"}}
                     </div>
                     {{#if secret.used_by}}
@@ -102,7 +102,7 @@ export default class AiSecretsListEditor extends Component {
                       </span>
                     {{/if}}
                   </td>
-                  <td class="d-admin-row__controls">
+                  <td class="d-table__cell --controls">
                     <DButton
                       class="btn btn-default btn-small ai-secret-list__edit-button"
                       @label="discourse_ai.secrets.edit"

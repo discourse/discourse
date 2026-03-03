@@ -38,6 +38,8 @@ ja:
           title: "フォントシステム"
         colors:
           title: "色"
+        dialog:
+          title: "ダイアログ"
         icons:
           title: "アイコン"
           full_list: "Font Awesome Icons の全リストを表示"
@@ -59,6 +61,8 @@ ja:
           title: "スタックナビゲーション"
         categories_list:
           title: "カテゴリリスト"
+        topic_link:
+          title: "トピックのリンクとステータス"
         topic_list_item:
           title: "トピックリスト項目"
         topic_statuses:
@@ -99,6 +103,8 @@ ja:
           title: "ヘッダーアイコン"
         spinners:
           title: "スピナー"
+        otp:
+          title: "OTP"
         empty_state:
           title: "エンプティステート"
         tooltips:

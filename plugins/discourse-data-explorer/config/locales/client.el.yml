@@ -8,6 +8,7 @@ el:
   js:
     explorer:
       or: "ή"
+      description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       import:
         label: "Εισαγωγή"
       help:
@@ -19,7 +20,6 @@ el:
           yes: "Ναι "
           no: "Όχι"
       export: "Εξαγωγή"
-      save: "Αποθήκευση αλλαγών"
       edit: "Επεξεργασία"
       delete: "Σβήσιμο"
       result_count:

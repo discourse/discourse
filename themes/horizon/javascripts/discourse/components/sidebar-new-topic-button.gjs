@@ -55,7 +55,7 @@ export default class SidebarNewTopicButton extends Component {
   createNewTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
-      tags: this.tag?.id,
+      tags: this.tag?.name,
     });
   }
 

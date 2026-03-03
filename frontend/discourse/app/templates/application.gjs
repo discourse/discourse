@@ -1,4 +1,5 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
@@ -84,6 +85,10 @@ export default <template>
       }}
     />
 
+    {{#unless @controller.isCurrentAdminRoute}}
+      <BlockOutlet @name="hero-blocks" />
+    {{/unless}}
+
     <div id="main-outlet-wrapper" class="wrap" role="main">
       {{#if @controller.sidebarEnabled}}
         <SidebarWrapper
@@ -99,6 +104,9 @@ export default <template>
       <div id="main-outlet">
         {{#unless @controller.shouldHideScrollableContentAbove}}
           <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+          {{#unless @controller.isCurrentAdminRoute}}
+            <BlockOutlet @name="main-outlet-blocks" />
+          {{/unless}}
 
           {{#if @controller.siteSettings.enable_site_owner_onboarding}}
             <AdminOnboardingBanner />

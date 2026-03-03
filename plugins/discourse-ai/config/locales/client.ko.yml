@@ -38,8 +38,6 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
-      llm_selector:
-        none: "없음"
       features:
         back: "뒤로"
         disabled: "(비활성)"
@@ -134,15 +132,6 @@ ko:
         parameter_required: "필수"
         edit: "편집"
         delete: "삭제"
-      secrets:
-        short_title: "자격 증명"
-        name: "그룹명"
-        secret: "값"
-        back: "뒤로"
-        save: "저장"
-        edit: "편집"
-        delete: "삭제"
-        embedding: "삽입(Embedding)"
       llms:
         display_name: "그룹명"
         provider: "공급자"

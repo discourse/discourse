@@ -176,8 +176,6 @@ it:
       default_llm:
         title: "Modello LLM predefinito"
         description: "Modello LLM predefinito da utilizzare per tutte le funzionalità IA. Verrà utilizzato se non è specificato alcun LLM nella configurazione della funzionalità o del personaggio. Se non è specificato alcun LLM predefinito, verrà utilizzato l'ultimo LLM creato."
-      llm_selector:
-        none: "Nessuna"
       features:
         short_title: "Funzionalità"
         description: "Le funzionalità IA a disposizione dei visitatori del tuo sito web. Possono essere configurate utilizzando personaggi e LLM specifici. I gruppi possono controllarne l'accesso."
@@ -388,7 +386,6 @@ it:
         overwrite: "Sovrascrivi"
         description: "Descrizione"
         no_llm_selected: "Nessun modello linguistico selezionato"
-        use_parent_llm: "Usa modello linguistico personaggi"
         max_context_posts: "Numero massimo di messaggi di contesto"
         max_context_posts_help: "Il numero massimo di post da utilizzare come contesto per l'IA quando si risponde a un utente. (vuoto per impostazione predefinita)"
         vision_enabled: Visione abilitata
@@ -522,7 +519,6 @@ it:
         enum_value: "Valore enumerativo"
         add_enum_value: "Aggiungi valore enumerativo"
         edit: "Modifica"
-        test: "Esegui test"
         delete: "Elimina"
         saved: "Strumento salvato"
         confirm_delete: "Vuoi davvero eliminare questo strumento?"
@@ -530,15 +526,6 @@ it:
           title: "Prova lo strumento IA"
           run: "Esegui test"
           result: "Risultato del test"
-      secrets:
-        short_title: "Credenziali"
-        name: "Nome"
-        secret: "Valore"
-        back: "Indietro"
-        save: "Salva"
-        edit: "Modifica"
-        delete: "Elimina"
-        embedding: "Integrazione"
       llms:
         short_title: "LLM"
         no_llms: "Ancora nessun LLM"
@@ -596,10 +583,7 @@ it:
           other: "Questo modello è attualmente utilizzato dai seguenti elementi: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
-          anthropic-claude-opus-4-5: "Il modello più intelligente di Anthropic"
-          anthropic-claude-sonnet-4-5: "Equilibrio ottimale tra velocità e costi"
           anthropic-claude-haiku-4-5: "Veloce e conveniente"
-          open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente"
         preseeded_model_description: "Modello open source preconfigurato che utilizza %{model}"
         configured:
           title: "LLM configurati"
@@ -762,12 +746,7 @@ it:
         provider_fields:
           model_name: "Nome del modello"
         semantic_search: "Argomenti (semantici)"
-        semantic_search_loading: "Ricerca di altri risultati tramite intelligenza artificiale"
         semantic_search_results:
-          toggle: "Stai vedendo %{count} risultati trovati utilizzando l'IA"
-          toggle_hidden: "%{count} risultati trovati utilizzando l'IA sono stati nascosti"
-          none: "Spiacenti, la nostra ricerca IA non ha trovato argomenti corrispondenti"
-          new: "Premi \"cerca\" per iniziare a cercare nuovi risultati con l'intelligenza artificiale"
           unavailable: "Risultati IA non disponibili"
         semantic_search_tooltips:
           results_explanation: "Se abilitata, verranno aggiunti ulteriori risultati di ricerca IA di seguito."

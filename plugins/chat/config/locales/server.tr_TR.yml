@@ -242,19 +242,14 @@ tr_TR:
         watched_thread:
           one: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajı"
           other: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajları"
-        watched_threads:
-          one: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni ileti dizisi mesajları"
-          other: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni ileti dizisi mesajları"
         chat_dm_1:
           one: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesaj"
           other: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesajlar"
         chat_dm_2: "[%{site_name}] %{name_1} ve %{name_2} kişiden daha yeni mesajlar"
-        chat_dm_3_or_more: "[%{site_name}] %{name} ve %{count} kişiden daha yeni mesajlar"
         chat_channel_1:
           one: "[%{site_name}] %{channel} adlı kanalda yeni mesaj"
           other: "[%{site_name}] %{channel} adlı kanalda yeni mesajlar"
         chat_channel_2: "[%{site_name}] %{channel_1} ve %{channel_2} kanallarında yeni mesajlar"
-        chat_channel_3_or_more: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni mesajlar"
         chat_channel_and_dm: "[%{site_name}] %{channel} adlı kanalda ve %{name} adlı kişiden yeni mesajlar"
       unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
       unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."

@@ -37,9 +37,6 @@ de:
           new_name: "Neue Eigenanzeige"
           save: "Speichern"
           delete: "Löschen"
-          html: "HTML"
-          categories: "Kategorien"
-          groups: "Gruppen"
           filter_placeholder: "Anzeigen auswählen …"
           more_settings: "Weitere Einstellungen"
           show_to_anons: "Für anonyme Benutzer anzeigen"
@@ -49,11 +46,6 @@ de:
           route_chooser_description: "Wähle die Seiten/Routen aus, auf denen diese Anzeige angezeigt werden soll. Lass das Feld und das Feld für die Kategorie leer, um die Anzeige überall anzuzeigen."
           group_chooser_description: "Wähle die Gruppen aus, die diese Anzeige sehen können, oder lass das Feld leer, um die Anzeige allen angemeldeten Benutzern zu zeigen."
           preview: "Vorschau"
-          back: "Eigenanzeigen"
-          name: "Name"
-          edit: "Bearbeiten"
-          tabs:
-            settings: "Einstellungen"
           topic_list_top:
             title: "Anzeigen oben bei der Themenliste"
             description: "Anzeigen, die oben auf den Themenlisten-Seiten gezeigt werden sollen."

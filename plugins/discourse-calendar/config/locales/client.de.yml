@@ -10,7 +10,7 @@ de:
       calendar: "Kalender & Ereignisse"
       site_settings:
         categories:
-          discourse_post_event: "Discourse – Ereignis"
+          discourse_post_event: "Discourse Ereignis"
           discourse_calendar: "Kalender und Ereignisse"
   js:
     notifications:
@@ -45,7 +45,7 @@ de:
         title: "Region"
         none: "Keine"
         use_current_region: "Aktuelle Region verwenden"
-        select_region: "Region auswählen ..."
+        select_region: "Region auswählen …"
         names:
           ae: "Vereinigte Arabische Emirate"
           ar: "Argentinien"

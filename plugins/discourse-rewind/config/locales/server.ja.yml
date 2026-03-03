@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 ja:
+  site_settings:
+    discourse_rewind_enabled: "Discourse Rewind を有効にして、コミュニティーメンバーのアクティビティに関する楽しい年末サマリーを作成する"
+  discourse_rewind:
+    report_failed: "Discourse Rewind レポートの生成に失敗しました。"
+    invalid_year: "Rewind は 1 月または 12 月にのみ生成できます。"
+    user_not_found: "ユーザーが見つからないか、表示できません。"
+    reports_not_cached: "レポートはまだ生成されていません。ページを更新してください。"
+    report_not_found: "レポートが見つかりません。"
+    cannot_share_when_profile_hidden: "Rewind を共有するには、他のユーザーがあなたの公開プロフィールを閲覧できるようにする必要があります。"

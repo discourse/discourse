@@ -36,8 +36,6 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
-      llm_selector:
-        none: "Ništa"
       features:
         back: "Natrag"
         disabled: "(onemogućeno)"
@@ -125,15 +123,6 @@ hr:
         parameter_required: "Potrebno"
         edit: "Uredi"
         delete: "Izbriši"
-      secrets:
-        short_title: "Vjerodajnice"
-        name: "Ime"
-        secret: "Vrijednost"
-        back: "Natrag"
-        save: "Spremi"
-        edit: "Uredi"
-        delete: "Izbriši"
-        embedding: "Ugrađivanje"
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"

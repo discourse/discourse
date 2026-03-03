@@ -4,6 +4,10 @@
 require "composer_messages_finder"
 
 RSpec.describe ComposerMessagesFinder do
+  fab!(:group)
+  fab!(:private_category) { Fabricate(:private_category, group: group) }
+  fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
   describe "delegates work" do
     let(:user) { Fabricate.build(:user) }
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
@@ -39,7 +43,7 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     context "with private message" do
-      fab!(:topic, :private_message_topic)
+      fab!(:topic) { Fabricate(:private_message_topic, user: user) }
 
       context "when starting a new private message" do
         let(:finder) do
@@ -188,6 +192,17 @@ RSpec.describe ComposerMessagesFinder do
         end
       end
     end
+
+    it "returns no message when the user cannot see the topic" do
+      Fabricate(:post, topic: private_topic, user: user)
+      Fabricate(:post, topic: private_topic, user: user)
+      Fabricate(:post, topic: private_topic)
+
+      finder =
+        ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: private_topic.id)
+
+      expect(finder.check_dominating_topic).to be_blank
+    end
   end
 
   describe "#dont_feed_the_trolls" do
@@ -280,6 +295,22 @@ RSpec.describe ComposerMessagesFinder do
 
     it "safely returns from not finding a post" do
       finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: nil)
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+
+    it "returns no message when the user cannot see the topic" do
+      private_post = Fabricate(:post, topic: private_topic, user: author)
+      _flag = Fabricate(:flag_post_action, post: private_post, user: other_user)
+      SiteSetting.dont_feed_the_trolls_threshold = 1
+
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: private_topic.id,
+          post_id: private_post.id,
+        )
+
       expect(finder.check_dont_feed_the_trolls).to be_blank
     end
   end

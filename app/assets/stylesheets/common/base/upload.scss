@@ -12,11 +12,15 @@
     position: relative;
     max-width: 400px;
     width: 100%;
-    height: 80px;
+    height: 125px;
     box-sizing: border-box;
     border-radius: var(--d-input-border-radius);
     background-origin: content-box;
     background-clip: content-box;
+
+    &:has(.lightbox) {
+      height: 85px; // ~125px with controls visible to match above height
+    }
 
     &:focus,
     &:focus-within {

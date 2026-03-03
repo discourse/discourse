@@ -82,6 +82,7 @@ ja:
               help: "例: #channel、@username。"
           errors:
             action_prohibited: "ボットには、そのチャンネルに投稿する権限がありません"
+            channel_not_found: "指定されたチャンネルは Slack に存在しません"
         telegram:
           title: "Telegram"
           param:
@@ -128,6 +129,7 @@ ja:
               help: "チャンネルを説明する名前。Matrix への接続には使用されません。"
             room_id:
               title: "ルーム ID"
+              help: "ルームの「プライベート識別子」。!abcdefghijkl のような形式です"
           errors:
             unknown_token: "アクセストークンが無効です"
             unknown_room: "ルーム ID が無効です"

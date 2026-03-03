@@ -13,7 +13,6 @@ be:
           yes: "Так"
           no: "Не"
       export: "экспарт"
-      save: "Захаваць"
       edit: "Рэдагаваць"
       delete: "Выдаліць"
       query_groups: "групы"

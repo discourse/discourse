@@ -36,7 +36,7 @@ zh_CN:
         header_title: "假期"
         pick_region_description: "选择一个区域以查看该区域的假期。"
         disabled_holidays_description: "已禁用的假期将被排除在管理人员假期日历之外。"
-        header_description: "请选择一个地区以查看该地区的假期。被禁用的假期将从员工假期日历中排除。"
+        header_description: "请选择一个区域以查看该区域的假期。被禁用的假期将从员工假期日历中排除。"
       date: "日期"
       add_to_calendar: "添加到 Google 日历"
       toggle_timezone_offset_title: "切换时区偏移"
@@ -45,7 +45,7 @@ zh_CN:
         title: "区域"
         none: "无"
         use_current_region: "使用当前区域"
-        select_region: "选择一个地区……"
+        select_region: "选择一个区域…"
         names:
           ae: "阿拉伯联合酋长国"
           ar: "阿根廷"

@@ -34,8 +34,6 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
-      llm_selector:
-        none: "Без"
       features:
         back: "Назад"
         disabled: "(деактивирани)"
@@ -117,15 +115,6 @@ bg:
         parameter_required: "Задъжителни"
         edit: "Редактирай"
         delete: "Изтрий"
-      secrets:
-        short_title: "Данни за удостоверяване"
-        name: "Име"
-        secret: "Стойност"
-        back: "Назад"
-        save: "Запази"
-        edit: "Редактирай"
-        delete: "Изтрий"
-        embedding: "Ембедване"
       llms:
         display_name: "Име"
         save: "Запази"

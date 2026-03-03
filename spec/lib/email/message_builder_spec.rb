@@ -115,6 +115,20 @@ RSpec.describe Email::MessageBuilder do
     expect(header_args["x-ms-reactions"]).to eq("disallow")
   end
 
+  describe "recipient_username" do
+    it "sets recipient_username when recipient_user is provided" do
+      user = Fabricate(:user, username: "recipient_user")
+      builder =
+        Email::MessageBuilder.new(user.email, subject: "test", body: "test", recipient_user: user)
+      expect(builder.template_args[:recipient_username]).to eq("recipient_user")
+    end
+
+    it "does not set recipient_username when recipient_user is not provided" do
+      builder = Email::MessageBuilder.new("test@test.com", subject: "test", body: "test")
+      expect(builder.template_args[:recipient_username]).to be_nil
+    end
+  end
+
   describe "include_respond_instructions" do
     context "when include_respond_instructions is false" do
       let(:private_reply) { false }

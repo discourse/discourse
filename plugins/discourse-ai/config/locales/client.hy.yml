@@ -34,8 +34,6 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
-      llm_selector:
-        none: "Ոչ մի"
       features:
         back: "Ետ"
         disabled: "(անջատված)"
@@ -114,15 +112,6 @@ hy:
         parameter_required: "Պարտադիր"
         edit: "Խմբագրել"
         delete: "Ջնջել"
-      secrets:
-        short_title: "Հավատարմագրեր"
-        name: "Անուն"
-        secret: "Արժեք"
-        back: "Ետ"
-        save: "Պահպանել"
-        edit: "Խմբագրել"
-        delete: "Ջնջել"
-        embedding: "Զետեղում"
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"
