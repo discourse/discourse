@@ -454,19 +454,49 @@ class Category < ActiveRecord::Base
     #
     # If you refactor this, test performance on a large database.
 
-    Category.all.each do |c|
+    Category.find_each do |c|
       topics = c.topics.visible
       topics = topics.where.not(id: c.topic_id) if c.topic_id
-      c.topics_year = topics.created_since(1.year.ago).count
-      c.topics_month = topics.created_since(1.month.ago).count
-      c.topics_week = topics.created_since(1.week.ago).count
-      c.topics_day = topics.created_since(1.day.ago).count
 
-      posts = c.visible_posts
-      c.posts_year = posts.created_since(1.year.ago).count
-      c.posts_month = posts.created_since(1.month.ago).count
-      c.posts_week = posts.created_since(1.week.ago).count
-      c.posts_day = posts.created_since(1.day.ago).count
+      # Combine time-based topic counts into a single query
+      topic_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM topics
+        WHERE category_id = :category_id
+          AND visible = true
+          AND deleted_at IS NULL
+          #{c.topic_id ? "AND id != :topic_id" : ""}
+      SQL
+
+      c.topics_year = topic_counts[0]
+      c.topics_month = topic_counts[1]
+      c.topics_week = topic_counts[2]
+      c.topics_day = topic_counts[3]
+
+      # Combine time-based post counts into a single query
+      post_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM posts
+        INNER JOIN topics ON topics.id = posts.topic_id
+        WHERE topics.category_id = :category_id
+          AND topics.visible = true
+          AND posts.deleted_at IS NULL
+          AND posts.user_deleted = false
+          #{c.topic_id ? "AND topics.id != :topic_id" : ""}
+      SQL
+
+      c.posts_year = post_counts[0]
+      c.posts_month = post_counts[1]
+      c.posts_week = post_counts[2]
+      c.posts_day = post_counts[3]
 
       c.save if c.changed?
     end
