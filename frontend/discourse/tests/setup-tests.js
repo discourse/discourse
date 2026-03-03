@@ -350,6 +350,10 @@ export default function setupTests(config) {
     MessageBus.unsubscribe("*");
     localStorage.clear();
     enableLoadMoreObserver();
+
+    // Release the app reference so the destroyed app isn't retained
+    // by this closure until the next test creates a new one.
+    app = null;
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
