@@ -16,6 +16,21 @@ RSpec.describe SiteSettings::DependencyGraph do
     it "topologically sorts the dependencies" do
       expect(depencency_graph.order).to match_array(%i[foo qux bar baz quux])
     end
+
+    context "with circular dependencies" do
+      let(:dependencies) { { foo: [:bar], bar: [:foo] } }
+
+      it "raises an exception" do
+        expect { depencency_graph.order }.to raise_error(
+          described_class::CircularDependency,
+          <<~MESSAGE,
+          Circular dependencies in site settings:
+
+            foo <-> bar
+        MESSAGE
+        )
+      end
+    end
   end
 
   describe "#dependents" do
