@@ -26,18 +26,23 @@ module Plugin
     end
 
     def compile!
-      puts "[Plugin::JSManager] Compiling plugins..."
+      puts "[Plugin::JSManager] Compiling #{Discourse.plugins.count} plugins..."
       start = Time.now
 
-      Parallel.each(Discourse.plugins, in_threads: 1) { |plugin| compile_js_bundle(plugin) }
+      if !GlobalSetting.mini_racer_single_threaded && AssetProcessor.booted?
+        raise "[Plugin::JSManager] Cannot fork for parallel compilation because AssetProcessor is already booted."
+      end
+
+      parallel_count = [Etc.nprocessors, 4].min
+
+      Parallel.each(Discourse.plugins, in_processes: parallel_count) do |plugin|
+        compile_js_bundle(plugin)
+      end
 
       puts "[Plugin::JSManager] Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
     end
 
     def compile_js_bundle(plugin)
-      print "Building #{plugin.directory_name}... "
-      start = Time.now
-
       base_output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}"
       js_dir = "#{base_output_dir}/js/plugins"
       map_dir = "#{base_output_dir}/map/plugins"
@@ -79,7 +84,7 @@ module Plugin
             *tree.keys,
             *tree.values,
             AssetProcessor::BASE_COMPILER_VERSION,
-            AssetProcessor.new.ember_version,
+            AssetProcessor.ember_version,
             minify?.to_s,
           ].join,
         )
@@ -131,8 +136,6 @@ module Plugin
         .glob("#{base_output_dir}/*/*/*")
         .reject { |path| path.include?(filename_suffix) || path.include?("_extra") }
         .each { |path| FileUtils.rm_rf(path) }
-
-      puts "done (#{(Time.now - start).round(2)}s)"
     end
 
     def watch

@@ -243,7 +243,7 @@ class Theme < ActiveRecord::Base
     get_set_cache "compiler_version" do
       dependencies = [
         AssetProcessor::BASE_COMPILER_VERSION,
-        AssetProcessor.new.ember_version,
+        AssetProcessor.ember_version,
         GlobalSetting.cdn_url,
         GlobalSetting.s3_cdn_url,
         GlobalSetting.s3_endpoint,

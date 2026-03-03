@@ -20,6 +20,10 @@ class AssetProcessor
   class TranspileError < StandardError
   end
 
+  def self.booted?
+    !!@ctx
+  end
+
   def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
     processor = new(skip_module: skip_module?(data))
     processor.perform(data, root_path, logical_path, theme_id: theme_id, extension: extension)
@@ -171,6 +175,10 @@ class AssetProcessor
     raise transpile_error
   end
 
+  def self.ember_version
+    v8_call("emberVersion")
+  end
+
   def initialize(skip_module: false)
     @skip_module = skip_module
   end
@@ -227,9 +235,5 @@ class AssetProcessor
 
   def post_css(css:, map:, source_map_file:)
     self.class.v8_call("postCss", css, map, source_map_file, fetch_result_call: "getPostCssResult")
-  end
-
-  def ember_version
-    self.class.v8_call("emberVersion")
   end
 end

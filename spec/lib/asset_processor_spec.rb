@@ -389,7 +389,7 @@ RSpec.describe AssetProcessor do
   end
 
   it "returns the ember version" do
-    expect(AssetProcessor.new.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
+    expect(AssetProcessor.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
 
   it "errors on missing relative imports" do
