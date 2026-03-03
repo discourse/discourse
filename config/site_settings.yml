@@ -2680,6 +2680,10 @@ security:
   moderators_change_post_ownership:
     client: true
     default: false
+  change_post_ownership_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
   moderators_view_emails:
     client: true
     default: false
