@@ -1,7 +1,6 @@
 import { get } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
 import { compare } from "@ember/utils";
-import { isTrackedArray } from "discourse/lib/tracked-tools";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 /**
  * Adds a value to the array if it does not already exist in the array.
@@ -161,7 +160,7 @@ export function uniqueItemsFromArray(array, selector) {
       ? [...new Set(array)]
       : dedupeBy(array, buildSelector(selector));
 
-  return isTrackedArray(array) ? trackedArray(items) : items;
+  return array instanceof TrackedArray ? new TrackedArray(items) : items;
 }
 
 /**

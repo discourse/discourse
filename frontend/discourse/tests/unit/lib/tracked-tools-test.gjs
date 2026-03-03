@@ -1,8 +1,8 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
 import { settled } from "@ember/test-helpers";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import {
   autoTrackedArray,
@@ -10,7 +10,6 @@ import {
   DeferredTrackedSet,
   enumerateTrackedEntries,
   enumerateTrackedKeys,
-  isTrackedArray,
 } from "discourse/lib/tracked-tools";
 
 module("Unit | tracked-tools", function () {
@@ -126,29 +125,6 @@ module("Unit | tracked-tools", function () {
     assert.deepEqual([...player.letters], ["a", "b", "c", "d", "e", "f"]);
   });
 
-  module("isTrackedArray", function () {
-    test("returns true for trackedArray() instances", function (assert) {
-      assert.true(isTrackedArray(trackedArray()), "empty tracked array");
-      assert.true(
-        isTrackedArray(trackedArray([1, 2, 3])),
-        "tracked array with data"
-      );
-    });
-
-    test("returns false for plain arrays", function (assert) {
-      assert.false(isTrackedArray([]), "empty array");
-      assert.false(isTrackedArray([1, 2, 3]), "array with data");
-    });
-
-    test("returns false for null, undefined, and non-array values", function (assert) {
-      assert.false(isTrackedArray(null), "null");
-      assert.false(isTrackedArray(undefined), "undefined");
-      assert.false(isTrackedArray(42), "number");
-      assert.false(isTrackedArray("string"), "string");
-      assert.false(isTrackedArray({}), "plain object");
-    });
-  });
-
   module("@autoTrackedArray", function () {
     test("initializes with an array", function (assert) {
       class TestClass {
@@ -157,8 +133,8 @@ module("Unit | tracked-tools", function () {
 
       const instance = new TestClass();
       assert.true(
-        isTrackedArray(instance.items),
-        "should wrap initial array in tracked array"
+        instance.items instanceof TrackedArray,
+        "should wrap initial array in TrackedArray"
       );
       assert.deepEqual(
         Array.from(instance.items),
@@ -202,8 +178,8 @@ module("Unit | tracked-tools", function () {
       instance.items = ["x", "y", "z"];
 
       assert.true(
-        isTrackedArray(instance.items),
-        "should wrap new array in tracked array"
+        instance.items instanceof TrackedArray,
+        "should wrap new array in TrackedArray"
       );
       assert.deepEqual(
         Array.from(instance.items),
@@ -212,19 +188,19 @@ module("Unit | tracked-tools", function () {
       );
     });
 
-    test("accepts tracked array instances directly", function (assert) {
+    test("accepts TrackedArray instances directly", function (assert) {
       class TestClass {
         @autoTrackedArray items = [];
       }
 
       const instance = new TestClass();
-      const trackedArr = trackedArray(["foo", "bar"]);
+      const trackedArr = new TrackedArray(["foo", "bar"]);
       instance.items = trackedArr;
 
       assert.strictEqual(
         instance.items,
         trackedArr,
-        "should use the provided tracked array instance"
+        "should use the provided TrackedArray instance"
       );
       assert.deepEqual(
         Array.from(instance.items),
@@ -730,7 +706,7 @@ module("Unit | tracked-tools", function () {
 
       const obj = Object.fromEntries(result);
       assert.strictEqual(obj.name, "test");
-      assert.true(isTrackedArray(obj.items));
+      assert.true(obj.items instanceof TrackedArray);
       assert.deepEqual(Array.from(obj.items), ["a", "b", "c"]);
       assert.strictEqual(obj.regularProp, undefined);
     });
