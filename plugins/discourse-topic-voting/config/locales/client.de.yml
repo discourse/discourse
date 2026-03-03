@@ -10,6 +10,8 @@ de:
       sort_options:
         votes: "Stimmen"
     topic_voting:
+      notification_label:
+        vote_released: "Stimme zurückgegeben"
       title: "Themenabstimmung"
       reached_limit: "Du hast keine Stimmen mehr. Entferne eine bestehende Stimme!"
       list_votes: "Deine Stimmen auflisten"

@@ -19,4 +19,11 @@ sw:
           settings: "Mipangilio"
           save: "Hifadhi"
           delete: "Futa"
+          html: "HTML"
+          categories: "Kategoria"
+          groups: "Makundi"
           preview: "Kihakiki"
+          name: "Jina"
+          edit: "Hariri"
+          tabs:
+            settings: "Mipangilio"

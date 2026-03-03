@@ -3028,8 +3028,6 @@ zh_CN:
         votes_released: "投票额度已释放"
         new_features: "新的 Discourse 功能已发布"
         admin_problems: "网站信息中心有新建议"
-        upcoming_change_available: "即将发生的新变化 '%{changeName}' 已可用"
-        upcoming_change_automatically_promoted: "即将推出的更改 '%{changeName}' 已自动启用"
     upload_selector:
       change: "更改"
       delete: "删除"
@@ -3986,6 +3984,7 @@ zh_CN:
         confirm:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
+        diff_too_complex: "差异过于复杂，无法显示。请尝试查看各个较小的修改。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
@@ -4103,7 +4102,11 @@ zh_CN:
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
       create: "新建类别"
+      create_with_type: "新 %{typeName} 类别"
       create_long: "创建新类别"
+      choose_type:
+        title: "选择类别类型"
+        requires_plugin: "需要插件"
       create_category: "创建类别"
       save: "保存类别"
       unsaved_changes: "您有未保存的更改"
@@ -7836,6 +7839,9 @@ zh_CN:
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
         no_results: "找不到匹配的网站文本"
         interpolation_keys: "可用的插值键："
+        interpolation_key_insert: "点击插入"
+        interpolation_key_used: "已使用"
+        interpolation_key_invalid: "未知密钥——将不会进行插值"
         outdated:
           title: "此翻译已过时"
           description: "自此替换创建以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"

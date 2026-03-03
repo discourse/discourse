@@ -117,3 +117,6 @@ nl:
     review:
       transcript:
         view: "Transcript van eerdere berichten weergeven"
+      types:
+        reviewable_post_voting_comment:
+          title: "Gemarkeerde Stemmen op berichten-reactie"

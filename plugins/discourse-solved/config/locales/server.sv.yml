@@ -6,6 +6,10 @@
 
 sv:
   accepted_answer: "Godkänt svar"
+  category_types:
+    support:
+      name: "Stöd"
+      title: "stöd"
   site_settings:
     solved_enabled: "Aktivera tillägg för lösningar, låt användare välja lösningar för ämnen"
     allow_solved_on_all_topics: "Tillåt användare att välja lösningar för alla ämnen (om detta avmarkeras kan lösningar aktiveras per kategori eller tagg)"

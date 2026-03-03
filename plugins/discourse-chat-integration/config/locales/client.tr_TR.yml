@@ -16,6 +16,7 @@ tr_TR:
       settings: "Ayarlar"
       no_providers: "Eklenti ayarlarında bazı sağlayıcıları etkinleştirmeniz gerekiyor"
       channels_with_errors: "Bu sağlayıcı için bazı kanallar en son mesaj gönderildiğinde başarısız oldu. Daha fazla bilgi edinmek için hata simgelerine tıklayın."
+      channel_exception: "Bu kanala en son mesaj gönderilirken bilinmeyen bir hata oluştu."
       group_mention_template: "Şu kullanıcıdan bahsedildi: @%{name}"
       group_message_template: "Şu kullanıcıya mesaj gönderildi: @%{name}"
       choose_group: "(bir grup seçin)"
@@ -32,6 +33,7 @@ tr_TR:
         topic: "Konu"
         send: "Test Mesajı gönderin"
         close: "Kapat"
+        error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerini kontrol edin."
         success: "Mesaj başarıyla gönderildi"
       type:
         normal: Normal
@@ -82,6 +84,7 @@ tr_TR:
               help: "ör. #kanal, @kullanıcıadı."
           errors:
             action_prohibited: "Botun bu kanala gönderi yapma izni yok"
+            channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
         telegram:
           title: "Telegram"
           param:
@@ -128,6 +131,7 @@ tr_TR:
               help: "Kanalı tanımlamak için bir ad. Matrix bağlantısı için kullanılmaz."
             room_id:
               title: "Oda Kimliği"
+              help: "Odanın ‘özel tanımlayıcısı’. Şu şekilde görünmelidir: !abcdefghijkl"
           errors:
             unknown_token: "Erişim jetonu geçersiz"
             unknown_room: "Oda Kimliği geçersiz"

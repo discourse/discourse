@@ -2959,8 +2959,6 @@ ja:
         votes_released: "投票がリリースされました"
         new_features: "新しい Discourse 機能がリリースされました"
         admin_problems: "サイトダッシュボードに関する新しいアドバイス"
-        upcoming_change_available: "次回の新しい変更 '%{changeName}' を利用できます"
-        upcoming_change_automatically_promoted: "次回の変更 '%{changeName}' は自動的に有効になりました"
     upload_selector:
       change: "変更"
       delete: "削除"

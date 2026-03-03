@@ -12,11 +12,17 @@ sw:
           always: "Mara kwa mara"
           never: "Kamwe"
     chat:
+      edit_category:
+        channel: "Chaneli"
+        description: "Maelezo"
+        actions: "Vitendo"
+        settings: "Mipangilio"
       deleted_chat_username: imefutwa
       dates:
         yesterday: "Jana"
       create: "Tengeneza"
       cancel: "Ghairi"
+      pinned: "Imebandikwa"
       channel_settings:
         edit: "Hariri"
         add: "ongeza"

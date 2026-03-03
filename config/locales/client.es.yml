@@ -9,6 +9,8 @@ es:
     blocks:
       ghost:
         status: "Estado"
+        conditions: "Condiciones"
+        arguments: "Parámetros"
         in_location: "en"
         hidden: "oculto"
         failed: "falló"
@@ -600,6 +602,10 @@ es:
         other_drafts:
           one: "+%{count} otro borrador"
           other: "+%{count} otros borradores"
+    embed_mode:
+      storage_access_prompt: "¿Ya tienes una cuenta en %{site_name}? Permite acceso a tu sesión para comentar con tu nombre."
+      allow_access: "Permitir acceso"
+      continue_as_guest: "Continuar sin iniciar sesión"
     topic_count_all:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
@@ -2341,6 +2347,8 @@ es:
         too_short:
           one: "Debe tener al menos %{count} carácter"
           other: "Debe tener al menos %{count} caracteres"
+      color:
+        already_used: "Ya está en uso"
     close: "Cerrar"
     assets_changed_confirm: "Se ha recibido una actualización de software. ¿Obtener la última versión ahora?"
     logout: "Has cerrado sesión."
@@ -2862,12 +2870,24 @@ es:
       upload_description: "introduce una descripción del archivo subido aquí"
       olist_title: "Lista numerada"
       ulist_title: "Lista con viñetas"
+      list_title: "Listas"
       list_item: "Lista de elementos"
       toggle_direction: "Mostrar/ocultar dirección"
+      apply_wrap_title: "Aplicar recubrimiento"
       wrap_modal:
+        title: "Editar recubrimiento"
+        name_label: "Nombre del recubrimiento"
         attributes_label: "Atributos"
+        add_attribute: "Añadir atributo"
+        remove_attribute: "Eliminar atributo"
         apply: "Aplicar"
+        unwrap: "Eliminar recubrimiento"
+        no_attributes: "Todavía no hay atributos."
+      wrap_text: "Recubrir contenido"
       help: "Ayuda de edición con Markdown"
+      collapse: "Minimizar el editor"
+      open: "Abrir el editor"
+      abandon: "Cerrar el editor y descartar borrador"
       enter_fullscreen: "Abrir editor en pantalla completa"
       exit_fullscreen: "Salir del editor en pantalla completa"
       exit_fullscreen_prompt: "Pulsa <kbd>ESC</kbd> para salir del modo pantalla completa"
@@ -3166,6 +3186,7 @@ es:
           aria_label: Filtrar por etiqueta
         filters:
           label: Solo temas/publicaciones que…
+          all: Incluir mensajes
           title: Coincide solo en el título
           likes: me han gustado
           posted: he publicado en ellos
@@ -4195,11 +4216,15 @@ es:
         delete: "Eliminar"
         add: "Añadir grupo de etiquetas obligado"
         placeholder: "Selecciona un grupo de etiquetas…"
+        min_count: "Número de etiquetas"
         tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
       create: "Crear categoría"
       create_long: "Crear una nueva categoría"
+      choose_type:
+        requires_plugin: "Requiere plugin"
+      create_category: "Crear categoría"
       save: "Guardar categoría"
       unsaved_changes: "Tienes cambios sin guardar"
       slug: "Identificador de URL de la categoría"
@@ -4845,10 +4870,13 @@ es:
         slug: "Slug"
         name_placeholder: "Nombre de la etiqueta"
         synonyms_subtitle: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por %{name}"
+        save: "Guardar etiqueta"
       localization:
         locale: "Idioma local"
         name: "Nombre"
         description: "Descripción"
+        add: "Añadir traducción"
+        remove: "Quitar traducción"
       sort_by: "Ordenar por:"
       sort_by_count: "cantidad"
       sort_by_name: "nombre"
@@ -5352,6 +5380,7 @@ es:
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
+    reset_filter: "Quitar filtro"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
@@ -5366,6 +5395,7 @@ es:
         title: "Lista de informes disponibles"
         sidebar_title: "Informes"
         back: "Volver a todos los informes"
+        group_engagement: "Interacción"
         group_traffic: "Tráfico"
         group_members: "Miembros"
         group_moderation: "Moderación"
@@ -5811,6 +5841,9 @@ es:
         embedding:
           title: "Incrustado"
           header_description: "Discourse tiene la capacidad de incrustar los comentarios de un tema en un sitio remoto utilizando una API Javascript que crea un IFRAME"
+        form_templates:
+          title: "Plantillas de formulario"
+          header_description: "Las plantillas de formulario permiten forzar una estructura con validación de datos para los mensajes al crear nuevos temas"
       theme_site_settings:
         setting: "Ajuste"
         overridden_by: "Anulado por"
@@ -5917,6 +5950,7 @@ es:
           daily: Diariamente
           monthly: Mensualmente
           weekly: Semanalmente
+          value_so_far: "%{value} (hasta ahora)"
           dates: "Fechas (UTC)"
           groups: "Todos los grupos"
           disabled: "Este informe está desactivado"
@@ -7416,6 +7450,7 @@ es:
           upload: "Subir un archivo"
           multiselect: "Múltiples opciones"
           tagchooser: "Selector de grupo de etiquetas"
+          composer: "Respuesta en Markdown"
         validations_modal:
           button_title: "Validaciones"
           modal_title: "Opciones de validación"
@@ -7457,7 +7492,10 @@ es:
             second: "Opción 2"
             third: "Opción 3"
         edit_category:
+          toggle_freeform: "Plantilla de formulario desactivada"
+          toggle_form_template: "Plantilla de formulario habilitada"
           select_template: "Seleccionar plantillas de formularios"
+          select_template_help: "Añadir/editar plantillas de formularios"
         errors:
           multiple_tags_not_allowed: 'No puedes seleccionar más etiquetas de «%{tag_name}». Para evitar problemas, usa la plantilla de formulario.'
       impersonate:
@@ -7465,6 +7503,7 @@ es:
         help: "Utiliza esta herramienta para suplantar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."
         not_found: "No se pudo encontrar a ese usuario."
         invalid: "Lo sentimos, no puedes suplantar a ese usuario."
+        error: "Vaya, ha ocurrido un error inesperado."
       users:
         title: "Usuarios"
         description: "Ver y gestionar usuarios."
@@ -7691,6 +7730,7 @@ es:
             cancel: "Cancelar"
         merging_user: "Fusionando usuario…"
         merge_failed: "Ha ocurrido un error al fusionar los usuarios."
+        delete_forbidden_because_admin: "Los administradores no pueden ser eliminados."
         delete_forbidden:
           one: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} día, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."
           other: "Los usuarios no se pueden eliminar si tienen publicaciones. Elimina todas las publicaciones antes de tratar de eliminar a un usuario. (No se pueden eliminar las publicaciones que se hayan creado hace más de %{count} días)"
@@ -7837,6 +7877,10 @@ es:
           title: "Mostrar en las tarjetas de usuario"
           enabled: "Se muestra en la tarjeta de usuario"
           disabled: "No se muestra en la tarjeta de usuario"
+        show_on_signup:
+          title: "Mostrar en el formulario de registro"
+          enabled: "Se muestra en el formulario de registro"
+          disabled: "No se muestra en el formulario de registro"
         searchable:
           title: "Se puede buscar"
           enabled: "Se puede buscar"
@@ -7865,6 +7909,8 @@ es:
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu búsqueda."
         no_results: "No se han encontrado textos de sitios coincidentes"
         interpolation_keys: "Claves de interpolación disponibles:"
+        interpolation_key_insert: "Haz clic para insertar"
+        interpolation_key_used: "Ya está en uso"
         outdated:
           title: "Esta traducción está anticuada"
           description: "La traducción por defecto de esta clave ha cambiado desde que se creó esta anulación. Comprueba a continuación que tu traducción coincide con cualquier cambio que se haya hecho en la intención original."
@@ -7912,6 +7958,9 @@ es:
             label: "Subir"
             title: "Subir imágenes"
         download_file: "Descargar"
+        upload_restrictions:
+          extensions: "Se aceptan: %{extensions}"
+          max_size: "Máximo: %{size}"
         selectable_avatars:
           title: "Lista de avatares que los usuarios pueden escoger"
         table_column_heading:
@@ -8017,6 +8066,8 @@ es:
         no_user_badges: "%{name} no ha recibido ninguna medalla."
         no_badges: No hay medallas que se puedan conceder.
         none_selected: "Selecciona una medalla para empezar"
+        filter_placeholder: "Filtrar medallas..."
+        no_badges_found: "No se han encontrado medallas"
         sections:
           design: Diseño
           query: Consulta

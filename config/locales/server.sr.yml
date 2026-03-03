@@ -406,7 +406,6 @@ sr:
     digest_other_topics: "Maksimalan broj tema za prikazivanje u sekciji \"Novo u temama i kategorijama koje pratite\" rezimea email poruke."
     digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
     email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
-    hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
     read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."

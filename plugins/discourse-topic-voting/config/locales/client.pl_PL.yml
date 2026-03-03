@@ -10,6 +10,8 @@ pl_PL:
       sort_options:
         votes: "Głosy"
     topic_voting:
+      notification_label:
+        vote_released: "Głos zwrócony"
       title: "Głosowanie na temat"
       reached_limit: "Oddałeś już maksymalną liczbę głosów!"
       list_votes: "Lista twoich głosów"

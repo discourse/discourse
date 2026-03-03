@@ -457,6 +457,9 @@ de:
           runs_today: "%{count} heute"
           runs_this_week: "%{count} diese Woche"
           runs_this_month: "%{count} diesen Monat"
+          recent_errors:
+            one: "%{count} Fehler in letzter Zeit"
+            other: "%{count} Fehler in letzter Zeit"
           runs:
             label: Ausführungen
           name:

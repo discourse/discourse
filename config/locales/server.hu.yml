@@ -2220,7 +2220,6 @@ hu:
     allow_likes_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy a webhelyet névtelenül böngésző felhasználók lájkolhassák a bejegyzéseket. Aktiválás esetén a felhasználók választhatják, hogy identitásuk rejtve maradjon, amikor bejegyzéseket vagy témákat lájkolnak a webhelyen. Ehhez a beállításhoz engedélyezni kell az „névtelen mód engedélyezése” beállítást."
     anonymous_posting_allowed_groups: "Azok a csoportok, amelyek engedélyezik a névtelen hozzászólás lehetőségét. Ehhez a beállításhoz engedélyezni kell a `engedélyezzük a névtelen módot` beállítást."
     anonymous_account_duration_minutes: "Az anonimitás védelme érdekében N percenként új névtelen fiókot hoz létre minden felhasználó számára. Példa: ha 600-ra van állítva, amint 600 perc eltelik az utolsó bejegyzés óta ÉS a felhasználó névtelen módra vált, egy új névtelen fiók jön létre."
-    hide_user_profiles_from_public: "Felhasználói kártyák, felhasználói profilok és felhasználói címtár letiltása névtelen felhasználók számára."
     hide_new_user_profiles: "Rejti az 1-es vagy alacsonyabb bizalmi szinttel rendelkező felhasználói profilokat a nyilvánosság és az 1-es szintű felhasználók elől, amíg azok nem posztolnak először. Ez a funkció feltétel nélkül le van tiltva azokon az oldalakon, ahol kötelező a felhasználók jóváhagyása vagy ahol csak meghívással lehet regisztrálni."
     allow_users_to_hide_profile: "Felhasználók számára engedélyezi a profiljuk és jelenlétük elrejtését"
     hide_user_activity_tab: "A tevékenység fül elrejtése a felhasználói profilokban, kivéve az Adminisztrátor és saját profil esetében."
@@ -4998,6 +4997,7 @@ hu:
   dev_mode:
     title: "Fejlesztői mód"
     enable_rack_mini_profiler: "Engedélyezze a Rack Mini Profiler 1 órás megőrzését a munkamenet-változások között"
+    enter: "Belépés a Fejlesztői módba"
   wizard:
     title: "Discourse telepítő"
     step:

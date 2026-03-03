@@ -6,6 +6,8 @@
 
 tr_TR:
   site_settings:
+    discourse_local_dates_enabled: "'discourse-local-dates' eklentisini etkinleştirin. Bu, kullanıcıların gönderilerinde ‘[date]’ kullanarak okuyuculara yerel saat dilimlerinde tarihleri göstermelerini sağlar."
     discourse_local_dates_default_formats: "Sık kullanılan tarih saat formatları, bkz: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs dize biçimi</a>"
     discourse_local_dates_default_timezones: "Varsayılan saat dilimleri listesi, geçerli bir <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>saat dilimi</a>olmalıdır"
+    discourse_local_dates_email_format: "E-postalarda tarihi görüntülemek için kullanılan format, örnekler: ‘LLLL’, ‘llll’ veya ‘YYYY-MM-DDTHH:mm:ss[Z]’. Bkz.: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
     discourse_local_dates_email_timezone: "E-postalarda tarihleri göstermek için kullanılan saat dilimi, geçerli bir <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> olmalıdır"

@@ -21,4 +21,11 @@ pt:
           settings: "Configurações"
           save: "Guardar"
           delete: "Eliminar"
+          html: "HTML"
+          categories: "Categorias"
+          groups: "Grupos"
           preview: "Pré-visualização"
+          name: "Nome"
+          edit: "Editar"
+          tabs:
+            settings: "Configurações"

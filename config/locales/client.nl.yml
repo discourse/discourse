@@ -7673,6 +7673,7 @@ nl:
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn je zoekopdracht."
         no_results: "Geen overeenkomende siteteksten gevonden"
         interpolation_keys: "Beschikbare interpolatiesleutels:"
+        interpolation_key_used: "Al gebruikt"
         outdated:
           title: "Deze vertaling is verouderd"
           description: "De standaardvertaling voor deze sleutel is gewijzigd sinds deze overschrijving is gemaakt. Controleer hieronder of je vertaling overeenkomt met eventuele wijzigingen die zijn aangebracht in de oorspronkelijke betekenis."

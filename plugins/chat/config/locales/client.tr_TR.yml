@@ -44,6 +44,15 @@ tr_TR:
           one: "%{formatted_number} sohbet mesajı"
           other: "%{formatted_number} sohbet mesajları"
     chat:
+      edit_category:
+        tab_title: "Sohbet"
+        channel: "Kanal"
+        description: "Açıklama"
+        actions: "Eylemler"
+        settings: "Ayarlar"
+        no_channels: "Bu kategoriyle ilişkili sohbet kanalı yoktur."
+        no_channels_body: "Kategori başına birden fazla kanal oluşturabilir ve kategorinin Güvenlik ayarlarına göre aynı üyelerin erişimine açabilirsiniz. <a href='%{chatBrowseUrl}'>Sohbet kanalı oluşturun</a>."
+        include_subcategories: "Alt kategori kanallarını dahil et"
       text_copied: Metin panoya kopyalandı
       link_copied: Bağlantı panoya kopyalandı
       back_to_forum: "Forum"
@@ -58,8 +67,21 @@ tr_TR:
       cancel: "İptal et"
       cancel_reply: "Yanıtı iptal et"
       chat_channels: "Kanallar"
+      starred: "Yıldızlı"
+      starred_channels: "Yıldızlı kanallar"
+      starred_channels_empty: "Henüz hiçbir kanalı yıldızlamadınız. Yıldızladığınız kanallara buradan hızlıca erişebilirsiniz."
+      pinned_messages:
+        title: "Sabitlenmiş mesajlar"
+        close: "Sabitlenmiş mesajları kapat"
+        pinned_by_you: "Sizin tarafınızdan sabitlendi"
+        pinned_by_user: "%{username} tarafından sabitlendi"
+      no_pinned_messages: "Bu kanalda sabitlenmiş mesaj yok."
+      pin_message: "Mesajı sabitle"
+      unpin_message: "Mesajı sabitlemeyi kaldır"
+      pinned: "Sabitlendi"
       browse_all_channels: "Tüm kanallara göz atın"
       see_in: "Şurada bak:"
+      open_channel_menu: "Kanal menüsünü aç"
       move_to_channel:
         title: "Mesajları kanala taşı"
         instructions:
@@ -74,13 +96,18 @@ tr_TR:
         title: "Kanal ayarları"
         edit: "Düzenle"
         add: "Ekle"
+        star_channel: "Kanalı yıldızla"
+        unstar_channel: "Kanal yıldızını kaldır"
         close_channel: "Kanalı kapat"
         open_channel: "Kanalı aç"
+        open_channel_disabled_archived: "Arşivlenen kanallar yeniden açılamaz."
+        open_channel_disabled_read_only: "Salt okunur kanallar yeniden açılamaz."
         archive_channel: "Kanalı arşivle"
         delete_channel: "Kanalı sil"
         join_channel: "Kanala katıl"
         leave_channel: "Kanaldan ayrıl"
         leave_groupchat_info: "Bu grup sohbetinden ayrıldığınızda, artık bu sohbete erişiminiz olmayacak ve bununla ilgili bildirimler almayacaksınız. Yeniden katılmak için grup sohbetinin bir üyesi tarafından yeniden davet edilmeniz gerekecek."
+        notification_settings: "Bildirim ayarları"
         notification_settings_context: "Bildirimler"
         join: "Katıl"
         leave: "Ayrıl"
@@ -129,6 +156,7 @@ tr_TR:
       email_frequency:
         description: "Yalnızca sizi son 15 dakika içinde görmediğimiz takdirde size e-posta göndeririz."
         never: "Asla"
+        title: "Bana doğrudan mesaj veya grup sohbeti gönderildiğinde bana e-posta gönderin."
         when_away: "Sadece uzaktayken"
       header_indicator_preference:
         title: "Etkinlik göstergesini başlıkta gösterin"
@@ -139,6 +167,7 @@ tr_TR:
       separate_sidebar_mode:
         title: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
       send_shortcut:
+        title: "Kısayol gönder"
         enter:
           label: "Enter ile gönder"
         meta_enter:
@@ -240,6 +269,7 @@ tr_TR:
       chat_notifications_title: "Sohbet bildirimleri"
       only_chat_push_notifications:
         title: "Yalnızca sohbet anlık bildirimleri gönder"
+      personalization_title: "Kişiselleştirme"
       ignore_channel_wide_mention:
         title: "Kanal genelindeki bahsetmeleri yok say"
       show_thread_title_prompts:
@@ -325,6 +355,10 @@ tr_TR:
         yesterday: Dün
       search_view:
         filter_placeholder: Mesajlarda ara
+        message_result_label: "%{username}'dan gelen sohbet mesajı: %{preview} %{threadInfo}"
+        in_thread: "%{title} başlıklı konuda"
+        sr_instructions: "Mesajı açmak için Enter veya Boşluk tuşuna basın. Sonuçlar arasında gezinmek için Tab tuşunu kullanın."
+        results_list_label: "Sohbet mesajı arama sonuçları"
       members_view:
         filter_placeholder: Üye bul
         add_member: Üye Ekle
@@ -367,6 +401,8 @@ tr_TR:
         slug_description: URL'de kanal adı yerine kanal slug'ı kullanılmış
         name: Kanal adı
         slug: Kanal slug'ı (isteğe bağlı)
+        emoji: Kanal emojisi (isteğe bağlı)
+        reset_emoji: Emojiyi sıfırla
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle
@@ -431,6 +467,9 @@ tr_TR:
         types:
           category: "Kategori"
           topic: "Konu"
+        emoji:
+          label: "Kanal emojisi (isteğe bağlı)"
+          reset: "Emojiyi sıfırla"
       reviewable:
         type: "Sohbet mesajı"
         message_in_channel: "Kanal"
@@ -473,6 +512,7 @@ tr_TR:
         follow: "Katıl"
         followed: "Katıldı"
         mute: "Kanalı sessize al"
+        unmute: "Kanalın sesini aç"
         threading_enabled: "Etkin"
         threading_disabled: "Devre Dışı"
         muted_on: "Açık"
@@ -498,6 +538,8 @@ tr_TR:
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
       search:
         short_title: Ara
+        title: Sohbette ara
+        aria_label: "Sohbet aramasına geç"
         no_results: "Sonuç bulunamadı"
         sort:
           relevance: "İlgi"
@@ -578,10 +620,15 @@ tr_TR:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
       retention_reminders:
+        chat_settings: "Sohbet ayarları"
         indefinitely_short: "süresiz olarak"
+        indefinitely_long: "%{chatSettingsLink} kanal mesajlarını süresiz olarak saklayacak şekilde ayarlandı."
         short:
           one: "%{count} gün"
           other: "%{count} gün"
+        long:
+          one: "%{chatSettingsLink} kanal mesajlarını %{count} gün boyunca saklayacak şekilde ayarlandı."
+          other: "%{chatSettingsLink} kanal mesajlarını %{count} gün boyunca saklayacak şekilde ayarlandı."
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
@@ -713,6 +760,7 @@ tr_TR:
           composer_bold: "%{shortcut} Kalın (yalnızca besteci)"
           composer_italic: "%{shortcut} İtalik (yalnızca besteci)"
           composer_code: "%{shortcut} Kod (yalnızca besteci)"
+          drawer_toggle: "%{shortcut} Sohbet çekmecesini aç/kapat"
           drawer_close: "%{shortcut} Sohbet çekmecesini kapat"
           mark_all_channels_read: "%{shortcut} Tüm kanalları okundu olarak işaretle"
     topic_statuses:
@@ -739,6 +787,7 @@ tr_TR:
           title: Sohbet
     sidebar:
       start_new_dm:
+        text: Yeni DM başlat
         title: Kişisel sohbet oluşturun
       panels:
         chat:
