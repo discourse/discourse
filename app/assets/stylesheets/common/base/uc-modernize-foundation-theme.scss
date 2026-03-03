@@ -75,7 +75,12 @@
   }
 
   .btn.no-text.btn-icon {
-    &:not(.user-menu-tab, .user-menu-tab-active, .composer-actions-btn) {
+    &:not(
+      .user-menu-tab,
+      .user-menu-tab-active,
+      .composer-actions-btn,
+      .dropdown-select-box-header
+    ) {
       width: var(--button-height);
     }
   }
@@ -273,6 +278,7 @@
   .select-kit .select-kit-header:not(.composer-actions-btn),
   .d-date-input .date-picker {
     height: var(--button-height);
+    border: var(--d-button-default-border);
   }
 
   .select-kit.is-expanded .select-kit-filter.is-expanded {
