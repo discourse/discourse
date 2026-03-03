@@ -176,6 +176,8 @@ nl:
       default_llm:
         title: "Standaard LLM-model"
         description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of persona. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
+      llm_selector:
+        none: "Geen"
       features:
         short_title: "Functies"
         description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke persona's en LLM's en de toegang kan per groep worden beheerd."
@@ -518,7 +520,9 @@ nl:
         parameter_description: "Parameterbeschrijving"
         enum_value: "Enumwaarde"
         add_enum_value: "Enumwaarde toevoegen"
+        credential_not_set: "(niet ingesteld)"
         edit: "Bewerken"
+        test: "Testen"
         delete: "Verwijderen"
         saved: "Tool opgeslagen"
         confirm_delete: "Weet je zeker dat je deze tool wilt verwijderen?"
@@ -526,6 +530,16 @@ nl:
           title: "AI-tool testen"
           run: "Test uitvoeren"
           result: "Testresultaat"
+      secrets:
+        short_title: "Aanmeldgegevens"
+        name: "Naam"
+        secret: "Waarde"
+        back: "Terug"
+        save: "Opslaan"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        embedding: "Insluiting"
+        tool: "Tool"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -583,7 +597,10 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
+          anthropic-claude-opus-4-6: "Het intelligentste model van Antropic"
+          anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
+          open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"
@@ -637,7 +654,6 @@ nl:
           disable_streaming: "Streamingvoltooiingen uitschakelen (streaming- naar niet-streaming-verzoeken converteren)"
           reasoning_effort: "Redeneringsinspanning (alleen van toepassing op redeneringsmodellen)"
           enable_reasoning: "Redeneren inschakelen (alleen van toepassing op redeneringsmodellen)"
-          enable_thinking: "Denken inschakelen (alleen op toepasselijke modellen, bijvoorbeeld: flash 2.5)"
           thinking_tokens: "Aantal tokens dat wordt gebruikt voor denken"
           reasoning_tokens: "Aantal tokens dat wordt gebruikt voor redeneren"
           disable_temperature: "Temperatuur uitschakelen (sommige denkmodellen ondersteunen geen temperatuur)"

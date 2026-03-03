@@ -99,6 +99,7 @@ uk:
     ai_helper_enabled_features: "Оберіть функції для активації в ШІ-помічнику."
     post_ai_helper_allowed_groups: "Групи користувачів, яким дозволено доступ до функцій ШІ-помічника в публікаціях"
     ai_helper_post_illustrator_persona: "Персона, яка використовуватиметься для функції ілюстрації публікацій помічника ШІ. Примітка: для роботи цієї функції також потрібно створити інструмент генерації зображень (Адміністратор > Плагіни > Discourse AI > Інструменти)."
+    ai_helper_chat_thread_title_persona: "Персона, яка використовується для створення заголовків гілок чату."
     ai_embeddings_selected_model: "Використовуйте обрану модель для генерації вбудовувань."
     ai_embeddings_generate_for_pms: "Створюйте вбудовування для особистих повідомлень."
     ai_embeddings_semantic_related_topics_enabled: "Використовуйте семантичний пошук для пов’язаних тем."
@@ -118,6 +119,7 @@ uk:
     ai_summary_backfill_maximum_topics_per_hour: "Кількість підсумків тем для заповнення на годину."
     ai_bot_enabled: "Увімкніть модуль AI Bot."
     ai_bot_enabled_llms: "LLM доступні для вибору для бесід з AI-ботами"
+    ai_bot_enable_chat_warning: "Відображати попередження, коли ініційовано чат особистих повідомлень. Можна змінити, відредагувавши рядок перекладу: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Коли GPT-бот отримає доступ до ПП, він відповідатиме членам цих груп."
     ai_bot_debugging_allowed_groups: "Дозвольте цим групам бачити кнопку налагодження в публікаціях, яка відображає необроблений запит і відповідь ШІ"
     ai_bot_public_sharing_allowed_groups: "Дозвольте цим групам ділитися особистими повідомленнями ШІ з громадськістю за унікальним загальнодоступним посиланням. Примітка: якщо ваш сайт вимагає входу, то для доступу до публікацій також потрібно буде ввійти."
@@ -280,6 +282,16 @@ uk:
           name: "Почніть з чистого аркуша..."
       name:
         characters: "повинні містити тільки цифри, літери та підкреслення"
+      secret_contracts:
+        invalid_payload: "Таємні контракти повинні бути масивом."
+        invalid_contract: "Секретний контракт за індексом %{index} недійсний."
+        alias_required: "Секретний контракт за індексом %{index} повинен містити псевдонім."
+        alias_too_long: "Секретний псевдонім `%{alias}` занадто довгий."
+        alias_invalid: "Секретний псевдонім `%{alias}` має містити лише цифри, літери та символи підкреслення."
+        alias_not_unique: "Секретний псевдонім `%{alias}` дублюється."
+      secret_bindings:
+        invalid_payload: "Секретні зв'язки повинні бути масивом."
+        secret_not_found: "Вибраний обліковий запис не існує."
     ai_helper:
       errors:
         completion_request_failed: "Щось пішло не так під час спроби надати пропозиції. Будь ласка, спробуйте ще раз."
@@ -314,6 +326,7 @@ uk:
       flag_reason: "Позначено як спам за допомогою <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Користувач автоматично заблокований <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Наданий невірний тип помилки"
+      unexpected: "Сталась непередбачена помилка"
       bot_user_update_failed: "Не вдалося оновити користувача бота для сканування спаму"
       configuration_missing: "Конфігурація виявлення спаму AI відсутня. Додайте конфігурацію в розділі «Адміністратор > Плагіни > Discourse AI > Спам» перед увімкненням."
       logging_subject: "Виявлення спаму"
@@ -428,6 +441,9 @@ uk:
         discover:
           name: "Відкриття"
           description: "Персона за замовчуванням, що використовується у функції «Відкриття» (безкоштовний пошук)"
+        chat_thread_titler:
+          name: "Заголовок теми чату"
+          description: "Персона за замовчуванням, що забезпечує автоматичне створення заголовків тем чату"
       topic_not_found: "Всього недоступно, тема не знайдена!"
       summarizing: "Підведення підсумків теми"
       searching: "Пошук: '%{query}'"
@@ -646,6 +662,7 @@ uk:
         invalid_seeded_model: "Ви не можете використовувати цю модель із цією функцією"
         invalid_persona_response_format: "Вибрана персона повинна мати формат відповіді з логічними назвами полів «спам»"
         must_select_model: "Спочатку ви повинні вибрати LLM"
+        invalid_llm_id: "Обрана модель LLM недійсна"
       endpoints:
         not_configured: "%{display_name} (не налаштовано)"
         configuration_hint:
@@ -664,12 +681,18 @@ uk:
     embeddings:
       delete_failed: "Ця модель наразі використовується. Спочатку оновіть `ai embeddings selected model`."
       cannot_edit_builtin: "Ви не можете редагувати вбудовану модель."
+      secret_required: "Необхідно вибрати обліковий запис"
+      secret_not_found: "Вибраний обліковий запис не існує"
       configuration:
         disable_embeddings: "Спершу потрібно вимкнути функцію «AI embeddings enabled»."
         choose_model: "Спочатку встановіть 'ai embeddings selected model'."
         model_test_failed: "Нам не вдалося створити тестове вбудовування з цією моделлю. Перевірте, чи правильно налаштовано."
+    secrets:
+      delete_failed_in_use: "Ці облікові дані наразі використовуються одним або кількома LLM, вбудовуваннями чи інструментами та не можуть бути видалені."
     llm_models:
       missing_provider_param: "%{param} не може бути пустим"
+      secret_required: "Необхідно вибрати обліковий запис"
+      secret_not_found: "Вибраний обліковий запис не існує"
       bedrock_invalid_url: "Будь ласка, заповніть усі поля, щоб використовувати цю модель."
       bedrock_missing_auth: "AWS Bedrock вимагає налаштування або ідентифікатора ключа доступу, або ARN ролі"
     ai_staff_action_logger:
@@ -694,6 +717,26 @@ uk:
       persona_disabled: Вказана особа вимкнена. Перевірте параметри persona_name або persona_id.
       no_default_llm: Особа повинна мати значення default_llm.
       user_not_allowed: Користувачеві заборонено брати участь у темі.
+      invalid_stream_resume_token: Токен resume_token є недійсним або його термін дії закінчився.
+      no_tool_results_specified: Параметр tool_results є обов'язковим при відновленні потоку.
+      invalid_custom_tools: "Параметр custom_tools є недійсним: %{details}"
+      duplicate_custom_tools: "Параметр custom_tools містить дублікати назв інструментів: %{names}"
+      too_many_custom_tools: "Параметр custom_tools може містити максимум %{max} інструментів."
+      custom_tool_definition_too_large: "Кожне визначення користувацького інструменту повинно мати розмір не більше %{max} байт."
+      invalid_stream_param: "Параметр %{key} недійсний: %{details}"
+      expected_array: "очікував масив"
+      expected_object: "очікував об'єкт"
+      ambiguous_tool_results: "Вказуйте або tool_results, або tool_result, але не обидва."
+      invalid_tool_results: "Параметр tool_results недійсний: %{details}"
+      too_many_tool_results: "Параметр tool_results може містити не більше %{max} елементів."
+      no_pending_tool_calls: Для цього токена резюме немає очікуваних викликів інструментів.
+      missing_tool_results: "Відсутні результати пошуку інструментів для tool_call_id(s): %{ids}"
+      unexpected_tool_results: "Неочікувані результати інструменту для tool_call_id(s): %{ids}"
+      invalid_tool_result_content: "Результат інструмента для %{id} повинен містити вміст"
+      tool_result_content_too_large: "Кожне корисне навантаження результату інструменту має містити не більше %{max} байтів."
+      stream_reply_max_resume_rounds_reached: Досягнуто максимальної кількості раундів відновлення користувацького інструменту (%{max}).
+      stream_reply_state_too_large: "Стан потоку занадто великий для збереження (максимум %{max} байтів)."
+      stream_reply_unexpected_error: Під час потокової передачі відповіді сталася неочікувана помилка.
       prompt_message_length: Повідомлення %{idx} перевищує ліміт у 1000 символів.
       persona_already_exists: Персона з іменем %{name} вже існує.
       custom_tool_exists:

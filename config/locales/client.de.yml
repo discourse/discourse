@@ -9,9 +9,15 @@ de:
     blocks:
       ghost:
         status: "Status"
+        conditions: "Bedingungen"
+        arguments: "Argumente"
+        container_args: "Container-Argumente"
         in_location: "in"
         hidden: "versteckt"
+        not_registered: "nicht registriert"
         failed: "fehlgeschlagen"
+      ghost_reasons:
+        head_hidden_tail_hint: "Dieser Block wird nicht gerendert, weil ein anderer Block im `head`-Container zuerst gerendert wurde."
     carousel:
       go_to_slide: "Gehe zu Folie %{index}"
       previous: "Vorherige Folie"
@@ -329,6 +335,8 @@ de:
     broken_page_change_alert: "Ein onPageChange-Handler hat einen Fehler ausgelöst. Überprüfe die Entwicklerwerkzeuge des Browsers für weitere Informationen."
     broken_plugin_alert: "Verursacht durch das Plug-in „%{name}“"
     broken_transformer_alert: "Es ist ein Fehler aufgetreten. Deine Website funktioniert möglicherweise nicht richtig."
+    broken_block_alert: "Es wurde ein Fehler in der Blockkonfiguration festgestellt. Überprüfe die Browserkonsole für Details."
+    broken_block_factory_alert: "Ein Block konnte nicht geladen werden. Einige UI-Elemente werden möglicherweise nicht richtig angezeigt."
     critical_deprecation:
       notice: "<b>[Admin-Hinweis]</b> %{source} enthält Code, der aktualisiert werden muss. (ID:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>mehr erfahren</em></a>)"
@@ -336,6 +344,10 @@ de:
       plugin_source: "Plug-in '%{name}'"
       unknown_source: "Eines deiner Themes oder Plug-ins"
     dev_tools:
+      drag_to_move: "Ziehe zum Verschieben"
+      toggle_safe_mode: "Abgesicherten Modus (de-)aktivieren"
+      toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
+      toggle_mobile_view: "Von/zu der mobilen Ansicht wechseln"
       disable_dev_tools: "Entwicklertools deaktivieren"
     s3:
       regions:
@@ -437,6 +449,12 @@ de:
         title: "Beginne mit dem Erstellen von Beiträgen"
         description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
         action: "Fragen zum Einstieg"
+        choose_option: "Wie möchtest du anfangen?"
+        predefined_topics: "Vorlagen für Fragen zum Einstieg"
+        predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
+        predefined_topics_description: "Wähle aus einer Sammlung von Gesprächsanregungen, um Diskussionen in Gang zu bringen"
+        use_predefined: "Vorlagen ansehen"
+        start_with_this: "Fange hiermit an"
         back: "Zurück"
         icebreakers:
           fun_facts:
@@ -3176,8 +3194,6 @@ de:
         votes_released: "Abstimmung wurde freigegeben"
         new_features: "neue Discourse-Funktionen wurden veröffentlicht"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
-        upcoming_change_available: "neue bevorstehende Änderung '%{changeName}' ist verfügbar"
-        upcoming_change_automatically_promoted: "bevorstehende Änderung '%{changeName}' wurde automatisch aktiviert"
     upload_selector:
       change: "Ändern"
       delete: "Löschen"
@@ -4207,6 +4223,7 @@ de:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
           other: "Möchtest du diese %{count} Beiträge wirklich zusammenführen?"
       revisions:
+        diff_too_complex: "Die Unterschiede sind zu komplex, um sie anzuzeigen. Bitte versuche einzelne, kleinere Änderungen anzusehen."
         locale:
           no_locale_set: "Keine Sprache eingestellt"
           locale_removed: "Sprache entfernt"
@@ -4325,6 +4342,9 @@ de:
       delete: "Kategorie löschen"
       create: "Neue Kategorie"
       create_long: "Eine neue Kategorie erstellen"
+      choose_type:
+        title: "Kategorietyp wählen"
+        requires_plugin: "Erfordert ein Plug-in"
       create_category: "Kategorie erstellen"
       save: "Kategorie speichern"
       unsaved_changes: "Du hast ungespeicherte Änderungen"
@@ -4391,7 +4411,7 @@ de:
         all_parent_groups_used: "Alle Gruppen aus der übergeordneten Kategorie sind hinzugefügt worden. Um weitere Gruppen hinzuzufügen, füge sie zuerst der übergeordneten Kategorie hinzu."
         toggle_reply: "Antwortberechtigung umschalten"
         toggle_full: "Erstellungsberechtigung umschalten"
-        inherited: 'Diese Berechtigung wird von %{everyone_group} geerbt'
+        inherited: 'Diese Berechtigung wird von „%{everyone_group}“ geerbt'
       special_warning: "Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen, anstatt sie für andere Zwecke zu verwenden."
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen/Textinhalte</a> geändert werden.'
@@ -8144,6 +8164,9 @@ de:
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
         no_results: "Keine passenden Website-Texte gefunden"
         interpolation_keys: "Verfügbare Variablennamen:"
+        interpolation_key_insert: "Zum Einfügen klicken"
+        interpolation_key_used: "Bereits verwendete Variablen"
+        interpolation_key_invalid: "Unbekannter Variablenname – wird nicht ersetzt"
         outdated:
           title: "Diese Übersetzung ist veraltet"
           description: "Die Standardübersetzung für diesen Schlüssel hat sich geändert, seit diese Überschreibung erstellt wurde. Bitte überprüfe unten, ob deine Übersetzung mit den Änderungen übereinstimmt, die an der ursprünglichen Aussage vorgenommen wurden."

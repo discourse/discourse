@@ -14,6 +14,7 @@ zh_CN:
               search: "允许 AI 搜索"
               stream_completion: "允许流式 AI 角色补全"
               update_personas: "允许更新 AI 角色"
+              manage_artifacts: "允许管理 AI 工件（列表、查看、创建、更新、删除）"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -44,6 +45,9 @@ zh_CN:
             create_ai_embedding: "创建 AI 嵌入向量"
             update_ai_embedding: "更新 AI 嵌入向量"
             delete_ai_embedding: "删除 AI 嵌入向量"
+            create_ai_secret: "创建 AI 密钥"
+            update_ai_secret: "更新 AI 密钥"
+            delete_ai_secret: "删除 AI 密钥"
             update_ai_spam_settings: "更新 AI 垃圾信息设置"
   js:
     discourse_automation:
@@ -225,6 +229,9 @@ zh_CN:
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 功能使用的默认 LLM 模型。如果功能配置或角色中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
+      llm_selector:
+        none: "无"
+        saved: "默认LLM模型已成功更新"
       features:
         short_title: "功能"
         description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的角色和 LLM，并按群组控制访问权限。"
@@ -316,6 +323,7 @@ zh_CN:
           image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建器"
+          chat_thread_titles: "聊天主题标题"
           setting_groups:
             access_permissions: "访问与权限"
             enabled_features: "启用的功能"
@@ -489,6 +497,7 @@ zh_CN:
         overwrite: "覆盖"
         description: "描述"
         no_llm_selected: "未选择语言模型"
+        use_parent_llm: "使用个人语言模型"
         max_context_posts: "最大上下文帖子数"
         max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
         vision_enabled: 启用视觉
@@ -622,7 +631,14 @@ zh_CN:
         parameter_description: "参数描述"
         enum_value: "枚举值"
         add_enum_value: "添加枚举值"
+        secret_alias: "凭证别名"
+        secret_alias_help: "脚本中通过 secrets.get(\"alias_name\") 获取别名。请使用字母、数字和下划线。"
+        secret_credential: "凭据"
+        add_secret_contract: "添加凭证"
+        remove_secret_contract: "移除凭据"
+        credential_not_set: "(未设置)"
         edit: "编辑"
+        test: "测试"
         delete: "删除"
         saved: "工具已保存"
         confirm_delete: "确定要删除此工具吗？"
@@ -630,6 +646,31 @@ zh_CN:
           title: "测试 AI 工具"
           run: "运行测试"
           result: "测试结果"
+      secrets:
+        short_title: "凭据"
+        description: "管理在 LLM 和嵌入式系统之间共享的身份验证凭据。"
+        name: "名称"
+        secret: "值"
+        select_secret: "选择凭证..."
+        create_new: "新凭证"
+        add_secret: "添加凭证"
+        saved: "凭证已保存"
+        confirm_delete: "您确定要删除此凭证吗？"
+        delete_failed_in_use: "此凭证当前正在使用中，无法删除。"
+        no_secrets: "暂无凭证"
+        new_title: "新凭证"
+        edit_title: "编辑凭证"
+        back: "返回"
+        save: "保存"
+        edit: "编辑"
+        delete: "删除"
+        used_by: "用于"
+        not_used: "未使用"
+        embedding: "嵌入"
+        cannot_delete_in_use: "此凭证无法删除，因为它正被以下用户使用："
+        tool: "工具"
+        modal:
+          title: "创建新凭证"
       llms:
         short_title: "LLM"
         no_llms: "暂无 LLM"
@@ -694,8 +735,20 @@ zh_CN:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
           none: "适用于大多数语言模型的常规设置"
+          anthropic-claude-opus-4-6: "Anthropic 最智能的模型"
+          anthropic-claude-sonnet-4-6: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-pro: "Google 最智能的模型"
+          google-gemini-3-flash: "快速高效且经济实惠，并具备多模态推理能力"
+          open_ai-gpt-5-2: "OpenAI 的旗舰模型，非常适合跨领域问题解决"
+          open_ai-gpt-5-mini: "在智能、速度和成本之间取得平衡"
+          open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型。"
+          open_router-deepseek-deepseek-v3-2: "DeepSeek 最新高性能模型"
+          open_router-moonshotai-kimi-k2-5: "具有视觉功能的 Moonshot 多模态模型"
+          open_router-x-ai-grok-4-fast: "xAI 的旗舰视觉模型"
+          open_router-minimax-minimax-m2-5: "MiniMax 带大上下文的多模态模型"
+          open_router-z-ai-glm-5: "Z-AI 的多模态视觉模型"
+          open_router-arcee-ai-trinity-large-preview-free: "来自 Arcee AI 的免费开源模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"
@@ -750,12 +803,12 @@ zh_CN:
           disable_system_prompt: "在提示中禁用系统消息"
           enable_native_tool: "启用原生工具支持"
           disable_native_tools: "禁用原生工具支持（使用基于 XML 的工具）"
+          disable_native_structured_output: "禁用原生结构化输出（改用助手消息预填充，Claude 3.x 及更早版本需要此功能）"
           provider_order: "提供商顺序（逗号分隔列表）"
           provider_quantizations: "提供商量化顺序（逗号分隔列表，例如：fp16,fp8）"
           disable_streaming: "禁用流式补全（将流式请求转换为非流式请求）"
           reasoning_effort: "推理工作（仅适用于推理模型）"
           enable_reasoning: "启用推理（仅适用于推理模型）"
-          enable_thinking: "启用思考（仅适用于适用模型，例如：flash 2.5）"
           thinking_tokens: "用于思考的词元数量"
           reasoning_tokens: "用于推理的词元数量"
           disable_temperature: "禁用温度（某些思考模型不支持温度）"
@@ -764,6 +817,7 @@ zh_CN:
           prompt_caching_never: "从不 - 不使用提示缓存"
           prompt_caching_tool_results: "工具结果 - 存在工具结果时进行缓存（推荐）"
           prompt_caching_always: "始终 - 始终使用提示缓存"
+          effort: "作用等级"
       related_topics:
         title: "相关话题"
         pill: "相关"
@@ -875,11 +929,14 @@ zh_CN:
           model_name: "模型名称"
         semantic_search: "话题（语义）"
         semantic_search_results:
+          toggle: "AI 结果"
           unavailable: "AI 结果不可用"
           zero_results_expanded: "找不到任何结果，正在显示 %{count} 个 AI 结果"
         semantic_search_tooltips:
           results_explanation: "启用后，将在下方添加更多 AI 搜索结果。"
           invalid_sort: "搜索结果必须按相关性排序才能显示 AI 结果"
+          not_submitted: "提交搜索以启用 AI 结果"
+          no_results: "此搜索未找到 AI 结果"
         semantic_search_unavailable_tooltip: "搜索结果必须按相关性排序才能显示 AI 结果"
         ai_generated_result: "使用 AI 找到的搜索结果"
         quick_search:

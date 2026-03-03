@@ -1874,7 +1874,6 @@ sv:
     enable_category_group_moderation: "Tillåt att grupper modererar innehåll i specifika kategorier"
     group_in_subject: "Ställ in %%{optional_pm} i e-postämnet till namnet på den första gruppen i PM, se: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Anpassa ämnesformat för standardmeddelanden</a>"
     anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N:e minut för varje användare för att skydda anonymiteten. Exempel: om detta ställs in till 600, så skapas ett nytt anonymt konto så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon."
-    hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarkataloger för anonyma användare."
     allow_users_to_hide_profile: "Tillåt att användare döljer sin profil och närvaro"
     hide_user_activity_tab: "Dölj aktivitetsfliken på användarprofiler utom för administratörer och användaren själv."
     allow_featured_topic_on_user_profiles: "Tillåt att användarna visar en länk till ett ämne från sitt användarkort och profil."

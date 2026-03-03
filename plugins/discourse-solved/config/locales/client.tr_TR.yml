@@ -29,6 +29,7 @@ tr_TR:
       solution_summary:
         one: "çözüm"
         other: "çözüm"
+      accepted_answer_solver_info: "%{user} tarafından %{post} içinde çözüldü."
       accepted_answer_post_number: "%{post_number}. gönderi"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -38,6 +39,20 @@ tr_TR:
       no_solved_topics_title: "Henüz hiçbir konuyu çözmediniz"
       no_solved_topics_title_others: "%{username} henüz hiçbir konuyu çözmedi"
       no_solved_topics_body: "Bir konuya yararlı bir yanıt verdiğinizde, yanıtınız konu sahibi veya personel tarafından çözüm olarak seçilebilir."
+      marked_solved_by: "%{user} tarafından çözüldü olarak işaretlendi"
+      confirm_move_solution_title: "Çözüm gönderisini taşı"
+      confirm_move_solution:
+        one: "Seçtiğiniz gönderi bu konunun çözümü olarak işaretlenmiştir. Gönderiyi taşırsanız, konu çözülmemiş olarak güncellenecektir."
+        other: "Seçtiğiniz gönderilerden biri bu konunun çözümü olarak işaretlenmiştir. Bunları taşırsanız, konu çözülmemiş olarak güncellenecektir."
+      move_post_confirm:
+        one: "Gönderiyi taşı"
+        other: "Gönderileri taşı"
+      move_post_cancel: "İptal et"
+      dont_show_again: "Anladım, bunu bir daha gösterme"
+      confirm_solved_removal_title: "Çözüm kaldırılacaktır"
+      confirm_solved_removal: "Bu değişiklik, bu konu için çözümleri devre dışı bırakacak ve kabul edilen çözümü kaldıracaktır."
+      confirm_solved_removal_confirm: "Onayla"
+      confirm_solved_removal_cancel: "İptal et"
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."

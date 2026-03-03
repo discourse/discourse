@@ -44,6 +44,12 @@ fr:
           one: "%{formatted_number} message de discussion"
           other: "%{formatted_number} messages de discussion"
     chat:
+      edit_category:
+        tab_title: "Discussion"
+        channel: "Canal"
+        description: "Description"
+        actions: "Actions"
+        settings: "Paramètres"
       text_copied: Texte copié dans le presse-papiers
       link_copied: Lien copié dans le presse-papiers
       back_to_forum: "Forum"
@@ -58,6 +64,7 @@ fr:
       cancel: "Annuler"
       cancel_reply: "Annuler la réponse"
       chat_channels: "Canaux"
+      pinned: "Épinglé"
       browse_all_channels: "Parcourir tous les canaux"
       see_in: "Voir dans"
       move_to_channel:

@@ -8,3 +8,9 @@ de:
   site_settings:
     discourse_math_enabled: "Aktiviere das Discourse-Math-Plug-in (fügt spezielle Bearbeitungsschritte für $- und $$-Blöcke hinzu)"
     discourse_math_provider: "Standard-Math-Rendering-Provider"
+    discourse_math_enable_latex_delimiters: "LaTeX-ähnliche Trennzeichen aktivieren: \\(...\\) für Inline-Formeln und \\[...\\] für Formelblöcke"
+    discourse_math_mathjax_output: "MathJax-Ausgabeformat (nur MathJax)"
+    discourse_math_enable_menu: "Kontextmenü aktivieren (nur MathJax)"
+    discourse_math_enable_accessibility: "Bedienungshilfen aktivieren (nur MathJax mit Menü)"
+    discourse_math_zoom_on_click: "Mit Alt-Klick auf 175 % zoomen (nur MathJax mit Menü)"
+    discourse_math_enable_asciimath: "asciimath aktivieren (fügt spezielle Bearbeitungsschritte für durch % getrennte Eingabe hinzu; nur bei Verwendung von MathJax unterstützt)"

@@ -19,3 +19,12 @@ hu:
     votes_moved:
       one: "Szavazás áthelyezve"
       other: "%{count} szavazás áthelyezve"
+    duplicated_votes:
+      one: "A szavazatot nem lehetett áthelyezni, mert a felhasználó már szavazott a másik témában."
+      other: "%{count} szavazatot nem lehet áthelyezni, mert a felhasználók már szavaztak a másik témában."
+    filter:
+      description:
+        topic_votes_min: "A témára leadott szavazatok minimális száma"
+        topic_votes_max: "A téma szavazatok maximális száma"
+        order_topic_votes: "Témák sorrendje a legtöbb szavazat szerint"
+        order_topic_votes_asc: "A témák sorrendje a legkevesebb szavazat szerint"

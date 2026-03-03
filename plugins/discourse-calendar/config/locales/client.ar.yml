@@ -355,6 +355,7 @@ ar:
       bulk_invite: "دعوة جماعية"
       close_event: "إغلاق الحدث"
       open_event: "فتح الحدث"
+      destroy_event: "إلغاء الحدث"
       invitees_modal:
         title_invited: "المشاركة في الحدث"
         title_participated: "قائمة المستخدمين الذين شاركوا"
@@ -447,6 +448,12 @@ ar:
             private:
               title: "خاص"
               description: "لا يمكن إلا للمستخدمين المدعوين الانضمام إلى حدثٍ خاص."
+      composer:
+        name_placeholder: "حدث"
+        end_date_placeholder: "تعيين تاريخ الانتهاء"
+        location_placeholder: "أضف الموقع أو عنوان URL"
+        max_attendees_placeholder: "حدد الحد الأقصى للحضور"
+        description_placeholder: "أضف وصفًا للحدث"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -516,6 +523,7 @@ ar:
           label: "المجموعات المدعوة"
         status:
           label: "الحالة"
+        delete_confirmation_message: "هل تريد حذف هذا الحدث؟"
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"

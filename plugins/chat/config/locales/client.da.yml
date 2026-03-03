@@ -28,6 +28,12 @@ da:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanal"
+        description: "Beskrivelse"
+        actions: "Handlinger"
+        settings: "Indstillinger"
       back_to_forum: "Forum"
       deleted_chat_username: slettet
       dates:
@@ -40,6 +46,7 @@ da:
       cancel: "Annuller"
       cancel_reply: "Annuller svar"
       chat_channels: "Kanaler"
+      pinned: "Fastgjort"
       browse_all_channels: "Gennemse alle kanaler"
       move_to_channel:
         title: "Flyt beskeder til kanal"
