@@ -23,7 +23,8 @@ import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 
 let lastRollupResult;
 let lastRollupError;
-globalThis.rollup = function (modules, opts) {
+
+async function performRollup(modules, opts) {
   let basePath = opts.pluginName
     ? `discourse/plugins/${opts.pluginName}/`
     : `theme-${opts.themeId}/`;
@@ -36,10 +37,11 @@ globalThis.rollup = function (modules, opts) {
 
   const { vol } = memfs(modules, basePath);
 
-  const resultPromise = rollup({
+  const result = await rollup({
     input: inputConfig,
     logLevel: "info",
     fs: vol.promises,
+    cache: opts.cache,
     onLog(level, message) {
       if (String(message).startsWith("Circular dependency")) {
         return;
@@ -106,38 +108,41 @@ globalThis.rollup = function (modules, opts) {
     ],
   });
 
-  resultPromise
-    .then((bundle) => {
-      return bundle.generate({
-        format: "es",
-        sourcemap: "hidden",
-        entryFileNames: `${opts.filenamePrefix ?? ""}[name]${opts.filenameSuffix ?? ""}.js`,
-        chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:6]${opts.filenameSuffix ?? ""}.js`,
-      });
-    })
-    .then(({ output }) => {
-      lastRollupResult = Object.fromEntries(
-        output
-          .filter((c) => c.code)
-          .map((chunk) => {
-            return [
-              chunk.fileName,
-              {
-                code: chunk.code,
-                map: JSON.stringify(chunk.map),
-                name: chunk.name,
-                isEntry: chunk.isEntry,
-                imports: chunk.imports.filter((i) =>
-                  output.find((c) => c.fileName === i)
-                ),
-              },
-            ];
-          })
-      );
-    })
-    .catch((error) => {
-      lastRollupError = error;
-    });
+  const bundle = await result.generate({
+    format: "es",
+    sourcemap: "hidden",
+    entryFileNames: `${opts.filenamePrefix ?? ""}[name]${opts.filenameSuffix ?? ""}.js`,
+    chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:6]${opts.filenameSuffix ?? ""}.js`,
+  });
+
+  const chunks = Object.fromEntries(
+    bundle.output
+      .filter((c) => c.code)
+      .map((chunk) => {
+        return [
+          chunk.fileName,
+          {
+            code: chunk.code,
+            map: JSON.stringify(chunk.map),
+            name: chunk.name,
+            isEntry: chunk.isEntry,
+            imports: chunk.imports.filter((i) =>
+              bundle.output.find((c) => c.fileName === i)
+            ),
+          },
+        ];
+      })
+  );
+
+  return chunks;
+}
+
+globalThis.rollup = async function (modules, opts) {
+  try {
+    lastRollupResult = await performRollup(modules, opts);
+  } catch (error) {
+    lastRollupError = error;
+  }
 };
 
 globalThis.getRollupResult = function () {
