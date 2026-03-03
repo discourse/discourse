@@ -1364,6 +1364,63 @@ acceptance(
 );
 
 acceptance(
+  "Sidebar - Logged on user - Categories Section - Mobile slide-out",
+  function (needs) {
+    needs.user({
+      admin: true,
+      can_create_category: true,
+      sidebar_category_ids: [],
+    });
+    needs.mobileView();
+    needs.settings({ navigation_menu: "sidebar" });
+
+    test("hamburger closes when header dropdown navigates to a new page", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .exists("hamburger sidebar is open");
+
+      const headerDropdown = selectKit(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+      );
+
+      await headerDropdown.expand();
+      await headerDropdown.selectRowByValue("new-category");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .doesNotExist("hamburger sidebar closes after header dropdown action");
+      assert.true(currentURL().startsWith("/new-category"));
+    });
+
+    test("hamburger closes when header dropdown opens a modal", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .exists("hamburger sidebar is open");
+
+      const headerDropdown = selectKit(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+      );
+
+      await headerDropdown.expand();
+      await headerDropdown.selectRowByValue("edit-categories");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .doesNotExist("hamburger sidebar closes after header dropdown action");
+      assert
+        .dom(".sidebar__edit-navigation-menu__categories-modal")
+        .exists("edit categories modal opens");
+    });
+  }
+);
+
+acceptance(
   "Sidebar - Admin - Categories Section - Header Dropdown Mode",
   function (needs) {
     needs.user({ admin: true, can_create_category: true });

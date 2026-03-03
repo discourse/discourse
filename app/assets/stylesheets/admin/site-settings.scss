@@ -36,6 +36,12 @@
   box-shadow: var(--shadow-card);
   z-index: 1;
 
+  .footer-nav-visible & {
+    bottom: calc(
+      var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-4)
+    );
+  }
+
   @include viewport.until(sm) {
     flex-direction: column;
     justify-content: flex-start;
