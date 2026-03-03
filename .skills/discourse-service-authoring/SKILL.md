@@ -79,7 +79,7 @@ Review the service against these structural rules. List every violation found.
 - No `return if`/`return unless` at the top of step methods — use `only_if` wrappers. Guard clauses in `only_if` predicate methods use bare `return` (not `return false`).
 - NEVER have an utility methods in a service, use model or step instead
 - NEVER rate limiting in the service — if necessary, it belongs in the controller via `before_action`
-- NEVER an optional model steps just to store a value for condition checks
+- NEVER use an optional model steps just to store a value for condition checks
 - `create` over `new` + separate `save!` in model steps
 - Each side effect is its own step with its own `only_if` wrapper — never bundle conditional side effects with internal if-statements
 - ALWAYS Group related side effects into one step ONLY when they are truly one conceptual action AND share the same condition
