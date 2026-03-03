@@ -24,8 +24,6 @@ end
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
-  register_category_type(DiscourseSolved::Categories::Types::Support)
-
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 
   module ::DiscourseSolved
@@ -175,6 +173,7 @@ after_initialize do
   end
 
   reloadable_patch do
+    register_category_type(DiscourseSolved::Categories::Types::Support)
     ::Guardian.prepend(DiscourseSolved::GuardianExtensions)
     ::WebHook.prepend(DiscourseSolved::WebHookExtension)
     ::TopicViewSerializer.prepend(DiscourseSolved::TopicViewSerializerExtension)
