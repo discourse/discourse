@@ -18,6 +18,17 @@ tr_TR:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "Reklam Türü"
+            house_ad_name:
+              label: "Kurum Reklamı Adı"
+            ad_placement:
+              label: "Reklam Yerleşimi"
+            user_type:
+              label: "Kullanıcı Türü"
       adplugin:
         house_ads:
           title: "Şirket İçi Reklamlar"
@@ -26,20 +37,27 @@ tr_TR:
           new_name: "Yeni Şirket İçi Reklam"
           save: "Kaydet"
           delete: "Sil"
+          confirm_delete: "Bu reklamı silmek istediğinizden emin misiniz?"
           html: "HTML"
           categories: "Kategoriler"
+          routes: "Rotalar"
           groups: "Gruplar"
+          description: "Sitenizin çeşitli yerlerinde görüntülenecek kendi reklamlarınızı oluşturun ve yönetin."
+          get_started: "Henüz hiçbir kurum reklamı oluşturulmadı."
           filter_placeholder: "Reklamları seçin..."
           more_settings: "Daha Fazla Ayar"
           show_to_anons: "Anonim kullanıcılara göster"
           show_to_logged_in_users: "Giriş yapmış kullanıcılara göster"
           category_chooser_description: "Bu reklamın gösterileceği kategorileri seçin veya reklamı her yerde göstermek için boş bırakın. `no_ads_for_categories` site ayarının bu ayar üzerinde önceliği vardır."
+          category_chooser_description_with_routes: "Bu reklamın gösterileceği kategorileri seçin. Reklamın her yerde gösterilmesi için bu alanı ve rota seçimlerini boş bırakın. `no_ads_for_categories` site ayarı bu ayardan önceliklidir."
+          route_chooser_description: "Bu reklamın gösterileceği sayfaları/yolları seçin. Reklamın her yerde gösterilmesi için bu alanı ve kategori seçimlerini boş bırakın."
           group_chooser_description: "Bu reklamı görüntüleyebilecek grupları seçin veya reklamı oturum açmış tüm kullanıcılara göstermek için boş bırakın."
           preview: "Ön izle"
           back: "Şirket İçi Reklamlar"
           name: "Ad"
           edit: "Düzenle"
           tabs:
+            ads: "Reklamlar"
             settings: "Ayarlar"
           topic_list_top:
             title: "Konu listesi üstü reklamları"

@@ -8,5 +8,11 @@ hu:
   js:
     user_notes:
       title: "Felhasználói megjegyzések"
+      attach: "Felhasználói megjegyzés hozzáadása"
       attach_note_description: "Adjon hozzá egy megjegyzést erről a felhasználóról. Ez a megjegyzés csak a személyzet számára lesz látható."
+      remove: "Felhasználói megjegyzés eltávolítása"
+      show: "%{count} megjegyzés"
       delete_confirm: "Biztosan törölni szeretné ezt a felhasználói megjegyzést?"
+      show_post: "Bejegyzés mutatása"
+      show_flag: "Megjelöltek mutatása"
+      copy_reviewable_note: "Másolja a jegyzetet a 'Felhasználói jegyzet' bejegyzésbe %{username}profilján?"

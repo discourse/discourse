@@ -6,6 +6,7 @@
 
 es:
   solved: "Solucionado"
+  unsolved: "Sin resolver"
   posted: "publicó"
   by_username: "por @%{username}"
   vote_count:

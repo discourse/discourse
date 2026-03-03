@@ -278,6 +278,10 @@ de:
           name: "Von vorne beginnen …"
       name:
         characters: "darf nur Zahlen, Buchstaben und Unterstriche enthalten"
+      secret_contracts:
+        alias_too_long: "Der geheime Alias „%{alias}“ ist zu lang."
+        alias_invalid: "Der geheime Alias „%{alias}“ darf nur Zahlen, Buchstaben und Unterstriche enthalten."
+        alias_not_unique: "Der geheime Alias „%{alias}“ ist doppelt vorhanden."
       secret_bindings:
         secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
       secret_runtime:

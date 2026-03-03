@@ -9,6 +9,7 @@ tr_TR:
   site_settings:
     solved_enabled: "Çözüldü eklentisini etkinleştirin, kullanıcıların konularda yanıtları çözüldü olarak seçmesine izin verin"
     allow_solved_on_all_topics: "Kullanıcıların tüm konularda çözüm seçmesine izin verin (işaretli olmadığında, çözümler kategori veya etiket başına etkinleştirilebilir)"
+    allow_solved_in_groups: "Bu gruplar için grup mesajlarında çözümlerin işaretlenmesine izin ver."
     accept_all_solutions_trust_level: "Herhangi bir konudaki çözümleri kabul etmek için gereken asgari güven seviyesi (OP olmasa bile)"
     accept_all_solutions_allowed_groups: "Herhangi bir konudaki çözümleri kabul etmesine izin verilen gruplar (OP olmasa bile). Yöneticilere ve moderatörlere her zaman izin verilir."
     empty_box_on_unsolved: "Çözülmemiş konuların yanında boş bir kutu görüntüle"
@@ -30,6 +31,7 @@ tr_TR:
   reports:
     accepted_solutions:
       title: "Kabul edilen çözümler"
+      description: "Belirli bir tarih aralığında, isteğe bağlı kategori filtresi ve 30 günlük karşılaştırma toplamı ile günde kaç konu için çözüm kabul edildi."
       xaxis: "Gün"
       yaxis: "Toplam"
   solved:

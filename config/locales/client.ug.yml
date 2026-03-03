@@ -9,6 +9,7 @@ ug:
     blocks:
       ghost:
         status: "ھالەت"
+        conditions: "شەرت"
         in_location: "دا"
         hidden: "يوشۇرۇن"
         failed: "مەغلۇب بولدى"
@@ -332,6 +333,8 @@ ug:
       theme_source: "ئۆرنەك <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "قىستۇرما «%{name}»"
       unknown_source: "ئۆرنەك ياكى قىستۇرمىڭىزدىن بىرى"
+    dev_tools:
+      drag_to_move: "سۆرەپ يۆتكە"
     s3:
       regions:
         ap_northeast_1: "ئاسىيا تىنچ ئوكيان (توكيو)"
@@ -421,7 +424,10 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      invite_collaborators:
+        action: "تەكلىپ قۇر"
       start_posting:
+        title: "يوللاشنى باشلا"
         back: "كەينى"
       spread_the_word:
         action: "ئۇلانما كۆچۈر"

@@ -8,6 +8,7 @@ tr_TR:
   site_settings:
     chat_separate_sidebar_mode: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
     chat_enabled: "Sohbeti etkinleştir."
+    chat_pinned_messages: "Sohbet kanallarında sabitlenmiş mesajları etkinleştirin."
     enable_public_channels: "Kategorilere göre herkese açık kanalları etkinleştirin."
     chat_allowed_groups: "Bu gruplardaki kullanıcılar sohbet edebilir. Yöneticilerin ve moderatörlerin her zaman sohbete erişebileceğini unutmayın."
     chat_channel_retention_days: "Normal kanallardaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
@@ -23,6 +24,7 @@ tr_TR:
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
+    chat_pinning_messages_allowed_groups: "Bu gruplardaki kullanıcılar, erişebildikleri kanallarda sohbet mesajlarını sabitleyebilirler. Yöneticiler ve moderatörler her zaman sohbet mesajlarını sabitleyebilirler. Grup sohbeti veya DM'nin herhangi bir üyesi mesajları sabitleyebilir."
     max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."
     chat_max_direct_message_users: "Kullanıcılar, yeni bir doğrudan mesaj oluştururken bu sayıdan daha fazla kullanıcı ekleyemez. Yalnızca kendisine mesaj gönderilmesine izin vermek için 0 olarak ayarlayın. Personel bu ayardan muaftır."
     chat_allow_archiving_channels: "Personelin bir kanalı kapatırken mesajları bir konuya arşivlemesine izin verin."
@@ -31,6 +33,7 @@ tr_TR:
     chat_editing_grace_period_max_diff_high_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 2 ve üstü)."
     chat_preferred_index: "/chat yüklenirken tercih edilen sekme."
     allow_chat_in_anonymous_mode: "Sitenizde anonim olarak gezinen kullanıcıların sohbet özelliğini kullanabilmesi için bu ayarı etkinleştirin. Bu ayar, `allow anonymous mode` ayarının etkinleştirilmesini gerektirir."
+    chat_search_enabled: "Kullanıcıların sohbet mesajlarını aramasına izin vermek için bu ayarı etkinleştirin."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
@@ -72,6 +75,7 @@ tr_TR:
         closed: "Kanal kapalı, hiçbir mesaj düzenlenemez veya silinemez"
         read_only: "Kanal salt okunur, hiçbir mesaj düzenlenemez veya silinemez"
       user_cannot_send_message: "Şu anda mesaj gönderemezsiniz."
+      user_not_in_channel: "Bu kanalın üyesi olmalısınız."
       rate_limit_exceeded: "30 saniye içinde gönderilebilecek sohbet mesajı limiti aşıldı"
       auto_silence_from_flags: "Kullanıcıyı susturmaya yetecek kadar yüksek puanla bayrak eklenen sohbet mesajı."
       channel_cannot_be_archived: "Kanal şu anda arşivlenemez, arşivlemek için kapalı veya açık olmalı."
@@ -103,12 +107,22 @@ tr_TR:
       thread_invalid_for_channel: "Konu, sağlanan kanalın bir parçası değildir."
       thread_does_not_match_parent: "Konu ana mesajla eşleşmiyor."
       invalid_direct_message: "Bu doğrudan mesajı oluşturmanıza izin verilmiyor."
+      pin_limit_reached: "Bu kanal, sabitlenmiş mesajların maksimum sayısına ulaştı (%{limit})."
+      message_already_pinned: "Bu mesaj zaten sabitlenmiş durumda."
+      message_not_pinned: "Bu mesaj sabitlenmemiş."
     reviewables:
       message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
       actions:
+        message_actions:
+          bundle_title: "Mesajla ne yapmak istiyorsunuz?"
         no_action_message:
           title: "Eylem yok"
+          description: "Mesajı olduğu gibi bırakın."
+        delete_message:
+          title: "Mesajı sil"
+          description: "Mesajı kalıcı olarak silin."
         restore_message:
+          title: "Mesajı geri yükle"
           description: "Kullanıcıların görebilmesi için mesajı geri yükleyin."
         agree:
           title: "Kabul et..."
@@ -131,12 +145,17 @@ tr_TR:
           title: "Mesajı sil"
           description: "Kullanıcıların görememesi için mesajı silin."
         delete_and_agree:
+          title: "Bayrağı yok say ve mesajı sil"
           description: "Kuyruktan kaldırarak bayrağı yok sayın ve mesajı sil."
         disagree_and_restore:
           title: "Katılma ve Mesajı Geri Yükle"
           description: "Tüm kullanıcıların görebilmesi için mesajı geri yükle."
+        disagree:
+          title: "Mesajı Sakla"
+          description: "Bayrağa katılma ve mesajı değiştirmeden bırak."
         ignore:
           title: "Bildirimi yoksay"
+          description: "Herhangi bir işlem yapmadan kuyruktan kaldır."
       direct_messages:
         transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
         transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"
@@ -185,6 +204,7 @@ tr_TR:
         is_already_in_use: "zaten kullanımda"
     bookmarkable:
       notification_title_channel: "%{channel_name} adlı kanaldaki mesaj"
+      notification_title_direct_message: "%{channel_name} ile mesaj"
     personal_chat: "kişisel sohbet"
     onebox:
       inline_to_message: "%{username} adlı kullanıcının #%{message_id} mesajı - #%{chat_channel}"
@@ -242,14 +262,19 @@ tr_TR:
         watched_thread:
           one: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajı"
           other: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajları"
+        watched_threads:
+          one: "[%{site_name}] %{channel} ve %{count} diğer kanalda yeni mesajlar"
+          other: "[%{site_name}] %{channel} ve %{count} diğer kanalda yeni mesajlar"
         chat_dm_1:
           one: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesaj"
           other: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesajlar"
         chat_dm_2: "[%{site_name}] %{name_1} ve %{name_2} kişiden daha yeni mesajlar"
+        chat_dm_3_or_more: "[%{site_name}] %{name} ve %{count} diğer doğrudan mesaj kanallarından yeni mesajlar"
         chat_channel_1:
           one: "[%{site_name}] %{channel} adlı kanalda yeni mesaj"
           other: "[%{site_name}] %{channel} adlı kanalda yeni mesajlar"
         chat_channel_2: "[%{site_name}] %{channel_1} ve %{channel_2} kanallarında yeni mesajlar"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} ve %{count} diğer kanalda yeni mesajlar var."
         chat_channel_and_dm: "[%{site_name}] %{channel} adlı kanalda ve %{name} adlı kişiden yeni mesajlar"
       unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
       unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."
@@ -259,8 +284,10 @@ tr_TR:
       view_more:
         one: "%{count} mesaj daha görüntüle"
         other: "%{count} mesaj daha görüntüle"
+      your_chat_settings: "sohbet e-posta tercihi"
   unsubscribe:
     chat_summary:
+      select_title: "Sohbet özeti e-postalarını şu şekilde ayarlayın:"
       never: Asla
       when_away: Sadece uzaktayken
   category:

@@ -11,6 +11,7 @@ tr_TR:
         draft: "Taslak"
         open: "Aç"
         approved: "Onaylandı"
+        merged: "Birleştirildi"
         closed: "Kapalı"
   admin_js:
     admin:
