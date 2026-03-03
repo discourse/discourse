@@ -17,7 +17,10 @@ export default class SidebarUserSections extends Component {
         @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
-      <CategoriesSection @collapsable={{@collapsableSections}} />
+      <CategoriesSection
+        @collapsable={{@collapsableSections}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
+      />
 
       {{#if this.currentUser.display_sidebar_tags}}
         <TagsSection @collapsable={{@collapsableSections}} />
