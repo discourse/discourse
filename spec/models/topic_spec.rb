@@ -2123,6 +2123,7 @@ RSpec.describe Topic do
         end
 
         describe "tracking state notifications" do
+          before { SiteSetting.experimental_topic_category_change_notification = true }
           it "publishes category change when moving to a restricted category" do
             restricted_category =
               Fabricate(:category_with_definition, read_restricted: true, user: user)

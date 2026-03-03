@@ -186,6 +186,7 @@ class TopicTrackingState
   # If moving to a more restricted category, users who lost access need to
   # have the topic removed from their tracking state.
   def self.publish_category_change(topic, old_category)
+    return if !SiteSetting.experimental_topic_category_change_notification
     return unless topic.regular?
 
     old_restricted = old_category&.read_restricted?

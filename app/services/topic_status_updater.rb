@@ -61,10 +61,12 @@ TopicStatusUpdater =
         # Notify tracking state when topic visibility changes
         # This handles the case where a topic is hidden due to flagging
         # or made visible again after review
-        if status.enabled?
-          TopicTrackingState.publish_recover(topic)
-        else
-          TopicTrackingState.publish_delete(topic)
+        if SiteSetting.experimental_topic_category_change_notification
+          if status.enabled?
+            TopicTrackingState.publish_recover(topic)
+          else
+            TopicTrackingState.publish_delete(topic)
+          end
         end
       end
 

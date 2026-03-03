@@ -281,6 +281,8 @@ RSpec.describe TopicStatusUpdater do
   end
 
   describe "tracking state notifications on visibility change" do
+    before { SiteSetting.experimental_topic_category_change_notification = true }
+
     it "publishes delete when topic becomes invisible" do
       topic = Fabricate(:topic)
 
