@@ -11,7 +11,6 @@ module Reports::Visits
       report.icon = "user"
 
       if SiteSetting.reporting_improvements
-
         report_visits_stacked(report, group_filter)
       else
         basic_report_about report,
@@ -37,14 +36,23 @@ module Reports::Visits
       report.modes = [Report::MODES[:stacked_chart]]
       report.default_group_by = "weekly"
 
-      desktop_data =
-        UserVisit
-          .desktop_by_day(report.start_date, report.end_date, group_filter)
-          .map { |date, count| { x: date.to_s, y: count } }
-      mobile_data =
-        UserVisit
-          .mobile_by_day(report.start_date, report.end_date, group_filter)
-          .map { |date, count| { x: date.to_s, y: count } }
+      results =
+        UserVisit.counts_by_day_and_mobile(
+          report.start_date,
+          report.end_date,
+          group_id: group_filter,
+        )
+
+      desktop_data = []
+      mobile_data = []
+
+      results.each do |row|
+        if row.mobile
+          mobile_data << { x: row.visited_at.to_s, y: row.visit_count }
+        else
+          desktop_data << { x: row.visited_at.to_s, y: row.visit_count }
+        end
+      end
 
       report.data = [
         {
@@ -61,13 +69,7 @@ module Reports::Visits
         },
       ]
 
-      report.total =
-        UserVisit.where(
-          "visited_at >= ? AND visited_at <= ?",
-          report.start_date,
-          report.end_date,
-        ).count
-
+      report.total = results.first&.total || 0
       report.prev30Days =
         UserVisit.where(
           "visited_at >= ? AND visited_at < ?",
