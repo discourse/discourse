@@ -39,21 +39,34 @@ export default class ToolbarScrollContainer extends Component {
 
   @action
   scrollLeft() {
-    this.scrollable?.scrollBy({ left: -150, behavior: "smooth" });
+    this.scrollable?.scrollBy({
+      left: -this.scrollable.offsetWidth,
+      behavior: "smooth",
+    });
   }
 
   @action
   scrollRight() {
-    this.scrollable?.scrollBy({ left: 150, behavior: "smooth" });
+    this.scrollable?.scrollBy({
+      left: this.scrollable.offsetWidth,
+      behavior: "smooth",
+    });
+  }
+
+  @action
+  preventFocusGrab(event) {
+    event.preventDefault();
   }
 
   <template>
     <div class="d-editor-button-bar-wrap">
       {{#if this.hasLeftScroll}}
+        {{! template-lint-disable no-pointer-down-event-binding }}
         <button
           type="button"
           class="d-editor-button-bar__scroll-btn --left"
           tabindex="-1"
+          {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollLeft}}
         >
           {{icon "chevron-left"}}
@@ -71,10 +84,12 @@ export default class ToolbarScrollContainer extends Component {
       </div>
 
       {{#if this.hasRightScroll}}
+        {{! template-lint-disable no-pointer-down-event-binding }}
         <button
           type="button"
           class="d-editor-button-bar__scroll-btn --right"
           tabindex="-1"
+          {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollRight}}
         >
           {{icon "chevron-right"}}

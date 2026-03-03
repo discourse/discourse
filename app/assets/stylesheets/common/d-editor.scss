@@ -312,14 +312,11 @@
   }
 }
 
-// d-editor bar button sizing
 .d-editor-button-bar-wrap {
   position: relative;
   min-width: 0;
-
-  // inset by the focused outline width (2px, offset -2px) so scroll buttons
-  // don't overlap the in-focus outline on any side
-  margin: 2px 2px 0;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 .d-editor-button-bar__scroll-btn {
@@ -332,6 +329,7 @@
   background: var(--fade-color);
   border: none;
   padding: 0 var(--space-1);
+  margin-block: 1px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -383,7 +381,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   gap: var(--space-2);
-  margin: 0.25rem 0;
+  margin: 0;
   padding-block: var(--space-1);
   overflow-x: auto;
   overflow-y: hidden;
