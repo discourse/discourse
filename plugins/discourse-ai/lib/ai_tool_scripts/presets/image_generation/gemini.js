@@ -150,9 +150,7 @@ function processResponse(result, prompt) {
 
   chain.setCustomRaw(raw);
 
-  return {
-    result: "Image generated successfully",
-  };
+  return { url: image.short_url };
 }
 
 function details() {

@@ -59,7 +59,7 @@ function performGeneration(prompt, size) {
   const raw = `\n![${prompt}](${image.short_url})\n`;
   chain.setCustomRaw(raw);
 
-  return { result: "Image generated successfully" };
+  return { url: image.short_url };
 }
 
 function performEdit(prompt, size, imageUrls) {
@@ -148,7 +148,7 @@ function performEdit(prompt, size, imageUrls) {
   const raw = `\n![${prompt}](${image.short_url})\n`;
   chain.setCustomRaw(raw);
 
-  return { result: "Image edited successfully" };
+  return { url: image.short_url };
 }
 
 function details() {

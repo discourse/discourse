@@ -7,7 +7,7 @@ import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
-import { and, gt } from "discourse/truth-helpers";
+import { and, eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { toPlainObject } from "../lib/utilities";
 import AiSecretSelector from "./ai-secret-selector";
@@ -30,6 +30,12 @@ export default class AiToolEditorForm extends Component {
     { name: "number", id: "number" },
     { name: "boolean", id: "boolean" },
     { name: "array", id: "array" },
+  ];
+
+  ITEM_TYPES = [
+    { name: "string", id: "string" },
+    { name: "number", id: "number" },
+    { name: "boolean", id: "boolean" },
   ];
 
   get formData() {
@@ -101,6 +107,9 @@ export default class AiToolEditorForm extends Component {
           delete parameter.enum;
         }
         delete parameter.isEnum;
+        if (parameter.type !== "array") {
+          delete parameter.item_type;
+        }
       });
     }
 
@@ -310,6 +319,25 @@ export default class AiToolEditorForm extends Component {
                 </field.Select>
               </collection.Field>
             </row.Col>
+
+            {{#if (eq collectionData.type "array")}}
+              <row.Col @size={{6}}>
+                <collection.Field
+                  @name="item_type"
+                  @title={{i18n "discourse_ai.tools.parameter_item_type"}}
+                  @format="full"
+                  as |field|
+                >
+                  <field.Select as |select|>
+                    {{#each this.ITEM_TYPES as |type|}}
+                      <select.Option
+                        @value={{type.id}}
+                      >{{type.name}}</select.Option>
+                    {{/each}}
+                  </field.Select>
+                </collection.Field>
+              </row.Col>
+            {{/if}}
           </form.Row>
 
           <form.Row as |row|>
@@ -330,7 +358,7 @@ export default class AiToolEditorForm extends Component {
             <row.Col>
               <collection.Field
                 @name="required"
-                @title={{i18n "discourse_ai.ai_tool.parameter_required"}}
+                @title={{i18n "discourse_ai.tools.parameter_required"}}
                 as |field|
               >
                 <field.Checkbox />
@@ -340,7 +368,7 @@ export default class AiToolEditorForm extends Component {
             <row.Col>
               <collection.Field
                 @name="isEnum"
-                @title={{i18n "discourse_ai.ai_tool.parameter_enum"}}
+                @title={{i18n "discourse_ai.tools.parameter_enum"}}
                 @onSet={{this.toggleIsEnum}}
                 as |field|
               >

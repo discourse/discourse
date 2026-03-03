@@ -38,7 +38,7 @@ module DiscourseAi
         render json: {
                  ai_personas: ai_personas,
                  meta: {
-                   tools: tools,
+                   tools: tools.sort_by { |t| t.try(:name) || t[:name] || "" },
                    llms: llms,
                    settings: {
                      rag_images_enabled: SiteSetting.ai_rag_images_enabled,

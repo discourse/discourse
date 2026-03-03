@@ -121,6 +121,19 @@ describe "AI Tool List Editor Dropdown", type: :system do
     expect(custom_preset_items.count).to eq(1)
   end
 
+  it "shows preset wizard dropdown from empty state button" do
+    visit "/admin/plugins/discourse-ai/ai-tools"
+
+    find(".ai-tool-list-editor__empty-new-button").click
+    tool_menu = PageObjects::Components::DMenu.new(find(".ai-tool-list-editor__empty-new-button"))
+
+    expect(tool_menu).to have_css(".btn[data-option='browse_web_jina']")
+    expect(tool_menu).to have_css(".btn[data-option='exchange_rate']")
+    expect(tool_menu).to have_css(".btn[data-option='stock_quote']")
+    expect(tool_menu).to have_css(".btn[data-option='image_generation_category']")
+    expect(tool_menu).to have_css(".btn[data-option='empty_tool']")
+  end
+
   it "resets menu state when closing dropdown" do
     visit "/admin/plugins/discourse-ai/ai-tools"
 
