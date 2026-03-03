@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -225,7 +225,7 @@ export default class PollComponent extends Component {
 
       this.hasSavedVote = true;
       if (!this.args.post.polls_votes) {
-        this.args.post.polls_votes = new TrackedObject();
+        this.args.post.polls_votes = trackedObject();
       }
       this.args.post.polls_votes[this.poll.name] = this.vote;
       Object.assign(this.poll, poll);

@@ -1,6 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
+import { trackedObject } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse/lib/decorators";
@@ -24,7 +24,7 @@ export default class ChatChannelsManager extends Service {
   @service siteSettings;
 
   @tracked userHasThreads = false;
-  @tracked _cached = new TrackedObject();
+  @tracked _cached = trackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
     const existingChannel = this.#findStale(id);

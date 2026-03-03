@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { trackedMap } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { SCROLLED_UP } from "./scroll-direction";
@@ -31,7 +31,7 @@ export default class Header extends Service {
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
 
-  #hiders = new TrackedMap();
+  #hiders = trackedMap();
 
   get topic() {
     deprecated(

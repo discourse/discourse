@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
+import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserAvatar from "discourse/components/user-avatar";
@@ -58,7 +58,7 @@ export function resetGroupPostSmallActionCodes() {
 export default class PostSmallAction extends Component {
   @service a11y;
 
-  decoratorState = new TrackedMap();
+  decoratorState = trackedMap();
 
   @cached
   get CustomComponent() {
