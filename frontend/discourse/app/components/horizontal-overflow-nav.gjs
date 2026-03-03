@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -13,6 +14,15 @@ export default class HorizontalOverflowNav extends Component {
   @tracked hideRightScroll = false;
   @tracked hideLeftScroll = true;
   scrollInterval;
+
+  @bind
+  setup(element) {
+    this.scrollToActive(element);
+
+    const observer = new MutationObserver(() => this.watchScroll(element));
+    observer.observe(element, { childList: true });
+    registerDestructor(this, () => observer.disconnect());
+  }
 
   @bind
   scrollToActive(element) {
@@ -149,7 +159,7 @@ export default class HorizontalOverflowNav extends Component {
       <ul
         {{onResize this.onResize}}
         {{on "scroll" this.onScroll}}
-        {{didInsert this.scrollToActive}}
+        {{didInsert this.setup}}
         {{on "mousedown" this.scrollDrag}}
         class="nav-pills action-list {{@className}}"
         ...attributes

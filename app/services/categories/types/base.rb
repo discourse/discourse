@@ -34,13 +34,15 @@ module Categories
         end
 
         def icon
-          "comments"
+          "memo"
         end
 
         def metadata
+          name = I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize)
           {
             id: type_id,
-            name: I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize),
+            name: name,
+            title: I18n.t("category_types.#{type_id}.title", default: name),
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon: icon,
             available: available?,

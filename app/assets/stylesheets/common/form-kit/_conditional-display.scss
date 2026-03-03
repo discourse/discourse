@@ -13,11 +13,7 @@
 }
 
 .--radio-cards {
-  width: var(--form-kit-max-input);
-
-  @include viewport.until(sm) {
-    width: 100%;
-  }
+  width: 100%;
 
   .form-kit__conditional-display,
   .form-kit__container-content.--large {

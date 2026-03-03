@@ -897,7 +897,8 @@ en:
   category_types:
     discussion:
       name: "Discussion"
-      description: "General discussion topics"
+      title: "discussion"
+      description: "All the essentials for paragraph-based conversation."
 
   trust_levels:
     admin: "Admin"

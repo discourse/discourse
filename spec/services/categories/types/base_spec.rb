@@ -14,7 +14,7 @@ RSpec.describe Categories::Types::Base do
     it "returns type information including configuration_schema" do
       expect(described_class.metadata).to include(
         id: :base,
-        icon: "comments",
+        icon: "memo",
         available: true,
         configuration_schema: [],
       )

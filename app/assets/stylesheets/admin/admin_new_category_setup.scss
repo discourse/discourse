@@ -1,30 +1,50 @@
-.admin-new-category-setup {
-  max-width: 600px;
-  margin: 0 auto;
+@use "lib/viewport";
 
+.admin-new-category-setup {
   .category-type-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1em;
-    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
 
     &__card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5em;
-      padding: 2em 1.5em;
+      all: unset; // reset browser button styles
+      position: relative;
+      display: grid;
+      grid-template-areas: "icon title" "icon description";
+      grid-template-columns: auto 1fr;
+      cursor: pointer;
+      text-align: left;
+      gap: 0 var(--space-6);
       border: 1px solid var(--primary-low);
       border-radius: var(--d-border-radius);
-      background: var(--secondary);
-      cursor: pointer;
-      transition: border-color 0.15s;
-      text-align: center;
+      padding: var(--space-9) var(--space-6);
+
+      @include viewport.from(sm) {
+        padding: var(--space-8) var(--space-8) var(--space-9);
+        gap: 0 var(--space-8);
+      }
+
+      &-icon {
+        grid-area: icon;
+        font-size: 2.75em;
+        margin-top: -0.1em;
+      }
+
+      &-name {
+        grid-area: title;
+        font-size: var(--font-up-1);
+        font-weight: bold;
+      }
+
+      &-description {
+        grid-area: description;
+        color: var(--primary-high);
+      }
 
       &:hover,
       &:focus-visible {
         border-color: var(--tertiary);
-        outline: none;
       }
 
       &.--unavailable {
@@ -38,31 +58,15 @@
       }
     }
 
-    &__card-icon {
-      font-size: var(--font-up-4);
-      color: var(--tertiary);
-
-      .--unavailable & {
-        color: var(--primary-medium);
-      }
-    }
-
-    &__card-name {
-      font-weight: 700;
-      font-size: var(--font-up-1);
-    }
-
-    &__card-description {
-      font-size: var(--font-down-1);
-      color: var(--primary-medium);
-    }
-
     &__card-badge {
+      position: absolute;
+      right: 0;
       font-size: var(--font-down-2);
-      color: var(--primary-medium);
-      background: var(--primary-very-low);
-      padding: 0.15em 0.5em;
-      border-radius: var(--d-border-radius);
+      color: var(--primary);
+      padding: var(--space-1) var(--space-2);
+      background: var(--highlight-low);
+      border-radius: 0 calc(var(--d-border-radius) - 1px) 0
+        var(--d-border-radius);
     }
   }
 }
