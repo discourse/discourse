@@ -6,7 +6,6 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 101
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -32,7 +31,7 @@ class Theme < ActiveRecord::Base
   attr_accessor :skip_child_components_update
 
   def self.cache
-    @cache ||= DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
+    @cache ||= DistributedCache.new("theme:compiler:#{AssetProcessor::BASE_COMPILER_VERSION}")
   end
 
   belongs_to :user
@@ -243,13 +242,14 @@ class Theme < ActiveRecord::Base
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
-        BASE_COMPILER_VERSION,
-        AssetProcessor.new.ember_version,
+        AssetProcessor::BASE_COMPILER_VERSION,
+        AssetProcessor.ember_version,
         GlobalSetting.cdn_url,
         GlobalSetting.s3_cdn_url,
         GlobalSetting.s3_endpoint,
         GlobalSetting.s3_bucket,
         Discourse.current_hostname,
+        ENV["ROLLUP_PLUGIN_COMPILER"],
       ]
       Digest::SHA1.hexdigest(dependencies.join)
     end

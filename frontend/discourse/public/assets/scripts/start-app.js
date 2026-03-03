@@ -1,7 +1,7 @@
 document.addEventListener("discourse-init", async (e) => {
   performance.mark("discourse-init");
   const config = e.detail;
-  const { default: klass, loadThemes, loadAdmin } = require(
+  const { default: klass, loadThemesAndPlugins, loadAdmin } = require(
     `${config.modulePrefix}/app`
   );
 
@@ -13,7 +13,7 @@ document.addEventListener("discourse-init", async (e) => {
     await loadAdmin();
   }
 
-  await loadThemes();
+  await loadThemesAndPlugins();
 
   const app = klass.create(config);
   app.start();

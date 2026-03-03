@@ -361,7 +361,7 @@ export default function setupTests(config) {
     window.location.href = window.location.origin + "/theme-qunit";
   }
 
-  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
+  const hasPluginJs = !!document.querySelector("script[data-plugin-name]");
   const hasThemeJs = !!document.querySelector("script[data-theme-id]");
 
   // forces 0 as duration for all jquery animations
@@ -384,7 +384,7 @@ export default function setupTests(config) {
   // core tests run without loading plugins or themes
   const isCoreTest = !hasPluginJs && !hasThemeJs;
   const isPreinstalledPluginTest = !!document.querySelector(
-    `script[data-discourse-plugin="${CSS.escape(target)}"][data-preinstalled="true"]`
+    `script[data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
   );
 
   if (
