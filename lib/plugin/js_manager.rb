@@ -26,7 +26,7 @@ module Plugin
     end
 
     def compile!
-      puts "[Plugin::JSManager] Compiling #{Discourse.plugins.count} plugins..."
+      log "Compiling #{Discourse.plugins.count} plugins..."
       start = Time.now
 
       if !GlobalSetting.mini_racer_single_threaded && AssetProcessor.booted?
@@ -39,7 +39,7 @@ module Plugin
         compile_js_bundle(plugin)
       end
 
-      puts "[Plugin::JSManager] Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
+      log "Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
     end
 
     def compile_js_bundle(plugin)
@@ -147,17 +147,23 @@ module Plugin
           changed_files = modified + added + removed
           changed_plugins = Set.new
 
+          log "Changed files:"
           changed_files.each do |file|
-            puts file
+            relative_path = Pathname.new(file).relative_path_from(Rails.root)
+            log "- #{relative_path}"
+
             plugin = Discourse.plugins.find { |p| file.start_with?(p.directory) }
             changed_plugins << plugin if plugin
           end
 
-          puts "Changed plugins #{changed_plugins.map(&:directory_name).join(", ")}"
+          log "Recompiling..."
+          start = Time.now
           changed_plugins.each { |plugin| compile_js_bundle(plugin) }
+          log "Finished recompilation in #{(Time.now - start).round(2)}s"
+
           MessageBus.publish("/file-change", ["refresh"])
         rescue => e
-          STDERR.puts "Plugin JS watcher crashed \n#{e}"
+          log "Plugin JS watcher crashed \n#{e}"
         end
 
       begin
@@ -175,6 +181,10 @@ module Plugin
 
     def cache?
       true
+    end
+
+    def log(message)
+      STDERR.puts "[Plugin::JsManager] #{message}"
     end
   end
 end
