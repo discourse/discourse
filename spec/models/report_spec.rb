@@ -172,11 +172,31 @@ RSpec.describe Report do
         user.user_visits.create!(visited_at: 2.days.ago, mobile: false)
 
         expect(report.modes).to eq([Report::MODES[:stacked_chart]])
+        expect(report.default_group_by).to eq("weekly")
         expect(report.data.length).to eq(2)
         expect(report.data[0][:req]).to eq("desktop")
         expect(report.data[1][:req]).to eq("mobile")
         expect(report.data[0][:data].length).to eq(2)
         expect(report.data[1][:data].length).to eq(1)
+        expect(report.total).to eq(3)
+        expect(report.prev30Days).to eq(0)
+      end
+
+      it "filters by group" do
+        freeze_time_safe
+        group = Fabricate(:group)
+        group.add(user)
+
+        user.user_visits.create!(visited_at: 1.day.ago, mobile: false)
+        user_2.user_visits.create!(visited_at: 1.day.ago, mobile: true)
+
+        filtered_report = Report.find("visits", filters: { group: group.id })
+
+        desktop_data = filtered_report.data[0][:data]
+        mobile_data = filtered_report.data[1][:data]
+
+        expect(desktop_data.length).to eq(1)
+        expect(mobile_data.length).to eq(0)
       end
     end
   end

@@ -79,11 +79,3 @@ module Reports::Visits
     end
   end
 end
-
-#  basic_report_about report,
-#                          UserVisit,
-#                          :by_day,
-#                          report.start_date,
-#                          report.end_date,
-#                          group_filter
-#       add_counts report, UserVisit, "visited_at"
