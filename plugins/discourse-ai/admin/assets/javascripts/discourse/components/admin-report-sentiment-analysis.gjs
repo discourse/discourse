@@ -4,9 +4,9 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
@@ -153,7 +153,7 @@ export default class AdminReportSentimentAnalysis extends Component {
       });
     }
 
-    return new TrackedArray(list);
+    return trackedArray(list);
   }
 
   get postFilters() {
