@@ -62,7 +62,15 @@ RSpec.describe DiscourseAi::AiCreditsController do
 
         it "handles mixed valid and invalid IDs" do
           llm_model = Fabricate(:llm_model, id: -10)
-          ai_persona = Fabricate(:ai_persona, default_llm_id: llm_model.id)
+          group = Fabricate(:group)
+          group.add(user)
+          ai_persona =
+            Fabricate(
+              :ai_persona,
+              default_llm_id: llm_model.id,
+              allowed_group_ids: [group.id],
+              enabled: true,
+            )
           Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
 
           get "/discourse-ai/credits/status.json", params: { persona_ids: [ai_persona.id, 99_999] }
@@ -74,7 +82,17 @@ RSpec.describe DiscourseAi::AiCreditsController do
 
       context "with persona_ids param" do
         fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
-        fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+        fab!(:group)
+        fab!(:ai_persona) do
+          Fabricate(
+            :ai_persona,
+            default_llm_id: llm_model.id,
+            allowed_group_ids: [group.id],
+            enabled: true,
+          )
+        end
+
+        before { group.add(user) }
 
         it "returns empty for persona without credit allocation" do
           get "/discourse-ai/credits/status.json", params: { persona_ids: [ai_persona.id] }
@@ -166,12 +184,21 @@ RSpec.describe DiscourseAi::AiCreditsController do
 
       context "with both persona_ids and features params" do
         fab!(:llm_model) { Fabricate(:llm_model, id: -3) }
-        fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+        fab!(:group)
+        fab!(:ai_persona) do
+          Fabricate(
+            :ai_persona,
+            default_llm_id: llm_model.id,
+            allowed_group_ids: [group.id],
+            enabled: true,
+          )
+        end
         fab!(:llm_credit_allocation) do
           Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
         end
 
         before do
+          group.add(user)
           SiteSetting.ai_discover_enabled = true
           SiteSetting.ai_discover_persona = ai_persona.id
         end
@@ -190,7 +217,10 @@ RSpec.describe DiscourseAi::AiCreditsController do
       end
 
       context "with llm_model_ids param" do
+        fab!(:admin)
         fab!(:llm_model) { Fabricate(:llm_model, id: -100) }
+
+        before { sign_in(admin) }
 
         it "returns empty for model without credit allocation" do
           get "/discourse-ai/credits/status.json", params: { llm_model_ids: [llm_model.id] }
@@ -237,6 +267,75 @@ RSpec.describe DiscourseAi::AiCreditsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["llm_models"]).to eq({})
+        end
+      end
+
+      context "with persona authorization scoping" do
+        fab!(:llm_model) { Fabricate(:llm_model, id: -11) }
+        fab!(:group)
+        fab!(:restricted_persona) do
+          Fabricate(
+            :ai_persona,
+            default_llm_id: llm_model.id,
+            allowed_group_ids: [group.id],
+            enabled: true,
+          )
+        end
+        fab!(:llm_credit_allocation) do
+          Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
+        end
+
+        it "does not return credit status for personas the user is not allowed to access" do
+          get "/discourse-ai/credits/status.json", params: { persona_ids: [restricted_persona.id] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["personas"]).to eq({})
+        end
+
+        it "returns credit status for personas the user has group access to" do
+          group.add(user)
+
+          get "/discourse-ai/credits/status.json", params: { persona_ids: [restricted_persona.id] }
+
+          expect(response.status).to eq(200)
+          persona_data = response.parsed_body.dig("personas", restricted_persona.id.to_s)
+          expect(persona_data).to be_present
+          expect(persona_data["credit_status"]["available"]).to eq(true)
+        end
+
+        it "does not return credit status for disabled personas" do
+          group.add(user)
+          restricted_persona.update!(enabled: false)
+
+          get "/discourse-ai/credits/status.json", params: { persona_ids: [restricted_persona.id] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["personas"]).to eq({})
+        end
+      end
+
+      context "with llm_model_ids authorization scoping" do
+        fab!(:llm_model) { Fabricate(:llm_model, id: -12) }
+        fab!(:llm_credit_allocation) do
+          Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 2000)
+        end
+
+        it "does not return LLM model credit status for regular users" do
+          get "/discourse-ai/credits/status.json", params: { llm_model_ids: [llm_model.id] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["llm_models"]).to eq({})
+        end
+
+        it "returns LLM model credit status for staff users" do
+          sign_in(Fabricate(:admin))
+
+          get "/discourse-ai/credits/status.json", params: { llm_model_ids: [llm_model.id] }
+
+          expect(response.status).to eq(200)
+          model_data = response.parsed_body.dig("llm_models", llm_model.id.to_s)
+          expect(model_data).to be_present
+          expect(model_data["credit_status"]["available"]).to eq(true)
         end
       end
     end
