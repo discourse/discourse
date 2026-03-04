@@ -916,6 +916,20 @@ RSpec.describe InvitesController do
           end
         end
       end
+
+      context "when invite is linked to a PM topic the user no longer has access to" do
+        it "returns an error when updating the email without providing topic_id" do
+          sign_in(user)
+          pm_topic = Fabricate(:private_message_topic, user: user)
+          invite = Fabricate(:invite, invited_by: user, email: "original@example.com")
+          TopicInvite.create!(invite: invite, topic: pm_topic)
+
+          pm_topic.topic_allowed_users.where(user_id: user.id).destroy_all
+
+          put "/invites/#{invite.id}.json", params: { email: "new-target@example.com" }
+          expect(response.status).to eq(403)
+        end
+      end
     end
   end
 
