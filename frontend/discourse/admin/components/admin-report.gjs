@@ -191,6 +191,12 @@ export default class AdminReport extends Component {
     );
   }
 
+  get description() {
+    if (!this.siteSettings.reporting_improvements) {
+      return this.model.description;
+    }
+  }
+
   @action
   changeGrouping(grouping) {
     this.refreshReport({ chartGrouping: grouping });
@@ -547,126 +553,463 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    <div
-      class={{concatClass "admin-report" this.reportClasses}}
-      {{didUpdate this.fetchOrRender @filters.startDate @filters.endDate}}
-    >
-      {{#unless this.isHidden}}
-        <ConditionalLoadingSection @isLoading={{this.isLoading}}>
-          {{#if
-            (and this.siteSettings.reporting_improvements this.model.legacy)
-          }}
-            <div class="alert alert-info">
-              {{icon "triangle-exclamation"}}
-              <span>{{i18n "admin.reports.legacy_warning"}}</span>
-            </div>
-          {{/if}}
-          {{#if this.showHeader}}
-            <div class="header">
-              {{#unless this.showNotFoundError}}
-                <DPageSubheader
-                  @titleLabel={{this.model.title}}
-                  @titleUrl={{this.model.reportUrl}}
-                  @descriptionLabel={{unless
-                    this.showDescriptionInTooltip
-                    this.model.description
-                  }}
-                  @learnMoreUrl={{this.model.description_link}}
-                />
+    {{#if this.siteSettings.reporting_improvements}}
+      <div
+        class={{concatClass "admin-report" this.reportClasses}}
+        {{didUpdate this.fetchOrRender @filters.startDate @filters.endDate}}
+      >
+        {{#unless this.isHidden}}
+          <ConditionalLoadingSection @isLoading={{this.isLoading}}>
+            {{#if
+              (and this.siteSettings.reporting_improvements this.model.legacy)
+            }}
+              <div class="alert alert-info">
+                {{icon "triangle-exclamation"}}
+                <span>{{i18n "admin.reports.legacy_warning"}}</span>
+              </div>
+            {{/if}}
+            {{#if this.showHeader}}
+              <div class="header">
+                {{#unless this.showNotFoundError}}
+                  <DPageSubheader
+                    @titleLabel={{this.model.title}}
+                    @titleUrl={{this.model.reportUrl}}
+                    @descriptionLabel={{unless
+                      this.showDescriptionInTooltip
+                      this.description
+                    }}
+                    @learnMoreUrl={{this.model.description_link}}
+                  />
 
-                {{#if this.showDescriptionInTooltip}}
-                  {{#if this.model.description}}
-                    <DTooltip
-                      @interactive={{this.model.description_link.length}}
+                  {{#if this.showDescriptionInTooltip}}
+                    {{#if this.model.description}}
+                      <DTooltip
+                        @interactive={{this.model.description_link.length}}
+                      >
+                        <:trigger>
+                          {{icon "circle-question"}}
+                        </:trigger>
+                        <:content>
+                          {{#if this.model.description_link}}
+                            <a
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={{this.model.description_link}}
+                              class="info"
+                            >
+                              {{this.model.description}}
+                            </a>
+                          {{else}}
+                            <span>{{this.model.description}}</span>
+                          {{/if}}
+                        </:content>
+                      </DTooltip>
+                    {{/if}}
+                  {{/if}}
+                {{/unless}}
+
+                {{#if this.shouldDisplayTrend}}
+                  <div class="trend {{this.model.trend}}">
+                    <span class="value" title={{this.model.trendTitle}}>
+                      {{#if this.model.average}}
+                        {{number this.model.currentAverage}}{{#if
+                          this.model.percent
+                        }}%{{/if}}
+                      {{else}}
+                        {{number this.model.currentTotal noTitle="true"}}{{#if
+                          this.model.percent
+                        }}%{{/if}}
+                      {{/if}}
+
+                      {{#if this.model.trendIcon}}
+                        {{icon this.model.trendIcon class="icon"}}
+                      {{/if}}
+                    </span>
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
+
+            <div class="chart__wrapper">
+              {{#if this.showFilteringUI}}
+                <div class="chart__filters">
+                  {{#if this.isChartMode}}
+
+                    <div
+                      class="chart-groupings"
+                      role="tablist"
+                      aria-label={{i18n
+                        "admin.dashboard.reports.chart_group_period"
+                      }}
                     >
-                      <:trigger>
-                        {{icon "circle-question"}}
-                      </:trigger>
-                      <:content>
-                        {{#if this.model.description_link}}
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={{this.model.description_link}}
-                            class="info"
-                          >
-                            {{this.model.description}}
+                      {{#each this.chartGroupings as |chartGrouping|}}
+                        <DButton
+                          @label={{chartGrouping.label}}
+                          @action={{fn this.changeGrouping chartGrouping.id}}
+                          @disabled={{chartGrouping.disabled}}
+                          class={{chartGrouping.class}}
+                          role="tab"
+                        />
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
+                  {{#if this.showDatesOptions}}
+                    <div class="chart__dates">
+                      <DateTimeInputRange
+                        @from={{this.startDate}}
+                        @to={{this.endDate}}
+                        @onChange={{this.onChangeDateRange}}
+                        @showFromTime={{false}}
+                        @showToTime={{false}}
+                      />
+                    </div>
+                  {{/if}}
+
+                  <div class="chart__additional-filters">
+                    {{#each this.model.available_filters as |filter|}}
+                      <div
+                        class={{concatClass
+                          "chart__filter"
+                          (concat "--" filter.id)
+                        }}
+                      >
+                        <div class="input">
+                          {{component
+                            (this.reportFilterComponent filter)
+                            model=this.model
+                            filter=filter
+                            applyFilter=this.applyFilter
+                          }}
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+
+                </div>
+              {{/if}}
+              <div class="chart__body">
+                {{#if (and this.model.average this.showFilteringUI)}}
+                  <div class="average-chart">
+                    {{i18n "admin.dashboard.reports.average_chart_label"}}
+                  </div>
+                {{/if}}
+                {{#if this.showError}}
+                  {{#if this.showTimeoutError}}
+                    <div class="alert alert-error report-alert timeout">
+                      {{icon "triangle-exclamation"}}
+                      <span>{{i18n "admin.dashboard.timeout_error"}}</span>
+                    </div>
+                  {{/if}}
+
+                  {{#if this.showExceptionError}}
+                    <div class="alert alert-error report-alert exception">
+                      {{icon "triangle-exclamation"}}
+                      <span>{{i18n "admin.dashboard.exception_error"}}</span>
+                    </div>
+                  {{/if}}
+
+                  {{#if this.showNotFoundError}}
+                    <div class="alert alert-error report-alert not-found">
+                      {{icon "triangle-exclamation"}}
+                      <span>{{i18n "admin.dashboard.not_found_error"}}</span>
+                    </div>
+                  {{/if}}
+                {{else}}
+                  {{#if this.hasData}}
+                    {{#if this.currentMode}}
+                      {{component
+                        this.modeComponent
+                        model=this.model
+                        options=this.options
+                      }}
+
+                      {{#if this.model.relatedReport}}
+                        <AdminReport
+                          @showFilteringUI={{false}}
+                          @dataSourceName={{this.model.relatedReport.type}}
+                        />
+                      {{/if}}
+                    {{/if}}
+                  {{else}}
+                    {{#if this.rateLimitationString}}
+                      <div class="alert alert-error report-alert rate-limited">
+                        {{icon "temperature-three-quarters"}}
+                        <span>{{this.rateLimitationString}}</span>
+                      </div>
+                    {{else}}
+                      <div class="alert alert-info report-alert no-data">
+                        {{icon "chart-pie"}}
+                        {{#if this.model.reportUrl}}
+                          <a href={{this.model.reportUrl}} class="report-url">
+                            <span>
+                              {{#if this.model.title}}
+                                {{this.model.title}}
+                                —
+                              {{/if}}
+                              {{i18n "admin.dashboard.reports.no_data"}}
+                            </span>
                           </a>
                         {{else}}
-                          <span>{{this.model.description}}</span>
+                          <span>{{i18n
+                              "admin.dashboard.reports.no_data"
+                            }}</span>
                         {{/if}}
-                      </:content>
-                    </DTooltip>
+                      </div>
+                    {{/if}}
                   {{/if}}
                 {{/if}}
-              {{/unless}}
+              </div>
+              {{#if this.showFilteringUI}}
+                <div class="chart__actions">
+                  {{#if this.showModes}}
+                    <div class="chart__modes">
+                      {{#each this.displayedModes as |displayedMode|}}
+                        <DButton
+                          @action={{fn this.onChangeMode displayedMode.mode}}
+                          @icon={{displayedMode.icon}}
+                          class={{displayedMode.cssClass}}
+                        />
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                  <div class="control">
+                    <div class="input">
+                      <DButton
+                        @action={{this.exportCsv}}
+                        @label="admin.export_csv.button_text"
+                        @icon="download"
+                        class="btn-default export-csv-btn"
+                      />
+                    </div>
+                  </div>
 
-              {{#if this.shouldDisplayTrend}}
-                <div class="trend {{this.model.trend}}">
-                  <span class="value" title={{this.model.trendTitle}}>
-                    {{#if this.model.average}}
-                      {{number this.model.currentAverage}}{{#if
-                        this.model.percent
-                      }}%{{/if}}
-                    {{else}}
-                      {{number this.model.currentTotal noTitle="true"}}{{#if
-                        this.model.percent
-                      }}%{{/if}}
-                    {{/if}}
-
-                    {{#if this.model.trendIcon}}
-                      {{icon this.model.trendIcon class="icon"}}
-                    {{/if}}
-                  </span>
+                  {{#if this.showRefresh}}
+                    <div class="control">
+                      <div class="input">
+                        <DButton
+                          @action={{this.refreshReport}}
+                          @label="admin.dashboard.reports.refresh_report"
+                          @icon="arrows-rotate"
+                          class="refresh-report-btn btn-default"
+                        />
+                      </div>
+                    </div>
+                  {{/if}}
                 </div>
               {{/if}}
             </div>
-          {{/if}}
-
-          <div class="chart__wrapper">
-            {{#if this.showFilteringUI}}
-              <div class="chart__filters">
-                {{#if this.isChartMode}}
-
-                  <div
-                    class="chart-groupings"
-                    role="tablist"
-                    aria-label={{i18n
-                      "admin.dashboard.reports.chart_group_period"
+          </ConditionalLoadingSection>
+        {{/unless}}
+      </div>
+    {{else}}
+      <div
+        class={{concatClass "admin-report" this.reportClasses}}
+        {{didUpdate this.fetchOrRender @filters.startDate @filters.endDate}}
+      >
+        {{#unless this.isHidden}}
+          <ConditionalLoadingSection @isLoading={{this.isLoading}}>
+            {{#if
+              (and this.siteSettings.reporting_improvements this.model.legacy)
+            }}
+              <div class="alert alert-info">
+                {{icon "triangle-exclamation"}}
+                <span>{{i18n "admin.reports.legacy_warning"}}</span>
+              </div>
+            {{/if}}
+            {{#if this.showHeader}}
+              <div class="header">
+                {{#unless this.showNotFoundError}}
+                  <DPageSubheader
+                    @titleLabel={{this.model.title}}
+                    @titleUrl={{this.model.reportUrl}}
+                    @descriptionLabel={{unless
+                      this.showDescriptionInTooltip
+                      this.description
                     }}
-                  >
-                    {{#each this.chartGroupings as |chartGrouping|}}
-                      <DButton
-                        @label={{chartGrouping.label}}
-                        @action={{fn this.changeGrouping chartGrouping.id}}
-                        @disabled={{chartGrouping.disabled}}
-                        class={{chartGrouping.class}}
-                        role="tab"
-                      />
-                    {{/each}}
+                    @learnMoreUrl={{this.model.description_link}}
+                  />
+
+                  {{#if this.showDescriptionInTooltip}}
+                    {{#if this.model.description}}
+                      <DTooltip
+                        @interactive={{this.model.description_link.length}}
+                      >
+                        <:trigger>
+                          {{icon "circle-question"}}
+                        </:trigger>
+                        <:content>
+                          {{#if this.model.description_link}}
+                            <a
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={{this.model.description_link}}
+                              class="info"
+                            >
+                              {{this.model.description}}
+                            </a>
+                          {{else}}
+                            <span>{{this.model.description}}</span>
+                          {{/if}}
+                        </:content>
+                      </DTooltip>
+                    {{/if}}
+                  {{/if}}
+                {{/unless}}
+
+                {{#if this.shouldDisplayTrend}}
+                  <div class="trend {{this.model.trend}}">
+                    <span class="value" title={{this.model.trendTitle}}>
+                      {{#if this.model.average}}
+                        {{number this.model.currentAverage}}{{#if
+                          this.model.percent
+                        }}%{{/if}}
+                      {{else}}
+                        {{number this.model.currentTotal noTitle="true"}}{{#if
+                          this.model.percent
+                        }}%{{/if}}
+                      {{/if}}
+
+                      {{#if this.model.trendIcon}}
+                        {{icon this.model.trendIcon class="icon"}}
+                      {{/if}}
+                    </span>
                   </div>
                 {{/if}}
+              </div>
+            {{/if}}
 
-                {{#if this.showDatesOptions}}
-                  <div class="chart__dates">
-                    <DateTimeInputRange
-                      @from={{this.startDate}}
-                      @to={{this.endDate}}
-                      @onChange={{this.onChangeDateRange}}
-                      @showFromTime={{false}}
-                      @showToTime={{false}}
-                    />
-                  </div>
-                {{/if}}
+            <div class="body">
+              <div class="main">
+                {{#if this.showError}}
+                  {{#if this.showTimeoutError}}
+                    <div class="alert alert-error report-alert timeout">
+                      {{icon "triangle-exclamation"}}
+                      <span>{{i18n "admin.dashboard.timeout_error"}}</span>
+                    </div>
+                  {{/if}}
 
-                <div class="chart__additional-filters">
-                  {{#each this.model.available_filters as |filter|}}
-                    <div
-                      class={{concatClass
-                        "chart__filter"
-                        (concat "--" filter.id)
+                  {{#if this.showExceptionError}}
+                    <div class="alert alert-error report-alert exception">
+                      {{icon "triangle-exclamation"}}
+                      <span>{{i18n "admin.dashboard.exception_error"}}</span>
+                    </div>
+                  {{/if}}
+
+                  {{#if this.showNotFoundError}}
+                    <div class="alert alert-error report-alert not-found">
+                      {{icon "triangle-exclamation"}}
+                      <span>{{i18n "admin.dashboard.not_found_error"}}</span>
+                    </div>
+                  {{/if}}
+                {{else}}
+                  {{#if this.hasData}}
+                    {{#if this.currentMode}}
+                      {{component
+                        this.modeComponent
+                        model=this.model
+                        options=this.options
                       }}
-                    >
+
+                      {{#if this.model.relatedReport}}
+                        <AdminReport
+                          @showFilteringUI={{false}}
+                          @dataSourceName={{this.model.relatedReport.type}}
+                        />
+                      {{/if}}
+                    {{/if}}
+                  {{else}}
+                    {{#if this.rateLimitationString}}
+                      <div class="alert alert-error report-alert rate-limited">
+                        {{icon "temperature-three-quarters"}}
+                        <span>{{this.rateLimitationString}}</span>
+                      </div>
+                    {{else}}
+                      <div class="alert alert-info report-alert no-data">
+                        {{icon "chart-pie"}}
+                        {{#if this.model.reportUrl}}
+                          <a href={{this.model.reportUrl}} class="report-url">
+                            <span>
+                              {{#if this.model.title}}
+                                {{this.model.title}}
+                                —
+                              {{/if}}
+                              {{i18n "admin.dashboard.reports.no_data"}}
+                            </span>
+                          </a>
+                        {{else}}
+                          <span>{{i18n
+                              "admin.dashboard.reports.no_data"
+                            }}</span>
+                        {{/if}}
+                      </div>
+                    {{/if}}
+                  {{/if}}
+                {{/if}}
+              </div>
+
+              {{#if this.showFilteringUI}}
+                <div class="filters">
+                  {{#if this.showModes}}
+                    <div class="modes">
+                      {{#each this.displayedModes as |displayedMode|}}
+                        <DButton
+                          @action={{fn this.onChangeMode displayedMode.mode}}
+                          @icon={{displayedMode.icon}}
+                          class={{displayedMode.cssClass}}
+                        />
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
+                  {{#if this.isChartMode}}
+                    {{#if this.model.average}}
+                      <span class="average-chart">
+                        {{i18n "admin.dashboard.reports.average_chart_label"}}
+                      </span>
+                    {{/if}}
+                    <div class="chart-groupings">
+                      {{#each this.chartGroupings as |chartGrouping|}}
+                        <DButton
+                          @label={{chartGrouping.label}}
+                          @action={{fn this.changeGrouping chartGrouping.id}}
+                          @disabled={{chartGrouping.disabled}}
+                          class={{chartGrouping.class}}
+                        />
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
+                  {{#if this.showDatesOptions}}
+                    <div class="control">
+                      <span class="label">
+                        {{i18n "admin.dashboard.reports.dates"}}
+                      </span>
+
+                      <div class="input">
+                        <DateTimeInputRange
+                          @from={{this.startDate}}
+                          @to={{this.endDate}}
+                          @onChange={{this.onChangeDateRange}}
+                          @showFromTime={{false}}
+                          @showToTime={{false}}
+                        />
+                      </div>
+                    </div>
+                  {{/if}}
+
+                  {{#each this.model.available_filters as |filter|}}
+                    <div class="control">
+                      <span class="label">
+                        {{i18n
+                          (concat
+                            "admin.dashboard.reports.filters."
+                            filter.id
+                            ".label"
+                          )
+                        }}
+                      </span>
+
                       <div class="input">
                         {{component
                           (this.reportFilterComponent filter)
@@ -677,119 +1020,36 @@ export default class AdminReport extends Component {
                       </div>
                     </div>
                   {{/each}}
-                </div>
 
-              </div>
-            {{/if}}
-            <div class="chart__body">
-              {{#if this.model.average}}
-                <div class="average-chart">
-                  {{i18n "admin.dashboard.reports.average_chart_label"}}
-                </div>
-              {{/if}}
-              {{#if this.showError}}
-                {{#if this.showTimeoutError}}
-                  <div class="alert alert-error report-alert timeout">
-                    {{icon "triangle-exclamation"}}
-                    <span>{{i18n "admin.dashboard.timeout_error"}}</span>
-                  </div>
-                {{/if}}
-
-                {{#if this.showExceptionError}}
-                  <div class="alert alert-error report-alert exception">
-                    {{icon "triangle-exclamation"}}
-                    <span>{{i18n "admin.dashboard.exception_error"}}</span>
-                  </div>
-                {{/if}}
-
-                {{#if this.showNotFoundError}}
-                  <div class="alert alert-error report-alert not-found">
-                    {{icon "triangle-exclamation"}}
-                    <span>{{i18n "admin.dashboard.not_found_error"}}</span>
-                  </div>
-                {{/if}}
-              {{else}}
-                {{#if this.hasData}}
-                  {{#if this.currentMode}}
-                    {{component
-                      this.modeComponent
-                      model=this.model
-                      options=this.options
-                    }}
-
-                    {{#if this.model.relatedReport}}
-                      <AdminReport
-                        @showFilteringUI={{false}}
-                        @dataSourceName={{this.model.relatedReport.type}}
+                  <div class="control">
+                    <div class="input">
+                      <DButton
+                        @action={{this.exportCsv}}
+                        @label="admin.export_csv.button_text"
+                        @icon="download"
+                        class="btn-default export-csv-btn"
                       />
-                    {{/if}}
-                  {{/if}}
-                {{else}}
-                  {{#if this.rateLimitationString}}
-                    <div class="alert alert-error report-alert rate-limited">
-                      {{icon "temperature-three-quarters"}}
-                      <span>{{this.rateLimitationString}}</span>
                     </div>
-                  {{else}}
-                    <div class="alert alert-info report-alert no-data">
-                      {{icon "chart-pie"}}
-                      {{#if this.model.reportUrl}}
-                        <a href={{this.model.reportUrl}} class="report-url">
-                          <span>
-                            {{#if this.model.title}}
-                              {{this.model.title}}
-                              —
-                            {{/if}}
-                            {{i18n "admin.dashboard.reports.no_data"}}
-                          </span>
-                        </a>
-                      {{else}}
-                        <span>{{i18n "admin.dashboard.reports.no_data"}}</span>
-                      {{/if}}
-                    </div>
-                  {{/if}}
-                {{/if}}
-              {{/if}}
-            </div>
-            <div class="chart__actions">
-              {{#if this.showModes}}
-                <div class="chart__modes">
-                  {{#each this.displayedModes as |displayedMode|}}
-                    <DButton
-                      @action={{fn this.onChangeMode displayedMode.mode}}
-                      @icon={{displayedMode.icon}}
-                      class={{displayedMode.cssClass}}
-                    />
-                  {{/each}}
-                </div>
-              {{/if}}
-              <div class="control">
-                <div class="input">
-                  <DButton
-                    @action={{this.exportCsv}}
-                    @label="admin.export_csv.button_text"
-                    @icon="download"
-                    class="btn-default export-csv-btn"
-                  />
-                </div>
-              </div>
-
-              {{#if this.showRefresh}}
-                <div class="control">
-                  <div class="input">
-                    <DButton
-                      @action={{this.refreshReport}}
-                      @label="admin.dashboard.reports.refresh_report"
-                      @icon="arrows-rotate"
-                      class="refresh-report-btn btn-default"
-                    />
                   </div>
+
+                  {{#if this.showRefresh}}
+                    <div class="control">
+                      <div class="input">
+                        <DButton
+                          @action={{this.refreshReport}}
+                          @label="admin.dashboard.reports.refresh_report"
+                          @icon="arrows-rotate"
+                          class="refresh-report-btn btn-primary"
+                        />
+                      </div>
+                    </div>
+                  {{/if}}
                 </div>
               {{/if}}
             </div>
-          </div>
-        </ConditionalLoadingSection>
-      {{/unless}}
-    </div>
+          </ConditionalLoadingSection>
+        {{/unless}}
+      </div>
+    {{/if}}
   </template>
 }

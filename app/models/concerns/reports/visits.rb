@@ -21,12 +21,14 @@ module Reports::Visits
                            group_filter
         add_counts report, UserVisit, "visited_at"
 
-        report.prev30Days =
-          UserVisit.where(
-            "visited_at >= ? AND visited_at < ?",
-            report.start_date - 30.days,
-            report.start_date,
-          ).count
+        if report.facets.include?(:prev30Days)
+          report.prev30Days =
+            UserVisit.where(
+              "visited_at >= ? AND visited_at < ?",
+              report.start_date - 30.days,
+              report.start_date,
+            ).count
+        end
       end
     end
 
@@ -70,12 +72,15 @@ module Reports::Visits
       ]
 
       report.total = results.first&.total || 0
-      report.prev30Days =
-        UserVisit.where(
-          "visited_at >= ? AND visited_at < ?",
-          report.start_date - 30.days,
-          report.start_date,
-        ).count
+
+      if report.facets.include?(:prev30Days)
+        report.prev30Days =
+          UserVisit.where(
+            "visited_at >= ? AND visited_at < ?",
+            report.start_date - 30.days,
+            report.start_date,
+          ).count
+      end
     end
   end
 end
