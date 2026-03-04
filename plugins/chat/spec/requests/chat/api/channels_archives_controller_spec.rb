@@ -86,6 +86,50 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
       expect(channel.reload.status).to eq("read_only")
     end
 
+    context "when archiving to an existing topic the user cannot access" do
+      fab!(:moderator)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+      it "returns 403 when the staff user cannot see the destination topic" do
+        sign_in(moderator)
+        post "/chat/api/channels/#{channel.id}/archives",
+             params: {
+               archive: {
+                 type: "existing_topic",
+                 topic_id: private_topic.id,
+               },
+             }
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 when the staff user cannot create posts on the destination topic" do
+        private_topic.update!(closed: true)
+        sign_in(moderator)
+        post "/chat/api/channels/#{channel.id}/archives",
+             params: {
+               archive: {
+                 type: "existing_topic",
+                 topic_id: private_topic.id,
+               },
+             }
+        expect(response.status).to eq(403)
+      end
+
+      it "does not create an archive record when destination topic is inaccessible" do
+        sign_in(moderator)
+        expect {
+          post "/chat/api/channels/#{channel.id}/archives",
+               params: {
+                 archive: {
+                   type: "existing_topic",
+                   topic_id: private_topic.id,
+                 },
+               }
+        }.not_to change { Chat::ChannelArchive.count }
+      end
+    end
+
     it "does nothing if the chat channel archive already exists" do
       sign_in(admin)
       post "/chat/api/channels/#{channel.id}/archives", params: new_topic_params
