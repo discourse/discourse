@@ -60,8 +60,8 @@ zh_CN:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
-    too_many_urls: "单次请求中无法将超过 10 个 URL 转换为内联单选框。"
-    concurrency_not_allowed: "不允许同时请求将 URL 转换为内联单选框。请一次只发送一个请求。"
+    too_many_urls: "单次请求中无法将超过 10 个 URL 转换为行内 Onebox。"
+    concurrency_not_allowed: "不允许并发请求将 URL 转换为行内 Onebox。每次请只发送一个请求。"
   components:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"

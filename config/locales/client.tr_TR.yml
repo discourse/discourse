@@ -9,9 +9,23 @@ tr_TR:
     blocks:
       ghost:
         status: "Durum"
+        conditions: "Koşullar"
+        arguments: "Tartışmalar"
+        container_args: "Konteyner Argümanları"
         in_location: "içinde"
         hidden: "gizli"
+        not_registered: "kayıtlı değil"
+        no_visible_children: "görünürde çocuk yok"
         failed: "başarısız"
+      ghost_reasons:
+        optional_missing_hint: "Bu isteğe bağlı blok, kayıtlı olmadığı için görüntülenmez."
+        no_visible_children_hint: "Bu konteyner bloğu, hiçbir alt öğesi görünür olmadığı için görüntülenmez."
+        condition_failed_hint: "Bu blok, koşulları karşılanmadığı için görüntülenmez."
+        head_hidden_tail_hint: "Bu blok, `head` konteynerinde başka bir blok önce işlendiği için işlenmez."
+    carousel:
+      go_to_slide: "%{index} numaralı slayta git"
+      previous: "Önceki slayt"
+      next: "Sonraki slayt"
     number:
       format:
         separator: "."
@@ -291,18 +305,31 @@ tr_TR:
       forwarded: "Yukarıdaki e-postayı iletti"
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
+    skip_links_label: "Navigasyon bağlantılarını atla"
+    skip_to_post: "%{post_number} numaralı gönderiye atla"
+    skip_to_where_you_left_off: "Bıraktığınız yerden devam edin (yazı %{post_number})"
+    skip_to_where_you_left_off_last: "Bıraktığınız yerden devam edin (son yanıt, gönderi %{post_number})"
+    skip_to_last_reply: "Son cevaba atla"
+    skip_to_top: "En üste atla"
     skip_user_nav: "Profil içeriğine atla"
     emails_are_disabled: "Giden tüm e-postalar bir yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
+    emails_are_disabled_no_smtp: "SMTP sunucusu yapılandırılmadığı için giden tüm e-postalar devre dışı bırakılmıştır. Hiçbir tür e-posta gönderilemez."
     emails_are_disabled_non_staff: "Giden e-posta, personel olmayan kullanıcılar için devre dışı bırakıldı."
     software_update_prompt:
       message: "Bu siteyi güncelledik, işlerin sorunsuz bir şekilde devam etmesi için <span>lütfen yenileyin</span>."
       dismiss: "Kapat"
+    notifications_tracking:
+      tooltip: "Bildirim seviyesi: %{level}"
     back_button: "Geri"
     welcome_banner:
       header:
+        new_members: "Hoş geldiniz, %{preferred_display_name}!"
         logged_in_members: "Tekrar hoş geldiniz %{preferred_display_name}!"
         anonymous_members: "%{site_name}'a hoş geldiniz!"
       search_placeholder: "Ara"
+    impersonation:
+      notice: "%{username} kimliğine bürünüyorsunuz."
+      stop: "Kişiyi taklit etmeyi bırak"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir tema/bileşende hata olması nedeniyle siteniz çalışmayabilir. Daha fazla bilgi için tarayıcı konsolunu kontrol edin."
@@ -312,12 +339,27 @@ tr_TR:
     broken_page_change_alert: "Bir onPageChange işleyicisi hata verdi. Daha fazla bilgi için tarayıcı geliştirici araçlarını kontrol edin."
     broken_plugin_alert: "'%{name}' eklentisinden kaynaklanıyor"
     broken_transformer_alert: "Bir hata oluştu. Siteniz düzgün çalışmayabilir."
+    broken_block_alert: "Bir blok yapılandırma hatası algılandı. Ayrıntılar için tarayıcı konsolunu kontrol edin."
+    broken_block_factory_alert: "Bir blok yüklenemedi. Bazı kullanıcı arayüzü öğeleri doğru görüntülenmeyebilir."
     critical_deprecation:
       notice: "<b>[Yönetici Duyurusu]</b> %{source}, güncellenmesi gereken kod içeriyor. (kimlik:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>daha fazla bilgi edinin</em></a>)"
       theme_source: "Tema <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Eklenti \"%{name}\""
       unknown_source: "Tema veya eklentilerinizden biri"
+    dev_tools:
+      drag_to_move: "Sürükleyerek taşıyın"
+      toggle_plugin_outlet_debug: "Eklenti çıkış hata ayıklamasını aç/kapat"
+      toggle_block_debug: "Blok hata ayıklamayı aç/kapat"
+      block_debug:
+        outlet_boundaries: "Çıkış sınırları"
+        visual_overlay: "Görsel katman"
+        ghost_blocks: "Hayalet bloklar"
+        condition_debugging: "Durum hata ayıklama"
+      toggle_safe_mode: "Güvenli modu aç/kapat"
+      toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
+      toggle_mobile_view: "Mobil görünümü aç/kapat"
+      disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
     s3:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"
@@ -407,9 +449,40 @@ tr_TR:
       pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
+      launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
+      skipped: "Yönetici oryantasyon kontrol listesi artık atlanmıştır. Yeniden etkinleştirmek isterseniz, site ayarlarında “site sahibi oryantasyonunu etkinleştir” seçeneğini arayın."
+      congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
+      invite_collaborators:
+        title: "İş Ortaklarını Davet Et"
+        description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
+        action: "Davet oluştur"
       start_posting:
+        title: "Paylaşmaya Başla"
+        description: "İnsanlara birlikte konuşacakları bir konu verin"
+        action: "Buz kırıcı fikirler"
+        choose_option: "Nasıl başlamak istersiniz?"
+        predefined_topics: "Buz kırıcı şablonlar"
+        predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."
+        predefined_topics_description: "Sohbet başlatıcılar koleksiyonundan seçim yapın ve tartışmaları başlatın"
+        use_predefined: "Şablonlara göz atın"
+        start_with_this: "Bununla başlayın"
         back: "Geri"
+        icebreakers:
+          fun_facts:
+            title: "Hakkında ilginç bilgiler nelerdir?"
+            body: "Herkese merhaba! Bu yeni topluluğu başlatmaktan dolayı çok heyecanlıyım. Başlangıç olarak, kendimizle ilgili eğlenceli bir bilgi paylaşalım. Ben başlayayım: Yürüyüş yapmayı ve yeni parkurları keşfetmeyi seviyorum! Sizinle ilgili ilginç bir şey nedir?"
+          coolest_thing_you_have_seen_today:
+            title: "Bugün gördüğün en havalı şey neydi?"
+            body: "Bugün gördüğün veya yaşadığın en havalı şey neydi? Güzel bir gün batımı ya da rastgele bir iyilik hareketi gibi herhangi bir şey olabilir. Ben başlayayım: Bir köpeğin yaşlı bir insana karşıdan karşıya geçmesine yardım ettiğini gördüm!"
+          introduce_yourself:
+            title: "Kendinizi tanıtın"
+            body: "Topluluğa hoş geldiniz! Birbirimizi tanıyalım. Lütfen kendinizi tanıtın ve ilgi alanlarınız hakkında biraz bilgi paylaşın. Ben başlayayım: Teknolojiye tutkuyla bağlıyım ve başkalarına öğretmeyi çok seviyorum!"
+          what_is_your_favorite_food:
+            title: "En sevdiğin yemek nedir?"
+            body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
       spread_the_word:
+        title: "Haberi yayalım!"
+        description: "Ağınızdaki herkesle bir bağlantı paylaşın"
         action: "Bağlantıyı kopyala"
         copied_to_clipboard: "Bağlantı panoya kopyalandı!"
     about:
@@ -571,6 +644,11 @@ tr_TR:
       resume: "Sürdür"
       remove: "Kaldır"
       remove_confirmation: "Bu taslağı silmek istediğinize emin misiniz?"
+      bulk_delete: "Seçilenleri sil"
+      bulk_delete_confirmation: "Taslakları sil"
+      bulk_delete_message:
+        one: "Bu taslağı silmek istediğinize emin misiniz?"
+        other: "Bu %{count} taslağı silmek istediğinizden emin misiniz?"
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni kişisel ileti taslağı"
       edit_topic: "Konu taslağını düzenle"
@@ -581,6 +659,10 @@ tr_TR:
         other_drafts:
           one: "+%{count} taslak daha"
           other: "+%{count} taslak daha"
+    embed_mode:
+      storage_access_prompt: "Zaten %{site_name} hesabınız mı var? Oturumunuza erişim izni vererek kendi adınıza yorum yapabilirsiniz."
+      allow_access: "Erişime İzin Ver"
+      continue_as_guest: "Misafir olarak devam et"
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -639,18 +721,26 @@ tr_TR:
     review:
       show_more: "Daha fazla göster"
       show_less: "Daha az göster"
+      back_to_queue: "Kuyruğa geri dön"
+      editing_post: "Gönderi düzenleniyor…"
       order_by: "Şuna göre sırala"
       date_filter: "Şu tarihler arasında gönderildi"
       in_reply_to: "şuna yanıt olarak"
       filtered_flagged_by: "Bayrak ekleyen kişi:"
       unknown:
+        title:
+          one: "Devre dışı bırakılmış eklentiden bekleyen inceleme kuyruğu öğeleriniz var:"
+          other: "Devre dışı bırakılmış eklentilerden bekleyen inceleme kuyruğu öğeleriniz var:"
         instruction: "İlgili eklentiyi etkinleştirmediğiniz sürece düzgün görüntülenemezler. Lütfen eklentiyi etkinleştirin ve sayfayı yenileyin. Alternatif olarak, bunları görmezden gelebilirsiniz. <a href='%{url}' target='_blank'>Daha fazlasını öğrenin...</a>"
         reviewable_unknown_source: "%{reviewableType} (bilinmeyen eklenti)"
         reviewable_known_source: "%{reviewableType} (\"%{pluginName}\" eklentisinden)"
         ignore_all: "Tümünü yok say"
         enable_plugins: "Eklentileri etkinleştir"
+        delete_confirm: "Devre dışı bırakılmış eklentiler tarafından oluşturulan tüm inceleme kuyruğu öğelerini silmek istediğinizden emin misiniz?"
+        ignore_success: "Devre dışı bırakılmış eklentiler tarafından oluşturulan tüm inceleme kuyruğu öğeleri silinmiştir."
       explain:
         why: "bu ögenin neden kuyruğa girdiğini açıklayın"
+        title: "İnceleme Kuyruğu Öğesi Puanlaması"
         formula: "Formül"
         subtotal: "Ara toplam"
         total: "Toplam"
@@ -664,8 +754,10 @@ tr_TR:
           title: "Bayrakları tarihsel olarak kabul edilen kullanıcılara bonus verilir."
         trust_level_bonus:
           name: "güven seviyesi"
+          title: "Daha yüksek güven düzeyine sahip kullanıcılar tarafından oluşturulan bayraklar daha yüksek puan alır."
         type_bonus:
           name: "tür bonusu"
+          title: "Belirli bayrak türlerine, personel tarafından daha yüksek öncelik verilmesi için bonus atanabilir."
       revise_and_reject_post:
         title: "Gözden geçir"
         reason: "Sebep"
@@ -674,12 +766,17 @@ tr_TR:
         custom_reason: "Sebebi net bir şekilde açıklayın"
         other_reason: "Diğer..."
         optional: "i̇steğe bağlı"
+      stale_help: "Bu sorun <b>%{username}</b> tarafından çözülmüştür."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
         required: "Ögeleri inceleyebilmek için önce talepte bulunmalısınız."
         claimed_by_you: "Bu ögeyi talep ettiniz ve inceleyebilirsiniz."
         claimed_by_other: "Bu öge yalnızca <b>%{username}</b> adlı kullanıcı tarafından incelenebilir."
         automatically_claimed_by: "Bu ürün şu anda <b>%{username}</b> tarafından inceleniyor."
+      claim:
+        title: "Bu konuyu talep et"
+      unclaim:
+        help: "Bu talebi kaldır"
       awaiting_approval: "Onay Bekleniyor"
       delete: "Sil"
       settings:
@@ -701,6 +798,7 @@ tr_TR:
       filtered_topic: "Tek bir konu içerisinde incelenebilir içerikleri filtrelediniz."
       filtered_user: "Bayrak eklenen kullanıcı"
       filtered_reviewed_by: "İnceleyen:"
+      filtered_claimed_by: "Bayrak, tarafından sahiplenildi"
       show_all_topics: "bütün konuları göster"
       deleted_post: "(gönderi silindi)"
       deleted_user: "(kullanıcı silindi)"
@@ -772,10 +870,13 @@ tr_TR:
           created_at: "Oluşturulma:"
           created_at_asc: "Oluşturulma (ters):"
         priority:
+          title: "Minimum öncelik"
           any: "(hiç)"
           low: "Düşük"
           medium: "Orta"
           high: "Yüksek"
+        active_filters: "Aktif filtreler:"
+        clear_filter: "%{filter} öğesini kaldır"
       conversation:
         view_full: "konuşmanın tamamını görüntüle"
       scores:
@@ -818,6 +919,10 @@ tr_TR:
         is_this_post: "Bu %{reviewable_type} %{reviewable_human_score_types} özelliği taşıyor mu?"
         delimiter: "veya"
         something_else_wrong: "Bu %{reviewable_type} ile ilgili bir sorun mu var?"
+        approve_user: "Bu kullanıcıyı onaylıyor musunuz?"
+        suspect_user: "Bu kullanıcı spam mı?"
+        approve_post: "Bu gönderiyi onaylıyor musunuz?"
+        approve_topic: "Bu konuyu onaylıyor musunuz?"
       types:
         reviewable_flagged_post:
           title: "Bayrak Eklenen Gönderi"
@@ -836,22 +941,35 @@ tr_TR:
           title: "Gönderi"
           noun: "gönderi"
         reviewable_ai_chat_message:
+          title: "AI tarafından işaretlenmiş sohbet mesajı"
           noun: "sohbet mesajı"
         reviewable_ai_post:
+          title: "AI tarafından işaretlenen gönderi"
           noun: "gönderi"
+        reviewable_post_voting_comment:
+          title: "Bildirilen yorum"
+          noun: "yorum"
       flagged_as: "Bayrak ekleme nedeni:"
+      post_flagged_as: "Şu şekilde işaretlenmiş gönderi:"
+      chat_flagged_as: "Sohbet şu şekilde işaretlendi:"
+      queued_post_label: "Sıraya alınmış gönderi"
+      queued_topic_label: "Sıraya alınmış konu"
       user_label: "Kullanıcı"
+      assigned_to: "Atanan gönderi"
       moderator_actions: "Moderatör eylemleri"
       timeline_and_notes: "Zaman çizelgesi ve notlar"
       timeline:
         target_created: "Gönderi oluşturuldu"
         target_created_by: "Gönderi %{username} tarafından oluşturuldu · %{relativeDate}"
         target_deleted: "Gönderi silindi"
+        target_deleted_by: "%{username} tarafından silinen gönderi · %{relativeDate}"
         flagged: "Bayrak eklendi"
         flagged_as_by: "%{username} tarafından %{flagReason} nedeniyle bayrak eklendi · %{relativeDate}"
         claimed: "Alındı"
         claimed_by: "%{username} tarafından alındı · %{relativeDate}"
+        unclaimed_by: "%{username} tarafından sahiplenilmemiştir · %{relativeDate}"
         reviewed: "İncelendi"
+        approved_by: "Onaylayan: %{username} · %{relativeDate}"
         view_conversation: "kişisel mesajı görüntüle"
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
@@ -2681,7 +2799,9 @@ tr_TR:
         select: "Çeviri seç"
         save: "Çeviriyi kaydet"
         translation: "Çeviri"
+        no_translation_yet: "Çevirinin önizlemesini görmek için yazmaya başlayın..."
         placeholder: "Gönderinin çevirisini buraya girin..."
+        show_raw_markdown: "Ham verileri göster"
       group_mentioned_limit:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
         other: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
@@ -2736,7 +2856,9 @@ tr_TR:
       create_shared_draft: "Paylaşılmış Taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
       title: "Veya %{modifier}Enter tuşuna basın"
+      save_and_close: "Kaydet ve kapat"
       discard: "Kapat"
+      draft_saved: "Taslak kaydedildi!"
       users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
@@ -2789,12 +2911,30 @@ tr_TR:
       upload_description: "yükleme açıklamasını buraya girin"
       olist_title: "Numaralandırılmış liste"
       ulist_title: "Madde işaretli liste"
+      list_title: "Listeler"
       list_item: "Liste ögesi"
       toggle_direction: "Yönü aç/kapat"
+      apply_wrap_title: "Sargı uygulayın"
       wrap_modal:
+        title: "Sargıyı Düzenle"
+        name_label: "Sargı Adı"
+        attributes_label: "Özellikler"
+        add_attribute: "Öznitelik ekle"
+        remove_attribute: "Özniteliği kaldır"
         apply: "Uygula"
+        unwrap: "Paketi aç"
+        no_attributes: "Henüz hiçbir öznitelik eklenmedi."
+      wrap_text: "İçeriği sarın"
       help: "Markdown Düzenleme Yardımı"
+      collapse: "Besteci panelini küçült"
+      open: "Besteci panelini aç"
+      abandon: "Besteciyi kapat ve taslağı sil"
+      enter_fullscreen: "Tam ekran besteci moduna gir"
+      exit_fullscreen: "Tam ekran besteci modundan çık"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
+      show_toolbar: "Besteci araç çubuğunu göster"
+      hide_toolbar: "Besteci araç çubuğunu gizle"
+      peek_mode_toggle: "Göz atma modunu aç/kapat"
       modal_ok: "Tamam"
       cant_send_pm: "Üzgünüz, %{username} adlı kullanıcıya mesaj gönderemezsiniz."
       create_message_error: "Üzgünüz, bu mesaj oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
