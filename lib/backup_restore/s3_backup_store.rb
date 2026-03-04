@@ -11,7 +11,14 @@ module BackupRestore
              to: :s3_helper
 
     def initialize(opts = {})
-      @s3_options = S3Helper.s3_options(SiteSetting)
+      # GlobalSetting (env vars) takes precedence over SiteSetting (UI config)
+      creds =
+        if GlobalAwsCredentials.configured?
+          GlobalAwsCredentials.instance
+        else
+          SiteAwsCredentials.instance
+        end
+      @s3_options = creds.to_sdk_options
       @s3_options.merge!(opts[:s3_options]) if opts[:s3_options]
     end
 
