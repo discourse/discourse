@@ -17,6 +17,8 @@ class Admin::WatchedWordsController < Admin::StaffController
     action = WatchedWord.actions[opts[:action_key].to_sym]
     words = opts.delete(:words)
 
+    opts = opts.merge(replacement: resolve_replacement_tags) if action == WatchedWord.actions[:tag]
+
     watched_word_group = WatchedWordGroup.new(action: action)
     watched_word_group.create_or_update_members(words, opts)
 
@@ -126,5 +128,22 @@ class Admin::WatchedWordsController < Admin::StaffController
   def watched_words_params
     @watched_words_params ||=
       params.permit(:id, :replacement, :action_key, :case_sensitive, :html, words: [])
+  end
+
+  def resolve_replacement_tags
+    tags_param = params[:replacement_tags].try(:values) || params[:replacement_tags]
+    return if tags_param.blank?
+
+    tag_ids = tags_param.filter_map { |t| t[:id]&.to_i }
+    new_tag_names = tags_param.select { |t| t[:id].blank? }.filter_map { |t| t[:name] }
+
+    tag_names = Tag.where(id: tag_ids).pluck(:name)
+
+    if new_tag_names.present?
+      new_tags = DiscourseTagging.find_or_create_tags!(new_tag_names, guardian)
+      tag_names.concat(new_tags.map(&:name))
+    end
+
+    tag_names.join(",")
   end
 end
