@@ -97,9 +97,18 @@ class AssetProcessor
     end
   end
 
+  def self.timeout
+    @timeout ||= 15_000
+  end
+
+  def self.timeout=(value)
+    @timeout = value
+    reset_context
+  end
+
   def self.create_new_context
     # timeout any eval that takes longer than 15 seconds
-    ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
+    ctx = MiniRacer::Context.new(timeout: timeout, ensure_gc_after_idle: 2000)
 
     # General shims
     ctx.attach(
