@@ -501,7 +501,7 @@ module Discourse
       end
 
       if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
-            plugin.test_js_asset_exists?
+           plugin.test_js_asset_exists?
         if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
           if logical_path =
                Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test")
