@@ -2,15 +2,20 @@
 
 module Plugin
   class JsManager
-    @@manifest_data = {}
+    @manifest_data = {}
 
     def self.read_manifest(plugin_name)
       manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_name}/manifest.json"
+      JSON.parse(File.read(manifest_path))
+    rescue Errno::ENOENT
+      {}
+    end
 
+    def self.parsed_manifest(plugin_name)
       if Rails.env.production?
-        @@manifest_data[plugin_name] ||= JSON.parse(File.read(manifest_path))
+        @manifest_data[plugin_name] ||= read_manifest(plugin_name)
       else
-        JSON.parse(File.read(manifest_path))
+        read_manifest(plugin_name)
       end
     end
 
