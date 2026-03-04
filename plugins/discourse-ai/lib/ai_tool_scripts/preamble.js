@@ -22,6 +22,21 @@
  *     return `Browsed: <a href="${lastUrl}">${lastUrl}</a>`;
  *   }
  *
+ * customSystemMessage(): Optional function. Called during prompt assembly (not during tool invocation).
+ *                        Runs each time a prompt is built, before the LLM sees any messages.
+ *                        Returns a string that is appended to the system prompt, or null/undefined to skip.
+ *                        Use this to inject persistent instructions into the AI's system prompt based on state
+ *                        (e.g., active skills stored via discourse.setCustomField).
+ *                        Has access to `context`, `discourse`, and `index` objects.
+ * Example:
+ *   function customSystemMessage() {
+ *     if (!context || !context.topic_id) return null;
+ *     var skill = discourse.getCustomField("topic", context.topic_id, "active_skill");
+ *     if (!skill) return null;
+ *     var content = index.getFile(skill + ".md");
+ *     return content ? "## Active Skill\n\n" + content : null;
+ *   }
+ *
  * Provided Objects & Functions
  *
  * 1. http
@@ -73,6 +88,12 @@
  *        filenames (Array<string>): Filter search to fragments from specific uploaded filenames.
  *        limit (number): Maximum number of fragments to return (default: 10, max: 200).
  *    Returns: Array<{ fragment: string, metadata: string | null }> - Ordered by relevance.
+ *
+ *    index.getFile(filename): Retrieves the full content of an uploaded RAG file by its exact filename.
+ *    Parameters:
+ *      filename (string): The original filename of the uploaded file (e.g., "my_skill.md").
+ *    Returns: string (all fragments joined in order) or null if file not found.
+ *    Use case: When you need the complete, ordered content of a file rather than semantic search fragments.
  *
  * 4. upload
  *    Handles file uploads within Discourse.

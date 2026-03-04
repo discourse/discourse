@@ -813,4 +813,150 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       end
     end
   end
+
+  describe "#has_custom_system_message?" do
+    it "returns true when script defines customSystemMessage function" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { return "extra system instructions"; }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.has_custom_system_message?).to eq(true)
+    end
+
+    it "returns false when script does not define customSystemMessage" do
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.has_custom_system_message?).to eq(false)
+    end
+  end
+
+  describe "#custom_system_message" do
+    it "returns the string from customSystemMessage()" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { return "You are a coding assistant"; }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.custom_system_message).to eq("You are a coding assistant")
+    end
+
+    it "returns nil when customSystemMessage returns null" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { return null; }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.custom_system_message).to be_nil
+    end
+
+    it "returns nil when script errors" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { throw new Error("oops"); }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.custom_system_message).to be_nil
+    end
+  end
+
+  describe "#rag_get_file" do
+    before { SiteSetting.authorized_extensions = "md|txt" }
+
+    it "returns full file content in fragment order" do
+      upload = Fabricate(:upload, original_filename: "skill.md")
+      UploadReference.create!(upload: upload, target: tool)
+
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: upload,
+        fragment: "Part 2",
+        fragment_number: 2,
+      )
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: upload,
+        fragment: "Part 1",
+        fragment_number: 1,
+      )
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: upload,
+        fragment: "Part 3",
+        fragment_number: 3,
+      )
+
+      tool.update!(
+        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
+      )
+
+      runner =
+        described_class.new(
+          parameters: {
+            "filename" => "skill.md",
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+
+      expect(result["content"]).to eq("Part 1\nPart 2\nPart 3")
+    end
+
+    it "returns null for non-existent file" do
+      tool.update!(
+        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
+      )
+
+      runner =
+        described_class.new(
+          parameters: {
+            "filename" => "nonexistent.md",
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+
+      expect(result["content"]).to be_nil
+    end
+
+    it "picks the latest upload when duplicate filenames exist" do
+      old_upload = Fabricate(:upload, original_filename: "skill.md")
+      new_upload = Fabricate(:upload, original_filename: "skill.md")
+      UploadReference.create!(upload: old_upload, target: tool)
+      UploadReference.create!(upload: new_upload, target: tool)
+
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: old_upload,
+        fragment: "old content",
+        fragment_number: 1,
+      )
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: new_upload,
+        fragment: "new content",
+        fragment_number: 1,
+      )
+
+      tool.update!(
+        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
+      )
+
+      runner =
+        described_class.new(
+          parameters: {
+            "filename" => "skill.md",
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+
+      expect(result["content"]).to eq("new content")
+    end
+  end
 end

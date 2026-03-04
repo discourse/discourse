@@ -129,6 +129,7 @@ module DiscourseAi
 
         const index = {
           search: _index_search,
+          getFile: _index_get_file,
         }
 
         const upload = {
@@ -334,6 +335,30 @@ module DiscourseAi
         nil
       end
 
+      def has_custom_system_message?
+        mini_racer_context.eval(tool.script)
+        mini_racer_context.eval("typeof customSystemMessage === 'function'")
+      rescue StandardError
+        false
+      end
+
+      def custom_system_message
+        mini_racer_context.eval(tool.script)
+        result = eval_with_timeout("customSystemMessage()")
+        return result if result.is_a?(String)
+        if result.present?
+          Rails.logger.warn(
+            "customSystemMessage for tool #{tool.id} (#{tool.name}) returned #{result.class}, expected String",
+          )
+        end
+        nil
+      rescue StandardError => e
+        Rails.logger.warn(
+          "customSystemMessage failed for tool #{tool.id} (#{tool.name}): #{e.class} - #{e.message}",
+        )
+        nil
+      end
+
       private
 
       def preload_secrets(bindings)
@@ -350,6 +375,7 @@ module DiscourseAi
       end
 
       MAX_FRAGMENTS = 200
+      MAX_GET_FILE_CHARS = 500_000
 
       def rag_search(query, filenames: nil, limit: 10)
         limit = limit.to_i
@@ -392,6 +418,35 @@ module DiscourseAi
         end
 
         fragment_ids.take(limit).map { |fragment_id| mapped[fragment_id] }
+      end
+
+      def rag_get_file(filename)
+        return nil if filename.blank?
+
+        upload_refs =
+          UploadReference.where(target_id: tool.id, target_type: "AiTool").pluck(:upload_id)
+        upload_id =
+          Upload.where(id: upload_refs, original_filename: filename).order(id: :desc).pick(:id)
+        return nil if upload_id.nil?
+
+        fragments =
+          RagDocumentFragment
+            .where(target_id: tool.id, target_type: "AiTool", upload_id: upload_id)
+            .order(:fragment_number)
+            .pluck(:fragment)
+
+        return nil if fragments.empty?
+
+        result = +""
+        fragments.each do |fragment|
+          if result.length + fragment.length + 1 > MAX_GET_FILE_CHARS
+            result << "\n[truncated]"
+            break
+          end
+          result << "\n" unless result.empty?
+          result << fragment
+        end
+        result
       end
 
       def attach_truncate(mini_racer_context)
@@ -470,6 +525,11 @@ module DiscourseAi
               self.rag_search(query, **options)
             end
           end,
+        )
+
+        mini_racer_context.attach(
+          "_index_get_file",
+          ->(filename) { in_attached_function { rag_get_file(filename) } },
         )
       end
 
