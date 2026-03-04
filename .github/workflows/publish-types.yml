@@ -36,8 +36,9 @@ jobs:
         run: pnpm lint:types
 
       - name: Generate external type definitions
-        run: pnpm types:generate-external
+        run: pnpm types:generate
 
       - name: Publish the package
         working-directory: frontend/discourse-types
         run: pnpm publish --no-git-checks --dry-run
+        # todo generate version
