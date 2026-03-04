@@ -341,35 +341,23 @@ class Stylesheet::Manager
 
   def color_scheme_stylesheet_details(color_scheme_id = nil, fallback_to_base: true)
     theme_id = @theme_id || SiteSetting.default_theme_id
+    theme_id = nil if !Theme.theme_ids.include?(theme_id)
 
     color_scheme = ColorScheme.find_by(id: color_scheme_id)
+    return if !color_scheme && !fallback_to_base
 
-    if !color_scheme
-      return if !fallback_to_base
-      color_scheme = get_theme(theme_id)&.color_scheme || ColorScheme.base
-    end
-
-    target = COLOR_SCHEME_STYLESHEET.to_sym
-    current_hostname = Discourse.current_hostname
+    theme = theme_id ? get_theme(theme_id) : nil
+    color_scheme ||= theme&.color_scheme || ColorScheme.base
     cache_key = self.class.color_scheme_cache_key(color_scheme, theme_id)
 
     cache.defer_get_set(cache_key) do
       stylesheet = { color_scheme_id: color_scheme.id }
 
-      theme = get_theme(theme_id)
-
       builder =
-        Builder.new(
-          target: target,
-          theme: get_theme(theme_id),
-          color_scheme: color_scheme,
-          manager: self,
-        )
-
+        Builder.new(target: COLOR_SCHEME_STYLESHEET.to_sym, theme:, color_scheme:, manager: self)
       builder.compile unless File.exist?(builder.stylesheet_fullpath)
 
-      href = builder.stylesheet_absolute_url
-      stylesheet[:new_href] = href
+      stylesheet[:new_href] = builder.stylesheet_absolute_url
 
       stylesheet.freeze
     end
