@@ -533,4 +533,82 @@ RSpec.describe DiscoursePoll::PollsController do
       end
     end
   end
+
+  context "when post_id does not match the poll's post" do
+    it "does not allow voting on another post's poll" do
+      accessible_post = Fabricate(:post, topic: topic, user: user)
+
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_poll_post =
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: Fabricate(:admin).tap { |u| group.add(u) },
+          raw: "[poll]\n- A\n- B\n[/poll]",
+        )
+
+      expect(accessible_post.id).to be < private_poll_post.id
+
+      put :vote,
+          params: {
+            post_id: [accessible_post.id, private_poll_post.id],
+            poll_name: "poll",
+            options: ["5c24fc1df56d764b550ceae1b9319125"],
+          },
+          format: :json
+
+      expect(response.status).not_to eq(200)
+      expect(PollVote.where(user_id: user.id).count).to eq(0)
+    end
+
+    it "does not allow removing a vote from another post's poll" do
+      accessible_post = Fabricate(:post, topic: topic, user: user)
+
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_poll_post =
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: Fabricate(:admin).tap { |u| group.add(u) },
+          raw: "[poll]\n- A\n- B\n[/poll]",
+        )
+
+      expect(accessible_post.id).to be < private_poll_post.id
+
+      delete :remove_vote,
+             params: {
+               post_id: [accessible_post.id, private_poll_post.id],
+               poll_name: "poll",
+             },
+             format: :json
+
+      expect(response.status).not_to eq(200)
+    end
+
+    it "does not allow toggling status of another post's poll" do
+      own_post = Fabricate(:post, topic: topic, user: user)
+
+      other_topic = Fabricate(:topic)
+      other_user = Fabricate(:user, trust_level: TrustLevel[1])
+      victim_poll_post =
+        Fabricate(:post, topic: other_topic, user: other_user, raw: "[poll]\n- A\n- B\n[/poll]")
+
+      expect(own_post.id).to be < victim_poll_post.id
+
+      put :toggle_status,
+          params: {
+            post_id: [own_post.id, victim_poll_post.id],
+            poll_name: "poll",
+            status: "closed",
+          },
+          format: :json
+
+      expect(response.status).not_to eq(200)
+      expect(victim_poll_post.polls.first.reload.status).to eq("open")
+    end
+  end
 end
