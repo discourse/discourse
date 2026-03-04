@@ -209,6 +209,18 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
       expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
     end
 
+    context "when the authenticator includes extension data" do
+      let(:attestation) do
+        "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViySZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2PFAAAAAK3OAAI1vMYKZIsLJfHwVQMAICRXq4sFZ9XpWZOzfJ8EguJmoEPMzNVyFMUWQfT5u1QzpQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmKha2htYWMtc2VjcmV09A=="
+      end
+
+      it "registers successfully by ignoring the extension data" do
+        key = service.register_security_key
+        expect(key).to be_a(UserSecurityKey)
+        expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
+      end
+    end
+
     context "when the user verification flag in the key is false" do
       it "raises a UserVerificationError" do
         # simulate missing user verification by flipping third bit to 0
