@@ -65,6 +65,8 @@ export default class NavItem extends Component {
           this.router.currentRoute.params.field_name === this.args.routeParam
         );
       }
+
+      return this.router.isActive(this.args.route, this.args.routeParam);
     }
 
     return this.router.isActive(this.args.route);
