@@ -296,11 +296,6 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
-      - name: Generate types
-        if: matrix.build_type == 'frontend'
-        working-directory: frontend/discourse-types
-        run: pnpm generate
-
       - name: Ember Build
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
         run: bin/rake assets:precompile:build_plugins && script/assemble_ember_build.rb
