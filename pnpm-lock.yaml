@@ -263,8 +263,8 @@ importers:
         specifier: 11.11.1
         version: 11.11.1
       '@json-editor/json-editor':
-        specifier: 2.15.2
-        version: 2.15.2
+        specifier: 2.16.0
+        version: 2.16.0
       '@jsquash/jpeg':
         specifier: ^1.6.0
         version: 1.6.0
@@ -2493,8 +2493,8 @@ packages:
     resolution: {integrity: sha512-yYxMVH7Dqw6nO0d5NIV8OQWnitU8k6vXH8NtgqAfIa/IUqRMxRv/NUJJ08VEKbAakwxlgBl5PJdrU0dMPStsnw==}
     engines: {node: '>=v12.0.0'}
 
-  '@json-editor/json-editor@2.15.2':
-    resolution: {integrity: sha512-vUQ7Oy+7VfNIzu6irtPz5qfHbMNTlQWUbHJ7eunxFza+SBwUXfq2Uh5QYD2d6hLDhF22sYh8DPpLWFixQrt1+Q==}
+  '@json-editor/json-editor@2.16.0':
+    resolution: {integrity: sha512-qzCDDImLAkqCpOp3G156ikEHTJKQviVyxie+3QXE1MTxRuT+BZ3yTYsXfUpvgRyaLBcYDJIind59Hj3oz+5TqA==}
     engines: {node: '>= 0.8.0'}
 
   '@jsonjoy.com/base64@1.1.2':
@@ -4419,6 +4419,9 @@ packages:
   core-js@2.6.12:
     resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
     deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+
+  core-js@3.48.0:
+    resolution: {integrity: sha512-zpEHTy1fjTMZCKLHUZoVeylt9XrzaIN2rbPXEt0k+q7JE5CkCZdo6bNq55bn24a69CH7ErAVLKijxJja4fw+UQ==}
 
   core-js@3.48.0:
     resolution: {integrity: sha512-zpEHTy1fjTMZCKLHUZoVeylt9XrzaIN2rbPXEt0k+q7JE5CkCZdo6bNq55bn24a69CH7ErAVLKijxJja4fw+UQ==}
@@ -11381,7 +11384,7 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  '@json-editor/json-editor@2.15.2':
+  '@json-editor/json-editor@2.16.0':
     dependencies:
       core-js: 3.48.0
 
@@ -13590,6 +13593,8 @@ snapshots:
       browserslist: 4.28.1
 
   core-js@2.6.12: {}
+
+  core-js@3.48.0: {}
 
   core-js@3.48.0: {}
 
