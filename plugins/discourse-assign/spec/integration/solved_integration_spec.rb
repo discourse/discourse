@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
-  fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:user)
   fab!(:group)
+  fab!(:topic) { Fabricate(:topic_with_op, user: user) }
+  fab!(:post) { Fabricate(:post, topic: topic) }
 
   before do
     SiteSetting.solved_enabled = true
+    SiteSetting.allow_solved_on_all_topics = true
     SiteSetting.assign_enabled = true
     SiteSetting.enable_assign_status = true
     SiteSetting.assign_allowed_on_groups = "#{group.id}"
@@ -26,7 +27,7 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       expect(result[:success]).to eq(true)
 
       expect(topic.assignment.status).to eq("New")
-      DiscourseSolved.accept_answer!(post, user)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
       topic.reload
 
       expect(topic.solved.answer_post_id).to eq(post.id)
@@ -38,11 +39,11 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       result = assigner.assign(user)
       expect(result[:success]).to eq(true)
 
-      DiscourseSolved.accept_answer!(post, user)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
 
       expect(topic.assignment.reload.status).to eq("Done")
 
-      DiscourseSolved.unaccept_answer!(post)
+      DiscourseSolved::UnacceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
 
       expect(topic.assignment.reload.status).to eq("New")
     end
@@ -65,11 +66,21 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       post_response = Fabricate(:post, topic: topic_question, user: user_3)
       Assigner.new(post_response, user_3).assign(user_3)
 
-      DiscourseSolved.accept_answer!(post_response, user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: post_response.id,
+        },
+        guardian: user.guardian,
+      )
 
       expect(topic_question.assignment.assigned_to_id).to eq(user_2.id)
       expect(post_response.assignment.assigned_to_id).to eq(user_3.id)
-      DiscourseSolved.unaccept_answer!(post_response)
+      DiscourseSolved::UnacceptAnswer.call!(
+        params: {
+          post_id: post_response.id,
+        },
+        guardian: user.guardian,
+      )
 
       expect(topic_question.assignment.assigned_to_id).to eq(user_2.id)
       expect(post_response.assignment.assigned_to_id).to eq(user_3.id)
@@ -77,10 +88,10 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
 
     describe "assigned topic reminder" do
       it "excludes solved topics when ignore_solved_topics_in_assigned_reminder is true" do
-        other_topic = Fabricate(:topic, title: "Topic that should be there")
+        other_topic = Fabricate(:topic_with_op, title: "Topic that should be there")
         other_post = Fabricate(:post, topic: other_topic, user: user)
 
-        other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
+        other_topic2 = Fabricate(:topic_with_op, title: "Topic that should be there2")
         other_post2 = Fabricate(:post, topic: other_topic2, user: user)
 
         Assigner.new(other_topic, user).assign(user)
@@ -90,7 +101,12 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
         topics = reminder.send(:assigned_topics, user, order: :asc)
         expect(topics.to_a.length).to eq(2)
 
-        DiscourseSolved.accept_answer!(other_post2, Discourse.system_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: other_post2.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
         topics = reminder.send(:assigned_topics, user, order: :asc)
         expect(topics.to_a.length).to eq(2)
         expect(topics).to include(other_topic2)
@@ -107,10 +123,10 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       it "does not count solved topics using assignment_status_on_solve status" do
         SiteSetting.ignore_solved_topics_in_assigned_reminder = true
 
-        other_topic = Fabricate(:topic, title: "Topic that should be there")
+        other_topic = Fabricate(:topic_with_op, title: "Topic that should be there")
         other_post = Fabricate(:post, topic: other_topic, user: user)
 
-        other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
+        other_topic2 = Fabricate(:topic_with_op, title: "Topic that should be there2")
         other_post2 = Fabricate(:post, topic: other_topic2, user: user)
 
         Assigner.new(other_topic, user).assign(user)
@@ -119,7 +135,12 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
         reminder = PendingAssignsReminder.new
         expect(reminder.send(:assigned_count_for, user)).to eq(2)
 
-        DiscourseSolved.accept_answer!(other_post2, Discourse.system_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: other_post2.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
         expect(reminder.send(:assigned_count_for, user)).to eq(1)
       end
     end

@@ -3,35 +3,38 @@
 class DiscourseSolved::AnswerController < ::ApplicationController
   requires_plugin DiscourseSolved::PLUGIN_NAME
 
+  before_action :limit_accepts
+
   def accept
-    limit_accepts
-
-    post = Post.find(params[:id].to_i)
-
-    topic = post.topic
-    topic ||= Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
-
-    guardian.ensure_can_accept_answer!(topic, post)
-
-    accepted_answer = DiscourseSolved.accept_answer!(post, current_user, topic: topic)
-
-    render_json_dump(accepted_answer)
+    DiscourseSolved::AcceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
+      on_success { |topic:| render_json_dump(topic.accepted_answer_post_info) }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_accept_answer) { raise Discourse::InvalidAccess }
+      on_model_errors(:solved) do |model|
+        render_json_error(model, type: :record_invalid, status: 422)
+      end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
+    end
   end
 
   def unaccept
-    limit_accepts
-
-    post = Post.find(params[:id].to_i)
-
-    topic = post.topic
-    topic ||= Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
-
-    guardian.ensure_can_accept_answer!(topic, post)
-
-    DiscourseSolved.unaccept_answer!(post, topic: topic)
-
-    render json: success_json
+    DiscourseSolved::UnacceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
+      on_success { render json: success_json }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:can_unaccept_answer) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
+    end
   end
+
+  private
 
   def limit_accepts
     return if current_user.staff?
