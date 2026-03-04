@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate type definitions
-        run: pnpm types-generate
+        run: pnpm types:generate
 
       - name: Publish the package
         run: pnpm publish
