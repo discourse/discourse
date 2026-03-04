@@ -36,45 +36,43 @@ export default class DSegmentedControl extends Component {
   }
 
   <template>
-    {{#let (uniqueId) as |groupName|}}
-      <fieldset
-        class="d-segmented-control"
-        {{this.positionSlider @value}}
-        ...attributes
-      >
-        {{#if this.legend}}
-          <legend class="d-segmented-control__legend">
-            {{this.legend}}
-          </legend>
-        {{/if}}
+    <fieldset
+      class="d-segmented-control"
+      {{this.positionSlider @value}}
+      ...attributes
+    >
+      {{#if this.legend}}
+        <legend class="d-segmented-control__legend">
+          {{this.legend}}
+        </legend>
+      {{/if}}
 
-        <span class="d-segmented-control__slider"></span>
+      <span class="d-segmented-control__slider"></span>
 
-        {{#each @items as |item|}}
-          {{#let (uniqueId) as |id|}}
-            <label
-              for={{id}}
-              class="d-segmented-control__label
-                {{if
-                  (eq @value item.value)
-                  'd-segmented-control__label --selected'
-                }}"
-            >
-              <input
-                type="radio"
-                id={{id}}
-                name={{groupName}}
-                value={{item.value}}
-                checked={{eq @value item.value}}
-                class="d-segmented-control__input"
-                {{on "change" (fn this.handleChange item.value)}}
-              />
-              <span class="d-segmented-control__text">{{item.label}}</span>
-            </label>
-          {{/let}}
-        {{/each}}
+      {{#each @items as |item|}}
+        {{#let (uniqueId) as |id|}}
+          <label
+            for={{id}}
+            class="d-segmented-control__label
+              {{if
+                (eq @value item.value)
+                'd-segmented-control__label --selected'
+              }}"
+          >
+            <input
+              type="radio"
+              id={{id}}
+              name={{@name}}
+              value={{item.value}}
+              checked={{eq @value item.value}}
+              class="d-segmented-control__input"
+              {{on "change" (fn this.handleChange item.value)}}
+            />
+            <span class="d-segmented-control__text">{{item.label}}</span>
+          </label>
+        {{/let}}
+      {{/each}}
 
-      </fieldset>
-    {{/let}}
+    </fieldset>
   </template>
 }

@@ -20,6 +20,7 @@ export default class SegmentedControl extends Component {
 
 <template>
   <DSegmentedControl
+    @name="time-period"
     @items={{this.items}}
     @value={{this.selected}}
     @onSelect={{this.handleSelect}}
@@ -35,6 +36,7 @@ export default class SegmentedControl extends Component {
   <template>
     <StyleguideExample @title="<DSegmentedControl>" @code={{this.basicCode}}>
       <DSegmentedControl
+        @name="time-period"
         @items={{this.items1}}
         @value={{this.value1}}
         @onSelect={{this.onSelect1}}
