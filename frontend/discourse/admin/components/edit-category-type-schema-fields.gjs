@@ -2,6 +2,10 @@ import Component from "@glimmer/component";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+// NOTE: In future we may want to use FormKit versions of site setting components
+// here rather than this custom implementation. We are also only supporting a small
+// subset of site setting types / category field types for now, we can expand this as
+// needed.
 const SchemaFormField = <template>
   {{#if (eq @entry.type "bool")}}
     <@formObject.Field

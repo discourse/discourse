@@ -39,6 +39,10 @@ export default class NewCategoryTabs extends DiscourseRoute {
         configuration_schema: result.typeSchema,
       };
       model.set("category_types", initialTypes);
+
+      result.typeSchema.general_category_settings?.forEach((setting) => {
+        model.set(setting.key, setting.default);
+      });
     }
 
     const selectedTab = transition.to.params.tab;

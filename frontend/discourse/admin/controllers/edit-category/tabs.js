@@ -161,9 +161,11 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    if (this.model.category_type_title) {
+    if (this.model.category_types) {
       return i18n("category.create_with_type", {
-        typeName: this.model.category_type_title,
+        typeName: Object.values(
+          this.model.category_types
+        )[0].name.toLowerCase(),
       });
     }
 

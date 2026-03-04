@@ -7,6 +7,12 @@ module Categories
         "type" => "object",
         "additionalProperties" => false,
         "properties" => {
+          "general_category_settings" => {
+            "type" => "object",
+            "additionalProperties" => {
+              "$ref" => "#/$defs/field_config",
+            },
+          },
           "site_settings" => {
             "type" => "object",
           },
@@ -80,6 +86,26 @@ module Categories
         # All top-level keys are optional; an empty hash is valid.
         #
         #   {
+        #     general_category_settings: {
+        #       # Used to prefill basic category fields when creating a new category.
+        #       # Each key is the category field name (Symbol).
+        #       # Each value is a config Hash:
+        #       #   default:     (required) Any value; the field's default when creating a new category.
+        #       #   type:        (required) Symbol — e.g. :integer, :string, :boolean, matching site setting types.
+        #       name: {
+        #         value: "My Category",
+        #         type: :string,
+        #       },
+        #       style_type: {
+        #         value: "emoji",
+        #         type: :string,
+        #       },
+        #       emoji: {
+        #         value: "🔥",
+        #         type: :string,
+        #       },
+        #     },
+        #
         #     site_settings: {
         #       # Each key must be a valid SiteSetting name.
         #       # The value is the desired default to apply when this category type is configured.
@@ -196,7 +222,20 @@ module Categories
           schema = configuration_schema
           return [] if schema.blank?
 
-          entries = { site_settings: [], category_settings: [], category_custom_fields: [] }
+          entries = {
+            general_category_settings: [],
+            site_settings: [],
+            category_settings: [],
+            category_custom_fields: [],
+          }
+
+          schema[:general_category_settings]&.each do |setting_name, config|
+            entries[:general_category_settings] << {
+              key: setting_name.to_s,
+              default: config[:default],
+              type: config[:type].to_s,
+            }
+          end
 
           schema[:site_settings]&.each do |setting_name, target_value|
             meta = SiteSetting.setting_metadata_hash(setting_name)
