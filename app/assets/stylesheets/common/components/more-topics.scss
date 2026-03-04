@@ -53,7 +53,7 @@
 
   .more-topics__list {
     .topic-list-body {
-      border-top: none;
+      border-top-width: 1px;
     }
 
     .topic-list-header:has(.nav-pills) {
@@ -62,6 +62,21 @@
 
         &:first-of-type {
           padding-left: 0;
+        }
+      }
+    }
+
+    @include viewport.until(sm) {
+      .topic-list-header.--has-tabs {
+        display: flex;
+
+        .nav-pills {
+          margin: 0;
+          border: none;
+        }
+
+        th:not(.default) {
+          display: none;
         }
       }
     }
