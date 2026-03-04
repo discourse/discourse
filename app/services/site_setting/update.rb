@@ -54,6 +54,11 @@ class SiteSetting::Update
               raw_value
             end
 
+          # Make sure to get the correct value here based on type, otherwise
+          # we can end up inserting a staff action log when e.g. setting the value
+          # to "false" when the setting value is already false.
+          setting.value = SiteSetting.type_supervisor.to_rb_value(setting.name, setting.value)
+
           setting
         end
     end
