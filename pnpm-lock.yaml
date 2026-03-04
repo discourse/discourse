@@ -462,8 +462,8 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1(@uppy/core@4.2.2)
       a11y-dialog:
-        specifier: 8.1.4
-        version: 8.1.4
+        specifier: 8.1.5
+        version: 8.1.5
       autosize:
         specifier: ^6.0.1
         version: 6.0.1
@@ -3235,8 +3235,8 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
-  a11y-dialog@8.1.4:
-    resolution: {integrity: sha512-CgaQfoTg9t+O8vArlNAYN7Gzv6h1bpWRqggzCtng6TQ2im6XCpUQI+GWlPvQdovQtwzJN6MydxipXKB8qP5Zxw==}
+  a11y-dialog@8.1.5:
+    resolution: {integrity: sha512-SlFk3QSqeuvmN/anaIteUkB6ipBHoG1jq5gfQZU2kqvbkDW3Iab7SNufj4io4e8StvuIshD+loJnsQgTEvq6dA==}
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -12196,7 +12196,7 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  a11y-dialog@8.1.4:
+  a11y-dialog@8.1.5:
     dependencies:
       focusable-selectors: 0.8.4
 
