@@ -11,12 +11,10 @@ const SchemaFormField = <template>
     <@formObject.Field
       @name={{@entry.key}}
       @title={{@entry.label}}
-      @helpText={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @format="large"
       as |field|
     >
-      <field.Checkbox />
+      <field.Checkbox>{{@entry.description}}</field.Checkbox>
     </@formObject.Field>
   {{else if (eq @entry.type "integer")}}
     <@formObject.Field
@@ -24,7 +22,6 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @format="large"
       as |field|
     >
       <field.Input @type="number" />
@@ -35,7 +32,6 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
-      @format="large"
       as |field|
     >
       <field.Input />

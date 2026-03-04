@@ -30,7 +30,7 @@ export default class FKControlCheckbox extends Component {
           <FKOptional @field={{@field}} />
           <FKTooltip @field={{@field}} />
         </span>
-        {{#if (has-block)}}
+        {{#if @hasBlock}}
           <span class="form-kit__control-checkbox-description">{{yield}}</span>
         {{/if}}
       </span>
