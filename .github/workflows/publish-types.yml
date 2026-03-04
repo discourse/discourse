@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - "0-a-types-again"
     paths:
       - "lib/version.rb"
 
