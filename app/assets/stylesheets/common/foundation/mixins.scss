@@ -41,7 +41,7 @@ $breakpoints: (
   @if $sidebar {
     // when the sidebar is shown, we want to increase the breakpoints by the width of the sidebar
     /* stylelint-disable-next-line scss/no-global-function-names */
-    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$sidebar-width})) {
+    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$d-sidebar-width})) {
       .has-sidebar-page {
         @content;
       }
