@@ -10,6 +10,22 @@
     }
   }
 
+  .fk-d-menu__inner-content {
+    --fade-height: 2em;
+    flex-direction: column;
+
+    &::after {
+      content: "";
+      position: sticky;
+      bottom: 0;
+      flex-shrink: 0;
+      height: var(--fade-height);
+      margin-top: calc(var(--fade-height) * -1);
+      pointer-events: none;
+      background: linear-gradient(to bottom, transparent, var(--secondary));
+    }
+  }
+
   .fullscreen-composer & {
     z-index: z("header") + 1;
   }
@@ -20,6 +36,9 @@
   }
 
   .shortcut {
+    line-height: 1;
+    vertical-align: middle;
+
     &.--apple {
       letter-spacing: 0.25em;
     }
