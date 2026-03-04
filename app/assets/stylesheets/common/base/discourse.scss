@@ -319,7 +319,7 @@ label {
   align-items: flex-start;
   color: var(--primary-high);
 
-  &:not(.checkbox-label) {
+  &:not(.checkbox-label, .d-segmented-control__label) {
     font-weight: bold;
   }
 
