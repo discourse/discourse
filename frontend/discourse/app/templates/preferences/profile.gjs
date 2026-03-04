@@ -99,7 +99,7 @@ export default <template>
 
   {{#each @controller.userFields as |uf|}}
     <div class="control-group" data-setting-name="user-user-fields">
-      <UserField @field={{uf.field}} @value={{uf.value}} />
+      <UserField @field={{uf.field}} @value={{uf.value}} @locked={{uf.locked}} />
     </div>
   {{/each}}
   <div class="clearfix"></div>

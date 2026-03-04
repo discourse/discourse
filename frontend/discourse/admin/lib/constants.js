@@ -45,6 +45,7 @@ export const REPORT_MODES = {
 
 export const USER_FIELD_FLAGS = [
   "editable",
+  "editable_once",
   "show_on_profile",
   "show_on_signup",
   "show_on_user_card",

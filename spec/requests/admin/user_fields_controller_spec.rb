@@ -210,6 +210,54 @@ RSpec.describe Admin::UserFieldsController do
         )
       end
 
+      it "creates a user field with editable_once" do
+        expect {
+          post "/admin/config/user_fields.json",
+               params: {
+                 user_field: {
+                   name: "invite_code",
+                   description: "Your invite code",
+                   field_type: "text",
+                   requirement: "for_all_users",
+                   editable: true,
+                   editable_once: true,
+                 },
+               }
+
+          expect(response.status).to eq(200)
+        }.to change(UserField, :count).by(1)
+
+        field = UserField.last
+        expect(field.editable_once).to eq(true)
+        expect(field.editable).to eq(true)
+      end
+
+      it "updates editable_once on an existing user field" do
+        expect(user_field.editable_once).to eq(false)
+
+        put "/admin/config/user_fields/#{user_field.id}.json",
+            params: {
+              user_field: {
+                editable_once: true,
+                editable: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(user_field.reload.editable_once).to eq(true)
+        expect(response.parsed_body["user_field"]["editable_once"]).to eq(true)
+      end
+
+      it "includes editable_once in the serialized response" do
+        user_field.update!(editable_once: true)
+
+        get "/admin/config/user_fields.json"
+
+        expect(response.status).to eq(200)
+        field_data = response.parsed_body["user_fields"].find { |f| f["id"] == user_field.id }
+        expect(field_data["editable_once"]).to eq(true)
+      end
+
       it "updates the user field options" do
         put "/admin/config/user_fields/#{user_field.id}.json",
             params: {

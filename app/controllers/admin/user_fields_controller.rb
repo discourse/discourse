@@ -6,6 +6,7 @@ class Admin::UserFieldsController < Admin::AdminController
       name
       field_type
       editable
+      editable_once
       description
       requirement
       show_on_profile

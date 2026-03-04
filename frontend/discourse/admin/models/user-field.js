@@ -25,6 +25,7 @@ export default class UserField extends RestModel {
 
   @tracked field_type;
   @tracked editable;
+  @tracked editable_once;
   @tracked show_on_profile;
   @tracked show_on_user_card;
   @tracked searchable;

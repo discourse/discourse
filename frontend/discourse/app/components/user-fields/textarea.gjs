@@ -11,6 +11,7 @@ export default class UserFieldTextArea extends UserFieldBase {
       <Textarea
         id={{concat "user-" this.elementId}}
         @value={{this.value}}
+        disabled={{this.locked}}
         class="form-template-field__textarea"
         maxlength={{this.site.user_field_max_length}}
       />

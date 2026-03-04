@@ -11,6 +11,7 @@ export default class UserFieldText extends UserFieldBase {
       <Input
         id={{concat "user-" this.elementId}}
         @value={{this.value}}
+        disabled={{this.locked}}
         maxlength={{this.site.user_field_max_length}}
       />
       <label

@@ -24,7 +24,7 @@ export default class UserFieldMultiselect extends UserFieldBase {
         @nameProperty={{null}}
         @value={{this.value}}
         @onChange={{fn (mut this.value)}}
-        @options={{hash none=this.noneLabel}}
+        @options={{hash none=this.noneLabel disabled=this.locked}}
       />
       {{#if this.validation.failed}}
         <InputTip @validation={{this.validation}} />

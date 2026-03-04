@@ -26,6 +26,7 @@ export default class UserFieldConfirm extends UserFieldBase {
           id={{concat "user-" this.elementId}}
           @checked={{this.value}}
           @type="checkbox"
+          disabled={{this.locked}}
         />
         <span>
           {{htmlSafe this.field.description}}

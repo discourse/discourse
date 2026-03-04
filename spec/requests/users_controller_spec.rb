@@ -2800,6 +2800,124 @@ RSpec.describe UsersController do
             end
           end
 
+          context "with editable_once field" do
+            fab!(:user_field) do
+              Fabricate(:user_field, editable: true, editable_once: true, requirement: "optional")
+            end
+
+            it "allows setting the field when it has no value" do
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "initial value",
+                    },
+                  }
+
+              expect(response.status).to eq(200)
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("initial value")
+            end
+
+            it "does not allow changing the field once a value is set" do
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "initial value",
+                    },
+                  }
+
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("initial value")
+
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "new value",
+                    },
+                  }
+
+              expect(response.status).to eq(200)
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("initial value")
+            end
+
+            it "allows staff to change the field even after a value is set" do
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "initial value",
+                    },
+                  }
+
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("initial value")
+
+              sign_in(admin)
+
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "staff override",
+                    },
+                  }
+
+              expect(response.status).to eq(200)
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("staff override")
+            end
+
+            it "works with for_all_users requirement - user can fill initially then field is locked" do
+              user_field.update!(requirement: "for_all_users")
+
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "filled value",
+                    },
+                  }
+
+              expect(response.status).to eq(200)
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("filled value")
+
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "changed value",
+                    },
+                  }
+
+              expect(response.status).to eq(200)
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("filled value")
+            end
+
+            it "allows refilling the field after admin clears it" do
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "original",
+                    },
+                  }
+
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("original")
+
+              sign_in(admin)
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => nil,
+                    },
+                  }
+
+              expect(user.reload.user_fields[user_field.id.to_s]).to be_blank
+
+              sign_in(user)
+              put "/u/#{user.username}.json",
+                  params: {
+                    user_fields: {
+                      user_field.id.to_s => "refilled",
+                    },
+                  }
+
+              expect(response.status).to eq(200)
+              expect(user.reload.user_fields[user_field.id.to_s]).to eq("refilled")
+            end
+          end
+
           context "with custom_field" do
             before do
               plugin = Plugin::Instance.new

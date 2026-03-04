@@ -70,7 +70,9 @@ export default class ProfileController extends Controller {
       .sort((a, b) => compare(a?.position, b?.position))
       .map((field) => {
         const value = this.model.user_fields?.[field.id.toString()];
-        return EmberObject.create({ field, value });
+        const locked =
+          !this.currentUser.staff && field.editable_once && !!value;
+        return EmberObject.create({ field, value, locked });
       });
   }
 

@@ -217,6 +217,11 @@ class UsersController < ApplicationController
         value = nil if value === "false"
         value = value[0...UserField.max_length] if value
 
+        if field.editable_once? && !current_user.staff?
+          existing_value = user.custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"]
+          next if existing_value.present?
+        end
+
         if value.blank? &&
              (
                field.for_all_users? ||

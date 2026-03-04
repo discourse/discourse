@@ -12,6 +12,7 @@ export default class UserFieldDate extends UserFieldBase {
         id={{concat "user-" this.elementId}}
         @type="date"
         @value={{this.value}}
+        disabled={{this.locked}}
       />
       <label
         class="control-label alt-placeholder"

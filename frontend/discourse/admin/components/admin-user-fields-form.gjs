@@ -20,10 +20,15 @@ export default class AdminUserFieldsForm extends Component {
   @service adminCustomUserFields;
   @service toasts;
 
-  @tracked
-  editableDisabled = this.args.userField.requirement === "for_all_users";
+  @tracked _disabledByRequirement =
+    this.args.userField.requirement === "for_all_users";
+  @tracked _disabledByEditableOnce = !!this.args.userField.editable_once;
   originalRequirement = this.args.userField.requirement;
   userField;
+
+  get editableDisabled() {
+    return this._disabledByRequirement || this._disabledByEditableOnce;
+  }
 
   /** @returns {any} */
   get fieldTypes() {
@@ -38,6 +43,7 @@ export default class AdminUserFieldsForm extends Component {
       "description",
       "requirement",
       "editable",
+      "editable_once",
       "show_on_profile",
       "show_on_signup",
       "show_on_user_card",
@@ -52,13 +58,14 @@ export default class AdminUserFieldsForm extends Component {
     set("requirement", value);
 
     if (value === "for_all_users") {
-      this.editableDisabled = true;
+      this._disabledByRequirement = true;
       set("editable", true);
       set("show_on_signup", true);
     } else if (value === "on_signup") {
+      this._disabledByRequirement = false;
       set("show_on_signup", true);
     } else {
-      this.editableDisabled = false;
+      this._disabledByRequirement = false;
     }
   }
 
@@ -68,6 +75,16 @@ export default class AdminUserFieldsForm extends Component {
 
     if (value === false) {
       set("show_on_signup", true);
+    }
+  }
+
+  @action
+  setEditableOnce(value, { set }) {
+    set("editable_once", value);
+    this._disabledByEditableOnce = value;
+
+    if (value) {
+      set("editable", true);
     }
   }
 
@@ -240,6 +257,16 @@ export default class AdminUserFieldsForm extends Component {
             as |field|
           >
             <field.Checkbox disabled={{this.editableDisabled}} />
+          </group.Field>
+          <group.Field
+            @name="editable_once"
+            @showTitle={{false}}
+            @onSet={{this.setEditableOnce}}
+            @title={{i18n "admin.user_fields.editable_once.title"}}
+            @description={{i18n "admin.user_fields.editable_once.description"}}
+            as |field|
+          >
+            <field.Checkbox />
           </group.Field>
           <group.Field
             @name="show_on_profile"

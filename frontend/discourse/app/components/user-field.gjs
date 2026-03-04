@@ -25,6 +25,7 @@ export default class UserField extends Component {
       <UserFieldComponent
         @field={{@field}}
         @value={{@value}}
+        @locked={{@locked}}
         @validation={{@validation}}
         ...attributes
       />
