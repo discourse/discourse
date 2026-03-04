@@ -206,6 +206,8 @@ class InvitesController < ApplicationController
       guardian.ensure_can_invite_to!(topic)
     end
 
+    invite.topics.each { |t| guardian.ensure_can_invite_to!(t) } if !params.has_key?(:topic_id)
+
     if params[:group_ids].present? || params[:group_names].present?
       groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
     end
