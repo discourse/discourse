@@ -322,7 +322,7 @@ jobs:
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend'
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
@@ -375,7 +375,7 @@ jobs:
           fi
 
       - name: Upload failed system test artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
         with:
           name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
@@ -399,7 +399,7 @@ jobs:
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
       - name: Upload flaky tests report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
@@ -411,7 +411,7 @@ jobs:
     needs: build
     steps:
       - name: Merge Artifacts
-        uses: actions/upload-artifact/merge@v6
+        uses: actions/upload-artifact/merge@v7
         with:
           name: failed-system-test-artifacts
           pattern: failed-system-test-artifacts-*
@@ -421,7 +421,7 @@ jobs:
         continue-on-error: true
 
       - name: Merge Artifacts
-        uses: actions/upload-artifact/merge@v6
+        uses: actions/upload-artifact/merge@v7
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*
