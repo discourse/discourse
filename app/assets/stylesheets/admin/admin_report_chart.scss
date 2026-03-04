@@ -8,7 +8,7 @@
   }
 }
 
-body.uc-reporting-improvements .chart {
+body.uc-reporting-improvements .admin-contents:not(.dashboard) .chart {
   &__wrapper {
     display: flex;
     flex-direction: column;

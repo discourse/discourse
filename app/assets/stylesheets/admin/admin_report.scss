@@ -91,20 +91,8 @@
   .d-page-subheader__title a {
     color: var(--primary);
   }
-}
 
-body:not(.uc-reporting-improvements) .admin-report {
-  .body {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .main {
-    flex: 1;
-    min-width: 0; // allow chart.js to shrink below intrinsic width
-  }
-
-  .main .report-alert {
+  .report-alert {
     margin: 0;
     text-align: center;
     padding: 3em;
@@ -137,6 +125,18 @@ body:not(.uc-reporting-improvements) .admin-report {
       border-color: var(--danger-low);
       color: var(--danger);
     }
+  }
+}
+
+body:not(.uc-reporting-improvements) .admin-report {
+  .body {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .main {
+    flex: 1;
+    min-width: 0; // allow chart.js to shrink below intrinsic width
   }
 
   .average-chart {
