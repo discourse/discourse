@@ -13,7 +13,7 @@
     "@rdil/parallel-prettier": "^3.0.0",
     "@swc/core": "^1.15.13",
     "chrome-launcher": "^1.2.1",
-    "chrome-remote-interface": "^0.33.3",
+    "chrome-remote-interface": "^0.34.0",
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.25.11",
