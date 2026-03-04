@@ -173,12 +173,23 @@ module DiscourseAi
           /#L(\d+)(?:-L?(\d+))?\z/i
         end
 
-        def extract_requested_content(content, start_line, end_line)
-          return content if start_line.nil?
+        MAX_LINES = 200
 
+        def extract_requested_content(content, start_line, end_line)
           normalized = content.gsub("\r\n", "\n")
           lines = normalized.split("\n")
           total_lines = lines.length
+
+          if start_line.nil?
+            if total_lines <= MAX_LINES
+              return normalized
+            else
+              extracted = lines[0...MAX_LINES].join("\n")
+              return(
+                "#{extracted}\n\n[truncated — file has #{total_lines} lines, showing first #{MAX_LINES}. Use file_path#L#{MAX_LINES + 1}-L#{MAX_LINES + 200} to read more]"
+              )
+            end
+          end
 
           if start_line > total_lines
             return(
@@ -188,7 +199,14 @@ module DiscourseAi
 
           final_end_line = [end_line || start_line, total_lines].min
           extracted = lines[(start_line - 1)..(final_end_line - 1)] || []
-          extracted.join("\n")
+          result = extracted.join("\n")
+
+          if final_end_line < total_lines
+            result +=
+              "\n\n[showing lines #{start_line}-#{final_end_line} of #{total_lines}. Use file_path#L#{final_end_line + 1}-L#{[final_end_line + 200, total_lines].min} to read more]"
+          end
+
+          result
         end
 
         def format_line_range(start_line, end_line)

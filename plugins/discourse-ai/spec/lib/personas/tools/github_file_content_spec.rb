@@ -168,6 +168,65 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubFileContent do
       end
     end
 
+    context "when a file exceeds the line limit" do
+      let(:large_file_tool) do
+        described_class.new(
+          { repo_name: "discourse/discourse-ai", file_paths: ["lib/large.rb"], branch: "main" },
+          bot_user: nil,
+          llm: llm,
+        )
+      end
+
+      before do
+        large_content = (1..500).map { |i| "line #{i}" }.join("\n")
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/large.rb?ref=main",
+        ).to_return(status: 200, body: { content: Base64.encode64(large_content) }.to_json)
+      end
+
+      it "truncates to MAX_LINES and shows a continuation hint" do
+        result = large_file_tool.invoke
+        content = result[:file_contents]
+
+        expect(content).to include("line 1")
+        expect(content).to include("line 200")
+        expect(content).not_to include("line 201")
+        expect(content).to include("[truncated")
+        expect(content).to include("file has 500 lines")
+        expect(content).to include("#L201-L400")
+      end
+    end
+
+    context "when a line range does not reach end of file" do
+      let(:range_tool) do
+        described_class.new(
+          { repo_name: "discourse/discourse-ai", file_paths: ["lib/big.rb#L1-L5"], branch: "main" },
+          bot_user: nil,
+          llm: llm,
+        )
+      end
+
+      before do
+        file_content = (1..50).map { |i| "line #{i}" }.join("\n")
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/big.rb?ref=main",
+        ).to_return(status: 200, body: { content: Base64.encode64(file_content) }.to_json)
+      end
+
+      it "shows a continuation hint with remaining lines" do
+        result = range_tool.invoke
+        content = result[:file_contents]
+
+        expect(content).to include("line 1")
+        expect(content).to include("line 5")
+        expect(content).not_to include("line 6")
+        expect(content).to include("showing lines 1-5 of 50")
+        expect(content).to include("#L6-L50")
+      end
+    end
+
     context "when repo_name is invalid" do
       let(:invalid_tool) do
         described_class.new(
