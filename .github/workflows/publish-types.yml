@@ -33,6 +33,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate type definitions
+        run: pnpm lint:types
+
+      - name: Generate external type definitions
         run: pnpm types:generate-external
 
       - name: Publish the package
