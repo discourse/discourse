@@ -52,6 +52,10 @@ module PageObjects
         PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.heading"))
       end
 
+      def list_menu
+        PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.list"))
+      end
+
       def focus
         find(composer_input_selector).click
         self
