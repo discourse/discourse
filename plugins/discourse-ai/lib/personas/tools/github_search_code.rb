@@ -34,6 +34,14 @@ module DiscourseAi
                 type: "integer",
                 required: false,
               },
+              {
+                name: "ignore_paths",
+                description:
+                  "File path prefixes to exclude from results (e.g., ['config/locales/', 'spec/'])",
+                type: "array",
+                item_type: "string",
+                required: false,
+              },
             ],
           }
         end
@@ -54,6 +62,10 @@ module DiscourseAi
           requested = parameters[:page].to_i
           requested = 1 if requested <= 0
           [requested, MAX_ALLOWED_PAGE].min
+        end
+
+        def ignore_paths
+          Array(parameters[:ignore_paths]).map(&:to_s)
         end
 
         def description_args
@@ -84,7 +96,9 @@ module DiscourseAi
           end
 
           if response_code == "200"
-            formatted_results = trim_results(format_results(search_data["items"]))
+            formatted_results = format_results(search_data["items"])
+            grouped = group_by_file(formatted_results)
+            trimmed = trim_results(grouped)
 
             total_count = search_data["total_count"].to_i
             total_pages =
@@ -94,19 +108,11 @@ module DiscourseAi
                 [((total_count.to_f / PER_PAGE).ceil), MAX_ALLOWED_PAGE].min
               end
 
-            result = {
-              search_results: formatted_results,
-              pagination: {
-                current_page: page,
-                per_page: PER_PAGE,
-                total_count: total_count,
-                total_pages: total_pages,
-                has_next_page: page < total_pages,
-                next_page: page < total_pages ? page + 1 : nil,
-                has_previous_page: page > 1,
-                previous_page: page > 1 ? page - 1 : nil,
-              },
-            }
+            result = { search_results: trimmed }
+
+            result[:page] = page if page > 1
+            result[:total_results] = total_count
+            result[:next_page] = page + 1 if page < total_pages
 
             if search_data["incomplete_results"]
               result[:notes] = "GitHub marked the search results as incomplete."
@@ -127,24 +133,40 @@ module DiscourseAi
           "https://api.github.com/search/code?#{encoded_params}"
         end
 
+        # Cap blob fetches to avoid excessive API calls for line-number enrichment.
+        # Files beyond this limit still appear in results but without line numbers.
+        MAX_BLOB_FETCHES = 10
+
         def format_results(items)
           return [] if items.blank?
 
           file_cache = {}
+          blob_fetches = 0
+          ignored = ignore_paths
 
           results =
             items.flat_map do |item|
               text_matches = item["text_matches"]
               next [] if text_matches.blank?
 
-              repo_full_name = item.dig("repository", "full_name") || repo
               path = item["path"]
+              next [] if ignored.any? { |prefix| path.start_with?(prefix) }
+
+              repo_full_name = item.dig("repository", "full_name") || repo
               ref =
                 extract_ref(item) || item.dig("repository", "default_branch") ||
                   fetch_default_branch(repo_full_name)
               sha = item["sha"]
 
-              file_details = fetch_file_content(repo_full_name, path, ref, file_cache, sha)
+              cache_key = blob_cache_key(repo_full_name, path, ref, sha)
+              if file_cache.key?(cache_key)
+                file_details = file_cache[cache_key]
+              elsif blob_fetches < MAX_BLOB_FETCHES
+                file_details = fetch_file_content(repo_full_name, path, ref, file_cache, sha)
+                blob_fetches += 1
+              else
+                file_details = nil
+              end
 
               text_matches.map do |match|
                 fragment = match["fragment"]
@@ -166,38 +188,64 @@ module DiscourseAi
           results.compact
         end
 
-        def trim_results(results)
+        def group_by_file(results)
           return [] if results.blank?
+
+          grouped = {}
+
+          results.each do |entry|
+            file = entry[:file]
+            grouped[file] ||= { file: file, total_lines: entry[:total_file_lines], matches: [] }
+            grouped[file][:matches] << { lines: entry[:lines], content: entry[:content] }
+          end
+
+          grouped.values
+        end
+
+        def trim_results(grouped_results)
+          return [] if grouped_results.blank?
 
           max_chars = 20_000
           used_chars = 0
 
-          trimmed =
-            results.each_with_object([]) do |entry, acc|
-              file = entry[:file].to_s
-              lines = entry[:lines].to_s
-              content = entry[:content].to_s
+          grouped_results.each_with_object([]) do |file_entry, acc|
+            file = file_entry[:file].to_s
+            file_overhead = file.length + file_entry[:total_lines].to_s.length
+            remaining = max_chars - used_chars
 
-              entry_length = file.length + lines.length + content.length
-              remaining = max_chars - used_chars
+            break acc if remaining <= file_overhead
 
-              break acc if remaining <= 0
+            trimmed_matches = []
+            match_chars = 0
 
-              if entry_length > remaining
-                # Require space for file and line metadata.
-                metadata_length = file.length + lines.length
-                break acc if metadata_length >= remaining
+            file_entry[:matches].each do |match|
+              lines = match[:lines].to_s
+              content = match[:content].to_s
+              entry_length = lines.length + content.length
+              match_remaining = remaining - file_overhead - match_chars
 
-                allowed_content_length = remaining - metadata_length
-                content = content[0...allowed_content_length]
-                entry_length = metadata_length + content.length
+              break if match_remaining <= 0
+
+              if entry_length > match_remaining
+                allowed = match_remaining - lines.length
+                break if allowed <= 0
+                content = content[0...allowed]
+                entry_length = lines.length + content.length
               end
 
-              acc << entry.merge(content: content)
-              used_chars += entry_length
+              trimmed_matches << { lines: match[:lines], content: content }
+              match_chars += entry_length
             end
 
-          trimmed
+            next if trimmed_matches.empty?
+
+            acc << {
+              file: file_entry[:file],
+              total_lines: file_entry[:total_lines],
+              matches: trimmed_matches,
+            }
+            used_chars += file_overhead + match_chars
+          end
         end
 
         def format_line_label(line_range)
@@ -210,11 +258,15 @@ module DiscourseAi
           end
         end
 
+        def blob_cache_key(repo_full_name, path, ref, blob_sha)
+          suffix = ref.presence || blob_sha.presence || "main"
+          "#{repo_full_name || repo}@#{suffix}:#{path}"
+        end
+
         def fetch_file_content(repo_full_name, path, ref, cache, blob_sha)
           repo_full_name ||= repo
 
-          cache_suffix = ref.presence || blob_sha.presence || "main"
-          cache_key = "#{repo_full_name}@#{cache_suffix}:#{path}"
+          cache_key = blob_cache_key(repo_full_name, path, ref, blob_sha)
           return cache[cache_key] if cache.key?(cache_key)
 
           owner, repo_name = repo_full_name.to_s.split("/", 2)
