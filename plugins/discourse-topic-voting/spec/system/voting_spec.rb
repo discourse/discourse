@@ -63,6 +63,52 @@ RSpec.describe "Topic voting", type: :system do
     expect(topic_page.vote_count).to have_text("0")
   end
 
+  context "when navigating between voting topics" do
+    fab!(:voting_post1) { Fabricate(:post, topic: voting_topic1) }
+    fab!(:voting_post2) { Fabricate(:post, topic: voting_topic2) }
+    fab!(:voting_post3) { Fabricate(:post, topic: voting_topic3) }
+
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "resets vote UI state after route transitions" do
+      voting_topic3.update!(closed: true)
+      Fabricate(:post, topic: voting_topic3, raw: "Check out #{voting_topic1.url}")
+      Fabricate(:post, topic: voting_topic1, raw: "Check out #{voting_topic2.url}")
+
+      visit("/t/#{voting_topic3.slug}/#{voting_topic3.id}")
+      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.voting_closed_title"))
+
+      find("a[href='#{voting_topic1.url}']").click
+      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+
+      topic_page.vote
+      expect(topic_page.vote_popup).to have_text(
+        I18n.t("js.topic_voting.see_votes", count: 9, max: 10),
+      )
+
+      find("a[href='#{voting_topic2.url}']").click
+      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+
+      topic_page.vote
+      expect(topic_page.vote_popup).to have_text(
+        I18n.t("js.topic_voting.see_votes", count: 8, max: 10),
+      )
+    end
+  end
+
+  context "when viewing a closed voting topic without having voted" do
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "does not show the remove vote button" do
+      voting_topic1.update!(closed: true)
+      Fabricate(:post, topic: voting_topic1)
+
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+      topic_page.vote
+      expect(topic_page).to have_no_remove_vote_button
+    end
+  end
+
   context "when no votes are left" do
     before do
       DiscourseTopicVoting::CategorySetting.create!(category: category1)

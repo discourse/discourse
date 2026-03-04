@@ -33,6 +33,14 @@ module TopicVotingTopic
   def click_my_votes
     find(".topic-voting-menu__votes-left").click
   end
+
+  def has_vote_button_label?(text)
+    has_css?("button.vote-button", text: text)
+  end
+
+  def has_no_remove_vote_button?
+    has_no_css?("button.remove-vote")
+  end
 end
 
 PageObjects::Pages::Topic.include(TopicVotingTopic)
