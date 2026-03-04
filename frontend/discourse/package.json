@@ -104,7 +104,7 @@
     "@uppy/drop-target": "3.0.1",
     "@uppy/utils": "^6.0.3",
     "@uppy/xhr-upload": "^4.2.1",
-    "a11y-dialog": "8.1.4",
+    "a11y-dialog": "8.1.5",
     "autosize": "^6.0.1",
     "babel-import-util": "^3.0.1",
     "babel-plugin-ember-template-compilation": "^3.0.1",
