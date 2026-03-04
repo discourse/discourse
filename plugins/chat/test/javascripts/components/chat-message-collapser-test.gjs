@@ -1,4 +1,4 @@
-import { click, render, waitFor } from "@ember/test-helpers";
+import { click, render, settled, waitFor } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
@@ -284,6 +284,7 @@ module(
           height: 16,
         },
       ]);
+      await settled();
 
       await click(".chat-img-upload");
       await waitFor(".pswp--open");
