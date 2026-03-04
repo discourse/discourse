@@ -64,17 +64,23 @@ module Categories
 
         # Returns true if the category provided is of this type,
         # based on settings, category attributes, etc.
+        #
+        # This MUST be overridden by category types.
         def category_matches?(category)
           raise NotImplementedError
         end
 
         # Use this to enable any related plugin for the category type,
         # since we register category types without the plugin being enabled.
+        #
+        # This SHOULD be overridden by category types if they are related to a plugin.
         def enable_plugin
         end
 
         # Configure any category-specific settings or custom fields that are
         # specific to this category type.
+        #
+        # This SHOULD be overridden by category types.
         def configure_category(category, guardian:, configuration_values: {})
         end
 
@@ -171,6 +177,19 @@ module Categories
           "memo"
         end
 
+        # Configure any custom fields that are specific to this category type,
+        # should be called from within +configure_category+ for each type.
+        #
+        # This SHOULD NOT be overridden by category types.
+        def configure_custom_fields(category, guardian:, configuration_values: {})
+          configuration_schema[:category_custom_fields]&.each do |field_name, config|
+            value = configuration_values.fetch(field_name.to_s, config[:default])
+            category.custom_fields[field_name.to_s] = value
+          end
+
+          category.save_custom_fields
+        end
+
         # Configure any site settings that are specific to this category type.
         # The configuration schema must be defined for this, as it is also used
         # to show related settings in the UI for the category creator based
@@ -179,12 +198,14 @@ module Categories
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
           category_type_settings =
-            configuration_schema[:site_settings].map do |setting_name, default_value|
+            configuration_schema[:site_settings]&.map do |setting_name, default_value|
               {
                 setting_name: setting_name.to_s,
                 value: configuration_values.fetch(setting_name.to_s, default_value),
               }
             end
+
+          return if category_type_settings.blank?
 
           # We do this because we want to allow updating hidden settings for the
           # category type, but not other settings. The configuration schema for
@@ -234,6 +255,7 @@ module Categories
               key: setting_name.to_s,
               default: config[:default],
               type: config[:type].to_s,
+              required: config[:required],
             }
           end
 
@@ -246,6 +268,7 @@ module Categories
               type: meta[:type],
               label: meta[:humanized_name],
               description: meta[:description],
+              required: false,
             }
           end
 
@@ -256,6 +279,7 @@ module Categories
               type: config[:type].to_s,
               label: config[:label],
               description: config[:description],
+              required: config[:required],
             }
           end
 
@@ -266,6 +290,7 @@ module Categories
               type: config[:type].to_s,
               label: config[:label],
               description: config[:description],
+              required: config[:required],
             }
           end
 

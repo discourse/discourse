@@ -16,12 +16,10 @@ module DiscourseSolved
           end
 
           def configure_category(category, guardian:, configuration_values: {})
-            category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
-
-            configuration_schema[:category_custom_fields]&.each do |field_name, config|
-              value = configuration_values.fetch(field_name.to_s, config[:default])
-              category.custom_fields[field_name.to_s] = value
-            end
+            configuration_values.merge!(
+              DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true",
+            )
+            configure_custom_fields(category, guardian:, configuration_values:)
 
             # NOTE (martin) In future we may want to handle category_settings
             # here.
@@ -30,7 +28,6 @@ module DiscourseSolved
             # model, but for now we do need a distinction between this and category
             # custom fields, not sure if this will be used at all yet.
 
-            category.save_custom_fields
             DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
           end
 
@@ -58,10 +55,9 @@ module DiscourseSolved
               category_custom_fields: {
                 DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => {
                   default: true,
-                  type: :boolean,
-                  label: I18n.t("discourse_solved.category_type.enable_accepted_answers.label"),
-                  description:
-                    I18n.t("discourse_solved.category_type.enable_accepted_answers.description"),
+                  type: :bool,
+                  label: I18n.t("discourse_solved.category_type.allow_accepted_answers.label"),
+                  required: true,
                 },
                 :solved_topics_auto_close_hours => {
                   default: 48,

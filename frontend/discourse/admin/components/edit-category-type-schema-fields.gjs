@@ -12,6 +12,7 @@ const SchemaFormField = <template>
       @name={{@entry.key}}
       @title={{@entry.label}}
       @helpText={{@entry.description}}
+      @validation={{if @entry.required "required"}}
       @format="large"
       as |field|
     >
@@ -22,6 +23,7 @@ const SchemaFormField = <template>
       @name={{@entry.key}}
       @title={{@entry.label}}
       @description={{@entry.description}}
+      @validation={{if @entry.required "required"}}
       @format="large"
       as |field|
     >
@@ -32,6 +34,7 @@ const SchemaFormField = <template>
       @name={{@entry.key}}
       @title={{@entry.label}}
       @description={{@entry.description}}
+      @validation={{if @entry.required "required"}}
       @format="large"
       as |field|
     >
