@@ -4,8 +4,10 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
   # Contract validations are tested through the service call tests below
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, guardian:) }
 
+    fab!(:admin)
+    let(:guardian) { Guardian.new(admin) }
     let(:params) { {} }
 
     context "when no parameters provided" do
@@ -26,7 +28,14 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
 
     context "with persona_ids param" do
       fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
-      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+      fab!(:ai_persona) do
+        Fabricate(
+          :ai_persona,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+          enabled: true,
+        )
+      end
 
       let(:params) { { persona_ids: [ai_persona.id] } }
 
@@ -74,14 +83,20 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
         end
 
         it "batch loads multiple personas efficiently" do
-          persona2 = Fabricate(:ai_persona, default_llm_id: llm_model.id)
+          persona2 =
+            Fabricate(
+              :ai_persona,
+              default_llm_id: llm_model.id,
+              allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+              enabled: true,
+            )
           params[:persona_ids] = [ai_persona.id, persona2.id]
 
           queries = track_sql_queries { result }
 
           select_queries = queries.select { |q| q.include?("SELECT") && !q.include?("SELECT 1") }
 
-          expect(select_queries.length).to be <= 5
+          expect(select_queries.length).to be <= 6
         end
 
         it "handles mixed valid and invalid IDs" do
@@ -218,7 +233,14 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
 
     context "with combined parameters" do
       fab!(:llm_model) { Fabricate(:llm_model, id: -6) }
-      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+      fab!(:ai_persona) do
+        Fabricate(
+          :ai_persona,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+          enabled: true,
+        )
+      end
       fab!(:llm_credit_allocation) do
         Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
       end
