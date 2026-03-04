@@ -17,6 +17,49 @@ RSpec.describe Emoji do
     end
   end
 
+  describe ".unicode_replacements" do
+    before { Emoji.clear_cache }
+
+    it "generates correct keys for skin tone and gendered ZWJ sequences" do
+      replacements = Emoji.unicode_replacements
+
+      # Case 1: Man Bouncing Ball: Light Skin Tone (RGI)
+      # 26f9 (Base) + 1f3fb (Tone) + 200d (ZWJ) + 2642 (Gender) + fe0f (VS16)
+      man_bouncing_ball_rgi = [0x26f9, 0x1f3fb, 0x200d, 0x2642, 0xfe0f].pack("U*")
+      # Malformed sequence (Old Bug): VS16 incorrectly persisting in the middle
+      malformed_key = [0x26f9, 0x1f3fb, 0xfe0f, 0x200d, 0x2642, 0xfe0f].pack("U*")
+      expect(replacements.keys).to include(man_bouncing_ball_rgi)
+      expect(replacements.keys).not_to include(malformed_key)
+      expect(replacements[man_bouncing_ball_rgi]).to eq("man_bouncing_ball:t2")
+
+      # Case 2: Thumbs Up: Light Skin Tone
+      thumbs_up = [0x1f44d, 0x1f3fb].pack("U*")
+      expect(replacements.keys).to include(thumbs_up)
+
+      # Case 3: Family (Man, Woman, Girl)
+      family = [0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467].pack("U*")
+      expect(replacements.keys).to include(family)
+    end
+  end
+
+  describe ".lookup_unicode" do
+    before { Emoji.clear_cache }
+
+    it "returns correct unicode for skin tone and gendered ZWJ sequences" do
+      # Case 1: Man Bouncing Ball: Light Skin Tone (RGI)
+      expected_rgi = [0x26f9, 0x1f3fb, 0x200d, 0x2642, 0xfe0f].pack("U*")
+      expect(Emoji.lookup_unicode("man_bouncing_ball:t2")).to eq(expected_rgi)
+
+      # Case 2: Thumbs Up: Light Skin Tone
+      thumbs_up = [0x1f44d, 0x1f3fb].pack("U*")
+      expect(Emoji.lookup_unicode("+1:t2")).to eq(thumbs_up)
+
+      # Case 3: Family (Man, Woman, Girl)
+      family_skinned = [0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467].pack("U*")
+      expect(Emoji.lookup_unicode("family_man_woman_girl")).to eq(family_skinned)
+    end
+  end
+
   describe ".lookup_unicode" do
     it "returns unicode for emoji, aliases, and skin tones" do
       expect(Emoji.lookup_unicode("trade_mark")).to eq("™")
