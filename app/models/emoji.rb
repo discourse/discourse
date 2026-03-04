@@ -308,7 +308,10 @@ class Emoji
           replacements[code] = name
           if is_tonable_emojis.include?(name)
             fitzpatrick_scales.each_with_index do |scale, index|
-              toned_code = code.codepoints.insert(1, scale).pack("U*")
+              codepoints = code.codepoints
+              codepoints.delete_at(1) if codepoints[1] == 0xfe0f
+
+              toned_code = codepoints.insert(1, scale).pack("U*")
               replacements[toned_code] = "#{name}:t#{index + 2}"
             end
           end
@@ -348,7 +351,10 @@ class Emoji
           map[e["name"]] = code
           if is_tonable_emojis.include?(e["name"])
             FITZPATRICK_SCALE.each_with_index do |scale, index|
-              toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
+              codepoints = code.codepoints
+              codepoints.delete_at(1) if codepoints[1] == 0xfe0f
+
+              toned_code = (codepoints.insert(1, scale.to_i(16))).pack("U*")
               map["#{e["name"]}:t#{index + 2}"] = toned_code
             end
           end
