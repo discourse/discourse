@@ -508,8 +508,9 @@ class InvitesController < ApplicationController
           end
 
           if row[0].present?
-            invite = csv_header.zip(row).map.to_h.filter { |k, v| v.present? }
-            invite.select! { |k, _| valid_columns.include?(k.downcase) } if valid_columns
+            invite = csv_header.zip(row).map.to_h.filter do |k, v| 
+              v.present? && (!valid_columns || valid_columns.include?(k))
+            end
             invites.push(invite)
           end
 
