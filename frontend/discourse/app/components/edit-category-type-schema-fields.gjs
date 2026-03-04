@@ -7,13 +7,24 @@ import { i18n } from "discourse-i18n";
 // subset of site setting types / category field types for now, we can expand this as
 // needed.
 const SchemaFormField = <template>
-  {{#if (eq @entry.type "bool")}}
+  {{#if (eq @entry.key "enable_accepted_answers")}}
+    {{#if @category.isCreated}}
+      <@formObject.Field
+        @name={{@entry.key}}
+        @title={{@entry.label}}
+        @validation={{if @entry.required "required"}}
+        @format="full"
+        as |field|
+      >
+        <field.Checkbox>{{@entry.description}}</field.Checkbox>
+      </@formObject.Field>
+    {{/if}}
+  {{else if (eq @entry.type "bool")}}
     <@formObject.Field
       @name={{@entry.key}}
       @title={{@entry.label}}
       @validation={{if @entry.required "required"}}
       @format="full"
-      @disabled={{@entry.required}}
       as |field|
     >
       <field.Checkbox>{{@entry.description}}</field.Checkbox>
@@ -65,27 +76,32 @@ export default class EditCategoryTypeSchemaFields extends Component {
   }
 
   <template>
-    <@form.Section
-      @title={{i18n "category.type_settings_schema.category_custom_fields"}}
-    >
+    <@form.Section>
       <@form.Object @name="custom_fields" as |customFields|>
         {{#each this.schema.category_custom_fields as |entry|}}
-          <SchemaFormField @entry={{entry}} @formObject={{customFields}} />
+          <SchemaFormField
+            @category={{@category}}
+            @entry={{entry}}
+            @formObject={{customFields}}
+          />
         {{/each}}
       </@form.Object>
     </@form.Section>
 
-    <@form.Section
+    <@form.Emphasis
+      @type="info"
       @title={{i18n "category.type_settings_schema.site_settings"}}
+      @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
     >
-      <@form.Alert @type="info">
-        {{i18n "category.settings_apply_to_all_of_type_warning"}}
-      </@form.Alert>
       <@form.Object @name="category_type_site_settings" as |siteSettings|>
         {{#each this.schema.site_settings as |entry|}}
-          <SchemaFormField @entry={{entry}} @formObject={{siteSettings}} />
+          <SchemaFormField
+            @category={{@category}}
+            @entry={{entry}}
+            @formObject={{siteSettings}}
+          />
         {{/each}}
       </@form.Object>
-    </@form.Section>
+    </@form.Emphasis>
   </template>
 }

@@ -171,7 +171,7 @@ export default <template>
     </Form>
 
     {{#if @controller.siteSettings.enable_simplified_category_creation}}
-      {{#if @controller.isFormDirty}}
+      {{#if (or @controller.model.isNew @controller.isFormDirty)}}
         <ChangesBanner
           @bannerLabel={{i18n "category.unsaved_changes"}}
           @saveLabel={{if
