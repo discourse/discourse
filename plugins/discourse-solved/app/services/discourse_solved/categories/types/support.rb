@@ -48,8 +48,9 @@ module DiscourseSolved
                     ),
                 },
               },
-              # TODO (martin) Maybe more things from plugins need to move into this dedicated model?
-              # For now we do need a distinction between the two, not sure if this will be used at all yet.
+              # NOTE (martin) Maybe more things from plugins need to move into
+              # this dedicated model?  For now we do need a distinction between
+              # this and category custom fields, not sure if this will be used at all yet.
               category_settings: {
               },
             }

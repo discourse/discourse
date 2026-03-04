@@ -51,11 +51,28 @@ module Categories
         #
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
-          # TODO (martin) Maybe use SiteSetting::Update here?
-          configuration_schema[:site_settings]&.each do |setting_name, default_value|
-            value = configuration_values.fetch(setting_name.to_s, default_value)
-            SiteSetting.set_and_log(setting_name, value, guardian.user)
-          end
+          category_type_settings =
+            configuration_schema[:site_settings].map do |setting_name, default_value|
+              {
+                setting_name: setting_name.to_s,
+                value: configuration_values.fetch(setting_name.to_s, default_value),
+              }
+            end
+
+          # We do this because we want to allow updating hidden settings for the
+          # category type, but not other settings. The configuration schema for
+          # a category type defines which settings it wants to change, so that's
+          # a good source to use as an allowlist here.
+          allowed_setting_names = category.category_type_site_setting_names
+          SiteSetting::Update.call(
+            guardian:,
+            options: {
+              allow_changing_hidden: allowed_setting_names,
+            },
+            params: {
+              settings: category_type_settings,
+            },
+          )
         end
 
         # Used when serializing the category configuration schema to the client.
