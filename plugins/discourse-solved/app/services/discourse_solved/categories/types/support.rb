@@ -56,7 +56,14 @@ module DiscourseSolved
                 empty_box_on_unsolved: true,
               },
               category_custom_fields: {
-                solved_topics_auto_close_hours: {
+                DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => {
+                  default: true,
+                  type: :boolean,
+                  label: I18n.t("discourse_solved.category_type.enable_accepted_answers.label"),
+                  description:
+                    I18n.t("discourse_solved.category_type.enable_accepted_answers.description"),
+                },
+                :solved_topics_auto_close_hours => {
                   default: 48,
                   type: :integer,
                   label:
