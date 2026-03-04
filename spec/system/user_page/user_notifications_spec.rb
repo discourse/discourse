@@ -85,7 +85,7 @@ describe "User notifications", type: :system do
 
     context "when prioritize_username_in_ux is false" do
       before do
-        SiteSetting.prioritize_full_name_in_ux = true
+        SiteSetting.prioritize_username_in_ux = false
         sign_in(user2)
       end
 
