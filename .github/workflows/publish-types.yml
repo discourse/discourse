@@ -36,4 +36,4 @@ jobs:
         run: pnpm types:generate
 
       - name: Publish the package
-        run: pnpm publish
+        run: pnpm publish --no-git-checks --dry-run
