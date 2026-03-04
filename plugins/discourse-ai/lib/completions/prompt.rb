@@ -6,7 +6,7 @@ module DiscourseAi
       INVALID_TURN = Class.new(StandardError)
 
       attr_reader :messages, :tools, :system_message_text
-      attr_accessor :topic_id, :post_id, :max_pixels, :tool_choice
+      attr_accessor :topic_id, :post_id, :max_pixels, :tool_choice, :skip_trim
 
       def self.text_only(message)
         if message[:content].is_a?(Array)

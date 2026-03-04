@@ -14,6 +14,20 @@ class AiPersona < ActiveRecord::Base
   validate :chat_preconditions
   validate :well_formated_examples
   validates :max_context_posts, numericality: { greater_than: 0 }, allow_nil: true
+  validates :execution_mode, inclusion: { in: %w[default agentic] }
+  validates :max_turn_tokens,
+            numericality: {
+              greater_than: 0,
+              maximum: 10_000_000,
+            },
+            allow_nil: true
+  validates :compression_threshold,
+            presence: true,
+            numericality: {
+              greater_than_or_equal_to: 20,
+              less_than_or_equal_to: 99,
+            },
+            if: -> { execution_mode == "agentic" }
   # leaves some room for growth but sets a maximum to avoid memory issues
   # we may want to revisit this in the future
   validates :vision_max_pixels, numericality: { greater_than: 0, maximum: 4_000_000 }
@@ -208,6 +222,9 @@ class AiPersona < ActiveRecord::Base
       allowed_group_ids
       show_thinking
       enabled
+      execution_mode
+      max_turn_tokens
+      compression_threshold
     ]
 
     instance_attributes = {}

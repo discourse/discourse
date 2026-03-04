@@ -31,6 +31,9 @@ class LocalizedAiPersonaSerializer < ApplicationSerializer
              :allow_topic_mentions,
              :allow_personal_messages,
              :force_default_llm,
+             :execution_mode,
+             :max_turn_tokens,
+             :compression_threshold,
              :response_format,
              :examples,
              :features

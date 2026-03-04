@@ -187,6 +187,9 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
           default_llm_id: llm_model.id,
           question_consolidator_llm_id: llm_model.id,
           forced_tool_count: 2,
+          execution_mode: "agentic",
+          max_turn_tokens: 5000,
+          compression_threshold: 80,
           response_format: [{ key: "summary", type: "string" }],
           examples: [%w[user_msg1 assistant_msg1], %w[user_msg2 assistant_msg2]],
         }
@@ -208,6 +211,9 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
           expect(persona_json["temperature"]).to eq(0.5)
           expect(persona_json["default_llm_id"]).to eq(llm_model.id)
           expect(persona_json["forced_tool_count"]).to eq(2)
+          expect(persona_json["execution_mode"]).to eq("agentic")
+          expect(persona_json["max_turn_tokens"]).to eq(5000)
+
           expect(persona_json["allow_topic_mentions"]).to eq(true)
           expect(persona_json["allow_personal_messages"]).to eq(true)
           expect(persona_json["allow_chat_channel_mentions"]).to eq(true)
@@ -381,6 +387,27 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       expect(persona.rag_conversation_chunks).to eq(13)
       expect(persona.rag_llm_model_id).to eq(llm_model.id)
       expect(persona.question_consolidator_llm_id).to eq(llm_model.id)
+    end
+
+    it "supports updating agentic params" do
+      persona = Fabricate(:ai_persona, name: "test_bot2")
+
+      put "/admin/plugins/discourse-ai/ai-personas/#{persona.id}.json",
+          params: {
+            ai_persona: {
+              execution_mode: "agentic",
+              max_turn_tokens: 8000,
+              compression_threshold: 75,
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      persona.reload
+
+      expect(persona.execution_mode).to eq("agentic")
+      expect(persona.max_turn_tokens).to eq(8000)
+
+      expect(persona.compression_threshold).to eq(75)
     end
 
     it "supports updating vision params" do

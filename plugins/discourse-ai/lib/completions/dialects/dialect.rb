@@ -199,6 +199,8 @@ module DiscourseAi
         end
 
         def trim_messages(messages)
+          return messages if prompt.skip_trim
+
           prompt_limit = max_prompt_tokens
           current_token_count = 0
           message_step_size = (prompt_limit / 25).to_i * -1

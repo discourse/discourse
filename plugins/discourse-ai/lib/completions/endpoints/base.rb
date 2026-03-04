@@ -298,6 +298,16 @@ module DiscourseAi
                 log.updated_at = Time.now
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
+
+                if (accumulator = Thread.current[:llm_token_accumulator])
+                  # request_tokens = non-cached input (already excludes cached)
+                  # cache_write_tokens = newly cached (full cost)
+                  # cache_read_tokens = served from cache (1/10 cost)
+                  accumulator[:request] += log.request_tokens.to_i + log.cache_write_tokens.to_i +
+                    (log.cache_read_tokens.to_i * 0.1).to_i
+                  accumulator[:response] += log.response_tokens.to_i
+                end
+
                 AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
                 LlmCreditAllocation.deduct_credits!(

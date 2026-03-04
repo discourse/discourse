@@ -34,6 +34,10 @@ const CREATE_ATTRIBUTES = [
   "allow_topic_mentions",
   "allow_chat_channel_mentions",
   "allow_chat_direct_messages",
+  "execution_mode",
+  "max_turn_tokens",
+
+  "compression_threshold",
   "response_format",
   "examples",
 ];
@@ -63,6 +67,10 @@ const SYSTEM_ATTRIBUTES = [
   "allow_topic_mentions",
   "allow_chat_channel_mentions",
   "allow_chat_direct_messages",
+  "execution_mode",
+  "max_turn_tokens",
+
+  "compression_threshold",
 ];
 
 export default class AiPersona extends RestModel {
@@ -156,7 +164,6 @@ export default class AiPersona extends RestModel {
     attrs.forced_tool_count = this.forced_tool_count || -1;
     attrs.response_format = attrs.response_format || [];
     attrs.examples = attrs.examples || [];
-
     // FormKit uses Immer proxies which cause issues when passed to upload handlers.
     // Convert to plain objects to ensure compatibility.
     if (attrs.rag_uploads?.length > 0) {
