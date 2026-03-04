@@ -35,28 +35,9 @@ class PostsController < ApplicationController
   end
 
   def markdown_num
-    if params[:revision].present?
-      post_revision = find_post_revision_from_topic_id
-      render plain: post_revision.modifications[:raw].last
-    elsif params[:post_number].present?
-      markdown Post.find_by(
-                 topic_id: params[:topic_id].to_i,
-                 post_number: params[:post_number].to_i,
-               )
-    else
-      opts = params.slice(:page)
-      opts[:limit] = MARKDOWN_TOPIC_PAGE_SIZE
-      topic_view = TopicView.new(params[:topic_id], current_user, opts)
-      content = topic_view.posts.map { |p| <<~MD }
-          #{p.user.username} | #{p.updated_at} | ##{p.post_number}
-
-          #{p.raw}
-
-          -------------------------
-
-        MD
-      render plain: content.join
-    end
+    return render plain: markdown_for_revision if params[:revision].present?
+    return markdown_for_post if params[:post_number].present?
+    render plain: markdown_for_topic
   end
 
   def latest
@@ -838,6 +819,33 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def markdown_for_revision
+    find_post_revision_from_topic_id.modifications[:raw].last
+  end
+
+  def markdown_for_post
+    post = Post.find_by(topic_id: params[:topic_id].to_i, post_number: params[:post_number].to_i)
+    markdown(post)
+  end
+
+  def markdown_for_topic
+    topic_view =
+      TopicView.new(
+        params[:topic_id],
+        current_user,
+        page: params[:page],
+        limit: MARKDOWN_TOPIC_PAGE_SIZE,
+      )
+    topic_view.posts.select { |post| guardian.can_see?(post) }.map { |post| <<~MD }.join
+        #{post.user.username} | #{post.updated_at} | ##{post.post_number}
+
+        #{post.raw}
+
+        -------------------------
+
+      MD
+  end
 
   def user_posts(guardian, user_id, opts)
     # Topic.unscoped is necessary to remove the default deleted_at: nil scope
