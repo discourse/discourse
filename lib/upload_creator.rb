@@ -219,6 +219,16 @@ class UploadCreator
           UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
         attrs = @upload.secure_params(secure, reason, "upload creator")
         @upload.assign_attributes(attrs)
+
+        # Check for existing primary with same content and security context
+        # This enables storage deduplication while maintaining separate upload records
+        if sha1.present? && !is_thumbnail
+          primary = Upload.find_primary_for(original_sha1: sha1, secure: @upload.secure)
+          if primary && primary.url.present?
+            @upload.primary_upload_id = primary.id
+            @dedup_from_primary = true
+          end
+        end
       end
 
       # Callbacks using this event to validate the upload or the file must add errors to the
@@ -239,35 +249,52 @@ class UploadCreator
           Upload.generate_digest(@file) != sha1_before_changes
         end
 
-      store = Discourse.store
-
-      if @opts[:existing_external_upload_key] && store.external?
-        should_move = external_upload_too_big || !upload_changed
-      end
-
-      if should_move
-        # move the file in the store instead of reuploading
-        url =
-          store.move_existing_stored_upload(
-            existing_external_upload_key: @opts[:existing_external_upload_key],
-            upload: @upload,
-          )
-      else
-        # store the file and update its url
-        File.open(@file.path) { |f| url = store.store_upload(f, @upload) }
-        if @opts[:existing_external_upload_key]
-          store.delete_file(@opts[:existing_external_upload_key])
+      # Storage deduplication: share the primary's URL instead of re-uploading
+      # The dependent upload keeps its own unique sha1 (used for short_url and data-base62-sha1)
+      # but points to the same storage object as the primary
+      if @dedup_from_primary
+        primary = Upload.find_by(id: @upload.primary_upload_id)
+        if primary&.url.present?
+          @upload.url = primary.url
+          @upload.save!(validate: @opts[:validate])
+        else
+          # Primary was deleted between dedup check and now - clear the reference and upload normally
+          @upload.update_columns(primary_upload_id: nil)
+          @dedup_from_primary = false
         end
       end
 
-      if url.present?
-        @upload.url = url
-        @upload.save!(validate: @opts[:validate])
-      else
-        @upload.errors.add(
-          :url,
-          I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id),
-        )
+      if !@dedup_from_primary
+        store = Discourse.store
+
+        if @opts[:existing_external_upload_key] && store.external?
+          should_move = external_upload_too_big || !upload_changed
+        end
+
+        if should_move
+          # move the file in the store instead of reuploading
+          url =
+            store.move_existing_stored_upload(
+              existing_external_upload_key: @opts[:existing_external_upload_key],
+              upload: @upload,
+            )
+        else
+          # store the file and update its url
+          File.open(@file.path) { |f| url = store.store_upload(f, @upload) }
+          if @opts[:existing_external_upload_key]
+            store.delete_file(@opts[:existing_external_upload_key])
+          end
+        end
+
+        if url.present?
+          @upload.url = url
+          @upload.save!(validate: @opts[:validate])
+        else
+          @upload.errors.add(
+            :url,
+            I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id),
+          )
+        end
       end
 
       if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
