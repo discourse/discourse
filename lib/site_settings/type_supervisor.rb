@@ -159,7 +159,7 @@ class SiteSettings::TypeSupervisor
       @validators[name] = { class: validator_type, opts: validator_opts }
     end
 
-    @dependencies[name] = opts[:depends_on] || []
+    @dependencies[name] = (opts[:depends_on] || []).map(&:to_sym)
     @dependencies.change_behavior(name, opts[:depends_behavior]) if opts[:depends_behavior]
   end
 

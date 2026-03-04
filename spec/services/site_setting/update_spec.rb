@@ -128,6 +128,8 @@ RSpec.describe SiteSetting::Update do
     end
 
     context "when updating dependent settings" do
+      before { SiteSetting.allow_user_locale = false }
+
       let(:settings) do
         [
           # The first setting depends on the second one, which will fail
