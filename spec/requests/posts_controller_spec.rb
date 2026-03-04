@@ -2940,6 +2940,95 @@ RSpec.describe PostsController do
       expect(response.status).to eq(200)
       expect(response.body).to include("123456789", "abcdefghij")
     end
+
+    context "with a hidden post" do
+      fab!(:topic)
+      fab!(:visible_post) do
+        Fabricate(:post, topic: topic, post_number: 1, raw: "visible post content")
+      end
+      fab!(:hidden_post) do
+        Fabricate(:post, topic: topic, post_number: 2, raw: "hidden post content", hidden: true)
+      end
+      fab!(:post_author) { hidden_post.user }
+
+      before { SiteSetting.hidden_post_visible_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+      context "when fetching a single hidden post" do
+        context "when logged out" do
+          it "returns not found" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response).to have_http_status(:not_found)
+          end
+        end
+
+        context "when logged in as a regular user" do
+          before { sign_in(user) }
+
+          it "returns not found" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response).to have_http_status(:not_found)
+          end
+        end
+
+        context "when logged in as the post author" do
+          before { sign_in(post_author) }
+
+          it "returns the hidden post content" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response.body).to eq("hidden post content")
+          end
+        end
+
+        context "when logged in as a moderator" do
+          before { sign_in(moderator) }
+
+          it "returns the hidden post content" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response.body).to eq("hidden post content")
+          end
+        end
+      end
+
+      context "when fetching the whole topic" do
+        context "when logged out" do
+          it "excludes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content").and exclude(
+                    "hidden post content",
+                  )
+          end
+        end
+
+        context "when logged in as a regular user" do
+          before { sign_in(user) }
+
+          it "excludes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content").and exclude(
+                    "hidden post content",
+                  )
+          end
+        end
+
+        context "when logged in as the post author" do
+          before { sign_in(post_author) }
+
+          it "includes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content", "hidden post content")
+          end
+        end
+
+        context "when logged in as a moderator" do
+          before { sign_in(moderator) }
+
+          it "includes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content", "hidden post content")
+          end
+        end
+      end
+    end
   end
 
   describe "#short_link" do
