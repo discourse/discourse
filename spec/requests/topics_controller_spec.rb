@@ -1075,6 +1075,9 @@ RSpec.describe TopicsController do
       fab!(:p1) { Fabricate(:post, user: post_author1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: post_author2, topic: topic) }
 
+      fab!(:allowed_group, :group)
+      fab!(:allowed_group_user) { Fabricate(:user, groups: [allowed_group]) }
+
       describe "moderator signed in" do
         let!(:editor) { sign_in(moderator) }
 
@@ -1185,6 +1188,37 @@ RSpec.describe TopicsController do
         end
       end
 
+      describe "user in group signed in" do
+        fab!(:allowed_group, :group)
+        fab!(:allowed_group_user) { Fabricate(:user, groups: [allowed_group]) }
+        fab!(:topic_allowed_user_can_see) { Fabricate(:topic, category: category) }
+        fab!(:post_allowed_user_can_see) { Fabricate(:post, topic: topic_allowed_user_can_see) }
+
+        before { sign_in(allowed_group_user) }
+
+        it "returns 200 when group is allow listed" do
+          SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}"
+
+          post "/t/#{topic_allowed_user_can_see.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [post_allowed_user_can_see.id],
+               }
+          expect(response.status).to eq(200)
+        end
+
+        it "returns 403 when group is not allow listed" do
+          SiteSetting.change_post_ownership_allowed_groups = nil
+
+          post "/t/#{topic_allowed_user_can_see.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [post_allowed_user_can_see.id],
+               }
+          expect(response.status).to eq(403)
+        end
+      end
+
       context "with API key" do
         let(:api_key) { Fabricate(:api_key, user: admin, created_by: admin) }
 
@@ -1283,6 +1317,47 @@ RSpec.describe TopicsController do
                  }
             expect(response.status).to eq(200)
             expect(private_post.reload.user).to eq(user_a)
+          end
+        end
+
+        describe "user in allowed group signed in" do
+          fab!(:pm_topic_allowed_user_can_see) do
+            Fabricate(:private_message_topic, user: allowed_group_user)
+          end
+          fab!(:pm_post_allowed_user_can_see) do
+            Fabricate(:post, topic: pm_topic_allowed_user_can_see, user: allowed_group_user)
+          end
+
+          before do
+            SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}"
+            sign_in(allowed_group_user)
+          end
+
+          it "returns 200 for visible PM" do
+            post "/t/#{pm_topic_allowed_user_can_see.id}/change-owner.json",
+                 params: {
+                   username: user_a.username_lower,
+                   post_ids: [pm_post_allowed_user_can_see.id],
+                 }
+            expect(response.status).to eq(200)
+          end
+
+          it "returns 403 for not visible PM" do
+            post "/t/#{pm_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [pm_post.id],
+                 }
+            expect(response.status).to eq(403)
+          end
+
+          it "returns 403 for post in private category" do
+            post "/t/#{private_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [private_post.id],
+                 }
+            expect(response.status).to eq(403)
           end
         end
       end

@@ -106,6 +106,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
       @headerActions={{this.headerActions}}
       @headerActionsIcon={{this.headerActionsIcon}}
       @collapsable={{@collapsable}}
+      @toggleNavigationMenu={{@toggleNavigationMenu}}
     >
 
       {{#each this.sectionLinks as |sectionLink|}}

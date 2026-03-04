@@ -3124,8 +3124,6 @@ ur:
         votes_released: "ووٹ جاری کر دیا گیا"
         new_features: "ڈسکورس کی نئی خصوصیات جاری کر دی گئی ہیں"
         admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
-        upcoming_change_available: "نئی آنے والی تبدیلی '%{changeName}' دستیاب ہے"
-        upcoming_change_automatically_promoted: "آنے والی تبدیلی '%{changeName}' خود بخود فعال ہو گئی ہے"
     upload_selector:
       change: "تبدیل"
       delete: "مٹائیں"

@@ -3122,8 +3122,6 @@ hu:
         votes_released: "a szavazat feloldásra került"
         new_features: "új Discourse funkciók jelentek meg"
         admin_problems: "új tanácsok a webhely irányítópultján"
-        upcoming_change_available: "új, közelgő változás, '%{changeName}' elérhető"
-        upcoming_change_automatically_promoted: "A közelgő '%{changeName}' változás automatikusan engedélyezve lett"
     upload_selector:
       change: "Módosítás"
       delete: "Törlés"
@@ -5957,7 +5955,7 @@ hu:
         up_to_date: "A rendszer naprakész!"
         critical_available: "Egy fontos frissítés érhető el!"
         updates_available: "Frissítések érhetőek el!"
-        please_update: "Kérünk frissíts!"
+        please_update: "Kérjük, frissítsd!"
         no_check_performed: "A frissítések ellenőrzése nem történt meg. Győződjön meg arról, hogy a Sidekiq fut."
         stale_data: "Rég nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
         version_check_pending: "Úgy nézik nem rég frissítettél. Fantasztikus!"

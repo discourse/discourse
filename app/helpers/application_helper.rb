@@ -90,6 +90,16 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
   end
 
+  def generate_import_map(plugin_assets)
+    imports =
+      plugin_assets
+        .filter { it[:importmap_name] }
+        .map { [it[:importmap_name], script_asset_path(it[:name])] }
+        .to_h
+
+    JSON.pretty_generate({ imports: }).html_safe
+  end
+
   def script_asset_path(script)
     path = ActionController::Base.helpers.asset_path("#{script}.js")
 
@@ -113,16 +123,17 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      # assets needed for theme testing are not compressed because they take a fair
-      # amount of time to compress (+30 seconds) during rebuilds/deploys when the
-      # vast majority of sites will never need them, so it makes more sense to serve
-      # them uncompressed instead of making everyone's rebuild/deploy take +30 more
-      # seconds.
-      if !script.start_with?("discourse/tests/")
-        if is_brotli_req?
-          path = path.gsub(/\.([^.]+)\z/, '.br.\1')
-        elsif is_gzip_req?
-          path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
+      if is_brotli_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/br/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.br.\1')
+        end
+      elsif is_gzip_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/gz/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
     end
@@ -148,12 +159,12 @@ module ApplicationHelper
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: {})
+  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     extra_attrs =
-      attrs.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }.join(" ")
+      attrs&.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }&.join(" ")
     extra_attrs = " #{extra_attrs}" if extra_attrs.present?
 
     add_resource_preload_list(url, "script")

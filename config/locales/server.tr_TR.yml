@@ -805,6 +805,10 @@ tr_TR:
         other: "Bu kategori silinemiyor çünkü %{count} konusu var. En eski konu: %{topic_link}."
       topic_exists_no_oldest: "Konu sayısı %{count} olduğu için bu kategori silinemiyor."
     uncategorized_description: "Kategoriye ihtiyaç duymayan veya mevcut başka bir kategoriye uymayan konular."
+  category_types:
+    discussion:
+      name: "Tartışma"
+      title: "tartışma"
   trust_levels:
     admin: "Yönetici"
     staff: "Personel"
@@ -2176,7 +2180,7 @@ tr_TR:
     group_in_subject: "Kişisel mesajdaki ilk grubun adına e-posta konusunda %%{optional_pm} olarak ayarlayın, bkz.: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standart e-postalar için konu formatını özelleştirme</a>"
     allow_anonymous_mode: "Kullanıcıların gönderi paylaşmak için anonim moda geçme seçeneğini etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderi veya konu oluştururken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca \"anonim beğenilere izin ver\" bölümüne bakın."
     anonymous_account_duration_minutes: "Anonimliği korumak için her kullanıcı için her N dakikada bir yeni bir anonim hesap oluşturun. Örnek: 600 olarak ayarlanırsa son gönderiden itibaren 600 dakika geçer geçmez VE kullanıcı anonime geçerse yeni bir anonim hesap oluşturulur."
-    hide_user_profiles_from_public: "Anonim kullanıcılar için kullanıcı kartlarını, kullanıcı profillerini ve kullanıcı dizinini devre dışı bırakın."
+    hide_user_profiles_from_public: "Anonim kullanıcılar için kullanıcı kartlarını ve kullanıcı profillerini devre dışı bırakın. Toplu istatistikler kullanıcı dizininde hala kullanılabilir olacaktır."
     hide_new_user_profiles: "Güven seviyesi 1 veya daha düşük kullanıcı profillerini herkesten gizleyin ve güven seviyesi 1 olan kullanıcıları ilk kez gönderi yapana kadar koruyun. Bu özellik must_approve_users ve invite_only sitelerinde koşulsuz olarak devre dışıdır."
     allow_users_to_hide_profile: "Kullanıcıların profillerini ve varlıklarını gizlemelerine izin verin"
     hide_user_activity_tab: "Yönetici ve kişisel profiller dışındaki kullanıcı profillerindeki aktivite sekmesini gizleyin."

@@ -51,6 +51,8 @@ zh_CN:
     chat_integration_flowdock_excerpt_length: "Flowdock 帖子摘要长度"
     chat_integration_groupme_enabled: "启用 Groupme 聊天集成提供程序"
     chat_integration_groupme_excerpt_length: "GroupMe 帖子摘要长度"
+    chat_integration_groupme_bot_ids: "*必填* 机器人 ID，有多个时使用 ',' 分隔"
+    chat_integration_groupme_instance_names: "*必填* GroupMe 聊天的名称，有多个时使用 ',' 分隔（与机器人 ID 的顺序相同）"
     chat_integration_teams_enabled: "启用 Microsoft Teams 聊天集成提供程序"
     chat_integration_teams_excerpt_length: "Microsoft Team 帖子摘要长度"
     chat_integration_powerautomate_enabled: "启用 Microsoft Power Automate 集成提供程序"
@@ -91,8 +93,10 @@ zh_CN:
         create:
           created: "规则成功创建"
           updated: "规则成功更新"
+          error: "抱歉，创建该规则时出错。"
         delete:
           success: "规则成功删除"
+          error: "抱歉，删除该规则时出错。运行 `/discourse help` 获取规则列表。"
         not_found:
           tag: "找不到标签 *%{name}*"
           category: "找不到类别*%{name}*。可用类别：*%{list}*"
@@ -154,8 +158,10 @@ zh_CN:
         create:
           created: "规则成功创建"
           updated: "规则成功更新"
+          error: "抱歉，创建该规则时出错。"
         delete:
           success: "规则成功删除"
+          error: "抱歉，删除该规则时出错。运行 <code>/status</code> 获取规则列表。"
         not_found:
           tag: "找不到标签 <b>%{name}</b>"
           category: "找不到类别<b>%{name}</b>。可用类别：<b>%{list}</b>"
@@ -186,8 +192,10 @@ zh_CN:
         create:
           created: "规则成功创建"
           updated: "规则成功更新"
+          error: "抱歉，创建该规则时出错。"
         delete:
           success: "规则成功删除"
+          error: "抱歉，删除该规则时出错。运行 `/discourse help` 获取规则列表。"
         not_found:
           tag: "找不到标签 *%{name}*"
           category: "找不到类别*%{name}*。可用类别：*%{list}*"

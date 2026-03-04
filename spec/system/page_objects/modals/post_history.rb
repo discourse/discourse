@@ -11,11 +11,11 @@ module PageObjects
       end
 
       def previous_locale
-        body.find(".revision__locale .revision-content:nth-child(1)")
+        body.find(".revision__locale .revision-content.--previous")
       end
 
       def current_locale
-        body.find(".revision__locale .revision-content:nth-child(2)")
+        body.find(".revision__locale .revision-content.--current")
       end
 
       def current_revision

@@ -34,6 +34,8 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      llm_selector:
+        none: "ไม่มี"
       features:
         back: "กลับ"
         disabled: "(ปิดใช้งานแล้ว)"
@@ -98,6 +100,14 @@ th:
         parameter_required: "ต้องการ"
         edit: "แก้ไข"
         delete: "ลบ"
+      secrets:
+        name: "ชื่อ"
+        secret: "ค่า"
+        back: "กลับ"
+        save: "บันทึก"
+        edit: "แก้ไข"
+        delete: "ลบ"
+        embedding: "ฝั่ง"
       llms:
         display_name: "ชื่อ"
         save: "บันทึก"

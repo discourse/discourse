@@ -3961,6 +3961,7 @@ tr_TR:
           one: "Bu gönderileri birleştirmek istediğinizden emin misiniz?"
           other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
+        diff_too_complex: "Fark görüntülenemeyecek kadar karmaşık. Lütfen daha küçük düzenlemeleri tek tek görüntülemeyi deneyin."
         locale:
           no_locale_set: "Dil ayarlanmadı"
           locale_removed: "Dil kaldırıldı"
@@ -4072,9 +4073,15 @@ tr_TR:
         delete: "Sil"
         add: "Gerekli etiket grubu ekleyin"
         placeholder: "Etiket grubu seç…"
+        min_count: "Etiket sayısı"
         tag_group: "Etiket grubu"
       topic_featured_link_allowed: "Bu kategoride öne çıkan bağlantılara izin ver"
+      create_with_type: "Yeni %{typeName} kategorisi"
       create_long: "Yeni bir kategori oluştur"
+      choose_type:
+        title: "Kategori türünü seçin"
+        requires_plugin: "Eklenti gerektirir"
+      create_category: "Kategori oluştur"
       unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
       slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
@@ -5173,6 +5180,7 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
+    reset_filter: "Filtreyi sıfırla"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -7608,6 +7616,9 @@ tr_TR:
         more_than_50_results: "50'den fazla sonuç var. Lütfen aramanızı daraltın."
         no_results: "Eşleşen site metni yok"
         interpolation_keys: "Mevcut enterpolasyon tuşları:"
+        interpolation_key_insert: "Eklemek için tıklayın"
+        interpolation_key_used: "Zaten kullanılmış"
+        interpolation_key_invalid: "Bilinmeyen anahtar — enterpolasyon yapılmayacaktır"
         outdated:
           title: "Bu çeviri güncel değil"
           description: "Bu anahtar için varsayılan çeviri, bu geçersiz kılma oluşturulduktan sonra değişti. Lütfen aşağıdan çevirinizin orijinal amaçta yapılan değişikliklerle eşleşip eşleşmediğini kontrol edin."

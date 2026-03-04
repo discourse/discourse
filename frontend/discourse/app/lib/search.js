@@ -244,39 +244,48 @@ export function isValidSearchTerm(searchTerm, siteSettings) {
 
 export function applySearchAutocomplete(inputElement, siteSettings, owner) {
   const autocompleteHandler = new TextareaAutocompleteHandler(inputElement);
-  DAutocompleteModifier.setupAutocomplete(
-    owner,
-    inputElement,
-    autocompleteHandler,
-    {
-      component: HashtagAutocompleteResults,
-      key: HashtagAutocompleteResults.TRIGGER_KEY,
-      autoSelectFirstSuggestion: false,
-      transformComplete: (obj) => obj.text,
-      dataSource: (term) => searchCategoryTag(term, siteSettings),
-      fixedTextareaPosition: true,
-      offset: 2,
-    }
-  );
-  if (siteSettings.enable_mentions) {
+  const modifiers = [];
+
+  modifiers.push(
     DAutocompleteModifier.setupAutocomplete(
       owner,
       inputElement,
       autocompleteHandler,
       {
-        component: UserAutocompleteResults,
-        key: UserAutocompleteResults.TRIGGER_KEY,
+        component: HashtagAutocompleteResults,
+        key: HashtagAutocompleteResults.TRIGGER_KEY,
         autoSelectFirstSuggestion: false,
-        transformComplete: (v) => {
-          validateSearchResult(v);
-          return v.username || v.name;
-        },
-        dataSource: (term) => userSearch({ term, includeGroups: true }),
+        transformComplete: (obj) => obj.text,
+        dataSource: (term) => searchCategoryTag(term, siteSettings),
         fixedTextareaPosition: true,
         offset: 2,
       }
+    )
+  );
+
+  if (siteSettings.enable_mentions) {
+    modifiers.push(
+      DAutocompleteModifier.setupAutocomplete(
+        owner,
+        inputElement,
+        autocompleteHandler,
+        {
+          component: UserAutocompleteResults,
+          key: UserAutocompleteResults.TRIGGER_KEY,
+          autoSelectFirstSuggestion: false,
+          transformComplete: (v) => {
+            validateSearchResult(v);
+            return v.username || v.name;
+          },
+          dataSource: (term) => userSearch({ term, includeGroups: true }),
+          fixedTextareaPosition: true,
+          offset: 2,
+        }
+      )
     );
   }
+
+  return modifiers;
 }
 
 export function updateRecentSearches(currentUser, term) {

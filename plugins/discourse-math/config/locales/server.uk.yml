@@ -8,3 +8,9 @@ uk:
   site_settings:
     discourse_math_enabled: "Увімкнути Discourse Math plugin (додасть спеціальну обробку для $ та $$ блоків)"
     discourse_math_provider: "Провайдер математичного рендерингу за замовчуванням"
+    discourse_math_enable_latex_delimiters: "Увімкнути роздільники в стилі Latex:\\ (...\\) для вбудованої математики та\\ [...\\] для математики блоків"
+    discourse_math_mathjax_output: "Формат виводу MathJax (тільки MathJax)"
+    discourse_math_enable_menu: "Увімкнути контекстне меню (тільки MathJax)"
+    discourse_math_enable_accessibility: "Увімкнути функції спеціальних можливостей (лише MathJax з меню)"
+    discourse_math_zoom_on_click: "Масштабування 175% при натисканні клавіші alt (MathJax тільки з меню)"
+    discourse_math_enable_asciimath: "Увімкнути asciimath (додасть спеціальну обробку до вхідних даних, розділених %; підтримується лише з MathJax)"

@@ -3457,9 +3457,13 @@ pl_PL:
         available:
           title: "Nadchodzące zmiany"
           description: "„%{changeName}” jest dostępny do podglądu"
+          description_two: "„%{changeName1}” i „%{changeName2}” są dostępne do podglądu"
+          description_many: "'%{changeName}' i %{otherChangeCount} więcej zmian jest dostępnych do podglądu"
         automatically_promoted:
           title: "Nadchodzące zmiany"
           description: "Opcja „%{changeName}” została automatycznie włączona"
+          description_two: "„%{changeName1}” i „%{changeName2}” zostały automatycznie włączone"
+          description_many: "'%{changeName}' i %{otherChangeCount} więcej zmian zostało automatycznie włączonych"
       dismiss_confirmation:
         body:
           default:
@@ -3526,8 +3530,8 @@ pl_PL:
         votes_released: "głos został opublikowany"
         new_features: "wydano nowe funkcje discourse"
         admin_problems: "nowe porady w panelu administratora"
-        upcoming_change_available: "dostępna jest nowa nadchodząca zmiana '%{changeName}'"
-        upcoming_change_automatically_promoted: "nadchodząca zmiana '%{changeName}' została automatycznie włączona"
+        upcoming_change_available: "dostępne są nowe nadchodzące zmiany"
+        upcoming_change_automatically_promoted: "nadchodzące zmiany zostały automatycznie włączone"
     upload_selector:
       change: "Zmień"
       delete: "Usuń"
@@ -4703,6 +4707,7 @@ pl_PL:
           many: "Czy na pewno chcesz połączyć te %{count} postów?"
           other: "Czy na pewno chcesz połączyć te %{count} postów?"
       revisions:
+        diff_too_complex: "Różnica jest zbyt złożona, aby ją wyświetlić. Spróbuj wyświetlić pojedyncze, mniejsze zmiany."
         locale:
           no_locale_set: "Nie ustawiono języka"
           locale_removed: "Język usunięty"
@@ -4820,7 +4825,11 @@ pl_PL:
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
       create: "Nowa kategoria"
+      create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
+      choose_type:
+        title: "Wybierz typ kategorii"
+        requires_plugin: "Wymaga wtyczki"
       create_category: "Utwórz kategorię"
       save: "Zapisz kategorię"
       unsaved_changes: "Masz niezapisane zmiany"
@@ -8798,6 +8807,9 @@ pl_PL:
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         no_results: "Nie znaleziono pasujących tekstów witryny"
         interpolation_keys: "Dostępne klucze interpolacji:"
+        interpolation_key_insert: "Kliknij, aby wstawić"
+        interpolation_key_used: "Już używane"
+        interpolation_key_invalid: "Nieznany klucz — nie będzie interpolowany"
         outdated:
           title: "To tłumaczenie jest nieaktualne"
           description: "Domyślne tłumaczenie tego klucza zmieniło się od czasu utworzenia tego zastąpienia. Sprawdź poniżej, czy Twoje tłumaczenie odpowiada wszelkim zmianom wprowadzonym w pierwotnej intencji."

@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -134,6 +135,9 @@ export default class SidebarSection extends Component {
     this.args.headerActions
       .find((headerAction) => headerAction.id === id)
       .action();
+    if (this.args.toggleNavigationMenu) {
+      next(this.args.toggleNavigationMenu);
+    }
   }
 
   get headerCaretIcon() {

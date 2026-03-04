@@ -389,6 +389,14 @@ class AiTool < ActiveRecord::Base
             required: false,
             description: "Image size (1024x1024, 1792x1024, or 1024x1792)",
           },
+          {
+            name: "image_urls",
+            type: "array",
+            item_type: "string",
+            required: false,
+            description:
+              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
+          },
         ],
         secret_contracts: [{ alias: "openai_api_key" }],
         script: "#{preamble}\n#{load_script("presets/image_generation/openai.js")}",
@@ -408,6 +416,14 @@ class AiTool < ActiveRecord::Base
             type: "string",
             required: true,
             description: "The text prompt for image generation",
+          },
+          {
+            name: "image_urls",
+            type: "array",
+            item_type: "string",
+            required: false,
+            description:
+              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
           },
         ],
         secret_contracts: [{ alias: "google_api_key" }],
@@ -436,6 +452,14 @@ class AiTool < ActiveRecord::Base
             required: false,
             description: "Optional seed for random number generation",
           },
+          {
+            name: "image_urls",
+            type: "array",
+            item_type: "string",
+            required: false,
+            description:
+              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
+          },
         ],
         secret_contracts: [{ alias: "together_api_key" }],
         script: "#{preamble}\n#{load_script("presets/image_generation/flux_together.js")}",
@@ -462,6 +486,14 @@ class AiTool < ActiveRecord::Base
             type: "number",
             required: false,
             description: "Optional seed for reproducible results",
+          },
+          {
+            name: "image_urls",
+            type: "array",
+            item_type: "string",
+            required: false,
+            description:
+              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
           },
         ],
         secret_contracts: [{ alias: "bfl_api_key" }],

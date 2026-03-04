@@ -8,3 +8,9 @@ tr_TR:
   site_settings:
     discourse_math_enabled: "Discourse Matematik eklentisini etkinleştir ($ ve $$ bloklarına özel işleme ekler)"
     discourse_math_provider: "Varsayılan matematik işleme sağlayıcısı"
+    discourse_math_enable_latex_delimiters: "LaTeX tarzı sınırlayıcıları etkinleştir: satır içi matematik için \\(...\\) ve blok matematik için \\[...\\]"
+    discourse_math_mathjax_output: "MathJax çıktı biçimi (yalnızca MathJax)"
+    discourse_math_enable_menu: "Bağlam menüsünü etkinleştir (yalnızca MathJax)"
+    discourse_math_enable_accessibility: "Erişilebilirlik özelliklerini etkinleştir (yalnızca menü ile MathJax)"
+    discourse_math_zoom_on_click: "Alt tuşuna basarak %175 yakınlaştırma (yalnızca menülü MathJax)"
+    discourse_math_enable_asciimath: "Asciimath'ı etkinleştir (ayrıştırıcılarla ayrılmış girdilere özel işleme ekler; yalnızca MathJax ile desteklenir)"

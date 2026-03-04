@@ -5,15 +5,38 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Visszatekintés"
   js:
     discourse_rewind:
+      placeholder: Discourse Visszatekintés
+      title: Visszatekintés
+      viewing_other_user: "Jelenleg <strong>%{username}</strong> Discourse Visszatekintését nézed."
+      cannot_view_rewind_gibberish: >
+        [HOZZÁFÉRÉS MEGTAGADVA::VISSZATEKERESŐ FŐSZÁMÍTÓGÉP ALPROGRAM HIBA]<br><br> Bootstrapping anomálianalóg...<br><br> &nbsp;&nbsp;>> kvantumpuffer alulfutás ⧛<br> &nbsp;&nbsp;>> csomópontközi paritáseltolódás (Δ=004.33)<br> &nbsp;&nbsp;>> csomag ϟ töredék a ∇47-es eltolásnál<br> &nbsp;&nbsp;>> fluxusvezeték-kézfogás IDŐTÚLJÁRÁS<br><br>
       cannot_view_rewind: >
-        Nem tekintheted meg ezt a Discourse Rewind jelentést. Lehet, hogy a tulajdonos nem osztotta meg nyilvánosan?<br><br> $> _<br><br>
+        Nem tekintheted meg ezt a Discourse Visszatekintést. Lehet, hogy a tulajdonos nem osztotta meg nyilvánosan?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Discourse Visszatekintés engedélyezése. Ez az év végi tevékenységek összefoglalóját jeleníti meg a profilodban és az avatárodon."
+        share_publicly: "Oszd meg a Discourse Visszatekintésed más fórumtagokkal. Bármelyik fórumtag megtekintheti a Discourse Visszatekintés összefoglalódat."
+        cannot_share_when_profile_hidden: "A Visszatekintés megosztásához engedélyezned kell másoknak a nyilvános profilod megtekintését."
+      profile_link: "%{rewindYear} évi Discourse Visszatekintésed"
       share:
         toggle_label:
           private: "Privát"
           public: "Nyilvános"
+        confirm: "Megosztás előtt mindenképpen nézd át a Visszatekintést, mivel tartalmazhat személyes üzenetekből származó adatokat. Bármikor visszaállíthatod privátra."
+        confirm_button:
+          enable: "Legyen nyilvános"
+          disable: "Maradjon titokban"
+        enabled_success: "A Visszatekintésed mostantól megosztható a többi fórumtaggal."
+        disabled_success: "A Visszatekintésed mostantól titkos."
       reports:
+        activity_calendar:
+          title: Tevékenységi naptár
         reading_time:
           title: Olvasási Idő
         chat_usage:

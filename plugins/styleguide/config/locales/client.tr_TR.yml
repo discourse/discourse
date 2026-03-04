@@ -38,6 +38,8 @@ tr_TR:
           title: "Yazı Tipi Sistemi"
         colors:
           title: "Renkler"
+        dialog:
+          title: "Diyalog"
         icons:
           title: "Simgeler"
           full_list: "Font Awesome Simgelerinin tam listesine bakın"
@@ -59,6 +61,8 @@ tr_TR:
           title: "Gezinti Yığılı"
         categories_list:
           title: "Kategori Listesi"
+        topic_link:
+          title: "Konu Bağlantısı ve Durumu"
         topic_list_item:
           title: "Konu Listesi Ögesi"
         topic_statuses:
@@ -81,6 +85,8 @@ tr_TR:
           title: "Gönderi Listesi"
           empty_example: "<PostList /> boş durum"
           populated_example: "<PostList /> doldurulmuş durum"
+        post_oneboxes:
+          title: "Onebox'ları Gönder"
         topic_map:
           title: "Konu Haritası"
         site_header:
@@ -99,6 +105,8 @@ tr_TR:
           title: "Başlık Simgeleri"
         spinners:
           title: "Değer Değiştiriciler"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Boş Durum"
         tooltips:

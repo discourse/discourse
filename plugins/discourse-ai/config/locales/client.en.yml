@@ -655,6 +655,7 @@ en:
         parameters: "Parameters"
         save: "Save"
         parameter_type: "Parameter type"
+        parameter_item_type: "Item type"
         add_parameter: "Add parameter"
         remove_parameter: "Remove"
         parameter_required: "Required"
