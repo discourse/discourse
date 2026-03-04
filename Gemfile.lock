@@ -608,7 +608,7 @@ GEM
       base64
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
-    ruby-readability (0.7.2)
+    ruby-readability (0.7.3)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
@@ -1197,7 +1197,7 @@ CHECKSUMS
   ruby-prof (1.7.2) sha256=270424fcac37e611f2d15a55226c4628e234f8434e1d7c25ca8a2155b9fc4340
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby-rc4 (0.1.5) sha256=00cc40a39d20b53f5459e7ea006a92cf584e9bc275e2a6f7aa1515510e896c03
-  ruby-readability (0.7.2) sha256=7351ddc89ac62ecdd35336acb1313ac29dc1dad9745d59f25109ec2215c6580c
+  ruby-readability (0.7.3) sha256=bd213fab037118cc15d999e167a8ea2cc6b689dc78c033e78fb36a2a37efc241
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
   rubyzip (2.4.1) sha256=8577c88edc1fde8935eb91064c5cb1aef9ad5494b940cf19c775ee833e075615
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984
