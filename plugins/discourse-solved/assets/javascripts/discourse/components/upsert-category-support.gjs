@@ -1,4 +1,4 @@
-import EditCategoryTypeSchemaFields from "discourse/admin/components/edit-category-type-schema-fields";
+import EditCategoryTypeSchemaFields from "discourse/components/edit-category-type-schema-fields";
 
 const UpsertCategorySupport = <template>
   <EditCategoryTypeSchemaFields
