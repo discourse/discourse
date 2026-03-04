@@ -18,6 +18,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/atoms/date-time-inputs", title: "Date/Time inputs" },
       { href: "/atoms/dropdowns", title: "Dropdowns" },
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
+      { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
     ],
     "MOLECULES" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
