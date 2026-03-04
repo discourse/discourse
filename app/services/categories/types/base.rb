@@ -3,6 +3,49 @@
 module Categories
   module Types
     class Base
+      CONFIGURATION_SCHEMA_DEFINITION = {
+        "type" => "object",
+        "additionalProperties" => false,
+        "properties" => {
+          "site_settings" => {
+            "type" => "object",
+          },
+          "category_custom_fields" => {
+            "type" => "object",
+            "additionalProperties" => {
+              "$ref" => "#/$defs/field_config",
+            },
+          },
+          "category_settings" => {
+            "type" => "object",
+            "additionalProperties" => {
+              "$ref" => "#/$defs/field_config",
+            },
+          },
+        },
+        "$defs" => {
+          "field_config" => {
+            "type" => "object",
+            "required" => %w[default type label],
+            "additionalProperties" => false,
+            "properties" => {
+              "default" => true,
+              "type" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "label" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "description" => {
+                "type" => "string",
+              },
+            },
+          },
+        },
+      }.freeze
+
       class << self
         # Every category type must have a unique type_id.
         def type_id(id = nil)
@@ -29,9 +72,67 @@ module Categories
         def configure_category(category, guardian:, configuration_values: {})
         end
 
-        # TODO (martin) Add docs for the schema/maybe a schema validator?
+        # Returns a hash describing the configuration schema for this category type.
+        # This schema drives both the UI (what settings are shown to admins in the
+        # category creator) and the site-setting update allowlist.
+        #
+        # The hash MAY include any subset of the following top-level keys.
+        # All top-level keys are optional; an empty hash is valid.
+        #
+        #   {
+        #     site_settings: {
+        #       # Each key must be a valid SiteSetting name.
+        #       # The value is the desired default to apply when this category type is configured.
+        #       show_filter_by_solved_status: true,
+        #     },
+        #
+        #     category_custom_fields: {
+        #       # Each key is the custom field name (Symbol).
+        #       # Each value is a config Hash:
+        #       #   default:     (required) Any value; the field's default.
+        #       #   type:        (required) Symbol — e.g. :integer, :string, :boolean, matching site setting types.
+        #       #   label:       (required) String — FormKit label shown in UI
+        #       #   description: (optional) String — FormKit description/help text shown in UI
+        #       solved_topics_auto_close_hours: {
+        #         default: 48,
+        #         type: :integer,
+        #         label: "Auto-close after solved (hours)",
+        #         description: "Close topics this many hours after being solved.",
+        #       },
+        #     },
+        #
+        #     category_settings: {
+        #       # Same structure as category_custom_fields above.
+        #     },
+        #   }
+        #
+        # Use +validate_schema!+ to verify a schema conforms to this contract.
         def configuration_schema
           {}
+        end
+
+        # Validates the hash returned by +configuration_schema+ using JSONSchemer.
+        # Raises +ArgumentError+ with a descriptive message if invalid.
+        # Also validates that any site_settings keys are real SiteSettings (a
+        # runtime check that cannot be expressed in JSON Schema).
+        def validate_schema!
+          # Normalize Ruby symbol keys/values to strings via JSON round-trip
+          schema_as_json = JSON.parse(configuration_schema.to_json)
+
+          schemer = JSONSchemer.schema(CONFIGURATION_SCHEMA_DEFINITION)
+          errors = schemer.validate(schema_as_json).to_a
+          if errors.any?
+            messages = errors.map { |err| JSONSchemer::Errors.pretty(err) }.join("; ")
+            raise ArgumentError, "#{name}#configuration_schema is invalid: #{messages}"
+          end
+
+          # Validate site_settings keys are real SiteSettings (runtime check)
+          schema_as_json["site_settings"]&.each_key do |setting_name|
+            unless SiteSetting.has_setting?(setting_name)
+              raise ArgumentError,
+                    "#{name}#configuration_schema[:site_settings] references unknown SiteSetting: #{setting_name.inspect}"
+            end
+          end
         end
 
         # Used as an extension point to limit access to a category type

@@ -2,6 +2,7 @@
 
 RSpec.describe Categories::Types::Base do
   fab!(:admin)
+  fab!(:category)
 
   describe ".type_id" do
     it "can be explicitly set" do
@@ -34,7 +35,7 @@ RSpec.describe Categories::Types::Base do
           end
         end
 
-      test_type.configure_site_settings(nil, guardian: admin.guardian)
+      test_type.configure_site_settings(category, guardian: admin.guardian)
       expect(SiteSetting.title).to eq("Configured Forum")
     end
 
@@ -49,13 +50,124 @@ RSpec.describe Categories::Types::Base do
         end
 
       test_type.configure_site_settings(
-        nil,
+        category,
         guardian: admin.guardian,
         configuration_values: {
           "title" => "Override",
         },
       )
       expect(SiteSetting.title).to eq("Override")
+    end
+  end
+
+  describe ".validate_schema!" do
+    it "accepts an empty hash" do
+      expect { described_class.validate_schema! }.not_to raise_error
+    end
+
+    it "accepts a valid schema with site_settings" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { site_settings: { title: "My Forum" } }
+          end
+        end
+      expect { test_type.validate_schema! }.not_to raise_error
+    end
+
+    it "accepts a valid schema with category_custom_fields" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            {
+              category_custom_fields: {
+                my_field: {
+                  default: 42,
+                  type: :integer,
+                  label: "My Field",
+                },
+              },
+            }
+          end
+        end
+      expect { test_type.validate_schema! }.not_to raise_error
+    end
+
+    it "accepts optional :description" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            {
+              category_custom_fields: {
+                my_field: {
+                  default: nil,
+                  type: :string,
+                  label: "My Field",
+                  description: "Details",
+                },
+              },
+            }
+          end
+        end
+      expect { test_type.validate_schema! }.not_to raise_error
+    end
+
+    it "accepts empty sub-hashes" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { category_settings: {} }
+          end
+        end
+      expect { test_type.validate_schema! }.not_to raise_error
+    end
+
+    it "raises on unknown top-level keys" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { unknown_key: {} }
+          end
+        end
+      expect { test_type.validate_schema! }.to raise_error(ArgumentError)
+    end
+
+    it "raises when site_settings references an unknown SiteSetting" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { site_settings: { not_a_real_setting_xyzzy: true } }
+          end
+        end
+      expect { test_type.validate_schema! }.to raise_error(ArgumentError, /unknown SiteSetting/)
+    end
+
+    it "raises when a field config is missing :default" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { category_custom_fields: { my_field: { type: :integer, label: "My Field" } } }
+          end
+        end
+      expect { test_type.validate_schema! }.to raise_error(ArgumentError)
+    end
+
+    it "raises when a field config :label is empty" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { category_custom_fields: { my_field: { default: 1, type: :integer, label: "" } } }
+          end
+        end
+      expect { test_type.validate_schema! }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe "all registered category types" do
+    it "have valid configuration schemas" do
+      Categories::TypeRegistry.all.each_value do |type_klass|
+        expect { type_klass.validate_schema! }.not_to raise_error
+      end
     end
   end
 
