@@ -10,7 +10,7 @@ module BackupRestore
 
   def self.backup!(user_id, opts = {})
     if opts[:fork] == false
-      BackupRestore::Backuper.new(user_id, opts).run
+      BackupRestore::Creator.new(user_id, opts).run
     else
       spawn_process!(:backup, user_id, opts)
     end

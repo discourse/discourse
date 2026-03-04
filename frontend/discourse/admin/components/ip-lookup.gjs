@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -159,7 +160,7 @@ export default class IpLookup extends Component {
       @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
       @isLoading={{this.loading}}
-      @class="btn-default"
+      @triggerClass="btn-default"
     >
       <:content>
         <div class="location-box">

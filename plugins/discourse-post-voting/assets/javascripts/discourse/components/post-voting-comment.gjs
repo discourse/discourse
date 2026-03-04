@@ -23,7 +23,6 @@ export default class PostVotingComment extends Component {
 
   @tracked isEditing = false;
   @tracked isVoting = false;
-  @tracked hidden = false;
 
   get anchorId() {
     return buildAnchorId(this.args.comment.id);

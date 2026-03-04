@@ -131,6 +131,31 @@ RSpec.describe Admin::Config::DiscourseIdController do
         expect(response.status).to eq(200)
         expect(SiteSetting.enable_discourse_id).to eq(true)
       end
+
+      it "logs the setting change to staff action logs" do
+        SiteSetting.enable_discourse_id = false
+
+        expect {
+          put "/admin/config/login-and-authentication/discourse-id/settings.json",
+              params: {
+                enabled: true,
+              }
+        }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:change_site_setting],
+            subject: "enable_discourse_id",
+          ).count
+        }.by(1)
+
+        log_entry =
+          UserHistory.find_by(
+            action: UserHistory.actions[:change_site_setting],
+            subject: "enable_discourse_id",
+          )
+        expect(log_entry.previous_value).to eq("false")
+        expect(log_entry.new_value).to eq("true")
+        expect(log_entry.acting_user_id).to eq(admin.id)
+      end
     end
 
     it "is admin only" do

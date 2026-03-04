@@ -22,6 +22,7 @@ class Chat::Api::ChannelThreadMessagesController < Chat::ApiController
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
       on_failed_policy(:can_view_thread) { raise Discourse::InvalidAccess }
+      on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_model_not_found(:thread) { raise Discourse::NotFound }
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)

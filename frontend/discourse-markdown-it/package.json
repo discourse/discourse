@@ -32,10 +32,10 @@
     "xss": "*"
   },
   "engines": {
-    "node": ">= 18",
+    "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
   "ember": {
     "edition": "octane"

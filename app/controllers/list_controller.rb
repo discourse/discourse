@@ -147,7 +147,7 @@ class ListController < ApplicationController
   def category_default
     canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
     view_method = @category.default_view
-    view_method = "latest" if %w[latest top].exclude?(view_method)
+    view_method = "latest" if %w[hot latest top].exclude?(view_method)
 
     self.public_send(view_method, category: @category.id)
   end
@@ -386,15 +386,13 @@ class ListController < ApplicationController
     route_params = { format: "json" }
 
     if @category.present?
-      slug_path = @category.slug_path
-
-      route_params[:category_slug_path_with_id] = (slug_path + [@category.id.to_s]).join("/")
+      route_params[:category_slug_path_with_id] = [*@category.slug_path, @category.id].join("/")
     end
 
-    route_params[:username] = UrlHelper.encode_component(params[:username]) if params[
-      :username
-    ].present?
-    route_params[:period] = params[:period] if params[:period].present?
+    %i[username group_name groupname period].each do |key|
+      route_params[key] = params[key] if params[key].present?
+    end
+
     route_params
   end
 
@@ -474,8 +472,11 @@ class ListController < ApplicationController
 
     opts = opts.dup
 
-    if SiteSetting.unicode_usernames && opts[:group_name]
-      opts[:group_name] = UrlHelper.encode_component(opts[:group_name])
+    if SiteSetting.unicode_usernames
+      %i[username group_name groupname].each do |key|
+        page_params[key] = UrlHelper.encode_component(page_params[key]) if page_params[key]
+        opts[key] = UrlHelper.encode_component(opts[key]) if opts[key]
+      end
     end
 
     opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
@@ -483,9 +484,13 @@ class ListController < ApplicationController
     url = public_send(method, opts.merge(page_params)).sub(".json?", "?")
 
     # Unicode usernames need to be encoded when calling Rails' path helper. However, it means that the already
-    # encoded username are encoded again which we do not want. As such, we unencode the url once when unicode usernames
+    # encoded username are encoded again which we do not want. As such, we unencode the path once when unicode usernames
     # have been enabled.
-    url = UrlHelper.unencode(url) if SiteSetting.unicode_usernames
+    if SiteSetting.unicode_usernames
+      path, query = url.split("?", 2)
+      path = UrlHelper.unencode(path)
+      url = query ? "#{path}?#{query}" : path
+    end
 
     url
   end

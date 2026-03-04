@@ -5,26 +5,241 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rückblick"
   js:
     discourse_rewind:
+      placeholder: Discourse-Rückblick
+      title: Rückblick
+      loading: "Splines werden retikuliert …"
+      viewing_other_user: "Du siehst dir gerade den Discourse-Rückblick-Bericht von <strong>%{username}</strong> an."
+      cannot_view_rewind_gibberish: >
+        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Bootstrapping anomaly log...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
+      cannot_view_rewind: >
+        Du kannst diesen Discourse-Rückblick-Bericht nicht anzeigen.  Vielleicht hat der Eigentümer ihn nicht öffentlich freigegeben?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Discourse-Rückblick aktivieren. Dadurch wird die Jahresübersicht deiner Aktivitäten in deinem Profil und auf deinem Avatar angezeigt."
+        share_publicly: "Discourse-Rückblick mit anderen Forenmitgliedern teilen. Jedes Forenmitglied kann deinen Discourse-Rückblick ansehen."
+        cannot_share_when_profile_hidden: "Um den Rückblick zu teilen, musst du anderen erlauben, dein öffentliches Profil anzusehen."
+      profile_link: "Schau deinen Rückblick für %{rewindYear} an"
       share:
         toggle_label:
           private: "Privat"
           public: "Öffentlich"
+        confirm: "Überprüfe deinen Rückblick unbedingt, bevor du ihn teilst, da er Daten aus persönlichen Nachrichten enthalten kann. Du kannst ihn jederzeit wieder privat machen."
+        confirm_button:
+          enable: "Öffentlich machen"
+          disable: "Privat behalten"
+        enabled_success: "Dein Rückblick kann jetzt mit anderen Forenmitgliedern geteilt werden."
+        disabled_success: "Dein Rückblick ist jetzt privat."
       reports:
+        activity_calendar:
+          title: Aktivitätskalender
+          cell_title:
+            visited_no_posts: "Du hast am %{date} vorbeigeschaut und mitgelesen, aber keine Beiträge erstellt."
+            visited_no_posts_others: "%{username} hat am %{date} vorbeigeschaut und mitgelesen, aber keine Beiträge erstellt."
+            visited_with_posts:
+              one: "Du hast am %{date} %{count} Beitrag verfasst."
+              other: "Du hast am %{date} %{count} Beiträge verfasst."
+            visited_with_posts_others:
+              one: "%{username} hat am %{date} %{count} Beitrag verfasst."
+              other: "%{username} hat am %{date} %{count} Beiträge verfasst."
+            no_activity: "Du warst am %{date} nicht online."
+            no_activity_others: "%{username} war am %{date} nicht online."
+        top_words:
+          title: Wortnutzung
         reading_time:
           title: Lesezeit
+          book_comparison: "Du hast <code>%{readingTime}</code> auf unserer Webseite mit Lesen verbracht! Das entspricht der Zeit, die man benötigt, um <i>%{bookTitle}</i> zu lesen."
+          book_comparison_others: "%{username} hat <code>%{readingTime}</code> auf unserer Webseite mit Lesen verbracht! Das entspricht der Zeit, die man benötigt, um <i>%{bookTitle}</i> zu lesen."
+        post_used_reactions:
+          title: Am häufigsten verwendete Reaktionen in Themen
+          total_number: "Gesamtzahl der Reaktionen: %{count}"
+        post_received_reactions:
+          title: Am häufigsten erhaltene Reaktionen in Themen
+        fbff:
+          title: Dein FBFF (Forum-Bester-Freund für immer)
+          title_others: "Der FBFF (Forum-Bester-Freund für immer) von %{username}"
+        most_viewed_categories:
+          title:
+            one: Deine am häufigsten betrachtete Kategorie
+            other: Deine %{count} am häufigsten betrachteten Kategorien
+          title_others:
+            one: "Die von %{username} am häufigsten betrachtete Kategorie"
+            other: "Die %{count} von %{username} am häufigsten betrachteten Kategorien"
+        most_viewed_tags:
+          title:
+            one: Dein am häufigsten betrachtetes Schlagwort
+            other: Deine %{count} am häufigsten betrachteten Schlagwörter
+          title_others:
+            one: "Das von %{username} am häufigsten betrachtete Schlagwort"
+            other: "Die %{count} von %{username} am häufigsten betrachteten Schlagwörter"
+        best_topics:
+          view_topic: Thema ansehen
+          title:
+            one: Dein bestes Thema
+            other: Deine %{count} besten Themen
+          title_others:
+            one: "Das beste Thema von %{username}"
+            other: "Die %{count} besten Themen von %{username}"
+        best_posts:
+          view_post: Beitrag ansehen
+          title:
+            one: Dein bester Beitrag
+            other: Deine %{count} besten Beiträge
+          title_others:
+            one: "Der beste Beitrag von %{username}"
+            other: "Die %{count} besten Beiträge von %{username}"
+        ai_usage:
+          title: KI-Nutzung
+          total_requests: Gesamtanzahl der Anfragen
+          total_tokens: Gesamtanzahl der Token
+          success_rate: Erfolgsquote
+          favorite_features: Meistgenutzte Funktionen
+          favorite_models: Meistgenutzte KI-Modelle
+          wake_up: "Aufwachen, %{username} …"
+          system_title: "KI-NUTZUNG ERKANNT"
+          section_features: "TOP FUNKTIONEN"
+          section_models: "TOP-KI-MODELLE"
+        assignments:
+          title: Zuordnungen
+          total_assigned: Mir zugeordnet
+          total_assigned_others: "%{username} zugeordnet"
+          completed: Abgeschlossene Zuordnungen
+          pending: Ausstehende Zuordnungen
+          assigned_by_user: Erhaltene Zuordnungen
+          completion_rate: Erledigungsquote
         chat_usage:
-          messages: nachrichten
-          you: Du
+          title: Chat-Aktivität
+          total_messages: Nachrichten gesamt
+          dm_messages: Direktnachrichten
+          unique_dm_channels: Unterhaltungen in Direktnachrichten
+          reactions_received: Erhaltene Reaktionen
+          avg_message_length: Ø Nachrichtenlänge
+          favorite_channels: Lieblingskanäle
+          messages: Nachrichten
+          bot_name: XxRückblickBotxX
+          author: Du
+          author_others: "%{username}"
+          channel_title: "#chat-Aktivität"
           status_online: "● online"
+          message_1:
+            one: "Du hast dieses Jahr <strong>eine</strong> Nachricht versendet!"
+            other: "Du hast dieses Jahr <strong>%{count}</strong> Nachrichten versendet!"
+          reply_1: "lol, super B-)"
+          message_2_MF: |
+            Du hast { dm_count, plural,
+                one {<strong>#</strong> DN Unterhaltung}
+              other {<strong>#</strong> DN Unterhaltungen}
+            } mit { channel_count, plural,
+                one {<strong>#</strong> Person oder Gruppe}
+              other {<strong>#</strong> unterschiedlichen Personen oder Gruppen}
+            } geführt.
+          reply_2: "cOo0oL :D"
+          message_3:
+            one: "Die Leute lieben deine Nachrichten! Du hast <strong>eine</strong> Reaktion erhalten ❤️"
+            other: "Die Leute lieben deine Nachrichten! Du hast <strong>%{count}</strong> Reaktionen erhalten ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Deine durchschnittliche Nachrichtenlänge betrug <strong>%{length}</strong> Zeichen"
+          message_5: "Deine Lieblingskanäle:"
+          dancing_baby_alt: "Tanzendes Baby"
+        favorite_gifs:
+          title:
+            one: Dein Lieblings-GIF
+            other: Deine %{count} Lieblings-GIFs
+          title_others:
+            one: "Das Lieblings-GIF von %{username}"
+            other: "Die %{count} Lieblings-GIFs von %{username}"
+          total_usage:
+            one: '%{count} mal benutzt'
+            other: Insgesamt %{count} mal benutzt
         invites:
           title: Einladungen
+          total_invites: Anzahl der versendeten Einladungen
+          redeemed: Angenommene Einladungen
+          redemption_rate: Annahmequote
+          avg_trust_level: Ø Vertrauensstufe
+          invitee_impact: Auswirkungen deiner Einladungen
+          invitee_impact_others: "Auswirkungen der Einladungen von %{username}"
           invitee_posts: Erstellte Beiträge
+          invitee_topics: Erstellte Themen
           invitee_likes: Abgegebene „Gefällt mir“
+          most_active_invitee: Aktivster Einladender
+          guest_book_title: Gästebuch
+          guest_book_subtitle: Deine Community Einladungen
+          guest_book_subtitle_others: "Community-Einladungen von %{username}"
           label_invitations_sent: "Einladungen gesendet:"
+          label_guests_joined: "Angenommene Einladungen:"
+          label_acceptance_rate: "Annahmequote:"
+          section_contributions: Beiträge von Eingeladenen
+          label_posts_written: "Verfasste Beiträge:"
+          label_topics_started: "Erstellte Themen:"
+          label_likes_given: "Abgegebene „Gefällt mir“"
+          section_most_active: Aktivster Gast
         new_user_interactions:
+          title: Betreuung neuer Benutzer
+          subtitle:
+            one: Du hast dieses Jahr einem neuen Benutzer geholfen
+            other: Du hast dieses Jahr %{count} neuen Benutzern geholfen
+          subtitle_others:
+            one: "%{username} hat einem neuen Benutzer in diesem Jahr geholfen"
+            other: "%{username} hat %{count} neuen Benutzern in diesem Jahr geholfen"
+          new_member:
+            one: "%{count} neuen Mitglied geholfen"
+            other: "%{count} neuen Mitgliedern geholfen"
+          total_interactions: Interaktionen insgesamt
+          unique_new_users: Einzigartige neue Benutzer
           likes_given: Abgegebene „Gefällt mir“
+          replies: Antworten auf Beiträge
           mentions: Erwähnungen
+          topics_with_new_users: Themen mit neuen Benutzern
+          contributions_helped: Deine Beiträge haben
+          contributions_helped_others: "Die Beiträge von %{username} haben"
+        time_of_day_activity:
+          title: Täglicher Aktivitätsrhythmus
+          play_button: Spiele deine Aktivität als Ton ab
+          play_button_others: "Spiele die Aktivität von %{username} als Ton ab"
+          stop_button: Audiowiedergabe stoppen
         writing_analysis:
+          title: Textanalyse
+          menu_file: Datei
           menu_other: Sonstiges
+          menu_additional: Mehr
+          menu_opening: ÖFFNEN
+          help_text: Drücke F1 für Hilfe
+          app_name: DiscoStar Professional
+          release_info: Veröffentlichung %{rewindYear} von CDCK
+          total_words: Wörter gesamt
+          total_posts: Beiträge gesamt
+          avg_post_length: Ø Beitragslänge
+          readability_score_label: Lesbarkeitswert
+          readability_level: Lesbarkeitsniveau
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C.S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R.R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virgina Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fyodor Dostoevsky"

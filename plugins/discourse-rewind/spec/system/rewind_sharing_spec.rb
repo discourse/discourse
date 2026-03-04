@@ -1,9 +1,23 @@
 # frozen_string_literal: true
 
 describe "DiscourseRewind | rewind sharing", type: :system do
-  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true, trust_level: 2) }
-  fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true, trust_level: 2) }
-  fab!(:admin)
+  fab!(:current_user) do
+    Fabricate(
+      :user,
+      refresh_auto_groups: true,
+      trust_level: 2,
+      created_at: DateTime.parse("2020-01-01"),
+    )
+  end
+  fab!(:other_user) do
+    Fabricate(
+      :user,
+      refresh_auto_groups: true,
+      trust_level: 2,
+      created_at: DateTime.parse("2020-01-01"),
+    )
+  end
+  fab!(:admin) { Fabricate(:admin, created_at: DateTime.parse("2020-01-01")) }
 
   let(:rewind_page) { PageObjects::Pages::Rewind.new }
   let(:dialog) { PageObjects::Components::Dialog.new }

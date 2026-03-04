@@ -12,14 +12,20 @@ lv:
           always: "Vienmēr"
           never: "Nekad"
     chat:
+      edit_category:
+        description: "Apraksts"
+        actions: "Darbības"
+        settings: "Iestatījumi"
       deleted_chat_username: dzēsts
       dates:
         yesterday: "Vakar"
       create: "Izveidot"
       cancel: "Atcelt"
+      pinned: "Piesprausts"
       channel_settings:
         edit: "Rediģēt"
         add: "Pievienot"
+        notification_settings_context: "Paziņojumi"
         join: "Pievienojieties"
         leave: "Iziet"
       close: "Aizvērt"

@@ -28,6 +28,7 @@ acceptance("Topic list tracking", function (needs) {
         fixture["topic_list"]["topics"].find((t) => {
           if (t.id === 11557) {
             t.notification_level = notificationLevel;
+            t.last_read_post_number = 1;
           }
         });
       }
@@ -35,11 +36,14 @@ acceptance("Topic list tracking", function (needs) {
       return helper.response(cloneJSON(fixture));
     });
 
-    server.get("/t/11557.json", () => {
+    const responseTopic11557 = () => {
       const topicFixture = cloneJSON(topicFixtures["/t/130.json"]);
       topicFixture.id = 11557;
       return helper.response(topicFixture);
-    });
+    };
+
+    server.get("/t/11557.json", responseTopic11557);
+    server.get("/t/11557/:post_number.json", responseTopic11557);
   });
 
   test("Navigation", async function (assert) {

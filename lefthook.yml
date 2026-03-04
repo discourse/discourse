@@ -127,6 +127,15 @@ fix-all:
       run: pnpm lint:css:fix
     rubocop:
       run: bundle exec rubocop --force-exclusion -A
+    syntax_tree:
+      exclude:
+        - "bin/notify_file_change"
+        - "bin/docker/**/*"
+      glob:
+        - "**/*.{rb,rake,thor}"
+        - "bin/**/*"
+        - "Gemfile"
+      run: bundle exec stree write Gemfile {all_files}
 
 lints:
   parallel: true
@@ -137,6 +146,15 @@ lints:
         - "bin/**/*"
         - "Gemfile"
       run: bundle exec rubocop
+    syntax_tree:
+      exclude:
+        - "bin/notify_file_change"
+        - "bin/docker/**/*"
+      glob:
+        - "**/*.{rb,rake,thor}"
+        - "bin/**/*"
+        - "Gemfile"
+      run: bundle exec stree check Gemfile {all_files}
     prettier:
       run: pnpm lint:prettier
     eslint:
@@ -154,4 +172,4 @@ lints:
       glob: "**/{client,server}.en.yml"
       run: bundle exec ruby script/i18n_lint.rb {all_files}
     glint:
-      run: pnpm lint:glint
+      run: pnpm lint:types

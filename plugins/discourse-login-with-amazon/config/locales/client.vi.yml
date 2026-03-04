@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 vi:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Đăng nhập bằng Amazon"
+        message: "Đăng nhập bằng tài khoản Amazon (đảm bảo rằng trình chặn cửa sổ bật lên không được bật)."

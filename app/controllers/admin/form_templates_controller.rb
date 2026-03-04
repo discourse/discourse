@@ -73,6 +73,8 @@ class Admin::FormTemplatesController < Admin::StaffController
   private
 
   def ensure_form_templates_enabled
-    raise Discourse::InvalidAccess.new unless SiteSetting.experimental_form_templates
+    unless UpcomingChanges.enabled_for_user?(:enable_form_templates, current_user)
+      raise Discourse::InvalidAccess.new
+    end
   end
 end

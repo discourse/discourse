@@ -5,7 +5,7 @@
 
     .category-status {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       max-width: 100%;
       flex: 1 1 auto;
       gap: 0 0.5em;
@@ -26,7 +26,7 @@
     }
 
     .read-only {
-      padding: 0.2em 0.5em;
+      padding: 0.1em 0.5em;
       margin: 0 0 0.25em 0.5em;
       border-radius: 8px;
       color: var(--secondary);

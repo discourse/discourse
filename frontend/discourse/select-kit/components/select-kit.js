@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -27,7 +27,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { normalize } from "discourse/select-kit/lib/input-utils";
 import {
   applyContentPluginApiCallbacks,
@@ -185,8 +185,8 @@ export default class SelectKit extends Component {
   @protoProp labelProperty = null;
   @protoProp titleProperty = null;
   @protoProp langProperty = null;
-  @trackedArray mainCollection = null;
-  @trackedArray errorsCollection = null;
+  @autoTrackedArray mainCollection = null;
+  @autoTrackedArray errorsCollection = null;
 
   init() {
     super.init(...arguments);
@@ -684,7 +684,7 @@ export default class SelectKit extends Component {
   }
 
   deselectByValue(value) {
-    if (!value) {
+    if (isNone(value)) {
       return;
     }
 
@@ -895,7 +895,10 @@ export default class SelectKit extends Component {
 
   _deselectLast() {
     if (this.selectKit.hasSelection) {
-      this.deselectByValue(this.value[this.value.length - 1]);
+      const lastItem = this.value[this.value.length - 1];
+      // handle both raw values and objects with valueProperty
+      const value = this.getValue(lastItem) ?? lastItem;
+      this.deselectByValue(value);
     }
   }
 
@@ -973,7 +976,7 @@ export default class SelectKit extends Component {
       this.cleanupFloatingUi?.();
       this.cleanupFloatingUi = autoUpdate(
         this.getHeader(),
-        this._mainElement(),
+        this._bodyElement(),
         () => this.updateFloatingUiPosition()
       );
     } else {

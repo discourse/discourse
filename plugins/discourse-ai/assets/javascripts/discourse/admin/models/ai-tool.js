@@ -7,6 +7,8 @@ const CREATE_ATTRIBUTES = [
   "tool_name",
   "description",
   "parameters",
+  "secret_contracts",
+  "secret_bindings",
   "script",
   "summary",
   "rag_uploads",

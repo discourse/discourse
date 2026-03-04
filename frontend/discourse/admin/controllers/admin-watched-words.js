@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
@@ -10,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 const MESSAGE_BUS_UPLOAD_PATH = "/watched_words/upload";
 
@@ -18,8 +19,8 @@ export default class AdminWatchedWordsController extends Controller {
   @service messageBus;
 
   @tracked filter = null;
-  @trackedArray allWatchedWords;
-  @trackedArray filteredWatchedWords;
+  @autoTrackedArray allWatchedWords;
+  @autoTrackedArray filteredWatchedWords;
 
   showWords = false;
 

@@ -1,9 +1,37 @@
 # frozen_string_literal: true
 
 module UpcomingChanges
+  def self.user_enabled_reasons
+    @user_enabled_reasons ||=
+      ::Enum.new(
+        enabled_for_everyone: :enabled_for_everyone,
+        enabled_for_no_one: :enabled_for_no_one,
+        in_specific_groups: :in_specific_groups,
+        not_in_specific_groups: :not_in_specific_groups,
+      )
+  end
+
   def self.statuses
     @statuses ||=
-      Enum.new(experimental: 0, alpha: 100, beta: 200, stable: 300, permanent: 500, never: 9999)
+      ::Enum.new(
+        conceptual: -100,
+        experimental: 0,
+        alpha: 100,
+        beta: 200,
+        stable: 300,
+        permanent: 500,
+        never: 9999,
+      )
+  end
+
+  def self.previous_status_value(status)
+    status_value = self.statuses[status.to_sym]
+    self.statuses.values.select { |value| value < status_value }.max || -100
+  end
+
+  def self.previous_status(status)
+    self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.last ||
+      :conceptual
   end
 
   def self.image_exists?(change_setting_name)
@@ -11,7 +39,12 @@ module UpcomingChanges
   end
 
   def self.image_path(change_setting_name)
-    File.join("images", "upcoming_changes", "#{change_setting_name}.png")
+    plugin_name = SiteSetting.plugins[change_setting_name.to_sym]
+    if plugin_name.present?
+      File.join("plugins", plugin_name, "images", "upcoming_changes", "#{change_setting_name}.png")
+    else
+      File.join("images", "upcoming_changes", "#{change_setting_name}.png")
+    end
   end
 
   def self.image_data(change_setting_name)
@@ -58,6 +91,31 @@ module UpcomingChanges
     ).order(created_at: :desc)
   end
 
+  def self.resolved_value(change_setting_name)
+    # An admin has modified the setting and a value is stored
+    # in the database, since the default for upcoming changes
+    # is false.
+    #
+    # If the change is permanent though, the admin has no choice
+    # in the matter.
+    if SiteSetting.modified.key?(change_setting_name) &&
+         UpcomingChanges.change_status(change_setting_name) != :permanent
+      SiteSetting.current[change_setting_name]
+
+      # The change has reached the promotion status and is forcibly
+      # enabled, admins can still disable it.
+    elsif UpcomingChanges.meets_or_exceeds_status?(
+          change_setting_name,
+          SiteSetting.promote_upcoming_changes_on_status.to_sym,
+        ) || UpcomingChanges.change_status(change_setting_name) == :permanent
+      true
+    else
+      # Otherwise use the default value, which for upcoming changes
+      # is false.
+      SiteSetting.defaults[change_setting_name]
+    end
+  end
+
   def self.has_groups?(change_setting_name)
     group_ids_for(change_setting_name).present?
   end
@@ -83,5 +141,68 @@ module UpcomingChanges
     end
 
     setting_enabled
+  end
+
+  def self.stats_for_user(user:, acting_guardian:)
+    guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
+    user_belonging_to_group_ids = user.belonging_to_group_ids
+
+    SiteSetting.upcoming_change_site_settings.filter_map do |name|
+      next if UpcomingChanges.change_status(name) == :conceptual
+      enabled = user.upcoming_change_enabled?(name)
+      has_groups = UpcomingChanges.has_groups?(name)
+
+      specific_groups = []
+      reason =
+        if has_groups
+          visible_group_ids =
+            UpcomingChanges.group_ids_for(name) & guardian_visible_group_ids &
+              user_belonging_to_group_ids
+
+          specific_groups = Group.where(id: visible_group_ids).pluck(:name)
+          if enabled
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups]
+          else
+            UpcomingChanges.user_enabled_reasons[:not_in_specific_groups]
+          end
+        elsif enabled
+          UpcomingChanges.user_enabled_reasons[:enabled_for_everyone]
+        else
+          UpcomingChanges.user_enabled_reasons[:enabled_for_no_one]
+        end
+
+      {
+        name:,
+        humanized_name: SiteSetting.humanized_name(name),
+        description: SiteSetting.description(name),
+        enabled:,
+        specific_groups:,
+        reason:,
+      }
+    end
+  end
+
+  def self.enabled_for_with_groups(setting_name, setting_value, upcoming_change_selected_groups)
+    group_ids_for_setting = SiteSetting.site_setting_group_ids[setting_name]
+    setting_groups =
+      upcoming_change_selected_groups.values_at(*group_ids_for_setting).join(
+        ",",
+      ) if group_ids_for_setting.present?
+
+    enabled_for =
+      if !setting_value
+        "no_one"
+      elsif setting_groups.blank?
+        "everyone"
+      else
+        if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
+          # Have to do this because the staff auto group name is localized
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
+      end
+
+    { enabled_for:, setting_groups: }
   end
 end

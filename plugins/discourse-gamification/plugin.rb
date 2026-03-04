@@ -20,6 +20,7 @@ register_asset "stylesheets/common/gamification-score.scss"
 
 register_svg_icon "crown"
 register_svg_icon "award"
+register_svg_icon "trophy"
 
 module ::DiscourseGamification
   PLUGIN_NAME = "discourse-gamification"

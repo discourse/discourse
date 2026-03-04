@@ -12,8 +12,8 @@ acceptance("Tag Groups", function (needs) {
       tag_group: {
         id: 42,
         name: "test tag group",
-        tag_names: ["monkey"],
-        parent_tag_name: [],
+        tags: [{ id: 1, name: "monkey", slug: "monkey" }],
+        parent_tag: [],
         one_per_topic: false,
         permissions: { 0: 1 },
       },
@@ -44,12 +44,12 @@ acceptance("Tag Groups", function (needs) {
     await fillIn(".tag-group-content .group-name input", "test tag group");
 
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
     await click(".tag-group-content .btn.btn-primary");
     await click(".tag-groups-sidebar li:first-child a");
 
     await tags.expand();
-    await tags.deselectItemByValue("monkey");
+    await tags.deselectItemByName("monkey");
     assert.dom(".tag-group-content .btn.btn-danger").isEnabled();
   });
 
@@ -62,7 +62,7 @@ acceptance("Tag Groups", function (needs) {
 
     await fillIn(".tag-group-content .group-name input", "test tag group");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     await click("#visible-permission");
     await groups.expand();

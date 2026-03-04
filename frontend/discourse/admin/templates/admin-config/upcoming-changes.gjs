@@ -10,6 +10,7 @@ export default <template>
     @descriptionLabel={{i18n
       "admin.config.upcoming_changes.header_description"
     }}
+    @learnMoreUrl="https://meta.discourse.org/t/-/392894"
   >
     <:breadcrumbs>
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
@@ -21,6 +22,10 @@ export default <template>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
-    <AdminConfigAreasUpcomingChanges @upcomingChanges={{@controller.model}} />
+    <AdminConfigAreasUpcomingChanges
+      @upcomingChanges={{@controller.model}}
+      @changeNamesFilter={{@controller.changeNamesFilter}}
+      @onClearChangeNamesFilter={{@controller.clearChangeNamesFilter}}
+    />
   </div>
 </template>

@@ -18,8 +18,6 @@ et:
           title: "Peata kasutaja"
         agree_and_silence:
           title: "Vaigista kasutaja"
-        disagree:
-          title: "Ei nõustu"
     channel:
       dm_title:
         single_user: "%{username}"

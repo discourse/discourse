@@ -97,9 +97,9 @@ describe "Topic bulk select", type: :system do
 
       topic_bulk_actions_modal.tag_selector.expand
       topic_bulk_actions_modal.tag_selector.search(tag1.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
       topic_bulk_actions_modal.tag_selector.search(tag2.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag2.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag2.name)
 
       topic_bulk_actions_modal.click_bulk_topics_confirm
 
@@ -149,9 +149,9 @@ describe "Topic bulk select", type: :system do
 
         topic_bulk_actions_modal.tag_selector.expand
         topic_bulk_actions_modal.tag_selector.search(restricted_tag.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_value(restricted_tag.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_name(restricted_tag.name)
         topic_bulk_actions_modal.tag_selector.search(tag1.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
 
         topic_bulk_actions_modal.click_bulk_topics_confirm
 
@@ -400,6 +400,22 @@ describe "Topic bulk select", type: :system do
 
       expect(topic_list).to have_checkbox_selected_on_row(1)
     end
+
+    it "opens topic in new window when pressing meta+Enter" do
+      sign_in(admin)
+      visit("/latest")
+
+      topic_list_header.click_bulk_select_button
+
+      new_window =
+        window_opened_by do
+          find(".topic-list-item[data-topic-id='#{topics.last.id}'] a.raw-topic-link").send_keys(
+            %i[meta return],
+          )
+        end
+
+      within_window(new_window) { expect(topic_page).to have_topic_title(topics.last.title) }
+    end
   end
 
   context "when changing topic notification levels" do
@@ -430,6 +446,33 @@ describe "Topic bulk select", type: :system do
 
       expect(topic_list).to have_no_topic(topics.first)
       expect(topic_list).to have_no_topic(topics.second)
+    end
+  end
+
+  context "when changing category" do
+    fab!(:destination_category, :category)
+    fab!(:restricted_tag, :tag)
+
+    before do
+      SiteSetting.tagging_enabled = true
+      topics.first.update!(tags: [restricted_tag])
+      topics.first.category.update!(tags: [restricted_tag])
+    end
+
+    it "shows errors in the modal when some topics cannot be moved due to tag restrictions" do
+      original_category = topics.first.category
+      sign_in(admin)
+      visit("/latest")
+
+      open_bulk_actions_modal([topics.first], "update-category")
+
+      topic_bulk_actions_modal.category_selector.expand
+      topic_bulk_actions_modal.category_selector.select_row_by_value(destination_category.id)
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(topic_bulk_actions_modal).to have_errors("could not be updated")
+
+      expect(topics.first.reload.category).to eq(original_category)
     end
   end
 end

@@ -153,20 +153,6 @@ module DiscourseUpdates
         end
       return nil if entries.nil?
 
-      entries.map! do |item|
-        next item if !item["related_site_setting"]
-
-        if !SiteSetting.respond_to?(item["related_site_setting"]) ||
-             SiteSetting.type_supervisor.get_type(item["related_site_setting"].to_sym) != :bool
-          item["related_site_setting"] = nil
-          item["setting_enabled"] = false
-        else
-          item["setting_enabled"] = SiteSetting.send(item["related_site_setting"].to_sym) if item
-        end
-
-        item
-      end
-
       entries.select! do |item|
         begin
           valid_version =

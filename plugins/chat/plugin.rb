@@ -140,7 +140,8 @@ after_initialize do
     return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.can_direct_message? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat? &&
+      scope.recipient_allows_direct_messages?(object)
   end
 
   add_to_serializer(:hidden_profile, :can_chat_user) do
@@ -148,7 +149,8 @@ after_initialize do
     return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.can_direct_message? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat? &&
+      scope.recipient_allows_direct_messages?(object)
   end
 
   add_to_serializer(
@@ -288,6 +290,12 @@ after_initialize do
   add_to_serializer(:current_user_option, :chat_quick_reactions_custom) do
     object.chat_quick_reactions_custom
   end
+
+  add_to_serializer(
+    :category,
+    :has_chat_channels,
+    include_condition: -> { SiteSetting.chat_enabled },
+  ) { object.category_channels.exists? }
 
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]

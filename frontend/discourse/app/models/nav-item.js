@@ -1,9 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -33,7 +32,8 @@ export default class NavItem extends EmberObject {
       return path;
     }
 
-    if (context.tagId && Site.currentProp("filters").includes(filterType)) {
+    const tag = context.tag;
+    if (tag?.slug && Site.currentProp("filters").includes(filterType)) {
       includesTagContext = true;
 
       if (context.category) {
@@ -53,7 +53,8 @@ export default class NavItem extends EmberObject {
     }
 
     if (includesTagContext) {
-      path += `/${context.tagId}`;
+      // use canonical URL format with slug/id when id is available
+      path += tag.id ? `/${tag.slug}/${tag.id}` : `/${tag.slug}`;
     }
 
     if (includesTagContext || includesCategoryContext) {
@@ -93,8 +94,8 @@ export default class NavItem extends EmberObject {
     if (opts.category) {
       args.category = opts.category;
     }
-    if (opts.tagId) {
-      args.tagId = opts.tagId;
+    if (opts.tag) {
+      args.tag = opts.tag;
     }
     if (opts.currentRouteQueryParams) {
       args.currentRouteQueryParams = opts.currentRouteQueryParams;
@@ -158,6 +159,7 @@ export default class NavItem extends EmberObject {
 
     const context = {
       category: args.category,
+      tag: args.tag,
       tagId: args.tagId,
       noSubcategories: args.noSubcategories,
     };
@@ -221,6 +223,7 @@ export default class NavItem extends EmberObject {
   @service currentUser;
 
   @tracked name;
+  @tracked tag;
   @reads("name") filterType;
 
   @tracked _title;
@@ -255,7 +258,7 @@ export default class NavItem extends EmberObject {
 
     if (
       this.name === "latest" &&
-      (Site.currentProp("desktopView") || this.tagId !== undefined)
+      (Site.currentProp("desktopView") || this.tag !== undefined)
     ) {
       count = 0;
     }
@@ -272,8 +275,8 @@ export default class NavItem extends EmberObject {
     this._displayName = value;
   }
 
-  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
-  href(filterType, category, noSubcategories, tagId) {
+  @computed("filterType", "category", "noSubcategories", "tag")
+  get href() {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function (cb) {
@@ -287,39 +290,43 @@ export default class NavItem extends EmberObject {
       return getURL(customHref);
     }
 
-    const context = { category, noSubcategories, tagId };
-    return NavItem.pathFor(filterType, context);
+    const context = {
+      category: this.category,
+      noSubcategories: this.noSubcategories,
+      tag: this.tag,
+    };
+    return NavItem.pathFor(this.filterType, context);
   }
 
-  @discourseComputed("name", "category", "noSubcategories")
-  filterMode(name, category, noSubcategories) {
+  @computed("name", "category", "noSubcategories")
+  get filterMode() {
     let mode = "";
-    if (category) {
+    if (this.category) {
       mode += "c/";
-      mode += Category.slugFor(category);
-      if (noSubcategories) {
+      mode += Category.slugFor(this.category);
+      if (this.noSubcategories) {
         mode += "/none";
       }
       mode += "/l/";
     }
-    return mode + name.replace(" ", "-");
+    return mode + this.name.replace(" ", "-");
   }
 
-  @discourseComputed(
+  @computed(
     "name",
     "category",
-    "tagId",
+    "tag",
     "noSubcategories",
     "currentRouteQueryParams",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId, noSubcategories, currentRouteQueryParams) {
+  get count() {
     return this.topicTrackingState?.lookupCount({
-      type: name,
-      category,
-      tagId,
-      noSubcategories,
-      customFilterFn: hasTrackedFilter(currentRouteQueryParams)
+      type: this.name,
+      category: this.category,
+      tagId: this.tag?.id,
+      noSubcategories: this.noSubcategories,
+      customFilterFn: hasTrackedFilter(this.currentRouteQueryParams)
         ? isTrackedTopic
         : undefined,
     });

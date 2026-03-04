@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import mobile from "discourse/lib/mobile";
+import { i18n } from "discourse-i18n";
 
 export default class MobileViewButton extends Component {
   get mobileViewActive() {
@@ -17,7 +18,7 @@ export default class MobileViewButton extends Component {
 
   <template>
     <button
-      title="Toggle mobile view"
+      title={{i18n "dev_tools.toggle_mobile_view"}}
       class={{concatClass
         "toggle-mobile-view"
         (if this.mobileViewActive "--active")

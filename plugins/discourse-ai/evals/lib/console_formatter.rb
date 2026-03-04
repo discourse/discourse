@@ -316,17 +316,6 @@ module DiscourseAi
         nil
       end
 
-      def rating_detail(rating)
-        return if rating.blank?
-
-        explanation = rating[:explanation].presence
-        if explanation
-          "Rating: #{rating[:rating]}/10 — #{explanation}"
-        else
-          "Rating: #{rating[:rating]}/10"
-        end
-      end
-
       def rating_summary(rating)
         return if rating.blank?
 

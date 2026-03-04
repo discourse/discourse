@@ -161,4 +161,84 @@ RSpec.describe FileHelper do
       end
     end
   end
+
+  describe "inline safety checks" do
+    describe ".is_inline_safe?" do
+      it "returns true for non-SVG images" do
+        expect(FileHelper.is_inline_safe?("image.png")).to eq(true)
+        expect(FileHelper.is_inline_safe?("photo.jpg")).to eq(true)
+        expect(FileHelper.is_inline_safe?("photo.jpeg")).to eq(true)
+        expect(FileHelper.is_inline_safe?("image.gif")).to eq(true)
+        expect(FileHelper.is_inline_safe?("picture.webp")).to eq(true)
+        expect(FileHelper.is_inline_safe?("pic.avif")).to eq(true)
+        expect(FileHelper.is_inline_safe?("icon.ico")).to eq(true)
+      end
+
+      it "returns true for PDFs" do
+        expect(FileHelper.is_inline_safe?("document.pdf")).to eq(true)
+        expect(FileHelper.is_inline_safe?("DOCUMENT.PDF")).to eq(true)
+      end
+
+      it "returns true for video files" do
+        expect(FileHelper.is_inline_safe?("video.mp4")).to eq(true)
+        expect(FileHelper.is_inline_safe?("movie.webm")).to eq(true)
+        expect(FileHelper.is_inline_safe?("clip.mov")).to eq(true)
+        expect(FileHelper.is_inline_safe?("VIDEO.AVI")).to eq(true)
+      end
+
+      it "returns true for audio files" do
+        expect(FileHelper.is_inline_safe?("song.mp3")).to eq(true)
+        expect(FileHelper.is_inline_safe?("audio.ogg")).to eq(true)
+        expect(FileHelper.is_inline_safe?("podcast.m4a")).to eq(true)
+        expect(FileHelper.is_inline_safe?("MUSIC.WAV")).to eq(true)
+      end
+
+      it "returns false for SVG" do
+        expect(FileHelper.is_inline_safe?("image.svg")).to eq(false)
+        expect(FileHelper.is_inline_safe?("IMAGE.SVG")).to eq(false)
+      end
+
+      it "returns false for HTML files" do
+        expect(FileHelper.is_inline_safe?("page.html")).to eq(false)
+        expect(FileHelper.is_inline_safe?("page.htm")).to eq(false)
+      end
+
+      it "returns false for XML files" do
+        expect(FileHelper.is_inline_safe?("data.xml")).to eq(false)
+      end
+
+      it "returns false for text files" do
+        expect(FileHelper.is_inline_safe?("readme.txt")).to eq(false)
+      end
+
+      it "returns false for JavaScript files" do
+        expect(FileHelper.is_inline_safe?("script.js")).to eq(false)
+      end
+    end
+
+    describe ".inline_safe_files" do
+      it "includes non-SVG images" do
+        safe_files = FileHelper.inline_safe_files
+        expect(safe_files).to include("png", "jpg", "jpeg", "gif", "webp", "avif", "ico")
+      end
+
+      it "includes PDF" do
+        expect(FileHelper.inline_safe_files).to include("pdf")
+      end
+
+      it "includes video files" do
+        safe_files = FileHelper.inline_safe_files
+        expect(safe_files).to include("mp4", "webm", "mov", "avi")
+      end
+
+      it "includes audio files" do
+        safe_files = FileHelper.inline_safe_files
+        expect(safe_files).to include("mp3", "ogg", "m4a", "wav")
+      end
+
+      it "excludes SVG" do
+        expect(FileHelper.inline_safe_files).not_to include("svg")
+      end
+    end
+  end
 end

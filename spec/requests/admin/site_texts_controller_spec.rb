@@ -52,23 +52,6 @@ RSpec.describe Admin::SiteTextsController do
         expect(value).to eq(I18n.t("js.yes_value", locale: :de))
       end
 
-      it "can return the value of the translation in the selected locale rather than English if specified" do
-        SiteSetting.default_locale = "it"
-        get "/admin/customize/site_texts.json",
-            params: {
-              q: "all tags",
-              locale: "it",
-              only_selected_locale: true,
-            }
-        value =
-          response.parsed_body["site_texts"].find do |text|
-            text["id"] == "js.topic.browse_all_tags_or_latest"
-          end[
-            "value"
-          ]
-        expect(value).to eq(I18n.t("js.topic.browse_all_tags_or_latest", locale: "it"))
-      end
-
       it "returns an error on invalid locale" do
         get "/admin/customize/site_texts.json", params: { locale: "?" }
         expect(response.status).to eq(400)
@@ -191,7 +174,6 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "returns only untranslated (english) strings" do
-        available_locales = I18n.config.available_locales
         I18n.config.available_locales = %i[en test]
 
         I18n.backend.store_translations(:en, { shrubbery: "Shrubbery" })
@@ -263,7 +245,6 @@ RSpec.describe Admin::SiteTextsController do
                   can_revert: overridden,
                   overridden:,
                   interpolation_keys:,
-                  has_interpolation_keys: interpolation_keys.present?,
                 }
               end
 
@@ -496,11 +477,7 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
         json = response.parsed_body
 
-        expect(json["site_text"]["interpolation_keys"]).to include(
-          "username",
-          "name",
-          "name_or_username",
-        )
+        expect(json["site_text"]["interpolation_keys"]).to eq(%w[name name_or_username username])
       end
 
       context "with plural keys" do

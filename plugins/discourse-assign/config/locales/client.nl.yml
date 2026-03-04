@@ -129,8 +129,6 @@ nl:
       web_hooks:
         assign_event:
           group_name: "Toewijzingsgebeurtenissen"
-          assigned: "Wanneer een gebruiker een topic toewijst"
-          unassigned: "Wanneer een gebruiker de toewijzing van een topic opheft"
     search:
       advanced:
         in:

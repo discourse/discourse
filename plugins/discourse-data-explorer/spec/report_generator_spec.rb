@@ -29,6 +29,7 @@ describe DiscourseDataExplorer::ReportGenerator do
     end
 
     it "returns a list of pms for authorised users" do
+      Fabricate(:query_group, query: query, group: group)
       SiteSetting.personal_message_enabled_groups = group.id
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time
@@ -126,6 +127,7 @@ describe DiscourseDataExplorer::ReportGenerator do
     end
 
     it "works with duplicate recipients" do
+      Fabricate(:query_group, query: query, group: group)
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time
 
@@ -231,6 +233,7 @@ describe DiscourseDataExplorer::ReportGenerator do
     end
 
     it "works with attached csv file" do
+      Fabricate(:query_group, query: query, group: group)
       SiteSetting.personal_message_enabled_groups = group.id
       DiscourseDataExplorer::ResultToMarkdown.expects(:convert).returns("le table")
       freeze_time

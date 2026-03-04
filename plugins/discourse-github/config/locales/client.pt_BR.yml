@@ -11,6 +11,7 @@ pt_BR:
         draft: "Rascunho"
         open: "Aberto"
         approved: "Aprovado"
+        merged: "Mesclado"
         closed: "Fechados"
   admin_js:
     admin:

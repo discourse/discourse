@@ -155,12 +155,6 @@ $sidebar-width: 17em;
     grid-area: extra-info;
   }
 
-  .d-header-mode {
-    .bootstrap-mode {
-      display: none;
-    }
-  }
-
   .home-logo-wrapper-outlet {
     grid-area: logo;
     margin-left: 3.7em; // 2.7em hamburger width + 1em for margin

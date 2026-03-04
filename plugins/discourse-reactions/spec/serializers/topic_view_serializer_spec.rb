@@ -48,7 +48,7 @@ describe TopicViewSerializer do
       expect(json[:post_stream][:posts][0][:reaction_users_count]).to eq(2)
     end
 
-    it "doesnt count deleted likes" do
+    it "doesn't count deleted likes" do
       SiteSetting.discourse_reactions_like_icon = "heart"
 
       json = TopicViewSerializer.new(topic_view, scope: Guardian.new(user_2), root: false).as_json

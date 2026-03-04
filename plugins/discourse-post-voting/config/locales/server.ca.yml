@@ -10,6 +10,12 @@ ca:
       actions:
         no_action_comment:
           title: "Cap acció"
+        agree_and_suspend:
+          description: "D'acord amb la bandera i suspèn l'usuari. "
+        agree_and_silence:
+          description: "D'acord amb la bandera i silencia l'usuari. "
+        ignore:
+          title: "Ignora la bandera"
   post_action_types:
     vote:
       title: "Vota"
@@ -23,8 +29,8 @@ ca:
           agree_and_silence:
             title: "Silencia l'usuari"
             description: "D'acord amb la bandera i silencia l'usuari. "
-          disagree:
-            title: "En desacord"
+          ignore:
+            title: "Ignora la bandera"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

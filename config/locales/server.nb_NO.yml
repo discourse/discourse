@@ -1005,8 +1005,6 @@ nb_NO:
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
       invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
-      min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
-      max_username_length_range: "Du kan ikke sette maksimum under minimum."
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1084,8 +1082,10 @@ nb_NO:
     queued_by_staff:
       title: "Innlegg trenger godkjenning"
     welcome_user:
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
     backup_failed:
       subject_template: "Sikkerhetskopiering mislyktes"
@@ -1096,6 +1096,7 @@ nb_NO:
     too_many_tl3_flags:
       subject_template: "Ny konto på vent"
     unsilenced:
+      preview: "Kontoen er ikke lenger på vent."
       subject_template: "Kontoen er ikke lenger på vent"
   unsubscribe_mailing_list: |
     Du mottar dette fordi du har slått på e-postlistemodus.
@@ -1337,30 +1338,40 @@ nb_NO:
         complete: "Post slettet."
       delete_and_agree:
         complete: "Post slettet."
-      disagree_and_restore:
-        description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      disagree:
+      disagree_bundle:
         title: "Nei"
       ignore:
         title: "Ignorer"
       ignore_and_do_nothing:
         title: "ikke gjør noe"
       approve:
-        title: "Godkjenn"
+        title: "Ja"
+      approve_post:
+        title: "Ja"
+      approve_post_closed:
+        title: "Ja"
+      reject_post_bundle:
+        title: "Nei"
       approve_user:
+        title: "Ja"
         complete: "Brukar godkjent."
       reject_user:
+        title: "Nei"
         delete:
           title: "Slett bruker"
           complete: "Bruker slettet."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nei"
       reject:
         title: "Avvis"
-      no_action_post:
-        title: "Ingen handling"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       delete_post:
         complete: "Post slettet"
-      no_action_user:
-        title: "Ingen handling"
       delete_user:
         complete: "Bruker slettet"
   fallback_username: "bruker"

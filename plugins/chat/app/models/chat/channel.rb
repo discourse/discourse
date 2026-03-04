@@ -6,9 +6,6 @@ module Chat
     include TypeMappable
     include HasCustomFields
 
-    # TODO (martin) Remove once we are using last_message instead,
-    # should be around August 2023.
-    self.ignored_columns = %w[last_message_sent_at icon_upload_id]
     self.table_name = "chat_channels"
 
     belongs_to :chatable, polymorphic: true
@@ -28,6 +25,7 @@ module Chat
                class_name: "Chat::Message",
                foreign_key: :last_message_id,
                optional: true
+    has_many :pinned_messages, class_name: "Chat::PinnedMessage", foreign_key: :chat_channel_id
 
     def last_message
       super || NullMessage.new
@@ -146,6 +144,10 @@ module Chat
 
     def leave(user)
       self.remove(user)
+    end
+
+    def pinned_messages_count
+      pinned_messages.size
     end
 
     def url
@@ -273,6 +275,7 @@ module Chat
           chat_channel_name: self.name,
           previous_value: status_previously_was,
           new_value: status,
+          category_id: category_channel? ? self.chatable_id : nil,
         },
       )
 

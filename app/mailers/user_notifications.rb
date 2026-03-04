@@ -35,6 +35,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.signup_after_approval",
       locale: locale,
       new_user_tips: tips,
+      recipient_user: user,
     )
   end
 
@@ -50,6 +51,7 @@ class UserNotifications < ActionMailer::Base
       locale: locale,
       base_url: Discourse.base_url,
       post_url: post_url,
+      recipient_user: user,
     )
   end
 
@@ -60,6 +62,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.signup_after_reject",
       locale: locale,
       reject_reason: opts[:reject_reason],
+      recipient_user: user,
     )
   end
 
@@ -79,6 +82,7 @@ class UserNotifications < ActionMailer::Base
       browser: I18n.t("user_auth_tokens.browser.#{browser}"),
       device: I18n.t("user_auth_tokens.device.#{device}"),
       os: I18n.t("user_auth_tokens.os.#{os}"),
+      recipient_user: user,
     )
   end
 
@@ -88,6 +92,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.notify_old_email",
       locale: user_locale(user),
       new_email: opts[:new_email],
+      recipient_user: user,
     )
   end
 
@@ -97,6 +102,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.notify_old_email_add",
       locale: user_locale(user),
       new_email: opts[:new_email],
+      recipient_user: user,
     )
   end
 
@@ -165,6 +171,7 @@ class UserNotifications < ActionMailer::Base
         template: "user_notifications.account_silenced_forever",
         locale: user_locale(user),
         reason: user_history.details,
+        recipient_user: user,
       )
     else
       silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone.presence || "UTC")
@@ -174,6 +181,7 @@ class UserNotifications < ActionMailer::Base
         locale: user_locale(user),
         reason: user_history.details,
         silenced_till: I18n.l(silenced_till, format: :long),
+        recipient_user: user,
       )
     end
   end
@@ -206,6 +214,7 @@ class UserNotifications < ActionMailer::Base
         template: "user_notifications.account_suspended_forever",
         locale: user_locale(user),
         reason: user_history.details,
+        recipient_user: user,
       )
     else
       suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone.presence || "UTC")
@@ -215,6 +224,7 @@ class UserNotifications < ActionMailer::Base
         locale: user_locale(user),
         reason: user_history.details,
         suspended_till: I18n.l(suspended_till, format: :long),
+        recipient_user: user,
       )
     end
   end
@@ -225,6 +235,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_exists",
       locale: user_locale(user),
       email: user.email,
+      recipient_user: user,
     )
   end
 
@@ -234,6 +245,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_second_factor_disabled",
       locale: user_locale(user),
       email: user.email,
+      recipient_user: user,
     )
   end
 
@@ -365,6 +377,8 @@ class UserNotifications < ActionMailer::Base
         post_ids:
           topics_for_digest.joins(:posts).where(posts: { post_number: 1 }).pluck("posts.id"),
       }
+
+      opts[:recipient_user] = user
 
       build_email(user.email, opts)
     end
@@ -530,7 +544,8 @@ class UserNotifications < ActionMailer::Base
 
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
     original_username =
-      notification_data[:original_username] || notification_data[:display_username]
+      notification_data[:original_username] || post&.user&.username ||
+        notification_data[:display_username]
 
     if user.staged && post
       original_subject =
@@ -555,7 +570,7 @@ class UserNotifications < ActionMailer::Base
       title: topic_title,
       post: post,
       username: original_username,
-      from_alias: I18n.t("email_from", user_name: user_name, site_name: Email.site_title),
+      from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],
@@ -786,6 +801,7 @@ class UserNotifications < ActionMailer::Base
       locale: locale,
     }
 
+    email_opts[:recipient_user] = user
     email_opts[:html_override] = html unless translation_override_exists
 
     # If we have a display name, change the from address
@@ -854,7 +870,13 @@ class UserNotifications < ActionMailer::Base
   private
 
   def build_user_email_token_by_template(template, user, email_token)
-    build_email(user.email, template: template, locale: user_locale(user), email_token: email_token)
+    build_email(
+      user.email,
+      template: template,
+      locale: user_locale(user),
+      email_token: email_token,
+      recipient_user: user,
+    )
   end
 
   def build_summary_for(user)
@@ -881,6 +903,6 @@ class UserNotifications < ActionMailer::Base
         .not_suspended
         .where("created_at > ?", date)
         .count
-        .tap { Discourse.redis.setex(key, 1.day, _1) }
+        .tap { Discourse.redis.setex(key, 1.day, it) }
   end
 end

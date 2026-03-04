@@ -1,8 +1,9 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import DEditor from "discourse/components/d-editor";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
@@ -12,10 +13,10 @@ import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class GroupsFormProfileFields extends Component {
   disableSave = null;
   nameInput = null;
@@ -33,9 +34,11 @@ export default class GroupsFormProfileFields extends Component {
     }
   }
 
-  @discourseComputed("basicNameValidation", "uniqueNameValidation")
-  nameValidation(basicNameValidation, uniqueNameValidation) {
-    return uniqueNameValidation ? uniqueNameValidation : basicNameValidation;
+  @computed("basicNameValidation", "uniqueNameValidation")
+  get nameValidation() {
+    return this.uniqueNameValidation
+      ? this.uniqueNameValidation
+      : this.basicNameValidation;
   }
 
   @observes("nameInput")
@@ -120,59 +123,63 @@ export default class GroupsFormProfileFields extends Component {
   }
 
   <template>
-    {{#if this.canEdit}}
-      {{#if this.currentUser.can_create_group}}
+    <div ...attributes>
+      {{#if this.canEdit}}
+        {{#if this.currentUser.can_create_group}}
+          <div class="control-group">
+            <label class="control-label" for="name">{{i18n
+                "groups.name"
+              }}</label>
+
+            <TextField
+              @name="name"
+              @value={{this.nameInput}}
+              @placeholderKey="admin.groups.name_placeholder"
+              class="input-xxlarge group-form-name"
+            />
+
+            <InputTip @validation={{this.nameValidation}} />
+          </div>
+        {{/if}}
+
         <div class="control-group">
-          <label class="control-label" for="name">{{i18n "groups.name"}}</label>
+          <label class="control-label" for="full_name">{{i18n
+              "groups.manage.full_name"
+            }}</label>
 
           <TextField
-            @name="name"
-            @value={{this.nameInput}}
-            @placeholderKey="admin.groups.name_placeholder"
-            class="input-xxlarge group-form-name"
+            @name="full_name"
+            @value={{this.model.full_name}}
+            class="input-xxlarge group-form-full-name"
           />
-
-          <InputTip @validation={{this.nameValidation}} />
         </div>
       {{/if}}
 
       <div class="control-group">
-        <label class="control-label" for="full_name">{{i18n
-            "groups.manage.full_name"
-          }}</label>
-
-        <TextField
-          @name="full_name"
-          @value={{this.model.full_name}}
-          class="input-xxlarge group-form-full-name"
+        <label class="control-label" for="bio">{{i18n "groups.bio"}}</label>
+        <DEditor
+          @value={{this.model.bio_raw}}
+          class="group-form-bio input-xxlarge"
         />
       </div>
-    {{/if}}
 
-    <div class="control-group">
-      <label class="control-label" for="bio">{{i18n "groups.bio"}}</label>
-      <DEditor
-        @value={{this.model.bio_raw}}
-        class="group-form-bio input-xxlarge"
-      />
+      {{#if this.model.automatic}}
+        <div class="control-group">
+          <GroupFlairInputs @model={{this.model}} />
+        </div>
+      {{/if}}
+
+      {{#if this.canEdit}}
+        {{yield}}
+
+        <span>
+          <PluginOutlet
+            @name="group-edit"
+            @connectorTagName="div"
+            @outletArgs={{lazyHash group=this.model}}
+          />
+        </span>
+      {{/if}}
     </div>
-
-    {{#if this.model.automatic}}
-      <div class="control-group">
-        <GroupFlairInputs @model={{this.model}} />
-      </div>
-    {{/if}}
-
-    {{#if this.canEdit}}
-      {{yield}}
-
-      <span>
-        <PluginOutlet
-          @name="group-edit"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash group=this.model}}
-        />
-      </span>
-    {{/if}}
   </template>
 }

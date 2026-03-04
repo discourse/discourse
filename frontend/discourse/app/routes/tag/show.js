@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { ajax } from "discourse/lib/ajax";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
@@ -40,36 +41,73 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
-    const tagIdFromParams = escapeExpression(params.tag_id);
-    const tag = this.store.createRecord("tag", {
-      id: tagIdFromParams,
-    });
+    // support both canonical (tag_slug/tag_id) and legacy (tag_name) params
+    let slug = params.tag_slug || params.tag_name;
+    let id = parseInt(params.tag_id, 10);
 
-    // Handles renaming a tag, since we refer to the tag.id instead
-    // of tag.name which is the actual identifier.
-    if (tag.id !== tagIdFromParams) {
-      tag.set("id", tagIdFromParams);
+    if (params.tag_id && isNaN(id) && params.category_slug_path_with_id) {
+      params.category_slug_path_with_id = `${params.category_slug_path_with_id}/${slug}`;
+      slug = params.tag_id;
+      id = null;
     }
+
+    if (!slug) {
+      slug = NONE;
+      id = null;
+    }
+
+    // handle legacy URLs without tag_id - fetch tag info to get the ID
+    // e.g., /tags/c/category/1/my-tag -> need to lookup my-tag to get its ID
+    // skip redirect for intersection routes (they use tag_name, not tag_slug/tag_id)
+    const isIntersectionRoute = params.additional_tags !== undefined;
+    if (slug && slug !== NONE && !id && !isIntersectionRoute) {
+      try {
+        const result = await ajax(`/tag/${slug}/info.json`);
+        if (result.tag_info) {
+          id = result.tag_info.id;
+          // redirect to canonical URL with ID
+          const routeName = transition.to.name;
+          const transitionQueryParams = transition.to.queryParams;
+          if (params.category_slug_path_with_id) {
+            return this.router.replaceWith(
+              routeName,
+              params.category_slug_path_with_id,
+              result.tag_info.slug,
+              id,
+              { queryParams: transitionQueryParams }
+            );
+          }
+          return this.router.replaceWith(routeName, result.tag_info.slug, id, {
+            queryParams: transitionQueryParams,
+          });
+        }
+      } catch {
+        // tag not found, continue with slug only
+      }
+    }
+
+    // use slug as initial name until API returns actual name
+    const tag = this.store.createRecord("tag", {
+      id,
+      name: slug,
+      slug,
+    });
 
     let additionalTags;
 
     if (params.additional_tags) {
       additionalTags = params.additional_tags.split("/").map((t) => {
         return this.store.createRecord("tag", {
-          id: escapeExpression(t),
-        }).id;
+          name: escapeExpression(t),
+        }).name;
       });
     }
 
     const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
-      // If logged in, we should get the tag's user settings
-      tagNotification = await this.store.find(
-        "tagNotification",
-        tag.id.toLowerCase()
-      );
+    if (tag && slug !== NONE && this.currentUser && !additionalTags) {
+      tagNotification = await this.store.find("tagNotification", id);
     }
 
     let category = params.category_slug_path_with_id
@@ -80,7 +118,6 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagId = tag ? tag.id.toLowerCase() : NONE;
     let filter;
 
     if (category) {
@@ -91,9 +128,15 @@ export default class TagShowRoute extends DiscourseRoute {
         filter += this.noSubcategories ? `/${NONE}` : `/${ALL}`;
       }
 
-      filter += `/${tagId}/l/${topicFilter}`;
+      if (slug === NONE) {
+        // untagged category route - use "none" without ID
+        filter += `/${NONE}/l/${topicFilter}`;
+      } else {
+        // category+tag routes still use slug/id format
+        filter += `/${slug}/${id}/l/${topicFilter}`;
+      }
     } else if (additionalTags) {
-      filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
+      filter = `tags/intersection/${slug}/${additionalTags.join("/")}`;
 
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
@@ -101,8 +144,11 @@ export default class TagShowRoute extends DiscourseRoute {
           transition.to.queryParams["category"]
         );
       }
+    } else if (slug === NONE) {
+      filter = `tag/${NONE}/l/${topicFilter}`;
     } else {
-      filter = `tag/${tagId}/l/${topicFilter}`;
+      // use ID-only format for API calls
+      filter = `tag/${id}/l/${topicFilter}`;
     }
 
     if (
@@ -115,7 +161,8 @@ export default class TagShowRoute extends DiscourseRoute {
       return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
-        tagId
+        slug,
+        id
       );
     }
 
@@ -129,12 +176,50 @@ export default class TagShowRoute extends DiscourseRoute {
       }
     );
 
-    if (list.topic_list.tags && list.topic_list.tags.length === 1) {
-      // Update name of tag (case might be different)
-      tag.setProperties({
-        id: list.topic_list.tags[0].name,
-        staff: list.topic_list.tags[0].staff,
-      });
+    if (list.topic_list.tags && list.topic_list.tags.length >= 1) {
+      const mainTagData = list.topic_list.tags.find(
+        (t) =>
+          t.id === id ||
+          (!id &&
+            (t.name.toLowerCase() === slug.toLowerCase() || t.slug === slug))
+      );
+      if (mainTagData) {
+        tag.setProperties({
+          id: mainTagData.id,
+          name: mainTagData.name,
+          slug: mainTagData.slug,
+          staff: mainTagData.staff,
+        });
+      } else if (!additionalTags) {
+        // tag was a synonym, redirect to canonical tag URL
+        const canonicalTag = list.topic_list.tags[0];
+        const routeName = transition.to.name;
+        if (params.category_slug_path_with_id) {
+          return this.router.replaceWith(
+            routeName,
+            params.category_slug_path_with_id,
+            canonicalTag.slug,
+            canonicalTag.id
+          );
+        } else {
+          return this.router.replaceWith(
+            routeName,
+            canonicalTag.slug,
+            canonicalTag.id
+          );
+        }
+      }
+
+      if (additionalTags) {
+        additionalTags = additionalTags.map((additionalSlug) => {
+          const tagData = list.topic_list.tags.find(
+            (t) =>
+              t.name.toLowerCase() === additionalSlug.toLowerCase() ||
+              t.slug === additionalSlug
+          );
+          return tagData ? tagData.name : additionalSlug;
+        });
+      }
     }
 
     return {
@@ -159,7 +244,7 @@ export default class TagShowRoute extends DiscourseRoute {
     if (model.category || model.additionalTags) {
       const tagIntersectionSearchContext = {
         type: "tagIntersection",
-        tagId: model.tag.id,
+        tagId: model.tag.name,
         tag: model.tag,
         additionalTags: model.additionalTags || null,
         categoryId: model.category?.id || null,
@@ -176,18 +261,18 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterText = i18n(`filters.${this.navMode.replace("/", ".")}.title`);
     const model = this.currentModel;
 
-    const tag = model?.tag?.id;
+    const tag = model?.tag?.name;
     if (tag && tag !== NONE) {
       if (model.category) {
         return i18n("tagging.filters.with_category", {
           filter: filterText,
-          tag: model.tag.id,
+          tag: model.tag.name,
           category: model.category.displayName,
         });
       } else {
         return i18n("tagging.filters.without_category", {
           filter: filterText,
-          tag: model.tag.id,
+          tag: model.tag.name,
         });
       }
     } else {

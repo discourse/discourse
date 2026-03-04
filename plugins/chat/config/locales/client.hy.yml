@@ -12,14 +12,21 @@ hy:
           always: "Միշտ"
           never: "Երբեք"
     chat:
+      edit_category:
+        channel: "Ալիք"
+        description: "Նկարագրություն"
+        actions: "Գործողություններ"
+        settings: "Կարգավորումներ"
       deleted_chat_username: ջնջված
       dates:
         yesterday: "Երեկվա"
       create: "Ստեղծել"
       cancel: "Չեղարկել"
+      pinned: "Ամրակցված"
       channel_settings:
         edit: "Խմբագրել"
         add: "Ավելացնել"
+        notification_settings_context: "Ծանուցումներ"
         join: "Միանալ"
         leave: "Լքել"
       close: "Փակել"

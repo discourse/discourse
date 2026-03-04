@@ -81,7 +81,7 @@ export default class DAutocompleteModifier extends Modifier {
   targetElement = null;
 
   // Constants
-  ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
+  ALLOWED_LETTERS_REGEXP = /[\s[{(+]/;
   TRIGGER_CHAR_RELATIVE_OFFSET = 9;
   VERTICAL_RELATIVE_OFFSET = 10;
 
@@ -197,6 +197,7 @@ export default class DAutocompleteModifier extends Modifier {
       const triggerContext = {
         ...opts,
         inCodeBlock: () => this.options.textHandler.inCodeBlock(),
+        inLink: () => this.options.textHandler.inLink?.() ?? false,
       };
       const triggerRuleResult = await this.options.triggerRule(
         this.targetElement,

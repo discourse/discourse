@@ -47,6 +47,20 @@ RSpec.describe UserApiKeyClientsController do
       end
     end
 
+    context "with only empty/blank scope tokens" do
+      it "rejects scopes that resolve to an empty list after splitting" do
+        post "/user-api-key-client.json", params: args.merge(scopes: ",")
+        expect(response.status).to eq(400)
+        expect(UserApiKeyClient.where(client_id: args[:client_id]).exists?).to eq(false)
+      end
+
+      it "rejects scopes that contain only whitespace tokens" do
+        post "/user-api-key-client.json", params: args.merge(scopes: " , , ")
+        expect(response.status).to eq(400)
+        expect(UserApiKeyClient.where(client_id: args[:client_id]).exists?).to eq(false)
+      end
+    end
+
     context "with scopes" do
       let!(:args_with_scopes) { args.merge(scopes: "user_status") }
 

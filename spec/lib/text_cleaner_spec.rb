@@ -238,7 +238,7 @@ RSpec.describe TextCleaner do
     end
 
     it "does not muck with zero width white space" do
-      # this is used for khmer, dont mess with it
+      # this is used for khmer, don't mess with it
       expect(TextCleaner.normalize_whitespaces("hello\u200Bworld").strip).to eq("hello\u200Bworld")
       expect(TextCleaner.normalize_whitespaces("hello\uFEFFworld").strip).to eq("hello\uFEFFworld")
     end

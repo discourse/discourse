@@ -2,12 +2,12 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
+import { tagName } from "@ember-decorators/component";
 import DatePickerFuture from "discourse/components/date-picker-future";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
-import discourseComputed from "discourse/lib/decorators";
 import {
   extendedDefaultTimeShortcuts,
   formatTime,
@@ -20,6 +20,7 @@ import FutureDateInputSelector, {
 } from "discourse/select-kit/components/future-date-input-selector";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class FutureDateInput extends Component {
   selection = null;
   includeDateTime = true;
@@ -62,11 +63,11 @@ export default class FutureDateInput extends Component {
     }
   }
 
-  @discourseComputed("customShortcuts")
-  shortcuts(customShortcuts) {
+  @computed("customShortcuts")
+  get shortcuts() {
     let shortcuts;
-    if (customShortcuts && customShortcuts.length) {
-      shortcuts = customShortcuts;
+    if (this.customShortcuts && this.customShortcuts.length) {
+      shortcuts = this.customShortcuts;
     } else {
       shortcuts = extendedDefaultTimeShortcuts(this.userTimezone);
     }
@@ -133,7 +134,7 @@ export default class FutureDateInput extends Component {
   }
 
   <template>
-    <div class="future-date-input">
+    <div class="future-date-input" ...attributes>
       {{#unless this.noRelativeOptions}}
         <div class="control-group">
           <label class={{this.labelClasses}}>

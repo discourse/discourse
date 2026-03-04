@@ -202,6 +202,9 @@ months:
     wday: 5
     observed: to_weekday_if_weekend(date)
   11:
+  - name: Election Day
+    regions: [us_il, us_la, us_ny]
+    mday: 3
   - name: Veterans Day
     regions: [us]
     mday: 11
@@ -230,7 +233,7 @@ months:
     regions: [us_ca, us_de, us_fl, us_ga, us_ia, us_il, us_ks, us_ky, us_me, us_mi, us_mn, us_ms, us_ne, us_nh, us_nc, us_ok, us_or, us_pa, us_sc, us_tn, us_tx, us_va, us_wa, us_wv]
   12:
   - name: Christmas Eve Day
-    regions: [us_ar, us_mi, us_nc, us_sc, us_tx, us_wi]
+    regions: [us_ar, us_ks, us_mi, us_nc, us_sc, us_tx, us_wi]
     mday: 24
   - name: Christmas Day
     regions: [us]
@@ -238,7 +241,7 @@ months:
     observed: to_weekday_if_weekend(date)
   - name: Day after Christmas
     regions: [us_nc, us_sc, us_tx]
-    mday: 26
+    mday: 28
   - name: New Year's Eve
     regions: [us_mi, us_wi]
     mday: 31

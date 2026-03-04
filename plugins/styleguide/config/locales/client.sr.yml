@@ -51,8 +51,6 @@ sr:
           title: "Lista tema"
         basic_topic_list:
           title: "Основна листа тема"
-        footer_message:
-          title: "Poruka u futeru"
         signup_cta:
           title: "ЦТА за регистрацију"
         topic_timer_info:

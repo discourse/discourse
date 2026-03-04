@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { escape } from "pretty-text/sanitizer";
 import discourseDebounce from "discourse/lib/debounce";

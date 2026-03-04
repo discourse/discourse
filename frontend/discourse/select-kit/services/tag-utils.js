@@ -45,11 +45,14 @@ export default class TagUtils extends Service {
     }
 
     const toLowerCaseOrUndefined = (string) => {
-      return isEmpty(string) ? undefined : string.toLowerCase();
+      if (isEmpty(string)) {
+        return undefined;
+      }
+      return typeof string === "string" ? string.toLowerCase() : undefined;
     };
 
     const inCollection = content
-      .map((c) => toLowerCaseOrUndefined(getValue(c)))
+      .map((c) => toLowerCaseOrUndefined(c?.name || getValue(c)))
       .filter(Boolean)
       .includes(filter);
 
@@ -71,6 +74,7 @@ export default class TagUtils extends Service {
       .trim()
       .replace(/\s+/g, "-")
       .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
+      .replace(/-{2,}/g, "-")
       .substring(0, this.siteSettings.max_tag_length);
 
     if (this.siteSettings.force_lowercase_tags) {

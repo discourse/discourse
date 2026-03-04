@@ -22,6 +22,8 @@ module DiscourseReactions
     end
 
     def toggle!
+      raise Discourse::InvalidAccess unless @user.guardian.can_use_reactions?(@post)
+
       if (@like && !@user.guardian.can_delete_post_action?(@like)) ||
            (reaction_user && !@user.guardian.can_delete_reaction_user?(reaction_user))
         raise Discourse::InvalidAccess

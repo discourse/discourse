@@ -176,48 +176,6 @@
             "null"
           ]
         },
-        "imap_enabled": {
-          "type": "boolean"
-        },
-        "imap_updated_at": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "imap_updated_by": {
-          "type": [
-            "object",
-            "null"
-          ]
-        },
-        "imap_server": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "imap_port": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "imap_ssl": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "imap_mailbox_name": {
-          "type": "string"
-        },
-        "imap_mailboxes": {
-          "type": "array",
-          "items": {
-
-          }
-        },
         "email_username": {
           "type": [
             "string",
@@ -231,24 +189,6 @@
           ]
         },
         "email_password": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "imap_last_error": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "imap_old_emails": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "imap_new_emails": {
           "type": [
             "string",
             "null"
@@ -364,16 +304,8 @@
         "smtp_server",
         "smtp_port",
         "smtp_ssl_mode",
-        "imap_server",
-        "imap_port",
-        "imap_ssl",
-        "imap_mailbox_name",
-        "imap_mailboxes",
         "email_username",
         "email_password",
-        "imap_last_error",
-        "imap_old_emails",
-        "imap_new_emails",
         "message_count",
         "allow_unknown_sender_topic_replies",
         "watching_category_ids",

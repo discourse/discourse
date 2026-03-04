@@ -1,23 +1,24 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import GeneratedInviteLink from "discourse/components/generated-invite-link";
 import TextField from "discourse/components/text-field";
 import { computedI18n } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class InvitePanel extends Component {
   @service site;
   @service toasts;
@@ -60,7 +61,7 @@ export default class InvitePanel extends Component {
     this.reset();
   }
 
-  @discourseComputed(
+  @computed(
     "isAdmin",
     "invitee",
     "invitingToTopic",
@@ -69,45 +70,41 @@ export default class InvitePanel extends Component {
     "inviteModel.saving",
     "inviteModel.details.can_invite_to"
   )
-  disabled(
-    isAdmin,
-    invitee,
-    invitingToTopic,
-    isPrivateTopic,
-    groupIds,
-    saving,
-    can_invite_to
-  ) {
-    if (saving) {
+  get disabled() {
+    if (this.inviteModel?.saving) {
       return true;
     }
-    if (isEmpty(invitee)) {
+    if (isEmpty(this.invitee)) {
       return true;
     }
 
     // when inviting to forum, email must be valid
-    if (!invitingToTopic && !emailValid(invitee)) {
+    if (!this.invitingToTopic && !emailValid(this.invitee)) {
       return true;
     }
 
     // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(invitee)) {
+    if (!this.isAdmin && this.isPrivateTopic && emailValid(this.invitee)) {
       return true;
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupIds) && emailValid(invitee)) {
+    if (
+      this.isPrivateTopic &&
+      isEmpty(this.groupIds) &&
+      emailValid(this.invitee)
+    ) {
       return true;
     }
 
-    if (can_invite_to) {
+    if (this.inviteModel?.details?.can_invite_to) {
       return false;
     }
 
     return false;
   }
 
-  @discourseComputed(
+  @computed(
     "isAdmin",
     "invitee",
     "inviteModel.saving",
@@ -115,73 +112,76 @@ export default class InvitePanel extends Component {
     "groupIds",
     "hasCustomMessage"
   )
-  disabledCopyLink(
-    isAdmin,
-    invitee,
-    saving,
-    isPrivateTopic,
-    groupIds,
-    hasCustomMessage
-  ) {
-    if (hasCustomMessage) {
+  get disabledCopyLink() {
+    if (this.hasCustomMessage) {
       return true;
     }
-    if (saving) {
+    if (this.inviteModel?.saving) {
       return true;
     }
-    if (isEmpty(invitee)) {
+    if (isEmpty(this.invitee)) {
       return true;
     }
 
     // email must be valid
-    if (!emailValid(invitee)) {
+    if (!emailValid(this.invitee)) {
       return true;
     }
 
     // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(invitee)) {
+    if (!this.isAdmin && this.isPrivateTopic && emailValid(this.invitee)) {
       return true;
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupIds) && emailValid(invitee)) {
+    if (
+      this.isPrivateTopic &&
+      isEmpty(this.groupIds) &&
+      emailValid(this.invitee)
+    ) {
       return true;
     }
 
     return false;
   }
 
-  @discourseComputed("inviteModel.saving")
-  buttonTitle(saving) {
-    return saving ? "topic.inviting" : "topic.invite_reply.action";
+  @computed("inviteModel.saving")
+  get buttonTitle() {
+    return this.inviteModel?.saving
+      ? "topic.inviting"
+      : "topic.invite_reply.action";
   }
 
   // We are inviting to a topic if the topic isn't the current user.
   // The current user would mean we are inviting to the forum in general.
-  @discourseComputed("inviteModel")
-  invitingToTopic(inviteModel) {
-    return inviteModel !== this.currentUser;
+  @computed("inviteModel")
+  get invitingToTopic() {
+    return this.inviteModel !== this.currentUser;
   }
 
-  @discourseComputed("inviteModel", "inviteModel.details.can_invite_via_email")
-  canInviteViaEmail(inviteModel, canInviteViaEmail) {
-    return inviteModel === this.currentUser ? true : canInviteViaEmail;
+  @computed("inviteModel", "inviteModel.details.can_invite_via_email")
+  get canInviteViaEmail() {
+    return this.inviteModel === this.currentUser
+      ? true
+      : this.inviteModel?.details?.can_invite_via_email;
   }
 
-  @discourseComputed("isPM", "canInviteViaEmail")
-  showCopyInviteButton(isPM, canInviteViaEmail) {
-    return canInviteViaEmail && !isPM;
+  @computed("isPM", "canInviteViaEmail")
+  get showCopyInviteButton() {
+    return this.canInviteViaEmail && !this.isPM;
   }
 
-  @discourseComputed("isAdmin", "inviteModel.group_users")
-  isGroupOwnerOrAdmin(isAdmin, groupUsers) {
+  @computed("isAdmin", "inviteModel.group_users")
+  get isGroupOwnerOrAdmin() {
     return (
-      isAdmin || (groupUsers && groupUsers.some((groupUser) => groupUser.owner))
+      this.isAdmin ||
+      (this.inviteModel?.group_users &&
+        this.inviteModel?.group_users?.some((groupUser) => groupUser.owner))
     );
   }
 
   // Show Groups? (add invited user to private group)
-  @discourseComputed(
+  @computed(
     "isGroupOwnerOrAdmin",
     "invitee",
     "isPrivateTopic",
@@ -189,29 +189,22 @@ export default class InvitePanel extends Component {
     "invitingToTopic",
     "canInviteViaEmail"
   )
-  showGroups(
-    isGroupOwnerOrAdmin,
-    invitee,
-    isPrivateTopic,
-    isPM,
-    invitingToTopic,
-    canInviteViaEmail
-  ) {
+  get showGroups() {
     return (
-      isGroupOwnerOrAdmin &&
-      canInviteViaEmail &&
-      !isPM &&
-      (emailValid(invitee) || isPrivateTopic || !invitingToTopic)
+      this.isGroupOwnerOrAdmin &&
+      this.canInviteViaEmail &&
+      !this.isPM &&
+      (emailValid(this.invitee) || this.isPrivateTopic || !this.invitingToTopic)
     );
   }
 
-  @discourseComputed("invitee")
-  showCustomMessage(invitee) {
-    return this.inviteModel === this.currentUser || emailValid(invitee);
+  @computed("invitee")
+  get showCustomMessage() {
+    return this.inviteModel === this.currentUser || emailValid(this.invitee);
   }
 
   // Instructional text for the modal.
-  @discourseComputed(
+  @computed(
     "isPM",
     "invitingToTopic",
     "invitee",
@@ -219,34 +212,27 @@ export default class InvitePanel extends Component {
     "isAdmin",
     "canInviteViaEmail"
   )
-  inviteInstructions(
-    isPM,
-    invitingToTopic,
-    invitee,
-    isPrivateTopic,
-    isAdmin,
-    canInviteViaEmail
-  ) {
-    if (!canInviteViaEmail) {
+  get inviteInstructions() {
+    if (!this.canInviteViaEmail) {
       // can't invite via email, only existing users
       return i18n("topic.invite_reply.discourse_connect_enabled");
-    } else if (isPM) {
+    } else if (this.isPM) {
       // inviting to a message
       return i18n("topic.invite_private.email_or_username");
-    } else if (invitingToTopic) {
+    } else if (this.invitingToTopic) {
       // inviting to a private/public topic
-      if (isPrivateTopic && !isAdmin) {
+      if (this.isPrivateTopic && !this.isAdmin) {
         // inviting to a private topic and is not admin
         return i18n("topic.invite_reply.to_username");
       } else {
         // when inviting to a topic, display instructions based on provided entity
-        if (isEmpty(invitee)) {
+        if (isEmpty(this.invitee)) {
           return i18n("topic.invite_reply.to_topic_blank");
-        } else if (emailValid(invitee)) {
-          this.set("inviteIcon", "envelope");
+        } else if (emailValid(this.invitee)) {
+          this.set("inviteIcon", "envelope"); // eslint-disable-line ember/no-side-effects
           return i18n("topic.invite_reply.to_topic_email");
         } else {
-          this.set("inviteIcon", "hand-point-right");
+          this.set("inviteIcon", "hand-point-right"); // eslint-disable-line ember/no-side-effects
           return i18n("topic.invite_reply.to_topic_username");
         }
       }
@@ -256,9 +242,9 @@ export default class InvitePanel extends Component {
     }
   }
 
-  @discourseComputed("isPrivateTopic")
-  showGroupsClass(isPrivateTopic) {
-    return isPrivateTopic ? "required" : "optional";
+  @computed("isPrivateTopic")
+  get showGroupsClass() {
+    return this.isPrivateTopic ? "required" : "optional";
   }
 
   successMessage(invitee) {
@@ -277,19 +263,19 @@ export default class InvitePanel extends Component {
     }
   }
 
-  @discourseComputed("isPM", "ajaxError")
-  errorMessage(isPM, ajaxError) {
-    if (ajaxError) {
-      return ajaxError;
+  @computed("isPM", "ajaxError")
+  get errorMessage() {
+    if (this.ajaxError) {
+      return this.ajaxError;
     }
-    return isPM
+    return this.isPM
       ? i18n("topic.invite_private.error")
       : i18n("topic.invite_reply.error");
   }
 
-  @discourseComputed("canInviteViaEmail")
-  placeholderKey(canInviteViaEmail) {
-    return canInviteViaEmail
+  @computed("canInviteViaEmail")
+  get placeholderKey() {
+    return this.canInviteViaEmail
       ? "topic.invite_private.email_or_username_placeholder"
       : "topic.invite_reply.username_placeholder";
   }
@@ -463,116 +449,118 @@ export default class InvitePanel extends Component {
   }
 
   <template>
-    {{#if this.inviteModel.error}}
-      <div class="alert alert-error">
-        {{htmlSafe this.errorMessage}}
-      </div>
-    {{/if}}
-
-    <div class="body">
-      {{#if this.inviteModel.finished}}
-        {{#if this.inviteModel.inviteLink}}
-          <GeneratedInviteLink
-            @link={{this.inviteModel.inviteLink}}
-            @email={{this.invitee}}
-          />
-        {{/if}}
-      {{else}}
-        <div class="invite-user-control">
-          <label class="instructions">{{this.inviteInstructions}}</label>
-          <div class="invite-user-input-wrapper">
-            {{#if this.allowExistingMembers}}
-              <EmailGroupUserChooser
-                @value={{this.invitee}}
-                @onChange={{this.updateInvitee}}
-                @options={{hash
-                  maximum=1
-                  allowEmails=this.canInviteViaEmail
-                  excludeCurrentUser=true
-                  includeMessageableGroups=this.isPM
-                  filterPlaceholder=this.placeholderKey
-                  fullWidthWrap=true
-                }}
-                class="invite-user-input"
-              />
-            {{else}}
-              <TextField
-                @value={{this.invitee}}
-                @placeholderKey="topic.invite_reply.email_placeholder"
-                class="email-or-username-input"
-              />
-            {{/if}}
-            {{#if this.capabilities.hasContactPicker}}
-              <DButton
-                @icon="address-book"
-                @action={{this.searchContact}}
-                class="btn-primary open-contact-picker"
-              />
-            {{/if}}
-          </div>
+    <div ...attributes>
+      {{#if this.inviteModel.error}}
+        <div class="alert alert-error">
+          {{htmlSafe this.errorMessage}}
         </div>
+      {{/if}}
 
-        {{#if this.showGroups}}
-          <div class="group-access-control">
-            <label class="instructions {{this.showGroupsClass}}">
-              {{i18n "topic.automatically_add_to_groups"}}
-            </label>
-            <GroupChooser
-              @content={{this.allGroups}}
-              @value={{this.groupIds}}
-              @labelProperty="name"
-              @onChange={{fn (mut this.groupIds)}}
+      <div class="body">
+        {{#if this.inviteModel.finished}}
+          {{#if this.inviteModel.inviteLink}}
+            <GeneratedInviteLink
+              @link={{this.inviteModel.inviteLink}}
+              @email={{this.invitee}}
             />
+          {{/if}}
+        {{else}}
+          <div class="invite-user-control">
+            <label class="instructions">{{this.inviteInstructions}}</label>
+            <div class="invite-user-input-wrapper">
+              {{#if this.allowExistingMembers}}
+                <EmailGroupUserChooser
+                  @value={{this.invitee}}
+                  @onChange={{this.updateInvitee}}
+                  @options={{hash
+                    maximum=1
+                    allowEmails=this.canInviteViaEmail
+                    excludeCurrentUser=true
+                    includeMessageableGroups=this.isPM
+                    filterPlaceholder=this.placeholderKey
+                    fullWidthWrap=true
+                  }}
+                  class="invite-user-input"
+                />
+              {{else}}
+                <TextField
+                  @value={{this.invitee}}
+                  @placeholderKey="topic.invite_reply.email_placeholder"
+                  class="email-or-username-input"
+                />
+              {{/if}}
+              {{#if this.capabilities.hasContactPicker}}
+                <DButton
+                  @icon="address-book"
+                  @action={{this.searchContact}}
+                  class="btn-primary open-contact-picker"
+                />
+              {{/if}}
+            </div>
           </div>
+
+          {{#if this.showGroups}}
+            <div class="group-access-control">
+              <label class="instructions {{this.showGroupsClass}}">
+                {{i18n "topic.automatically_add_to_groups"}}
+              </label>
+              <GroupChooser
+                @content={{this.allGroups}}
+                @value={{this.groupIds}}
+                @labelProperty="name"
+                @onChange={{fn (mut this.groupIds)}}
+              />
+            </div>
+          {{/if}}
+
+          {{#if this.showCustomMessage}}
+            <div class="show-custom-message-control">
+              <label class="instructions">
+                <DiscourseLinkedText
+                  @action={{this.showCustomMessageBox}}
+                  @text="invite.custom_message"
+                  class="optional"
+                />
+              </label>
+              {{#if this.hasCustomMessage}}
+                <Textarea
+                  @value={{this.customMessage}}
+                  placeholder={{this.customMessagePlaceholder}}
+                />
+              {{/if}}
+            </div>
+          {{/if}}
         {{/if}}
 
-        {{#if this.showCustomMessage}}
-          <div class="show-custom-message-control">
-            <label class="instructions">
-              <DiscourseLinkedText
-                @action={{this.showCustomMessageBox}}
-                @text="invite.custom_message"
-                class="optional"
-              />
-            </label>
-            {{#if this.hasCustomMessage}}
-              <Textarea
-                @value={{this.customMessage}}
-                placeholder={{this.customMessagePlaceholder}}
-              />
-            {{/if}}
-          </div>
+        {{#if this.showApprovalMessage}}
+          <label class="instructions approval-notice">
+            {{i18n "invite.approval_not_required"}}
+          </label>
         {{/if}}
-      {{/if}}
+      </div>
 
-      {{#if this.showApprovalMessage}}
-        <label class="instructions approval-notice">
-          {{i18n "invite.approval_not_required"}}
-        </label>
-      {{/if}}
-    </div>
-
-    <div class="footer">
-      {{#if this.inviteModel.finished}}
-        <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
-      {{else}}
-        <DButton
-          @icon={{this.inviteIcon}}
-          @action={{this.createInvite}}
-          @disabled={{this.disabled}}
-          @label={{this.buttonTitle}}
-          class="btn-primary send-invite"
-        />
-        {{#if this.showCopyInviteButton}}
+      <div class="footer">
+        {{#if this.inviteModel.finished}}
+          <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
+        {{else}}
           <DButton
-            @icon="link"
-            @action={{this.generateInviteLink}}
-            @disabled={{this.disabledCopyLink}}
-            @label="user.invited.generate_link"
-            class="btn-primary generate-invite-link"
+            @icon={{this.inviteIcon}}
+            @action={{this.createInvite}}
+            @disabled={{this.disabled}}
+            @label={{this.buttonTitle}}
+            class="btn-primary send-invite"
           />
+          {{#if this.showCopyInviteButton}}
+            <DButton
+              @icon="link"
+              @action={{this.generateInviteLink}}
+              @disabled={{this.disabledCopyLink}}
+              @label="user.invited.generate_link"
+              class="btn-primary generate-invite-link"
+            />
+          {{/if}}
         {{/if}}
-      {{/if}}
+      </div>
     </div>
   </template>
 }

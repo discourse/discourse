@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
@@ -18,14 +19,14 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 class Section {
   @tracked title;
-  @trackedArray links;
-  @trackedArray secondaryLinks;
+  @autoTrackedArray links;
+  @autoTrackedArray secondaryLinks;
 
   constructor({
     title,
@@ -218,6 +219,7 @@ class SectionLink {
   }
 }
 
+@tagName("")
 export default class SidebarSectionForm extends Component {
   @service dialog;
   @service router;

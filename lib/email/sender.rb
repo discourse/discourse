@@ -304,7 +304,7 @@ module Email
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       rescue Net::SMTPError => e
         response = e.try(:response)
-        response = " response: #{response}" if response
+        response = " response: #{response.try(:string) || response}" if response
         Rails.logger.error("SMTP Error #{e.class} with message: #{e.message}#{response}")
         raise
       end
@@ -389,7 +389,7 @@ module Email
               if attached_upload.local?
                 Discourse.store.path_for(attached_upload)
               else
-                Discourse.store.download!(attached_upload).path
+                Discourse.store.download!(attached_upload)
               end
 
             @message_attachments_index[original_upload.sha1] = @message.attachments.size

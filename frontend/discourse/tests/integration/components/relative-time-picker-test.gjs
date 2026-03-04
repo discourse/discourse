@@ -15,24 +15,28 @@ module("Integration | Component | relative-time-picker", function (hooks) {
       <template><RelativeTimePicker @onChange={{update}} /></template>
     );
 
-    // empty and "minutes" by default
+    // empty and "days" by default
     assert.dom(".relative-time-duration").hasValue("");
     assert.strictEqual(
       selectKit().header().value(),
-      "mins",
-      "dropdown has 'minutes' preselected"
+      "days",
+      "dropdown has 'days' preselected"
     );
 
-    // type <60 minutes
-    await typeIn(".relative-time-duration", "50");
-    assert.dom(".relative-time-duration").hasValue("50");
-    assert.strictEqual(updatedValue, 50, "onChange called with 50");
+    // type 5 days
+    await typeIn(".relative-time-duration", "5");
+    assert.dom(".relative-time-duration").hasValue("5");
+    assert.strictEqual(
+      updatedValue,
+      5 * 60 * 24,
+      "onChange called with 5 days in minutes"
+    );
 
     // select "hours"
     await selectKit().expand();
     await selectKit().selectRowByValue("hours");
-    assert.dom(".relative-time-duration").hasValue("50");
-    assert.strictEqual(updatedValue, 50 * 60, "onChange called with 50 * 60");
+    assert.dom(".relative-time-duration").hasValue("5");
+    assert.strictEqual(updatedValue, 5 * 60, "onChange called with 5 * 60");
 
     // clear the duration
     await fillIn(".relative-time-duration", "");

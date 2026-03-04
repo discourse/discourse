@@ -12,6 +12,7 @@ module DiscourseAi
       end
 
       def translate
+        return nil if @text.blank?
         return nil if !SiteSetting.ai_translation_enabled
         if (ai_persona = AiPersona.find_by_id_from_cache(persona_setting)).blank?
           return nil

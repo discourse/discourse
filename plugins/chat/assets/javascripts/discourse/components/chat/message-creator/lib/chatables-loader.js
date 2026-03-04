@@ -3,9 +3,55 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { MATCH_QUALITY_PARTIAL } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable";
 
 const MAX_RESULTS = 10;
+
+const TYPE_PRIORITY = {
+  USER: 0,
+  DM_CHANNEL: 1,
+  CATEGORY_CHANNEL: 2,
+  GROUP: 3,
+};
+
+function typePriority(chatable) {
+  if (chatable.type === "user") {
+    return TYPE_PRIORITY.USER;
+  }
+  if (chatable.type === "group") {
+    return TYPE_PRIORITY.GROUP;
+  }
+  if (chatable.model?.chatableType === "DirectMessage") {
+    return TYPE_PRIORITY.DM_CHANNEL;
+  }
+  return TYPE_PRIORITY.CATEGORY_CHANNEL;
+}
+
+export function sortChatables(chatables) {
+  return chatables.sort((a, b) => {
+    // Primary: match quality (from server, lower is better)
+    const matchA = a.matchQuality ?? MATCH_QUALITY_PARTIAL;
+    const matchB = b.matchQuality ?? MATCH_QUALITY_PARTIAL;
+    if (matchA !== matchB) {
+      return matchA - matchB;
+    }
+
+    // Secondary: type priority (users > DM channels > category channels > groups)
+    const typeA = typePriority(a);
+    const typeB = typePriority(b);
+    if (typeA !== typeB) {
+      return typeA - typeB;
+    }
+
+    // Tertiary: enabled before disabled (applies to users and groups)
+    if (a.enabled !== b.enabled) {
+      return a.enabled ? -1 : 1;
+    }
+
+    return 0;
+  });
+}
 
 export default class ChatablesLoader {
   @service chatChannelsManager;
@@ -23,7 +69,6 @@ export default class ChatablesLoader {
       includeGroups: true,
       includeCategoryChannels: true,
       includeDirectMessageChannels: true,
-      excludedUserIds: null,
       preloadChannels: false,
     }
   ) {
@@ -51,25 +96,25 @@ export default class ChatablesLoader {
       const results = await this.request;
       this.loadingSlider.transitionEnded();
 
-      return [
+      const chatables = [
         ...results.users,
         ...results.groups,
         ...results.direct_message_channels,
         ...results.category_channels,
-      ]
-        .map((item) => {
-          const chatable = ChatChatable.create(item);
-          const channel = this.#findChannel(chatable);
+      ].map((item) => {
+        const chatable = ChatChatable.create(item);
+        const channel = this.#findChannel(chatable);
 
-          if (channel) {
-            chatable.tracking = channel.tracking;
-            chatable.unread_thread_count =
-              channel.unreadThreadsCountSinceLastViewed;
-          }
+        if (channel) {
+          chatable.tracking = channel.tracking;
+          chatable.unread_thread_count =
+            channel.unreadThreadsCountSinceLastViewed;
+        }
 
-          return chatable;
-        })
-        .slice(0, MAX_RESULTS);
+        return chatable;
+      });
+
+      return sortChatables(chatables).slice(0, MAX_RESULTS);
     } catch (e) {
       popupAjaxError(e);
     }

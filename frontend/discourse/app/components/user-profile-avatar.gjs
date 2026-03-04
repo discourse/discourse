@@ -1,10 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import lazyHash from "discourse/helpers/lazy-hash";
 
+@tagName("")
 export default class UserProfileAvatar extends Component {
   <template>
     <PluginOutlet

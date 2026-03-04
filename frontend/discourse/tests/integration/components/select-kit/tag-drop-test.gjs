@@ -13,12 +13,17 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
   hooks.beforeEach(function () {
     this.subject = selectKit();
 
-    this.site.top_tags = ["jeff", "neil", "arpit", "régis"];
+    this.site.top_tags = [
+      { id: 1, name: "jeff" },
+      { id: 2, name: "neil" },
+      { id: 3, name: "arpit" },
+      { id: 4, name: "régis" },
+    ];
 
     pretender.get("/tags/filter/search", (params) => {
       if (params.queryParams.q === "dav") {
         return response({
-          results: [{ id: "David", name: "David", count: 2, pm_only: false }],
+          results: [{ id: 123, name: "David", count: 2, pm_only: false }],
         });
       }
     });
@@ -32,8 +37,8 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
       <template>
         <TagDrop
           @currentCategory={{category}}
-          @tagId="jeff"
-          @options={{hash tagId="jeff"}}
+          @tag={{hash id=1 name="jeff"}}
+          @options={{hash}}
         />
       </template>
     );
@@ -83,5 +88,41 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
     assert
       .dom(".filter-for-more")
       .doesNotExist("does not have the 'filter for more' note");
+  });
+
+  test("sorts tags alphabetically when setting enabled", async function (assert) {
+    this.siteSettings.tags_sort_alphabetically = true;
+    this.site.top_tags = [
+      { id: 1, name: "zebra" },
+      { id: 2, name: "apple" },
+      { id: 3, name: "banana" },
+    ];
+
+    await render(<template><TagDrop /></template>);
+    await this.subject.expand();
+
+    const content = this.subject.displayedContent();
+    // first item is "no tags" shortcut
+    assert.strictEqual(content[1].name, "apple");
+    assert.strictEqual(content[2].name, "banana");
+    assert.strictEqual(content[3].name, "zebra");
+  });
+
+  test("preserves tag order when alphabetical sorting disabled", async function (assert) {
+    this.siteSettings.tags_sort_alphabetically = false;
+    this.site.top_tags = [
+      { id: 1, name: "zebra" },
+      { id: 2, name: "apple" },
+      { id: 3, name: "banana" },
+    ];
+
+    await render(<template><TagDrop /></template>);
+    await this.subject.expand();
+
+    const content = this.subject.displayedContent();
+    // first item is "no tags" shortcut
+    assert.strictEqual(content[1].name, "zebra");
+    assert.strictEqual(content[2].name, "apple");
+    assert.strictEqual(content[3].name, "banana");
   });
 });

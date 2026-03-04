@@ -12,6 +12,11 @@ class GroupsController < ApplicationController
                    search
                    new
                    test_email_settings
+                   add_members
+                   add_owners
+                   remove_member
+                   handle_membership_request
+                   edit
                  ]
 
   skip_before_action :preload_json, :check_xhr, only: %i[posts_feed mentions_feed]
@@ -165,7 +170,9 @@ class GroupsController < ApplicationController
             render status: :unprocessable_entity,
                    json: {
                      user_count: user_count,
-                     errors: [I18n.t("invalid_params", message: :update_existing_users)],
+                     errors: [
+                       I18n.t("groups.errors.update_existing_users_required", count: user_count),
+                     ],
                    }
           )
         end
@@ -175,7 +182,6 @@ class GroupsController < ApplicationController
     if group.update(group_attributes)
       GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
-      group.expire_imap_mailbox_cache
       if params[:update_existing_users] == "true"
         update_existing_users(group.group_users, notification_level, categories, tags)
       end
@@ -276,7 +282,7 @@ class GroupsController < ApplicationController
 
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
-    dir = (params[:asc] && params[:asc].present?) ? "ASC" : "DESC"
+    dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
     order = "NOT group_users.owner"
 
     if params[:requesters]
@@ -328,7 +334,7 @@ class GroupsController < ApplicationController
     elsif include_custom_fields && params[:order] == "custom_field" &&
           allowed_fields.include?(params[:order_field])
       order =
-        "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = '#{params[:order_field]}') #{dir} NULLS LAST"
+        "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = #{ActiveRecord::Base.connection.quote(params[:order_field])}) #{dir} NULLS LAST"
     end
 
     users = group.users.human_users
@@ -604,6 +610,9 @@ class GroupsController < ApplicationController
 
     group = find_group(:name)
 
+    raise Discourse::InvalidAccess unless group.allow_membership_requests?
+    raise Discourse::InvalidAccess if group.users.exists?(id: current_user.id)
+
     begin
       GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
     rescue ActiveRecord::RecordNotUnique
@@ -725,51 +734,30 @@ class GroupsController < ApplicationController
     settings = params.except(:name, :protocol)
     email_host = params[:host]
 
-    if !%w[smtp imap].include?(params[:protocol])
-      raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
+    if params[:protocol] != "smtp"
+      raise Discourse::InvalidParameters.new("Valid protocol to test is smtp")
     end
 
     hijack do
       begin
-        case params[:protocol]
-        when "smtp"
-          raise Discourse::InvalidParameters if params[:ssl_mode].blank?
+        raise Discourse::InvalidParameters if params[:ssl_mode].blank?
 
-          settings.delete(:ssl_mode)
+        settings.delete(:ssl_mode)
 
-          if params[:ssl_mode].blank? ||
-               !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
-            raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
-          end
-
-          final_settings =
-            settings.merge(
-              enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
-              enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
-            ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
-          EmailSettingsValidator.validate_as_user(
-            current_user,
-            "smtp",
-            **final_settings.to_h.symbolize_keys,
-          )
-        when "imap"
-          raise Discourse::InvalidParameters if params[:ssl].blank?
-
-          final_settings =
-            settings.merge(ssl: settings[:ssl] == "true").permit(
-              :host,
-              :port,
-              :username,
-              :password,
-              :ssl,
-              :debug,
-            )
-          EmailSettingsValidator.validate_as_user(
-            current_user,
-            "imap",
-            **final_settings.to_h.symbolize_keys,
-          )
+        if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
+          raise Discourse::InvalidParameters.new("SSL mode must be valid")
         end
+
+        final_settings =
+          settings.merge(
+            enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
+            enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
+          ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+        EmailSettingsValidator.validate_as_user(
+          current_user,
+          "smtp",
+          **final_settings.to_h.symbolize_keys,
+        )
 
         render json: success_json
       rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
@@ -830,13 +818,6 @@ class GroupsController < ApplicationController
         :smtp_enabled,
         :smtp_updated_by,
         :smtp_updated_at,
-        :imap_server,
-        :imap_port,
-        :imap_ssl,
-        :imap_mailbox_name,
-        :imap_enabled,
-        :imap_updated_by,
-        :imap_updated_at,
         :email_username,
         :email_password,
         :email_from_alias,
@@ -906,19 +887,11 @@ class GroupsController < ApplicationController
   end
 
   def reset_group_email_settings_if_disabled!(group, attributes)
-    should_clear_imap = group.imap_enabled && attributes[:imap_enabled] == "false"
     should_clear_smtp = group.smtp_enabled && attributes[:smtp_enabled] == "false"
-
-    if should_clear_imap || should_clear_smtp
-      attributes[:imap_server] = nil
-      attributes[:imap_ssl] = false
-      attributes[:imap_port] = nil
-      attributes[:imap_mailbox_name] = ""
-    end
 
     if should_clear_smtp
       attributes[:smtp_server] = nil
-      attributes[:smtp_ssl_mode] = false
+      attributes[:smtp_ssl_mode] = Group.smtp_ssl_modes[:none]
       attributes[:smtp_port] = nil
       attributes[:email_username] = nil
       attributes[:email_password] = nil

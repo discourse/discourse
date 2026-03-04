@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_patreon: "Discourse – Patreon"
+          discourse_patreon: "Discourse Patreon"
   js:
     login:
       patreon:

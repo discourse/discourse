@@ -45,5 +45,31 @@ RSpec.describe(AdminNotices::Dismiss) do
         expect { result }.to change { problem_check.reload.blips }.from(3).to(0)
       end
     end
+
+    context "when the admin notice has a specific target" do
+      fab!(:admin_notice) do
+        Fabricate(
+          :admin_notice,
+          identifier: "problem.test",
+          details: {
+            "target" => "specific_target",
+          },
+        )
+      end
+      fab!(:problem_check) do
+        Fabricate(
+          :problem_check_tracker,
+          identifier: "problem.test",
+          target: "specific_target",
+          blips: 5,
+        )
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "resets the problem check with the matching target" do
+        expect { result }.to change { problem_check.reload.blips }.from(5).to(0)
+      end
+    end
   end
 end

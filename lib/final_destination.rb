@@ -2,7 +2,6 @@
 
 require "socket"
 require "ipaddr"
-require "excon"
 require "rate_limiter"
 require "url_helper"
 
@@ -232,7 +231,7 @@ class FinalDestination
     end
 
     @ignored.each do |ignored|
-      if @uri&.hostname&.match?(ignored[:hostname]) &&
+      if @uri&.hostname == ignored[:hostname] &&
            @uri.path.start_with?(ignored[:path].presence || "/")
         @status = :resolved
         return @uri

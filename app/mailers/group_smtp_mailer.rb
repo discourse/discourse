@@ -49,7 +49,7 @@ class GroupSmtpMailer < ActionMailer::Base
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
       from: from_group.smtp_from_address,
-      from_alias: I18n.t("email_from_without_site", group_name: group_name),
+      from_alias: group_name,
       html_override: html_override(post),
       cc: cc_addresses,
       bcc: bcc_addresses,

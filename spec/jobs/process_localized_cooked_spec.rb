@@ -91,4 +91,51 @@ describe Jobs::ProcessLocalizedCooked do
     post_localization.reload
     expect(post_localization.cooked).to include("onebox")
   end
+
+  describe "topic localization excerpt" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:first_post_localization) do
+      Fabricate(
+        :post_localization,
+        post: first_post,
+        locale: "ja",
+        raw: "これは最初の投稿です。",
+        cooked: "<p>これは最初の投稿です。</p>",
+      )
+    end
+    fab!(:topic_localization) do
+      Fabricate(:topic_localization, topic: topic, locale: "ja", title: "日本語タイトル")
+    end
+
+    it "updates topic localization excerpt when processing first post" do
+      job.execute(post_localization_id: first_post_localization.id)
+
+      topic_localization.reload
+      expect(topic_localization.excerpt).to eq("これは最初の投稿です。")
+    end
+
+    it "does not update excerpt when processing non-first post" do
+      second_post = Fabricate(:post, topic: topic, post_number: 2)
+      second_post_localization =
+        Fabricate(
+          :post_localization,
+          post: second_post,
+          locale: "ja",
+          raw: "これは2番目の投稿です。",
+          cooked: "<p>これは2番目の投稿です。</p>",
+        )
+
+      job.execute(post_localization_id: second_post_localization.id)
+
+      topic_localization.reload
+      expect(topic_localization.excerpt).to be_nil
+    end
+
+    it "does not error when topic localization does not exist" do
+      topic_localization.destroy!
+
+      expect { job.execute(post_localization_id: first_post_localization.id) }.not_to raise_error
+    end
+  end
 end

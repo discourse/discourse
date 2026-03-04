@@ -10,6 +10,9 @@ es:
       sort_options:
         votes: "Votos"
     topic_voting:
+      notification_label:
+        vote_released: "Voto devuelto"
+      title: "Votación de temas"
       reached_limit: "Se te acabaron los votos, ¡elimina un voto existente!"
       list_votes: "Lista de tus votos"
       votes_nav_help: "temas con más votos"
@@ -20,6 +23,8 @@ es:
       voted_title: "Votado"
       voting_closed_title: "Cerrado"
       voting_limit: "Límite"
+      see_votes: "Te quedan %{count}/%{max} votos"
+      locked_description: "Sube de nivel de confianza para votar"
       votes:
         one: "%{count} voto"
         other: "%{count} votos"

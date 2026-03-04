@@ -5,129 +5,23 @@ module ReviewableActionBuilder
 
   attr_accessor :actions, :guardian, :action_args
 
-  # Standard post-actions bundle. Consumers should use the returned
-  # bundle value when adding post-focused actions.
-  #
-  # @return [Reviewable::Actions::Bundle] The created post actions bundle.
-  def build_post_actions_bundle
-    bundle_actions = { no_action_post: {} }
-    if target_post
-      if target_post.trashed? && @guardian.can_recover_post?(target_post)
-        bundle_actions[:restore_post] = {}
-      end
-
-      if target_post.hidden?
-        bundle_actions[:unhide_post] = {} if !target_post.user_deleted?
-      else
-        bundle_actions[:hide_post] = {}
-      end
-
-      if @guardian.can_delete_post_or_topic?(target_post)
-        bundle_actions[:delete_post] = {}
-        bundle_actions[:delete_post_and_replies] = { confirm: true } if target_post.reply_count > 0
-      end
-
-      bundle_actions[:edit_post] = { client_action: "edit" }
-
-      bundle_actions[:convert_to_pm] = {}
-    end
-
-    build_bundle(
-      "#{id}-post-actions",
-      "reviewables.actions.post_actions.bundle_title",
-      bundle_actions,
-      source: "core",
-    )
-  end
-
-  # Standard user-actions bundle and default user actions.
-  #
-  # @return [Reviewable::Actions::Bundle] The created user actions bundle.
-  def build_user_actions_bundle
-    bundle_actions = { no_action_user: {} }
-    if target_user
-      if @guardian.can_silence_user?(target_user)
-        bundle_actions[:silence_user] = { client_action: "silence" }
-      end
-
-      if @guardian.can_suspend?(target_user)
-        bundle_actions[:suspend_user] = { client_action: "suspend" }
-      end
-
-      if @guardian.can_delete_user?(target_user)
-        bundle_actions[:delete_user] = {}
-        bundle_actions[:delete_and_block_user] = {}
-      end
-    end
-
-    build_bundle(
-      "#{id}-user-actions",
-      "reviewables.actions.user_actions.bundle_title",
-      bundle_actions,
-      source: "core",
-    )
-  end
-
-  # Build actions for the reviewable based on the current state and guardian permissions.
-  #
-  # @TODO (reviewable-refresh) Replace this method with {Reviewable#build_actions} once the new UI is fully implemented.
-  #
-  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
-  # @param guardian [Guardian] Guardian instance to check permissions.
-  # @param args [Hash] Additional arguments for building actions.
-  #
-  # @return [void]
   def build_actions(actions, guardian, args)
     @actions = actions
     @guardian = guardian
     @action_args = args
 
-    if guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
-      build_new_separated_actions
-    else
+    # For backward compatibility with plugins that override build_legacy_combined_actions
+    if respond_to?(:build_legacy_combined_actions)
       build_legacy_combined_actions(actions, guardian, args)
+    else
+      build_combined_actions(actions, guardian, args)
     end
   end
 
-  # Build legacy combined actions for the reviewable.
-  #
-  # Classes that include this module should implement this method to define
-  # the legacy combined actions for their specific reviewable type.
-  #
-  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
-  #
-  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
-  # @param guardian [Guardian] Guardian instance to check permissions.
-  # @param args [Hash] Additional arguments for building actions.
-  #
-  # @return [void]
-  def build_legacy_combined_actions(actions, guardian, args)
-    raise NotImplementedError, "Including class must implement #build_legacy_combined_actions"
+  def build_combined_actions(actions, guardian, args)
+    raise NotImplementedError, "Including class must implement #build_combined_actions"
   end
 
-  # Build new separated actions for the reviewable.
-  #
-  # Classes that include this module should implement this method to define
-  # the new separated actions for their specific reviewable type.
-  #
-  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
-  #
-  # @return [void]
-  def build_new_separated_actions
-    raise NotImplementedError, "Including class must implement #build_new_separated_actions"
-  end
-
-  # Build a bundle of actions and add it to the provided actions list.
-  #
-  # @param id [String] ID for the bundle, used to derive I18n keys.
-  # @param label [String] I18n key for the bundle label.
-  # @param bundle_actions [Hash] Hash of action IDs and optional params to pass to build_action.
-  # @option bundle_actions [Symbol] :client_action Optional client-side action identifier (e.g. "edit").
-  # @option bundle_actions [Symbol] :confirm When true, uses "reviewables.actions.<id>.confirm" for confirm_message.
-  # @option bundle_actions [Symbol] :require_reject_reason When true, requires a rejection reason for the action.
-  # @param source [String] Optional source string for namespacing I18n keys. Will default to `type_source`.
-  #
-  # @return [Reviewable::Actions::Bundle] The created bundle.
   def build_bundle(id, label, bundle_actions = {}, source: nil)
     bundle = @actions.add_bundle(id, label:)
     bundle_actions.each do |action_id, action_params|
@@ -136,20 +30,6 @@ module ReviewableActionBuilder
     bundle
   end
 
-  # Build a single reviewable action and add it to the provided actions list.
-  # This is the canonical API used by both the legacy and refreshed UI code paths.
-  #
-  # @param actions [Reviewable::Actions] Actions instance to add to.
-  # @param id [Symbol] Symbol for the action, used to derive I18n keys.
-  # @param icon [String] Optional name of the icon to display with the action. Ignored in the refreshed UI.
-  # @param button_class [String] Optional CSS class for buttons in clients that render it. Ignored in the refreshed UI.
-  # @param bundle [Reviewable::Actions::Bundle] Optional bundle object returned by add_bundle to group actions.
-  # @param client_action [String] Optional client-side action identifier (e.g. "edit").
-  # @param confirm [Boolean] When true, uses "reviewables.actions.<id>.confirm" for confirm_message.
-  # @param require_reject_reason [Boolean] When true, requires a rejection reason for the action.
-  # @param source [String] Optional source string for namespacing I18n keys. Will default to `type_source`.
-  #
-  # @return [Reviewable::Actions] The updated actions instance.
   def build_action(
     actions,
     id,
@@ -180,14 +60,6 @@ module ReviewableActionBuilder
     end
   end
 
-  def perform_no_action_user(performed_by, args)
-    create_result(:success, :ignored)
-  end
-
-  def perform_no_action_post(performed_by, args)
-    create_result(:success, :ignored)
-  end
-
   def perform_silence_user(performed_by, args)
     create_result(:success, :rejected)
   end
@@ -215,8 +87,6 @@ module ReviewableActionBuilder
   end
 
   def perform_hide_post(performed_by, _args)
-    # TODO (reviewable-refresh): This hard-coded post action type needs to make use of the
-    # original flag type. See ReviewableFlaggedPost::perform_agree_and_hide for reference.
     target_post.hide!(PostActionType.types[:inappropriate])
     create_result(:success, :rejected, [created_by_id], false)
   end
@@ -235,11 +105,6 @@ module ReviewableActionBuilder
   def perform_edit_post(performed_by, _args)
     # This is handled client-side, just transition the state
     create_result(:success, :approved, [created_by_id], false)
-  end
-
-  def perform_convert_to_pm(performed_by, _args)
-    # TODO (reviewable-refresh): Implement convert to PM logic
-    create_result(:success, :rejected, [created_by_id], false)
   end
 
   private

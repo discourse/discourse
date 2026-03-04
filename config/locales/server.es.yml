@@ -60,8 +60,6 @@ es:
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
-    too_many_urls: "No se pueden incluir más de 10 URL en una única solicitud de onebox."
-    concurrency_not_allowed: "No se permiten solicitudes simultáneas de inline-oneboxing. Envía una sola solicitud a la vez."
   components:
     enabled_filter: "Activado"
     disabled_filter: "Desactivado"
@@ -344,7 +342,6 @@ es:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar accidentalmente la velocidad de los usuarios legítimos."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
-      x_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
       tl0_and_anonymous_flag: "Debes proporcionar el «site contact email» (correo electrónico de contacto del sitio) o la «email address to report illegal content» (dirección de correo electrónico para denunciar contenido ilegal) para los usuarios anónimos."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Este ajuste requiere que primero se active el ajuste «allow anonymous mode»."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -808,6 +805,10 @@ es:
         other: "No se puede eliminar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}."
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el número de temas es %{count}."
     uncategorized_description: "Temas que no necesitan una categoría o no encajan en ninguna de las categorías existentes."
+  category_types:
+    discussion:
+      name: "Debate"
+      title: "debate"
   trust_levels:
     admin: "Administrador"
     staff: "Personal"
@@ -1040,12 +1041,9 @@ es:
     no_log_search_queries: "Los registros de consultas de búsqueda están actualmente desactivados (un administrador puede activarlos en los ajustes del sitio)."
   email_settings:
     pop3_authentication_error: "Ha habido un problema con las credenciales POP3 proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
-    imap_authentication_error: "Ha habido un problema con las credenciales IMAP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
-    imap_no_response_error: "Se ha producido un error al comunicarse con el servidor IMAP. %{message}"
     smtp_authentication_error: "Se ha producido un problema con las credenciales SMTP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo. %{message}"
     smtp_server_busy_error: "El servidor SMTP está ocupado actualmente, inténtalo de nuevo más tarde."
     smtp_unhandled_error: "Se ha producido un error no gestionado al comunicarse con el servidor SMTP. %{message}"
-    imap_unhandled_error: "Se ha producido un error no gestionado al comunicarse con el servidor IMAP. %{message}"
     connection_error: "Ha habido un problema de conexión con el servidor, comprueba el nombre del servidor y el puerto e inténtalo de nuevo."
     timeout_error: "La conexión con el servidor se ha interrumpido, comprueba el nombre y el puerto del servidor e inténtalo de nuevo."
     unhandled_error: "Error no controlado al probar la configuración del correo electrónico. %{message}"
@@ -1134,10 +1132,14 @@ es:
       every_month: "cada mes"
       every_six_months: "cada seis meses"
   user_api_key:
+    title: 'Autorizar a "%{application_name}"'
     authorize: "Autorizar"
     deny: "Cancelar"
     read: "leer"
     read_write: "lectura/escritura"
+    logged_in_as: "Sesión iniciada como"
+    permissions_header: 'Esto permitirá a "%{application_name}" hacer lo siguiente:'
+    redirect_warning: "Si lo autorizas, se te redireccionará a"
     instructions: 'Acabamos de generar una nueva clave API de usuario para que uses con «%{application_name}». Pega la siguiente clave en tu aplicación:'
     otp_description: '¿Te gustaría permitir a «%{application_name}» acceder a este sitio?'
     otp_confirmation:
@@ -1569,6 +1571,7 @@ es:
       labels:
         provider: Proveedor de inicio de sesión
         no_accounts: "No hay cuentas asociadas"
+        total_users: "Total de cuentas de usuario activas"
       description: "Muestra el número de cuentas asociadas agrupadas por proveedor de inicio de sesión. Solo se aplica cuando los métodos de inicio de sesión con red social están activados."
   dashboard:
     problem:
@@ -1701,7 +1704,6 @@ es:
     manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente el tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
     manifest_screenshots: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
     favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para que funcione correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
-    apple_touch_icon: "Icono utilizado para los dispositivos táctiles de Apple. No se recomienda un fondo transparente. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
     x_summary_large_image: "«Imagen grande de resumen» de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg."
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
@@ -1778,7 +1780,6 @@ es:
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
     content_security_policy: "Activa la Política de Seguridad de Contenidos (CSP). La CSP es una capa adicional de seguridad que ayuda a evitar ciertos tipos de ataques, como el Cross Site Scripting (XSS) y la inyección de datos."
     content_security_policy_report_only: "Activar la política de seguridad de contenido de solo denuncias (CSP)"
-    content_security_policy_collect_reports: "Activar la recolección de denuncias de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
     content_security_policy_script_src: "Fuentes de scripts adicionales permitidas. El host actual y la CDN se incluyen por defecto. Ver <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar los ataques XSS con la Política de Seguridad de Contenidos.</a> (CSP). Otras fuentes de host se ignoran, ya que está activada la dinámica estricta."
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
@@ -1928,7 +1929,6 @@ es:
     invite_link_max_redemptions_limit_users: "El número máximo de usuarios que pueden registrarse desde un enlace de invitación generado por usuarios habituales no puede sobrepasar este valor."
     alert_admins_if_errors_per_minute: "Número de errores por minuto que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
     alert_admins_if_errors_per_hour: "Número de errores por hora que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
-    categories_topics: "Número de temas que se muestran en la página de /categories. Si estableces el valor en 0, automáticamente intentará conseguir un valor para mantener las dos columnas simétricas (categorías y temas)."
     suggested_topics: "Número de temas sugeridos que se muestran en la parte inferior del tema."
     limit_suggested_to_category: "Solo mostrar temas de la categoría actual en los temas sugeridos."
     suggested_topics_max_days_old: "Los temas sugeridos no deben ser más antiguos de n días."
@@ -2080,8 +2080,6 @@ es:
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para su intervención"
     num_hours_to_close_topic: "Número de horas que se pausa un tema para su invervención."
     auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer una denuncia."
-    min_first_post_typing_time: "Período mínimo en milisegundos durante el que un usuario debe escribir en su primera publicación, si no se llega a este umbral, la publicación entrará automáticamente a la cola de moderación. Establece esta opción a 0 para desactivar (no recomendado)."
-    fast_typing_threshold: "Cantidad mínima de tiempo en milisegundos que un usuario debe escribir para su primera publicación. Si no se alcanza el umbral, la publicación entrará automáticamente en la cola de revisión. El mínimo es de 1 segundo, el estándar es de 3 segundos y el máximo es de 5 segundos."
     auto_silence_fast_typers_on_first_post: "Silencia automáticamente a los usuarios que no alcancen el umbral de escritura rápida"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar a usuarios que escriban demasiado rápido en su primera publicación"
     auto_silence_first_post_regex: "Expresión regular (que ignora mayúsculas/minúsculas) que, si coincide con la primera publicación de un usuario, lo silenciará y mandará el mensaje a la cola de aprobación. Por ejemplo: enfadado|a[bc]a hará que todas las primeras publicaciones que contengan enfadado, aba o aca se manden a la cola y se silencie al autor. Solo se ejecutará en el primer mensaje de cada usuario. DEPRECIADO: Utiliza en su lugar Palabras Vigiladas para Silencio."
@@ -2098,7 +2096,6 @@ es:
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por correo electrónico. Ejemplo: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Usar el HTML en vez del texto para los correos electrónicos entrantes."
     strip_incoming_email_lines: "Elimina los espacios en blanco iniciales y finales de cada línea de correos electrónicos entrantes."
-    disable_emails: "Evite que el Discourse envíe cualquier clase de correo electrónico. Seleccione «sí» para desactivar los correos electrónicos a todos los usuarios. Seleccione «no staff» para desactivar los correos electrónicos solo para usuarios que no formen parte del personal."
     strip_images_from_short_emails: "Quitar imágenes que tengan un tamaño menor a 2800 Bytes de los correos electrónicos"
     short_email_length: "Define la longitud máxima, en bytes, para que un correo electrónico se clasifique como «corto» para la supresión de imágenes. Si el tamaño de un correo electrónico no supera este valor, se eliminarán todas las imágenes (como avatares y emojis) que contenga."
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de correos electrónicos"
@@ -2150,14 +2147,7 @@ es:
     email_in_allowed_groups: "Grupos que pueden enviar nuevos temas por correo electrónico. Los administradores y moderadores siempre pueden enviar nuevos temas por correo electrónico."
     email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     email_in_spam_header: "Selecciona el encabezado de correo electrónico específico que se utilizará para identificar el correo no deseado. Esta opción puede ser X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict, y el correo electrónico se etiqueta como correo no deseado en función del valor del encabezado. Por ejemplo, si la opción elegida es X-Spam-Flag, un correo electrónico con este valor de encabezado establecido en SÍ se clasificaría como correo no deseado."
-    enable_imap: "Activar IMAP para sincronizar mensajes de grupo."
-    enable_imap_write: "Activar sincronización IMAP bidireccional. Si está desactivado, todas las operaciones de escritura en cuentas IMAP están desactivadas."
-    enable_imap_idle: "Usar el mecanismo IMAP IDLE para esperar nuevos correos electrónicos."
     enable_smtp: "Activar SMTP para enviar notificaciones de mensajes de grupo."
-    imap_polling_period_mins: "El período, en minutos, entre las comprobaciones de mensajes de correo electrónico en las cuentas IMAP."
-    imap_polling_old_emails: "El número máximo de correos electrónicos antiguos (procesados) que se actualizarán cada vez que se sondee una bandeja IMAP (0 para todos)."
-    imap_polling_new_emails: "El número máximo de correos electrónicos nuevos (sin procesar) que se actualizarán cada vez que se sondee una bandeja IMAP."
-    imap_batch_import_email: "El número mínimo de correos electrónicos nuevos que activan el modo de importación (desactiva las alertas de publicaciones)."
     email_prefix: "La [label] utilizada en el asunto de los correos electrónicos. Si no está configurado, será por defecto el 'título'."
     email_site_title: "El título del sitio utilizado como remitente de los correos electrónicos desde el sitio. Si no está configurado, será por defecto «título». Si tu «título» contiene caracteres que no están permitidos en las cadenas del remitente del correo electrónico, usa esta opción."
     find_related_post_with_key: "Solo usar la «clave de respuesta» para encontrar la publicación a la que se le respondió. ADVERTENCIA: desactivar esto permitirá al usuario hacerse pasar por otro basado en las direcciones de correo electrónico."
@@ -2194,15 +2184,12 @@ es:
     group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
     allow_anonymous_mode: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear publicaciones o temas en todo el sitio. Véase también «allow_anonymous_likes»."
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
-    hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
     hide_new_user_profiles: "Oculta los perfiles de usuarios de nivel de confianza 1 o inferior al público y a los usuarios de nivel de confianza 1 hasta que publiquen por primera vez. Esta característica está desactivada incondicionalmente en los sitios must_approve_users y invite_only."
     allow_users_to_hide_profile: "Permitir a los usuarios ocultar su perfil y presencia"
     hide_user_activity_tab: "Ocultar la pestaña de actividad en los perfiles de usuario, excepto para el Administrador y para mí."
     delete_associated_accounts_on_password_reset: "Elimina la cuenta asociada al usuario cuando este cambie la contraseña."
     allow_featured_topic_on_user_profiles: "Permitir a los usuarios destacar un enlace a un tema en su tarjeta de usuario y perfil."
     show_inactive_accounts: "Permitir a usuarios con una sesión iniciada visualizar perfiles de cuentas inactivas."
-    hide_silencing_reasons: "No mostrar las razones de silenciamiento públicamente en el perfil de usuario."
-    hide_suspension_reasons: "No mostrar laa razones de suspensión públicamente en el perfil de usuario."
     log_personal_messages_views: "Registrar los mensajes personales vistos por el administrador para otros usuarios/grupos."
     ignored_users_count_message_threshold: "Notificar a los moderadores si un usuario en particular es ignorado este número de veces por otros usuarios."
     ignored_users_message_gap_days: "Tiempo que se espera antes de notificar a los moderadores de nuevo sobre un usuario que ha sido ignorado por muchos otros."
@@ -2215,7 +2202,6 @@ es:
     dont_feed_the_trolls_threshold: "Número de denuncias de otros usuarios antes de ser advertido."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Desactiva esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Porcentaje de publicaciones que un usuario debe hacer en un mismo tema antes de que se le muestre un recordatorio acerca de dominar en demasía un tema."
-    pm_warn_user_last_seen_months_ago: "Al crear un nuevo PM, advierte a los usuarios cuando el destinatario no se haya visto hace más de n meses."
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     header_dropdown_category_count: "Cantidad de categorías que se pueden mostrar en el menú desplegable del encabezado."
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
@@ -2264,7 +2250,6 @@ es:
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después de estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     delete_drafts_older_than_n_days: "Elimina los borradores que no se hayan modificado en más de (n) días."
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Establece -1 para no eliminar nunca. Establece 0 para eliminar inmediatamente."
-    bootstrap_mode_min_users: 'Número mínimo de usuarios necesarios para desactivar el modo de arranque y eliminar el botón de Inicio (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas). Consulta <a target="_blank" href="https://meta.discourse.org/t/-/322876">el tema sobre el modo de arranque en Meta</a> para más detalles.'
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si la opción «inicio de sesión obligatorio» está activada, solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas multimedia en mensajes personales y categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere profundos conocimientos administrativos. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema sobre subidas seguras en Meta</a> para obtener más información.'
     secure_uploads_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente estarían redactadas en los correos electrónicos, si su tamaño es menor que el ajuste de «tamaño máximo de la imagen incrustada en el correo electrónico»."
@@ -2389,7 +2374,6 @@ es:
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
     dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
-    gravatar_enabled: "Usa el servicio <a href='https://gravatar.com/'>Gravatar</a> para los avatares de usuario. Esto evitará que los usuarios cambien a Gravatar para sus avatares, pero no afectará a quienes ya lo usan."
     gravatar_name: "Especifica el nombre del proveedor del servicio Gravatar. Este nombre se utiliza normalmente para identificar la fuente que proporciona avatares Gravatar al sitio."
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
     gravatar_login_url: "URL relativa a «gravatar_base_url», que proporciona al usuario el acceso al servicio Gravatar."
@@ -2411,10 +2395,9 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
-    experimental_auto_grid_images: "Envuelve automáticamente las imágenes en etiquetas [grid] al cargar 3 o más imágenes en el compositor."
+    enable_auto_grid_images: "Envuelve automáticamente las imágenes en etiquetas [grid] al cargar 3 o más imágenes en el compositor."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
     show_user_menu_avatars: "Mostrar avatares de usuario en el menú de usuario"
     about_page_hidden_groups: "No mostrar a los miembros de determinados grupos en la página /about."
@@ -2428,7 +2411,6 @@ es:
     default_composition_mode: "Establece el modo predeterminado para el compositor de tu comunidad. El modo de texto enriquecido ofrece una experiencia de escritura más moderna y familiar para la mayoría de los usuarios, mientras que el modo Markdown puede ser adecuado para usuarios con conocimientos técnicos. Los miembros pueden usar un interruptor en la barra de herramientas del compositor para cambiar de un modo a otro."
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
     content_localization_enabled: "Muestra contenido localizado para los usuarios según sus preferencias de navegador o idioma. Este contenido puede incluir categorías, etiquetas, publicaciones y temas. Los idiomas locales se configuran en «idiomas compatibles con la localización de contenido»."
-    content_localization_supported_locales: "Lista de idiomas regionales compatibles a los que se puede traducir el contenido del usuario. Requiere «content localization enabled»."
     content_localization_allowed_groups: "Los grupos pueden actualizar el contenido localizado. Requiere «content localization enabled»."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
@@ -2472,12 +2454,6 @@ es:
       reply_by_email_disabled: "Primero debes activar «responder por correo electrónico» antes de activar esta configuración."
       discourse_connect_url_is_empty: "Debes rellenar «discourse connect url» antes de activar este ajuste."
       enable_local_logins_disabled: "Primero debes activar «activar inicio de sesión local» antes de activar esta configuración."
-      min_username_length_exists: "No puede establecer la longitud de usuario mínima por encima del nombre de usuario más corto (%{username})"
-      min_group_name_length_exists: "No puedes establecer la longitud de nombre de usuario mínima por encima del nombre de grupo más corto (%{group_name})"
-      min_username_length_range: "No puedes establecer el mínimo por encima del máximo."
-      max_username_length_exists: "No puedes establecer la longitud de usuario máxima por debajo del nombre de usuario más largo (%{username})."
-      max_group_name_length_exists: "No puedes establecer la longitud de nombre usuario máxima por debajo del nombre de grupo más largo (%{group_name})."
-      max_username_length_range: "No puedes establecer el máximo por debajo del mínimo."
       invalid_hex_value: "Los colores debe ser códigos hexadecimalesde 6 dígitos."
       empty_selectable_avatars: "Debes subir al menos dos avatares seleccionables antes de activar esta configuración."
       category_search_priority:
@@ -2536,7 +2512,6 @@ es:
       exclude_tag: "Excluir temas con una etiqueta específica"
       exclude_tags_any: "Excluir temas con cualquiera de las etiquetas especificadas (separadas por comas)"
       exclude_tags_all: "Excluir temas con todas las etiquetas especificadas (separadas por comas)"
-      tags_alias: "Alias para el filtro «etiqueta:»"
       tag_group: "Mostrar temas con etiquetas de un grupo de etiquetas específico"
       exclude_tag_group: "Excluir temas con etiquetas de un grupo de etiquetas específico"
       activity_before: "Mostrar temas con última actividad antes de una fecha (AAAA-MM-DD o hace días)"
@@ -2572,6 +2547,7 @@ es:
       in_new: "Mostrar temas que son nuevos o tienen respuestas nuevas"
       in_new_replies: "Mostrar temas con respuestas nuevas"
       in_new_topics: "Mostrar temas nuevos"
+      in_unseen: "Mostrar temas que no has visto"
       order_activity: "Ordenar por actividad (más reciente primero)"
       order_activity_asc: "Ordenar por actividad (más antigua primero)"
       order_category: "Ordenar por nombre de categoría (Z-A)"
@@ -2592,6 +2568,7 @@ es:
       order_views_asc: "Ordenar por número de visualizaciones (de menor a mayor)"
       order_read: "Ordenar por fecha de última lectura (más reciente primero)"
       order_read_asc: "Ordenar por fecha de última lectura (más antigua primero)"
+      users: "Filtrar temas por participantes"
   discourse_connect:
     login_error: "Error al iniciar sesión"
     not_found: "No se ha podido encontrar tu cuenta. Contacta con la administración del sitio."
@@ -2774,6 +2751,7 @@ es:
         updating_user_ids: "Actualizando identificadores de usuario…"
         deleting_source_user: "Eliminando usuario de origen…"
   user:
+    anonymized: "[eliminado debido a la anonimización del usuario]"
     deactivated: "Ha sido desactivado debido a muchos correod electrónicos rechazados a «%{email}»."
     deactivated_by_staff: "Desactivado por el personal"
     deactivated_by_inactivity:
@@ -3158,6 +3136,7 @@ es:
         Conforme vayas participando, te iremos conociendo más y se irán levantando tus limitaciones temporales como usuario nuevo. Con el tiempo ganarás [niveles de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que incluyen capacidades especiales para ayudarnos a gestionar la comunidad juntos.
     welcome_user:
       title: "Bienvenida al usuario"
+      preview: "¡Te damos la bienvenida a %{site_name}!"
       subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         ¡Gracias por unirte a %{site_name}! ¡Te damos la bienvenida!
@@ -3185,6 +3164,7 @@ es:
         Un gran poder conlleva una gran responsabilidad. Si no tienes experiencia moderando, consulta la [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Bienvenida al invitado"
+      preview: "¡Te damos la bienvenida a %{site_name}!"
       subject_template: "¡Te damos la bienvenida a %{site_name}!"
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
@@ -3604,6 +3584,7 @@ es:
         Puedes cambiar este comportamiento a través de los ajustes «newuser_spam_host_threshold» y «allowed_spam_host_domains». Considera añadir %{domains} a la lista de dominios permitidos si deberían estar exentos.
     unsilenced:
       title: "Ha dejado de estar silenciado"
+      preview: "Cuenta reestablecida."
       subject_template: "Cuenta reestablecida"
       text_body_template: |
         Hola,
@@ -3652,8 +3633,6 @@ es:
     Para cancelar estos correos, [haz clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} vía %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
@@ -3757,6 +3736,7 @@ es:
         %{respond_instructions}
     user_replied:
       title: "Usuario respondió"
+      preview: "Alguien ha respondido a tu publicación."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3779,6 +3759,7 @@ es:
         %{respond_instructions}
     user_quoted:
       title: "Usuario citado"
+      preview: "Alguien ha citado tu publicación."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3790,6 +3771,7 @@ es:
         %{respond_instructions}
     user_linked:
       title: "Usuario enlazado"
+      preview: "Publicación enlazada desde otro tema."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3801,6 +3783,7 @@ es:
         %{respond_instructions}
     user_mentioned:
       title: "Usuario mencionado"
+      preview: "Alguien te ha mencionado en una publicación."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3889,6 +3872,7 @@ es:
         %{respond_instructions}
     user_posted_pm:
       title: "Usuario envió un MP"
+      preview: "Alguien te ha enviado un mensaje personal."
       subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3977,6 +3961,7 @@ es:
       preheader: "Un breve resumen desde %{since}"
     forgot_password:
       title: "Olvidé la contraseña"
+      preview: "Restablece tu contraseña."
       subject_template: "[%{email_prefix}] restablecer contraseña"
       text_body_template: |
         Alguien ha pedido restablecer tu contraseña en [%{site_name}](%{base_url}).
@@ -3987,6 +3972,7 @@ es:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Iniciar sesión con un enlace"
+      preview: "Iniciar sesión con un enlace."
       subject_template: "[%{email_prefix}] Iniciar sesión con un enlace"
       text_body_template: |
         Aquí tienes tu enlace para iniciar sesión en [%{site_name}](%{base_url}).
@@ -4064,6 +4050,7 @@ es:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
+      preview: "Dirección de correo electrónico actualizada."
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"
       text_body_template: "Este es un mensaje automatizado para comunicarte que tu correo electrónico para \nel sitio %{site_name} ha sido modificado. Si esto fue un error, ponte en contacto con un \nadministrador del sitio.\n\nTu correo electrónico fue modificado por:\n\n%{new_email}\n"
     notify_old_email_add:
@@ -4078,6 +4065,7 @@ es:
         %{new_email}
     signup_after_approval:
       title: "Entrar después de ser aprobado"
+      preview: "Nueva cuenta aprobada."
       subject_template: "¡Tu solicitud fue aprobada en %{site_name}!"
       text_body_template: |
         ¡Te damos la bienvenida a %{site_name}!
@@ -4151,8 +4139,13 @@ es:
   page_not_found:
     page_title: "Página no encontrada"
     title: "¡Ups! Esa página no existe o es privada."
+    popular_topics: "Temas populares"
+    recent_topics: "Temas recientes"
     see_more: "Más"
+    search_title: "¿Y si pruebas a buscar?"
     search_button: "Buscar"
+    home: "Ir al inicio"
+    placeholder: "Buscar temas por título o palabras clave…"
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
@@ -4873,6 +4866,8 @@ es:
       one: "Debes seleccionar al menos %{count} etiqueta."
       other: "Debes seleccionar al menos %{count} etiquetas."
     upload_row_too_long: "El archivo CSV debe tener una etiqueta por línea. Opcionalmente, la etiqueta puede ir seguida de una coma, luego el nombre del grupo de etiquetas."
+    bulk_create:
+      invalid_name: "Nombre de etiqueta inválido."
     forbidden:
       invalid:
         one: "La etiqueta que seleccionó no se puede usar"
@@ -4899,6 +4894,7 @@ es:
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
     congratulations: "¡Enhorabuena, has instalado Discourse!"
+    login_with_discourse_id: "Iniciar sesión con ID de Discourse"
     register:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
@@ -4920,6 +4916,8 @@ es:
     deprecation_error_label: Hacer que las depreciaciones de Javascript produzcan un error
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."
+  dev_mode:
+    title: "Modo de desarrollo"
   wizard:
     title: "Instalación de Discourse"
     step:
@@ -4975,9 +4973,15 @@ es:
       review_by: "Revisado por"
       pr_summary: "%{commits} commits cambiaron %{changed_files} archivos con %{additions} adiciones y %{deletions} eliminaciones"
       no_description: "Contribuye al desarrollo de %{repo} creando una cuenta en GitHub."
+      pr_title:
+        default: "Pull request"
+        draft: "Borrador de pull request"
+        closed: "Pull request cerrado"
       status_date:
         open: "abierto"
+        draft: "borrador"
         approved: "fecha de aprobación"
+        changes_requested: "cambios solicitados"
         closed: "cerrado"
   discourse_push_notifications:
     popup:
@@ -4993,6 +4997,7 @@ es:
       confirm_body: "¡Bien! Se han activado las notificaciones."
       custom: "Notificación de %{username} en %{site_title}"
   staff_action_logs:
+    redacted: "[contenido no visible]"
     json_too_long: "Valores no registrados porque superan los límites de longitud de columna"
     not_found: "no encontrado"
     unknown: "desconocido"
@@ -5013,14 +5018,15 @@ es:
     api_post_delete: "Eliminado mediante API"
     reminder_deleted: "Reemplazado por un recordatorio nuevo"
     user_associated_posts_deleted: "El usuario ha sido destruido"
-    imap_email_deleted: "El correo electrónico se ha eliminado del servidor IMAP"
-    imap_email_marked_as_spam: "El correo electrónico se ha movido a la carpeta de correo no deseado del servidor IMAP"
     auto_deleted_hidden_posts: "Publicaciones ocultas destruidas automáticamente"
     seed_data_topic_updated: "Tema de datos de semillas actualizado"
     seed_data_topic_deleted: "Tema de datos de semillas eliminado"
+    upcoming_changes:
+      log_manually_toggled: "Cambiado manualmente por el usuario"
   reviewables:
     already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita denunciarse de nuevo."
     already_handled_and_user_not_exist: "Gracias, pero otra persona ya lo ha revisado, y ese usuario ha dejado de existir."
+    post_restored_by_author: "La publicación fue restaurada por su autor/a"
     priorities:
       low: "Bajo"
       medium: "Medio"
@@ -5086,19 +5092,15 @@ es:
         description: "Aceptar la denuncia y ocultar esta entrada + enviar automáticamente al usuario un mensaje instándole a editarla."
         complete: "Publicación oculta, se ha notificado al usuario."
       agree_and_edit:
-        title: "Aceptar y editar la publicación"
+        title: "Editar publicación"
         description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
         complete: "Denuncia reconocida, ahora puedes editar la publicación."
       delete:
         title: "Eliminar"
         complete: "Publicación eliminada."
       delete_and_ignore:
-        title: "Ignorar la denuncia y eliminar la publicación"
-        description: "Ignorar la denuncia quitándola de la cola y eliminar la publicación; si es la primera publicación, eliminar también el tema. "
         complete: "Publicación eliminada."
       delete_and_ignore_replies:
-        title: "Ignorar la denuncia, eliminar la publicación y las respuestas"
-        description: "Ignorar la denuncia quitándola de la cola, eliminar la publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       delete_and_agree:
@@ -5111,16 +5113,18 @@ es:
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       disagree_and_restore:
-        title: "No, restaurar publicación"
-        description: "Restaurar la publicación para que los usuarios puedan verla."
+        title: "Restaurar publicación"
         complete: "Publicación restaurada."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Mantener publicación"
         complete: "Denuncia ignorada."
       discard_post:
         title: "Descartar publicación"
         complete: "Publicación descartada."
       revise_and_reject_post:
+        title: "Solicitar revisión..."
         complete: "Publicación rechazada pendiente de revisión."
       ignore:
         title: "Ignorar"
@@ -5130,31 +5134,36 @@ es:
         description: "Ignorar la denuncia quitándola de la cola sin realizar ninguna acción. Las publicaciones ocultas permanecerán ocultas y las gestionarán las herramientas automáticas."
         complete: "Denuncia ignorada."
       approve:
-        title: "Aprobar"
+        title: "Sí"
         complete: "Publicación aprobada."
       approve_post:
-        title: "Aprobar publicación"
+        title: "Sí"
         complete: "Publicación aprobada."
       approve_post_closed:
-        title: "Aprobar publicación"
+        title: "Sí"
         confirm: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
         complete: "Publicación aprobada."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rechazar publicación"
         complete: "Publicación rechazada."
       approve_user:
-        title: "Aprobar usuario"
+        title: "Sí"
         complete: "Usuario aprobado."
       reject_user:
-        title: "Eliminar usuario…"
+        title: "No"
         delete:
           title: "Eliminar usuario"
-          description: "El usuario será eliminado del foro."
           complete: "Usuario eliminado."
         block:
           title: "Eliminar y bloquear usuario"
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
           complete: "Usuario eliminado y bloqueado."
+      confirm_spam:
+        title: "Sí"
+      not_spam:
+        title: "No"
       reject:
         title: "Rechazar"
         bundle_title: "Rechazar…"
@@ -5167,42 +5176,67 @@ es:
       reject_and_delete:
         title: "Rechazar y eliminar la publicación"
         complete: "Publicación rechazada y eliminada."
+      reject_and_delete_standalone:
+        title: "No, eliminar publicación"
       reject_and_keep_deleted:
         title: "Mantener publicación eliminada"
         complete: "La publicación se ha rechazado y se ha mantenido eliminada."
+      reject_and_keep_deleted_standalone:
+        title: "No, mantener la publicación eliminada"
       scrub:
         title: Borrar registro
       approve_and_restore:
-        title: "Aprobar y restaurar publicación"
+        title: "Sí"
         complete: "Publicación aprobada y restaurada."
       approve_and_unhide:
-        title: "Aprobar y dejar de ocultar publicación"
+        title: "Sí"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
-      no_action_post:
-        title: "Ninguna acción"
+      post_actions:
+        bundle_title: "¿Qué quieres hacer con la publicación?"
       delete_post:
         title: "Eliminar publicación"
+        description: "Eliminar esta publicación"
         complete: "Publicación eliminada"
       hide_post:
         title: "Ocultar publicación"
+        description: "Ocultar esta publicación de la vista pública"
+        complete: "Publicación ocultada"
+      unhide_post:
+        title: "Dejar de ocultar la publicación"
+        description: "Volver a hacer público el contenido de la publicación"
+        complete: "Publicación desocultada"
       restore_post:
         title: "Restaurar publicación"
+        description: "Restaurar la publicación eliminada"
         complete: "Publicación restaurada"
-      no_action_user:
-        title: "Ninguna acción"
+      edit_post:
+        title: "Editar publicación"
+        description: "Editar el contenido de esta publicación"
+        complete: "Publicación editada"
+      user_actions:
+        bundle_title: "¿Qué quieres hacer con el usuario?"
       silence_user:
         title: "Silenciar al usuario"
+        description: "Evitar que el usuario siga publicando"
         complete: "Usuario silenciado"
+        reason: "Usuario silenciado a través de la cola de revisión"
       suspend_user:
         title: "Suspender al usuario"
+        description: "Suspender la cuenta del usuario"
         complete: "Usuario suspendido"
+        reason: "Usuario suspendido a través de la cola de revisión"
       delete_user:
         title: "Eliminar usuario"
+        description: "Eliminar este usuario del foro"
         complete: "Usuario eliminado"
         reason: "Eliminado a través de la cola de revisiones"
       delete_and_block_user:
+        title: "Eliminar y bloquear"
+        description: "Eliminar el usuario y bloquear su IP y correo electrónico"
         complete: "Usuario eliminado y bloqueado"
       delete_user_block:
+        title: "Eliminar y bloquear"
+        description: "Eliminar el usuario y bloquear su IP y correo electrónico"
         complete: "Usuario eliminado y bloqueado"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
@@ -5247,6 +5281,10 @@ es:
       reserved_id: "tiene una palabra clave reservada como id: %{id}"
       unsafe_description: "tiene una descripción HTML no segura"
       invalid_tag_group: "tiene un grupo de etiquetas no válido: %{tag_group_name}"
+  discourse_id:
+    already_registered: "Este sitio ya está registrado con Discourse ID"
+    errors:
+      regenerate_failed: "Error al regenerar las credenciales. Inténtalo de nuevo más tarde."
   activemodel:
     errors:
       <<: *errors

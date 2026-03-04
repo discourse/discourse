@@ -63,9 +63,7 @@ RSpec.describe ReviewableUserSerializer do
       expect(json[:target_user]).to be_nil
     end
 
-    it "returns FlaggedUserSerializer when user can see reviewable UI refresh" do
-      allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-
+    it "returns FlaggedUserSerializer when there is a target" do
       json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
       expect(json[:target_user]).to be_present
       expect(json[:target_user][:id]).to eq(user.id)

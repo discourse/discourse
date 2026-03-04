@@ -4,6 +4,7 @@ require "file_store/s3_store"
 
 RSpec.describe UploadCreator do
   fab!(:user)
+  fab!(:admin)
 
   describe "#create_for" do
     describe "when upload is not an image" do
@@ -207,7 +208,7 @@ RSpec.describe UploadCreator do
             large_filename,
             for_site_setting: true,
             force_optimize: true,
-          ).create_for(user.id)
+          ).create_for(admin.id)
 
         expect(upload.extension).to eq("png")
         expect(File.extname(upload.url)).to eq(".png")
@@ -468,7 +469,7 @@ RSpec.describe UploadCreator do
                 file_from_fixtures(filename),
                 filename,
                 for_site_setting: true,
-              ).create_for(user.id)
+              ).create_for(admin.id)
             expect(upload.secure).to eq(false)
             upload.destroy!
 

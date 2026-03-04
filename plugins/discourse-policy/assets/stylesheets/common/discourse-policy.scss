@@ -145,12 +145,18 @@
 }
 
 // Policy in editor styles
-.d-editor-preview .policy {
+.d-editor-preview .policy,
+.ProseMirror .policy {
   padding: 0.5em;
   border: 1px solid var(--primary-low);
+  margin-block: var(--space-4);
 
   .policy-preview {
     font-size: var(--font-up-1);
     font-weight: 700;
+  }
+
+  .policy-body {
+    padding: var(--space-2) 0;
   }
 }

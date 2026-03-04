@@ -6,7 +6,7 @@ module DiscourseAi
       def tools
         [
           Tools::GithubFileContent,
-          Tools::GithubPullRequestDiff,
+          Tools::GithubDiff,
           Tools::GithubSearchCode,
           Tools::GithubSearchFiles,
         ]

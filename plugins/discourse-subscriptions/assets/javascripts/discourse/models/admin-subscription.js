@@ -1,6 +1,5 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 
 export default class AdminSubscription extends EmberObject {
@@ -29,19 +28,21 @@ export default class AdminSubscription extends EmberObject {
     });
   }
 
-  @discourseComputed("status")
-  canceled(status) {
-    return status === "canceled";
+  @computed("status")
+  get canceled() {
+    return this.status === "canceled";
   }
 
-  @discourseComputed("metadata")
-  metadataUserExists(metadata) {
-    return metadata.user_id && metadata.username;
+  @computed("metadata")
+  get metadataUserExists() {
+    return this.metadata.user_id && this.metadata.username;
   }
 
-  @discourseComputed("metadata")
-  subscriptionUserPath(metadata) {
-    return getURL(`/admin/users/${metadata.user_id}/${metadata.username}`);
+  @computed("metadata")
+  get subscriptionUserPath() {
+    return getURL(
+      `/admin/users/${this.metadata.user_id}/${this.metadata.username}`
+    );
   }
 
   destroy(refund) {

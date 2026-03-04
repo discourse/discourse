@@ -55,8 +55,6 @@ id:
           title: "Daftar Topik"
         basic_topic_list:
           title: "Daftar Topik Dasar"
-        footer_message:
-          title: "Pesan Footer"
         signup_cta:
           title: "CTA Pendaftaran"
         topic_timer_info:

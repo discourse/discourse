@@ -69,8 +69,6 @@ he:
           title: "רשימת נושאים"
         basic_topic_list:
           title: "רשימת נושאים בסיסית"
-        footer_message:
-          title: "הודעת כותרת תחתונה"
         signup_cta:
           title: "קריאה להרשמה"
         topic_timer_info:

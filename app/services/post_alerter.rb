@@ -720,14 +720,11 @@ class PostAlerter
   end
 
   def expand_here_mention(post, exclude_ids: nil)
-    posts = Post.where(topic_id: post.topic_id)
-    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
+    post_type = [Post.types[:regular], Post.types[:moderator_action]]
+    post_type << Post.types[:whisper] if post.user.staff?
 
-    if post.user.staff?
-      posts = posts.where(post_type: [Post.types[:regular], Post.types[:whisper]])
-    else
-      posts = posts.where(post_type: Post.types[:regular])
-    end
+    posts = Post.where(topic_id: post.topic_id, post_type:)
+    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
 
     User.real.where(id: posts.select(:user_id)).limit(SiteSetting.max_here_mentioned)
   end
@@ -817,9 +814,8 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # To simplify things and to avoid IMAP double sync issues, and to cut down
-    # on emails sent via SMTP, any topic_allowed_users (except those who are
-    # not_allowed?) for a group that has SMTP enabled will have their notification
+    # To simplify things and to cut down on emails sent via SMTP, any topic_allowed_users
+    # (except those who are not_allowed?) for a group that has SMTP enabled will have their notification
     # email combined into one and sent via a single group SMTP email with CC addresses.
     emails_to_skip_send = email_using_group_smtp_if_configured(post)
 

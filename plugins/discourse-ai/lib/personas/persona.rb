@@ -71,6 +71,7 @@ module DiscourseAi
             ContentCreator => -32,
             ReportRunner => -33,
             Discover => -34,
+            ChatThreadTitler => -35,
           }
         end
 
@@ -113,13 +114,14 @@ module DiscourseAi
             Tools::Time,
             Tools::Search,
             Tools::Read,
+            Tools::FlagPost,
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
             Tools::RandomPicker,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
-            Tools::GithubPullRequestDiff,
+            Tools::GithubDiff,
             Tools::GithubSearchFiles,
             Tools::WebBrowser,
             Tools::JavascriptEvaluator,
@@ -425,7 +427,7 @@ module DiscourseAi
               .rerank(conversation_context.last[:content], guidance)
               .to_a
               .take(rag_conversation_chunks)
-              .map { _1[:index] }
+              .map { it[:index] }
 
           if ranks.empty?
             fragments = fragments.take(rag_conversation_chunks)

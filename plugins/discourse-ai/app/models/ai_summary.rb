@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class AiSummary < ActiveRecord::Base
-  # TODO remove this line 01-3-2025
-  self.ignored_columns = %i[content_range]
-
   belongs_to :target, polymorphic: true
 
   enum :summary_type, { complete: 0, gist: 1 }
@@ -34,7 +31,7 @@ class AiSummary < ActiveRecord::Base
         ],
       )
       .first
-      .then { AiSummary.find_by(id: _1["id"]) }
+      .then { AiSummary.find_by(id: it["id"]) }
   end
 
   def self.build_sha(joined_ids)

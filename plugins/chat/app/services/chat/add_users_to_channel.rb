@@ -44,6 +44,10 @@ module Chat
       model :channel
       policy :can_add_users_to_channel
       model :target_users, optional: true
+      model :user_comm_screener
+      policy :actor_allows_dms
+      policy :targets_allow_dms_from_user,
+             class_name: Chat::DirectMessageChannel::Policy::CanCommunicateAllParties
       policy :satisfies_dms_max_users_limit,
              class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
 
@@ -58,6 +62,14 @@ module Chat
 
     def fetch_channel(params:)
       ::Chat::Channel.includes(:chatable).find_by(id: params.channel_id)
+    end
+
+    def fetch_user_comm_screener(target_users:, guardian:)
+      UserCommScreener.new(acting_user: guardian.user, target_user_ids: target_users.map(&:id))
+    end
+
+    def actor_allows_dms(user_comm_screener:)
+      !user_comm_screener.actor_disallowing_all_pms?
     end
 
     def can_add_users_to_channel(guardian:, channel:)

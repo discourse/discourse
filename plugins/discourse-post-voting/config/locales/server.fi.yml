@@ -49,9 +49,21 @@ fi:
         agree_and_delete:
           title: "Poista kommentti"
           description: "Poista kommentti, jotta käyttäjät eivät näe sitä."
+        agree_and_suspend:
+          title: "Jäädytä käyttäjä"
+          description: "Hyväksy liputus ja aseta käyttäjä käyttökieltoon."
+        agree_and_silence:
+          title: "Hiljennä käyttäjä"
+          description: "Hyväksy liputus ja hiljennä käyttäjä."
         disagree_and_restore:
           title: "Hylkää ja palauta kommentti"
           description: "Palauta kommentti, jotta kaikki käyttäjät näkevät sen."
+        disagree:
+          title: "Pidä kommentti"
+        ignore:
+          title: "Sivuuta lippu"
+        delete_and_agree:
+          description: "Ohita lippu poistamalla se jonosta ja poista kommentti."
   post_action_types:
     vote:
       title: "Äänestä"
@@ -99,16 +111,14 @@ fi:
             title: "Poista kommentti"
             description: "Poista kommentti, jotta käyttäjät eivät näe sitä."
           delete_and_agree:
-            title: "Ohita liputus ja poista kommentti"
             description: "Ohita lippu poistamalla se jonosta ja poista kommentti."
           disagree_and_restore:
             title: "Hylkää ja palauta kommentti"
             description: "Palauta kommentti, jotta kaikki käyttäjät näkevät sen."
           disagree:
-            title: "Hylkää"
+            title: "Pidä kommentti"
           ignore:
-            title: "Älä tee mitään"
-            description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
+            title: "Sivuuta lippu"
         transcript:
           view: "Näytä aiempien kommenttien transkriptio"
       reviewable_score_types:

@@ -31,7 +31,6 @@ export default <template>
               @startDate={{@controller.startDate}}
               @endDate={{@controller.endDate}}
               @setCustomDateRange={{@controller.setCustomDateRange}}
-              @onDateChange={{@controller.onDateChange}}
             />
           </div>
 

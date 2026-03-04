@@ -1,4 +1,4 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import {
@@ -34,16 +34,26 @@ import TagRow from "./tag-row";
   maximum: "maxTagsPerTopic",
   autoInsertNoneItem: false,
   useHeaderFilter: false,
+  valueProperty: "id",
+  nameProperty: "name",
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
 export default class MiniTagChooser extends MultiSelectComponent {
   @service tagUtils;
+
+  valueProperty = "id";
+  nameProperty = "name";
 
   @empty("value") noTags;
   @or("allowCreate", "site.can_create_tag") allowAnyTag;
 
   @setting("max_tag_search_results") maxTagSearchResults;
   @setting("max_tags_per_topic") maxTagsPerTopic;
+
+  @computed("value.[]")
+  get tags() {
+    return makeArray(this.value);
+  }
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
@@ -74,18 +84,40 @@ export default class MiniTagChooser extends MultiSelectComponent {
       : "plus";
   }
 
-  @computed("value.[]")
+  @computed("tags.[]")
   get content() {
-    let values = makeArray(this.value);
+    let tags = this.tags;
     if (this.selectKit.options.hiddenValues) {
-      values = values.filter(
-        (val) => !this.selectKit.options.hiddenValues.includes(val)
-      );
+      tags = tags.filter((t) => {
+        const id = typeof t === "object" ? t.id : t;
+        return !this.selectKit.options.hiddenValues.some((h) => {
+          const hiddenId = typeof h === "object" ? h.id : h;
+          return hiddenId === id;
+        });
+      });
     }
-    return values.map((x) => this.defaultItem(x, x));
+    return tags.map((t) => {
+      if (typeof t === "object" && t !== null) {
+        return this.defaultItem(t.id, t.name);
+      }
+      return this.defaultItem(t, t);
+    });
+  }
+
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      this.onChange(items);
+    } else {
+      this.set("value", items);
+    }
   }
 
   validateCreate(filter, content) {
+    const selectedTagNames = (this.selectedContent || []).map((t) =>
+      typeof t === "string" ? t : t.name
+    );
+
     return this.tagUtils.validateCreate(
       filter,
       content,
@@ -93,7 +125,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
       (e) => this.addError(e),
       this.termMatchesForbidden,
       (value) => this.getValue(value),
-      this.value
+      selectedTagNames
     );
   }
 
@@ -115,8 +147,11 @@ export default class MiniTagChooser extends MultiSelectComponent {
       categoryId: this.selectKit.options.categoryId,
     };
 
-    if (this.value) {
-      data.selected_tags = this.value.slice(0, 100);
+    if (this.value?.length) {
+      const ids = this.value.map((v) => v.id);
+      if (ids.length) {
+        data.selected_tag_ids = ids.slice(0, 100);
+      }
     }
 
     if (!this.selectKit.options.everyTag) {
@@ -144,7 +179,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
     });
 
     if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.text.localeCompare(b.text));
+      results = results.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     if (json.required_tag_group) {
@@ -159,6 +194,9 @@ export default class MiniTagChooser extends MultiSelectComponent {
       this.set("selectKit.options.translatedFilterPlaceholder", null);
     }
 
-    return results.filter((r) => !makeArray(this.tags).includes(r.id));
+    const selectedNames = this.tags.map((t) =>
+      typeof t === "string" ? t : t.name
+    );
+    return results.filter((r) => !selectedNames.includes(r.name));
   }
 }

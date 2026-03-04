@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -23,7 +23,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
-import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
+import { bind, debounce } from "discourse/lib/decorators";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import {
   fetchUnseenHashtagsInContext,
@@ -133,14 +133,14 @@ export default class ComposerEditor extends Component {
     return this.composer.get("model.topic");
   }
 
-  @discourseComputed(
+  @computed(
     "composer.model.requiredCategoryMissing",
     "currentUser.useRichEditor"
   )
-  replyPlaceholder(requiredCategoryMissing) {
+  get replyPlaceholder() {
     let placeholder = "composer.reply_placeholder_choose_category";
 
-    if (!requiredCategoryMissing) {
+    if (!this.composer?.model?.requiredCategoryMissing) {
       const allowImages = authorizesOneOrMoreImageExtensions(
         this.currentUser.staff,
         this.siteSettings
@@ -158,15 +158,15 @@ export default class ComposerEditor extends Component {
       placeholder = `composer.${key}`;
     }
 
-    return applyValueTransformer(
-      "composer-editor-reply-placeholder",
-      placeholder,
-      { model: this.composer }
+    return i18n(
+      applyValueTransformer("composer-editor-reply-placeholder", placeholder, {
+        model: this.composer,
+      })
     );
   }
 
-  @discourseComputed
-  showLink() {
+  @computed
+  get showLink() {
     return this.currentUser && this.currentUser.link_posting_access !== "none";
   }
 
@@ -177,8 +177,8 @@ export default class ComposerEditor extends Component {
     }
   }
 
-  @discourseComputed
-  markdownOptions() {
+  @computed
+  get markdownOptions() {
     return {
       previewing: true,
 
@@ -243,14 +243,18 @@ export default class ComposerEditor extends Component {
 
   @action
   _composerEditorInitPreview(elem) {
-    const preview = elem.querySelector(".d-editor-preview-wrapper");
+    const preview = elem.classList.contains("d-editor-preview-wrapper")
+      ? elem
+      : elem.querySelector(".d-editor-preview-wrapper");
     this._registerImageAltTextButtonClick(preview);
     this._editorInitPreview = true;
   }
 
   @action
   _composerEditorDestroyPreview(elem) {
-    const preview = elem.querySelector(".d-editor-preview-wrapper");
+    const preview = elem.classList.contains("d-editor-preview-wrapper")
+      ? elem
+      : elem.querySelector(".d-editor-preview-wrapper");
 
     if (preview) {
       preview.removeEventListener(
@@ -322,31 +326,25 @@ export default class ComposerEditor extends Component {
     };
   }
 
-  @discourseComputed(
+  @computed(
     "composer.model.reply",
     "composer.model.replyLength",
     "composer.model.missingReplyCharacters",
     "composer.model.minimumPostLength",
     "composer.lastValidatedAt"
   )
-  validation(
-    reply,
-    replyLength,
-    missingReplyCharacters,
-    minimumPostLength,
-    lastValidatedAt
-  ) {
+  get validation() {
     const postType = this.get("composer.post.post_type");
     if (postType === this.site.get("post_types.small_action")) {
       return;
     }
 
     let reason;
-    if (replyLength < 1) {
+    if (this.composer?.model?.replyLength < 1) {
       reason = i18n("composer.error.post_missing");
-    } else if (missingReplyCharacters > 0) {
+    } else if (this.composer?.model?.missingReplyCharacters > 0) {
       reason = i18n("composer.error.post_length", {
-        count: minimumPostLength,
+        count: this.composer?.model?.minimumPostLength,
       });
       const tl = this.get("currentUser.trust_level");
       if ((tl === 0 || tl === 1) && !this._isNewTopic) {
@@ -364,7 +362,7 @@ export default class ComposerEditor extends Component {
       return EmberObject.create({
         failed: true,
         reason,
-        lastShownAt: lastValidatedAt,
+        lastShownAt: this.composer?.lastValidatedAt,
       });
     }
   }
@@ -968,9 +966,53 @@ export default class ComposerEditor extends Component {
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
+    // Only apply image size adjustments for form template previews
+    // Regular composer handles this through ProseMirror
+    if (this.composer.formTemplateIds?.length > 0) {
+      this._applyImageSizes(preview);
+    }
+
     this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
+  }
+
+  _applyImageSizes(preview) {
+    // Apply sizing to images to match regular composer behavior
+    // where percentage scales are relative to the max_image_width site setting
+    // not the original image dimensions
+    const maxImageWidth = this.siteSettings.max_image_width;
+
+    const images = preview.querySelectorAll("img.resizable[width][height]");
+
+    images.forEach((img) => {
+      const processImage = () => {
+        const width = parseInt(img.getAttribute("width"), 10);
+        const height = parseInt(img.getAttribute("height"), 10);
+        const naturalWidth = img.naturalWidth;
+
+        if (!naturalWidth || naturalWidth === 0) {
+          return;
+        }
+
+        if (width && height) {
+          const percentage = width / naturalWidth;
+
+          const constrainedBase = Math.min(naturalWidth, maxImageWidth);
+          const displayWidth = Math.round(constrainedBase * percentage);
+          const displayHeight = Math.round(height * (displayWidth / width));
+
+          img.setAttribute("width", displayWidth);
+          img.setAttribute("height", displayHeight);
+        }
+      };
+
+      if (img.complete && img.naturalWidth > 0) {
+        processImage();
+      } else {
+        img.addEventListener("load", processImage, { once: true });
+      }
+    });
   }
 
   @computed("composer.formTemplateIds")
@@ -1009,6 +1051,8 @@ export default class ComposerEditor extends Component {
       false
     );
 
+    this.composer.model.set("reply", formTemplateData);
+
     this.preview = await this.cachedCookAsync(
       formTemplateData,
       this.markdownOptions
@@ -1025,17 +1069,21 @@ export default class ComposerEditor extends Component {
     this.selectedFormTemplateId = formTemplateId;
   }
 
-  @discourseComputed(
+  @computed(
     "composer.formTemplateIds",
     "composer.model.replyingToTopic",
     "composer.model.editingPost"
   )
-  showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
-    return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
+  get showFormTemplateForm() {
+    return (
+      this.composer?.formTemplateIds?.length > 0 &&
+      !this.composer?.model?.replyingToTopic &&
+      !this.composer?.model?.editingPost
+    );
   }
 
-  @discourseComputed("composer.model")
-  forceEditorMode() {
+  @computed("composer.model")
+  get forceEditorMode() {
     return applyValueTransformer("composer-force-editor-mode", null, {
       model: this.composer.model,
     });

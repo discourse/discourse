@@ -66,7 +66,7 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
           @selectKit={{this.selectKit}}
         />
         {{#if this.caretIcon}}
-          {{icon this.caretIcon class="caret-icon"}}
+          {{icon this.caretIcon class="angle-icon"}}
         {{/if}}
       {{/if}}
     </div>

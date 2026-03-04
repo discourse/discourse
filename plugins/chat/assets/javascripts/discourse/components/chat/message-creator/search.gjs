@@ -17,21 +17,17 @@ import SearchInput from "./search-input";
 
 export default class ChatMessageCreatorSearch extends Component {
   @service chat;
+  @service chatGuardian;
   @service router;
 
   @tracked chatables = [];
   @tracked highlightedChatable;
   @tracked term;
-  @tracked loading = false;
 
   get items() {
     const items = [];
 
-    if (this.loading) {
-      return items;
-    }
-
-    if (!this.term?.length) {
+    if (!this.term?.length && this.chatGuardian.canUseGroupChat()) {
       items.push({
         identifier: "new-group",
         type: "list-action",

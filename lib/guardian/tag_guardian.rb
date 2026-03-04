@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-#mixin for all guardian methods dealing with tagging permissions
 module TagGuardian
-  def can_see_tag?(_tag)
+  def can_see_tag?(tag)
+    return false if !SiteSetting.tagging_enabled
+    return false if hidden_tag_names.include?(tag.name)
     true
   end
 
@@ -39,7 +40,7 @@ module TagGuardian
   def hidden_tag_names
     @hidden_tag_names ||=
       begin
-        if SiteSetting.tagging_enabled && !is_staff?
+        if SiteSetting.tagging_enabled && !is_admin?
           DiscourseTagging.hidden_tag_names(self)
         else
           []

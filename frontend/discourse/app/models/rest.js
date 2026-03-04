@@ -5,6 +5,7 @@ import { equal } from "@ember/object/computed";
 import { getOwner, setOwner } from "@ember/owner";
 import { Promise } from "rsvp";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
 
 export default class RestModel extends EmberObject {
   // Overwrite and JSON will be passed through here before `create` and `update`
@@ -16,7 +17,10 @@ export default class RestModel extends EmberObject {
     args = args || {};
 
     args.__munge = this.munge;
-    const createArgs = this.munge(args, args.store);
+    const createArgs = this.munge(
+      { ...args, ...Object.fromEntries(enumerateTrackedEntries(args)) },
+      args.store
+    );
 
     // Some Discourse code calls `model.create()` directly without going through the
     // store. In that case the owner is not set, and injections will fail. This workaround ensures
@@ -33,6 +37,7 @@ export default class RestModel extends EmberObject {
   @equal("__state", "new") isNew;
   @equal("__state", "created") isCreated;
 
+  primaryKey = "id";
   @tracked __state;
 
   beforeCreate() {}
@@ -52,7 +57,7 @@ export default class RestModel extends EmberObject {
 
     this.set("isSaving", true);
     return this.store
-      .update(this.__type, this.id, props)
+      .update(this.__type, this.get(this.primaryKey), props)
       .then((res) => {
         const payload = this.__munge(res.payload || res.responseJson);
 

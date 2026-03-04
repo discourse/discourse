@@ -25,7 +25,7 @@ export default class EmbeddableHost extends Component {
     const category = Category.findById(categoryId);
 
     this.category = category;
-    this.tags = (this.host.tags || []).join(", ");
+    this.tags = (this.host.tags || []).map((t) => t.name).join(", ");
     this.user = this.host.user;
   }
 

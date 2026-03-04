@@ -101,6 +101,16 @@ RSpec.describe Onebox::Engine::StandardEmbed do
       expect(instance.raw).to eq({ description: "description" })
     end
 
+    it "skips oembed dimensions for rich embeds" do
+      Onebox::Helpers.stubs(fetch_html_doc: nil)
+      Onebox::Oembed
+        .any_instance
+        .stubs(:data)
+        .returns({ type: "rich", width: 600, height: 338, title: "Title" })
+
+      expect(instance.raw).to eq({ type: "rich", title: "Title" })
+    end
+
     it "does not override data with json_ld data" do
       Onebox::Helpers.stubs(fetch_html_doc: nil)
       Onebox::JsonLd.any_instance.stubs(:data).returns({ title: "i do not want to override" })
@@ -192,6 +202,13 @@ RSpec.describe Onebox::Engine::StandardEmbed do
         embed = embed_with_html("https://x.com", "<h2 id='x'>X</h2>", { title: "Page" })
         embed.send(:enhance_title_with_anchor)
         expect(embed.instance_variable_get(:@raw)[:title]).to eq("Page")
+      end
+
+      it "handles fragments containing single quotes" do
+        html = "<h2 id=\"it's-complicated\">It's Complicated</h2>"
+        embed = embed_with_html("https://x.com#it's-complicated", html, { title: "Docs" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("It's Complicated - Docs")
       end
     end
 

@@ -10,7 +10,7 @@ const AiLlmSelector = <template>
       filterable=true
       none="discourse_ai.ai_persona.no_llm_selected"
     }}
-    class={{@class}}
+    ...attributes
   />
 </template>;
 

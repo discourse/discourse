@@ -6,6 +6,7 @@ import curryComponent from "ember-curry-component";
 import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
+import FKControlColor from "discourse/form-kit/components/fk/control/color";
 import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
 import FKControlCustom from "discourse/form-kit/components/fk/control/custom";
 import FKControlEmoji from "discourse/form-kit/components/fk/control/emoji";
@@ -17,6 +18,7 @@ import FKControlPassword from "discourse/form-kit/components/fk/control/password
 import FKControlQuestion from "discourse/form-kit/components/fk/control/question";
 import FKControlRadioGroup from "discourse/form-kit/components/fk/control/radio-group";
 import FKControlSelect from "discourse/form-kit/components/fk/control/select";
+import FKControlTagChooser from "discourse/form-kit/components/fk/control/tag-chooser";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
 import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
@@ -100,6 +102,7 @@ export default class FKField extends Component {
             Question=(this.componentFor FKControlQuestion field)
             Textarea=(this.componentFor FKControlTextarea field)
             Checkbox=(this.componentFor FKControlCheckbox field)
+            Color=(this.componentFor FKControlColor field)
             Image=(this.componentFor FKControlImage field)
             Password=(this.componentFor FKControlPassword field)
             Composer=(this.componentFor FKControlComposer field)
@@ -108,6 +111,7 @@ export default class FKField extends Component {
             Toggle=(this.componentFor FKControlToggle field)
             Menu=(this.componentFor FKControlMenu field)
             Select=(this.componentFor FKControlSelect field)
+            TagChooser=(this.componentFor FKControlTagChooser field)
             Input=(this.componentFor FKControlInput field)
             RadioGroup=(this.componentFor FKControlRadioGroup field)
             Calendar=(this.componentFor FKControlCalendar field)

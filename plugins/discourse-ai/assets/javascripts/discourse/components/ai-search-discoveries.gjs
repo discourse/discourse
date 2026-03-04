@@ -30,7 +30,6 @@ export default class AiSearchDiscoveries extends Component {
 
   @tracked loadingConversationTopic = false;
   @tracked fullDiscoveryToggled = false;
-  @tracked discoveryPreviewLength = this.args.discoveryPreviewLength || 150;
 
   constructor() {
     super(...arguments);
@@ -71,6 +70,10 @@ export default class AiSearchDiscoveries extends Component {
       "/discourse-ai/discoveries",
       this._updateDiscovery
     );
+  }
+
+  get discoveryPreviewLength() {
+    return this.args.discoveryPreviewLength || 150;
   }
 
   get query() {
@@ -169,7 +172,6 @@ export default class AiSearchDiscoveries extends Component {
   @action
   async continueConversation() {
     const data = {
-      user_id: this.currentUser.id,
       query: this.query,
       context: this.discobotDiscoveries.discovery,
     };

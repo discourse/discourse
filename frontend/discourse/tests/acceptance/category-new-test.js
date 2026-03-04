@@ -5,26 +5,30 @@ import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import formKit from "discourse/tests/helpers/form-kit-helper";
+import {
+  acceptance,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("New category access for moderators", function (needs) {
   needs.user({ moderator: true, admin: false, trust_level: 1 });
 
-  test("Authorizes access based on site setting", async function (assert) {
-    this.siteSettings.moderators_manage_categories = false;
+  test("Prevents access when moderator cannot create categories", async function (assert) {
     await visit("/new-category");
-
     assert.strictEqual(currentURL(), "/404");
+  });
 
-    this.siteSettings.moderators_manage_categories = true;
+  test("Authorizes access when moderator can create categories", async function (assert) {
+    updateCurrentUser({ can_create_category: true });
     await visit("/new-category");
 
     assert.strictEqual(
       currentURL(),
-      "/new-category",
-      "it allows access to new category when site setting is enabled"
+      "/new-category/general",
+      "it allows access to new category"
     );
   });
 });
@@ -37,7 +41,7 @@ acceptance("New category access for non authorized users", function () {
 });
 
 acceptance("Category New", function (needs) {
-  needs.user();
+  needs.user({ can_create_category: true });
 
   test("Creating a new category", async function (assert) {
     await visit("/new-category");
@@ -117,8 +121,74 @@ acceptance("Category New", function (needs) {
   });
 });
 
+acceptance("Category type setup page", function (needs) {
+  needs.user({ admin: true, can_create_category: true });
+  needs.settings({
+    enable_simplified_category_creation: true,
+    enable_category_type_setup: true,
+  });
+  needs.pretender((server, helper) => {
+    server.get("/categories/types", () => {
+      return helper.response(200, {
+        types: [
+          {
+            id: "discussion",
+            name: "Discussion",
+            icon: "comments",
+            description: "General discussion",
+            available: true,
+          },
+          {
+            id: "support",
+            name: "Support",
+            icon: "circle-question",
+            description: "Q&A support",
+            available: true,
+          },
+        ],
+      });
+    });
+  });
+
+  test("Visiting /new-category redirects to setup page", async function (assert) {
+    await visit("/new-category");
+    assert.strictEqual(currentURL(), "/new-category/setup");
+  });
+
+  test("Setup page shows type cards", async function (assert) {
+    await visit("/new-category/setup");
+    assert.dom(".category-type-cards__card").exists({ count: 2 });
+    assert.dom(".category-type-cards__card-name").exists();
+  });
+
+  test("Clicking a type card transitions to new category form", async function (assert) {
+    await visit("/new-category/setup");
+    await click(".category-type-cards__card:first-child");
+    assert.strictEqual(currentURL(), "/new-category/general");
+  });
+});
+
+acceptance("Category type setup disabled", function (needs) {
+  needs.user({ admin: true, can_create_category: true });
+  needs.settings({
+    enable_simplified_category_creation: true,
+    enable_category_type_setup: false,
+  });
+
+  test("Visiting /new-category goes directly to form", async function (assert) {
+    await visit("/new-category");
+    assert.strictEqual(currentURL(), "/new-category/general");
+    assert.dom(".edit-category").exists();
+  });
+
+  test("Visiting /new-category/setup redirects to new-category", async function (assert) {
+    await visit("/new-category/setup");
+    assert.strictEqual(currentURL(), "/new-category/general");
+  });
+});
+
 acceptance("Category text color", function (needs) {
-  needs.user();
+  needs.user({ can_create_category: true });
   needs.pretender((server, helper) => {
     const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
 
@@ -136,21 +206,25 @@ acceptance("Category text color", function (needs) {
   test("Category text color is set based on contrast", async function (assert) {
     await visit("/new-category");
 
-    assert
-      .dom(".edit-text-color .hex-input")
-      .hasValue(CATEGORY_TEXT_COLORS[0], "has the default text color");
+    assert.strictEqual(
+      formKit().field("text_color").value(),
+      CATEGORY_TEXT_COLORS[0],
+      "has the default text color"
+    );
 
     await fillIn("input.category-name", "testing");
-    await fillIn(".category-color-editor .hex-input", "EEEEEE");
+    await formKit().field("color").fillIn("EEEEEE");
 
-    assert
-      .dom(".edit-text-color .hex-input")
-      .hasValue(CATEGORY_TEXT_COLORS[1], "sets the contrast text color");
+    assert.strictEqual(
+      formKit().field("text_color").value(),
+      CATEGORY_TEXT_COLORS[1],
+      "sets the contrast text color"
+    );
   });
 });
 
 acceptance("New category preview", function (needs) {
-  needs.user({ admin: true });
+  needs.user({ admin: true, can_create_category: true });
 
   test("Category badge color appears and updates", async function (assert) {
     await visit("/new-category");
@@ -162,7 +236,7 @@ acceptance("New category preview", function (needs) {
 
     assert.strictEqual(previewBadgeColor, "#0088CC");
 
-    await fillIn(".hex-input", "FF00FF");
+    await formKit().field("color").fillIn("FF00FF");
 
     previewBadgeColor = document
       .querySelector(".category-style .badge-category")

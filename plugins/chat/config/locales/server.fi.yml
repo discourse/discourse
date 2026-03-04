@@ -131,16 +131,12 @@ fi:
           title: "Poista viesti"
           description: "Poista viesti, jotta käyttäjät eivät näe sitä."
         delete_and_agree:
-          title: "Ohita liputus ja poista viesti"
           description: "Ohita lippu poistamalla se jonosta ja poista viesti."
         disagree_and_restore:
           title: "Hylkää ja palauta viesti"
           description: "Palauta viesti, jotta kaikki käyttäjät näkevät sen."
-        disagree:
-          title: "Hylkää"
         ignore:
-          title: "Älä tee mitään"
-          description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
+          title: "Sivuuta lippu"
       direct_messages:
         transcript_title: "Kanavan %{channel_name} aiempien viestin transkriptio"
         transcript_body: "Antaaksemme sinulle enemmän kontekstia lisäsimme tämän keskustelun aiempien viestien transkription (enintään kymmenen):\n\n%{transcript}"
@@ -246,19 +242,14 @@ fi:
         watched_thread:
           one: "[%{site_name}] Uusi viesti kanavalla %{channel}"
           other: "[%{site_name}] Uusia viestejä kanavalla %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muussa"
-          other: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muussa"
         chat_dm_1:
           one: "[%{site_name}] Uusi viesti käyttäjältä %{name}"
           other: "[%{site_name}] Uusia viestejä käyttäjältä %{name}"
         chat_dm_2: "[%{site_name}] Uusia viestejä käyttäjältä %{name_1} ja %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Uusia viestejä käyttäjältä %{name} ja %{count} muulta"
         chat_channel_1:
           one: "[%{site_name}] Uusi viesti kanavalta %{channel}"
           other: "[%{site_name}] Uusia viestejä kanavalta %{channel}"
         chat_channel_2: "[%{site_name}] Uusia viestejä kanavalta %{channel_1} ja %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muulla"
         chat_channel_and_dm: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja käyttäjältä %{name}"
       unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
       unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."

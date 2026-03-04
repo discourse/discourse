@@ -1,3 +1,4 @@
+/* eslint-disable ember/route-path-style */
 export default function () {
   this.route("admin", function () {
     this.route("dashboard", { path: "/" }, function () {
@@ -434,7 +435,10 @@ export default function () {
     );
   });
 
-  this.route("newCategory", { path: "/new-category" });
+  this.route("newCategory", { path: "/new-category" }, function () {
+    this.route("setup");
+    this.route("tabs", { path: "/:tab" });
+  });
 
   this.route("editCategory", { path: "/c/*slug/edit" }, function () {
     this.route("tabs", { path: "/:tab" });

@@ -106,7 +106,7 @@ acceptance("Composer - Tags", function (needs) {
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     await click("#reply-control button.create");
     assert.notStrictEqual(currentURL(), "/");
@@ -140,7 +140,7 @@ acceptance("Composer - Tags", function (needs) {
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     await click("#reply-control button.create");
     assert.notStrictEqual(currentURL(), "/");

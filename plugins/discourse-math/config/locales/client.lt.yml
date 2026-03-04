@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    discourse_math:
+      edit_math: "Redaguoti matematiką"
+      edit_modal:
+        title: "Redaguoti matematiką"
+        label: "Matematika"
+        apply: "Kandidatuoti"
+      composer:
+        insert_math: "Įterpti matematinį kodą"
+      insert_modal:
+        title_inline: "Įterpti įterptąją matematiką"
+        title_block: "Įterpti blokinę matematiką"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "Įterpti"
+        block_mode: "Blokavimo režimas (rodoma lygtis)"

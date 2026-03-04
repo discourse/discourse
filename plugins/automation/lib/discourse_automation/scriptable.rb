@@ -250,39 +250,73 @@ module DiscourseAutomation
         "[quote=#{params.join(", ")}]\n#{post.raw.strip}\n[/quote]\n\n"
       end
 
-      def self.send_pm(
-        pm,
-        sender: Discourse.system_user.username,
-        delay: nil,
-        automation_id: nil,
-        prefers_encrypt: true
-      )
+      def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil)
         pm = pm.symbolize_keys
-        prefers_encrypt = prefers_encrypt && !!defined?(EncryptedPostCreator)
 
-        if delay && delay.to_i > 0 && automation_id
-          pm[:execute_at] = delay.to_i.minutes.from_now
-          pm[:sender] = sender
-          pm[:automation_id] = automation_id
-          pm[:prefers_encrypt] = prefers_encrypt
-          DiscourseAutomation::PendingPm.create!(pm)
-        else
-          sender = User.find_by(username: sender)
-          if !sender
-            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} - sender does not exist: `#{sender}`"
-            return
+        sender_user =
+          if sender.is_a?(Integer)
+            User.find_by(id: sender)
+          else
+            User.find_by(username: sender)
           end
 
-          pm[:target_usernames] = Array.wrap(pm[:target_usernames])
+        if !sender_user
+          DiscourseAutomation::Logger.warn(
+            "Did not send PM #{pm[:title]} - sender does not exist: `#{sender}`",
+          )
+          return
+        end
+
+        if delay && delay.to_i > 0 && automation_id
+          if pm[:target_user_ids].present?
+            target_user_ids = Array.wrap(pm[:target_user_ids])
+            if !User.where(id: target_user_ids).exists?
+              DiscourseAutomation::Logger.warn(
+                "Did not create pending PM #{pm[:title]} - no valid targets exist",
+              )
+              return
+            end
+          else
+            target_usernames = Array.wrap(pm[:target_usernames])
+            target_user_ids = User.where(username: target_usernames).pluck(:id)
+            if target_user_ids.empty?
+              DiscourseAutomation::Logger.warn(
+                "Did not create pending PM #{pm[:title]} - no valid targets exist",
+              )
+              return
+            end
+          end
+
+          pm.delete(:target_usernames)
+          pm[:execute_at] = delay.to_i.minutes.from_now
+          pm[:sender_id] = sender_user.id
+          pm[:target_user_ids] = target_user_ids
+          pm[:automation_id] = automation_id
+          DiscourseAutomation::PendingPm.create!(pm)
+        else
+          if pm[:target_user_ids].present?
+            pm[:target_user_ids] = Array.wrap(pm[:target_user_ids])
+            pm.delete(:target_usernames)
+          else
+            pm[:target_usernames] = Array.wrap(pm[:target_usernames])
+          end
           pm[:target_group_names] = Array.wrap(pm[:target_group_names])
           pm[:target_emails] = Array.wrap(pm[:target_emails])
 
-          if pm[:target_usernames].empty? && pm[:target_group_names].empty? &&
-               pm[:target_emails].empty?
+          if pm[:target_user_ids].blank? && pm[:target_usernames].blank? &&
+               pm[:target_group_names].empty? && pm[:target_emails].empty?
             return
           end
 
           non_existing_targets = []
+
+          if pm[:target_user_ids].present?
+            existing_ids = User.where(id: pm[:target_user_ids]).pluck(:id)
+            if existing_ids.length != pm[:target_user_ids].length
+              non_existing_targets << "#{pm[:target_user_ids].length - existing_ids.length} user(s) by ID"
+              pm[:target_user_ids] = existing_ids
+            end
+          end
 
           if pm[:target_usernames].present?
             existing_target_usernames = User.where(username: pm[:target_usernames]).pluck(:username)
@@ -308,24 +342,33 @@ module DiscourseAutomation
             end
           end
 
-          post_created = false
           pm = pm.merge(archetype: Archetype.private_message)
-          pm[:target_usernames] = pm[:target_usernames].join(",")
+          pm[:target_usernames] = pm[:target_usernames].join(",") if pm[:target_usernames].present?
           pm[:target_group_names] = pm[:target_group_names].join(",")
           pm[:target_emails] = pm[:target_emails].join(",")
 
-          if pm[:target_usernames].blank? && pm[:target_group_names].blank? &&
-               pm[:target_emails].blank?
-            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} - no valid targets exist"
+          if pm[:target_user_ids].blank? && pm[:target_usernames].blank? &&
+               pm[:target_group_names].blank? && pm[:target_emails].blank?
+            DiscourseAutomation::Logger.warn(
+              "Did not send PM #{pm[:title]} - no valid targets exist",
+            )
             return
           elsif non_existing_targets.any?
-            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`"
+            DiscourseAutomation::Logger.warn(
+              "Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`",
+            )
           end
 
-          post_created = EncryptedPostCreator.new(sender, pm).create if prefers_encrypt
-
           pm[:acting_user] = Discourse.system_user
-          PostCreator.new(sender, pm).create! if !post_created
+          creator = PostCreator.new(sender_user, pm)
+          post = creator.create
+          if post.blank? || creator.errors.present?
+            error_message = creator.errors.full_messages.join(", ")
+            DiscourseAutomation::Logger.error(
+              "Failed to send PM '#{pm[:title]}' - #{error_message}",
+            )
+            raise ActiveRecord::RecordNotSaved.new(error_message)
+          end
         end
       end
     end

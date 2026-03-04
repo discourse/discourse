@@ -382,8 +382,8 @@ class PostSerializer < BasicPostSerializer
 
       summary.delete(:count) if summary[:count].to_i.zero?
 
-      # Only include it if the user can do it or it has a count
-      result << summary if summary[:can_act] || summary[:count]
+      # Only include it if the user can do it, it has a count, or the user has acted
+      result << summary if summary[:can_act] || summary[:count] || summary[:acted]
     end
 
     result
@@ -631,7 +631,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_user_status?
-    SiteSetting.enable_user_status && object.user&.has_status?
+    SiteSetting.enable_user_status && object.user&.has_status? &&
+      scope&.can_see_user_status?(object.user)
   end
 
   def user_status

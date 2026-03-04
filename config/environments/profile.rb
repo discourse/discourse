@@ -30,7 +30,10 @@ Discourse::Application.configure do
   config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for nginx
 
   # we recommend you use mailhog https://github.com/mailhog/MailHog
-  config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
+  config.action_mailer.smtp_settings = {
+    address: "localhost",
+    port: ENV["DISCOURSE_LOCAL_EMAIL_PORT"] || 1025,
+  }
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify

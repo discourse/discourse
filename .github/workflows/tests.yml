@@ -24,13 +24,13 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'rollup' && ' (rollup)' || '' }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
-          matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
-          && 'debian-12-16core'
-          || 'debian-12-8core'
+          matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
+          && 'cdck-linux-16-core'
+          || 'cdck-linux-8-core'
         )
         || 'ubuntu-latest'
       }}
@@ -61,6 +61,8 @@ jobs:
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
+      QUNIT_REUSE_BUILD: 1
+      ROLLUP_PLUGIN_COMPILER: ${{ matrix.plugin_compiler == 'rollup' && '1' || '0' }}
 
     strategy:
       fail-fast: false
@@ -69,6 +71,7 @@ jobs:
         build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
+        plugin_compiler: ["legacy"]
         exclude:
           - build_type: backend
             target: themes
@@ -86,6 +89,9 @@ jobs:
           - build_type: system
             target: chat
             browser: Chrome
+          - build_type: frontend
+            target: plugins
+            plugin_compiler: "rollup"
           # - build_type: frontend
           #   target: core
           #   browser: Firefox Evergreen
@@ -135,7 +141,6 @@ jobs:
 
       - name: Setup gems
         run: |
-          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
@@ -291,6 +296,10 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
+      - name: Ember Build
+        if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
+        run: bin/rake assets:precompile:build_plugins && script/assemble_ember_build.rb
+
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
@@ -307,7 +316,7 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake plugin:qunit['*']
+        run: bin/rake 'plugin:qunit[*]'
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
@@ -318,10 +327,6 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
-
-      - name: Ember Build for System Tests
-        if: matrix.build_type == 'system'
-        run: script/assemble_ember_build.rb
 
       - name: Install playwright
         if: matrix.build_type == 'system'
@@ -389,23 +394,16 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Fetch Job ID
-        id: fetch-job-id
-        if: steps.check-flaky-spec-report.outputs.exists == 'true'
-        run: |
-          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}')
-          echo "job_id=$job_id" >> $GITHUB_OUTPUT
-
       - name: Create flaky tests report artifact
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
-        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
+        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
       - name: Upload flaky tests report
         uses: actions/upload-artifact@v6
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
-          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
+          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'

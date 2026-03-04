@@ -273,8 +273,8 @@ class Auth::DefaultCurrentUserProvider
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
     user.unstage!
+
     make_developer_admin(user)
-    enable_bootstrap_mode(user)
 
     UserAuthToken.enforce_session_count_limit!(user.id)
 
@@ -294,6 +294,10 @@ class Auth::DefaultCurrentUserProvider
     # Clear memoization of `current_user` so we can get the acting user back in
     # the context of the same request.
     @env.delete(CURRENT_USER_KEY)
+  end
+
+  def impersonation_acting_user
+    @user_token.acting_user
   end
 
   def set_auth_cookie!(unhashed_auth_token, user, cookie_jar)
@@ -328,14 +332,6 @@ class Auth::DefaultCurrentUserProvider
       user.admin = true
       user.save
       Group.refresh_automatic_groups!(:staff, :admins)
-    end
-  end
-
-  def enable_bootstrap_mode(user)
-    return if SiteSetting.bootstrap_mode_enabled
-
-    if user.admin && user.last_seen_at.nil? && user.is_singular_admin?
-      Jobs.enqueue(:enable_bootstrap_mode, user_id: user.id)
     end
   end
 

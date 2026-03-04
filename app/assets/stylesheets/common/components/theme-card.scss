@@ -91,11 +91,10 @@
   &__image-wrapper {
     width: 100%;
     height: 160px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
     display: flex;
     align-items: center;
-    scroll-snap-type: x mandatory;
+    position: relative;
     border-bottom: 1px solid var(--content-border-color);
     border-top-left-radius: var(--d-border-radius);
     border-top-right-radius: var(--d-border-radius);
@@ -105,6 +104,10 @@
       top: 0;
       left: 0;
     }
+
+    &:hover .theme-card__screenshot-toggle {
+      opacity: 1;
+    }
   }
 
   &__image {
@@ -112,7 +115,14 @@
     flex-shrink: 0;
     object-fit: cover;
     object-position: top left;
-    scroll-snap-align: start;
+  }
+
+  &__screenshot-toggle {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
   }
 
   .ember-checkbox {

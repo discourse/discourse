@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import TopicDetails from "discourse/models/topic-details";
@@ -253,5 +254,44 @@ module("Unit | Model | topic", function (hooks) {
     const invisibleTopic = this.store.createRecord("topic", { visible: false });
     assert.false(invisibleTopic.visible);
     assert.true(invisibleTopic.invisible);
+  });
+
+  test("addTrackedTopicProperties", function (assert) {
+    withPluginApi((api) => {
+      api.addTrackedTopicProperties("plugin_property", "other_plugin_property");
+    });
+
+    const topic = this.store.createRecord("topic", { id: 1234 });
+
+    topic.plugin_property = "test value";
+    topic.other_plugin_property = "other value";
+
+    assert.strictEqual(
+      topic.plugin_property,
+      "test value",
+      "plugin tracked property can be set and read via direct assignment"
+    );
+    assert.strictEqual(
+      topic.other_plugin_property,
+      "other value",
+      "other plugin tracked property can be set and read via direct assignment"
+    );
+
+    topic.updateFromJson({
+      details: {},
+      plugin_property: "updated value",
+      other_plugin_property: "other updated value",
+    });
+
+    assert.strictEqual(
+      topic.plugin_property,
+      "updated value",
+      "plugin tracked property is updated via updateFromJson"
+    );
+    assert.strictEqual(
+      topic.other_plugin_property,
+      "other updated value",
+      "other plugin tracked property is updated via updateFromJson"
+    );
   });
 });

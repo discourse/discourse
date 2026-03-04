@@ -2,6 +2,7 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { AUTO_GROUPS, SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import PermissionType from "discourse/models/permission-type";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -13,24 +14,16 @@ function getNewCategoryDefaultColors() {
 }
 
 export default class NewCategory extends DiscourseRoute {
+  @service categoryTypeChooser;
   @service router;
 
-  controllerName = "edit-category.tabs";
-
-  templateName = "edit-category.tabs";
+  deactivate() {
+    this.categoryTypeChooser.reset();
+  }
 
   beforeModel() {
-    if (!this.currentUser) {
-      this.router.replaceWith("/404");
-      return;
-    }
-    if (!this.currentUser.admin) {
-      if (
-        !this.currentUser.moderator ||
-        this.siteSettings.moderators_manage_categories === false
-      ) {
-        this.router.replaceWith("/404");
-      }
+    if (!this.currentUser?.can_create_category) {
+      return this.router.replaceWith("/404");
     }
   }
 
@@ -49,6 +42,8 @@ export default class NewCategory extends DiscourseRoute {
     return this.store.createRecord("category", {
       color: backgroundColor,
       text_color: textColor,
+      style_type: "icon",
+      icon: "square-full",
       group_permissions,
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,
@@ -68,18 +63,15 @@ export default class NewCategory extends DiscourseRoute {
   }
 
   groupPermissions() {
-    // Override this function if you want different groupPermissions from a plugin.
-    // If your plugin override fails, permissions will fallback to defaultGroupPermissions
     return this.defaultGroupPermissions();
   }
 
   defaultGroupPermissions() {
     return [
       {
-        group_name: this.site.groups.find(
-          (g) => g.id === AUTO_GROUPS.everyone.id
-        ).name,
-        permission_type: 1,
+        group_id: AUTO_GROUPS.everyone.id,
+        group_name: this.site.groupsById[AUTO_GROUPS.everyone.id].name,
+        permission_type: PermissionType.FULL,
       },
     ];
   }

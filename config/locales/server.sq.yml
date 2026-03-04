@@ -52,6 +52,7 @@ sq:
   topic_category_changed: "Nga %{from} në %{to}"
   topic_tag_changed:
     added_and_removed: "U shtua %{added} dhe u hoq %{removed}"
+    added: "Shtuar %{added}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
   components:
@@ -777,7 +778,6 @@ sq:
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
-    min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
@@ -912,6 +912,7 @@ sq:
     queued_by_staff:
       title: "Postimi ka nevojë për aprovim"
     welcome_user:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -922,6 +923,7 @@ sq:
 
         Enjoy your stay!
     welcome_invite:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
     backup_succeeded:
       subject_template: "Backup completed successfully"
@@ -1410,30 +1412,45 @@ sq:
         complete: "Postimi u fshi."
       delete_and_agree:
         complete: "Postimi u fshi."
-      disagree:
+      disagree_bundle:
         title: "Jo"
+      disagree:
         complete: "Shënimi u injorua."
       ignore:
         complete: "Shënimi u injorua."
       ignore_and_do_nothing:
         complete: "Shënimi u injorua."
       approve:
-        title: "Aprovo"
+        title: "Po"
         complete: "Postimi u miratua."
       approve_post:
+        title: "Po"
         complete: "Postimi u miratua."
       approve_post_closed:
+        title: "Po"
         complete: "Postimi u miratua."
+      reject_post_bundle:
+        title: "Jo"
       reject_post:
         complete: "Postimi u refuzua."
       approve_user:
+        title: "Po"
         complete: "Përdoruesi u miratua."
       reject_user:
+        title: "Jo"
         delete:
           title: "Fshij Anëtarin"
           complete: "Përdoruesi u fshi."
+      confirm_spam:
+        title: "Po"
+      not_spam:
+        title: "Jo"
       reject:
         title: "Refuzo"
+      approve_and_restore:
+        title: "Po"
+      approve_and_unhide:
+        title: "Po"
       delete_post:
         complete: "Postimi u fshi"
       delete_user:

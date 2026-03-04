@@ -1,8 +1,8 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -29,7 +29,6 @@ import concatClass from "discourse/helpers/concat-class";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
@@ -154,16 +153,8 @@ export default class DEditor extends Component {
     });
   }
 
-  @discourseComputed("placeholder")
-  placeholderTranslated(placeholder) {
-    if (placeholder) {
-      return i18n(placeholder);
-    }
-    return null;
-  }
-
-  @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
-  showEditorModeToggle() {
+  @computed("siteSettings.rich_editor", "forceEditorMode")
+  get showEditorModeToggle() {
     return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
   }
 
@@ -204,13 +195,13 @@ export default class DEditor extends Component {
       keymap[sc] = () => {
         const customAction = shortcuts[sc].shortcutAction;
 
+        const toolbarEvent = this.newToolbarEvent();
         if (customAction) {
-          const toolbarEvent = this.newToolbarEvent();
           if (!button.condition || button.condition(toolbarEvent)) {
             customAction(toolbarEvent);
           }
         } else {
-          button.action(button);
+          button.action(toolbarEvent);
         }
         return false;
       };
@@ -833,7 +824,7 @@ export default class DEditor extends Component {
             @markdownOptions={{this.markdownOptions}}
             @keymap={{this.keymap}}
             @value={{this.value}}
-            @placeholder={{this.placeholderTranslated}}
+            @placeholder={{@placeholder}}
             @disabled={{this.disabled}}
             @change={{this.onChange}}
             @focusIn={{this.handleFocusIn}}

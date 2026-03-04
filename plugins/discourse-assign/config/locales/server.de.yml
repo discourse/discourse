@@ -14,6 +14,7 @@ de:
     assign_self_regex: "Regulärer Ausdruck, der erfüllt sein muss, um sich einem Thema selbst zuzuordnen. Beispiel: „meine Liste“"
     assign_other_regex: "Regulärer Ausdruck, der erfüllt sein muss, um ein Thema jemand anderem per Erwähnung zuzuordnen. Beispiel: „deine Liste“"
     unassign_on_group_archive: "Zuordnung aufheben, wenn eine Nachricht von einer Gruppe archiviert wurde (neu zuordnen, wenn sie wieder in den Posteingang verschoben wird)"
+    unassign_on_close: "Hebe die Zuweisung des Themas automatisch auf, wenn es geschlossen wird. HINWEIS: Es wird kein separater Beitrag dabei erstellt."
     reassign_on_open: "Wenn ein Thema eröffnet wird, ordne zuvor zugeordnete Benutzer/Gruppen neu zu"
     invite_on_assign: "Wenn eine persönliche Nachricht einem Benutzer oder einer Gruppe zugeordnet wird, lade ihn/sie zu der PN ein, wenn er/sie nicht bereits Teilnehmer ist."
     assign_mailer: "Wann für Zuordnungen Benachrichtigungs-E-Mails gesendet werden"
@@ -24,6 +25,9 @@ de:
     assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen und können Themen zugeordnet werden."
     enable_assign_status: "Füge zu jeder Zuordnung ein anpassbares Statusfeld hinzu."
     assign_statuses: "Liste der Status, die für jede Zuordnung verfügbar sind. Der erste Status ist der Standardstatus, der für jede neue Zuordnung verwendet wird."
+    ignore_solved_topics_in_assigned_reminder: "Verhindere, dass Erinnerungen für Zuordnungen gelöste Themen betreffen. Nur relevant, wenn das Plugin „Discourse Gelöst“ verwendet wird."
+    assignment_status_on_solve: "Wenn ein Thema als gelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
+    assignment_status_on_unsolve: "Wenn ein Thema als ungelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
     errors:
       assign_statuses:
         too_few: "Es müssen mindestens zwei verschiedene Status verfügbar sein."
@@ -32,6 +36,11 @@ de:
   discourse_assign:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
+    filter:
+      description:
+        assigned: "Themen anzeigen, die einem Benutzer oder einer Gruppe zugeordnet wurden"
+        nobody: "Themen anzeigen, die keinem zugeordnet sind"
+        anyone: "Themen anzeigen, die jemanden zugeordnet sind"
     already_claimed: "Dieses Thema wurde bereits übernommen."
     already_assigned: "Thema ist bereits @%{username} zugeordnet"
     too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugeordneten Themen erreicht (%{max})."

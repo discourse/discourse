@@ -1,19 +1,19 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import DButton from "discourse/components/d-button";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
-import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-@classNames("topic-timer-info")
+@tagName("")
 export default class TopicTimerInfo extends Component {
   clockIcon = htmlSafe(`${iconHTML("far-clock")}`);
   trashLabel = i18n("post.controls.remove_timer");
@@ -37,19 +37,19 @@ export default class TopicTimerInfo extends Component {
     }
   }
 
-  @discourseComputed
-  canModifyTimer() {
+  @computed
+  get canModifyTimer() {
     return this.currentUser && this.currentUser.get("canManageTopic");
   }
 
-  @discourseComputed("canModifyTimer", "removeTopicTimer")
-  showTrashCan(canModifyTimer, removeTopicTimer) {
-    return canModifyTimer && removeTopicTimer;
+  @computed("canModifyTimer", "removeTopicTimer")
+  get showTrashCan() {
+    return this.canModifyTimer && this.removeTopicTimer;
   }
 
-  @discourseComputed("canModifyTimer", "showTopicTimerModal")
-  showEdit(canModifyTimer, showTopicTimerModal) {
-    return canModifyTimer && showTopicTimerModal;
+  @computed("canModifyTimer", "showTopicTimerModal")
+  get showEdit() {
+    return this.canModifyTimer && this.showTopicTimerModal;
   }
 
   additionalOpts() {
@@ -164,31 +164,33 @@ export default class TopicTimerInfo extends Component {
   }
 
   <template>
-    {{#if this.showTopicTimer}}
-      <h3 class="topic-timer-heading">
-        <span title={{this.title}}>
-          {{this.clockIcon}}
-          {{this.notice}}
-        </span>
-        <div class="topic-timer-modify">
-          {{#if this.showEdit}}
-            <DButton
-              @title="post.controls.edit_timer"
-              @icon="pencil"
-              @action={{this.showTopicTimerModal}}
-              class="topic-timer-edit no-text"
-            />
-          {{/if}}
-          {{#if this.showTrashCan}}
-            <DButton
-              @title="post.controls.remove_timer"
-              @icon="trash-can"
-              @action={{this.removeTopicTimer}}
-              class="topic-timer-remove no-text"
-            />
-          {{/if}}
-        </div>
-      </h3>
-    {{/if}}
+    <div class="topic-timer-info" ...attributes>
+      {{#if this.showTopicTimer}}
+        <h3 class="topic-timer-heading">
+          <span title={{this.title}}>
+            {{this.clockIcon}}
+            {{this.notice}}
+          </span>
+          <div class="topic-timer-modify">
+            {{#if this.showEdit}}
+              <DButton
+                @title="post.controls.edit_timer"
+                @icon="pencil"
+                @action={{this.showTopicTimerModal}}
+                class="topic-timer-edit no-text"
+              />
+            {{/if}}
+            {{#if this.showTrashCan}}
+              <DButton
+                @title="post.controls.remove_timer"
+                @icon="trash-can"
+                @action={{this.removeTopicTimer}}
+                class="topic-timer-remove no-text"
+              />
+            {{/if}}
+          </div>
+        </h3>
+      {{/if}}
+    </div>
   </template>
 }

@@ -28,11 +28,15 @@ module("Integration | Component | da-relative_time-field", function (hooks) {
     );
 
     await fillIn(".relative-time-duration", "4");
-    assert.strictEqual(this.field.metadata.value, 4);
 
     await selectKit().expand();
     await selectKit().selectRowByValue("hours");
 
     assert.strictEqual(this.field.metadata.value, 4 * 60);
+
+    await selectKit().expand();
+    await selectKit().selectRowByValue("mins");
+
+    assert.strictEqual(this.field.metadata.value, 4);
   });
 });

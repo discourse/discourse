@@ -2,6 +2,8 @@
 
 class DirectoryItemsController < ApplicationController
   PAGE_SIZE = 50
+  PAGE_LIMIT = 10
+
   before_action :set_groups_exclusion, if: -> { params[:exclude_groups].present? }
 
   def index
@@ -58,7 +60,7 @@ class DirectoryItemsController < ApplicationController
     end
 
     result = result.includes(:user_stat) if period_type == DirectoryItem.period_types[:all]
-    page = fetch_int_from_params(:page, default: 0)
+    page = fetch_int_from_params(:page, default: 0, max: PAGE_LIMIT)
 
     user_ids = nil
     if params[:name].present?
@@ -111,7 +113,14 @@ class DirectoryItemsController < ApplicationController
     if params[:user_field_ids]
       serializer_opts[:user_custom_field_map] = {}
 
-      user_field_ids = params[:user_field_ids]&.split("|")&.map(&:to_i)
+      allowed_field_ids =
+        if guardian.is_staff?
+          UserField.pluck(:id)
+        else
+          UserField.public_fields.pluck(:id)
+        end
+
+      user_field_ids = params[:user_field_ids].split("|").map(&:to_i) & allowed_field_ids
       user_field_ids.each do |user_field_id|
         serializer_opts[:user_custom_field_map][
           "#{User::USER_FIELD_PREFIX}#{user_field_id}"

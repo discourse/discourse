@@ -11,6 +11,7 @@ ar:
         draft: "مسودة"
         open: "فتح"
         approved: "تمت الموافقة"
+        merged: "تم دمجه"
         closed: "مغلق"
   admin_js:
     admin:

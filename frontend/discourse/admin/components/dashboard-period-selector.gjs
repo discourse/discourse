@@ -28,6 +28,8 @@ export default class DashboardPeriodSelector extends Component {
         @action={{@setPeriod}}
         @content={{this.availablePeriods}}
         @fullDay={{false}}
+        @startDate={{@startDate}}
+        @endDate={{@endDate}}
       />
       <DButton
         @icon="gear"

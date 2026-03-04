@@ -34,6 +34,19 @@ RSpec.describe "Sidebar New Topic Button", system: true do
       expect(page).to have_css(".sidebar-new-topic-button__wrapper .topic-drafts-menu-trigger")
     end
 
+    it "opens the composer with the tag pre-filled when on a tag page" do
+      tag = Fabricate(:tag)
+      Fabricate(:topic, tags: [tag])
+
+      visit("/tag/#{tag.slug}/#{tag.id}")
+      find(".sidebar-new-topic-button").click
+
+      expect(page).to have_css("#reply-title")
+
+      tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+      expect(tag_chooser).to have_selected_name(tag.name)
+    end
+
     it "does not disable button when visiting read-only category" do
       visit("/c/#{private_category.slug}/#{private_category.id}")
 

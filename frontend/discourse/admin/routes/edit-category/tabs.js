@@ -9,11 +9,13 @@ export default class EditCategoryTabs extends DiscourseRoute {
     super.setupController(...arguments);
 
     const parentParams = this.paramsFor("editCategory");
+    const selectedTab = transition.to.params.tab;
 
     controller.setProperties({
       parentParams,
-      selectedTab: transition.to.params.tab,
       showTooltip: false,
     });
+
+    controller.setSelectedTab(selectedTab);
   }
 }

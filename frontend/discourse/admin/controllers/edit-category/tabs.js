@@ -1,14 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, getProperties } from "@ember/object";
+import { action, computed, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import getURL from "discourse/lib/get-url";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -23,18 +25,61 @@ const FIELD_LIST = [
   "emoji",
   "icon",
   "localizations",
+  "position",
+  "num_featured_topics",
+  "search_priority",
+  "allow_badges",
+  "topic_featured_link_allowed",
+  "navigate_to_first_post_after_read",
+  "all_topics_wiki",
+  "allow_unlimited_owner_edits_on_first_post",
+  "moderating_group_ids",
+  "auto_close_hours",
+  "auto_close_based_on_last_post",
+  "default_view",
+  "default_top_period",
+  "sort_order",
+  "sort_ascending",
+  "default_list_filter",
+  "show_subcategory_list",
+  "subcategory_list_style",
+  "read_only_banner",
+  "email_in",
+  "email_in_enabled",
+  "email_in_allow_strangers",
+  "mailinglist_mirror",
+  "allowed_tag_groups",
+  "allowed_tags",
 ];
+
+// Additional fields managed through FormKit in the simplified creation flow.
+// The legacy edit-category components manage these directly on the model.
+const SIMPLIFIED_FIELD_LIST = [
+  ...FIELD_LIST,
+  "required_tag_groups",
+  "minimum_required_tags",
+  "allow_global_tags",
+  "default_slow_mode_seconds",
+];
+
+const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 
 export default class EditCategoryTabsController extends Controller {
   @service currentUser;
   @service dialog;
   @service site;
+  @service siteSettings;
   @service router;
+  @service keyValueStore;
+  @service toasts;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
-  @trackedArray panels = [];
-
-  selectedTab = "general";
+  @tracked
+  showAdvancedTabs =
+    this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
+  @tracked selectedTab = "general";
+  @tracked formApi = null;
+  @autoTrackedArray panels = [];
   saving = false;
   deleting = false;
   showTooltip = false;
@@ -47,59 +92,117 @@ export default class EditCategoryTabsController extends Controller {
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
   get formData() {
-    const data = getProperties(this.model, ...FIELD_LIST);
+    const simplified = this.siteSettings.enable_simplified_category_creation;
+    const data = getProperties(
+      this.model,
+      ...(simplified ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
+    );
 
-    if (!this.model.styleType) {
-      data.style_type = "square";
+    if (simplified && !this.model.styleType) {
+      data.style_type = "icon";
+    }
+
+    if (simplified) {
+      data.required_tag_groups = Array.from(
+        data.required_tag_groups ?? [],
+        (rtg) => ({ ...rtg })
+      );
+      data.category_setting = { ...(this.model.category_setting ?? {}) };
+      data.custom_fields = { ...(this.model.custom_fields ?? {}) };
     }
 
     return data;
   }
 
-  @action
-  canSaveForm(transientData) {
-    if (!transientData.name) {
-      return false;
-    }
-
-    if (this.saving || this.deleting) {
-      return true;
-    }
-
-    return true;
+  @computed("saving", "deleting")
+  get deleteDisabled() {
+    return this.deleting || this.saving || false;
   }
 
-  @discourseComputed("saving", "deleting")
-  deleteDisabled(saving, deleting) {
-    return deleting || saving || false;
-  }
-
-  @discourseComputed("name")
-  categoryName(name) {
-    name = name || "";
+  @computed("name")
+  get categoryName() {
+    const name = this.name || "";
     return name.trim().length > 0 ? name : i18n("preview");
   }
 
-  @discourseComputed("saving", "model.id")
-  saveLabel(saving, id) {
-    if (saving) {
+  @computed("saving", "model.id")
+  get saveLabel() {
+    if (this.saving) {
       return "saving";
     }
-    return id ? "category.save" : "category.create";
+    return this.model?.id ? "category.save" : "category.create_category";
   }
 
-  @discourseComputed("model.id", "model.name")
-  title(id, name) {
-    return id
-      ? i18n("category.edit_dialog_title", {
-          categoryName: name,
-        })
-      : i18n("category.create");
+  get baseTitle() {
+    if (this.model.id) {
+      return i18n("category.edit_dialog_title", {
+        categoryName: this.model.name,
+      });
+    }
+
+    if (this.model.category_type_title) {
+      return i18n("category.create_with_type", {
+        typeName: this.model.category_type_title,
+      });
+    }
+
+    return i18n("category.create");
   }
 
-  @discourseComputed("selectedTab")
-  selectedTabTitle(tab) {
-    return i18n(`category.${underscore(tab)}`);
+  get isFormDirty() {
+    return this.formApi?.isDirty ?? false;
+  }
+
+  @action
+  onRegisterFormApi(api) {
+    this.formApi = api;
+  }
+
+  @action
+  setSelectedTab(tab) {
+    this.selectedTab = tab;
+    this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
+  }
+
+  @action
+  validateForm(data, { addError }) {
+    if (!this.siteSettings.enable_simplified_category_creation) {
+      return;
+    }
+
+    if (this.selectedTab === "general") {
+      return;
+    }
+
+    let hasGeneralTabErrors = false;
+
+    if (!data.name) {
+      hasGeneralTabErrors = true;
+      addError("name", {
+        title: i18n("category.name"),
+        message: i18n("form_kit.errors.required"),
+      });
+    }
+
+    if (data.style_type === "emoji" && !data.emoji) {
+      hasGeneralTabErrors = true;
+      addError("emoji", {
+        title: i18n("category.emoji"),
+        message: i18n("category.validations.emoji_required"),
+      });
+    }
+
+    if (data.style_type === "icon" && !data.icon) {
+      hasGeneralTabErrors = true;
+      addError("icon", {
+        title: i18n("category.icon"),
+        message: i18n("category.validations.icon_required"),
+      });
+    }
+
+    if (hasGeneralTabErrors) {
+      this.selectedTab = "general";
+    }
   }
 
   @action
@@ -109,7 +212,11 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   isLeavingForm(transition) {
-    return !transition.targetName.startsWith("editCategory.tabs");
+    const name = transition.targetName;
+    return (
+      !name.startsWith("editCategory.tabs") &&
+      !name.startsWith("newCategory.tabs")
+    );
   }
 
   _wouldLoseAccess(category = this.model) {
@@ -131,56 +238,67 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  saveCategory(data) {
+  async saveCategory(data) {
     if (this.validators.some((validator) => validator())) {
       return;
     }
 
-    this.model.setProperties(data);
+    // eslint-disable-next-line no-unused-vars
+    const { visibility, ...categoryData } = data;
+    this.model.setProperties(categoryData);
 
-    if (this._wouldLoseAccess()) {
-      this.dialog.yesNoConfirm({
-        message: i18n("category.errors.self_lockout"),
-        didConfirm: () => this._performSave({ lostAccess: true }),
-      });
-      return;
+    // If permissions is empty or not set, ensure it's an empty array (public category)
+    if (!this.model.permissions || this.model.permissions.length === 0) {
+      this.model.set("permissions", []);
     }
 
-    this._performSave();
-  }
+    const lostAccess = this._wouldLoseAccess();
 
-  _performSave({ lostAccess } = {}) {
+    if (lostAccess) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("category.errors.self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     this.set("saving", true);
 
-    this.model
-      .save()
-      .then((result) => {
-        const updatedModel = this.site.updateCategory(result.category);
-        updatedModel.setupGroupsAndPermissions();
+    try {
+      const result = await this.model.save();
+      const updatedModel = this.site.updateCategory(result.category);
+      updatedModel.setupGroupsAndPermissions();
 
-        if (lostAccess) {
-          DiscourseURL.routeTo("/");
-          return;
-        }
+      if (lostAccess) {
+        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
 
-        if (!this.model.id) {
-          this.router.transitionTo(
-            "editCategory",
-            Category.slugFor(updatedModel)
-          );
-        }
-        // ensure breadcrumbs contain the updated category model
-        this.breadcrumbCategories = this.site.categoriesList.map((c) =>
-          c.id === this.model.id ? updatedModel : c
-        );
-      })
-      .catch((error) => {
-        popupAjaxError(error);
-        this.model.set("parent_category_id", undefined);
-      })
-      .finally(() => {
-        this.set("saving", false);
+      this.set("saving", false);
+
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("saved") },
       });
+
+      if (!this.model.id) {
+        this.router.transitionTo(
+          "editCategory",
+          Category.slugFor(updatedModel)
+        );
+      }
+
+      // ensure breadcrumbs contain the updated category model
+      this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+        c.id === this.model.id ? updatedModel : c
+      );
+    } catch (error) {
+      this.set("saving", false);
+      popupAjaxError(error);
+      this.model.set("parent_category_id", undefined);
+    }
   }
 
   @action
@@ -213,5 +331,35 @@ export default class EditCategoryTabsController extends Controller {
   @action
   goBack() {
     DiscourseURL.routeTo(this.model.url);
+  }
+
+  @action
+  toggleAdvancedTabs() {
+    this.showAdvancedTabs = !this.showAdvancedTabs;
+
+    // Save preference to localStorage
+    this.keyValueStore.setItem(
+      SHOW_ADVANCED_TABS_KEY,
+      this.showAdvancedTabs.toString()
+    );
+
+    // When collapsing, reset to general unless current tab is still visible
+    if (!this.showAdvancedTabs && this.selectedTab !== "general") {
+      const primaryTab = registeredEditCategoryTabs.find(
+        (tab) => tab.id === this.selectedTab && tab.primary
+      );
+      if (!primaryTab) {
+        next(() => {
+          this.selectedTab = "general";
+          if (this.router.currentRouteName?.startsWith("newCategory")) {
+            DiscourseURL.routeTo(getURL("/new-category/general"));
+          } else if (this.parentParams?.slug) {
+            DiscourseURL.routeTo(
+              getURL(`/c/${this.parentParams.slug}/edit/general`)
+            );
+          }
+        });
+      }
+    }
   }
 }

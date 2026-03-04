@@ -51,8 +51,6 @@ nl:
     chat_integration_flowdock_excerpt_length: "Lengte uittreksel Flowdock-bericht"
     chat_integration_groupme_enabled: "Groupme-chatintegratieprovider inschakelen"
     chat_integration_groupme_excerpt_length: "Lengte uittreksel Groupme-bericht"
-    chat_integration_groupme_bot_ids: "*vereist* Bot-ID's, gescheiden door ',' als er meerdere zijn"
-    chat_integration_groupme_instance_names: " *vereist* Naam van de GroupMe-chat, gescheiden door ',' als er meerdere zijn (zelfde volgorde als bot-ID's)"
     chat_integration_teams_enabled: "Microsoft Teams-chatintegratieprovider inschakelen"
     chat_integration_teams_excerpt_length: "Lengte uittreksel Microsoft Teams-bericht"
     chat_integration_powerautomate_enabled: "Microsoft Power Automate-integratieprovider inschakelen"
@@ -93,10 +91,8 @@ nl:
         create:
           created: "Regel gemaakt"
           updated: "Regel bijgewerkt"
-          error: "Sorry, er is een fout opgetreden bij het maken van die regel."
         delete:
           success: "Regel verwijderd"
-          error: "Sorry, er is een fout opgetreden bij het verwijderen van die regel. Voer '/discourse status' uit voor een lijst van regels."
         not_found:
           tag: "De tag *%{name}* kon niet worden gevonden."
           category: "De categorie *%{name}* kon niet worden gevonden. Beschikbare categorieën: *%{list}*"
@@ -158,10 +154,8 @@ nl:
         create:
           created: "Regel gemaakt"
           updated: "Regel bijgewerkt"
-          error: "Sorry, er is een fout opgetreden bij het maken van die regel."
         delete:
           success: "Regel verwijderd"
-          error: "Sorry, er is een fout opgetreden bij het verwijderen van die regel. Voer <code>/status</code> uit voor een lijst van regels."
         not_found:
           tag: "De tag <b>%{name}</b> kon niet worden gevonden."
           category: "De categorie <b>%{name}</b> kon niet worden gevonden. Beschikbare categorieën: <b>%{list}</b>"
@@ -192,10 +186,8 @@ nl:
         create:
           created: "Regel gemaakt"
           updated: "Regel bijgewerkt"
-          error: "Sorry, er is een fout opgetreden bij het maken van die regel."
         delete:
           success: "Regel verwijderd"
-          error: "Sorry, er is een fout opgetreden bij het verwijderen van die regel. Voer '/discourse status' uit voor een lijst van regels."
         not_found:
           tag: "De tag *%{name}* kon niet worden gevonden."
           category: "De categorie *%{name}* kon niet worden gevonden. Beschikbare categorieën: *%{list}*"

@@ -41,7 +41,12 @@ module AdPlugin
           ),
         creatives:
           ads.inject({}) do |h, ad|
-            h[ad.name] = { id: ad.id, html: ad.html, category_ids: ad.category_ids }
+            h[ad.name] = {
+              id: ad.id,
+              html: ad.html,
+              category_ids: ad.category_ids,
+              routes: ad.routes.pluck(:route_name),
+            }
             h
           end,
       }

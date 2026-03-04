@@ -72,6 +72,38 @@ RSpec.describe UserDestroyer do
           UserDestroyer.new(admin).destroy(user, destroy_opts.merge(block_email: true))
         }.to change { ScreenedEmail.count }.by(2)
       end
+
+      it "also blocks associated account emails if block_email is true" do
+        UserAssociatedAccount.create!(
+          user: user,
+          provider_name: "google_oauth2",
+          provider_uid: "12345",
+          info: {
+            email: "oauth@example.com",
+          },
+        )
+
+        expect {
+          UserDestroyer.new(admin).destroy(user, destroy_opts.merge(block_email: true))
+        }.to change { ScreenedEmail.count }.by(3)
+
+        expect(ScreenedEmail.exists?(email: "oauth@example.com")).to eq(true)
+      end
+
+      it "does not duplicate block when associated account email matches a user email" do
+        UserAssociatedAccount.create!(
+          user: user,
+          provider_name: "google_oauth2",
+          provider_uid: "12345",
+          info: {
+            email: user.email,
+          },
+        )
+
+        expect {
+          UserDestroyer.new(admin).destroy(user, destroy_opts.merge(block_email: true))
+        }.to change { ScreenedEmail.count }.by(2)
+      end
     end
 
     context "when user deletes self" do
@@ -259,6 +291,23 @@ RSpec.describe UserDestroyer do
         expect(Invite.exists?(invite.id)).to eq(false)
         expect(InvitedGroup.exists?(invited_group.id)).to eq(false)
         expect(TopicInvite.exists?(topic_invite.id)).to eq(false)
+      end
+
+      it "should delete invites matching associated account emails" do
+        user = Fabricate(:user)
+        invite = Fabricate(:invite, email: "oauth@example.com")
+        UserAssociatedAccount.create!(
+          user: user,
+          provider_name: "google_oauth2",
+          provider_uid: "12345",
+          info: {
+            email: "oauth@example.com",
+          },
+        )
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(Invite.exists?(invite.id)).to eq(false)
       end
     end
 

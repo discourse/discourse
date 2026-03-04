@@ -16,7 +16,20 @@ module DiscourseAi
       MAX_SLEEP_CALLS = 30
       MAX_SLEEP_DURATION_MS = 60_000
 
-      def initialize(parameters:, llm:, bot_user:, context: nil, tool:, timeout: nil)
+      MAX_CUSTOM_FIELD_KEY_LENGTH = 256
+      MAX_CUSTOM_FIELD_VALUE_LENGTH = 1024
+
+      CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
+
+      def initialize(
+        parameters:,
+        llm:,
+        bot_user:,
+        context: nil,
+        tool:,
+        timeout: nil,
+        secret_bindings: nil
+      )
         if context && !context.is_a?(DiscourseAi::Personas::BotContext)
           raise ArgumentError, "context must be a BotContext object"
         end
@@ -30,9 +43,41 @@ module DiscourseAi
         @tool = tool
         @timeout = timeout || DEFAULT_TIMEOUT
         @running_attached_function = false
+        @secret_bindings = secret_bindings
 
         @sleep_calls_made = 0
         @http_requests_made = 0
+      end
+
+      def system_guardian
+        @system_guardian ||= Guardian.new(Discourse.system_user)
+      end
+
+      def resolve_user(username)
+        if username.present?
+          User.find_by(username: username)
+        else
+          @bot_user || Discourse.system_user
+        end
+      end
+
+      def resolve_guardian(username)
+        user = resolve_user(username)
+        return nil, nil if user.nil?
+        guardian = user.staged? ? system_guardian : Guardian.new(user)
+        [user, guardian]
+      end
+
+      def resolve_category(category_id_or_name)
+        if category_id_or_name.is_a?(Integer) ||
+             category_id_or_name.to_i.to_s == category_id_or_name.to_s
+          Category.find_by(id: category_id_or_name.to_i)
+        else
+          Category
+            .where(name: category_id_or_name)
+            .or(Category.where(slug: category_id_or_name))
+            .first
+        end
       end
 
       def mini_racer_context
@@ -48,6 +93,7 @@ module DiscourseAi
             attach_index(ctx)
             attach_upload(ctx)
             attach_chain(ctx)
+            attach_secrets(ctx)
             attach_sleep(ctx)
             attach_discourse(ctx)
             ctx.eval(framework_script)
@@ -68,7 +114,17 @@ module DiscourseAi
 
         const llm = {
           truncate: _llm_truncate,
-          generate: function(prompt, options) { return _llm_generate(prompt, options); },
+          generate: function(prompt, options) {
+            const result = _llm_generate(prompt, options);
+            if (options && options.json) {
+              try {
+                return JSON.parse(result);
+              } catch (e) {
+                return result;
+              }
+            }
+            return result;
+          },
         };
 
         const index = {
@@ -88,7 +144,14 @@ module DiscourseAi
           streamCustomRaw: _chain_stream_custom_raw,
         };
 
+        const secrets = {
+          get: function(aliasName) {
+            return _secrets_get(aliasName);
+          },
+        };
+
         const discourse = {
+          baseUrl: #{Discourse.base_url.to_json},
           search: function(params) {
             return _discourse_search(params);
           },
@@ -154,6 +217,38 @@ module DiscourseAi
             }
             return result;
           },
+          editPost: function(post_id, raw, options) {
+            const result = _discourse_edit_post(post_id, raw, options);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
+          editTopic: function(topic_id, updates, options) {
+            const result = _discourse_edit_topic(topic_id, updates, options);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
+          // Backwards compatibility alias (undocumented)
+          setTags: function(topic_id, tags, options) {
+            return this.editTopic(topic_id, { tags: tags }, options);
+          },
+          getCustomField: function(type, id, key) {
+            const result = _discourse_get_custom_field(type, id, key);
+            if (result && result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
+          setCustomField: function(type, id, key, value) {
+            const result = _discourse_set_custom_field(type, id, key, value);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
         };
 
         const context = #{JSON.generate(@context.to_json)};
@@ -206,6 +301,17 @@ module DiscourseAi
 
       def invoke(progress_callback: nil)
         @progress_callback = progress_callback
+        source_bindings = @secret_bindings || tool.secret_bindings
+        missing_aliases = tool.missing_secret_aliases(bindings: source_bindings)
+        if missing_aliases.present?
+          raise Discourse::InvalidParameters.new(
+                  I18n.t(
+                    "discourse_ai.tools.secret_runtime.missing_required_aliases",
+                    aliases: missing_aliases.join(", "),
+                  ),
+                )
+        end
+        preload_secrets(source_bindings)
         mini_racer_context.eval(tool.script)
         eval_with_timeout("invoke(#{JSON.generate(parameters)})")
       rescue MiniRacer::ScriptTerminatedError
@@ -229,6 +335,19 @@ module DiscourseAi
       end
 
       private
+
+      def preload_secrets(bindings)
+        secret_ids =
+          bindings.filter_map do |binding|
+            if binding.respond_to?(:[])
+              binding[:ai_secret_id] || binding["ai_secret_id"]
+            else
+              binding.ai_secret_id
+            end
+          end
+        secret_ids = secret_ids.map(&:to_i).uniq
+        @secrets_cache = secret_ids.present? ? AiSecret.where(id: secret_ids).index_by(&:id) : {}
+      end
 
       MAX_FRAGMENTS = 200
 
@@ -289,6 +408,9 @@ module DiscourseAi
             in_attached_function do
               options ||= {}
               response_format = options["response_format"]
+
+              response_format = { "type" => "json_object" } if options["json"]
+
               if response_format && !response_format.is_a?(Hash)
                 raise Discourse::InvalidParameters.new("response_format must be a hash")
               end
@@ -362,6 +484,13 @@ module DiscourseAi
         )
       end
 
+      def attach_secrets(mini_racer_context)
+        mini_racer_context.attach(
+          "_secrets_get",
+          ->(alias_name) { in_attached_function { resolve_tool_secret!(alias_name) } },
+        )
+      end
+
       # this is useful for polling apis
       def attach_sleep(mini_racer_context)
         mini_racer_context.attach(
@@ -396,14 +525,13 @@ module DiscourseAi
             in_attached_function do
               post = Post.find_by(id: post_id)
               return nil if post.nil?
-              guardian = Guardian.new(Discourse.system_user)
               obj =
                 recursive_as_json(
-                  PostSerializer.new(post, scope: guardian, root: false, add_raw: true),
+                  PostSerializer.new(post, scope: system_guardian, root: false, add_raw: true),
                 )
               topic_obj =
                 recursive_as_json(
-                  ListableTopicSerializer.new(post.topic, scope: guardian, root: false),
+                  ListableTopicSerializer.new(post.topic, scope: system_guardian, root: false),
                 )
               obj["topic"] = topic_obj
               obj
@@ -417,8 +545,16 @@ module DiscourseAi
             in_attached_function do
               topic = Topic.find_by(id: topic_id)
               return nil if topic.nil?
-              guardian = Guardian.new(Discourse.system_user)
-              recursive_as_json(ListableTopicSerializer.new(topic, scope: guardian, root: false))
+              data =
+                recursive_as_json(
+                  ListableTopicSerializer.new(topic, scope: system_guardian, root: false),
+                )
+              data["tags"] = topic.tags.pluck(:name)
+              data["first_post_id"] = topic.first_post&.id
+              data["category_id"] = topic.category_id
+              data["category_name"] = topic.category&.name
+              data["category_slug"] = topic.category&.slug
+              data
             end
           end,
         )
@@ -438,8 +574,7 @@ module DiscourseAi
 
               return nil if user.nil?
 
-              guardian = Guardian.new(Discourse.system_user)
-              recursive_as_json(UserSerializer.new(user, scope: guardian, root: false))
+              recursive_as_json(UserSerializer.new(user, scope: system_guardian, root: false))
             end
           end,
         )
@@ -503,25 +638,17 @@ module DiscourseAi
               username = params[:username]
               message = params[:message]
 
-              # Validate parameters
               return { error: "Missing required parameter: channel_name" } if channel_name.blank?
-              return { error: "Missing required parameter: username" } if username.blank?
               return { error: "Missing required parameter: message" } if message.blank?
 
-              # Find the user
-              user = User.find_by(username: username)
+              user, guardian = resolve_guardian(username)
               return { error: "User not found: #{username}" } if user.nil?
 
-              # Find the channel
               channel = Chat::Channel.find_by(name: channel_name)
-              if channel.nil?
-                # Try finding by slug if not found by name
-                channel = Chat::Channel.find_by(slug: channel_name.parameterize)
-              end
+              channel ||= Chat::Channel.find_by(slug: channel_name.parameterize)
               return { error: "Channel not found: #{channel_name}" } if channel.nil?
 
               begin
-                guardian = Guardian.new(user)
                 message =
                   ChatSDK::Message.create(
                     raw: message,
@@ -597,22 +724,12 @@ module DiscourseAi
               return { error: "Missing required parameter: title" } if title.blank?
               return { error: "Missing required parameter: raw" } if raw.blank?
 
-              user =
-                if username.present?
-                  User.find_by(username: username)
-                else
-                  Discourse.system_user
-                end
+              user, guardian = resolve_guardian(username)
               return { error: "User not found: #{username}" } if user.nil?
 
-              category =
-                if category_id.present?
-                  Category.find_by(id: category_id)
-                else
-                  Category.find_by(name: category_name) || Category.find_by(slug: category_name)
-                end
-
+              category = resolve_category(category_id.presence || category_name)
               return { error: "Category not found" } if category.nil?
+              return { error: "Permission denied" } unless guardian.can_create?(Topic, category)
 
               begin
                 post_creator =
@@ -623,7 +740,7 @@ module DiscourseAi
                     category: category.id,
                     tags: tags,
                     skip_validations: true,
-                    guardian: Guardian.new(Discourse.system_user),
+                    guardian: guardian,
                   )
 
                 post = post_creator.create
@@ -660,18 +777,12 @@ module DiscourseAi
               return { error: "Missing required parameter: topic_id" } if topic_id.blank?
               return { error: "Missing required parameter: raw" } if raw.blank?
 
-              # Find the user
-              user =
-                if username.present?
-                  User.find_by(username: username)
-                else
-                  Discourse.system_user
-                end
+              user, guardian = resolve_guardian(username)
               return { error: "User not found: #{username}" } if user.nil?
 
-              # Verify topic exists
               topic = Topic.find_by(id: topic_id)
               return { error: "Topic not found" } if topic.nil?
+              return { error: "Permission denied" } unless guardian.can_create?(Post, topic)
 
               begin
                 post_creator =
@@ -681,7 +792,7 @@ module DiscourseAi
                     topic_id: topic_id,
                     reply_to_post_number: reply_to_post_number,
                     skip_validations: true,
-                    guardian: Guardian.new(Discourse.system_user),
+                    guardian: guardian,
                   )
 
                 post = post_creator.create
@@ -804,6 +915,146 @@ module DiscourseAi
               else
                 return { error: persona.errors.full_messages.join(", ") }
               end
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_edit_post",
+          ->(post_id, raw, options) do
+            in_attached_function do
+              post = Post.find_by(id: post_id)
+              return { error: "Post not found" } if post.nil?
+
+              options ||= {}
+              edit_reason = options["edit_reason"]
+
+              user, guardian = resolve_guardian(options["username"])
+              return { error: "User not found: #{options["username"]}" } if user.nil?
+              return { error: "Permission denied" } unless guardian.can_edit?(post)
+
+              revisor = PostRevisor.new(post)
+              if revisor.revise!(user, { raw: raw, edit_reason: edit_reason })
+                { success: true, post_id: post.id }
+              else
+                { error: post.errors.full_messages.join(", ") }
+              end
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_edit_topic",
+          ->(topic_id, updates, options) do
+            in_attached_function do
+              topic = Topic.find_by(id: topic_id)
+              return { error: "Topic not found" } if topic.nil?
+
+              updates ||= {}
+              options ||= {}
+
+              user, guardian = resolve_guardian(options["username"])
+              return { error: "User not found: #{options["username"]}" } if user.nil?
+              return { error: "Permission denied" } unless guardian.can_see?(topic)
+
+              # Handle category change
+              if updates.key?("category")
+                if topic.private_message?
+                  return { error: "Cannot change category of private messages" }
+                end
+
+                category = resolve_category(updates["category"])
+                return { error: "Category not found" } if category.nil?
+
+                unless guardian.can_move_topic_to_category?(category.id)
+                  return { error: "Permission denied" }
+                end
+
+                unless topic.change_category_to_id(category.id, silent: !!options["silent"])
+                  return { error: "Failed to change category", details: topic.errors.full_messages }
+                end
+              end
+
+              # Handle visibility change
+              if updates.key?("visible")
+                unless guardian.can_toggle_topic_visibility?(topic)
+                  return { error: "Permission denied" }
+                end
+
+                visibility_reason =
+                  Topic.visibility_reasons[
+                    updates["visible"] ? :manually_relisted : :manually_unlisted
+                  ]
+
+                topic.update_status(
+                  "visible",
+                  updates["visible"],
+                  user,
+                  { visibility_reason_id: visibility_reason },
+                )
+              end
+
+              # Handle tags change
+              if updates.key?("tags")
+                unless DiscourseTagging.tag_topic_by_names(
+                         topic,
+                         guardian,
+                         updates["tags"],
+                         append: !!options["append"],
+                       )
+                  return { error: "Failed to apply tags", details: topic.errors.full_messages }
+                end
+                topic.first_post&.publish_change_to_clients!(:revised)
+              end
+
+              {
+                success: true,
+                topic: {
+                  id: topic.id,
+                  category_id: topic.category_id,
+                  category_name: topic.category&.name,
+                  category_slug: topic.category&.slug,
+                  tags: topic.tags.pluck(:name),
+                  visible: topic.visible,
+                  visibility_reason_id: topic.visibility_reason_id,
+                },
+              }
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_get_custom_field",
+          ->(type, id, key) do
+            in_attached_function do
+              return { error: "Invalid type: #{type}" } unless CUSTOM_FIELD_MODELS.key?(type)
+              model = find_model_by_type(type, id)
+              return nil if model.nil?
+              model.custom_fields[key]
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_set_custom_field",
+          ->(type, id, key, value) do
+            in_attached_function do
+              return { error: "Invalid type: #{type}" } unless CUSTOM_FIELD_MODELS.key?(type)
+              return { error: "Key is required" } if key.blank?
+              if key.to_s.length > MAX_CUSTOM_FIELD_KEY_LENGTH
+                return { error: "Key too long (max #{MAX_CUSTOM_FIELD_KEY_LENGTH} characters)" }
+              end
+              if value.to_s.length > MAX_CUSTOM_FIELD_VALUE_LENGTH
+                return { error: "Value too long (max #{MAX_CUSTOM_FIELD_VALUE_LENGTH} characters)" }
+              end
+
+              model = find_model_by_type(type, id)
+              return { error: "#{type.capitalize} not found: #{id}" } if model.nil?
+
+              model.custom_fields[key] = value
+              model.save_custom_fields
+
+              { success: true, key: key, value: model.custom_fields[key] }
             end
           end,
         )
@@ -976,6 +1227,40 @@ module DiscourseAi
               end
             end,
           )
+        end
+      end
+
+      def find_model_by_type(type, id)
+        CUSTOM_FIELD_MODELS[type]&.find_by(id: id)
+      end
+
+      def resolve_tool_secret!(alias_name)
+        value, error =
+          tool.resolve_secret(
+            alias_name,
+            bindings: @secret_bindings || tool.secret_bindings,
+            secrets_cache: @secrets_cache,
+          )
+
+        case error
+        when nil
+          value
+        when :alias_not_declared
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.alias_not_declared", alias: alias_name),
+                )
+        when :missing_binding
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.missing_binding", alias: alias_name),
+                )
+        when :secret_not_found
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.secret_not_found", alias: alias_name),
+                )
+        else
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("discourse_ai.tools.secret_runtime.unknown_error"),
+                )
         end
       end
 

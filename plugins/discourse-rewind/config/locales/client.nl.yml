@@ -16,9 +16,11 @@ nl:
           title: Leestijd
         assignments:
           title: Toewijzingen
+          total_assigned_others: "Toegewezen aan %{username}"
         chat_usage:
           messages: berichten
-          you: Jij
+          author: Jij
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Uitnodigingen

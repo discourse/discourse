@@ -69,6 +69,8 @@ pt:
       title: "IA"
       default_llm:
         title: "Modelo de LLM Predefinido"
+      llm_selector:
+        none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
         back: "Voltar"
@@ -105,14 +107,15 @@ pt:
           hyde: "HyDE"
         discord:
           name: "Integração do Discord"
-          search: "Procura do Discord"
+          description: "Adiciona a capacidade para procurar canais no Discord"
+          search: "Procura no Discord"
         ai_helper:
           name: "Assistente"
           description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
           proofread: Rever texto
           title_suggestions: "Sugerir títulos"
           explain: "Explicar"
-          illustrate_post: "Ilustrar artigo"
+          illustrate_post: "Ilustrar publicação"
           smart_dates: "Datas inteligentes"
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Marcação"
@@ -126,6 +129,8 @@ pt:
         spam:
           name: "Lixo Eletrónico"
           inspect_posts: "Inspecionar publicações"
+        automation_reports:
+          name: "Relatórios automatizados"
       modals:
         select_option: "Selecione uma opção..."
       translations:
@@ -200,8 +205,19 @@ pt:
         save: "Guardar"
         remove_parameter: "Remover"
         parameter_required: "Necessário"
+        credential_not_set: "(não definido)"
+        edit: "Editar"
+        test: "Testar"
+        delete: "Eliminar"
+      secrets:
+        short_title: "Credenciais"
+        name: "Nome"
+        secret: "Valor"
+        back: "Anterior"
+        save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
+        embedding: "Incorporação"
       llms:
         display_name: "Nome"
         provider: "Provedor"
@@ -224,7 +240,7 @@ pt:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-5: "O modelo mais inteligente da Anthropic"
+          anthropic-claude-opus-4-6: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -232,8 +248,6 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
-        provider_fields:
-          effort: "Nível de esforço (apenas Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Cancelar"
@@ -284,6 +298,8 @@ pt:
       summarization:
         chat:
           summarize: "Resumir"
+        topic:
+          regenerate_summaries_option: "Resumos de tópico"
       discobot_discoveries:
         regular_results: "Tópicos"
         collapse: "Colapsar"

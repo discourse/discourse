@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-require "net/imap"
 require "net/smtp"
 require "net/pop"
 
 class EmailSettingsExceptionHandler
   EXPECTED_EXCEPTIONS = [
     Net::POPAuthenticationError,
-    Net::IMAP::NoResponseError,
-    Net::IMAP::Error,
     Net::SMTPAuthenticationError,
     Net::SMTPServerBusy,
     Net::SMTPSyntaxError,
@@ -29,10 +26,6 @@ class EmailSettingsExceptionHandler
       case @exception
       when Net::POPAuthenticationError
         net_pop_authentication_error
-      when Net::IMAP::NoResponseError
-        net_imap_no_response_error
-      when Net::IMAP::Error
-        net_imap_unhandled_error
       when Net::SMTPAuthenticationError
         net_smtp_authentication_error
       when Net::SMTPServerBusy
@@ -52,26 +45,6 @@ class EmailSettingsExceptionHandler
 
     def net_pop_authentication_error
       I18n.t("email_settings.pop3_authentication_error")
-    end
-
-    def net_imap_no_response_error
-      # Most of IMAP's errors are lumped under the NoResponseError, including invalid
-      # credentials errors, because it is raised when a "NO" response is
-      # raised from the IMAP server https://datatracker.ietf.org/doc/html/rfc3501#section-7.1.2
-      #
-      # Generally, it should be fairly safe to just return the error message as is.
-      if @exception.message.match(/Invalid credentials/)
-        I18n.t("email_settings.imap_authentication_error")
-      else
-        I18n.t(
-          "email_settings.imap_no_response_error",
-          message: @exception.message.gsub(" (Failure)", ""),
-        )
-      end
-    end
-
-    def net_imap_unhandled_error
-      I18n.t("email_settings.imap_unhandled_error", message: @exception.message)
     end
 
     def net_smtp_authentication_error

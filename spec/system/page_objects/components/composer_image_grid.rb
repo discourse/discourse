@@ -51,6 +51,23 @@ module PageObjects
           @rich_editor.has_css?(".composer-image-grid .composer-image-node img", count: count) &&
           @rich_editor.has_no_css?(".composer-image-grid .composer-image-grid")
       end
+
+      def has_mode_select?
+        @rich_editor.has_css?(".composer-image-gallery__mode-buttons")
+      end
+
+      def select_mode(mode)
+        @rich_editor.find(".composer-image-gallery__mode-btn[data-mode='#{mode.downcase}']").click
+        self
+      end
+
+      def has_selected_mode?(value)
+        @rich_editor.has_css?(".composer-image-gallery__mode-btn[data-mode='#{value}'].is-active")
+      end
+
+      def mode_value
+        @rich_editor.find(".composer-image-gallery")["data-mode"]
+      end
     end
   end
 end

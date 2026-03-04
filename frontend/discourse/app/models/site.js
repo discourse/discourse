@@ -7,14 +7,14 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
@@ -86,8 +86,8 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
-  @trackedArray categories = [];
-  @trackedArray groups = [];
+  @autoTrackedArray categories = [];
+  @autoTrackedArray groups = [];
 
   @alias("is_readonly") isReadOnly;
 
@@ -99,6 +99,13 @@ export default class Site extends RestModel {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
+  }
+
+  get groupsById() {
+    const map = {};
+    Object.values(AUTO_GROUPS).forEach((g) => (map[g.id] = g));
+    this.groups?.forEach((g) => (map[g.id] = g));
+    return map;
   }
 
   @dependentKeyCompat
@@ -178,17 +185,17 @@ export default class Site extends RestModel {
     return map;
   }
 
-  @discourseComputed("notification_types")
-  notificationLookup(notificationTypes) {
+  @computed("notification_types")
+  get notificationLookup() {
     const result = [];
-    Object.keys(notificationTypes).forEach(
-      (k) => (result[notificationTypes[k]] = k)
+    Object.keys(this.notification_types).forEach(
+      (k) => (result[this.notification_types[k]] = k)
     );
     return result;
   }
 
-  @discourseComputed("post_action_types.[]")
-  flagTypes() {
+  @computed("post_action_types.[]")
+  get flagTypes() {
     const postActionTypes = this.post_action_types;
     if (!postActionTypes) {
       return [];
@@ -218,18 +225,18 @@ export default class Site extends RestModel {
   }
 
   // Returns it in the correct order, by setting
-  @discourseComputed("categories.[]")
-  categoriesList(categories) {
+  @computed("categories.[]")
+  get categoriesList() {
     return this.siteSettings.fixed_category_positions
-      ? categories
+      ? this.categories
       : this.sortedCategories;
   }
 
-  @discourseComputed("categories.[]", "categories.@each.notification_level")
-  trackedCategoriesList(categories) {
+  @computed("categories.[]", "categories.@each.notification_level")
+  get trackedCategoriesList() {
     const trackedCategories = [];
 
-    for (const category of categories) {
+    for (const category of this.categories) {
       if (category.isTracked) {
         if (
           this.siteSettings.allow_uncategorized_topics ||
@@ -251,6 +258,21 @@ export default class Site extends RestModel {
     return this.get("topicFlagByIdLookup.action" + id);
   }
 
+  #transformTags(tags) {
+    if (!tags) {
+      return [];
+    }
+    return tags.map((tag) => this.store.createRecord("tag", tag));
+  }
+
+  get topTags() {
+    return this.#transformTags(this.top_tags);
+  }
+
+  get categoryTopTags() {
+    return this.#transformTags(this.category_top_tags);
+  }
+
   removeCategory(id) {
     const categories = this.categories;
     const existingCategory = categories.find((c) => c.id === id);
@@ -270,16 +292,18 @@ export default class Site extends RestModel {
     const categoryId = get(newCategory, "id");
     const existingCategory = categories.find((c) => c.id === categoryId);
 
-    // Don't update null permissions
     if (newCategory.permission === null) {
       delete newCategory.permission;
+    }
+
+    if (newCategory.has_children == null) {
+      delete newCategory.has_children;
     }
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
       return existingCategory;
     } else {
-      // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.push(newCategory);
       return newCategory;

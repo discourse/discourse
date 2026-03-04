@@ -4,23 +4,23 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import PickFilesButton from "discourse/components/pick-files-button";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { cloneJSON } from "discourse/lib/object";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
 
-@classNames("chat-composer-uploads")
+@tagName("")
 export default class ChatComposerUploads extends Component {
   @service capabilities;
   @service mediaOptimizationWorker;
 
-  @trackedArray uploads = null;
+  @autoTrackedArray uploads = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "chat-composer-uploader",
@@ -147,30 +147,32 @@ export default class ChatComposerUploads extends Component {
   }
 
   <template>
-    {{#if this.showUploadsContainer}}
-      <div class="chat-composer-uploads-container">
-        {{#each this.uploads as |upload|}}
-          <ChatComposerUpload
-            @upload={{upload}}
-            @isDone={{true}}
-            @onCancel={{fn this.removeUpload upload}}
-          />
-        {{/each}}
+    <div class="chat-composer-uploads" ...attributes>
+      {{#if this.showUploadsContainer}}
+        <div class="chat-composer-uploads-container">
+          {{#each this.uploads as |upload|}}
+            <ChatComposerUpload
+              @upload={{upload}}
+              @isDone={{true}}
+              @onCancel={{fn this.removeUpload upload}}
+            />
+          {{/each}}
 
-        {{#each this.inProgressUploads as |upload|}}
-          <ChatComposerUpload
-            @upload={{upload}}
-            @onCancel={{fn this.cancelUploading upload}}
-          />
-        {{/each}}
-      </div>
-    {{/if}}
+          {{#each this.inProgressUploads as |upload|}}
+            <ChatComposerUpload
+              @upload={{upload}}
+              @onCancel={{fn this.cancelUploading upload}}
+            />
+          {{/each}}
+        </div>
+      {{/if}}
 
-    <PickFilesButton
-      @allowMultiple={{true}}
-      @fileInputId={{this.fileUploadElementId}}
-      @fileInputClass="hidden-upload-field"
-      @registerFileInput={{this.uppyUpload.setup}}
-    />
+      <PickFilesButton
+        @allowMultiple={{true}}
+        @fileInputId={{this.fileUploadElementId}}
+        @fileInputClass="hidden-upload-field"
+        @registerFileInput={{this.uppyUpload.setup}}
+      />
+    </div>
   </template>
 }

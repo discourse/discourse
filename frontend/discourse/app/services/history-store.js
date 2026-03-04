@@ -80,6 +80,7 @@ export default class HistoryStore extends Service {
       }
       return key !== this.#uuid;
     }
+    return false;
   }
 
   #pruneOldData() {

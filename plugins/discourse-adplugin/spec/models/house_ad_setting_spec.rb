@@ -73,7 +73,7 @@ describe AdPlugin::HouseAdSetting do
       Fabricate(
         :house_ad,
         name: "anon-ad",
-        html: "<whatever-anon>",
+        html: '<div id="anon-banner" style="color: red" data-campaign="spring">anon ad</div>',
         visible_to_anons: true,
         visible_to_logged_in_users: false,
       )
@@ -83,7 +83,8 @@ describe AdPlugin::HouseAdSetting do
       Fabricate(
         :house_ad,
         name: "logged-in-ad",
-        html: "<whatever-logged-in>",
+        html:
+          '<section id="logged-in-banner" data-track="true"><a href="https://example.com" target="_blank" rel="noopener">logged-in ad</a></section>',
         visible_to_anons: false,
         visible_to_logged_in_users: true,
       )
@@ -100,9 +101,10 @@ describe AdPlugin::HouseAdSetting do
 
       expect(anon_message.data[:creatives]).to match(
         "anon-ad" => {
-          html: "<whatever-anon>",
+          html: '<div id="anon-banner" style="color: red" data-campaign="spring">anon ad</div>',
           category_ids: [],
           id: a_kind_of(Integer),
+          routes: [],
         },
       )
       expect(anon_message.group_ids).to eq(nil)
@@ -110,9 +112,11 @@ describe AdPlugin::HouseAdSetting do
 
       expect(logged_in_message.data[:creatives]).to match(
         "logged-in-ad" => {
-          html: "<whatever-logged-in>",
+          html:
+            '<section id="logged-in-banner" data-track="true"><a href="https://example.com" target="_blank" rel="noopener">logged-in ad</a></section>',
           category_ids: [],
           id: a_kind_of(Integer),
+          routes: [],
         },
       )
       expect(logged_in_message.group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])

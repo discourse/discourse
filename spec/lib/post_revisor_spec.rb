@@ -227,6 +227,15 @@ describe PostRevisor do
       expect { post_revisor.revise!(admin, tags: ["new-tag"]) }.not_to change { Post.count }
     end
 
+    it "edits a topic's tags" do
+      tag = Fabricate(:tag)
+      post_revisor.revise!(admin, tags: [{ id: tag.id, name: "outdated" }])
+      expect(post.topic.reload.tags).to contain_exactly(tag)
+
+      post_revisor.revise!(admin, tags: ["a-whole-new-tag"])
+      expect(post.topic.reload.tags).to match_array([have_attributes(name: "a-whole-new-tag")])
+    end
+
     describe "when `create_post_for_category_and_tag_changes` site setting is enabled" do
       fab!(:tag1) { Fabricate(:tag, name: "First tag") }
       fab!(:tag2) { Fabricate(:tag, name: "Second tag") }
@@ -524,6 +533,32 @@ describe PostRevisor do
         expect(post.revisions.count).to eq(1)
       end
 
+      it "creates a new version when diff computation exceeds the comparison budget" do
+        SiteSetting.editing_grace_period = 1.minute
+        SiteSetting.editing_grace_period_max_diff = 1_000
+
+        post = Fabricate(:post, raw: "hello world")
+        revisor = PostRevisor.new(post)
+
+        ONPDiff
+          .any_instance
+          .stubs(:short_diff)
+          .raises(
+            ONPDiff::DiffLimitExceeded.new(
+              comparisons_used: 2_000_001,
+              comparison_budget: 2_000_000,
+              left_size: 11,
+              right_size: 12,
+            ),
+          )
+
+        revisor.revise!(post.user, { raw: "hello world!" }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+      end
+
       it "creates a new version when the post is flagged" do
         SiteSetting.editing_grace_period = 1.minute
 
@@ -564,6 +599,17 @@ describe PostRevisor do
 
         expect(post.version).to eq(1)
         expect(post.public_version).to eq(1)
+        expect(post.revisions.size).to eq(0)
+      end
+
+      it "does not create a new version for tag-only topic change within grace period when tags unchanged" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.editing_grace_period = 1.minute
+
+        post_revisor.revise!(post.user, { tags: [] }, revised_at: post.updated_at + 10.seconds)
+        post.reload
+
+        expect(post.version).to eq(1)
         expect(post.revisions.size).to eq(0)
       end
     end
@@ -1024,11 +1070,11 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
     end
 
-    it "revises and tracks changes of topic archetypes" do
+    it "revises and tracks changes of topic archetypes for staff" do
       new_archetype = Archetype.banner
       result =
         post_revisor.revise!(
-          post.user,
+          admin,
           { archetype: new_archetype },
           revised_at: post.updated_at + 10.minutes,
         )
@@ -1040,18 +1086,66 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
     end
 
+    it "does not allow regular users to change topic archetype to banner" do
+      result =
+        post_revisor.revise!(
+          post.user,
+          { archetype: Archetype.banner },
+          revised_at: post.updated_at + 10.minutes,
+        )
+
+      expect(result).to eq(false)
+      post.reload
+      expect(post.topic.archetype).to eq(Archetype.default)
+    end
+
     it "revises and tracks changes of topic tags" do
       post_revisor.revise!(admin, tags: ["new-tag"])
       expect(post.post_revisions.last.modifications).to eq("tags" => [[], ["new-tag"]])
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: %w[new-tag new-tag-2])
-      expect(post.post_revisions.last.modifications).to eq("tags" => [[], %w[new-tag new-tag-2]])
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag")
+      expect(after).to contain_exactly("new-tag", "new-tag-2")
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: ["new-tag-3"])
-      expect(post.post_revisions.last.modifications).to eq("tags" => [[], ["new-tag-3"]])
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag", "new-tag-2")
+      expect(after).to contain_exactly("new-tag-3")
       expect(post_revisor.raw_changed?).to eq(false)
+    end
+
+    it "tracks tag changes by IDs (integers) with revision storing names" do
+      tag1 = Fabricate(:tag, name: "existing-tag")
+      tag2 = Fabricate(:tag, name: "another-tag")
+
+      post.topic.update!(tags: [tag1])
+
+      post_revisor.revise!(admin, tags: [{ id: tag2.id, name: tag2.name }])
+
+      modifications = post.post_revisions.last.modifications
+      expect(modifications["tags"]).to eq([["existing-tag"], ["another-tag"]])
+    end
+
+    it "tracks tag changes from empty to tagged using objects" do
+      tag = Fabricate(:tag, name: "new-via-id")
+
+      post_revisor.revise!(admin, tags: [{ id: tag.id, name: tag.name }])
+
+      modifications = post.post_revisions.last.modifications
+      expect(modifications["tags"]).to eq([[], ["new-via-id"]])
+    end
+
+    it "tracks tag changes from tagged to empty" do
+      tag = Fabricate(:tag, name: "will-remove")
+      post.topic.update!(tags: [tag])
+
+      post_revisor.revise!(admin, tags: [])
+
+      modifications = post.post_revisions.last.modifications
+      expect(modifications["tags"]).to eq([["will-remove"], []])
     end
 
     describe "#publish_changes" do
@@ -1406,6 +1500,40 @@ describe PostRevisor do
                 tags: topic.tags.map(&:name) + ["secret"],
               )
               expect(post.reload.revisions.first.hidden).to eq(true)
+            end
+
+            it "doesn't increment public_version for hidden revisions" do
+              post_revisor.revise!(admin, raw: post.raw, tags: topic.tags.map(&:name) + ["secret"])
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.public_version).to eq(1)
+            end
+
+            it "doesn't decrement public_version when hidden revision is destroyed" do
+              original_tags = topic.tags.map(&:name)
+              post_revisor.revise!(admin, raw: post.raw, tags: original_tags + ["secret"])
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.public_version).to eq(1)
+              expect(post.revisions.count).to eq(1)
+
+              post_revisor.revise!(admin, raw: post.raw, tags: original_tags)
+              post.reload
+              expect(post.version).to eq(1)
+              expect(post.public_version).to eq(1)
+              expect(post.revisions.count).to eq(0)
+            end
+
+            it "increments public_version when hidden tag added with other visible changes" do
+              post_revisor.revise!(
+                admin,
+                raw: "#{post.raw} with additional content",
+                tags: topic.tags.map(&:name) + ["secret"],
+              )
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.public_version).to eq(2)
+              expect(post.revisions.first.hidden).to eq(false)
             end
 
             it "doesn't notify topic owner about hidden tags" do
@@ -1829,6 +1957,36 @@ describe PostRevisor do
           expect(result).to eq(true)
         }.not_to change { post.topic.reload.bumped_at }
       end
+    end
+  end
+
+  describe "draft cleanup" do
+    fab!(:post)
+
+    it "deletes the draft after successful revision" do
+      draft_key = post.topic.draft_key
+      Draft.set(post.user, draft_key, 0, '{"reply":"test draft"}')
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_present
+
+      post.revise(post.user, raw: "updated content here for the test")
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_nil
+    end
+
+    it "deletes the draft even when draft sequence exceeds DraftSequence" do
+      draft_key = post.topic.draft_key
+
+      # Simulate edge case: draft sequence is higher than DraftSequence
+      # When DraftSequence.next! runs, it increments to 6, but sequence < 6 doesn't catch sequence 6
+      Draft.create!(user: post.user, draft_key: draft_key, data: '{"reply":"test"}', sequence: 6)
+      DraftSequence.create!(user_id: post.user.id, draft_key: draft_key, sequence: 5)
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_present
+
+      post.revise(post.user, raw: "updated content here for the test")
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_nil
     end
   end
 end

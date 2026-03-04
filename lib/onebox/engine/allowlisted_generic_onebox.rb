@@ -228,7 +228,7 @@ module Onebox
       end
 
       def is_embedded?
-        return false unless data[:html] && data[:height]
+        return false if data[:html].blank?
         return true if AllowlistedGenericOnebox.html_providers.include?(data[:provider_name])
         return false unless data[:html]["iframe"]
 
@@ -300,7 +300,7 @@ module Onebox
         if iframe = fragment.at_css("iframe")
           iframe.remove_attribute("style")
           iframe["width"] = data[:width] || "100%"
-          iframe["height"] = data[:height]
+          iframe["height"] = data[:height] if data[:height].present?
           iframe["scrolling"] = "no"
           iframe["frameborder"] = "0"
         end

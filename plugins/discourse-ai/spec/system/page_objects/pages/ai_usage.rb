@@ -75,6 +75,22 @@ module PageObjects
       def feature_selector
         PageObjects::Components::SelectKit.new(".ai-usage__feature-selector")
       end
+
+      def select_period(period)
+        label =
+          case period
+          when :day
+            I18n.t("js.discourse_ai.usage.periods.last_day")
+          when :week
+            I18n.t("js.discourse_ai.usage.periods.last_week")
+          when :month
+            I18n.t("js.discourse_ai.usage.periods.last_month")
+          end
+
+        find(".ai-usage__period-buttons .btn", text: label).click
+
+        self
+      end
     end
   end
 end

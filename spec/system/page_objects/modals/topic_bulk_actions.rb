@@ -8,6 +8,10 @@ module PageObjects
         PageObjects::Components::SelectKit.new(".tag-chooser")
       end
 
+      def category_selector
+        PageObjects::Components::SelectKit.new(".category-chooser")
+      end
+
       def click_bulk_topics_confirm
         find("#bulk-topics-confirm").click
       end
@@ -37,6 +41,14 @@ module PageObjects
       def has_no_category_badge?(category)
         within(MODAL_SELECTOR) do
           has_no_css?(PageObjects::Components::CategoryBadge.new.category_selector(category))
+        end
+      end
+
+      def has_errors?(text = nil)
+        if text
+          has_css?("#{MODAL_SELECTOR}__errors", text: text)
+        else
+          has_css?("#{MODAL_SELECTOR}__errors")
         end
       end
     end

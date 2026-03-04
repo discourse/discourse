@@ -34,36 +34,36 @@ export default class TopicStatus extends Component {
         <a
           href={{@topic.url}}
           title={{i18n "topic_statuses.bookmarked.help"}}
-          class="topic-status"
+          class="topic-status --bookmarked"
         >{{icon "bookmark"}}</a>
       {{~/if~}}
 
       {{~#if (and @topic.closed @topic.archived)~}}
         <span
           title={{i18n "topic_statuses.locked_and_archived.help"}}
-          class="topic-status"
+          class="topic-status --closed --archived"
         >{{icon "topic.closed"}}</span>
       {{~else if @topic.closed~}}
         <span
           title={{i18n "topic_statuses.locked.help"}}
-          class="topic-status"
+          class="topic-status --closed"
         >{{icon "topic.closed"}}</span>
       {{~else if @topic.archived~}}
         <span
           title={{i18n "topic_statuses.archived.help"}}
-          class="topic-status"
+          class="topic-status --archived"
         >{{icon "topic.closed"}}</span>
       {{~/if~}}
 
       {{~#if @topic.is_warning~}}
         <span
           title={{i18n "topic_statuses.warning.help"}}
-          class="topic-status topic-status-warning"
+          class="topic-status --warning topic-status-warning"
         >{{icon "envelope"}}</span>
       {{~else if (and @showPrivateMessageIcon @topic.isPrivateMessage)~}}
         <span
           title={{i18n "topic_statuses.personal_message.help"}}
-          class="topic-status"
+          class="topic-status --personal-message"
         >{{icon "envelope"}}</span>
       {{~/if~}}
 
@@ -73,12 +73,12 @@ export default class TopicStatus extends Component {
             {{on "click" this.togglePinned}}
             href
             title={{i18n "topic_statuses.pinned.help"}}
-            class="topic-status pinned pin-toggle-button"
+            class="topic-status --pinned pin-toggle-button"
           >{{icon "thumbtack"}}</a>
         {{~else~}}
           <span
             title={{i18n "topic_statuses.pinned.help"}}
-            class="topic-status pinned"
+            class="topic-status --pinned"
           >{{icon "thumbtack"}}</span>
         {{~/if~}}
       {{~else if @topic.unpinned~}}
@@ -87,12 +87,12 @@ export default class TopicStatus extends Component {
             {{on "click" this.togglePinned}}
             href
             title={{i18n "topic_statuses.unpinned.help"}}
-            class="topic-status unpinned pin-toggle-button"
+            class="topic-status --unpinned pin-toggle-button"
           >{{icon "thumbtack" class="unpinned"}}</a>
         {{~else~}}
           <span
             title={{i18n "topic_statuses.unpinned.help"}}
-            class="topic-status unpinned"
+            class="topic-status --unpinned"
           >{{icon "thumbtack" class="unpinned"}}</span>
         {{~/if~}}
       {{~/if~}}
@@ -103,7 +103,7 @@ export default class TopicStatus extends Component {
             "topic_statuses.unlisted.help"
             unlistedReason=@topic.visibilityReasonTranslated
           }}
-          class="topic-status"
+          class="topic-status --invisible"
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
       <PluginOutlet

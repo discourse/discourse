@@ -48,10 +48,11 @@ export default class ChannelsListDirect extends Component {
   }
 
   get channelList() {
-    if (!this.inSidebar) {
+    if (this.inSidebar) {
       return this.chatChannelsManager.truncatedUnstarredDirectMessageChannels;
     }
-    return this.chatChannelsManager.truncatedDirectMessageChannels;
+    // In mobile/drawer, show all channels including starred, sorted by activity
+    return this.chatChannelsManager.truncatedDirectMessageChannelsByActivity;
   }
 
   @action
@@ -136,7 +137,6 @@ export default class ChannelsListDirect extends Component {
 
     <PluginOutlet
       @name="below-direct-chat-channels"
-      @tagName=""
       @outletArgs={{lazyHash inSidebar=this.inSidebar}}
     />
   </template>

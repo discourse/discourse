@@ -14,10 +14,22 @@ ug:
       reports:
         activity_calendar:
           title: پائالىيەت يىلنامەسى
+          cell_title:
+            visited_no_posts: "سىز %{date} زىيارەتكە كېلىپ يوشۇرنۇپ تۇردىڭىز ئەمما ھېچقانداق يازما يوللىمىدىڭىز."
+            visited_with_posts:
+              one: "سىز %{date} دا %{count} يازما يازدىڭىز."
+              other: "سىز %{date} دا %{count} يازما يازدىڭىز."
+            no_activity: "سىز %{date} دا يوق ئىدىڭىز."
         top_words:
           title: سۆز ئىشلىتىش
         reading_time:
           title: ئوقۇش ۋاقتى
+          book_comparison: "سىز تور بېكىتىمىزدە <code>%{readingTime}</code> ئوقۇدىڭىز! بۇ <i>%{bookTitle}</i> كىتابنى ئوقۇشقا كەتكەن ۋاقىتقا تەڭ"
+        post_used_reactions:
+          title: تېمىدا ئەڭ كۆپ ئىشلىتىلگەن ئىنكاس
+          total_number: "جەمئىي ئىنكاس سانى: %{count}"
+        post_received_reactions:
+          title: تېمىدا ئەڭ كۆپ تاپشۇرۇۋالغان ئىنكاس
         fbff:
           title: يېقىن دوستىڭىز (مۇنبەردىكى ئەڭ يېقىن دوستىڭىز)
         most_viewed_categories:
@@ -28,6 +40,9 @@ ug:
           title:
             one: سىز ئەڭ كۆپ زىيارەت قىلىدىغان بەلگە
             other: سىز ئەڭ كۆپ زىيارەت قىلىدىغان %{count} سەھىپە
+          title_others:
+            one: "%{username} نىڭ ئەڭ كۆپ كۆرۈلگەن بەلگىسى"
+            other: "%{username} نىڭ ئەڭ كۆپ كۆرۈلگەن %{count} بەلگىسى"
         best_topics:
           view_topic: تېما كۆرسەت
           title:
@@ -59,21 +74,17 @@ ug:
         chat_usage:
           title: سۆھبەت پائالىيىتى
           total_messages: جەمئىي ئۇچۇر
-          dm_messages: بىۋاسىتە ئۇچۇر
-          unique_dm_channels: بىۋاسىتە ئۇچۇر سۆھبىتى
           reactions_received: تاپشۇرۇۋالغان ئىنكاس
           avg_message_length: ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقى
           favorite_channels: ياقتۇرىدىغان قانال
           messages: ئۇچۇر
           bot_name: XxRewindBotxX
-          you: سىز
+          author: سىز
+          author_others: "%{username}"
           channel_title: "#سۆھبەت پائالىيىتى"
           status_online: "● توردا"
-          message_1: "سىز بۇ يىل <strong>%{count}</strong> ئۇچۇر يوللىدىڭىز!"
           reply_1: "lol قالتىس B-)"
-          message_2: "سىز پەرقلىق <strong>%{channel_count}</strong> كىشى ياكى گۇرۇپپا بىلەن <strong>%{dm_count}</strong> بىۋاستە ئۇچۇر سۆھبىتى ئۆتكۈزدىڭىز."
           reply_2: "ئاجايىپ :D"
-          message_3: "كىشىلەر ئۇچۇرىڭىزنى ياقتۇردى! <strong>%{count}</strong> ئىنكاسقا ئېرىشتىڭىز ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "سىزنىڭ ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقىڭىز <strong>%{length}</strong> ھەرپ"
           message_5: "ياقتۇرىدىغان قانىلىڭىز:"
@@ -120,7 +131,7 @@ ug:
           replies: يازمىغا جاۋاب
           mentions: ئاتاش
           topics_with_new_users: يېڭى ئىشلەتكۈچىنىڭ تېمىسى
-          your_contributions_helped: تۆھپىڭىز ياردەم قىلدى
+          contributions_helped: تۆھپىڭىز ياردەم قىلدى
         time_of_day_activity:
           title: كۈندىلىك پائالىيەت رېتىمى
           play_button: پائالىيىتىڭىزنى ئاۋازلىق ياڭرىتىدۇ

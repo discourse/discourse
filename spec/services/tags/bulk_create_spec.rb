@@ -103,6 +103,28 @@ RSpec.describe(Tags::BulkCreate) do
       end
     end
 
+    context "when force_lowercase_tags is disabled" do
+      let(:tag_names) { ["CamelCase", "UPPERCASE", "Tag With Spaces"] }
+
+      before { SiteSetting.force_lowercase_tags = false }
+
+      it { is_expected.to run_successfully }
+
+      it "preserves case in tag names" do
+        result
+        expect(Tag.where(name: %w[CamelCase UPPERCASE Tag-With-Spaces]).count).to eq(3)
+      end
+
+      it "returns preserved-case names" do
+        expect(result.results[:created]).to contain_exactly(
+          "CamelCase",
+          "UPPERCASE",
+          "Tag-With-Spaces",
+        )
+        expect(result.results[:failed]).to be_empty
+      end
+    end
+
     context "when tag names are numbers" do
       let(:tag_names) { [123, 456, 789] }
 
@@ -133,8 +155,40 @@ RSpec.describe(Tags::BulkCreate) do
       end
     end
 
-    context "when some tags are invalid" do
-      let(:tag_names) { ["", "valid-tag", "   ", "%^&ui^&*", "!!!test"] }
+    context "when tags contain consecutive dashes" do
+      let(:tag_names) { %w[test--tag multi---dash a--b--c] }
+
+      it { is_expected.to run_successfully }
+
+      it "normalizes consecutive dashes and creates tags" do
+        expect { result }.to change { Tag.count }.by(3)
+        expect(Tag.where(name: %w[test-tag multi-dash a-b-c]).count).to eq(3)
+      end
+
+      it "returns normalized names" do
+        expect(result.results[:created]).to contain_exactly("test-tag", "multi-dash", "a-b-c")
+        expect(result.results[:failed]).to be_empty
+      end
+    end
+
+    context "when tags contain characters that get stripped by clean_tag" do
+      let(:tag_names) { %w[valid-tag %^&ui^&* !!!test] }
+
+      it { is_expected.to run_successfully }
+
+      it "cleans and creates tags" do
+        expect { result }.to change { Tag.count }.by(3)
+        expect(Tag.where(name: %w[valid-tag ui test]).count).to eq(3)
+      end
+
+      it "returns cleaned names" do
+        expect(result.results[:created]).to contain_exactly("valid-tag", "ui", "test")
+        expect(result.results[:failed]).to be_empty
+      end
+    end
+
+    context "when tags are entirely invalid" do
+      let(:tag_names) { ["", "valid-tag", "   ", "@!#$%^&*"] }
 
       it { is_expected.to run_successfully }
 
@@ -144,7 +198,7 @@ RSpec.describe(Tags::BulkCreate) do
 
       it "reports failed tags" do
         expect(result.results[:created]).to contain_exactly("valid-tag")
-        expect(result.results[:failed].keys).to contain_exactly("%^&ui^&*", "!!!test")
+        expect(result.results[:failed].keys).to contain_exactly("@!#$%^&*")
       end
     end
 
@@ -180,7 +234,7 @@ RSpec.describe(Tags::BulkCreate) do
     context "when mixing valid, existing, and invalid tags" do
       fab!(:existing_tag) { Fabricate(:tag, name: "existing") }
 
-      let(:tag_names) { ["new-tag", "existing", "", "invalid@@@", "another-new"] }
+      let(:tag_names) { ["new-tag", "existing", "", "@!#$%", "another-new"] }
 
       it { is_expected.to run_successfully }
 
@@ -188,7 +242,7 @@ RSpec.describe(Tags::BulkCreate) do
         expect { result }.to change { Tag.count }.by(2)
         expect(result.results[:created]).to contain_exactly("new-tag", "another-new")
         expect(result.results[:existing]).to contain_exactly("existing")
-        expect(result.results[:failed].keys).to contain_exactly("invalid@@@")
+        expect(result.results[:failed].keys).to contain_exactly("@!#$%")
       end
     end
   end

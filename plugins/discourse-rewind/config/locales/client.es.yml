@@ -46,7 +46,7 @@ es:
           title: Uso de palabras
         reading_time:
           title: Tiempo de lectura
-          book_comparison: "¡Pasaste <code>%{readingTitme}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
+          book_comparison: "¡Pasaste <code>%{readingTime}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Reacciones más utilizadas en los temas
           total_number: "Número total de reacciones: %{count}"
@@ -86,6 +86,7 @@ es:
         assignments:
           title: Tareas
           total_assigned: Asignado a mí
+          total_assigned_others: "Asignada a %{username}"
           completed: Tareas completadas
           pending: Tareas pendientes
           assigned_by_user: Tareas asignadas
@@ -93,20 +94,16 @@ es:
         chat_usage:
           title: Actividad del chat
           total_messages: Total de mensajes
-          dm_messages: Mensajes privados
-          unique_dm_channels: Conversaciones en mensajes privados
           reactions_received: Reacciones recibidas
           avg_message_length: Longitud media de los mensajes
           favorite_channels: Canales favoritos
           messages: mensajes
-          you: Tú
+          author: Tú
+          author_others: "%{username}"
           channel_title: "#actividad-en-el-chat"
           status_online: "● en línea"
-          message_1: "¡Enviaste <strong>%{count}</strong> mensajes este año!"
           reply_1: "lol impresionante B-)"
-          message_2: "Tuviste <strong>%{dm_count}</strong> conversaciones privadas con <strong>%{channel_count}</strong> personas o grupos diferentes"
           reply_2: "MOo0oLa :D"
-          message_3: "¡A la gente le encantaron tus mensajes! Recibiste <strong>%{count}</strong> reacciones ❤️"
           message_4: "La longitud media de tus mensajes fue de <strong>%{length}</strong> caracteres"
           message_5: "Tus canales favoritos:"
         favorite_gifs:
@@ -151,7 +148,7 @@ es:
           replies: Respuestas a las publicaciones
           mentions: Menciones
           topics_with_new_users: Temas con nuevos usuarios
-          your_contributions_helped: tus contribuciones ayudaron a
+          contributions_helped: tus contribuciones ayudaron a
         time_of_day_activity:
           title: Ritmo de actividad diaria
           play_button: Reproduce tu actividad como sonido

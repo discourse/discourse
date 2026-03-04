@@ -1300,5 +1300,115 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(queries.length).to eq(1)
       end
     end
+
+    context "for datetime properties" do
+      let(:schema) { { name: "section", properties: { datetime_property: { type: "datetime" } } } }
+
+      it "should not return any error messages when the value of the property is a valid UTC datetime" do
+        expect(
+          described_class.new(
+            schema: schema,
+            object: {
+              datetime_property: "2024-12-29T15:30:00Z",
+            },
+          ).validate,
+        ).to eq({})
+
+        expect(
+          described_class.new(
+            schema: schema,
+            object: {
+              datetime_property: "2024-12-29T15:30:00.000Z",
+            },
+          ).validate,
+        ).to eq({})
+      end
+
+      it "should not return any error messages when the value is an ISO 8601 datetime with timezone offset" do
+        expect(
+          described_class.new(
+            schema: schema,
+            object: {
+              datetime_property: "2024-12-29T15:30:00+05:30",
+            },
+          ).validate,
+        ).to eq({})
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should not return any error messages when the value is an empty string and it's not required" do
+        expect(
+          described_class.new(schema: schema, object: { datetime_property: "" }).validate,
+        ).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            datetime_property: {
+              type: "datetime",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/datetime_property"])
+        expect(errors["/datetime_property"].full_messages).to contain_exactly("must be present")
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid datetime" do
+        errors =
+          described_class.new(
+            schema: schema,
+            object: {
+              datetime_property: "not a datetime",
+            },
+          ).validate
+
+        expect(errors.keys).to eq(["/datetime_property"])
+        expect(errors["/datetime_property"].full_messages).to contain_exactly(
+          "must be a valid datetime",
+        )
+      end
+
+      it "should return the right hash of error messages when value is a date-only string" do
+        errors =
+          described_class.new(schema: schema, object: { datetime_property: "2024-12-29" }).validate
+
+        expect(errors.keys).to eq(["/datetime_property"])
+        expect(errors["/datetime_property"].full_messages).to contain_exactly(
+          "must be a valid datetime",
+        )
+      end
+
+      it "should return the right hash of error messages when value is datetime without timezone" do
+        errors =
+          described_class.new(
+            schema: schema,
+            object: {
+              datetime_property: "2024-12-29T15:30:00",
+            },
+          ).validate
+
+        expect(errors.keys).to eq(["/datetime_property"])
+        expect(errors["/datetime_property"].full_messages).to contain_exactly(
+          "must be a valid datetime",
+        )
+      end
+
+      it "should return the right hash of error messages when value of property is not a string" do
+        errors = described_class.new(schema: schema, object: { datetime_property: 123 }).validate
+
+        expect(errors.keys).to eq(["/datetime_property"])
+        expect(errors["/datetime_property"].full_messages).to contain_exactly(
+          "must be a valid datetime",
+        )
+      end
+    end
   end
 end

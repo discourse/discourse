@@ -1,5 +1,11 @@
 @use "lib/viewport";
 
+:root {
+  --sidebar-section-wrapper-padding: 0 var(--space-2) var(--space-4)
+    var(--space-4);
+}
+
+body.has-full-page-chat .sidebar-wrapper,
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
   @include viewport.until(lg) {
@@ -23,10 +29,6 @@
     border-right: none;
   }
 
-  .sidebar-sections {
-    padding: 0;
-  }
-
   .sidebar-section-link {
     transition: none;
     border-radius: var(--d-border-radius);
@@ -34,6 +36,13 @@
 
   .dropdown-menu__item .sidebar-section-link {
     border-radius: 0;
+  }
+}
+
+.sidebar-hamburger-dropdown {
+  .sidebar-new-topic-button__wrapper {
+    width: 100%;
+    margin: 0 0 var(--space-2);
   }
 }
 
@@ -67,7 +76,6 @@
 
 .sidebar-wrapper .sidebar-sections {
   --scrollbarThumbBg: var(--d-selected);
-  padding: 0 1rem;
 }
 
 .sidebar-section-link-wrapper .sidebar-section-link:focus,
@@ -78,7 +86,7 @@
 }
 
 .sidebar-new-topic-button__wrapper {
-  margin: 0 var(--space-4) var(--space-6);
+  margin: 0 var(--space-2) var(--space-4) var(--space-4);
 
   .sidebar-new-topic-button .d-icon {
     display: none;
@@ -92,6 +100,11 @@
       z-index: z("modal", "overlay");
     }
   }
+}
+
+.admin-area .sidebar-wrapper .admin-panel {
+  --d-sidebar-highlight-background: var(--d-selected);
+  --d-sidebar-link-icon-color: var(--d-sidebar-link-color);
 }
 
 .sidebar-theme-toggle__wrapper {

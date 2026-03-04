@@ -110,7 +110,29 @@ RSpec.describe WebhooksController do
     fab!(:user) { Fabricate(:user, email:) }
     fab!(:email_log) { Fabricate(:email_log, user:, message_id: message_id, to_address: email) }
 
-    it "works" do
+    it "returns an error when no verification key is configured" do
+      SiteSetting.sendgrid_verification_key = ""
+
+      post "/webhooks/sendgrid.json",
+           params: {
+             "_json" => [
+               {
+                 "email" => email,
+                 "smtp-id" => "<12345@il.com>",
+                 "event" => "bounce",
+                 "status" => "5.0.0",
+               },
+             ],
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
+
+    it "hard bounces" do
+      SiteSetting.sendgrid_verification_key = "test"
+      WebhooksController.any_instance.stubs(:valid_sendgrid_signature?).returns(true)
+
       post "/webhooks/sendgrid.json",
            params: {
              "_json" => [
@@ -132,6 +154,9 @@ RSpec.describe WebhooksController do
     end
 
     it "sets the bounce error code to 5.1.2 when payload's `event` is `bounce`, `type` is `blocked` and `status` is blank" do
+      SiteSetting.sendgrid_verification_key = "test"
+      WebhooksController.any_instance.stubs(:valid_sendgrid_signature?).returns(true)
+
       post "/webhooks/sendgrid.json",
            params: {
              "_json" => [
@@ -197,14 +222,61 @@ RSpec.describe WebhooksController do
 
       expect(response.status).to eq(406)
     end
+
+    it "returns error if signature header is missing" do
+      SiteSetting.sendgrid_verification_key =
+        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE83T4O/n84iotIvIW4mdBgQ/7dAfSmpqIM8kF9mN1flpVKS3GRqe62gw+2fNNRaINXvVpiglSI8eNEc6wEA3F+g=="
+
+      post "/webhooks/sendgrid.json",
+           headers: {
+             "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112492",
+           },
+           params:
+             "[{\"email\":\"hello@world.com\",\"event\":\"dropped\",\"reason\":\"Bounced Address\",\"sg_event_id\":\"ZHJvcC0xMDk5NDkxOS1MUnpYbF9OSFN0T0doUTRrb2ZTbV9BLTA\",\"sg_message_id\":\"LRzXl_NHStOGhQ4kofSm_A.filterdrecv-p3mdw1-756b745b58-kmzbl-18-5F5FC76C-9.0\",\"smtp-id\":\"<LRzXl_NHStOGhQ4kofSm_A@ismtpd0039p1iad1.sendgrid.net>\",\"timestamp\":1600112492}]\r\n"
+
+      expect(response.status).to eq(406)
+    end
+
+    it "returns error if timestamp header is missing" do
+      SiteSetting.sendgrid_verification_key =
+        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE83T4O/n84iotIvIW4mdBgQ/7dAfSmpqIM8kF9mN1flpVKS3GRqe62gw+2fNNRaINXvVpiglSI8eNEc6wEA3F+g=="
+
+      post "/webhooks/sendgrid.json",
+           headers: {
+             "X-Twilio-Email-Event-Webhook-Signature" =>
+               "MEUCIGHQVtGj+Y3LkG9fLcxf3qfI10QysgDWmMOVmxG0u6ZUAiEAyBiXDWzM+uOe5W0JuG+luQAbPIqHh89M15TluLtEZtM=",
+           },
+           params:
+             "[{\"email\":\"hello@world.com\",\"event\":\"dropped\",\"reason\":\"Bounced Address\",\"sg_event_id\":\"ZHJvcC0xMDk5NDkxOS1MUnpYbF9OSFN0T0doUTRrb2ZTbV9BLTA\",\"sg_message_id\":\"LRzXl_NHStOGhQ4kofSm_A.filterdrecv-p3mdw1-756b745b58-kmzbl-18-5F5FC76C-9.0\",\"smtp-id\":\"<LRzXl_NHStOGhQ4kofSm_A@ismtpd0039p1iad1.sendgrid.net>\",\"timestamp\":1600112492}]\r\n"
+
+      expect(response.status).to eq(406)
+    end
   end
 
   describe "#mailjet" do
-    it "works" do
+    it "returns an error when no webhook token is configured" do
+      SiteSetting.mailjet_webhook_token = ""
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post "/webhooks/mailjet.json",
+           params: {
+             "event" => "bounce",
+             "email" => email,
+             "hard_bounce" => true,
+             "CustomID" => message_id,
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
+
+    it "hard bounces" do
+      SiteSetting.mailjet_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailjet.json?t=foo",
            params: {
              "event" => "bounce",
              "email" => email,
@@ -253,14 +325,32 @@ RSpec.describe WebhooksController do
       expect(response.status).to eq(406)
       expect(email_log.reload.bounced).to eq(false)
     end
-  end
 
-  describe "#mailpace" do
-    it "works" do
+    it "returns error if token param is missing" do
+      SiteSetting.mailjet_webhook_token = "foo"
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mailpace.json",
+      post "/webhooks/mailjet.json",
+           params: {
+             "event" => "bounce",
+             "email" => email,
+             "hard_bounce" => true,
+             "CustomID" => message_id,
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
+  end
+
+  describe "#mailpace" do
+    it "hard bounces" do
+      SiteSetting.mailpace_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailpace.json?t=foo",
            params: {
              event: "email.bounced",
              payload: {
@@ -279,10 +369,11 @@ RSpec.describe WebhooksController do
     end
 
     it "soft bounces" do
+      SiteSetting.mailpace_webhook_token = "foo"
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mailpace.json",
+      post "/webhooks/mailpace.json?t=foo",
            params: {
              event: "email.deferred",
              payload: {
@@ -299,14 +390,79 @@ RSpec.describe WebhooksController do
       expect(email_log.bounce_error_code).to eq(nil) # mailpace doesn't give us this
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
+
+    it "verifies webhook tokens" do
+      SiteSetting.mailpace_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailpace.json?t=foo",
+           params: {
+             event: "email.bounced",
+             payload: {
+               status: "bounced",
+               to: email,
+               message_id: "<#{message_id}>",
+             },
+           }
+
+      expect(response.status).to eq(200)
+      expect(email_log.reload.bounced).to eq(true)
+    end
+
+    it "returns error if token verification fails" do
+      SiteSetting.mailpace_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailpace.json?t=bar",
+           params: {
+             event: "email.bounced",
+             payload: {
+               status: "bounced",
+               to: email,
+               message_id: "<#{message_id}>",
+             },
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
   end
 
   describe "#mandrill" do
+    it "returns an error when no authentication key is configured" do
+      SiteSetting.mandrill_authentication_key = ""
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mandrill.json",
+           params: {
+             mandrill_events: [
+               {
+                 "event" => "hard_bounce",
+                 "msg" => {
+                   "email" => email,
+                   "diag" => "5.1.1",
+                   "metadata" => {
+                     "message_id" => message_id,
+                   },
+                 },
+               },
+             ].to_json,
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
+
     let(:payload) do
       "mandrill_events=%5B%7B%22event%22%3A%22hard_bounce%22%2C%22msg%22%3A%7B%22email%22%3A%22em%40il.com%22%2C%22diag%22%3A%225.1.1%22%2C%22bounce_description%22%3A%22smtp%3B+550-5.1.1+The+email+account+that+you+tried+to+reach+does+not+exist.%22%2C%22metadata%22%3A%7B%22message_id%22%3A%2212345%40il.com%22%7D%7D%7D%5D"
     end
 
-    it "works" do
+    it "hard bounces" do
+      SiteSetting.mandrill_authentication_key = "test"
+      WebhooksController.any_instance.stubs(:valid_mandrill_signature?).returns(true)
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
@@ -367,6 +523,14 @@ RSpec.describe WebhooksController do
 
       expect(response.status).to eq(406)
     end
+
+    it "returns error if signature header is missing" do
+      SiteSetting.mandrill_authentication_key = "wr_JeJNO9OI65RFDrvk3Zw"
+
+      post "/webhooks/mandrill.json", params: payload
+
+      expect(response.status).to eq(406)
+    end
   end
 
   describe "#mandrill_head" do
@@ -378,11 +542,28 @@ RSpec.describe WebhooksController do
   end
 
   describe "#postmark" do
-    it "works" do
+    it "returns an error when no webhook token is configured" do
+      SiteSetting.postmark_webhook_token = ""
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post "/webhooks/postmark.json",
+           params: {
+             "Type" => "HardBounce",
+             "MessageID" => message_id,
+             "Email" => email,
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
+
+    it "hard bounces" do
+      SiteSetting.postmark_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/postmark.json?t=foo",
            params: {
              "Type" => "HardBounce",
              "MessageID" => message_id,
@@ -397,10 +578,11 @@ RSpec.describe WebhooksController do
     end
 
     it "soft bounces" do
+      SiteSetting.postmark_webhook_token = "foo"
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/postmark.json",
+      post "/webhooks/postmark.json?t=foo",
            params: {
              "Type" => "SoftBounce",
              "MessageID" => message_id,
@@ -445,14 +627,58 @@ RSpec.describe WebhooksController do
       expect(response.status).to eq(406)
       expect(email_log.reload.bounced).to eq(false)
     end
+
+    it "returns error if token param is missing" do
+      SiteSetting.postmark_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/postmark.json",
+           params: {
+             "Type" => "HardBounce",
+             "MessageID" => message_id,
+             "Email" => email,
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
   end
 
   describe "#sparkpost" do
-    it "works" do
+    it "returns an error when no webhook token is configured" do
+      SiteSetting.sparkpost_webhook_token = ""
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post "/webhooks/sparkpost.json",
+           params: {
+             "_json" => [
+               {
+                 "msys" => {
+                   "message_event" => {
+                     "bounce_class" => 10,
+                     "error_code" => "554",
+                     "rcpt_to" => email,
+                     "rcpt_meta" => {
+                       "message_id" => message_id,
+                     },
+                   },
+                 },
+               },
+             ],
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
+
+    it "hard bounces" do
+      SiteSetting.sparkpost_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/sparkpost.json?t=foo",
            params: {
              "_json" => [
                {
@@ -510,6 +736,33 @@ RSpec.describe WebhooksController do
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
       post "/webhooks/sparkpost.json?t=bar",
+           params: {
+             "_json" => [
+               {
+                 "msys" => {
+                   "message_event" => {
+                     "bounce_class" => 10,
+                     "error_code" => "554",
+                     "rcpt_to" => email,
+                     "rcpt_meta" => {
+                       "message_id" => message_id,
+                     },
+                   },
+                 },
+               },
+             ],
+           }
+
+      expect(response.status).to eq(406)
+      expect(email_log.reload.bounced).to eq(false)
+    end
+
+    it "returns error if token param is missing" do
+      SiteSetting.sparkpost_webhook_token = "foo"
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/sparkpost.json",
            params: {
              "_json" => [
                {
@@ -593,7 +846,7 @@ RSpec.describe WebhooksController do
 
     before { Jobs.run_immediately! }
 
-    it "works" do
+    it "hard bounces" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 

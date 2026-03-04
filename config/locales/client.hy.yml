@@ -6,6 +6,11 @@
 
 hy:
   js:
+    blocks:
+      ghost:
+        status: "Ստատուս"
+        hidden: "թաքցված"
+        failed: "ձախողված"
     number:
       format:
         separator: "."
@@ -291,6 +296,11 @@ hy:
       title: "Նոր և Չկարդացված Թեմաներ"
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Ետ"
+      spread_the_word:
+        action: "Պատճենել հղումը"
     about:
       edit: "Խմբագրել այս էջը"
       simple_title: "Մեր Մասին"
@@ -513,7 +523,6 @@ hy:
       in_reply_to: "ի պատասխան"
       explain:
         why: "Բացատրել, թե ինչու՞ է այդ էլեմենտը հայտնվել հերթի մեջ: "
-        title: "Ամփոփիչ Գնահատական"
         formula: "Բանաձև"
         subtotal: "Միջանկյալ հանրագումար "
         total: "Ամբողջը"
@@ -527,10 +536,8 @@ hy:
           title: "Օգտատերերը, ում գրավոր բողոքները համաձայնեցված են՝ կստանան բոնուս: "
         trust_level_bonus:
           name: "վստահության մակարդակ"
-          title: "Օգտատրիրոջ վստահության առավել մեծ մակարդակ ունենալու դեպքում, ստուգվող էլեմենտները ստանում են ավելի բարձր բալ: "
         type_bonus:
           name: "բոնուսի տեսակը"
-          title: "Որոշ ստուգվող տեսակների դեպքում, աշխատակիցներին կարող են բոնուս նշանակվել, որպեսզի նրանք գերակայության հասնեն: "
       revise_and_reject_post:
         title: "Վերանայել"
         reason: "Պատճառ"
@@ -539,7 +546,6 @@ hy:
         custom_reason: "Տվեք պատճառի հստակ նկարագրությունը"
         other_reason: "Այլ..."
         optional: "ընտրովի"
-      stale_help: "Այս վերանայումը լուծվել է <b>%{username}</b>- ի կողմից:"
       claim_help:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
         required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
@@ -689,7 +695,11 @@ hy:
         reviewable_post:
           title: "Գրառում"
           noun: "գրառում"
+        reviewable_ai_post:
+          noun: "գրառում"
       user_label: "Օգտատեր"
+      timeline:
+        target_deleted: "Գրառումը ջնջված է"
       notes:
         delete: "Ջնջել"
       topic_label: "Թեմա"
@@ -848,9 +858,7 @@ hy:
           notification: Ծանուցում
         email:
           title: "Էլ. հասցե"
-          status: "Նամակները սինխրոնիզացված են IMAP-ի միջոցով՝ %{old_emails} %{total_emails}-ից։"
           enable_smtp: "Միացնել SMTP-ն"
-          enable_imap: "Միացնել IMAP-ը"
           test_settings: "Փորձարկել Կարգավորումները"
           save_settings: "Պահպանել Կարգավորումները"
           last_updated: "Վերջին թարմացումը՝"
@@ -859,14 +867,7 @@ hy:
           smtp_settings_valid: "SMTP կարգավորումները վավեր են:"
           smtp_title: "SMTP"
           smtp_instructions: "Երբ միացնում եք SMTP-ն խմբի համար, խմբի մուտքի արկղից ուղարկված բոլոր ելքային նամակները կուղարկվեն այստեղ նշված SMTP կարգավորումներով՝ ֆորումի մյուս նամակների համար կարգավորված փոստային սերվերի փոխարեն։"
-          imap_title: "IMAP"
-          imap_additional_settings: "Լրացուցիչ Կարգավորումներ"
-          imap_instructions: 'Երբ միացնում եք IMAP-ը խմբի համար, նամակները համաժամացվում են խմբի մուտքի արկղի և տրամադրված IMAP սերվերի և փոստարկղի միջև։ SMTP-ն պետք է միացված լինի վավեր և փորձարկված հավատարմագրերով, նախքան IMAP-ի միացումը։ SMTP-ի համար օգտագործվող էլ. փոստի մուտքանունն ու գաղտնաբառը կօգտագործվեն նաև IMAP-ի համար։ Լրացուցիչ տեղեկությունների համար տես <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">ֆունկցիայի հայտարարությունը Discourse Meta-ում</a>։'
-          imap_alpha_warning: "Զգուշացում. Սա նախնական զարգացման փուլում է։ Պաշտոնապես աշխատում է միայն Gmail-ի հետ։ Օգտագործեք ձեր իսկ պատասխանատվությամբ։"
-          imap_settings_valid: "IMAP կարգավորումները վավեր են:"
-          smtp_disable_confirm: "Եթե անջատեք SMTP-ն, SMTP-ի և IMAP-ի բոլոր կարգավորումները կզրոյացվեն, և հարակից գործառույթները կանջատվեն: Վստա՞հ եք, որ ցանկանում եք շարունակել:"
-          imap_disable_confirm: "Եթե անջատեք IMAP-ը, IMAP-ի բոլոր կարգավորումները կզրոյացվեն, և հարակից գործառույթները կանջատվեն: Վստա՞հ եք, որ ցանկանում եք շարունակել:"
-          imap_mailbox_not_selected: "IMAP- ի այս կոնֆիգուրացիայի համար դուք պետք է ընտրեք փոստարկղ, հակառակ դեպքում ոչ մի փոստարկղ չի համաժամեցվի:"
+          additional_settings: "Լրացուցիչ Կարգավորումներ"
           prefill:
             title: "Նախապես լրացնել կարգավորումները ՝ հետևյալի համար"
             gmail: "Gmail"
@@ -881,9 +882,6 @@ hy:
             smtp_server: "SMTP սերվեր"
             smtp_port: "SMTP Պորտ"
             smtp_ssl_mode: "SSL ռեժիմ"
-            imap_server: "IMAP սերվեր"
-            imap_port: "IMAP Պորտ"
-            imap_ssl: "Օգտագործեք SSL IMAP-ի համար"
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
           settings:
@@ -892,10 +890,6 @@ hy:
             allow_unknown_sender_topic_replies_hint: "Թույլ է տալիս անհայտ ուղարկողներին պատասխանել խմբային թեմաներին: Եթե սա միացված չէ, ապա թեմայում արդեն չհրավիրված էլփոստի հասցեներից պատասխանները նոր թեմա կստեղծեն:"
             from_alias: "Ուղարկողի կեղծանուն"
             from_alias_hint: "Կեղծանունը, որը պետք է օգտագործել որպես ուղարկողի հասցե խմբային SMTP նամակներ ուղարկելիս։ Նշենք, որ սա հնարավոր է չաջակցվի բոլոր փոստային մատակարարների կողմից, խնդրում ենք ստուգել ձեր փոստային մատակարարի փաստաթղթերը։"
-          mailboxes:
-            synchronized: "Համաժամանակեցված Փոստարկղ"
-            none_found: "Այս էլ. փոստի հաշվում փոստարկղեր չեն գտնվել:"
-            disabled: "Անջատված"
         membership:
           title: Անդամակցություն
           access: Թույլտվություն
@@ -1148,6 +1142,9 @@ hy:
       new_private_message: "Նոր Հաղորդագրություն"
       private_message: "Հաղորդագրություն"
       private_messages: "Հաղորդագրություններ"
+      upcoming_changes:
+        for_user:
+          enabled: "Միացվա՞ծ է:"
       user_notifications:
         filters:
           filter_by: "Զտել Ըստ"
@@ -1341,9 +1338,6 @@ hy:
         flags_given:
           one: '<span class="%{className}">%{count}</span> օգտակար բողոք'
           other: '<span class="%{className}">%{count}</span> օգտակար բողոք'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> բողոքված գրառում'
-          other: '<span class="%{className}">%{count}</span> բողոքված գրառում'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> ջնջված գրառում'
           other: '<span class="%{className}">%{count}</span> ջնջված գրառում'
@@ -1448,7 +1442,6 @@ hy:
         tags: "Պիտակներ"
         interface: "Ինտերֆեյս"
         apps: "Հավելվածներ"
-        navigation_menu: "Նավիգացիոն Մենյու"
       change_password:
         success: "(էլ. նամակն ուղարկված է)"
         in_progress: "(էլ. նամակն ուղարկվում է)"
@@ -2529,8 +2522,6 @@ hy:
         max_views:
           placeholder: առավելագույնը
           aria_label: զտել ըստ առավելագույն դիտումների
-        additional_options:
-          label: "Զտել ըստ գրառումների քանակի և թեմայի դիտումների"
     new_item: "նոր"
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
@@ -2577,6 +2568,9 @@ hy:
         choose_new_tags: "Ընտրել նոր պիտակներ այս թեմաների համար՝"
         choose_append_tags: "Ընտրել նոր պիտակներ այս թեմաներին ավելացնելու համար՝"
         changed_tags: "Այդ թեմաների պիտակները փոփոխվել են:"
+        error_topic_count:
+          one: "%{count} թեմա"
+          other: "%{count} թեմա"
       none:
         unread: "Դուք չունեք չկարդացած թեմաներ:"
         new: "Դուք չունեք նոր թեմաներ:"
@@ -2587,19 +2581,6 @@ hy:
         category: " %{category}-ում թեմաներ չկան:"
         top: "Թոփ թեմաներ չկան:"
         hot: "Թոփ թեմաներ չկան:"
-      bottom:
-        latest: "Վերջին թեմաներ այլևս չկան:"
-        posted: "Հրապարակված թեմաներ այլևս չկան:"
-        read: "Կարդացած թեմաներ այլևս չկան:"
-        new: "Նոր թեմաներ այլևս չկան:"
-        unread: "Չկարդացած թեմաներ այլևս չկան:"
-        unseen: "Այլևս չտեսնված թեմաներ չկան։"
-        category: "%{category}-ում թեմաներ այլևս չկան:"
-        tag: "%{tag}-ում թեմաներ այլևս չկան:"
-        top: "Թոփ թեմաներ այլևս չկան:"
-        hot: "Թոփ թեմաներ այլևս չկան:"
-        bookmarks: "Էջանշված թեմաներ այլևս չկան:"
-        filter: "Այլևս թեմաներ չկան։"
     topic_bulk_actions:
       dismiss:
         name: "Չեղարկել"
@@ -2667,9 +2648,6 @@ hy:
       unread_indicator: "Ոչ մի անդամ դեռ չի կարդացել այս թեմայի մինչև վերջին գրառումը: "
       created_at: "Ստեղծվել է՝ %{date}"
       bumped_at: "Վերջինը՝ %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Թերթեք բոլոր կատեգորիաները</a> կամ <a href='%{basePath}/latest'>դիտեք վերջին թեմաները</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Թերթեք բոլոր կատեգորիաները</a>, <a href='%{basePath}/latest'>դիտեք վերջին թեմաները</a> կամ ամենահայտնիները:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Թերթեք բոլոր պիտակները</a> կամ <a href='%{basePath}/latest'>դիտեք վերջին թեմաները</a>:"
       suggest_create_topic: Պատրա՞ստ եք <a href>նոր զրույց սկսել:</a>
       deleted: "Թեման ջնջվել է"
       slow_mode_update:
@@ -3169,7 +3147,11 @@ hy:
       slug_placeholder: "(Ընտրովի) գծիկավոր-բառեր url-ի համար"
       creation_error: 'Կատեգորիայի ստեղծման ժամանակ տեղի է ունեցել սխալ:'
       save_error: 'Կատեգորիան պահելիս տեղի է ունեցել սխալ:'
+      validations:
+        icon_required: "Ընտրեք պատկերակ."
       description: "Նկարագրույթուն"
+      icon: "Պատկերակ"
+      emoji: "Էմոջի"
       background_color: "Գույն"
       color_validations:
         cant_be_empty: "չի կարող դատարկ լինել"
@@ -3179,7 +3161,6 @@ hy:
         options:
           icon: "Պատկերակ"
           emoji: "Էմոջի"
-      name_placeholder: "Առավելագույնը մեկ կամ երկու բառ"
       color_placeholder: "Ցանկացած վեբ-գույն"
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
@@ -3191,11 +3172,10 @@ hy:
         see: "Դիտել"
         reply: "Պատասխանել"
         create: "Ստեղծել"
-      special_warning: "Ուշադրություն. Այս կատեգորիան նախապես ստեղծված կատեգորիա է, և անվտանգության կարգավորումները չեն կարող փոփոխվել: Եթե Դուք չեք ցանկանում օգտագործել այս կատեգորիան, ջնջեք այն՝ փոփոխելու փոխարեն:"
       uncategorized_security_warning: "Այս կատեգորիան հատուկ է: Այն նախատեսված է որպես կատեգորիա չունեցող թեմաների պահման տարածք; այն չի կարող ունենալ անվտանգության կարգավորումներ:"
       uncategorized_general_warning: 'Այս կատեգորիան հատուկ է: Այն օգտագործվում է որպես լռելյայն կատեգորիա նոր թեմաների համար, որոնք չունեն ընտրված կատեգորիա: Եթե Դուք ցանկանում եք կանխել սա և պարտադրել կատեգորիայի ընտրությունը, <a href="%{settingLink}">խնդրում ենք անջատել կարգավորումը այստեղ</a>: Եթե ցանկանում եք փոփոխել անունը կամ նկարագրությունը, այցելեք <a href="%{customizeLink}">Customize / Text Content</a>:'
       pending_permission_change_alert: "Դուք չեք ավելացրել %{group} այդ կատեգորիայի մեջ, սեղմեք այս կոճակը՝ դրանք ավելացնելու համար: "
-      images: "Նկարներ"
+      images: "Արտաքին տեսք"
       email_in: "Անհատական մուտքային էլ. հասցե՝"
       email_in_allow_strangers: "Ընդունել էլ. նամակներ հաշիվ չունեցող անանուն օգտատերերից"
       mailinglist_mirror: "Կատեգորիան արտապատճենում է փոստային ցուցակ"
@@ -3212,6 +3192,11 @@ hy:
       this_year: "այս տարի"
       position: "Դիրքը կատեգորիայի էջում."
       minimum_required_tags: "Թեմայում պահանջվող պիտակների նվազագույն քանակը՝"
+      none_subcategory_text: "Ոչ մի"
+      visibility:
+        title: "Տեսանելիություն"
+        public: "Հանրային"
+        group_restricted: "Մասնավոր"
       num_auto_bump_daily: "Օրեկան ավտոմատ բարձրացվող բաց թեմաների քանակը՝"
       navigate_to_first_post_after_read: "Բոլոր թեմաները կարդալուց հետո տեղափոխվել դեպի առաջին գրառում"
       notifications:
@@ -3444,6 +3429,7 @@ hy:
         this_month: "Ամիս"
         this_week: "Շաբաթ"
         today: "Այսօր"
+        custom: "Մասնավոր"
     permission_types:
       full: "Ստեղծել/Պատասխանել/Դիտել"
       create_post: "Պատասխանել/Դիտել"
@@ -3594,6 +3580,15 @@ hy:
         one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որին այն վերագրված է:"
         other: "Իսկապե՞ս ուզում եք ջնջել այս պիտակը և հեռացնել այն %{count} թեմայից, որոնց այն վերագրված է:"
       delete_confirm_no_topics: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս պիտակը:"
+      description: "Նկարագրություն"
+      settings:
+        title: "Կարգավորումներ"
+        general: "Ընդհանուր"
+        back: "Ետ"
+        name: "Անուն"
+      localization:
+        name: "Անուն"
+        description: "Նկարագրություն"
       sort_by: "Դասավորել ըստ՝ "
       sort_by_count: "քանակի"
       sort_by_name: "անվան"
@@ -3802,7 +3797,6 @@ hy:
         categories: "Բոլոր կատեգորիաները"
   admin_js:
     settings: "Կարգավորումներ"
-    reset_filter: "Վերահաստատե;"
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
@@ -3815,6 +3809,11 @@ hy:
       reports:
         title: "Հասանելի հաշվետվությունների ցանկը"
         sidebar_title: "Հաշվետվություններ"
+        group_traffic: "Այցելությունները"
+        group_members: "Անդամներ"
+        group_moderation: "Մոդերացիա"
+        group_security: "Անվտանգություն"
+        group_other: "Այլ"
       config_sections:
         account:
           title: "Հաշիվ"
@@ -3842,6 +3841,8 @@ hy:
           all: "Բոլոր"
           disabled: "Անջատված"
           impact_type_other: "Այլ"
+          impact_role_moderators: "Մոդերատորներ"
+          impact_role_staff: "Անձնակազմ"
       config:
         developer:
           title: "Ծրագրավորող"
@@ -3899,6 +3900,9 @@ hy:
               title: "Գրառումներ"
         reports:
           title: "Հաշվետվություններ"
+          sub_pages:
+            settings:
+              title: "Կարգավորումներ"
         badges:
           title: "Կրծքանշաններ"
         permalinks:
@@ -3941,13 +3945,6 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
-        result_types:
-          theme:
-            one: "Թեմա"
-            other: "Թեմաներ"
-          component:
-            one: "Բաղադրիչ"
-            other: "Բաղադրիչներ"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
@@ -4028,6 +4025,9 @@ hy:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
             disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'
+          sort_button: "Դասավորել ըստ %{column}"
+          sort_ascending: "ըստ աճման"
+          sort_descending: "ըստ նվազման"
           filters:
             file_extension:
               label: Ֆայլի ընդլայնում
@@ -4101,6 +4101,7 @@ hy:
         save: "Պահպանել"
         cancel: "Չեղարկել"
         continue: "Շարունակել"
+        copy_key: "Կրկնօրինակել"
         revoke: "Հետ կանչել"
         revoked: "Հետկանչված"
       api:
@@ -5095,6 +5096,7 @@ hy:
             title: "Ընտրովի"
         field_types:
           text: "Տեքստ"
+          date: "Ամսաթիվ"
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:
@@ -5126,6 +5128,7 @@ hy:
           empty: "Նկարներ դեռևս չկան: Խնդրում ենք վերբեռնել:"
           upload:
             label: "Վերբեռնել"
+        download_file: "Ներբեռնել"
         selectable_avatars:
           title: "Անձնապատկերների ցանկը, որոնցից օգտատերերը կարող են ընտրություն կատարել"
         table_column_heading:

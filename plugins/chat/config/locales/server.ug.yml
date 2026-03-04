@@ -135,16 +135,10 @@ ug:
           title: "ئۇچۇر ئۆچۈر"
           description: "ئۇچۇرنى ئۆچۈرىدۇ شۇڭا ئىشلەتكۈچى ئۇنى كۆرەلمەيدۇ."
         delete_and_agree:
-          title: "پاش قىلىشقا پەرۋا قىلماي ئۇچۇرنى ئۆچۈرىدۇ"
           description: "پاش قىلىشقا پەرۋا قىلماي ئۇنى پاش قىلىش قاتارىدىن چىقىرىۋېتىپ ئۇچۇرنى ئۆچۈرىدۇ."
         disagree_and_restore:
           title: "قوشۇلماي ئۇچۇرنى ئەسلىگە كەلتۈر"
           description: "ئۇچۇرنى ھەممە ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
-        disagree:
-          title: "قوشۇلما"
-        ignore:
-          title: "ھېچ ئىش قىلما"
-          description: "پاش قىلىشنى ئۆچرەتتىن چىقىرىۋېتىپ پەرۋا قىلماي، ھېچقانداق مەشغۇلات قىلمايدۇ."
       direct_messages:
         transcript_title: "%{channel_name} دىكى ئىلگىرىكى ئۇچۇرنىڭ مەزمۇنى"
         transcript_body: "تېخىمۇ كۆپ ئارقا كۆرۈنۈش مەزمۇنى بىلەن تەمىنلەش ئۈچۈن، بۇ سۆھبەتتە ئالدىنقى ئۇچۇرنىڭ مەزمۇنلىرىنىمۇ قوشتۇق (ئەڭ كۆپ بولغاندا 10):\n\n%{transcript}"
@@ -249,19 +243,14 @@ ug:
         watched_thread:
           one: "[%{site_name}] نىڭ %{channel} دىكى يېڭى سۆزلىشىش ئۇچۇرى"
           other: "[%{site_name}] نىڭ %{channel} دىكى يېڭى سۆزلىشىش ئۇچۇرى"
-        watched_threads:
-          one: "%{site_name} تىكى %{channel} ۋە باشقا %{count} يېڭى تېما ئۇچۇرى"
-          other: "%{site_name} تىكى %{channel} ۋە باشقا %{count} يېڭى تېما ئۇچۇرى"
         chat_dm_1:
           one: "[%{site_name}] %{name} دىن كەلگەن يېڭى ئۇچۇر"
           other: "[%{site_name}] %{name} دىن كەلگەن يېڭى ئۇچۇر"
         chat_dm_2: "[%{site_name}] %{name_1} ۋە %{name_2} دىن كەلگەن يېڭى ئۇچۇر"
-        chat_dm_3_or_more: "[%{site_name}] %{name} ۋە باشقا %{count} ئىشلەتكۈچىدىن كەلگەن يېڭى ئۇچۇر"
         chat_channel_1:
           one: "[%{site_name}] %{channel} دىكى يېڭى ئۇچۇر"
           other: "[%{site_name}] %{channel} دىكى يېڭى ئۇچۇر"
         chat_channel_2: "[%{site_name}] %{channel_1} ۋە %{channel_2} دىكى يېڭى ئۇچۇر"
-        chat_channel_3_or_more: "[%{site_name}] %{channel} ۋە باشقا %{count} دىكى يېڭى ئۇچۇر"
         chat_channel_and_dm: "[%{site_name}] %{channel} ۋە %{name} دىن كەلگەن يېڭى ئۇچۇر"
       unsubscribe: "سىز ئايرىلغاندا %{site_link} دىن بۇ سۆھبەتنىڭ خۇلاسىسى ئەۋەتىلدى. %{email_preferences_link} نى ئۆزگەرتىڭ ياكى %{unsubscribe_link} مۇشتەرىلىكتىن چېكىنىڭ."
       unsubscribe_no_link: "سىز ئايرىلغاندا %{site_link} دىن بۇ سۆھبەتنىڭ خۇلاسىسى ئەۋەتىلدى. %{email_preferences_link} نى ئۆزگەرتىڭ."

@@ -61,8 +61,6 @@ sk:
             label: Telo
           delay:
             label: Oneskorenie (minúty)
-          prefers_encrypt:
-            label: Šifruje PM, ak je k dispozícii
         group:
           label: Skupina
         text:

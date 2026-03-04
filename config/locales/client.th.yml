@@ -6,6 +6,11 @@
 
 th:
   js:
+    blocks:
+      ghost:
+        status: "สถานะ"
+        hidden: "ถูกซ่อน"
+        failed: "ล้มเหลว"
     number:
       format:
         separator: "."
@@ -233,6 +238,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
+    admin_onboarding_banner:
+      start_posting:
+        back: "กลับ"
     about:
       simple_title: "เกี่ยวกับ"
       title: "เกี่ยวกับ %{title}"
@@ -436,7 +444,11 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+        reviewable_ai_post:
+          noun: "โพส"
       user_label: "ผู้ใช้"
+      timeline:
+        target_deleted: "โพสต์ถูกลบ"
       notes:
         delete: "ลบ"
       topic_label: "หัวข้อ"
@@ -548,8 +560,6 @@ th:
             password: "รหัสผ่าน"
           settings:
             title: "การตั้งค่า"
-          mailboxes:
-            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -723,6 +733,9 @@ th:
       new_private_message: "สร้างข้อความส่วนตัวใหม่"
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
+      upcoming_changes:
+        for_user:
+          enabled: "เปิดใช้"
       user_notifications:
         filters:
           filter_by: "กรองโดย"
@@ -1629,6 +1642,8 @@ th:
         change_tags: "แทนที่แท็ก"
         choose_new_tags: "เลือกแท็กใหม่เพื่อกระทู้เหล่านี้:"
         changed_tags: "แท็กของกระทู้เหล่านี้ถูกเปลี่ยนแปลง"
+        error_topic_count:
+          other: "%{count}กระทู้"
       none:
         unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"
         new: "คุณไม่มีกระทู้ใหม่"
@@ -1637,16 +1652,6 @@ th:
         bookmarks: "คุณยังไม่ได้บุ๊กมาร์กกระทู้ใดๆเลย"
         category: "ไม่มีกระทู้ในหมวด %{category}"
         top: "ไม่มีกระทู้ยอดนิยม"
-      bottom:
-        latest: "ไม่มีกระทู้ล่าสุดอีกแล้ว"
-        posted: "ไม่มีกระทู้ที่โพสต์อีกแล้ว"
-        read: "ไม่มีกระทู้ที่อ่านแล้วอีก"
-        new: "ไม่มีกระทู้ใหม่อีกแล้ว"
-        unread: "ไม่มีกระทู้ที่ยังไม่อ่านอีกแล้ว"
-        category: "ไม่มีกระทู้อื่นอีกใน %{category}"
-        tag: "ไม่มีกระทู้อื่นอีกใน %{tag}"
-        top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
-        bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
       dismiss:
         name: "ซ่อน"
@@ -2079,7 +2084,11 @@ th:
       create_long: "สร้างหมวดหมู่ใหม่"
       creation_error: มีข้อผิดพลาดขณะสร้างหมวดหมู่
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
+      validations:
+        icon_required: "เลือกไอคอน."
       description: "รายละเอียด"
+      icon: "ไอคอน"
+      emoji: "Emoji"
       background_color: "สี"
       styles:
         icon: "ไอคอน"
@@ -2087,7 +2096,6 @@ th:
         options:
           icon: "ไอคอน"
           emoji: "Emoji"
-      name_placeholder: "สูงสุดหนึ่งหรือสองคำ"
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"
       no_description: "กรุณาเพิ่มรายละเอียดสำหรับหมวดหมู่นี้"
@@ -2099,7 +2107,6 @@ th:
         reply: "ตอบกลับ"
         create: "สร้าง"
       pending_permission_change_alert: "คุณยังไม่ได้เพิ่ม %{group} ไปยังหมวดหมู่นี้ คลิกปุ่มนี้เพื่อเพิ่ม"
-      images: "รูปภาพ"
       email_in: "ตั้งที่อยู่สำหรับอีเมลขาเข้า:"
       email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
       review_group_name: "ชื่อกลุ่ม"
@@ -2107,6 +2114,10 @@ th:
       require_reply_approval: "คำตอบใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
       this_year: "ปีนี้"
       minimum_required_tags: "จำนวนแท็กขั้นต่ำในกระทู้:"
+      none_subcategory_text: "ไม่มี"
+      visibility:
+        public: "สาธารณะ"
+        group_restricted: "ส่วนตัว"
       notifications:
         watching:
           title: "กำลังดู"
@@ -2385,6 +2396,16 @@ th:
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
+      description: "รายละเอียด"
+      settings:
+        title: "การตั้งค่า"
+        general: "ทั่วไป"
+        back: "กลับ"
+        name: "ชื่อ"
+        name_placeholder: "ชื่อแท็ก"
+      localization:
+        name: "ชื่อ"
+        description: "รายละเอียด"
       sort_by: "เรียงโดย:"
       sort_by_count: "นับ"
       sort_by_name: "ชื่อ"
@@ -2539,6 +2560,11 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
+      reports:
+        group_traffic: "การจราจร"
+        group_members: "สมาชิก"
+        group_security: "ความปลอดภัย"
+        group_other: "อื่นๆ"
       config_sections:
         account:
           title: "บัญชี"
@@ -2563,6 +2589,9 @@ th:
           all: "ทั้งหมด"
           disabled: "ปิดใช้งานแล้ว"
           impact_type_other: "อื่นๆ"
+          impact_role_admins: "แอดมิน"
+          impact_role_moderators: "ผู้ดูแลระบบ"
+          impact_role_staff: "ทีมงาน"
       config:
         developer:
           title: "นักพัฒนา"
@@ -2609,6 +2638,10 @@ th:
           title: "กลุ่ม"
         backups:
           title: "สำรอง"
+        reports:
+          sub_pages:
+            settings:
+              title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
         permalinks:
@@ -2637,11 +2670,6 @@ th:
         default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
-        result_types:
-          setting:
-            other: "การตั้งค่า"
-          theme:
-            other: "ธีม"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2747,6 +2775,7 @@ th:
         save: "บันทึก"
         cancel: "ยกเลิก"
         continue: "ดำเนินการต่อ"
+        copy_key: "คัดลอก"
         revoke: "เอาออก"
       api:
         user: "ผู้ใช้"
@@ -3293,6 +3322,7 @@ th:
           title: "แสดงในข้อมูลสาธารณะ"
         field_types:
           text: "ข้อความ"
+          date: "วันที่"
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
@@ -3319,6 +3349,7 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+        download_file: "ดาวน์โหลด"
         table_column_heading:
           status: "สถานะ"
         categories:

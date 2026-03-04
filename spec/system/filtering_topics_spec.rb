@@ -108,6 +108,26 @@ describe "Filtering topics", type: :system do
     end
   end
 
+  describe "when filtering by tag groups with special characters" do
+    fab!(:tag) { Fabricate(:tag, name: "special-tag") }
+    fab!(:tag_group) { Fabricate(:tag_group, name: "Cat & Dogs", tag_names: [tag.name]) }
+    fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
+    fab!(:topic_without_tag, :topic)
+
+    it "filters by tag group name with spaces using quoted syntax" do
+      sign_in(user)
+      visit("/filter")
+
+      expect(topic_list).to have_topic(topic_with_tag)
+      expect(topic_list).to have_topic(topic_without_tag)
+
+      topic_query_filter.fill_in('tag_group:"Cat & Dogs"')
+
+      expect(topic_list).to have_topic(topic_with_tag)
+      expect(topic_list).to have_no_topic(topic_without_tag)
+    end
+  end
+
   describe "bulk topic selection" do
     fab!(:user, :moderator)
 

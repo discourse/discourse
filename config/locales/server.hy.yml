@@ -51,6 +51,8 @@ hy:
   remove_posts_deleted_by_author: "Ջնջված է հեղինակի կողմից"
   redirect_warning: "Մենք չկարողացանք հաստատել, որ Ձեր ընտրած հղումը իրականում հրապարակվել է ֆորումում: Եթե ամեն դեպքում ցանկանում եք շարունակել, ընտրեք ներքևի հղումը:"
   on_another_topic: "Մեկ այլ թեմայում"
+  topic_tag_changed:
+    added: "Ավելացվել է %{added}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} %{username}-ի կողմից"
   components:
@@ -1124,7 +1126,6 @@ hy:
     blocked_ip_blocks: "Մասնավոր IP արգելափակումների ցանկ, որոնք երբեք չպետք է ենթարկվեն տվյալների հավաքագրման Discourse-ի կողմից:"
     allowed_internal_hosts: "Ներքին հոսթերի ցանկ, որը discourse-ը կարող է ապահով հավաքագրել սմարթ-ներդիրի և այլ նպատակների համար"
     slow_down_crawler_rate: "Եթե slow_down_crawler_user_agents -ը որոշված է, այս գնահատականը կկիրառվի տվյալների բոլոր հավաքագրիչների նկատմամբ (հարցումների միջև դադարի վայրկյանների քանակը)"
-    content_security_policy_collect_reports: "Միացնել CSP խախտումների հաշվետվությունների հավաքածուն /csp_reports -ում"
     invalidate_inactive_admin_email_after_days: "Ադմինի հաշիվները, որոնք չեն այցելել կայք այսքան օրվա ընթացքում, պետք է վերա-վավերացնեն իրենց էլ. հասցեն մինչ մուտք գործելը: Սահմանեք 0 անջատելու համար:"
     share_links: "Որոշեք, թե որ տարրերն են հայտնվելու կիսման երկխոսության մեջ և ինչ հերթականությամբ:"
     site_contact_username: "Անձնակազմի որևէ վավեր օգտանուն, որից պետք է ուղարկվեն բոլոր ավտոմատ հաղորդագրությունները: Դատարկ թողնելու դեպքում կօգտագործվի Համակարգի լռելյայն հաշիվը:"
@@ -1284,12 +1285,10 @@ hy:
     num_flaggers_to_close_topic: "Չկրկնվող դրոշակավորողների նվազագույն քանակը, որը պահանջվում է միջամտության համար թեմայի ավտոմատ դադարեցման համար:"
     num_hours_to_close_topic: "Միջամտության համար թեմայի դադարեցման ժամերի քանակը:"
     auto_respond_to_flag_actions: "Միացնել ավտոմատ պատասխանը դրոշակի տեղադրման ժամանակ:"
-    min_first_post_typing_time: "Ժամանակի նվազագույն քանակը միլիվայրկյաններով, որքան օգտատերը պետք է գրի առաջին գրառման ընթացքում, եթե սահմանը չի հատվել, գրառումը ավտոմատ կերպով մուտք կգործի հաստատման կարիք ունեցողների հերթի մեջ: Սահմանեք 0 անջատելու համար (խորհուրդ չի տրվում)"
     auto_silence_fast_typers_max_trust_level: "Առավելագույն վստահության մակարդակը՝ արագ գրողներին ավտոմատ լռեցնելու համար"
     reply_by_email_address: "Էլ. փոստի միջոցով պատասխանի մուտքային էլ. հասցեների ձևանմուշ, օրինակ՝ %%{reply_key}@reply.example.com կամ replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Էլ. նամակի միջոցով պատասխանի համար մուտքային հասցեների այլընտրանքային ձևանմուշների ցանկ: Օրինակ՝ %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Մուտքային նամակի համար տեսքտի փոխարեն օգտագործեք HTML:"
-    disable_emails: "Կանխարգելել Discourse-ը՝ ցանկացած տիպի նամակ ուղարկելուց: Ընտրեք 'այո' ՝ բոլոր օգտատերերի համար էլ. նամակներն անջատելու համար: Ընտրեք 'ոչ-անձնակազմ' ՝ միայն ոչ-անձնակազմի օգտատերերի համար էլ. նամակներն անջատելու համար:"
     strip_images_from_short_emails: "Էլ. նամակներից առանձնացնել 2800 Բայթից քիչ չափ ունեցող նկարները"
     display_name_on_email_from: "Դաշտերից ցուցադրել նամակում ամբողջական անունները"
     unsubscribe_via_email: "Թույլատրել օգտատերերին դուրս գալ էլ. նամակների բաժանորդագրումից՝ ուղարկելով էլ. նամակ, որը կպարունակի 'unsubscribe' թեմայում կամ տեքստի մեջ"
@@ -1344,9 +1343,7 @@ hy:
     enable_group_directory: "Տրամադրել խմբերի դիրեկտորիա՝ ուսումնասիրման համար"
     group_in_subject: "Սահմանել %%{optional_pm} էլ. նամակի թեմայում՝ անձնական հաղորդագրության մեջ առաջին խմբի անվան համար, այցելեք՝ <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Անհատականացնել թեմայի ֆորմատը ստանդարտ էլ. հասցեների համար</a>"
     anonymous_account_duration_minutes: "Անանունությունը պահպանելու համար ստեղծեք անանուն հաշիվ յուրաքանչյուր N րոպեն մեկ յուրաքանչյուր օգտատիրոջ համար: Օրինակ՝ եթե սահմանված է 600, հենց որ վերջին գրառումից անցնի 600 րոպե ԵՎ օգտատերը միացնի անանուն ռեժիմը, կստեղծվի նոր անանուն հաշիվ:"
-    hide_user_profiles_from_public: "Անջատել օգտատիրոջ քարտը, պրոֆիլները և դիրեկտորիան անանուն օգտագործողների համար:"
     show_inactive_accounts: "Թույլատրել մուտքագրված օգտատերերին դիտել ապակտիվ հաշիվների պրոֆիլները:"
-    hide_suspension_reasons: "Հանրայնորեն չցուցադրել սառեցման պատճառները օգտատերերի պրոֆիլներում:"
     log_personal_messages_views: "Գրանցել անձնական նամակների դիտումները Ադմինի կողմից այլ օգտատերերի/խմբերի համար:"
     ignored_users_count_message_threshold: "Ծանուցել մոդերատորներին, եթե մասնավորապես որևէ օգտատեր անտեսվում է այսքան այլ օգտատերերի կողմից:"
     ignored_users_message_gap_days: "Որքան սպասել՝ մինչ մոդերատորներին կրկին ծանուցելը օգտատիրոջ մասին, որը անտեսվել է շատ այլոց կողմից:"
@@ -1438,10 +1435,6 @@ hy:
       staged_users_disabled: "Դուք պետք է սկզբում միացնեք 'staged users' ՝ մինչև այս կարգավորումը միացնելը"
       reply_by_email_disabled: "Դուք պետք է սկզբում միացնեք 'reply by email'' ՝ մինչև այս կարգավորումը միացնելը"
       enable_local_logins_disabled: "Դուք պետք է սկզբում միացնեք 'enable local logins' ՝ մինչև այս կարգավորումը միացնելը"
-      min_username_length_exists: "Դուք չեք կարող սահմանել օգտանվան նվազագույն երկարություն ամենակարճ օգտանունից բարձր (%{username})"
-      min_username_length_range: "Դուք չեք կարող սահմանել նվազագույնը առավելագույնից բարձր:"
-      max_username_length_exists: "Դուք չեք կարող սահմանել օգտանվան առավելագույն երկարություն ամենաերկար օգտանունից ցածր (%{username}):"
-      max_username_length_range: "Դուք չեք կարող սահմանել առավելագույնը նվազագույնից ցածր:"
       invalid_hex_value: "Գույների արժեքները պետք է լինեն 6-նիշանոց տասնվեցերորդական կոդեր:"
     placeholder:
       discourse_connect_provider_secrets:
@@ -1742,6 +1735,7 @@ hy:
         Քանի որ Դուք այստեղի մասնակից եք, մենք կճանաչենք Ձեզ, և նոր օգտատիրոջ ժամանակավոր սահմանափակումները կհանվեն: Ժամանակի ընթացքում Դուք կվաստակեք [վստահության մակարդակներ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), որոնք պարունակում են հատուկ կարողություններ՝ մեզ օգնելու մեր համայնքը կառավարել միասին:
     welcome_user:
       title: "Ողջունել Օգտատիրոջը"
+      preview: "Բարի գալուստ %{site_name}!"
       subject_template: "Բարի գալուստ %{site_name}!"
       text_body_template: |
         Շնորհակալ ենք %{site_name} -ին միանալու համար և բարի գալուստ!
@@ -1760,6 +1754,7 @@ hy:
         Մենք իսկապես ուրախ ենք, որ Դուք ժամանակ եք անցկացնում մեզ հետ, և մենք կցանկանայինք ավելին իմանալ Ձեր մասին: Գտեք մի պահ և [լրացրեք Ձեր պրոֆիլը](%{base_url}/my/preferences/profile) կամ ազատ [սկսեք նոր թեմա](%{base_url}/categories):
     welcome_invite:
       title: "Ողջույնի Հրավեր"
+      preview: "Բարի գալուստ %{site_name}!"
       subject_template: "Բարի գալուստ %{site_name}!"
       text_body_template: |
         Շնորհակալ ենք %{site_name} -ին հրավերը ընդունելու համար -- բարի գալուստ!
@@ -2031,6 +2026,7 @@ hy:
       subject_template: " %{username} նոր օգտատիրոջ գիառումները արդելափակվել են կրկնվող հղումների պատճառով:"
     unsilenced:
       title: "Միացված"
+      preview: "Հաշիվը այլևս սպասման մեջ չէ."
       subject_template: "Հաշիվը այլևս սպասման մեջ չէ"
       text_body_template: |
         Ողջույն,
@@ -2075,7 +2071,6 @@ hy:
     Այս էլ. նամակների բաժանորդագրումից դուրս գալու համար, [սեղմեք այստեղ](%{unsubscribe_url}):
   subject_re: "Re: "
   subject_pm: "[Անձնական Նամակ] "
-  email_from: "%{user_name} -ը %{site_name} -ի միջոցով"
   user_notifications:
     previous_discussion: "Նախորդ Պատասխանները"
     reached_limit:
@@ -2314,6 +2309,7 @@ hy:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Մուտք գործեք հղման միջոցով"
+      preview: "Մուտք գործեք հղման միջոցով."
       subject_template: "[%{email_prefix}] Մուտք գործեք հղման միջոցով"
       text_body_template: |
         Ահա Ձեր մուտքի հղումը այստեղ՝ [%{site_name}](%{base_url}).
@@ -2798,10 +2794,9 @@ hy:
         complete: "Գրառումը ջնջված է."
       delete_and_agree:
         complete: "Գրառումը ջնջված է."
-      disagree_and_restore:
-        description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
-      disagree:
+      disagree_bundle:
         title: "Ոչ"
+      disagree:
         complete: "Բողոքը անտեսվել է."
       ignore:
         title: "Անտեսել"
@@ -2810,28 +2805,38 @@ hy:
         title: "Ոչինչ չանել"
         complete: "Բողոքը անտեսվել է."
       approve:
-        title: "Հաստատել"
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
       approve_post:
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
       approve_post_closed:
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
+      reject_post_bundle:
+        title: "Ոչ"
       reject_post:
         complete: "Գրառումը մերժվել է."
       approve_user:
+        title: "Այո"
         complete: "Օգտատերը հաստատվել է."
       reject_user:
+        title: "Ոչ"
         delete:
           title: "Ջնջել Օգտատիրոջը"
           complete: "Օգտատերը ջնջված է."
+      confirm_spam:
+        title: "Այո"
+      not_spam:
+        title: "Ոչ"
       reject:
         title: "Մերժել"
-      no_action_post:
-        title: "Առանց գործողության"
+      approve_and_restore:
+        title: "Այո"
+      approve_and_unhide:
+        title: "Այո"
       delete_post:
         complete: "Գրառումը ջնջված է"
-      no_action_user:
-        title: "Առանց գործողության"
       delete_user:
         complete: "Օգտատերը ջնջված է"
   fallback_username: "օգտատեր"

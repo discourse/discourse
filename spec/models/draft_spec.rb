@@ -210,6 +210,17 @@ RSpec.describe Draft do
       draft_row = stream.first
       expect(draft_row.user.username).to eq(user.username)
     end
+
+    it "does not return drafts with stale sequences" do
+      draft_key = "topic_#{public_topic.id}"
+
+      # Create a draft and advance the sequence to make it stale
+      # We insert directly to simulate an edge case where the draft wasn't cleaned up
+      Draft.create!(user: user, draft_key: draft_key, data: '{"reply":"stale draft"}', sequence: 0)
+      DraftSequence.create!(user_id: user.id, draft_key: draft_key, sequence: 5)
+
+      expect(stream).to be_empty
+    end
   end
 
   describe "multiple drafts" do

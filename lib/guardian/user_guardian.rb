@@ -32,8 +32,10 @@ module UserGuardian
   def can_edit_email?(user)
     return false if SiteSetting.auth_overrides_email?
     return false unless SiteSetting.email_editable?
-    return true if is_staff?
+    return true if is_admin?
     return false if is_anonymous?
+    return false if is_moderator? && !is_me?(user)
+
     can_edit?(user)
   end
 
@@ -118,6 +120,16 @@ module UserGuardian
   def can_see_silencing_reason?(user)
     return true unless SiteSetting.hide_silencing_reasons?
     is_me?(user) || is_staff?
+  end
+
+  def can_see_user_status?(user)
+    return false if user.blank?
+
+    if user.silenced?
+      is_me?(user) || is_staff?
+    else
+      true
+    end
   end
 
   def can_disable_second_factor?(user)

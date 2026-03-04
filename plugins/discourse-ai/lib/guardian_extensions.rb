@@ -43,6 +43,13 @@ module DiscourseAi
       is_staff?
     end
 
+    def can_regenerate_summary?
+      return false if !SiteSetting.ai_summarization_enabled
+      return false if !AiPersona.exists?(id: SiteSetting.ai_summarization_persona)
+
+      is_staff?
+    end
+
     def can_request_summary?
       return false if anonymous?
 

@@ -1,13 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
-@tagName("div")
+@tagName("")
 export default class CreateInviteUploader extends Component {
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "create-invite-uploader",
@@ -24,9 +23,9 @@ export default class CreateInviteUploader extends Component {
     },
   });
 
-  @discourseComputed("uppyUpload.filesAwaitingUpload", "uppyUpload.uploading")
-  submitDisabled(filesAwaitingUpload, uploading) {
-    return !filesAwaitingUpload || uploading;
+  @computed("uppyUpload.filesAwaitingUpload", "uppyUpload.uploading")
+  get submitDisabled() {
+    return !this.uppyUpload?.filesAwaitingUpload || this.uppyUpload?.uploading;
   }
 
   @action
@@ -35,16 +34,18 @@ export default class CreateInviteUploader extends Component {
   }
 
   <template>
-    {{yield
-      (hash
-        data=this.data
-        uploading=this.uploading
-        uploadProgress=this.uploadProgress
-        uploaded=this.uploaded
-        submitDisabled=this.submitDisabled
-        startUpload=this.startUpload
-      )
-      this.uppyUpload.setup
-    }}
+    <div ...attributes>
+      {{yield
+        (hash
+          data=this.data
+          uploading=this.uploading
+          uploadProgress=this.uploadProgress
+          uploaded=this.uploaded
+          submitDisabled=this.submitDisabled
+          startUpload=this.startUpload
+        )
+        this.uppyUpload.setup
+      }}
+    </div>
   </template>
 }

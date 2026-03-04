@@ -179,6 +179,32 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     }, 0);
   });
 
+  test("@onRegisterApi - isDirty", async function (assert) {
+    let formApi;
+    const model = { foo: 1 };
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form @data={{model}} @onRegisterApi={{registerApi}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.false(formApi.isDirty, "form is not dirty initially");
+
+    await formKit().field("foo").fillIn("2");
+
+    assert.true(formApi.isDirty, "form is dirty after a change");
+
+    await formApi.reset();
+
+    assert.false(formApi.isDirty, "form is not dirty after reset");
+  });
+
   test("@data", async function (assert) {
     await render(
       <template>
@@ -370,5 +396,54 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       document.querySelector("#ember-testing-container").scrollTop,
       0
     );
+  });
+
+  test("clicking error link focuses the field input", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    await click(".form-kit__errors-summary-list a");
+
+    assert.dom(document.activeElement).hasClass("form-kit__control-input");
+  });
+
+  test("error link has anchor href for fields without focusable elements", async function (assert) {
+    const validate = async (data, { addError }) => {
+      addError("foo", { title: "Foo", message: "error" });
+    };
+
+    await render(
+      <template>
+        <Form @validate={{validate}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Custom>
+              <div class="not-focusable">Custom content</div>
+            </field.Custom>
+          </form.Field>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    assert
+      .dom(".form-kit__errors-summary-list a")
+      .hasAttribute("href", "#control-foo");
   });
 });

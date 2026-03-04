@@ -2,7 +2,6 @@
 
 describe "Reviewables", type: :system do
   let(:review_page) { PageObjects::Pages::Review.new }
-  let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
   fab!(:admin)
   fab!(:theme)
   fab!(:long_post, :post_with_very_long_raw_content)
@@ -63,7 +62,9 @@ describe "Reviewables", type: :system do
       it "should show a toast when disagreeing with a flag flag" do
         visit("/review")
 
-        find(".post-disagree").click
+        select_kit = PageObjects::Components::SelectKit.new(".dropdown-select-box.post-disagree")
+        select_kit.expand
+        select_kit.select_row_by_value("post-disagree")
 
         expect(toasts).to have_success(I18n.t("reviewables.actions.disagree.complete"))
       end
@@ -108,13 +109,13 @@ describe "Reviewables", type: :system do
       # cache it for later assertion instead of querying UserHistory
       user_email = user.email
 
-      refreshed_review_page.visit_reviewable(reviewable)
-      refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "user-delete_user")
       rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
       rejection_reason_modal.select_send_rejection_email_checkbox
       rejection_reason_modal.delete_user
 
-      expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
 
       mail = ActionMailer::Base.deliveries.first
       expect(mail.to).to eq([user_email])
@@ -127,26 +128,23 @@ describe "Reviewables", type: :system do
       scrubbing_reason = "a spammer who knows how to make GDPR requests"
       reviewable = ReviewableUser.find_by_target_id(user.id)
 
-      refreshed_review_page.visit_reviewable(reviewable)
-      refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "user-delete_user")
       rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
       rejection_reason_modal.delete_user
 
-      expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
 
-      refreshed_review_page.click_scrub_user_button
+      review_page.click_scrub_user_button
 
       expect(scrub_user_modal.scrub_button).to be_disabled
       scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
       expect(scrub_user_modal.scrub_button).not_to be_disabled
       scrub_user_modal.scrub_button.click
 
-      expect(refreshed_review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
-      expect(refreshed_review_page).to have_reviewable_with_scrubbed_reason(
-        reviewable,
-        scrubbing_reason,
-      )
-      expect(refreshed_review_page).to have_reviewable_with_scrubbed_at(
+      expect(review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
+      expect(review_page).to have_reviewable_with_scrubbed_reason(reviewable, scrubbing_reason)
+      expect(review_page).to have_reviewable_with_scrubbed_at(
         reviewable,
         reviewable.payload["scrubbed_at"],
       )
@@ -166,18 +164,16 @@ describe "Reviewables", type: :system do
       fab!(:queued_post_reviewable, :reviewable_queued_post)
 
       it "delete_user does not delete reviewable" do
-        refreshed_review_page.visit_reviewable(queued_post_reviewable)
+        review_page.visit_reviewable(queued_post_reviewable)
 
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
-        expect(refreshed_review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
+        expect(review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
 
-        refreshed_review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+        review_page.select_bundled_action(queued_post_reviewable, "delete_user")
 
         expect(review_page).to have_no_error_dialog_visible
-        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
-          queued_post_reviewable,
-        )
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
         expect(review_page).to have_no_reviewable_action_dropdown
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
@@ -186,12 +182,12 @@ describe "Reviewables", type: :system do
       it "allows revising and rejecting to send a PM to the user" do
         revise_modal = PageObjects::Modals::Base.new
 
-        refreshed_review_page.visit_reviewable(queued_post_reviewable)
+        review_page.visit_reviewable(queued_post_reviewable)
 
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        refreshed_review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        review_page.select_bundled_action(queued_post_reviewable, "revise_and_reject_post")
 
         expect(revise_modal).to be_open
 
@@ -201,9 +197,7 @@ describe "Reviewables", type: :system do
         find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
         revise_modal.click_primary_button
 
-        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
-          queued_post_reviewable,
-        )
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
         expect(queued_post_reviewable.reload).to be_rejected
 
         topic = Topic.where(archetype: Archetype.private_message).last
@@ -220,12 +214,12 @@ describe "Reviewables", type: :system do
       it "allows selecting a custom reason for revise and reject" do
         revise_modal = PageObjects::Modals::Base.new
 
-        refreshed_review_page.visit_reviewable(queued_post_reviewable)
+        review_page.visit_reviewable(queued_post_reviewable)
 
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        refreshed_review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        review_page.select_bundled_action(queued_post_reviewable, "revise_and_reject_post")
         expect(revise_modal).to be_open
 
         reason_dropdown =
@@ -235,9 +229,7 @@ describe "Reviewables", type: :system do
         find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
         revise_modal.click_primary_button
 
-        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
-          queued_post_reviewable,
-        )
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
       end
 
       context "with reviewable claiming enabled" do
@@ -295,11 +287,7 @@ describe "Reviewables", type: :system do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:reviewable, :reviewable_queued_post)
 
-    before do
-      SiteSetting.reviewable_old_moderator_actions = false
-      SiteSetting.reviewable_ui_refresh = group.name
-      group.add(admin)
-    end
+    before { group.add(admin) }
 
     it "displays the custom guide topic link when configured" do
       SiteSetting.moderator_guide_topic = topic.id

@@ -33,16 +33,6 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
     {{/if}}
 
     <@form.Collection @name="localizations" as |collection index|>
-      <collection.Field
-        @name="category_id"
-        @title="category_id"
-        @showTitle={{false}}
-        @disabled={{true}}
-        as |field|
-      >
-        <field.Input @value={{this.category.id}} @type="hidden" />
-      </collection.Field>
-
       <@form.Row as |row|>
         <row.Col @size={{2}}>
           <collection.Field
@@ -99,7 +89,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
     </@form.Collection>
 
     <@form.Button
-      class="add-localization"
+      class="btn-default add-localization"
       @icon="plus"
       @label="category.localization.add"
       @action={{fn

@@ -12,7 +12,7 @@ export default class ChatChannelChooserHeader extends ComboBoxSelectBoxHeaderCom
         {{i18n "chat.incoming_webhooks.channel_placeholder"}}
       {{/if}}
 
-      {{icon this.caretIcon class="caret-icon"}}
+      {{icon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

@@ -1,4 +1,4 @@
-import HighlightedCode from "discourse/admin/components/highlighted-code";
+import HighlightedCode from "discourse/components/highlighted-code";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 

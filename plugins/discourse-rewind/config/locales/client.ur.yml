@@ -16,7 +16,8 @@ ur:
           title: پڑھنے کیلئے وقت
         chat_usage:
           messages: پیغامات
-          you: آپ
+          author: آپ
+          author_others: "%{username}"
           status_online: "● آن لائن"
         invites:
           title: دعوتیں

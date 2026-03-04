@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Color Palettes Config Area Page", type: :system do
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, locale: "en") }
   fab!(:palette) { Fabricate(:color_scheme, user_selectable: false, name: "A Test Palette") }
   fab!(:theme) { Fabricate(:theme, name: "Test Theme") }
   fab!(:user_selectable_palette) do
@@ -319,7 +319,7 @@ describe "Admin Color Palettes Config Area Page", type: :system do
           "Horizon scheme b",
           "Foundation scheme a",
           "Foundation scheme b",
-          "Light (default)",
+          I18n.t("admin_js.admin.customize.theme.default_light_scheme"),
         ],
       )
     end
@@ -330,7 +330,7 @@ describe "Admin Color Palettes Config Area Page", type: :system do
       color_schemes = page.all(".color-palette__details h3").map(&:text)
       expect(color_schemes).to eq(
         [
-          "Light (default)",
+          I18n.t("admin_js.admin.customize.theme.default_light_scheme"),
           "Selectable custom scheme a",
           "Selectable custom scheme b",
           "Selectable foundation scheme a",

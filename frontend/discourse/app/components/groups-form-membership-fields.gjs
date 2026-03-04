@@ -4,17 +4,18 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { not, or as computedOr, readOnly } from "@ember/object/computed";
+import { tagName } from "@ember-decorators/component";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
-import discourseComputed from "discourse/lib/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class GroupsFormMembershipFields extends Component {
   tokenSeparator = "|";
 
@@ -49,36 +50,29 @@ export default class GroupsFormMembershipFields extends Component {
     );
   }
 
-  @discourseComputed("model.visibility_level", "model.public_admission")
-  disableMembershipRequestSetting(visibility_level, publicAdmission) {
-    visibility_level = parseInt(visibility_level, 10);
-    return publicAdmission || visibility_level > 1;
+  @computed("model.visibility_level", "model.public_admission")
+  get disableMembershipRequestSetting() {
+    const visibility_level = parseInt(this.model?.visibility_level, 10);
+    return this.model?.public_admission || visibility_level > 1;
   }
 
-  @discourseComputed(
-    "model.visibility_level",
-    "model.allow_membership_requests"
-  )
-  disablePublicSetting(visibility_level, allowMembershipRequests) {
-    visibility_level = parseInt(visibility_level, 10);
-    return allowMembershipRequests || visibility_level > 1;
+  @computed("model.visibility_level", "model.allow_membership_requests")
+  get disablePublicSetting() {
+    const visibility_level = parseInt(this.model?.visibility_level, 10);
+    return this.model?.allow_membership_requests || visibility_level > 1;
   }
 
-  @discourseComputed(
-    "model.visibility_level",
-    "model.primary_group",
-    "hasFlair"
-  )
-  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
-    if (visibilityLevel === 0) {
+  @computed("model.visibility_level", "model.primary_group", "hasFlair")
+  get privateGroupNameNotice() {
+    if (this.model?.visibility_level === 0) {
       return;
     }
 
-    if (isPrimaryGroup) {
+    if (this.model?.primary_group) {
       return i18n("admin.groups.manage.alert.primary_group", {
         group_name: this.model.name,
       });
-    } else if (hasFlair) {
+    } else if (this.hasFlair) {
       return i18n("admin.groups.manage.alert.flair_group", {
         group_name: this.model.name,
       });
@@ -103,159 +97,167 @@ export default class GroupsFormMembershipFields extends Component {
   }
 
   <template>
-    <div class="control-group">
-      <label class="control-label">{{i18n
-          "groups.manage.membership.access"
-        }}</label>
-
-      <label>
-        <Input
-          @type="checkbox"
-          class="group-form-public-admission"
-          @checked={{this.model.public_admission}}
-          disabled={{this.disablePublicSetting}}
-        />
-
-        {{i18n "groups.public_admission"}}
-      </label>
-
-      <label>
-        <Input
-          @type="checkbox"
-          class="group-form-public-exit"
-          @checked={{this.model.public_exit}}
-        />
-
-        {{i18n "groups.public_exit"}}
-      </label>
-
-      <label>
-        <Input
-          @type="checkbox"
-          class="group-form-allow-membership-requests"
-          @checked={{this.model.allow_membership_requests}}
-          disabled={{this.disableMembershipRequestSetting}}
-        />
-
-        {{i18n "groups.allow_membership_requests"}}
-      </label>
-
-      {{#if this.model.allow_membership_requests}}
-        <div>
-          <label for="membership-request-template">
-            {{i18n "groups.membership_request_template"}}
-          </label>
-
-          <ExpandingTextArea
-            {{on
-              "input"
-              (withEventValue (fn (mut this.model.membership_request_template)))
-            }}
-            value={{this.model.membership_request_template}}
-            name="membership-request-template"
-            class="group-form-membership-request-template input-xxlarge"
-          />
-        </div>
-      {{/if}}
-    </div>
-
-    {{#if this.model.can_admin_group}}
+    <div ...attributes>
       <div class="control-group">
         <label class="control-label">{{i18n
-            "admin.groups.manage.membership.automatic"
+            "groups.manage.membership.access"
           }}</label>
 
-        <label for="automatic_membership">
-          {{i18n
-            "admin.groups.manage.membership.automatic_membership_email_domains"
-          }}
+        <label>
+          <Input
+            @type="checkbox"
+            class="group-form-public-admission"
+            @checked={{this.model.public_admission}}
+            disabled={{this.disablePublicSetting}}
+          />
+
+          {{i18n "groups.public_admission"}}
         </label>
 
-        <ListSetting
-          @name="automatic_membership"
-          @value={{this.emailDomains}}
-          @choices={{this.emailDomains}}
-          @settingName="name"
-          @nameProperty={{null}}
-          @valueProperty={{null}}
-          @onChange={{this.onChangeEmailDomainsSetting}}
-          @options={{hash allowAny=true}}
-          class="group-form-automatic-membership-automatic"
-        />
+        <label>
+          <Input
+            @type="checkbox"
+            class="group-form-public-exit"
+            @checked={{this.model.public_exit}}
+          />
 
-        {{#if this.showAssociatedGroups}}
-          <label for="automatic_membership_associated_groups">
+          {{i18n "groups.public_exit"}}
+        </label>
+
+        <label>
+          <Input
+            @type="checkbox"
+            class="group-form-allow-membership-requests"
+            @checked={{this.model.allow_membership_requests}}
+            disabled={{this.disableMembershipRequestSetting}}
+          />
+
+          {{i18n "groups.allow_membership_requests"}}
+        </label>
+
+        {{#if this.model.allow_membership_requests}}
+          <div>
+            <label for="membership-request-template">
+              {{i18n "groups.membership_request_template"}}
+            </label>
+
+            <ExpandingTextArea
+              {{on
+                "input"
+                (withEventValue
+                  (fn (mut this.model.membership_request_template))
+                )
+              }}
+              value={{this.model.membership_request_template}}
+              name="membership-request-template"
+              class="group-form-membership-request-template input-xxlarge"
+            />
+          </div>
+        {{/if}}
+      </div>
+
+      {{#if this.model.can_admin_group}}
+        <div class="control-group">
+          <label class="control-label">{{i18n
+              "admin.groups.manage.membership.automatic"
+            }}</label>
+
+          <label for="automatic_membership">
             {{i18n
-              "admin.groups.manage.membership.automatic_membership_associated_groups"
+              "admin.groups.manage.membership.automatic_membership_email_domains"
             }}
           </label>
 
           <ListSetting
-            @name="automatic_membership_associated_groups"
-            @value={{this.model.associatedGroupIds}}
-            @choices={{this.associatedGroups}}
+            @name="automatic_membership"
+            @value={{this.emailDomains}}
+            @choices={{this.emailDomains}}
             @settingName="name"
-            @nameProperty="label"
-            @valueProperty="id"
-            @onChange={{fn (mut this.model.associated_group_ids)}}
-            class="group-form-automatic-membership-associated-groups"
-          />
-        {{/if}}
-      </div>
-
-      <span>
-        <PluginOutlet
-          @name="groups-form-membership-below-automatic"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash model=this.model}}
-        />
-      </span>
-
-      <div class="control-group">
-        <label class="control-label">{{i18n
-            "admin.groups.manage.membership.effects"
-          }}</label>
-        <label for="grant_trust_level">{{i18n
-            "admin.groups.manage.membership.trust_levels_title"
-          }}</label>
-
-        <ComboBox
-          @name="grant_trust_level"
-          @valueProperty="value"
-          @value={{this.groupTrustLevel}}
-          @content={{this.trustLevelOptions}}
-          @onChange={{fn (mut this.model.grant_trust_level)}}
-          class="groups-form-grant-trust-level"
-        />
-        <label>
-          <Input
-            @type="checkbox"
-            @checked={{this.model.primary_group}}
-            class="groups-form-primary-group"
+            @nameProperty={{null}}
+            @valueProperty={{null}}
+            @onChange={{this.onChangeEmailDomainsSetting}}
+            @options={{hash allowAny=true}}
+            class="group-form-automatic-membership-automatic"
           />
 
-          {{i18n "admin.groups.manage.membership.primary_group"}}
-        </label>
-      </div>
+          {{#if this.showAssociatedGroups}}
+            <label for="automatic_membership_associated_groups">
+              {{i18n
+                "admin.groups.manage.membership.automatic_membership_associated_groups"
+              }}
+            </label>
 
-      <div class="control-group">
-        <label class="control-label" for="title">
-          {{i18n "admin.groups.default_title"}}
-        </label>
-
-        <Input @value={{this.model.title}} name="title" class="input-xxlarge" />
-
-        <div class="control-instructions">
-          {{i18n "admin.groups.default_title_description"}}
+            <ListSetting
+              @name="automatic_membership_associated_groups"
+              @value={{this.model.associatedGroupIds}}
+              @choices={{this.associatedGroups}}
+              @settingName="name"
+              @nameProperty="label"
+              @valueProperty="id"
+              @onChange={{fn (mut this.model.associated_group_ids)}}
+              class="group-form-automatic-membership-associated-groups"
+            />
+          {{/if}}
         </div>
-      </div>
-    {{/if}}
 
-    {{#if this.canEdit}}
-      <div class="control-group">
-        <GroupFlairInputs @model={{this.model}} />
-      </div>
+        <span>
+          <PluginOutlet
+            @name="groups-form-membership-below-automatic"
+            @connectorTagName="div"
+            @outletArgs={{lazyHash model=this.model}}
+          />
+        </span>
 
-    {{/if}}
+        <div class="control-group">
+          <label class="control-label">{{i18n
+              "admin.groups.manage.membership.effects"
+            }}</label>
+          <label for="grant_trust_level">{{i18n
+              "admin.groups.manage.membership.trust_levels_title"
+            }}</label>
+
+          <ComboBox
+            @name="grant_trust_level"
+            @valueProperty="value"
+            @value={{this.groupTrustLevel}}
+            @content={{this.trustLevelOptions}}
+            @onChange={{fn (mut this.model.grant_trust_level)}}
+            class="groups-form-grant-trust-level"
+          />
+          <label>
+            <Input
+              @type="checkbox"
+              @checked={{this.model.primary_group}}
+              class="groups-form-primary-group"
+            />
+
+            {{i18n "admin.groups.manage.membership.primary_group"}}
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="title">
+            {{i18n "admin.groups.default_title"}}
+          </label>
+
+          <Input
+            @value={{this.model.title}}
+            name="title"
+            class="input-xxlarge"
+          />
+
+          <div class="control-instructions">
+            {{i18n "admin.groups.default_title_description"}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if this.canEdit}}
+        <div class="control-group">
+          <GroupFlairInputs @model={{this.model}} />
+        </div>
+
+      {{/if}}
+    </div>
   </template>
 }

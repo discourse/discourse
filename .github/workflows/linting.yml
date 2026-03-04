@@ -17,7 +17,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12-8core') || 'ubuntu-latest' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: 30
 
@@ -40,7 +40,6 @@ jobs:
 
       - name: Setup gems
         run: |
-          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
@@ -97,6 +96,6 @@ jobs:
         if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
 
-      - name: Glint
+      - name: Types
         if: ${{ !cancelled() }}
-        run: pnpm lint:glint
+        run: pnpm lint:types

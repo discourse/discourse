@@ -29,6 +29,11 @@ sl:
       chat_channels_count: "Kanali klepeta"
       chat_users_count: "Uporabniki klepeta"
     chat:
+      edit_category:
+        tab_title: "Klepet"
+        description: "Opis"
+        actions: "Akcije"
+        settings: "Nastavitve"
       text_copied: Besedilo je bilo kopirano v odložišče
       link_copied: Povezava je bila kopirana v odložišče
       deleted_chat_username: izbrisano
@@ -36,9 +41,11 @@ sl:
         yesterday: "Včeraj"
       create: "Ustvari"
       cancel: "Prekliči"
+      pinned: "Pripeto"
       channel_settings:
         edit: "Uredi"
         add: "Dodaj"
+        notification_settings_context: "Obvestila"
         join: "Pridruži se"
         leave: "Zapusti"
       close: "Zapri"

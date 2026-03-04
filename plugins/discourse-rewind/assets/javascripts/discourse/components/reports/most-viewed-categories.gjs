@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
+import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 /**
  * Component displaying most viewed categories in rewind report
@@ -15,6 +15,17 @@ import { i18n } from "discourse-i18n";
  */
 export default class MostViewedCategories extends Component {
   @tracked openedCategoryId = null;
+
+  get titleText() {
+    return i18nForOwner(
+      "discourse_rewind.reports.most_viewed_categories.title",
+      this.args.isOwnRewind,
+      {
+        count: this.args.report.data.length,
+        username: this.args.user?.username,
+      }
+    );
+  }
 
   /**
    * Handles click on folder-wrapper, we want to open
@@ -35,10 +46,7 @@ export default class MostViewedCategories extends Component {
     {{#if @report.data.length}}
       <div class="rewind-report-page --most-viewed-categories">
         <h2 class="rewind-report-title">
-          {{i18n
-            "discourse_rewind.reports.most_viewed_categories.title"
-            count=@report.data.length
-          }}
+          {{this.titleText}}
         </h2>
         <div class="rewind-report-container">
           {{#each @report.data as |data|}}

@@ -85,12 +85,16 @@ module Middleware
       end
 
       def blocked_crawler?
-        @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
-          !@request.path.ends_with?("srv/status") &&
-          @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
-          CrawlerDetection.is_blocked_crawler?(crawler_identifier)
+        return false if !@request.get?
+        return false if @request.xhr?
+        return false if @request.path.ends_with?("robots.txt")
+        return false if @request.path.ends_with?("llms.txt")
+        return false if @request.path.ends_with?("srv/status")
+        return false if @request[Auth::DefaultCurrentUserProvider::API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::USER_API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+
+        CrawlerDetection.is_blocked_crawler?(crawler_identifier)
       end
 
       # rubocop:disable Lint/BooleanSymbol
@@ -373,7 +377,7 @@ module Middleware
       return @app.call(env) if defined?(@@disabled) && @@disabled
 
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
-           env[Rack::RACK_INPUT].size > 0
+           env[Rack::RACK_INPUT].read(1).present?
         return 413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []
       end
 

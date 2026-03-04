@@ -90,24 +90,24 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       };
     };
 
-    const leave1 = await dropImage("#uploader1 .uploaded-image-preview");
+    const leave1 = await dropImage("#uploader1 .file-uploader__preview");
 
     assert
-      .dom("#uploader1 .uploaded-image-preview")
+      .dom("#uploader1 .file-uploader__preview")
       .hasClass("uppy-is-drag-over");
     assert
-      .dom("#uploader2 .uploaded-image-preview")
+      .dom("#uploader2 .file-uploader__preview")
       .hasNoClass("uppy-is-drag-over");
 
     await leave1();
 
-    await dropImage("#uploader2 .uploaded-image-preview");
+    await dropImage("#uploader2 .file-uploader__preview");
 
     assert
-      .dom("#uploader2 .uploaded-image-preview")
+      .dom("#uploader2 .file-uploader__preview")
       .hasClass("uppy-is-drag-over");
     assert
-      .dom("#uploader1 .uploaded-image-preview")
+      .dom("#uploader1 .file-uploader__preview")
       .hasNoClass("uppy-is-drag-over");
   });
 

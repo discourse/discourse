@@ -6,6 +6,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { forceMobile } from "discourse/lib/mobile";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { Placeholder } from "discourse/models/post-stream";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -351,8 +352,11 @@ module("Unit | Controller | topic", function (hooks) {
     );
   });
 
-  test("canChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", { admin: false });
+  test("admin canChangeOwner", function (assert) {
+    const currentUser = this.store.createRecord("user", {
+      admin: false,
+      can_change_post_owner: false,
+    });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
@@ -371,6 +375,9 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(controller.canChangeOwner, "false when not admin");
 
     currentUser.set("admin", true);
+    // For admin, can_change_post_owner will be set on the model
+    currentUser.set("can_change_post_owner", true);
+
     assert.true(
       controller.canChangeOwner,
       "true when admin and one post is selected"
@@ -383,8 +390,11 @@ module("Unit | Controller | topic", function (hooks) {
     );
   });
 
-  test("modCanChangeOwner", function (assert) {
-    const currentUser = this.store.createRecord("user", { moderator: false });
+  test("moderator canChangeOwner", function (assert) {
+    const currentUser = this.store.createRecord("user", {
+      moderator: false,
+      can_change_post_owner: false,
+    });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
@@ -406,6 +416,9 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(controller.canChangeOwner, "false when not moderator");
 
     currentUser.set("moderator", true);
+    // For a moderator, can_change_post_owner would be set on the model
+    currentUser.set("can_change_post_owner", true);
+
     assert.true(
       controller.canChangeOwner,
       "true when moderator and one post is selected"
@@ -415,6 +428,43 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(
       controller.canChangeOwner,
       "false when moderator but more than 1 user"
+    );
+  });
+
+  test("canChangeOwner", function (assert) {
+    const currentUser = this.store.createRecord("user", {
+      can_change_post_owner: false,
+    });
+    const model = topicWithStream.call(this, {
+      posts: [
+        { id: 1, username: "gary" },
+        { id: 2, username: "lili" },
+      ],
+      stream: [1, 2],
+    });
+    model.set("currentUser", currentUser);
+
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model, currentUser });
+
+    assert.false(controller.canChangeOwner, "false when no posts are selected");
+
+    controller.selectedPostIds.push(1);
+    assert.false(
+      controller.canChangeOwner,
+      "false when can_change_post_owner is false"
+    );
+
+    currentUser.set("can_change_post_owner", true);
+    assert.true(
+      controller.canChangeOwner,
+      "true when can_change_post_owner and one post is selected"
+    );
+
+    controller.selectedPostIds.push(2);
+    assert.false(
+      controller.canChangeOwner,
+      "false when can_change_post_owner but more than 1 user"
     );
   });
 
@@ -620,5 +670,45 @@ module("Unit | Controller | topic", function (hooks) {
     await settled();
 
     assert.true(destroyed, "post was destroyed");
+  });
+
+  test("topic-controller:finished-editing behavior transformer", async function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = this.store.createRecord("topic", {
+      id: 123,
+      title: "Test",
+    });
+    controller.setProperties({ model });
+    controller.set("editingTopic", true);
+
+    sinon.stub(model.constructor, "update").resolves();
+    sinon.stub(controller, "send");
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "topic-controller:finished-editing",
+        ({ next }) => {
+          if (controller.blockWithTransformer) {
+            return;
+          }
+          next();
+        }
+      );
+    });
+
+    controller.blockWithTransformer = true;
+    await controller.finishedEditingTopic();
+
+    assert.true(
+      controller.editingTopic,
+      "transformer blocked finishedEditingTopic"
+    );
+
+    controller.blockWithTransformer = false;
+    await controller.finishedEditingTopic();
+    assert.false(
+      controller.editingTopic,
+      "transformer allowed finishedEditingTopic"
+    );
   });
 });

@@ -408,13 +408,13 @@ acceptance(`Composer Actions With New Topic Draft`, function (needs) {
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("shared_draft");
 
-    assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
+    assert.strictEqual(tags.header().name(), "monkey", "tags are not reset");
     assert
       .dom("#reply-title")
       .hasValue("This is the new text for the title using 'quotes'");

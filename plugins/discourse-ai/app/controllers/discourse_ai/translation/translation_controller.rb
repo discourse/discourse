@@ -14,6 +14,7 @@ module DiscourseAi
       def translate
         post = Post.find_by(id: params[:post_id])
         raise ActiveRecord::RecordNotFound unless post
+        guardian.ensure_can_see!(post)
 
         if DiscourseAi::Translation.enabled?
           Jobs.enqueue(:detect_translate_post, post_id: post.id, force: true)
@@ -46,9 +47,9 @@ module DiscourseAi
 
         guardian.ensure_can_see!(topic)
 
-        untranslated_posts = find_untranslated_posts(topic)
+        untranslated_posts = find_untranslated_posts(topic, guardian)
 
-        if untranslated_posts.empty?
+        if !untranslated_posts.exists?
           return(
             render_json_error(
               I18n.t("discourse_ai.translation.errors.all_posts_translated"),
@@ -80,8 +81,8 @@ module DiscourseAi
         end
       end
 
-      def find_untranslated_posts(topic)
-        supported_locales = SiteSetting.content_localization_supported_locales.split("|")
+      def find_untranslated_posts(topic, guardian)
+        supported_locales = DiscourseAi::Translation.locales
         base_locales = supported_locales.map { |locale| locale.split("_").first }
 
         # Find posts that:
@@ -89,9 +90,10 @@ module DiscourseAi
         # 2. Need translation to other supported locales (excluding their own locale)
         # 3. Don't have PostLocalization records for those target locales yet
         # 4. Are not deleted and have content
-        topic
-          .posts
-          .where("user_id > 0")
+        posts = topic.posts.secured(guardian)
+        posts =
+          posts.where("posts.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
+        posts
           .where.not(raw: "")
           .where(deleted_at: nil)
           .where.not(locale: nil)

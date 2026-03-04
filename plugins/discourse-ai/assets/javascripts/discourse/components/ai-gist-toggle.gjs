@@ -67,13 +67,14 @@ export default class AiGistToggle extends Component {
         <:content>
           <DropdownMenu as |dropdown|>
             {{#each this.buttons as |button|}}
-              <dropdown.item>
+              <dropdown.item
+                class={{if (eq this.currentButton.id button.id) "--selected"}}
+              >
                 <DButton
                   @label={{button.label}}
                   @icon={{button.icon}}
                   class="btn-transparent
-                    {{if button.description '--with-description'}}
-                    {{if (eq this.currentButton.id button.id) '--active'}}"
+                    {{if button.description '--with-description'}}"
                   @action={{fn this.onSelect button.id}}
                 >
                   {{#if button.description}}

@@ -7,23 +7,25 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress";
 
+@tagName("")
 export default class RagUploader extends Component {
   @service appEvents;
 
   @tracked term = null;
   @tracked filteredUploads = null;
   @tracked ragIndexingStatuses = null;
-  @trackedArray ragUploads = null;
+  @autoTrackedArray ragUploads = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "discourse-ai-rag-uploader",
@@ -65,7 +67,7 @@ export default class RagUploader extends Component {
       ajax(
         `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${targetName}&target_id=${this.target.id}`
       ).then((statuses) => {
-        this.set("ragIndexingStatuses", statuses);
+        this.ragIndexingStatuses = statuses;
       });
     }
 
@@ -128,7 +130,7 @@ export default class RagUploader extends Component {
   }
 
   <template>
-    <div class="rag-uploader">
+    <div class="rag-uploader" ...attributes>
       {{#if @allowImages}}
         <p>{{i18n "discourse_ai.rag.uploads.description_with_images"}}</p>
       {{else}}

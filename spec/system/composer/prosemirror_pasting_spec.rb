@@ -161,6 +161,27 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
       composer.toggle_rich_editor
       expect(composer).to have_value("image")
     end
+
+    it "replaces multiple base64 images with same data URI" do
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+      cdp.allow_clipboard
+      open_composer
+      html = <<~HTML
+        <p>before</p>
+        <img src="#{valid_png_data_uri}" alt="img1">
+        <p>middle</p>
+        <img src="#{valid_png_data_uri}" alt="img2">
+        <p>after</p>
+      HTML
+      cdp.copy_paste(html, html: true)
+      expect(rich).to have_no_css("img")
+      expect(rich).to have_text("before")
+      expect(rich).to have_text("middle")
+      expect(rich).to have_text("after")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("before\n\nimage\n\nmiddle\n\nimage\n\nafter")
+    end
   end
 
   it "merges text with link marks created from parsing" do
@@ -204,5 +225,141 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
     expect(rich).to have_css("br", count: 2)
     composer.toggle_rich_editor
     expect(composer).to have_value("line1\nline2\nline3")
+  end
+
+  context "when pasting tables" do
+    it "fills incomplete rows" do
+      cdp.allow_clipboard
+      open_composer
+
+      html = <<~HTML
+        <table>
+          <tbody>
+            <tr><td>Title</td></tr>
+            <tr><th>Column A</th><td>Column B</td></tr>
+            <tr><th>Value 1</th><td>Value 2</td></tr>
+            <tr><td colspan="2"></td></tr>
+            <tr><th>Value 3</th><td>Value 4</td></tr>
+          </tbody>
+        </table>
+      HTML
+
+      cdp.copy_paste(html, html: true)
+
+      composer.toggle_rich_editor
+
+      markdown = <<~MARKDOWN
+        | Title |  |
+        |----|----|
+        | Column A | Column B |
+        | Value 1 | Value 2 |
+        |  |  |
+        | Value 3 | Value 4 |
+
+      MARKDOWN
+
+      expect(composer).to have_value(markdown)
+    end
+
+    it "normalizes column counts when header has fewer columns than body rows" do
+      cdp.allow_clipboard
+      open_composer
+
+      html = <<~HTML
+        <table>
+          <tbody>
+            <tr><th>Header1</th><th>Header2</th></tr>
+            <tr><td>Cell1</td><td>Cell2</td><td>Cell3</td><td>Cell4</td></tr>
+            <tr><td>Data1</td><td>Data2</td><td>Data3</td><td>Data4</td></tr>
+          </tbody>
+        </table>
+      HTML
+
+      cdp.copy_paste(html, html: true)
+
+      composer.toggle_rich_editor
+
+      markdown = <<~MARKDOWN
+        | Header1 | Header2 |  |  |
+        |----|----|----|----|
+        | Cell1 | Cell2 | Cell3 | Cell4 |
+        | Data1 | Data2 | Data3 | Data4 |
+
+      MARKDOWN
+
+      expect(composer).to have_value(markdown)
+    end
+
+    it "normalizes nested table column counts" do
+      cdp.allow_clipboard
+      open_composer
+
+      html = <<~HTML
+        <table>
+          <tbody>
+            <tr>
+            <td>
+              <table>
+                <tbody>
+                  <tr><td>CLOSED DOWNSTREAM</td></tr>
+                  <tr><td colspan="2"></td></tr>
+                  <tr><th>Alias:</th><td>None</td></tr>
+                  <tr><th>Product:</th><td>name</td></tr>
+                  <tr><th>Component:</th><td>general</td></tr>
+                </tbody>
+             </table>
+            </td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+        </table>
+      HTML
+
+      cdp.copy_paste(html, html: true)
+
+      composer.toggle_rich_editor
+
+      # The inner table header should be properly normalized
+      markdown = <<~MARKDOWN
+        |  |
+        |----|
+
+
+        | CLOSED DOWNSTREAM |  |
+        |----|----|
+        |  |  |
+        | Alias: | None |
+        | Product: | name |
+        | Component: | general |
+
+
+        |  |  |
+        |----|----|
+
+      MARKDOWN
+
+      expect(composer).to have_value(markdown)
+    end
+
+    it "handles tables with empty rows without crashing" do
+      cdp.allow_clipboard
+      open_composer
+
+      html = <<~HTML
+        <table>
+          <tbody>
+            <tr></tr>
+          </tbody>
+        </table>
+        <p>After table</p>
+      HTML
+
+      cdp.copy_paste(html, html: true)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("|  |\n|----|\n\nAfter table")
+    end
   end
 end

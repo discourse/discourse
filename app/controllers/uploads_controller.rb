@@ -61,6 +61,7 @@ class UploadsController < ApplicationController
     pasted = params[:pasted] == "true"
     for_private_message = params[:for_private_message] == "true"
     for_site_setting = params[:for_site_setting] == "true"
+    site_setting_name = for_site_setting ? params[:site_setting_name] : nil
     is_api = is_api?
     retain_hours = params[:retain_hours].to_i
 
@@ -71,14 +72,15 @@ class UploadsController < ApplicationController
         info =
           UploadsController.create_upload(
             current_user: me,
-            file: file,
-            url: url,
-            type: type,
-            for_private_message: for_private_message,
-            for_site_setting: for_site_setting,
-            pasted: pasted,
-            is_api: is_api,
-            retain_hours: retain_hours,
+            file:,
+            url:,
+            type:,
+            for_private_message:,
+            for_site_setting:,
+            site_setting_name:,
+            pasted:,
+            is_api:,
+            retain_hours:,
           )
       rescue => e
         render json: failed_json.merge(message: e.message&.split("\n")&.first),
@@ -110,21 +112,35 @@ class UploadsController < ApplicationController
 
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
-    RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
-      return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
+    begin
+      request_site_current_user =
+        request.env.delete(Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY)
 
-      if upload =
-           Upload.find_by(sha1: params[:sha]) ||
-             Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
-        unless Discourse.store.internal?
-          local_store = FileStore::LocalStore.new
-          return render_404 unless local_store.has_been_uploaded?(upload.url)
+      RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
+        begin
+          # current_user here refers to the user for the site that we are operating on
+          # using with_connection. If DB for the target site matches the current site
+          # for the request, then current_user will be the same as the request_site_current_user
+          return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
+
+          upload =
+            Upload.find_by(sha1: params[:sha]) ||
+              Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
+
+          if upload.present?
+            if !Discourse.store.internal?
+              local_store = FileStore::LocalStore.new
+              return render_404 unless local_store.has_been_uploaded?(upload.url)
+            end
+
+            send_file_local_upload(upload)
+          else
+            render_404
+          end
         end
-
-        send_file_local_upload(upload)
-      else
-        render_404
       end
+    ensure
+      request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = request_site_current_user
     end
   end
 
@@ -280,6 +296,7 @@ class UploadsController < ApplicationController
     type:,
     for_private_message:,
     for_site_setting:,
+    site_setting_name: nil,
     pasted:,
     is_api:,
     retain_hours:
@@ -310,12 +327,7 @@ class UploadsController < ApplicationController
 
     return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
 
-    opts = {
-      type: type,
-      for_private_message: for_private_message,
-      for_site_setting: for_site_setting,
-      pasted: pasted,
-    }
+    opts = { type:, for_private_message:, for_site_setting:, site_setting_name:, pasted: }
 
     upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
 
@@ -358,11 +370,13 @@ class UploadsController < ApplicationController
       content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,
     }
 
-    if !FileHelper.is_inline_image?(upload.original_filename)
+    if !FileHelper.is_inline_safe?(upload.original_filename)
       opts[:disposition] = "attachment"
     elsif params[:inline]
       opts[:disposition] = "inline"
     end
+
+    response.headers["Content-Security-Policy"] = "sandbox;"
 
     file_path = Discourse.store.path_for(upload)
     return render_404 unless file_path

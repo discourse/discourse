@@ -8,6 +8,18 @@ describe DiscourseAi::Translation::TopicCandidates do
       expect(DiscourseAi::Translation::TopicCandidates.get).not_to include(topic)
     end
 
+    describe "SiteSetting.ai_translation_include_bot_content" do
+      it "includes bot topics when enabled" do
+        SiteSetting.ai_translation_include_bot_content = true
+        bot_topic = Fabricate(:topic, user: Discourse.system_user)
+        regular_topic = Fabricate(:topic)
+
+        topics = DiscourseAi::Translation::TopicCandidates.get
+        expect(topics).to include(bot_topic)
+        expect(topics).to include(regular_topic)
+      end
+    end
+
     it "does not return topics older than ai_translation_backfill_max_age_days" do
       topic =
         Fabricate(

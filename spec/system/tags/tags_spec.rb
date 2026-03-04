@@ -53,6 +53,35 @@ describe "Tags", type: :system do
     let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
     let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
+    it "uses correct tag slug in URL when selecting a searched tag from tag drop" do
+      rare_tag = Fabricate(:tag, name: "rare-tag")
+      popular_tag = Fabricate(:tag, name: "popular-tag")
+      category_for_tags = Fabricate(:category)
+
+      2.times do
+        Fabricate(:topic, category: category_for_tags, tags: [popular_tag]).tap do |t|
+          Fabricate(:post, topic: t)
+        end
+      end
+      Fabricate(:topic, category: category_for_tags, tags: [rare_tag]).tap do |t|
+        Fabricate(:post, topic: t)
+      end
+      CategoryTagStat.update_topic_counts
+
+      SiteSetting.max_tags_in_filter_list = 1
+
+      sign_in(user_tl1)
+      category_page.visit(category_for_tags)
+
+      discovery.tag_drop.expand
+      discovery.tag_drop.search(rare_tag.name)
+      discovery.tag_drop.select_row_by_name(rare_tag.name)
+
+      expect(page).to have_current_path(
+        "/tags/c/#{category_for_tags.slug}/#{category_for_tags.id}/#{rare_tag.slug}/#{rare_tag.id}",
+      )
+    end
+
     it "displays tags on topics in topic lists" do
       sign_in(user_tl1)
 
@@ -66,18 +95,20 @@ describe "Tags", type: :system do
       expect(discovery.topic_list).to have_no_topic_tags(topic_with_no_tags)
       expect(discovery.tag_drop).to have_selected_name("tags") # unselected
 
-      # /latest -> /tag/tag-one (by clicking tag on topic)
+      # /latest -> /tag/tag-one/id (by clicking tag on topic)
       discovery.topic_list.click_topic_tag(topic_with_one_tag, "tag-one")
-      expect(page).to have_current_path("/tag/tag-one")
+      expect(page).to have_current_path("/tag/#{tag_one.slug}/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
 
       # /c/category
       category_page.visit(category)
       expect(discovery.topic_list).to have_topic_tag(topic_in_category_with_tag, "tag-three")
 
-      # /c/category -> /tags/c/category-slug/category-id/tag-name
+      # /c/category -> /tags/c/category-slug/category-id/tag-slug/tag-id
       discovery.tag_drop.select_row_by_name("tag-three")
-      expect(page).to have_current_path("/tags/c/#{category.slug}/#{category.id}/tag-three")
+      expect(page).to have_current_path(
+        "/tags/c/#{category.slug}/#{category.id}/#{tag_three.slug}/#{tag_three.id}",
+      )
       expect(discovery.tag_drop).to have_selected_name("tag-three")
       expect(discovery.topic_list).to have_topic(topic_in_category_with_tag)
 
@@ -88,9 +119,9 @@ describe "Tags", type: :system do
       expect(discovery.topic_list).to have_no_topic(topic_with_no_tags)
       expect(discovery.topic_list).to have_topic_tag(topic_with_one_tag, "tag-one")
 
-      # -> /tag/tag-one to /tag/tag-two
+      # -> /tag/tag-one/id to /tag/tag-two/id
       discovery.topic_list.click_topic_tag(topic_with_two_tags, "tag-two")
-      expect(page).to have_current_path("/tag/tag-two")
+      expect(page).to have_current_path("/tag/#{tag_two.slug}/#{tag_two.id}")
       expect(discovery.topic_list).to have_topic(topic_with_two_tags)
       expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
 
@@ -114,8 +145,21 @@ describe "Tags", type: :system do
       ## Sidebar
       expect(sidebar).to have_tag_section_links([tag_one, tag_three, tag_two])
       sidebar.click_section_link(tag_one.name)
-      expect(page).to have_current_path("/tag/tag-one")
+      expect(page).to have_current_path("/tag/#{tag_one.slug}/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
+    end
+
+    it "filters to untagged topics when selecting 'no tags' from tag drop" do
+      sign_in(user_tl1)
+      visit "/latest"
+
+      discovery.tag_drop.expand
+      discovery.tag_drop.select_row_by_value("no-tags")
+
+      expect(page).to have_current_path("/tag/none")
+      expect(discovery.topic_list).to have_topic(topic_with_no_tags)
+      expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
+      expect(discovery.topic_list).to have_no_topic(topic_with_two_tags)
     end
   end
 
@@ -233,6 +277,84 @@ describe "Tags", type: :system do
       # PM - tag updated in topic view
       expect(topic_page.topic_tags).to include("tag-one", "tag-three")
       expect(topic_page.topic_tags).not_to include("tag-two")
+    end
+
+    it "saves draft correctly when editing topic with tags" do
+      topic = Fabricate(:topic, user: admin, tags: [tag_one, tag_two])
+      Fabricate(:post, topic: topic, user: admin)
+      toasts = PageObjects::Components::Toasts.new
+
+      sign_in(admin)
+      visit topic.url
+
+      find("#post_1 .post-controls .edit").click
+      expect(composer).to be_opened
+
+      # wait for composer to load topic data including tags
+      # this ensures originalTags is set from topic.tags
+      expect(page).to have_css(".mini-tag-chooser", text: "tag-one")
+
+      composer.fill_content("Updated content for draft test")
+
+      draft = nil
+      try_until_success(reason: "saving a draft") do
+        draft = Draft.find_by(user: admin)
+        expect(draft).to be_present
+      end
+
+      # check that original_tags is in the draft data as tag objects
+      draft_data = JSON.parse(draft.data)
+      original_tag_ids = draft_data["original_tags"].map { |t| t["id"] }
+      expect(original_tag_ids).to contain_exactly(tag_one.id, tag_two.id)
+    end
+
+    it "shows child tags when parent tag is selected in topic title editor and composer" do
+      parent_tag = Fabricate(:tag, name: "cap")
+      child_tag_approved = Fabricate(:tag, name: "cap-approved")
+      child_tag_closed = Fabricate(:tag, name: "cap-closed")
+      child_tag_open = Fabricate(:tag, name: "cap-open")
+
+      tag_group =
+        Fabricate(
+          :tag_group,
+          name: "Corrective Action Plans",
+          parent_tag: parent_tag,
+          one_per_topic: true,
+          tags: [child_tag_approved, child_tag_closed, child_tag_open],
+        )
+
+      topic = Fabricate(:topic, user: admin, tags: [parent_tag])
+      Fabricate(:post, topic: topic, user: admin)
+
+      sign_in(admin)
+      visit topic.url
+
+      topic_page.click_topic_edit_title
+      expect(topic_page).to have_topic_title_editor
+
+      mini_tag_chooser.expand
+      mini_tag_chooser.search("cap-")
+
+      expect(mini_tag_chooser).to have_option_name("cap-approved")
+      expect(mini_tag_chooser).to have_option_name("cap-closed")
+      expect(mini_tag_chooser).to have_option_name("cap-open")
+
+      mini_tag_chooser.collapse_with_escape
+      topic_page.click_topic_title_cancel_edit
+
+      find("#post_1 .post-controls .edit").click
+      expect(composer).to be_opened
+
+      expect(page).to have_css(".mini-tag-chooser", text: "cap")
+
+      composer_tag_chooser =
+        PageObjects::Components::SelectKit.new(".composer-fields .mini-tag-chooser")
+      composer_tag_chooser.expand
+      composer_tag_chooser.search("cap-")
+
+      expect(composer_tag_chooser).to have_option_name("cap-approved")
+      expect(composer_tag_chooser).to have_option_name("cap-closed")
+      expect(composer_tag_chooser).to have_option_name("cap-open")
     end
   end
 end

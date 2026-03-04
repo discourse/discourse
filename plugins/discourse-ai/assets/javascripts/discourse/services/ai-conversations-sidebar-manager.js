@@ -6,7 +6,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
@@ -106,6 +106,7 @@ export default class AiConversationsSidebarManager extends Service {
     }
 
     this.sidebarState.isForcingSidebar = true;
+    this.sidebarState.forcingSidebarPanel = AI_CONVERSATIONS_PANEL;
 
     // calling this before fetching data
     // helps avoid flash of main sidebar mode
@@ -159,10 +160,21 @@ export default class AiConversationsSidebarManager extends Service {
     document.body.classList.remove("has-ai-conversations-sidebar");
     document.body.classList.remove("has-empty-ai-conversations-sidebar");
 
-    const isAdmin = this.sidebarState.currentPanel?.key === ADMIN_PANEL;
-    if (this.sidebarState.isForcingSidebar && !isAdmin) {
-      this.sidebarState.setPanel(MAIN_PANEL);
+    const isStillAiPanel =
+      this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL;
+
+    // Only clear forcing if we were the ones who set it
+    const weSetForcing =
+      this.sidebarState.forcingSidebarPanel === AI_CONVERSATIONS_PANEL;
+
+    if (this.sidebarState.isForcingSidebar && weSetForcing) {
+      if (isStillAiPanel) {
+        // No other route claimed the sidebar, reset to main panel
+        this.sidebarState.setPanel(MAIN_PANEL);
+      }
+      // Clear the forcing flag since we set it and we're leaving
       this.sidebarState.isForcingSidebar = false;
+      this.sidebarState.forcingSidebarPanel = null;
       this.appEvents.trigger("discourse-ai:stop-forcing-conversations-sidebar");
     }
 

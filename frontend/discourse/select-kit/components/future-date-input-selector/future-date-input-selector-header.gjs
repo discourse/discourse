@@ -30,7 +30,7 @@ export default class FutureDateInputSelectorHeader extends ComboBoxHeaderCompone
         </span>
       {{/if}}
 
-      {{icon this.caretIcon class="caret-icon"}}
+      {{icon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

@@ -33,8 +33,13 @@ module PageObjects
         case control_type
         when /input-/, "password"
           component.find("input").value
+        when "color"
+          component.find("input[type='text']").value
         when "icon", "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
+          picker.value
+        when "tag-chooser"
+          picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
         when "checkbox"
           component.find("input[type='checkbox']").checked?
@@ -45,7 +50,7 @@ module PageObjects
         when "composer", "textarea"
           component.find("textarea").value
         when "image"
-          url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
+          url = component.find(".file-uploader__preview a.lightbox", wait: 10)[:href]
           sha1 = url.match(/(\h{40})/).captures.first
           Upload.find_by(sha1:)
         when "toggle"
@@ -114,6 +119,8 @@ module PageObjects
         case control_type
         when "input-text", "password", "input-date", "input-number"
           component.find("input").fill_in(with: value)
+        when "color"
+          component.find("input[type='text']").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
         when "code"
@@ -137,6 +144,11 @@ module PageObjects
           picker.expand
           picker.search(value)
           picker.select_row_by_name(value)
+        when "tag-chooser"
+          picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
+          picker.expand
+          picker.search(value)
+          picker.select_row_by_name(value)
         when "select"
           PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
             value,
@@ -151,11 +163,7 @@ module PageObjects
           radio = component.find("input[type='radio'][value='#{value}']")
           radio.click
         when "question"
-          if value == true
-            accept
-          else
-            refuse
-          end
+          value == true ? accept : refuse
         else
           raise "Unsupported control type: #{control_type}"
         end
@@ -180,10 +188,18 @@ module PageObjects
       def upload_image(image_path)
         if control_type == "image"
           attach_file(image_path) do
-            component.find(".image-upload-controls .btn.btn-default").click
+            component.find(".file-uploader__controls .btn.btn-default").click
           end
         else
           raise "'upload_image' is not supported for control type: #{control_type}"
+        end
+      end
+
+      def has_selected_names?(*names)
+        if control_type == "tag-chooser"
+          PageObjects::Components::SelectKit.new(tag_chooser_selector).has_selected_names?(*names)
+        else
+          raise "'has_selected_names?' is only supported for control type: tag-chooser"
         end
       end
 
@@ -193,6 +209,12 @@ module PageObjects
 
       def enabled?
         !disabled?
+      end
+
+      private
+
+      def tag_chooser_selector
+        "[data-name='#{component["data-name"]}'] .form-kit__control-tag-chooser"
       end
     end
 
@@ -241,7 +263,11 @@ module PageObjects
       end
 
       def choose_conditional(name)
-        find(".form-kit__conditional-display .form-kit__control-radio[value='#{name}']").click
+        within component do
+          find("input.form-kit__control-radio[value='#{name}']", visible: :all).ancestor(
+            "label",
+          ).click
+        end
       end
     end
   end

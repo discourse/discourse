@@ -102,3 +102,7 @@ html {
   --discourse_id-icon-hover: var(--accent-text-color) !important;
   --discourse_id-border: var(--discourse_id-background) !important;
 }
+
+.uc-modernize-foundation-theme {
+  --d-sidebar-active-background: var(--d-selected) !important;
+}

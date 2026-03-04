@@ -36,11 +36,21 @@ describe "Admin Site Setting Bulk Action", type: :system do
 
     banner.click_save
 
-    2.times do
-      expect(dialog).to be_open
-      expect(dialog).to have_content("You’re about to change your password policy.")
-      dialog.click_yes
-    end
+    expect(dialog).to be_open
+    expect(dialog).to have_content(
+      I18n.t(
+        "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
+      ),
+    )
+    dialog.click_yes
+
+    expect(dialog).to be_open
+    expect(dialog).to have_content(
+      I18n.t(
+        "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
+      ),
+    )
+    dialog.click_yes
 
     expect(settings_page).to have_overridden_setting("min_password_length", value: 12)
     expect(settings_page).to have_overridden_setting("min_admin_password_length", value: 13)
@@ -57,11 +67,19 @@ describe "Admin Site Setting Bulk Action", type: :system do
     banner.click_save
 
     expect(dialog).to be_open
-    expect(dialog).to have_content("You’re about to change your password policy.")
+    expect(dialog).to have_content(
+      I18n.t(
+        "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
+      ),
+    )
     dialog.click_yes
 
     expect(dialog).to be_open
-    expect(dialog).to have_content("You’re about to change your password policy.")
+    expect(dialog).to have_content(
+      I18n.t(
+        "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
+      ),
+    )
     dialog.click_no
 
     expect(banner).to be_visible
@@ -79,7 +97,9 @@ describe "Admin Site Setting Bulk Action", type: :system do
     banner.click_save
 
     expect(dialog).to be_open
-    expect(dialog).to have_content("An error occurred: contact_email: Invalid email address.")
+    expect(dialog).to have_content(
+      I18n.t("js.generic_error_with_reason", error: "contact_email: Invalid email address."),
+    )
     dialog.click_ok
 
     expect(banner).to be_visible

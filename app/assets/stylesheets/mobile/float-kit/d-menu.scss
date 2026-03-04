@@ -29,7 +29,7 @@
     &__item {
       .btn {
         border-radius: 0; // overruling the general border-radius var on all btns
-        // all specific overrules to make sure touch devices dont show focus states, which we apply on opening of the menu
+        // all specific overrules to make sure touch devices don't show focus states, which we apply on opening of the menu
         &:focus-visible,
         &:active {
           .discourse-touch & {

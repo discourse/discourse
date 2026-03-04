@@ -131,16 +131,13 @@ hu:
           title: "Üzenet törlése"
           description: "Üzenet törlése, hogy a felhasználók ne láthassák."
         delete_and_agree:
-          title: "Megjelölés figyelmen kívül hagyása, és az üzenet törlése"
           description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és az üzenet törlésével."
         disagree_and_restore:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
-        disagree:
-          title: "Elutasítás"
         ignore:
-          title: "Ne csináljon semmit"
-          description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
+          title: "Jelzés figyelmen kívül hagyása"
+          description: "Eltávolítás a várólistáról intézkedés nélkül."
       direct_messages:
         transcript_title: "A korábbi üzenetek leirata a(z) %{channel_name} csatornában"
         transcript_body: "A pontosabb kontextus érdekében hozzáadtuk a beszélgetés korábbi üzeneteinek leiratát (legfeljebb tíz):\n\n%{transcript}"
@@ -189,6 +186,7 @@ hu:
         is_already_in_use: "már használatban van"
     bookmarkable:
       notification_title_channel: "Üzenet a(z) %{channel_name} csatornában."
+      notification_title_direct_message: "%{channel_name} csatornával üzenet"
     personal_chat: "személyes csevegés"
     onebox:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"
@@ -246,19 +244,14 @@ hu:
         watched_thread:
           one: "[%{site_name}] Új szálüzenet itt: %{channel}"
           other: "[%{site_name}] Új szálüzenetek itt: %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Új szálüzenet a(z) %{channel} és %{count} további csoportban"
-          other: "[%{site_name}] Új szálüzenet a(z) %{channel} és %{count} további csoportban"
         chat_dm_1:
           one: "[%{site_name}] Új üzenet tőle: %{name}"
           other: "[%{site_name}] Új üzenetek tőle: %{name}"
         chat_dm_2: "[%{site_name}] Új üzenetek tőlük: %{name_1} és %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Új üzenetek: %{name} és %{count} másik felhasználótól"
         chat_channel_1:
           one: "[%{site_name}] Új üzenet itt: %{channel}"
           other: "[%{site_name}] Új üzenetek itt: %{channel}"
         chat_channel_2: "[%{site_name}] Új üzenetek itt: %{channel_1} és %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Új üzenetek itt: %{channel} és %{count} további csoport"
         chat_channel_and_dm: "[%{site_name}] Új üzenetek itt: %{channel}, és tőle: %{name}"
       unsubscribe: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. A leiratkozáshoz módosítsa a %{email_preferences_link} vagy a %{unsubscribe_link} értéket."
       unsubscribe_no_link: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. Itt tudja módosítani: %{email_preferences_link}."
@@ -268,8 +261,10 @@ hu:
       view_more:
         one: "%{count} további üzenet megtekintése"
         other: "%{count} további üzenet megtekintése"
+      your_chat_settings: "csevegési e-mail-beállítás"
   unsubscribe:
     chat_summary:
+      select_title: "Csevegés összefoglaló e-mailek beállítása:"
       never: Soha
       when_away: Csak ha távol van
   category:

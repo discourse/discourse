@@ -21,6 +21,7 @@ el:
     discourse_post_event_allowed_on_groups: "Ομάδες που επιτρέπεται να δημιουργούν εκδηλώσεις."
     event_participation_buttons: "Λίστα κουμπιών συμμετοχής σε εκδήλωση που μπορούν να χρησιμοποιήσουν οι χρήστες."
   discourse_calendar:
+    invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
     event_expired: "Η εκδήλωση έληξε"
   discourse_post_event:
     notifications:

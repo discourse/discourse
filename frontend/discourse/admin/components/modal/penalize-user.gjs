@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -23,16 +24,20 @@ export default class PenalizeUser extends Component {
   @tracked confirmClose = false;
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
-  @tracked postEdit = this.args.model.postEdit;
   @tracked flash;
   @tracked reason;
   @tracked message;
+  @tracked readyToDeleteAll = false;
 
   constructor() {
     super(...arguments);
     if (this.postEdit && this.siteSettings.penalty_include_post_message) {
       this.message = `-------------------\n${this.postEdit}\n-------------------`;
     }
+  }
+
+  get postEdit() {
+    return this.args.model.postEdit;
   }
 
   get modalTitle() {
@@ -72,7 +77,8 @@ export default class PenalizeUser extends Component {
       this.penalizing ||
       isEmpty(this.penalizeUntil) ||
       !this.reason ||
-      this.reason.length < 1
+      this.reason.length < 1 ||
+      (this.postAction === "delete_all" && !this.readyToDeleteAll)
     );
   }
 
@@ -110,8 +116,12 @@ export default class PenalizeUser extends Component {
         console.error("Unknown penalty type:", this.args.model.penaltyType);
       }
       this.args.closeModal({ success: true });
-      if (this.successCallback) {
-        await this.successCallback(result);
+      if (this.args.model.successCallback) {
+        await this.args.model.successCallback({
+          ...result,
+          shouldDeleteAllPosts:
+            this.postAction === "delete_all" && this.readyToDeleteAll,
+        });
       }
     } catch (error) {
       this.flash = result ? extractError(result) : extractError(error);
@@ -136,6 +146,11 @@ export default class PenalizeUser extends Component {
   @action
   similarUsersChanged(userIds) {
     this.otherUserIds = userIds;
+  }
+
+  @action
+  updateReadyToDeleteAll(flag) {
+    this.readyToDeleteAll = flag;
   }
 
   <template>
@@ -185,6 +200,8 @@ export default class PenalizeUser extends Component {
               @postId={{@model.postId}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
+              @user={{@model.user}}
+              @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
             />
           {{/if}}
           {{#if @model.user.similar_users_count}}

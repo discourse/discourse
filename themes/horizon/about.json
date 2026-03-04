@@ -4,9 +4,19 @@
   "theme_version": "1.0.0",
   "modifiers": {
     "svg_icons": [
-      "fire"
+      "fire",
+      "far-square-check",
+      "far-square",
+      "thumbtack",
+      "reply",
+      "heart",
+      "user-plus"
     ],
-    "serialize_topic_is_hot": true
+    "serialize_topic_is_hot": true,
+    "serialize_topic_excerpts": {
+      "type": "setting",
+      "value": "topic_card_high_context"
+    }
   },
   "color_schemes": {
     "Horizon": {

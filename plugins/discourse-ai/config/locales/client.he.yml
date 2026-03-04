@@ -113,14 +113,6 @@ he:
             persona_id:
               label: "דמות"
               description: "דמות בינה מלאכותית לשימוש להפקת דוחות"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "מודל"
-              description: "מודל שפה כברירת מחדל שישמש למיון ראשוני"
-            tool:
-              label: "כלי"
-              description: "כלי לשימוש למיון ראשוני (אסור שלכלי יהיו מוגדרים משתנים)"
         llm_persona_triage:
           fields:
             persona:
@@ -224,6 +216,8 @@ he:
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
         description: "מודל המש״ג (LLM) לשימוש כברירת מחדל לכל יכולות הבינה המלאכותית. אם לא צוין מש״ג בהגדרות היכולת או הדמות ייעשה שימוש בזה. אם לא צוין מש״ג כברירת מחדל, ייעשה שימוש במש״ג האחרון שנוצר."
+      llm_selector:
+        none: "ללא"
       features:
         short_title: "יכולות"
         description: "אלו יכולות בינה מלאכותית שזמינות למבקרים באתר שלך. אפשר להגדיר אותן להשתמש בדמויות וב־LLMים (מש״גים) מסוימים ואפשר לשלוט בגישה אליהן על ידי קבוצות."
@@ -275,6 +269,9 @@ he:
         embeddings:
           name: "הטמעות"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "נושאים קשורים"
+            semantic_search: "חיפוש סמנטי"
         discord:
           name: "שילוב מול Discord"
           description: "הוספת היכולת לחפש בערוצי Discord"
@@ -284,6 +281,8 @@ he:
           generate_concepts: "הסקת תפיסות"
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
+          setting_groups:
+            personas: "דמויות"
         ai_helper:
           name: "מסייע"
           proofread: הגהת הטקסט
@@ -297,6 +296,8 @@ he:
           image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+          setting_groups:
+            personas: "דמויות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -304,6 +305,14 @@ he:
           post_raw_translator: "מתרגם פוסטים גולמי"
           topic_title_translator: "מתרגם כותרות נושאים"
           short_text_translator: "מתרגם טקסטים קצרים"
+          schedule_untranslated: "תזמון תרגומים"
+          schedule_topic_success:
+            one: "תזמון תרגום לפוסט שלא תורגם."
+            two: "תזמון תרגום של שני פוסטים לא מתורגמים."
+            many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
+            other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
+          setting_groups:
+            personas: "דמויות"
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"
@@ -328,8 +337,6 @@ he:
           enable_translations: "הפעלת תרגומים אוטומטיים"
         stats:
           title: "סטטיסטיקת תרגום"
-          complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
-          incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
           eta_minutes:
             one: "דקה"
@@ -385,6 +392,7 @@ he:
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 או מזהה פוסט"
           result: "תוצאה"
           llm: "LLM"
+          scan_history: "היסטוריית סריקה"
           sent_message: "הודעה שנשלחה"
           system_prompt: "בקשת מערכת"
           scan_log: "יומן סריקה"
@@ -408,6 +416,7 @@ he:
         feature: "יכולת"
         usage_count: "כמות שימושים"
         model: "מודל"
+        credits_remaining: "קרדיטים שנותרו"
         models_breakdown: "שימוש לפי מודל"
         users_breakdown: "שימוש לפי משתמש"
         all_features: "כל היכולות"
@@ -456,7 +465,6 @@ he:
         overwrite: "לדרוס"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
-        use_parent_llm: "להשתמש במודל שפה עם פיצול אישיות"
         max_context_posts: "כמות מרבית של פוסטים להקשר"
         max_context_posts_help: "הכמות המרבית של פוסטים לשימוש כהקשר לבינה המלאכותית בעת מענה למשתמש (ריק לברירת מחדל)"
         vision_enabled: ראייה מופעלת
@@ -590,8 +598,9 @@ he:
         parameter_description: "תיאור משתנה"
         enum_value: "ערך מונה"
         add_enum_value: "הוספת ערך מונה"
+        credential_not_set: "(לא מוגדר)"
         edit: "עריכה"
-        test: "הרצת בדיקה"
+        test: "נסיון"
         delete: "מחיקה"
         saved: "הכלי נשמר"
         confirm_delete: "למחוק את הכלי הזה?"
@@ -599,6 +608,16 @@ he:
           title: "כלי בדיקת בינה מלאכותית"
           run: "הרצת בדיקה"
           result: "תוצאת הבדיקה"
+      secrets:
+        short_title: "פרטי גישה"
+        name: "שם"
+        secret: "ערך"
+        back: "חזרה"
+        save: "שמירה"
+        edit: "עריכה"
+        delete: "מחיקה"
+        embedding: "שילוב (embedding)"
+        tool: "כלי"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -659,25 +678,11 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-5: "המודל החכם ביותר של Anthropic"
-          anthropic-claude-sonnet-4-5: "איזון מיטבי בין מהירות לעלות"
+          anthropic-claude-opus-4-6: "המודל החכם ביותר של Anthropic"
+          anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-pro: "המודל החכם ביותר של Google"
-          google-gemini-2-5-pro: "מודל גדול רב־נדבכים שבנוי למגוון רחב של משימות"
-          google-gemini-2-5-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים"
-          google-gemini-2-5-flash-lite: "המודל הקטן והחסכוני ביותר של Google"
-          open_ai-gpt-5-1: "מודל הדגל של OpenAI. מותאם לפתרון בעיות בתחומים שונים"
-          open_ai-gpt-5-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
-          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "דגם רב־לשוני, קליל ויעיל"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "מודל רב־תכליתי חזק"
-          mistral-mistral-large-latest: "המודל החזק ביותר של Mistral"
-          mistral-pixtral-large-latest: "המודל החזק ביותר של Mistral שבנוי לעיבוד חזותי"
-          open_router-x-ai-grok-4: "המודל האחרון של xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "מודל ההנמקה העדכני ביותר של DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "מודל רב־לשוני עם יכולות גבוהות"
-          groq-openai-gpt-oss-120b: "מודל משקל פתוח מהשורה הראשונה מבית OpenAI"
-          groq-openai-gpt-oss-20b: "מודל קל משקל, מהיר ופתוח של OpenAI"
+          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -723,6 +728,7 @@ he:
           fake: "מותאם"
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
+          role_arn: "ARN של AWS Bedrock"
           region: "אזור של AWS Bedrock"
           organization: "מזהה ארגון OpenAI כרשות"
           disable_system_prompt: "השבתת הודעת מערכת בבקשות"
@@ -733,11 +739,9 @@ he:
           disable_streaming: "השבתת השלמות מוזרמות (המרת בקשות מוזרמות לבקשות שאינן מוזרמות)"
           reasoning_effort: "מאמץ נימוק (תקף רק על מודלים של נימוק)"
           enable_reasoning: "הפעלת נימוק (תקף רק על מודלים עם אפשרות נימוק)"
-          enable_thinking: "הפעלת חשיבה (רק במודלים תקפים לדוגמה: flash 2.5)"
           thinking_tokens: "כמות אסימונים המשמשים לחשיבה"
           reasoning_tokens: "כמות אסימונים המשמשים לנימוק"
           disable_temperature: "השבתת טמפרטורה (חלק ממודלי החשיבה אינם תומכים בטמפרטורה)"
-          effort: "רמת מאמץ (Claude Opus 4.5 בלבד)"
       related_topics:
         title: "נושאים קשורים"
         pill: "קשורים"
@@ -841,12 +845,7 @@ he:
         provider_fields:
           model_name: "שם המודל"
         semantic_search: "נושאים (סמנטיקה)"
-        semantic_search_loading: "מתבצע חיפוש אחר תוצאות נוספות עם בינה מלאכותית"
         semantic_search_results:
-          toggle: "מוצגות %{count} תוצאות שנמצאו באמצעות בינה מלאכותית"
-          toggle_hidden: "מוסתרות %{count} תוצאות שנמצאו באמצעות בינה מלאכותית"
-          none: "חיפוש הבינה המלאכותית שלנו לא מצא נושאים, עמך הסליחה"
-          new: "יש ללחוץ על ‚חיפוש’ כדי להתחיל לחפש תוצאות חדשות עם בינה מלאכותית"
           unavailable: "תוצאות בינה מלאכותית לא זמינות"
         semantic_search_tooltips:
           invalid_sort: "יש לסדר את תוצאות החיפוש לפי רלוונטיות להצגת תוצאות בינה מלאכותית"
@@ -966,14 +965,13 @@ he:
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
-          regenerate: "לסכם בקצרה מחדש"
-          regenerate_bulk: "לסכם תקצירים מחדש"
-          regenerate_success:
+          regenerate_summaries_option: "תקצירי נושאים."
+          regenerate_gists_success:
             one: "התקציר הקצר נוצר מחדש בהצלחה"
             two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
             many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
             other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-          regenerate_error:
+          regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"
             many: "יצירת %{count} תקצירים מחדש נכשלה"

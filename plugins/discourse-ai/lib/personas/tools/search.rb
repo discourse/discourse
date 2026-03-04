@@ -6,8 +6,6 @@ module DiscourseAi
       class Search < Tool
         attr_reader :last_query
 
-        MIN_SEMANTIC_RESULTS = 5
-
         class << self
           def signature
             {

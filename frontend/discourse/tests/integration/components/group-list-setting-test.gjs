@@ -102,4 +102,58 @@ module("Integration | Component | group-list site-setting", function (hooks) {
 
     assert.dom(".selected-content button").hasClass("disabled");
   });
+
+  test("disallowed groups", async function (assert) {
+    this.site.groups = [
+      {
+        id: 0,
+        name: "everyone",
+      },
+      {
+        id: 1,
+        name: "Donuts",
+      },
+      {
+        id: 2,
+        name: "Cheese cake",
+      },
+    ];
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        category: "foo",
+        default: "",
+        description: "Choose groups",
+        placeholder: null,
+        preview: null,
+        secret: false,
+        setting: "foo_bar",
+        type: "group_list",
+        disallowed_groups: "0",
+        value: "",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
+    );
+
+    const subject = selectKit(".list-setting");
+
+    await subject.expand();
+
+    assert.false(
+      subject.rowByValue("0").exists(),
+      "disallowed group is not in the list"
+    );
+    assert.true(
+      subject.rowByValue("1").exists(),
+      "allowed group is in the list"
+    );
+    assert.true(
+      subject.rowByValue("2").exists(),
+      "allowed group is in the list"
+    );
+  });
 });

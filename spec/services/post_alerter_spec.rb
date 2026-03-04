@@ -792,6 +792,15 @@ RSpec.describe PostAlerter do
             ).by(1).and change(post3.user.notifications, :count).by(1)
     end
 
+    it "notifies users who posted with staff colour" do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:moderator_action])
+
+      expect { post }.to change(other_post.user.notifications, :count).by(1).and change(
+              post2.user.notifications,
+              :count,
+            ).by(1)
+    end
+
     it "notifies only last max_here_mentioned users" do
       SiteSetting.max_here_mentioned = 2
       3.times { Fabricate(:post, topic: topic) }
@@ -2211,6 +2220,22 @@ RSpec.describe PostAlerter do
         ).to eq(1)
       end
 
+      it "triggers a watching_first_post notification even when tag edit notifications are disabled" do
+        SiteSetting.disable_tags_edit_notifications = true
+
+        expect {
+          PostRevisor.new(post).revise!(
+            Fabricate(:user, refresh_auto_groups: true),
+            tags: [other_tag.name, watched_tag.name],
+          )
+        }.to change {
+          user
+            .notifications
+            .where(notification_type: Notification.types[:watching_first_post])
+            .count
+        }.by(1)
+      end
+
       it "doesn't trigger a notification if topic is unlisted" do
         post.topic.update_column(:visible, false)
 
@@ -2457,13 +2482,9 @@ RSpec.describe PostAlerter do
         smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
-        imap_server: "imap.gmail.com",
-        imap_port: 993,
-        imap_ssl: true,
         email_username: "discourse@example.com",
         email_password: "password",
         smtp_enabled: true,
-        imap_enabled: true,
       )
     end
 

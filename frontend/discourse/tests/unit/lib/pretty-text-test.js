@@ -1473,6 +1473,17 @@ var bar = 'bar';
     );
   });
 
+  test("emoji - boundary check allows zero-width space before emoji", function (assert) {
+    // When emojiUnicodeReplacer converts Unicode emoji after text, it inserts
+    // a zero-width space (\u200b) before the :emoji: to help with word boundaries.
+    // The markdown-it emoji processing must recognize this as a valid boundary.
+    assert.cooked(
+      "example\u200b:heart_eyes:",
+      `<p>example\u200b<img src="/images/emoji/twitter/heart_eyes.png?v=${v}" title=":heart_eyes:" class="emoji" alt=":heart_eyes:" loading="lazy" width="20" height="20"></p>`,
+      "zero-width space is a valid emoji boundary"
+    );
+  });
+
   test("emoji - emojiSet", function (assert) {
     assert.cookedOptions(
       ":smile:",

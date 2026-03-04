@@ -101,7 +101,8 @@ export default {
                 accountUsername: options.username,
                 accountName: options.name,
                 authOptions: EmberObject.create(options),
-                skipConfirmation: siteSettings.auth_skip_create_confirm,
+                skipConfirmation:
+                  siteSettings.auth_skip_create_confirm && options.username,
               };
 
               router.transitionTo("signup").then(() => {

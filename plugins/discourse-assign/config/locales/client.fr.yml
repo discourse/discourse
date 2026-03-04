@@ -129,8 +129,6 @@ fr:
       web_hooks:
         assign_event:
           group_name: "Événements d'attribution"
-          assigned: "Lorsqu'un utilisateur attribue un sujet"
-          unassigned: "Lorsqu'un utilisateur annule l'attribution d'un sujet"
     search:
       advanced:
         in:

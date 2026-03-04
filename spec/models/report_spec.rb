@@ -1950,4 +1950,62 @@ RSpec.describe Report do
       end
     end
   end
+
+  describe ".hidden?" do
+    context "when admin is true" do
+      it "returns false for regular reports" do
+        expect(Report.hidden?("topics", admin: true)).to eq(false)
+      end
+
+      it "returns false for admin-only reports" do
+        Report::ADMIN_ONLY_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, admin: true)).to eq(false)
+        end
+      end
+    end
+
+    context "when admin is false" do
+      it "returns false for regular reports" do
+        expect(Report.hidden?("topics", admin: false)).to eq(false)
+      end
+
+      it "returns true for admin-only reports" do
+        Report::ADMIN_ONLY_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, admin: false)).to eq(true)
+        end
+      end
+    end
+
+    context "when use_legacy_pageviews is true" do
+      before { SiteSetting.use_legacy_pageviews = true }
+
+      it "hides pageview reports" do
+        Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, admin: true)).to eq(true)
+        end
+      end
+
+      it "does not hide legacy pageview reports" do
+        Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, admin: true)).to eq(false)
+        end
+      end
+    end
+
+    context "when use_legacy_pageviews is false" do
+      before { SiteSetting.use_legacy_pageviews = false }
+
+      it "does not hide pageview reports" do
+        Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, admin: true)).to eq(false)
+        end
+      end
+
+      it "hides legacy pageview reports" do
+        Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, admin: true)).to eq(true)
+        end
+      end
+    end
+  end
 end

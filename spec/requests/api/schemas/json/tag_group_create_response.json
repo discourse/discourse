@@ -11,16 +11,28 @@
         "name": {
           "type": "string"
         },
-        "tag_names": {
+        "tags": {
           "type": "array",
           "items": {
-
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" },
+              "slug": { "type": "string" }
+            },
+            "required": ["id", "name", "slug"]
           }
         },
-        "parent_tag_name": {
+        "parent_tag": {
           "type": "array",
           "items": {
-
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" },
+              "slug": { "type": "string" }
+            },
+            "required": ["id", "name", "slug"]
           }
         },
         "one_per_topic": {
@@ -33,8 +45,8 @@
       "required": [
         "id",
         "name",
-        "tag_names",
-        "parent_tag_name",
+        "tags",
+        "parent_tag",
         "one_per_topic",
         "permissions"
       ]

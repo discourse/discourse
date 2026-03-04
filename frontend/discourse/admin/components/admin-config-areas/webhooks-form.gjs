@@ -11,9 +11,8 @@ import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -22,20 +21,21 @@ export default class AdminConfigAreasWebhookForm extends Component {
   @service siteSettings;
   @service store;
 
-  @tracked webhook = this.args.webhook;
-
   @tracked loadingExtras = true;
-
   @tracked defaultEventTypes = {};
   @tracked groupedEventTypes = {};
   @tracked contentTypes = [];
   @tracked deliveryStatuses = [];
-  @trackedArray webhookEventTypes = [];
+  @autoTrackedArray webhookEventTypes = [];
 
   constructor() {
     super(...arguments);
 
     this.#loadExtras();
+  }
+
+  get webhook() {
+    return this.args.webhook;
   }
 
   @cached
@@ -46,7 +46,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
       secret: this.webhook.secret,
       categories: this.webhook.categories,
       group_names: this.webhook.group_names,
-      tag_names: this.webhook.tag_names,
+      tags: this.webhook.tags,
       wildcard: this.webhook.wildcard,
       web_hook_event_types: this.webhook.web_hook_event_types,
       verify_certificate: this.webhook.verify_certificate,
@@ -222,7 +222,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
 
                 {{#if this.showTagsFilter}}
                   <form.Field
-                    @name="tag_names"
+                    @name="tags"
                     @title={{i18n "admin.web_hooks.tags_filter"}}
                     @description={{i18n
                       "admin.web_hooks.tags_filter_instructions"
@@ -230,14 +230,10 @@ export default class AdminConfigAreasWebhookForm extends Component {
                     @format="large"
                     as |field|
                   >
-                    <field.Custom>
-                      <TagChooser
-                        @tags={{field.value}}
-                        @everyTag={{true}}
-                        @excludeSynonyms={{true}}
-                        @onChange={{field.set}}
-                      />
-                    </field.Custom>
+                    <field.TagChooser
+                      @showAllTags={{true}}
+                      @excludeSynonyms={{true}}
+                    />
                   </form.Field>
                 {{/if}}
 

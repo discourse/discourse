@@ -30,13 +30,13 @@ export default class Collapser extends Component {
       {{#if this.collapsed}}
         <DButton
           @action={{this.open}}
-          @icon="caret-right"
+          @icon="angle-right"
           class="chat-message-collapser-button chat-message-collapser-closed"
         />
       {{else}}
         <DButton
           @action={{this.close}}
-          @icon="caret-down"
+          @icon="angle-down"
           class="chat-message-collapser-button chat-message-collapser-opened"
         />
       {{/if}}

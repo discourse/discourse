@@ -1,19 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import {
-  attributeBindings,
-  classNameBindings,
-  classNames,
-  tagName,
-} from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 
-@tagName("td")
-@classNames("admin-report-table-cell")
-@classNameBindings("type", "property")
-@attributeBindings("value:title")
+@tagName("")
 export default class AdminReportTableCell extends Component {
   options = null;
 
@@ -22,10 +15,18 @@ export default class AdminReportTableCell extends Component {
   @alias("computedLabel.formattedValue") formattedValue;
   @alias("computedLabel.value") value;
 
-  @discourseComputed("label", "data", "options")
-  computedLabel(label, data, options) {
-    return label.compute(data, options || {});
+  @computed("label", "data", "options")
+  get computedLabel() {
+    return this.label.compute(this.data, this.options || {});
   }
 
-  <template>{{htmlSafe this.formattedValue}}</template>
+  <template>
+    <td
+      title={{this.value}}
+      class={{concatClass "admin-report-table-cell" this.type this.property}}
+      ...attributes
+    >
+      {{htmlSafe this.formattedValue}}
+    </td>
+  </template>
 }

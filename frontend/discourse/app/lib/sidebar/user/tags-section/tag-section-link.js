@@ -16,12 +16,12 @@ export default class TagSectionLink extends BaseTagSectionLink {
   @bind
   refreshCounts() {
     this.totalUnread = this.topicTrackingState.countUnread({
-      tagId: this.tagName,
+      tagId: this.tag.id,
     });
 
     if (this.totalUnread === 0 || this.#newNewViewEnabled) {
       this.totalNew = this.topicTrackingState.countNew({
-        tagId: this.tagName,
+        tagId: this.tag.id,
       });
     }
   }
@@ -31,7 +31,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get models() {
-    return [this.tagName];
+    return [this.tag.slug, this.tag.id];
   }
 
   get route() {

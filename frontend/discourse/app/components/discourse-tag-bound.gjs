@@ -1,26 +1,32 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import {
-  attributeBindings,
-  classNameBindings,
-  tagName,
-} from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
+import { computed } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
 
-@tagName("a")
-@classNameBindings(":discourse-tag", "style", "tagClass")
-@attributeBindings("href")
+@tagName("")
 export default class DiscourseTagBound extends Component {
-  @discourseComputed("tagRecord.id")
-  tagClass(tagRecordId) {
-    return "tag-" + tagRecordId;
+  @computed("tagRecord.name")
+  get tagClass() {
+    return "tag-" + this.tagRecord?.name;
   }
 
-  @discourseComputed("tagRecord.id")
-  href(tagRecordId) {
-    return getURL("/tag/" + tagRecordId);
+  @computed("tagRecord.slug", "tagRecord.id")
+  get href() {
+    if (this.tagRecord?.id) {
+      const slugForUrl = this.tagRecord?.slug || `${this.tagRecord?.id}-tag`;
+      return getURL(`/tag/${slugForUrl}/${this.tagRecord?.id}`);
+    }
+    // fallback for tags without id
+    return getURL("/tag/" + this.tagRecord.name);
   }
 
-  <template>{{this.tagRecord.id}}</template>
+  <template>
+    <a
+      href={{this.href}}
+      class={{concatClass "discourse-tag" this.style this.tagClass}}
+      ...attributes
+    >{{this.tagRecord.name}}</a>
+  </template>
 }

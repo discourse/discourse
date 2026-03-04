@@ -1,6 +1,7 @@
+/* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
@@ -26,7 +27,7 @@ import {
 } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
@@ -35,7 +36,8 @@ import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
@@ -77,6 +79,7 @@ export default class TopicController extends Controller {
   @service modal;
   @service router;
   @service screenTrack;
+  @service scrollState;
   @service site;
   @service siteSettings;
 
@@ -87,8 +90,8 @@ export default class TopicController extends Controller {
   @tracked translationLocale = null;
   @tracked translationTitle = null;
   @tracked editingTopicLocalization = false;
-  @trackedArray bookmarks = [];
-  @trackedArray selectedPostIds = [];
+  @autoTrackedArray bookmarks = [];
+  @autoTrackedArray selectedPostIds = [];
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
 
@@ -148,6 +151,10 @@ export default class TopicController extends Controller {
     return this.selectedPostIds.length;
   }
 
+  get shouldHideScrollableContentAbove() {
+    return this.scrollState.shouldHideContentAbove;
+  }
+
   get titleIsVisibleOnHeader() {
     return !this.header.mainTopicTitleVisible;
   }
@@ -175,19 +182,19 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
-  showSharedDraftControls(loaded, isSharedDraft) {
-    return loaded && isSharedDraft;
+  @computed("model.postStream.loaded", "model.is_shared_draft")
+  get showSharedDraftControls() {
+    return this.model?.postStream?.loaded && this.model?.is_shared_draft;
   }
 
-  @discourseComputed("site.mobileView", "model.posts_count")
-  showSelectedPostsAtBottom(mobileView, postsCount) {
-    return mobileView && postsCount > 3;
+  @computed("site.mobileView", "model.posts_count")
+  get showSelectedPostsAtBottom() {
+    return this.site?.mobileView && this.model?.posts_count > 3;
   }
 
-  @discourseComputed("model")
-  pmPath(topic) {
-    return this.currentUser && this.currentUser.pmPath(topic);
+  @computed("model")
+  get pmPath() {
+    return this.currentUser && this.currentUser.pmPath(this.model);
   }
 
   _showRevision(postNumber, revision) {
@@ -208,18 +215,21 @@ export default class TopicController extends Controller {
     DiscourseURL.routeTo(url);
   }
 
-  @discourseComputed
-  selectedQuery() {
+  @computed
+  get selectedQuery() {
     return (post) => this.postSelected(post);
   }
 
-  @discourseComputed("model.isPrivateMessage", "model.category.id")
-  canEditTopicFeaturedLink(isPrivateMessage, categoryId) {
+  @computed("model.isPrivateMessage", "model.category.id")
+  get canEditTopicFeaturedLink() {
     if (this.currentUser && this.currentUser.trust_level === 0) {
       return false;
     }
 
-    if (!this.siteSettings.topic_featured_link_enabled || isPrivateMessage) {
+    if (
+      !this.siteSettings.topic_featured_link_enabled ||
+      this.model?.isPrivateMessage
+    ) {
       return false;
     }
 
@@ -229,50 +239,54 @@ export default class TopicController extends Controller {
     return (
       categoryIds === undefined ||
       !categoryIds.length ||
-      categoryIds.includes(categoryId)
+      categoryIds.includes(this.model?.category?.id)
     );
   }
 
-  @discourseComputed("model")
-  featuredLinkDomain(topic) {
-    return extractLinkMeta(topic).domain;
+  @computed("model")
+  get featuredLinkDomain() {
+    return extractLinkMeta(this.model).domain;
   }
 
-  @discourseComputed("model.isPrivateMessage")
-  canEditTags(isPrivateMessage) {
+  @computed("model.isPrivateMessage")
+  get canEditTags() {
     return (
       this.site.get("can_tag_topics") &&
-      (!isPrivateMessage || this.site.get("can_tag_pms"))
+      (!this.model?.isPrivateMessage || this.site.get("can_tag_pms"))
     );
   }
 
-  @discourseComputed("currentUser.can_send_private_messages")
-  canSendPms() {
+  @computed("currentUser.can_send_private_messages")
+  get canSendPms() {
     return this.currentUser?.can_send_private_messages;
   }
 
-  @discourseComputed("buffered.category_id")
-  minimumRequiredTags(categoryId) {
-    return Category.findById(categoryId)?.minimumRequiredTags || 0;
+  @computed("buffered.category_id")
+  get minimumRequiredTags() {
+    return (
+      Category.findById(this.get("buffered.category_id"))
+        ?.minimumRequiredTags || 0 // TODO (devxp) we need a buffered proxy that works with tracked properties
+    );
   }
 
-  @discourseComputed(
+  @computed(
     "model.postStream.posts",
     "model.word_count",
     "model.postStream.loadingFilter"
   )
-  showBottomTopicMap(posts, wordCount, loading) {
+  get showBottomTopicMap() {
     // filter out small posts, because they're short
     const postsCount =
-      posts?.filter((post) => post.post_type !== 3).length || 0;
+      this.model?.postStream?.posts?.filter((post) => post.post_type !== 3)
+        ?.length || 0;
 
     const minWordCount = isTesting
       ? true
-      : wordCount > MIN_BOTTOM_MAP_WORD_COUNT;
+      : this.model?.word_count > MIN_BOTTOM_MAP_WORD_COUNT;
 
     return (
       this.siteSettings.show_bottom_topic_map &&
-      !loading &&
+      !this.model?.postStream?.loadingFilter &&
       postsCount > MIN_POSTS_COUNT &&
       minWordCount
     );
@@ -625,7 +639,7 @@ export default class TopicController extends Controller {
   // Called when the topmost visible post on the page changes.
   @action
   async topVisibleChanged(event) {
-    const { post, refresh } = event;
+    const { post, captureAnchor, refresh } = event;
     if (!post) {
       return;
     }
@@ -638,7 +652,7 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      await postStream.prependMore();
+      await postStream.prependMore({ beforePrepend: captureAnchor });
       refresh?.();
     }
   }
@@ -670,30 +684,28 @@ export default class TopicController extends Controller {
   }
 
   @action
-  cancelFilter(nearestPost = null) {
-    const postStream = this.get("model.postStream");
+  async cancelFilter(nearestPost = null) {
+    const postStream = this.model.postStream;
 
     if (!nearestPost) {
       const loadedPost = postStream.findLoadedPost(this.currentPostId);
       if (loadedPost) {
         nearestPost = loadedPost.post_number;
       } else {
-        postStream.findPostsByIds([this.currentPostId]).then((arr) => {
-          nearestPost = arr[0].post_number;
-        });
+        try {
+          const [post] = await postStream.findPostsByIds([this.currentPostId]);
+          nearestPost = post.post_number;
+        } catch (error) {
+          popupAjaxError(error);
+          return;
+        }
       }
     }
 
     postStream.cancelFilter();
-    postStream
-      .refresh({
-        nearPost: nearestPost,
-        forceLoad: true,
-      })
-      .then(() => {
-        DiscourseURL.routeTo(this.model.urlForPostNumber(nearestPost));
-        this.updateQueryParams();
-      });
+    await postStream.refresh({ nearPost: nearestPost, forceLoad: true });
+    DiscourseURL.routeTo(this.model.urlForPostNumber(nearestPost));
+    this.updateQueryParams();
   }
 
   @action
@@ -800,6 +812,9 @@ export default class TopicController extends Controller {
       post?.get("post_number") !== 1
     ) {
       composerController.set("model.post", post);
+      if (post?.get("post_type") === this.site.post_types.whisper) {
+        composerController.set("model.whisper", true);
+      }
       composerController.set("model.composeState", Composer.OPEN);
       this.appEvents.trigger("composer:insert-block", quotedText.trim());
     } else {
@@ -820,6 +835,7 @@ export default class TopicController extends Controller {
       if (draftData.draft) {
         const data = JSON.parse(draftData.draft);
         opts.draftSequence = draftData.draft_sequence;
+        opts.whisper = data.whisper;
 
         if (quotedText) {
           opts.reply = data.reply + "\n" + quotedText;
@@ -1244,25 +1260,37 @@ export default class TopicController extends Controller {
     if (!this.editingTopic) {
       return;
     }
-    const props = this.get("buffered.buffer");
-    const hasCategoryOrTagChanges =
-      props.category_id !== undefined || props.tags !== undefined;
 
-    try {
-      if (this.editingTopicLocalization) {
-        await this._saveTopicLocalization();
+    return applyBehaviorTransformer(
+      "topic-controller:finished-editing",
+      async ({ context }) => {
+        const props = context.buffered;
+        const hasCategoryOrTagChanges =
+          props.category_id !== undefined || props.tags !== undefined;
+
+        try {
+          if (context.editingTopicLocalization) {
+            await this._saveTopicLocalization();
+          }
+
+          if (hasCategoryOrTagChanges || !context.editingTopicLocalization) {
+            await Topic.update(context.model, props, { fastEdit: true });
+          }
+
+          this.buffered.discardChanges();
+          this._resetTranslationState();
+          this.set("editingTopic", false);
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+      {
+        editingTopic: this.editingTopic,
+        editingTopicLocalization: this.editingTopicLocalization,
+        buffered: this.get("buffered.buffer"),
+        model: this.model,
       }
-
-      if (hasCategoryOrTagChanges || !this.editingTopicLocalization) {
-        await Topic.update(this.model, props, { fastEdit: true });
-      }
-
-      this.buffered.discardChanges();
-      this._resetTranslationState();
-      this.set("editingTopic", false);
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    );
   }
 
   async _saveTopicLocalization() {
@@ -1534,7 +1562,7 @@ export default class TopicController extends Controller {
     }
   }
 
-  _jumpToPostId(postId) {
+  async _jumpToPostId(postId) {
     if (!postId) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -1545,25 +1573,21 @@ export default class TopicController extends Controller {
 
     this.appEvents.trigger("topic:jump-to-post", postId);
 
-    const topic = this.model;
-    const postStream = topic.get("postStream");
-    const post = postStream.findLoadedPost(postId);
+    const postStream = this.model.postStream;
+    let post = postStream.findLoadedPost(postId);
 
-    if (post) {
-      DiscourseURL.routeTo(topic.urlForPostNumber(post.get("post_number")), {
-        keepFilter: true,
-      });
-    } else {
-      // need to load it
-      postStream.findPostsByIds([postId]).then((arr) => {
-        DiscourseURL.routeTo(
-          topic.urlForPostNumber(arr[0].get("post_number")),
-          {
-            keepFilter: true,
-          }
-        );
-      });
+    if (!post) {
+      try {
+        [post] = await postStream.findPostsByIds([postId]);
+      } catch (error) {
+        popupAjaxError(error);
+        return;
+      }
     }
+
+    DiscourseURL.routeTo(this.model.urlForPostNumber(post.post_number), {
+      keepFilter: true,
+    });
   }
 
   _modifyTopicBookmark(bookmark) {
@@ -1717,9 +1741,9 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed("selectedAllPosts", "model.postStream.isMegaTopic")
-  canSelectAll(selectedAllPosts, isMegaTopic) {
-    return isMegaTopic ? false : !selectedAllPosts;
+  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
+  get canSelectAll() {
+    return this.model?.postStream?.isMegaTopic ? false : !this.selectedAllPosts;
   }
 
   @dependentKeyCompat
@@ -1733,29 +1757,21 @@ export default class TopicController extends Controller {
     );
   }
 
-  @discourseComputed("model.details.can_move_posts", "selectedPostsCount")
-  canMergeTopic(canMovePosts, selectedPostsCount) {
-    return canMovePosts && selectedPostsCount > 0;
+  @computed("model.details.can_move_posts", "selectedPostsCount")
+  get canMergeTopic() {
+    return this.model?.details?.can_move_posts && this.selectedPostsCount > 0;
   }
 
-  @discourseComputed(
-    "currentUser.admin",
-    "currentUser.staff",
-    "siteSettings.moderators_change_post_ownership",
+  @computed(
     "selectedPostsCount",
-    "selectedPostsUsername"
+    "selectedPostsUsername",
+    "currentUser.canChangePostOwner"
   )
-  canChangeOwner(
-    isAdmin,
-    isStaff,
-    modChangePostOwner,
-    selectedPostsCount,
-    selectedPostsUsername
-  ) {
+  get canChangeOwner() {
     return (
-      (isAdmin || (modChangePostOwner && isStaff)) &&
-      selectedPostsCount > 0 &&
-      selectedPostsUsername !== undefined
+      !!this.currentUser?.canChangePostOwner &&
+      this.selectedPostsCount > 0 &&
+      this.selectedPostsUsername !== undefined
     );
   }
 
@@ -1778,8 +1794,8 @@ export default class TopicController extends Controller {
     return this.selectedAllPost || this.selectedPostIds.includes(post.id);
   }
 
-  @discourseComputed
-  loadingHTML() {
+  @computed
+  get loadingHTML() {
     return spinnerHTML;
   }
 

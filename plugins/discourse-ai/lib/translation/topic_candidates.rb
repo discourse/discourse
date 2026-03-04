@@ -9,13 +9,13 @@ module DiscourseAi
       # including those without locale detected yet.
       def self.get
         topics =
-          Topic
-            .where(
-              "topics.created_at > ?",
-              SiteSetting.ai_translation_backfill_max_age_days.days.ago,
-            )
-            .where(deleted_at: nil)
-            .where("topics.user_id > 0")
+          Topic.where(
+            "topics.created_at > ?",
+            SiteSetting.ai_translation_backfill_max_age_days.days.ago,
+          ).where(deleted_at: nil)
+
+        topics =
+          topics.where("topics.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
         if SiteSetting.ai_translation_backfill_limit_to_public_content
           # exclude all PMs

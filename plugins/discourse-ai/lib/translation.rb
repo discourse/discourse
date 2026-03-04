@@ -7,6 +7,10 @@ module DiscourseAi
         SiteSetting.content_localization_supported_locales.present?
     end
 
+    def self.locales
+      SiteSetting.content_localization_locales
+    end
+
     def self.has_llm_model?
       persona_ids = [
         SiteSetting.ai_translation_locale_detector_persona,

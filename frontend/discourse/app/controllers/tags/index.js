@@ -1,13 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import autosize from "autosize";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { optionalRequire } from "discourse/lib/utilities";
 
 export default class TagsIndexController extends Controller {
@@ -35,7 +34,7 @@ export default class TagsIndexController extends Controller {
     this.setProperties({
       sortedByCount: isAlphaSort ? false : true,
       sortedByName: isAlphaSort ? true : false,
-      sortProperties: isAlphaSort ? ["id"] : ["totalCount:desc", "id"],
+      sortProperties: isAlphaSort ? ["name"] : ["totalCount:desc", "name"],
     });
   }
 
@@ -54,9 +53,9 @@ export default class TagsIndexController extends Controller {
     );
   }
 
-  @discourseComputed("groupedByCategory", "groupedByTagGroup")
-  otherTagsTitleKey(groupedByCategory, groupedByTagGroup) {
-    if (!groupedByCategory && !groupedByTagGroup) {
+  @computed("groupedByCategory", "groupedByTagGroup")
+  get otherTagsTitleKey() {
+    if (!this.groupedByCategory && !this.groupedByTagGroup) {
       return "tagging.all_tags";
     } else {
       return "tagging.other_tags";
@@ -67,17 +66,17 @@ export default class TagsIndexController extends Controller {
   sortByCount(event) {
     event?.preventDefault();
     this.setProperties({
-      sortProperties: ["totalCount:desc", "id"],
+      sortProperties: ["totalCount:desc", "name"],
       sortedByCount: true,
       sortedByName: false,
     });
   }
 
   @action
-  sortById(event) {
+  sortByName(event) {
     event?.preventDefault();
     this.setProperties({
-      sortProperties: ["id"],
+      sortProperties: ["name"],
       sortedByCount: false,
       sortedByName: true,
     });

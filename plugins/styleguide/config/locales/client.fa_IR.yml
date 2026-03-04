@@ -51,8 +51,6 @@ fa_IR:
           title: "فهرست موضوعات"
         basic_topic_list:
           title: "فهرست موضوعات اصلی"
-        footer_message:
-          title: "پیام پاورقی"
         signup_cta:
           title: "فراخوانی اقدام به ثبت‌نام"
         topic_timer_info:

@@ -54,6 +54,10 @@ export default class Rewind extends Component {
     return this.currentUser.id === this.args.user.id;
   }
 
+  get isOwnRewind() {
+    return this.currentUser?.id === this.args.user.id;
+  }
+
   @action
   registerScrollWrapper(element) {
     this.scrollWrapper = element;
@@ -362,9 +366,20 @@ export default class Rewind extends Component {
 
             {{#if this.cannotViewRewind}}
               <div class="rewind-error">
-                {{htmlSafe
-                  (i18n "discourse_rewind.cannot_view_rewind_gibberish")
-                }}
+                <div class="rewind-gibberish">
+                  <p class="rewind-gibberish__title">[ACCESS DENIED::REWIND
+                    MAINFRAME SUBROUTINE FAILURE]</p>
+                  <p>Bootstrapping anomaly log...</p>
+
+                  <p><span class="rewind-gibberish__code-line">>> quantum buffer
+                      underrun ⧛</span><br />
+                    <span class="rewind-gibberish__code-line">>> cross-node
+                      parity drift (Δ=004.33)</span><br />
+                    <span class="rewind-gibberish__code-line">>> packet ϟ
+                      fragment at offset ∇47</span><br />
+                    <span class="rewind-gibberish__code-line">>> flux conduit
+                      handshake TIMED OUT</span><br /></p>
+                </div>
                 {{htmlSafe (i18n "discourse_rewind.cannot_view_rewind")}}
               </div>
             {{/if}}
@@ -376,7 +391,11 @@ export default class Rewind extends Component {
               }}
                 {{#if ReportComponent}}
                   <div class={{concatClass "rewind-report" report.identifier}}>
-                    <ReportComponent @report={{report}} @user={{@user}} />
+                    <ReportComponent
+                      @report={{report}}
+                      @user={{@user}}
+                      @isOwnRewind={{this.isOwnRewind}}
+                    />
                   </div>
                 {{/if}}
               {{/let}}

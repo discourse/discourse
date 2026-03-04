@@ -1,12 +1,5 @@
 export const POPULAR_THEMES = [
   {
-    name: "Air",
-    value: "https://github.com/discourse/discourse-air",
-    preview: "https://discourse.theme-creator.io/theme/Discourse/air-theme",
-    description: "A clean and modern theme for Discourse.",
-    meta_url: "https://meta.discourse.org/t/air-theme/197703",
-  },
-  {
     name: "Graceful",
     value: "https://github.com/discourse/graceful",
     preview:

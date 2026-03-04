@@ -858,4 +858,47 @@ RSpec.describe Notification do
       end
     end
   end
+
+  describe ".filter_disabled_badge_notifications" do
+    fab!(:enabled_badge) { Fabricate(:badge, enabled: true) }
+    fab!(:disabled_badge) { Fabricate(:badge, enabled: false) }
+
+    fab!(:enabled_badge_notification) do
+      BadgeGranter.send_notification(user.id, user.username, user.locale, enabled_badge)
+    end
+
+    fab!(:disabled_badge_notification) do
+      BadgeGranter.send_notification(user.id, user.username, user.locale, disabled_badge)
+    end
+
+    fab!(:regular_notification) { Fabricate(:notification, user: user) }
+
+    it "filters all badge notifications when enable_badges is false" do
+      SiteSetting.enable_badges = false
+
+      result =
+        Notification.filter_disabled_badge_notifications(
+          [enabled_badge_notification, disabled_badge_notification, regular_notification],
+        )
+
+      expect(result).to contain_exactly(regular_notification)
+    end
+
+    it "filters badge notifications for badges that are disabled" do
+      result =
+        Notification.filter_disabled_badge_notifications(
+          [enabled_badge_notification, disabled_badge_notification, regular_notification],
+        )
+
+      expect(result).to contain_exactly(enabled_badge_notification, regular_notification)
+    end
+
+    it "filters badge notifications for badges that do not exist" do
+      enabled_badge.destroy!
+
+      result = Notification.filter_disabled_badge_notifications([enabled_badge_notification])
+
+      expect(result).to eq([])
+    end
+  end
 end

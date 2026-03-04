@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import SiteTextSummary from "discourse/admin/components/site-text-summary";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
@@ -84,24 +85,28 @@ export default <template>
     </p>
   </div>
 
-  <ConditionalLoadingSpinner @condition={{@controller.searching}}>
-    {{#if @controller.model.extras.recommended}}
-      <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
-    {{/if}}
+  {{#if @controller.extras.recommended}}
+    <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
+  {{/if}}
 
-    {{#each @controller.model.content as |siteText|}}
+  <LoadMore
+    @action={{@controller.loadMore}}
+    @enabled={{@controller.canLoadMore}}
+    @isLoading={{@controller.searching}}
+    class="site-text-list"
+  >
+    {{#each @controller.siteTexts as |siteText|}}
       <SiteTextSummary
         @siteText={{siteText}}
         @editAction={{@controller.edit}}
         @term={{@controller.q}}
-        @searchRegex={{@controller.model.extras.regex}}
+        @searchRegex={{@controller.extras.regex}}
       />
     {{else}}
-      {{i18n "admin.site_text.no_results"}}
+      {{#unless @controller.searching}}
+        {{i18n "admin.site_text.no_results"}}
+      {{/unless}}
     {{/each}}
-
-    {{#if @controller.model.extras.has_more}}
-      <p class="warning">{{i18n "admin.site_text.more_than_50_results"}}</p>
-    {{/if}}
-  </ConditionalLoadingSpinner>
+    <ConditionalLoadingSpinner @condition={{@controller.searching}} />
+  </LoadMore>
 </template>

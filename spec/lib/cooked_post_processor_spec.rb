@@ -1497,9 +1497,9 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "#post_process_oneboxes with square image" do
-    it "generates a onebox-avatar class" do
-      url = "https://square-image.com/onebox"
+    fab!(:post) { Fabricate(:post, raw: "https://square-image.com/onebox") }
 
+    it "generates a onebox-avatar class" do
       body = <<~HTML
       <html>
       <head>
@@ -1510,16 +1510,14 @@ RSpec.describe CookedPostProcessor do
       </html>
       HTML
 
-      stub_request(:head, url)
-      stub_request(:get, url).to_return(body: body)
+      stub_request(:head, post.raw)
+      stub_request(:get, post.raw).to_return(body: body)
 
       # not an ideal stub but shipping the whole image to fast image can add
       # a lot of cost to this test
       stub_image_size(width: 200, height: 200)
 
-      post = Fabricate.build(:post, raw: url)
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-
       cpp.post_process_oneboxes
 
       expect(cpp.doc.to_s).not_to include("aspect-image")

@@ -19,9 +19,10 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 
 export default class DiscoveryNavigation extends Component {
-  @service router;
+  @service categoryTypeChooser;
   @service currentUser;
   @service modal;
+  @service router;
 
   get filterMode() {
     return calculateFilterMode({
@@ -63,7 +64,7 @@ export default class DiscoveryNavigation extends Component {
 
   @action
   createCategory() {
-    this.router.transitionTo("newCategory");
+    this.categoryTypeChooser.createCategory();
   }
 
   @action
@@ -81,7 +82,7 @@ export default class DiscoveryNavigation extends Component {
   <template>
     <AddCategoryTagClasses
       @category={{@category}}
-      @tags={{if @tag (array @tag.id)}}
+      @tags={{if @tag (array @tag.name)}}
     />
 
     <AccessibleDiscoveryHeading

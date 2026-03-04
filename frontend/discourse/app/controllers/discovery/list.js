@@ -180,7 +180,7 @@ export default class DiscoveryListController extends Controller {
   createTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
-      tags: [this.model.tag?.id, ...(this.model.additionalTags ?? [])]
+      tags: [this.model.tag?.name, ...(this.model.additionalTags ?? [])]
         .filter(Boolean)
         .filter((t) => !["none", "all"].includes(t))
         .join(","),

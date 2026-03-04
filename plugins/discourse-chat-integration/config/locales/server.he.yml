@@ -51,8 +51,6 @@ he:
     chat_integration_flowdock_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Flowdock"
     chat_integration_groupme_enabled: "הפעלת ספק שילוב הצ׳אט עם Groupme"
     chat_integration_groupme_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Groupme"
-    chat_integration_groupme_bot_ids: "*נדרש* מזהי הבוטים, מופרדים ב־, אם יש כמה כאלה"
-    chat_integration_groupme_instance_names: "*נדרש* שמות הצ׳אטים ב־GroupMe, מופרדים ב־, אם יש כמה כאלה (באותו הסדר כמו מזהי הבוטים)"
     chat_integration_teams_enabled: "הפעלת ספק שילוב הצ׳אט עם Microsoft Teams"
     chat_integration_teams_excerpt_length: "אורך מהפוסט שמופיע בתקציר Microsoft Teams"
     chat_integration_powerautomate_enabled: "הפעלת ספק השילוב עם Microsoft Power Automate"
@@ -93,10 +91,8 @@ he:
         create:
           created: "כלל נוצר בהצלחה"
           updated: "כלל עודכן בהצלחה"
-          error: "אירעה שגיאה בעת יצירת כלל זה, עמך הסליחה."
         delete:
           success: "כלל נמחק בהצלחה"
-          error: "אירעה שגיאה בעת מחיקת הכלל הזה, עמך הסליחה. נא להריץ את הפקודה `‎/discourse status` לרשימת הכללים."
         not_found:
           tag: "לא ניתן למצוא את התגית *%{name}*."
           category: "לא ניתן למצוא את הקטגוריה *%{name}*. קטגוריות זמינות: *%{list}*"
@@ -158,10 +154,8 @@ he:
         create:
           created: "כלל נוצר בהצלחה"
           updated: "כלל עודכן בהצלחה"
-          error: "אירעה שגיאה בעת יצירת כלל זה, עמך הסליחה."
         delete:
           success: "כלל נמחק בהצלחה"
-          error: "אירעה שגיאה בעת מחיקת הכלל, עמך הסליחה. יש להריץ את הפקודה <code>‎/status</code> לקבלת רשימת הכללים."
         not_found:
           tag: "לא ניתן למצוא את התגית <b>%{name}</b>."
           category: "לא ניתן למצוא את הקטגוריה <b>%{name}</b>. הקטגוריות הזמינות: <b>%{list}</b>"
@@ -192,10 +186,8 @@ he:
         create:
           created: "כלל נוצר בהצלחה"
           updated: "כלל עודכן בהצלחה"
-          error: "אירעה שגיאה בעת יצירת כלל זה, עמך הסליחה."
         delete:
           success: "כלל נמחק בהצלחה"
-          error: "אירעה שגיאה בעת מחיקת הכלל הזה, עמך הסליחה. נא להריץ את הפקודה `‎/discourse status` לרשימת הכללים."
         not_found:
           tag: "לא ניתן למצוא את התגית *%{name}*."
           category: "לא ניתן למצוא את הקטגוריה *%{name}*. קטגוריות זמינות: *%{list}*"

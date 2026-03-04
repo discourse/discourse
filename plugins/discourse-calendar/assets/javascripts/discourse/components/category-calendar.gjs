@@ -21,7 +21,6 @@ export default class CategoryCalendar extends Component {
       const params = {
         after: info.startStr,
         before: info.endStr,
-        post_id: this.categorySetting?.postId,
         category_id: this.category.id,
         include_subcategories: true,
       };
@@ -119,7 +118,10 @@ export default class CategoryCalendar extends Component {
       if (post.topic.tags) {
         const tagColorEntry = this.tagsColorsMap.find(
           (entry) =>
-            entry.type === "tag" && post.topic.tags.includes(entry.slug)
+            entry.type === "tag" &&
+            post.topic.tags.some(
+              (t) => (typeof t === "string" ? t : t.name) === entry.slug
+            )
         );
         backgroundColor = tagColorEntry ? tagColorEntry.color : null;
       }
@@ -149,8 +151,9 @@ export default class CategoryCalendar extends Component {
       <FullCalendar
         @onLoadEvents={{this.loadEvents}}
         @height="650px"
-        @initialView={{this.categorySetting?.defaultView}}
+        @initialView={{this.categorySetting.defaultView}}
         @weekends={{this.renderWeekends}}
+        @refreshKey={{this.category.id}}
       />
     {{/if}}
   </template>

@@ -62,7 +62,7 @@ describe "Navigating with breadcrumbs", type: :system do
       expect(discovery.topic_list).to have_topics(count: 2)
 
       expect(discovery.tag_drop).to have_selected_name("tags")
-      discovery.tag_drop.select_row_by_value(tag.name)
+      discovery.tag_drop.select_row_by_name(tag.name)
 
       expect(discovery.topic_list).to have_topics(count: 1)
       expect(discovery.topic_list).to have_topic(c1_topic_tagged)
@@ -76,10 +76,10 @@ describe "Navigating with breadcrumbs", type: :system do
 
       expect(discovery.subcategory_drop).to have_selected_name("no subcategories")
       expect(discovery.tag_drop).to have_selected_name("tags")
-      discovery.tag_drop.select_row_by_value(tag.name)
+      discovery.tag_drop.select_row_by_name(tag.name)
 
       expect(page).to have_current_path(
-        "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.name}",
+        "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.slug}/#{tag.id}",
       )
       expect(discovery.topic_list).to have_topics(count: 1)
       expect(discovery.topic_list).to have_topic(c3_topic_tagged)
@@ -99,9 +99,9 @@ describe "Navigating with breadcrumbs", type: :system do
       c3_topic.update!(tags: [tag])
       c3_child_topic.update!(tags: [tag])
 
-      visit("/tags/c/#{category3.slug}/#{category3.id}/#{tag.name}")
+      visit("/tags/c/#{category3.slug}/#{category3.id}/#{tag.name}/#{tag.id}")
       expect(page).to have_current_path(
-        "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.name}",
+        "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.slug}/#{tag.id}",
       )
       expect(discovery.topic_list).to have_topic(c3_topic)
       expect(discovery.topic_list).to have_topics(count: 1)

@@ -20,6 +20,7 @@ export default class UserTopicsListRoute extends DiscourseRoute {
     controller.setProperties({
       model,
       hideCategory: false,
+      listContext: "user-activity",
     });
   }
 }

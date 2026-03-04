@@ -131,16 +131,12 @@ fr:
           title: "Supprimer le message"
           description: "Supprimer le message pour que les utilisateurs ne puissent pas le voir."
         delete_and_agree:
-          title: "Ignorer le signalement et supprimer le message"
           description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le message."
         disagree_and_restore:
           title: "Refuser et restaurer le message"
           description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
-        disagree:
-          title: "Refuser"
         ignore:
-          title: "Ne rien faire"
-          description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
+          title: "Ignorer le signalement"
       direct_messages:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"
@@ -246,19 +242,14 @@ fr:
         watched_thread:
           one: "[%{site_name}] Nouveau message dans le fil %{channel}"
           other: "[%{site_name}] Nouveaux messages dans le fil %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Nouveaux messages dans %{channel} et %{count} autre canal"
-          other: "[%{site_name}] Nouveaux messages dans %{channel} et %{count} autres canaux"
         chat_dm_1:
           one: "[%{site_name}] Nouveau message de %{name}"
           other: "[%{site_name}] Nouveaux messages de %{name}"
         chat_dm_2: "[%{site_name}] Nouveaux messages de %{name_1} et de %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Nouveaux messages de %{name} et de %{count} autres utilisateurs"
         chat_channel_1:
           one: "[%{site_name}] Nouveau message dans %{channel}"
           other: "[%{site_name}] Nouveaux messages dans %{channel}"
         chat_channel_2: "[%{site_name}] Nouveaux messages dans %{channel_1} et %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Nouveaux messages dans %{channel} et %{count} autres chaînes"
         chat_channel_and_dm: "[%{site_name}] Nouveaux messages dans %{channel} de la part de %{name}"
       unsubscribe: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       unsubscribe_no_link: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link}."

@@ -38,12 +38,12 @@ export default class ComboBoxHeader extends SingleSelectHeaderComponent {
           @icon="xmark"
           @action={{this.selectKit.onClearSelection}}
           @ariaLabel="clear_input"
-          class="btn-clear"
+          class="btn-clear btn-transparent"
         />
       {{/if}}
 
       {{#if this.caretIcon}}
-        {{icon this.caretIcon class="caret-icon"}}
+        {{icon this.caretIcon class="angle-icon"}}
       {{/if}}
     </div>
   </template>

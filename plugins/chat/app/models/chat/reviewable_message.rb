@@ -40,8 +40,7 @@ module Chat
       nil
     end
 
-    # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
-    def build_legacy_combined_actions(actions, guardian, args)
+    def build_combined_actions(actions, guardian, args)
       return unless pending?
 
       return build_action(actions, :ignore, icon: "up-right-from-square") if chat_message.blank?
@@ -56,11 +55,9 @@ module Chat
       if chat_message.deleted_at?
         build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree)
         build_action(actions, :agree_and_keep_deleted, icon: "thumbs-up", bundle: agree)
-        build_action(actions, :disagree_and_restore, icon: "thumbs-down")
       else
-        build_action(actions, :agree_and_delete, icon: "far-eye-slash", bundle: agree)
-        build_action(actions, :agree_and_keep_message, icon: "thumbs-up", bundle: agree)
-        build_action(actions, :disagree, icon: "thumbs-down")
+        build_action(actions, :agree_and_delete, icon: "trash-can", bundle: agree)
+        build_action(actions, :agree_and_keep_message, icon: "far-eye", bundle: agree)
       end
 
       if guardian.can_suspend?(chat_message_creator)
@@ -80,33 +77,26 @@ module Chat
         )
       end
 
-      ignore_bundle = actions.add_bundle("#{id}-ignore", label: "reviewables.actions.ignore.title")
+      disagree_bundle =
+        actions.add_bundle(
+          "#{id}-disagree",
+          icon: "far-eye",
+          label: "reviewables.actions.disagree_bundle.title",
+        )
 
-      build_action(actions, :ignore, icon: "up-right-from-square", bundle: ignore_bundle)
+      if chat_message.deleted_at?
+        build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
+      else
+        build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
+      end
+
+      build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
       unless chat_message.deleted_at?
-        build_action(actions, :delete_and_agree, icon: "trash-can", bundle: ignore_bundle)
+        build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
       end
     end
 
-    # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
-    def build_new_separated_actions
-      bundle_actions = { no_action_message: {} }
-      if chat_message.deleted_at?
-        bundle_actions[:restore_message] = {}
-      else
-        bundle_actions[:delete_message] = {}
-      end
-      build_bundle(
-        "#{id}-message-actions",
-        "chat.reviewables.actions.message_actions.bundle_title",
-        bundle_actions,
-      )
-
-      build_user_actions_bundle
-    end
-
-    # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI
     def perform_agree_and_keep_message(performed_by, args)
       agree
     end
@@ -137,25 +127,6 @@ module Chat
 
     def perform_agree_and_keep_deleted(performed_by, args)
       agree
-    end
-    # TODO (reviewable-refresh): Remove combined actions above when fully migrated to new UI
-
-    def perform_no_action_message(performed_by, args)
-      if chat_message.deleted_at?
-        create_result(:success, :approved, [created_by_id], true)
-      else
-        create_result(:success, :rejected, [created_by_id], true)
-      end
-    end
-
-    def perform_restore_message(_performed_by, args)
-      chat_message.recover!
-      create_result(:success, :rejected, [created_by_id], true)
-    end
-
-    def perform_delete_message(performed_by, args)
-      chat_message.trash!(performed_by)
-      create_result(:success, :approved, [created_by_id], true)
     end
 
     private

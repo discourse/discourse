@@ -14,7 +14,8 @@ bs_BA:
       reports:
         chat_usage:
           messages: poruke
-          you: Vi
+          author: Vi
+          author_others: "%{username}"
         invites:
           title: Pozivnice
           invitee_posts: Posts Created

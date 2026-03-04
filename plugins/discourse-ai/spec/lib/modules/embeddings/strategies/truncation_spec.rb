@@ -40,7 +40,7 @@ RSpec.describe DiscourseAi::Embeddings::Strategies::Truncation do
       expect(prepared_text.starts_with?(prefix)).to eq(true)
     end
 
-    context "if topic contains more tokens in cooked posts than embeddings max sequence lenght" do
+    context "if topic contains more tokens in cooked posts than embeddings max sequence length" do
       before { open_ai_embedding_def.update!(max_sequence_length: 100) }
 
       it "applies TEXT_TO_HTML_TOKEN_RATIO multiplier for post content collection" do

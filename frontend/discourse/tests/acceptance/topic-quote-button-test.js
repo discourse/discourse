@@ -29,7 +29,9 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
     assert.dom(".insert-quote").exists("shows the quote button");
-    assert.dom(".quote-sharing").doesNotExist("does not show quote sharing");
+    assert
+      .dom(`.btn[title='${i18n("share.email")}']`)
+      .doesNotExist("does not show quote sharing");
   });
 
   test("Shows quote share buttons with the right site settings", async function (assert) {
@@ -38,12 +40,11 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
+      .dom(`.btn[title='${i18n("share.twitter")}']`)
       .exists("includes the twitter share button");
     assert
-      .dom(`.quote-sharing .btn[title='${i18n("share.email")}']`)
+      .dom(`.btn[title='${i18n("share.email")}']`)
       .exists("includes the email share button");
   });
 
@@ -97,29 +98,13 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
+      .dom(`.btn[title='${i18n("share.twitter")}']`)
       .exists("includes the twitter share button");
     assert
-      .dom(`.quote-sharing .btn[title='${i18n("share.email")}']`)
+      .dom(`.btn[title='${i18n("share.email")}']`)
       .exists("includes the email share button");
     assert.dom(".insert-quote").doesNotExist("does not show the quote button");
-  });
-
-  test("Shows single share button when site setting only has one item", async function (assert) {
-    this.siteSettings.share_quote_buttons = "twitter";
-
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-
-    assert.dom(".quote-sharing").exists("shows the quote sharing options");
-    assert
-      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
-      .exists("includes the twitter share button");
-    assert
-      .dom(".quote-share-label")
-      .doesNotExist("does not show the Share label");
   });
 
   test("Shows nothing when visibility is disabled", async function (assert) {
@@ -128,7 +113,9 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.dom(".quote-sharing").doesNotExist("does not show quote sharing");
+    assert
+      .dom(`.btn[title='${i18n("share.email")}']`)
+      .doesNotExist("does not show quote sharing");
     assert.dom(".insert-quote").doesNotExist("does not show the quote button");
   });
 });

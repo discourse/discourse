@@ -2,6 +2,8 @@
 
 RSpec.describe "Managing Embeddings configurations", type: :system do
   fab!(:admin)
+  fab!(:ai_secret) { Fabricate(:ai_secret, name: "Test API Key", secret: "abcd") }
+
   let(:page_header) { PageObjects::Components::DPageHeader.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
 
@@ -12,7 +14,6 @@ RSpec.describe "Managing Embeddings configurations", type: :system do
 
   it "correctly sets defaults" do
     preset = "text-embedding-3-small"
-    api_key = "abcd"
 
     visit "/admin/plugins/discourse-ai/ai-embeddings"
 
@@ -20,13 +21,17 @@ RSpec.describe "Managing Embeddings configurations", type: :system do
 
     find("[data-preset-id='text-embedding-3-small'] button").click()
 
-    form.field("api_key").fill_in(api_key)
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    secret_selector.expand
+    secret_selector.select_row_by_value(ai_secret.id)
+
     form.submit
 
     expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-embeddings")
 
     embedding_def = EmbeddingDefinition.order(:id).last
-    expect(embedding_def.api_key).to eq(api_key)
+    expect(embedding_def.ai_secret_id).to eq(ai_secret.id)
+    expect(embedding_def.api_key).to eq("abcd")
 
     preset = EmbeddingDefinition.presets.find { |p| p[:preset_id] == preset }
 
@@ -41,8 +46,6 @@ RSpec.describe "Managing Embeddings configurations", type: :system do
   end
 
   it "supports manual config" do
-    api_key = "abcd"
-
     visit "/admin/plugins/discourse-ai/ai-embeddings"
 
     find(".ai-embeddings-list-editor__new-button").click()
@@ -52,7 +55,11 @@ RSpec.describe "Managing Embeddings configurations", type: :system do
     form.field("display_name").fill_in("text-embedding-3-small")
     form.field("provider").select(EmbeddingDefinition::OPEN_AI)
     form.field("url").fill_in("https://api.openai.com/v1/embeddings")
-    form.field("api_key").fill_in(api_key)
+
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    secret_selector.expand
+    secret_selector.select_row_by_value(ai_secret.id)
+
     form.field("tokenizer_class").select("DiscourseAi::Tokenizer::OpenAiCl100kTokenizer")
 
     embed_prefix = "On creation:"
@@ -70,7 +77,8 @@ RSpec.describe "Managing Embeddings configurations", type: :system do
 
     embedding_def = EmbeddingDefinition.order(:id).last
 
-    expect(embedding_def.api_key).to eq(api_key)
+    expect(embedding_def.ai_secret_id).to eq(ai_secret.id)
+    expect(embedding_def.api_key).to eq("abcd")
 
     preset = EmbeddingDefinition.presets.find { |p| p[:preset_id] == "text-embedding-3-small" }
 

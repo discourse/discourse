@@ -123,7 +123,7 @@ html.discourse-reactions-no-select {
 }
 
 .discourse-reactions-picker {
-  z-index: z("usercard") - 2;
+  z-index: calc(z("composer", "content") - 1);
   position: absolute;
   visibility: hidden;
   padding: 15px 0;

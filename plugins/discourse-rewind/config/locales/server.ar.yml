@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 ar:
+  site_settings:
+    discourse_rewind_enabled: "تفعيل Discourse Rewind للحصول على ملخص ممتع لنشاط الأعضاء في المجتمع في نهاية العام."
+  discourse_rewind:
+    report_failed: "فشل إنشاء تقرير Discourse Rewind."
+    invalid_year: "يمكن إنشاء Rewind فقط في شهري يناير أو ديسمبر."
+    user_not_found: "تعذّر العثور على المستخدم أو لا يمكن عرض ملفه الشخصي."
+    reports_not_cached: "لم يتم إنشاء التقارير بعد. يرجى تحديث الصفحة."
+    report_not_found: "تعذّر العثور على التقرير."
+    cannot_share_when_profile_hidden: "لكي تتمكن من مشاركة Rewind، يجب السماح للآخرين بعرض ملفك الشخصي العام."

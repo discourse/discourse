@@ -186,7 +186,7 @@ describe ReviewableAiPost do
           Fabricate(:user),
           raw: "this is the reply text",
           reply_to_post_number: post.post_number,
-          topic_id: post.topic,
+          topic_id: post.topic_id,
         )
       end
 

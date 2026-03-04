@@ -24,6 +24,12 @@ module DiscourseAi
                        { id: tn, name: tn.split("::").last }
                      },
                    presets: EmbeddingDefinition.presets,
+                   ai_secrets:
+                     ActiveModel::ArraySerializer.new(
+                       AiSecret.all.order(:name),
+                       each_serializer: AiSecretSerializer,
+                       root: false,
+                     ).as_json,
                  },
                }
       end
@@ -123,6 +129,7 @@ module DiscourseAi
             :provider,
             :url,
             :api_key,
+            :ai_secret_id,
             :tokenizer_class,
             :embed_prompt,
             :search_prompt,

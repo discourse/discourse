@@ -222,7 +222,20 @@ class Draft < ActiveRecord::Base
     offset = (opts[:offset] || 0).to_i
     limit = (opts[:limit] || 30).to_i
 
-    stream = Draft.where(user_id: user_id).order(updated_at: :desc).offset(offset).limit(limit)
+    stream =
+      Draft
+        .where(user_id: user_id)
+        .where(<<~SQL)
+          sequence >= COALESCE(
+            (SELECT sequence FROM draft_sequences
+             WHERE draft_sequences.user_id = drafts.user_id
+             AND draft_sequences.draft_key = drafts.draft_key),
+            0
+          )
+        SQL
+        .order(updated_at: :desc)
+        .offset(offset)
+        .limit(limit)
 
     # Preload posts and topics to avoid N+1 queries
     Draft.preload_data(stream, opts[:user])

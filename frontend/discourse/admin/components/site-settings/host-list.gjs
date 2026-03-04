@@ -2,8 +2,10 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
+@tagName("")
 export default class HostList extends Component {
   tokenSeparator = "|";
   choices = null;
@@ -23,12 +25,14 @@ export default class HostList extends Component {
   }
 
   <template>
-    <ListSetting
-      @value={{this.settingValue}}
-      @settingName={{this.setting.setting}}
-      @choices={{this.settingValue}}
-      @onChange={{this.onChange}}
-      @options={{hash allowAny=this.allowAny disabled=@disabled}}
-    />
+    <div ...attributes>
+      <ListSetting
+        @value={{this.settingValue}}
+        @settingName={{this.setting.setting}}
+        @choices={{this.settingValue}}
+        @onChange={{this.onChange}}
+        @options={{hash allowAny=this.allowAny disabled=@disabled}}
+      />
+    </div>
   </template>
 }

@@ -105,7 +105,7 @@ module DiscourseAi
           name = param.name
           required << name if param.required
           properties[name] = { type: param.type, description: param.description }
-          properties[name][:items] = { type: param.item_type } if param.item_type
+          properties[name][:items] = { type: param.item_type || :string } if param.type == :array
           properties[name][:enum] = param.enum if param.enum
         end
 

@@ -20,17 +20,19 @@ export default class UserPrivateMessagesTagsIndex extends DiscourseRoute {
   }
 
   setupController(controller, model) {
+    const sortProperties = this.siteSettings.tags_sort_alphabetically
+      ? ["name"]
+      : ["count:desc", "name"];
+
+    const tagsForUser = this.modelFor("user").get("username_lower");
+
     controller.setProperties({
       model,
-      sortProperties: this.siteSettings.tags_sort_alphabetically
-        ? ["id"]
-        : ["count:desc", "id"],
-      tagsForUser: this.modelFor("user").get("username_lower"),
+      sortProperties,
+      tagsForUser,
     });
 
-    this.controllerFor("user-topics-list").setProperties({
-      showToggleBulkSelect: false,
-    });
+    this.controllerFor("user-topics-list").set("showToggleBulkSelect", false);
     this.controllerFor("user-topics-list").bulkSelectHelper.clear();
   }
 }

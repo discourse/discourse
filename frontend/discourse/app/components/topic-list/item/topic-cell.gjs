@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
 import ParticipantGroups from "discourse/components/topic-list/participant-groups";
@@ -15,17 +14,8 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
-import { i18n } from "discourse-i18n";
 
 export default class TopicCell extends Component {
-  @service currentUser;
-
-  get newDotText() {
-    return this.currentUser?.trust_level > 0
-      ? ""
-      : i18n("filters.new.lower_title");
-  }
-
   get participantGroups() {
     if (!this.args.topic.get("participant_groups")) {
       return [];
@@ -88,7 +78,6 @@ export default class TopicCell extends Component {
             <TopicPostBadges
               @unreadPosts={{@topic.unread_posts}}
               @unseen={{@topic.unseen}}
-              @newDotText={{this.newDotText}}
               @url={{@topic.lastUnreadUrl}}
             />
           {{~/if~}}

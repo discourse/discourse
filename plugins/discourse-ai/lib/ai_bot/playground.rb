@@ -192,7 +192,8 @@ module DiscourseAi
         auto_set_title: false,
         silent_mode: false,
         feature_name: nil,
-        attributed_user: nil
+        attributed_user: nil,
+        feature_context: nil
       )
         ai_persona = AiPersona.find_by(id: persona_id)
         raise Discourse::InvalidParameters.new(:persona_id) if !ai_persona
@@ -214,6 +215,7 @@ module DiscourseAi
           silent_mode: silent_mode,
           feature_name: feature_name,
           attributed_user: attributed_user,
+          feature_context: feature_context,
         )
       rescue => e
         if Rails.env.test?
@@ -386,7 +388,7 @@ module DiscourseAi
           )
         end
 
-        reset_time = e.allocation&.relative_reset_time || ""
+        reset_time = e.allocation&.formatted_reset_time || ""
         locale_key = message.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
         error_message =
           I18n.t("discourse_ai.llm_credit_allocation.#{locale_key}", reset_time: reset_time)
@@ -423,6 +425,7 @@ module DiscourseAi
         existing_reply_post: nil,
         cancel_manager: nil,
         attributed_user: nil,
+        feature_context: nil,
         &blk
       )
         # this is a multithreading issue
@@ -459,6 +462,7 @@ module DiscourseAi
             user: attributed_user,
             custom_instructions: custom_instructions,
             feature_name: feature_name,
+            feature_context: feature_context,
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
@@ -634,7 +638,7 @@ module DiscourseAi
 
         reply_post
       rescue LlmCreditAllocation::CreditLimitExceeded => e
-        reset_time = e.allocation&.relative_reset_time || ""
+        reset_time = e.allocation&.formatted_reset_time || ""
         locale_key = post.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
         error_message =
           I18n.t("discourse_ai.llm_credit_allocation.#{locale_key}", reset_time: reset_time)

@@ -17,7 +17,7 @@ module Jobs
           )
 
         if result.status != 200
-          Rails.logger.warn(
+          ::DiscourseAutomation::Logger.warn(
             "Failed to call Zapier webhook at #{args["webhook_url"]} Status: #{result.status}: #{result.status_line}",
           )
         end

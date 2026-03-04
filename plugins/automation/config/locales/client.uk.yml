@@ -62,8 +62,6 @@ uk:
             label: Тіло
           delay:
             label: Затримка (хвилин)
-          prefers_encrypt:
-            label: Шифрує ПП, якщо можливо
         group:
           label: Група
         text:
@@ -444,6 +442,11 @@ uk:
               label: "Назва користувальницького поля"
         set_topic_timer:
           title: Встановити таймер теми
+          fields:
+            type:
+              label: Тип таймера
+            duration:
+              label: Тривалість таймера
       unnamed_automation: "Неназвана автоматизація"
       models:
         script:
@@ -456,6 +459,11 @@ uk:
           runs_today: "%{count} сьогодні"
           runs_this_week: "%{count} цього тижня"
           runs_this_month: "%{count} цього місяця"
+          recent_errors:
+            one: "нещодавно виникла %{count} помилка"
+            few: "нещодавно виникли %{count} помилки"
+            many: "Нещодавно виникли %{count} помилки"
+            other: "Нещодавно виникли %{count} помилки"
           runs:
             label: Запуски
           name:

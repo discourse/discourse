@@ -347,6 +347,7 @@ RSpec.configure do |config|
 
     SystemThemesManager.clear_system_theme_user_history!
     ThemeField.delete_all
+    ThemeSettingsMigration.delete_all
     JavascriptCache.delete_all
     ThemeSiteSetting.delete_all
     SiteSetting.refresh!
@@ -496,10 +497,13 @@ RSpec.configure do |config|
             should_set_raise_on_deprecation =
               if extension_match
                 type_dir, extension_name = extension_match.captures
-                extension_root = Rails.root.join(type_dir, extension_name)
 
-                # Preinstalled plugins/themes don't have a .git directory
-                !extension_root.join(".git").exist?
+                if type_dir == "plugins"
+                  Discourse.preinstalled_plugins.any? { |p| p.directory_name == extension_name }
+                else
+                  # Preinstalled themes don't have a .git directory
+                  !Rails.root.join(type_dir, extension_name, ".git").exist?
+                end
               else
                 # Not a plugin or theme spec
                 true
@@ -814,7 +818,9 @@ RSpec.configure do |config|
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
       logger: Logger.new(IO::NULL),
-      timezoneId: example.metadata[:timezone],
+      # NOTE: timezoneId is NOT set here because the driver is cached and reused,
+      # so only the first test's timezone would be applied. Instead, we use CDP
+      # to override the timezone per-test in the before(:each) hook below.
       colorScheme: example.metadata[:color_scheme],
     }
 
@@ -880,6 +886,15 @@ RSpec.configure do |config|
 
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
+
+      # Apply timezone override via CDP if timezone metadata is present.
+      # We use CDP instead of the driver's timezoneId option because the driver
+      # instance is cached and reused between tests, so timezoneId only affects
+      # the first test. CDP override works at runtime for each test.
+      if (tz = example.metadata[:timezone])
+        cdp = pw_page.context.new_cdp_session(pw_page)
+        cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: tz })
+      end
     end
   end
 
@@ -1189,9 +1204,7 @@ def plugin_from_fixtures(plugin_name)
   FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
   FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
 
-  plugin = Plugin::Instance.new
-  plugin.path = File.join(tmp_plugins_dir, plugin_name, "plugin.rb")
-  plugin
+  Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
 end
 
 def concurrency_safe_tmp_dir

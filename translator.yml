@@ -84,6 +84,9 @@ files:
     destination_path: plugins/checklist/server.yml
     label: checklist
 
+  - source_path: plugins/footnote/config/locales/client.en.yml
+    destination_path: plugins/footnote/client.yml
+    label: footnote
   - source_path: plugins/footnote/config/locales/server.en.yml
     destination_path: plugins/footnote/server.yml
     label: footnote
@@ -177,6 +180,9 @@ files:
     destination_path: plugins/rss-polling/server.yml
     label: rss-polling
 
+  - source_path: plugins/discourse-math/config/locales/client.en.yml
+    destination_path: plugins/math/client.yml
+    label: math
   - source_path: plugins/discourse-math/config/locales/server.en.yml
     destination_path: plugins/math/server.yml
     label: math

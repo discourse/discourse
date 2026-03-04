@@ -747,7 +747,6 @@ bg:
     add_rel_nofollow_to_user_content: 'Добави "rel nofollow" към всички връзки с изключение на вътрешните ( включително домейн майките). Промяната на тази настройка изисква актуализация на всички публикации със "rake posts:rebake"'
     post_excerpt_maxlength: "Максимална дължина на откъс / резюме от публикацията."
     post_onebox_maxlength: "Максимална дължина на oneboxed Discourse публикация в писмени знаци."
-    apple_touch_icon: "Икона, използвана за сензорни устройства на Apple. Не се препоръчва прозрачен фон. Ще бъде автоматично преоразмерена до 180x180. Ако се остави празно, ще се използва large_icon."
     notification_email: "Подател: имейлът се използва при изпращане на всички системни съобщения. Посоченият тук домейн трябва да се конфигурира правилно със SPF, DKIM и PTR данни за успешна доставка."
     summary_score_threshold: "Минимална оценка необходима за една публикация, за да бъде включена в \"Обобщи тази тема\""
     summary_percent_filter: "Когато потребителят кликне върху \"Обобщи тази тема\", се показват % от най-добрите публикации "
@@ -866,6 +865,7 @@ bg:
     strip_images_from_short_emails: "Премахни от имейлите по-малките от 2800 байта изображения"
     sendgrid_verification_key: "Ключ за проверка на Sendgrid, използван за проверка на съобщенията на Webhook."
     mailjet_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Ключ за удостоверение Mandrill, който се използва за проверка на webhook съобщения"
     postmark_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/sparkpost?t=supersecret"
@@ -1078,8 +1078,10 @@ bg:
     queued_by_staff:
       title: "Публикацията изисква одобрение"
     welcome_user:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     welcome_invite:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     backup_succeeded:
       subject_template: "Бекъпа завърши успещно."
@@ -1639,12 +1641,7 @@ bg:
         title: "Изтрий"
         complete: "Публикацията е изтрита."
       delete_and_ignore:
-        title: "Игнорирайте сигнала и изтрийте публикацията"
-        description: "Игнорирайте сигнала, като го премахнете от опашката и изтрийте публикацията; ако е първата публикация, изтрийте и темата. "
         complete: "Публикацията е изтрита."
-      delete_and_ignore_replies:
-        title: "Игнориране на сигнала, изтриване на публикацията и отговорите"
-        description: "Игнорирайте сигнала, като го премахнете от опашката, изтрийте публикацията и всички нейни отговори; ако е първата публикация, изтрийте и темата"
       delete_and_agree:
         title: "Изтрий публикацията"
         description: "Съгласете се със сигнала и изтрийте публикацията; ако това е първата публикация, изтрийте и темата."
@@ -1653,10 +1650,11 @@ bg:
         title: "Изтриване на публикацията и отговорите"
         description: "Съгласете се със сигнала и изтрийте публикацията и всички нейни отговори; ако това е първата публикация, изтрийте и темата."
       disagree_and_restore:
-        title: "Не, възстанови публикацията"
-        description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
-      disagree:
+        title: "Възстановяване на публикацията"
+      disagree_bundle:
         title: "Не"
+      disagree:
+        title: "Запазете публикацията"
         complete: "Сигналът е игнориран."
       ignore:
         title: "Игнорирай"
@@ -1666,22 +1664,36 @@ bg:
         description: "Игнорирайте сигнала, като го премахнете от опашката, без да предприемате никакви действия. Скритите публикации ще останат скрити и ще бъдат обработвани от автоматичните инструменти."
         complete: "Сигналът е игнориран."
       approve:
-        title: "Одобри"
+        title: "Да"
         complete: "Публикацията е одобрена."
       approve_post:
+        title: "Да"
         complete: "Публикацията е одобрена."
       approve_post_closed:
+        title: "Да"
         complete: "Публикацията е одобрена."
+      reject_post_bundle:
+        title: "Не"
       reject_post:
         complete: "Публикацията е отхвърлена."
       approve_user:
+        title: "Да"
         complete: "Потребителят е одобрен."
       reject_user:
+        title: "Не"
         delete:
           title: "Изтрий потребител "
           complete: "Потребителят е изтрит."
+      confirm_spam:
+        title: "Да"
+      not_spam:
+        title: "Не"
       reject:
         title: "Отхвърли"
+      approve_and_restore:
+        title: "Да"
+      approve_and_unhide:
+        title: "Да"
       delete_post:
         title: "Изтрий публикацията"
         complete: "Публикацията е изтрита"

@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 vi:
+  site_settings:
+    rss_polling_enabled: "[RSS Polling] Bật tính năng nhập bài viết nhúng từ nhiều nguồn RSS"
+    rss_polling_frequency: "[RSS Polling] Tần suất cập nhật nguồn cấp dữ liệu, tính bằng phút"
+    rss_polling_use_pubdate: "[RSS Polling] Đặt ngày tạo chủ đề thành PubDate được tìm thấy trong nguồn cấp dữ liệu RSS"
+    rss_polling_update_tags: "[RSS Polling] Cập nhật thẻ chủ đề khi chủ đề được cập nhật. Tắt tính năng này sẽ lấy các thẻ ban đầu nhưng vô hiệu hóa các thay đổi thẻ tiếp theo."

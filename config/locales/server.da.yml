@@ -771,8 +771,6 @@ da:
     pm_body: "Emne, der indeholder backup-kladder"
   email_settings:
     pop3_authentication_error: "Der var et problem med de angivne POP3-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
-    imap_authentication_error: "Der var et problem med de leverede IMAP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
-    imap_no_response_error: "Der opstod en fejl under kommunikation med IMAP-serveren. %{message}"
     smtp_server_busy_error: "SMTP-serveren er i øjeblikket optaget, prøv igen senere."
     smtp_unhandled_error: "Der opstod en uhåndteret fejl under kommunikation med SMTP-serveren. %{message}"
     connection_error: "Der var et problem med forbindelsen til serveren, tjek serverens navn og port og prøv igen."
@@ -1211,7 +1209,7 @@ da:
     top_ignored_users:
       title: "Top Ignorerede / Tavse Brugere"
       labels:
-        ignored_user: Ignoreret Bruger
+        ignored_user: Ignoreret bruger
         mutes_count: Tavsheds tæller
       description: "Brugere, der er gjort tavse og/eller ignoreret af mange andre brugere."
     top_users_by_likes_received:
@@ -1347,7 +1345,6 @@ da:
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
-    content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
@@ -1474,7 +1471,6 @@ da:
     cooldown_hours_until_reflag: "Hvor lang tid brugerne skal vente, indtil de kan genanmelde et indlæg"
     reply_by_email_address: "Skabelon for e-mail-adressen i formularen, for eksempel: %%{reply_key}@reply.myforum.com."
     incoming_email_prefer_html: "Brug HTML i stedet for tekst til indgående e-mail."
-    disable_emails: "Forhindre Discourse i at sende nogen form for e-mails. Vælg 'ja' for at deaktivere e-mails for alle brugere. Vælg 'ikke-personale' for at deaktivere e-mails for ikke-personale brugere."
     strip_images_from_short_emails: "Undlad at inkludere billeder fra emails som fylder mindre end 2800 Bytes"
     display_name_on_email_from: "Vis fulde navne på emails fra felter"
     unsubscribe_via_email: "Tillad brugere at afmelde sig fra emails ved at sende en email med \"unsubscribe\" i emne eller indholdsfeltet"
@@ -1495,9 +1491,6 @@ da:
     pop3_polling_password: "Adgangskoden til POP3-kontoen til kontrol for e-mail."
     pop3_polling_delete_from_server: "Slet e-mails fra serveren. BEMÆRK: Hvis du deaktiverer dette, skal du manuelt rense din postindbakke"
     log_mail_processing_failures: "Log alle e-mail-behandlingsfejl til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_imap: "Aktiver IMAP til synkronisering af gruppemeddelelser."
-    enable_imap_write: "Aktiver to-vejs IMAP-synkronisering. Hvis deaktiveret, er alle skriveoperationer på IMAP-konti deaktiveret."
-    enable_imap_idle: "Brug IMAP-IDLE-mekanismen til at vente på nye e-mails."
     enable_smtp: "Aktiver SMTP for afsendelse af notifikationer for gruppemeddelelser."
     email_site_title: "Titlen på webstedet der bruges som afsender af e-mails fra webstedet. Standard er 'titel', hvis ikke angivet. Hvis din 'titel' indeholder tegn, der ikke er tilladt i e-mail-afsenderstrenge, så brug denne indstilling."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
@@ -1515,9 +1508,7 @@ da:
     staff_user_custom_fields: "En liste over brugertilpassede felter, der kan hentes for personale med API'en."
     enable_user_directory: "Gør det muligt at gennemse et indeks af brugere "
     enable_group_directory: "Tilbyd en oversigt over grupper til gennemsyn"
-    hide_user_profiles_from_public: "Deaktiver brugerkort, brugerprofiler og brugerkatalog for anonyme brugere."
     show_inactive_accounts: "Tillad brugere der er logget ind at gennemse profiler af inaktive konti."
-    hide_suspension_reasons: "Vis ikke suspensionsårsager offentligt på brugerprofiler."
     user_selected_primary_groups: "Tillad brugere at indstille deres egen primære gruppe"
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
@@ -1588,8 +1579,6 @@ da:
       invalid_alternative_reply_by_email_addresses: "Alle værdier skal indeholde '%{reply_key}' og være forskellige fra notifikations e-mail."
       pop3_polling_authentication_failed: "POP3 godkendelse mislykkedes. Kontroller venligst dine pop3 legitimationsoplysninger."
       reply_by_email_address_is_empty: "Du skal angive en 'svar via email-adresse', før du aktiverer svar via e-mail."
-      min_username_length_range: "Du kan ikke sætte minimum til mere end maksimum."
-      max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       invalid_hex_value: "Farveværdier skal være 6-cifrede hexadecimale koder."
       empty_selectable_avatars: "Du skal først overføre mindst to valgbare avatarer før du aktiverer denne indstilling."
     placeholder:
@@ -1942,6 +1931,7 @@ da:
         Gennemse vores [fællesskabs-retningslinjer](%{base_url}/guidelines) for detaljer.
     welcome_user:
       title: "Velkomst til bruger"
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
       text_body_template: |
         Tak for din tilmelding til %{site_name}, og velkommen!
@@ -1969,6 +1959,7 @@ da:
         Med stor magt kommer stort ansvar. Hvis du er ny til at moderere, henvises til [Moderationsvejledningen](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Velkomst til inviterede brugere"
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
       text_body_template: |
         Tak, fordi du accepterede din invitation til %{site_name} - velkommen!
@@ -2259,6 +2250,7 @@ da:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
     unsilenced:
+      preview: "Konto ikke længere sat på hold."
       subject_template: "Konto ikke længere sat på hold"
       text_body_template: |
         Hej,
@@ -2590,6 +2582,7 @@ da:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Log ind via link"
+      preview: "Log ind via link."
       subject_template: "[%{email_prefix}] Log ind via link"
       text_body_template: |
         Her er dit link til at logge ind på [%{site_name}](%{base_url}).
@@ -3184,10 +3177,9 @@ da:
         complete: "Indlæg slettet."
       delete_and_agree_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      disagree_and_restore:
-        description: "Gendan indlægget, så alle brugere kan se det."
-      disagree:
+      disagree_bundle:
         title: "Nej"
+      disagree:
         complete: "Rapportering ignoreret."
       ignore:
         title: "Ignorér"
@@ -3196,39 +3188,44 @@ da:
         title: "Gøre ingenting"
         complete: "Rapportering ignoreret."
       approve:
-        title: "Godkend"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post_closed:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
+      reject_post_bundle:
+        title: "Nej"
       reject_post:
         title: "Afvis Indlæg"
         complete: "Indlæg afvist."
       approve_user:
-        title: "Godkend Bruger"
+        title: "Ja"
         complete: "Bruger godkendt."
       reject_user:
-        title: "Slet Bruger…"
+        title: "Nej"
         delete:
           title: "Slet Bruger"
-          description: "Brugeren vil blive slettet fra forummet."
           complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nej"
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
-      no_action_post:
-        title: "Ingen handling"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       delete_post:
         title: "Slet indlæg"
         complete: "Indlæg slettet"
-      no_action_user:
-        title: "Ingen handling"
       delete_user:
         title: "Slet bruger"
         complete: "Bruger slettet"

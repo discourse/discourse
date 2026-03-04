@@ -263,6 +263,8 @@ class Post < ActiveRecord::Base
     recover_public_post_actions
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
+    extract_quoted_post_numbers
+    save_reply_relationships
     topic.category.update_latest if topic && topic.category_id && topic.category
   end
 

@@ -109,13 +109,6 @@ before_fork do |server, worker|
       end
     end
 
-    enable_email_sync_demon = ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
-
-    if enable_email_sync_demon
-      server.logger.info "starting up EmailSync demon"
-      Demon::EmailSync.start(1, logger: server.logger)
-    end
-
     DiscoursePluginRegistry.demon_processes.each do |demon_class|
       server.logger.info "starting #{demon_class.prefix} demon"
       demon_class.start(1, logger: server.logger)
@@ -130,11 +123,6 @@ before_fork do |server, worker|
             Demon::Sidekiq.ensure_running
             Demon::Sidekiq.heartbeat_check
             Demon::Sidekiq.rss_memory_check
-          end
-
-          if enable_email_sync_demon
-            Demon::EmailSync.ensure_running
-            Demon::EmailSync.check_email_sync_heartbeat
           end
 
           DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }

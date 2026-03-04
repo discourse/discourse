@@ -28,7 +28,7 @@ module Jobs
     end
 
     def delete_prior_to_n_days
-      BackupRestore::Backuper.new(Discourse.system_user.id).delete_prior_to_n_days
+      BackupRestore::Creator.new(Discourse.system_user.id).delete_prior_to_n_days
     end
 
     def notify_user(ex)

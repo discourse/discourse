@@ -6,6 +6,12 @@
 
 tr_TR:
   js:
+    blocks:
+      ghost:
+        status: "Durum"
+        in_location: "içinde"
+        hidden: "gizli"
+        failed: "başarısız"
     number:
       format:
         separator: "."
@@ -400,6 +406,12 @@ tr_TR:
       title: "Yeni ve Okunmamış Konular"
       pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Geri"
+      spread_the_word:
+        action: "Bağlantıyı kopyala"
+        copied_to_clipboard: "Bağlantı panoya kopyalandı!"
     about:
       edit: "Bu sayfayı düzenle"
       simple_title: "Hakkında"
@@ -632,19 +644,13 @@ tr_TR:
       in_reply_to: "şuna yanıt olarak"
       filtered_flagged_by: "Bayrak ekleyen kişi:"
       unknown:
-        title:
-          one: "Devre dışı bırakılmış eklentiden bekleyen incelenebilir dosyalarınız var:"
-          other: "Devre dışı bırakılmış eklentilerden bekleyen incelenebilir dosyalarınız var:"
         instruction: "İlgili eklentiyi etkinleştirmediğiniz sürece düzgün görüntülenemezler. Lütfen eklentiyi etkinleştirin ve sayfayı yenileyin. Alternatif olarak, bunları görmezden gelebilirsiniz. <a href='%{url}' target='_blank'>Daha fazlasını öğrenin...</a>"
         reviewable_unknown_source: "%{reviewableType} (bilinmeyen eklenti)"
         reviewable_known_source: "%{reviewableType} (\"%{pluginName}\" eklentisinden)"
         ignore_all: "Tümünü yok say"
         enable_plugins: "Eklentileri etkinleştir"
-        delete_confirm: "Devre dışı bırakılan eklentiler tarafından oluşturulan tüm incelemeleri silmek istediğinizden emin misiniz?"
-        ignore_success: "Devre dışı bırakılan eklentiler tarafından oluşturulan tüm incelemeler silindi."
       explain:
         why: "bu ögenin neden kuyruğa girdiğini açıklayın"
-        title: "İncelenebilir Puanlama"
         formula: "Formül"
         subtotal: "Ara toplam"
         total: "Toplam"
@@ -658,10 +664,8 @@ tr_TR:
           title: "Bayrakları tarihsel olarak kabul edilen kullanıcılara bonus verilir."
         trust_level_bonus:
           name: "güven seviyesi"
-          title: "Güven seviyesi yüksek kullanıcılar tarafından oluşturulan, incelenebilir ögeler daha yüksek bir puana sahiptir."
         type_bonus:
           name: "tür bonusu"
-          title: "Bazı incelenebilir türlere daha yüksek öncelikli olmaları için personel tarafından bonus atanabilir."
       revise_and_reject_post:
         title: "Gözden geçir"
         reason: "Sebep"
@@ -670,7 +674,6 @@ tr_TR:
         custom_reason: "Sebebi net bir şekilde açıklayın"
         other_reason: "Diğer..."
         optional: "i̇steğe bağlı"
-      stale_help: "Bu incelenebilir, <b>%{username}</b> tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
         required: "Ögeleri inceleyebilmek için önce talepte bulunmalısınız."
@@ -832,6 +835,10 @@ tr_TR:
         reviewable_post:
           title: "Gönderi"
           noun: "gönderi"
+        reviewable_ai_chat_message:
+          noun: "sohbet mesajı"
+        reviewable_ai_post:
+          noun: "gönderi"
       flagged_as: "Bayrak ekleme nedeni:"
       user_label: "Kullanıcı"
       moderator_actions: "Moderatör eylemleri"
@@ -839,6 +846,7 @@ tr_TR:
       timeline:
         target_created: "Gönderi oluşturuldu"
         target_created_by: "Gönderi %{username} tarafından oluşturuldu · %{relativeDate}"
+        target_deleted: "Gönderi silindi"
         flagged: "Bayrak eklendi"
         flagged_as_by: "%{username} tarafından %{flagReason} nedeniyle bayrak eklendi · %{relativeDate}"
         claimed: "Alındı"
@@ -1028,9 +1036,7 @@ tr_TR:
           notification: Bildirim
         email:
           title: "E-posta"
-          status: "IMAP üzerinden senkronize edilmiş e-postalar %{old_emails} / %{total_emails}"
           enable_smtp: "SMTP'yi etkinleştir"
-          enable_imap: "IMAP'i etkinleştir"
           test_settings: "Test Ayarları"
           save_settings: "Ayarları kaydet"
           last_updated: "Son güncelleme:"
@@ -1039,14 +1045,7 @@ tr_TR:
           smtp_settings_valid: "SMTP ayarları geçerli."
           smtp_title: "SMTP"
           smtp_instructions: "Grup için SMTP'yi etkinleştirdiğinizde, grubun gelen kutusundan gönderilen tüm e-postalar, forumunuz tarafından gönderilen diğer e-postalar için yapılandırılmış posta sunucusu yerine burada belirtilen SMTP ayarları gözetilerek gönderilir."
-          imap_title: "IMAP"
-          imap_additional_settings: "Ek Ayarlar"
-          imap_instructions: 'Grup için IMAP''i etkinleştirdiğinizde, e-postalar gruba ait gelen kutusu, sağlanan IMAP sunucusu ve posta kutusu arasında senkronize edilir. IMAP''in etkinleştirilebilmesi için SMTP''nin geçerli ve test edilmiş giriş bilgileriyle etkinleştirilmesi gerekir. SMTP için kullanılan e-posta kullanıcı adı ve şifre IMAP için kullanılır. Daha fazla bilgi için <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta özellik duyurusuna</a> bakın.'
-          imap_alpha_warning: "Uyarı: Bu bir alfa aşaması özelliğidir. Resmi olarak yalnızca Gmail desteklenmektedir. Kendi sorumluluğunuzda kullanın!"
-          imap_settings_valid: "IMAP ayarları geçerli."
-          smtp_disable_confirm: "SMTP'yi devre dışı bırakırsanız tüm SMTP ve IMAP ayarları sıfırlanır ve ilgili işlevler devre dışı bırakılır. Devam etmek istediğinize emin misiniz?"
-          imap_disable_confirm: "IMAP'i devre dışı bırakırsanız tüm IMAP ayarları sıfırlanır ve ilgili işlevler devre dışı bırakılır. Devam etmek istediğinize emin misiniz?"
-          imap_mailbox_not_selected: "Bu IMAP yapılandırması için bir Posta Kutusu seçmelisiniz, yoksa hiçbir posta kutusu senkronize edilmez!"
+          additional_settings: "Ek Ayarlar"
           prefill:
             title: "Şu ayarlarla önceden doldurun:"
             gmail: "Gmail"
@@ -1061,9 +1060,6 @@ tr_TR:
             smtp_server: "SMTP Sunucusu"
             smtp_port: "SMTP Bağlantı Noktası"
             smtp_ssl_mode: "SSL Modu"
-            imap_server: "IMAP Sunucusu"
-            imap_port: "IMAP Bağlantı Noktası"
-            imap_ssl: "IMAP için SSL kullan"
             username: "Kullanıcı Adı"
             password: "Şifre"
           settings:
@@ -1072,10 +1068,6 @@ tr_TR:
             allow_unknown_sender_topic_replies_hint: "Bilinmeyen göndericilerin grup konularını yanıtlamalarına izin verir. Bu ayar etkinleştirilmezse konuya davet edilmemiş e-posta adreslerinden gelen yanıtlar yeni bir konu oluşturur."
             from_alias: "Takma Addan"
             from_alias_hint: "Grup SMTP e-postaları gönderirken gönderici adresi olarak kullanılacak takma ad. Bunun tüm posta sağlayıcıları tarafından desteklenmeyebileceğini unutmayın, lütfen posta sağlayıcınızın belgelerini inceleyin."
-          mailboxes:
-            synchronized: "Senkronize Posta Kutusu"
-            none_found: "Bu e-posta hesabında posta kutusu bulunamadı."
-            disabled: "Devre dışı"
         membership:
           title: Üyelik
           access: Erişim
@@ -1339,6 +1331,9 @@ tr_TR:
       new_private_message: "Yeni Mesaj"
       private_message: "Mesaj"
       private_messages: "Mesajlar"
+      upcoming_changes:
+        for_user:
+          enabled: "Etkin mi?"
       user_notifications:
         filters:
           filter_by: "Şuna göre filtrele"
@@ -1551,9 +1546,6 @@ tr_TR:
         flags_given:
           one: '<span class="%{className}">%{count}</span> faydalı bayrak'
           other: '<span class="%{className}">%{count}</span> faydalı bayrak'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> bayrak eklenmiş gönderi'
-          other: '<span class="%{className}">%{count}</span> bayrak eklenmiş gönderi'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> silinmiş gönderi'
           other: '<span class="%{className}">%{count}</span> silinmiş gönderi'
@@ -1661,7 +1653,7 @@ tr_TR:
         tags: "Etiketler"
         interface: "Arayüz"
         apps: "Uygulamalar"
-        navigation_menu: "Navigasyon Menüsü"
+        navigation_menu: "Navigasyon menüsü"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
@@ -2064,6 +2056,7 @@ tr_TR:
               other {# günlüğüne}
             } geçerlidir.
           edit_link_options: "Bağlantı seçeneklerini düzenleyin veya e-posta ile gönderin."
+          edit_link_options_only: "Bağlantı seçeneklerini düzenleyin"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           description: "Açıklama"
@@ -2263,7 +2256,6 @@ tr_TR:
     form_kit:
       reset: Sıfırla
       optional: i̇steğe bağlı
-      errors_summary_title: "Bu form hatalar içeriyor:"
       dirty_form: "Değişikliklerinizi göndermediniz! Ayrılmak istediğinizden emin misiniz?"
       errors:
         starts_with: "%{prefix} ile başlamalı"
@@ -2993,8 +2985,7 @@ tr_TR:
         post_approved: "gönderi onaylandı"
         membership_request_consolidated: "yeni üyelik talepleri"
         reaction: "yeni tepki"
-        votes_released: "Oy verildi"
-        new_features: "Yeni Discourse özellikleri çıktı!"
+        votes_released: "oy verildi"
         admin_problems: "sitenizin panonuzda yeni öneriler mevcut"
     upload_selector:
       change: "Değiştir"
@@ -3131,8 +3122,6 @@ tr_TR:
         max_views:
           placeholder: en fazla
           aria_label: en fazla görüntülemeye göre filtrele
-        additional_options:
-          label: "Gönderi sayısına ve konu görüntülemelerine göre filtrele"
     hamburger_menu: "Navigasyon menüsü"
     new_item: "yeni"
     go_back: "geri dön"
@@ -3263,6 +3252,9 @@ tr_TR:
           other: "İlerleme: <strong>%{count}</strong> konu"
         performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
         completed: "Toplu işlemler başarıyla tamamlandı!"
+        error_topic_count:
+          one: "%{count} konu"
+          other: "%{count} konu"
       none:
         unread: "Okunmamış konunuz bulunmuyor."
         unseen: "Görülmemiş konunuz bulunmuyor."
@@ -3280,19 +3272,6 @@ tr_TR:
           unread: "Okunmamış bir şey kalmadı... Etkileyici!"
           new_new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
           new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
-      bottom:
-        latest: "Başka en son konu yok."
-        posted: "Başka gönderi yapılan konu yok."
-        read: "Başka okunmuş konu yok."
-        new: "Başka yeni konu yok."
-        unread: "Başka okunmamış konu yok."
-        unseen: "Başka görülmemiş konu yok."
-        category: "Başka %{category} konusu yok."
-        tag: "Başka %{tag} konusu yok."
-        top: "Başka popüler konu yok."
-        hot: "Başka popüler konu yok."
-        bookmarks: "Başka yer imli konu yok."
-        filter: "Başka konu kalmadı."
     topic_bulk_actions:
       dismiss:
         name: "Kapat"
@@ -3420,9 +3399,6 @@ tr_TR:
         other: "%{count} yanıt, ilk gönderiye atla"
       created_at: "Oluşturulma: %{date}"
       bumped_at: "En Son: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a>, <a href='%{basePath}/latest'>en son konuları görüntüleyin</a> veya en üste bakın:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Tüm etiketlere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
       browse_latest_topics: "En son konulara göz atın"
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
       jump_reply: "Gönderinin orijinal konumuna atla"
@@ -3451,8 +3427,6 @@ tr_TR:
           12_hours: "12 Saat"
           24_hours: "24 saat"
           custom: "Özel Süre"
-      slow_mode_notice:
-        duration: "Lütfen bu konudaki gönderiler arasında %{duration} bekleyin"
       topic_status_update:
         title: "Konu Zamanlayıcısı"
         save: "Zamanlayıcıyı Ayarla"
@@ -3781,7 +3755,7 @@ tr_TR:
       quote_edit: "Düzenle"
       quote_edit_shortcut: "Düzenle (veya e tuşuna basın)"
       quote_copy: "Alıntıyı Kopyala"
-      quote_copied_to_clibboard: "Alıntı panoya kopyalandı"
+      quote_copied_to_clipboard: "Alıntı panoya kopyalandı"
       quote_share: "Paylaş"
       edit_reason: "Sebep: "
       post_number: "%{number}. gönderi"
@@ -3987,6 +3961,7 @@ tr_TR:
           one: "Bu gönderileri birleştirmek istediğinizden emin misiniz?"
           other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
+        diff_too_complex: "Fark görüntülenemeyecek kadar karmaşık. Lütfen daha küçük düzenlemeleri tek tek görüntülemeyi deneyin."
         locale:
           no_locale_set: "Dil ayarlanmadı"
           locale_removed: "Dil kaldırıldı"
@@ -4073,6 +4048,7 @@ tr_TR:
       back: "Kategoriye dön"
       general: "Genel"
       settings: "Ayarlar"
+      advanced: "Gelişmiş"
       topic_template: "Şablon"
       tags: "Etiketler"
       localizations: "Yerelleştirmeler"
@@ -4097,14 +4073,26 @@ tr_TR:
         delete: "Sil"
         add: "Gerekli etiket grubu ekleyin"
         placeholder: "Etiket grubu seç…"
+        min_count: "Etiket sayısı"
+        tag_group: "Etiket grubu"
       topic_featured_link_allowed: "Bu kategoride öne çıkan bağlantılara izin ver"
+      create_with_type: "Yeni %{typeName} kategorisi"
       create_long: "Yeni bir kategori oluştur"
+      choose_type:
+        title: "Kategori türünü seçin"
+        requires_plugin: "Eklenti gerektirir"
+      create_category: "Kategori oluştur"
+      unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
       slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
+      validations:
+        icon_required: "Simge seçin."
       description: "Açıklama"
       logo_description: "Önerilen 1:1 en boy oranı ve minimum 200 piksel boyut. Boş bırakılırsa hiçbir görüntü gösterilmez."
-      style: "Stiller"
+      style: "Stil"
+      icon: "Simge"
+      emoji: "Emoji"
       background_color: "Renk"
       foreground_color: "Metin rengi"
       color_validations:
@@ -4113,13 +4101,13 @@ tr_TR:
         type: "Stil"
         icon: "Simge"
         emoji: "Emoji"
+        square: "Kare"
         options:
           square: "Kare"
           icon: "Simge"
           emoji: "Emoji"
       color_used: "Kullanılan renk"
       predefined_colors: "Önceden tanımlanmış renk seçenekleri"
-      name_placeholder: "En fazla bir veya iki kelime"
       color_placeholder: "Herhangi bir web rengi"
       delete_confirm: "Bu kategoriyi silmek istediğinizden emin misiniz?"
       delete_error: "Kategori silinirken bir hata oluştu."
@@ -4127,6 +4115,7 @@ tr_TR:
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
       already_used: "Bu renk başka bir kategori tarafından kullanılmış."
+      color_palette: "Renk paleti"
       security: "Güvenlik"
       security_add_group: "Grup ekle"
       permissions:
@@ -4135,15 +4124,12 @@ tr_TR:
         reply: "Yanıtla"
         create: "Oluştur"
         no_groups_selected: "Hiçbir gruba erişim izni verilmedi; bu kategori yalnızca personel tarafından görülebilir."
-        everyone_has_access: 'Bu kategori herkese açık, herkes gönderileri görebilir, yanıtlayabilir ve oluşturabilir. İzinleri kısıtlamak için "herkes" grubuna verilen izinlerden birini veya birkaçını kaldırın.'
         toggle_reply: "Yanıtlama iznini aç/kapat"
         toggle_full: "Oluşturma iznini aç/kapat"
-        inherited: 'Bu izin "herkesten" devralınır'
-      special_warning: "Uyarı: Bu kategori önceden oluşturulmuş bir kategoridir ve güvenlik ayarları düzenlenemez. Bu kategoriyi kullanmak istemiyorsanız yeniden kullanmak yerine silin."
       uncategorized_security_warning: "Bu kategori özeldir. Kategorisi olmayan konular için tutma alanı olarak tasarlanmıştır; güvenlik ayarlarına sahip olamaz."
       uncategorized_general_warning: 'Bu kategori özeldir. Kategori seçilmeyen yeni konular için varsayılan kategori olarak kullanılır. Bu davranışı önlemek ve kategori seçimini zorlamak isterseniz <a href="%{settingLink}">lütfen buradaki ayarı devre dışı bırakın</a>. Adı veya açıklamayı değiştirmek isterseniz <a href="%{customizeLink}">Özelleştir / Metin İçeriği</a>''ne gidin.'
       pending_permission_change_alert: "Bu kategoriye %{group} eklemediniz; eklemek için bu düğmeye tıklayın."
-      images: "Resimler"
+      images: "Görünüm"
       email_in: "Kişiselleştirilmiş gelen e-posta adresi:"
       email_in_tooltip: "Birden fazla e-posta adresini | karakteri ile ayırabilirsiniz."
       email_in_allow_strangers: "Hesabı olmayan anonim kullanıcılardan gelen e-postaları kabul edin"
@@ -4165,6 +4151,11 @@ tr_TR:
       position: "Kategoriler sayfasındaki pozisyon:"
       position_disabled: "Kategoriler aktivite sırasına göre görüntülenir. Listelerdeki kategorilerin sırasını kontrol etmek için <a href='%{url}'>\"sabit kategori pozisyonları\"</a> ayarını etkinleştirin."
       minimum_required_tags: "Bir konuda gerekli minimum etiket sayısı:"
+      none_subcategory_text: "Hiçbiri"
+      visibility:
+        title: "Görünürlük"
+        public: "Genel"
+        group_restricted: "Özel"
       num_auto_bump_daily: "Günlük olarak otomatik olarak üste çıkacak açık konu sayısı:"
       auto_bump_cooldown_days: "Aynı konuyu tekrar açmadan önce geçmesi gereken gün sayısı:"
       navigate_to_first_post_after_read: "Konular okunduktan sonra ilk gönderiye gidin"
@@ -4462,6 +4453,7 @@ tr_TR:
         this_month: "Ay"
         this_week: "Hafta"
         today: "Bugün"
+        custom: "Özel"
     custom_homepage:
       admin_message: 'Temalarınızdan biri "custom_homepage" değiştiricisini etkinleştirdi ancak [custom-homepage] bağlayıcısında hiçbir çıktı vermiyor. (Bu mesaj yalnızca site yöneticilerine gösterilir.)'
     browser_update: 'Ne yazık ki <a href="https://discourse.org/about#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
@@ -4685,7 +4677,20 @@ tr_TR:
         one: "Eş anlamlısı da silinecek."
         other: "%{count} eş anlamlısı da silinecek."
       edit_tag: "Etiket adını ve açıklamasını düzenle"
-      description: "Açıklama (en fazla 1000 karakter)"
+      description: "Açıklama"
+      settings:
+        title: "Ayarlar"
+        general: "Genel"
+        localizations: "Yerelleştirmeler"
+        back: "Geri"
+        name: "Ad"
+        slug: "Kısa ad"
+        name_placeholder: "Etiket adı"
+        synonyms_subtitle: "Aşağıdaki etiketler kullanıldığında %{name}ile değiştirilir"
+      localization:
+        locale: "Yerel Ayar"
+        name: "Ad"
+        description: "Açıklama"
       sort_by: "Sıralama ölçütü:"
       sort_by_count: "sayı"
       sort_by_name: "ad"
@@ -5175,7 +5180,7 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
-    reset_filter: "Sıfırla"
+    reset_filter: "Filtreyi sıfırla"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -5188,9 +5193,13 @@ tr_TR:
           never: "asla"
       reports:
         title: "Mevcut raporlar listesi"
-        meta_doc: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
         sidebar_title: "Raporlar"
         back: "Tüm raporlara geri dön"
+        group_traffic: "Trafik"
+        group_members: "Üyeler"
+        group_moderation: "Moderasyon"
+        group_security: "Güvenlik"
+        group_other: "Diğer"
       config_sections:
         account:
           title: "Hesap"
@@ -5215,7 +5224,6 @@ tr_TR:
         preview: "Ön izle"
         enabled_for_options:
           everyone: "Herkes"
-          staff: "Sadece personel"
         statuses:
           experimental: "Deneysel"
         impact_roles:
@@ -5229,6 +5237,9 @@ tr_TR:
           impact_type_feature: "Özellik"
           impact_type_other: "Diğer"
           status_experimental: "Deneysel"
+          impact_role_admins: "Yöneticiler"
+          impact_role_moderators: "Moderatörler"
+          impact_role_staff: "Personel"
       config:
         about:
           title: "Siteniz hakkında"
@@ -5285,7 +5296,6 @@ tr_TR:
               help_text: "Önerilen boyut 600 x 80 pikseldir."
             large_icon:
               title: "Kare simge"
-              description: "Logo görüntüsünün kare bir versiyonu, yönetimin üst kısmında görünür ve aynı zamanda mobil ana ekran uygulaması logosudur."
               help_text: "Önerilen boyut 512 x 512 pikseldir."
             square_icon_dark:
               required: "Koyu mod için farklı bir kare simge kullanılsın mı?"
@@ -5369,6 +5379,8 @@ tr_TR:
               options:
                 above_topic_content: "Yukarıdaki konu içeriği"
                 below_site_header: "Aşağıdaki site başlığı"
+            text_section:
+              locale_label: "Dil"
             header_logged_in:
               placeholder: "Tekrar hoş geldiniz %{preferred_display_name}!"
             header_anonymous:
@@ -5434,7 +5446,7 @@ tr_TR:
           header_description: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
           sub_pages:
             settings:
-              title: "Pano ayarları"
+              title: "Ayarlar"
         badges:
           title: "Rozetler"
           header_description: "Rozetler, topluluk içindeki olumlu davranışları ve katılımı tanımak, doğrulamak ve teşvik etmek için kullanıcıları aktiviteleri, katkıları ve başarıları için ödüllendirir"
@@ -5584,22 +5596,6 @@ tr_TR:
         result_count:
           one: '"%{filter}" için %{count} sonuç'
           other: '"%{filter}" için %{count} sonuç'
-        result_types:
-          page:
-            one: "Sayfa"
-            other: "Sayfa"
-          report:
-            one: "Rapor"
-            other: "Rapor"
-          setting:
-            one: "Ayar"
-            other: "Ayarlar"
-          theme:
-            one: "Tema"
-            other: "Temalar"
-          component:
-            one: "Bileşen"
-            other: "Bileşenler"
       new_features:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
@@ -5622,17 +5618,7 @@ tr_TR:
         new_features:
           title: "Yenilikler"
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
-          previous_announcements: "Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta'da</a> görebilirsiniz"
           learn_more: "Daha fazla bilgi edinin..."
-          experimental: "Deneysel"
-          only_experiments: "Yalnızca deneysel özellikleri göster"
-          experiment_enabled: "Deneysel özelliği etkinleştirdiniz."
-          experiment_disabled: "Deneysel özelliği devre dışı bıraktınız."
-          experiment_tooltip:
-            title_enabled: "Deneysel özelliği kapat"
-            content_enabled: "Bunu değiştirmek özelliği tüm kullanıcılar için devre dışı bırakır."
-          feature_tooltip:
-            content_enabled: "Bunu değiştirmek özelliği tüm kullanıcılar için devre dışı bırakır."
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."
@@ -5709,7 +5695,9 @@ tr_TR:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama günlükleri</a>'
             disabled: 'Trend olan arama raporu devre dışı bırakıldı. Veri toplamak için <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">günlük arama sorgularını</a> etkinleştirin.'
-          average_chart_label: Ortalama
+          sort_button: "%{column} kriterine göre sırala"
+          sort_ascending: "artan"
+          sort_descending: "azalan"
           filters:
             file_extension:
               label: Dosya uzantısı
@@ -5812,6 +5800,7 @@ tr_TR:
         save: "Kaydet"
         cancel: "İptal et"
         continue: "Devam et"
+        copy_key: "Kopyala"
         back: "API anahtarlarına geri dön"
         revoke: "Geri çek"
         undo_revoke: "İptal işlemini geri al"
@@ -6445,8 +6434,6 @@ tr_TR:
         delete: "Sil"
         delete_confirm: '"%{theme_name}" adlı temayı silmek istediğinizden emin misiniz?'
         bulk_delete: "Emin misiniz?"
-        bulk_themes_delete_confirm: "Bu işlem aşağıdaki temaları kaldıracak ve artık bu temalar sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
-        bulk_components_delete_confirm: "Bu işlem aşağıdaki bileşenleri kaldıracak ve artık bu bileşenler sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
         color: "Renk"
         opacity: "Opaklık"
         copy: "Eş Kopya"
@@ -7418,7 +7405,6 @@ tr_TR:
           button: "Tüm gönderileri sil"
           progress:
             title: "Gönderileri silme ilerleme durumu"
-            description: "Gönderiler siliniyor…"
           confirmation:
             title: "@%{username} tarafından gönderilen tüm gönderileri sil"
             description: |
@@ -7609,6 +7595,7 @@ tr_TR:
         field_types:
           text: "Metin"
           textarea: "Metin alanı"
+          date: "Tarih"
           confirm: "Onayla"
           dropdown: "Açılır Menü"
           multiselect: "Çoklu seçim"
@@ -7629,6 +7616,9 @@ tr_TR:
         more_than_50_results: "50'den fazla sonuç var. Lütfen aramanızı daraltın."
         no_results: "Eşleşen site metni yok"
         interpolation_keys: "Mevcut enterpolasyon tuşları:"
+        interpolation_key_insert: "Eklemek için tıklayın"
+        interpolation_key_used: "Zaten kullanılmış"
+        interpolation_key_invalid: "Bilinmeyen anahtar — enterpolasyon yapılmayacaktır"
         outdated:
           title: "Bu çeviri güncel değil"
           description: "Bu anahtar için varsayılan çeviri, bu geçersiz kılma oluşturulduktan sonra değişti. Lütfen aşağıdan çevirinizin orijinal amaçta yapılan değişikliklerle eşleşip eşleşmediğini kontrol edin."
@@ -7675,6 +7665,7 @@ tr_TR:
           upload:
             label: "Yükle"
             title: "Görüntü yükle"
+        download_file: "İndir"
         selectable_avatars:
           title: "Kullanıcıların seçebileceği avatarların listesi"
         table_column_heading:
@@ -7737,16 +7728,12 @@ tr_TR:
             prompt: "Bu ayarı değiştirmenin siteniz için geniş kapsamlı veya istenmeyen sonuçları olabilir. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, eminim"
           min_password_length:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm kullanıcıları etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
           min_admin_password_length:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm yöneticileri etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
           password_unique_charactes:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm kullanıcıları etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
           block_common_passwords:
-            prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm kullanıcıları etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
       badges:
         status: Durum

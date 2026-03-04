@@ -67,8 +67,6 @@ it:
           title: "Elenco Argomenti"
         basic_topic_list:
           title: "Elenco argomenti di base"
-        footer_message:
-          title: "Messaggio Piè di Pagina"
         signup_cta:
           title: "CTA registrazione"
         topic_timer_info:

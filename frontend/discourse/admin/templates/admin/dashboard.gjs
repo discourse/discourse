@@ -28,7 +28,7 @@ export default <template>
   {{#if @controller.showVersionChecks}}
     <div class="section-top">
       <div class="version-checks">
-        <VersionChecks @versionCheck={{@controller.versionCheck}} @tagName="" />
+        <VersionChecks @versionCheck={{@controller.versionCheck}} />
       </div>
     </div>
   {{/if}}
@@ -41,6 +41,12 @@ export default <template>
   />
   <nav>
     <ul class="nav nav-pills">
+      <li class="navigation-item settings">
+        <LinkTo @route="adminReports.dashboardSettings" class="navigation-link">
+          {{i18n "admin.config.reports.sub_pages.settings.title"}}
+        </LinkTo>
+      </li>
+
       <li class="navigation-item general">
         <LinkTo @route="admin.dashboard.general" class="navigation-link">
           {{i18n "admin.dashboard.general_tab"}}

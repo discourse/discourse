@@ -163,7 +163,7 @@ RSpec.describe PostGuardian do
       UserSilencer.silence(user, admin)
 
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
-      expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
+      expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :bookmark)).to be_truthy
     end
 
@@ -458,14 +458,7 @@ RSpec.describe PostGuardian do
     end
 
     context "with system message" do
-      fab!(:private_message) do
-        Fabricate(
-          :topic,
-          archetype: Archetype.private_message,
-          subtype: "system_message",
-          category_id: nil,
-        )
-      end
+      fab!(:private_message) { Fabricate(:system_message_topic, user: user) }
 
       before { user.save! }
       it "allows the user to reply to system messages" do
@@ -476,9 +469,7 @@ RSpec.describe PostGuardian do
     end
 
     context "with private message" do
-      fab!(:private_message) do
-        Fabricate(:topic, archetype: Archetype.private_message, category_id: nil)
-      end
+      fab!(:private_message, :private_message_topic)
 
       before { user.save! }
 
@@ -487,8 +478,16 @@ RSpec.describe PostGuardian do
         expect(Guardian.new(user).can_create?(Post, private_message)).to be_truthy
       end
 
-      it "doesn't allow new posts by people not invited to the pm" do
-        expect(Guardian.new(user).can_create?(Post, private_message)).to be_falsey
+      it "allows new posts by people included via allowed groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        private_message.topic_allowed_groups.create!(group: group)
+
+        expect(Guardian.new(user).can_create_post?(private_message)).to be_truthy
+      end
+
+      it "doesn't allow new posts by people not included in the pm" do
+        expect(Guardian.new(user).can_create_post?(private_message)).to be_falsey
       end
 
       it "allows new posts from silenced users included in the pm" do
@@ -584,10 +583,25 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(moderator).can_change_post_owner?).to be_truthy
     end
 
-    it "returns true for a moderator when not allowed" do
+    it "returns false for a moderator when not allowed" do
       SiteSetting.moderators_change_post_ownership = false
 
       expect(Guardian.new(moderator).can_change_post_owner?).to be_falsey
+    end
+
+    describe "with allowed groups" do
+      fab!(:allowed_group, :group)
+      fab!(:allowed_group_user) { Fabricate(:user, groups: [allowed_group]) }
+
+      before { SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}" }
+
+      it "returns true for user in allowed group" do
+        expect(Guardian.new(allowed_group_user).can_change_post_owner?).to be_truthy
+      end
+
+      it "returns false for user not in allowed group" do
+        expect(Guardian.new(user).can_change_post_owner?).to be_falsy
+      end
     end
   end
 

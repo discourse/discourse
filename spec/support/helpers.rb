@@ -179,26 +179,38 @@ module Helpers
 
   def setup_git_repo(files)
     repo_dir = Dir.mktmpdir
-    `cd #{repo_dir} && git init . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}`
-    `cd #{repo_dir} && git config user.email 'someone@cool.com'`
-    `cd #{repo_dir} && git config user.name 'The Cool One'`
-    `cd #{repo_dir} && git config commit.gpgsign 'false'`
+    system(
+      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}",
+      exception: true,
+    )
+    system("git -C #{repo_dir} config user.email 'someone@cool.com'", exception: true)
+    system("git -C #{repo_dir} config user.name 'The Cool One'", exception: true)
+    system("git -C #{repo_dir} config commit.gpgsign 'false'", exception: true)
     files.each do |name, data|
       FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
       File.write("#{repo_dir}/#{name}", data)
-      `cd #{repo_dir} && git add #{name}`
+      system("git -C #{repo_dir} add #{name}", exception: true)
     end
-    `cd #{repo_dir} && git commit -am 'first commit'`
+    system("git -C #{repo_dir} commit -q -am 'first commit'", exception: false)
     repo_dir
+  end
+
+  def setup_remote_upstream(path)
+    system("git -C #{path} remote add origin #{path}/.git", exception: true)
+    system("git -C #{path} fetch -q", exception: true)
+    branch = `git -C #{path} rev-parse --abbrev-ref HEAD`.strip
+    raise "no branch in setup_remote_upstream" if branch.blank?
+    system("git -C #{path} branch -u origin/#{branch}", exception: true)
+    system("git -C #{path} remote set-head origin #{branch}", exception: true)
   end
 
   def add_to_git_repo(repo_dir, files)
     files.each do |name, data|
       FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
       File.write("#{repo_dir}/#{name}", data)
-      `cd #{repo_dir} && git add #{name}`
+      system("git -C #{repo_dir} add #{name}", exception: true)
     end
-    `cd #{repo_dir} && git commit -am 'add #{files.size} files'`
+    system("git -C #{repo_dir} commit -q -am 'add #{files.size} files'", exception: true)
     repo_dir
   end
 

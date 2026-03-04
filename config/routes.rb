@@ -28,8 +28,9 @@ Discourse::Application.routes.draw do
     get "/404-body" => "exceptions#not_found_body"
 
     if Rails.env.local?
-      get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
+      get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
+      get "/bootstrap/plugin-test-info" => "bootstrap#plugin_test_info"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in
@@ -145,6 +146,7 @@ Discourse::Application.routes.draw do
         delete "penalty_history", constraints: AdminConstraint.new
         put "suspend"
         put "delete_posts_batch"
+        post "delete_posts_decider"
         put "unsuspend"
         put "revoke_admin", constraints: AdminConstraint.new
         put "grant_admin", constraints: AdminConstraint.new
@@ -357,7 +359,7 @@ Discourse::Application.routes.draw do
           resources :web_hooks, only: %i[index create show edit update destroy]
           get "web_hook_events/:id" => "web_hooks#list_events", :as => :web_hook_events
           get "web_hooks/:id/events/bulk" => "web_hooks#bulk_events"
-          post "web_hooks/:web_hook_id/events/:event_id/redeliver" => "web_hooks#redeliver_event"
+          post "web_hooks/:id/events/:event_id/redeliver" => "web_hooks#redeliver_event"
           post "web_hooks/:id/events/failed_redeliver" => "web_hooks#redeliver_failed_events"
           post "web_hooks/:id/ping" => "web_hooks#ping"
         end
@@ -726,7 +728,7 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
             group_name: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/tags/:tag_id" => "list#private_messages_tag",
+      get "#{root_path}/:username/messages/tags/:tag_name" => "list#private_messages_tag",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -1329,6 +1331,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, only: %i[index create update destroy]
     post "categories/reorder" => "categories#reorder"
+    get "categories/types" => "categories#types"
     get "categories/find" => "categories#find"
     post "categories/search" => "categories#search"
     get "categories/hierarchical_search" => "categories#hierarchical_search"
@@ -1355,6 +1358,8 @@ Discourse::Application.routes.draw do
           format: "html",
         }
     get "/new-category" => "categories#show", :constraints => { format: "html" }
+    get "/new-category/setup" => "categories#show", :constraints => { format: "html" }
+    get "/new-category/:tab" => "categories#show", :constraints => { format: "html" }
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", :format => :rss
     scope path: "c/*category_slug_path_with_id" do
@@ -1453,7 +1458,7 @@ Discourse::Application.routes.draw do
           :defaults => {
             format: :json,
           }
-      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag",
+      get "private-messages-tags/:username/:tag_name.json" => "list#private_messages_tag",
           :as => "topics_private_messages_tag",
           :defaults => {
             format: :json,
@@ -1646,6 +1651,7 @@ Discourse::Application.routes.draw do
 
     get "robots.txt" => "robots_txt#index"
     get "robots-builder.json" => "robots_txt#builder"
+    get "llms.txt" => "static#llms_txt"
     get "offline.html" => "offline#index"
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
@@ -1657,9 +1663,51 @@ Discourse::Application.routes.draw do
     get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
-    scope "/tag/:tag_id" do
+    # Tag Routes - Canonical vs Legacy
+    #
+    # Canonical:
+    #   - /tag/:slug/:id - for user-facing endpoints with SEO-friendly URLs
+    #   - /tag/:id - for APIs
+    # Legacy: /tag/:name - for backward compat, redirects browsers to canonical
+    #
+
+    scope "/tag/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
+      get "/" => "tags#show", :as => "tag_show"
+      get "/info" => "tags#info", :as => "tag_info"
+      get "/notifications" => "tags#notifications", :as => "tag_notifications"
+      put "/notifications" => "tags#update_notifications"
+      get "/settings" => "tags#settings"
+      put "/settings" => "tags#update_settings"
+      put "/" => "tags#update", :as => "tag_update"
+      delete "/" => "tags#destroy", :as => "tag_destroy"
+      post "/synonyms" => "tags#create_synonyms", :as => "tag_synonyms"
+      delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
+
+      Discourse.filters.each do |filter|
+        get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
+      end
+    end
+
+    scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
+      get "/" => "tags#show", :as => "tag_show_with_slug"
+      get "/edit" => "tags#show"
+      get "/edit/:tab" => "tags#show"
+
+      Discourse.filters.each do |filter|
+        get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_with_slug"
+      end
+    end
+
+    get "/tag/:tag_slug/:tag_id" => "tags#tag_feed",
+        :constraints => {
+          tag_id: /\d+/,
+          format: :rss,
+        },
+        :as => "tag_feed_with_id"
+
+    scope "/tag/:tag_name" do
       constraints format: :json do
-        get "/" => "tags#show", :as => "tag_show"
+        get "/" => "tags#show", :as => "tag_show_by_name"
         get "/info" => "tags#info"
         get "/notifications" => "tags#notifications"
         put "/notifications" => "tags#update_notifications"
@@ -1669,7 +1717,7 @@ Discourse::Application.routes.draw do
         delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
 
         Discourse.filters.each do |filter|
-          get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
+          get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_by_name"
         end
       end
 
@@ -1678,6 +1726,9 @@ Discourse::Application.routes.draw do
       end
     end
 
+    # Tag listings & category+tag combinations:
+    #   /tags - index, search, management endpoints
+    #   /tags/c/:category/:slug/:id - topics filtered by category AND tag
     scope "/tags" do
       get "/" => "tags#index"
       get "/filter/list" => "tags#index"
@@ -1692,44 +1743,82 @@ Discourse::Application.routes.draw do
       get "/unused" => "tags#list_unused"
       delete "/unused" => "tags#destroy_unused"
 
-      constraints(tag_id: %r{[^/]+?}, format: /json|rss/) do
+      # canonical slug/id format for category+tag routes
+      constraints(tag_id: /\d+/, format: /json|rss/) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
-            get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/none/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_none_show_#{filter}",
                 :defaults => {
                   no_subcategories: true,
                 }
-            get "/all/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/all/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_all_show_#{filter}",
                 :defaults => {
                   no_subcategories: false,
                 }
           end
 
-          get "/none/:tag_id" => "tags#show",
+          get "/none/:tag_slug/:tag_id" => "tags#show",
               :as => "tag_category_none_show",
               :defaults => {
                 no_subcategories: true,
               }
-          get "/all/:tag_id" => "tags#show",
+          get "/all/:tag_slug/:tag_id" => "tags#show",
               :as => "tag_category_all_show",
               :defaults => {
                 no_subcategories: false,
               }
 
           Discourse.filters.each do |filter|
-            get "/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_show_#{filter}"
           end
 
-          get "/:tag_id" => "tags#show", :as => "tag_category_show"
+          get "/:tag_slug/:tag_id" => "tags#show", :as => "tag_category_show"
         end
-
-        get "/intersection/:tag_id/*additional_tag_ids" => "tags#show", :as => "tag_intersection"
       end
 
-      get "*tag_id", to: redirect(relative_url_root + "tag/%{tag_id}")
+      # legacy name-based format for category+tag routes
+      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
+        scope path: "/c/*category_slug_path_with_id" do
+          Discourse.filters.each do |filter|
+            get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+                :as => "tag_category_none_show_#{filter}_by_name",
+                :defaults => {
+                  no_subcategories: true,
+                }
+            get "/all/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+                :as => "tag_category_all_show_#{filter}_by_name",
+                :defaults => {
+                  no_subcategories: false,
+                }
+          end
+
+          get "/none/:tag_name" => "tags#show",
+              :as => "tag_category_none_show_by_name",
+              :defaults => {
+                no_subcategories: true,
+              }
+          get "/all/:tag_name" => "tags#show",
+              :as => "tag_category_all_show_by_name",
+              :defaults => {
+                no_subcategories: false,
+              }
+
+          Discourse.filters.each do |filter|
+            get "/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+                :as => "tag_category_show_#{filter}_by_name"
+          end
+
+          get "/:tag_name" => "tags#show", :as => "tag_category_show_by_name"
+        end
+
+        get "/intersection/:tag_name/*additional_tag_names" => "tags#show",
+            :as => "tag_intersection"
+      end
+
+      get "*tag_name", to: redirect(relative_url_root + "tag/%{tag_name}")
     end
 
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
@@ -1773,6 +1862,9 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
+    get "/dev-mode" => "dev_mode#index"
+    post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
+
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
 
@@ -1788,8 +1880,6 @@ Discourse::Application.routes.draw do
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
-
-    resources :csp_reports, only: [:create]
 
     get "/permalink-check", to: "permalinks#check"
 

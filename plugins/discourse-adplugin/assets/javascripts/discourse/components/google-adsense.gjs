@@ -1,8 +1,9 @@
+import { computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
-import { classNameBindings } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import RSVP from "rsvp";
-import discourseComputed from "discourse/lib/decorators";
+import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
@@ -99,11 +100,7 @@ const MOBILE_SETTINGS = {
   },
 };
 
-@classNameBindings(
-  ":google-adsense",
-  "classForSlot",
-  "isResponsive:adsense-responsive"
-)
+@tagName("")
 export default class GoogleAdsense extends AdComponent {
   loadedGoogletag = false;
   publisher_id = null;
@@ -174,40 +171,46 @@ export default class GoogleAdsense extends AdComponent {
     scheduleOnce("afterRender", this, this._triggerAds);
   }
 
-  @discourseComputed("ad_width")
-  isResponsive(adWidth) {
-    return ["auto", "fluid"].includes(adWidth);
+  @computed("ad_width")
+  get isResponsive() {
+    return ["auto", "fluid"].includes(this.ad_width);
   }
 
-  @discourseComputed("ad_width")
-  isFluid(adWidth) {
-    return adWidth === "fluid";
+  @computed("ad_width")
+  get isFluid() {
+    return this.ad_width === "fluid";
   }
 
-  @discourseComputed("placement", "showAd")
-  classForSlot(placement, showAd) {
-    return showAd ? htmlSafe(`adsense-${placement}`) : "";
+  @computed("placement", "showAd")
+  get classForSlot() {
+    return this.showAd ? htmlSafe(`adsense-${this.placement}`) : "";
   }
 
-  @discourseComputed("isResponsive", "isFluid")
-  autoAdFormat(isResponsive, isFluid) {
-    return isResponsive ? htmlSafe(isFluid ? "fluid" : "auto") : false;
+  @computed("isResponsive", "isFluid")
+  get autoAdFormat() {
+    return this.isResponsive
+      ? htmlSafe(this.isFluid ? "fluid" : "auto")
+      : false;
   }
 
-  @discourseComputed("ad_width", "ad_height", "isResponsive")
-  adWrapperStyle(w, h, isResponsive) {
-    return htmlSafe(isResponsive ? "" : `width: ${w}; height: ${h};`);
-  }
-
-  @discourseComputed("adWrapperStyle", "isResponsive")
-  adInsStyle(adWrapperStyle, isResponsive) {
+  @computed("ad_width", "ad_height", "isResponsive")
+  get adWrapperStyle() {
     return htmlSafe(
-      `display: ${isResponsive ? "block" : "inline-block"}; ${adWrapperStyle}`
+      this.isResponsive
+        ? ""
+        : `width: ${this.ad_width}; height: ${this.ad_height};`
     );
   }
 
-  @discourseComputed
-  showAdsenseAds() {
+  @computed("adWrapperStyle", "isResponsive")
+  get adInsStyle() {
+    return htmlSafe(
+      `display: ${this.isResponsive ? "block" : "inline-block"}; ${this.adWrapperStyle}`
+    );
+  }
+
+  @computed
+  get showAdsenseAds() {
     if (!this.currentUser) {
       return true;
     }
@@ -215,32 +218,26 @@ export default class GoogleAdsense extends AdComponent {
     return this.currentUser.show_adsense_ads;
   }
 
-  @discourseComputed(
+  @computed(
     "publisher_id",
     "showAdsenseAds",
     "showToGroups",
     "showAfterPost",
     "showOnCurrentPage"
   )
-  showAd(
-    publisherId,
-    showAdsenseAds,
-    showToGroups,
-    showAfterPost,
-    showOnCurrentPage
-  ) {
+  get showAd() {
     return (
-      publisherId &&
-      showAdsenseAds &&
-      showToGroups &&
-      showAfterPost &&
-      showOnCurrentPage
+      this.publisher_id &&
+      this.showAdsenseAds &&
+      this.showToGroups &&
+      this.showAfterPost &&
+      this.showOnCurrentPage
     );
   }
 
-  @discourseComputed("postNumber")
-  showAfterPost(postNumber) {
-    if (!postNumber) {
+  @computed("postNumber")
+  get showAfterPost() {
+    if (!this.postNumber) {
       return true;
     }
 
@@ -260,24 +257,33 @@ export default class GoogleAdsense extends AdComponent {
   }
 
   <template>
-    {{#if this.showAd}}
-      <div class="google-adsense-label"><h2>{{i18n
-            "adplugin.advertisement_label"
-          }}</h2></div>
-      <div
-        class="google-adsense-content"
-        id={{if this.isResponsive "google-adsense__responsive"}}
-        style={{this.adWrapperStyle}}
-      >
-        <ins
-          class="adsbygoogle"
-          style={{this.adInsStyle}}
-          data-ad-client="ca-pub-{{this.publisher_id}}"
-          data-ad-slot={{this.ad_code}}
-          data-ad-format={{this.autoAdFormat}}
+    <div
+      class={{concatClass
+        "google-adsense"
+        this.classForSlot
+        (if this.isResponsive "adsense-responsive")
+      }}
+      ...attributes
+    >
+      {{#if this.showAd}}
+        <div class="google-adsense-label"><h2>{{i18n
+              "adplugin.advertisement_label"
+            }}</h2></div>
+        <div
+          class="google-adsense-content"
+          id={{if this.isResponsive "google-adsense__responsive"}}
+          style={{this.adWrapperStyle}}
         >
-        </ins>
-      </div>
-    {{/if}}
+          <ins
+            class="adsbygoogle"
+            style={{this.adInsStyle}}
+            data-ad-client="ca-pub-{{this.publisher_id}}"
+            data-ad-slot={{this.ad_code}}
+            data-ad-format={{this.autoAdFormat}}
+          >
+          </ins>
+        </div>
+      {{/if}}
+    </div>
   </template>
 }

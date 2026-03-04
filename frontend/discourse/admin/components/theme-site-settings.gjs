@@ -106,8 +106,8 @@ export default class ThemeSiteSettings extends Component {
             }}
           >
             <:content as |filteredSettings|>
-              <table class="d-admin-table admin-theme-site-settings">
-                <thead>
+              <table class="d-table admin-theme-site-settings">
+                <thead class="d-table__header">
                   <tr>
                     <th>{{i18n "admin.theme_site_settings.setting"}}</th>
                     <th>{{i18n "admin.theme_site_settings.default_value"}}</th>
@@ -117,7 +117,7 @@ export default class ThemeSiteSettings extends Component {
                 <tbody>
                   {{#each filteredSettings as |fs|}}
                     <tr
-                      class="admin-theme-site-settings-row d-admin-row__content"
+                      class="admin-theme-site-settings-row d-table__row"
                       data-setting-name={{fs.name}}
                     >
                       <td class="admin-theme-site-settings-row__setting">

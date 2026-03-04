@@ -10,6 +10,7 @@ pt_BR:
       logs:
         staff_actions:
           actions:
+            create_automation: criar automação
             update_automation: atualizar automação
             delete_automation: excluir automação
     discourse_automation:
@@ -59,8 +60,6 @@ pt_BR:
             label: Corpo
           delay:
             label: Atraso (minutos)
-          prefers_encrypt:
-            label: Criptografa PM, se disponível
         group:
           label: Grupo
         text:

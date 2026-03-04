@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import ApiSections from "../api-sections";
 import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";
@@ -10,12 +11,16 @@ export default class SidebarUserSections extends Component {
 
   <template>
     <div class="sidebar-sections">
+      <BlockOutlet @name="sidebar-blocks" />
       <CustomSections
         @collapsable={{@collapsableSections}}
         @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
-      <CategoriesSection @collapsable={{@collapsableSections}} />
+      <CategoriesSection
+        @collapsable={{@collapsableSections}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
+      />
 
       {{#if this.currentUser.display_sidebar_tags}}
         <TagsSection @collapsable={{@collapsableSections}} />

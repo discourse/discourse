@@ -13,8 +13,13 @@ module DiscourseAi
       def self.new_post(post)
         return if !enabled?
         return if !should_scan_post?(post)
+        return if approved_from_review_queue?(post)
 
         flag_post_for_scanning(post)
+      end
+
+      def self.approved_from_review_queue?(post)
+        ReviewableQueuedPost.approved.exists?(target: post)
       end
 
       def self.ensure_flagging_user!
@@ -65,6 +70,9 @@ module DiscourseAi
         return if !should_scan_post?(post)
         return if !post.custom_fields[SHOULD_SCAN_POST_CUSTOM_FIELD]
         return if post.updated_at < MAX_AGE_TO_SCAN.ago
+
+        editor = post.last_editor
+        return if editor && (editor.staff? || editor.bot?)
 
         last_scan = AiSpamLog.where(post_id: post.id).order(created_at: :desc).first
 

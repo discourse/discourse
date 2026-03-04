@@ -321,8 +321,10 @@ th:
     queued_by_staff:
       title: "โพสต์นี้ต้องได้รับการอนุมัติ"
     welcome_user:
+      preview: "ยินดีต้อนรับสู่ %{site_name}!"
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
     welcome_invite:
+      preview: "ยินดีต้อนรับสู่ %{site_name}!"
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
   subject_re: "ตอบ: "
   subject_pm: "[PM] "
@@ -540,18 +542,35 @@ th:
         complete: "โพสต์ถูกลบ."
       delete_and_agree:
         complete: "โพสต์ถูกลบ."
-      disagree:
+      disagree_bundle:
         title: "ไม่ใช่"
       ignore:
         title: "ไม่สนใจ"
       approve:
-        title: "อนุมัติ"
+        title: "ใช่"
+      approve_post:
+        title: "ใช่"
+      approve_post_closed:
+        title: "ใช่"
+      reject_post_bundle:
+        title: "ไม่ใช่"
+      approve_user:
+        title: "ใช่"
       reject_user:
+        title: "ไม่ใช่"
         delete:
           title: "ลบผู้ใช้"
           complete: "ผู้ใช้ถูกลบ."
+      confirm_spam:
+        title: "ใช่"
+      not_spam:
+        title: "ไม่ใช่"
       reject:
         title: "ละทิ้ง"
+      approve_and_restore:
+        title: "ใช่"
+      approve_and_unhide:
+        title: "ใช่"
       delete_post:
         complete: "โพสต์ถูกลบ"
       delete_user:

@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse Spoiler Alert"
   js:
+    spoiler:
+      title: Làm mờ tiết lộ nội dung
+      label:
+        show: "Hiển thị nội dung ẩn"
     composer:
       spoiler_text: "Đoạn text này sẽ được làm mờ"

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 
 // This was heavily modified by us over the years, and mostly written by us

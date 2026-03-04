@@ -41,6 +41,9 @@ ad_plugin:
   ad_plugin_enable_tracking:
     client: true
     default: false
+  ad_plugin_routes_enabled:
+    client: true
+    default: false
 
 adsense_plugin:
   adsense_publisher_code:

@@ -315,6 +315,34 @@ RSpec.describe "Managing Posts solved status" do
       expect(notification.post_number).to eq(post.post_number)
     end
 
+    describe "when muting solution accepter" do
+      fab!(:solution_accepter) { Fabricate(:user, trust_level: 4) }
+      fab!(:author, :user)
+
+      before do
+        SiteSetting.notify_on_staff_accept_solved = true
+        MutedUser.create!(user_id: author.id, muted_user_id: solution_accepter.id)
+      end
+
+      it "does not send notification to post author" do
+        topic = Fabricate(:topic, user: Fabricate(:user))
+        post = Fabricate(:post, post_number: 2, topic: topic, user: author)
+
+        expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
+          author.notifications.count
+        }
+      end
+
+      it "does not send notification to topic author" do
+        topic = Fabricate(:topic, user: author)
+        post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
+
+        expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
+          author.notifications.count
+        }
+      end
+    end
+
     it "does not set a timer when the topic is closed" do
       topic.update!(closed: true)
       post "/solution/accept.json", params: { id: p1.id }
@@ -451,132 +479,6 @@ RSpec.describe "Managing Posts solved status" do
     it "can accept a solution" do
       post "/solution/accept.json", params: { id: p1.id }
       expect(response.status).to eq(200)
-    end
-  end
-
-  context "with discourse-assign installed", if: defined?(DiscourseAssign) do
-    let(:admin) { Fabricate(:admin) }
-    fab!(:group)
-    before do
-      SiteSetting.solved_enabled = true
-      SiteSetting.assign_enabled = true
-      SiteSetting.enable_assign_status = true
-      SiteSetting.assign_allowed_on_groups = "#{group.id}"
-      SiteSetting.assigns_public = true
-      SiteSetting.assignment_status_on_solve = "Done"
-      SiteSetting.assignment_status_on_unsolve = "New"
-      SiteSetting.ignore_solved_topics_in_assigned_reminder = false
-      group.add(p1.acting_user)
-      group.add(user)
-
-      sign_in(user)
-    end
-
-    describe "updating assignment status on solve when assignment_status_on_solve is set" do
-      it "update all assignments to this status when a post is accepted" do
-        assigner = Assigner.new(p1.topic, user)
-        result = assigner.assign(user)
-        expect(result[:success]).to eq(true)
-
-        expect(p1.topic.assignment.status).to eq("New")
-        DiscourseSolved.accept_answer!(p1, user)
-        topic.reload
-
-        expect(topic.solved.answer_post_id).to eq(p1.id)
-        expect(p1.topic.assignment.reload.status).to eq("Done")
-      end
-
-      it "update all assignments to this status when a post is unaccepted" do
-        assigner = Assigner.new(p1.topic, user)
-        result = assigner.assign(user)
-        expect(result[:success]).to eq(true)
-
-        DiscourseSolved.accept_answer!(p1, user)
-
-        expect(p1.reload.topic.assignment.reload.status).to eq("Done")
-
-        DiscourseSolved.unaccept_answer!(p1)
-
-        expect(p1.reload.topic.assignment.reload.status).to eq("New")
-      end
-
-      it "does not update the assignee when a post is accepted" do
-        user = Fabricate(:user)
-        user_2 = Fabricate(:user)
-        user_3 = Fabricate(:user)
-        group.add(user)
-        group.add(user_2)
-        group.add(user_3)
-
-        topic_question = Fabricate(:topic, user: user)
-
-        Fabricate(:post, topic: topic_question, user: user)
-        Fabricate(:post, topic: topic_question, user: user_2)
-
-        result = Assigner.new(topic_question, user_2).assign(user_2)
-        expect(result[:success]).to eq(true)
-
-        post_response = Fabricate(:post, topic: topic_question, user: user_3)
-        Assigner.new(post_response, user_3).assign(user_3)
-
-        DiscourseSolved.accept_answer!(post_response, user)
-
-        expect(topic_question.assignment.assigned_to_id).to eq(user_2.id)
-        expect(post_response.assignment.assigned_to_id).to eq(user_3.id)
-        DiscourseSolved.unaccept_answer!(post_response)
-
-        expect(topic_question.assignment.assigned_to_id).to eq(user_2.id)
-        expect(post_response.assignment.assigned_to_id).to eq(user_3.id)
-      end
-
-      describe "assigned topic reminder" do
-        it "excludes solved topics when ignore_solved_topics_in_assigned_reminder is false" do
-          other_topic = Fabricate(:topic, title: "Topic that should be there")
-          post = Fabricate(:post, topic: other_topic, user: user)
-
-          other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
-          post2 = Fabricate(:post, topic: other_topic2, user: user)
-
-          Assigner.new(post.topic, user).assign(user)
-          Assigner.new(post2.topic, user).assign(user)
-
-          reminder = PendingAssignsReminder.new
-          topics = reminder.send(:assigned_topics, user, order: :asc)
-          expect(topics.to_a.length).to eq(2)
-
-          DiscourseSolved.accept_answer!(post2, Discourse.system_user)
-          topics = reminder.send(:assigned_topics, user, order: :asc)
-          expect(topics.to_a.length).to eq(2)
-          expect(topics).to include(other_topic2)
-
-          SiteSetting.ignore_solved_topics_in_assigned_reminder = true
-          topics = reminder.send(:assigned_topics, user, order: :asc)
-          expect(topics.to_a.length).to eq(1)
-          expect(topics).not_to include(other_topic2)
-          expect(topics).to include(other_topic)
-        end
-      end
-
-      describe "assigned count for user" do
-        it "does not count solved topics using assignment_status_on_solve status" do
-          SiteSetting.ignore_solved_topics_in_assigned_reminder = true
-
-          other_topic = Fabricate(:topic, title: "Topic that should be there")
-          post = Fabricate(:post, topic: other_topic, user: user)
-
-          other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
-          post2 = Fabricate(:post, topic: other_topic2, user: user)
-
-          Assigner.new(post.topic, user).assign(user)
-          Assigner.new(post2.topic, user).assign(user)
-
-          reminder = PendingAssignsReminder.new
-          expect(reminder.send(:assigned_count_for, user)).to eq(2)
-
-          DiscourseSolved.accept_answer!(post2, Discourse.system_user)
-          expect(reminder.send(:assigned_count_for, user)).to eq(1)
-        end
-      end
     end
   end
 

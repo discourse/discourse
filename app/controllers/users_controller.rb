@@ -40,6 +40,7 @@ class UsersController < ApplicationController
                    reset_recent_searches
                    user_menu_bookmarks
                    user_menu_messages
+                   toggle_anon
                  ]
 
   skip_before_action :check_xhr,
@@ -264,6 +265,11 @@ class UsersController < ApplicationController
 
   def username
     params.require(:new_username)
+
+    # Fast fail for usernames exceeding hardcoded max length
+    if params[:new_username].length > UsernameValidator::MAX_CHARS * 3
+      return render_json_error(I18n.t("user.username.long", count: SiteSetting.max_username_length))
+    end
 
     if clashing_with_existing_route?(params[:new_username]) ||
          (User.reserved_username?(params[:new_username]) && !current_user.admin?)
@@ -1525,7 +1531,7 @@ class UsersController < ApplicationController
 
     %W[
       number_of_deleted_posts
-      number_of_flagged_posts
+      number_of_flags
       number_of_flags_given
       number_of_silencings
       number_of_suspensions

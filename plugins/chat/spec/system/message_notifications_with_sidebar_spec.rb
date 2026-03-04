@@ -6,7 +6,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
   let!(:chat_page) { PageObjects::Pages::Chat.new }
   let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let!(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let!(:sidebar) { PageObjects::Pages::Sidebar.new }
+  let!(:sidebar) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -186,7 +186,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
 
           create_message(channel: dm_channel, creator: other_user)
 
-          expect(chat_sidebar).to have_direct_message_channel(dm_channel)
+          expect(chat_sidebar).to have_direct_message_channel(dm_channel, mention: true)
           expect(chat_sidebar).to have_no_start_new_dm
         end
       end
@@ -331,6 +331,32 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
               thread: thread,
               creator: other_user,
               text: "hey @#{current_user.username}",
+            )
+
+            expect(page).to have_css(".sidebar-row.channel-#{dm_channel.id} .urgent")
+          end
+        end
+
+        context "with direct message replies (threading disabled)" do
+          fab!(:dm_channel) do
+            Fabricate(:direct_message_channel, users: [current_user, other_user])
+          end
+
+          it "shows the urgent indicator when someone replies to a message" do
+            first_message =
+              Fabricate(:chat_message_with_service, chat_channel: dm_channel, user: other_user)
+            dm_channel.membership_for(current_user).mark_read!(first_message.id)
+
+            visit("/")
+            expect(page).to have_no_css(".sidebar-row.channel-#{dm_channel.id} .urgent")
+
+            Chat::CreateMessage.call(
+              guardian: other_user.guardian,
+              params: {
+                chat_channel_id: dm_channel.id,
+                message: "This is a reply",
+                in_reply_to_id: first_message.id,
+              },
             )
 
             expect(page).to have_css(".sidebar-row.channel-#{dm_channel.id} .urgent")

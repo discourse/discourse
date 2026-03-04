@@ -13,6 +13,7 @@ ja:
     discourse_reactions_desaturated_reaction_panel: "ホバーされるまで彩度を下げて表示することで、リアクションの視覚的な煩わしさを低減します。"
     discourse_reactions_excluded_from_like: "「いいね！」としてカウントされないリアクション。このリストに含まれないリアクションは、バッジ、レポート作成、およびその他の目的で「いいね！」としてカウントされます。"
     discourse_reactions_like_sync_enabled: "これが有効である場合、`discourse_reactions_excluded_from_like` で定義されたリアクションを除き、過去のリアクションにはそれに一致する「いいね！」レコードが作成されます。この同期はバックグラウンドで定期的に処理されます。また、`discourse_reactions_excluded_from_like` を変更した場合にも処理されます。"
+    discourse_reactions_allow_any_emoji: "これを有効にすると、リアクションピッカーで任意の絵文字を選択できるボタンが追加されます。メンバーはカスタム絵文字を含む任意の絵文字をリアクションに選択できます。利用可能なリアクションを宣言するには、`emoji_deny_list` サイト設定を使用してください。"
     errors:
       invalid_excluded_emoji: "「Discourse リアクション対応リアクション」含まれない絵文字を除外できません。また、「「いいね！」に対する Discourse リアクション」に使用される絵文字は除外できません。"
   badges:

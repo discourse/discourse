@@ -43,10 +43,8 @@ sw:
         create:
           created: "Kanuni imetengenezwa bila tatizo"
           updated: "Kanuni imesasishwa vizuri"
-          error: "Samahani, hitilafu imetokea wakati wa kutengeneza hiyo kanuni."
         delete:
           success: "Kanuni imefutwa kwa mafanikio"
-          error: "Samahani, hitilafu imetokea wakati wa kufuta kanuni. Andika `/discourse hali` kupata orodha ya kanuni."
         not_found:
           tag: "Lebo ya *%{name}* haijapatikana."
           category: "Kikundi kinachoitwa %{name} hakijapatikana. Vikundi vilivyopo ni: *%{list}*"
@@ -77,10 +75,8 @@ sw:
         create:
           created: "Kanuni imetengenezwa bila tatizo"
           updated: "Kanuni imesasishwa vizuri"
-          error: "Samahani, hitilafu imetokea wakati wa kutengeneza hiyo kanuni."
         delete:
           success: "Kanuni imefutwa kwa mafanikio"
-          error: "Samahani, hitilafu imetokea wakati wa kufuta kanuni. Andika <code>/hali</code>kupata orodha ya kanuni."
         not_found:
           tag: "Nembo ya <b>%{name}</b> haipatikani/haipo"
           category: "Kikundi cha <b>%{name}</b>hakipatikani. Vikundi vilivyopo ni: <b>%{list}</b>"
@@ -111,10 +107,8 @@ sw:
         create:
           created: "Kanuni imetengenezwa bila tatizo"
           updated: "Kanuni imesasishwa vizuri"
-          error: "Samahani, hitilafu imetokea wakati wa kutengeneza hiyo kanuni."
         delete:
           success: "Kanuni imefutwa kwa mafanikio"
-          error: "Samahani, hitilafu imetokea wakati wa kufuta kanuni. Andika `/discourse hali` kupata orodha ya kanuni."
         not_found:
           tag: "Lebo ya *%{name}* haijapatikana."
           category: "Kikundi kinachoitwa %{name} hakijapatikana. Vikundi vilivyopo ni: *%{list}*"

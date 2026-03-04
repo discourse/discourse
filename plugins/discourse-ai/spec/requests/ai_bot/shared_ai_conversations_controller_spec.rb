@@ -319,7 +319,8 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
   describe "GET preview" do
     it "denies preview from logged out users" do
       get "#{path}/preview/#{user_pm_share.id}.json"
-      expect(response).not_to have_http_status(:success)
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
     context "when logged in" do

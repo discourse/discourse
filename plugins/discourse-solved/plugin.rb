@@ -24,6 +24,8 @@ end
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
+  register_category_type(DiscourseSolved::CategoryType)
+
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 
   module ::DiscourseSolved
@@ -53,7 +55,7 @@ after_initialize do
           solved =
             DiscourseSolved::SolvedTopic.new(topic:, answer_post: post, accepter: acting_user)
 
-          unless acting_user.id == post.user_id
+          if acting_user.id != post.user_id && notify_solved?(recipient: post.user, acting_user:)
             Notification.create!(
               notification_type: Notification.types[:custom],
               user_id: post.user_id,
@@ -68,7 +70,8 @@ after_initialize do
             )
           end
 
-          if SiteSetting.notify_on_staff_accept_solved && acting_user.id != topic.user_id
+          if SiteSetting.notify_on_staff_accept_solved && acting_user.id != topic.user_id &&
+               notify_solved?(recipient: topic.user, acting_user:)
             Notification.create!(
               notification_type: Notification.types[:custom],
               user_id: topic.user_id,
@@ -159,6 +162,13 @@ after_initialize do
       end
     end
 
+    def self.notify_solved?(recipient:, acting_user:)
+      !UserCommScreener.new(
+        acting_user_id: acting_user.id,
+        target_user_ids: recipient.id,
+      ).ignoring_or_muting_actor?(recipient.id)
+    end
+
     def self.skip_db?
       defined?(GlobalSetting.skip_db?) && GlobalSetting.skip_db?
     end
@@ -172,6 +182,7 @@ after_initialize do
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
+    ::TopicsController.prepend(DiscourseSolved::TopicsControllerExtension)
     ::Topic.attr_accessor(:accepted_answer_user_id)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)
@@ -288,13 +299,28 @@ after_initialize do
   end
 
   on(:before_post_publish_changes) do |post_changes, topic_changes, options|
-    category_id_changes = topic_changes.diff["category_id"].to_a
-    tag_changes = topic_changes.diff["tags"].to_a
+    topic = topic_changes.topic
+    current_tag_names = topic.tags.map(&:name)
 
-    old_allowed = Guardian.new.allow_accepted_answers?(category_id_changes[0], tag_changes[0])
-    new_allowed = Guardian.new.allow_accepted_answers?(category_id_changes[1], tag_changes[1])
+    category_id_diff = topic_changes.diff["category_id"]
+    tag_diff = topic_changes.diff["tags"]
 
-    options[:refresh_stream] = true if old_allowed != new_allowed
+    old_category_id = category_id_diff ? category_id_diff[0] : topic.category_id
+    old_tags = tag_diff ? tag_diff[0] : current_tag_names
+
+    old_allowed = Guardian.new.solved_enabled_for_category?(old_category_id, old_tags)
+    new_allowed = Guardian.new.solved_enabled_for_category?(topic.category_id, current_tag_names)
+
+    if old_allowed != new_allowed
+      options[:refresh_stream] = true
+
+      if !new_allowed
+        if topic.solved.present?
+          post = topic.solved.answer_post
+          DiscourseSolved.unaccept_answer!(post, topic: topic) if post
+        end
+      end
+    end
   end
 
   query = <<~SQL
@@ -362,5 +388,4 @@ after_initialize do
 
   DiscourseDev::DiscourseSolved.populate(self)
   DiscourseAutomation::EntryPoint.inject(self) if defined?(DiscourseAutomation)
-  DiscourseAssign::EntryPoint.inject(self) if defined?(DiscourseAssign)
 end

@@ -94,6 +94,10 @@ class FieldHelper {
       case "select": {
         return this.element.querySelector(".form-kit__control-select").value;
       }
+      case "color": {
+        return this.element.querySelector(".form-kit__control-color-input-hex")
+          .value;
+      }
       case "menu": {
         return this.element.querySelector(".form-kit__control-menu-trigger")
           .dataset.value;

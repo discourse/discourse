@@ -22,6 +22,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   scopedCategoryId: null,
   prioritizedCategoryId: null,
   readOnlyCategoryId: null,
+  displayCategoryDescription: true,
 })
 @pluginApiIdentifiers(["category-chooser"])
 export default class CategoryChooser extends ComboBoxComponent {
@@ -150,7 +151,7 @@ export default class CategoryChooser extends ComboBoxComponent {
     prioritizedCategoryId = null,
   } = {}) {
     const categories = this.fixedCategoryPositionsOnCreate
-      ? Category.list()
+      ? Category.sortCategories(Category.list())
       : Category.listByActivity();
 
     let { readOnlyCategoryId } = this.selectKit.options;

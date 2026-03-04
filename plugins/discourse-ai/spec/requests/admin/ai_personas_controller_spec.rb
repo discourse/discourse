@@ -2,6 +2,7 @@
 
 RSpec.describe DiscourseAi::Admin::AiPersonasController do
   fab!(:admin)
+  fab!(:admin_2, :admin)
   fab!(:ai_persona)
   fab!(:embedding_definition)
   fab!(:llm_model)
@@ -832,7 +833,7 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       expect(response.body).to include("associated")
     end
 
-    def validate_streamed_response(raw_http, expected)
+    def parse_streamed_response(raw_http)
       lines = raw_http.split("\r\n")
 
       header_lines, _, payload_lines = lines.chunk { |l| l == "" }.map(&:last)
@@ -850,7 +851,7 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       expect(header_lines.join("\n")).to eq(preamble)
 
       parsed = +""
-
+      chunks = []
       context_info = nil
 
       payload_lines.each_slice(2) do |size, data|
@@ -860,15 +861,20 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
 
         if size > 0
           json = JSON.parse(data)
+          chunks << json
           parsed << json["partial"].to_s
 
           context_info = json if json["topic_id"]
         end
       end
 
-      expect(parsed).to eq(expected)
+      { parsed: parsed, context_info: context_info, chunks: chunks }
+    end
 
-      context_info
+    def validate_streamed_response(raw_http, expected)
+      response = parse_streamed_response(raw_http)
+      expect(response[:parsed]).to eq(expected)
+      response[:context_info]
     end
 
     it "is able to create a new conversation" do
@@ -979,6 +985,560 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       )
 
       expect(topic.posts.count).to eq(4)
+    end
+
+    it "supports custom injected tools with resume tokens" do
+      Jobs.run_immediately!
+      SiteSetting.ai_bot_allowed_groups = "10"
+
+      ai_persona.create_user!
+      ai_persona.update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm.id,
+        allow_personal_messages: true,
+        system_prompt: "you are a helpful bot",
+      )
+
+      fake_endpoint.fake_content = [
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_weather",
+          parameters: {
+            city: "Austin",
+          },
+          id: "tool_1",
+        ),
+        "This is the response after a client tool call.",
+        "Tool flow title",
+      ]
+      fake_endpoint.chunk_count = 1
+
+      io_out, io_in = IO.pipe
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             persona_id: ai_persona.id,
+             query: "What's the weather?",
+             user_unique_id: "site:test.com:user_id:42",
+             preferred_username: "tool_user",
+             custom_tools: [
+               {
+                 name: "client_weather",
+                 description: "Gets weather from the client runtime",
+                 parameters: [
+                   {
+                     name: "city",
+                     description: "City to fetch weather for",
+                     type: "string",
+                     required: true,
+                   },
+                 ],
+               },
+             ],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+
+      parsed = parse_streamed_response(io_out.read)
+      context = parsed[:context_info]
+      tool_event = parsed[:chunks].find { |chunk| chunk["event"] == "tool_calls" }
+
+      expect(parsed[:parsed]).to eq("")
+      expect(context["topic_id"]).to be_present
+      expect(tool_event).to be_present
+      expect(tool_event.dig("tool_calls", 0, "name")).to eq("client_weather")
+      expect(tool_event["resume_token"]).to be_present
+
+      topic = Topic.find(context["topic_id"])
+      expect(topic.posts.count).to eq(1)
+      expect(topic.posts.first.raw).to eq("What's the weather?")
+
+      io_out, io_in = IO.pipe
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: tool_event["resume_token"],
+             tool_results: [{ tool_call_id: "tool_1", content: { temperature_c: 23 } }],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+
+      resumed = parse_streamed_response(io_out.read)
+      expect(resumed[:parsed]).to eq("This is the response after a client tool call.")
+
+      topic.reload
+      expect(topic.posts.count).to eq(2)
+      expect(topic.posts.order(:created_at).last.raw).to eq(
+        "This is the response after a client tool call.",
+      )
+      expect(topic.title).to eq("Tool flow title")
+    end
+
+    it "validates resume requests include tool_results" do
+      resume_token = SecureRandom.hex(12)
+      Discourse.redis.setex(
+        DiscourseAi::AiBot::StreamReplyCustomToolsSession.redis_key(resume_token),
+        60,
+        { prompt: { messages: [], tools: [] } }.to_json,
+      )
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: resume_token,
+           }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"].join).to include("tool_results")
+    end
+
+    it "supports parallel tool calls in one completion turn" do
+      Jobs.run_immediately!
+      SiteSetting.ai_bot_allowed_groups = "10"
+
+      ai_persona.create_user!
+      ai_persona.update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm.id,
+        allow_personal_messages: true,
+        system_prompt: "you are a helpful bot",
+      )
+
+      user = Fabricate(:user)
+      Group.user_trust_level_change!(user.id, user.trust_level)
+
+      first_post =
+        PostCreator.create!(
+          user,
+          title: "Parallel Tool Topic",
+          archetype: Archetype.private_message,
+          target_usernames: ai_persona.user.username,
+          raw: "Initial context message",
+          custom_fields: {
+            DiscourseAi::AiBot::Playground::BYPASS_AI_REPLY_CUSTOM_FIELD => true,
+          },
+        )
+      topic = first_post.topic
+
+      tool_1 =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_weather",
+          parameters: {
+            city: "Austin",
+          },
+          id: "tool_1",
+        )
+
+      tool_2 =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_time",
+          parameters: {
+            timezone: "America/Chicago",
+          },
+          id: "tool_2",
+        )
+
+      fake_endpoint.fake_content = [[tool_1, tool_2], "Parallel tool response finished."]
+
+      io_out, io_in = IO.pipe
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             persona_id: ai_persona.id,
+             username: user.username,
+             topic_id: topic.id,
+             query: "Need weather and local time.",
+             custom_tools: [
+               {
+                 name: "client_weather",
+                 description: "Gets weather from a client runtime",
+                 parameters: [
+                   {
+                     name: "city",
+                     description: "City to fetch weather for",
+                     type: "string",
+                     required: true,
+                   },
+                 ],
+               },
+               {
+                 name: "client_time",
+                 description: "Gets local time from a client runtime",
+                 parameters: [
+                   {
+                     name: "timezone",
+                     description: "IANA timezone string",
+                     type: "string",
+                     required: true,
+                   },
+                 ],
+               },
+             ],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+
+      parsed = parse_streamed_response(io_out.read)
+      tool_event = parsed[:chunks].find { |chunk| chunk["event"] == "tool_calls" }
+
+      expect(parsed[:parsed]).to eq("")
+      expect(tool_event).to be_present
+      expect(tool_event["tool_calls"].length).to eq(2)
+      expect(tool_event["tool_calls"].map { |call| call["id"] }).to contain_exactly(
+        "tool_1",
+        "tool_2",
+      )
+      expect(tool_event["resume_token"]).to be_present
+
+      io_out, io_in = IO.pipe
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: tool_event["resume_token"],
+             tool_results: [
+               { tool_call_id: "tool_2", content: { local_time: "10:15" } },
+               { tool_call_id: "tool_1", content: { temperature_c: 23 } },
+             ],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+
+      resumed = parse_streamed_response(io_out.read)
+      expect(resumed[:parsed]).to eq("Parallel tool response finished.")
+
+      topic.reload
+      expect(topic.posts.count).to eq(3)
+      expect(topic.posts.order(:created_at).last.raw).to eq("Parallel tool response finished.")
+    end
+
+    it "rejects too many custom tools" do
+      tools =
+        Array.new(21) do |index|
+          { name: "tool_#{index}", description: "test tool #{index}", parameters: [] }
+        end
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             custom_tools: tools,
+           }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"].join).to include("custom_tools")
+    end
+
+    it "rejects ambiguous tool_results params" do
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             tool_result: {
+               tool_call_id: "tool_1",
+               content: "single",
+             },
+             tool_results: [{ tool_call_id: "tool_2", content: "plural" }],
+           }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"].join).to include("either tool_results or tool_result")
+    end
+
+    it "rejects oversized tool result content" do
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: "ignored-by-validation",
+             tool_results: [{ tool_call_id: "tool_1", content: "a" * 103_000 }],
+           }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"].join).to include("at most")
+    end
+
+    it "rejects nil tool result content" do
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             tool_results: [{ tool_call_id: "tool_1", content: nil }],
+           }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["errors"].join).to include("tool_results")
+    end
+
+    it "handles resume token TOCTOU expiration during session load" do
+      allow(DiscourseAi::AiBot::StreamReplyCustomToolsSession).to receive(
+        :resume_state_exists?,
+      ).and_call_original
+      allow(DiscourseAi::AiBot::StreamReplyCustomToolsSession).to receive(
+        :resume_state_exists?,
+      ).with("toctou-token").and_return(true)
+
+      io_out, io_in = IO.pipe
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: "toctou-token",
+             tool_results: [{ tool_call_id: "tool_1", content: { ok: true } }],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+
+      parsed = parse_streamed_response(io_out.read)
+      error_event = parsed[:chunks].find { |chunk| chunk["event"] == "error" }
+
+      expect(error_event).to be_present
+      expect(error_event["error"]).to include("resume_token")
+    end
+
+    it "rejects resume tokens from a different admin user" do
+      Jobs.run_immediately!
+      SiteSetting.ai_bot_allowed_groups = "10"
+
+      ai_persona.create_user!
+      ai_persona.update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm.id,
+        allow_personal_messages: true,
+        system_prompt: "you are a helpful bot",
+      )
+
+      fake_endpoint.fake_content = [
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_weather",
+          parameters: {
+            city: "Austin",
+          },
+          id: "tool_1",
+        ),
+      ]
+
+      io_out, io_in = IO.pipe
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             persona_id: ai_persona.id,
+             query: "Need weather",
+             user_unique_id: "site:test.com:user_id:mismatch",
+             preferred_username: "mismatch_user",
+             custom_tools: [
+               {
+                 name: "client_weather",
+                 description: "Gets weather from the client runtime",
+                 parameters: [
+                   {
+                     name: "city",
+                     description: "City to fetch weather for",
+                     type: "string",
+                     required: true,
+                   },
+                 ],
+               },
+             ],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+      parsed = parse_streamed_response(io_out.read)
+      resume_token = parsed[:chunks].find { |chunk| chunk["event"] == "tool_calls" }["resume_token"]
+
+      sign_in(admin_2)
+      io_out, io_in = IO.pipe
+
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: resume_token,
+             tool_results: [{ tool_call_id: "tool_1", content: { temp_c: 22 } }],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+      resumed = parse_streamed_response(io_out.read)
+      error_event = resumed[:chunks].find { |chunk| chunk["event"] == "error" }
+
+      expect(error_event).to be_present
+      expect(error_event["error"]).to include("resume_token")
+    end
+
+    it "rejects unexpected tool_call_ids in tool results" do
+      Jobs.run_immediately!
+      SiteSetting.ai_bot_allowed_groups = "10"
+
+      ai_persona.create_user!
+      ai_persona.update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm.id,
+        allow_personal_messages: true,
+        system_prompt: "you are a helpful bot",
+      )
+
+      fake_endpoint.fake_content = [
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_weather",
+          parameters: {
+          },
+          id: "tool_1",
+        ),
+      ]
+
+      io_out, io_in = IO.pipe
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             persona_id: ai_persona.id,
+             query: "Need weather",
+             user_unique_id: "site:test.com:user_id:unexpected",
+             preferred_username: "unexpected_user",
+             custom_tools: [
+               {
+                 name: "client_weather",
+                 description: "Gets weather from the client runtime",
+                 parameters: [],
+               },
+             ],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+      parsed = parse_streamed_response(io_out.read)
+      resume_token = parsed[:chunks].find { |chunk| chunk["event"] == "tool_calls" }["resume_token"]
+
+      io_out, io_in = IO.pipe
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: resume_token,
+             tool_results: [
+               { tool_call_id: "tool_1", content: { ok: true } },
+               { tool_call_id: "tool_extra", content: { bad: true } },
+             ],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+      resumed = parse_streamed_response(io_out.read)
+      error_event = resumed[:chunks].find { |chunk| chunk["event"] == "error" }
+
+      expect(error_event).to be_present
+      expect(error_event["error"]).to include("Unexpected")
+    end
+
+    it "supports multi-round tool calling with resume" do
+      Jobs.run_immediately!
+      SiteSetting.ai_bot_allowed_groups = "10"
+
+      ai_persona.create_user!
+      ai_persona.update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm.id,
+        allow_personal_messages: true,
+        system_prompt: "you are a helpful bot",
+      )
+
+      user = Fabricate(:user)
+      Group.user_trust_level_change!(user.id, user.trust_level)
+
+      first_post =
+        PostCreator.create!(
+          user,
+          title: "Multi Round Tool Topic",
+          archetype: Archetype.private_message,
+          target_usernames: ai_persona.user.username,
+          raw: "Initial context message",
+          custom_fields: {
+            DiscourseAi::AiBot::Playground::BYPASS_AI_REPLY_CUSTOM_FIELD => true,
+          },
+        )
+      topic = first_post.topic
+
+      fake_endpoint.fake_content = [
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_weather",
+          parameters: {
+          },
+          id: "tool_1",
+        ),
+        DiscourseAi::Completions::ToolCall.new(name: "client_time", parameters: {}, id: "tool_2"),
+        "Finished after two tool rounds.",
+      ]
+
+      io_out, io_in = IO.pipe
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             persona_id: ai_persona.id,
+             username: user.username,
+             topic_id: topic.id,
+             query: "Need weather and time.",
+             custom_tools: [
+               {
+                 name: "client_weather",
+                 description: "Gets weather from a client runtime",
+                 parameters: [],
+               },
+               {
+                 name: "client_time",
+                 description: "Gets local time from a client runtime",
+                 parameters: [],
+               },
+             ],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+      first_round = parse_streamed_response(io_out.read)
+      first_tool_event = first_round[:chunks].find { |chunk| chunk["event"] == "tool_calls" }
+
+      expect(first_tool_event.dig("tool_calls", 0, "id")).to eq("tool_1")
+
+      io_out, io_in = IO.pipe
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: first_tool_event["resume_token"],
+             tool_results: [{ tool_call_id: "tool_1", content: { temp_c: 22 } }],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+      second_round = parse_streamed_response(io_out.read)
+      second_tool_event = second_round[:chunks].find { |chunk| chunk["event"] == "tool_calls" }
+
+      expect(second_tool_event.dig("tool_calls", 0, "id")).to eq("tool_2")
+
+      io_out, io_in = IO.pipe
+      post "/admin/plugins/discourse-ai/ai-personas/stream-reply.json",
+           params: {
+             resume_token: second_tool_event["resume_token"],
+             tool_results: [{ tool_call_id: "tool_2", content: { time: "10:15" } }],
+           },
+           env: {
+             "rack.hijack" => lambda { io_in },
+           }
+
+      expect(response).to have_http_status(:no_content)
+      final_round = parse_streamed_response(io_out.read)
+
+      expect(final_round[:parsed]).to eq("Finished after two tool rounds.")
+      topic.reload
+      expect(topic.posts.count).to eq(3)
+      expect(topic.posts.order(:created_at).last.raw).to eq("Finished after two tool rounds.")
     end
   end
 end

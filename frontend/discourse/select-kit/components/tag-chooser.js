@@ -20,10 +20,14 @@ import TagChooserRow from "./tag-chooser-row";
   limit: null,
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
+  valueProperty: "id",
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
   @service tagUtils;
+
+  valueProperty = "id";
+  nameProperty = "name";
 
   blockedTags = null;
   excludeSynonyms = false;
@@ -68,26 +72,47 @@ export default class TagChooser extends MultiSelectComponent {
 
   @computed("tags.[]")
   get value() {
-    return uniqueItemsFromArray(makeArray(this.tags));
+    return uniqueItemsFromArray(
+      makeArray(this.tags).map((t) => {
+        if (typeof t === "string" || typeof t === "number") {
+          return t;
+        }
+        return t.id;
+      })
+    );
   }
 
   @computed("tags.[]")
   get content() {
-    return uniqueItemsFromArray(makeArray(this.tags)).map((t) =>
-      this.defaultItem(t, t)
+    return uniqueItemsFromArray(
+      makeArray(this.tags).map((t) => {
+        if (typeof t === "string") {
+          return this.defaultItem(t, t);
+        }
+        if (typeof t === "number") {
+          // numeric ID - use as both id and name until we can look up the actual name
+          return this.defaultItem(t, t);
+        }
+        return this.defaultItem(t.id, t.name);
+      })
     );
   }
 
   @action
   _onChange(value, items) {
     if (this.onChange) {
-      this.onChange(value, items);
+      this.onChange(items);
     } else {
-      this.set("tags", value);
+      this.set("tags", items);
     }
   }
 
   validateCreate(filter, content) {
+    // Get tag names for validation (not IDs)
+    const selectedTagNames = makeArray(this.tags)
+      .filter(Boolean)
+      .map((t) => (typeof t === "string" ? t : t.name));
+
     return this.tagUtils.validateCreate(
       filter,
       content,
@@ -95,7 +120,7 @@ export default class TagChooser extends MultiSelectComponent {
       (e) => this.addError(e),
       this.termMatchesForbidden,
       (value) => this.getValue(value),
-      this.value
+      selectedTagNames
     );
   }
 
@@ -113,9 +138,22 @@ export default class TagChooser extends MultiSelectComponent {
     };
 
     if (selectedTags.length || this.blockedTags.length) {
-      data.selected_tags = uniqueItemsFromArray(
+      const allTags = uniqueItemsFromArray(
         selectedTags.concat(this.blockedTags)
       ).slice(0, 100);
+
+      // Extract IDs for objects, keep strings for legacy/blocked tags
+      const ids = allTags
+        .map((t) => (typeof t === "string" ? null : t.id))
+        .filter((id) => id !== null);
+      const names = allTags.filter((t) => typeof t === "string");
+
+      if (ids.length) {
+        data.selected_tag_ids = ids;
+      }
+      if (names.length) {
+        data.selected_tags = names;
+      }
     }
 
     if (!this.everyTag) {
@@ -149,15 +187,19 @@ export default class TagChooser extends MultiSelectComponent {
     });
 
     if (this.blockedTags) {
+      // extract names from blockedTags (may be strings or objects)
+      const blockedNames = this.blockedTags.map((t) =>
+        typeof t === "string" ? t : t.name
+      );
       results = results.filter((result) => {
-        return !this.blockedTags.includes(result.id);
+        return !blockedNames.includes(result.name);
       });
     }
 
     if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.id > b.id);
+      results = results.sort((a, b) => a.name > b.name);
     }
 
-    return uniqueItemsFromArray(results, "id");
+    return uniqueItemsFromArray(results, "name");
   }
 }

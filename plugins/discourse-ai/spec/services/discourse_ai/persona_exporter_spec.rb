@@ -19,6 +19,7 @@ RSpec.describe DiscourseAi::PersonaExporter do
         custom_tool = export_json["custom_tools"].first
         expect(custom_tool["identifier"]).to eq(ai_tool.tool_name)
         expect(custom_tool["name"]).to eq(ai_tool.name)
+        expect(custom_tool["secret_contracts"]).to eq(ai_tool.secret_contracts)
       end
     end
 

@@ -1,15 +1,19 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { classNames, tagName } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import AdSlot from "../../components/ad-slot";
 
-@tagName("div")
-@classNames("topic-above-post-stream-outlet", "discourse-adplugin")
+@tagName("")
 export default class DiscourseAdplugin extends Component {
   <template>
-    <AdSlot
-      @placement="topic-above-post-stream"
-      @category={{this.model.category.slug}}
-    />
+    <div
+      class="topic-above-post-stream-outlet discourse-adplugin"
+      ...attributes
+    >
+      <AdSlot
+        @placement="topic-above-post-stream"
+        @category={{this.model.category.slug}}
+      />
+    </div>
   </template>
 }

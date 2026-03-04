@@ -90,6 +90,16 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
   end
 
+  def generate_import_map(plugin_assets)
+    imports =
+      plugin_assets
+        .filter { it[:importmap_name] }
+        .map { [it[:importmap_name], script_asset_path(it[:name])] }
+        .to_h
+
+    JSON.pretty_generate({ imports: }).html_safe
+  end
+
   def script_asset_path(script)
     path = ActionController::Base.helpers.asset_path("#{script}.js")
 
@@ -113,16 +123,17 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      # assets needed for theme testing are not compressed because they take a fair
-      # amount of time to compress (+30 seconds) during rebuilds/deploys when the
-      # vast majority of sites will never need them, so it makes more sense to serve
-      # them uncompressed instead of making everyone's rebuild/deploy take +30 more
-      # seconds.
-      if !script.start_with?("discourse/tests/")
-        if is_brotli_req?
-          path = path.gsub(/\.([^.]+)\z/, '.br.\1')
-        elsif is_gzip_req?
-          path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
+      if is_brotli_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/br/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.br.\1')
+        end
+      elsif is_gzip_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/gz/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
     end
@@ -130,7 +141,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script)
+  def preload_script(script, attrs: {})
     scripts = []
 
     if chunks = EmberCli.script_chunks[script]
@@ -142,20 +153,24 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script)
+        preload_script_url(path, entrypoint: script, attrs: attrs)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, type_module: false)
+  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
+
+    extra_attrs =
+      attrs&.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }&.join(" ")
+    extra_attrs = " #{extra_attrs}" if extra_attrs.present?
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute}#{extra_attrs} #{nonce_attribute}></script>
     HTML
   end
 
@@ -322,7 +337,16 @@ module ApplicationHelper
 
     generate_twitter_card_metadata(result, opts)
 
-    result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
+    if opts[:image].present?
+      result << tag(:meta, property: "og:image", content: opts[:image])
+      if opts[:image_width].present? && opts[:image_height].present?
+        result << tag(:meta, property: "og:image:width", content: opts[:image_width])
+        result << tag(:meta, property: "og:image:height", content: opts[:image_height])
+      end
+      if opts[:image_type].present?
+        result << tag(:meta, property: "og:image:type", content: opts[:image_type])
+      end
+    end
 
     %i[url title description].each do |property|
       if opts[property].present?
@@ -393,6 +417,13 @@ module ApplicationHelper
       }
       content_tag(:script, MultiJson.dump(json).html_safe, type: "application/ld+json")
     end
+  end
+
+  def discourse_track_view_session_tag
+    return if !SiteSetting.trigger_browser_pageview_events
+    <<~HTML.html_safe
+      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
+    HTML
   end
 
   def gsub_emoji_to_unicode(str)
@@ -486,6 +517,67 @@ module ApplicationHelper
     # A bit basic for now but will be expanded later
     SiteSetting.splash_screen
   end
+
+  def custom_splash_screen_enabled?
+    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
+
+    @custom_splash_screen_enabled =
+      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
+        SiteSetting.splash_screen_image.is_a?(Upload)
+  end
+
+  def splash_screen_image_animated?
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg.present? && @splash_screen_image_svg.match?(/@keyframes\s/)
+  end
+
+  def splash_screen_inline_svg
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg&.html_safe
+  end
+
+  def splash_screen_image_data_uri(dark: false)
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    return nil if @splash_screen_image_svg.blank?
+
+    # Replace CSS variable references with actual theme colors
+    svg_with_colors = @splash_screen_image_svg.dup
+
+    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
+    primary = "##{public_send(color_method, "primary")}"
+    secondary = "##{public_send(color_method, "secondary")}"
+    tertiary = "##{public_send(color_method, "tertiary")}"
+
+    svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
+    svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
+    svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
+
+    # Use base64 encoding for better compatibility with complex SVGs
+    "data:image/svg+xml;base64,#{Base64.strict_encode64(svg_with_colors)}"
+  end
+
+  private
+
+  def build_splash_screen_image
+    @splash_screen_image_svg = nil
+
+    upload = SiteSetting.splash_screen_image
+    return unless upload.is_a?(Upload)
+
+    @splash_screen_image_svg =
+      Discourse
+        .cache
+        .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
+          begin
+            upload.content.presence
+          rescue StandardError => e
+            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+            nil
+          end
+        end
+  end
+
+  public
 
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]

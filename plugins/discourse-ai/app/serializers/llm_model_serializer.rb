@@ -3,7 +3,7 @@
 class LlmModelSerializer < ApplicationSerializer
   # TODO: we probably should rename the table LlmModel to AiLlm
   # it is consistent with AiPersona and AiTool
-  # LLM model is a bit confusing given that large langauge model model is a confusing
+  # LLM model is a bit confusing given that large language model model is a confusing
   # name
   root "ai_llm"
   attributes :id,
@@ -14,6 +14,7 @@ class LlmModelSerializer < ApplicationSerializer
              :max_output_tokens,
              :tokenizer,
              :api_key,
+             :ai_secret_id,
              :url,
              :provider_params,
              :vision_enabled,

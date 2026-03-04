@@ -11,8 +11,6 @@ bg:
       actions:
         agree_and_suspend:
           title: "Преустанови потребител"
-        disagree:
-          title: "Не съм съгласен "
     channel:
       dm_title:
         single_user: "%{username}"

@@ -167,9 +167,7 @@ HTML
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
     expect(javascript_cache.content).to include("test text \\\" 123!")
-    expect(javascript_cache.content).to include(
-      'themeCompatModules["discourse/templates/my-template"]',
-    )
+    expect(javascript_cache.content).to include('compatModules["discourse/templates/my-template"]')
   end
 
   it "correctly generates errors for transpiled css" do
@@ -271,13 +269,13 @@ HTML
 
     # All together
     expect(theme.javascript_cache.content).to include(
-      'themeCompatModules["discourse/templates/discovery"]',
+      'compatModules["discourse/templates/discovery"]',
     )
     expect(theme.javascript_cache.content).to include(
-      'themeCompatModules["discourse/controllers/discovery"]',
+      'compatModules["discourse/controllers/discovery"]',
     )
     expect(theme.javascript_cache.content).to include(
-      'themeCompatModules["discourse/controllers/discovery-2"]',
+      'compatModules["discourse/controllers/discovery-2"]',
     )
     expect(theme.javascript_cache.content).to include("registerSettings(")
     expect(theme.javascript_cache.content).to include(
@@ -294,7 +292,7 @@ HTML
       "theme-#{theme.id}/discourse/controllers/discovery-2.js",
       "theme-#{theme.id}/discourse/controllers/discovery.js",
       "theme-#{theme.id}/discourse/templates/discovery.hbs",
-      "theme-#{theme.id}/virtual:main",
+      "theme-#{theme.id}/virtual:entrypoint:main",
       "theme-#{theme.id}/virtual:theme",
       "theme-#{theme.id}/virtual:init-settings",
     )

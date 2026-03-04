@@ -36,6 +36,8 @@ class Field {
         return this.element.querySelector("button");
       case "select":
         return this.element.querySelector("select");
+      case "color":
+        return this.element.querySelector(".form-kit__control-color-input-hex");
       default:
         throw new Error(`Unsupported control type: ${this.controlType}`);
     }
@@ -43,8 +45,23 @@ class Field {
 
   value() {
     switch (this.controlType) {
-      case "input-text":
+      case "input-number":
         return parseInt(this.inputElement.value, 10);
+      // String-based controls fall through to return raw value
+      case "input-text":
+      case "password":
+      case "code":
+      case "textarea":
+      case "composer":
+      case "color":
+      case "select":
+        return this.inputElement.value;
+      // Boolean-based controls return checked state
+      case "checkbox":
+      case "toggle":
+        return this.inputElement.checked;
+      default:
+        throw new Error(`Unsupported control type: ${this.controlType}`);
     }
   }
 
@@ -117,6 +134,40 @@ class Field {
     await fillIn(this.element.querySelector("input[type='time']"), time);
   }
 
+  isDisabled() {
+    return this.inputElement.disabled;
+  }
+
+  hasPrefix() {
+    if (this.controlType !== "color") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    return !!this.element.querySelector(
+      ".form-kit__control-color-input-prefix"
+    );
+  }
+
+  get pickerElement() {
+    if (this.controlType !== "color") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    return this.element.querySelector(".form-kit__control-color-input-picker");
+  }
+
+  swatches() {
+    if (this.controlType !== "color") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    const swatchElements = this.element.querySelectorAll(
+      ".form-kit__control-color-swatch"
+    );
+    return [...swatchElements].map((swatch) => ({
+      color: swatch.dataset.color,
+      isUsed: swatch.classList.contains("is-used"),
+      isDisabled: swatch.disabled,
+    }));
+  }
+
   async select(value) {
     switch (this.element.dataset.controlType) {
       case "icon":
@@ -148,6 +199,14 @@ class Field {
           `input[type="radio"][value="${value}"]`
         );
         await click(radio);
+        break;
+      case "color":
+        const swatch = this.element.querySelector(
+          `.form-kit__control-color-swatch[data-color="${value.toUpperCase()}"]`
+        );
+        if (swatch) {
+          await click(swatch);
+        }
         break;
       default:
         throw new Error("Unsupported field type");

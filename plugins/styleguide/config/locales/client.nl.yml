@@ -67,8 +67,6 @@ nl:
           title: "Topiclijst"
         basic_topic_list:
           title: "Basistopicslijst"
-        footer_message:
-          title: "Voettekstbericht"
         signup_cta:
           title: "Registratie-CTA"
         topic_timer_info:

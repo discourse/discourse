@@ -49,9 +49,21 @@ nl:
         agree_and_delete:
           title: "Reactie verwijderen"
           description: "Verwijder de reactie zodat gebruikers deze niet kunnen zien."
+        agree_and_suspend:
+          title: "Gebruiker schorsen"
+          description: "Akkoord met markering en de gebruiker schorsen."
+        agree_and_silence:
+          title: "Gebruiker dempen"
+          description: "Akkoord met markering en de gebruiker dempen."
         disagree_and_restore:
           title: "Niet akkoord en reactie herstellen"
           description: "Herstel de reactie zodat alle gebruikers deze kunnen zien."
+        disagree:
+          title: "Reactie behouden"
+        ignore:
+          title: "Markering negeren"
+        delete_and_agree:
+          description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder de reactie."
   post_action_types:
     vote:
       title: "Stemmen"
@@ -99,16 +111,14 @@ nl:
             title: "Reactie verwijderen"
             description: "Verwijder de reactie zodat gebruikers deze niet kunnen zien."
           delete_and_agree:
-            title: "Markering negeren en reactie verwijderen"
             description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder de reactie."
           disagree_and_restore:
             title: "Niet akkoord en reactie herstellen"
             description: "Herstel de reactie zodat alle gebruikers deze kunnen zien."
           disagree:
-            title: "Niet akkoord"
+            title: "Reactie behouden"
           ignore:
-            title: "Niets doen"
-            description: "Negeer de markering door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen."
+            title: "Markering negeren"
         transcript:
           view: "Transcript van eerdere reacties weergeven"
       reviewable_score_types:

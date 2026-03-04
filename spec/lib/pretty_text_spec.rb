@@ -31,7 +31,7 @@ RSpec.describe PrettyText do
       it "correctly extracts usernames from the new quote format" do
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote no-group" data-username="codinghorror" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="codinghorror" data-display-name="Jeff" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a></div>
@@ -164,7 +164,7 @@ RSpec.describe PrettyText do
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
-            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d​:wink: <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d​<img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d<br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"></p>
           HTML
@@ -1200,6 +1200,21 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt(nil, 100)).to eq("")
     end
 
+    it "returns empty string when Nokogiri hits tree depth limits" do
+      html = "<div>" * 10 + "Hello" + "</div>" * 10
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_TREE_DEPTH", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
+    it "returns empty string when Nokogiri hits attribute limits" do
+      attrs = (1..10).map { |i| "data-a#{i}=\"v\"" }.join(" ")
+      html = "<div #{attrs}>Hello</div>"
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_ATTRIBUTES", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
     it "handles custom bbcode excerpt" do
       raw = <<~MD
       [excerpt]
@@ -1905,11 +1920,17 @@ RSpec.describe PrettyText do
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
     end
+  end
 
-    # ensure it does not fight with the autolinker
+  it "does not fight with the autolinker" do
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?abc#known")).not_to include("hashtag")
+  end
+
+  it "does not trigger when preceded with a slash" do
+    expect(PrettyText.cook("/#known")).not_to include("hashtag")
+    expect(PrettyText.cook("test/#known")).not_to include("hashtag")
   end
 
   it "can handle mixed lists" do

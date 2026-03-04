@@ -48,8 +48,6 @@ gl:
     chat_integration_flowdock_excerpt_length: "Lonxitude do resumo da publicación en Flowdock"
     chat_integration_groupme_enabled: "Activar o fornecedor de chat-integration para Groupme"
     chat_integration_groupme_excerpt_length: "Lonxitude do resumo da publicación en Groupme"
-    chat_integration_groupme_bot_ids: "* obrigatorios * Os ID de bot, separados por ',' se hai varios"
-    chat_integration_groupme_instance_names: " * obrigatorio * Nome do chat de GroupMe, separado por ',' se hai varios (a mesma orde que os ID do bot)"
     chat_integration_teams_enabled: "Activar o fornecedor de chat-integration para Microsft Teams"
     chat_integration_teams_excerpt_length: "Lonxitude do resumo da publicación en Microsft Team"
     chat_integration_webex_enabled: "Activar o fornecedor de chat-integration con Webex Teams"
@@ -75,10 +73,8 @@ gl:
         create:
           created: "A regra creouse correctamente"
           updated: "A regra actualizouse correctamente"
-          error: "Desculpe pero produciuse un erro ao crear esa regra."
         delete:
           success: "A regra eliminouse correctamente"
-          error: "Desculpe, produciuse un erro ao eliminar esa regra. Execute «/discourse status» para unha listaxe de regras."
         not_found:
           tag: "Non se pode atopar a etiqueta *%{name}*."
           category: "Non foi posíbel atopar a categoría *%{name}*. Categorías dispoñíbeis: *%{list}*"
@@ -128,10 +124,8 @@ gl:
         create:
           created: "A regra creouse correctamente"
           updated: "A regra actualizouse correctamente"
-          error: "Desculpe pero produciuse un erro ao crear esa regra."
         delete:
           success: "A regra eliminouse correctamente"
-          error: "Desculpe, produciuse un erro ao eliminar esa regra. Execute <code>/status</code> para unha listaxe de regras."
         not_found:
           tag: "Non se pode atopar a etiqueta <b>%{name}</b>"
           category: "Non foi posíbel atopar a categoría <b>%{name}</b>. Categorías dispoñíbeis: <b>%{list}</b>"
@@ -162,10 +156,8 @@ gl:
         create:
           created: "A regra creouse correctamente"
           updated: "A regra actualizouse correctamente"
-          error: "Desculpe pero produciuse un erro ao crear esa regra."
         delete:
           success: "A regra eliminouse correctamente"
-          error: "Desculpe, produciuse un erro ao eliminar esa regra. Execute «/discourse status» para unha listaxe de regras."
         not_found:
           tag: "Non se pode atopar a etiqueta *%{name}*."
           category: "Non foi posíbel atopar a categoría *%{name}*. Categorías dispoñíbeis: *%{list}*"

@@ -106,6 +106,18 @@ module Chat
       )
     end
 
+    def self.user_has_threads_message_bus_channel(user_id)
+      "/chat/user-has-threads/#{user_id}"
+    end
+
+    def self.publish_user_has_threads!(user)
+      MessageBus.publish(
+        user_has_threads_message_bus_channel(user.id),
+        { has_threads: true },
+        user_ids: [user.id],
+      )
+    end
+
     def self.publish_processed!(chat_message)
       chat_channel = chat_message.chat_channel
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
@@ -447,6 +459,25 @@ module Chat
           archive_topic_id: archive_topic_id,
         },
         permissions(chat_channel),
+      )
+    end
+
+    def self.publish_pin!(chat_channel, chat_message, pin)
+      publish_to_channel!(
+        chat_channel,
+        {
+          type: :pin,
+          chat_message_id: chat_message.id,
+          pinned_at: pin.created_at.iso8601(3),
+          pinned_by_id: pin.pinned_by_id,
+        },
+      )
+    end
+
+    def self.publish_unpin!(chat_channel, chat_message, unpinned_by)
+      publish_to_channel!(
+        chat_channel,
+        { type: :unpin, chat_message_id: chat_message.id, unpinned_by_id: unpinned_by.id },
       )
     end
 

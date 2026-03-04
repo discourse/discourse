@@ -106,14 +106,14 @@ class DiscourseCLI < Thor
 
     begin
       puts "Starting backup..."
-      backuper =
-        BackupRestore::Backuper.new(
+      creator =
+        BackupRestore::Creator.new(
           Discourse.system_user.id,
           filename: filename_without_extension,
           with_uploads: !options[:sql_only],
         )
-      backup_filename = backuper.run
-      exit(1) unless backuper.success
+      backup_filename = creator.run
+      exit(1) unless creator.success
 
       puts "Backup done."
 

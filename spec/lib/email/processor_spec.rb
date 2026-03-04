@@ -3,48 +3,113 @@
 require "email/processor"
 
 RSpec.describe Email::Processor do
+  def configure_reply_by_email
+    SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+    SiteSetting.manual_polling_enabled = true
+    SiteSetting.reply_by_email_enabled = true
+  end
+
   after { Discourse.redis.flushdb }
 
   let(:from) { "foo@bar.com" }
 
-  context "when reply via email is too short" do
-    let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
-    fab!(:post)
-    fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
+  context "with reply_by_email configured" do
+    before { configure_reply_by_email }
 
-    fab!(:post_reply_key) do
-      Fabricate(
-        :post_reply_key,
-        user: user,
-        post: post,
-        reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
-      )
+    context "when reply via email is too short" do
+      let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
+      fab!(:post)
+      fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
+
+      fab!(:post_reply_key) do
+        Fabricate(
+          :post_reply_key,
+          user: user,
+          post: post,
+          reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
+        )
+      end
+
+      before { SiteSetting.min_post_length = 1000 }
+
+      it "rejects reply and sends an email with custom error message" do
+        processor = Email::Processor.new(mail)
+        processor.process!
+
+        rejection_raw = ActionMailer::Base.deliveries.first.body.raw_source
+
+        count = SiteSetting.min_post_length
+        destination = processor.receiver.mail.to
+        former_title = processor.receiver.mail.subject
+
+        expect(rejection_raw.gsub(/\r/, "")).to eq(
+          I18n.t(
+            "system_messages.email_reject_post_too_short.text_body_template",
+            count: count,
+            destination: destination,
+            former_title: former_title,
+          ).gsub(/\r/, ""),
+        )
+      end
+    end
+    describe "from reply to email address" do
+      let(:mail) do
+        "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?"
+      end
+
+      it "ignores the email" do
+        Email::Receiver
+          .any_instance
+          .stubs(:process_internal)
+          .raises(Email::Receiver::FromReplyByAddressError.new)
+
+        expect { Email::Processor.process!(mail) }.not_to change { EmailLog.count }
+      end
     end
 
-    before do
-      SiteSetting.email_in = true
-      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
-      SiteSetting.min_post_length = 1000
+    describe "mailinglist mirror" do
+      before { Fabricate(:mailinglist_mirror_category) }
+
+      it "does not send rejection email" do
+        SiteSetting.email_in = true
+
+        Email::Receiver.any_instance.stubs(:process_internal).raises("boom")
+
+        email = <<~EMAIL
+        From: foo@example.com
+        To: list@example.com
+        Subject: Hello world
+      EMAIL
+
+        expect { Email::Processor.process!(email) }.to_not change { EmailLog.count }
+      end
     end
 
-    it "rejects reply and sends an email with custom error message" do
-      processor = Email::Processor.new(mail)
-      processor.process!
+    describe "when replying to a post that is too old" do
+      fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+      fab!(:topic)
+      fab!(:post) { Fabricate(:post, topic: topic, created_at: 3.days.ago) }
+      let(:mail) do
+        file_from_fixtures("old_destination.eml", "emails").read.gsub(":post_id", post.id.to_s)
+      end
 
-      rejection_raw = ActionMailer::Base.deliveries.first.body.raw_source
+      it "rejects the email with the right response" do
+        SiteSetting.disallow_reply_by_email_after_days = 2
+        processor = Email::Processor.new(mail)
+        processor.process!
 
-      count = SiteSetting.min_post_length
-      destination = processor.receiver.mail.to
-      former_title = processor.receiver.mail.subject
+        rejection_raw = ActionMailer::Base.deliveries.first.body.to_s
 
-      expect(rejection_raw.gsub(/\r/, "")).to eq(
-        I18n.t(
-          "system_messages.email_reject_post_too_short.text_body_template",
-          count: count,
-          destination: destination,
-          former_title: former_title,
-        ).gsub(/\r/, ""),
-      )
+        expect(rejection_raw).to eq(
+          I18n.t(
+            "system_messages.email_reject_old_destination.text_body_template",
+            destination: '["reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com"]',
+            former_title: "Some Old Post",
+            short_url: "#{Discourse.base_url}/p/#{post.id}",
+            number_of_days: 2,
+          ),
+        )
+      end
     end
   end
 
@@ -136,76 +201,6 @@ RSpec.describe Email::Processor do
       expect { Email::Processor.process!(mail) }.to change { EmailLog.count }.by(1)
 
       expect { Email::Processor.process!(mail2) }.to change { EmailLog.count }.by(1)
-    end
-  end
-
-  describe "from reply to email address" do
-    before do
-      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
-      SiteSetting.manual_polling_enabled = true
-      SiteSetting.reply_by_email_enabled = true
-    end
-
-    let(:mail) do
-      "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?"
-    end
-
-    it "ignores the email" do
-      Email::Receiver
-        .any_instance
-        .stubs(:process_internal)
-        .raises(Email::Receiver::FromReplyByAddressError.new)
-
-      expect { Email::Processor.process!(mail) }.not_to change { EmailLog.count }
-    end
-  end
-
-  describe "mailinglist mirror" do
-    before do
-      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
-      SiteSetting.manual_polling_enabled = true
-      SiteSetting.reply_by_email_enabled = true
-      SiteSetting.email_in = true
-      Fabricate(:mailinglist_mirror_category)
-    end
-
-    it "does not send rejection email" do
-      Email::Receiver.any_instance.stubs(:process_internal).raises("boom")
-
-      email = <<~EMAIL
-        From: foo@example.com
-        To: list@example.com
-        Subject: Hello world
-      EMAIL
-
-      expect { Email::Processor.process!(email) }.to_not change { EmailLog.count }
-    end
-  end
-
-  describe "when replying to a post that is too old" do
-    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
-    fab!(:topic)
-    fab!(:post) { Fabricate(:post, topic: topic, created_at: 3.days.ago) }
-    let(:mail) do
-      file_from_fixtures("old_destination.eml", "emails").read.gsub(":post_id", post.id.to_s)
-    end
-
-    it "rejects the email with the right response" do
-      SiteSetting.disallow_reply_by_email_after_days = 2
-      processor = Email::Processor.new(mail)
-      processor.process!
-
-      rejection_raw = ActionMailer::Base.deliveries.first.body.to_s
-
-      expect(rejection_raw).to eq(
-        I18n.t(
-          "system_messages.email_reject_old_destination.text_body_template",
-          destination: '["reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com"]',
-          former_title: "Some Old Post",
-          short_url: "#{Discourse.base_url}/p/#{post.id}",
-          number_of_days: 2,
-        ),
-      )
     end
   end
 

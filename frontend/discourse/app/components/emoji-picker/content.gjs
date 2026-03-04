@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
@@ -60,13 +61,11 @@ export default class EmojiPicker extends Component {
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";
-  @tracked emojis = null;
   @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked term = this.args.term;
 
   prevYPosition = 0;
-
   scrollableNode;
 
   setupSectionsNavScroll = modifierFn((element) => {
@@ -341,10 +340,18 @@ export default class EmojiPicker extends Component {
 
     next(() => {
       schedule("afterRender", () => {
-        const targetEmoji = document.querySelector(
+        const targetSection = document.querySelector(
           `.emoji-picker__section[data-section="${section}"]`
         );
-        targetEmoji.scrollIntoView({ block: "nearest" });
+
+        if (targetSection && this.scrollableNode) {
+          const titleContainer = targetSection.querySelector(
+            ".emoji-picker__section-title-container"
+          );
+          const titleHeight = titleContainer?.offsetHeight ?? 0;
+          this.scrollableNode.scrollTop = targetSection.offsetTop - titleHeight;
+        }
+
         this.scrollObserverEnabled = true;
       });
     });

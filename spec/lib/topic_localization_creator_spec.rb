@@ -60,4 +60,42 @@ describe TopicLocalizationCreator do
       }.to raise_error(Discourse::InvalidAccess)
     end
   end
+
+  describe "excerpt from existing post localization" do
+    fab!(:first_post) { Fabricate(:post, topic: topic, post_number: 1) }
+
+    it "sets excerpt from existing post localization" do
+      Fabricate(
+        :post_localization,
+        post: first_post,
+        locale: locale,
+        raw: "これは投稿の内容です。",
+        cooked: "<p>これは投稿の内容です。</p>",
+      )
+
+      localization = described_class.create(topic:, locale:, title:, user:)
+
+      expect(localization.excerpt).to eq("これは投稿の内容です。")
+    end
+
+    it "sets excerpt to nil when no post localization exists" do
+      localization = described_class.create(topic:, locale:, title:, user:)
+
+      expect(localization.excerpt).to be_nil
+    end
+
+    it "sets excerpt to nil when post localization exists for different locale" do
+      Fabricate(
+        :post_localization,
+        post: first_post,
+        locale: "fr",
+        raw: "Ceci est le contenu du post.",
+        cooked: "<p>Ceci est le contenu du post.</p>",
+      )
+
+      localization = described_class.create(topic:, locale:, title:, user:)
+
+      expect(localization.excerpt).to be_nil
+    end
+  end
 end

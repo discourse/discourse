@@ -504,7 +504,7 @@ RSpec.describe SessionController do
         end
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
-        it "doesnt allow logging in if the 2fa params are garbled" do
+        it "doesn't allow logging in if the 2fa params are garbled" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
                  second_factor_method: UserSecondFactor.methods[:totp],
@@ -517,7 +517,7 @@ RSpec.describe SessionController do
           expect(response_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
         end
 
-        it "doesnt allow login if both of the 2fa params are blank" do
+        it "doesn't allow login if both of the 2fa params are blank" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
                  second_factor_method: UserSecondFactor.methods[:totp],
@@ -1900,7 +1900,7 @@ RSpec.describe SessionController do
         SiteSetting.enable_local_logins_via_email = false
         EmailToken.confirm(email_token.token)
       end
-      it "doesnt matter, logs in correctly" do
+      it "doesn't matter, logs in correctly" do
         post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
@@ -3281,6 +3281,67 @@ RSpec.describe SessionController do
           expect(response.parsed_body["error"]).not_to be_present
 
           expect(session[:current_user_id]).to eq(user.id)
+        end
+
+        it "does not log in a suspended user" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          user.update!(suspended_till: 2.days.from_now, suspended_at: Time.zone.now)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to be_present
+          expect(response.parsed_body["reason"]).to eq("suspended")
+          expect(session[:current_user_id]).to be_nil
+        end
+
+        it "does not log in a user from a screened IP address" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          ScreenedIpAddress.all.destroy_all
+          get "/"
+          Fabricate(:screened_ip_address, ip_address: request.remote_ip)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to be_present
+          expect(session[:current_user_id]).to be_nil
+        end
+
+        it "does not log in an unapproved user when must_approve_users is enabled" do
+          SiteSetting.must_approve_users = true
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          user.update_columns(approved: false)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
+          expect(session[:current_user_id]).to be_nil
         end
 
         context "with a valid discourse connect provider" do

@@ -31,8 +31,12 @@ describe "Admin Badges Page", type: :system do
       expect(form.field("icon")).to be_enabled
       expect(form.field("icon")).to have_value("user-pen")
       expect(form.container("name")).to have_content(badge.name.strip)
-      expect(form.container("description")).to have_content(badge.description.strip)
-      expect(form.container("long_description")).to have_content(badge.long_description.strip)
+      expect(form.container("description")).to have_content(
+        Nokogiri::HTML5.fragment(badge.description).text.strip,
+      )
+      expect(form.container("long_description")).to have_content(
+        Nokogiri::HTML5.fragment(badge.long_description).text.strip,
+      )
     end
   end
 
@@ -101,6 +105,30 @@ describe "Admin Badges Page", type: :system do
 
         expect(badges_page.form.field("trigger").value).to eq("0")
       end
+    end
+  end
+
+  context "when filtering badges" do
+    it "filters badges by name" do
+      badges_page.visit_page
+
+      autobiographer = Badge.find(Badge::Autobiographer)
+      editor = Badge.find(Badge::Editor)
+
+      expect(badges_page).to have_badge_in_list(autobiographer.display_name)
+      expect(badges_page).to have_badge_in_list(editor.display_name)
+
+      badges_page.filter_badges(editor.display_name)
+
+      expect(badges_page).to have_badge_in_list(editor.display_name)
+      expect(badges_page).to have_no_badge_in_list(autobiographer.display_name)
+    end
+
+    it "shows no results message when no badges match" do
+      badges_page.visit_page
+      badges_page.filter_badges("nonexistent")
+
+      expect(badges_page).to have_no_badges_found_message
     end
   end
 

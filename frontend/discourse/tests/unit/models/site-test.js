@@ -3,6 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
 import Site from "discourse/models/site";
+import Tag from "discourse/models/tag";
 
 module("Unit | Model | site", function (hooks) {
   setupTest(hooks);
@@ -105,5 +106,51 @@ module("Unit | Model | site", function (hooks) {
         "Test Sub Sub Sub",
       ]
     );
+  });
+
+  test("topTags returns Tag model instances", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {
+      top_tags: [
+        { id: 1, name: "bug", slug: "bug" },
+        { id: 2, name: "feature", slug: "feature" },
+      ],
+    });
+
+    const topTags = site.topTags;
+
+    assert.strictEqual(topTags.length, 2);
+    assert.true(topTags[0] instanceof Tag);
+    assert.true(topTags[1] instanceof Tag);
+  });
+
+  test("topTags returns empty array when top_tags is not set", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {});
+
+    assert.deepEqual(site.topTags, []);
+  });
+
+  test("categoryTopTags returns Tag model instances", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {
+      category_top_tags: [
+        { id: 3, name: "support", slug: "support" },
+        { id: 4, name: "help", slug: "help" },
+      ],
+    });
+
+    const categoryTopTags = site.categoryTopTags;
+
+    assert.strictEqual(categoryTopTags.length, 2);
+    assert.true(categoryTopTags[0] instanceof Tag);
+    assert.true(categoryTopTags[1] instanceof Tag);
+  });
+
+  test("categoryTopTags returns empty array when category_top_tags is not set", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {});
+
+    assert.deepEqual(site.categoryTopTags, []);
   });
 });

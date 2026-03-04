@@ -1,3 +1,5 @@
+// @ts-check
+
 import { Fragment, Slice } from "prosemirror-model";
 import { NodeSelection, Plugin } from "prosemirror-state";
 
@@ -8,13 +10,6 @@ import { NodeSelection, Plugin } from "prosemirror-state";
 const EMPTY_DRAG_IMG = new Image();
 EMPTY_DRAG_IMG.src =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-
-/**
- * Overrides the default drag image with an empty image, giving room for the drop cursor.
- *
- * @type {RichEditorExtension}
- *
- **/
 
 const dropSelectionPlugin = new Plugin({
   appendTransaction(transactions, oldState, newState) {
@@ -45,6 +40,12 @@ const dropSelectionPlugin = new Plugin({
   },
 });
 
+/**
+ * Overrides the default drag image with an empty image, giving room for the drop cursor.
+ *
+ * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
+ *
+ **/
 const extension = {
   plugins: [
     dropSelectionPlugin,

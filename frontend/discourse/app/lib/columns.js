@@ -51,18 +51,23 @@ export default class Columns {
   _prepareItems() {
     let targets = [];
 
-    for (let child of this.container.children) {
+    const children = [...this.container.children];
+    for (let child of children) {
       // sometimes children are wrapped in a paragraph
       if (child.nodeName === "P" && child.children.length > 0) {
-        for (let c of child.children) {
-          targets.push(this._wrapDirectImage(c));
+        for (let c of [...child.children]) {
+          if (!["BR", "P"].includes(c.nodeName)) {
+            targets.push(c);
+          }
         }
       } else {
-        targets.push(this._wrapDirectImage(child));
+        if (!["BR", "P"].includes(child.nodeName)) {
+          targets.push(child);
+        }
       }
     }
 
-    return targets.filter((item) => !["BR", "P"].includes(item.nodeName));
+    return targets;
   }
 
   _wrapDirectImage(item) {
@@ -72,7 +77,7 @@ export default class Columns {
 
     const wrapper = document.createElement("span");
     wrapper.classList.add("image-wrapper");
-    wrapper.appendChild(item.cloneNode());
+    wrapper.appendChild(item);
     return wrapper;
   }
 
@@ -92,9 +97,12 @@ export default class Columns {
 
       // use aspect ratio to compare heights and append to shortest column
       // if element is not an image, assume ratio is 1:1
-      const img = item.querySelector("img") || item;
-      heights[shortest] += img.nodeName === "IMG" ? img.height / img.width : 1;
-      columns[shortest].append(item);
+      const img =
+        item.querySelector("img") || (item.nodeName === "IMG" ? item : null);
+      heights[shortest] += img && img.width > 0 ? img.height / img.width : 1;
+
+      const wrappedItem = this._wrapDirectImage(item);
+      columns[shortest].append(wrappedItem);
     });
 
     return columns;

@@ -11,7 +11,7 @@ export default class AiEmbedding extends RestModel {
       "tokenizer_class",
       "dimensions",
       "url",
-      "api_key",
+      "ai_secret_id",
       "max_sequence_length",
       "provider_params",
       "pg_function",

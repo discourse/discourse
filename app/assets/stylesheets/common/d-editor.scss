@@ -443,7 +443,13 @@
   }
 
   .translation-selector-dropdown {
-    margin-bottom: 0.5rem;
+    .select-kit-header {
+      --d-button-default-bg-color: transparent;
+      --d-button-default-bg-color--hover: var(--primary-low);
+      --d-button-default-text-color--hover: var(--primary-high);
+      --d-button-default-icon-color--hover: var(--primary-high);
+      border: 1px solid var(--primary-low-mid);
+    }
 
     .select-kit-body {
       max-height: 300px;

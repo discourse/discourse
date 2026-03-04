@@ -49,9 +49,21 @@ fr:
         agree_and_delete:
           title: "Supprimer le commentaire"
           description: "Supprimer le commentaire pour que les utilisateurs ne puissent pas le voir."
+        agree_and_suspend:
+          title: "Suspendre l'utilisateur"
+          description: "Accepter le signalement et suspendre l'utilisateur."
+        agree_and_silence:
+          title: "Désactiver l'utilisateur"
+          description: "Accepter le signalement et désactiver l'utilisateur."
         disagree_and_restore:
           title: "Rejeter le signalement et rétablir le commentaire"
           description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
+        disagree:
+          title: "Conserver le commentaire"
+        ignore:
+          title: "Ignorer le signalement"
+        delete_and_agree:
+          description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le commentaire."
   post_action_types:
     vote:
       title: "Voter"
@@ -99,16 +111,14 @@ fr:
             title: "Supprimer le commentaire"
             description: "Supprimer le commentaire pour que les utilisateurs ne puissent pas le voir."
           delete_and_agree:
-            title: "Ignorer le signalement et supprimer le commentaire"
             description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le commentaire."
           disagree_and_restore:
             title: "Rejeter le signalement et rétablir le commentaire"
             description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
           disagree:
-            title: "Refuser"
+            title: "Conserver le commentaire"
           ignore:
-            title: "Ne rien faire"
-            description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
+            title: "Ignorer le signalement"
         transcript:
           view: "Afficher la transcription des commentaires précédents"
       reviewable_score_types:

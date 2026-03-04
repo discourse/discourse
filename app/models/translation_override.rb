@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class TranslationOverride < ActiveRecord::Base
-  # TODO: Remove once
-  # 20240711123755_drop_compiled_js_from_translation_overrides has been
-  # promoted to pre-deploy
-  self.ignored_columns = %w[compiled_js]
-
   # Allowlist i18n interpolation keys that can be included when customizing translations
   ALLOWED_CUSTOM_INTERPOLATION_KEYS = {
     %w[
@@ -27,6 +22,7 @@ class TranslationOverride < ActiveRecord::Base
       topic_id
       context
       username
+      recipient_username
       group_name
       unsubscribe_url
       subject_pm
@@ -41,6 +37,7 @@ class TranslationOverride < ActiveRecord::Base
       optional_tags
     ],
     %w[system_messages.welcome_user] => %w[username name name_or_username],
+    %w[js.welcome_banner.header] => %w[site_name],
   }
 
   include HasSanitizableFields
@@ -155,18 +152,17 @@ class TranslationOverride < ActiveRecord::Base
   end
 
   def invalid_interpolation_keys
-    return [] if current_default.blank?
+    return [] if current_default.blank? || value.blank?
 
     original_interpolation_keys = I18nInterpolationKeysFinder.find(current_default)
-    new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
-    custom_interpolation_keys = []
+    custom_keys = self.class.custom_interpolation_keys(transformed_key)
+    allowed_keys = original_interpolation_keys + custom_keys
 
-    ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
-      custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
-    end
+    # Find all patterns that look like interpolation attempts: %{...}
+    attempted_keys = value.scan(/%\{([^{}]+?)\}/).flatten.uniq
 
-    (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
-      custom_interpolation_keys
+    # Return keys that aren't in the allowed list
+    attempted_keys - allowed_keys
   end
 
   def current_default

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef, no-unused-vars */
-const apiKey = "YOUR_BFL_API_KEY";
+const apiKey = secrets.get("bfl_api_key");
 
 function invoke(params) {
   const prompt = params.prompt;
@@ -105,7 +105,7 @@ function submitAndPoll(body, prompt, seed) {
       const raw = `\n![${prompt}](${image.short_url})\n`;
       chain.setCustomRaw(raw);
 
-      return { result: "Image generated successfully", seed };
+      return { url: image.short_url, seed };
     }
 
     if (

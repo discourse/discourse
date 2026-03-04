@@ -143,6 +143,8 @@ export default class Chat extends Component {
 
   @action
   handleSubmit(data) {
+    this.saved = false;
+
     const { chat_quick_reactions_custom, ...userOptions } = data;
     const shouldReload =
       userOptions.chat_enabled !== this.args.model.user_option.chat_enabled;
@@ -158,14 +160,12 @@ export default class Chat extends Component {
     return this.args.model
       .save(CHAT_ATTRS)
       .then(() => {
+        this.saved = true;
         if (shouldReload && !isTesting()) {
           location.reload();
         }
       })
-      .catch(popupAjaxError)
-      .finally(() => {
-        this.saved = true;
-      });
+      .catch(popupAjaxError);
   }
 
   <template>

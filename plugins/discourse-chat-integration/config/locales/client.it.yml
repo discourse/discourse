@@ -16,7 +16,6 @@ it:
       settings: "Impostazioni"
       no_providers: "È necessario abilitare alcuni fornitori nelle impostazioni del plugin"
       channels_with_errors: "L'invio di messaggi per alcuni canali di questo fornitore non ha funzionato. Fai clic sull'icona/e di errore per saperne di più."
-      channel_exception: "Si è verificato un errore sconosciuto l'ultima volta che un messaggio è stato inviato a questo canale."
       group_mention_template: "Menzioni di: @%{name}"
       group_message_template: "Messaggi a: @%{name}"
       choose_group: "(scegli un gruppo)"
@@ -33,7 +32,6 @@ it:
         topic: "Argomento"
         send: "Invia messaggio di prova"
         close: "Chiudi"
-        error: "Si è verificato un errore sconosciuto durante l'invio del messaggio. Controlla i log del sito per maggiori informazioni."
         success: "Messaggio inviato correttamente"
       type:
         normal: Normale

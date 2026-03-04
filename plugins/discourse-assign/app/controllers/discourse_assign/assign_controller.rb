@@ -28,7 +28,7 @@ module DiscourseAssign
       target_type = params.require(:target_type)
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
-      raise Discourse::NotFound unless target
+      raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
 
       assigner = Assigner.new(target, current_user)
       assigner.unassign
@@ -58,7 +58,7 @@ module DiscourseAssign
       raise Discourse::NotFound unless assign_to
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
-      raise Discourse::NotFound unless target
+      raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
 
       assign =
         Assigner.new(target, current_user).assign(

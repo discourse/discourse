@@ -67,7 +67,10 @@ export default class UpcomingEventsCalendar extends Component {
       if (post?.topic?.tags) {
         const tagColorEntry = tagsColorsMap.find(
           (entry) =>
-            entry.type === "tag" && post.topic.tags.includes(entry.slug)
+            entry.type === "tag" &&
+            post.topic.tags.some(
+              (t) => (typeof t === "string" ? t : t.name) === entry.slug
+            )
         );
         backgroundColor = tagColorEntry?.color;
       }
@@ -178,6 +181,7 @@ export default class UpcomingEventsCalendar extends Component {
         @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
         @rightHeaderToolbar={{this.rightHeaderToolbar}}
+        @refreshKey={{this.currentUser?.id}}
       />
     </div>
   </template>
