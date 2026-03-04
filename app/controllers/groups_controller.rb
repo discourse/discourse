@@ -648,10 +648,10 @@ class GroupsController < ApplicationController
     user_id = current_user.id
     user_id = params[:user_id] || user_id if guardian.is_staff?
 
-    GroupUser
-      .where(group_id: group.id)
-      .where(user_id: user_id)
-      .update_all(notification_level: notification_level)
+    group_user = GroupUser.find_by(group_id: group.id, user_id: user_id)
+    raise Discourse::InvalidParameters.new(:user_id) if group_user.blank?
+
+    group_user.update!(notification_level: notification_level)
 
     render json: success_json
   end
