@@ -34,6 +34,7 @@ export default class TopicList extends Component {
   @service currentUser;
   // eslint-disable-next-line discourse/no-unused-services
   @service topicTrackingState; // accessed via `self` variable
+  @service moreTopicsTabs;
 
   @cached
   get columns() {
@@ -198,7 +199,12 @@ export default class TopicList extends Component {
       ...attributes
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
-      <thead class="topic-list-header">
+      <thead
+        class={{concatClass
+          "topic-list-header"
+          (if this.moreTopicsTabs.tabs.length "--has-tabs")
+        }}
+      >
         <Header
           @columns={{this.columns}}
           @canBulkSelect={{@canBulkSelect}}
