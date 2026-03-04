@@ -28,12 +28,16 @@ module DiscourseAi
 
     private
 
-    def check_personas(params:)
+    def check_personas(params:, guardian:)
       context[:personas] = {}
       return true if params.persona_ids.blank?
 
-      # Batch load personas
-      personas = AiPersona.where(id: params.persona_ids).to_a
+      # Batch load personas scoped to enabled and user-accessible
+      personas =
+        AiPersona
+          .where(id: params.persona_ids, enabled: true)
+          .to_a
+          .select { |p| guardian.user.in_any_groups?(p.allowed_group_ids) }
 
       # Collect all LLM model IDs needed
       llm_model_ids =
@@ -100,9 +104,10 @@ module DiscourseAi
       true
     end
 
-    def check_llm_models(params:)
+    def check_llm_models(params:, guardian:)
       context[:llm_models] = {}
       return true if params.llm_model_ids.blank?
+      return true unless guardian.is_staff?
 
       # Batch load LLM models with their credit allocations and daily usage
       llm_models =
