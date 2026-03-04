@@ -5,7 +5,13 @@ import { i18n } from "discourse-i18n";
 
 export default class SolvedSettingsUpsert extends Component {
   static shouldRender(args, context) {
-    return context.siteSettings.enable_simplified_category_creation;
+    return (
+      context.siteSettings.enable_simplified_category_creation &&
+      !(
+        context.siteSettings.enable_category_type_setup &&
+        args.category?.isType("support")
+      )
+    );
   }
 
   @service siteSettings;

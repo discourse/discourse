@@ -910,11 +910,11 @@ export default class Category extends RestModel {
   }
 
   isType(type) {
-    return Object.keys(this.category_types).includes(type);
+    return Object.keys(this.category_types ?? {}).includes(type);
   }
 
   getType(type) {
-    return this.category_types[type];
+    return this.category_types?.[type];
   }
 
   @computed("topics")
