@@ -1401,7 +1401,7 @@ en:
       description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU / MAU (Daily Active Users / Monthly Active Users)"
+      title: "DAU / MAU"
       xaxis: "Day"
       yaxis: "DAU/MAU"
       description: "The share of monthly active members who returned in the last day. This percentage shows how regularly people come back; also called the community 'stickiness'. Aim for > 20%."
