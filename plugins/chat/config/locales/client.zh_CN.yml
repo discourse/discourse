@@ -72,7 +72,7 @@ zh_CN:
       pinned_messages:
         title: "置顶消息"
         close: "关闭置顶消息"
-        pinned_by_you: "您置顶"
+        pinned_by_you: "由您置顶"
         pinned_by_user: "由 %{username} 置顶"
       no_pinned_messages: "此频道中没有置顶消息。"
       pin_message: "置顶消息"
