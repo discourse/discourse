@@ -286,3 +286,9 @@
     border-right-color: transparent;
   }
 }
+
+.rewind-gibberish {
+  &__code-line {
+    margin-left: var(--space-4);
+  }
+}

@@ -10,15 +10,6 @@ en:
       title: Rewind
       loading: "Reticulating splines..."
       viewing_other_user: "You are viewing <strong>%{username}'s</strong> Discourse Rewind report."
-      cannot_view_rewind_gibberish: >
-        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br>
-
-        Bootstrapping anomaly log...<br><br>
-
-        &nbsp;&nbsp;>> quantum buffer underrun ⧛<br>
-        &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br>
-        &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br>
-        &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
       cannot_view_rewind: >
         You cannot view this Discourse Rewind report. Maybe the owner has not shared it publicly?<br><br>
 
@@ -135,7 +126,7 @@ en:
           reply_1: "lol awesome B-)"
           # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
           message_2_MF: |
-            You had { dm_count, plural, 
+            You had { dm_count, plural,
                 one {<strong>#</strong> DM conversation}
               other {<strong>#</strong> DM conversations}
             } with { channel_count, plural,
