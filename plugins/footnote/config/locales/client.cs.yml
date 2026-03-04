@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse Poznámky pod čarou"
+  js:
+    footnote:
+      title: "Poznámky pod čarou"
+      add: "Přidat poznámku pod čarou"

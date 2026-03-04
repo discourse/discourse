@@ -30,14 +30,3 @@ Propshaft::Helper.prepend(
     end
   end,
 )
-
-Propshaft::Compiler::SourceMappingUrls.prepend(
-  Module.new do
-    def source_mapping_url(*args)
-      # Propshaft insists on converting sourcemap URLs to absolute paths. We want to keep
-      # relative paths so that we can serve assets from different subdirectories without needing
-      # to recompile them
-      super.gsub(%r{sourceMappingURL=\S+/([^/]+\.map)}, 'sourceMappingURL=\1')
-    end
-  end,
-)

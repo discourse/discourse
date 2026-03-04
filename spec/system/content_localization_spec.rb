@@ -82,16 +82,19 @@ describe "Content Localization" do
 
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
 
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-        I18n.t("js.content_localization.toggle_localized.translated"),
-      )
+      I18n.with_locale(:ja) do
+        expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+          I18n.t("js.content_localization.toggle_localized.translated"),
+        )
+      end
       page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-        I18n.t("js.content_localization.toggle_localized.not_translated"),
-      )
-
+      I18n.with_locale(:ja) do
+        expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+          I18n.t("js.content_localization.toggle_localized.not_translated"),
+        )
+      end
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
     end
@@ -483,6 +486,69 @@ describe "Content Localization" do
         topic_page.visit_topic(jap_topic)
         expect(topic_page).to have_topic_title(jap_topic.fancy_title)
         expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+      end
+    end
+
+    context "for tags" do
+      SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+
+      let(:discovery) { PageObjects::Pages::Discovery.new }
+      let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+      let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+
+      fab!(:tag) { Fabricate(:tag, name: "strategy", locale: "en") }
+      fab!(:tag_localization) { Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略") }
+      fab!(:topic_tag) { Fabricate(:topic_tag, topic:, tag:) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.navigation_menu = "sidebar"
+        SiteSetting.default_navigation_menu_tags = tag.name
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      it "displays localized tag names in sidebar, topic list, tag dropdown, and topic view" do
+        sign_in(japanese_user)
+
+        visit("/")
+
+        expect(sidebar).to have_section_link("戦略")
+        expect(topic_list).to have_topic_tag(topic, "戦略")
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name("戦略")
+        discovery.tag_drop.collapse
+
+        topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
+        expect(page).to have_css(".title-wrapper .discourse-tag", text: "戦略")
+
+        switcher.expand
+        switcher.option("[data-menu-option-id='en']").click
+
+        visit("/")
+        expect(sidebar).to have_section_link("strategy")
+        expect(topic_list).to have_topic_tag(topic, "strategy")
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name("strategy")
+        discovery.tag_drop.collapse
+
+        topic_list.visit_topic_with_title("Life strategies from The Art of War")
+        expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
+      end
+
+      it "displays localized tag names in the composer tag chooser" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        sign_in(japanese_user)
+        visit("/new-topic")
+        expect(composer).to be_opened
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("戦")
+        expect(mini_tag_chooser).to have_option_name("戦略")
       end
     end
   end

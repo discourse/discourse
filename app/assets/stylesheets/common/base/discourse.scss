@@ -252,6 +252,12 @@ small {
 
 blockquote {
   @include post-aside;
+
+  @include viewport.until(sm) {
+    clear: both;
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 code,
@@ -613,7 +619,7 @@ textarea {
 }
 
 .full-width {
-  margin-left: 12px;
+  margin-left: 0;
 
   @include viewport.until(sm) {
     min-width: 0;

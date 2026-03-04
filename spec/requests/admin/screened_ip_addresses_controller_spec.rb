@@ -67,4 +67,20 @@ RSpec.describe Admin::ScreenedIpAddressesController do
       end
     end
   end
+
+  describe "#create" do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "returns a valid error when action_name is invalid" do
+        post "/admin/logs/screened_ip_addresses.json",
+             params: {
+               ip_address: "1.2.3.4",
+               action_name: "invalid_value",
+             }
+
+        expect(response.status).to eq(400)
+      end
+    end
+  end
 end

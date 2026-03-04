@@ -8,6 +8,8 @@ tr_TR:
   site_settings:
     discourse_automation_enabled: "discourse-automation eklentisini etkinleştirin"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(boş)"
     models:
       automations:
         validations:
@@ -20,6 +22,9 @@ tr_TR:
         invalid_field: Alanın `%{component}` bileşeni `%{target}:%{target_name}` üzerinde kullanılamıyor.
         invalid_metadata: '`%{field}` verileri geçersiz veya `%{component}` bileşeni bilinmiyor.'
     triggerables:
+      post_flag_created:
+        title: Bayrak oluşturuldu
+        description: Bir gönderi işaretlendiğinde otomasyonu tetikler
       errors:
         custom_fields_or_user_profile_required: "'custom_fields' veya 'user_profile' ögelerinden en az biri sağlanmalıdır."
       user_badge_granted:
@@ -67,6 +72,10 @@ tr_TR:
         description: Bir konunun etiketleri değiştirildiğinde otomasyon tetiklenir
       topic:
         title: Konu
+        description: İlgili komut dosyası yalnızca belirtilen konuda kullanılacaktır. Bu, örneğin doğrulama yapan komut dosyaları için yararlıdır.
+      topic_closed:
+        title: Konu kapatıldı
+        description: Bir konu kapatıldığında bir komut dosyasını tetikler.
       after_post_cook:
         title: Gönderi finalize edildikten sonra
         description: Bir gönderi içeriği hazırlandığında otomasyon tetiklenir
@@ -74,6 +83,24 @@ tr_TR:
         title: Kullanıcı güncellemesinden sonra
         description: Bir kullanıcı herhangi bir bilgiyi güncellediğinde otomasyon tetiklenir
     scriptables:
+      email_on_flagged_post:
+        title: İşaretli gönderi hakkında e-posta
+        description: Bir gönderiye bayrak eklendiğinde özel bir e-posta gönder
+        subject: "İşaretlenen gönderi: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Bir gönderi işaretlendi.
+
+          Konu: {{topic_title}} ({{topic_url}})
+          Gönderi: {{post_url}} (#{{post_number}})
+          İşaretleme türü: {{flag_type}}
+          İşaretlenen kullanıcı: {{flagged_username}}
+          İşaretleyen: {{flagger_username}}
+          Kategori: {{category}}
+          Etiketler: {{tags}}
+
+          --------
+          Gönderi alıntısı:
+          {{post_excerpt}}
       post:
         title: Gönderi oluştur
         description: Belirli bir konuda gönderi oluşturun
@@ -104,6 +131,10 @@ tr_TR:
         title: Hediye değiş tokuşu
         description: Birbirlerine hediye göndermeleri için bir grubun kullanıcılarını anonim olarak eşleştirmeye izin verir.
         doc: Hediye değiş tokuşu en az 3 kullanıcısı olan mevcut bir grup gerektirir. Seçilen tarihte grubun her kullanıcısı bir hediye veren ve bir hediye alan ile eşleştirilir.
+      remove_upload_markup_from_deleted_posts:
+        title: Silinen gönderilerdeki yükleme işaretlerini kaldır
+        description: Sistem kullanıcısı olarak hareket eder ve yükleme işaretlemesi kaldırılan silinmiş gönderilere bir revizyon ekler. “Yüklemeleri temizle” göreviyle birlikte, bu işlem silinmiş gönderilerdeki yüklemelerin kalıcı olarak silinmesine neden olur. Dikkatli kullanın!
+        edit_reason: Otomasyon, silinen gönderiden yükleme işaretlemesini kaldırdı.
       send_pms:
         title: Özel mesaj gönder
         description: Özel mesaj göndermeye izin verir (muhtemelen gecikmeli).
@@ -159,3 +190,4 @@ tr_TR:
         description: "Konuları rastgele bir gruba atayın"
       set_topic_timer:
         title: "Konu Zamanlayıcısını ayarla"
+        description: "Bir konuya konu zamanlayıcı ayarlayın"

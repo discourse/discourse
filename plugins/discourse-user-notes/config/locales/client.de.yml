@@ -15,3 +15,4 @@ de:
       delete_confirm: "Bist du sicher, dass du diese Benutzer-Notiz löschen möchtest?"
       show_post: "Beitrag anzeigen"
       show_flag: "Meldung anzeigen"
+      copy_reviewable_note: "Notiz in die \"Benutzer-Notizen\" im Profil von %{username} kopieren?"

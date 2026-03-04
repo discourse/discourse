@@ -5,6 +5,7 @@ module PageObjects
     module DiscourseCalendar
       class PostEvent < PageObjects::Pages::Base
         TRIGGER_MENU_SELECTOR = ".discourse-post-event-more-menu-trigger"
+
         def open_more_menu
           find(TRIGGER_MENU_SELECTOR).click
           self

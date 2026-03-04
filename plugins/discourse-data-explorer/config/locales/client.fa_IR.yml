@@ -7,7 +7,9 @@
 fa_IR:
   js:
     explorer:
+      default_query: "پیش‌فرض"
       or: "یا"
+      create: "ایجاد"
       import:
         label: "ورود داده‌ها"
       help:
@@ -19,7 +21,7 @@ fa_IR:
           yes: "بله"
           no: "خیر"
       export: "خروجی گرفتن"
-      save: "ذخیره تغییرات"
+      save: "ذخیر تغییرات"
       run: "اجرا"
       edit: "ویرایش"
       delete: "حذف"

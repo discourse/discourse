@@ -43,18 +43,16 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
       end
     end
 
-    context "when user can’t flag message" do
+    context "when user can't flag message" do
       before { UserSilencer.new(current_user).silence }
 
-      it "returns a 403" do
+      it "returns a 404" do
         post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
              params: params
 
-        expect(response.status).to eq(403)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("invalid_access"))
+        expect(response.status).to eq(404)
       end
     end
-
     context "when channel is not found" do
       it "returns a 404" do
         post "/chat/api/channels/-999/messages/#{message_1.id}/flags", params: params
@@ -77,6 +75,29 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
     context "when message is not found" do
       it "returns a 404" do
         post "/chat/api/channels/#{message_1.chat_channel.id}/messages/-999/flags", params: params
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when user cannot access the channel" do
+      fab!(:private_channel, :private_category_channel)
+      fab!(:private_message) { Fabricate(:chat_message, chat_channel: private_channel) }
+
+      it "returns the same status whether message exists or not" do
+        post "/chat/api/channels/#{private_channel.id}/messages/#{private_message.id}/flags",
+             params: params
+        existing_message_status = response.status
+
+        post "/chat/api/channels/#{private_channel.id}/messages/-999/flags", params: params
+        missing_message_status = response.status
+
+        expect(existing_message_status).to eq(missing_message_status)
+      end
+
+      it "returns 404 when message exists in inaccessible channel" do
+        post "/chat/api/channels/#{private_channel.id}/messages/#{private_message.id}/flags",
+             params: params
 
         expect(response.status).to eq(404)
       end

@@ -5,8 +5,6 @@
 # https://translate.discourse.org/
 
 ru:
-  site_settings:
-    data_explorer_enabled: "Включить проводник данных в /admin/plugins/explorer"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -20,18 +18,4 @@ ru:
     report_generator:
       private_message:
         title: "Запланированный отчет по запросу «%{query_name}»"
-        body: |
-          Здравствуйте, %{recipient_name}! Ваш отчет готов.
-
-          Запрос:
-          %{query_name}
-
-          Результаты:
-          %{table}
-
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Открыть запрос в проводнике данных</a>
-
-          Отчет создан: %{created_at} (%{timezone})
-      post:
-        body: "### Плановый отчет по запросу «%{query_name}»\n\nРезультаты: \n%{table}\n\n<a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Открыть запрос в проводнике данных</a>\n\nДата создания отчета: %{created_at} (%{timezone})\n"
       upload_appendix: "Приложение: [%{filename}|вложение](%{short_url})"

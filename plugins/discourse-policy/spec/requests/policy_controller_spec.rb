@@ -112,6 +112,99 @@ describe DiscoursePolicy::PolicyController do
     end
   end
 
+  describe "post visibility checks" do
+    fab!(:private_group, :group)
+    fab!(:private_category) { Fabricate(:private_category, group: private_group) }
+    fab!(:outsider, :user)
+    fab!(:private_topic) { Fabricate(:topic, category: private_category, user: moderator) }
+    fab!(:private_post) { Fabricate(:post, topic: private_topic, user: moderator) }
+    fab!(:private_policy) do
+      policy = Fabricate(:post_policy, post: private_post)
+      PostPolicyGroup.create!(post_policy_id: policy.id, group_id: group.id)
+      policy
+    end
+
+    before { group.add(outsider) }
+
+    it "returns 404 when user cannot see the post for accept" do
+      sign_in(outsider)
+      put "/policy/accept.json", params: { post_id: private_post.id }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when user cannot see the post for unaccept" do
+      sign_in(outsider)
+      put "/policy/unaccept.json", params: { post_id: private_post.id }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when user cannot see the post for accepted" do
+      sign_in(outsider)
+      get "/policy/accepted.json", params: { post_id: private_post.id }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when user cannot see the post for not_accepted" do
+      sign_in(outsider)
+      get "/policy/not-accepted.json", params: { post_id: private_post.id }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "private policy restrictions" do
+    fab!(:admin)
+
+    def private_raw
+      <<~MD
+        [policy group=#{group.name} private=true]
+        I always open **doors**!
+        [/policy]
+      MD
+    end
+
+    it "denies non-admin access to accepted users for a private policy" do
+      post = create_post(raw: private_raw, user: moderator)
+      PolicyUser.add!(user1, post.post_policy)
+
+      sign_in(user1)
+      get "/policy/accepted.json", params: { post_id: post.id, offset: 0 }
+      expect(response.status).to eq(403)
+    end
+
+    it "denies non-admin access to not_accepted users for a private policy" do
+      post = create_post(raw: private_raw, user: moderator)
+
+      sign_in(user1)
+      get "/policy/not-accepted.json", params: { post_id: post.id, offset: 0 }
+      expect(response.status).to eq(403)
+    end
+
+    it "allows admin access to accepted users for a private policy" do
+      group.add(admin)
+      post = create_post(raw: private_raw, user: moderator)
+      PolicyUser.add!(user1, post.post_policy)
+
+      sign_in(admin)
+      get "/policy/accepted.json", params: { post_id: post.id, offset: 0 }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |x| x["id"] }).to include(user1.id)
+    end
+
+    it "allows admin access to not_accepted users for a private policy" do
+      group.add(admin)
+      post = create_post(raw: private_raw, user: moderator)
+
+      sign_in(admin)
+      get "/policy/not-accepted.json", params: { post_id: post.id, offset: 0 }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |x| x["id"] }).to contain_exactly(
+        user1.id,
+        user2.id,
+        admin.id,
+      )
+    end
+  end
+
   describe "group member visibility restrictions" do
     fab!(:owner, :user)
     let!(:post) do
@@ -147,10 +240,12 @@ describe DiscoursePolicy::PolicyController do
     end
 
     it "allows owner to see group members" do
+      PolicyUser.add!(user1, post.post_policy)
+
       sign_in(owner)
       get "/policy/accepted.json", params: { post_id: post.id, offset: 0 }
       expect(response.status).to eq(200)
-      expect(response.parsed_body["users"]).to be_an(Array)
+      expect(response.parsed_body["users"].map { |x| x["id"] }).to contain_exactly(user1.id)
     end
   end
 end

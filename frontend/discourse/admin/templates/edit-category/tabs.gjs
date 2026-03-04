@@ -1,5 +1,6 @@
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import ChangesBanner from "discourse/admin/components/changes-banner";
 import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
 import EditCategoryImages from "discourse/admin/components/edit-category-images";
 import EditCategoryLocalizations from "discourse/admin/components/edit-category-localizations";
@@ -15,6 +16,9 @@ import UpsertCategoryTags from "discourse/admin/components/upsert-category/tags"
 import EditCategoryTabsHorizontal from "discourse/admin/templates/edit-category/tabs-horizontal";
 import EditCategoryTabsVertical from "discourse/admin/templates/edit-category/tabs-vertical";
 import Form from "discourse/components/form";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { or } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 
 const TAB_COMPONENTS = {
   general: EditCategoryGeneral,
@@ -41,10 +45,16 @@ function componentFor(name, useSimplified) {
   name = name.replace("edit-category-", "");
   const components = useSimplified ? TAB_COMPONENTS_V2 : TAB_COMPONENTS;
 
-  if (!components[name]) {
-    throw new Error(`No category-tab component found for tab name: ${name}`);
+  if (components[name]) {
+    return components[name];
   }
-  return components[name];
+
+  const pluginTab = registeredEditCategoryTabs.find((tab) => tab.id === name);
+  if (pluginTab) {
+    return pluginTab.component;
+  }
+
+  throw new Error(`No category-tab component found for tab name: ${name}`);
 }
 
 export default <template>
@@ -60,6 +70,7 @@ export default <template>
       @onDirtyCheck={{@controller.isLeavingForm}}
       @onSubmit={{@controller.saveCategory}}
       @validate={{@controller.validateForm}}
+      @onRegisterApi={{@controller.onRegisterFormApi}}
       as |form transientData|
     >
       <form.Section
@@ -109,27 +120,67 @@ export default <template>
         </form.Alert>
       {{/if}}
 
-      <form.Actions class="edit-category-footer">
-        <form.Submit @label={{@controller.saveLabel}} id="save-category" />
-
-        {{#if @controller.model.can_delete}}
-          <form.Button
-            @disabled={{@controller.deleteDisabled}}
-            @action={{@controller.deleteCategory}}
-            @icon="trash-can"
-            @label="category.delete"
-            class="btn-danger"
-          />
-        {{else if @controller.model.id}}
-          <form.Button
-            @disabled={{@controller.deleteDisabled}}
-            @action={{@controller.toggleDeleteTooltip}}
-            @icon="circle-question"
-            @label="category.delete"
-            class="btn-default"
-          />
+      {{#if @controller.siteSettings.enable_simplified_category_creation}}
+        {{#if (or @controller.model.can_delete @controller.model.id)}}
+          <form.Actions class="edit-category-footer">
+            {{#if @controller.model.can_delete}}
+              <form.Button
+                @disabled={{@controller.deleteDisabled}}
+                @action={{@controller.deleteCategory}}
+                @icon="trash-can"
+                @label="category.delete"
+                class="btn-danger"
+              />
+            {{else}}
+              <form.Button
+                @disabled={{@controller.deleteDisabled}}
+                @action={{@controller.toggleDeleteTooltip}}
+                @icon="circle-question"
+                @label="category.delete"
+                class="btn-default"
+              />
+            {{/if}}
+          </form.Actions>
         {{/if}}
-      </form.Actions>
+      {{else}}
+        <form.Actions class="edit-category-footer">
+          <form.Submit @label={{@controller.saveLabel}} id="save-category" />
+
+          {{#if @controller.model.can_delete}}
+            <form.Button
+              @disabled={{@controller.deleteDisabled}}
+              @action={{@controller.deleteCategory}}
+              @icon="trash-can"
+              @label="category.delete"
+              class="btn-danger"
+            />
+          {{else if @controller.model.id}}
+            <form.Button
+              @disabled={{@controller.deleteDisabled}}
+              @action={{@controller.toggleDeleteTooltip}}
+              @icon="circle-question"
+              @label="category.delete"
+              class="btn-default"
+            />
+          {{/if}}
+        </form.Actions>
+      {{/if}}
     </Form>
+
+    {{#if @controller.siteSettings.enable_simplified_category_creation}}
+      {{#if @controller.isFormDirty}}
+        <ChangesBanner
+          @bannerLabel={{i18n "category.unsaved_changes"}}
+          @saveLabel={{if
+            @controller.model.id
+            (i18n "category.save")
+            (i18n "category.create_category")
+          }}
+          @discardLabel={{i18n "form_kit.reset"}}
+          @save={{@controller.formApi.submit}}
+          @discard={{@controller.formApi.reset}}
+        />
+      {{/if}}
+    {{/if}}
   </div>
 </template>

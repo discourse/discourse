@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_reactions: "Discourse – Reaktionen"
+          discourse_reactions: "Discourse Reaktionen"
   js:
     discourse_reactions:
       reactions_title: "Reaktionen"

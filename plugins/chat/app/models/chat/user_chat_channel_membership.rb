@@ -17,6 +17,24 @@ module Chat
     def mark_read!(new_last_read_id = nil)
       update!(last_read_message_id: new_last_read_id || chat_channel.last_message_id)
     end
+
+    def has_unseen_pins?
+      pins = chat_channel.pinned_messages
+
+      if pins.loaded?
+        others = pins.reject { |pin| pin.pinned_by_id == user_id }
+        return false if others.empty?
+        return true if last_viewed_pins_at.nil?
+        others.any? { |pin| pin.created_at > last_viewed_pins_at }
+      else
+        others = pins.where.not(pinned_by_id: user_id)
+        if last_viewed_pins_at.nil?
+          others.exists?
+        else
+          others.where("created_at > ?", last_viewed_pins_at).exists?
+        end
+      end
+    end
   end
 end
 
@@ -28,6 +46,7 @@ end
 #  following                           :boolean          default(FALSE), not null
 #  join_mode                           :integer          default("manual"), not null
 #  last_viewed_at                      :datetime         not null
+#  last_viewed_pins_at                 :datetime
 #  muted                               :boolean          default(FALSE), not null
 #  notification_level                  :integer          default("mention"), not null
 #  starred                             :boolean          default(FALSE), not null

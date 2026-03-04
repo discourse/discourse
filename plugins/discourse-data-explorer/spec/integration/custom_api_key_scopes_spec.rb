@@ -66,7 +66,7 @@ describe "API keys scoped to query#run" do
 
   it "can only run the queries they're allowed to run" do
     expect {
-      post "/admin/plugins/explorer/queries/#{query1.id}/run.json",
+      post "/admin/plugins/discourse-data-explorer/queries/#{query1.id}/run.json",
            headers: {
              "Api-Key" => single_query_api_key.key,
              "Api-Username" => admin.username,
@@ -77,7 +77,7 @@ describe "API keys scoped to query#run" do
     expect(response.parsed_body["columns"]).to eq(["query1_res"])
 
     expect {
-      post "/admin/plugins/explorer/queries/#{query2.id}/run.json",
+      post "/admin/plugins/discourse-data-explorer/queries/#{query2.id}/run.json",
            headers: {
              "Api-Key" => single_query_api_key.key,
              "Api-Username" => admin.username,
@@ -88,7 +88,7 @@ describe "API keys scoped to query#run" do
 
   it "can run all queries if they're not restricted to any queries" do
     expect {
-      post "/admin/plugins/explorer/queries/#{query1.id}/run.json",
+      post "/admin/plugins/discourse-data-explorer/queries/#{query1.id}/run.json",
            headers: {
              "Api-Key" => all_queries_api_key.key,
              "Api-Username" => admin.username,
@@ -99,7 +99,7 @@ describe "API keys scoped to query#run" do
     expect(response.parsed_body["columns"]).to eq(["query1_res"])
 
     expect {
-      post "/admin/plugins/explorer/queries/#{query2.id}/run.json",
+      post "/admin/plugins/discourse-data-explorer/queries/#{query2.id}/run.json",
            headers: {
              "Api-Key" => all_queries_api_key.key,
              "Api-Username" => admin.username,

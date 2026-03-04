@@ -28,6 +28,7 @@ module Chat
 
     model :channel
     policy :can_view_channel
+    policy :can_create_thread_in_channel
     policy :threading_enabled_for_channel
     model :original_message
 
@@ -47,6 +48,10 @@ module Chat
 
     def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
+    end
+
+    def can_create_thread_in_channel(guardian:, channel:)
+      guardian.can_create_channel_message?(channel)
     end
 
     def threading_enabled_for_channel(channel:)

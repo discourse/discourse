@@ -123,6 +123,20 @@ RSpec.describe Admin::ReportsController do
       end
 
       context "with invalid params" do
+        context "with invalid report_type format" do
+          it "returns 404 when report_type contains special characters" do
+            get "/admin/reports/bulk.json", params: { reports: { "!!&asdfasdf" => { limit: 10 } } }
+
+            expect(response.status).to eq(404)
+          end
+
+          it "returns 404 when report_type contains path traversal characters" do
+            get "/admin/reports/bulk.json", params: { reports: { "../../etc" => { limit: 10 } } }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
         context "when limit param is invalid" do
           include_examples "invalid limit params",
                            "/admin/reports/topics.json",

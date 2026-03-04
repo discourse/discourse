@@ -105,7 +105,12 @@ class TagGroupsController < ApplicationController
                matches.map do |x|
                  {
                    name: x.name,
-                   tags: x.tags.base_tags.pluck(:id, :name).map { |id, name| { id:, name: } },
+                   tags:
+                     x
+                       .tags
+                       .base_tags
+                       .pluck(:id, :name, :slug)
+                       .map { |id, name, slug| { id:, name:, slug: } },
                  }
                end,
            }

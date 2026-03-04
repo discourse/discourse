@@ -21,7 +21,9 @@ export default class Query extends RestModel {
   }
 
   get downloadUrl() {
-    return getURL(`/admin/plugins/explorer/queries/${this.id}.json?export=1`);
+    return getURL(
+      `/admin/plugins/discourse-data-explorer/queries/${this.id}.json?export=1`
+    );
   }
 
   @computed("param_info", "updating")

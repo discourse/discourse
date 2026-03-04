@@ -1023,8 +1023,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("categories section header shows dropdown with new and edit actions for admin user", async function (assert) {
-    updateCurrentUser({ admin: true });
+  test("categories section header shows dropdown with new and edit actions for user who can create categories", async function (assert) {
+    updateCurrentUser({ admin: true, can_create_category: true });
 
     await visit("/");
 
@@ -1041,10 +1041,10 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await headerDropdown.selectRowByValue("new-category");
 
-    assert.strictEqual(currentURL(), "/new-category");
+    assert.true(currentURL().startsWith("/new-category"));
   });
 
-  test("categories section header shows single edit button for non-admin user", async function (assert) {
+  test("categories section header shows single edit button for user who cannot create categories", async function (assert) {
     await visit("/");
 
     const categoriesSection =
@@ -1364,9 +1364,71 @@ acceptance(
 );
 
 acceptance(
+  "Sidebar - Logged on user - Categories Section - Mobile slide-out",
+  function (needs) {
+    needs.user({
+      admin: true,
+      can_create_category: true,
+      sidebar_category_ids: [],
+    });
+    needs.mobileView();
+    needs.settings({ navigation_menu: "sidebar" });
+    needs.pretender((server, helper) => {
+      server.get("/categories/hierarchical_search", () => {
+        return helper.response({ categories: [] });
+      });
+    });
+
+    test("hamburger closes when header dropdown navigates to a new page", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .exists("hamburger sidebar is open");
+
+      const headerDropdown = selectKit(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+      );
+
+      await headerDropdown.expand();
+      await headerDropdown.selectRowByValue("new-category");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .doesNotExist("hamburger sidebar closes after header dropdown action");
+      assert.true(currentURL().startsWith("/new-category"));
+    });
+
+    test("hamburger closes when header dropdown opens a modal", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .exists("hamburger sidebar is open");
+
+      const headerDropdown = selectKit(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-header-dropdown"
+      );
+
+      await headerDropdown.expand();
+      await headerDropdown.selectRowByValue("edit-categories");
+
+      assert
+        .dom(".sidebar-hamburger-dropdown")
+        .doesNotExist("hamburger sidebar closes after header dropdown action");
+      assert
+        .dom(".sidebar__edit-navigation-menu__categories-modal")
+        .exists("edit categories modal opens");
+    });
+  }
+);
+
+acceptance(
   "Sidebar - Admin - Categories Section - Header Dropdown Mode",
   function (needs) {
-    needs.user({ admin: true });
+    needs.user({ admin: true, can_create_category: true });
     needs.settings({ navigation_menu: "header dropdown" });
 
     test("edit action shows 'Edit nav categories' text", async function (assert) {

@@ -14,6 +14,7 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -45,6 +46,7 @@ import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -89,6 +91,7 @@ import { clearNavItems } from "discourse/models/nav-item";
 import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
+import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
@@ -100,6 +103,10 @@ import {
 } from "discourse/services/keyboard-shortcuts";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+import {
+  resetBlockRegistryForTesting,
+  resetDebugCallbacks,
+} from "discourse/tests/helpers/block-testing";
 import {
   currentSettings,
   mergeSettings,
@@ -265,11 +272,16 @@ export function testCleanup(container, app) {
   clearAboutPageActivities();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
+  clearRegisteredEditCategoryTabs();
   clearAddedTrackedPostProperties();
+  clearAddedTrackedTopicProperties();
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();
   resetCustomUserNavMessagesDropdownRows();
+  _resetOutletLayoutsForTesting();
+  resetBlockRegistryForTesting();
+  resetDebugCallbacks();
 }
 
 function cleanupCssGeneratorTags() {
@@ -334,24 +346,10 @@ export function addPretenderCallback(name, fn) {
   }
 }
 
-export function acceptance(name, optionsOrCallback) {
+export function acceptance(name, callback) {
   name = `Acceptance: ${name}`;
 
-  let callback;
   let options = {};
-  if (typeof optionsOrCallback === "function") {
-    callback = optionsOrCallback;
-  } else if (typeof optionsOrCallback === "object") {
-    deprecated(
-      `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      {
-        since: "2.6.0",
-        dropFrom: "2.9.0.beta1",
-        id: "discourse.qunit.acceptance-function",
-      }
-    );
-    options = optionsOrCallback;
-  }
 
   addPretenderCallback(name, options.pretend);
 

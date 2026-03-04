@@ -38,20 +38,20 @@ RSpec.describe Admin::WatchedWordsController do
           hash_including(
             "id" => word1.id,
             "word" => word1.word,
-            "regexp" => WordWatcher.word_to_regexp(word1.word, engine: :js),
+            "regexp" => WordWatcher.word_to_regexp(word1.word),
             "case_sensitive" => false,
             "action" => "block",
           ),
           hash_including(
             "id" => word4.id,
             "word" => word4.word,
-            "regexp" => WordWatcher.word_to_regexp(word4.word, engine: :js),
+            "regexp" => WordWatcher.word_to_regexp(word4.word),
             "case_sensitive" => false,
             "action" => "censor",
           ),
         )
         expect(watched_words["compiled_regular_expressions"]["block"].first).to eq(
-          WordWatcher.serialized_regexps_for_action(:block, engine: :js).first.deep_stringify_keys,
+          WordWatcher.serialized_regexps_for_action(:block).first.deep_stringify_keys,
         )
       end
     end

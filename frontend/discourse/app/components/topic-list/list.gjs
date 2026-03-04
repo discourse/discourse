@@ -34,6 +34,7 @@ export default class TopicList extends Component {
   @service currentUser;
   // eslint-disable-next-line discourse/no-unused-services
   @service topicTrackingState; // accessed via `self` variable
+  @service moreTopicsTabs;
 
   @cached
   get columns() {
@@ -93,6 +94,10 @@ export default class TopicList extends Component {
 
     const self = this;
     const context = {
+      get listContext() {
+        return self.args.listContext;
+      },
+
       get category() {
         return self.topicTrackingState.get("filterCategory");
       },
@@ -178,6 +183,7 @@ export default class TopicList extends Component {
   get additionalClasses() {
     return applyValueTransformer("topic-list-class", [], {
       topics: this.args.topics,
+      listContext: this.args.listContext,
     });
   }
 
@@ -193,7 +199,12 @@ export default class TopicList extends Component {
       ...attributes
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
-      <thead class="topic-list-header">
+      <thead
+        class={{concatClass
+          "topic-list-header"
+          (if this.moreTopicsTabs.tabs.length "--has-tabs")
+        }}
+      >
         <Header
           @columns={{this.columns}}
           @canBulkSelect={{@canBulkSelect}}
@@ -239,6 +250,7 @@ export default class TopicList extends Component {
             @tagsForUser={{@tagsForUser}}
             @focusLastVisitedTopic={{@focusLastVisitedTopic}}
             @index={{index}}
+            @listContext={{@listContext}}
           />
 
           {{#if (eq topic this.lastVisitedTopic)}}

@@ -13,11 +13,7 @@
 }
 
 .--radio-cards {
-  width: var(--form-kit-large-input);
-
-  @include viewport.until(sm) {
-    width: 100%;
-  }
+  width: 100%;
 
   .form-kit__conditional-display,
   .form-kit__container-content.--large {
@@ -50,6 +46,11 @@
     justify-content: center;
     position: relative;
     line-height: normal;
+
+    &:has(:focus-visible) {
+      outline: 1px solid var(--d-input-focused-color);
+      border: 1px solid var(--d-input-focused-color);
+    }
 
     &.--disabled {
       color: var(--primary-medium);

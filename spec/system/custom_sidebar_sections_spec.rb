@@ -407,6 +407,31 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("Sidebar Categories")
   end
 
+  it "navigates to tag page when clicking a legacy category+tag link without tag_id" do
+    SiteSetting.tagging_enabled = true
+    category = Fabricate(:category)
+    tag = Fabricate(:tag)
+    Fabricate(:topic, category: category, tags: [tag])
+
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+    sidebar_url =
+      Fabricate(
+        :sidebar_url,
+        name: "Tagged",
+        value: "/tags/c/#{category.slug}/#{category.id}/#{tag.name}?status=closed",
+      )
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_section_link("Tagged")
+
+    expect(page).to have_current_path(
+      "/tags/c/#{category.slug}/#{category.id}/#{tag.slug}/#{tag.id}?status=closed",
+    )
+  end
+
   it "validates custom section fields" do
     sign_in user
     visit("/latest")

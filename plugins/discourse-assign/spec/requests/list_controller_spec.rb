@@ -87,6 +87,23 @@ describe ListController do
       expect(ids).to be_empty
     end
 
+    it "returns the correct more_topics_url with a unicode group name" do
+      SiteSetting.unicode_usernames = true
+
+      unicode_group = Fabricate(:group, name: "管理员")
+      unicode_group.add(user)
+      SiteSetting.assign_allowed_on_groups += "|#{unicode_group.id}"
+
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+        get "/topics/group-topics-assigned/#{UrlHelper.encode_component(unicode_group.name)}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["more_topics_url"]).to eq(
+          "/topics/group-topics-assigned/%E7%AE%A1%E7%90%86%E5%91%98?page=1",
+        )
+      end
+    end
+
     it "doesn't return deleted topics" do
       sign_in(admin)
 
@@ -378,7 +395,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
       end
     end
@@ -395,7 +412,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id)
       end
 
@@ -406,7 +423,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_2.id)
       end
 
@@ -429,7 +446,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
       end
 
@@ -452,7 +469,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id)
       end
 
@@ -467,7 +484,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id, topic_2.id)
       end
 
@@ -482,7 +499,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_3.id)
       end
 
@@ -496,7 +513,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
       end
 
@@ -514,7 +531,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id)
       end
     end
@@ -529,7 +546,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
       end
 
@@ -542,7 +559,7 @@ describe ListController do
 
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+          response.parsed_body.dig("topic_list", "topics").map { it["id"] },
         ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
       end
     end

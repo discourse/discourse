@@ -103,7 +103,6 @@ export function htmlStatus(status, type) {
   `;
 }
 
-// TODO (reviewable-refresh): Replace with newReviewableStatus
 export default function (status, type) {
   return htmlSafe(htmlStatus(status, type));
 }

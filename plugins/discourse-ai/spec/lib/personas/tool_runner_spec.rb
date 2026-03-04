@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe DiscourseAi::Personas::ToolRunner do
-  fab!(:user)
-  fab!(:bot_user) { Fabricate(:user, admin: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:bot_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   fab!(:tool) do
     AiTool.create!(
       name: "test_tool",
@@ -16,6 +16,7 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
     )
   end
   fab!(:llm_model)
+  fab!(:ai_secret)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }
   fab!(:tag2) { Fabricate(:tag, name: "tag2") }
   fab!(:category) { Fabricate(:category, name: "Test Category", slug: "test-category") }
@@ -40,6 +41,59 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
       result = runner.invoke
       expect(result["baseUrl"]).to eq(Discourse.base_url)
+    end
+
+    it "allows scripts to resolve configured secret aliases" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return { key: secrets.get('external_api_key') }; }",
+      )
+      AiToolSecretBinding.create!(
+        ai_tool: tool,
+        alias: "external_api_key",
+        ai_secret_id: ai_secret.id,
+      )
+
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      result = runner.invoke
+
+      expect(result["key"]).to eq(ai_secret.secret)
+    end
+
+    it "raises when secret alias is not bound" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return secrets.get('external_api_key'); }",
+      )
+
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+
+      expect { runner.invoke }.to raise_error(
+        Discourse::InvalidParameters,
+        /Missing required credential bindings/,
+      )
+    end
+
+    it "resolves secrets from in-flight secret_bindings override" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return { key: secrets.get('external_api_key') }; }",
+      )
+
+      bindings = [{ "alias" => "external_api_key", "ai_secret_id" => ai_secret.id }]
+
+      runner =
+        described_class.new(
+          parameters: {
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+          secret_bindings: bindings,
+        )
+      result = runner.invoke
+
+      expect(result["key"]).to eq(ai_secret.secret)
     end
 
     it "can set tags on a topic" do
@@ -173,7 +227,7 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(result["success"]).to eq(true)
       expect(post.reload.raw).to eq("new raw content")
       expect(post.edit_reason).to eq("AI edit")
-      expect(post.last_editor_id).to eq(Discourse.system_user.id)
+      expect(post.last_editor_id).to eq(bot_user.id)
     end
 
     it "can edit a post as a specific user" do
@@ -215,7 +269,7 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
           bot_user: bot_user,
           tool: tool,
         )
-      expect { runner.invoke }.to raise_error(/Permission denied|not allowed to edit/)
+      expect { runner.invoke }.to raise_error(/Permission denied/)
       expect(post.reload.raw).to eq(original_raw)
     end
 
@@ -515,6 +569,104 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1", "tag2")
     end
 
+    describe "guardian permission checks" do
+      fab!(:private_category) do
+        Fabricate(:category).tap do |c|
+          c.set_permissions(staff: :full)
+          c.save!
+        end
+      end
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+      def run_tool(script, parameters)
+        tool.update!(script: script)
+        described_class.new(parameters: parameters, llm: llm, bot_user: bot_user, tool: tool).invoke
+      end
+
+      it "denies regular user access to restricted topics and categories" do
+        params = { username: user.username }
+
+        expect {
+          run_tool(
+            "function invoke(params) { return discourse.editTopic(params.topic_id, { visible: false }, { username: params.username }); }",
+            params.merge(topic_id: private_topic.id),
+          )
+        }.to raise_error(MiniRacer::RuntimeError, /Permission denied/)
+
+        expect {
+          run_tool(
+            'function invoke(params) { return discourse.createTopic({ title: "Test title", raw: "Test body", category_id: params.category_id, username: params.username }); }',
+            params.merge(category_id: private_category.id),
+          )
+        }.to raise_error(MiniRacer::RuntimeError, /Permission denied/)
+
+        expect {
+          run_tool(
+            'function invoke(params) { return discourse.createPost({ topic_id: params.topic_id, raw: "Test reply", username: params.username }); }',
+            params.merge(topic_id: private_topic.id),
+          )
+        }.to raise_error(MiniRacer::RuntimeError, /Permission denied/)
+      end
+
+      it "defaults to bot_user when no username is provided" do
+        new_category = Fabricate(:category)
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createTopic({ title: "Bot topic title here", raw: "Bot topic body content", category_id: params.category_id }); }',
+            { category_id: new_category.id },
+          )
+        expect(result["success"]).to eq(true)
+        expect(Topic.find(result["topic_id"]).user_id).to eq(bot_user.id)
+
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createPost({ topic_id: params.topic_id, raw: "Bot reply content" }); }',
+            { topic_id: topic.id },
+          )
+        expect(result["success"]).to eq(true)
+        expect(Post.find(result["post_id"]).user_id).to eq(bot_user.id)
+
+        result =
+          run_tool(
+            "function invoke(params) { return discourse.editTopic(params.topic_id, { visible: false }); }",
+            { topic_id: topic.id },
+          )
+        expect(result["success"]).to eq(true)
+        expect(topic.reload.visible).to eq(false)
+      end
+
+      it "allows moderator to toggle visibility on a topic" do
+        mod = Fabricate(:moderator)
+        result =
+          run_tool(
+            "function invoke(params) { return discourse.editTopic(params.topic_id, { visible: false }, { username: params.username }); }",
+            { topic_id: topic.id, username: mod.username },
+          )
+        expect(result["success"]).to eq(true)
+        expect(topic.reload.visible).to eq(false)
+      end
+
+      it "allows user to createTopic in a permitted category" do
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createTopic({ title: "A valid topic title here", raw: "Some body content for the topic", category_id: params.category_id, username: params.username }); }',
+            { category_id: category.id, username: user.username },
+          )
+        expect(result["success"]).to eq(true)
+        expect(result["topic_id"]).to be_present
+      end
+
+      it "allows user to createPost in a permitted topic" do
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createPost({ topic_id: params.topic_id, raw: "A reply to the topic", username: params.username }); }',
+            { topic_id: topic.id, username: user.username },
+          )
+        expect(result["success"]).to eq(true)
+        expect(result["post_id"]).to be_present
+      end
+    end
+
     describe "custom fields" do
       it "can get a custom field from a post" do
         post = Fabricate(:post)
@@ -659,6 +811,152 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
           )
         expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Value too long/)
       end
+    end
+  end
+
+  describe "#has_custom_system_message?" do
+    it "returns true when script defines customSystemMessage function" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { return "extra system instructions"; }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.has_custom_system_message?).to eq(true)
+    end
+
+    it "returns false when script does not define customSystemMessage" do
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.has_custom_system_message?).to eq(false)
+    end
+  end
+
+  describe "#custom_system_message" do
+    it "returns the string from customSystemMessage()" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { return "You are a coding assistant"; }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.custom_system_message).to eq("You are a coding assistant")
+    end
+
+    it "returns nil when customSystemMessage returns null" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { return null; }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.custom_system_message).to be_nil
+    end
+
+    it "returns nil when script errors" do
+      tool.update!(script: <<~JS)
+          function invoke(params) { return {}; }
+          function customSystemMessage() { throw new Error("oops"); }
+        JS
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      expect(runner.custom_system_message).to be_nil
+    end
+  end
+
+  describe "#rag_get_file" do
+    before { SiteSetting.authorized_extensions = "md|txt" }
+
+    it "returns full file content in fragment order" do
+      upload = Fabricate(:upload, original_filename: "skill.md")
+      UploadReference.create!(upload: upload, target: tool)
+
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: upload,
+        fragment: "Part 2",
+        fragment_number: 2,
+      )
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: upload,
+        fragment: "Part 1",
+        fragment_number: 1,
+      )
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: upload,
+        fragment: "Part 3",
+        fragment_number: 3,
+      )
+
+      tool.update!(
+        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
+      )
+
+      runner =
+        described_class.new(
+          parameters: {
+            "filename" => "skill.md",
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+
+      expect(result["content"]).to eq("Part 1\nPart 2\nPart 3")
+    end
+
+    it "returns null for non-existent file" do
+      tool.update!(
+        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
+      )
+
+      runner =
+        described_class.new(
+          parameters: {
+            "filename" => "nonexistent.md",
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+
+      expect(result["content"]).to be_nil
+    end
+
+    it "picks the latest upload when duplicate filenames exist" do
+      old_upload = Fabricate(:upload, original_filename: "skill.md")
+      new_upload = Fabricate(:upload, original_filename: "skill.md")
+      UploadReference.create!(upload: old_upload, target: tool)
+      UploadReference.create!(upload: new_upload, target: tool)
+
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: old_upload,
+        fragment: "old content",
+        fragment_number: 1,
+      )
+      RagDocumentFragment.create!(
+        target: tool,
+        upload: new_upload,
+        fragment: "new content",
+        fragment_number: 1,
+      )
+
+      tool.update!(
+        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
+      )
+
+      runner =
+        described_class.new(
+          parameters: {
+            "filename" => "skill.md",
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      result = runner.invoke
+
+      expect(result["content"]).to eq("new content")
     end
   end
 end

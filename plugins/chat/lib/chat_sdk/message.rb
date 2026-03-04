@@ -187,6 +187,7 @@ module ChatSDK
         params: {
           message_id: message.id,
           message: message.message + raw,
+          channel_id: message.chat_channel_id,
         },
         options: {
           strip_whitespaces: false,

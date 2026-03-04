@@ -65,6 +65,21 @@ RSpec.describe Admin::RobotsTxtController do
         expect(response.body).to include("new_content")
       end
 
+      it "logs the change to staff action logs" do
+        SiteSetting.overridden_robots_txt = "old_content"
+
+        expect do
+          put "/admin/customize/robots.json", params: { robots_txt: "new_content" }
+        end.to change { UserHistory.count }.by(1)
+
+        log = UserHistory.last
+        expect(log.action).to eq(UserHistory.actions[:change_site_setting])
+        expect(log.subject).to eq("overridden_robots_txt")
+        expect(log.previous_value).to eq("old_content")
+        expect(log.new_value).to eq("new_content")
+        expect(log.acting_user_id).to eq(admin.id)
+      end
+
       it "requires `robots_txt` param to be present" do
         SiteSetting.overridden_robots_txt = "overridden_content"
         put "/admin/customize/robots.json", params: { robots_txt: "" }
@@ -113,6 +128,21 @@ RSpec.describe Admin::RobotsTxtController do
         expect(json["overridden"]).to eq(false)
 
         expect(SiteSetting.overridden_robots_txt).to eq("")
+      end
+
+      it "logs the reset to staff action logs" do
+        SiteSetting.overridden_robots_txt = "overridden_content"
+
+        expect do delete "/admin/customize/robots.json", xhr: true end.to change {
+          UserHistory.count
+        }.by(1)
+
+        log = UserHistory.last
+        expect(log.action).to eq(UserHistory.actions[:change_site_setting])
+        expect(log.subject).to eq("overridden_robots_txt")
+        expect(log.previous_value).to eq("overridden_content")
+        expect(log.new_value).to eq("")
+        expect(log.acting_user_id).to eq(admin.id)
       end
     end
 

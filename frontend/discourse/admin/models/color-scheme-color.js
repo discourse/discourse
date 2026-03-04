@@ -1,10 +1,9 @@
 /* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { observes, on } from "@ember-decorators/object";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { propertyNotEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ColorSchemeColor extends EmberObject {
@@ -35,24 +34,24 @@ export default class ColorSchemeColor extends EmberObject {
   }
 
   // Whether value has changed since it was last saved.
-  @discourseComputed("hex")
-  changed(hex) {
+  @computed("hex")
+  get changed() {
     if (!this.originals) {
       return false;
     }
-    if (hex !== this.originals.hex) {
+    if (this.hex !== this.originals.hex) {
       return true;
     }
     return false;
   }
 
   // Whether the saved value is different than Discourse's default color scheme.
-  @discourseComputed("default_hex", "hex")
-  savedIsOverriden(defaultHex) {
-    if (!defaultHex) {
+  @computed("default_hex", "hex")
+  get savedIsOverriden() {
+    if (!this.default_hex) {
       return false;
     }
-    return this.originals.hex !== defaultHex;
+    return this.originals.hex !== this.default_hex;
   }
 
   revert() {
@@ -65,14 +64,16 @@ export default class ColorSchemeColor extends EmberObject {
     }
   }
 
-  @discourseComputed("name")
-  translatedName(name) {
-    return i18n(`admin.customize.colors.${name}.name`, { defaultValue: name });
+  @computed("name")
+  get translatedName() {
+    return i18n(`admin.customize.colors.${this.name}.name`, {
+      defaultValue: this.name,
+    });
   }
 
-  @discourseComputed("name")
-  description(name) {
-    return i18n(`admin.customize.colors.${name}.description`, {
+  @computed("name")
+  get description() {
+    return i18n(`admin.customize.colors.${this.name}.description`, {
       defaultValue: "",
     });
   }
@@ -83,8 +84,9 @@ export default class ColorSchemeColor extends EmberObject {
 
     @property brightness
   **/
-  @discourseComputed("hex")
-  brightness(hex) {
+  @computed("hex")
+  get brightness() {
+    let hex = this.hex;
     if (hex.length === 6 || hex.length === 3) {
       hex = normalizeHex(hex);
       return Math.round(
@@ -103,8 +105,8 @@ export default class ColorSchemeColor extends EmberObject {
     }
   }
 
-  @discourseComputed("hex")
-  valid(hex) {
-    return isValidHex(hex);
+  @computed("hex")
+  get valid() {
+    return isValidHex(this.hex);
   }
 }

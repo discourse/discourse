@@ -253,7 +253,7 @@ export default class CategoryDrop extends ComboBoxComponent {
       route = getCategoryAndTagUrl(
         category,
         categoryId !== NO_CATEGORIES_ID,
-        this.tag?.name
+        this.tag
       );
     }
 

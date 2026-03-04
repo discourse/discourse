@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 he:
+  js:
+    discourse_math:
+      edit_modal:
+        apply: "החלה"
+      insert_modal:
+        insert: "הוספה"

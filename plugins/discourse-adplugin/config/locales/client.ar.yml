@@ -18,6 +18,17 @@ ar:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "نوع الإعلان"
+            house_ad_name:
+              label: "اسم HouseAd"
+            ad_placement:
+              label: "موقع الإعلان"
+            user_type:
+              label: "نوع المستخدم"
       adplugin:
         house_ads:
           title: "House Ads"
@@ -26,15 +37,23 @@ ar:
           new_name: "New House Ad"
           save: "حفظ"
           delete: "حذف"
-          description: "حدِّد إعلاناتك الخاصة ومكان عرضها."
-          get_started: "ابدأ بإنشاء إعلان جديد."
+          html: "HTML"
+          categories: "الفئات"
+          groups: "المجموعات"
           filter_placeholder: "حدِّد الإعلانات..."
           more_settings: "إعدادات إضافية"
           show_to_anons: "العرض للمستخدمين المجهولين"
           show_to_logged_in_users: "العرض للمستخدمين الذين سجَّلوا الدخول"
           category_chooser_description: "اختر الفئات التي سيتم عرض هذا الإعلان فيها أو اتركها فارغة لعرض الإعلان في كل مكان. يحظى إعداد الموقع `no_ads_for_categories` بالأولوية على هذا الإعداد."
+          category_chooser_description_with_routes: "اختر الفئات التي يجب عرض هذا الإعلان فيها. اترك هذا الخيار واختيارات المسار فارغة لعرض الإعلان في كل مكان. يحظى إعداد الموقع `no_ads_for_categories` بالأولوية على هذا الإعداد."
+          route_chooser_description: "اختر الصفحات أو المسارات التي يجب عرض هذا الإعلان فيها. اترك هذا الخيار واختيارات الفئات فارغة لعرض الإعلان في كل مكان."
           group_chooser_description: "اختر المجموعات التي يمكنها عرض هذا الإعلان أو اتركها فارغة لعرض الإعلان لجميع المستخدمين الذين سجَّلوا الدخول."
           preview: "معاينة"
+          back: "House Ads"
+          name: "الاسم"
+          edit: "تعديل"
+          tabs:
+            settings: "الإعدادان"
           topic_list_top:
             title: "الإعلانات أعلى قائمة الموضوعات"
             description: "إعلانات لعرضها في أعلى صفحات قائمة الموضوعات"

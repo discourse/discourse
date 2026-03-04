@@ -65,7 +65,7 @@ describe "Composer Form Template Validations", type: :system do
   let(:topic_title) { "A topic about Batman" }
 
   before do
-    SiteSetting.experimental_form_templates = true
+    SiteSetting.enable_form_templates = true
     sign_in user
   end
 

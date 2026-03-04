@@ -40,7 +40,16 @@ class UpcomingChanges::List
       .map do |setting|
         # We don't need to return all the other setting metadata for
         # endpoints that use this.
-        setting.slice(:setting, :humanized_name, :description, :value, :upcoming_change, :plugin)
+        setting.slice(
+          :setting,
+          :humanized_name,
+          :description,
+          :value,
+          :upcoming_change,
+          :plugin,
+        ).merge(
+          dependents: SiteSetting.type_supervisor.dependencies.dependents(setting[:setting].to_s),
+        )
       end
   end
 
@@ -51,26 +60,18 @@ class UpcomingChanges::List
         .flatten
         .compact
         .uniq
-
     groups = Group.where(id: group_ids).pluck(:id, :name).to_h
 
     upcoming_changes.each do |setting|
-      group_ids_for_setting = SiteSetting.site_setting_group_ids[setting[:setting]]
-      setting[:groups] = groups.values_at(*group_ids_for_setting).join(
-        ",",
-      ) if group_ids_for_setting.present?
+      enabled_for, setting_groups =
+        UpcomingChanges.enabled_for_with_groups(
+          setting[:setting],
+          setting[:value],
+          groups,
+        ).values_at(:enabled_for, :setting_groups)
 
-      setting[:upcoming_change][:enabled_for] = if !setting[:value]
-        "no_one"
-      elsif setting[:groups].blank?
-        "everyone"
-      else
-        if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
-          "staff"
-        else
-          "groups"
-        end
-      end
+      setting[:upcoming_change][:enabled_for] = enabled_for
+      setting[:groups] = setting_groups
     end
   end
 

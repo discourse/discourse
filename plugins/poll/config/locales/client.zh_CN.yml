@@ -13,7 +13,7 @@ zh_CN:
   js:
     poll:
       dynamic:
-        enabled_hint: "可添加或删除选项。"
+        enabled_hint: "可以添加或移除选项。"
       voters:
         other: "投票人"
       total_votes:

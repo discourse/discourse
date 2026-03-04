@@ -135,6 +135,9 @@ class GithubLinkback
 
   def post_pr_or_issue(link, type)
     pr_or_issue_number = link.pr_number || link.issue_number
+
+    return if topic_already_linked_on_github?(link)
+
     github_url =
       "https://api.github.com/repos/#{link.project}/issues/#{pr_or_issue_number}/comments"
     comment =
@@ -148,6 +151,8 @@ class GithubLinkback
   end
 
   def post_commit(link)
+    return if topic_already_linked_on_github?(link)
+
     github_url = "https://api.github.com/repos/#{link.project}/commits/#{link.sha}/comments"
 
     comment =
@@ -158,6 +163,61 @@ class GithubLinkback
       )
 
     Excon.post(github_url, body: { body: comment }.to_json, headers: headers)
+  end
+
+  def topic_already_linked_on_github?(link)
+    texts =
+      if link.type == :commit
+        fetch_commit_comment_texts(link.project, link.sha)
+      else
+        fetch_pr_or_issue_texts(link.project, link.pr_number || link.issue_number)
+      end
+
+    texts.any? { |text| text_links_to_topic?(text) }
+  rescue Excon::Error
+    false
+  end
+
+  def fetch_commit_comment_texts(project, sha)
+    response =
+      Excon.get(
+        "https://api.github.com/repos/#{project}/commits/#{sha}/comments?per_page=100",
+        headers:,
+        expects: [200],
+      )
+    JSON.parse(response.body).map { |comment| comment["body"].to_s }
+  end
+
+  def fetch_pr_or_issue_texts(project, number)
+    issue_response =
+      Excon.get(
+        "https://api.github.com/repos/#{project}/issues/#{number}",
+        headers:,
+        expects: [200],
+      )
+
+    comments_response =
+      Excon.get(
+        "https://api.github.com/repos/#{project}/issues/#{number}/comments?per_page=100",
+        headers:,
+        expects: [200],
+      )
+
+    [
+      JSON.parse(issue_response.body)["body"].to_s,
+      *JSON.parse(comments_response.body).map { |comment| comment["body"].to_s },
+    ]
+  end
+
+  def text_links_to_topic?(text)
+    base_url = Discourse.base_url
+    text
+      .scan(%r{#{Regexp.escape(base_url)}/t/\S+})
+      .any? do |url|
+        route = Discourse.route_for(url)
+        route && route[:controller] == "topics" && route[:action] == "show" &&
+          (route[:id] || route[:topic_id]).to_i == @post.topic_id
+      end
   end
 
   def headers

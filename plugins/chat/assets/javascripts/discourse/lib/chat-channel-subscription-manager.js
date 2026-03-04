@@ -80,6 +80,12 @@ export default class ChatChannelSubscriptionManager {
       case "notice":
         this.handleNotice(busData);
         break;
+      case "pin":
+        this.handlePinMessage(busData);
+        break;
+      case "unpin":
+        this.handleUnpinMessage(busData);
+        break;
     }
 
     this.channel.channelMessageBusLastId = lastMessageBusId;
@@ -113,10 +119,14 @@ export default class ChatChannelSubscriptionManager {
     stagedMessage.error = null;
     stagedMessage.id = data.chat_message.id;
     stagedMessage.staged = false;
+    stagedMessage.message = data.chat_message.message;
     stagedMessage.excerpt = data.chat_message.excerpt;
     stagedMessage.channel = channel;
     stagedMessage.createdAt = new Date(data.chat_message.created_at);
     stagedMessage.cooked = data.chat_message.cooked;
+    stagedMessage.uploads = cloneJSON(data.chat_message.uploads || []);
+    stagedMessage.streaming = data.chat_message.streaming;
+    stagedMessage.edited = data.chat_message.edited;
 
     return stagedMessage;
   }
@@ -244,6 +254,46 @@ export default class ChatChannelSubscriptionManager {
       } else {
         message.thread.preview = ChatThreadPreview.create(data.preview);
       }
+    }
+  }
+
+  handlePinMessage(data) {
+    const alreadyApplied = this.channel.pendingOptimisticPins.delete(
+      data.chat_message_id
+    );
+
+    const message = this.messagesManager.findMessage(data.chat_message_id);
+    if (message) {
+      message.pinned = true;
+    }
+
+    if (!alreadyApplied) {
+      this.channel.pinnedMessagesCount++;
+    }
+
+    if (
+      this.channel.currentUserMembership &&
+      data.pinned_by_id !== this.currentUser?.id
+    ) {
+      this.channel.currentUserMembership.hasUnseenPins = true;
+    }
+  }
+
+  handleUnpinMessage(data) {
+    const alreadyApplied = this.channel.pendingOptimisticUnpins.delete(
+      data.chat_message_id
+    );
+
+    const message = this.messagesManager.findMessage(data.chat_message_id);
+    if (message) {
+      message.pinned = false;
+    }
+
+    if (!alreadyApplied) {
+      this.channel.pinnedMessagesCount = Math.max(
+        0,
+        this.channel.pinnedMessagesCount - 1
+      );
     }
   }
 }

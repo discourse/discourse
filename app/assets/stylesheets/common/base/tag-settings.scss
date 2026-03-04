@@ -1,0 +1,34 @@
+.tag-settings {
+  &__form {
+    margin-top: var(--space-4);
+  }
+
+  .d-nav-submenu {
+    display: flex;
+    gap: var(--space-4);
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  .d-breadcrumbs {
+    text-transform: capitalize;
+  }
+
+  .d-page-header__title {
+    .tag-dropdown {
+      font-size: var(--font-down-4);
+    }
+
+    .select-kit-body {
+      font-size: var(--font-down-1);
+      font-weight: normal;
+    }
+
+    &-row {
+      margin-bottom: var(--space-4);
+    }
+  }
+
+  .select-kit.multi-select .multi-select-header .formatted-selection {
+    white-space: normal;
+  }
+}

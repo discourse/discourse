@@ -1,6 +1,5 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class VersionCheck extends EmberObject {
   static find() {
@@ -9,32 +8,34 @@ export default class VersionCheck extends EmberObject {
     );
   }
 
-  @discourseComputed("updated_at")
-  noCheckPerformed(updatedAt) {
-    return updatedAt === null;
+  @computed("updated_at")
+  get noCheckPerformed() {
+    return this.updated_at === null;
   }
 
-  @discourseComputed("missing_versions_count")
-  upToDate(missingVersionsCount) {
-    return missingVersionsCount === 0 || missingVersionsCount === null;
+  @computed("missing_versions_count")
+  get upToDate() {
+    return (
+      this.missing_versions_count === 0 || this.missing_versions_count === null
+    );
   }
 
-  @discourseComputed("missing_versions_count")
-  behindByOneVersion(missingVersionsCount) {
-    return missingVersionsCount === 1;
+  @computed("missing_versions_count")
+  get behindByOneVersion() {
+    return this.missing_versions_count === 1;
   }
 
-  @discourseComputed("installed_sha")
-  gitLink(installedSHA) {
-    if (installedSHA) {
-      return `https://github.com/discourse/discourse/commits/${installedSHA}`;
+  @computed("installed_sha")
+  get gitLink() {
+    if (this.installed_sha) {
+      return `https://github.com/discourse/discourse/commits/${this.installed_sha}`;
     }
   }
 
-  @discourseComputed("installed_sha")
-  shortSha(installedSHA) {
-    if (installedSHA) {
-      return installedSHA.slice(0, 10);
+  @computed("installed_sha")
+  get shortSha() {
+    if (this.installed_sha) {
+      return this.installed_sha.slice(0, 10);
     }
   }
 }

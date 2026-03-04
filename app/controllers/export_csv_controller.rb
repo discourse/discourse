@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ExportCsvController < ApplicationController
+  requires_login
   skip_before_action :preload_json, :check_xhr, only: [:show]
 
   def export_entity

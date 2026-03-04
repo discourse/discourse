@@ -7,7 +7,9 @@
 th:
   js:
     explorer:
+      default_query: "ค่าเริ่มต้น"
       or: "หรือ"
+      create: "สร้าง"
       help:
         label: "ช่วยเหลือ"
       schema:
@@ -17,7 +19,6 @@ th:
           yes: "ใช่"
           no: "ไม่ใช่"
       export: "ส่งออก"
-      save: "บันทึกการเปลี่ยนแปลง"
       edit: "แก้ไข"
       delete: "ลบ"
       query_groups: "กลุ่ม"

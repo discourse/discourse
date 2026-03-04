@@ -13,3 +13,7 @@ ja:
       site_settings:
         categories:
           discourse_oauth2_basic: "OAuth2 ログイン"
+      config:
+        login:
+          sub_pages:
+            oauth2: "OAuth2"

@@ -12,6 +12,8 @@ ar:
     github_linkback_access_token: 'رمز وصول صالح للمستخدم الذي سينشر الرابط ولإحصاء الإرسالات/المساهمات لمنح الشارات. راجع <a href="https://meta.discourse.org/t/99895">هنا</a> للحصول على الإرشادات بشأن كيفية الحصول على رمز مميَّز.'
     github_linkback_maximum_links: "الحد الأقصى لعدد الروابط التي يمكن إنشاؤها من منشور واحد. عندما تحتوي إحدى المشاركات على روابط أكثر من الحد، لا يتم إنشاء أيٍّ منها."
     github_permalinks_enabled: "تفعيل استبدال الرابط الثابت من GitHub"
+    github_pr_status_enabled: "عرض حالة طلب السحب على GitHub في لوحات المعاينة (مسودة، أو مفتوح، أو مُعتمد، أو مدمج، أو مغلق)"
+    github_webhook_secret: "الرمز السري المستخدم للتحقق من توقيع Webhook في GitHub. يجب ضبط هذه القيمة ضمن إعدادات Webhook على GitHub."
     github_permalinks_exclude: "اسم الملف أو الدليل الذي يجب استبعاده من استبدال الرابط الثابت. أدخل اسم الملف أو المسار الكامل فقط: user/repository/optional-directory/filename"
     github_badges_enabled: "تفعيل شارات GitHub"
     github_badges_repos: "عناوين URL الخاصة بمستودعات GitHub للبحث عن المساهمات والإرسالات"

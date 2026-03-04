@@ -3283,6 +3283,67 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to eq(user.id)
         end
 
+        it "does not log in a suspended user" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          user.update!(suspended_till: 2.days.from_now, suspended_at: Time.zone.now)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to be_present
+          expect(response.parsed_body["reason"]).to eq("suspended")
+          expect(session[:current_user_id]).to be_nil
+        end
+
+        it "does not log in a user from a screened IP address" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          ScreenedIpAddress.all.destroy_all
+          get "/"
+          Fabricate(:screened_ip_address, ip_address: request.remote_ip)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to be_present
+          expect(session[:current_user_id]).to be_nil
+        end
+
+        it "does not log in an unapproved user when must_approve_users is enabled" do
+          SiteSetting.must_approve_users = true
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          user.update_columns(approved: false)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
+          expect(session[:current_user_id]).to be_nil
+        end
+
         context "with a valid discourse connect provider" do
           before do
             sso = DiscourseConnectBase.new

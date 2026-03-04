@@ -122,4 +122,30 @@ describe "Composer", type: :system do
       expect(topic_page.topic_tags).to include(tag.name)
     end
   end
+
+  context "with fixed category positions" do
+    fab!(:parent_category) { Fabricate(:category, name: "Software", position: 102) }
+    fab!(:subcategory) do
+      Fabricate(:category, name: "Email", parent_category: parent_category, position: 25)
+    end
+
+    before do
+      SiteSetting.fixed_category_positions = true
+      SiteSetting.fixed_category_positions_on_create = true
+    end
+
+    it "groups subcategories immediately after their parent in the category chooser" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+
+      category_chooser = composer.category_chooser
+      category_chooser.expand
+
+      option_names = category_chooser.option_names
+      parent_index = option_names.index("Software")
+      child_index = option_names.index("Email")
+
+      expect(child_index).to eq(parent_index + 1)
+    end
+  end
 end

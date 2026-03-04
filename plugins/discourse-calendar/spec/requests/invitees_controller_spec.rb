@@ -108,294 +108,281 @@ module DiscoursePostEvent
           filteredInvitees = response.parsed_body["invitees"]
           expect(filteredInvitees.count).to eq(2)
         end
+
+        it "returns 400 when filtering by an invalid type" do
+          get "/discourse-post-event/events/#{post_event_1.id}/invitees.json",
+              params: {
+                type: "nonexistent",
+              }
+          expect(response.status).to eq(400)
+        end
       end
     end
 
-    context "when a post event exists" do
-      context "when an invitee exists" do
-        let(:invitee1) { Fabricate(:user) }
-        let(:post_event_2) do
-          pe = Fabricate(:event, post: post_1)
-          pe.create_invitees([{ user_id: invitee1.id, status: Invitee.statuses[:going] }])
+    describe "#create" do
+      let(:event) { Fabricate(:event, post: post_1) }
+
+      it "creates an invitee" do
+        post "/discourse-post-event/events/#{event.id}/invitees.json",
+             params: {
+               invitee: {
+                 status: "going",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(Invitee).to exist(user_id: user.id, status: Invitee.statuses[:going])
+      end
+
+      it "allows staff to invite another user" do
+        other_user = Fabricate(:user)
+
+        post "/discourse-post-event/events/#{event.id}/invitees.json",
+             params: {
+               invitee: {
+                 status: "interested",
+                 user_id: other_user.id,
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(Invitee).to exist(user_id: other_user.id, status: Invitee.statuses[:interested])
+      end
+
+      it "returns 403 when non-staff tries to invite themselves to a private event" do
+        private_event = Fabricate(:event, post: post_1, status: "private")
+        other_user = Fabricate(:user)
+        sign_in(other_user)
+
+        expect do
+          post "/discourse-post-event/events/#{private_event.id}/invitees.json",
+               params: {
+                 invitee: {
+                   status: "going",
+                 },
+               }
+        end.not_to change { Invitee.count }
+
+        expect(response.status).to eq(403)
+      end
+
+      context "when event is at max capacity" do
+        fab!(:post_2) { create_post(user: Fabricate(:admin), category: Fabricate(:category)) }
+        fab!(:user_a, :user)
+        fab!(:user_b, :user)
+        fab!(:full_event) do
+          pe = Fabricate(:event, post: post_2, max_attendees: 1)
+          pe.create_invitees([{ user_id: user_a.id, status: Invitee.statuses[:going] }])
           pe
         end
 
-        describe "updating invitee" do
-          it "updates its status" do
-            invitee = post_event_2.invitees.first
+        it "returns 422 when trying to join as going" do
+          sign_in(user_b)
 
-            expect(invitee.status).to eq(0)
-
-            put "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json",
-                params: {
-                  invitee: {
-                    status: "interested",
-                  },
-                }
-
-            invitee.reload
-
-            expect(invitee.status).to eq(1)
-            expect(invitee.post_id).to eq(post_1.id)
-          end
-        end
-
-        describe "destroying invitee" do
-          context "when acting user can act on discourse event" do
-            it "destroys the invitee" do
-              invitee = post_event_2.invitees.first
-              delete "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json"
-              expect(Invitee.where(id: invitee.id).length).to eq(0)
-              expect(response.status).to eq(200)
-            end
-          end
-
-          context "when acting user can act on invitee" do
-            before { sign_in(invitee1) }
-
-            it "destroys the invitee" do
-              invitee = post_event_2.invitees.first
-              delete "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json"
-              expect(Invitee.where(id: invitee.id).length).to eq(0)
-              expect(response.status).to eq(200)
-            end
-          end
-
-          context "when acting user can’t act on discourse event" do
-            let(:lurker) { Fabricate(:user) }
-
-            before { sign_in(lurker) }
-
-            it "doesn’t destroy the invitee" do
-              invitee = post_event_2.invitees.first
-              delete "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json"
-              expect(Invitee.where(id: invitee.id).length).to eq(1)
-              expect(response.status).to eq(403)
-            end
-          end
-        end
-
-        context "when changing status" do
-          it "sets tracking of the topic" do
-            invitee = post_event_2.invitees.first
-
-            expect(invitee.status).to eq(0)
-
-            put "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json",
-                params: {
-                  invitee: {
-                    status: "interested",
-                  },
-                }
-
-            tu = TopicUser.get(invitee.event.post.topic, invitee.user)
-            expect(tu.notification_level).to eq(TopicUser.notification_levels[:tracking])
-
-            put "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json",
-                params: {
-                  invitee: {
-                    status: "going",
-                  },
-                }
-
-            tu = TopicUser.get(invitee.event.post.topic, invitee.user)
-            expect(tu.notification_level).to eq(TopicUser.notification_levels[:watching])
-
-            put "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json",
-                params: {
-                  invitee: {
-                    status: "not_going",
-                  },
-                }
-
-            tu = TopicUser.get(invitee.event.post.topic, invitee.user)
-            expect(tu.notification_level).to eq(TopicUser.notification_levels[:regular])
-          end
-        end
-      end
-
-      context "when an invitee doesn’t exist" do
-        let(:post_event_2) { Fabricate(:event, post: post_1) }
-
-        it "creates an invitee" do
-          post "/discourse-post-event/events/#{post_event_2.id}/invitees.json",
-               params: {
-                 invitee: {
-                   status: "not_going",
-                 },
-               }
-
-          expect(Invitee).to exist(user_id: user.id, status: 2)
-        end
-
-        it "sets tracking of the topic" do
-          post "/discourse-post-event/events/#{post_event_2.id}/invitees.json",
+          post "/discourse-post-event/events/#{full_event.id}/invitees.json",
                params: {
                  invitee: {
                    status: "going",
                  },
                }
 
-          invitee = Invitee.find_by(user_id: user.id)
-
-          tu = TopicUser.get(invitee.event.post.topic, user)
-          expect(tu.notification_level).to eq(TopicUser.notification_levels[:watching])
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"].join).to include("full")
         end
 
-        context "when someone is trying to invite themselves to a private event (creepy)" do
-          let(:post_event_2) { Fabricate(:event, post: post_1, status: "private") }
-          let(:other_user) { Fabricate(:user, username: "creep") }
+        it "allows interested when full" do
+          sign_in(user_b)
 
-          before { sign_in(other_user) }
+          post "/discourse-post-event/events/#{full_event.id}/invitees.json",
+               params: {
+                 invitee: {
+                   status: "interested",
+                 },
+               }
 
-          it "does not create an invitee" do
-            expect do
-              post "/discourse-post-event/events/#{post_event_2.id}/invitees.json",
-                   params: {
-                     invitee: {
-                       status: "going",
-                     },
-                   }
-            end.not_to change { post_event_2.invitees.count }
-          end
-        end
-
-        context "when the invitee is the event owner" do
-          let(:post_event_2) { Fabricate(:event, post: post_1) }
-
-          it "allows inviting other users" do
-            user = Fabricate(:user)
-
-            post "/discourse-post-event/events/#{post_event_2.id}/invitees.json",
-                 params: {
-                   invitee: {
-                     status: "interested",
-                     user_id: user.id,
-                   },
-                 }
-
-            post_event_2.reload
-
-            expect(post_event_2.invitees.length).to eq(1)
-            invitee = post_event_2.invitees.first
-            expect(invitee.status).to eq(1)
-            expect(invitee.post_id).to eq(post_1.id)
-            expect(invitee.user_id).to eq(user.id)
-          end
-
-          it "creates an invitee" do
-            expect(post_event_2.invitees.length).to eq(0)
-
-            post "/discourse-post-event/events/#{post_event_2.id}/invitees.json",
-                 params: {
-                   invitee: {
-                     status: "interested",
-                   },
-                 }
-
-            post_event_2.reload
-
-            invitee = post_event_2.invitees.first
-            expect(invitee.status).to eq(1)
-            expect(invitee.post_id).to eq(post_1.id)
-          end
-        end
-
-        context "when event has max attendees and is full" do
-          fab!(:post_2) { create_post(user: Fabricate(:admin), category: Fabricate(:category)) }
-          fab!(:user_a, :user)
-          fab!(:user_b, :user)
-          fab!(:post_event_full) do
-            pe = Fabricate(:event, post: post_2, max_attendees: 1)
-            pe.create_invitees([{ user_id: user_a.id, status: Invitee.statuses[:going] }])
-            pe
-          end
-
-          context "when updating an invitee" do
-            fab!(:invitee) do
-              Fabricate(
-                :invitee,
-                post_id: post_2.id,
-                user_id: user_b.id,
-                status: Invitee.statuses[:interested],
-              )
-            end
-
-            context "when invitee was interested" do
-              it "returns 422 when trying to join as going" do
-                sign_in(user_b)
-
-                put "/discourse-post-event/events/#{post_event_full.id}/invitees/#{invitee.id}.json",
-                    params: {
-                      invitee: {
-                        status: "going",
-                      },
-                    }
-
-                expect(response.status).to eq(422)
-                expect(response.parsed_body["errors"].join).to include("full")
-              end
-            end
-
-            context "when invitee was going" do
-              it "allows upading to interested" do
-                sign_in(user_b)
-
-                put "/discourse-post-event/events/#{post_event_full.id}/invitees/#{invitee.id}.json",
-                    params: {
-                      invitee: {
-                        status: "interested",
-                      },
-                    }
-
-                expect(response.status).to eq(200)
-              end
-            end
-          end
-
-          context "when creating an invitee" do
-            it "returns 422 when trying to join as going" do
-              sign_in(user_b)
-
-              post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
-                   params: {
-                     invitee: {
-                       status: "going",
-                     },
-                   }
-
-              expect(response.status).to eq(422)
-              expect(response.parsed_body["errors"].join).to include("full")
-            end
-
-            it "allows interested when full" do
-              sign_in(user_b)
-
-              post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
-                   params: {
-                     invitee: {
-                       status: "interested",
-                     },
-                   }
-
-              expect(response.status).to eq(200)
-            end
-
-            it "allows not_going when full" do
-              sign_in(user_b)
-
-              post "/discourse-post-event/events/#{post_event_full.id}/invitees.json",
-                   params: {
-                     invitee: {
-                       status: "not_going",
-                     },
-                   }
-
-              expect(response.status).to eq(200)
-            end
-          end
+          expect(response.status).to eq(200)
         end
       end
+    end
+
+    describe "#update" do
+      let(:invitee_user) { Fabricate(:user) }
+      let(:event) do
+        pe = Fabricate(:event, post: post_1)
+        pe.create_invitees([{ user_id: invitee_user.id, status: Invitee.statuses[:going] }])
+        pe
+      end
+      let(:invitee) { event.invitees.first }
+
+      it "updates the invitee status" do
+        put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
+            params: {
+              invitee: {
+                status: "interested",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(invitee.reload.status).to eq(Invitee.statuses[:interested])
+      end
+
+      it "returns 404 when invitee does not exist" do
+        put "/discourse-post-event/events/#{event.id}/invitees/999999.json",
+            params: {
+              invitee: {
+                status: "interested",
+              },
+            }
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 403 when user cannot act on invitee" do
+        lurker = Fabricate(:user)
+        sign_in(lurker)
+
+        put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
+            params: {
+              invitee: {
+                status: "interested",
+              },
+            }
+
+        expect(response.status).to eq(403)
+      end
+
+      context "when event is at max capacity" do
+        fab!(:post_2) { create_post(user: Fabricate(:admin), category: Fabricate(:category)) }
+        fab!(:user_a, :user)
+        fab!(:user_b, :user)
+        fab!(:full_event) do
+          pe = Fabricate(:event, post: post_2, max_attendees: 1)
+          pe.create_invitees([{ user_id: user_a.id, status: Invitee.statuses[:going] }])
+          pe
+        end
+        fab!(:interested_invitee) do
+          Fabricate(
+            :invitee,
+            post_id: post_2.id,
+            user_id: user_b.id,
+            status: Invitee.statuses[:interested],
+          )
+        end
+
+        it "returns 422 when trying to change to going" do
+          sign_in(user_b)
+
+          put "/discourse-post-event/events/#{full_event.id}/invitees/#{interested_invitee.id}.json",
+              params: {
+                invitee: {
+                  status: "going",
+                },
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"].join).to include("full")
+        end
+
+        it "allows changing to interested" do
+          sign_in(user_b)
+
+          put "/discourse-post-event/events/#{full_event.id}/invitees/#{interested_invitee.id}.json",
+              params: {
+                invitee: {
+                  status: "interested",
+                },
+              }
+
+          expect(response.status).to eq(200)
+        end
+      end
+    end
+
+    describe "#destroy" do
+      let(:invitee_user) { Fabricate(:user) }
+      let(:event) do
+        pe = Fabricate(:event, post: post_1)
+        pe.create_invitees([{ user_id: invitee_user.id, status: Invitee.statuses[:going] }])
+        pe
+      end
+      let(:invitee) { event.invitees.first }
+
+      it "destroys the invitee as staff" do
+        delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(Invitee.exists?(invitee.id)).to eq(false)
+      end
+
+      it "destroys the invitee as the invitee owner" do
+        sign_in(invitee_user)
+
+        delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(Invitee.exists?(invitee.id)).to eq(false)
+      end
+
+      it "returns 403 when user cannot act on invitee" do
+        lurker = Fabricate(:user)
+        sign_in(lurker)
+
+        delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
+
+        expect(response.status).to eq(403)
+        expect(Invitee.exists?(invitee.id)).to eq(true)
+      end
+
+      it "returns 404 when invitee does not exist" do
+        delete "/discourse-post-event/events/#{event.id}/invitees/999999.json"
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "anonymous access to InviteesController" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: admin_user) }
+    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+    fab!(:event) { Fabricate(:event, post: post_1) }
+    fab!(:invitee_user, :user)
+    fab!(:invitee) do
+      DiscoursePostEvent::Invitee.create!(
+        post_id: post_1.id,
+        user_id: invitee_user.id,
+        status: DiscoursePostEvent::Invitee.statuses[:going],
+      )
+    end
+
+    it "requires login for create" do
+      post "/discourse-post-event/events/#{event.id}/invitees.json",
+           params: {
+             invitee: {
+               status: "going",
+             },
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for update" do
+      put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
+          params: {
+            invitee: {
+              status: "interested",
+            },
+          }
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for destroy" do
+      delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
+      expect(response.status).to eq(403)
     end
   end
 end

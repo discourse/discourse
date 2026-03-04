@@ -8,7 +8,7 @@ module PageObjects
       HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
       MENTION_MENU = ".autocomplete.ac-user"
       RICH_EDITOR = ".d-editor-input.ProseMirror"
-      POST_LANGUAGE_SELECTOR = ".post-language-selector"
+      POST_LANGUAGE_SELECTOR = ".post-language-selector-trigger"
 
       def initialize(composer_id = COMPOSER_ID)
         @composer_id = composer_id
@@ -50,6 +50,10 @@ module PageObjects
 
       def heading_menu
         PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.heading"))
+      end
+
+      def list_menu
+        PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.list"))
       end
 
       def focus
@@ -155,7 +159,7 @@ module PageObjects
 
       def set_locale(locale)
         Components::DMenu.new(POST_LANGUAGE_SELECTOR).expand
-        find("#{POST_LANGUAGE_SELECTOR} button", text: locale).click
+        within("#d-menu-portals", visible: false) { find("button", text: locale).click }
       end
 
       def switch_category(category_name)

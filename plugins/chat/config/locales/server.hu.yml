@@ -244,19 +244,14 @@ hu:
         watched_thread:
           one: "[%{site_name}] Új szálüzenet itt: %{channel}"
           other: "[%{site_name}] Új szálüzenetek itt: %{channel}"
-        watched_threads:
-          one: "[%{site_name}] Új szálüzenet a(z) %{channel} és %{count} további csoportban"
-          other: "[%{site_name}] Új szálüzenet a(z) %{channel} és %{count} további csoportban"
         chat_dm_1:
           one: "[%{site_name}] Új üzenet tőle: %{name}"
           other: "[%{site_name}] Új üzenetek tőle: %{name}"
         chat_dm_2: "[%{site_name}] Új üzenetek tőlük: %{name_1} és %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] Új üzenetek: %{name} és %{count} másik felhasználótól"
         chat_channel_1:
           one: "[%{site_name}] Új üzenet itt: %{channel}"
           other: "[%{site_name}] Új üzenetek itt: %{channel}"
         chat_channel_2: "[%{site_name}] Új üzenetek itt: %{channel_1} és %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] Új üzenetek itt: %{channel} és %{count} további csoport"
         chat_channel_and_dm: "[%{site_name}] Új üzenetek itt: %{channel}, és tőle: %{name}"
       unsubscribe: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. A leiratkozáshoz módosítsa a %{email_preferences_link} vagy a %{unsubscribe_link} értéket."
       unsubscribe_no_link: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. Itt tudja módosítani: %{email_preferences_link}."

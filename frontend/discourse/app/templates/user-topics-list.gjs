@@ -69,6 +69,7 @@ export default <template>
         @order={{@controller.order}}
         @ascending={{@controller.ascending}}
         @focusLastVisitedTopic={{true}}
+        @listContext={{@controller.listContext}}
       />
 
       <TopicDismissButtons

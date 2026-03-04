@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_assign: "Discourse – Zuordnen"
+          discourse_assign: "Discourse Zuordnen"
   js:
     filters:
       unassigned:

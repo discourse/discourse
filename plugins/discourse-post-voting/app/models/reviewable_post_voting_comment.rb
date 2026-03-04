@@ -32,8 +32,7 @@ class ReviewablePostVotingComment < Reviewable
     @comment_creator ||= User.find_by(id: comment.user_id)
   end
 
-  # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     return unless pending?
     return if comment.blank?
 
@@ -83,25 +82,6 @@ class ReviewablePostVotingComment < Reviewable
     unless comment.deleted_at?
       build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
     end
-  end
-
-  # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
-  def build_new_separated_actions
-    bundle_actions = { no_action_comment: {} }
-    if comment.deleted_at?
-      bundle_actions[:agree_and_restore] = {}
-      bundle_actions[:disagree_and_restore] = {}
-    else
-      bundle_actions[:agree_and_delete] = {}
-      bundle_actions[:agree_and_keep_comment] = {}
-    end
-
-    build_bundle(
-      "#{id}-comment-actions",
-      "discourse_post_voting.reviewables.actions.comment_actions.bundle_title",
-      bundle_actions,
-    )
-    build_user_actions_bundle
   end
 
   def perform_no_action_comment(performed_by, args)

@@ -229,6 +229,28 @@ RSpec.describe "AI Composer helper", type: :system do
           expect(composer.composer_input.value).to eq(proofread_text)
         end
       end
+
+      it "applies confirmed changes directly in the rich text editor" do
+        visit("/latest")
+        page.find("#create-topic").click
+
+        composer.toggle_rich_editor
+        expect(composer).to have_rich_editor_active
+
+        composer.focus
+        composer.type_content(input)
+
+        composer.click_toolbar_button("ai-helper-trigger")
+        expect(ai_helper_menu).to have_context_menu
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([proofread_text]) do
+          ai_helper_menu.select_helper_model(mode)
+          expect(diff_modal).to have_diff("spain", "Spain,")
+          diff_modal.confirm_changes
+          expect(composer.rich_editor).to have_css("p", text: proofread_text)
+          expect(composer.rich_editor).to have_no_text(input)
+        end
+      end
     end
   end
 
@@ -387,11 +409,26 @@ RSpec.describe "AI Composer helper", type: :system do
       topic_page.visit_topic(topic)
       page.find(".edit-topic", visible: false).click
       page.find(".ai-tag-suggester-trigger").click
-      tag1_css = ".ai-tag-suggester-content btn[data-name='#{video.name}']"
-      tag2_css = ".ai-tag-suggester-content btn[data-name='#{music.name}']"
+      tag1_css = ".ai-suggestions-menu button[data-name='#{video.name}']"
+      tag2_css = ".ai-suggestions-menu button[data-name='#{music.name}']"
 
       expect(page).to have_no_css(tag1_css)
       expect(page).to have_no_css(tag2_css)
+    end
+
+    it "shows filtered suggestions when topic already has tags" do
+      response =
+        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      page.find(".ai-tag-suggester-trigger").click
+
+      wait_for { ai_suggestion_dropdown.has_dropdown? }
+
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{video.name}']")
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{music.name}']")
     end
 
     it "removes applied tag suggestions from the dropdown" do

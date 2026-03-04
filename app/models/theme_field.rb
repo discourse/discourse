@@ -271,19 +271,17 @@ class ThemeField < ActiveRecord::Base
   end
 
   def validate_svg_sprite_xml
-    upload =
-      begin
-        Upload.find(self.upload_id)
-      rescue StandardError
-        nil
-      end
+    upload = Upload.find_by(id: self.upload_id)
+
+    return "Error with #{self.name}: No upload found for the provided upload_id" if upload.nil?
 
     if Discourse.store.external?
-      external_copy = Discourse.store.download_safe(upload)
-      path = external_copy&.path
+      path = Discourse.store.download(upload)
     else
       path = Discourse.store.path_for(upload)
     end
+
+    return "Error with #{self.name}: Could not download icon sprite" if path.nil?
 
     error = nil
 
@@ -297,6 +295,7 @@ class ThemeField < ActiveRecord::Base
     rescue => e
       error = "Error with #{self.name}: #{e.inspect}"
     end
+
     error
   end
 

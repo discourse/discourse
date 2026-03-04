@@ -29,7 +29,7 @@ export default class CardContainer extends Component {
 
   <template>
     {{#if this.site.mobileView}}
-      <div class="card-cloak hidden"></div>
+      <div class="card-cloak"></div>
     {{/if}}
 
     <PluginOutlet @name="user-card-content-container">

@@ -25,6 +25,10 @@ class WebHook < ActiveRecord::Base
     DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
   end
 
+  def tag_ids=(ids)
+    self.tags = Tag.where(id: ids).to_a
+  end
+
   def self.content_types
     @content_types ||= Enum.new("application/json" => 1, "application/x-www-form-urlencoded" => 2)
   end

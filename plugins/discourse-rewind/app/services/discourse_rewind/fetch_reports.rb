@@ -61,7 +61,7 @@ module DiscourseRewind
     end
 
     def fetch_reports(date:, for_user:, year:)
-      reports = load_reports_from_cache(for_user.username, year)
+      reports = load_reports_from_cache(for_user.id, year)
 
       if !reports
         reports =
@@ -72,7 +72,7 @@ module DiscourseRewind
             rescue StandardError
               nil
             end
-        cache_reports(for_user.username, year, reports)
+        cache_reports(for_user.id, year, reports)
       end
 
       reports

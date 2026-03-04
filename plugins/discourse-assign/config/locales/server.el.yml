@@ -8,6 +8,7 @@ el:
   site_settings:
     assigns_by_staff_mention: "Εάν ένα μέλος του προσωπικού επισημάνει ένα άλλο μέλος του προσωπικού, το θέμα ανατίθεται αυτόματα"
   discourse_assign:
+    forbidden_assignee_not_pm_participant: "Δεν είναι δυνατή η ανάθεση στον χρήστη @%{username} επειδή δεν έχει πρόσβαση σε αυτό το ΠΜ. Μπορείτε να χορηγήσετε πρόσβαση στον χρήστη @%{username} προσκαλώντας τον σε αυτό το ΠΜ."
     reminders_frequency:
       never: "ποτέ"
       daily: "καθημερινά"

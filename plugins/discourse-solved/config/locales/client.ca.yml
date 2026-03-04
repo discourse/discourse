@@ -29,6 +29,8 @@ ca:
         solved: "resolt"
         unsolved: "no resolt"
       move_post_cancel: "Cancel·la"
+      confirm_solved_removal_confirm: "Confirma"
+      confirm_solved_removal_cancel: "Cancel·la"
     topic_statuses:
       solved:
         help: "Aquest tema té una solució"

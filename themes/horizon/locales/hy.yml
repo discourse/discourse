@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 hy:
+  solved: "Լուծված է"
+  posted: "հրապարակված"
+  reply_count:
+    one: "%{count} պատասխան"
+    other: "%{count} պատասխան"

@@ -11,7 +11,6 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
       expect(page).to have_css(".toolbar__button.italic.--active", count: 0)
       expect(page).to have_css(".toolbar__button.heading.--active", count: 0)
       expect(page).to have_css(".toolbar__button.link.--active", count: 0)
-      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
       expect(page).to have_css(".toolbar__button.list.--active", count: 0)
       expect(page).to have_css(".toolbar__button.code.--active", count: 0)
       expect(page).to have_css(".toolbar__button.blockquote.--active", count: 0)
@@ -22,16 +21,9 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
       expect(page).to have_css(".toolbar__button.bold.--active", count: 1)
       expect(page).to have_css(".toolbar__button.italic.--active", count: 1)
       expect(page).to have_css(".toolbar__button.link.--active", count: 1)
-      expect(page).to have_css(".toolbar__button.bullet.--active", count: 1)
-      expect(page).to have_css(".toolbar__button.list.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.list.--active", count: 1)
       expect(page).to have_css(".toolbar__button.code.--active", count: 1)
       expect(page).to have_css(".toolbar__button.blockquote.--active", count: 1)
-
-      page.find(".toolbar__button.bullet").click
-      page.find(".toolbar__button.list").click
-
-      expect(page).to have_css(".toolbar__button.list.--active", count: 1)
-      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
     end
   end
 
@@ -174,6 +166,42 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
 
       composer.toggle_rich_editor
       expect(composer).to have_value("[link text :heart:](https://example.com)")
+    end
+  end
+
+  describe "list toolbar" do
+    it "shows the list dropdown on mobile", mobile: true do
+      open_composer
+
+      list_menu = composer.list_menu
+      list_menu.expand
+
+      expect(page).to have_css("[data-name='list-bullet']")
+      expect(page).to have_css("[data-name='list-ordered']")
+    end
+
+    it "can apply a bullet list from the dropdown" do
+      open_composer
+
+      composer.type_content("A list item")
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-bullet']").click
+
+      expect(rich).to have_css("ul li", text: "A list item")
+    end
+
+    it "can apply an ordered list from the dropdown" do
+      open_composer
+
+      composer.type_content("A list item")
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-ordered']").click
+
+      expect(rich).to have_css("ol li", text: "A list item")
     end
   end
 

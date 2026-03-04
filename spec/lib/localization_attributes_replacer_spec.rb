@@ -37,11 +37,39 @@ describe LocalizationAttributesReplacer do
       Fabricate(:topic_localization, topic:, locale: "ja", title: "猫犬", excerpt: "柴犬は猫のような犬です。")
     end
 
-    it "replaces the title and excerpt with localized values" do
+    it "replaces the title, fancy_title, and excerpt with localized values" do
       LocalizationAttributesReplacer.replace_topic_attributes(topic, "ja")
 
       expect(topic.title).to eq(ja_localization.title)
+      expect(topic.fancy_title).to eq(ja_localization.fancy_title)
       expect(topic.excerpt).to eq(ja_localization.excerpt)
+    end
+
+    it "does not write localized fancy_title to the database when fancy_title is null" do
+      topic.update_column(:fancy_title, nil)
+      topic.reload
+
+      LocalizationAttributesReplacer.replace_topic_attributes(topic, "ja")
+
+      expect(topic.title).to eq(ja_localization.title)
+      expect(topic.read_attribute(:fancy_title)).to eq(ja_localization.fancy_title)
+
+      localized_fancy_title = Topic.fancy_title(ja_localization.title)
+      expect(Topic.where(id: topic.id).pick(:fancy_title)).not_to eq(localized_fancy_title)
+    end
+
+    it "generates fancy_title from localized title when localization fancy_title is blank" do
+      ja_localization.update_column(:fancy_title, "")
+      topic.update_column(:fancy_title, nil)
+      topic.reload
+
+      LocalizationAttributesReplacer.replace_topic_attributes(topic, "ja")
+
+      expect(topic.title).to eq(ja_localization.title)
+      expect(topic.read_attribute(:fancy_title)).to eq(Topic.fancy_title(ja_localization.title))
+
+      localized_fancy_title = Topic.fancy_title(ja_localization.title)
+      expect(Topic.where(id: topic.id).pick(:fancy_title)).not_to eq(localized_fancy_title)
     end
 
     it "does not change the title or excerpt if the locale is the same" do

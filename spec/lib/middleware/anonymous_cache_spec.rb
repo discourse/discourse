@@ -340,7 +340,12 @@ RSpec.describe Middleware::AnonymousCache do
   describe "invalid request payload" do
     it "returns 413 for GET request with payload" do
       status, headers, _ =
-        middleware.call(env.tap { |environment| environment[Rack::RACK_INPUT].write("test") })
+        middleware.call(
+          env.tap do |environment|
+            environment[Rack::RACK_INPUT].write("test")
+            environment[Rack::RACK_INPUT].rewind
+          end,
+        )
 
       expect(status).to eq(413)
       expect(headers["Cache-Control"]).to eq("private, max-age=0, must-revalidate")

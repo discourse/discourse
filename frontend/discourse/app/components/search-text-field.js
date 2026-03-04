@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-jquery */
+import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import TextField from "discourse/components/text-field";
-import discourseComputed from "discourse/lib/decorators";
 import { applySearchAutocomplete } from "discourse/lib/search";
 import { i18n } from "discourse-i18n";
 
@@ -13,14 +13,20 @@ export default class SearchTextField extends TextField {
   autocapitalize = "none";
   autocorrect = "off";
 
-  @discourseComputed("searchService.searchContextEnabled")
-  placeholder(searchContextEnabled) {
-    return searchContextEnabled ? "" : i18n("search.full_page_title");
+  @computed("searchService.searchContextEnabled")
+  get placeholder() {
+    return this.searchService?.searchContextEnabled
+      ? ""
+      : i18n("search.full_page_title");
   }
 
   @on("didInsertElement")
   becomeFocused() {
-    applySearchAutocomplete(this.element, this.siteSettings, getOwner(this));
+    this._autocompleteModifiers = applySearchAutocomplete(
+      this.element,
+      this.siteSettings,
+      getOwner(this)
+    );
 
     const $searchInput = $(this.element);
     if (!this.hasAutofocus) {
@@ -30,5 +36,10 @@ export default class SearchTextField extends TextField {
     // at the top of the page
     $(window).scrollTop(0);
     $searchInput.focus();
+  }
+
+  @on("willDestroyElement")
+  teardown() {
+    this._autocompleteModifiers?.forEach((m) => m.cleanup());
   }
 }

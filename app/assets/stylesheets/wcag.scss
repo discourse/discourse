@@ -12,21 +12,12 @@
 
 html.discourse-no-touch {
   .btn-default {
-    .d-icon {
-      color: var(--primary-medium);
-    }
-
-    &:hover,
-    &.btn-hover,
-    &:focus {
-      .d-icon {
-        color: var(--secondary);
-      }
-    }
+    --d-button-default-icon-color: var(--primary-medium);
+    --d-button-default-icon-color--hover: var(--secondary);
   }
 
-  .btn-primary .d-icon {
-    color: var(--secondary);
+  .btn-primary {
+    --d-button-primary-icon-color: var(--secondary);
   }
 
   .btn-icon.ok,
@@ -201,15 +192,6 @@ html {
     color: var(--primary-high);
   }
 
-  // Post controls
-  .topic-admin-menu,
-  .timeline-controls {
-    .btn .d-icon {
-      // admin wrenches
-      color: var(--primary-medium);
-    }
-  }
-
   nav.post-controls {
     .btn.btn-flat {
       --d-post-control-icon-color: var(--primary-high);
@@ -310,14 +292,6 @@ html {
     color: var(--primary-medium);
   }
 
-  // Search
-  .search-container
-    .search-filters
-    details.search-advanced-additional-options
-    > summary {
-    color: var(--highlight-high);
-  }
-
   .chat-notices__notice,
   .chat-notices .chat-retention-reminder {
     background-color: var(--tertiary-very-low);
@@ -353,4 +327,48 @@ html {
   .sidebar-section-link-suffix.icon.unread
   svg {
   color: var(--tertiary);
+}
+
+// Modernize Foundation Theme specific WCAG overrides
+html.discourse-no-touch .uc-modernize-foundation-theme {
+  .btn-default {
+    .d-icon {
+      color: var(--d-button-default-icon-color);
+    }
+
+    &:hover,
+    &.btn-hover,
+    &:focus {
+      .d-icon {
+        color: var(--d-button-default-icon-color--hover);
+      }
+    }
+  }
+
+  // Create topic button - ensure icon matches text color
+  #create-topic .d-icon {
+    color: var(--d-button-default-icon-color);
+  }
+
+  // Composer button bar icons should match the modernize theme
+  .d-editor-button-bar .btn-icon.btn-default .d-icon {
+    color: var(--d-button-default-icon-color);
+
+    &:hover {
+      color: var(--d-button-default-icon-color--hover);
+    }
+  }
+}
+
+html .uc-modernize-foundation-theme {
+  // Header icons with modernize theme colors
+  .d-header-icons .d-icon,
+  .header-sidebar-toggle button .d-icon {
+    color: var(--d-sidebar-link-icon-color);
+  }
+
+  // Topic list header consistency
+  table th {
+    color: var(--d-topic-list-header-text-color);
+  }
 }

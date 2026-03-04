@@ -69,6 +69,8 @@ pt:
       title: "IA"
       default_llm:
         title: "Modelo de LLM Predefinido"
+      llm_selector:
+        none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
         back: "Voltar"
@@ -203,8 +205,19 @@ pt:
         save: "Guardar"
         remove_parameter: "Remover"
         parameter_required: "Necessário"
+        credential_not_set: "(não definido)"
+        edit: "Editar"
+        test: "Testar"
+        delete: "Eliminar"
+      secrets:
+        short_title: "Credenciais"
+        name: "Nome"
+        secret: "Valor"
+        back: "Anterior"
+        save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
+        embedding: "Incorporação"
       llms:
         display_name: "Nome"
         provider: "Provedor"
@@ -227,7 +240,7 @@ pt:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-5: "O modelo mais inteligente da Anthropic"
+          anthropic-claude-opus-4-6: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -235,8 +248,6 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
-        provider_fields:
-          effort: "Nível de esforço (apenas Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Cancelar"

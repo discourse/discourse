@@ -1,5 +1,5 @@
 /* eslint-disable no-undef, no-unused-vars */
-const apiKey = "YOUR_KEY";
+const apiKey = secrets.get("together_api_key");
 const model = "black-forest-labs/FLUX.1.1-pro";
 
 function invoke(params) {
@@ -66,7 +66,7 @@ function performGeneration(prompt, seed) {
   const raw = `\n![${prompt}](${image.short_url})\n`;
   chain.setCustomRaw(raw);
 
-  return { result: "Image generated successfully", seed };
+  return { url: image.short_url, seed };
 }
 
 function performEdit(prompt, imageUrls, seed) {
@@ -125,7 +125,7 @@ function performEdit(prompt, imageUrls, seed) {
   const raw = `\n![${prompt}](${image.short_url})\n`;
   chain.setCustomRaw(raw);
 
-  return { result: "Image edited successfully", seed };
+  return { url: image.short_url, seed };
 }
 
 function details() {

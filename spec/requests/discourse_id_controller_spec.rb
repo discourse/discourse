@@ -114,6 +114,28 @@ RSpec.describe Users::DiscourseIdController do
       end
     end
 
+    context "when login_required is true" do
+      before { SiteSetting.login_required = true }
+
+      it "still allows anonymous revocation requests" do
+        UserAuthToken.generate!(user_id: user.id)
+
+        timestamp = Time.now.to_i
+        signature =
+          OpenSSL::HMAC.hexdigest(
+            "sha256",
+            hashed_secret,
+            "#{client_id}:#{identifier}:#{timestamp}",
+          )
+
+        post "/auth/discourse_id/revoke.json", params: { signature:, identifier:, timestamp: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(UserAuthToken.where(user_id: user.id).count).to eq(0)
+      end
+    end
+
     context "with rate limiting" do
       before { RateLimiter.enable }
 

@@ -83,11 +83,24 @@ RSpec.describe Chat::InviteUsersToChannel do
       it { is_expected.to fail_to_find_a_model(:channel) }
     end
 
-    context "when current user can't view channel" do
+    context "when current user can't join channel" do
       fab!(:current_user, :user)
       fab!(:channel_1, :private_category_channel)
 
-      it { is_expected.to fail_a_policy(:can_view_channel) }
+      it { is_expected.to fail_a_policy(:can_join_channel) }
+    end
+
+    context "when current user can view but not join channel" do
+      fab!(:current_user, :user)
+      fab!(:channel_1, :category_channel)
+
+      before do
+        channel_1.chatable.set_permissions(group_1 => :readonly)
+        channel_1.chatable.save!
+        group_1.add(current_user)
+      end
+
+      it { is_expected.to fail_a_policy(:can_join_channel) }
     end
   end
 end

@@ -394,6 +394,10 @@ module Discourse
     plugins.find_all { |p| !p.metadata.official? }
   end
 
+  def self.preinstalled_plugins
+    plugins.find_all(&:preinstalled?)
+  end
+
   def self.find_plugins(args)
     plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?
@@ -452,15 +456,76 @@ module Discourse
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
-    plugins.flat_map do |plugin|
-      assets = []
-      assets << "plugins/#{plugin.directory_name}" if plugin.js_asset_exists?
-      assets << "plugins/#{plugin.directory_name}_extra" if plugin.extra_js_asset_exists?
-      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
-        assets << "plugins/#{plugin.directory_name}_admin"
+    assets = []
+
+    plugins.each do |plugin|
+      if plugin.js_asset_exists?
+        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+          if logical_path =
+               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main")
+            assets << {
+              name: logical_path,
+              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
+              plugin: plugin,
+              type_module: true,
+              importmap_name: "discourse/plugins/#{plugin.directory_name}",
+            }
+          end
+        else
+          assets << { name: "plugins/#{plugin.directory_name}", plugin: plugin }
+        end
       end
-      assets
+
+      if plugin.extra_js_asset_exists?
+        assets << {
+          name: "plugins/#{plugin.directory_name}_extra",
+          plugin: plugin,
+          type_module: false,
+        }
+      end
+
+      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
+        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+          if logical_path =
+               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin")
+            assets << {
+              name: logical_path,
+              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
+              plugin: plugin,
+              type_module: true,
+            }
+          end
+        else
+          assets << { name: "plugins/#{plugin.directory_name}_admin", plugin: plugin }
+        end
+      end
+
+      if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
+           plugin.test_js_asset_exists?
+        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+          if logical_path =
+               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test")
+            assets << {
+              name: logical_path,
+              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
+              plugin: plugin,
+              type_module: true,
+            }
+          end
+        else
+          assets << { name: "plugins/test/#{plugin.directory_name}_tests", plugin: plugin }
+        end
+      end
     end
+
+    assets.each do |asset|
+      asset[:plugin_attributes] = {
+        "data-official": !!asset[:plugin].metadata&.official?,
+        "data-preinstalled": asset[:plugin].preinstalled?,
+      }
+    end
+
+    assets
   end
 
   def self.assets_digest
@@ -928,8 +993,10 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
-    # V8 does not support forking, make sure all contexts are disposed
-    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+    if !GlobalSetting.mini_racer_single_threaded
+      # V8 does not support forking, make sure all contexts are disposed
+      ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+    end
 
     # get rid of rubbish so we don't share it
     Process.warmup
@@ -968,10 +1035,10 @@ module Discourse
     Logster.store.redis.reconnect
     Sidekiq.redis_pool.reload(&:close)
 
-    # in case v8 was initialized we want to make sure it is nil
-    PrettyText.reset_context
-
-    AssetProcessor.reset_context if defined?(AssetProcessor)
+    if !GlobalSetting.mini_racer_single_threaded
+      PrettyText.reset_context
+      AssetProcessor.reset_context
+    end
 
     # warm up v8 after fork, that way we do not fork a v8 context
     # it may cause issues if bg threads in a v8 isolate randomly stop
@@ -1208,6 +1275,12 @@ module Discourse
       Thread.new { LetterAvatar.image_magick_version },
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberCli.script_chunks },
+      Thread.new do
+        if GlobalSetting.mini_racer_single_threaded
+          PrettyText.cook("warm up **pretty text**")
+          AssetProcessor.v8
+        end
+      end,
     ].each(&:join)
   ensure
     @preloaded_rails = true

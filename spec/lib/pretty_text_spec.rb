@@ -31,7 +31,7 @@ RSpec.describe PrettyText do
       it "correctly extracts usernames from the new quote format" do
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote no-group" data-username="codinghorror" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="codinghorror" data-display-name="Jeff" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a></div>
@@ -1200,6 +1200,21 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt(nil, 100)).to eq("")
     end
 
+    it "returns empty string when Nokogiri hits tree depth limits" do
+      html = "<div>" * 10 + "Hello" + "</div>" * 10
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_TREE_DEPTH", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
+    it "returns empty string when Nokogiri hits attribute limits" do
+      attrs = (1..10).map { |i| "data-a#{i}=\"v\"" }.join(" ")
+      html = "<div #{attrs}>Hello</div>"
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_ATTRIBUTES", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
     it "handles custom bbcode excerpt" do
       raw = <<~MD
       [excerpt]
@@ -1675,6 +1690,29 @@ RSpec.describe PrettyText do
 
     it "correctly strips VARIATION SELECTOR-16 character (ufe0f) from some emojis" do
       expect(PrettyText.cook("❤️💣")).to match(/<img src[^>]+bomb[^>]+>/)
+    end
+
+    it "correctly cooks skin tone and gendered ZWJ sequences" do
+      # 1. Standard RGI Input (Man Bouncing Ball: Light Skin Tone)
+      # Structure: ⛹ (26f9) + 🏻 (1f3fb) + ZWJ (200d) + ♂ (2642) + VS16 (fe0f)
+      standard_input = [0x26f9, 0x1f3fb, 0x200d, 0x2642, 0xfe0f].pack("U*")
+      expect(PrettyText.cook(standard_input)).to eq(
+        "<p><img src=\"/images/emoji/twitter/man_bouncing_ball/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":man_bouncing_ball:t2:\" class=\"emoji only-emoji\" alt=\":man_bouncing_ball:t2:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+
+      # 2. Regression: Ordinary Skin Tone (Thumbs Up: Light Skin Tone)
+      # Structure: 👍 (1f44d) + 🏻 (1f3fb)
+      thumbs_up = [0x1f44d, 0x1f3fb].pack("U*")
+      expect(PrettyText.cook(thumbs_up)).to eq(
+        "<p><img src=\"/images/emoji/twitter/+1/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":+1:t2:\" class=\"emoji only-emoji\" alt=\":+1:t2:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+
+      # 3. Regression: Ordinary ZWJ Sequence (Family: Man, Woman, Girl)
+      # Structure: 👨 (1f468) + ZWJ (200d) + 👩 (1f469) + ZWJ (200d) + 👧 (1f467)
+      family = [0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467].pack("U*")
+      expect(PrettyText.cook(family)).to eq(
+        "<p><img src=\"/images/emoji/twitter/family_man_woman_girl.png?v=#{Emoji::EMOJI_VERSION}\" title=\":family_man_woman_girl:\" class=\"emoji only-emoji\" alt=\":family_man_woman_girl:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
     end
 
     it "replaces Emoji from Unicode 14.0" do

@@ -3,7 +3,7 @@
 RSpec.describe FormTemplatesController do
   fab!(:user)
 
-  before { SiteSetting.experimental_form_templates = true }
+  before { SiteSetting.enable_form_templates = true }
 
   describe "#index" do
     fab!(:form_template)
@@ -37,7 +37,7 @@ RSpec.describe FormTemplatesController do
     context "when experimental form templates is disabled" do
       before do
         sign_in(user)
-        SiteSetting.experimental_form_templates = false
+        SiteSetting.enable_form_templates = false
       end
 
       it "should not work if you are a logged in user" do
@@ -176,7 +176,7 @@ RSpec.describe FormTemplatesController do
     context "when experimental form templates is disabled" do
       before do
         sign_in(user)
-        SiteSetting.experimental_form_templates = false
+        SiteSetting.enable_form_templates = false
       end
 
       it "should not work if you are a logged in user" do

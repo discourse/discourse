@@ -52,22 +52,31 @@
   }
 
   .more-topics__list {
-    .topic-list-header::after {
-      content: "";
-      display: block;
-      height: 12px;
+    .topic-list-body {
+      border-top-width: 1px;
     }
 
-    .topic-list-body {
-      border-top: none;
+    .topic-list-header:has(.nav-pills) {
+      th.topic-list-data {
+        padding-bottom: 0;
 
-      .topic-list-item {
-        &:first-child td {
-          padding-top: 0;
+        &:first-of-type {
+          padding-left: 0;
+        }
+      }
+    }
+
+    @include viewport.until(sm) {
+      .topic-list-header.--has-tabs {
+        display: flex;
+
+        .nav-pills {
+          margin: 0;
+          border: none;
         }
 
-        &:last-of-type {
-          border-bottom: none;
+        th:not(.default) {
+          display: none;
         }
       }
     }

@@ -49,7 +49,7 @@ export default class AdminReportTableHeader extends Component {
           @icon={{this.sortIcon}}
           @translatedLabel={{unless @label.htmlTitle @label.title}}
           @translatedTitle={{this.sortButtonTitle}}
-          class="btn-primary btn-transparent sort-btn"
+          class="btn-transparent --primary sort-btn"
         >
           {{#if @label.htmlTitle}}
             <span class="d-button-label">{{htmlSafe @label.htmlTitle}}</span>

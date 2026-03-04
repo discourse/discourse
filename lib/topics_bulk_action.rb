@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class TopicsBulkAction
+  attr_reader :errors
+
   def initialize(user, topic_ids, operation, options = {})
     @user = user
     @topic_ids = topic_ids
     @operation = operation
     @changed_ids = []
+    @errors = Hash.new(0)
     @options = options
   end
 
@@ -39,8 +42,17 @@ class TopicsBulkAction
     if TopicsBulkAction.operations.exclude?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
     end
+
     # careful these are private methods, we need send
     send(@operation[:type])
+
+    if @errors.present?
+      error_details = @errors.map { |msg, count| "- #{msg} (#{count} topics)" }.join("\n")
+      Rails.logger.warn(
+        "Bulk '#{@operation[:type]}' by @#{@user.username} (id=#{@user.id}) failed for #{@errors.values.sum} topics:\n#{error_details}",
+      )
+    end
+
     @changed_ids.sort
   end
 
@@ -66,6 +78,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.move_to_inbox!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
@@ -79,6 +92,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.archive!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
@@ -134,26 +148,21 @@ class TopicsBulkAction
   def change_category
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
-    if SiteSetting.create_revision_on_bulk_topic_moves
-      opts = {
-        bypass_bump: true,
-        validate_post: false,
-        bypass_rate_limiter: true,
-        silent: @operation[:silent],
-      }
+    opts = {
+      bypass_bump: true,
+      validate_post: false,
+      bypass_rate_limiter: true,
+      silent: @operation[:silent],
+      skip_revision: !SiteSetting.create_revision_on_bulk_topic_moves,
+    }
 
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          changes = { category_id: @operation[:category_id] }
-          @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
-        end
-      end
-    else
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          if t.change_category_to_id(@operation[:category_id], silent: @operation[:silent])
-            @changed_ids << t.id
-          end
+    updatable_topics.each do |t|
+      if guardian.can_edit?(t)
+        changes = { category_id: @operation[:category_id] }
+        if t.first_post.revise(@user, changes, opts)
+          @changed_ids << t.id
+        else
+          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
         end
       end
     end
@@ -242,60 +251,72 @@ class TopicsBulkAction
   end
 
   def change_tags
-    tag_ids, tag_names = extract_tag_params
+    tags = resolve_tag_names || []
 
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        if tag_ids.present?
-          DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids)
-        elsif tag_names.present?
-          DiscourseTagging.tag_topic_by_names(t, guardian, tag_names)
-        else
-          t.tags = []
-        end
+    topics_with_tags.each do |t|
+      next unless guardian.can_edit?(t)
+      next unless t.first_post
+
+      if t.first_post.revise(@user, { tags: tags }, bulk_tag_opts)
         @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
       end
     end
   end
 
   def append_tags
-    tag_ids, tag_names = extract_tag_params
+    tags = resolve_tag_names || []
 
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        if tag_ids.present?
-          DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids, append: true)
-        elsif tag_names.present?
-          DiscourseTagging.tag_topic_by_names(t, guardian, tag_names, append: true)
-        end
+    return if tags.blank?
+
+    topics_with_tags.each do |t|
+      next unless guardian.can_edit?(t)
+      next unless t.first_post
+
+      merged = t.tags.map(&:name) | tags
+      if t.first_post.revise(@user, { tags: merged }, bulk_tag_opts)
         @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
       end
     end
   end
 
-  def extract_tag_params
+  def remove_tags
+    topics_with_tags.each do |t|
+      next unless guardian.can_edit?(t)
+      next unless t.first_post
+
+      if t.first_post.revise(@user, { tags: [] }, bulk_tag_opts)
+        @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      end
+    end
+  end
+
+  def resolve_tag_names
     if @operation[:tag_ids].present?
-      [@operation[:tag_ids], nil]
+      Tag.where(id: @operation[:tag_ids]).pluck(:name)
     elsif @operation[:tags].present?
       Discourse.deprecate(
         "the tags param for bulk actions is deprecated, use tag_ids instead",
         since: "2026.01",
         drop_from: "2026.07",
       )
-      tag_names = @operation[:tags]
-      [nil, tag_names]
-    else
-      [nil, nil]
+      @operation[:tags]
     end
   end
 
-  def remove_tags
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        TopicTag.where(topic_id: t.id).in_batches.destroy_all
-        @changed_ids << t.id
-      end
-    end
+  def bulk_tag_opts
+    {
+      bypass_bump: true,
+      validate_post: false,
+      bypass_rate_limiter: true,
+      skip_revision: true,
+      silent: true,
+    }
   end
 
   def guardian
@@ -304,6 +325,10 @@ class TopicsBulkAction
 
   def topics
     @topics ||= Topic.where(id: @topic_ids)
+  end
+
+  def topics_with_tags
+    @topics_with_tags ||= topics.includes(:first_post, :tags)
   end
 
   def dismiss_topics_since_date

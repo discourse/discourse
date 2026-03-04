@@ -43,3 +43,6 @@ export const CHAT_QUICK_REACTION_TYPE_CUSTOM = "custom";
 export const CHAT_SEPARATE_SIDEBAR_MODE_ALWAYS = "always";
 export const CHAT_SEPARATE_SIDEBAR_MODE_FULLSCREEN = "fullscreen";
 export const CHAT_SEPARATE_SIDEBAR_MODE_NEVER = "never";
+export const MATCH_QUALITY_EXACT = 1;
+export const MATCH_QUALITY_PREFIX = 2;
+export const MATCH_QUALITY_PARTIAL = 3;

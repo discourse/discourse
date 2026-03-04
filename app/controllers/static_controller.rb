@@ -64,8 +64,7 @@ class StaticController < ApplicationController
       return redirect_to path("/login")
     end
 
-    rename_faq =
-      UpcomingChanges.enabled_for_user?(:experimental_rename_faq_to_guidelines, current_user)
+    rename_faq = UpcomingChanges.enabled_for_user?(:rename_faq_to_guidelines, current_user)
 
     if rename_faq
       redirect_paths = %w[/rules /conduct]
@@ -111,7 +110,7 @@ class StaticController < ApplicationController
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overridden = SiteSetting.faq_url.present?
-      @experimental_rename_faq_to_guidelines = rename_faq
+      @rename_faq_to_guidelines = rename_faq
 
       render :show, layout: !request.xhr?, formats: [:html]
       return
@@ -233,8 +232,10 @@ class StaticController < ApplicationController
         Discourse
           .cache
           .fetch("llms_txt_content:#{upload.sha1}") do
-            Discourse.store.download_safe(upload)&.path&.then { |path| File.read(path) }
+            path = Discourse.store.download(upload)
+            File.read(path) if path
           end
+
       return head(:not_found) if content.blank?
 
       render plain: content, content_type: "text/plain"
@@ -272,7 +273,7 @@ class StaticController < ApplicationController
     path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
 
     # SECURITY what if path has /../
-    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
+    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets/")
 
     response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]

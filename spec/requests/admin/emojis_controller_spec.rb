@@ -133,9 +133,44 @@ RSpec.describe Admin::EmojiController do
 
         custom_emoji = CustomEmoji.last
 
-        data = response.parsed_body
         expect(response.status).to eq(200)
         expect(custom_emoji.group).to eq("foo")
+      end
+
+      it "should allow an admin to add a custom SVG emoji" do
+        Emoji.expects(:clear_cache)
+
+        post "/admin/config/emoji.json",
+             params: {
+               name: "test_svg",
+               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/image.svg"),
+             }
+
+        expect(response.status).to eq(200)
+
+        custom_emoji = CustomEmoji.last
+        upload = custom_emoji.upload
+
+        expect(upload.original_filename).to eq("image.svg")
+        expect(upload.extension).to eq("svg")
+      end
+
+      it "should allow an admin to add a custom animated GIF emoji" do
+        Emoji.expects(:clear_cache)
+
+        post "/admin/config/emoji.json",
+             params: {
+               name: "test_gif",
+               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/animated.gif"),
+             }
+
+        expect(response.status).to eq(200)
+
+        custom_emoji = CustomEmoji.last
+        upload = custom_emoji.upload
+
+        expect(upload.original_filename).to eq("animated.gif")
+        expect(upload.extension).to eq("gif")
       end
 
       it "should fix up the emoji name" do

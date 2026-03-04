@@ -1,11 +1,13 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
+import { capitalize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -25,6 +27,7 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
+  @service site;
   @service toasts;
 
   @tracked bufferedGroups = this.args.change.groups;
@@ -57,7 +60,7 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get enabledForOptions() {
-    return [
+    const options = [
       {
         label: i18n("admin.upcoming_changes.enabled_for_options.no_one"),
         value: "no_one",
@@ -66,23 +69,40 @@ export default class UpcomingChangeItem extends Component {
         label: i18n("admin.upcoming_changes.enabled_for_options.everyone"),
         value: "everyone",
       },
-      {
-        label: i18n("admin.upcoming_changes.enabled_for_options.staff"),
-        value: "staff",
-      },
-      {
-        label: i18n(
-          "admin.upcoming_changes.enabled_for_options.specific_groups"
-        ),
-        value: "groups",
-      },
     ];
+
+    if (!this.args.change.upcoming_change.disallow_enabled_for_groups) {
+      options.push(
+        {
+          label: capitalize(this.staffGroupName),
+          value: this.staffGroupName,
+        },
+        {
+          label: i18n(
+            "admin.upcoming_changes.enabled_for_options.specific_groups"
+          ),
+          value: "groups",
+        }
+      );
+    }
+
+    return options;
+  }
+
+  get staffGroupName() {
+    return this.site.groupsById[AUTO_GROUPS.staff.id].name;
   }
 
   get enabledForDisabled() {
     return (
       this.args.change.upcoming_change.status === "permanent" ||
       this.savingEnabledFor
+    );
+  }
+
+  get showDependentSettingsLink() {
+    return (
+      this.args.change.dependents.length && this.bufferedEnabledFor !== "no_one"
     );
   }
 
@@ -175,9 +195,10 @@ export default class UpcomingChangeItem extends Component {
       enabledForLabel = i18n(
         "admin.upcoming_changes.enabled_for_options.everyone"
       );
-    } else if (enabledFor === "staff") {
+    } else if (enabledFor === this.staffGroupName) {
       enabledForLabel = i18n(
-        "admin.upcoming_changes.enabled_for_options.staff"
+        "admin.upcoming_changes.enabled_for_options.staff",
+        { staffGroupName: capitalize(this.staffGroupName) }
       );
     } else if (enabledFor === "groups") {
       const groupNames = this.bufferedGroups.split(",");
@@ -231,8 +252,8 @@ export default class UpcomingChangeItem extends Component {
     try {
       await this.toggleChange(isEnabled, newValue);
 
-      if (newValue === "staff") {
-        this.groupsChanged(AUTO_GROUPS.staff.name);
+      if (newValue === this.staffGroupName) {
+        this.groupsChanged(this.staffGroupName);
       } else if (newValue === "everyone" || newValue === "no_one") {
         this.groupsChanged("");
       }
@@ -384,9 +405,21 @@ export default class UpcomingChangeItem extends Component {
         >
           {{#each this.enabledForOptions as |option|}}
             <select.Option @value={{option.value}}>
-              {{option.label}}</select.Option>
+              {{option.label}}
+            </select.Option>
           {{/each}}
         </DSelect>
+
+        {{#if this.showDependentSettingsLink}}
+          <div class="upcoming-change__dependents">
+            <LinkTo
+              @route="adminSiteSettings"
+              @query={{hash filter="all_results" dependsOn=@change.setting}}
+            >
+              {{i18n "admin.upcoming_changes.show_related_settings"}}
+            </LinkTo>
+          </div>
+        {{/if}}
 
         {{#if (eq this.bufferedEnabledFor "groups")}}
           <div class="upcoming-change__group-selection-wrapper">

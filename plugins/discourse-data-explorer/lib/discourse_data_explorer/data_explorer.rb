@@ -47,7 +47,7 @@ module DiscourseDataExplorer
           sql = <<~SQL
             /*
             * DiscourseDataExplorer Query
-            * Query: /admin/plugins/explorer/queries/#{query.id}
+            * Query: /admin/plugins/discourse-data-explorer/queries/#{query.id}
             #{"* Started by: #{started_by}" if started_by}
             */
             WITH query AS (

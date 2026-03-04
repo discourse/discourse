@@ -53,6 +53,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :flair_group_id,
              :can_create_topic,
+             :can_create_category,
              :can_create_group,
              :link_posting_access,
              :external_id,
@@ -80,9 +81,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_see_emails,
              :can_localize_content?,
              :effective_locale,
-             :use_reviewable_ui_refresh,
              :can_see_ip,
-             :is_impersonating
+             :is_impersonating,
+             :can_change_post_owner
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -106,6 +107,17 @@ class CurrentUserSerializer < BasicUserSerializer
     !!object.is_impersonating
   end
 
+  def include_can_change_post_owner?
+    return true if admin?
+    return true if SiteSetting.moderators_change_post_ownership && moderator?
+    return true if object.in_any_groups?(SiteSetting.change_post_ownership_allowed_groups_map)
+    false
+  end
+
+  def can_change_post_owner
+    true
+  end
+
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
 
@@ -127,8 +139,16 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_create_topic?(nil)
   end
 
+  def can_create_category
+    true
+  end
+
+  def include_can_create_category?
+    scope.can_create_category?
+  end
+
   def can_create_group
-    scope.can_create_group?
+    true
   end
 
   def include_can_create_group?
@@ -189,7 +209,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_invite_to_forum
-    scope.can_invite_to_forum?
+    true
   end
 
   def include_can_invite_to_forum?
@@ -204,12 +224,12 @@ class CurrentUserSerializer < BasicUserSerializer
     !object.has_password?
   end
 
-  def include_can_delete_account?
-    scope.can_delete_user?(object)
-  end
-
   def can_delete_account
     true
+  end
+
+  def include_can_delete_account?
+    scope.can_delete_user?(object)
   end
 
   def custom_fields
@@ -357,14 +377,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_effective_locale?
     SiteSetting.content_localization_enabled
-  end
-
-  def use_reviewable_ui_refresh
-    scope.can_see_reviewable_ui_refresh?
-  end
-
-  def include_use_reviewable_ui_refresh?
-    scope.can_see_review_queue?
   end
 
   def can_see_ip

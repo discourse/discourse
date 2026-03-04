@@ -25,7 +25,7 @@ export default <template>
         @icon="play"
         @label="explorer.run"
         @type="submit"
-        class="btn-primary"
+        class="btn-primary query-run__submit"
       />
 
       <DButton

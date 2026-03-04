@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class GroupsNewController extends Controller {
   @service router;
@@ -10,14 +9,18 @@ export default class GroupsNewController extends Controller {
 
   saving = null;
 
-  @discourseComputed("model.ownerUsernames")
-  splitOwnerUsernames(owners) {
-    return owners && owners.length ? owners.split(",") : [];
+  @computed("model.ownerUsernames")
+  get splitOwnerUsernames() {
+    return this.model?.ownerUsernames && this.model?.ownerUsernames?.length
+      ? this.model?.ownerUsernames?.split(",")
+      : [];
   }
 
-  @discourseComputed("model.usernames")
-  splitUsernames(usernames) {
-    return usernames && usernames.length ? usernames.split(",") : [];
+  @computed("model.usernames")
+  get splitUsernames() {
+    return this.model?.usernames && this.model?.usernames?.length
+      ? this.model?.usernames?.split(",")
+      : [];
   }
 
   @action

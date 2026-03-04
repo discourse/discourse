@@ -852,6 +852,27 @@ RSpec.describe UserNotifications do
         )
       expect(mail.subject).to match(/Super cool topic/)
     end
+
+    it "uses post author username when original_username is missing from notification data" do
+      SiteSetting.enable_names = false
+
+      notification_data = {
+        topic_title: topic.title,
+        original_post_id: response.id,
+        original_post_type: response.post_type,
+        display_username: I18n.t("embed.replies", count: 7),
+      }
+
+      mail =
+        UserNotifications.user_posted(
+          user,
+          post: response,
+          notification_type: Notification.types[:posted],
+          notification_data_hash: notification_data,
+        )
+
+      expect(mail.header["X-Discourse-Sender"].value).to eq(response_by_user.username)
+    end
   end
 
   describe ".user_private_message" do
@@ -1435,6 +1456,31 @@ RSpec.describe UserNotifications do
         :user_notification_email_options,
         &modify_post
       )
+    end
+  end
+
+  describe "recipient_username" do
+    fab!(:user)
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:response) { Fabricate(:basic_reply, topic: topic) }
+    fab!(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
+
+    it "includes recipient_username in notification emails" do
+      TranslationOverride.upsert!(
+        I18n.locale,
+        "user_notifications.user_mentioned.text_body_template",
+        "Hello %{recipient_username}, %{username} mentioned you on %{topic_title}",
+      )
+
+      mail =
+        UserNotifications.user_mentioned(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+      expect(mail.body.to_s).to include("Hello #{user.username}")
     end
   end
 

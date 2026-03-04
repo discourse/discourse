@@ -35,8 +35,11 @@ tr_TR:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "Yorumla ne yapmak istiyorsunuz?"
         no_action_comment:
           title: "Eylem yok"
+          description: "Yorumu olduğu gibi bırakın."
         agree_and_keep_comment:
           title: "Yorumu tut"
           description: "Bayrağı kabul edin ve yorumu değiştirmeyin."
@@ -49,9 +52,24 @@ tr_TR:
         agree_and_delete:
           title: "Yorumu sil"
           description: "Kullanıcıların görememesi için yorumu silin."
+        agree_and_suspend:
+          title: "Kullanıcıyı askıya al"
+          description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
+        agree_and_silence:
+          title: "Kullanıcıyı sustur"
+          description: "Bayrağı kabul edin ve kullanıcıyı susturun."
         disagree_and_restore:
           title: "Katılma ve yorumu Geri Yükle"
           description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
+        disagree:
+          title: "Yorumu tut"
+          description: "Bayrağa katılmıyorum ve yorumu değiştirmeden bırakıyorum."
+        ignore:
+          title: "Bildirimi yoksay"
+          description: "Herhangi bir işlem yapmadan kuyruktan kaldırın."
+        delete_and_agree:
+          title: "Bayrağı yok say ve yorumu sil"
+          description: "Kuyruktan kaldırarak bayrağı yok sayın ve yorumu silin."
   post_action_types:
     vote:
       title: "Oy ver"
@@ -99,10 +117,17 @@ tr_TR:
             title: "Yorumu sil"
             description: "Kullanıcıların görememesi için yorumu silin."
           delete_and_agree:
+            title: "Bayrağı yok say ve yorumu sil"
             description: "Kuyruktan kaldırarak bayrağı yok sayın ve yorumu silin."
           disagree_and_restore:
             title: "Katılma ve yorumu Geri Yükle"
             description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
+          disagree:
+            title: "Yorumu tut"
+            description: "Bayrağa katılmıyorum ve yorumu değiştirmeden bırakıyorum."
+          ignore:
+            title: "Bildirimi yoksay"
+            description: "Herhangi bir işlem yapmadan kuyruktan kaldırın."
         transcript:
           view: "Önceki yorumların dökümünü görüntüle"
       reviewable_score_types:

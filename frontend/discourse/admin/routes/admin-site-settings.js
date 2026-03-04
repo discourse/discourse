@@ -17,6 +17,10 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
       replace: true,
       refreshModel: true,
     },
+    dependsOn: {
+      replace: true,
+      refreshModel: true,
+    },
   };
 
   _siteSettings = null;
@@ -31,9 +35,11 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
     return {
       filteredSettings: this.filterSettings(
         params.filter,
-        params.onlyOverridden
+        params.onlyOverridden,
+        params.dependsOn
       ),
-      filtersApplied: params.filter || params.onlyOverridden,
+      filtersApplied:
+        params.filter || params.onlyOverridden || params.dependsOn,
     };
   }
 
@@ -52,11 +58,12 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
   }
 
   @action
-  filterSettings(filter, onlyOverridden) {
+  filterSettings(filter, onlyOverridden, dependsOn) {
     const settingFilter = new SiteSettingFilter(this._siteSettings);
 
     return settingFilter.filterSettings(filter, {
       onlyOverridden: onlyOverridden === "true",
+      dependsOn,
     });
   }
 

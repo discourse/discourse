@@ -5,7 +5,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
@@ -53,7 +53,8 @@ export default class ChatMessage {
   @tracked manager;
   @tracked deletedById;
   @tracked streaming;
-  @trackedArray reactions;
+  @tracked pinned;
+  @autoTrackedArray reactions;
 
   @tracked _deletedAt;
   @tracked _cooked;
@@ -103,6 +104,8 @@ export default class ChatMessage {
     if (args.thread) {
       this.thread = args.thread;
     }
+
+    this.pinned = args.pinned ?? false;
   }
 
   get url() {

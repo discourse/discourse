@@ -35,14 +35,14 @@
     "ember-cli-terser": "^4.0.2",
     "ember-disable-prototype-extensions": "^1.1.3",
     "ember-load-initializers": "^3.0.1",
-    "ember-resolver": "^13.1.1",
+    "ember-resolver": "^13.2.0",
     "ember-source": "~6.6.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
     "webpack": "5.99.9"
   },
   "engines": {
-    "node": ">= 18",
+    "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^10"

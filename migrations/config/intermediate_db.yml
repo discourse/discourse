@@ -303,6 +303,7 @@ schema:
         - "ai_moderation_settings"
         - "ai_personas"
         - "ai_posts_embeddings"
+        - "ai_secrets"
         - "ai_spam_logs"
         - "ai_summaries"
         - "ai_tools"

@@ -4,6 +4,21 @@ describe EmbeddingDefinition do
   fab!(:embedding_definition, :open_ai_embedding_def)
   fab!(:gemini_embedding_definition, :gemini_embedding_def)
 
+  describe "validations" do
+    it "allows valid pg_function values" do
+      EmbeddingDefinition.distance_functions.each do |fn|
+        embedding_definition.pg_function = fn
+        expect(embedding_definition).to be_valid
+      end
+    end
+
+    it "rejects invalid pg_function values" do
+      embedding_definition.pg_function = "'; DROP TABLE users; --"
+      expect(embedding_definition).not_to be_valid
+      expect(embedding_definition.errors[:pg_function]).to be_present
+    end
+  end
+
   describe "#prepare_query_text" do
     let(:text) { "test query" }
 

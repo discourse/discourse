@@ -19,6 +19,7 @@
 @import "edit-category";
 @import "uc-simplified-category-setup-edit-categories";
 @import "edit-topic-timer-modal";
+@import "embedded-posts";
 @import "ember-select";
 @import "emoji";
 @import "exception";
@@ -59,6 +60,7 @@
 @import "sidebar-section-link";
 @import "static-login";
 @import "tagging";
+@import "tag-settings";
 @import "tooltip";
 @import "topic";
 @import "topic-admin-menu";
@@ -68,5 +70,6 @@
 @import "user";
 @import "user-badges";
 @import "user-tips";
+@import "embed-mode";
 @import "uc-dismiss";
 @import "uc-modernize-foundation-theme";

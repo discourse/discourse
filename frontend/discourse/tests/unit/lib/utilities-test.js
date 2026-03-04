@@ -16,6 +16,7 @@ import {
   inCodeBlock,
   initializeDefaultHomepage,
   mergeSortedLists,
+  replaceTableRaw,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
@@ -469,6 +470,19 @@ module("Unit | Utilities | table-builder", function (hooks) {
       arrayToTable(tableData, ["Col 1", "Col 2", "Col 3", "Col 4"]),
       "|Col 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
       "it creates a valid table"
+    );
+  });
+
+  test("replaceTableRaw", function (assert) {
+    const raw = "Some text\n\nMaterial | Value\n--- | ---\nA | 1\n\nMore text";
+    const result = replaceTableRaw(
+      raw,
+      [2, 5],
+      "| Material | Value |\n| --- | --- |\n| A | 1 |"
+    );
+    assert.strictEqual(
+      result,
+      "Some text\n\n| Material | Value |\n| --- | --- |\n| A | 1 |\n\nMore text"
     );
   });
 

@@ -16,6 +16,8 @@ sw:
           title: Mda wa kusoma
         chat_usage:
           messages: ujumbe
+          author: Wewe
+          author_others: "%{username}"
         invites:
           title: Waliokaribishwa
           invitee_posts: Machapisho Yaliotengenezwa

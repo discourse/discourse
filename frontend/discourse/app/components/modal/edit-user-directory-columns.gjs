@@ -20,7 +20,6 @@ const DOWN = "down";
 export default class EditUserDirectoryColumns extends Component {
   @tracked loading = true;
   @tracked columns;
-  @tracked labelKey;
   @tracked flash;
 
   constructor() {
@@ -133,7 +132,6 @@ export default class EditUserDirectoryColumns extends Component {
                     {{#if (directoryColumnIsAutomatic column=column)}}
                       {{directoryTableHeaderTitle
                         field=column.name
-                        labelKey=this.labelKey
                         icon=column.icon
                       }}
                     {{else if (directoryColumnIsUserField column=column)}}

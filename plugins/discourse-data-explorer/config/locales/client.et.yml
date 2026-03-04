@@ -7,13 +7,13 @@
 et:
   js:
     explorer:
+      default_query: "Vaikimisi"
       or: "või"
       title: "Andmete eksportija"
-      create: "Loo uus"
+      create: "Loo"
       create_placeholder: "Päringu nimi..."
       import:
         label: "Impordi"
-        modal: "Impordi päring"
       help:
         label: "Abi"
       schema:
@@ -25,16 +25,12 @@ et:
           no: "Ei"
           null_: "Nulli"
       export: "Ekspordi"
-      save: "Salvesta muudatused"
-      saverun: "Salvesta muudatused ja käivita"
       run: "Käivita"
-      undo: "Loobu muudatustest"
       edit: "Muuda"
       delete: "Kustuta"
       download_json: "JSON"
       download_csv: "CSV"
       query_groups: "Rühmad"
       query_description: "Kirjeldus"
-      save_params: "Määra vaikeväärtused"
       reset_params: "Nulli"
       search_placeholder: "Otsi..."

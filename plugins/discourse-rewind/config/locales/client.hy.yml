@@ -16,6 +16,8 @@ hy:
           title: Կարդալու ժամանակը
         chat_usage:
           messages: հաղորդագրություն
+          author: Դուք
+          author_others: "%{username}"
           status_online: "● օնլայն"
         invites:
           title: Հրավերներ

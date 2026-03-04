@@ -520,6 +520,7 @@ class Topic < ActiveRecord::Base
 
   def limit_private_messages_per_day
     return unless private_message?
+    return if subtype == TopicSubtype.notify_moderators
     apply_per_day_rate_limit_for("pms", :max_personal_messages_per_day)
   end
 
@@ -1109,6 +1110,12 @@ class Topic < ActiveRecord::Base
         # category is private. this is only done if the category
         # has actually changed to avoid noise.
         DB.after_commit { Jobs.enqueue(:update_topic_upload_security, topic_id: self.id) }
+
+        # Notify tracking state of category change so users who lost access
+        # have the topic removed from their tracking state
+        if SiteSetting.experimental_topic_category_change_notification
+          DB.after_commit { TopicTrackingState.publish_category_change(self, old_category) }
+        end
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")

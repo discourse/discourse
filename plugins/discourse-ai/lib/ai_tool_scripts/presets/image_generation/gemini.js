@@ -1,5 +1,5 @@
 /* eslint-disable no-undef, no-unused-vars */
-const apiKey = "YOUR_GOOGLE_API_KEY";
+const apiKey = secrets.get("google_api_key");
 
 function invoke(params) {
   const prompt = params.prompt;
@@ -150,9 +150,7 @@ function processResponse(result, prompt) {
 
   chain.setCustomRaw(raw);
 
-  return {
-    result: "Image generated successfully",
-  };
+  return { url: image.short_url };
 }
 
 function details() {

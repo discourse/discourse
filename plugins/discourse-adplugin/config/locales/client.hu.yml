@@ -19,4 +19,11 @@ hu:
           settings: "Beállítások"
           save: "Mentés"
           delete: "Törlés"
+          html: "HTML"
+          categories: "Kategóriák"
+          groups: "Csoportok"
           preview: "Előnézet"
+          name: "Név"
+          edit: "Szerkesztés"
+          tabs:
+            settings: "Beállítások"

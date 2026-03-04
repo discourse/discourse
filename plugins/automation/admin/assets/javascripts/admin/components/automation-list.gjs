@@ -97,8 +97,8 @@ export default class AutomationList extends Component {
       </DPageSubheader>
 
       {{#if @model.content.length}}
-        <table class="d-admin-table automations">
-          <thead>
+        <table class="d-table automations">
+          <thead class="d-table__header">
             <tr>
               <th>{{i18n
                   "discourse_automation.models.automation.name.label"
@@ -120,13 +120,13 @@ export default class AutomationList extends Component {
           </thead>
           <tbody>
             {{#each @model.content as |automation|}}
-              <tr class="d-admin-row__content">
+              <tr class="d-table__row">
                 {{#if automation.script.not_found}}
                   <td
                     colspan="5"
-                    class="d-admin-row__detail alert alert-danger"
+                    class="d-table__cell --detail alert alert-danger"
                   >
-                    <div class="d-admin-row__mobile-label">
+                    <div class="d-table__mobile-label">
                       {{i18n
                         "discourse_automation.models.automation.status.label"
                       }}
@@ -140,9 +140,9 @@ export default class AutomationList extends Component {
                 {{else if automation.trigger.not_found}}
                   <td
                     colspan="5"
-                    class="d-admin-row__detail alert alert-danger"
+                    class="d-table__cell --detail alert alert-danger"
                   >
-                    <div class="d-admin-row__mobile-label">
+                    <div class="d-table__mobile-label">
                       {{i18n
                         "discourse_automation.models.automation.status.label"
                       }}
@@ -154,15 +154,15 @@ export default class AutomationList extends Component {
                     }}
                   </td>
                 {{else}}
-                  <td class="d-admin-row__overview automations__name">
+                  <td class="d-table__cell --overview automations__name">
                     {{if
                       automation.name
                       automation.name
                       (i18n "discourse_automation.unnamed_automation")
                     }}
                   </td>
-                  <td class="d-admin-row__detail automations__updated-by">
-                    <div class="d-admin-row__mobile-label">
+                  <td class="d-table__cell --detail automations__updated-by">
+                    <div class="d-table__mobile-label">
                       {{i18n
                         "discourse_automation.models.automation.last_updated_by.label"
                       }}
@@ -177,8 +177,8 @@ export default class AutomationList extends Component {
                       {{formatDate automation.updated_at leaveAgo="true"}}
                     </div>
                   </td>
-                  <td class="d-admin-row__detail automations__runs">
-                    <div class="d-admin-row__mobile-label">
+                  <td class="d-table__cell --detail automations__runs">
+                    <div class="d-table__mobile-label">
                       {{i18n
                         "discourse_automation.models.automation.runs.label"
                       }}
@@ -199,8 +199,8 @@ export default class AutomationList extends Component {
                       </a>
                     {{/if}}
                   </td>
-                  <td class="d-admin-row__detail automations__last-run">
-                    <div class="d-admin-row__mobile-label">
+                  <td class="d-table__cell --detail automations__last-run">
+                    <div class="d-table__mobile-label">
                       {{i18n
                         "discourse_automation.models.automation.last_run.label"
                       }}
@@ -214,8 +214,8 @@ export default class AutomationList extends Component {
                       -
                     {{/if}}
                   </td>
-                  <td class="d-admin-row__detail automations__enabled">
-                    <div class="d-admin-row__mobile-label">
+                  <td class="d-table__cell --detail automations__enabled">
+                    <div class="d-table__mobile-label">
                       {{i18n
                         "discourse_automation.models.automation.enabled.label"
                       }}
@@ -233,7 +233,7 @@ export default class AutomationList extends Component {
                   </td>
                 {{/if}}
 
-                <td class="d-admin-row__controls automations__controls">
+                <td class="d-table__cell --controls automations__controls">
                   <LinkTo
                     @route="adminPlugins.show.automation.edit"
                     @model={{automation.id}}

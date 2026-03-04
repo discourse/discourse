@@ -2,7 +2,7 @@ import { Plugin } from "prosemirror-state";
 import GlimmerNodeView from "../lib/glimmer-node-view";
 
 /*
-  There are 4 ways to define a node view:
+  There are 3 ways to define a node view:
 
   Setting a node view class directly (e.g. code-block)
   `nodeViews: { nodeName: NodeViewClass }`
@@ -10,11 +10,13 @@ import GlimmerNodeView from "../lib/glimmer-node-view";
   Setting a node view class as returned by a function, when plugin params are needed (e.g. footnote)
   `nodeViews: { nodeName: (pluginParams) => NodeViewClass }`
 
-  Setting a node view instance as returned by a function, when plugin params are needed (e.g. image)
-  `nodeViews: { nodeName: (pluginParams) => (...args) => nodeViewInstance }`
+  Setting a Glimmer component with auto-wrapping (recommended for Glimmer components)
+  `nodeViews: { nodeName: { component: GlimmerComponent } }`
 
-  Setting a Glimmer component with auto-wrapping (new)
-  `nodeViews: { nodeName: { component: GlimmerComponent, name: "nodeName" } }`
+  The Glimmer component descriptor supports additional options:
+  - `name: "customName"` - CSS class suffix (defaults to the key)
+  - `hasContent: true` - for nodes with editable content inside
+  - `shouldRender: ({ node, view, getPos, pluginParams }) => boolean` - for conditional rendering
 */
 export function extractNodeViews(extensions, pluginParams) {
   /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */
@@ -25,13 +27,21 @@ export function extractNodeViews(extensions, pluginParams) {
         // Check if nodeView is a Glimmer component descriptor
         if (nodeView && typeof nodeView === "object" && nodeView.component) {
           allNodeViews[name] = (node, view, getPos) => {
+            if (
+              nodeView.shouldRender &&
+              !nodeView.shouldRender({ node, view, getPos, pluginParams })
+            ) {
+              return null;
+            }
+
             return new GlimmerNodeView({
               node,
               view,
               getPos,
-              getContext: pluginParams.getContext,
+              pluginParams,
               component: nodeView.component,
               name: nodeView.name || name,
+              hasContent: nodeView.hasContent,
             });
           };
           continue;

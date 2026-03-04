@@ -503,6 +503,68 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(log.response_tokens).to eq(25)
   end
 
+  it "strips temperature and top_p when reasoning is enabled" do
+    model.update!(provider_params: { enable_reasoning: true, reasoning_tokens: 2048 })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body: {
+        id: "msg_123",
+        type: "message",
+        role: "assistant",
+        content: [{ type: "text", text: "response" }],
+        model: "claude-3-opus-20240229",
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json,
+    )
+
+    llm.generate(prompt, user: Discourse.system_user, temperature: 0.7, top_p: 0.9)
+
+    expect(parsed_body).not_to have_key(:temperature)
+    expect(parsed_body).not_to have_key(:top_p)
+  end
+
+  it "strips temperature and top_p when adaptive thinking is enabled" do
+    model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+    parsed_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body: {
+        id: "msg_123",
+        type: "message",
+        role: "assistant",
+        content: [{ type: "text", text: "response" }],
+        model: "claude-3-opus-20240229",
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json,
+    )
+
+    llm.generate(prompt, user: Discourse.system_user, temperature: 0.7, top_p: 0.9)
+
+    expect(parsed_body).not_to have_key(:temperature)
+    expect(parsed_body).not_to have_key(:top_p)
+  end
+
   it "can operate in regular mode" do
     body = <<~STRING
       {
@@ -586,7 +648,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         "Content-Type" => "application/json",
         "X-Api-Key" => "123",
         "Anthropic-Version" => "2023-06-01",
-        "Anthropic-Beta" => "prompt-caching-2024-07-31",
       },
     ).to_return(status: 200, body: body)
 
@@ -709,7 +770,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         "Content-Type" => "application/json",
         "X-Api-Key" => "123",
         "Anthropic-Version" => "2023-06-01",
-        "Anthropic-Beta" => "prompt-caching-2024-07-31",
       },
     ).to_return(status: 200, body: body)
 
@@ -1130,18 +1190,75 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       # Verify that tool_choice is set to { type: "none" }
       expect(parsed_body[:tool_choice]).to eq({ type: "none" })
 
-      # Verify that an assistant message with no_more_tool_calls_text was added
+      # Verify no assistant prefill message was added
       messages = parsed_body[:messages]
-      expect(messages.length).to eq(2) # user message + added assistant message
-
-      last_message = messages.last
-      expect(last_message[:role]).to eq("assistant")
-
-      expect(last_message[:content]).to eq(
-        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text,
-      )
+      expect(messages.length).to eq(1)
 
       expect(result).to eq("I won't use any tools. Here's a direct response instead.")
+    end
+  end
+
+  describe "tool_choice :none with response_format" do
+    it "sets tool_choice none and appends assistant prefill when structured output is disabled" do
+      model.update!(provider_params: { disable_native_structured_output: true })
+
+      schema = {
+        type: "json_schema",
+        json_schema: {
+          name: "reply",
+          schema: {
+            type: "object",
+            properties: {
+              key: {
+                type: "string",
+              },
+            },
+            required: ["key"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      }
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [type: :user, id: "user1", content: "reply as json"],
+          tools: [echo_tool],
+          tool_choice: :none,
+        )
+
+      response_body = {
+        id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+        type: "message",
+        role: "assistant",
+        model: "claude-3-haiku-20240307",
+        content: [{ type: "text", text: "\"key\":\"value\"}" }],
+        stop_reason: "end_turn",
+        usage: {
+          input_tokens: 345,
+          output_tokens: 65,
+        },
+      }.to_json
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: response_body)
+
+      llm.generate(prompt, user: Discourse.system_user, response_format: schema)
+
+      expect(parsed_body[:tool_choice]).to eq({ type: "none" })
+      expect(parsed_body).not_to have_key(:output_config)
+
+      messages = parsed_body[:messages]
+      expect(messages.length).to eq(2)
+      expect(messages[0][:role]).to eq("user")
+      expect(messages[1]).to eq({ role: "assistant", content: "{" })
     end
   end
 
@@ -1192,9 +1309,124 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       # Verify that tool_choice: "echo" is present
       expect(parsed_body.dig(:tool_choice, :name)).to eq("echo")
     end
+
+    it "skips tool_choice and injects guidance when thinking is enabled" do
+      model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [type: :user, id: "user1", content: "echo hello"],
+          tools: [echo_tool],
+          tool_choice: "echo",
+        )
+
+      response_body = {
+        id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+        type: "message",
+        role: "assistant",
+        model: "claude-3-haiku-20240307",
+        content: [
+          {
+            type: "tool_use",
+            id: "toolu_bdrk_014CMjxtGmKUtGoEFPgc7PF7",
+            name: "echo",
+            input: {
+              text: "hello",
+            },
+          },
+        ],
+        stop_reason: "end_turn",
+        stop_sequence: nil,
+        usage: {
+          input_tokens: 345,
+          output_tokens: 65,
+        },
+      }.to_json
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: response_body)
+
+      llm.generate(prompt, user: Discourse.system_user)
+
+      expect(parsed_body).not_to have_key(:tool_choice)
+      last_message = parsed_body[:messages].last
+      expect(last_message[:role]).to eq("user")
+      expect(last_message[:content]).to include("'echo' tool")
+    end
+
+    it "appends guidance as a text block when last user message has array content" do
+      model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [
+            { type: :user, id: "user1", content: "echo hello" },
+            {
+              type: :tool_call,
+              id: "call_1",
+              name: "echo",
+              content: { arguments: { text: "hello" } }.to_json,
+            },
+            { type: :tool, id: "call_1", name: "echo", content: "hello" },
+          ],
+          tools: [echo_tool],
+          tool_choice: "echo",
+        )
+
+      response_body = {
+        id: "msg_01RdJkxCbsEj9VFyFYAkfy2S",
+        type: "message",
+        role: "assistant",
+        model: "claude-3-haiku-20240307",
+        content: [
+          {
+            type: "tool_use",
+            id: "toolu_014CMjxtGmKUtGoEFPgc7PF7",
+            name: "echo",
+            input: {
+              text: "hello again",
+            },
+          },
+        ],
+        stop_reason: "end_turn",
+        stop_sequence: nil,
+        usage: {
+          input_tokens: 345,
+          output_tokens: 65,
+        },
+      }.to_json
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: response_body)
+
+      llm.generate(prompt, user: Discourse.system_user)
+
+      expect(parsed_body).not_to have_key(:tool_choice)
+      last_message = parsed_body[:messages].last
+      expect(last_message[:role]).to eq("user")
+      expect(last_message[:content]).to be_an(Array)
+      expect(last_message[:content].first[:type]).to eq("tool_result")
+      guidance_block = last_message[:content].last
+      expect(guidance_block[:type]).to eq("text")
+      expect(guidance_block[:text]).to include("'echo' tool")
+    end
   end
 
-  describe "structured output via prefilling" do
+  describe "structured output via output_config" do
     it "forces the response to be a JSON and using the given JSON schema" do
       schema = {
         type: "json_schema",
@@ -1220,6 +1452,9 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
       event: content_block_start
       data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "{"}}
 
       event: content_block_delta
       data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\""}}
@@ -1288,16 +1523,202 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expected_body = {
         model: "claude-3-opus-20240229",
         max_tokens: 4096,
-        messages: [{ role: "user", content: "user1: hello" }, { role: "assistant", content: "{" }],
+        messages: [{ role: "user", content: "user1: hello" }],
         system: "You are hello bot",
         stream: true,
+        output_config: {
+          format: {
+            type: "json_schema",
+            schema: schema[:json_schema][:schema],
+          },
+        },
       }
       expect(parsed_body).to eq(expected_body)
     end
   end
 
+  describe "structured output via prefilling when native structured output is disabled" do
+    it "falls back to assistant message prefill" do
+      model.update!(provider_params: { disable_native_structured_output: true })
+
+      schema = {
+        type: "json_schema",
+        json_schema: {
+          name: "reply",
+          schema: {
+            type: "object",
+            properties: {
+              key: {
+                type: "string",
+              },
+            },
+            required: ["key"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      }
+
+      body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "key\\":\\""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "value\\"}"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null, "usage":{"output_tokens": 15}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+    STRING
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: body)
+
+      structured_output = nil
+      llm.generate(
+        prompt,
+        user: Discourse.system_user,
+        feature_name: "testing",
+        response_format: schema,
+      ) { |partial, cancel| structured_output = partial }
+
+      expect(structured_output.read_buffered_property(:key)).to eq("value")
+
+      messages = parsed_body[:messages]
+      expect(messages.last).to eq({ role: "assistant", content: "{" })
+      expect(parsed_body).not_to have_key(:output_config)
+    end
+  end
+
+  describe "adaptive thinking" do
+    it "sends adaptive thinking config when enabled" do
+      model.update!(provider_params: { enable_reasoning: true, adaptive_thinking: true })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body[:thinking]).to eq({ type: "adaptive" })
+      expect(parsed_body[:max_tokens]).to eq(32_000)
+    end
+
+    it "adaptive_thinking takes priority over enable_reasoning" do
+      model.update!(
+        provider_params: {
+          adaptive_thinking: true,
+          enable_reasoning: true,
+          reasoning_tokens: 10_000,
+        },
+      )
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body[:thinking]).to eq({ type: "adaptive" })
+      expect(parsed_body[:max_tokens]).to eq(32_000)
+    end
+  end
+
   describe "effort parameter" do
-    it "includes effort in output_config and beta header when set to low, medium, or high" do
+    it "includes effort in output_config when set to max" do
+      model.update!(provider_params: { effort: "max" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body.dig(:output_config, :effort)).to eq("max")
+    end
+
+    it "includes effort in output_config when set to low, medium, or high" do
       model.update!(provider_params: { effort: "high" })
 
       parsed_body = nil
@@ -1311,7 +1732,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
           "Content-Type" => "application/json",
           "X-Api-Key" => "123",
           "Anthropic-Version" => "2023-06-01",
-          "Anthropic-Beta" => "effort-2025-11-24",
         },
       ).to_return(
         status: 200,
@@ -1332,7 +1752,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expect(parsed_body.dig(:output_config, :effort)).to eq("high")
     end
 
-    it "combines effort and caching beta headers when both are configured" do
+    it "includes effort in output_config when both effort and caching are configured" do
       model.update!(provider_params: { effort: "medium", prompt_caching: "always" })
 
       parsed_body = nil
@@ -1346,7 +1766,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
           "Content-Type" => "application/json",
           "X-Api-Key" => "123",
           "Anthropic-Version" => "2023-06-01",
-          "Anthropic-Beta" => "prompt-caching-2024-07-31,effort-2025-11-24",
         },
       ).to_return(
         status: 200,
@@ -1367,7 +1786,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expect(parsed_body.dig(:output_config, :effort)).to eq("medium")
     end
 
-    it "omits effort and beta header when set to default" do
+    it "omits effort when set to default" do
       model.update!(provider_params: { effort: "default" })
 
       parsed_body = nil
@@ -1401,7 +1820,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expect(parsed_body).not_to have_key(:output_config)
     end
 
-    it "omits effort and beta header when not configured" do
+    it "omits effort when not configured" do
       parsed_body = nil
       stub_request(:post, url).with(
         body:
@@ -1431,6 +1850,66 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
 
       llm.generate(prompt, user: Discourse.system_user)
       expect(parsed_body).not_to have_key(:output_config)
+    end
+
+    it "merges effort and structured output format in output_config" do
+      model.update!(provider_params: { effort: "high" })
+
+      schema = {
+        type: "json_schema",
+        json_schema: {
+          name: "reply",
+          schema: {
+            type: "object",
+            properties: {
+              key: {
+                type: "string",
+              },
+            },
+            required: ["key"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      }
+
+      body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_123", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "{"}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "\\"key\\":\\"value\\"}"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null, "usage":{"output_tokens": 15}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+      STRING
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: body)
+
+      llm.generate(prompt, user: Discourse.system_user, response_format: schema) { |partial| }
+
+      expect(parsed_body[:output_config]).to eq(
+        { effort: "high", format: { type: "json_schema", schema: schema[:json_schema][:schema] } },
+      )
     end
   end
 end

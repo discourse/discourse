@@ -515,18 +515,6 @@ $mobile-avatar-height: 1.532em;
 }
 
 .d-header-mode {
-  .bootstrap-mode {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-    margin-left: 1em;
-    padding: 0.15em 0.5em;
-
-    &:focus {
-      background-color: var(--primary-medium);
-      color: var(--secondary);
-    }
-  }
-
   .fk-d-button-tooltip .fk-d-tooltip__trigger {
     color: var(--header_primary-high);
     background: transparent;

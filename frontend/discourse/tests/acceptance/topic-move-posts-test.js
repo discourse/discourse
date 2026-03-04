@@ -62,7 +62,9 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
     await fillIn(".choose-topic-modal #split-topic-name", "Existing topic");
     await click(".choose-topic-modal .d-modal__footer .btn-primary");
-    assert.dom("#modal-alert").hasText(i18n("topic.move_to.error"));
+    assert
+      .dom("#modal-alert")
+      .hasText(i18n("generic_error_with_reason", { error: "Invalid title" }));
   });
 
   test("moving all posts", async function (assert) {

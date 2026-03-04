@@ -170,7 +170,7 @@ module DiscourseAi
 
         raise Discourse::InvalidParameters.new(:mode) if params[:mode].blank?
         if params[:mode] == DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST
-          return suggest_thumbnails(input)
+          return suggest_thumbnails(text)
         end
 
         if params[:mode] == DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT
@@ -200,6 +200,7 @@ module DiscourseAi
           post = Post.includes(:topic).find_by(id: post_id)
 
           raise Discourse::InvalidParameters.new(:post_id) unless post
+          guardian.ensure_can_see!(post)
 
           Jobs.enqueue(
             :stream_post_helper,

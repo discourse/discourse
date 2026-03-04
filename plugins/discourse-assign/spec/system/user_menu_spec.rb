@@ -27,7 +27,7 @@ RSpec.describe "Assign | User Menu", type: :system do
         read_user_assign_2,
         read_user_assign,
         read_group_assign,
-      ].map { _1.topic.fancy_title }
+      ].map { it.topic.fancy_title }
     end
 
     it "orders the items properly" do

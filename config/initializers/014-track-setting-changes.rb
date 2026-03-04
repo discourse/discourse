@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-PRIVATE_BOOTSTRAP_MODE_MIN_USERS = 10
-
 DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   Category.clear_subcategory_ids if name === :max_category_nesting
 
@@ -28,20 +26,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
         after: after,
         like: "%#{before}%",
       )
-    end
-  end
-
-  # Set bootstrap min users for private sites to a lower default
-  if name == :login_required && SiteSetting.bootstrap_mode_enabled == true
-    if new_value == true &&
-         SiteSetting.bootstrap_mode_min_users == SiteSetting.defaults.get(:bootstrap_mode_min_users)
-      SiteSetting.bootstrap_mode_min_users = PRIVATE_BOOTSTRAP_MODE_MIN_USERS
-    end
-
-    # Set bootstrap min users for public sites back to the default
-    if new_value == false &&
-         SiteSetting.bootstrap_mode_min_users == PRIVATE_BOOTSTRAP_MODE_MIN_USERS
-      SiteSetting.bootstrap_mode_min_users = SiteSetting.defaults.get(:bootstrap_mode_min_users)
     end
   end
 
@@ -87,6 +71,20 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   end
 
   Theme.expire_site_cache! if name == :default_theme_id
+
+  if name == :splash_screen_image && new_value.present?
+    SiteSetting::SplashScreenImageChanged.call(
+      upload_id: new_value,
+      guardian: Discourse.system_user.guardian,
+    ) do |result|
+      on_model_not_found(:upload) { Rails.logger.error("Upload not found for #{name} change") }
+      on_model_not_found(:svg) do
+        Rails.logger.error("SVG could not be parsed from upload #{new_value} when updating #{name}")
+      end
+      on_success { Rails.logger.info("Successfully updated #{name} SVG") }
+      on_failure { Rails.logger.error("Failed to update #{name} SVG") }
+    end
+  end
 
   if name == :content_localization_enabled && new_value == true
     %i[post_menu post_menu_hidden_items].each do |setting_name|

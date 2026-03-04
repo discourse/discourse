@@ -1,3 +1,4 @@
+import ColorScheme from "discourse/admin/models/color-scheme";
 import { ajax } from "discourse/lib/ajax";
 
 /**
@@ -94,55 +95,49 @@ export async function applyColorScheme(scheme, options = {}) {
  * set color scheme as active for the default theme and apply immediately
  *
  * @param {Object} scheme - color scheme to set as default
+ * @param {Object} defaultTheme - the default theme object
  * @param {Object} options
  * @param {string} options.previewMode - preview mode: "live", "none", or "reload" (default: auto-detect)
+ * @param {string} options.mode - "light" or "dark" (default: "light")
  * @returns {Promise}
  */
 
-export async function setDefaultColorScheme(scheme, store, options = {}) {
+export async function setDefaultColorScheme(
+  scheme,
+  defaultTheme,
+  options = {}
+) {
   const { previewMode = "live", mode = "light" } = options;
 
   try {
-    // Determine preview behavior
-    let shouldPreview = false;
-    let shouldReload = false;
-
-    switch (previewMode) {
-      case "live":
-        shouldPreview = true;
-        shouldReload = false;
-        break;
-      case "none":
-        shouldPreview = false;
-        shouldReload = false;
-        break;
-      case "reload":
-        shouldPreview = false;
-        shouldReload = true;
-        break;
-    }
-
-    if (shouldPreview) {
+    if (previewMode === "live") {
       await applyColorScheme(scheme, { replace: true });
     }
-
-    const themes = await store.findAll("theme");
-    const defaultTheme = themes.content.find((value) => value.default === true);
 
     if (!defaultTheme) {
       throw new Error("Could not find default theme");
     }
 
-    const schemeId = scheme?.id || null;
-    if (mode === "light") {
-      defaultTheme.set("color_scheme_id", schemeId);
-      await defaultTheme.saveChanges("color_scheme_id");
+    const themeField =
+      mode === "light" ? "color_scheme_id" : "dark_color_scheme_id";
+    const schemeField =
+      mode === "light" ? "default_light_on_theme" : "default_dark_on_theme";
+
+    if (!scheme.is_base) {
+      await scheme.updateDefaultOnTheme(schemeField, true);
+      defaultTheme[themeField] = scheme.id;
     } else {
-      defaultTheme.set("dark_color_scheme_id", schemeId);
-      await defaultTheme.saveChanges("dark_color_scheme_id");
+      const currentSchemeId = defaultTheme[themeField];
+
+      if (currentSchemeId && currentSchemeId > 0) {
+        const currentScheme = ColorScheme.create({ id: currentSchemeId });
+        await currentScheme.updateDefaultOnTheme(schemeField, false);
+      }
+
+      defaultTheme[themeField] = null;
     }
 
-    if (shouldReload) {
+    if (previewMode === "reload") {
       window.location.reload();
     }
 

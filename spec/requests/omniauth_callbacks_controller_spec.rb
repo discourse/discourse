@@ -168,7 +168,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           )
         post "/auth/google_oauth2"
         expect(response.status).to eq(302)
-        expect(response.location).to include("/auth/failure?message=request_error")
+        expect(response.location).to include("/auth/failure?message=unauthorized")
 
         OmniAuth::Strategies::GoogleOauth2
           .any_instance
