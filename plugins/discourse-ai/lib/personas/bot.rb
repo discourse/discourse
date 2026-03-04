@@ -6,10 +6,10 @@ module DiscourseAi
       BOT_NOT_FOUND = Class.new(StandardError)
 
       # the future is agentic, allow for more turns
-      MAX_COMPLETIONS = 8
+      MAX_COMPLETIONS = 12
 
       # limit is arbitrary, but 5 which was used in the past was too low
-      MAX_TOOLS = 20
+      MAX_TOOLS = 30
 
       def self.as(bot_user, persona: DiscourseAi::Personas::General.new, model: nil)
         new(bot_user, persona, model)

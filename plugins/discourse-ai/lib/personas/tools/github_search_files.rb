@@ -90,7 +90,7 @@ module DiscourseAi
                   item["type"] == "blob" &&
                     keywords.any? { |keyword| item["path"].include?(keyword) }
                 end
-                .map { |item| item["path"] }
+                .map { |item| { path: item["path"], size: item["size"] } }
                 .take(MAX_FILE_SEARCH_RESULTS)
 
             result = { matching_files: matching_files, branch: branch_name }
