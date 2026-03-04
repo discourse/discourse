@@ -47,15 +47,44 @@ module DiscourseAi
           @has_custom_context
         end
 
+        def self.has_custom_system_message?
+          # cached safely - persona cache is bumped when an ai tool is saved, expiring this class
+          return @has_custom_system_message if defined?(@has_custom_system_message)
+
+          @has_custom_system_message = false
+          ai_tool = AiTool.find_by(id: tool_id)
+          if ai_tool&.script&.include?("customSystemMessage")
+            runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: nil)
+            @has_custom_system_message = runner.has_custom_system_message?
+          end
+
+          @has_custom_system_message
+        end
+
         def self.inject_prompt(prompt:, context:, persona:)
-          if has_custom_context?
-            ai_tool = AiTool.find_by(id: tool_id)
-            if ai_tool
-              runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: context)
-              custom_context = runner.custom_context
-              if custom_context.present?
-                last_message = prompt.messages.last
-                last_message[:content] = "#{custom_context}\n\n#{last_message[:content]}"
+          needs_context = has_custom_context?
+          needs_system_message = has_custom_system_message?
+          return unless needs_context || needs_system_message
+
+          ai_tool = AiTool.find_by(id: tool_id)
+          return unless ai_tool
+
+          runner = ai_tool.runner({}, llm: nil, bot_user: nil, context: context)
+
+          if needs_context
+            custom_context = runner.custom_context
+            if custom_context.present?
+              last_message = prompt.messages.last
+              last_message[:content] = "#{custom_context}\n\n#{last_message[:content]}"
+            end
+          end
+
+          if needs_system_message
+            system_msg = runner.custom_system_message
+            if system_msg.is_a?(String) && system_msg.present?
+              system_message = prompt.messages.first
+              if system_message && system_message[:type] == :system
+                system_message[:content] = "#{system_message[:content]}\n#{system_msg}"
               end
             end
           end
