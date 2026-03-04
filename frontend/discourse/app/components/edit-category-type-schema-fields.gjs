@@ -12,6 +12,8 @@ const SchemaFormField = <template>
       @name={{@entry.key}}
       @title={{@entry.label}}
       @validation={{if @entry.required "required"}}
+      @format="full"
+      @disabled={{@entry.required}}
       as |field|
     >
       <field.Checkbox>{{@entry.description}}</field.Checkbox>
@@ -22,6 +24,9 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
+      @titleFormat="full"
+      @descriptionFormat="full"
+      @format="small"
       as |field|
     >
       <field.Input @type="number" />
@@ -32,6 +37,9 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
+      @titleFormat="full"
+      @descriptionFormat="full"
+      @format="large"
       as |field|
     >
       <field.Input />
@@ -57,29 +65,27 @@ export default class EditCategoryTypeSchemaFields extends Component {
   }
 
   <template>
-    <div class={{this.className}}>
-      <@form.Section
-        @title={{i18n "category.type_settings_schema.category_custom_fields"}}
-      >
-        <@form.Object @name="custom_fields" as |customFields|>
-          {{#each this.schema.category_custom_fields as |entry|}}
-            <SchemaFormField @entry={{entry}} @formObject={{customFields}} />
-          {{/each}}
-        </@form.Object>
-      </@form.Section>
+    <@form.Section
+      @title={{i18n "category.type_settings_schema.category_custom_fields"}}
+    >
+      <@form.Object @name="custom_fields" as |customFields|>
+        {{#each this.schema.category_custom_fields as |entry|}}
+          <SchemaFormField @entry={{entry}} @formObject={{customFields}} />
+        {{/each}}
+      </@form.Object>
+    </@form.Section>
 
-      <@form.Section
-        @title={{i18n "category.type_settings_schema.site_settings"}}
-      >
-        <@form.Alert @type="danger">
-          {{i18n "category.settings_apply_to_all_of_type_warning"}}
-        </@form.Alert>
-        <@form.Object @name="category_type_site_settings" as |siteSettings|>
-          {{#each this.schema.site_settings as |entry|}}
-            <SchemaFormField @entry={{entry}} @formObject={{siteSettings}} />
-          {{/each}}
-        </@form.Object>
-      </@form.Section>
-    </div>
+    <@form.Section
+      @title={{i18n "category.type_settings_schema.site_settings"}}
+    >
+      <@form.Alert @type="info">
+        {{i18n "category.settings_apply_to_all_of_type_warning"}}
+      </@form.Alert>
+      <@form.Object @name="category_type_site_settings" as |siteSettings|>
+        {{#each this.schema.site_settings as |entry|}}
+          <SchemaFormField @entry={{entry}} @formObject={{siteSettings}} />
+        {{/each}}
+      </@form.Object>
+    </@form.Section>
   </template>
 }

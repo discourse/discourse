@@ -1,8 +1,9 @@
 .form-kit__section {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
+  padding-bottom: 1.5rem;
 
   &.form-kit__actions {
     align-items: center;
@@ -14,6 +15,8 @@
 .form-kit__section-title {
   margin: 0;
   font-size: var(--font-up-1-rem);
+  border-bottom: 1px solid var(--content-border-color);
+  padding-bottom: 0.5em;
 }
 
 .form-kit__section-subtitle {

@@ -2592,6 +2592,7 @@ en:
     form_kit:
       reset: Reset
       optional: optional
+      required: required
       errors_summary_title:
         one: "Fix this error to continue"
         other: "Fix these errors to continue"

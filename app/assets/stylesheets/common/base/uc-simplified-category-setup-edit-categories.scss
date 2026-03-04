@@ -140,8 +140,11 @@
       border-bottom: 1px solid var(--content-border-color);
     }
 
+    .edit-category-page-header {
+      margin-bottom: 1.5em;
+    }
+
     .edit-category-content {
-      margin-top: 2em;
       grid-area: unset;
     }
   }
@@ -209,12 +212,6 @@
     .controls {
       flex-direction: row-reverse;
       margin-right: auto;
-    }
-  }
-
-  .edit-category-type-schema-fields {
-    .form-kit__section {
-      margin-bottom: var(--space-8);
     }
   }
 }
