@@ -1,4 +1,5 @@
 .d-segmented-control {
+  position: relative;
   display: inline-flex;
   align-items: center;
   background: var(--primary-very-low);
@@ -17,6 +18,26 @@
     white-space: nowrap;
   }
 
+  &__slider {
+    position: absolute;
+    top: var(--space-1);
+    left: 0;
+    width: var(--slider-width, 0);
+    height: var(--space-9);
+    transform: translateX(var(--slider-x, 0));
+    background: var(--secondary);
+    border-radius: var(--d-border-radius-large);
+    box-shadow: 0 1px 6px rgb(0, 0, 0, 0.1);
+    pointer-events: none;
+    transition:
+      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0ms;
+    }
+  }
+
   &__input[type="radio"] {
     position: absolute;
     width: 1px;
@@ -25,14 +46,10 @@
     margin: 0;
     overflow: hidden;
     clip-path: inset(50%);
-
-    &:focus-visible + .d-segmented-control__label {
-      outline: 2px solid var(--tertiary);
-      outline-offset: -2px;
-    }
   }
 
   &__label {
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,10 +63,6 @@
     user-select: none;
     white-space: nowrap;
 
-    @media (prefers-reduced-motion: reduce) {
-      transition-duration: 0ms;
-    }
-
     &:hover {
       background: var(--primary-low);
       color: var(--primary);
@@ -57,9 +70,8 @@
 
     &.--selected,
     &.--selected:hover {
-      background: var(--secondary);
+      background: transparent;
       color: var(--primary);
-      box-shadow: var(--shadow-card);
     }
   }
 }

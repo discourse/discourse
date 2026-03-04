@@ -2,11 +2,27 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { modifier as modifierFn } from "ember-modifier";
 import uniqueId from "discourse/helpers/unique-id";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class DSegmentedControl extends Component {
+  positionSlider = modifierFn((element, positional) => {
+    void positional[0];
+    const selected = element.querySelector(".--selected");
+    if (!selected) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      element.style.setProperty("--slider-x", `${selected.offsetLeft}px`);
+      element.style.setProperty("--slider-width", `${selected.offsetWidth}px`);
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  });
+
   get legend() {
     if (this.args.label) {
       return i18n(this.args.label);
@@ -21,24 +37,21 @@ export default class DSegmentedControl extends Component {
 
   <template>
     {{#let (uniqueId) as |groupName|}}
-      <fieldset class="d-segmented-control" ...attributes>
+      <fieldset
+        class="d-segmented-control"
+        {{this.positionSlider @value}}
+        ...attributes
+      >
         {{#if this.legend}}
           <legend class="d-segmented-control__legend">
             {{this.legend}}
           </legend>
         {{/if}}
 
+        <span class="d-segmented-control__slider"></span>
+
         {{#each @items as |item|}}
           {{#let (uniqueId) as |id|}}
-            <input
-              type="radio"
-              id={{id}}
-              name={{groupName}}
-              value={{item.value}}
-              checked={{eq @value item.value}}
-              class="d-segmented-control__input"
-              {{on "change" (fn this.handleChange item.value)}}
-            />
             <label
               for={{id}}
               class="d-segmented-control__label
@@ -47,7 +60,16 @@ export default class DSegmentedControl extends Component {
                   'd-segmented-control__label --selected'
                 }}"
             >
-              {{item.label}}
+              <input
+                type="radio"
+                id={{id}}
+                name={{groupName}}
+                value={{item.value}}
+                checked={{eq @value item.value}}
+                class="d-segmented-control__input"
+                {{on "change" (fn this.handleChange item.value)}}
+              />
+              <span class="d-segmented-control__text">{{item.label}}</span>
             </label>
           {{/let}}
         {{/each}}
