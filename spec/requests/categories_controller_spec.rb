@@ -1725,7 +1725,7 @@ RSpec.describe CategoriesController do
       end
 
       it "matches categories with accented names using unaccented search term" do
-        accented_category = Fabricate(:category, name: "Éditions")
+        Fabricate(:category, name: "Éditions")
 
         post "/categories/search.json", params: { term: "editions" }
 

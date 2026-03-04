@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Categories::Types::Base do
+  fab!(:admin)
+
   describe ".type_id" do
     it "can be explicitly set" do
       test_type = Class.new(described_class)
@@ -32,7 +34,7 @@ RSpec.describe Categories::Types::Base do
           end
         end
 
-      test_type.configure_site_settings(nil)
+      test_type.configure_site_settings(nil, guardian: admin.guardian)
       expect(SiteSetting.title).to eq("Configured Forum")
     end
 
@@ -46,7 +48,13 @@ RSpec.describe Categories::Types::Base do
           end
         end
 
-      test_type.configure_site_settings(nil, configuration_values: { "title" => "Override" })
+      test_type.configure_site_settings(
+        nil,
+        guardian: admin.guardian,
+        configuration_values: {
+          "title" => "Override",
+        },
+      )
       expect(SiteSetting.title).to eq("Override")
     end
   end
