@@ -121,7 +121,7 @@
     "ember-buffered-proxy": "^2.1.1",
     "ember-cli": "~6.9.1",
     "ember-cli-app-version": "^7.0.0",
-    "ember-cli-babel": "^8.2.0",
+    "ember-cli-babel": "^8.3.1",
     "ember-cli-deprecation-workflow": "^4.0.0",
     "ember-cli-htmlbars": "^7.0.0",
     "ember-cli-inject-live-reload": "^2.1.0",
