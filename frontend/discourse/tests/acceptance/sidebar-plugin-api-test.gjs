@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -947,5 +947,59 @@ acceptance("Sidebar - Plugin API", function (needs) {
       searchLinkOffsetTop < sidebarScrollTop + sidebarHeight,
       "the link is into view"
     );
+  });
+
+  test("filtering does not crash when a custom sidebar section link has no keywords getter", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        return class extends BaseCustomSidebarPanel {
+          key = "filterable-panel";
+          switchButtonLabel = "Filterable panel";
+          switchButtonIcon = "d-chat";
+          switchButtonDefaultUrl = "/";
+          displayHeader = true;
+
+          get filterable() {
+            return true;
+          }
+        };
+      });
+
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-section";
+            text = "test section text";
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "test-link";
+                href = "/";
+                title = "Test Link";
+                text = "Test Link Text";
+              })(),
+            ];
+          };
+        },
+        "filterable-panel"
+      );
+
+      api.setSeparatedSidebarMode();
+      api.setSidebarPanel("filterable-panel");
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".sidebar-filter__input")
+      .exists("filter input is visible for filterable panel");
+
+    // Use a filter that doesn't match the link text so keywords.navigation is accessed
+    await fillIn(".sidebar-filter__input", "nomatch");
+
+    assert
+      .dom(".sidebar-section-link-wrapper[data-list-item-name='test-link']")
+      .doesNotExist(
+        "section link is filtered out (no crash accessing keywords)"
+      );
   });
 });
