@@ -175,6 +175,99 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
       expect(last_message.data[:result]).to eq("hello world")
       expect(last_message.data[:done]).to eq(true)
     end
+
+    context "when enforcing context-specific group permissions" do
+      fab!(:composer_group, :group)
+      fab!(:post_group, :group)
+      fab!(:composer_only_user) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:post_only_user) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:my_post, :post)
+
+      before do
+        SiteSetting.composer_ai_helper_allowed_groups = composer_group.id.to_s
+        SiteSetting.post_ai_helper_allowed_groups = post_group.id.to_s
+        composer_group.add(composer_only_user)
+        post_group.add(post_only_user)
+      end
+
+      it "returns 403 when a composer-only user tries to use post helper" do
+        sign_in(composer_only_user)
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "hello",
+               location: "post",
+               post_id: my_post.id,
+               mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
+               client_id: "test123",
+             }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 400 with a location error when location is missing" do
+        sign_in(composer_only_user)
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "hello",
+               mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
+               client_id: "test123",
+             }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].join).to include("location")
+      end
+
+      it "returns 403 when a post-only user tries to use composer helper" do
+        sign_in(post_only_user)
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "hello",
+               location: "composer",
+               mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
+               client_id: "test123",
+             }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows a composer-only user to use the composer helper" do
+        sign_in(composer_only_user)
+
+        results = [["hello ", "world"]]
+        DiscourseAi::Completions::Llm.with_prepared_responses(results) do
+          post "/discourse-ai/ai-helper/stream_suggestion.json",
+               params: {
+                 text: "hello",
+                 location: "composer",
+                 mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
+                 client_id: "test123",
+               }
+
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "allows a post-only user to use the post helper" do
+        sign_in(post_only_user)
+
+        results = [["hello ", "world"]]
+        DiscourseAi::Completions::Llm.with_prepared_responses(results) do
+          post "/discourse-ai/ai-helper/stream_suggestion.json",
+               params: {
+                 text: "hello",
+                 location: "post",
+                 post_id: my_post.id,
+                 mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
+                 client_id: "test123",
+               }
+
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe "#suggest" do

@@ -7,7 +7,8 @@ module DiscourseAi
 
       requires_plugin PLUGIN_NAME
       requires_login
-      before_action :ensure_can_request_suggestions
+      before_action :ensure_can_request_composer_suggestions, except: :stream_suggestion
+      before_action :ensure_can_request_stream_suggestions, only: :stream_suggestion
       before_action :rate_limiter_performed!
 
       include SecureUploadEndpointHelpers
@@ -285,13 +286,25 @@ module DiscourseAi
         ).performed!
       end
 
-      def ensure_can_request_suggestions
-        allowed_groups =
-          (
-            SiteSetting.composer_ai_helper_allowed_groups_map |
-              SiteSetting.post_ai_helper_allowed_groups_map
-          )
+      def ensure_can_request_composer_suggestions
+        ensure_user_is_in_any_allowed_group!(SiteSetting.composer_ai_helper_allowed_groups_map)
+      end
 
+      def ensure_can_request_stream_suggestions
+        location = params[:location]
+        raise Discourse::InvalidParameters.new(:location) if location.blank?
+
+        allowed_groups =
+          if location == "composer"
+            SiteSetting.composer_ai_helper_allowed_groups_map
+          else
+            SiteSetting.post_ai_helper_allowed_groups_map
+          end
+
+        ensure_user_is_in_any_allowed_group!(allowed_groups)
+      end
+
+      def ensure_user_is_in_any_allowed_group!(allowed_groups)
         raise Discourse::InvalidAccess if !current_user.in_any_groups?(allowed_groups)
       end
     end
