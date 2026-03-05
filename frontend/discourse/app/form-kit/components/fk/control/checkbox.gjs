@@ -5,6 +5,7 @@ import FKLabel from "discourse/form-kit/components/fk/label";
 import FKOptional from "discourse/form-kit/components/fk/optional";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 
 export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";
@@ -27,10 +28,17 @@ export default class FKControlCheckbox extends Component {
       <span class="form-kit__control-checkbox-content">
         <span class="form-kit__control-checkbox-title">
           <span>{{@field.title}}</span>
-          <FKOptional @field={{@field}} />
+
+          {{#if @showRequiredLabel}}
+            <span class="form-kit__container-required">({{i18n
+                "form_kit.required"
+              }})</span>
+          {{else}}
+            <FKOptional @field={{@field}} />
+          {{/if}}
           <FKTooltip @field={{@field}} />
         </span>
-        {{#if (has-block)}}
+        {{#if @hasBlock}}
           <span class="form-kit__control-checkbox-description">{{yield}}</span>
         {{/if}}
       </span>

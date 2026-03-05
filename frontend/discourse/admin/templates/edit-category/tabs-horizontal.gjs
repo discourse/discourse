@@ -43,6 +43,7 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
       @titleLabel={{@controller.baseTitle}}
       @showDrawer={{true}}
       @collapseActionsOnMobile={{false}}
+      ...attributes
     >
 
       <:actions>

@@ -590,6 +590,65 @@ RSpec.describe CategoriesController do
           expect(category.description).not_to include("&lt;script&gt;")
           expect(category.description).to include("&lt;img")
         end
+
+        describe "when category_type is provided" do
+          before do
+            SiteSetting.enable_category_type_setup = true
+            SiteSetting.enable_simplified_category_creation = true
+          end
+
+          it "creates a category with the category type" do
+            post "/categories.json", params: { name: "Test Category", category_type: "discussion" }
+
+            expect(response.status).to eq(200)
+            cat_json = response.parsed_body["category"]
+            expect(cat_json).to be_present
+            expect(cat_json["category_types"]).to eq(
+              {
+                "discussion" => {
+                  "available" => true,
+                  "configuration_schema" => {
+                  },
+                  "description" => I18n.t("category_types.discussion.description"),
+                  "icon" => "memo",
+                  "id" => "discussion",
+                  "name" => I18n.t("category_types.discussion.name"),
+                  "title" => "discussion",
+                },
+              },
+            )
+          end
+
+          it "can set site_settings for the category type when they match the schema" do
+            Categories::Types::Discussion.stubs(:configuration_schema).returns(
+              { site_settings: { max_category_nesting: 2 } },
+            )
+            post "/categories.json",
+                 params: {
+                   name: "Test Category",
+                   category_type: "discussion",
+                   category_type_site_settings: {
+                     "max_category_nesting" => 3,
+                   },
+                 }
+
+            expect(response.status).to eq(200)
+            cat_json = response.parsed_body["category"]
+            expect(cat_json).to be_present
+            expect(SiteSetting.max_category_nesting).to eq(3)
+          end
+
+          it "will set the schema value for site settings when overrides are not provided" do
+            SiteSetting.max_category_nesting = 3
+            Categories::Types::Discussion.stubs(:configuration_schema).returns(
+              { site_settings: { max_category_nesting: 2 } },
+            )
+            post "/categories.json", params: { name: "Test Category", category_type: "discussion" }
+
+            expect(response.status).to eq(200)
+            expect(SiteSetting.max_category_nesting).to eq(2)
+          end
+        end
       end
     end
   end
@@ -1061,6 +1120,16 @@ RSpec.describe CategoriesController do
           expect(category.form_template_ids.count).to eq(0)
         end
 
+        it "persists boolean false for custom fields" do
+          put "/categories/#{category.id}.json",
+              params: { custom_fields: { bool_field: false } }.to_json,
+              headers: {
+                "CONTENT_TYPE" => "application/json",
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.custom_fields).to have_key("bool_field")
+        end
+
         it "doesn't set category moderation groups if the enable_category_group_moderation setting is false" do
           SiteSetting.enable_category_group_moderation = false
 
@@ -1117,6 +1186,39 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(200)
           expect(category.reload.email_in).to eq("ted@discourse.org")
           expect(category.reload.minimum_required_tags).to eq(5)
+        end
+
+        context "when category_type_site_settings are provided" do
+          before do
+            SiteSetting.enable_category_type_setup = true
+            SiteSetting.enable_simplified_category_creation = true
+          end
+
+          it "can set site_settings for the category type when they match the schema" do
+            Categories::Types::Discussion.stubs(:configuration_schema).returns(
+              { site_settings: { max_category_nesting: 2 } },
+            )
+            put "/categories/#{category.id}.json",
+                params: {
+                  category_type_site_settings: {
+                    "max_category_nesting" => 3,
+                  },
+                }
+
+            expect(response.status).to eq(200)
+            expect(SiteSetting.max_category_nesting).to eq(3)
+          end
+
+          it "does not set the schema value for site settings when overrides are not provided" do
+            SiteSetting.max_category_nesting = 3
+            Categories::Types::Discussion.stubs(:configuration_schema).returns(
+              { site_settings: { max_category_nesting: 2 } },
+            )
+            put "/categories/#{category.id}.json", params: {}
+
+            expect(response.status).to eq(200)
+            expect(SiteSetting.max_category_nesting).to eq(3)
+          end
         end
       end
     end
@@ -1634,7 +1736,7 @@ RSpec.describe CategoriesController do
       end
 
       it "matches categories with accented names using unaccented search term" do
-        accented_category = Fabricate(:category, name: "Éditions")
+        Fabricate(:category, name: "Éditions")
 
         post "/categories/search.json", params: { term: "editions" }
 

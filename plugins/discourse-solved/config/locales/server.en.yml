@@ -5,10 +5,12 @@ en:
     support:
       name: "Support"
       title: "support"
-      description: "Ask questions and allow replies to be marked as solutions."
+      description: "Ask questions and allow replies to be marked as solutions"
 
   discourse_solved:
     category_type:
+      allow_accepted_answers:
+        label: "Allow topic owner and staff to mark a reply as the solution"
       solved_topics_auto_close_hours:
         label: "Auto close solved topics (hours)"
         description: "Automatically close topic after this many hours once marked as solved. Set to 0 to disable."
