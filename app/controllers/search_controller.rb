@@ -7,6 +7,7 @@ class SearchController < ApplicationController
   after_action :add_noindex_header
 
   PAGE_LIMIT = 10
+  SEARCH_CLICK_RATE_LIMIT = 15
 
   def self.valid_context_types
     %w[user topic category private_messages tag]
@@ -138,6 +139,13 @@ class SearchController < ApplicationController
     params.require(:search_result_type)
     params.require(:search_result_id)
 
+    if rate_limit_search_click
+      return(
+        render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")),
+               status: :too_many_requests
+      )
+    end
+
     search_result_type = params[:search_result_type].downcase.to_sym
     if SearchLog.search_result_types.has_key?(search_result_type)
       attributes = { id: params[:search_log_id] }
@@ -172,6 +180,29 @@ class SearchController < ApplicationController
     else
       false
     end
+  end
+
+  def rate_limit_search_click
+    begin
+      if current_user.present?
+        RateLimiter.new(
+          current_user,
+          "search-click-min",
+          SEARCH_CLICK_RATE_LIMIT,
+          1.minute,
+        ).performed!
+      else
+        RateLimiter.new(
+          nil,
+          "search-click-min-#{request.remote_ip}",
+          SEARCH_CLICK_RATE_LIMIT,
+          1.minute,
+        ).performed!
+      end
+    rescue RateLimiter::LimitExceeded => e
+      return e
+    end
+    false
   end
 
   def rate_limit_search

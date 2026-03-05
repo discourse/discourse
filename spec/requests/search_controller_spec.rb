@@ -752,6 +752,84 @@ RSpec.describe SearchController do
   describe "#click" do
     after { SearchLog.clear_debounce_cache! }
 
+    context "when rate limited" do
+      before { RateLimiter.enable }
+
+      it "rate limits logged in users with a dedicated click rate limiter" do
+        sign_in(user)
+
+        _, search_log_id =
+          SearchLog.log(
+            term: SecureRandom.hex,
+            search_type: :header,
+            user_id: user.id,
+            ip_address: "127.0.0.1",
+          )
+
+        params = {
+          search_log_id: search_log_id,
+          search_result_id: 12_345,
+          search_result_type: "topic",
+        }
+
+        15.times do
+          post "/search/click.json", params: params
+          expect(response.status).to eq(200)
+        end
+
+        post "/search/click.json", params: params
+        expect(response.status).to eq(429)
+      end
+
+      it "rate limits anonymous users with a dedicated click rate limiter" do
+        get "/"
+        ip_address = request.remote_ip
+
+        _, search_log_id =
+          SearchLog.log(term: SecureRandom.hex, search_type: :header, ip_address: ip_address)
+
+        params = {
+          search_log_id: search_log_id,
+          search_result_id: 12_345,
+          search_result_type: "topic",
+        }
+
+        start = Time.now
+        freeze_time start
+
+        15.times do
+          post "/search/click.json", params: params
+          expect(response.status).to eq(200)
+        end
+
+        post "/search/click.json", params: params
+        expect(response.status).to eq(429)
+      end
+
+      it "does not share rate limit with search queries" do
+        sign_in(user)
+        SiteSetting.rate_limit_search_user = 1
+
+        _, search_log_id =
+          SearchLog.log(
+            term: SecureRandom.hex,
+            search_type: :header,
+            user_id: user.id,
+            ip_address: "127.0.0.1",
+          )
+
+        RateLimiter.new(user, "search-min", SiteSetting.rate_limit_search_user, 1.minute).performed!
+
+        post "/search/click.json",
+             params: {
+               search_log_id: search_log_id,
+               search_result_id: 12_345,
+               search_result_type: "topic",
+             }
+        expect(response.status).to eq(200)
+      end
+    end
+
     it "doesn't work without the necessary parameters" do
       post "/search/click.json"
       expect(response.status).to eq(400)
