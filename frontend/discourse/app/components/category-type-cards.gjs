@@ -3,9 +3,10 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
-import { i18n } from "discourse-i18n";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 export default class CategoryTypeCards extends Component {
   @service categoryTypeChooser;
@@ -48,9 +49,18 @@ export default class CategoryTypeCards extends Component {
           {{/if}}
           {{#unless type.available}}
             <span class="category-type-cards__card-badge">
-              {{i18n "category.choose_type.requires_plugin"}}
+              <PluginOutlet
+                @name="category-type-card-unavailable-badge"
+                @outletArgs={{lazyHash type=type}}
+              />
             </span>
           {{/unless}}
+          <div class="category-type-cards__card-bottom">
+            <PluginOutlet
+              @name="category-type-card-bottom"
+              @outletArgs={{lazyHash type=type}}
+            />
+          </div>
         </button>
       {{/each}}
     </div>

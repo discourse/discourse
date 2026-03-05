@@ -11,17 +11,17 @@
       all: unset; // reset browser button styles
       position: relative;
       display: grid;
-      grid-template-areas: "icon title" "icon description";
+      grid-template-areas: "icon title" "icon description" "bottom bottom";
       grid-template-columns: auto 1fr;
       cursor: pointer;
       text-align: left;
       gap: 0 var(--space-6);
       border: 1px solid var(--primary-low);
       border-radius: var(--d-border-radius);
-      padding: var(--space-9) var(--space-6);
+      padding: var(--space-9) 0 var(--space-9);
 
       @include viewport.from(sm) {
-        padding: var(--space-8) var(--space-8) var(--space-9);
+        padding: var(--space-8) 0 var(--space-9);
         gap: 0 var(--space-8);
       }
 
@@ -29,6 +29,7 @@
         grid-area: icon;
         font-size: 2.75em;
         margin-top: -0.1em;
+        padding-left: var(--space-6);
       }
 
       &-name {
@@ -42,18 +43,33 @@
         color: var(--primary-high);
       }
 
+      &-bottom {
+        grid-area: bottom;
+        display: flex;
+      }
+
       &:hover,
       &:focus-visible {
         border-color: var(--tertiary);
       }
 
       &.--unavailable {
-        opacity: 0.5;
+        padding-bottom: 0;
         cursor: not-allowed;
 
         &:hover,
         &:focus-visible {
           border-color: var(--primary-low);
+        }
+
+        [class^="category-type-cards__card-"] {
+          opacity: 0.5;
+        }
+
+        .category-type-cards__card-bottom,
+        .category-type-cards__card-badge {
+          opacity: 1;
+          cursor: auto !important;
         }
       }
     }
