@@ -3,8 +3,7 @@
   "include": [
     "admin/assets/javascripts/**/*",
     "assets/javascripts/**/*",
-    "test/javascripts/**/*",
-    "node_modules/discourse/declarations/**/*"
+    "test/javascripts/**/*"
   ],
   "compilerOptions": {
     "paths": {
