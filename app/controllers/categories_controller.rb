@@ -206,12 +206,14 @@ class CategoriesController < ApplicationController
       category_params.delete(:position)
 
       old_custom_fields = cat.custom_fields.dup
-      if category_params[:custom_fields]
-        category_params[:custom_fields].each do |key, value|
-          if value.nil? || value == ""
-            cat.custom_fields.delete(key)
+      category_params[:custom_fields]&.each do |key, value|
+        if value.nil? || value == ""
+          cat.custom_fields.delete(key)
+        else
+          cat.custom_fields[key] = if value.is_a?(TrueClass) || value.is_a?(FalseClass)
+            value.to_s
           else
-            cat.custom_fields[key] = value
+            value
           end
         end
       end
