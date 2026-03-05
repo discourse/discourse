@@ -4,6 +4,7 @@ import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
+import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
@@ -113,7 +114,7 @@ export function extractDomainFromUrl(url) {
   return url.split(":")[0];
 }
 
-export function selectedText() {
+export function selectedHTML() {
   const selection = window.getSelection();
   if (selection.isCollapsed) {
     return "";
@@ -146,7 +147,10 @@ export function selectedText() {
       // Treat it as though the entire onebox was quoted.
       div.append(oneboxTest.dataset.oneboxSrc);
     } else {
-      div.append(range.cloneContents());
+      const fragmentContainer = document.createElement("div");
+      fragmentContainer.append(range.cloneContents());
+      processSelectionFragment(fragmentContainer, range);
+      div.append(...fragmentContainer.childNodes);
     }
   }
 
@@ -166,7 +170,16 @@ export function selectedText() {
       }
     });
 
-  return toMarkdown(div.outerHTML);
+  return div.outerHTML;
+}
+
+export async function selectedText() {
+  const html = selectedHTML();
+  if (!html) {
+    return "";
+  }
+
+  return await toMarkdown(html);
 }
 
 export function selectedNode() {
