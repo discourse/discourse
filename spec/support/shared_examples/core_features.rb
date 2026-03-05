@@ -224,7 +224,11 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       plugin_script_tags =
         page
-          .all("script[data-plugin-name], link[rel=modulepreload][data-plugin-name]", visible: :all)
+          .all(
+            "script[data-plugin-name], link[rel=modulepreload][data-plugin-name]",
+            visible: :all,
+            minimum: 0,
+          )
           .map { |tag| tag["data-plugin-name"] }
 
       enabled_plugins.each do |plugin|
