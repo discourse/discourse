@@ -144,7 +144,11 @@ export default class ComposerActions extends Component {
 
     let iconName;
     if (currentAction === CREATE_TOPIC) {
-      iconName = "plus";
+      if (this.canUnlistTopic && this.composerModel?.unlistTopic) {
+        iconName = "far-eye-slash";
+      } else {
+        iconName = "far-pen-to-square";
+      }
     } else if (currentAction === PRIVATE_MESSAGE) {
       iconName = "envelope";
     } else if (currentAction === CREATE_SHARED_DRAFT) {
@@ -226,7 +230,7 @@ export default class ComposerActions extends Component {
       const actionObj = {
         name: i18n("composer.composer_actions.reply_as_new_topic.label"),
         description: i18n("composer.composer_actions.reply_as_new_topic.desc"),
-        icon: "plus",
+        icon: "far-pen-to-square",
         id: "reply_as_new_topic",
       };
 
@@ -369,7 +373,7 @@ export default class ComposerActions extends Component {
       const actionObj = {
         name: i18n("composer.composer_actions.create_topic.label"),
         description: i18n("composer.composer_actions.create_topic.desc"),
-        icon: "share",
+        icon: "far-pen-to-square",
         id: "create_topic",
       };
 
