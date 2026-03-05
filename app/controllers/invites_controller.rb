@@ -430,8 +430,8 @@ class InvitesController < ApplicationController
   end
 
   def destroy_all_expired
-    guardian.ensure_can_destroy_all_invites!
     user = fetch_user_from_params
+    guardian.ensure_can_destroy_all_invites!(user)
 
     Invite
       .where(invited_by: user)
