@@ -898,7 +898,7 @@ en:
     discussion:
       name: "Discussion"
       title: "discussion"
-      description: "All the essentials for paragraph-based conversation"
+      description: "A standard category with all the essentials for conversation."
 
   trust_levels:
     admin: "Admin"
