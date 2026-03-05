@@ -13,6 +13,18 @@
   }
 }
 
+.fk-d-tooltip__content[data-identifier="post-language"]
+  .fk-d-tooltip__inner-content {
+  flex-direction: column;
+  align-items: flex-start;
+
+  .post-language__disclaimer {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    margin-top: var(--space-1);
+  }
+}
+
 .post-language-selector-trigger {
   .d-button-label {
     margin-left: var(--space-1);

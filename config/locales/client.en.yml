@@ -4630,6 +4630,7 @@ en:
 
       original_language: "This post was originally written in %{language}"
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
+      ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
       none: "(no category)"
