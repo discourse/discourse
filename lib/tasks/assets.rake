@@ -31,11 +31,7 @@ task "assets:precompile:build_plugins": "environment" do
   end
 end
 
-task "assets:precompile:before": %w[
-       environment
-       assets:precompile:build
-       assets:precompile:build_plugins
-     ]
+task "assets:precompile:before": %w[environment assets:precompile:build]
 
 task "assets:precompile:css" => "environment" do
   if ENV["DONT_PRECOMPILE_CSS"] == "1" || ENV["SKIP_DB_AND_REDIS"] == "1"

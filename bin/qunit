@@ -479,8 +479,7 @@ class QunitRunner
       return
     end
 
-    system("pnpm", "ember", "build", chdir: frontend_dir, exception: true)
-    system("bin/rake assets:precompile:build_plugins", exception: true)
+    system("script/assemble_ember_build.rb", chdir: rails_root, exception: true)
   end
 
   def build_theme_test_pages(query)
