@@ -90,7 +90,7 @@ export default class ChatMessageActionsDesktop extends Component {
         strategy: "fixed",
         middleware: [
           offset({
-            mainAxis: this.chat.activeMessage.hideUserInfo
+            mainAxis: this.chat.activeMessage?.hideUserInfo
               ? MSG_ACTIONS_VERTICAL_OFFSET
               : MSG_ACTIONS_USER_INFO_VERTICAL_OFFSET,
             crossAxis: -2,
