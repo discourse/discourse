@@ -518,7 +518,7 @@ class TagsController < ::ApplicationController
   end
 
   def create_synonyms
-    guardian.ensure_can_edit_tag!
+    guardian.ensure_can_edit_tag!(@tag)
 
     # frontend uses form data
     tags_param = params[:tags].try(:values) || params[:tags]
