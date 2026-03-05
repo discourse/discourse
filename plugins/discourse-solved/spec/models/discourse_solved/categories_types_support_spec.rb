@@ -65,22 +65,22 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
       expect(Guardian.new(admin).can_accept_answer?(topic, reply)).to eq(true)
     end
 
-    it "sets default auto-close hours" do
+    it "sets default auto-close days" do
       described_class.configure_category(category, guardian: admin.guardian)
 
-      expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("48")
+      expect(category.custom_fields["solved_topics_auto_close_days"]).to eq("2")
     end
 
-    it "uses provided configuration_values for auto-close hours" do
+    it "uses provided configuration_values for auto-close days" do
       described_class.configure_category(
         category,
         guardian: admin.guardian,
         configuration_values: {
-          "solved_topics_auto_close_hours" => 72,
+          "solved_topics_auto_close_days" => 5,
         },
       )
 
-      expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("72")
+      expect(category.custom_fields["solved_topics_auto_close_days"]).to eq("5")
     end
   end
 end

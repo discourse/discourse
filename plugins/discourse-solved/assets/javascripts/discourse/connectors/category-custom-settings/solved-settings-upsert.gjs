@@ -48,8 +48,8 @@ export default class SolvedSettingsUpsert extends Component {
           {{/unless}}
 
           <customFields.Field
-            @name="solved_topics_auto_close_hours"
-            @title={{i18n "solved.solved_topics_auto_close_hours"}}
+            @name="solved_topics_auto_close_days"
+            @title={{i18n "solved.solved_topics_auto_close_days"}}
             as |field|
           >
             <field.Input @type="number" min="0" />

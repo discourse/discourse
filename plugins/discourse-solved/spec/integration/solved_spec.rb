@@ -257,7 +257,7 @@ RSpec.describe "Managing Posts solved status" do
   describe "accepting a post as the answer" do
     before do
       sign_in(user)
-      SiteSetting.solved_topics_auto_close_hours = 2
+      SiteSetting.solved_topics_auto_close_days = 2
     end
 
     it "can mark a post as the accepted answer correctly" do
@@ -273,16 +273,16 @@ RSpec.describe "Managing Posts solved status" do
       expect(topic.public_topic_timer.status_type).to eq(TopicTimer.types[:silent_close])
 
       expect(topic.solved.topic_timer).to eq(topic.public_topic_timer)
-      expect(topic.public_topic_timer.execute_at).to eq_time(2.hours.from_now)
+      expect(topic.public_topic_timer.execute_at).to eq_time(2.days.from_now)
       expect(topic.public_topic_timer.based_on_last_post).to eq(true)
     end
 
-    it "gives priority to category's solved_topics_auto_close_hours setting" do
+    it "gives priority to category's solved_topics_auto_close_days setting" do
       freeze_time
       custom_auto_close_category = Fabricate(:category)
       topic_2 = Fabricate(:topic_with_op, category: custom_auto_close_category)
       post_2 = Fabricate(:post, topic: topic_2)
-      custom_auto_close_category.custom_fields["solved_topics_auto_close_hours"] = 4
+      custom_auto_close_category.custom_fields["solved_topics_auto_close_days"] = 4
       custom_auto_close_category.save_custom_fields
 
       post "/solution/accept.json", params: { id: post_2.id }
@@ -295,7 +295,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(topic_2.public_topic_timer.status_type).to eq(TopicTimer.types[:silent_close])
 
       expect(topic_2.solved.topic_timer).to eq(topic_2.public_topic_timer)
-      expect(topic_2.public_topic_timer.execute_at).to eq_time(4.hours.from_now)
+      expect(topic_2.public_topic_timer.execute_at).to eq_time(4.days.from_now)
       expect(topic_2.public_topic_timer.based_on_last_post).to eq(true)
     end
 
@@ -454,9 +454,9 @@ RSpec.describe "Managing Posts solved status" do
   describe "#unaccept" do
     before { sign_in(user) }
 
-    describe "when solved_topics_auto_close_hours is enabled" do
+    describe "when solved_topics_auto_close_days is enabled" do
       before do
-        SiteSetting.solved_topics_auto_close_hours = 2
+        SiteSetting.solved_topics_auto_close_days = 2
         DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, guardian: user.guardian)
         topic.reload
       end

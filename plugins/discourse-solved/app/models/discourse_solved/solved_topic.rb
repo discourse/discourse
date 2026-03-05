@@ -18,15 +18,15 @@ module DiscourseSolved
     private
 
     def auto_close_topic_timer
-      hours = topic.solved_auto_close_hours
-      return if hours.zero? || topic.closed?
+      days = topic.solved_auto_close_days
+      return if days.zero? || topic.closed?
 
       self.topic_timer =
         topic.set_or_create_timer(
           TopicTimer.types[:silent_close],
           nil,
           based_on_last_post: true,
-          duration_minutes: hours * 60,
+          duration_minutes: days * 24 * 60,
         )
     end
   end

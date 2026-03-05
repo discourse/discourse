@@ -32,10 +32,17 @@ discourse_solved:
   solved_quote_length:
     default: 300
     client: false
+  
+  # this is deprecated, use solved_topics_auto_close_days instead
   solved_topics_auto_close_hours:
     default: 0
     min: 0
     max: 175200 # 20 years
+    hidden: true
+  solved_topics_auto_close_days:
+    default: 0
+    min: 0
+    max: 7300 # 20 years
   show_filter_by_solved_status:
     default: false
     client: true

@@ -187,7 +187,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       context "when a topic timer is created" do
-        before { SiteSetting.solved_topics_auto_close_hours = 48 }
+        before { SiteSetting.solved_topics_auto_close_days = 2 }
 
         it "broadcasts a topic reload" do
           expect(messages.map(&:data)).to include(reload_topic: true)
