@@ -433,6 +433,9 @@ module DiscourseAi
             :show_thinking,
             :forced_tool_count,
             :force_default_llm,
+            :execution_mode,
+            :max_turn_tokens,
+            :compression_threshold,
             allowed_group_ids: [],
             rag_uploads: [:id],
           )
@@ -533,6 +536,12 @@ module DiscourseAi
           forced_tool_count: {
           },
           force_default_llm: {
+          },
+          execution_mode: {
+          },
+          max_turn_tokens: {
+          },
+          compression_threshold: {
           },
           # JSON fields
           json_fields: %i[tools response_format examples allowed_group_ids],

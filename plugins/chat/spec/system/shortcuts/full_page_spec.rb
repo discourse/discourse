@@ -24,6 +24,25 @@ RSpec.describe "Shortcuts | full page", type: :system do
     end
   end
 
+  context "when pressing Esc" do
+    fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
+    fab!(:pin) { Fabricate(:chat_pinned_message, chat_message: message, user: current_user) }
+
+    before { SiteSetting.chat_pinned_messages = true }
+
+    it "closes the pinned messages list" do
+      chat.visit_channel(channel_1)
+      find(".c-navbar__pinned-messages-btn").click
+
+      expect(page).to have_css(".c-routes.--channel-pins")
+
+      page.send_keys(:escape)
+
+      expect(page).to have_no_css(".c-routes.--channel-pins")
+      expect(page).to have_current_path(channel_1.url)
+    end
+  end
+
   context "with chat search" do
     context "when disabled" do
       before { SiteSetting.chat_search_enabled = false }

@@ -24,7 +24,8 @@ class DiscourseAi::Evals::PromptSingleTestRunner
     tools:,
     tool_results: nil,
     chain_length: 1,
-    max_tool_calls: nil
+    max_tool_calls: nil,
+    execution_context: nil
   )
     @c_prompt =
       DiscourseAi::Completions::Prompt.new(prompt, messages: [{ type: :user, content: message }])
@@ -32,7 +33,7 @@ class DiscourseAi::Evals::PromptSingleTestRunner
     @tool_results = tool_results || {}
 
     while chain_length > 0
-      generate_result(temperature, output_thinking, stream)
+      generate_result(temperature, output_thinking, stream, execution_context:)
       chain_length -= 1
       if chain_length > 0
         populate_reply(max_tool_calls:)
@@ -44,7 +45,7 @@ class DiscourseAi::Evals::PromptSingleTestRunner
 
     if followups
       followups.each do |followup|
-        generate_followup(followup, output_thinking, stream, temperature)
+        generate_followup(followup, output_thinking, stream, temperature, execution_context:)
       end
     end
 
@@ -86,12 +87,12 @@ class DiscourseAi::Evals::PromptSingleTestRunner
     @c_prompt.push_model_response(result)
   end
 
-  def generate_followup(followup, output_thinking, stream, temperature)
+  def generate_followup(followup, output_thinking, stream, temperature, execution_context: nil)
     @c_prompt.push_model_response(@result)
     followup_message = set_followup_tool(followup)
     @c_prompt.push(**followup_message)
     begin
-      generate_result(temperature, output_thinking, stream)
+      generate_result(temperature, output_thinking, stream, execution_context:)
     rescue => e
       # should not happen but it helps debugging...
       puts e
@@ -112,7 +113,7 @@ class DiscourseAi::Evals::PromptSingleTestRunner
     followup_message
   end
 
-  def generate_result(temperature, output_thinking, stream)
+  def generate_result(temperature, output_thinking, stream, execution_context: nil)
     @result =
       if stream
         stream_result = []
@@ -121,10 +122,17 @@ class DiscourseAi::Evals::PromptSingleTestRunner
           user: Discourse.system_user,
           temperature:,
           output_thinking:,
+          execution_context:,
         ) { |partial| stream_result << partial }
         stream_result
       else
-        @llm.generate(@c_prompt, user: Discourse.system_user, temperature:, output_thinking:)
+        @llm.generate(
+          @c_prompt,
+          user: Discourse.system_user,
+          temperature:,
+          output_thinking:,
+          execution_context:,
+        )
       end
   end
 end

@@ -389,10 +389,6 @@ module PostGuardian
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
-  def can_see_flagged_posts?
-    is_staff?
-  end
-
   def can_see_deleted_posts?(category = nil)
     is_category_group_moderator?(category) ||
       @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)

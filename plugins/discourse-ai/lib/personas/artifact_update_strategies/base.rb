@@ -5,7 +5,14 @@ module DiscourseAi
       class InvalidFormatError < StandardError
       end
       class Base
-        attr_reader :post, :user, :artifact, :artifact_version, :instructions, :llm, :cancel_manager
+        attr_reader :post,
+                    :user,
+                    :artifact,
+                    :artifact_version,
+                    :instructions,
+                    :llm,
+                    :cancel_manager,
+                    :execution_context
 
         def initialize(
           llm:,
@@ -14,7 +21,8 @@ module DiscourseAi
           artifact:,
           artifact_version:,
           instructions:,
-          cancel_manager: nil
+          cancel_manager: nil,
+          execution_context: nil
         )
           @llm = llm
           @post = post
@@ -23,6 +31,7 @@ module DiscourseAi
           @artifact_version = artifact_version
           @instructions = instructions
           @cancel_manager = cancel_manager
+          @execution_context = execution_context
         end
 
         def apply(&progress)
@@ -41,7 +50,12 @@ module DiscourseAi
 
         def generate_changes(&progress)
           response = +""
-          llm.generate(build_prompt, user: user, cancel_manager: cancel_manager) do |partial|
+          llm.generate(
+            build_prompt,
+            user: user,
+            cancel_manager: cancel_manager,
+            execution_context:,
+          ) do |partial|
             progress.call(partial) if progress
             response << partial
           end

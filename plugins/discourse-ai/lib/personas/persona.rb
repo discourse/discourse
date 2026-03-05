@@ -24,6 +24,18 @@ module DiscourseAi
           nil
         end
 
+        def execution_mode
+          "default"
+        end
+
+        def max_turn_tokens
+          nil
+        end
+
+        def compression_threshold
+          nil
+        end
+
         def force_default_llm
           false
         end

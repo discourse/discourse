@@ -20,7 +20,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { gt, or } from "discourse/truth-helpers";
+import { eq, gt, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiPersonaResponseFormatEditor from "../components/modal/ai-persona-response-format-editor";
 import { toPlainObject } from "../lib/utilities";
@@ -77,6 +77,19 @@ export default class PersonaEditor extends Component {
       { name: l("low"), id: 65536 },
       { name: l("medium"), id: 262144 },
       { name: l("high"), id: 1048576 },
+    ];
+  }
+
+  get executionModes() {
+    return [
+      {
+        id: "default",
+        name: i18n("discourse_ai.ai_persona.execution_mode_options.default"),
+      },
+      {
+        id: "agentic",
+        name: i18n("discourse_ai.ai_persona.execution_mode_options.agentic"),
+      },
     ];
   }
 
@@ -234,6 +247,17 @@ export default class PersonaEditor extends Component {
         (fct) => !removedTools.includes(fct)
       );
       form.set("forcedTools", updatedForcedTools);
+    }
+  }
+
+  @action
+  onExecutionModeChange(mode, { set }) {
+    set("execution_mode", mode);
+    if (mode === "default") {
+      set("max_turn_tokens", null);
+      set("compression_threshold", null);
+    } else {
+      set("compression_threshold", 80);
     }
   }
 
@@ -411,16 +435,6 @@ export default class PersonaEditor extends Component {
           </form.Field>
         {{/if}}
 
-        <form.Field
-          @name="max_context_posts"
-          @title={{i18n "discourse_ai.ai_persona.max_context_posts"}}
-          @tooltip={{i18n "discourse_ai.ai_persona.max_context_posts_help"}}
-          @format="large"
-          as |field|
-        >
-          <field.Input @type="number" lang="en" />
-        </form.Field>
-
         {{#unless data.system}}
           <form.Field
             @name="temperature"
@@ -520,6 +534,57 @@ export default class PersonaEditor extends Component {
               </field.Select>
             </form.Field>
           {{/if}}
+
+          <form.Field
+            @name="execution_mode"
+            @title={{i18n "discourse_ai.ai_persona.execution_mode"}}
+            @tooltip={{i18n "discourse_ai.ai_persona.execution_mode_help"}}
+            @format="large"
+            @onSet={{this.onExecutionModeChange}}
+            as |field|
+          >
+            <field.Select @includeNone={{false}} as |select|>
+              {{#each this.executionModes as |mode|}}
+                <select.Option @value={{mode.id}}>{{mode.name}}</select.Option>
+              {{/each}}
+            </field.Select>
+          </form.Field>
+
+          {{#if (eq data.execution_mode "agentic")}}
+            <form.Field
+              @name="max_turn_tokens"
+              @title={{i18n "discourse_ai.ai_persona.max_turn_tokens"}}
+              @tooltip={{i18n "discourse_ai.ai_persona.max_turn_tokens_help"}}
+              @format="large"
+              as |field|
+            >
+              <field.Input @type="number" @min={{1}} lang="en" />
+            </form.Field>
+
+            <form.Field
+              @name="compression_threshold"
+              @title={{i18n "discourse_ai.ai_persona.compression_threshold"}}
+              @tooltip={{i18n
+                "discourse_ai.ai_persona.compression_threshold_help"
+              }}
+              @format="large"
+              as |field|
+            >
+              <field.Input @type="number" @min={{20}} @max={{99}} lang="en" />
+            </form.Field>
+          {{/if}}
+
+          {{#unless (eq data.execution_mode "agentic")}}
+            <form.Field
+              @name="max_context_posts"
+              @title={{i18n "discourse_ai.ai_persona.max_context_posts"}}
+              @tooltip={{i18n "discourse_ai.ai_persona.max_context_posts_help"}}
+              @format="large"
+              as |field|
+            >
+              <field.Input @type="number" lang="en" />
+            </form.Field>
+          {{/unless}}
 
           {{#if (gt data.tools.length 0)}}
             <AiPersonaToolOptions

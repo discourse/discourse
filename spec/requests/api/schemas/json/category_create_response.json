@@ -316,6 +316,9 @@
             "string",
             "null"
           ]
+        },
+        "category_types": {
+          "type": "object"
         }
       },
       "required": [
