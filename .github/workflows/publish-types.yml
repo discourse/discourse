@@ -39,7 +39,16 @@ jobs:
       - name: Generate external type definitions
         run: pnpm types:generate
 
+      - name: Prepare version
+        shell: bash
+        run: |
+          discourse_version=$(ruby -r ./lib/version.rb -e 'puts "#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}.#{Discourse::VERSION::TINY}"')
+          commit_hash=$(git rev-parse --short HEAD)
+          package_version="${discourse_version}-${commit_hash}"
+
+          echo "@discourse/types version: ${package_version}"
+          sed -i -E  "s/\"version\": \"0\.0\.0\"/\"version\": \"${package_version}\"/" frontend/discourse-types/package.json
+
       - name: Publish the package
         working-directory: frontend/discourse-types
         run: pnpm publish --no-git-checks --dry-run
-        # todo generate version
