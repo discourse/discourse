@@ -53,7 +53,9 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
 
     data.each do |key, value|
       regex_string = params.find { |p| p[:key] == key }[:regex]
-      errors.add(:data, "data.#{key} is invalid") if !Regexp.new(regex_string).match(value)
+      if regex_string.present? && !Regexp.new(regex_string).match?(value)
+        errors.add(:data, "data.#{key} is invalid")
+      end
 
       unique = params.find { |p| p[:key] == key }[:unique]
       if unique
