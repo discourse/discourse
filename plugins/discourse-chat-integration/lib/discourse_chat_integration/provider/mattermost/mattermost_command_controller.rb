@@ -18,6 +18,8 @@ module DiscourseChatIntegration::Provider::MattermostProvider
       render json: { response_type: "ephemeral", text: text }
     end
 
+    private
+
     def process_command(params)
       tokens = params[:text].split(" ")
 
