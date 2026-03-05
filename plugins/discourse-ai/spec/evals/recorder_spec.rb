@@ -50,10 +50,15 @@ RSpec.describe DiscourseAi::Evals::Recorder do
   let(:child_step) { {} }
   let(:output) { StringIO.new }
 
-  before do
-    allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter)
-    allow_any_instance_of(described_class).to receive(:attach_thread_loggers)
-    allow_any_instance_of(described_class).to receive(:detach_thread_loggers)
+  before { allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter) }
+
+  describe "#execution_context" do
+    it "exposes recorder loggers through an explicit completion context" do
+      context = recorder.execution_context
+
+      expect(context.audit_logger).to eq(logger)
+      expect(context.structured_audit_logger).to eq(structured_logger)
+    end
   end
 
   describe "#running" do

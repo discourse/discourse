@@ -5,6 +5,7 @@ require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Inference do
   fab!(:llm, :fake_model)
+  let(:execution_context) { DiscourseAi::Completions::ExecutionContext.new }
 
   let(:structured_output) do
     instance_double(
@@ -28,7 +29,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
         )
 
       runner = described_class.new("generate_concepts")
-      result = runner.run(eval_case, llm)
+      result = runner.run(eval_case, llm, execution_context: execution_context)
 
       expect(result[:raw]).to eq("concept_a\nconcept_b")
     end
@@ -37,15 +38,16 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
       eval_case =
         OpenStruct.new(args: { input: "Moderation queue updates", concepts: %w[queue ai] })
       runner = described_class.new("match_concepts")
-      expect(runner.run(eval_case, llm)[:raw]).to eq("concept_a\nconcept_b")
+      expect(runner.run(eval_case, llm, execution_context: execution_context)[:raw]).to eq(
+        "concept_a\nconcept_b",
+      )
     end
 
     it "requires concepts for deduplicate_concepts" do
       runner = described_class.new("deduplicate_concepts")
-      expect do runner.run(OpenStruct.new(args: {}), llm) end.to raise_error(
-        ArgumentError,
-        /requires :concepts/,
-      )
+      expect {
+        runner.run(OpenStruct.new(args: {}), llm, execution_context: execution_context)
+      }.to raise_error(ArgumentError, /requires :concepts/)
     end
   end
 end

@@ -14,6 +14,20 @@ class AiPersona < ActiveRecord::Base
   validate :chat_preconditions
   validate :well_formated_examples
   validates :max_context_posts, numericality: { greater_than: 0 }, allow_nil: true
+  validates :execution_mode, inclusion: { in: %w[default agentic] }
+  validates :max_turn_tokens,
+            numericality: {
+              greater_than: 0,
+              maximum: 10_000_000,
+            },
+            allow_nil: true
+  validates :compression_threshold,
+            presence: true,
+            numericality: {
+              greater_than_or_equal_to: 20,
+              less_than_or_equal_to: 99,
+            },
+            if: -> { execution_mode == "agentic" }
   # leaves some room for growth but sets a maximum to avoid memory issues
   # we may want to revisit this in the future
   validates :vision_max_pixels, numericality: { greater_than: 0, maximum: 4_000_000 }
@@ -208,6 +222,9 @@ class AiPersona < ActiveRecord::Base
       allowed_group_ids
       show_thinking
       enabled
+      execution_mode
+      max_turn_tokens
+      compression_threshold
     ]
 
     instance_attributes = {}
@@ -419,38 +436,41 @@ end
 # Table name: ai_personas
 #
 #  id                           :bigint           not null, primary key
-#  name                         :string(100)      not null
-#  description                  :string(2000)     not null
-#  system_prompt                :string(10000000) not null
-#  allowed_group_ids            :integer          default([]), not null, is an Array
-#  created_by_id                :integer
-#  enabled                      :boolean          default(TRUE), not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  system                       :boolean          default(FALSE), not null
-#  priority                     :boolean          default(FALSE), not null
-#  temperature                  :float
-#  top_p                        :float
-#  user_id                      :integer
-#  max_context_posts            :integer
-#  vision_enabled               :boolean          default(FALSE), not null
-#  vision_max_pixels            :integer          default(1048576), not null
-#  rag_chunk_tokens             :integer          default(374), not null
-#  rag_chunk_overlap_tokens     :integer          default(10), not null
-#  rag_conversation_chunks      :integer          default(10), not null
-#  show_thinking                :boolean          default(TRUE), not null
-#  tools                        :json             not null
-#  forced_tool_count            :integer          default(-1), not null
 #  allow_chat_channel_mentions  :boolean          default(FALSE), not null
 #  allow_chat_direct_messages   :boolean          default(FALSE), not null
-#  allow_topic_mentions         :boolean          default(FALSE), not null
 #  allow_personal_messages      :boolean          default(TRUE), not null
+#  allow_topic_mentions         :boolean          default(FALSE), not null
+#  allowed_group_ids            :integer          default([]), not null, is an Array
+#  compression_threshold        :integer
+#  description                  :string(2000)     not null
+#  enabled                      :boolean          default(TRUE), not null
+#  examples                     :jsonb
+#  execution_mode               :string           default("default"), not null
 #  force_default_llm            :boolean          default(FALSE), not null
-#  rag_llm_model_id             :bigint
+#  forced_tool_count            :integer          default(-1), not null
+#  max_context_posts            :integer
+#  max_turn_tokens              :integer
+#  name                         :string(100)      not null
+#  priority                     :boolean          default(FALSE), not null
+#  rag_chunk_overlap_tokens     :integer          default(10), not null
+#  rag_chunk_tokens             :integer          default(374), not null
+#  rag_conversation_chunks      :integer          default(10), not null
+#  response_format              :jsonb
+#  show_thinking                :boolean          default(TRUE), not null
+#  system                       :boolean          default(FALSE), not null
+#  system_prompt                :string(10000000) not null
+#  temperature                  :float
+#  tools                        :json             not null
+#  top_p                        :float
+#  vision_enabled               :boolean          default(FALSE), not null
+#  vision_max_pixels            :integer          default(1048576), not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  created_by_id                :integer
 #  default_llm_id               :bigint
 #  question_consolidator_llm_id :bigint
-#  response_format              :jsonb
-#  examples                     :jsonb
+#  rag_llm_model_id             :bigint
+#  user_id                      :integer
 #
 # Indexes
 #

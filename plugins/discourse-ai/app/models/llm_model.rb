@@ -86,7 +86,7 @@ class LlmModel < ActiveRecord::Base
         prompt_caching: {
           type: :enum,
           values: %w[never tool_results always],
-          default: "never",
+          default: "tool_results",
         },
       },
       anthropic: {
@@ -118,7 +118,7 @@ class LlmModel < ActiveRecord::Base
         prompt_caching: {
           type: :enum,
           values: %w[never tool_results always],
-          default: "never",
+          default: "tool_results",
         },
       },
       open_ai: {

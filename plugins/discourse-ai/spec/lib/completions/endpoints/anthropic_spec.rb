@@ -743,6 +743,41 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     expect(log.cache_read_tokens).to eq(500)
   end
 
+  it "discounts cached tokens in the explicit usage tracker" do
+    body = (<<~STRING).strip
+      event: message_start
+      data: {"type": "message_start", "message": {"id": "msg_1", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 1000, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 800, "output_tokens": 1}}}
+
+      event: content_block_start
+      data: {"type": "content_block_start", "index":0, "content_block": {"type": "text", "text": ""}}
+
+      event: content_block_delta
+      data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello"}}
+
+      event: content_block_stop
+      data: {"type": "content_block_stop", "index": 0}
+
+      event: message_delta
+      data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null, "usage":{"output_tokens": 50}}}
+
+      event: message_stop
+      data: {"type": "message_stop"}
+    STRING
+
+    model.update!(provider_params: { prompt_caching: "always" })
+    stub_request(:post, url).to_return(status: 200, body: body)
+
+    tracker = DiscourseAi::Completions::TokenUsageTracker.new
+    execution_context = DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
+
+    llm.generate(prompt, user: Discourse.system_user, execution_context:) { |partial| }
+
+    # request_tokens=1000 (non-cached input), cache_read=800, cache_write=0
+    # effective request = 1000 + 0 + (800 * 0.1).to_i = 1080
+    expect(tracker.request).to eq(1080)
+    expect(tracker.response).to eq(50)
+  end
+
   it "defaults to never mode and does not cache when mode is tool_results without tool results" do
     body = {
       id: "msg_013Zva2CMHLNnXjNJJKqJ2EF",

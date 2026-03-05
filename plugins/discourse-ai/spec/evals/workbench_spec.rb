@@ -15,6 +15,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   let(:recorder) do
     instance_double(
       DiscourseAi::Evals::Recorder,
+      execution_context: nil,
       record_llm_skip: nil,
       record_llm_results: nil,
       finish: nil,
@@ -166,6 +167,44 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         end
 
       expect(results[:classified].first[:result]).to eq(:pass)
+    end
+
+    it "always provides an execution_context to runners even when caller omits it" do
+      eval_case =
+        OpenStruct.new(
+          id: "ctx-check",
+          feature: "summarization:topic_summaries",
+          args: {
+            input: "Test post",
+          },
+          expected_output: nil,
+          expected_output_regex: nil,
+          expected_tool_call: nil,
+          judge: nil,
+          vision: false,
+        )
+
+      captured_context = nil
+      allow(DiscourseAi::Personas::Bot).to receive(
+        :as,
+      ).and_wrap_original do |original, *args, **kwargs|
+        original
+          .call(*args, **kwargs)
+          .tap do |bot|
+            allow(bot).to receive(
+              :reply,
+            ).and_wrap_original do |reply_method, *rargs, **rkwargs, &blk|
+              captured_context = rkwargs[:execution_context]
+              reply_method.call(*rargs, **rkwargs, &blk)
+            end
+          end
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Summary"]) do
+        workbench.execute_eval(eval_case, llm)
+      end
+
+      expect(captured_context).to be_a(DiscourseAi::Completions::ExecutionContext)
     end
 
     it "flags spam posts via the spam inspection eval feature" do

@@ -10,7 +10,7 @@ module DiscourseAi
           full_feature_name&.start_with?("summarization:")
         end
 
-        def run(eval_case, llm)
+        def run(eval_case, llm, execution_context:)
           args = eval_case.args
           conversation = extract_conversation(args)
           user = Discourse.system_user
@@ -39,7 +39,7 @@ module DiscourseAi
               messages: strategy.as_llm_messages(content),
             )
 
-          summary = capture_summary(persona, user, llm, context)
+          summary = capture_summary(persona, user, llm, context, execution_context:)
 
           wrap_result(summary, { feature: feature_name })
         end
@@ -62,7 +62,7 @@ module DiscourseAi
           end
         end
 
-        def capture_summary(persona, user, llm, context)
+        def capture_summary(persona, user, llm, context, execution_context:)
           bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
           schema = persona.response_format&.first
 
@@ -72,9 +72,10 @@ module DiscourseAi
               context,
               schema_key: schema["key"],
               schema_type: schema["type"],
+              execution_context:,
             )
           else
-            capture_plain_response(bot, context)
+            capture_plain_response(bot, context, execution_context:)
           end
         end
 

@@ -48,6 +48,9 @@ module DiscourseAi
         @tool_results = Array(tool_results).map(&:stringify_keys)
         @accumulated_reply = +""
         @round_count = 0
+        @accumulated_tokens = 0
+        @accumulated_request_tokens = 0
+        @accumulated_response_tokens = 0
       end
 
       def run(&event_blk)
@@ -149,6 +152,16 @@ module DiscourseAi
         @accumulated_reply = payload["accumulated_reply"].to_s
         @expected_tool_calls = payload["expected_tool_calls"] || []
         @round_count = payload["round_count"].to_i
+        @accumulated_tokens = payload["accumulated_tokens"].to_i
+        request_tokens = payload["accumulated_request_tokens"]
+        response_tokens = payload["accumulated_response_tokens"]
+        if request_tokens.nil? || response_tokens.nil?
+          @accumulated_request_tokens = @accumulated_tokens / 2
+          @accumulated_response_tokens = @accumulated_tokens - @accumulated_request_tokens
+        else
+          @accumulated_request_tokens = request_tokens.to_i
+          @accumulated_response_tokens = response_tokens.to_i
+        end
 
         @prompt = prompt_from_payload(payload.fetch("prompt"))
       rescue ActiveRecord::RecordNotFound
@@ -160,8 +173,47 @@ module DiscourseAi
         turn_reply = +""
         streamed_tool_calls = []
 
+        token_budget = resolve_token_budget
+        use_token_budget = resolve_execution_mode == "agentic"
+
+        execution_context = nil
+        token_usage_tracker = nil
+        if use_token_budget
+          token_usage_tracker =
+            DiscourseAi::Completions::TokenUsageTracker.new(
+              base_request: @accumulated_request_tokens,
+              base_response: @accumulated_response_tokens,
+            )
+          execution_context =
+            DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: token_usage_tracker)
+        end
+        generate_options = { user: @user, temperature: @temperature, top_p: @top_p }
+        generate_options[:execution_context] = execution_context if execution_context
+
+        # Pre-check: if budget already exhausted on resume, force a final
+        # text-only call or finalize immediately — don't overshoot.
+        if use_token_budget && @accumulated_tokens >= token_budget
+          if @prompt.messages.last&.dig(:type) == :tool
+            DiscourseAi::Personas::Bot.inject_budget_exhausted_hint(@prompt)
+            @prompt.tool_choice = :none
+
+            final_reply = +""
+            llm.generate(@prompt, **generate_options) do |partial|
+              if partial.is_a?(String) && !partial.empty?
+                final_reply << partial
+                yield(:partial, partial)
+              end
+            end
+            @accumulated_reply << final_reply
+          end
+
+          persist_reply_post!
+          clear_resume_state!
+          return
+        end
+
         result =
-          llm.generate(@prompt, user: @user, temperature: @temperature, top_p: @top_p) do |partial|
+          llm.generate(@prompt, **generate_options) do |partial|
             if partial.is_a?(String)
               next if partial.empty?
 
@@ -175,6 +227,12 @@ module DiscourseAi
         @accumulated_reply << turn_reply
         normalized_result = normalize_result(result)
         tool_calls = unique_tool_calls(streamed_tool_calls + extract_tool_calls(normalized_result))
+
+        if use_token_budget
+          @accumulated_request_tokens = token_usage_tracker.request
+          @accumulated_response_tokens = token_usage_tracker.response
+          @accumulated_tokens = token_usage_tracker.total
+        end
 
         if tool_calls.present?
           non_tool_result =
@@ -194,6 +252,42 @@ module DiscourseAi
         end
 
         if tool_calls.present?
+          if use_token_budget && @accumulated_tokens >= token_budget
+            # Budget exhausted — can't hand tools to client. Push synthetic
+            # "not executed" results and give the model one final text-only call.
+            tool_calls.each do |call|
+              @prompt.push(
+                type: :tool_call,
+                id: call.id,
+                name: call.name,
+                content: { arguments: call.parameters }.to_json,
+                provider_data: call.provider_data,
+              )
+              @prompt.push(
+                type: :tool,
+                id: call.id,
+                name: call.name,
+                content: { error: "Not executed — token budget exhausted." }.to_json,
+              )
+            end
+
+            DiscourseAi::Personas::Bot.inject_budget_exhausted_hint(@prompt)
+            @prompt.tool_choice = :none
+
+            final_reply = +""
+            llm.generate(@prompt, **generate_options) do |partial|
+              if partial.is_a?(String) && !partial.empty?
+                final_reply << partial
+                yield(:partial, partial)
+              end
+            end
+            @accumulated_reply << final_reply
+
+            persist_reply_post!
+            clear_resume_state!
+            return
+          end
+
           token = persist_state!(tool_calls: tool_calls)
           yield(
             :tool_calls,
@@ -324,6 +418,9 @@ module DiscourseAi
           temperature: @temperature,
           top_p: @top_p,
           round_count: next_round_count,
+          accumulated_tokens: @accumulated_tokens,
+          accumulated_request_tokens: @accumulated_request_tokens,
+          accumulated_response_tokens: @accumulated_response_tokens,
         }
 
         payload_json = payload.to_json
@@ -398,6 +495,23 @@ module DiscourseAi
       def available_bot_users
         @available_bot_users ||=
           User.joins("INNER JOIN llm_models llm ON llm.user_id = users.id").where(active: true)
+      end
+
+      def resolve_persona_record
+        @_persona_record ||=
+          if @persona.is_a?(AiPersona)
+            @persona
+          else
+            AiPersona.find_by(id: @persona.id)
+          end
+      end
+
+      def resolve_token_budget
+        resolve_persona_record&.max_turn_tokens
+      end
+
+      def resolve_execution_mode
+        resolve_persona_record&.execution_mode || "default"
       end
 
       def persist_reply_post!

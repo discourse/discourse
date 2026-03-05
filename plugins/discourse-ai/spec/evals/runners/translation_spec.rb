@@ -5,6 +5,7 @@ require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Translation do
   fab!(:llm, :fake_model)
+  let(:execution_context) { DiscourseAi::Completions::ExecutionContext.new }
 
   describe "#run" do
     it "translates a single piece of content when no cases are provided" do
@@ -13,7 +14,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
 
       eval_case = OpenStruct.new(args: { input: "Hello world", target_locale: "es" })
 
-      result = runner.run(eval_case, llm)
+      result = runner.run(eval_case, llm, execution_context: execution_context)
 
       expect(result[:raw]).to eq("Hola mundo")
       expect(result[:metadata]).to include(target_locale: "es")
@@ -32,7 +33,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
           },
         )
 
-      results = runner.run(eval_case, llm)
+      results = runner.run(eval_case, llm, execution_context: execution_context)
 
       expect(results.length).to eq(2)
       expect(results[0][:raw]).to eq("Hola")
@@ -47,16 +48,19 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
 
       eval_case = OpenStruct.new(args: { input: "¿Cómo estás?" })
 
-      expect(runner.run(eval_case, llm)[:raw]).to eq("es")
+      expect(runner.run(eval_case, llm, execution_context: execution_context)[:raw]).to eq("es")
     end
 
     it "raises when translation cases omit the target locale" do
       runner = described_class.new("topic_title_translator")
 
-      expect { runner.run(OpenStruct.new(args: { input: "Hello" }), llm) }.to raise_error(
-        ArgumentError,
-        /target_locale/,
-      )
+      expect {
+        runner.run(
+          OpenStruct.new(args: { input: "Hello" }),
+          llm,
+          execution_context: execution_context,
+        )
+      }.to raise_error(ArgumentError, /target_locale/)
     end
   end
 end

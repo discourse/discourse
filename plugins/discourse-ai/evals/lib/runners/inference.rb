@@ -28,17 +28,17 @@ module DiscourseAi
           feature_name&.start_with?("inference:")
         end
 
-        def run(eval_case, llm)
+        def run(eval_case, llm, execution_context:)
           args = eval_case.args || {}
 
           response =
             case feature_name
             when "generate_concepts"
-              generate_concepts(args, llm)
+              generate_concepts(args, llm, execution_context:)
             when "match_concepts"
-              match_concepts(args, llm)
+              match_concepts(args, llm, execution_context:)
             when "deduplicate_concepts"
-              deduplicate_concepts(args, llm)
+              deduplicate_concepts(args, llm, execution_context:)
             else
               raise ArgumentError, "Unsupported inference feature '#{feature_name}'"
             end
@@ -48,7 +48,7 @@ module DiscourseAi
 
         private
 
-        def generate_concepts(args, llm)
+        def generate_concepts(args, llm, execution_context:)
           content = conversation_to_text(args)
           raise ArgumentError, "Missing input for generate concepts eval" if content.blank?
 
@@ -59,11 +59,12 @@ module DiscourseAi
               ctx.inferred_concepts = args[:existing_concepts] || []
             end
 
-          values = capture_structured_output(persona, user, llm, context, feature_name)
+          values =
+            capture_structured_output(persona, user, llm, context, feature_name, execution_context:)
           wrap_result(format_response(values), { query: content })
         end
 
-        def match_concepts(args, llm)
+        def match_concepts(args, llm, execution_context:)
           content = conversation_to_text(args)
           candidates = args[:concepts].to_a.map(&:to_s)
           if content.blank? || candidates.empty?
@@ -78,11 +79,12 @@ module DiscourseAi
               ctx.inferred_concepts = candidates
             end
 
-          values = capture_structured_output(persona, user, llm, context, feature_name)
+          values =
+            capture_structured_output(persona, user, llm, context, feature_name, execution_context:)
           wrap_result(format_response(values), { query: content, concepts: candidates })
         end
 
-        def deduplicate_concepts(args, llm)
+        def deduplicate_concepts(args, llm, execution_context:)
           candidates = args[:concepts].to_a.map(&:to_s)
           raise ArgumentError, "Deduplicate concepts eval requires :concepts" if candidates.empty?
 
@@ -91,7 +93,8 @@ module DiscourseAi
           context =
             build_ctx.tap { |ctx| ctx.messages = [{ type: :user, content: candidates.join(", ") }] }
 
-          values = capture_structured_output(persona, user, llm, context, feature_name)
+          values =
+            capture_structured_output(persona, user, llm, context, feature_name, execution_context:)
           wrap_result(format_response(values), { concepts: candidates })
         end
 
@@ -102,7 +105,7 @@ module DiscourseAi
           resolve_persona(persona_class: persona_klass)
         end
 
-        def capture_structured_output(persona, user, llm, context, op)
+        def capture_structured_output(persona, user, llm, context, op, execution_context:)
           schema = OPERATIONS.fetch(op)
           schema_key = schema[:schema_key]
           schema_type = schema[:schema_type] || "array"
@@ -113,6 +116,7 @@ module DiscourseAi
             context,
             schema_key: schema_key,
             schema_type: schema_type,
+            execution_context:,
           )
         end
 

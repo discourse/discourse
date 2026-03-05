@@ -350,6 +350,51 @@ RSpec.describe AiPersona do
     end
   end
 
+  describe "agentic execution mode defaults and propagation" do
+    it "assigns safe defaults to a persona created without agentic fields" do
+      persona =
+        AiPersona.create!(
+          name: "legacy_persona",
+          description: "no agentic fields set",
+          system_prompt: "test",
+          tools: [],
+          allowed_group_ids: [],
+        )
+
+      expect(persona.execution_mode).to eq("default")
+      expect(persona.max_turn_tokens).to be_nil
+      expect(persona.compression_threshold).to be_nil
+
+      klass = persona.class_instance
+
+      expect(klass.execution_mode).to eq("default")
+      expect(klass.max_turn_tokens).to be_nil
+      expect(klass.compression_threshold).to be_nil
+    end
+
+    it "requires compression_threshold for agentic mode but not for default mode" do
+      persona =
+        AiPersona.new(
+          name: "agentic_persona",
+          description: "test",
+          system_prompt: "test",
+          tools: [],
+          allowed_group_ids: [],
+          execution_mode: "agentic",
+        )
+
+      expect(persona.valid?).to eq(false)
+      expect(persona.errors[:compression_threshold]).to be_present
+
+      persona.compression_threshold = 75
+      expect(persona.valid?).to eq(true)
+
+      persona.execution_mode = "default"
+      persona.compression_threshold = nil
+      expect(persona.valid?).to eq(true)
+    end
+  end
+
   describe "validates examples format" do
     it "doesn't accept examples that are not arrays" do
       basic_persona.examples = [1]

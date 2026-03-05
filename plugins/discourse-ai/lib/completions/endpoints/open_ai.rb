@@ -55,6 +55,7 @@ module DiscourseAi
           partial_tool_calls: false,
           output_thinking: false,
           cancel_manager: nil,
+          execution_context: nil,
           &blk
         )
           @native_tool_support = dialect.native_tool_support?
