@@ -231,9 +231,6 @@ export default class ComposerContainer extends Component {
                   />
 
                   {{#if this.site.desktopView}}
-                    {{#if this.composer.model.unlistTopic}}
-                      <span class="unlist">({{i18n "composer.unlist"}})</span>
-                    {{/if}}
                     {{#if this.composer.isWhispering}}
                       {{#if this.composer.model.noBump}}
                         <span class="no-bump">{{icon "anchor"}}</span>
