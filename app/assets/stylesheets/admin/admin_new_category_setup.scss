@@ -8,21 +8,25 @@
     margin-top: var(--space-8);
 
     &__card {
-      all: unset; // reset browser button styles
       position: relative;
-      display: grid;
-      grid-template-areas: "icon title" "icon description" "bottom bottom";
-      grid-template-columns: auto 1fr;
-      cursor: pointer;
-      text-align: left;
-      gap: 0 var(--space-6);
       border: 1px solid var(--primary-low);
       border-radius: var(--d-border-radius);
-      padding: var(--space-9) 0 var(--space-9);
 
-      @include viewport.from(sm) {
-        padding: var(--space-8) 0 var(--space-9);
-        gap: 0 var(--space-8);
+      &-select {
+        all: unset; // reset browser button styles
+        width: 100%;
+        display: grid;
+        grid-template-areas: "icon title" "icon description";
+        grid-template-columns: auto 1fr;
+        cursor: pointer;
+        text-align: left;
+        gap: 0 var(--space-6);
+        padding: var(--space-9) 0 var(--space-9);
+
+        @include viewport.from(sm) {
+          padding: var(--space-8) 0 var(--space-9);
+          gap: 0 var(--space-8);
+        }
       }
 
       &-icon {
@@ -44,7 +48,6 @@
       }
 
       &-bottom {
-        grid-area: bottom;
         display: flex;
       }
 
@@ -55,7 +58,10 @@
 
       &.--unavailable {
         padding-bottom: 0;
-        cursor: not-allowed;
+
+        .category-type-cards__card-select {
+          cursor: not-allowed;
+        }
 
         &:hover,
         &:focus-visible {
@@ -69,7 +75,6 @@
         .category-type-cards__card-bottom,
         .category-type-cards__card-badge {
           opacity: 1;
-          cursor: auto !important;
         }
       }
     }
@@ -77,6 +82,7 @@
     &__card-badge {
       position: absolute;
       right: 0;
+      top: 0;
       font-size: var(--font-down-2);
       color: var(--primary);
       padding: var(--space-1) var(--space-2);

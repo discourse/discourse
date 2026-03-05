@@ -26,27 +26,31 @@ export default class CategoryTypeCards extends Component {
   <template>
     <div class="category-type-cards">
       {{#each @types as |type|}}
-        <button
-          type="button"
+        <div
           class={{concatClass
             "category-type-cards__card"
             (unless type.available "--unavailable")
             (concat "--category-type-" type.id)
           }}
-          disabled={{unless type.available true}}
-          {{on "click" (fn this.selectType type)}}
         >
-          <span class="category-type-cards__card-icon">
-            {{emoji type.icon alt="" skipTitle=true}}
-          </span>
-          <span class="category-type-cards__card-name">
-            {{type.name}}
-          </span>
-          {{#if type.description}}
-            <span class="category-type-cards__card-description">
-              {{type.description}}
+          <button
+            type="button"
+            class="category-type-cards__card-select"
+            disabled={{unless type.available true}}
+            {{on "click" (fn this.selectType type)}}
+          >
+            <span class="category-type-cards__card-icon">
+              {{emoji type.icon alt="" skipTitle=true}}
             </span>
-          {{/if}}
+            <span class="category-type-cards__card-name">
+              {{type.name}}
+            </span>
+            {{#if type.description}}
+              <span class="category-type-cards__card-description">
+                {{type.description}}
+              </span>
+            {{/if}}
+          </button>
           {{#unless type.available}}
             <span class="category-type-cards__card-badge">
               <PluginOutlet
@@ -61,7 +65,7 @@ export default class CategoryTypeCards extends Component {
               @outletArgs={{lazyHash type=type}}
             />
           </div>
-        </button>
+        </div>
       {{/each}}
     </div>
   </template>
