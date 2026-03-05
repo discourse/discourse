@@ -145,6 +145,7 @@ export default class ChatMessageActionsDesktop extends Component {
         class={{concatClass
           "chat-message-actions-container"
           (concat "is-size-" this.size)
+          (if this.chat.activeMessage.hideUserInfo "-user-info-hidden")
         }}
         data-id={{this.message.id}}
         {{on "wheel" this.redirectScroll}}

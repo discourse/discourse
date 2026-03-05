@@ -359,6 +359,7 @@ export default class ChatMessage extends Component {
 
     this.chat.activeMessage = {
       model: this.args.message,
+      hideUserInfo: this.hideUserInfo,
       context: this.args.context,
     };
   }
