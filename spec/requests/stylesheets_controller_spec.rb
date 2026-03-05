@@ -159,5 +159,21 @@ RSpec.describe StylesheetsController do
       json = JSON.parse(response.body)
       expect(json["color_scheme_id"]).to eq(scheme.id)
     end
+
+    it "does not create duplicate cache entries for incorrect theme_ids" do
+      scheme = ColorScheme.create_from_base(name: "test scheme", colors: [])
+      incorrect_theme_id = Theme.maximum(:id).to_i + 100
+
+      Stylesheet::Manager.cache.clear
+      expect(Stylesheet::Manager.cache.hash.size).to eq(0)
+
+      get "/color-scheme-stylesheet/#{scheme.id}/#{incorrect_theme_id}.json"
+      expect(response.status).to eq(200)
+      expect(Stylesheet::Manager.cache.hash.size).to eq(1)
+
+      get "/color-scheme-stylesheet/#{scheme.id}/#{incorrect_theme_id + 1}.json"
+      expect(response.status).to eq(200)
+      expect(Stylesheet::Manager.cache.hash.size).to eq(1)
+    end
   end
 end
