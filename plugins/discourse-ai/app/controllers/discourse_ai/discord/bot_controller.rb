@@ -8,14 +8,15 @@ module DiscourseAi
       skip_before_action :verify_authenticity_token
 
       def interactions
+        body = request.raw_post
+
         # Request signature verification
         begin
-          verify_request!
+          verify_request!(body)
         rescue Ed25519::VerifyError
           return head :unauthorized
         end
 
-        body = request.body.read
         interaction = JSON.parse(body, object_class: OpenStruct)
 
         if interaction.type == 1
@@ -36,10 +37,10 @@ module DiscourseAi
 
       private
 
-      def verify_request!
+      def verify_request!(body)
         signature = request.headers["X-Signature-Ed25519"]
         timestamp = request.headers["X-Signature-Timestamp"]
-        verify_key.verify([signature].pack("H*"), "#{timestamp}#{request.raw_post}")
+        verify_key.verify([signature].pack("H*"), "#{timestamp}#{body}")
       end
 
       def verify_key
