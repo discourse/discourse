@@ -235,3 +235,18 @@ WebHookEventType.seed do |b|
   b.name = "chat_message_restored"
   b.group = WebHookEventType.groups[:chat]
 end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:calendar_event_created]
+  b.name = "calendar_event_created"
+  b.group = WebHookEventType.groups[:calendar]
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:calendar_event_updated]
+  b.name = "calendar_event_updated"
+  b.group = WebHookEventType.groups[:calendar]
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:calendar_event_destroyed]
+  b.name = "calendar_event_destroyed"
+  b.group = WebHookEventType.groups[:calendar]
+end
