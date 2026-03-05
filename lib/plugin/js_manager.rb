@@ -2,20 +2,32 @@
 
 module Plugin
   class JsManager
-    @manifest_data = {}
+    @cache = {}
 
-    def self.read_manifest(plugin_name)
-      manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_name}/manifest.json"
-      JSON.parse(File.read(manifest_path))
-    rescue Errno::ENOENT
-      {}
+    def self.js_asset_exists?(plugin_name)
+      maybe_cache("js_asset_exists_#{plugin_name}") do
+        has_source_files_in_dir(plugin_name, "assets/javascripts")
+      end
     end
 
-    def self.parsed_manifest(plugin_name)
-      if Rails.env.production?
-        @manifest_data[plugin_name] ||= read_manifest(plugin_name)
-      else
-        read_manifest(plugin_name)
+    def self.admin_js_asset_exists?(plugin_name)
+      maybe_cache("admin_js_asset_exists_#{plugin_name}") do
+        has_source_files_in_dir(plugin_name, "admin/assets/javascripts")
+      end
+    end
+
+    def self.test_js_asset_exists?(plugin_name)
+      maybe_cache("test_js_asset_exists_#{plugin_name}") do
+        has_source_files_in_dir(plugin_name, "test/javascripts")
+      end
+    end
+
+    def self.read_manifest(plugin_name)
+      maybe_cache("manifest_#{plugin_name}") do
+        manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_name}/manifest.json"
+        JSON.parse(File.read(manifest_path))
+      rescue Errno::ENOENT
+        {}
       end
     end
 
@@ -181,6 +193,8 @@ module Plugin
       end
     end
 
+    private
+
     def minify?
       Rails.env.production?
     end
@@ -191,6 +205,18 @@ module Plugin
 
     def log(message)
       STDERR.puts "[Plugin::JsManager] #{message}"
+    end
+
+    private_class_method def self.maybe_cache(key, &blk)
+      if Rails.env.production?
+        @cache.fetch(key, &blk)
+      else
+        blk.call
+      end
+    end
+
+    private_class_method def self.has_source_files_in_dir(plugin_name, dir)
+      Dir.glob("plugins/#{plugin_name}/#{dir}/**/*.{js,hbs,gjs,es6}") { break true } || false
     end
   end
 end

@@ -963,8 +963,7 @@ class Plugin::Instance
   end
 
   def js_asset_exists?
-    # If assets/javascripts exists, ember-cli will output a .js file
-    File.exist?("#{File.dirname(@path)}/assets/javascripts")
+    Plugin::JsManager.js_asset_exists?(directory_name)
   end
 
   def extra_js_asset_exists?
@@ -972,11 +971,11 @@ class Plugin::Instance
   end
 
   def admin_js_asset_exists?
-    File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
+    Plugin::JsManager.admin_js_asset_exists?(directory_name)
   end
 
   def test_js_asset_exists?
-    File.exist?("#{File.dirname(@path)}/test/javascripts")
+    Plugin::JsManager.test_js_asset_exists?(directory_name)
   end
 
   # Receives an array with two elements:

@@ -71,12 +71,12 @@ async function loadPluginFromModulePreload(link) {
     );
 
     if (DEBUG) {
-      let { addError } = importSync("discourse/static/development-error");
-      addError(error, link.dataset.pluginName, link.href);
-
       if (isRailsTesting() || isTesting()) {
         throw new Error(error);
       }
+
+      let { addError } = importSync("discourse/static/development-error");
+      addError(error, link.dataset.pluginName, link.href);
     }
   }
 }
