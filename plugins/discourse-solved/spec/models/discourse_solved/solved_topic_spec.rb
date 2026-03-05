@@ -24,15 +24,15 @@ RSpec.describe DiscourseSolved::SolvedTopic do
     describe "#auto_close_topic_timer" do
       subject(:solved) { described_class.create(topic:, answer_post: post, accepter: user) }
 
-      context "when auto close hours is greater than zero" do
-        before { SiteSetting.solved_topics_auto_close_hours = 2 }
+      context "when auto close days is greater than zero" do
+        before { SiteSetting.solved_topics_auto_close_days = 2 }
 
         it "creates a silent close timer based on last post" do
           expect(solved.topic_timer).to have_attributes(
             topic:,
             status_type: TopicTimer.types[:silent_close],
             based_on_last_post: true,
-            duration_minutes: 120,
+            duration_minutes: 2880,
           )
         end
 
@@ -45,26 +45,26 @@ RSpec.describe DiscourseSolved::SolvedTopic do
         end
       end
 
-      context "when auto close hours is zero" do
-        before { SiteSetting.solved_topics_auto_close_hours = 0 }
+      context "when auto close days is zero" do
+        before { SiteSetting.solved_topics_auto_close_days = 0 }
 
         it "does not create a timer" do
           expect(solved.topic_timer).to be_nil
         end
       end
 
-      context "when category overrides auto close hours" do
+      context "when category overrides auto close days" do
         fab!(:category)
 
         before do
           topic.update!(category:)
-          category.custom_fields["solved_topics_auto_close_hours"] = 5
+          category.custom_fields["solved_topics_auto_close_days"] = 5
           category.save!
-          SiteSetting.solved_topics_auto_close_hours = 2
+          SiteSetting.solved_topics_auto_close_days = 2
         end
 
         it "uses the category value" do
-          expect(solved.topic_timer).to have_attributes(duration_minutes: 300)
+          expect(solved.topic_timer).to have_attributes(duration_minutes: 7200)
         end
       end
     end

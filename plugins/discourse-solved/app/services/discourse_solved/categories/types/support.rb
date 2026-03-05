@@ -60,14 +60,14 @@ module DiscourseSolved
                   required: true,
                   show_on_create: false,
                 },
-                :solved_topics_auto_close_hours => {
-                  default: 48,
+                :solved_topics_auto_close_days => {
+                  default: 2,
                   type: :integer,
                   label:
-                    I18n.t("discourse_solved.category_type.solved_topics_auto_close_hours.label"),
+                    I18n.t("discourse_solved.category_type.solved_topics_auto_close_days.label"),
                   description:
                     I18n.t(
-                      "discourse_solved.category_type.solved_topics_auto_close_hours.description",
+                      "discourse_solved.category_type.solved_topics_auto_close_days.description",
                     ),
                 },
               },

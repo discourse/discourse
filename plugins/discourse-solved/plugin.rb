@@ -20,12 +20,15 @@ module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
+  MAX_AUTO_CLOSE_DAYS = 7300
 end
 
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
+
+  deprecate_setting("solved_topics_auto_close_hours", "solved_topics_auto_close_days", false, "4.1")
 
   reloadable_patch do
     register_category_type(DiscourseSolved::Categories::Types::Support)
