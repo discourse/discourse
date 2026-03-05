@@ -33,11 +33,8 @@ export default class WatchedWord extends EmberObject {
       action_key: this.action,
       case_sensitive: this.isCaseSensitive,
       html: this.isHtml,
+      replacement_tags: this.replacementTags,
     };
-
-    if (this.replacementTags) {
-      data.replacement_tags = this.replacementTags;
-    }
 
     return ajax(
       "/admin/customize/watched_words" +

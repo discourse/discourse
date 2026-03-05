@@ -188,6 +188,20 @@ RSpec.describe Admin::WatchedWordsController do
         expect(Tag.find_by(name: "newone")).to be_present
         expect(WatchedWord.last.replacement).to eq("existing,newone")
       end
+
+      it "creates a tag watched word via the legacy replacement param" do
+        Fabricate(:tag, name: "greeting")
+
+        post "/admin/customize/watched_words.json",
+             params: {
+               action_key: "tag",
+               words: ["hello"],
+               replacement: "greeting",
+             }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.last.replacement).to eq("greeting")
+      end
     end
   end
 

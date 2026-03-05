@@ -34,7 +34,6 @@ describe "Admin Watched Words", type: :system do
   end
 
   it "creates a watched word with the tag action type" do
-    SiteSetting.tagging_enabled = true
     Fabricate(:tag, name: "greeting")
 
     ww_page.visit(action: "tag")

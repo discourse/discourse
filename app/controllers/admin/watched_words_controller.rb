@@ -17,7 +17,9 @@ class Admin::WatchedWordsController < Admin::StaffController
     action = WatchedWord.actions[opts[:action_key].to_sym]
     words = opts.delete(:words)
 
-    opts = opts.merge(replacement: resolve_replacement_tags) if action == WatchedWord.actions[:tag]
+    if action == WatchedWord.actions[:tag] && watched_words_params[:replacement_tags].present?
+      opts = opts.merge(replacement: resolve_replacement_tags)
+    end
 
     watched_word_group = WatchedWordGroup.new(action: action)
     watched_word_group.create_or_update_members(words, opts)
@@ -127,11 +129,20 @@ class Admin::WatchedWordsController < Admin::StaffController
 
   def watched_words_params
     @watched_words_params ||=
-      params.permit(:id, :replacement, :action_key, :case_sensitive, :html, words: [])
+      params.permit(
+        :id,
+        :replacement,
+        :action_key,
+        :case_sensitive,
+        :html,
+        words: [],
+        replacement_tags: %i[id name],
+      )
   end
 
   def resolve_replacement_tags
-    tags_param = params[:replacement_tags].try(:values) || params[:replacement_tags]
+    tags_param = watched_words_params[:replacement_tags]
+    tags_param = tags_param.values if tags_param.is_a?(ActionController::Parameters)
     return if tags_param.blank?
 
     tag_ids = tags_param.filter_map { |t| t[:id]&.to_i }
