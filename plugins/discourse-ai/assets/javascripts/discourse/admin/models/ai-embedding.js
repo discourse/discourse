@@ -30,6 +30,7 @@ export default class AiEmbedding extends RestModel {
 
   async testConfig() {
     return await ajax(`/admin/plugins/discourse-ai/ai-embeddings/test.json`, {
+      type: "POST",
       data: { ai_embedding: this.createProperties() },
     });
   }

@@ -147,7 +147,7 @@ Discourse::Application.routes.draw do
               only: %i[index new create edit update destroy],
               path: "ai-embeddings",
               controller: "discourse_ai/admin/ai_embeddings" do
-      collection { get :test }
+      collection { post :test }
     end
 
     resources :ai_features,
