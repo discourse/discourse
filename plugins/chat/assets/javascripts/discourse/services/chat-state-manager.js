@@ -165,6 +165,10 @@ export default class ChatStateManager extends Service {
     return this.isFullPageActive || this.isDrawerActive;
   }
 
+  get isPinnedMessagesPaneOpen() {
+    return this.router.currentRouteName === "chat.channel.pins";
+  }
+
   storeAppURL(url = null) {
     if (url) {
       this._appURL = url;
