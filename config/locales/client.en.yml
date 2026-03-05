@@ -3258,10 +3258,10 @@ en:
           label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
-          label: "New topic"
+          label: "Topic"
           desc: Create a new topic
         create_personal_message:
-          label: "New message"
+          label: "Message"
           desc: "Create a new personal message"
         shared_draft:
           label: "Shared Draft"
@@ -3269,6 +3269,7 @@ en:
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
+        create_unlisted_topic: "Unlisted topic"
         toggle_unlisted:
           label: Toggle unlisted
           desc: "Unlisted topics are only accessible by direct link"
