@@ -104,6 +104,16 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
 
         expect(created_def).to be_nil
       end
+
+      it "rejects a SQL injection payload in pg_function" do
+        post "/admin/plugins/discourse-ai/ai-embeddings.json",
+             params: {
+               ai_embedding: valid_attrs.merge(pg_function: "'; DROP TABLE users; --"),
+             }
+
+        expect(response.status).to eq(422)
+        expect(EmbeddingDefinition.last).to be_nil
+      end
     end
   end
 
