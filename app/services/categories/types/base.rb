@@ -47,6 +47,12 @@ module Categories
               "description" => {
                 "type" => "string",
               },
+              "show_on_create" => {
+                "type" => "boolean",
+              },
+              "show_on_edit" => {
+                "type" => "boolean",
+              },
             },
           },
         },
@@ -125,6 +131,8 @@ module Categories
         #       #   type:        (required) Symbol — e.g. :integer, :string, :boolean, matching site setting types.
         #       #   label:       (required) String — FormKit label shown in UI
         #       #   description: (optional) String — FormKit description/help text shown in UI
+        #       #   show_on_create: (optional) Boolean — Whether to show the field on category creation. Defaults to true.
+        #       #   show_on_edit: (optional) Boolean — Whether to show the field on category edit. Defaults to true.
         #       solved_topics_auto_close_hours: {
         #         default: 48,
         #         type: :integer,
@@ -241,7 +249,7 @@ module Categories
 
         def resolved_configuration_schema
           schema = configuration_schema
-          return [] if schema.blank?
+          return {} if schema.blank?
 
           entries = {
             general_category_settings: [],
@@ -256,6 +264,8 @@ module Categories
               default: config[:default],
               type: config[:type].to_s,
               required: config[:required],
+              show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
+              show_on_edit: config[:show_on_edit].nil? ? true : config[:show_on_edit],
             }
           end
 
@@ -269,6 +279,8 @@ module Categories
               label: meta[:humanized_name],
               description: meta[:description],
               required: false,
+              show_on_create: true,
+              show_on_edit: true,
             }
           end
 
@@ -280,6 +292,8 @@ module Categories
               label: config[:label],
               description: config[:description],
               required: config[:required],
+              show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
+              show_on_edit: config[:show_on_edit].nil? ? true : config[:show_on_edit],
             }
           end
 
@@ -291,6 +305,8 @@ module Categories
               label: config[:label],
               description: config[:description],
               required: config[:required],
+              show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
+              show_on_edit: config[:show_on_edit].nil? ? true : config[:show_on_edit],
             }
           end
 

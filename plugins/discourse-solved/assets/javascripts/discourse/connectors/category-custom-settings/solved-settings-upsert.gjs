@@ -5,6 +5,10 @@ import { i18n } from "discourse-i18n";
 
 export default class SolvedSettingsUpsert extends Component {
   static shouldRender(args, context) {
+    // NOTE: There is a separate Support tab when the solved plugin
+    // is enabled for a category. In future, we may want to get rid
+    // of this component entirely and just rely on the schema defined
+    // in Categories::Types::Support.
     return (
       context.siteSettings.enable_simplified_category_creation &&
       !(

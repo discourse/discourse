@@ -19,7 +19,8 @@ RSpec.describe Categories::Types::Base do
         id: :base,
         icon: "memo",
         available: true,
-        configuration_schema: [],
+        configuration_schema: {
+        },
       )
     end
   end
