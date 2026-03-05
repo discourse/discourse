@@ -284,6 +284,12 @@ class StaticController < ApplicationController
       begin
         if GlobalSetting.fallback_assets_path.present?
           path = File.expand_path("#{GlobalSetting.fallback_assets_path}/#{params[:path]}#{suffix}")
+
+          # fallback path should not escape the fallback directory with /../
+          unless path.start_with?(File.expand_path(GlobalSetting.fallback_assets_path))
+            raise Discourse::NotFound
+          end
+
           response.headers["Last-Modified"] = File.ctime(path).httpdate
         else
           raise
