@@ -24,7 +24,7 @@ module DiscourseAi
           end
         end
 
-        def run(eval_case, llm, execution_context: nil)
+        def run(eval_case, llm, execution_context:)
           raw_args = eval_case.args
           if raw_args.present? && !raw_args.is_a?(Hash)
             raise ArgumentError, "Translation evals expect args defined as a Hash"

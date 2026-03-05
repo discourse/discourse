@@ -239,6 +239,7 @@ module DiscourseAi
         skip_judge: false,
         execution_context: nil
       )
+        execution_context ||= DiscourseAi::Completions::ExecutionContext.new
         feature = eval_case.feature
 
         if eval_case.vision && !llm.vision_enabled?

@@ -10,7 +10,7 @@ module DiscourseAi
           feature_name&.start_with?("embeddings:hyde")
         end
 
-        def run(eval_case, llm, execution_context: nil)
+        def run(eval_case, llm, execution_context:)
           args = normalize_args(eval_case.args)
           case_defs = Array(args.delete(:cases)).presence
 

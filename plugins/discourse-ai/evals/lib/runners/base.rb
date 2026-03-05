@@ -48,7 +48,7 @@ module DiscourseAi
           persona
         end
 
-        def capture_plain_response(bot, context, execution_context: nil)
+        def capture_plain_response(bot, context, execution_context:)
           buffer = +""
           bot.reply(context, execution_context:) do |partial, _, type|
             buffer << partial if type.blank?
@@ -61,7 +61,7 @@ module DiscourseAi
           context,
           schema_key:,
           schema_type: "string",
-          execution_context: nil
+          execution_context:
         )
           key = schema_key&.to_sym
           raise ArgumentError, "schema_key is required for structured capture" if key.nil?

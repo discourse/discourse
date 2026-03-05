@@ -28,7 +28,7 @@ module DiscourseAi
           feature_name&.start_with?("inference:")
         end
 
-        def run(eval_case, llm, execution_context: nil)
+        def run(eval_case, llm, execution_context:)
           args = eval_case.args || {}
 
           response =

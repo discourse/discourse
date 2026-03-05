@@ -10,7 +10,7 @@ module DiscourseAi
           full_feature_name&.start_with?("spam:")
         end
 
-        def run(eval_case, llm, execution_context: nil)
+        def run(eval_case, llm, execution_context:)
           args = eval_case.args
           persona = resolve_persona(persona_class: DiscourseAi::Personas::SpamDetector)
           user = Discourse.system_user

@@ -35,7 +35,7 @@ module DiscourseAi
           super(feature_name, persona_prompt_override)
         end
 
-        def run(eval_case, llm, execution_context: nil)
+        def run(eval_case, llm, execution_context:)
           args = eval_case.args || {}
           input = args[:input].presence || raise(ArgumentError, "ai_helper evals require :input")
           user = build_user(args[:locale])
@@ -72,7 +72,7 @@ module DiscourseAi
           user:,
           force_default_locale:,
           custom_prompt:,
-          execution_context: nil
+          execution_context:
         )
           bot = build_bot(llm, user)
           user_input = build_user_input(input, custom_prompt)
@@ -104,7 +104,7 @@ module DiscourseAi
           DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
         end
 
-        def capture_response(bot, context, execution_context: nil)
+        def capture_response(bot, context, execution_context:)
           schema_info = bot.persona.response_format&.first
 
           if schema_info.present?
