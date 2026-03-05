@@ -216,5 +216,29 @@ RSpec.describe Categories::Types::Base do
       expect(entry[:type]).to eq("integer")
       expect(entry[:label]).to eq("My Field")
     end
+
+    it "returns a hash (not array) when configuration_schema is empty" do
+      schema = described_class.send(:resolved_configuration_schema)
+      expect(schema).to be_a(Hash)
+    end
+  end
+
+  describe "category_type_site_setting_names with empty schema" do
+    it "does not raise when a matched type has no configuration_schema" do
+      test_type =
+        Class.new(described_class) do
+          type_id :no_schema_test
+          def self.category_matches?(_category)
+            true
+          end
+        end
+
+      Categories::TypeRegistry.register(test_type, plugin_identifier: "test")
+      SiteSetting.enable_simplified_category_creation = true
+
+      expect { category.category_type_site_setting_names }.not_to raise_error
+    ensure
+      Categories::TypeRegistry.all.delete(:no_schema_test)
+    end
   end
 end

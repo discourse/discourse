@@ -318,8 +318,7 @@
           ]
         },
         "category_types": {
-          "type": "array",
-          "items": {}
+          "type": "object"
         }
       },
       "required": [

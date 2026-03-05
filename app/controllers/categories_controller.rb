@@ -208,10 +208,10 @@ class CategoriesController < ApplicationController
       old_custom_fields = cat.custom_fields.dup
       if category_params[:custom_fields]
         category_params[:custom_fields].each do |key, value|
-          if value.present?
-            cat.custom_fields[key] = value
-          else
+          if value.nil? || value == ""
             cat.custom_fields.delete(key)
+          else
+            cat.custom_fields[key] = value
           end
         end
       end

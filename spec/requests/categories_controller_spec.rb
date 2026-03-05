@@ -1120,6 +1120,16 @@ RSpec.describe CategoriesController do
           expect(category.form_template_ids.count).to eq(0)
         end
 
+        it "persists boolean false for custom fields" do
+          put "/categories/#{category.id}.json",
+              params: { custom_fields: { bool_field: false } }.to_json,
+              headers: {
+                "CONTENT_TYPE" => "application/json",
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.custom_fields).to have_key("bool_field")
+        end
+
         it "doesn't set category moderation groups if the enable_category_group_moderation setting is false" do
           SiteSetting.enable_category_group_moderation = false
 
