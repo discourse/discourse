@@ -125,9 +125,8 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           :generate,
         ).and_wrap_original do |original, *args, **kwargs, &blk|
           result = original.call(*args, **kwargs, &blk)
-          if (acc = Thread.current[:llm_token_accumulator])
-            acc[:request] += 500
-            acc[:response] += 500
+          if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+            tracker.add_effective(request: 500, response: 500)
           end
           result
         end
@@ -142,26 +141,46 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    it "cleans up thread-local accumulator even on error" do
-      DiscourseAi::Completions::Llm.with_prepared_responses([RuntimeError.new("boom")]) do
+    it "persists request and response token counters in resume state" do
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_tool",
+          parameters: {
+            input: "hello",
+          },
+          id: "tool_3",
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([tool_call]) do
         session = build_session
-        expect { collect_events(session) }.to raise_error(RuntimeError, "boom")
-        expect(Thread.current[:llm_token_accumulator]).to be_nil
+
+        allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+          :generate,
+        ).and_wrap_original do |original, *args, **kwargs, &blk|
+          result = original.call(*args, **kwargs, &blk)
+          if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+            tracker.add_effective(request: 123, response: 45)
+          end
+          result
+        end
+
+        events = collect_events(session)
+        tool_event = events.find { |type, _| type == :tool_calls }
+        expect(tool_event).to be_present
+
+        state =
+          JSON.parse(Discourse.redis.get(described_class.redis_key(tool_event[1][:resume_token])))
+        expect(state["accumulated_request_tokens"]).to eq(123)
+        expect(state["accumulated_response_tokens"]).to eq(45)
+        expect(state["accumulated_tokens"]).to eq(168)
       end
     end
 
-    it "restores previous thread-local accumulator value" do
-      previous = { request: 42, response: 7 }
-      Thread.current[:llm_token_accumulator] = previous
-
-      DiscourseAi::Completions::Llm.with_prepared_responses(["Simple response"]) do
+    it "propagates llm errors" do
+      DiscourseAi::Completions::Llm.with_prepared_responses([RuntimeError.new("boom")]) do
         session = build_session
-        collect_events(session)
+        expect { collect_events(session) }.to raise_error(RuntimeError, "boom")
       end
-
-      expect(Thread.current[:llm_token_accumulator]).to eq(previous)
-    ensure
-      Thread.current[:llm_token_accumulator] = nil
     end
   end
 end

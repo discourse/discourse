@@ -15,6 +15,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   let(:recorder) do
     instance_double(
       DiscourseAi::Evals::Recorder,
+      execution_context: nil,
       record_llm_skip: nil,
       record_llm_results: nil,
       finish: nil,

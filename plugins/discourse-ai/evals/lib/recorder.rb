@@ -79,7 +79,6 @@ module DiscourseAi
       end
 
       def running
-        attach_thread_loggers
         logger.info("Starting evaluation '#{an_eval.id}' (persona: #{persona_key})")
         formatter.announce_start if announce_formatter
         structured_logger.start_root(
@@ -239,7 +238,6 @@ module DiscourseAi
         structured_logger.finish_root(end_time: Time.now.utc)
         formatter.finalize if finalize_formatter
 
-        detach_thread_loggers
         structured_logger.save
 
         output.puts
@@ -247,6 +245,14 @@ module DiscourseAi
         output.puts "Structured log file (ui.perfetto.dev): #{structured_logger.path}"
       ensure
         logger&.close
+      end
+
+      def execution_context
+        @execution_context ||=
+          DiscourseAi::Completions::ExecutionContext.new(
+            audit_logger: logger,
+            structured_audit_logger: structured_logger,
+          )
       end
 
       private
@@ -273,21 +279,6 @@ module DiscourseAi
 
         slug = stripped.gsub(/[^a-zA-Z0-9]+/, "-").gsub(/-+/, "-").gsub(/^-|-$/, "")
         slug.empty? ? "default" : slug.downcase
-      end
-
-      def attach_thread_loggers
-        @previous_thread_loggers = {
-          audit_log: Thread.current[:llm_audit_log],
-          structured_log: Thread.current[:llm_audit_structured_log],
-        }
-
-        Thread.current[:llm_audit_log] = logger
-        Thread.current[:llm_audit_structured_log] = structured_logger
-      end
-
-      def detach_thread_loggers
-        Thread.current[:llm_audit_log] = @previous_thread_loggers[:audit_log]
-        Thread.current[:llm_audit_structured_log] = @previous_thread_loggers[:structured_log]
       end
 
       def comparison_header(eval_case_id, mode_label, persona_key, summary: false)

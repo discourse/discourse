@@ -5,7 +5,7 @@ class DiscourseAi::Evals::PromptEvaluator
     @llm = llm_model.to_llm
   end
 
-  def prompt_call(args)
+  def prompt_call(args, execution_context: nil)
     args = [args] if !args.is_a?(Array)
     runner = DiscourseAi::Evals::PromptSingleTestRunner.new(@llm)
 
@@ -37,6 +37,7 @@ class DiscourseAi::Evals::PromptEvaluator
               tool_results:,
               chain_length:,
               max_tool_calls:,
+              execution_context:,
             )
           end
         end

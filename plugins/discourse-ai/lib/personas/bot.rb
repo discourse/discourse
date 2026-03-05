@@ -61,7 +61,7 @@ module DiscourseAi
         end
       end
 
-      def reply(context, llm_args: {}, &update_blk)
+      def reply(context, llm_args: {}, execution_context: nil, &update_blk)
         unless context.is_a?(BotContext)
           raise ArgumentError, "context must be an instance of BotContext"
         end
@@ -97,164 +97,161 @@ module DiscourseAi
         # the two strategies from fighting each other.
         prompt.skip_trim = true if use_token_budget
 
-        previous_accumulator = Thread.current[:llm_token_accumulator]
-        Thread.current[:llm_token_accumulator] = { request: 0, response: 0 } if use_token_budget
+        if use_token_budget
+          execution_context ||= DiscourseAi::Completions::ExecutionContext.new
+          execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
+        end
+        llm_kwargs[:execution_context] = execution_context if execution_context
+        token_usage_tracker = execution_context&.token_usage_tracker
 
         final_answer_requested = false
 
-        begin
-          while ongoing_chain
-            if final_answer_requested
-              break # already ran the final text-only generate
+        while ongoing_chain
+          if final_answer_requested
+            break # already ran the final text-only generate
+          end
+
+          should_stop =
+            if use_token_budget
+              token_usage_tracker.total >= token_budget
+            else
+              total_completions >= MAX_COMPLETIONS
             end
 
-            should_stop =
-              if use_token_budget
-                Thread.current[:llm_token_accumulator].values.sum >= token_budget
-              else
-                total_completions >= MAX_COMPLETIONS
-              end
-
-            if should_stop
-              if prompt.messages.last&.dig(:type) == :tool
-                self.class.inject_budget_exhausted_hint(prompt)
-                prompt.tool_choice = :none
-                final_answer_requested = true
-              else
-                break
-              end
-            end
-
-            maybe_compress_context(prompt, current_llm) if use_token_budget
-
-            tool_found = false
-            force_tool_if_needed(prompt, context)
-
-            tool_halted = false
-
-            allow_partial_tool_calls = persona.allow_partial_tool_calls?
-            existing_tools = Set.new
-            current_thinking = []
-            thinking_placeholder = nil
-
-            result =
-              current_llm.generate(
-                prompt,
-                feature_name: context.feature_name,
-                partial_tool_calls: allow_partial_tool_calls,
-                output_thinking: true,
-                cancel_manager: context.cancel_manager,
-                **llm_kwargs,
-              ) do |partial|
-                tool =
-                  persona.find_tool(
-                    partial,
-                    bot_user: user,
-                    llm: current_llm,
-                    context: context,
-                    existing_tools: existing_tools,
-                  )
-
-                if !use_token_budget
-                  tool = nil if tools_ran >= MAX_TOOLS
-                end
-
-                if tool.present?
-                  existing_tools << tool
-                  tool_call = partial
-                  if tool_call.partial?
-                    if tool.class.allow_partial_tool_calls?
-                      tool.partial_invoke
-                      update_blk.call("", tool.custom_raw, :partial_tool)
-                    end
-                    next
-                  end
-
-                  tool_found = true
-                  # a bit hacky, but extra newlines do no harm
-                  if needs_newlines
-                    update_blk.call("\n\n")
-                    needs_newlines = false
-                  end
-
-                  process_tool(
-                    tool: tool,
-                    raw_context: raw_context,
-                    current_llm: current_llm,
-                    update_blk: update_blk,
-                    prompt: prompt,
-                    context: context,
-                    current_thinking: current_thinking,
-                  )
-
-                  tools_ran += 1
-                  ongoing_chain &&= tool.chain_next_response?
-
-                  tool_halted = true if !tool.chain_next_response?
-                else
-                  next if tool_halted
-                  needs_newlines = true
-                  if partial.is_a?(DiscourseAi::Completions::ToolCall)
-                    Rails.logger.warn("DiscourseAi: Tool not found: #{partial.name}")
-                  else
-                    if partial.is_a?(DiscourseAi::Completions::Thinking)
-                      thinking = partial
-
-                      if thinking.partial? && thinking.message.present? &&
-                           !context.skip_show_thinking
-                        thinking_placeholder ||= +""
-                        thinking_placeholder << thinking.message
-                        update_blk.call("", thinking_placeholder, :thinking)
-                      end
-
-                      if !thinking.partial?
-                        raw_context << thinking
-                        current_thinking << thinking
-                        thinking_placeholder = nil
-                        if thinking.message.present?
-                          update_blk.call(thinking.message, nil, :thinking)
-                        end
-                      end
-                    else
-                      if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
-                        update_blk.call(partial, nil, :structured_output)
-                      else
-                        update_blk.call(partial)
-                      end
-                    end
-                  end
-                end
-              end
-
-            if !tool_found
-              ongoing_chain = false
-              text = result
-
-              # we must strip out thinking and other types of blocks
-              if result.is_a?(Array)
-                text = +""
-                result.each { |item| text << item if item.is_a?(String) }
-              end
-              raw_context << [text, bot_user&.username]
-            end
-
-            total_completions += 1
-
-            if !final_answer_requested
-              if use_token_budget
-                total_used = Thread.current[:llm_token_accumulator].values.sum
-                prompt.tool_choice = :none if total_used >= (token_budget * 0.85)
-              else
-                prompt.tool_choice = :none if total_completions == MAX_COMPLETIONS - 1 ||
-                  tools_ran >= MAX_TOOLS
-              end
-
-              # safety valve even in token budget mode
-              break if use_token_budget && total_completions >= 100
+          if should_stop
+            if prompt.messages.last&.dig(:type) == :tool
+              self.class.inject_budget_exhausted_hint(prompt)
+              prompt.tool_choice = :none
+              final_answer_requested = true
+            else
+              break
             end
           end
-        ensure
-          Thread.current[:llm_token_accumulator] = previous_accumulator if use_token_budget
+
+          maybe_compress_context(prompt, current_llm, execution_context:) if use_token_budget
+
+          tool_found = false
+          force_tool_if_needed(prompt, context)
+
+          tool_halted = false
+
+          allow_partial_tool_calls = persona.allow_partial_tool_calls?
+          existing_tools = Set.new
+          current_thinking = []
+          thinking_placeholder = nil
+
+          result =
+            current_llm.generate(
+              prompt,
+              feature_name: context.feature_name,
+              partial_tool_calls: allow_partial_tool_calls,
+              output_thinking: true,
+              cancel_manager: context.cancel_manager,
+              **llm_kwargs,
+            ) do |partial|
+              tool =
+                persona.find_tool(
+                  partial,
+                  bot_user: user,
+                  llm: current_llm,
+                  context: context,
+                  existing_tools: existing_tools,
+                )
+
+              if !use_token_budget
+                tool = nil if tools_ran >= MAX_TOOLS
+              end
+
+              if tool.present?
+                existing_tools << tool
+                tool_call = partial
+                if tool_call.partial?
+                  if tool.class.allow_partial_tool_calls?
+                    tool.partial_invoke
+                    update_blk.call("", tool.custom_raw, :partial_tool)
+                  end
+                  next
+                end
+
+                tool_found = true
+                # a bit hacky, but extra newlines do no harm
+                if needs_newlines
+                  update_blk.call("\n\n")
+                  needs_newlines = false
+                end
+
+                process_tool(
+                  tool: tool,
+                  raw_context: raw_context,
+                  current_llm: current_llm,
+                  update_blk: update_blk,
+                  prompt: prompt,
+                  context: context,
+                  current_thinking: current_thinking,
+                )
+
+                tools_ran += 1
+                ongoing_chain &&= tool.chain_next_response?
+
+                tool_halted = true if !tool.chain_next_response?
+              else
+                next if tool_halted
+                needs_newlines = true
+                if partial.is_a?(DiscourseAi::Completions::ToolCall)
+                  Rails.logger.warn("DiscourseAi: Tool not found: #{partial.name}")
+                else
+                  if partial.is_a?(DiscourseAi::Completions::Thinking)
+                    thinking = partial
+
+                    if thinking.partial? && thinking.message.present? && !context.skip_show_thinking
+                      thinking_placeholder ||= +""
+                      thinking_placeholder << thinking.message
+                      update_blk.call("", thinking_placeholder, :thinking)
+                    end
+
+                    if !thinking.partial?
+                      raw_context << thinking
+                      current_thinking << thinking
+                      thinking_placeholder = nil
+                      update_blk.call(thinking.message, nil, :thinking) if thinking.message.present?
+                    end
+                  else
+                    if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
+                      update_blk.call(partial, nil, :structured_output)
+                    else
+                      update_blk.call(partial)
+                    end
+                  end
+                end
+              end
+            end
+
+          if !tool_found
+            ongoing_chain = false
+            text = result
+
+            # we must strip out thinking and other types of blocks
+            if result.is_a?(Array)
+              text = +""
+              result.each { |item| text << item if item.is_a?(String) }
+            end
+            raw_context << [text, bot_user&.username]
+          end
+
+          total_completions += 1
+
+          if !final_answer_requested
+            if use_token_budget
+              total_used = token_usage_tracker.total
+              prompt.tool_choice = :none if total_used >= (token_budget * 0.85)
+            else
+              prompt.tool_choice = :none if total_completions == MAX_COMPLETIONS - 1 ||
+                tools_ran >= MAX_TOOLS
+            end
+
+            # safety valve even in token budget mode
+            break if use_token_budget && total_completions >= 100
+          end
         end
 
         embed_thinking(raw_context)
@@ -403,7 +400,7 @@ module DiscourseAi
         Output ONLY the summary text, nothing else.
       TEXT
 
-      def maybe_compress_context(prompt, current_llm)
+      def maybe_compress_context(prompt, current_llm, execution_context: nil)
         max_tokens = current_llm.max_prompt_tokens
         return if max_tokens.blank? || max_tokens <= 0
 
@@ -472,7 +469,12 @@ module DiscourseAi
 
         summary =
           begin
-            current_llm.generate(compression_prompt, user: nil, feature_name: "context_compression")
+            current_llm.generate(
+              compression_prompt,
+              user: nil,
+              feature_name: "context_compression",
+              execution_context:,
+            )
           rescue => e
             Rails.logger.warn("DiscourseAi: Context compression failed, skipping: #{e.message}")
             return

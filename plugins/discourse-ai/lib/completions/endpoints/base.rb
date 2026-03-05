@@ -78,6 +78,7 @@ module DiscourseAi
           partial_tool_calls: false,
           output_thinking: false,
           cancel_manager: nil,
+          execution_context: nil,
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
@@ -110,6 +111,7 @@ module DiscourseAi
                 partial_tool_calls: partial_tool_calls,
                 output_thinking: output_thinking,
                 cancel_manager: cancel_manager,
+                execution_context:,
               )
 
             wrapped = result
@@ -299,14 +301,7 @@ module DiscourseAi
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
 
-                if (accumulator = Thread.current[:llm_token_accumulator])
-                  # request_tokens = non-cached input (already excludes cached)
-                  # cache_write_tokens = newly cached (full cost)
-                  # cache_read_tokens = served from cache (1/10 cost)
-                  accumulator[:request] += log.request_tokens.to_i + log.cache_write_tokens.to_i +
-                    (log.cache_read_tokens.to_i * 0.1).to_i
-                  accumulator[:response] += log.response_tokens.to_i
-                end
+                execution_context&.token_usage_tracker&.add_from_audit_log(log)
 
                 AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
@@ -334,7 +329,7 @@ module DiscourseAi
 
               track_failures(call_status)
 
-              if should_log && (logger = Thread.current[:llm_audit_log])
+              if should_log && (logger = execution_context&.audit_logger)
                 call_data = <<~LOG
                   #{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}
                   request:
@@ -344,7 +339,7 @@ module DiscourseAi
                 LOG
                 logger.info(call_data)
               end
-              if should_log && (structured_logger = Thread.current[:llm_audit_structured_log])
+              if should_log && (structured_logger = execution_context&.structured_audit_logger)
                 llm_request =
                   begin
                     JSON.parse(log.raw_request_payload)

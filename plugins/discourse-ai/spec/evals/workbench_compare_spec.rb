@@ -30,6 +30,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
     let(:recorder) do
       instance_double(
         DiscourseAi::Evals::Recorder,
+        execution_context: nil,
         record_llm_results: nil,
         record_llm_skip: nil,
         announce_comparison_judged: nil,
@@ -93,6 +94,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
     let(:recorder) do
       instance_double(
         DiscourseAi::Evals::Recorder,
+        execution_context: nil,
         record_llm_results: nil,
         record_llm_skip: nil,
         announce_comparison_judged: nil,

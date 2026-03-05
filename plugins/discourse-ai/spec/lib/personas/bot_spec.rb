@@ -116,9 +116,8 @@ RSpec.describe DiscourseAi::Personas::Bot do
           ).and_wrap_original do |original, *args, **kwargs, &blk|
             call_count += 1
             result = original.call(*args, **kwargs, &blk)
-            if (acc = Thread.current[:llm_token_accumulator])
-              acc[:request] += 3000
-              acc[:response] += 500
+            if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+              tracker.add_effective(request: 3000, response: 500)
             end
             result
           end
@@ -165,9 +164,8 @@ RSpec.describe DiscourseAi::Personas::Bot do
             prompt_arg = args.first
             tool_choice_values << prompt_arg.tool_choice
             result = original.call(*args, **kwargs, &blk)
-            if (acc = Thread.current[:llm_token_accumulator])
-              acc[:request] += 8000
-              acc[:response] += 1000
+            if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+              tracker.add_effective(request: 8000, response: 1000)
             end
             result
           end
@@ -249,9 +247,8 @@ RSpec.describe DiscourseAi::Personas::Bot do
             tool_choice_values << prompt_arg.tool_choice
             prompt_messages << prompt_arg.messages.map { |m| m[:type] }
             result = original.call(*args, **kwargs, &blk)
-            if (acc = Thread.current[:llm_token_accumulator])
-              acc[:request] += 2500
-              acc[:response] += 500
+            if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+              tracker.add_effective(request: 2500, response: 500)
             end
             result
           end
@@ -302,16 +299,22 @@ RSpec.describe DiscourseAi::Personas::Bot do
         expect(last_tool_choice).to eq(:none)
       end
 
-      it "cleans up thread-local accumulator even on error" do
+      it "keeps the caller execution context intact on error" do
         responses = [RuntimeError.new("boom")]
+        tracker = DiscourseAi::Completions::TokenUsageTracker.new
+        execution_context =
+          DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
 
         DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
           bot = described_class.as(bot_user, persona: persona_class.new)
           context =
             DiscourseAi::Personas::BotContext.new(messages: [{ type: :user, content: "test" }])
 
-          expect { bot.reply(context) { |_partial| } }.to raise_error(RuntimeError, "boom")
-          expect(Thread.current[:llm_token_accumulator]).to be_nil
+          expect { bot.reply(context, execution_context:) { |_partial| } }.to raise_error(
+            RuntimeError,
+            "boom",
+          )
+          expect(execution_context.token_usage_tracker).to eq(tracker)
         end
       end
     end
