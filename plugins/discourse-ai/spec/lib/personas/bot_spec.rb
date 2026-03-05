@@ -518,6 +518,96 @@ RSpec.describe DiscourseAi::Personas::Bot do
 
         expect(prompt.messages.length).to eq(original_length)
       end
+
+      it "skips compression when summary is larger than the original middle messages" do
+        bot = described_class.as(bot_user, persona: persona_class.new)
+
+        messages = [{ type: :system, content: "You are a bot" }]
+        # use short messages so middle section is small
+        10.times do |i|
+          messages << { type: :user, content: "Message #{i} short" }
+          messages << { type: :model, content: "Response #{i} short" }
+        end
+
+        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
+        original_length = prompt.messages.length
+
+        llm = bot.send(:llm)
+        # set threshold low enough to trigger compression on short messages
+        allow(llm).to receive(:max_prompt_tokens).and_return(50)
+        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
+
+        inflated_summary = "Very long inflated summary output " * 500
+        allow(llm).to receive(:generate).and_return(inflated_summary)
+
+        bot.send(:maybe_compress_context, prompt, llm)
+
+        expect(prompt.messages.length).to eq(original_length)
+      end
+
+      it "includes merge instruction when prior compressed context exists" do
+        bot = described_class.as(bot_user, persona: persona_class.new)
+
+        messages = [
+          { type: :system, content: "You are a bot" },
+          { type: :user, content: "<compressed_context>Previous summary</compressed_context>" },
+          { type: :model, content: "Understood, I have the context." },
+        ]
+        10.times do |i|
+          messages << { type: :user, content: "Message #{i} " * 200 }
+          messages << { type: :model, content: "Response #{i} " * 200 }
+        end
+
+        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
+
+        llm = bot.send(:llm)
+        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
+        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
+
+        compression_response = "Merged summary."
+        compression_prompt_content = nil
+
+        allow(llm).to receive(:generate) do |compression_prompt, **_kwargs|
+          compression_prompt_content = compression_prompt.messages.last[:content]
+          compression_response
+        end
+
+        bot.send(:maybe_compress_context, prompt, llm)
+
+        expect(compression_prompt_content).to include("Merge the previous summary")
+        expect(compression_prompt_content).to include(
+          "Do not discard information from the previous summary",
+        )
+        expect(prompt.messages[1][:content]).to include("<compressed_context>")
+        expect(prompt.messages[1][:content]).to include("Merged summary.")
+      end
+
+      it "does not include merge instruction when no prior compressed context exists" do
+        bot = described_class.as(bot_user, persona: persona_class.new)
+
+        messages = [{ type: :system, content: "You are a bot" }]
+        20.times do |i|
+          messages << { type: :user, content: "Message #{i} " * 200 }
+          messages << { type: :model, content: "Response #{i} " * 200 }
+        end
+
+        prompt = DiscourseAi::Completions::Prompt.new(messages: messages, tools: [])
+
+        llm = bot.send(:llm)
+        allow(llm).to receive(:max_prompt_tokens).and_return(2000)
+        allow(llm).to receive(:tokenizer).and_return(DiscourseAi::Tokenizer::OpenAiTokenizer)
+
+        compression_prompt_content = nil
+
+        allow(llm).to receive(:generate) do |compression_prompt, **_kwargs|
+          compression_prompt_content = compression_prompt.messages.last[:content]
+          "Summary."
+        end
+
+        bot.send(:maybe_compress_context, prompt, llm)
+
+        expect(compression_prompt_content).not_to include("Merge the previous summary")
+      end
     end
   end
 end
