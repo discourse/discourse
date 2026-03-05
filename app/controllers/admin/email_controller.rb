@@ -45,12 +45,19 @@ class Admin::EmailController < Admin::AdminController
     params.require(:username)
     params.require(:email)
     user = User.find_by_username(params[:username])
+    raise Discourse::InvalidParameters unless user
 
     message, skip_reason =
-      UserNotifications.public_send(:digest, user, since: params[:last_seen_at])
+      UserNotifications.public_send(
+        :digest,
+        user,
+        since: params[:last_seen_at],
+        skip_unsubscribe_links: true,
+      )
 
     if message
       message.to = params[:email]
+
       begin
         Email::Sender.new(message, :digest).send
         render json: success_json

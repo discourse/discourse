@@ -10,6 +10,7 @@ export default class AdminEmailPreviewDigestController extends Controller {
 
   username = null;
   lastSeen = null;
+  email = null;
 
   @empty("email") emailEmpty;
   @or("emailEmpty", "sendingEmail") sendEmailDisabled;
