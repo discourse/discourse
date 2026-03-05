@@ -524,6 +524,15 @@ en:
         use_parent_llm: "Use persona's language model"
         max_context_posts: "Max context posts"
         max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
+        execution_mode: "Execution Mode"
+        execution_mode_help: "Controls how the persona manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
+        execution_mode_options:
+          default: "Default (Fixed Limits)"
+          agentic: "Agentic (Token Budget)"
+        max_turn_tokens: "Max Turn Tokens"
+        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. When set, replaces the fixed completion/tool limits with a token budget, enabling more agentic behavior. Leave empty for default limits."
+        compression_threshold: "Compression Threshold"
+        compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
         vision_enabled: Vision enabled
         vision_enabled_help: If enabled, the AI will attempt to understand images users post in the topic, depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI.
         vision_max_pixels: Supported image size

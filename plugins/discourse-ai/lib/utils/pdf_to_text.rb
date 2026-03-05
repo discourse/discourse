@@ -4,9 +4,14 @@ class DiscourseAi::Utils::PdfToText
   MAX_PDF_SIZE = 100.megabytes
 
   class Reader
-    def initialize(upload:, user: nil, llm_model: nil)
+    def initialize(upload:, user: nil, llm_model: nil, execution_context: nil)
       @extractor =
-        DiscourseAi::Utils::PdfToText.new(upload: upload, user: user, llm_model: llm_model)
+        DiscourseAi::Utils::PdfToText.new(
+          upload: upload,
+          user: user,
+          llm_model: llm_model,
+          execution_context:,
+        )
       @enumerator = create_enumerator
       @buffer = +""
     end
@@ -32,14 +37,15 @@ class DiscourseAi::Utils::PdfToText
 
   attr_reader :upload
 
-  def self.as_fake_file(upload:, user: nil, llm_model: nil)
-    Reader.new(upload: upload, user: user, llm_model: llm_model)
+  def self.as_fake_file(upload:, user: nil, llm_model: nil, execution_context: nil)
+    Reader.new(upload: upload, user: user, llm_model: llm_model, execution_context:)
   end
 
-  def initialize(upload:, user: nil, llm_model: nil)
+  def initialize(upload:, user: nil, llm_model: nil, execution_context: nil)
     @upload = upload
     @user = user
     @llm_model = llm_model
+    @execution_context = execution_context
   end
 
   def extract_text
@@ -103,7 +109,13 @@ class DiscourseAi::Utils::PdfToText
         UploadCreator.new(File.open(output_path), "page-#{page_number}.png").create_for(@user&.id)
 
       DiscourseAi::Utils::ImageToText
-        .new(upload: upload, llm_model: @llm_model, user: @user, guidance_text: text)
+        .new(
+          upload: upload,
+          llm_model: @llm_model,
+          user: @user,
+          guidance_text: text,
+          execution_context: @execution_context,
+        )
         .extract_text { |chunk| yield chunk }
     ensure
       FileUtils.rm_rf(temp_dir) if temp_dir

@@ -48,19 +48,27 @@ module DiscourseAi
           persona
         end
 
-        def capture_plain_response(bot, context)
+        def capture_plain_response(bot, context, execution_context:)
           buffer = +""
-          bot.reply(context) { |partial, _, type| buffer << partial if type.blank? }
+          bot.reply(context, execution_context:) do |partial, _, type|
+            buffer << partial if type.blank?
+          end
           buffer
         end
 
-        def capture_structured_response(bot, context, schema_key:, schema_type: "string")
+        def capture_structured_response(
+          bot,
+          context,
+          schema_key:,
+          schema_type: "string",
+          execution_context:
+        )
           key = schema_key&.to_sym
           raise ArgumentError, "schema_key is required for structured capture" if key.nil?
 
           accumulator = schema_type == "array" ? [] : +""
 
-          bot.reply(context) do |partial, _, type|
+          bot.reply(context, execution_context:) do |partial, _, type|
             if type == :structured_output
               chunk = partial.read_buffered_property(key)
               accumulator = append_structured_chunk(accumulator, schema_type, chunk)

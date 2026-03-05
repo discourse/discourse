@@ -35,7 +35,7 @@ module DiscourseAi
           super(feature_name, persona_prompt_override)
         end
 
-        def run(eval_case, llm)
+        def run(eval_case, llm, execution_context:)
           args = eval_case.args || {}
           input = args[:input].presence || raise(ArgumentError, "ai_helper evals require :input")
           user = build_user(args[:locale])
@@ -46,6 +46,7 @@ module DiscourseAi
               user: user,
               force_default_locale: args.fetch(:force_default_locale, false),
               custom_prompt: args[:custom_prompt],
+              execution_context:,
             )
 
           formatted = format_response(response)
@@ -65,7 +66,14 @@ module DiscourseAi
           end
         end
 
-        def generate_prompt(llm:, input:, user:, force_default_locale:, custom_prompt:)
+        def generate_prompt(
+          llm:,
+          input:,
+          user:,
+          force_default_locale:,
+          custom_prompt:,
+          execution_context:
+        )
           bot = build_bot(llm, user)
           user_input = build_user_input(input, custom_prompt)
           context =
@@ -79,7 +87,7 @@ module DiscourseAi
             )
           context = attach_user_context(context, user, force_default_locale: force_default_locale)
 
-          capture_response(bot, context)
+          capture_response(bot, context, execution_context:)
         end
 
         def build_user_input(input, custom_prompt)
@@ -96,7 +104,7 @@ module DiscourseAi
           DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
         end
 
-        def capture_response(bot, context)
+        def capture_response(bot, context, execution_context:)
           schema_info = bot.persona.response_format&.first
 
           if schema_info.present?
@@ -105,9 +113,10 @@ module DiscourseAi
               context,
               schema_key: schema_info["key"],
               schema_type: schema_info["type"],
+              execution_context:,
             )
           else
-            capture_plain_response(bot, context)
+            capture_plain_response(bot, context, execution_context:)
           end
         end
 

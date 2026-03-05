@@ -81,6 +81,7 @@ module DiscourseAi
               announce_formatter: false,
               finalize_formatter: false,
             )
+          execution_context = recorder.execution_context
           candidates = []
 
           persona_variants.each do |variant|
@@ -89,7 +90,8 @@ module DiscourseAi
               start_time = Time.now.utc
               display_label = table_label_for(variant, llm_name, persona_compare)
 
-              execution = execute_eval(eval_case, llm, variant, skip_judge: true)
+              execution =
+                execute_eval(eval_case, llm, variant, skip_judge: true, execution_context:)
               classified = Array(execution[:classified])
 
               if classified.first&.dig(:result) == :skipped
@@ -146,6 +148,7 @@ module DiscourseAi
             candidates,
             persona_variants.first&.dig(:key),
             aggregate_scores,
+            execution_context:,
           )
         ensure
           recorder&.finish
@@ -168,6 +171,7 @@ module DiscourseAi
               announce_formatter: false,
               finalize_formatter: false,
             )
+          execution_context = recorder.execution_context
 
           llms.each do |llm|
             llm_name = llm.display_name || llm.name
@@ -184,7 +188,7 @@ module DiscourseAi
               next
             end
 
-            execution = execute_eval(eval_case, llm, variant)
+            execution = execute_eval(eval_case, llm, variant, execution_context:)
             classified = Array(execution[:classified])
 
             if classified.first&.dig(:result) == :skipped
@@ -232,8 +236,10 @@ module DiscourseAi
         eval_case,
         llm,
         persona_variant = { key: :default, prompt: nil },
-        skip_judge: false
+        skip_judge: false,
+        execution_context: nil
       )
+        execution_context ||= DiscourseAi::Completions::ExecutionContext.new
         feature = eval_case.feature
 
         if eval_case.vision && !llm.vision_enabled?
@@ -250,15 +256,18 @@ module DiscourseAi
 
         raw =
           if runner
-            runner.run(eval_case, llm)
+            runner.run(eval_case, llm, execution_context:)
           elsif feature == "custom:pdf_to_text"
-            pdf_to_text(llm, **eval_case.args)
+            pdf_to_text(llm, **eval_case.args, execution_context:)
           elsif feature == "custom:image_to_text"
-            image_to_text(llm, **eval_case.args)
+            image_to_text(llm, **eval_case.args, execution_context:)
           elsif feature == "custom:prompt"
-            DiscourseAi::Evals::PromptEvaluator.new(llm).prompt_call(eval_case.args)
+            DiscourseAi::Evals::PromptEvaluator.new(llm).prompt_call(
+              eval_case.args,
+              execution_context:,
+            )
           elsif feature == "custom:edit_artifact"
-            edit_artifact(llm, **eval_case.args)
+            edit_artifact(llm, **eval_case.args, execution_context:)
           else
             raise ArgumentError, "Unsupported eval feature '#{feature}'"
           end
@@ -268,7 +277,8 @@ module DiscourseAi
         {
           raw: raw,
           raw_entries: entries,
-          classified: classify_results(eval_case, entries, skip_judge: skip_judge),
+          classified:
+            classify_results(eval_case, entries, skip_judge: skip_judge, execution_context:),
         }
       end
 
@@ -284,12 +294,13 @@ module DiscourseAi
         raw.is_a?(Array) ? raw : [raw]
       end
 
-      def classify_results(eval_case, entries, skip_judge: false)
+      def classify_results(eval_case, entries, skip_judge: false, execution_context: nil)
         entries.map do |entry|
           raw_value = entry.is_a?(Hash) && entry.key?(:raw) ? entry[:raw] : entry
           metadata = entry.is_a?(Hash) ? entry[:metadata] : nil
 
-          classification = classify_result(eval_case, raw_value, skip_judge: skip_judge)
+          classification =
+            classify_result(eval_case, raw_value, skip_judge: skip_judge, execution_context:)
 
           classification[:metadata] = metadata if metadata.present?
 
@@ -297,13 +308,24 @@ module DiscourseAi
         end
       end
 
-      def announce_comparison(recorder, eval_case, candidates, persona_key, aggregate_scores)
+      def announce_comparison(
+        recorder,
+        eval_case,
+        candidates,
+        persona_key,
+        aggregate_scores,
+        execution_context: nil
+      )
         return if candidates.length < 2
 
         mode_label = comparison_mode_label(persona_key, candidates)
 
         if judge_llm.present? || eval_case.judge.present?
-          judged = judge_for(eval_case).compare(candidates.map { |c| c.slice(:label, :output) })
+          judged =
+            judge_for(eval_case).compare(
+              candidates.map { |c| c.slice(:label, :output) },
+              execution_context:,
+            )
           recorder.announce_comparison_judged(
             eval_case_id: eval_case.id,
             mode_label: mode_label,
@@ -449,7 +471,7 @@ module DiscourseAi
         DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm)
       end
 
-      def classify_result(eval_case, result, skip_judge: false)
+      def classify_result(eval_case, result, skip_judge: false, execution_context: nil)
         if eval_case.expected_output
           if result == eval_case.expected_output
             { result: :pass }
@@ -469,7 +491,7 @@ module DiscourseAi
         elsif eval_case.expected_tool_call
           classify_tool_call(eval_case.expected_tool_call, result)
         elsif eval_case.judge && !skip_judge
-          judge_result(eval_case, result)
+          judge_result(eval_case, result, execution_context:)
         else
           { result: :pass }
         end
@@ -503,7 +525,7 @@ module DiscourseAi
         output.puts "\n=== Persona: #{label} ==="
       end
 
-      def judge_result(eval_case, result)
+      def judge_result(eval_case, result, execution_context: nil)
         if judge_llm.nil?
           raise DiscourseAi::Evals::Eval::EvalError.new(
                   "Evaluation '#{eval_case.id}' requires the --judge option to specify an LLM.",
@@ -511,7 +533,10 @@ module DiscourseAi
                 )
         end
 
-        DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm).evaluate(result)
+        DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm).evaluate(
+          result,
+          execution_context:,
+        )
       end
 
       def build_formatter(eval_cases:, llms:, persona_variants:)
@@ -540,7 +565,7 @@ module DiscourseAi
       # @param llm [LlmModel] LLM backing the OCR step.
       # @param path [String] path to the source image used for OCR.
       # @return [String] text extracted from the image.
-      def image_to_text(llm, path:)
+      def image_to_text(llm, path:, execution_context: nil)
         upload =
           UploadCreator.new(File.open(path), File.basename(path)).create_for(
             Discourse.system_user.id,
@@ -548,7 +573,7 @@ module DiscourseAi
 
         text = +""
         DiscourseAi::Utils::ImageToText
-          .new(upload: upload, llm_model: llm, user: Discourse.system_user)
+          .new(upload: upload, llm_model: llm, user: Discourse.system_user, execution_context:)
           .extract_text do |chunk, _error|
             text << chunk if chunk
             text << "\n\n" if chunk
@@ -563,7 +588,7 @@ module DiscourseAi
       # @param llm [LlmModel] LLM passed to PdfToText for OCR guidance.
       # @param path [String] path to the PDF fixture.
       # @return [String] text aggregated across the PDF pages.
-      def pdf_to_text(llm, path:)
+      def pdf_to_text(llm, path:, execution_context: nil)
         upload =
           UploadCreator.new(File.open(path), File.basename(path)).create_for(
             Discourse.system_user.id,
@@ -571,7 +596,7 @@ module DiscourseAi
 
         text = +""
         DiscourseAi::Utils::PdfToText
-          .new(upload: upload, user: Discourse.system_user, llm_model: llm)
+          .new(upload: upload, user: Discourse.system_user, llm_model: llm, execution_context:)
           .extract_text do |chunk|
             text << chunk if chunk
             text << "\n\n" if chunk
@@ -590,7 +615,14 @@ module DiscourseAi
       # @param html_path [String] path to the HTML fixture.
       # @param instructions_path [String] instructions fed to the LLM.
       # @return [Hash] latest artifact snapshot ({ css:, js:, html: }).
-      def edit_artifact(llm, css_path:, js_path:, html_path:, instructions_path:)
+      def edit_artifact(
+        llm,
+        css_path:,
+        js_path:,
+        html_path:,
+        instructions_path:,
+        execution_context: nil
+      )
         css = File.read(css_path)
         js = File.read(js_path)
         html = File.read(html_path)
@@ -614,6 +646,7 @@ module DiscourseAi
             artifact: artifact,
             artifact_version: nil,
             instructions: instructions,
+            execution_context:,
           )
         diff.apply
 

@@ -10,20 +10,22 @@ module DiscourseAi
           feature_name&.start_with?("embeddings:hyde")
         end
 
-        def run(eval_case, llm)
+        def run(eval_case, llm, execution_context:)
           args = normalize_args(eval_case.args)
           case_defs = Array(args.delete(:cases)).presence
 
           if case_defs
-            case_defs.map { |case_args| run_case(args.merge(case_args.symbolize_keys), llm) }
+            case_defs.map do |case_args|
+              run_case(args.merge(case_args.symbolize_keys), llm, execution_context:)
+            end
           else
-            run_case(args, llm)
+            run_case(args, llm, execution_context:)
           end
         end
 
         private
 
-        def run_case(case_args, llm)
+        def run_case(case_args, llm, execution_context:)
           query = case_args[:query].presence || case_args[:input].presence
           raise ArgumentError, "HyDE evals require :query or :input" if query.blank?
 
@@ -39,7 +41,7 @@ module DiscourseAi
             )
 
           bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
-          response = capture_plain_response(bot, context).strip
+          response = capture_plain_response(bot, context, execution_context:).strip
 
           wrap_result(response, { query: query })
         end
