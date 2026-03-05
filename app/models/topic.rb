@@ -1201,7 +1201,7 @@ class Topic < ActiveRecord::Base
       if group_user
         group_user.destroy
         allowed_groups.reload
-        add_small_action(removed_by, "removed_group", group.name)
+        add_small_action(removed_by, "removed_group", group.name, skip_guardian: true)
         return true
       end
     end
