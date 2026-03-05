@@ -62,7 +62,10 @@ export default class BadgeCard extends Component {
 
   <template>
     <div
-      class="badge-card --badge-{{this.size}}"
+      class="badge-card --badge-{{this.size}}{{if
+          @canFavorite
+          ' --can-favorite'
+        }}"
       data-badge-slug={{@badge.slug}}
     >
       <div class="badge-contents">
@@ -124,7 +127,7 @@ export default class BadgeCard extends Component {
           <DButton
             @icon="star"
             @action={{@onFavoriteClick}}
-            class="btn-default favorite-btn"
+            class="btn-default favorite-btn btn-small"
           />
         {{else}}
           <DButton
@@ -136,7 +139,7 @@ export default class BadgeCard extends Component {
               "badges.favorite_max_reached"
             }}
             @disabled={{not @canFavoriteMoreBadges}}
-            class="btn-default favorite-btn"
+            class="btn-default favorite-btn btn-small"
           />
         {{/if}}
       {{/if}}
