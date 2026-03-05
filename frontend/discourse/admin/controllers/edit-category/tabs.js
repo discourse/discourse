@@ -92,23 +92,51 @@ export default class EditCategoryTabsController extends Controller {
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
   get formData() {
-    const simplified = this.siteSettings.enable_simplified_category_creation;
+    const enableSimplifiedCategoryCreation =
+      this.siteSettings.enable_simplified_category_creation;
     const data = getProperties(
       this.model,
-      ...(simplified ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
+      ...(enableSimplifiedCategoryCreation ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
     );
 
-    if (simplified && !this.model.styleType) {
-      data.style_type = "icon";
-    }
+    if (enableSimplifiedCategoryCreation) {
+      if (!this.model.styleType) {
+        data.style_type = "icon";
+      }
 
-    if (simplified) {
       data.required_tag_groups = Array.from(
         data.required_tag_groups ?? [],
         (rtg) => ({ ...rtg })
       );
       data.category_setting = { ...(this.model.category_setting ?? {}) };
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
+
+      Object.entries(data.custom_fields).forEach(([key, value]) => {
+        // Coerce to boolean otherwise FormKit checkboxes do not work correctly.
+        if (value === "true" || value === "false") {
+          data.custom_fields[key] = value === "true";
+        }
+      });
+
+      if (this.siteSettings.enable_category_type_setup) {
+        data.category_type_site_settings = {};
+
+        Object.values(this.model.category_types).forEach((categoryType) => {
+          categoryType.configuration_schema.category_custom_fields?.forEach(
+            (field) => {
+              data.custom_fields[field.key] ??= field.default;
+            }
+          );
+
+          categoryType.configuration_schema.site_settings?.forEach(
+            (setting) => {
+              data.category_type_site_settings[setting.key] = this.model.id
+                ? setting.current
+                : setting.default;
+            }
+          );
+        });
+      }
     }
 
     return data;
@@ -140,9 +168,10 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    if (this.model.category_type_title) {
+    const types = Object.values(this.model.category_types ?? {});
+    if (types.length > 0) {
       return i18n("category.create_with_type", {
-        typeName: this.model.category_type_title,
+        typeName: types[0].name.toLowerCase(),
       });
     }
 

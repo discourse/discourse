@@ -4675,6 +4675,11 @@ en:
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      settings_apply_to_all_of_type_warning: "Changes below will apply to all categories of this type"
+      type_settings_schema:
+        category_settings: "Category settings"
+        category_custom_fields: "Category settings"
+        site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
         requires_plugin: "Requires plugin"
@@ -7976,6 +7981,7 @@ en:
             upcoming_change_available: "upcoming change available"
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
+            configure_category_type: "configure category type"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

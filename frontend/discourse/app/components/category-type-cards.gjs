@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 
@@ -26,8 +27,11 @@ export default class CategoryTypeCards extends Component {
       {{#each @types as |type|}}
         <button
           type="button"
-          class="category-type-cards__card
-            {{unless type.available '--unavailable'}}"
+          class={{concatClass
+            "category-type-cards__card"
+            (unless type.available "--unavailable")
+            (concat "--category-type-" type.id)
+          }}
           disabled={{unless type.available true}}
           {{on "click" (fn this.selectType type)}}
         >

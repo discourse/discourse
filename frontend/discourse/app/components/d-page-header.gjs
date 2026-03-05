@@ -65,7 +65,7 @@ export default class DPageHeader extends Component {
 
   <template>
     {{#if this.shouldDisplay}}
-      <div class="d-page-header">
+      <div class="d-page-header" ...attributes>
         {{#if (has-block "breadcrumbs")}}
           <div class="d-page-header__breadcrumbs">
             <DBreadcrumbsContainer />

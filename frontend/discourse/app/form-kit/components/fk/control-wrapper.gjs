@@ -124,6 +124,7 @@ export default class FKControlWrapper extends Component {
           @categoryId={{@categoryId}}
           @allowCreate={{@allowCreate}}
           @placeholder={{@placeholder}}
+          @hasBlock={{has-block}}
           @onControlWidthChange={{fn (mut this.controlWidth)}}
           id={{@field.id}}
           name={{@field.name}}

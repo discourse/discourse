@@ -20,7 +20,7 @@ export default class EditCategoryTab extends Component {
 
   @computed("tab")
   get tabClassName() {
-    return "edit-category-" + this.tab;
+    return `edit-category-${this.tab}`;
   }
 
   @computed("tab", "tabTitle")

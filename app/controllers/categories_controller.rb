@@ -173,8 +173,17 @@ class CategoriesController < ApplicationController
       @category.move_to(position.to_i) if position
 
       if category_type.present? &&
-           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-        Categories::Configure.call(guardian:, params: { category_id: @category.id, category_type: })
+           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
+           SiteSetting.enable_category_type_setup
+        Categories::Configure.call(
+          guardian:,
+          params: {
+            category_id: @category.id,
+            category_type:,
+            site_setting_configuration_values: params[:category_type_site_settings],
+            category_configuration_values: category_params[:custom_fields],
+          },
+        )
       end
 
       Scheduler::Defer.later "Log staff action create category" do
@@ -199,14 +208,45 @@ class CategoriesController < ApplicationController
       old_custom_fields = cat.custom_fields.dup
       if category_params[:custom_fields]
         category_params[:custom_fields].each do |key, value|
-          if value.present?
-            cat.custom_fields[key] = value
-          else
+          if value.nil? || value == ""
             cat.custom_fields.delete(key)
+          else
+            cat.custom_fields[key] = value
           end
         end
       end
       category_params.delete(:custom_fields)
+
+      if SiteSetting.enable_category_type_setup &&
+           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
+           params[:category_type_site_settings].present?
+        # NOTE: The code in this block is pretty similar to what we are doing in
+        # configure_site_settings in Categories::Types::Base, however here we
+        # need to be able to update site settings across all category types for
+        # the category and it's best to do this in one query rather than
+        # multiple.
+        #
+        # Maybe in future we do something different, but this is a good starting point.
+        category_type_settings =
+          params[:category_type_site_settings].permit!.to_h.map do |name, value|
+            { setting_name: name, value: }
+          end
+
+        # We do this because we want to allow updating hidden settings for the
+        # category type, but not other settings. The configuration schema for a
+        # category type defines which settings it wants to change, so that's a
+        # good source to use as an allowlist here.
+        allowed_setting_names = cat.category_type_site_setting_names
+        SiteSetting::Update.call(
+          guardian:,
+          options: {
+            allow_changing_hidden: allowed_setting_names,
+          },
+          params: {
+            settings: category_type_settings,
+          },
+        )
+      end
 
       # properly null the value so the database constraint doesn't catch us
       category_params[:email_in] = nil if category_params[:email_in]&.blank?

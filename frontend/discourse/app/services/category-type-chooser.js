@@ -23,10 +23,8 @@ export default class CategoryTypeChooser extends Service {
     this._setupComplete = true;
   }
 
-  consume() {
-    const selection = this._selection;
-    this._selection = null;
-    return selection;
+  currentSelection() {
+    return this._selection;
   }
 
   reset() {

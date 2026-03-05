@@ -5,6 +5,7 @@ import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 
 export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";

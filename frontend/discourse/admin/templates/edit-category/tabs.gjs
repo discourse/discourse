@@ -60,7 +60,10 @@ function componentFor(name, useSimplified) {
 export default <template>
   <div class="edit-category {{if @controller.expandedMenu 'expanded-menu'}}">
     {{#if @controller.siteSettings.enable_simplified_category_creation}}
-      <EditCategoryTabsHorizontal @controller={{@controller}} />
+      <EditCategoryTabsHorizontal
+        @controller={{@controller}}
+        class="edit-category-page-header"
+      />
     {{else}}
       <EditCategoryTabsVertical @controller={{@controller}} />
     {{/if}}
@@ -168,7 +171,7 @@ export default <template>
     </Form>
 
     {{#if @controller.siteSettings.enable_simplified_category_creation}}
-      {{#if @controller.isFormDirty}}
+      {{#if (or @controller.model.isNew @controller.isFormDirty)}}
         <ChangesBanner
           @bannerLabel={{i18n "category.unsaved_changes"}}
           @saveLabel={{if

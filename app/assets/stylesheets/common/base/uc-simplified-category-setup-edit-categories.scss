@@ -140,8 +140,11 @@
       border-bottom: 1px solid var(--content-border-color);
     }
 
+    .edit-category-page-header {
+      margin-bottom: 1.5em;
+    }
+
     .edit-category-content {
-      margin-top: 2em;
       grid-area: unset;
     }
   }

@@ -25,12 +25,24 @@ export default class NewCategoryTabs extends DiscourseRoute {
   setupController(controller, model, transition) {
     super.setupController(...arguments);
 
-    const result = this.categoryTypeChooser.consume();
+    // NOTE (martin) This was previously consume() which got rid of the selection
+    // of category type in memory, but model() is called every time the tab is changed
+    // when creating a new category, so we need to keep the selection in memory.
+    //
+    // categoryTypeChooser is reset when leaving the newCategory route anyway.
+    const result = this.categoryTypeChooser.currentSelection();
     if (result) {
-      controller.model.set("category_type", result.type);
-      controller.model.set("category_type_name", result.typeName);
-      controller.model.set("category_type_title", result.typeTitle);
-      controller.model.set("category_type_schema", result.typeSchema);
+      const initialTypes = {};
+      initialTypes[result.type] = {
+        id: result.type,
+        name: result.typeName,
+        configuration_schema: result.typeSchema,
+      };
+      model.set("category_types", initialTypes);
+
+      result.typeSchema.general_category_settings?.forEach((setting) => {
+        model.set(setting.key, setting.default);
+      });
     }
 
     const selectedTab = transition.to.params.tab;

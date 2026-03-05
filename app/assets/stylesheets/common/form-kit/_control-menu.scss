@@ -2,6 +2,7 @@
   justify-content: space-between;
 
   @include default-input;
+  width: auto;
 }
 
 .form-kit__control-menu-content {

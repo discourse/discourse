@@ -41,17 +41,18 @@
 
   .form-kit__container-description {
     margin: 0;
-    font-size: var(--font-down-1-rem);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
 
     pre,
     code {
-      font-size: var(--font-down-2-rem);
+      font-size: var(--font-down-2);
     }
   }
 
   .form-kit__container-help-text {
     margin: 0;
-    font-size: var(--font-down-1-rem);
+    font-size: var(--font-down-1);
     color: var(--primary-high-or-secondary-low);
   }
 

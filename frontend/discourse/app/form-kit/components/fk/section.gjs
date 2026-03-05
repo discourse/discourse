@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { modifier as modifierFn } from "ember-modifier";
-import { or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { or } from "discourse/truth-helpers/index";
 
 export default class FKSection extends Component {
   sizeSection = modifierFn((element, [floating]) => {

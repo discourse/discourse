@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  padding-bottom: 1.5rem;
 
   &.form-kit__actions {
     align-items: center;
@@ -22,6 +23,36 @@
   color: var(--primary-very-high);
 }
 
+.form-kit__section-header {
+  border-bottom: 1px solid var(--content-border-color);
+  padding-bottom: 0.5em;
+}
+
 .form-kit__section-subtitle {
   margin-top: calc(var(--space-4) * -1); // Offset the gap of the section
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.form-kit__section.emphasis {
+  border: 2px solid var(--tertiary);
+  border-radius: var(--d-border-radius);
+  padding: 1em;
+  box-sizing: border-box;
+
+  &.emphasis-success {
+    border-color: var(--success-medium);
+  }
+
+  &.emphasis-error {
+    border-color: var(--danger-medium);
+  }
+
+  &.emphasis-warning {
+    border-color: var(--highlight);
+  }
+
+  &.emphasis-info {
+    border-color: var(--tertiary-medium);
+  }
 }

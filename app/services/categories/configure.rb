@@ -7,7 +7,8 @@ module Categories
     params do
       attribute :category_id, :integer
       attribute :category_type, :string
-      attribute :configuration_values
+      attribute :category_configuration_values
+      attribute :site_setting_configuration_values
 
       validates :category_id, presence: true
       validates :category_type, presence: true
@@ -51,17 +52,19 @@ module Categories
       type_class.enable_plugin
     end
 
-    def configure_site_settings(type_class:, category:, params:)
+    def configure_site_settings(type_class:, category:, guardian:, params:)
       type_class.configure_site_settings(
         category,
-        configuration_values: params.configuration_values || {},
+        guardian:,
+        configuration_values: params.site_setting_configuration_values || {},
       )
     end
 
-    def configure_category(type_class:, category:, params:)
+    def configure_category(type_class:, category:, guardian:, params:)
       type_class.configure_category(
         category,
-        configuration_values: params.configuration_values || {},
+        guardian:,
+        configuration_values: params.category_configuration_values || {},
       )
     end
 

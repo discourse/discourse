@@ -537,15 +537,14 @@ export default class UpsertCategoryGeneral extends Component {
                   @onChange={{this.onChangeAccessGroups}}
                   @options={{hash disabled=this.isParentRestricted}}
                 />
+                {{! template-lint-disable no-invalid-interactive }}
+                <span
+                  class="category-permission-hint"
+                  {{on "click" this.goToSecurityTab}}
+                >
+                  {{this.permissionHint}}
+                </span>
               </@form.Container>
-
-              {{! template-lint-disable no-invalid-interactive }}
-              <span
-                class="category-permission-hint"
-                {{on "click" this.goToSecurityTab}}
-              >
-                {{this.permissionHint}}
-              </span>
             </Content>
           </cc.Contents>
         </@form.ConditionalContent>

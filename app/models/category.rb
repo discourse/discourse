@@ -312,6 +312,25 @@ class Category < ActiveRecord::Base
     Category.reset_topic_ids_cache
   end
 
+  def category_types
+    return {} if !SiteSetting.enable_simplified_category_creation
+    Categories::TypeRegistry
+      .all
+      .values
+      .each_with_object({}) do |type_klass, result|
+        result[type_klass.type_id] = type_klass.metadata if type_klass.category_matches?(self)
+      end
+  end
+
+  def category_type_site_setting_names
+    category_types
+      .values
+      .filter_map { |type_metadata| type_metadata.dig(:configuration_schema, :site_settings) }
+      .flatten(1)
+      .map { |setting| setting[:key].to_sym }
+      .uniq
+  end
+
   # Accepts an array of slugs with each item in the array
   # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
   # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
