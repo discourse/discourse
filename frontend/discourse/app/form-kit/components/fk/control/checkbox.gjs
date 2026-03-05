@@ -2,10 +2,9 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FKLabel from "discourse/form-kit/components/fk/label";
-import FKOptional from "discourse/form-kit/components/fk/optional";
+import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import { eq, or } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
 
 export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";
@@ -29,12 +28,8 @@ export default class FKControlCheckbox extends Component {
         <span class="form-kit__control-checkbox-title">
           <span>{{@field.title}}</span>
 
-          {{#if @showRequiredLabel}}
-            <span class="form-kit__container-required">({{i18n
-                "form_kit.required"
-              }})</span>
-          {{else}}
-            <FKOptional @field={{@field}} />
+          {{#if @field.required}}
+            <FKRequired @field={{@field}} />
           {{/if}}
           <FKTooltip @field={{@field}} />
         </span>
