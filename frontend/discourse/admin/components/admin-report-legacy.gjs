@@ -35,7 +35,7 @@ import { i18n } from "discourse-i18n";
                 @titleUrl={{@report.model.reportUrl}}
                 @descriptionLabel={{unless
                   @report.showDescriptionInTooltip
-                  @report.description
+                  @report.model.description
                 }}
                 @learnMoreUrl={{@report.model.description_link}}
               />

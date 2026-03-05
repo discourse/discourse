@@ -182,12 +182,6 @@ export default class AdminReport extends Component {
     );
   }
 
-  get description() {
-    if (!this.siteSettings.reporting_improvements) {
-      return this.model.description;
-    }
-  }
-
   @action
   changeGrouping(grouping) {
     this.refreshReport({ chartGrouping: grouping });

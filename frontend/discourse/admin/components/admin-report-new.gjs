@@ -33,10 +33,6 @@ import { i18n } from "discourse-i18n";
               <DPageSubheader
                 @titleLabel={{@report.model.title}}
                 @titleUrl={{@report.model.reportUrl}}
-                @descriptionLabel={{unless
-                  @report.showDescriptionInTooltip
-                  @report.description
-                }}
                 @learnMoreUrl={{@report.model.description_link}}
               />
 
