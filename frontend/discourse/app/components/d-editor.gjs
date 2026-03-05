@@ -16,6 +16,7 @@ import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
+import ToolbarScrollContainer from "discourse/components/composer/toolbar-scroll-container";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
@@ -783,7 +784,7 @@ export default class DEditor extends Component {
         >
 
           {{#if this.replacedToolbarInstance}}
-            <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
+            <ToolbarScrollContainer @class="--replaced-toolbar">
               <DButton
                 @action={{this.resetToolbar}}
                 @icon="angle-left"
@@ -796,9 +797,9 @@ export default class DEditor extends Component {
                 @rovingButtonBar={{this.rovingButtonBar}}
                 @isFirst={{false}}
               />
-            </div>
+            </ToolbarScrollContainer>
           {{else}}
-            <div class="d-editor-button-bar" role="toolbar">
+            <ToolbarScrollContainer>
               {{#if this.showEditorModeToggle}}
                 <ToggleSwitch
                   @preventFocus={{true}}
@@ -814,7 +815,7 @@ export default class DEditor extends Component {
                 @rovingButtonBar={{this.rovingButtonBar}}
                 @isFirst={{not this.siteSettings.rich_editor}}
               />
-            </div>
+            </ToolbarScrollContainer>
           {{/if}}
 
           <ConditionalLoadingSpinner @condition={{this.loading}} />

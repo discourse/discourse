@@ -4312,6 +4312,9 @@ experimental:
       status: "experimental"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
+  experimental_topic_category_change_notification:
+    default: false
+    hidden: true
   enable_category_type_setup:
     default: false
     hidden: true

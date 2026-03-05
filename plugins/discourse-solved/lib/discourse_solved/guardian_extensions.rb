@@ -46,5 +46,9 @@ module DiscourseSolved
 
       topic.user_id == current_user.id && !topic.closed && SiteSetting.accept_solutions_topic_author
     end
+
+    def can_unaccept_answer?(topic, post)
+      can_accept_answer?(topic, post) || (is_staff? && topic.solved.present?)
+    end
   end
 end

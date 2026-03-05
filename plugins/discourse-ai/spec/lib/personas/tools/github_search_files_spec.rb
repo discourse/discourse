@@ -36,8 +36,8 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubSearchFiles do
         status: 200,
         body: {
           tree: [
-            { path: "lib/modules/ai_bot/tools/github_search_code.rb", type: "blob" },
-            { path: "lib/modules/ai_bot/tools/github_file_content.rb", type: "blob" },
+            { path: "lib/modules/ai_bot/tools/github_search_code.rb", type: "blob", size: 8_432 },
+            { path: "lib/modules/ai_bot/tools/github_file_content.rb", type: "blob", size: 5_210 },
           ],
         }.to_json,
       )
@@ -45,15 +45,13 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubSearchFiles do
 
     it "retrieves files matching the specified keywords" do
       result = tool.invoke
-      expected = {
-        branch: "main",
-        matching_files: %w[
-          lib/modules/ai_bot/tools/github_search_code.rb
-          lib/modules/ai_bot/tools/github_file_content.rb
+      expect(result[:branch]).to eq("main")
+      expect(result[:matching_files]).to eq(
+        [
+          { path: "lib/modules/ai_bot/tools/github_search_code.rb", size: 8_432 },
+          { path: "lib/modules/ai_bot/tools/github_file_content.rb", size: 5_210 },
         ],
-      }
-
-      expect(result).to eq(expected)
+      )
     end
 
     it "handles missing branches gracefully" do
@@ -80,7 +78,8 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubSearchFiles do
 
     it "fetches the default branch if none is specified" do
       result = tool.invoke
-      expect(result[:matching_files]).to match_array(
+      files = result[:matching_files].map { |f| f[:path] }
+      expect(files).to match_array(
         %w[
           lib/modules/ai_bot/tools/github_search_code.rb
           lib/modules/ai_bot/tools/github_file_content.rb
@@ -91,13 +90,13 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubSearchFiles do
 
     it "limits results to MAX_FILE_SEARCH_RESULTS and adds a note when limit is reached" do
       max_results = described_class::MAX_FILE_SEARCH_RESULTS
-      matching_files = (1..max_results + 1).map { |i| "lib/tools/search_tool_#{i}.rb" }
+      file_paths = (1..max_results + 1).map { |i| "lib/tools/search_tool_#{i}.rb" }
       stub_request(
         :get,
         "https://api.github.com/repos/discourse/discourse-ai/git/trees/#{default_branch}?recursive=1",
       ).to_return(
         status: 200,
-        body: { tree: matching_files.map { |path| { path: path, type: "blob" } } }.to_json,
+        body: { tree: file_paths.map { |path| { path: path, type: "blob", size: 1000 } } }.to_json,
       )
 
       result = tool.invoke

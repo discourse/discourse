@@ -1332,6 +1332,96 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
   end
 
+  describe "custom tool system message injection" do
+    let!(:custom_tool) do
+      AiTool.create!(
+        name: "system_msg_tool",
+        tool_name: "system_msg_tool",
+        summary: "tool with custom system message",
+        description: "A test custom tool that injects into system prompt",
+        parameters: [{ name: "query", type: "string", description: "Input" }],
+        script: <<~JS,
+          function invoke(params) {
+            return 'Tool result: ' + params.query;
+          }
+
+          function customSystemMessage() {
+            return "You must always respond in haiku format.";
+          }
+        JS
+        created_by: user,
+      )
+    end
+
+    let!(:ai_persona) { Fabricate(:ai_persona, tools: ["custom-#{custom_tool.id}"]) }
+    let(:bot) { DiscourseAi::Personas::Bot.as(bot_user, persona: ai_persona.class_instance.new) }
+    let(:playground) { DiscourseAi::AiBot::Playground.new(bot) }
+
+    it "injects custom system message into the system prompt" do
+      prompts = nil
+      response = "I received the system instructions"
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([response]) do |_, _, _prompts|
+        new_post = Fabricate(:post, raw: "Hello bot")
+        playground.reply_to(new_post)
+        prompts = _prompts
+      end
+
+      system_message = prompts[0].messages.first
+      expect(system_message[:type]).to eq(:system)
+      expect(system_message[:content]).to include("You must always respond in haiku format.")
+    end
+  end
+
+  describe "custom tool with both context and system message hooks" do
+    let!(:custom_tool) do
+      AiTool.create!(
+        name: "dual_hook_tool",
+        tool_name: "dual_hook_tool",
+        summary: "tool with both hooks",
+        description: "A test custom tool with both customContext and customSystemMessage",
+        parameters: [{ name: "query", type: "string", description: "Input" }],
+        script: <<~JS,
+          function invoke(params) {
+            return 'result';
+          }
+
+          function customContext() {
+            return "Context from the tool";
+          }
+
+          function customSystemMessage() {
+            return "System instructions from the tool";
+          }
+        JS
+        created_by: user,
+      )
+    end
+
+    let!(:ai_persona) { Fabricate(:ai_persona, tools: ["custom-#{custom_tool.id}"]) }
+    let(:bot) { DiscourseAi::Personas::Bot.as(bot_user, persona: ai_persona.class_instance.new) }
+    let(:playground) { DiscourseAi::AiBot::Playground.new(bot) }
+
+    it "injects both hooks into the correct prompt locations" do
+      prompts = nil
+      response = "I received both injections"
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([response]) do |_, _, _prompts|
+        new_post = Fabricate(:post, raw: "Hello bot")
+        playground.reply_to(new_post)
+        prompts = _prompts
+      end
+
+      system_message = prompts[0].messages.first
+      expect(system_message[:type]).to eq(:system)
+      expect(system_message[:content]).to include("System instructions from the tool")
+
+      user_message = prompts[0].messages.last
+      expect(user_message[:content]).to include("Context from the tool")
+      expect(user_message[:content]).to include("Hello bot")
+    end
+  end
+
   it "does not raise 'can't modify frozen attributes' when retrying a reply with thinking" do
     thinking_progress =
       DiscourseAi::Completions::Thinking.new(message: "I should say hello", partial: true)
