@@ -31,7 +31,7 @@ export function resetRemovedChatComposerSecondaryActions() {
   removedSecondaryActions.clear();
 }
 
-export default class ChatemojiReactions {
+export default class ChatMessageInteractor {
   @service appEvents;
   @service chat;
   @service chatChannelComposer;

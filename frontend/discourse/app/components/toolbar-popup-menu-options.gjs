@@ -13,7 +13,7 @@ import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
-export default class ToolbarPopupmenuOptions extends Component {
+export default class ToolbarPopupMenuOptions extends Component {
   @service capabilities;
 
   willDestroy() {
