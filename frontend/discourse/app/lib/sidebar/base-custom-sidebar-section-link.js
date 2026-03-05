@@ -150,6 +150,10 @@ export default class BaseCustomSidebarSectionLink {
    */
   get hoverTitle() {}
 
+  get keywords() {
+    return { navigation: [] };
+  }
+
   _notImplemented() {
     throw "not implemented";
   }
