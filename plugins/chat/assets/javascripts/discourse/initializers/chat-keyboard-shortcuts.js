@@ -131,6 +131,16 @@ export default {
         chatThreadListPane.close();
         return;
       }
+
+      if (chatStateManager.isPinnedMessagesPaneOpen) {
+        event.preventDefault();
+        event.stopPropagation();
+        router.transitionTo(
+          "chat.channel",
+          ...chatService.activeChannel.routeModels
+        );
+        return;
+      }
     };
 
     const markAllChannelsRead = (event) => {
