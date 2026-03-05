@@ -18,6 +18,7 @@ const {
   CustomizeChunkUrlPlugin,
 } = require("./lib/webpack-customize-chunk-url-plugin");
 const { BroccoliMergeFiles } = require("broccoli-merge-files");
+const { mkdirSync } = require("fs");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -49,6 +50,9 @@ function compatModulesFor(name) {
 
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../..");
+  mkdirSync(path.join(discourseRoot, "app/assets/generated"), {
+    recursive: true,
+  });
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   DeprecationSilencer.silence(console, "warn");
@@ -107,7 +111,7 @@ module.exports = function (defaults) {
           compatModulesFor("dialog-holder"),
         ]),
         {
-          watching: ["../discourse-markdown-it"],
+          watching: ["../discourse-markdown-it", "../../app/assets/generated"],
         }
       ),
     },
