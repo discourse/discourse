@@ -33,11 +33,11 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
-      - name: Generate type definitions
-        run: pnpm lint:types
-
       - name: Generate external type definitions
         run: pnpm types:generate
+
+      - name: Generate type definitions
+        run: pnpm lint:types
 
       - name: Prepare version
         shell: bash
