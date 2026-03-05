@@ -6,7 +6,7 @@ SystemThemesManager.sync!
 
 # we can not guess what to do if customization already started, so skip it
 if !theme_exists
-  STDERR.puts "> Seeding theme and color schemes"
+  $stdout.puts "Seeding theme and color schemes"
 
   color_schemes = [
     { name: I18n.t("color_schemes.dark"), base_scheme_name: "Dark" },
