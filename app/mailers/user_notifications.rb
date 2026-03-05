@@ -251,7 +251,9 @@ class UserNotifications < ActionMailer::Base
 
   def digest(user, opts = {})
     build_summary_for(user)
-    @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
+    if !opts[:skip_unsubscribe_links]
+      @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
+    end
 
     @since = opts[:since].presence
     @since ||= [user.last_seen_at, user.user_stat&.digest_attempted_at, 1.month.ago].compact.max
@@ -371,7 +373,7 @@ class UserNotifications < ActionMailer::Base
             email_prefix: @email_prefix,
             date: short_date(Time.now),
           ),
-        add_unsubscribe_link: true,
+        add_unsubscribe_link: !opts[:skip_unsubscribe_links],
         unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
         topic_ids: topics_for_digest.pluck(:id),
         post_ids:
