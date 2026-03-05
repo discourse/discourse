@@ -286,10 +286,6 @@ module TopicGuardian
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
-  def can_get_access_to_topic?(topic)
-    topic&.access_topic_via_group.present? && authenticated?
-  end
-
   def filter_allowed_categories(records, category_id_column: "topics.category_id")
     return records if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
 
