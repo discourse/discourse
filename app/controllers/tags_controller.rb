@@ -447,7 +447,7 @@ class TagsController < ::ApplicationController
   end
 
   def create_synonyms
-    guardian.ensure_can_edit_tag!
+    guardian.ensure_can_edit_tag!(@tag)
     value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
     if value.is_a?(Array)
       render json:
