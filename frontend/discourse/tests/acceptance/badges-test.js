@@ -11,6 +11,9 @@ acceptance("Badges", function (needs) {
 
     assert.dom(document.body).hasClass("badges-page", "has body class");
     assert.dom(".badge-groups .badge-card").exists("has a list of badges");
+    assert
+      .dom(".badge-grouping h2#getting-started")
+      .exists("badge grouping titles have slugified ids");
 
     await visit("/badges/9/autobiographer");
 
