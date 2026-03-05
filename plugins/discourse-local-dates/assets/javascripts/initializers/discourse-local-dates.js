@@ -108,7 +108,7 @@ function buildOptionsFromMarkdownTag(element) {
   const opts = {};
 
   // siteSettings defaults as used by buildOptionsFromElement are purposefully
-  // ommitted to reproduce exactly what was on the original element
+  // omitted to reproduce exactly what was on the original element
   opts.time = element.attributes["data-time"];
   opts.date = element.attributes["data-date"];
   opts.recurring = element.attributes["data-recurring"];
