@@ -111,13 +111,6 @@ export default class EditCategoryTabsController extends Controller {
       data.category_setting = { ...(this.model.category_setting ?? {}) };
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
 
-      Object.entries(data.custom_fields).forEach(([key, value]) => {
-        // Coerce to boolean otherwise FormKit checkboxes do not work correctly.
-        if (value === "true" || value === "false") {
-          data.custom_fields[key] = value === "true";
-        }
-      });
-
       if (this.siteSettings.enable_category_type_setup) {
         data.category_type_site_settings = {};
 

@@ -35,6 +35,31 @@ module(
       assert.deepEqual(data, { foo: true });
     });
 
+    test("when value is string 'false'", async function (assert) {
+      let data = { foo: "false" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.form().field("foo").hasValue(false);
+
+      await formKit().field("foo").toggle();
+
+      assert.form().field("foo").hasValue(true);
+
+      await formKit().submit();
+
+      assert.deepEqual(data, { foo: true });
+    });
+
     test("when disabled", async function (assert) {
       await render(
         <template>
@@ -77,6 +102,31 @@ module(
       );
 
       assert.form().field("foo").hasTitle("Foo (optional)");
+    });
+
+    test("when value is string 'true'", async function (assert) {
+      let data = { foo: "true" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.form().field("foo").hasValue(true);
+
+      await formKit().field("foo").toggle();
+
+      assert.form().field("foo").hasValue(false);
+
+      await formKit().submit();
+
+      assert.deepEqual(data, { foo: false });
     });
 
     test("required", async function (assert) {
