@@ -138,7 +138,7 @@ RSpec.describe Themes::ThemeSiteSettingManager do
       end
     end
 
-    context "when removing a theme site setting by ommitting the value" do
+    context "when removing a theme site setting by omitting the value" do
       let!(:theme_site_setting) do
         Fabricate(
           :theme_site_setting_with_service,
