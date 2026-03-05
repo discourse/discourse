@@ -607,7 +607,8 @@ RSpec.describe CategoriesController do
               {
                 "discussion" => {
                   "available" => true,
-                  "configuration_schema" => [],
+                  "configuration_schema" => {
+                  },
                   "description" => I18n.t("category_types.discussion.description"),
                   "icon" => "memo",
                   "id" => "discussion",
