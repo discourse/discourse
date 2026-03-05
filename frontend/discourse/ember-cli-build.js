@@ -107,7 +107,7 @@ module.exports = function (defaults) {
           compatModulesFor("dialog-holder"),
         ]),
         {
-          watching: ["../discourse-markdown-it"],
+          watching: ["../discourse-markdown-it", "../../app/assets/generated"],
         }
       ),
     },
