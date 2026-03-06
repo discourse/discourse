@@ -22,7 +22,7 @@ RSpec.describe "Chat message codeblock", type: :system do
       )
 
       expect(page).to have_selector(".chat-message .codeblock-buttons")
-      expect(page).to have_selector(".chat-message .codeblock-buttons .copy-cmd")
+      expect(page).to have_selector(".chat-message .codeblock-buttons .codeblock-button-wrapper")
     end
   end
 
@@ -35,7 +35,7 @@ RSpec.describe "Chat message codeblock", type: :system do
       )
 
       expect(page).to have_selector(".chat-message pre code")
-      expect(page).not_to have_selector(".chat-message .codeblock-buttons .copy-cmd")
+      expect(page).not_to have_selector(".chat-message .codeblock-buttons .codeblock-button-wrapper")
     end
   end
 end
