@@ -22,6 +22,7 @@ class UserApiKeysController < ApplicationController
     find_client
     require_client_params
     validate_params
+    validate_auth_redirect
 
     unless current_user
       cookies[:destination_url] = request.fullpath
