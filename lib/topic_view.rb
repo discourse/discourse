@@ -45,6 +45,7 @@ class TopicView
     :personal_message,
     :can_review_topic,
     :page,
+    :skip_post_loading,
   )
   alias queued_posts_enabled? queued_posts_enabled
 
