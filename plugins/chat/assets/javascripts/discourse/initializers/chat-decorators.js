@@ -6,6 +6,7 @@ import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import CodeblockButtons from "discourse/lib/codeblock-buttons";
 
 export default {
   name: "chat-decorators",
@@ -69,6 +70,25 @@ export default {
     });
     api.decorateChatMessage((element) => decorateHashtags(element, site), {
       id: "hashtagIcons",
+    });
+    
+    api.decorateChatMessage((element) => {
+      if (!siteSettings.chat_show_copy_button_on_codeblocks) {
+        return;
+      }
+      if (!element.querySelector("pre > code")) {
+        return;
+      }
+      const cb = new CodeblockButtons({
+        site,
+        showFullscreen: true,
+        showCopy: true,
+      });
+      cb.attachToGeneric(element);
+
+      return cb.cleanup;
+    }, {
+      id: "codeblockButtons",
     });
   },
 
