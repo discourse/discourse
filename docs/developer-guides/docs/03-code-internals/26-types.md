@@ -14,13 +14,11 @@ Much of this will be automatically consumed by IDEs with TypeScript/JavaScript s
 
 - **VSCode**: Install the [Glint v2](https://marketplace.visualstudio.com/items?itemName=typed-ember.glint2-vscode) extension. This is part of our [recommended config](https://github.com/discourse/discourse/blob/main/.vscode/extensions.json), so you may already have it. If anything isn't working, you may need to trigger "Restart extension host" from VSCode's command palette, or restart the IDE.
 
-- **JetBrains** (RubyMine, Webstorm, Intellij, etc.): Install the [EmberExperimental](https://plugins.jetbrains.com/plugin/15499-emberexperimental-js) plugin.
+- **JetBrains** (RubyMine, WebStorm, Intellij, etc.): Install the [EmberExperimental](https://plugins.jetbrains.com/plugin/15499-emberexperimental-js) plugin.
 
 ## Troubleshooting
 
-1. Ensure that you've run `pnpm install` recently
-
-2. For functionality in core plugins, make sure that you're running `pnpm ember-tsc -b --watch` while working on Discourse core. This is automatically started when you use our recommended `bin/ember-cli -u` entrypoint.
+Ensure that you've run `pnpm install` recently
 
 ## Enabling for a theme or plugin
 

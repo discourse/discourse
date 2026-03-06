@@ -32,6 +32,7 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
+    "postinstall": "if [ -z \"$CI\" ] && [ \"$RAILS_ENV\" != \"production\" ]; then pnpm types:generate && pnpm lint:types; fi",
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
@@ -44,6 +45,8 @@
     "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs}') 'themes/**/*.{js,gjs,scss}'",
     "lint:prettier:fix": "pnpm prettier -w --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs}') 'themes/**/*.{js,gjs,scss}'",
     "lint:types": "ember-tsc -b",
+    "types:generate": "pnpm --dir=frontend/discourse-i18n ember-tsc && pnpm --dir=frontend/discourse-types generate-external",
+    "types:watch": "pnpm types:generate && pnpm ember-tsc -b --watch --preserveWatchOutput",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
