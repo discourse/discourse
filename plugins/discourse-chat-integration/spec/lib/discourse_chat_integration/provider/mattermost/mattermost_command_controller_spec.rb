@@ -130,4 +130,20 @@ describe "Mattermost Command Controller", type: :request do
       end
     end
   end
+
+  describe "method visibility" do
+    it "marks process_command as private" do
+      controller =
+        DiscourseChatIntegration::Provider::MattermostProvider::MattermostCommandController
+      expect(controller.private_method_defined?(:process_command)).to eq(true)
+      expect(controller.public_method_defined?(:process_command)).to eq(false)
+    end
+
+    it "marks mattermost_token_valid? as private" do
+      controller =
+        DiscourseChatIntegration::Provider::MattermostProvider::MattermostCommandController
+      expect(controller.private_method_defined?(:mattermost_token_valid?)).to eq(true)
+      expect(controller.public_method_defined?(:mattermost_token_valid?)).to eq(false)
+    end
+  end
 end
