@@ -358,7 +358,7 @@ RSpec.describe TagGroupsController do
     end
 
     it "returns an error when updating with a duplicate name" do
-      other_tag_group = Fabricate(:tag_group, name: "existing_name")
+      Fabricate(:tag_group, name: "existing_name")
       original_name = tag_group.name
 
       put "/tag_groups/#{tag_group.id}.json", params: { tag_group: { name: "existing_name" } }
