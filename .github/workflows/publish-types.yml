@@ -51,4 +51,4 @@ jobs:
 
       - name: Publish the package
         working-directory: frontend/discourse-types
-        run: pnpm publish --no-git-checks --dry-run
+        run: pnpm publish --no-git-checks
