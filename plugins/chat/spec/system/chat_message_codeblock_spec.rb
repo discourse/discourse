@@ -17,7 +17,9 @@ RSpec.describe "Chat message codeblock", type: :system do
     it "renders the codeblock and shows the copy button" do
       SiteSetting.chat_show_copy_button_on_codeblocks = true
       chat_page.visit_channel(channel_1)
-      channel_page.send_message("Here is some code:\n```ruby\ndef hello\n  puts 'Hello, world!'\nend\n```")
+      channel_page.send_message(
+        "Here is some code:\n```ruby\ndef hello\n  puts 'Hello, world!'\nend\n```",
+      )
 
       expect(page).to have_selector(".chat-message .codeblock-buttons")
       expect(page).to have_selector(".chat-message .codeblock-buttons .copy-cmd")
@@ -28,7 +30,9 @@ RSpec.describe "Chat message codeblock", type: :system do
     it "renders the codeblock but does not show the copy button" do
       SiteSetting.chat_show_copy_button_on_codeblocks = false
       chat_page.visit_channel(channel_1)
-      channel_page.send_message("Here is some code:\n```ruby\ndef hello\n  puts 'Hello, world!'\nend\n```")
+      channel_page.send_message(
+        "Here is some code:\n```ruby\ndef hello\n  puts 'Hello, world!'\nend\n```",
+      )
 
       expect(page).to have_selector(".chat-message pre code")
       expect(page).not_to have_selector(".chat-message .codeblock-buttons .copy-cmd")
