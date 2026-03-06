@@ -21,13 +21,13 @@ end
 #
 # Table name: ai_moderation_settings
 #
-#  id            :bigint           not null, primary key
-#  setting_type  :enum             not null
-#  data          :jsonb
-#  llm_model_id  :bigint           not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  ai_agent_id   :bigint           default(-31), not null
+#  id           :bigint           not null, primary key
+#  data         :jsonb
+#  setting_type :enum             not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  ai_agent_id  :bigint           default(-31), not null
+#  llm_model_id :bigint           not null
 #
 # Indexes
 #
