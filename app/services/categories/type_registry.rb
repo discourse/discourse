@@ -38,6 +38,34 @@ module Categories
         @owners = nil
       end
 
+      # Returns all the category type counts in a hash with the type
+      # and count like this:
+      #
+      # {
+      #   discussion: 10,
+      #   support: 5,
+      # }
+      #
+      # Relies on the find_matches method overriden by each category type
+      # to return an AR relation that will be used to count the categories.
+      def counts
+        type_list = types.values
+        return {} if type_list.empty?
+
+        # We want to get all the counts in a single query to avoid N1
+        conn = Category.connection
+        select_parts =
+          type_list.map do |type|
+            subquery_sql = type.find_matches.select("COUNT(*)").to_sql
+            alias_name = conn.quote_column_name(type.type_id.to_s)
+            "(#{subquery_sql}) AS #{alias_name}"
+          end
+        result = conn.select_one("SELECT #{select_parts.join(", ")}")
+        type_list.each_with_object({}) do |type, counts|
+          counts[type.type_id] = (result[type.type_id.to_s] || 0).to_i
+        end
+      end
+
       private
 
       def types

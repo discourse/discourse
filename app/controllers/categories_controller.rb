@@ -129,7 +129,13 @@ class CategoriesController < ApplicationController
 
   def types
     guardian.ensure_can_create_category!
-    render json: { types: Categories::TypeRegistry.list }
+
+    counts_by_type =
+      Discourse
+        .cache
+        .fetch("category_type_counts", expires_in: 1.hour) { Categories::TypeRegistry.counts }
+
+    render json: { types: Categories::TypeRegistry.list, counts: counts_by_type }
   end
 
   def show
@@ -184,6 +190,7 @@ class CategoriesController < ApplicationController
             category_configuration_values: category_params[:custom_fields],
           },
         )
+        Discourse.cache.delete("category_type_counts")
       end
 
       Scheduler::Defer.later "Log staff action create category" do
