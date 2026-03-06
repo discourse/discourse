@@ -227,12 +227,12 @@ export default class ComposerTitle extends Component {
     );
   }
 
-  @discourseComputed(
-    "composer.categoryTitlePlaceholder",
-    "composer.titlePlaceholder"
-  )
-  titleAriaLabel(categoryTitlePlaceholder, titlePlaceholder) {
-    return categoryTitlePlaceholder || i18n(titlePlaceholder);
+  @computed("composer.categoryTitlePlaceholder", "composer.titlePlaceholder")
+  get titleAriaLabel() {
+    return (
+      this.composer.categoryTitlePlaceholder ||
+      i18n(this.composer.titlePlaceholder)
+    );
   }
 
   bodyIsDefault() {
