@@ -4646,8 +4646,8 @@ en:
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
-      topic_title_placeholder: "Topic Title Placeholder"
-      topic_title_placeholder_placeholder: "Placeholder text for the topic title field in this category"
+      topic_title_placeholder: "Category topic title placeholder"
+      topic_title_placeholder_placeholder: "[optional] custom topic title placeholder for this category"
       tags: "Tags"
       localizations: "Localizations"
       localization:
