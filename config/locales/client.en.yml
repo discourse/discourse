@@ -4650,6 +4650,8 @@ en:
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
+      topic_title_placeholder: "Topic Title Placeholder"
+      topic_title_placeholder_placeholder: "Placeholder text for the topic title field in this category"
       tags: "Tags"
       localizations: "Localizations"
       localization:
