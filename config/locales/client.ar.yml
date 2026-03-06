@@ -9,9 +9,19 @@ ar:
     blocks:
       ghost:
         status: "الحالة"
+        conditions: "الشروط"
+        arguments: "الوسيطات"
+        container_args: "وسيطات الحاوية"
         in_location: "في"
         hidden: "مخفي"
+        not_registered: "غير مسجل"
+        no_visible_children: "لا توجد تبعيات ظاهرة"
         failed: "فشل"
+      ghost_reasons:
+        optional_missing_hint: "لا يتم عرض هذه الكتلة الاختيارية لأنها غير مسجلة."
+        no_visible_children_hint: "لا يتم عرض كتلة الحاوية هذه لأنه لا توجد أي تبعيات ظاهرة."
+        condition_failed_hint: "لا يتم عرض هذه الكتلة نظرًا لإخفاق شروطها."
+        head_hidden_tail_hint: "لا يتم عرض هذه الكتلة لأنه يجري عرض كتلة أخرى أولًا في الحاوية `head`."
     carousel:
       go_to_slide: "الانتقال إلى الشريحة %{index}"
       previous: "الشريحة السابقة"
