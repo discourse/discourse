@@ -820,7 +820,7 @@ de:
   category_types:
     discussion:
       name: "Diskussion"
-      title: "diskussion"
+      title: "Diskussion"
   trust_levels:
     admin: "Administrator"
     staff: "Team"
@@ -1232,9 +1232,10 @@ de:
       description: "Liste der Meldungszustände einschließlich Art der Meldung, Beitragsersteller, Meldungsersteller und Zeit bis zur Lösung."
     visits:
       title: "Benutzerbesuche"
-      xaxis: "Tag"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobil"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl der Besuche von angemeldeten Benutzern."
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
@@ -1298,10 +1299,8 @@ de:
       description: "Seitenaufrufe für angemeldete Benutzer, anonyme Benutzer, bekannte Crawler und anderen Traffic."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "TAB/MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
-      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 20 % oder mehr."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"

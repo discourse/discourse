@@ -1873,6 +1873,7 @@ sv:
     form_kit:
       reset: Återställ
       optional: valfritt
+      required: krävs
       errors:
         required: "Krävs"
         invalid_url: "Måste vara en giltig URL"
@@ -4602,7 +4603,7 @@ sv:
           all: "Alla"
           view_table: "tabell"
           view_graph: "graf"
-          refresh_report: "Uppdatera rapport"
+          refresh_report: "Uppdatera"
           daily: Dagligen
           monthly: Månadsvis
           weekly: Veckovis

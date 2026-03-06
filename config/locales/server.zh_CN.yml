@@ -60,8 +60,8 @@ zh_CN:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
-    too_many_urls: "单次请求中无法将超过 10 个 URL 转换为内联单选框。"
-    concurrency_not_allowed: "不允许同时请求将 URL 转换为内联单选框。请一次只发送一个请求。"
+    too_many_urls: "单次请求中无法将超过 10 个 URL 转换为行内 Onebox。"
+    concurrency_not_allowed: "不允许并发请求将 URL 转换为行内 Onebox。每次请只发送一个请求。"
   components:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"
@@ -767,6 +767,7 @@ zh_CN:
       topic_exists_no_oldest: "无法删除此类别，因为话题数量为 %{count}。"
     uncategorized_description: "不需要类别或不适合任何其他现有类别的话题。"
   category_types:
+    not_available: "类别类型 '%{type_name}' 不可用"
     discussion:
       name: "讨论"
       title: "讨论"
@@ -1156,9 +1157,10 @@ zh_CN:
       description: "举报状态列表，包括举报类型、发帖人、举报人和解决时间。"
     visits:
       title: "用户访问"
-      xaxis: "天"
+      xaxis:
+        desktop: "桌面"
+        mobile: "移动"
       yaxis: "访问次数"
-      description: "登录用户访问的次数。"
     signups:
       title: "注册"
       xaxis: "天"
@@ -1222,10 +1224,8 @@ zh_CN:
       description: "登录用户、匿名用户、已知抓取工具和其他流量的页面浏览量。"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "天"
       yaxis: "DAU/MAU"
-      description: "在过去一天内登录的成员数除以过去一个月内登录的成员数 – 返回表示社区“粘性”的 %。目标为 >20％。"
     daily_engaged_users:
       title: "每日参与用户"
       xaxis: "天"
@@ -1723,6 +1723,7 @@ zh_CN:
     moderators_manage_categories: "允许版主创建和管理类别"
     moderators_manage_groups: "允许版主创建和管理群组"
     moderators_change_post_ownership: "允许版主更改帖子所有权"
+    change_post_ownership_allowed_groups: "允许这些群组中的用户更改帖子所有权"
     cors_origins: "允许跨源请求（CORS）。每个来源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
     use_admin_ip_allowlist: "只有使用“屏蔽的 IP 列表”（管理 > 日志 > 屏蔽的 IP）中的 IP 地址时，管理员才能登录。"
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"

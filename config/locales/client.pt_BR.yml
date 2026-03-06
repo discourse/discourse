@@ -11,7 +11,7 @@ pt_BR:
         status: "Status"
         in_location: "em"
         hidden: "oculto"
-        failed: "falha"
+        failed: "falhou"
     number:
       format:
         separator: ","
@@ -2294,6 +2294,7 @@ pt_BR:
     form_kit:
       reset: Redefinir
       optional: opcional
+      required: necessário(a)
       dirty_form: "Você não enviou as alterações! Deseja mesmo sair?"
       errors:
         starts_with: "Deve começar com %{prefix}"
@@ -4118,6 +4119,8 @@ pt_BR:
         tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       create_long: "Criar uma nova categoria"
+      type_settings_schema:
+        site_settings: "Configurações do site"
       unsaved_changes: "Você tem alterações não salvas"
       slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
@@ -5716,7 +5719,7 @@ pt_BR:
           all: "Tudo"
           view_table: "tabela"
           view_graph: "gráfico"
-          refresh_report: "Atualizar relatório"
+          refresh_report: "Atualizar"
           daily: A cada dia
           monthly: Todo mês
           weekly: A cada semana

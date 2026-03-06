@@ -10,6 +10,10 @@ ja:
     support:
       name: "支援する"
       title: "支援する"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "トピックオーナーとスタッフが返信を解決策としてマークすることを許可する"
   site_settings:
     solved_enabled: "解決済みプラグインを有効にし、ユーザーがトピックの解決策を選択できるようにする"
     allow_solved_on_all_topics: "すべてのトピックでユーザーが解決策を選択することを許可する（オフの場合、解決策はカテゴリごとまたはタグごとに有効にできます）"

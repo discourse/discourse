@@ -1361,9 +1361,10 @@ sk:
       description: "Zoznam stavov vlajok vrátane typu vlajky, plagátu, vlajky a času na vyriešenie."
     visits:
       title: "Používateľské návštevy"
-      xaxis: "Deň"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobil"
       yaxis: "Počet návštev"
-      description: "Počet návštev prihlásených používateľov."
     signups:
       title: "Registrácie"
       xaxis: "Deň"
@@ -1425,10 +1426,8 @@ sk:
       description: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a inej návštevnosti."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Deň"
       yaxis: "DAU/MAU"
-      description: "Počet členov, ktorí sa prihlásili za posledný deň, vydelený počtom členov, ktorí sa prihlásili za posledný mesiac - vráti %, ktoré udáva \"priľnavosť\" komunity. Snažte sa dosiahnuť > 20 %."
     daily_engaged_users:
       title: "Denne zapojení používatelia"
       xaxis: "Deň"

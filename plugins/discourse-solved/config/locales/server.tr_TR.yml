@@ -12,6 +12,8 @@ tr_TR:
       title: "destek"
   discourse_solved:
     category_type:
+      allow_accepted_answers:
+        label: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
       solved_topics_auto_close_hours:
         label: "Çözülmüş konuları otomatik olarak kapat (saat)"
         description: "Çözüldü olarak işaretlendikten sonra bu kadar saat geçtikten sonra konuyu otomatik olarak kapat. Devre dışı bırakmak için 0 olarak ayarla."

@@ -1212,9 +1212,10 @@ pt_BR:
       description: "Lista de status dos sinalizadores, incluindo o tipo de sinalizador, autor(a) da postagem, criador(a) do sinalizador e hora da resolução."
     visits:
       title: "Acessos do(a) usuário(a)"
-      xaxis: "Dia"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Dispositivos móveis"
       yaxis: "Quantidade de acessos"
-      description: "Quantidade de acessos de usuários(as) que entraram com a conta"
     signups:
       title: "Cadastros"
       xaxis: "Dia"
@@ -1276,10 +1277,8 @@ pt_BR:
       description: "Visualizações de página para usuários(as) que entraram com a conta, rastreadores conhecidos e outras formas de tráfego."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Quantidade de membros que entraram com a conta no último dia dividida pela quantidade de membros que entraram com a conta no último mês. Retorna uma % que indica a \"adesão\" à comunidade. Tente alcançar >20%."
     daily_engaged_users:
       title: "Usuários(as) envolvidos(as) diariamente"
       xaxis: "Dia"

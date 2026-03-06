@@ -413,7 +413,9 @@ bs_BA:
         flag: Tip
     visits:
       title: "User Visits"
-      xaxis: "Day"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobilno"
       yaxis: "Number of visits"
     signups:
       xaxis: "Day"

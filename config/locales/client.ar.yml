@@ -9,9 +9,19 @@ ar:
     blocks:
       ghost:
         status: "الحالة"
+        conditions: "الشروط"
+        arguments: "الوسيطات"
+        container_args: "وسيطات الحاوية"
         in_location: "في"
         hidden: "مخفي"
+        not_registered: "غير مسجل"
+        no_visible_children: "لا توجد تبعيات ظاهرة"
         failed: "فشل"
+      ghost_reasons:
+        optional_missing_hint: "لا يتم عرض هذه الكتلة الاختيارية لأنها غير مسجلة."
+        no_visible_children_hint: "لا يتم عرض كتلة الحاوية هذه لأنه لا توجد أي تبعيات ظاهرة."
+        condition_failed_hint: "لا يتم عرض هذه الكتلة نظرًا لإخفاق شروطها."
+        head_hidden_tail_hint: "لا يتم عرض هذه الكتلة لأنه يجري عرض كتلة أخرى أولًا في الحاوية `head`."
     carousel:
       go_to_slide: "الانتقال إلى الشريحة %{index}"
       previous: "الشريحة السابقة"
@@ -2800,6 +2810,7 @@ ar:
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
+      required: مطلوب
       dirty_form: "لم ترسل التغييرات! هل تريد بالتأكيد المغادرة؟"
       errors:
         starts_with: "يجب أن يبدأ بـ %{prefix}"
@@ -5141,6 +5152,8 @@ ar:
       delete: "احذف الفئة"
       create: "فئة جديدة"
       create_long: "إنشاء فئة جديدة"
+      type_settings_schema:
+        site_settings: "إعدادات الموقع"
       save: "احفظ الفئة"
       unsaved_changes: "لديك تغييرات غير محفوظة"
       slug: "مسار الفئة"
@@ -7108,7 +7121,7 @@ ar:
           all: "الكل"
           view_table: "جدول"
           view_graph: "رسم بياني"
-          refresh_report: "تحديث التقرير "
+          refresh_report: "تحديث"
           daily: يوميًا
           monthly: شهريًا
           weekly: أسبوعيًا
