@@ -1,125 +1,49 @@
-import { getOwner } from "@ember/owner";
-import { click, visit } from "@ember/test-helpers";
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { ajax } from "discourse/lib/ajax";
-import pretender from "discourse/tests/helpers/create-pretender";
+import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-const trackViewHeaderName = "Discourse-Track-View";
-
-function setupPretender(server, helper) {
-  server.get("/fake-analytics-endpoint", (request) => {
-    if (request.requestHeaders[trackViewHeaderName]) {
-      throw "Fake analytics endpoint was called with track-view header";
-    }
-    return helper.response({});
-  });
-}
-
-function setupFakeAnalytics(ref) {
-  getOwner(ref)
-    .lookup("service:router")
-    .on("routeDidChange", () => ajax("/fake-analytics-endpoint"));
-}
-
-function assertRequests({ assert, tracked, untracked, message }) {
-  let trackedCount = 0,
-    untrackedCount = 0;
-
-  const requests = pretender.handledRequests;
-  requests.forEach((request) => {
-    if (request.requestHeaders[trackViewHeaderName]) {
-      trackedCount++;
-    } else {
-      untrackedCount++;
-    }
-  });
-
-  assert.strictEqual(trackedCount, tracked, `${message} (tracked)`);
-  assert.strictEqual(untrackedCount, untracked, `${message} (untracked)`);
-
-  pretender.handledRequests = [];
-}
-
-acceptance("Page tracking - loading slider", function (needs) {
+acceptance("Page tracking - initial load", function (needs) {
   needs.user();
-  needs.pretender(setupPretender);
 
-  test("sets the discourse-track-view header correctly", async function (assert) {
-    setupFakeAnalytics(this);
-
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 1,
-      message: "no tracked requests before app boot",
+  needs.hooks.beforeEach(function () {
+    this.fetchRequests = [];
+    sinon.stub(window, "fetch").callsFake((url, opts) => {
+      this.fetchRequests.push({ url, opts });
+      return Promise.resolve(new Response("{}", { status: 200 }));
     });
-
-    await visit("/");
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 2,
-      message: "no ajax tracked for initial page load",
-    });
-
-    await click("#site-logo");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      message: "tracked one pageview for reloading latest",
-    });
-
-    await visit("/t/-/280");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      message: "tracked one pageview for navigating to topic",
-    });
-  });
-});
-
-acceptance("Page tracking - loading spinner", function (needs) {
-  needs.user();
-  needs.pretender(setupPretender);
-  needs.settings({
-    page_loading_indicator: "spinner",
+    const meta = document.createElement("meta");
+    meta.name = "discourse-track-view-session-id";
+    meta.content = "test-session-id";
+    document.head.appendChild(meta);
   });
 
-  test("sets the discourse-track-view header correctly", async function (assert) {
-    setupFakeAnalytics(this);
+  needs.hooks.afterEach(function () {
+    document
+      .querySelector("meta[name='discourse-track-view-session-id']")
+      ?.remove();
+  });
 
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 1,
-      message: "no tracked requests before app boot",
-    });
-
+  test("sends pageview on initial load with session_id", async function (assert) {
     await visit("/");
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 2,
-      message: "no ajax tracked for initial page load",
-    });
+    const pageviewCall = this.fetchRequests.find((r) =>
+      r.url.includes("/pageview")
+    );
+    assert.notStrictEqual(
+      pageviewCall,
+      undefined,
+      "fetch called for /pageview"
+    );
+    assert.true(pageviewCall.opts.keepalive);
+    const body = JSON.parse(pageviewCall.opts.body);
+    assert.strictEqual(body.session_id, "test-session-id");
+  });
 
-    await click("#site-logo");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      message: "tracked one pageview for reloading latest",
-    });
-
-    await visit("/t/-/280");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      message: "tracked one pageview for navigating to topic",
-    });
+  test("sends pageview with topic_id on topic route", async function (assert) {
+    await visit("/t/some-topic/280");
+    const calls = this.fetchRequests.filter((r) => r.url.includes("/pageview"));
+    const topicCall = calls.find((c) => JSON.parse(c.opts.body).topic_id);
+    assert.notStrictEqual(topicCall, undefined, "pageview sent with topic_id");
+    assert.strictEqual(JSON.parse(topicCall.opts.body).topic_id, "280");
   });
 });

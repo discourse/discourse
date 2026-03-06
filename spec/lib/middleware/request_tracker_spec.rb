@@ -86,38 +86,6 @@ RSpec.describe Middleware::RequestTracker do
       ApplicationRequest.clear_cache!
     end
 
-    def log_tracked_view(val)
-      data =
-        Middleware::RequestTracker.get_data(
-          env("HTTP_DISCOURSE_TRACK_VIEW" => val),
-          ["200", { "Content-Type" => "text/html" }],
-          0.2,
-        )
-
-      Middleware::RequestTracker.log_request(data)
-    end
-
-    it "can exclude/include based on custom header" do
-      log_tracked_view("true")
-      log_tracked_view("1")
-      log_tracked_view("false")
-      log_tracked_view("0")
-
-      CachedCounting.flush
-
-      expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
-      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(2)
-    end
-
-    it "adds the appropriate response header based on explicit tracking (AJAX requests, BPVs)" do
-      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      status, headers = middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1"))
-
-      expect(status).to eq(200)
-      expect(headers["X-Discourse-TrackView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
-    end
-
     it "adds the appropriate response header based on implicit tracking (HTML requests)" do
       middleware =
         Middleware::RequestTracker.new(
@@ -136,7 +104,7 @@ RSpec.describe Middleware::RequestTracker do
 
       expect(status).to eq(200)
       expect(headers["X-Discourse-TrackView"]).to eq(nil)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
     end
 
     it "adds the appropriate response headers for MessageBus requests with deferred tracking" do
@@ -154,7 +122,7 @@ RSpec.describe Middleware::RequestTracker do
         )
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
     end
 
     it "adds the appropriate response headers for MessageBus requests with regular tracking" do
@@ -170,8 +138,8 @@ RSpec.describe Middleware::RequestTracker do
         middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1", :path => "/message-bus/abcde/poll"))
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
-      expect(headers["X-Discourse-TrackView"]).to eq("1")
+      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
+      expect(headers["X-Discourse-TrackView"]).to eq(nil)
     end
 
     it "does not add these response headers when skipping the request tracker" do
@@ -249,19 +217,23 @@ RSpec.describe Middleware::RequestTracker do
 
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
 
-      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon_browser.first).to eq(nil)
     end
 
     it "logs deferred pageviews correctly" do
       data =
         Middleware::RequestTracker.get_data(
-          env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1"),
-          ["200", { "Content-Type" => "text/html" }],
+          env(
+            :path => "/pageview",
+            "REQUEST_METHOD" => "POST",
+            "rack.input" => StringIO.new({ url: "https://example.com/" }.to_json),
+          ),
+          ["200", {}],
           0.1,
         )
       Middleware::RequestTracker.log_request(data)
 
-      expect(data[:deferred_track_view]).to eq(true)
+      expect(data[:browser_page_view]).to eq(true)
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
@@ -331,6 +303,66 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
     end
 
+    describe "POST /pageview JSON body parsing" do
+      it "sets browser_page_view and populates tracking fields from JSON body" do
+        json_body = {
+          url: "https://example.com/t/slug/123",
+          referrer: "https://example.com/",
+          session_id: "abc123",
+          topic_id: 456,
+        }.to_json
+
+        pageview_env =
+          env(
+            :path => "/pageview",
+            "REQUEST_METHOD" => "POST",
+            "rack.input" => StringIO.new(json_body),
+          )
+
+        data = described_class.extract_view_tracking_data(pageview_env, nil, nil)
+        expect(data[:browser_page_view]).to eq(true)
+        expect(data[:track_view]).to eq(false)
+        expect(data[:tracking_url]).to eq("https://example.com/t/slug/123")
+        expect(data[:tracking_referrer]).to eq("https://example.com/")
+        expect(data[:tracking_session_id]).to eq("abc123")
+        expect(data[:topic_id]).to eq(456)
+      end
+
+      it "gracefully returns nil tracking fields for malformed JSON body" do
+        pageview_env =
+          env(
+            :path => "/pageview",
+            "REQUEST_METHOD" => "POST",
+            "rack.input" => StringIO.new("not valid json{{{"),
+          )
+
+        data = nil
+        expect {
+          data = described_class.extract_view_tracking_data(pageview_env, nil, nil)
+        }.not_to raise_error
+        expect(data[:browser_page_view]).to eq(true)
+        expect(data[:tracking_url]).to be_nil
+        expect(data[:tracking_referrer]).to be_nil
+        expect(data[:tracking_session_id]).to be_nil
+      end
+
+      it "rewinds rack.input after reading the body" do
+        json_body = {
+          url: "https://example.com/",
+          referrer: "",
+          session_id: "s1",
+          topic_id: nil,
+        }.to_json
+        input = StringIO.new(json_body)
+
+        pageview_env = env(:path => "/pageview", "REQUEST_METHOD" => "POST", "rack.input" => input)
+
+        data = described_class.extract_view_tracking_data(pageview_env, nil, nil)
+        expect(data[:browser_page_view]).to eq(true)
+        expect(pageview_env["rack.input"].pos).to eq(0)
+      end
+    end
+
     describe "topic views" do
       fab!(:topic)
       fab!(:post) { Fabricate(:post, topic: topic) }
@@ -348,24 +380,24 @@ RSpec.describe Middleware::RequestTracker do
 
       def log_topic_view(authenticated: false, deferred: false)
         headers = { "action_dispatch.remote_ip" => "127.0.0.1" }
-
         headers["HTTP_COOKIE"] = "_t=#{auth_cookie};" if authenticated
 
-        if deferred
-          headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"] = "1"
-          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
-          path = "/message-bus/abcde/poll"
-        else
-          headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
-          path = URI.parse(topic.url).path
-        end
+        json_body = {
+          topic_id: topic.id,
+          url: topic.url,
+          referrer: "",
+          session_id: "abc123",
+        }.to_json
 
         data =
           Middleware::RequestTracker.get_data(
-            env(path: path, **headers),
-            ["200", { "Content-Type" => "text/html" }],
+            env(
+              :path => "/pageview",
+              "REQUEST_METHOD" => "POST",
+              "rack.input" => StringIO.new(json_body),
+              **headers,
+            ),
+            ["200", {}],
             0.1,
           )
         Middleware::RequestTracker.log_request(data)
@@ -595,18 +627,26 @@ RSpec.describe Middleware::RequestTracker do
     describe "browser_pageview event" do
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
+
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 
           data =
             Middleware::RequestTracker.get_data(
               env(
-                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
-                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
-                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+                :path => "/pageview",
+                "REQUEST_METHOD" => "POST",
+                "rack.input" =>
+                  StringIO.new(
+                    {
+                      url: "https://discourse.org",
+                      referrer: "https://example.com",
+                      session_id: session_id,
+                      topic_id: nil,
+                    }.to_json,
+                  ),
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", {}],
               0.2,
             )
 
@@ -632,12 +672,19 @@ RSpec.describe Middleware::RequestTracker do
           data =
             Middleware::RequestTracker.get_data(
               env(
-                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
-                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
-                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+                :path => "/pageview",
+                "REQUEST_METHOD" => "POST",
+                "rack.input" =>
+                  StringIO.new(
+                    {
+                      url: "https://discourse.org",
+                      referrer: "https://example.com",
+                      session_id: session_id,
+                      topic_id: nil,
+                    }.to_json,
+                  ),
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", {}],
               0.2,
             )
 
@@ -654,14 +701,21 @@ RSpec.describe Middleware::RequestTracker do
           data =
             Middleware::RequestTracker.get_data(
               env(
-                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => "A" * 50,
-                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "A" * 5000,
-                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "A" * 5000,
+                :path => "/pageview",
+                "REQUEST_METHOD" => "POST",
+                "rack.input" =>
+                  StringIO.new(
+                    {
+                      url: "A" * 5000,
+                      referrer: "A" * 5000,
+                      session_id: "A" * 50,
+                      topic_id: nil,
+                    }.to_json,
+                  ),
                 "HTTP_USER_AGENT" => "A" * 5000,
                 "action_dispatch.remote_ip" => "1" * 50,
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", {}],
               0.2,
             )
 
@@ -693,12 +747,20 @@ RSpec.describe Middleware::RequestTracker do
           data =
             Middleware::RequestTracker.get_data(
               env(
-                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                :path => "/pageview",
+                "REQUEST_METHOD" => "POST",
                 "HTTP_COOKIE" => "_t=#{cookie};",
-                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
-                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+                "rack.input" =>
+                  StringIO.new(
+                    {
+                      url: "https://discourse.org",
+                      referrer: "https://example.com",
+                      session_id: nil,
+                      topic_id: nil,
+                    }.to_json,
+                  ),
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", {}],
               0.2,
             )
 
@@ -740,12 +802,19 @@ RSpec.describe Middleware::RequestTracker do
           data =
             Middleware::RequestTracker.get_data(
               env(
-                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
-                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
-                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
+                :path => "/pageview",
+                "REQUEST_METHOD" => "POST",
+                "rack.input" =>
+                  StringIO.new(
+                    {
+                      url: "https://discourse.org",
+                      referrer: "https://example.com",
+                      session_id: session_id,
+                      topic_id: nil,
+                    }.to_json,
+                  ),
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", {}],
               0.2,
             )
 

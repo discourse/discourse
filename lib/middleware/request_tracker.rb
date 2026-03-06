@@ -178,7 +178,7 @@ class Middleware::RequestTracker
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
     current_user_id =
-      if view_tracking_data[:deferred_track_view] || view_tracking_data[:explicit_track_view]
+      if view_tracking_data[:browser_page_view]
         begin
           (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
         rescue Discourse::InvalidAccess => err
@@ -249,7 +249,6 @@ class Middleware::RequestTracker
     if data
       if result && (headers = result[1])
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
-        headers["X-Discourse-BrowserPageView"] = "1" if data[:browser_page_view]
       end
 
       if @@detailed_request_loggers
@@ -521,54 +520,26 @@ class Middleware::RequestTracker
     is_html_request = headers["Content-Type"]&.include?("text/html")
     is_ajax_request = request.xhr?
 
-    # This Discourse-Track-View request header is set in `lib/ajax.js`,
-    # whenever the user navigates between Ember routes, to indicate a
-    # browser page view.
-    env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
-    explicit_track_view = status == 200 && %w[1 true].include?(env_track_view)
+    # An HTML response to a GET request is tracked as a legacy page view.
+    # The X-Discourse-TrackView header is included in the response when this is true.
+    track_view = !!(status == 200 && request.get? && !is_ajax_request && is_html_request)
 
-    # An HTML response to a GET request is tracked implicitly, these do
-    # not count as browser page views but they do count as legacy page views.
-    implicit_track_view =
-      status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !is_ajax_request &&
-        is_html_request
-
-    # This Discourse-Deferred-Track-View header is piggybacked on a
-    # follow-up MessageBus request after a real browser loads up a page
-    # to avoid bots influencing browser page views when loading HTML
-    # versions of a page.
+    # A POST to /pageview is a dedicated browser page view beacon sent via
+    # fetch(..., { keepalive: true }). The view data is passed in the JSON body.
     #
     # See `scripts/pageview.js` and `instance-initializers/page-tracking.js`
-    env_deferred_track_view = env["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"]
-    deferred_track_view = %w[1 true].include?(env_deferred_track_view)
+    is_pageview_request = request.post? && request.path_info == "/pageview"
+    body_data = is_pageview_request ? read_pageview_body(env) : nil
+    browser_page_view = is_pageview_request
 
-    # This only indicates that we are tracking a page view of some kind, not
-    # using an API key. In #log_request is where we are determining which
-    # of these count as browser page views.
-    #
-    # TL;DR -- Explicit and Deferred page views count as browser page views (BPVs),
-    # explicit and implicit page views count as legacy page views.
-    #
-    # If this is true, then the X-Discourse-TrackView header is included in
-    # the response.
-    #
-    # If the page view is explicit or deferred, then the X-Discourse-BrowserPageView header
-    # is included in the response.
-    track_view = !!(explicit_track_view || implicit_track_view)
-    browser_page_view = !!(explicit_track_view || deferred_track_view)
-
-    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]&.to_i
-    tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]&.slice(0, MAX_URL_LENGTH)
-    tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]&.slice(0, MAX_URL_LENGTH)
-    tracking_session_id =
-      env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]&.slice(0, MAX_SESSION_ID_LENGTH)
+    topic_id = body_data&.[]("topic_id").to_i.nonzero?
+    tracking_url = body_data&.[]("url")&.slice(0, MAX_URL_LENGTH)
+    tracking_referrer = body_data&.[]("referrer")&.slice(0, MAX_URL_LENGTH)
+    tracking_session_id = body_data&.[]("session_id")&.slice(0, MAX_SESSION_ID_LENGTH)
     user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
 
     {
       track_view: track_view,
-      explicit_track_view: explicit_track_view,
-      deferred_track_view: deferred_track_view,
-      implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
       topic_id: topic_id,
       tracking_url: tracking_url,
@@ -577,6 +548,16 @@ class Middleware::RequestTracker
       user_agent: user_agent,
     }
   end
+
+  def self.read_pageview_body(env)
+    raw_body = env["rack.input"].read
+    JSON.parse(raw_body)
+  rescue JSON::ParserError
+    nil
+  ensure
+    env["rack.input"].rewind
+  end
+  private_class_method :read_pageview_body
 
   def self.trigger_browser_pageview_event(data)
     if SiteSetting.trigger_browser_pageview_events
