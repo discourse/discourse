@@ -12,21 +12,22 @@ describe DiscourseAi::TopicSummarization do
     SiteSetting.ai_summarization_enabled = true
   end
 
-  let(:strategy) { DiscourseAi::Summarization.topic_summary(topic) }
-
   let(:summary) { "This is the final summary" }
 
   describe "#summarize" do
     subject(:summarization) { described_class.new(strategy, user) }
 
-    def assert_summary_is_cached(topic, summary_response)
+    let(:strategy) { DiscourseAi::Summarization.topic_summary(topic) }
+
+    def assert_summary_is_cached(topic, summary_response, locale: "")
       cached_summary =
-        AiSummary.find_by(target: topic, summary_type: AiSummary.summary_types[:complete])
+        AiSummary.find_by(target: topic, summary_type: AiSummary.summary_types[:complete], locale:)
 
       expect(cached_summary.highest_target_number).to eq(topic.highest_post_number)
       expect(cached_summary.summarized_text).to eq(summary)
       expect(cached_summary.original_content_sha).to be_present
       expect(cached_summary.algorithm).to eq("fake")
+      expect(cached_summary.locale).to eq(locale)
     end
 
     context "when the content was summarized in a single chunk" do
@@ -50,6 +51,86 @@ describe DiscourseAi::TopicSummarization do
         summarization = described_class.new(strategy, user)
         section = summarization.summarize
         expect(section.summarized_text).to eq(cached_summary_text)
+      end
+    end
+
+    describe "locale-specific caching" do
+      let(:zh_strategy) { DiscourseAi::Summarization.topic_summary(topic, locale: "zh_CN") }
+      let(:en_strategy) { DiscourseAi::Summarization.topic_summary(topic, locale: "en") }
+
+      it "caches summary with the given locale" do
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+          described_class.new(zh_strategy, user).summarize
+        end
+
+        assert_summary_is_cached(topic, summary, locale: "zh_CN")
+        expect(
+          AiSummary.find_by(
+            target: topic,
+            summary_type: AiSummary.summary_types[:complete],
+            locale: "en",
+          ),
+        ).to be_nil
+      end
+
+      it "generates separate cached summaries per locale" do
+        zh_summary = "Chinese summary"
+        en_summary = "English summary"
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([zh_summary]) do
+          described_class.new(zh_strategy, user).summarize
+        end
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([en_summary]) do
+          described_class.new(en_strategy, user).summarize
+        end
+
+        zh_cached =
+          AiSummary.find_by(
+            target: topic,
+            summary_type: AiSummary.summary_types[:complete],
+            locale: "zh_CN",
+          )
+        en_cached =
+          AiSummary.find_by(
+            target: topic,
+            summary_type: AiSummary.summary_types[:complete],
+            locale: "en",
+          )
+
+        expect(zh_cached.summarized_text).to eq(zh_summary)
+        expect(en_cached.summarized_text).to eq(en_summary)
+      end
+
+      it "falls back to locale='' summary when no locale-specific summary exists" do
+        legacy_text = "Legacy summary"
+        Fabricate(:ai_summary, target: topic, summarized_text: legacy_text, locale: "")
+
+        section = described_class.new(zh_strategy, user).cached_summary
+        expect(section.summarized_text).to eq(legacy_text)
+      end
+
+      it "prefers locale-specific summary over legacy summary" do
+        Fabricate(:ai_summary, target: topic, summarized_text: "Legacy summary", locale: "")
+        Fabricate(:ai_summary, target: topic, summarized_text: "Chinese summary", locale: "zh_CN")
+
+        section = described_class.new(zh_strategy, user).cached_summary
+        expect(section.summarized_text).to eq("Chinese summary")
+      end
+
+      it "sets user_language on BotContext when locale resolves to a known language name" do
+        captured_context = nil
+
+        allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(:reply) do |_, context, &_blk|
+          captured_context = context
+          ""
+        end
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+          described_class.new(zh_strategy, user).summarize
+        end
+
+        expect(captured_context&.user_language).to be_present
       end
     end
 

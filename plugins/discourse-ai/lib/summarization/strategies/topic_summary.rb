@@ -58,7 +58,7 @@ module DiscourseAi
               #{input}
             </input>
 
-            Generate a concise, coherent summary of the text above maintaining the original language.
+            Generate a concise, coherent summary of the text above.
           TEXT
         end
 

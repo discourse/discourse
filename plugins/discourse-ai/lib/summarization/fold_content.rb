@@ -9,10 +9,11 @@ module DiscourseAi
     # into a final version.
     #
     class FoldContent
-      def initialize(bot, strategy, persist_summaries: true)
+      def initialize(bot, strategy, persist_summaries: true, locale: nil)
         @bot = bot
         @strategy = strategy
         @persist_summaries = persist_summaries
+        @locale = locale.to_s
       end
 
       attr_reader :bot, :strategy
@@ -30,7 +31,14 @@ module DiscourseAi
         summary = fold(truncated_content, user, &on_partial_blk)
 
         if persist_summaries
-          AiSummary.store!(strategy, llm_model, summary, truncated_content, human: user&.human?)
+          AiSummary.store!(
+            strategy,
+            llm_model,
+            summary,
+            truncated_content,
+            human: user&.human?,
+            locale: @locale,
+          )
         else
           AiSummary.new(summarized_text: summary)
         end
@@ -38,10 +46,14 @@ module DiscourseAi
 
       # @returns { AiSummary } - Resulting summary.
       #
-      # Finds a summary matching the target and strategy. Marks it as outdated if the strategy found newer content
+      # Finds a summary matching the target and strategy. Marks it as outdated if the strategy found newer content.
+      # Looks up by exact locale first, then falls back to legacy entries with no locale.
       def existing_summary
         if !defined?(@existing_summary)
-          summary = AiSummary.find_by(target: strategy.target, summary_type: strategy.type)
+          summary =
+            AiSummary.find_by(target: strategy.target, summary_type: strategy.type, locale: @locale)
+          summary ||=
+            AiSummary.find_by(target: strategy.target, summary_type: strategy.type, locale: "")
 
           if summary
             @existing_summary = summary
@@ -141,6 +153,14 @@ module DiscourseAi
           end
         end
 
+        locale_name =
+          if @locale.present?
+            locale_hash =
+              LocaleSiteSetting.language_names[@locale] ||
+                LocaleSiteSetting.language_names[@locale.split("_").first]
+            locale_hash&.dig("name")
+          end
+
         context =
           DiscourseAi::Personas::BotContext.new(
             user: user,
@@ -149,6 +169,7 @@ module DiscourseAi
             resource_url: "#{Discourse.base_path}/t/-/#{strategy.target.id}",
             messages: strategy.as_llm_messages(content_in_window),
           )
+        context.user_language = locale_name if locale_name
 
         summary = +""
 
