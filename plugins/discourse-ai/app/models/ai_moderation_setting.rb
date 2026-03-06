@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 class AiModerationSetting < ActiveRecord::Base
   belongs_to :llm_model
-  belongs_to :ai_persona
+  belongs_to :ai_agent, class_name: "AiAgent", optional: true
 
   validates :llm_model_id, presence: true
   validates :setting_type, presence: true
@@ -12,7 +13,7 @@ class AiModerationSetting < ActiveRecord::Base
   end
 
   def custom_instructions
-    data["custom_instructions"]
+    data&.[]("custom_instructions")
   end
 end
 
@@ -26,7 +27,7 @@ end
 #  llm_model_id  :bigint           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  ai_persona_id :bigint           default(-31), not null
+#  ai_agent_id   :bigint           default(-31), not null
 #
 # Indexes
 #

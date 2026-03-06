@@ -110,16 +110,16 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         )
       end
 
-      let(:post_illustrator_persona) do
-        AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
+      let(:post_illustrator_agent) do
+        AiAgent.find_by(id: SiteSetting.ai_helper_post_illustrator_agent)
       end
 
       before do
         image_tool
-        post_illustrator_persona.update_columns(system: false)
-        post_illustrator_persona.update!(tools: [["custom-#{image_tool.id}", nil, true]])
+        post_illustrator_agent.update_columns(system: false)
+        post_illustrator_agent.update!(tools: [["custom-#{image_tool.id}", nil, true]])
 
-        allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
+        allow_any_instance_of(DiscourseAi::Agents::Bot).to receive(
           :reply,
         ) do |_bot, _context, &block|
           block.call("", "![test](#{upload.short_url})", :partial_invoke)
@@ -364,7 +364,7 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         end
       end
 
-      it "returns error when PostIllustrator persona has no image generation tool" do
+      it "returns error when PostIllustrator agent has no image generation tool" do
         post "/discourse-ai/ai-helper/suggest",
              params: {
                mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
@@ -374,12 +374,12 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to include(
-          "Post Illustrator persona must have an image generation tool",
+          "Post Illustrator agent must have an image generation tool",
         )
       end
 
-      it "returns error when PostIllustrator persona is not found" do
-        SiteSetting.ai_helper_post_illustrator_persona = 99_999
+      it "returns error when PostIllustrator agent is not found" do
+        SiteSetting.ai_helper_post_illustrator_agent = 99_999
 
         post "/discourse-ai/ai-helper/suggest",
              params: {
@@ -390,11 +390,11 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"].first).to include(
-          "Post Illustrator persona is not configured",
+          "Post Illustrator agent is not configured",
         )
       end
 
-      context "when PostIllustrator persona has image generation tool" do
+      context "when PostIllustrator agent has image generation tool" do
         let(:image_tool) do
           AiTool.create!(
             name: "Test Image Generator",
@@ -423,16 +423,16 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
           )
         end
 
-        let(:post_illustrator_persona) do
-          AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
+        let(:post_illustrator_agent) do
+          AiAgent.find_by(id: SiteSetting.ai_helper_post_illustrator_agent)
         end
 
         before do
           image_tool
-          post_illustrator_persona.update_columns(system: false) # Allow editing for test
-          post_illustrator_persona.update!(tools: [["custom-#{image_tool.id}", nil, true]])
+          post_illustrator_agent.update_columns(system: false) # Allow editing for test
+          post_illustrator_agent.update!(tools: [["custom-#{image_tool.id}", nil, true]])
 
-          allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
+          allow_any_instance_of(DiscourseAi::Agents::Bot).to receive(
             :reply,
           ) do |_bot, _context, &block|
             block.call("", "![test](#{upload.short_url})", :partial_invoke)
@@ -454,7 +454,7 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         end
 
         it "returns error when image generation fails" do
-          allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(:reply).and_return(nil)
+          allow_any_instance_of(DiscourseAi::Agents::Bot).to receive(:reply).and_return(nil)
 
           post "/discourse-ai/ai-helper/suggest",
                params: {

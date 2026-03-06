@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Translation::BaseTranslator do
-  let!(:persona) do
-    AiPersona.find(
-      DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::PostRawTranslator],
-    )
+  let!(:agent) do
+    AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::PostRawTranslator])
   end
 
   before do
@@ -24,7 +22,7 @@ describe DiscourseAi::Translation::BaseTranslator do
       post_translator =
         DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:, post:)
       allow(DiscourseAi::Completions::Prompt).to receive(:new).with(
-        persona.system_prompt,
+        agent.system_prompt,
         messages: array_including({ type: :user, content: a_string_including(text) }),
         post_id: post.id,
         topic_id: post.topic_id,
@@ -41,16 +39,16 @@ describe DiscourseAi::Translation::BaseTranslator do
 
       expected_content = { content: text, target_locale: target_locale }.to_json
 
-      bot_context = instance_double(DiscourseAi::Personas::BotContext)
-      allow(DiscourseAi::Personas::BotContext).to receive(:new).and_return(bot_context)
+      bot_context = instance_double(DiscourseAi::Agents::BotContext)
+      allow(DiscourseAi::Agents::BotContext).to receive(:new).and_return(bot_context)
 
-      mock_bot = instance_double(DiscourseAi::Personas::Bot)
-      allow(DiscourseAi::Personas::Bot).to receive(:as).and_return(mock_bot)
+      mock_bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(mock_bot)
       allow(mock_bot).to receive(:reply).and_yield(llm_response)
 
       post_translator.translate
 
-      expect(DiscourseAi::Personas::BotContext).to have_received(:new).with(
+      expect(DiscourseAi::Agents::BotContext).to have_received(:new).with(
         user: an_instance_of(User),
         skip_show_thinking: true,
         feature_name: "translation",
@@ -59,7 +57,7 @@ describe DiscourseAi::Translation::BaseTranslator do
         post: post,
       )
 
-      expect(DiscourseAi::Personas::Bot).to have_received(:as)
+      expect(DiscourseAi::Agents::Bot).to have_received(:as)
       expect(mock_bot).to have_received(:reply).with(bot_context, llm_args: { max_tokens: 500 })
     end
 
@@ -75,11 +73,11 @@ describe DiscourseAi::Translation::BaseTranslator do
       test_cases.each do |text, expected_max_tokens|
         translator = DiscourseAi::Translation::PostRawTranslator.new(text: text, target_locale:)
 
-        bot_context = instance_double(DiscourseAi::Personas::BotContext)
-        allow(DiscourseAi::Personas::BotContext).to receive(:new).and_return(bot_context)
+        bot_context = instance_double(DiscourseAi::Agents::BotContext)
+        allow(DiscourseAi::Agents::BotContext).to receive(:new).and_return(bot_context)
 
-        mock_bot = instance_double(DiscourseAi::Personas::Bot)
-        allow(DiscourseAi::Personas::Bot).to receive(:as).and_return(mock_bot)
+        mock_bot = instance_double(DiscourseAi::Agents::Bot)
+        allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(mock_bot)
         allow(mock_bot).to receive(:reply).and_yield("translated #{text[0..10]}")
 
         translator.translate

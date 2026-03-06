@@ -8,22 +8,22 @@ module DiscourseAi
       def identify_concepts(content)
         return [] if content.blank?
 
-        # Use the ConceptFinder persona to identify concepts
-        persona =
-          AiPersona
-            .all_personas(enabled_only: false)
-            .find { |p| p.id == SiteSetting.inferred_concepts_generate_persona.to_i }
+        # Use the ConceptFinder agent to identify concepts
+        agent =
+          AiAgent
+            .all_agents(enabled_only: false)
+            .find { |p| p.id == SiteSetting.inferred_concepts_generate_agent.to_i }
             .new
 
-        llm = LlmModel.find(persona.class.default_llm_id || SiteSetting.ai_default_llm_model)
+        llm = LlmModel.find(agent.class.default_llm_id || SiteSetting.ai_default_llm_model)
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             messages: [{ type: :user, content: content }],
             user: Discourse.system_user,
             inferred_concepts: DiscourseAi::InferredConcepts::Manager.new.list_concepts,
           )
 
-        bot = DiscourseAi::Personas::Bot.as(Discourse.system_user, persona: persona, model: llm)
+        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
         structured_output = nil
 
         bot.reply(context) do |partial, _, type|
@@ -147,22 +147,22 @@ module DiscourseAi
       def deduplicate_concepts(concept_names)
         return { deduplicated_concepts: [], mapping: {} } if concept_names.blank?
 
-        # Use the ConceptDeduplicator persona to deduplicate concepts
-        persona =
-          AiPersona
-            .all_personas(enabled_only: false)
-            .find { |p| p.id == SiteSetting.inferred_concepts_deduplicate_persona.to_i }
+        # Use the ConceptDeduplicator agent to deduplicate concepts
+        agent =
+          AiAgent
+            .all_agents(enabled_only: false)
+            .find { |p| p.id == SiteSetting.inferred_concepts_deduplicate_agent.to_i }
             .new
 
-        llm = LlmModel.find(persona.class.default_llm_id || SiteSetting.ai_default_llm_model)
+        llm = LlmModel.find(agent.class.default_llm_id || SiteSetting.ai_default_llm_model)
 
         # Create the input for the deduplicator
         input = { type: :user, content: concept_names.join(", ") }
 
         context =
-          DiscourseAi::Personas::BotContext.new(messages: [input], user: Discourse.system_user)
+          DiscourseAi::Agents::BotContext.new(messages: [input], user: Discourse.system_user)
 
-        bot = DiscourseAi::Personas::Bot.as(Discourse.system_user, persona: persona, model: llm)
+        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
         structured_output = nil
 
         bot.reply(context) do |partial, _, type|

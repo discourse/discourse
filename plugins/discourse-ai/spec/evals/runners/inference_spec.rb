@@ -14,7 +14,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
     )
   end
   before do
-    stub_runner_bot(persona: DiscourseAi::Personas::ConceptFinder.new) do |blk|
+    stub_runner_bot(agent: DiscourseAi::Agents::ConceptFinder.new) do |blk|
       blk.call(structured_output, nil, :structured_output)
     end
   end

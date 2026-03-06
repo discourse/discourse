@@ -144,7 +144,7 @@ export default class AiLlmEditorForm extends Component {
 
     const localized = usedBy.map((m) => {
       return i18n(`discourse_ai.llms.usage.${m.type}`, {
-        persona: m.name,
+        agent: m.name,
       });
     });
 

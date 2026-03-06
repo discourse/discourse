@@ -27,8 +27,8 @@ describe DiscourseAutomation do
     add_automation_field("sender", user.username, type: "user")
     add_automation_field("receivers", [user.username], type: "email_group_user")
     add_automation_field(
-      "persona_id",
-      DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+      "agent_id",
+      DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ReportRunner],
     )
 
     add_automation_field("model", llm_model.id)
@@ -46,8 +46,8 @@ describe DiscourseAutomation do
     add_automation_field("sender", user.username, type: "user")
     add_automation_field("topic_id", "#{post.topic_id}")
     add_automation_field(
-      "persona_id",
-      DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ReportRunner],
+      "agent_id",
+      DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ReportRunner],
     )
     add_automation_field("model", llm_model.id)
 

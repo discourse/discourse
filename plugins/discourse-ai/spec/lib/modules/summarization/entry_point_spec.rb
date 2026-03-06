@@ -64,7 +64,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
 
           before do
             group.add(user)
-            assign_persona_to(:ai_summary_gists_persona, [group.id])
+            assign_agent_to(:ai_summary_gists_agent, [group.id])
             SiteSetting.ai_summary_gists_enabled = true
           end
 

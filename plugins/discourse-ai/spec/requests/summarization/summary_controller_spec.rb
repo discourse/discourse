@@ -151,7 +151,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       SiteSetting.ai_summary_gists_enabled = true
 
       group.add(admin)
-      assign_persona_to(:ai_summary_gists_persona, [group.id])
+      assign_agent_to(:ai_summary_gists_agent, [group.id])
       Jobs.run_immediately!
     end
 
@@ -221,7 +221,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       SiteSetting.ai_summarization_enabled = true
 
       group.add(admin)
-      assign_persona_to(:ai_summarization_persona, [group.id])
+      assign_agent_to(:ai_summarization_agent, [group.id])
     end
 
     context "when a single topic id is provided" do
