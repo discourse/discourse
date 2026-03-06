@@ -17,7 +17,7 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
 
     context "when the user doesn't have access to the persona" do
       it "returns a 403" do
-        get "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
+        post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
 
         expect(response.status).to eq(403)
       end
@@ -31,16 +31,22 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
 
       it "returns a 200 and queues a job to reply" do
         expect {
-          get "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
+          post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
         }.to change(Jobs::StreamDiscoverReply.jobs, :size).by(1)
 
         expect(response.status).to eq(200)
       end
 
       it "retues a 400 if the query is missing" do
-        get "/discourse-ai/discoveries/reply"
+        post "/discourse-ai/discoveries/reply"
 
         expect(response.status).to eq(400)
+      end
+
+      it "is not accessible via GET to prevent CSRF" do
+        expect {
+          get "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
+        }.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
       end
     end
   end
