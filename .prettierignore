@@ -15,6 +15,7 @@ public/
 vendor/
 frontend/discourse/tests/unit/utils/decorators-test.js
 frontend/discourse/tests/fixtures
+frontend/discourse-types/dts-generator.js
 spec/
 node_modules/
 dist/
