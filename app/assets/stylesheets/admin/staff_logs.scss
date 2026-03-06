@@ -142,11 +142,8 @@
   gap: 0.5em;
   justify-content: space-between;
   margin: 0 0 1em 0;
-
-  // for too small screen, we want it to also wrap
-  @media (width <= 400px) {
-    flex-wrap: wrap;
-  }
+  min-width: 0;
+  flex-wrap: wrap;
 
   .staff-action-logs-controls__left {
     flex: 1 1 auto;
@@ -155,6 +152,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
+    min-width: 0;
 
     // we want to put it in one line
     .date-filter-container .d-date-time-input-range {
@@ -180,15 +178,16 @@
     gap: 0.5em;
     align-items: center;
   }
+}
 
-  a.filter {
-    .label {
-      font-weight: bold;
-    }
+.staff-action-logs-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 
-    .d-icon {
-      margin-left: 0.5em;
-    }
+  .btn {
+    gap: var(--space-2);
+    text-align: left;
   }
 }
 
