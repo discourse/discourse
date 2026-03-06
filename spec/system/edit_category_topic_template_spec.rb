@@ -11,7 +11,6 @@ describe "Edit category topic template", type: :system do
     find("#category-topic-title-placeholder").fill_in(with: "Describe your issue briefly")
     find("#save-category").click
 
-    visit "/c/#{category.slug}/edit/topic-template"
-    expect(find("#category-topic-title-placeholder").value).to eq("Describe your issue briefly")
+    expect(category.reload.topic_title_placeholder).to eq("Describe your issue briefly")
   end
 end
