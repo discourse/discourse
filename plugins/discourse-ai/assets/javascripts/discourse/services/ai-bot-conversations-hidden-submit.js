@@ -15,7 +15,7 @@ export default class AiBotConversationsHiddenSubmit extends Service {
 
   @tracked loading = false;
 
-  personaId;
+  agentId;
   targetUsername;
 
   inputValue = "";
@@ -76,7 +76,9 @@ export default class AiBotConversationsHiddenSubmit extends Service {
           title,
           archetype: "private_message",
           target_recipients: this.targetUsername,
-          meta_data: { ai_persona_id: this.personaId },
+          meta_data: {
+            ai_agent_id: this.agentId,
+          },
         },
       });
 

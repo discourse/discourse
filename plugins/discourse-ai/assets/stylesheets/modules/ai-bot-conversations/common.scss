@@ -139,7 +139,7 @@ body.has-ai-conversations-sidebar {
     flex-direction: column;
     height: calc(100dvh - var(--header-offset) - 5em);
 
-    .persona-llm-selector {
+    .agent-llm-selector {
       display: flex;
       gap: 0.5em;
       justify-content: flex-start;

@@ -43,8 +43,8 @@
         <article class="post">
           <header class="post__header">
             <span class="post__user"><%= post.user.username %></span>
-            <%if post.persona.present? %>
-              <span class="post__persona"><%= post.persona %></span>
+            <%if post.agent.present? %>
+              <span class="post__agent"><%= post.agent %></span>
             <% end %>
             <time class="post__date" datetime="<%= post.created_at.iso8601 %>"><%= post.created_at.strftime('%Y-%m-%d') %></time>
           </header>

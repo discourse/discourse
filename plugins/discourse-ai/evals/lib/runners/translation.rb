@@ -7,10 +7,10 @@ module DiscourseAi
     module Runners
       class Translation < Base
         OPERATIONS = {
-          "locale_detector" => DiscourseAi::Personas::LocaleDetector,
-          "post_raw_translator" => DiscourseAi::Personas::PostRawTranslator,
-          "topic_title_translator" => DiscourseAi::Personas::TopicTitleTranslator,
-          "short_text_translator" => DiscourseAi::Personas::ShortTextTranslator,
+          "locale_detector" => DiscourseAi::Agents::LocaleDetector,
+          "post_raw_translator" => DiscourseAi::Agents::PostRawTranslator,
+          "topic_title_translator" => DiscourseAi::Agents::TopicTitleTranslator,
+          "short_text_translator" => DiscourseAi::Agents::ShortTextTranslator,
         }.freeze
 
         def self.can_handle?(feature_name)
@@ -65,31 +65,31 @@ module DiscourseAi
         end
 
         def detect_locale(content, llm, execution_context:)
-          persona = persona_for_operation
+          agent = agent_for_operation
           context =
-            DiscourseAi::Personas::BotContext.new(
+            DiscourseAi::Agents::BotContext.new(
               user: system_user,
               skip_show_thinking: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: content }],
             )
 
-          bot = DiscourseAi::Personas::Bot.as(system_user, persona: persona, model: llm)
+          bot = DiscourseAi::Agents::Bot.as(system_user, agent: agent, model: llm)
           capture_plain_response(bot, context, execution_context:).strip
         end
 
         def translate_content(content, target_locale, llm, execution_context:)
-          persona = persona_for_operation
+          agent = agent_for_operation
           payload = { content:, target_locale: }.to_json
           context =
-            DiscourseAi::Personas::BotContext.new(
+            DiscourseAi::Agents::BotContext.new(
               user: system_user,
               skip_show_thinking: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: payload }],
             )
 
-          bot = DiscourseAi::Personas::Bot.as(system_user, persona: persona, model: llm)
+          bot = DiscourseAi::Agents::Bot.as(system_user, agent: agent, model: llm)
           capture_plain_response(bot, context, execution_context:).strip
         end
 
@@ -115,9 +115,9 @@ module DiscourseAi
           @user ||= Discourse.system_user
         end
 
-        def persona_for_operation
-          persona_class = OPERATIONS.fetch(operation)
-          resolve_persona(persona_class: persona_class)
+        def agent_for_operation
+          agent_class = OPERATIONS.fetch(operation)
+          resolve_agent(agent_class: agent_class)
         end
       end
     end

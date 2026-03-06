@@ -128,7 +128,7 @@ export default class AiLlmsListEditor extends Component {
 
   localizeUsage(usage) {
     return i18n(`discourse_ai.llms.usage.${usage.type}`, {
-      persona: usage.name,
+      agent: usage.name,
     });
   }
 

@@ -18,28 +18,28 @@ module DiscourseAi
         return nil if !SiteSetting.ai_translation_enabled
         return nil if @text.blank?
         if (
-             ai_persona =
-               AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
+             ai_agent =
+               AiAgent.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_agent)
            ).blank?
           return nil
         end
 
-        persona_klass = ai_persona.class_instance
-        persona = persona_klass.new
+        agent_klass = ai_agent.class_instance
+        agent = agent_klass.new
 
-        llm_model = DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
+        llm_model = DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
         return nil if llm_model.blank?
 
         bot =
-          DiscourseAi::Personas::Bot.as(
-            ai_persona.user || Discourse.system_user,
-            persona: persona,
+          DiscourseAi::Agents::Bot.as(
+            ai_agent.user || Discourse.system_user,
+            agent: agent,
             model: llm_model,
           )
 
         context =
-          DiscourseAi::Personas::BotContext.new(
-            user: ai_persona.user || Discourse.system_user,
+          DiscourseAi::Agents::BotContext.new(
+            user: ai_agent.user || Discourse.system_user,
             skip_show_thinking: true,
             feature_name: "translation",
             messages: [{ type: :user, content: @text }],

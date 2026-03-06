@@ -5,8 +5,8 @@ RSpec.describe DiscourseAi::Admin::AiFeaturesController do
   fab!(:admin)
   fab!(:group)
   fab!(:llm_model)
-  fab!(:summarizer_persona, :ai_persona)
-  fab!(:alternate_summarizer_persona, :ai_persona)
+  fab!(:summarizer_agent, :ai_agent)
+  fab!(:alternate_summarizer_agent, :ai_agent)
 
   before do
     enable_current_plugin
@@ -16,7 +16,7 @@ RSpec.describe DiscourseAi::Admin::AiFeaturesController do
   end
 
   describe "#index" do
-    it "lists all features backed by personas" do
+    it "lists all features backed by agents" do
       get "/admin/plugins/discourse-ai/ai-features.json"
 
       expect(response.status).to eq(200)

@@ -46,7 +46,7 @@ class AiTool < ActiveRecord::Base
   end
 
   def runner(parameters, llm:, bot_user:, context: nil, secret_bindings: nil)
-    DiscourseAi::Personas::ToolRunner.new(
+    DiscourseAi::Agents::ToolRunner.new(
       parameters: parameters,
       llm: llm,
       bot_user: bot_user,
@@ -56,10 +56,10 @@ class AiTool < ActiveRecord::Base
     )
   end
 
-  after_commit :bump_persona_cache
+  after_commit :bump_agent_cache
 
-  def bump_persona_cache
-    AiPersona.persona_cache.flush!
+  def bump_agent_cache
+    AiAgent.agent_cache.flush!
   end
 
   def regenerate_rag_fragments

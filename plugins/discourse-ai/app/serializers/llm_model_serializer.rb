@@ -2,7 +2,7 @@
 
 class LlmModelSerializer < ApplicationSerializer
   # TODO: we probably should rename the table LlmModel to AiLlm
-  # it is consistent with AiPersona and AiTool
+  # it is consistent with AiAgent and AiTool
   # LLM model is a bit confusing given that large language model model is a confusing
   # name
   root "ai_llm"
