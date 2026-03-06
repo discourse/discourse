@@ -98,10 +98,30 @@ module ReleaseUtils
     stdout
   end
 
-  def self.gh(*args)
+  def self.gh(*args, capture: false, input: nil)
     puts "> gh #{args.inspect}"
-    return true if test_mode?
-    system "gh", *args
+    return true if test_mode? && !capture
+
+    if capture
+      stdout_text, stderr_text, status = Open3.capture3("gh", *args, stdin_data: input)
+
+      return stdout_text if status.success?
+
+      raise <<~MESSAGE
+        gh failed with status #{status.exitstatus}
+        Command: gh #{args.join(" ")}
+        STDOUT:
+        #{stdout_text}
+        STDERR:
+        #{stderr_text}
+      MESSAGE
+    else
+      system "gh", *args
+    end
+  end
+
+  def self.supported_version_info
+    read_versions_json.select { |_version, info| info["supported"] }
   end
 
   def self.ref_exists?(ref)

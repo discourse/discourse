@@ -293,4 +293,111 @@ namespace :release do
       end
     end
   end
+
+  desc "Update advisory affected versions on GitHub for all supported Discourse versions"
+  task "update_security_advisories" do
+    advisories_base = "repos/discourse/discourse/security-advisories"
+
+    puts "Fetching draft security advisories..."
+    pages =
+      JSON.parse(
+        ReleaseUtils.gh(
+          "api",
+          "#{advisories_base}?state=draft",
+          "--paginate",
+          "--slurp",
+          capture: true,
+        ),
+      )
+    advisories = pages.flat_map { |page| page.is_a?(Array) ? page : [page] }
+
+    draft_advisories =
+      advisories.reject { |advisory| advisory.fetch("summary").start_with?("DRAFT") }
+
+    if draft_advisories.empty?
+      puts "No draft advisories to update."
+      next
+    end
+
+    puts "Found #{draft_advisories.size} draft advisory(ies) to update."
+
+    # Calculate patched versions for all supported versions
+    version_patches = []
+    version_info = ReleaseUtils.supported_version_info
+
+    version_info.each do |series, info|
+      branch = info["released"] ? "release/#{series}" : "main"
+
+      current_version = ReleaseUtils.with_clean_worktree(branch) { ReleaseUtils::Version.current }
+
+      if info["released"]
+        # For released versions, next patch is current patch + 1
+        next_version =
+          "#{current_version.major}.#{current_version.minor}.#{current_version.patch + 1}"
+        version_patches << { series:, patched_version: next_version }
+        puts "  #{series}: #{current_version} -> #{next_version}"
+      else
+        # For unreleased (latest/development) version, ask about release type
+        prompt = TTY::Prompt.new
+        release_type =
+          prompt.select(
+            "What type of release for #{series} (currently #{current_version})?",
+            {
+              "Intermediate release (security patch)" => :intermediate,
+              "Monthly release" => :monthly,
+            },
+          )
+
+        next_version =
+          if release_type == :intermediate
+            current_version.next_revision.to_s
+          else
+            "#{current_version.major}.#{current_version.minor}.#{current_version.patch}"
+          end
+
+        version_patches << { series:, patched_version: next_version }
+        puts "  #{series}: #{current_version} -> #{next_version} (#{release_type})"
+      end
+    end
+
+    vulnerabilities =
+      version_patches.map.with_index do |entry, index|
+        vulnerable_range = index == 0 ? ">= 0" : ">= #{entry[:series]}.0-latest"
+        {
+          package: {
+            ecosystem: "other",
+            name: "Discourse",
+          },
+          vulnerable_version_range: vulnerable_range,
+          patched_versions: entry[:patched_version],
+        }
+      end
+
+    patched_versions = version_patches.map { |e| e[:patched_version] }
+    puts "\nAdvisories to update:"
+    draft_advisories.each { |a| puts "  - #{a.fetch("ghsa_id")}: #{a.fetch("summary")}" }
+    puts "\nPatched versions: #{patched_versions.join(", ")}"
+
+    ReleaseUtils.confirm_or_abort("Proceed with updating #{draft_advisories.size} advisory(ies)?")
+
+    draft_advisories.each do |advisory|
+      ghsa_id = advisory.fetch("ghsa_id")
+      payload = { vulnerabilities: vulnerabilities }
+
+      ReleaseUtils.gh(
+        "api",
+        "#{advisories_base}/#{ghsa_id}",
+        "--method",
+        "PATCH",
+        "--input",
+        "-",
+        capture: true,
+        input: JSON.pretty_generate(payload),
+      )
+
+      puts "Updated #{ghsa_id}"
+    end
+
+    puts "\nDone! Updated #{draft_advisories.size} advisory(ies)."
+  end
 end
