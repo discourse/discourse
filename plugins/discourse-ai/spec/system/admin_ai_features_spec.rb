@@ -20,13 +20,13 @@ RSpec.describe "Admin AI features configuration", type: :system do
     sign_in(admin)
   end
 
-  it "lists all persona backed AI features separated by configured/unconfigured" do
+  it "lists all persona backed AI features separated by enabled/not enabled" do
     ai_features_page.visit
-    ai_features_page.toggle_configured
+    ai_features_page.toggle_enabled
 
     expect(ai_features_page).to have_listed_modules(1)
 
-    ai_features_page.toggle_unconfigured
+    ai_features_page.toggle_not_enabled
 
     # this changes as we add more AI features
     expect(ai_features_page).to have_listed_modules(8)
@@ -35,7 +35,7 @@ RSpec.describe "Admin AI features configuration", type: :system do
   it "lists the persona used for the corresponding AI feature" do
     ai_features_page.visit
 
-    ai_features_page.toggle_configured
+    ai_features_page.toggle_enabled
 
     expect(ai_features_page).to have_feature_persona("topic_summaries", summarization_persona.name)
   end
@@ -43,7 +43,7 @@ RSpec.describe "Admin AI features configuration", type: :system do
   it "lists the groups allowed to use the AI feature" do
     ai_features_page.visit
 
-    ai_features_page.toggle_configured
+    ai_features_page.toggle_enabled
 
     expect(ai_features_page).to have_feature_groups("topic_summaries", [group_1.name, group_2.name])
   end
