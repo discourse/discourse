@@ -199,7 +199,10 @@ class BadgeGranter
       User.joins(:user_badges).where(user_badges: { badge_id: badge.id }).where(title: badge.name)
     users =
       users.or(
-        User.joins(:user_badges).where(title: custom_badge_names),
+        User
+          .joins(:user_badges)
+          .where(user_badges: { badge_id: badge.id })
+          .where(title: custom_badge_names),
       ) unless custom_badge_names.empty?
     users.update_all(title: nil)
 
