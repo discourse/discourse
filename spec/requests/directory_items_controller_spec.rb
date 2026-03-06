@@ -65,6 +65,56 @@ RSpec.describe DirectoryItemsController do
       user_names = json["directory_items"].map { |item| item["user"]["username"] }
       expect(user_names).to include("eviltrout")
     end
+
+    it "does not allow anonymous users to exclude private groups" do
+      secret_group =
+        Fabricate(
+          :group,
+          name: "secret_group",
+          members_visibility_level: Group.visibility_levels[:members],
+        )
+      secret_group.add(evil_trout)
+      DirectoryItem.refresh!
+
+      get "/directory_items.json", params: { period: "all", username: evil_trout.username }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["directory_items"].length).to eq(1)
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            username: evil_trout.username,
+            exclude_groups: "secret_group",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["directory_items"].length).to eq(1)
+    end
+
+    it "does not allow a regular user to exclude groups with non-public member visibility" do
+      secret_group =
+        Fabricate(
+          :group,
+          name: "secret_group",
+          members_visibility_level: Group.visibility_levels[:staff],
+        )
+      secret_group.add(evil_trout)
+      DirectoryItem.refresh!
+
+      sign_in(user)
+
+      get "/directory_items.json", params: { period: "all", username: evil_trout.username }
+      expect(response.status).to eq(200)
+      baseline_count = response.parsed_body["directory_items"].length
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            username: evil_trout.username,
+            exclude_groups: "secret_group",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["directory_items"].length).to eq(baseline_count)
+    end
   end
 
   context "with exclude_groups parameter and current user in the top positions" do
