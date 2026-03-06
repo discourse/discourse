@@ -23,6 +23,18 @@ describe DiscourseSolved::SolvedTopicsController do
         expect(result["user_solved_posts"][0]["post_id"]).to eq(answer_post.id)
       end
 
+      it "returns escaped topic_title" do
+        topic.update_columns(title: "<script>alert('xss')</script> test", fancy_title: nil)
+        sign_in(user)
+
+        get "/solution/by_user.json", params: { username: user.username }
+
+        expect(response.status).to eq(200)
+        title = response.parsed_body["user_solved_posts"][0]["topic_title"]
+
+        expect(title).to eq("&lt;script&gt;alert(&lsquo;xss&rsquo;)&lt;/script&gt; test")
+      end
+
       it "returns 404 for a non-existent user" do
         sign_in(admin)
 
