@@ -168,15 +168,14 @@ module DiscourseDataExplorer
       opts[:explain] = true if params[:explain] == "true"
 
       opts[:limit] = if params[:format] == "csv"
-        if params[:limit].present?
-          limit = params[:limit].to_i
-          limit = QUERY_RESULT_MAX_LIMIT if limit > QUERY_RESULT_MAX_LIMIT
-          limit
-        else
-          QUERY_RESULT_MAX_LIMIT
-        end
-      elsif params[:limit].present?
-        params[:limit] == "ALL" ? "ALL" : params[:limit].to_i
+        limit = params.fetch(:limit, QUERY_RESULT_MAX_LIMIT).to_i
+        limit = QUERY_RESULT_MAX_LIMIT if limit > QUERY_RESULT_MAX_LIMIT
+        limit
+      else
+        fetch_limit_from_params(
+          default: SiteSetting.data_explorer_query_result_limit,
+          max: QUERY_RESULT_MAX_LIMIT,
+        )
       end
 
       result = DataExplorer.run_query(query, query_params, opts)
