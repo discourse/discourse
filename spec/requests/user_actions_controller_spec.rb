@@ -43,6 +43,7 @@ RSpec.describe UserActionsController do
         let(:user) { Fabricate(:user) }
 
         before do
+          sign_in(post.user)
           PostActionNotifier.enable
           PostActionCreator.like(user, post)
           params[:acting_username] = user.username
@@ -79,6 +80,27 @@ RSpec.describe UserActionsController do
 
       context "when checking other users' activity" do
         fab!(:another_user, :user)
+
+        context "when filter is omitted" do
+          it "does not return private action types for another user" do
+            another_user.user_stat.update!(post_count: 1)
+            topic = Fabricate(:topic, user: another_user)
+            post = Fabricate(:post, topic: topic, user: another_user)
+            UserAction.create!(
+              action_type: UserAction::RESPONSE,
+              user_id: another_user.id,
+              acting_user_id: another_user.id,
+              target_topic_id: topic.id,
+              target_post_id: post.id,
+            )
+
+            get "/user_actions.json", params: { username: another_user.username }
+
+            expect(response.status).to eq(200)
+            action_types = response.parsed_body["user_actions"].map { |a| a["action_type"] }
+            expect(action_types).not_to include(*UserAction.private_types)
+          end
+        end
 
         context "when user is anonymous" do
           UserAction.private_types.each do |action_type|
