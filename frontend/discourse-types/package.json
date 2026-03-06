@@ -4,6 +4,9 @@
   "description": "Types only",
   "license": "GPL-2.0-only",
   "author": "Discourse",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "files": [
     "declarations",
