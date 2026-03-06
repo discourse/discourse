@@ -231,11 +231,8 @@ export default class ComposerTitle extends Component {
     "composer.categoryTitlePlaceholder",
     "composer.titlePlaceholder"
   )
-  titleAriaLabel() {
-    return (
-      this.composer.categoryTitlePlaceholder ||
-      i18n(this.composer.titlePlaceholder)
-    );
+  titleAriaLabel(categoryTitlePlaceholder, titlePlaceholder) {
+    return categoryTitlePlaceholder || i18n(titlePlaceholder);
   }
 
   bodyIsDefault() {
