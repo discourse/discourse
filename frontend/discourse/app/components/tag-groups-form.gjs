@@ -11,6 +11,7 @@ import BufferedProxy from "ember-buffered-proxy/proxy";
 import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import PermissionType from "discourse/models/permission-type";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -109,7 +110,10 @@ export default class TagGroupsForm extends Component {
       return false;
     }
 
-    this.model.save(attrs).then(() => this.onSave?.());
+    this.model
+      .save(attrs)
+      .then(() => this.onSave?.())
+      .catch(popupAjaxError);
   }
 
   #serializeTag(t) {
