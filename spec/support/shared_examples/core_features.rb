@@ -233,9 +233,9 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       enabled_plugins.each do |plugin|
         if plugin.js_asset_exists?
-          expect(plugin_script_tags).to include(plugin.name)
+          expect(plugin_script_tags).to include(plugin.directory_name)
         else
-          expect(plugin_script_tags).not_to include(plugin.name)
+          expect(plugin_script_tags).not_to include(plugin.directory_name)
         end
       end
     end
