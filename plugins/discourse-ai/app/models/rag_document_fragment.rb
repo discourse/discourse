@@ -35,7 +35,7 @@ class RagDocumentFragment < ActiveRecord::Base
       end
     end
 
-    def indexing_status(persona, uploads)
+    def indexing_status(agent, uploads)
       embeddings_table = DiscourseAi::Embeddings::Schema.for(self).table
 
       results =
@@ -53,8 +53,8 @@ class RagDocumentFragment < ActiveRecord::Base
         WHERE uploads.id IN (:upload_ids)
         GROUP BY uploads.id
       SQL
-          target_id: persona.id,
-          target_type: persona.class.to_s,
+          target_id: agent.id,
+          target_type: agent.class.to_s,
           upload_ids: uploads.map(&:id),
         )
 

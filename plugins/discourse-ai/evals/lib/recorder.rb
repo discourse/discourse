@@ -10,7 +10,7 @@ module DiscourseAi
     class Recorder
       def self.with_cassette(
         an_eval,
-        persona_key: nil,
+        agent_key: nil,
         output: $stdout,
         total_targets: 1,
         formatter: nil,
@@ -21,9 +21,9 @@ module DiscourseAi
         FileUtils.mkdir_p(logs_dir)
 
         now = Time.now.strftime("%Y%m%d-%H%M%S")
-        normalized_key = normalize_persona_key(persona_key)
-        persona_segment = sanitized_persona_key(normalized_key)
-        base_filename = [an_eval.id, persona_segment, now].compact.join("-")
+        normalized_key = normalize_agent_key(agent_key)
+        agent_segment = sanitized_agent_key(normalized_key)
+        base_filename = [an_eval.id, agent_segment, now].compact.join("-")
         structured_log_filename = "#{base_filename}.json"
         log_filename = "#{base_filename}.log"
 
@@ -42,7 +42,7 @@ module DiscourseAi
           formatter: formatter,
           announce_formatter: announce_formatter,
           finalize_formatter: finalize_formatter,
-          persona_key: normalized_key,
+          agent_key: normalized_key,
           output: output,
         ).tap { |recorder| recorder.running }
       end
@@ -56,7 +56,7 @@ module DiscourseAi
         formatter: nil,
         announce_formatter: true,
         finalize_formatter: true,
-        persona_key:,
+        agent_key:,
         output: $stdout
       )
         @an_eval = an_eval
@@ -70,20 +70,20 @@ module DiscourseAi
               label: an_eval.id,
               output: output,
               total_targets: total_targets,
-              persona_key: persona_key,
+              agent_key: agent_key,
             )
         @announce_formatter = announce_formatter
         @finalize_formatter = finalize_formatter
-        normalized = persona_key.to_s.strip
-        @persona_key = normalized.empty? ? "default" : normalized
+        normalized = agent_key.to_s.strip
+        @agent_key = normalized.empty? ? "default" : normalized
       end
 
       def running
-        logger.info("Starting evaluation '#{an_eval.id}' (persona: #{persona_key})")
+        logger.info("Starting evaluation '#{an_eval.id}' (agent: #{agent_key})")
         formatter.announce_start if announce_formatter
         structured_logger.start_root(
-          name: "Evaluating #{an_eval.id} (persona: #{persona_key})",
-          args: an_eval.to_json.merge(persona_key: persona_key),
+          name: "Evaluating #{an_eval.id} (agent: #{agent_key})",
+          args: an_eval.to_json.merge(agent_key: agent_key),
         )
       end
 
@@ -160,11 +160,11 @@ module DiscourseAi
       def announce_comparison_judged(
         eval_case_id:,
         mode_label:,
-        persona_key: nil,
+        agent_key: nil,
         result:,
         candidates: []
       )
-        step = start_comparison_step(eval_case_id, mode_label, persona_key)
+        step = start_comparison_step(eval_case_id, mode_label, agent_key)
 
         formatter.pause_progress_line
         formatter.record_comparison_judged(
@@ -186,13 +186,13 @@ module DiscourseAi
       def announce_comparison_expected(
         eval_case_id:,
         mode_label:,
-        persona_key: nil,
+        agent_key: nil,
         winner:,
         status_line: nil,
         failures: [],
         candidates: []
       )
-        step = start_comparison_step(eval_case_id, mode_label, persona_key)
+        step = start_comparison_step(eval_case_id, mode_label, agent_key)
 
         formatter.pause_progress_line
         formatter.record_comparison_expected(
@@ -210,14 +210,14 @@ module DiscourseAi
         finish_comparison_step(step)
       end
 
-      def announce_comparison_aggregate(mode_label:, persona_key: nil, aggregate_scores:)
+      def announce_comparison_aggregate(mode_label:, agent_key: nil, aggregate_scores:)
         return if aggregate_scores.blank?
 
-        step = start_comparison_step(nil, mode_label, persona_key, summary: true)
+        step = start_comparison_step(nil, mode_label, agent_key, summary: true)
 
         output.puts
-        output.puts "#{comparison_header(nil, mode_label, persona_key, summary: true)}\n"
-        logger.info(comparison_header(nil, mode_label, persona_key, summary: true))
+        output.puts "#{comparison_header(nil, mode_label, agent_key, summary: true)}\n"
+        logger.info(comparison_header(nil, mode_label, agent_key, summary: true))
 
         aggregate_scores.each do |label, stats|
           output.puts "  - #{label}: #{stats[:passes]}/#{stats[:evals]} passed"
@@ -262,18 +262,18 @@ module DiscourseAi
                   :structured_logger,
                   :output,
                   :log_path,
-                  :persona_key,
+                  :agent_key,
                   :formatter,
                   :announce_formatter,
                   :finalize_formatter
 
-      def self.normalize_persona_key(key)
+      def self.normalize_agent_key(key)
         stripped = key.to_s.strip
         stripped = "default" if stripped.empty?
         stripped
       end
 
-      def self.sanitized_persona_key(key)
+      def self.sanitized_agent_key(key)
         stripped = key.to_s.strip
         stripped = "default" if stripped.empty?
 
@@ -281,18 +281,18 @@ module DiscourseAi
         slug.empty? ? "default" : slug.downcase
       end
 
-      def comparison_header(eval_case_id, mode_label, persona_key, summary: false)
+      def comparison_header(eval_case_id, mode_label, agent_key, summary: false)
         header = "=== Comparison (#{mode_label}"
-        header << ", persona: #{persona_key}" if persona_key
+        header << ", agent: #{agent_key}" if agent_key
         header << ")"
         header << " #{eval_case_id}" if eval_case_id && !summary
         header
       end
 
-      def start_comparison_step(eval_case_id, mode_label, persona_key, summary: false)
+      def start_comparison_step(eval_case_id, mode_label, agent_key, summary: false)
         ensure_root!
         name = "Comparison (#{mode_label}"
-        name += ", persona: #{persona_key}" if persona_key
+        name += ", agent: #{agent_key}" if agent_key
         name += ")"
         name += " #{eval_case_id}" if eval_case_id && !summary
         structured_logger.add_child_step(name: name)

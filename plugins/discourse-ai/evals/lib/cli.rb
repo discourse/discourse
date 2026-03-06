@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 require_relative "features"
-require_relative "persona_prompt_loader"
+require_relative "agent_prompt_loader"
 
 class DiscourseAi::Evals::Cli
   DEFAULT_JUDGE = "gpt-4o"
 
-  attr_reader :persona_keys
+  attr_reader :agent_keys
 
   attr_accessor :eval_name,
                 :models,
                 :list,
                 :list_models,
                 :list_features,
-                :list_personas,
+                :list_agents,
                 :feature_key,
                 :judge_name,
                 :comparison_mode,
@@ -32,8 +32,8 @@ class DiscourseAi::Evals::Cli
 
         opts.on("--list-models", "List models") { cli.list_models = true }
         opts.on("--list-features", "List features available for evals") { cli.list_features = true }
-        opts.on("--list-personas", "List persona definitions available to evals") do
-          cli.list_personas = true
+        opts.on("--list-agents", "List agent definitions available to evals") do
+          cli.list_agents = true
         end
 
         opts.on(
@@ -57,11 +57,11 @@ class DiscourseAi::Evals::Cli
         ) { |judge| cli.judge_name = judge }
 
         opts.on(
-          "--persona-keys KEYS",
-          "Comma-separated list of persona keys to run sequentially",
-        ) { |keys| keys.split(",").each { |key| cli.add_persona_key(key) } }
+          "--agent-keys KEYS",
+          "Comma-separated list of agent keys to run sequentially",
+        ) { |keys| keys.split(",").each { |key| cli.add_agent_key(key) } }
 
-        opts.on("--compare MODE", "Comparison mode (personas or llms)") do |mode|
+        opts.on("--compare MODE", "Comparison mode (agents or llms)") do |mode|
           cli.comparison_mode = mode
         end
 
@@ -89,17 +89,17 @@ class DiscourseAi::Evals::Cli
       normalized = cli.comparison_mode.to_s.downcase.strip
       cli.comparison_mode =
         case normalized
-        when "persona", "personas"
-          :personas
+        when "agent", "agents"
+          :agents
         when "llms", "models"
           :llms
         else
-          STDERR.puts("Unknown comparison mode '#{cli.comparison_mode}'. Use Personas or LLMs.")
+          STDERR.puts("Unknown comparison mode '#{cli.comparison_mode}'. Use Agents or LLMs.")
           exit 1
         end
 
-      if cli.comparison_mode == :personas
-        cli.add_persona_key(DiscourseAi::Evals::PersonaPromptLoader::DEFAULT_PERSONA_KEY)
+      if cli.comparison_mode == :agents
+        cli.add_agent_key(DiscourseAi::Evals::AgentPromptLoader::DEFAULT_AGENT_KEY)
       end
     end
 
@@ -112,18 +112,18 @@ class DiscourseAi::Evals::Cli
   end
 
   def initialize
-    @persona_keys = Set.new
+    @agent_keys = Set.new
   end
 
   def judge_provided?
     judge_name.present?
   end
 
-  def add_persona_key(key)
+  def add_agent_key(key)
     trimmed = key.to_s.strip
     return if trimmed.empty?
 
-    @persona_keys << trimmed
+    @agent_keys << trimmed
   end
 
   def select_evals(available_evals)
@@ -143,27 +143,27 @@ class DiscourseAi::Evals::Cli
     evals
   end
 
-  def validate_comparison_requirements!(llms:, persona_variants:)
+  def validate_comparison_requirements!(llms:, agent_variants:)
     case comparison_mode
     when :llms
-      if persona_variants.length != 1
-        STDERR.puts("LLM comparison runs against exactly one persona.")
+      if agent_variants.length != 1
+        STDERR.puts("LLM comparison runs against exactly one agent.")
         exit 1
       end
-    when :personas
+    when :agents
       if llms.length != 1
-        STDERR.puts("Persona comparison requires exactly one LLM.")
+        STDERR.puts("Agent comparison requires exactly one LLM.")
         exit 1
       end
 
-      if persona_variants.length < 2
-        STDERR.puts("Persona comparison needs at least two personas.")
+      if agent_variants.length < 2
+        STDERR.puts("Agent comparison needs at least two agents.")
         exit 1
       end
     else
-      if persona_variants.length > 1
+      if agent_variants.length > 1
         STDERR.puts(
-          "Non-comparison runs accept only one persona. Remove extra --persona-keys or use --compare personas.",
+          "Non-comparison runs accept only one agent. Remove extra --agent-keys or use --compare agents.",
         )
         exit 1
       end

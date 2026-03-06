@@ -9,13 +9,13 @@ RSpec.describe Jobs::StreamDiscoverReply do
     fab!(:user)
     fab!(:llm_model)
     fab!(:group)
-    fab!(:ai_persona) do
-      Fabricate(:ai_persona, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+    fab!(:ai_agent) do
+      Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
     end
 
     before do
       SiteSetting.ai_discover_enabled = true
-      SiteSetting.ai_discover_persona = ai_persona.id
+      SiteSetting.ai_discover_agent = ai_agent.id
       group.add(user)
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Jobs::StreamDiscoverReply do
       with_responses(["dummy"]) do
         # Spy on BotContext creation to verify user is passed
         context_spy = nil
-        allow(DiscourseAi::Personas::BotContext).to receive(
+        allow(DiscourseAi::Agents::BotContext).to receive(
           :new,
         ).and_wrap_original do |method, **args|
           context_spy = args

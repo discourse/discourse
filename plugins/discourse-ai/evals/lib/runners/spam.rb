@@ -12,13 +12,13 @@ module DiscourseAi
 
         def run(eval_case, llm, execution_context:)
           args = eval_case.args
-          persona = resolve_persona(persona_class: DiscourseAi::Personas::SpamDetector)
+          agent = resolve_agent(agent_class: DiscourseAi::Agents::SpamDetector)
           user = Discourse.system_user
 
           content = "- Topic title: #{args[:title]}\nPost content: #{args[:input]}"
 
           context =
-            DiscourseAi::Personas::BotContext
+            DiscourseAi::Agents::BotContext
               .new(
                 user: user,
                 skip_show_thinking: true,
@@ -29,16 +29,16 @@ module DiscourseAi
                 ctx.custom_instructions = args[:custom_instructions] if args[:custom_instructions]
               end
 
-          verdict = capture_verdict(persona, user, llm, context, execution_context:)
+          verdict = capture_verdict(agent, user, llm, context, execution_context:)
 
           wrap_result(verdict.to_s, { feature: feature_name })
         end
 
         private
 
-        def capture_verdict(persona, user, llm, context, execution_context:)
-          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
-          schema = persona.response_format&.first
+        def capture_verdict(agent, user, llm, context, execution_context:)
+          bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
+          schema = agent.response_format&.first
 
           if schema.present?
             capture_structured_response(

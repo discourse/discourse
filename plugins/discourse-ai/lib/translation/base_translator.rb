@@ -14,17 +14,17 @@ module DiscourseAi
       def translate
         return nil if @text.blank?
         return nil if !SiteSetting.ai_translation_enabled
-        if (ai_persona = AiPersona.find_by_id_from_cache(persona_setting)).blank?
+        if (ai_agent = AiAgent.find_by_id_from_cache(agent_setting)).blank?
           return nil
         end
-        translation_user = ai_persona.user || Discourse.system_user
-        persona_klass = ai_persona.class_instance
-        persona = persona_klass.new
+        translation_user = ai_agent.user || Discourse.system_user
+        agent_klass = ai_agent.class_instance
+        agent = agent_klass.new
 
-        model = @llm_model || self.class.preferred_llm_model(persona_klass)
+        model = @llm_model || self.class.preferred_llm_model(agent_klass)
         return nil if model.blank?
 
-        bot = DiscourseAi::Personas::Bot.as(translation_user, persona:, model:)
+        bot = DiscourseAi::Agents::Bot.as(translation_user, agent:, model:)
 
         ContentSplitter
           .split(content: @text, chunk_size: model.max_output_tokens)
@@ -40,7 +40,7 @@ module DiscourseAi
 
       def get_translation(text:, bot:, translation_user:)
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: translation_user,
             skip_show_thinking: true,
             feature_name: "translation",
@@ -74,12 +74,12 @@ module DiscourseAi
         multiplier > 0 ? multiplier : 1.0
       end
 
-      def persona_setting
+      def agent_setting
         raise NotImplementedError
       end
 
-      def self.preferred_llm_model(persona_klass)
-        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
+      def self.preferred_llm_model(agent_klass)
+        model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
         if model_id.present?
           LlmModel.find_by(id: model_id)
