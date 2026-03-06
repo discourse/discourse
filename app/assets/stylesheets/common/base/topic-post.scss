@@ -559,17 +559,6 @@ nav.post-controls {
     }
 
     button {
-      &.expand-post {
-        @include viewport.until(sm) {
-          margin: var(--control-space) 0 var(--control-space) 0;
-        }
-
-        @include viewport.from(sm) {
-          margin-top: var(--space-3);
-          margin-left: var(--topic-body-width-padding);
-        }
-      }
-
       .discourse-no-touch & {
         &:hover,
         &:focus-visible,
@@ -712,6 +701,17 @@ nav.post-controls {
         flex-grow: 2;
       }
     }
+  }
+}
+
+.expand-post {
+  @include viewport.until(sm) {
+    margin: var(--space-3) 0;
+  }
+
+  @include viewport.from(sm) {
+    margin-top: var(--space-3);
+    margin-left: var(--topic-body-width-padding);
   }
 }
 
