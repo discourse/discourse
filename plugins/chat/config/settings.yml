@@ -98,6 +98,10 @@ chat:
     default: true
     client: true
     validator: "Chat::AllowUploadsValidator"
+  chat_show_copy_button_on_codeblocks:
+    client: true
+    default: true
+    hidden: true
   max_chat_auto_joined_users:
     min: 0
     default: 10000
