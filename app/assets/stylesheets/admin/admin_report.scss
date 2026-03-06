@@ -1,6 +1,17 @@
 @use "lib/viewport";
 
 .admin-report {
+  .select-kit {
+    @include viewport.from(sm) {
+      width: auto;
+      max-width: 250px;
+    }
+
+    @include viewport.until(sm) {
+      width: 100% !important;
+    }
+  }
+
   .conditional-loading-section {
     &.is-loading {
       margin: 0;
@@ -10,9 +21,7 @@
   .header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--content-border-color);
     margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
   }
 
   .header .breadcrumb {
@@ -79,17 +88,11 @@
     }
   }
 
-  .body {
-    display: flex;
-    flex-direction: row;
+  .d-page-subheader__title a {
+    color: var(--primary);
   }
 
-  .main {
-    flex: 1;
-    min-width: 0; // allow chart.js to shrink below intrinsic width
-  }
-
-  .main .report-alert {
+  .report-alert {
     margin: 0;
     text-align: center;
     padding: 3em;
@@ -122,6 +125,18 @@
       border-color: var(--danger-low);
       color: var(--danger);
     }
+  }
+}
+
+body:not(.uc-reporting-improvements) .admin-report {
+  .body {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .main {
+    flex: 1;
+    min-width: 0; // allow chart.js to shrink below intrinsic width
   }
 
   .average-chart {
@@ -186,10 +201,6 @@
         width: 100%;
       }
     }
-  }
-
-  .d-page-subheader__title a {
-    color: var(--primary);
   }
 }
 
