@@ -6,6 +6,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DEditor from "discourse/components/d-editor";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import TextField from "discourse/components/text-field";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import { i18n } from "discourse-i18n";
 
@@ -66,6 +67,16 @@ export default class CategoryTopicTemplateEditor extends Component {
   }
 
   <template>
+    <div class="control-group">
+      <label for="category-topic-title-placeholder">
+        {{i18n "category.topic_title_placeholder"}}
+      </label>
+      <TextField
+        @value={{@category.topic_title_placeholder}}
+        @id="category-topic-title-placeholder"
+        @placeholderKey="category.topic_title_placeholder_placeholder"
+      />
+    </div>
     {{#if this.siteSettings.enable_form_templates}}
       <div class="control-group">
         <DToggleSwitch
