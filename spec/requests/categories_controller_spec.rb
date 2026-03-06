@@ -914,6 +914,7 @@ RSpec.describe CategoriesController do
                 custom_fields: {
                   "dancing" => "frogs",
                   "running" => %w[turtle salamander],
+                  "enable_thingy" => true,
                 },
                 minimum_required_tags: "",
                 allow_global_tags: "true",
@@ -933,6 +934,7 @@ RSpec.describe CategoriesController do
           expect(category.custom_fields).to eq(
             "dancing" => "frogs",
             "running" => %w[turtle salamander],
+            "enable_thingy" => "true",
           )
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)

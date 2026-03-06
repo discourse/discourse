@@ -29,8 +29,14 @@ export default class PostMetaDataLanguage extends Component {
         class={{if this.outdated "heatmap-low"}}
         @identifier="post-language"
         @icon="language"
-        @content={{this.tooltip}}
-      />
+      >
+        <:content>
+          <div>{{this.tooltip}}</div>
+          <div class="post-language__disclaimer">{{i18n
+              "post.ai_translation_disclaimer"
+            }}</div>
+        </:content>
+      </DTooltip>
     </div>
   </template>
 }

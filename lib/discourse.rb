@@ -522,6 +522,7 @@ module Discourse
       asset[:plugin_attributes] = {
         "data-official": !!asset[:plugin].metadata&.official?,
         "data-preinstalled": asset[:plugin].preinstalled?,
+        "data-plugin-name": asset[:plugin].directory_name,
       }
     end
 

@@ -110,7 +110,7 @@ before_service_worker_ready do |server, service_worker|
           # The cause is currently unknown but we suspect that it is related to the Unicorn master process and
           # Sidekiq demon processes reopening logs at the same time as we noticed that Unicorn worker processes only
           # reopen logs after the Unicorn master process is done. To workaround the problem, we are adding an arbitrary
-          # delay of 1 second to Sidekiq's log reopeing procedure. The 1 second delay should be
+          # delay of 1 second to Sidekiq's log reopening procedure. The 1 second delay should be
           # more than enough for the Unicorn master process to finish reopening logs.
           Demon::Sidekiq.kill("USR2")
         end

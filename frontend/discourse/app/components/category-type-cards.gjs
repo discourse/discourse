@@ -7,6 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { i18n } from "discourse-i18n";
 
 export default class CategoryTypeCards extends Component {
   @service categoryTypeChooser;
@@ -56,7 +57,9 @@ export default class CategoryTypeCards extends Component {
               <PluginOutlet
                 @name="category-type-card-unavailable-badge"
                 @outletArgs={{lazyHash type=type}}
-              />
+              >
+                {{i18n "category.choose_type.requires_plugin"}}
+              </PluginOutlet>
             </span>
           {{/unless}}
           <div class="category-type-cards__card-bottom">

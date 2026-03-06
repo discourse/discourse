@@ -298,11 +298,14 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
-    assert.dom(".post-language").hasText(
+    assert.dom(".post-language").includesText(
       i18n("post.original_language", {
         language: "English (US)",
       })
     );
+    assert
+      .dom(".post-language")
+      .includesText(i18n("post.ai_translation_disclaimer"));
   });
 
   test("outdated localization", async function (assert) {
@@ -316,11 +319,14 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
-    assert.dom(".post-language").hasText(
+    assert.dom(".post-language").includesText(
       i18n("post.original_language_and_outdated", {
         language: "English (US)",
       })
     );
+    assert
+      .dom(".post-language")
+      .includesText(i18n("post.ai_translation_disclaimer"));
   });
 
   test("read indicator", async function (assert) {

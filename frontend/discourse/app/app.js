@@ -24,7 +24,7 @@ import { VERSION } from "@ember/version";
 import { importSync } from "@embroider/macros";
 import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildResolver } from "discourse/resolver";
 
@@ -71,6 +71,10 @@ async function loadPluginFromModulePreload(link) {
     );
 
     if (DEBUG) {
+      if (isRailsTesting() || isTesting()) {
+        throw new Error(error);
+      }
+
       let { addError } = importSync("discourse/static/development-error");
       addError(error, link.dataset.pluginName, link.href);
     }

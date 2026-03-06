@@ -1078,6 +1078,7 @@ Discourse::Application.routes.draw do
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme",
         :constraints => {
           format: :json,
+          theme_id: /-?\d+/,
         }
     get "theme-javascripts/:digest" => "theme_javascripts#show",
         :constraints => {

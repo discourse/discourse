@@ -74,26 +74,8 @@ module DiscourseSolved
             }
           end
 
-          ICON_VARIANTS = %w[
-            person_raising_hand:t2
-            person_raising_hand:t3
-            person_raising_hand:t4
-            person_raising_hand:t5
-            person_raising_hand:t6
-            man_raising_hand:t2
-            man_raising_hand:t3
-            man_raising_hand:t4
-            man_raising_hand:t5
-            man_raising_hand:t6
-            woman_raising_hand:t2
-            woman_raising_hand:t3
-            woman_raising_hand:t4
-            woman_raising_hand:t5
-            woman_raising_hand:t6
-          ].freeze
-
           def icon
-            ICON_VARIANTS.sample
+            "person_raising_hand"
           end
         end
       end
