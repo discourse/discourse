@@ -183,7 +183,21 @@ class CategoriesController < ApplicationController
             site_setting_configuration_values: params[:category_type_site_settings],
             category_configuration_values: category_params[:custom_fields],
           },
-        )
+        ) do |result|
+          on_failed_policy(:type_is_available) do
+            return(
+              render json: {
+                       errors: [
+                         I18n.t(
+                           "category_types.not_available",
+                           type_name: category_type.capitalize,
+                         ),
+                       ],
+                     },
+                     status: :unprocessable_entity
+            )
+          end
+        end
       end
 
       Scheduler::Defer.later "Log staff action create category" do

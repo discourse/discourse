@@ -895,6 +895,7 @@ en:
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
 
   category_types:
+    not_available: "Category type '%{type_name}' is not available"
     discussion:
       name: "Discussion"
       title: "discussion"
