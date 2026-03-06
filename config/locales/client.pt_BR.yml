@@ -11,7 +11,7 @@ pt_BR:
         status: "Status"
         in_location: "em"
         hidden: "oculto"
-        failed: "falha"
+        failed: "falhou"
     number:
       format:
         separator: ","

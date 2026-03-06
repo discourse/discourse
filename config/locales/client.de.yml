@@ -15,8 +15,12 @@ de:
         in_location: "in"
         hidden: "versteckt"
         not_registered: "nicht registriert"
+        no_visible_children: "keine sichtbaren untergeordneten Elemente"
         failed: "fehlgeschlagen"
       ghost_reasons:
+        optional_missing_hint: "Dieser optionale Block wird nicht gerendert, da er nicht registriert ist."
+        no_visible_children_hint: "Dieser Containerblock wird nicht gerendert, da keines seiner untergeordneten Elemente sichtbar ist."
+        condition_failed_hint: "Dieser Block wird nicht gerendert, da seine Bedingungen nicht erfüllt sind."
         head_hidden_tail_hint: "Dieser Block wird nicht gerendert, weil ein anderer Block im `head`-Container zuerst gerendert wurde."
     carousel:
       go_to_slide: "Gehe zu Folie %{index}"
@@ -345,6 +349,13 @@ de:
       unknown_source: "Eines deiner Themes oder Plug-ins"
     dev_tools:
       drag_to_move: "Ziehe zum Verschieben"
+      toggle_plugin_outlet_debug: "Debugging des Plug-in-Outlets umschalten"
+      toggle_block_debug: "Block-Debugging umschalten"
+      block_debug:
+        outlet_boundaries: "Outlet-Grenzen"
+        visual_overlay: "Visuelles Overlay"
+        ghost_blocks: "Geisterblöcke"
+        condition_debugging: "Debugging der Bedingungen"
       toggle_safe_mode: "Abgesicherten Modus (de-)aktivieren"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
       toggle_mobile_view: "Von/zu der mobilen Ansicht wechseln"
