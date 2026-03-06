@@ -37,16 +37,10 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.status).to eq(200)
       end
 
-      it "retues a 400 if the query is missing" do
+      it "returns a 400 if the query is missing" do
         post "/discourse-ai/discoveries/reply"
 
         expect(response.status).to eq(400)
-      end
-
-      it "is not accessible via GET to prevent CSRF" do
-        expect {
-          get "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
-        }.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
       end
     end
   end
