@@ -593,7 +593,7 @@ export default class Post extends Component {
                         )
                       }}
                         <DButton
-                          class="post__expand-button expand-post"
+                          class="btn-default post__expand-button expand-post"
                           @action={{this.expandFirstPost}}
                           @translatedLabel={{if
                             this.expandedFirstPost.isPending
