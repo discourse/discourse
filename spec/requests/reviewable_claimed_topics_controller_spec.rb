@@ -146,6 +146,25 @@ RSpec.describe ReviewableClaimedTopicsController do
       Fabricate(:reviewable_claimed_topic, topic: automatic_topic, automatic: true)
     end
 
+    context "when logged in as a regular user" do
+      fab!(:user)
+
+      before { sign_in(user) }
+
+      it "returns 404 for both existing and non-existing topics to prevent enumeration" do
+        SiteSetting.reviewable_claiming = "optional"
+
+        delete "/reviewable_claimed_topics/#{topic.id}.json"
+        existing_topic_status = response.status
+
+        delete "/reviewable_claimed_topics/#{topic.id + 1000}.json"
+        non_existing_topic_status = response.status
+
+        expect(existing_topic_status).to eq(404)
+        expect(non_existing_topic_status).to eq(404)
+      end
+    end
+
     before { sign_in(moderator) }
 
     it "works" do
@@ -195,10 +214,10 @@ RSpec.describe ReviewableClaimedTopicsController do
       expect(response.status).to eq(404)
     end
 
-    it "raises an error if user cannot claim the topic" do
+    it "returns 404 if user cannot claim the topic" do
       delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "allows unclaiming when automatic param is present" do
