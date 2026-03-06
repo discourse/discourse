@@ -242,7 +242,20 @@ class Stylesheet::Manager::Builder
   def color_scheme_digest
     cs = @color_scheme || theme&.color_scheme
 
-    fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
+    theme_id = theme&.id || SiteSetting.default_theme_id
+    base_font =
+      if theme_id.present?
+        SiteSetting.base_font(theme_id: theme_id)
+      else
+        SiteSetting.defaults[:base_font]
+      end
+    heading_font =
+      if theme_id.present?
+        SiteSetting.heading_font(theme_id: theme_id)
+      else
+        SiteSetting.defaults[:heading_font]
+      end
+    fonts = "#{base_font}-#{heading_font}"
 
     digest_string = "#{current_hostname}-"
     if cs

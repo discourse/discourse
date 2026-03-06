@@ -144,5 +144,11 @@ class Themes::ThemeSiteSettingManager
     # This also sends a MessageBus message to the client for client site settings,
     # and a DiscourseEvent for the change.
     SiteSetting.change_themeable_site_setting(theme.id, params.name, new_value)
+
+    # Clear the stylesheet cache when font settings change, as fonts affect
+    # the color scheme stylesheets.
+    if %i[base_font heading_font].include?(params.name.to_sym)
+      Stylesheet::Manager.clear_color_scheme_cache!
+    end
   end
 end

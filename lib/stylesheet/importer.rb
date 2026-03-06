@@ -40,8 +40,22 @@ module Stylesheet
     register_imports!
 
     def font
-      body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
-      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
+      theme_id = @theme_id || SiteSetting.default_theme_id
+      base_font_key =
+        if theme_id.present?
+          SiteSetting.base_font(theme_id: theme_id)
+        else
+          SiteSetting.defaults[:base_font]
+        end
+      heading_font_key =
+        if theme_id.present?
+          SiteSetting.heading_font(theme_id: theme_id)
+        else
+          SiteSetting.defaults[:heading_font]
+        end
+
+      body_font = DiscourseFonts.fonts.find { |f| f[:key] == base_font_key }
+      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == heading_font_key }
       contents = +""
 
       contents << <<~CSS if body_font.present?
