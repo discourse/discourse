@@ -142,7 +142,6 @@ group :test, :development do
 
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
-  gem "pry-stack_explorer", require: false
   gem "debug", ">= 1.0.0", require: "debug/prelude"
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
@@ -160,7 +159,6 @@ group :development do
   gem "ruby-prof", require: false, platform: :mri
   gem "bullet", require: !!ENV["BULLET"]
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
-  gem "binding_of_caller"
   gem "yaml-lint"
   gem "yard"
   gem "ruby-lsp", require: false

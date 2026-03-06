@@ -220,7 +220,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       enabled_plugins = Discourse.plugins.filter(&:enabled?)
 
       visit "/"
-      expect(page).to have_css("#site-logo")
+      expect(page).to have_css("#site-logo", visible: :all) # Themes might hide it
 
       plugin_script_tags =
         page
@@ -233,9 +233,9 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       enabled_plugins.each do |plugin|
         if plugin.js_asset_exists?
-          expect(plugin_script_tags).to include(plugin.name)
+          expect(plugin_script_tags).to include(plugin.directory_name)
         else
-          expect(plugin_script_tags).not_to include(plugin.name)
+          expect(plugin_script_tags).not_to include(plugin.directory_name)
         end
       end
     end

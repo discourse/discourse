@@ -82,14 +82,14 @@ export function performEmojiUnescape(string, opts) {
       return "";
     }
 
-    const isReplacable =
+    const isReplaceable =
       (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
       isReplaceableInlineEmoji(string, index, opts.inlineEmoji);
 
     const title = opts.title ?? emojiVal;
     const alt = opts.alt ?? opts.title ?? emojiVal;
     const tabIndex = opts.tabIndex ? ` tabindex='${opts.tabIndex}'` : "";
-    return url && isReplacable
+    return url && isReplaceable
       ? `<img width="20" height="20" src='${url}' ${
           opts.skipTitle ? "" : `title='${title}'`
         } ${
