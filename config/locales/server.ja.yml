@@ -1148,9 +1148,10 @@ ja:
       description: "通報の種類、投稿者、通報者、および解決までの時間など、通報のステータスのリスト。"
     visits:
       title: "ユーザーアクセス"
-      xaxis: "日"
+      xaxis:
+        desktop: "デスクトップ"
+        mobile: "モバイル"
       yaxis: "アクセス数"
-      description: "サインイン済みのユーザーの訪問数。"
     signups:
       title: "登録"
       xaxis: "日"
@@ -1214,10 +1215,8 @@ ja:
       description: "ログインユーザー、匿名ユーザー、既知のクローラー、およびその他のトラフィックのページビュー。"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "日"
       yaxis: "DAU/MAU"
-      description: "前日にログインしたメンバーの数を先月にログインしたメンバーの数で割った数 - コミュニティーの「粘着性」を示す割合 % を返します。20% 以上を目指してください。"
     daily_engaged_users:
       title: "1 日のエンゲージユーザー"
       xaxis: "日"

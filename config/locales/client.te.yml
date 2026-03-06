@@ -1846,6 +1846,7 @@ te:
     form_kit:
       reset: రీసెట్ చేయండి
       optional: ఐచ్ఛికం
+      required: అవసరం
       errors:
         required: "అవసరం"
         invalid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
@@ -4568,7 +4569,7 @@ te:
           all: "అన్ని"
           view_table: "పట్టిక"
           view_graph: "గ్రాఫ్"
-          refresh_report: "రిపోర్టు తాజాపరుచండి"
+          refresh_report: "రిఫ్రెష్ చేయండి"
           daily: రోజువారీ
           monthly: నెలవారీ
           weekly: వారానికోసారి

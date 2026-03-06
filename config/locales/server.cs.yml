@@ -1371,9 +1371,10 @@ cs:
       description: "Seznam stavů nahlášení včetně typu, přispěvatele, ohlašovatele a doby do odbavení."
     visits:
       title: "Návštěvy uživatelů"
-      xaxis: "Den"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobilní verze"
       yaxis: "Počet návštěv"
-      description: "Počet návštěv přihlášených uživatelů."
     signups:
       title: "Registrace"
       xaxis: "Den"
@@ -1435,10 +1436,8 @@ cs:
       description: "Počty zobrazených stránek pro přihlášené uživatele, anonymní uživatele, známé prohledávače a další provoz."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Den"
       yaxis: "DAU/MAU"
-      description: "Počet členů, kteří se přihlásili za poslední den, vydělený počtem členů, kteří se přihlásili za poslední měsíc – vrátí %, které označuje „přilnavost“ komunity. Zaměřte se na > 20 %."
     daily_engaged_users:
       title: "Denně zapojení uživatelé"
       xaxis: "Den"

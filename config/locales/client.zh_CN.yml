@@ -2301,6 +2301,7 @@ zh_CN:
     form_kit:
       reset: 重置
       optional: 可选
+      required: 必选
       errors_summary_title:
         other: "修复这些错误以继续"
       dirty_form: "您没有提交更改！确定要离开吗？"
@@ -2971,9 +2972,13 @@ zh_CN:
         available:
           title: "即将推出的更改"
           description: "'%{changeName}' 可供预览"
+          description_two: "'%{changeName1}' 和 '%{changeName2}' 可供预览"
+          description_many: "'%{changeName}' 和 %{otherChangeCount} ' 更多更改可供预览"
         automatically_promoted:
           title: "即将推出的更改"
           description: "'%{changeName}' 已自动启用"
+          description_two: "'%{changeName1}' 和 '%{changeName2}' 已自动启用"
+          description_many: "'%{changeName}' 和 %{otherChangeCount} 的更多更改已自动启用"
       dismiss_confirmation:
         body:
           default:
@@ -3028,6 +3033,8 @@ zh_CN:
         votes_released: "投票额度已释放"
         new_features: "新的 Discourse 功能已发布"
         admin_problems: "网站信息中心有新建议"
+        upcoming_change_available: "即将推出的新变化已发布"
+        upcoming_change_automatically_promoted: "即将发生的更改已自动启用"
     upload_selector:
       change: "更改"
       delete: "删除"
@@ -4104,6 +4111,11 @@ zh_CN:
       create: "新建类别"
       create_with_type: "新 %{typeName} 类别"
       create_long: "创建新类别"
+      settings_apply_to_all_of_type_warning: "以下更改将适用于此类型的所有类别"
+      type_settings_schema:
+        category_settings: "类别设置"
+        category_custom_fields: "类别设置"
+        site_settings: "网站设置"
       choose_type:
         title: "选择类别类型"
         requires_plugin: "需要插件"
@@ -5868,7 +5880,7 @@ zh_CN:
           all: "所有"
           view_table: "表格"
           view_graph: "图表"
-          refresh_report: "刷新报告"
+          refresh_report: "刷新"
           daily: 每天
           monthly: 每月
           weekly: 每周
@@ -7242,6 +7254,7 @@ zh_CN:
             upcoming_change_available: "即将推出的更改已可用"
             change_site_setting_groups: "更改站点设置群组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭据"
+            configure_category_type: "配置类别类型"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

@@ -2579,6 +2579,7 @@ cs:
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
+      required: required
       dirty_form: "Neodeslali jste změny! Opravdu chcete odejít?"
       errors:
         starts_with: "Musí začínat na %{prefix}"
@@ -4719,6 +4720,8 @@ cs:
       delete: "Smazat kategorii"
       create: "Přidat kategorii"
       create_long: "Vytvořit novou kategorii"
+      type_settings_schema:
+        site_settings: "Nastavení webu"
       save: "Uložit kategorii"
       unsaved_changes: "Máte neuložené změny"
       slug: "URL kategorie"
@@ -6597,7 +6600,7 @@ cs:
           all: "Celkem"
           view_table: "tabulka"
           view_graph: "graf"
-          refresh_report: "Aktualizovat data"
+          refresh_report: "Aktualizovat"
           daily: Denně
           monthly: Měsíčně
           weekly: Týdně
