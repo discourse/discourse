@@ -32,7 +32,7 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "postinstall": "if [ \"$CI\" != \"1\" ] && [ \"$RAILS_ENV\" != \"production\" ]; then pnpm types:generate && pnpm lint:types; fi",
+    "postinstall": "if [ -z \"$CI\" ] && [ \"$RAILS_ENV\" != \"production\" ]; then pnpm types:generate && pnpm lint:types; fi",
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
