@@ -1190,6 +1190,19 @@ RSpec.describe PostGuardian do
     end
   end
 
+  describe "#can_see_deleted_posts_for_user?" do
+    it "returns true for staff" do
+      expect(Guardian.new(admin).can_see_deleted_posts_for_user?).to eq(true)
+      expect(Guardian.new(moderator).can_see_deleted_posts_for_user?).to eq(true)
+    end
+
+    it "returns false for non-staff users in delete_all_posts_and_topics_allowed_groups" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      expect(Guardian.new(trust_level_4).can_see_deleted_posts_for_user?).to eq(false)
+    end
+  end
+
   describe "#can_see_post_actors?" do
     let(:topic) { Fabricate(:topic, user: coding_horror) }
 
