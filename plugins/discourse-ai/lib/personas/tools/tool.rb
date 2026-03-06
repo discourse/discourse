@@ -276,6 +276,10 @@ module DiscourseAi
           Option.new(tool: self, name: name, type: type)
         end
 
+        def acting_user
+          bot_user || Discourse.system_user
+        end
+
         def description_args
           {}
         end
