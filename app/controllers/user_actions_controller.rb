@@ -15,6 +15,10 @@ class UserActionsController < ApplicationController
 
     ensure_user_actions_visible!(user, action_types)
 
+    if action_types.empty? && !guardian.can_see_user_actions?(user, UserAction.private_types)
+      action_types = UserAction.types.values - UserAction.private_types
+    end
+
     opts = {
       user_id: user.id,
       user: user,
