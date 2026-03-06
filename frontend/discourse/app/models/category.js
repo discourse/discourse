@@ -804,6 +804,7 @@ export default class Category extends RestModel {
         category_setting_attributes: this.category_setting,
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
+        topic_title_placeholder: this.topic_title_placeholder,
         form_template_ids: this.form_template_ids,
         all_topics_wiki: this.all_topics_wiki,
         allow_unlimited_owner_edits_on_first_post:
