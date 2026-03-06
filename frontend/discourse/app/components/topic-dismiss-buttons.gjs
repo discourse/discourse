@@ -56,6 +56,7 @@ export default class TopicDismissButtons extends Component {
         {{~#if @showDismissRead~}}
           <DButton
             @action={{this.dismissReadPosts}}
+            @icon="check"
             @translatedLabel={{this.dismissLabel}}
             @title="topics.bulk.dismiss_tooltip"
             id="dismiss-topics-{{@position}}"
@@ -65,8 +66,9 @@ export default class TopicDismissButtons extends Component {
         {{~#if @showResetNew~}}
           <DButton
             @action={{@resetNew}}
-            @translatedLabel={{this.dismissNewLabel}}
             @icon="check"
+            @translatedLabel={{this.dismissNewLabel}}
+            @title="topics.bulk.dismiss_tooltip"
             id="dismiss-new-{{@position}}"
             class="btn-default dismiss-read"
           />
