@@ -41,6 +41,7 @@ RSpec.describe UserApiKeysController do
     end
 
     it "includes padding parameter in the form only when provided" do
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
       get "/user-api-key/new", params: args
@@ -58,6 +59,7 @@ RSpec.describe UserApiKeysController do
     end
 
     it "does not show redirect warning when auth_redirect is discourse://auth_redirect" do
+      SiteSetting.allowed_user_api_auth_redirects = "discourse://auth_redirect"
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
       get "/user-api-key/new", params: args.merge(auth_redirect: "discourse://auth_redirect")
@@ -65,10 +67,29 @@ RSpec.describe UserApiKeysController do
     end
 
     it "shows redirect warning when auth_redirect is not discourse://auth_redirect" do
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
       get "/user-api-key/new", params: args
       expect(response.body).to include(I18n.t("user_api_key.redirect_warning"))
+    end
+
+    it "rejects auth_redirect to a disallowed domain" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/new", params: args.merge(auth_redirect: "https://evil.com/steal")
+      expect(response.body).to include(I18n.t("user_api_key.generic_error"))
+      expect(response.body).not_to include("evil.com")
+    end
+
+    it "allows auth_redirect when it matches allowed_user_api_auth_redirects" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://good.com/callback"
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/new", params: args.merge(auth_redirect: "https://good.com/callback")
+      expect(response.status).to eq(200)
+      expect(response.body).to include("good.com")
+      expect(response.body).not_to include(I18n.t("user_api_key.generic_error"))
     end
   end
 
