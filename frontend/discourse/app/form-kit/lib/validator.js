@@ -140,7 +140,7 @@ export default class Validator {
         }
         break;
       case "checkbox":
-        if (value !== true) {
+        if (![true, "true"].includes(value)) {
           error = true;
         }
         break;
