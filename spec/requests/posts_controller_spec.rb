@@ -2727,6 +2727,17 @@ RSpec.describe PostsController do
         expect(data[0]["id"]).to eq(post_deleted_by_admin.id)
         expect(data[0]["deleted_by"]["id"]).to eq(admin.id)
       end
+
+      it "denies access to non-staff users in delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        non_staff_user = Fabricate(:user, refresh_auto_groups: true)
+        group.add(non_staff_user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+
+        sign_in(non_staff_user)
+        get "/posts/#{user.username}/deleted.json"
+        expect(response).to be_forbidden
+      end
     end
   end
 
