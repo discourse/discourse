@@ -16,12 +16,18 @@ export default class TagChooserField extends Component {
   @service dialog;
 
   get formattedChoices() {
+    if (!this.args.choices) {
+      return [];
+    }
+
+    const tagChoices = this.args.attributes?.tag_choices || {};
+
     return this.args.choices.map((tag) => ({
       id: tag.id,
       name: tag.name,
-      display: this.args.attributes.tag_choices[tag.name]
-        ? this.args.attributes.tag_choices[tag.name]
-        : tag.name.replace(/-/g, " ").toUpperCase(),
+      display: tagChoices[tag.name]
+        ? tagChoices[tag.name]
+        : (tag.name || "").replace(/-/g, " ").toUpperCase(),
     }));
   }
 
@@ -93,7 +99,7 @@ export default class TagChooserField extends Component {
     const getFallbackValue = (optionValue) =>
       optionValue.toLowerCase().replace(/\s+/g, "-");
     let choiceMap = null;
-    const tagChoices = this.args.attributes.tag_choices;
+    const tagChoices = this.args.attributes?.tag_choices;
 
     if (tagChoices) {
       choiceMap = new Map(
