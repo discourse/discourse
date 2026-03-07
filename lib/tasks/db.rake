@@ -130,6 +130,8 @@ task "multisite:migrate" => %w[
 
     puts "Running migrations and seeds for #{databases.join(", ")} database(s)"
 
+    Discourse.before_fork
+
     results =
       Parallel.map(
         databases,
