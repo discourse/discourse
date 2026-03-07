@@ -167,20 +167,24 @@ export default class AdminLogoForm extends Component {
           @description={{i18n "admin.config.logo.form.large_icon.description"}}
           @helpText={{i18n "admin.config.logo.form.large_icon.help_text"}}
           @onSet={{fn this.handleUpload "large_icon"}}
-          @placeholderUrl={{this.placeholders.large_icon}}
           as |field|
         >
-          <field.Image @type="branding" />
+          <field.Image
+            @type="branding"
+            @placeholderUrl={{this.placeholders.large_icon}}
+          />
         </form.Field>
         <form.Field
           @name="favicon"
           @title={{i18n "admin.config.logo.form.favicon.title"}}
           @description={{i18n "admin.config.logo.form.favicon.description"}}
           @onSet={{fn this.handleUpload "favicon"}}
-          @placeholderUrl={{this.placeholders.favicon}}
           as |field|
         >
-          <field.Image @type="branding" />
+          <field.Image
+            @type="branding"
+            @placeholderUrl={{this.placeholders.favicon}}
+          />
         </form.Field>
         <form.Field
           @name="logo_small"
@@ -231,10 +235,12 @@ export default class AdminLogoForm extends Component {
               }}
               @helpText={{i18n "admin.config.logo.form.mobile_logo.help_text"}}
               @onSet={{fn this.handleUpload "mobile_logo"}}
-              @placeholderUrl={{this.placeholders.mobile_logo}}
               as |field|
             >
-              <field.Image @type="branding" />
+              <field.Image
+                @type="branding"
+                @placeholderUrl={{this.placeholders.mobile_logo}}
+              />
             </form.Field>
             <form.Field
               @name="mobile_logo_dark_required"
@@ -306,10 +312,12 @@ export default class AdminLogoForm extends Component {
                 "admin.config.logo.form.apple_touch_icon.help_text"
               }}
               @onSet={{fn this.handleUpload "apple_touch_icon"}}
-              @placeholderUrl={{this.placeholders.apple_touch_icon}}
               as |field|
             >
-              <field.Image @type="branding" />
+              <field.Image
+                @type="branding"
+                @placeholderUrl={{this.placeholders.apple_touch_icon}}
+              />
             </form.Field>
           </:content>
         </AdminConfigAreaCardSection>
@@ -328,7 +336,6 @@ export default class AdminLogoForm extends Component {
               }}
               @helpText={{i18n "admin.config.logo.form.digest_logo.help_text"}}
               @onSet={{fn this.handleUpload "digest_logo"}}
-              @placeholderUrl={{this.placeholders.digest_logo}}
               as |field|
             >
               <field.Image
@@ -352,10 +359,12 @@ export default class AdminLogoForm extends Component {
                 "admin.config.logo.form.opengraph_image.description"
               }}
               @onSet={{fn this.handleUpload "opengraph_image"}}
-              @placeholderUrl={{this.placeholders.opengraph_image}}
               as |field|
             >
-              <field.Image @type="branding" />
+              <field.Image
+                @type="branding"
+                @placeholderUrl={{this.placeholders.opengraph_image}}
+              />
             </form.Field>
           </:content>
         </AdminConfigAreaCardSection>
