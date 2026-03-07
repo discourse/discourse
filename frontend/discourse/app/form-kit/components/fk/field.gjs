@@ -70,59 +70,38 @@ export default class FKField extends Component {
   }
 
   <template>
-    <FKFieldData
-      @name={{@name}}
-      @data={{@data}}
-      @triggerRevalidationFor={{@triggerRevalidationFor}}
-      @title={{@title}}
-      @tooltip={{@tooltip}}
-      @description={{@description}}
-      @helpText={{@helpText}}
-      @showTitle={{@showTitle}}
-      @collectionIndex={{@collectionIndex}}
-      @set={{@set}}
-      @addError={{@addError}}
-      @validate={{@validate}}
-      @validation={{@validation}}
-      @onSet={{@onSet}}
-      @registerField={{@registerField}}
-      @format={{@format}}
-      @titleFormat={{@titleFormat}}
-      @descriptionFormat={{@descriptionFormat}}
-      @disabled={{@disabled}}
-      @parentName={{@parentName}}
-      @placeholderUrl={{@placeholderUrl}}
-      as |field|
-    >
-      <this.wrapper @size={{@size}}>
-        {{yield
-          (hash
-            Custom=(this.componentFor FKControlCustom field)
-            Code=(this.componentFor FKControlCode field)
-            Question=(this.componentFor FKControlQuestion field)
-            Textarea=(this.componentFor FKControlTextarea field)
-            Checkbox=(this.componentFor FKControlCheckbox field)
-            Color=(this.componentFor FKControlColor field)
-            Image=(this.componentFor FKControlImage field)
-            Password=(this.componentFor FKControlPassword field)
-            Composer=(this.componentFor FKControlComposer field)
-            Icon=(this.componentFor FKControlIcon field)
-            Emoji=(this.componentFor FKControlEmoji field)
-            Toggle=(this.componentFor FKControlToggle field)
-            Menu=(this.componentFor FKControlMenu field)
-            Select=(this.componentFor FKControlSelect field)
-            TagChooser=(this.componentFor FKControlTagChooser field)
-            Input=(this.componentFor FKControlInput field)
-            RadioGroup=(this.componentFor FKControlRadioGroup field)
-            Calendar=(this.componentFor FKControlCalendar field)
-            errorId=field.errorId
-            id=field.id
-            name=field.name
-            set=field.set
-            value=field.value
-          )
-        }}
-      </this.wrapper>
-    </FKFieldData>
+    {{#let (curryComponent FKFieldData this.args) as |FieldData|}}
+      <FieldData as |field|>
+        <this.wrapper @size={{@size}}>
+          {{yield
+            (hash
+              Custom=(this.componentFor FKControlCustom field)
+              Code=(this.componentFor FKControlCode field)
+              Question=(this.componentFor FKControlQuestion field)
+              Textarea=(this.componentFor FKControlTextarea field)
+              Checkbox=(this.componentFor FKControlCheckbox field)
+              Color=(this.componentFor FKControlColor field)
+              Image=(this.componentFor FKControlImage field)
+              Password=(this.componentFor FKControlPassword field)
+              Composer=(this.componentFor FKControlComposer field)
+              Icon=(this.componentFor FKControlIcon field)
+              Emoji=(this.componentFor FKControlEmoji field)
+              Toggle=(this.componentFor FKControlToggle field)
+              Menu=(this.componentFor FKControlMenu field)
+              Select=(this.componentFor FKControlSelect field)
+              TagChooser=(this.componentFor FKControlTagChooser field)
+              Input=(this.componentFor FKControlInput field)
+              RadioGroup=(this.componentFor FKControlRadioGroup field)
+              Calendar=(this.componentFor FKControlCalendar field)
+              errorId=field.errorId
+              id=field.id
+              name=field.name
+              set=field.set
+              value=field.value
+            )
+          }}
+        </this.wrapper>
+      </FieldData>
+    {{/let}}
   </template>
 }

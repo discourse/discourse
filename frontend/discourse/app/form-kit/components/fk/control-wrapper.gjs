@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import curryComponent from "ember-curry-component";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
 import FKOptional from "discourse/form-kit/components/fk/optional";
@@ -93,45 +94,21 @@ export default class FKControlWrapper extends Component {
           (if @field.format (concat "--" @field.format))
         }}
       >
-        <@component
-          @field={{@field}}
-          @value={{@value}}
-          @type={{@type}}
-          @yesLabel={{@yesLabel}}
-          @noLabel={{@noLabel}}
-          @lang={{@lang}}
-          @before={{@before}}
-          @after={{@after}}
-          @height={{@height}}
-          @preview={{@preview}}
-          @includeTime={{@includeTime}}
-          @expandedDatePickerOnDesktop={{@expandedDatePickerOnDesktop}}
-          @selection={{@selection}}
-          @includeNone={{@includeNone}}
-          @colors={{@colors}}
-          @usedColors={{@usedColors}}
-          @allowNamedColors={{@allowNamedColors}}
-          @collapseSwatches={{@collapseSwatches}}
-          @collapseSwatchesLabel={{@collapseSwatchesLabel}}
-          @fallbackValue={{@fallbackValue}}
-          @showAllTags={{@showAllTags}}
-          @excludeSynonyms={{@excludeSynonyms}}
-          @excludeTagsWithSynonyms={{@excludeTagsWithSynonyms}}
-          @unlimited={{@unlimited}}
-          @categoryId={{@categoryId}}
-          @allowCreate={{@allowCreate}}
-          @placeholder={{@placeholder}}
-          @hasBlock={{has-block}}
-          @onControlWidthChange={{fn (mut this.controlWidth)}}
-          id={{@field.id}}
-          name={{@field.name}}
-          aria-invalid={{if this.error "true"}}
-          aria-describedby={{if this.error @field.errorId}}
-          ...attributes
-          as |components|
-        >
-          {{yield components}}
-        </@component>
+        {{#let (curryComponent @component this.args) as |Control|}}
+          <Control
+            @field={{@field}}
+            @hasBlock={{has-block}}
+            @onControlWidthChange={{fn (mut this.controlWidth)}}
+            id={{@field.id}}
+            name={{@field.name}}
+            aria-invalid={{if this.error "true"}}
+            aria-describedby={{if this.error @field.errorId}}
+            ...attributes
+            as |components|
+          >
+            {{yield components}}
+          </Control>
+        {{/let}}
 
         {{#if @field.helpText}}
           <FKText
