@@ -9,6 +9,7 @@
   width: max-content;
   top: 0;
   left: 0;
+  padding-left: 72px !important; /* for easier mouse movement to the element */
   z-index: z("composer", "content");
 
   // dynamically overridden by the component
