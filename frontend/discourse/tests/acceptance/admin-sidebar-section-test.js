@@ -395,6 +395,21 @@ acceptance("Admin Sidebar - Plugin Icons", function (needs) {
       )
       .exists("default gear icon is displayed when no custom icon is set");
   });
+
+  test("setAdminPluginIcon with falsy icon is ignored and keeps default gear icon", async function (assert) {
+    withPluginApi((api) => {
+      api.setAdminPluginIcon("discourse-calendar", "");
+    });
+
+    await visit("/admin");
+    await click(".sidebar-toggle-all-sections");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='admin-plugins'] .sidebar-section-link-wrapper[data-list-item-name='admin_plugin_discourse-calendar'] .d-icon-gear"
+      )
+      .exists("default gear icon is displayed when falsy icon is provided");
+  });
 });
 
 let _locale;
