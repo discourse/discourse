@@ -105,6 +105,7 @@ class Demon::Sidekiq < ::Demon::Base
   end
 
   def after_fork
+    super
     Demon::Sidekiq.after_fork&.call
     SignalTrapLogger.instance.after_fork
 
