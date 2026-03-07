@@ -9,12 +9,19 @@
   width: max-content;
   top: 0;
   left: 0;
-  padding-left: 72px !important; /* for easier mouse movement to the element */
   z-index: z("composer", "content");
 
   // dynamically overridden by the component
   visibility: hidden;
   pointer-events: none;
+
+  &.is-size-full {
+    padding-left: 60px !important; /* for easier mouse movement to the element */
+  }
+
+  &.is-size-reduced {
+    padding-left: 20px !important; /* for easier mouse movement to the element */
+  }
 }
 
 .chat-message-actions {
