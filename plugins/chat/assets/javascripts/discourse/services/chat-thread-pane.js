@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ChatChannelPane from "./chat-channel-pane";
 
@@ -17,6 +18,12 @@ export default class ChatThreadPane extends ChatChannelPane {
 
   get selectedMessageIds() {
     return this.thread.messagesManager.selectedMessages.map((item) => item.id);
+  }
+
+  @action
+  onSelectMessage(message) {
+    super.onSelectMessage(message);
+    this.chat.activeMessage = null;
   }
 
   async close() {
