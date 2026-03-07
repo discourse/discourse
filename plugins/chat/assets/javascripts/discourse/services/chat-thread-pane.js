@@ -21,6 +21,12 @@ export default class ChatThreadPane extends ChatChannelPane {
   }
 
   @action
+  cancelSelecting() {
+    this.selectingMessages = false;
+    this.thread.messagesManager.clearSelectedMessages();
+  }
+
+  @action
   onSelectMessage(message) {
     super.onSelectMessage(message);
     this.chat.activeMessage = null;
