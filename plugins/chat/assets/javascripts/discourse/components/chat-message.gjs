@@ -272,7 +272,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+    if (
+      this.chat.activeMessage?.model?.id === this.args.message.id &&
+      this.chat.activeMessage?.context === this.args.context
+    ) {
       return;
     }
 
@@ -295,7 +298,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+    if (
+      this.chat.activeMessage?.model?.id === this.args.message.id &&
+      this.chat.activeMessage?.context === this.args.context
+    ) {
       return;
     }
 
