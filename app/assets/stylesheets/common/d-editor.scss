@@ -317,6 +317,9 @@
   min-width: 0;
   margin-left: 1px;
   margin-right: 1px;
+  overflow: clip;
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
 }
 
 .d-editor-button-bar__scroll-btn {
