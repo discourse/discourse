@@ -26,12 +26,6 @@ export default class ChatThreadPane extends ChatChannelPane {
     this.thread.messagesManager.clearSelectedMessages();
   }
 
-  @action
-  onSelectMessage(message) {
-    super.onSelectMessage(message);
-    this.chat.activeMessage = null;
-  }
-
   async close() {
     await this.router.transitionTo("chat.channel", ...this.channel.routeModels);
   }
