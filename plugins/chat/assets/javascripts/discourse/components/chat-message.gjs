@@ -186,6 +186,7 @@ export default class ChatMessage extends Component {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
     cancel(this._makeMessageActiveHandler);
+    cancel(this._onMouseEnterMessageDebouncedHandler);
     this.#teardownMentionedUsers();
     this.chat.activeMessage = null;
   }
