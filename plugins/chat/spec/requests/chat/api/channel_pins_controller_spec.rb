@@ -14,15 +14,21 @@ RSpec.describe Chat::Api::ChannelPinsController do
   end
 
   describe "#index" do
-    fab!(:pin) { Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel) }
-
     it "returns pinned messages for the channel" do
+      Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel)
       Fabricate(:user_chat_channel_membership, chat_channel: channel, user: admin)
       get "/chat/api/channels/#{channel.id}/pins"
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["pinned_messages"].length).to eq(1)
       expect(response.parsed_body["pinned_messages"][0]["chat_message_id"]).to eq(message.id)
+    end
+
+    it "returns an empty list when there are no pinned messages" do
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["pinned_messages"].length).to eq(0)
     end
 
     it "does not mark pins as read" do

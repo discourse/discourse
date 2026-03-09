@@ -163,6 +163,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
           chat_page.open_from_header
           drawer_page.open_channel(thread_1.channel)
           channel_page.reply_to(message_1)
+          expect(drawer_page).to have_open_thread
           thread_page.messages.select(message_1)
           thread_page.selection_management.quote
 

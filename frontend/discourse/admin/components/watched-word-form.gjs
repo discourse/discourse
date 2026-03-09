@@ -76,7 +76,9 @@ export default class WatchedWordForm extends Component {
   changeSelectedTags(tags) {
     this.setProperties({
       selectedTags: tags,
-      replacement: tags.join(","),
+      replacementTags: tags.map((t) =>
+        typeof t.id === "number" ? { id: t.id, name: t.name } : { name: t.name }
+      ),
     });
   }
 
@@ -95,10 +97,8 @@ export default class WatchedWordForm extends Component {
 
       const watchedWord = WatchedWord.create({
         words: this.words,
-        replacement:
-          this.canReplace || this.canTag || this.canLink
-            ? this.replacement
-            : null,
+        replacement: this.canReplace || this.canLink ? this.replacement : null,
+        replacementTags: this.canTag ? this.replacementTags : null,
         action: this.actionKey,
         isCaseSensitive: this.isCaseSensitive,
         isHtml: this.isHtml,
@@ -110,6 +110,7 @@ export default class WatchedWordForm extends Component {
           this.setProperties({
             words: [],
             replacement: "",
+            replacementTags: [],
             selectedTags: [],
             showMessage: true,
             message: i18n("admin.watched_words.form.success"),

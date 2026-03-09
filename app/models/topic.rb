@@ -2188,10 +2188,6 @@ class Topic < ActiveRecord::Base
     fields
   end
 
-  def has_localization?(locale = I18n.locale)
-    localizations.exists?(locale: locale.to_s.sub("-", "_"))
-  end
-
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)

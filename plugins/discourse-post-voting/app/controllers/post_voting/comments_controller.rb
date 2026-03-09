@@ -26,6 +26,8 @@ module PostVoting
     end
 
     def create
+      @guardian.ensure_can_see!(@post)
+
       raise Discourse::InvalidAccess if !@guardian.can_create_post_on_topic?(@post.topic)
 
       comment =

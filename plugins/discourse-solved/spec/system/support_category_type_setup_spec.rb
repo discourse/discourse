@@ -34,5 +34,21 @@ RSpec.describe "Support Category Type Setup", type: :system do
     banner.click_save
 
     expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Support"))
+    expect(SiteSetting.solved_enabled).to eq(true)
+    expect(SiteSetting.show_filter_by_solved_status).to eq(true)
+    expect(SiteSetting.notify_on_staff_accept_solved).to eq(true)
+    expect(SiteSetting.empty_box_on_unsolved).to eq(true)
+    category = Category.find_by(name: "Support")
+    expect(category.custom_fields["enable_accepted_answers"]).to eq("true")
+    expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("48")
+  end
+
+  context "when visiting the Support tab for a non-support category" do
+    fab!(:category)
+
+    it "shows the not support type message" do
+      visit("/c/#{category.slug}/edit/support")
+      expect(page).to have_content(I18n.t("js.solved.category_type_support.not_support_type"))
+    end
   end
 end

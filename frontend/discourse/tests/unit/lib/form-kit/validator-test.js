@@ -411,6 +411,33 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       "it returns an error when the value is undefined"
     );
 
+    errors = await new Validator("true", {
+      required: {},
+    }).validate("checkbox");
+    assert.deepEqual(
+      errors,
+      [],
+      'it returns no errors when the checkbox value is the string "true"'
+    );
+
+    errors = await new Validator(false, {
+      required: {},
+    }).validate("checkbox");
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.required")],
+      "it returns an error when the checkbox value is false"
+    );
+
+    errors = await new Validator("false", {
+      required: {},
+    }).validate("checkbox");
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.required")],
+      'it returns an error when the checkbox value is the string "false"'
+    );
+
     errors = await new Validator(undefined, {
       required: {},
     }).validate("menu");
