@@ -375,7 +375,9 @@ export default function setupTests(config) {
   }
 
   const hasPluginJs = !!document.querySelector("script[data-plugin-name]");
-  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
+  const hasThemeJs = !!document.querySelector(
+    "link[rel=modulepreload][data-theme-id], script[data-theme-id]"
+  );
 
   // forces 0 as duration for all jquery animations
   $.fx.off = true;
