@@ -65,6 +65,7 @@ describe DiscourseSolved::AnswerController do
       end
     end
   end
+
   describe "#unaccept" do
     before do
       # Setup an accepted solution
@@ -81,6 +82,33 @@ describe DiscourseSolved::AnswerController do
       RateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
       post "/solution/unaccept.json", params: { id: solution_post.id }
       expect(response.status).to eq(429)
+    end
+  end
+
+  context "with a read-restricted category" do
+    fab!(:secure_group, :group)
+    fab!(:secure_category, :private_category) { Fabricate(:private_category, group: secure_group) }
+    fab!(:secure_topic) { Fabricate(:topic_with_op, category: secure_category) }
+    fab!(:secure_post) { Fabricate(:post, topic: secure_topic) }
+    fab!(:tl4_user) { Fabricate(:user, trust_level: TrustLevel[4], refresh_auto_groups: true) }
+
+    before { SiteSetting.accept_all_solutions_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+    it "rejects accept when user cannot see the topic" do
+      sign_in(tl4_user)
+      post "/solution/accept.json", params: { id: secure_post.id }
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects unaccept when user cannot see the topic" do
+      sign_in(staff_user)
+      post "/solution/accept.json", params: { id: secure_post.id }
+      expect(response.status).to eq(200)
+      sign_out
+
+      sign_in(tl4_user)
+      post "/solution/unaccept.json", params: { id: secure_post.id }
+      expect(response.status).to eq(403)
     end
   end
 end
