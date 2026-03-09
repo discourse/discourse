@@ -19,7 +19,6 @@ jobs:
     name: publish
     runs-on: ubuntu-latest
     if: github.repository == 'discourse/discourse'
-    container: discourse/discourse_test:slim
     timeout-minutes: 5
 
     steps:
@@ -29,6 +28,17 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 1
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
@@ -51,4 +61,4 @@ jobs:
 
       - name: Publish the package
         working-directory: frontend/discourse-types
-        run: pnpm publish --no-git-checks
+        run: pnpm publish --no-git-checks --dry-run
