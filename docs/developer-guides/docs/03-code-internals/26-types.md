@@ -37,6 +37,7 @@ To do so, temporarily change the plugin or theme's `package.json` to:
     "discourse": "workspace:@discourse/types@*"
   }
 }
+```
 
 Then run `pnpm install` and start the type watcher with `pnpm types:watch`.
 
