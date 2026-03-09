@@ -865,6 +865,9 @@ login:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
     area: "discourseconnect"
+  discourse_connect_provider_provides_email:
+    default: true
+    area: "discourseconnect"
   blocked_email_domains:
     default: "mailinator.com"
     type: host_list
