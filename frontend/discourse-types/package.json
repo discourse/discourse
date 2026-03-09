@@ -2,6 +2,7 @@
   "name": "@discourse/types",
   "version": "0.0.0",
   "description": "Types only",
+  "repository": "https://github.com/discourse/discourse",
   "license": "GPL-2.0-only",
   "author": "Discourse",
   "publishConfig": {
