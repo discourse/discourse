@@ -762,6 +762,16 @@ RSpec.describe TagsController do
       expect(settings["tag_groups"][0]["name"]).to eq(tag_group.name)
     end
 
+    it "returns slug_for_url when tag has an empty slug" do
+      tag.update_column(:slug, "")
+      sign_in(admin)
+      get "/tag/#{tag.id}/settings.json"
+      expect(response.status).to eq(200)
+
+      settings = response.parsed_body["tag_settings"]
+      expect(settings["slug"]).to eq("#{tag.id}-tag")
+    end
+
     context "with content localization enabled" do
       before { SiteSetting.content_localization_enabled = true }
 
