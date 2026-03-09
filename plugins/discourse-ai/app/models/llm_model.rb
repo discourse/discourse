@@ -138,6 +138,11 @@ class LlmModel < ActiveRecord::Base
           hidden_if: :reasoning_effort,
         },
         disable_streaming: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default auto flex priority],
+          default: "default",
+        },
       },
       groq: {
         disable_native_tools: :checkbox,
@@ -195,6 +200,11 @@ class LlmModel < ActiveRecord::Base
           hidden_if: :reasoning_effort,
         },
         disable_streaming: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default auto flex priority],
+          default: "default",
+        },
       },
       hugging_face: {
         disable_system_prompt: :checkbox,
