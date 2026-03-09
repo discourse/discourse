@@ -54,6 +54,9 @@ en:
         description: "Highlight the answer and help others by using the solution button below the correct reply."
       notification:
         title: "your post was marked as solution"
+      category_type_support:
+        title: "Support"
+        not_support_type: "Heads up! You've disabled the ability to mark posts as solutions in this category. To turn that back on, you'll find the relevant settings in the Settings tab."
 
     topic_statuses:
       solved:
