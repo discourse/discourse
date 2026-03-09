@@ -24,10 +24,10 @@ import SignupCta from "discourse/components/signup-cta";
 import SlowModeInfo from "discourse/components/slow-mode-info";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicCategory from "discourse/components/topic-category";
-import TopicCategoryTagEditor from "discourse/components/topic-category-tag-editor";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
 import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import TopicMap from "discourse/components/topic-map/index";
+import TopicMetadata from "discourse/components/topic-metadata";
 import TopicNavigation from "discourse/components/topic-navigation";
 import TopicProgress from "discourse/components/topic-progress";
 import TopicSkipLinks from "discourse/components/topic-skip-links";
@@ -120,7 +120,7 @@ export default <template>
                 @buffered={{@controller.buffered}}
               />
 
-              <TopicCategoryTagEditor
+              <TopicMetadata
                 @buffered={{@controller.buffered}}
                 @model={{@controller.model}}
                 @showCategoryChooser={{@controller.showCategoryChooser}}
@@ -142,7 +142,7 @@ export default <template>
                     {{@controller.featuredLinkDomain}}
                   </a>
                 {{/if}}
-              </TopicCategoryTagEditor>
+              </TopicMetadata>
             </div>
 
           {{else}}
