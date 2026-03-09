@@ -20,9 +20,7 @@ const extension = {
   parse: {
     bbcode_open(state, token) {
       if (token.tag === "details") {
-        state.openNode(state.schema.nodes.details, {
-          open: token.attrGet("open") !== null,
-        });
+        state.openNode(state.schema.nodes.details);
         return true;
       }
 
@@ -43,7 +41,7 @@ const extension = {
       state.renderContent(node);
       state.write("[/details]\n\n");
     },
-    summary(state, node, parent) {
+    summary(state, node) {
       let hasSummary = false;
       // If the [details] tag has no summary.
       if (node.content.childCount === 0) {
@@ -57,7 +55,7 @@ const extension = {
             state.text(child.text.replace(/"/g, "“"), state.inAutolink)
         );
       }
-      let finalState = `${parent.attrs.open ? " open" : ""}]\n`;
+      let finalState = "]\n";
       if (hasSummary) {
         finalState = `"${finalState}`;
       }
