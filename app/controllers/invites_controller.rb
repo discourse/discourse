@@ -3,6 +3,8 @@
 require "csv"
 
 class InvitesController < ApplicationController
+  ALLOWED_BULK_INVITE_COLUMNS = %w[email groups topic_id locale]
+
   requires_login only: %i[
                    create
                    create_multiple
@@ -490,19 +492,29 @@ class InvitesController < ApplicationController
 
         csv_header = nil
         invites = []
+        valid_columns = nil
 
         CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
           # Try to extract a CSV header, if it exists
           if csv_header.nil?
             if row[0] == "email"
               csv_header = row
+              valid_columns = Set.new(ALLOWED_BULK_INVITE_COLUMNS + UserField.pluck(:name))
               next
             else
               csv_header = %w[email groups topic_id]
             end
           end
 
-          invites.push(csv_header.zip(row).map.to_h.filter { |k, v| v.present? }) if row[0].present?
+          if row[0].present?
+            invite =
+              csv_header
+                .zip(row)
+                .map
+                .to_h
+                .filter { |k, v| v.present? && (!valid_columns || valid_columns.include?(k)) }
+            invites.push(invite)
+          end
 
           break if invites.count >= SiteSetting.max_bulk_invites
         end

@@ -1819,6 +1819,18 @@ RSpec.describe InvitesController do
         File.new("#{Rails.root}/spec/fixtures/csv/invites_with_locales.csv")
       end
       let(:file_with_locales) { Rack::Test::UploadedFile.new(File.open(csv_file_with_locales)) }
+      let(:csv_file_with_malicious_headers) do
+        File.new("#{Rails.root}/spec/fixtures/csv/invite_malicious_headers.csv")
+      end
+      let(:file_with_malicious_headers) do
+        Rack::Test::UploadedFile.new(File.open(csv_file_with_malicious_headers))
+      end
+      let(:csv_file_with_valid_and_invalid_headers) do
+        File.new("#{Rails.root}/spec/fixtures/csv/invite_valid_and_invalid_headers.csv")
+      end
+      let(:file_with_valid_and_invalid_headers) do
+        Rack::Test::UploadedFile.new(File.open(csv_file_with_valid_and_invalid_headers))
+      end
 
       it "fails if you cannot bulk invite to the forum" do
         sign_in(Fabricate(:user))
@@ -1893,6 +1905,47 @@ RSpec.describe InvitesController do
 
         user2 = User.where(staged: true).find_by_email("test2@example.com")
         expect(user2.locale).to eq("pl")
+      end
+
+      it "strips arbitrary CSV header columns that are not allowed" do
+        sign_in(admin)
+
+        post "/invites/upload_csv.json",
+             params: {
+               file: file_with_malicious_headers,
+               name: "malicious.csv",
+             }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::BulkInvite.jobs.size).to eq(1)
+
+        job_args = Jobs::BulkInvite.jobs.first["args"].first
+        invites = job_args["invites"]
+
+        invites.each do |invite|
+          expect(invite.keys).not_to include("admin", "moderator", "trust_level")
+        end
+
+        expect(invites.first).to eq({ "email" => "test@example.com", "groups" => "discourse" })
+        expect(invites.second).to eq({ "email" => "test2@example.com" })
+      end
+
+      it "allows valid user field names in CSV headers while stripping others" do
+        Fabricate(:user_field, name: "location")
+        sign_in(admin)
+
+        post "/invites/upload_csv.json",
+             params: {
+               file: file_with_valid_and_invalid_headers,
+               name: "test.csv",
+             }
+
+        expect(response.status).to eq(200)
+
+        job_args = Jobs::BulkInvite.jobs.first["args"].first
+        invites = job_args["invites"]
+
+        expect(invites.first).to eq({ "email" => "test@example.com", "location" => "usa" })
       end
 
       describe "invite_bulk_csv_custom_error modifier" do
