@@ -1927,7 +1927,6 @@ RSpec.describe InvitesController do
         invites = job_args["invites"]
 
         expect(invites.first).to eq({ "email" => "test@example.com", "location" => "usa" })
-        expect(invites.first.keys).not_to include("moderator")
       end
 
       describe "invite_bulk_csv_custom_error modifier" do

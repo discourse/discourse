@@ -499,8 +499,7 @@ class InvitesController < ApplicationController
           if csv_header.nil?
             if row[0] == "email"
               csv_header = row
-              user_field_names = UserField.pluck(:name).map(&:downcase)
-              valid_columns = Set.new(ALLOWED_BULK_INVITE_COLUMNS + user_field_names)
+              valid_columns = Set.new(ALLOWED_BULK_INVITE_COLUMNS + UserField.pluck(:name))
               next
             else
               csv_header = %w[email groups topic_id]
@@ -508,9 +507,12 @@ class InvitesController < ApplicationController
           end
 
           if row[0].present?
-            invite = csv_header.zip(row).map.to_h.filter do |k, v| 
-              v.present? && (!valid_columns || valid_columns.include?(k))
-            end
+            invite =
+              csv_header
+                .zip(row)
+                .map
+                .to_h
+                .filter { |k, v| v.present? && (!valid_columns || valid_columns.include?(k)) }
             invites.push(invite)
           end
 
