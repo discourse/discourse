@@ -24,6 +24,22 @@ Ensure that you've run `pnpm install` recently
 
 Official themes/plugins, and the official skeletons, are all wired up for types. To enable it for your own plugin/theme, pull in the latest changes from the relevant skeleton (`package.json`, `tsconfig.json`)
 
+## Live types updates for bundled plugins and themes
+
+If you're adding or changing core types and rely on them at the same time in a bundled plugin or theme, you should use live types updates.
+To do that, temporarily change the plugin's `package.json` to:
+
+```json
+{
+  "private": true,
+  "dependencies": {
+    "discourse": "workspace:@discourse/types@*"
+  }
+}
+```
+
+Then run `pnpm install` and start watching for types updates: `pnpm types:watch`
+
 ## Enable checking for a file
 
 To enable type-checking for a specific file, add `/** @ts-check */` at the top. For some examples, search Discourse core for `@ts-check`.
