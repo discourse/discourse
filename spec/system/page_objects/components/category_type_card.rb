@@ -8,6 +8,10 @@ module PageObjects
       def find_type_card(type_id)
         find("#{CATEGORY_TYPE_CARD_SELECTOR}.--category-type-#{type_id}")
       end
+
+      def has_type_card?(type_id)
+        has_css?("#{CATEGORY_TYPE_CARD_SELECTOR}.--category-type-#{type_id}")
+      end
     end
   end
 end

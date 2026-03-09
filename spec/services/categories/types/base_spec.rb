@@ -25,6 +25,25 @@ RSpec.describe Categories::Types::Base do
     end
   end
 
+  describe ".additional_metadata" do
+    it "returns an empty hash by default" do
+      expect(described_class.additional_metadata).to eq({})
+    end
+
+    it "is merged into metadata when overridden by a subclass" do
+      test_type =
+        Class.new(described_class) do
+          type_id :with_extra_metadata
+
+          def self.additional_metadata
+            { feature_flags: %w[a b] }
+          end
+        end
+
+      expect(test_type.metadata).to include(feature_flags: %w[a b])
+    end
+  end
+
   describe ".configure_site_settings" do
     it "applies site settings from configuration_schema defaults" do
       test_type =
