@@ -276,6 +276,22 @@ module DiscourseAi
           Option.new(tool: self, name: name, type: type)
         end
 
+        def acting_user
+          bot_user || Discourse.system_user
+        end
+
+        def guardian
+          Guardian.new(context.user || acting_user)
+        end
+
+        def reason
+          parameters[:reason].to_s.strip
+        end
+
+        def error_response(message)
+          { status: "error", error: message }
+        end
+
         def description_args
           {}
         end

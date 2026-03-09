@@ -127,6 +127,16 @@ module DiscourseAi
             Tools::Search,
             Tools::Read,
             Tools::FlagPost,
+            Tools::CloseTopic,
+            Tools::UnlistTopic,
+            Tools::LockPost,
+            Tools::DeleteTopic,
+            Tools::EditPost,
+            Tools::EditCategory,
+            Tools::SetTopicTimer,
+            Tools::SetSlowMode,
+            Tools::MovePosts,
+            Tools::GrantBadge,
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
@@ -148,7 +158,10 @@ module DiscourseAi
 
           tools << Tools::GithubSearchCode if SiteSetting.ai_bot_github_access_token.present?
 
-          tools << Tools::ListTags if SiteSetting.tagging_enabled
+          if SiteSetting.tagging_enabled
+            tools << Tools::ListTags
+            tools << Tools::EditTags
+          end
 
           # Image generation tools - use custom UI-configured tools
           if Tools::Tool.available_custom_image_tools.present?
@@ -161,6 +174,9 @@ module DiscourseAi
                SiteSetting.ai_google_custom_search_cx.present?
             tools << Tools::Google
           end
+
+          tools << Tools::Assign if defined?(::Assigner)
+          tools << Tools::MarkAsSolved if defined?(::DiscourseSolved)
 
           tools
         end
