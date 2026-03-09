@@ -922,4 +922,33 @@ RSpec.describe "Managing Posts solved status" do
       expect(unauthorized_user_messages).to eq(nil)
     end
   end
+
+  describe "DiscourseSolved.accept_answer! shim" do
+    fab!(:user, :trust_level_4)
+
+    it "delegates to the AcceptAnswer service" do
+      topic = Fabricate(:topic, user:)
+      reply = Fabricate(:post, topic:, post_number: 2)
+
+      DiscourseSolved.accept_answer!(reply, user)
+
+      expect(topic.reload.solved.answer_post_id).to eq(reply.id)
+    end
+  end
+
+  describe "DiscourseSolved.unaccept_answer! shim" do
+    fab!(:user, :trust_level_4)
+
+    it "delegates to the UnacceptAnswer service" do
+      topic = Fabricate(:topic, user:)
+      reply = Fabricate(:post, topic:, post_number: 2)
+
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: user.guardian)
+      expect(topic.reload.solved).to be_present
+
+      DiscourseSolved.unaccept_answer!(reply)
+
+      expect(topic.reload.solved).to be_nil
+    end
+  end
 end

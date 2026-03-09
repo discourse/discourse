@@ -20,6 +20,19 @@ module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
+
+  def self.accept_answer!(post, acting_user, topic: nil)
+    DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, guardian: acting_user.guardian)
+  end
+
+  def self.unaccept_answer!(post, topic: nil)
+    DiscourseSolved::UnacceptAnswer.call(
+      params: {
+        post_id: post.id,
+      },
+      guardian: Discourse.system_user.guardian,
+    )
+  end
 end
 
 require_relative "lib/discourse_solved/engine"
