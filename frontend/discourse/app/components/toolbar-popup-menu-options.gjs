@@ -3,6 +3,7 @@ import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -15,6 +16,27 @@ import { i18n } from "discourse-i18n";
 
 export default class ToolbarPopupMenuOptions extends Component {
   @service capabilities;
+
+  trackScrollability = modifier((element) => {
+    const innerContent = element.closest(".fk-d-menu__inner-content");
+    const menuElement = innerContent?.parentElement;
+    if (!innerContent || !menuElement) {
+      return;
+    }
+
+    const checkScrollable = () => {
+      menuElement.classList.toggle(
+        "--scrollable",
+        innerContent.scrollHeight > innerContent.clientHeight
+      );
+    };
+
+    const observer = new ResizeObserver(checkScrollable);
+    observer.observe(innerContent);
+    checkScrollable();
+
+    return () => observer.disconnect();
+  });
 
   willDestroy() {
     super.willDestroy();
@@ -150,7 +172,7 @@ export default class ToolbarPopupMenuOptions extends Component {
         {{icon (this.getIcon this.args)}}
       </:trigger>
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DropdownMenu {{this.trackScrollability}} as |dropdown|>
           {{#each this.convertedContent as |option|}}
             <dropdown.item>
               <DButton
