@@ -27,19 +27,22 @@ export default class WatchedWord extends EmberObject {
   }
 
   save() {
+    const data = {
+      words: this.words,
+      replacement: this.replacement,
+      action_key: this.action,
+      case_sensitive: this.isCaseSensitive,
+      html: this.isHtml,
+      replacement_tags: this.replacementTags,
+    };
+
     return ajax(
       "/admin/customize/watched_words" +
         (this.id ? "/" + this.id : "") +
         ".json",
       {
         type: this.id ? "PUT" : "POST",
-        data: {
-          words: this.words,
-          replacement: this.replacement,
-          action_key: this.action,
-          case_sensitive: this.isCaseSensitive,
-          html: this.isHtml,
-        },
+        data,
         dataType: "json",
       }
     );
