@@ -4,12 +4,12 @@ module PageObjects
   module Pages
     class TagSettings < PageObjects::Pages::Base
       def visit(tag)
-        page.visit "/tag/#{tag.slug}/#{tag.id}/edit/general"
+        page.visit "/tag/#{tag.slug_for_url}/#{tag.id}/edit/general"
         self
       end
 
       def visit_tab(tag, tab)
-        page.visit "/tag/#{tag.slug}/#{tag.id}/edit/#{tab}"
+        page.visit "/tag/#{tag.slug_for_url}/#{tag.id}/edit/#{tab}"
         self
       end
 

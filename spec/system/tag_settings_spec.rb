@@ -21,6 +21,19 @@ describe "Tag Settings", type: :system do
   context "when experimental_tag_settings_page is enabled" do
     before { SiteSetting.experimental_tag_settings_page = true }
 
+    it "loads the tag edit page for tags with empty slugs" do
+      tag_1.update_column(:slug, "")
+      sign_in(admin)
+
+      tags_page.visit_tag(tag_1)
+      tags_page.tag_info_btn.click
+
+      expect(tag_settings_page).to have_tag_settings_page
+      expect(page).to have_current_path("/tag/#{tag_1.id}-tag/#{tag_1.id}/edit/general")
+      expect(tag_settings_page).to have_name_value(tag_1.name)
+      expect(tag_settings_page).to have_slug_value("#{tag_1.id}-tag")
+    end
+
     it "allows privileged users to access the new tag settings page" do
       sign_in(admin)
 
