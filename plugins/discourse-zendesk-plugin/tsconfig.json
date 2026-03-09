@@ -1,12 +1,18 @@
 {
   "extends": "discourse/tsconfig-plugin",
   "include": [
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*"
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-zendesk-plugin/*": ["./assets/javascripts/*"]
+      "discourse/plugins/discourse-zendesk-plugin/*": [
+        "./assets/javascripts/*"
+      ],
+      "discourse/plugins/discourse-zendesk-plugin/admin/*": [
+        "./admin/assets/javascripts/admin/*"
+      ]
     }
   }
 }
