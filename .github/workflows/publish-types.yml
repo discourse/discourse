@@ -22,9 +22,6 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Set working directory owner
-        run: chown root:root .
-
       - uses: actions/checkout@v6
         with:
           fetch-depth: 1
