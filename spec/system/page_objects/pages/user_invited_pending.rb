@@ -70,7 +70,6 @@ module PageObjects
         has_css?(
           ".user-content .user-invite-list tbody tr",
           count: count,
-          wait: Capybara.default_max_wait_time,
         )
       end
 
