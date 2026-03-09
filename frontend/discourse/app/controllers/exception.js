@@ -61,7 +61,7 @@ export default class ExceptionController extends Controller {
 
   @computed("isNetwork", "thrown.status", "thrown")
   get reason() {
-    if (this.thrown.reason) {
+    if (this.thrown?.reason) {
       return this.thrown.reason;
     } else if (this.isNetwork) {
       return i18n("errors.reasons.network");
@@ -87,7 +87,7 @@ export default class ExceptionController extends Controller {
     "thrown"
   )
   get desc() {
-    if (this.thrown.desc) {
+    if (this.thrown?.desc) {
       return this.thrown.desc;
     } else if (this.networkFixed) {
       return i18n("errors.desc.network_fixed");

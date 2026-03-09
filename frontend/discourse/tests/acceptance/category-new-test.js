@@ -165,7 +165,9 @@ acceptance("Category type setup page", function (needs) {
 
   test("Clicking a type card transitions to new category form", async function (assert) {
     await visit("/new-category/setup");
-    await click(".category-type-cards__card:first-child");
+    await click(
+      ".category-type-cards__card:first-child .category-type-cards__card-select"
+    );
     assert.strictEqual(currentURL(), "/new-category/general");
   });
 });

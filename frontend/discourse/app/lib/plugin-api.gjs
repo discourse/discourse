@@ -3207,6 +3207,12 @@ class _PluginApi {
       return;
     }
 
+    if (!icon) {
+      // eslint-disable-next-line no-console
+      console.warn(consolePrefix(), "An icon must be provided!");
+      return;
+    }
+
     this.registerValueTransformer("admin-plugin-icon", ({ value, context }) => {
       return context.pluginId === pluginId ? icon : value;
     });

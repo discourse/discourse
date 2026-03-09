@@ -96,11 +96,14 @@ export default class TagShowRoute extends DiscourseRoute {
     let additionalTags;
 
     if (params.additional_tags) {
-      additionalTags = params.additional_tags.split("/").map((t) => {
-        return this.store.createRecord("tag", {
-          name: escapeExpression(t),
-        }).name;
-      });
+      additionalTags = params.additional_tags
+        .split("/")
+        .filter(Boolean)
+        .map((t) => {
+          return this.store.createRecord("tag", {
+            name: escapeExpression(t),
+          }).name;
+        });
     }
 
     const filterType = filterTypeForMode(this.navMode);

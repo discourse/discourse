@@ -13,7 +13,7 @@ module Chat
     model :channel
     policy :can_view_channel
     model :membership, optional: true
-    model :pins
+    model :pins, optional: true
 
     private
 

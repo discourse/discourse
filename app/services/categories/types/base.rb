@@ -191,6 +191,12 @@ module Categories
           true
         end
 
+        # Also used as an extension point to add additional keys/values to
+        # the metadata hash returned by +metadata+, mostly for Discourse hosting.
+        def additional_metadata
+          {}
+        end
+
         def icon
           "memo"
         end
@@ -252,7 +258,7 @@ module Categories
             icon:,
             available: available?,
             configuration_schema: resolved_configuration_schema,
-          }
+          }.merge(additional_metadata)
         end
 
         private

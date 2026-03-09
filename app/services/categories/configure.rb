@@ -23,8 +23,9 @@ module Categories
     end
 
     model :category
-    model :type_class
     policy :can_modify_category
+    model :type_class
+    policy :type_is_available
 
     transaction do
       step :enable_plugin
@@ -33,6 +34,7 @@ module Categories
     end
 
     step :log_action
+    step :clear_category_type_counts_cache
 
     private
 
@@ -46,6 +48,10 @@ module Categories
 
     def fetch_type_class(params:)
       Categories::TypeRegistry.get(params.category_type)
+    end
+
+    def type_is_available(type_class:)
+      type_class.available?
     end
 
     def enable_plugin(type_class:)
@@ -73,6 +79,10 @@ module Categories
         "configure_category_type",
         { category_id: category.id, category_type: params.category_type },
       )
+    end
+
+    def clear_category_type_counts_cache
+      Discourse.cache.delete("category_type_counts")
     end
   end
 end
