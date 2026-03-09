@@ -146,6 +146,62 @@ RSpec.describe Admin::WatchedWordsController do
         expect(WatchedWord.take.case_sensitive?).to eq(true)
         expect(WatchedWord.take.word).to eq("PNG")
       end
+
+      it "creates a tag watched word with existing tags by id" do
+        tag = Fabricate(:tag, name: "greeting")
+
+        post "/admin/customize/watched_words.json",
+             params: {
+               action_key: "tag",
+               words: ["hello"],
+               replacement_tags: [{ id: tag.id, name: tag.name }],
+             }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.last.replacement).to eq("greeting")
+      end
+
+      it "creates a tag watched word and creates new tags" do
+        post "/admin/customize/watched_words.json",
+             params: {
+               action_key: "tag",
+               words: ["hello"],
+               replacement_tags: [{ name: "brandnewtag" }],
+             }
+
+        expect(response.status).to eq(200)
+        expect(Tag.find_by(name: "brandnewtag")).to be_present
+        expect(WatchedWord.last.replacement).to eq("brandnewtag")
+      end
+
+      it "creates a tag watched word with a mix of existing and new tags" do
+        tag = Fabricate(:tag, name: "existing")
+
+        post "/admin/customize/watched_words.json",
+             params: {
+               action_key: "tag",
+               words: ["hello"],
+               replacement_tags: [{ id: tag.id, name: tag.name }, { name: "newone" }],
+             }
+
+        expect(response.status).to eq(200)
+        expect(Tag.find_by(name: "newone")).to be_present
+        expect(WatchedWord.last.replacement).to eq("existing,newone")
+      end
+
+      it "creates a tag watched word via the legacy replacement param" do
+        Fabricate(:tag, name: "greeting")
+
+        post "/admin/customize/watched_words.json",
+             params: {
+               action_key: "tag",
+               words: ["hello"],
+               replacement: "greeting",
+             }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.last.replacement).to eq("greeting")
+      end
     end
   end
 
