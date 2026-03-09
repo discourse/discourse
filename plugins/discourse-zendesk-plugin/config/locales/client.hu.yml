@@ -21,3 +21,12 @@ hu:
   site_settings:
     zendesk_url: A Zendesk webcíme. Például https://SAJAT_ALDOMEN.zendesk.com/api/v2
     zendesk_enabled: Zendesk bővítmény engedélyezése
+    zendesk_autogenerate_all_categories: Automatikusan hozzon létre jegyeket minden kategóriához. Ha engedélyezve van, a `zendesk_autogenerate_categories` figyelmen kívül marad.
+    zendesk_autogenerate_categories: Azon kategóriák listája, amelyek automatikusan létrehozzák a Zendesk jegyeket.
+    zendesk_jobs_api_token: API token Zendesk hitelesítéshez
+    zendesk_jobs_email: A Zendesk hitelesítéshez használandó e-mail
+    zendesk_job_push_all_posts: Egy téma összes hozzászólását Zendesk-kommentként küldjem át? Ha le van tiltva, csak az első hozzászólás kerül át a Zendesk-re.
+    zendesk_job_push_only_author_posts: Csak az eredeti téma szerzőjének hozzászólásait küldje át a zendeskbe. Csak akkor érvényes, ha a `zendesk_job_push_all_posts` engedélyezve van.
+    sync_comments_from_zendesk: Automatikusan közzéteszi a Zendeskből származó hozzászólásokat a Discourse-ba. Csak a `zendesk_autogenerate_categories` kategóriákban található témákra vonatkozik.
+    zendesk_incoming_webhook_token: A Zendesk kimenő webhookjából a hasznos adatban küldött token. Csak akkor szükséges, ha a `sync_comments_from_zendesk` engedélyezve van.
+    zendesk_tags: Az egyes jegyekhez hozzáadandó címkék listája

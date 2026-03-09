@@ -50,6 +50,9 @@ pt_BR:
         description: "Descrição"
         actions: "Ações"
         settings: "Definições"
+        no_channels: "Não há canais de chat associados a este grupo"
+        no_channels_body: "Você pode ter vários canais por categoria, acessíveis aos mesmos membros com base nas configurações de segurança da categoria. <a href='%{chatBrowseUrl}'>Criar um canal de chat</a>."
+        include_subcategories: "Incluir canais de subcategoria"
       text_copied: Texto copiado para área de transferência
       link_copied: Link copiado para área de transferência
       back_to_forum: "Fórum"
@@ -64,9 +67,21 @@ pt_BR:
       cancel: "Cancelar"
       cancel_reply: "Cancelar resposta"
       chat_channels: "Canais"
+      starred: "Marcado como favorito"
+      starred_channels: "Canais favoritados"
+      starred_channels_empty: "Você ainda não adicionou nenhum canal aos seus favoritos. Adicione canais aos favoritos para vê-los aqui e poder acessá-los rapidamente."
+      pinned_messages:
+        title: "Mensagens fixadas"
+        close: "Fechar mensagens fixadas"
+        pinned_by_you: "Fixado por você"
+        pinned_by_user: "Fixada por %{username}"
+      no_pinned_messages: "Não há mensagens fixadas neste canal."
+      pin_message: "Fixar mensagem"
+      unpin_message: "Desafixar mensagem"
       pinned: "Fixado"
       browse_all_channels: "Navegar por todos os canais"
       see_in: "Veja em"
+      open_channel_menu: "Abrir menu de canal"
       move_to_channel:
         title: "Mover mensagens para o canal"
         instructions:
@@ -81,13 +96,18 @@ pt_BR:
         title: "Configurações do canal"
         edit: "Editar"
         add: "Adicionar"
+        star_channel: "Adicionar canal aos favoritos"
+        unstar_channel: "Remover canal dos favoritos"
         close_channel: "Fechar canal"
         open_channel: "Abrir canal"
+        open_channel_disabled_archived: "Canais arquivados não podem ser reabertos."
+        open_channel_disabled_read_only: "Canais somente leitura não podem ser reabertos."
         archive_channel: "Arquivar canal"
         delete_channel: "Excluir canal"
         join_channel: "Entrar no canal"
         leave_channel: "Sair do canal"
         leave_groupchat_info: "Ao sair do chat em grupo, você não terá mais acesso a ele nem receberá as notificações relacionadas. Para entrar novamente, você precisa ser convidado(a) novamente por um membro do chat em grupo."
+        notification_settings: "Configurações de notificação"
         notification_settings_context: "Notificações"
         join: "Participar"
         leave: "Sair"
@@ -136,6 +156,7 @@ pt_BR:
       email_frequency:
         description: "Só enviaremos um e-mail mediante ausência nos últimos 15 minutos."
         never: "Nunca"
+        title: "Envie-me um e-mail quando eu receber uma mensagem de chat direta ou em grupo."
         when_away: "Só quando estiver ausente"
       header_indicator_preference:
         title: "Mostrar indicador de atividade no cabeçalho"
@@ -146,6 +167,7 @@ pt_BR:
       separate_sidebar_mode:
         title: "Mostrar modos de barra lateral separados para o fórum e o chat"
       send_shortcut:
+        title: "Enviar atalho"
         enter:
           label: "Enviar por Enter"
         meta_enter:
@@ -247,6 +269,7 @@ pt_BR:
       chat_notifications_title: "Notificações do chat"
       only_chat_push_notifications:
         title: "Enviar apenas notificações por push"
+      personalization_title: "Personalização"
       ignore_channel_wide_mention:
         title: "Ignorar menções em todo o canal"
       show_thread_title_prompts:
@@ -332,6 +355,10 @@ pt_BR:
         yesterday: Ontem
       search_view:
         filter_placeholder: Pesquisar mensagens
+        message_result_label: "Mensagem de chat de %{username}: %{preview} %{threadInfo}"
+        in_thread: "na thread %{title}"
+        sr_instructions: "Pressione a tecla Enter ou Espaço para abrir a mensagem. Use a tecla Tab para navegar entre os resultados."
+        results_list_label: "Resultados da pesquisa de mensagens de chat"
       members_view:
         filter_placeholder: Encontrar membros
         add_member: Adicionar membro
@@ -374,6 +401,8 @@ pt_BR:
         slug_description: Um slug de canal é usado na URL em vez do nome do canal
         name: Nome do canal
         slug: Slug do canal (opcional)
+        emoji: Emoji do canal (opcional)
+        reset_emoji: Redefinir emoji
       channel_edit_description_modal:
         title: Editar descrição
         input_placeholder: Adicione uma descrição
@@ -438,6 +467,9 @@ pt_BR:
         types:
           category: "Categoria"
           topic: "Tópico"
+        emoji:
+          label: "Emoji do canal (opcional)"
+          reset: "Redefinir emoji"
       reviewable:
         type: "Mensagem de chat"
         message_in_channel: "Canal"
@@ -480,6 +512,7 @@ pt_BR:
         follow: "Participar"
         followed: "Entrou"
         mute: "Silenciar canal"
+        unmute: "Reativar canal"
         threading_enabled: "Ativada"
         threading_disabled: "Desativada"
         muted_on: "Ligado"
@@ -505,6 +538,8 @@ pt_BR:
           export_has_started: "A exportação foi iniciada. Você receberá uma MP quando estiver pronta."
       search:
         short_title: Pesquisar
+        title: Pesquisar no chat
+        aria_label: "Alternar para a pesquisa de chat"
         no_results: "Nenhum resultado encontrado"
         sort:
           relevance: "Relevância"
@@ -585,10 +620,15 @@ pt_BR:
           one: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
           other: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
       retention_reminders:
+        chat_settings: "Configurações de chat"
         indefinitely_short: "indefinidamente"
+        indefinitely_long: "%{chatSettingsLink} foram definidas para manter as mensagens do canal indefinidamente."
         short:
           one: "%{count} dia"
           other: "%{count} dias"
+        long:
+          one: "%{chatSettingsLink} foram definidas para manter as mensagens do canal durante %{count} dia."
+          other: "%{chatSettingsLink} foram definidas para manter as mensagens do canal durante %{count} dias."
       flags:
         off_topic: "Esta mensagem não é relevante para a discussão atual, conforme definido pelo título do canal, e provavelmente deve ser movida para outro lugar."
         inappropriate: "Esta mensagem contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação de <a href=\"%{basePath}/guidelines\">nossas diretrizes da comunidade</a>."
@@ -720,6 +760,7 @@ pt_BR:
           composer_bold: "%{shortcut} Negrito (somente compositor)"
           composer_italic: "%{shortcut} Itálico (somente compositor)"
           composer_code: "%{shortcut} Código (somente compositor)"
+          drawer_toggle: "%{shortcut} Alternar a gaveta do chat"
           drawer_close: "%{shortcut} Fechar a gaveta do chat"
           mark_all_channels_read: "%{shortcut} Marcar todos os canais como lidos"
     topic_statuses:
@@ -746,6 +787,7 @@ pt_BR:
           title: Chat
     sidebar:
       start_new_dm:
+        text: Iniciar nova DM
         title: Criar um chat pessoal
       panels:
         chat:

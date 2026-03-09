@@ -18,6 +18,17 @@ pt_BR:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "Tipo de anúncio"
+            house_ad_name:
+              label: "Nome do anúncio interno"
+            ad_placement:
+              label: "Posicionamento de anúncios"
+            user_type:
+              label: "Tipo de usuário"
       adplugin:
         house_ads:
           title: "Anúncios Internos"
@@ -26,20 +37,27 @@ pt_BR:
           new_name: "Novo Anúncio Interno"
           save: "Salvar"
           delete: "Excluir"
+          confirm_delete: "Tem certeza de que deseja excluir este anúncio?"
           html: "HTML"
           categories: "Categorias"
+          routes: "Rotas"
           groups: "Grupos"
+          description: "Crie e gerencie seus próprios anúncios para exibi-los em diversas posições no seu site."
+          get_started: "Ainda não foram criados anúncios internos."
           filter_placeholder: "Selecionar anúncios…"
           more_settings: "Mais Configurações"
           show_to_anons: "Mostrar para usuários(as) anônimos(as)"
           show_to_logged_in_users: "Mostrar para usuários(as) logados(as)"
           category_chooser_description: "Escolha as categorias nas quais este anúncio deve ser exibido ou deixe vazio para exibir em todos os lugares. A configuração do site \"no_ads_for_categories\" tem prioridade em relação a esta configuração."
+          category_chooser_description_with_routes: "Escolha as categorias nas quais este anúncio deve ser exibido. Para mostrar o anúncio em todo lugar, deixe esta opção e as seleções de rota em branco. A configuração do site \"no_ads_for_categories\" tem prioridade em relação a esta configuração."
+          route_chooser_description: "Escolha as páginas/rotas onde este anúncio deve ser exibido. Para mostrar o anúncio em todo lugar, deixe esta opção e a seleção de categoria em branco."
           group_chooser_description: "Escolha os grupos que podem visualizar este anúncio ou deixe vazio para exibir o anúncio a todos(as) os(as) usuários(as) que entraram com a conta."
           preview: "Pré-visualizar"
           back: "Anúncios Internos"
           name: "Nome"
           edit: "Editar"
           tabs:
+            ads: "Anúncios"
             settings: "Definições"
           topic_list_top:
             title: "Principais anúncios da lista de tópicos"

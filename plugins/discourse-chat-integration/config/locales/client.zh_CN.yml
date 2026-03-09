@@ -33,7 +33,7 @@ zh_CN:
         topic: "话题"
         send: "发送测试信息"
         close: "关闭"
-        error: "发送消息时遇到未知错误。检查站点日志了解详情。"
+        error: "发送消息时发生未知错误。检查站点日志了解详情。"
         success: "消息已成功发送"
       type:
         normal: 正常
