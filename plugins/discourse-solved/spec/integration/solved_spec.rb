@@ -379,7 +379,7 @@ RSpec.describe "Managing Posts solved status" do
 
     it "works when the topic author has been deleted" do
       SiteSetting.notify_on_staff_accept_solved = true
-      SiteSetting.solved_topics_auto_close_hours = 0
+      SiteSetting.solved_topics_auto_close_days = 0
       topic.user.destroy!
       topic.reload
 

@@ -52,4 +52,23 @@ RSpec.describe DiscourseSolved::TopicExtension do
       expect(topic.accepted_answer_post_info).to be_nil
     end
   end
+
+  describe "#solved_auto_close_days" do
+    it "falls back to legacy site setting hours when days is zero" do
+      SiteSetting.solved_topics_auto_close_days = 0
+      SiteSetting.solved_topics_auto_close_hours = 36
+
+      expect(topic.solved_auto_close_days).to eq(2)
+    end
+
+    it "falls back to legacy category setting hours when days is zero" do
+      topic.category.custom_fields["solved_topics_auto_close_days"] = "0"
+      topic.category.custom_fields["solved_topics_auto_close_hours"] = "36"
+      topic.category.save_custom_fields
+      SiteSetting.solved_topics_auto_close_days = 0
+      SiteSetting.solved_topics_auto_close_hours = 0
+
+      expect(topic.solved_auto_close_days).to eq(2)
+    end
+  end
 end

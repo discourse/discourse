@@ -53,6 +53,17 @@ RSpec.describe DiscourseSolved::SolvedTopic do
         end
       end
 
+      context "when only legacy auto close hours is set at site level" do
+        before do
+          SiteSetting.solved_topics_auto_close_days = 0
+          SiteSetting.solved_topics_auto_close_hours = 36
+        end
+
+        it "uses the rounded days value from hours" do
+          expect(solved.topic_timer).to have_attributes(duration_minutes: 2880)
+        end
+      end
+
       context "when category overrides auto close days" do
         fab!(:category)
 
@@ -65,6 +76,22 @@ RSpec.describe DiscourseSolved::SolvedTopic do
 
         it "uses the category value" do
           expect(solved.topic_timer).to have_attributes(duration_minutes: 7200)
+        end
+      end
+
+      context "when category only has legacy auto close hours" do
+        fab!(:category)
+
+        before do
+          topic.update!(category:)
+          category.custom_fields["solved_topics_auto_close_hours"] = 36
+          category.save!
+          SiteSetting.solved_topics_auto_close_days = 0
+          SiteSetting.solved_topics_auto_close_hours = 0
+        end
+
+        it "uses the rounded days value from the category hours" do
+          expect(solved.topic_timer).to have_attributes(duration_minutes: 2880)
         end
       end
     end

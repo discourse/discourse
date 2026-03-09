@@ -28,7 +28,29 @@ require_relative "lib/discourse_solved/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 
-  deprecate_setting("solved_topics_auto_close_hours", "solved_topics_auto_close_days", false, "4.1")
+  # TODO: Remove this in 2026.5.0 once we've deployed the change from hours to days
+  # widely.
+  on(:site_setting_changed) do |name, _old_value, new_value|
+    next if !%i[solved_topics_auto_close_days solved_topics_auto_close_hours].include?(name)
+
+    if name == :solved_topics_auto_close_days
+      DistributedMutex.synchronize("discourse_solved_sync_auto_close_days", validity: 10.seconds) do
+        hours = new_value.to_i * 24
+        if SiteSetting.solved_topics_auto_close_hours != hours
+          SiteSetting.solved_topics_auto_close_hours = hours
+        end
+      end
+    elsif name == :solved_topics_auto_close_hours
+      DistributedMutex.synchronize(
+        "discourse_solved_sync_auto_close_hours",
+        validity: 10.seconds,
+      ) do
+        days = (new_value.to_i / 24.0).round
+        SiteSetting.solved_topics_auto_close_days =
+          days if SiteSetting.solved_topics_auto_close_days != days
+      end
+    end
+  end
 
   reloadable_patch do
     register_category_type(DiscourseSolved::Categories::Types::Support)

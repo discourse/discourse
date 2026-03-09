@@ -30,7 +30,9 @@ export default class SolvedSettings extends Component {
 
   @action
   onChangeAutoCloseDays(value) {
-    this.customFields.solved_topics_auto_close_days = value;
+    const days = parseInt(value, 10) || 0;
+    this.customFields.solved_topics_auto_close_days = days.toString();
+    this.customFields.solved_topics_auto_close_hours = (days * 24).toString();
   }
 
   <template>

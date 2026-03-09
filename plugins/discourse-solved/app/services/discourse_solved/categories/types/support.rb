@@ -20,6 +20,7 @@ module DiscourseSolved
               DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true",
             )
             configure_custom_fields(category, guardian:, configuration_values:)
+            category.save_custom_fields
 
             # NOTE (martin) In future we may want to handle category_settings
             # here.

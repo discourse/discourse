@@ -7,7 +7,12 @@ module DiscourseSolved::TopicExtension
 
   def solved_auto_close_days
     days = category&.solved_auto_close_days || 0
-    days.zero? ? SiteSetting.solved_topics_auto_close_days : days
+    return days if days > 0
+
+    site_days = SiteSetting.solved_topics_auto_close_days
+    return site_days if site_days > 0
+
+    (SiteSetting.solved_topics_auto_close_hours / 24.0).round
   end
 
   def accepted_answer_post_info

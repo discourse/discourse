@@ -2,12 +2,12 @@
 
 class MigrateSolvedAutoCloseHoursToDays < ActiveRecord::Migration[7.2]
   def up
-    # Migrate category_custom_fields: hours → days (rounded to nearest 0.5)
+    # Migrate category_custom_fields: hours → days (rounded to nearest day, minimum 1 for positive values)
     execute <<~SQL
       INSERT INTO category_custom_fields (category_id, name, value, created_at, updated_at)
       SELECT category_id,
              'solved_topics_auto_close_days',
-             ROUND(value::numeric / 24.0 * 2) / 2,
+             GREATEST(1, ROUND(value::numeric / 24.0, 0))::integer,
              NOW(),
              NOW()
         FROM category_custom_fields
@@ -21,12 +21,12 @@ class MigrateSolvedAutoCloseHoursToDays < ActiveRecord::Migration[7.2]
          )
     SQL
 
-    # Migrate site_settings: hours → days (rounded to nearest 0.5)
+    # Migrate site_settings: hours → days (rounded to nearest day, minimum 1 for positive values)
     execute <<~SQL
       INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
       SELECT 'solved_topics_auto_close_days',
              data_type,
-             ROUND(value::numeric / 24.0 * 2) / 2,
+             GREATEST(1, ROUND(value::numeric / 24.0, 0))::integer,
              NOW(),
              NOW()
         FROM site_settings

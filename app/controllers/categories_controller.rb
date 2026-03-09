@@ -230,6 +230,12 @@ class CategoriesController < ApplicationController
             value
           end
         end
+
+        # TODO: Remove this in 2026.5.0 once we've deployed the change from hours to days
+        # widely.
+        if key == "solved_topics_auto_close_days"
+          cat.custom_fields["solved_topics_auto_close_hours"] = value.to_i * 24
+        end
       end
       category_params.delete(:custom_fields)
 

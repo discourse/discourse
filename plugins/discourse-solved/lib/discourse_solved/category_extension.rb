@@ -6,7 +6,8 @@ module DiscourseSolved::CategoryExtension
   prepended { after_save :reset_accepted_cache, if: -> { SiteSetting.solved_enabled? } }
 
   def solved_auto_close_days
-    days = custom_fields["solved_topics_auto_close_days"].to_f
+    days = custom_fields["solved_topics_auto_close_days"].to_i
+    days = (custom_fields["solved_topics_auto_close_hours"].to_i / 24.0).round if days.zero?
     [days, DiscourseSolved::MAX_AUTO_CLOSE_DAYS].min
   end
 

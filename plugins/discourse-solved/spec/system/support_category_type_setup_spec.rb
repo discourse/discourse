@@ -40,6 +40,7 @@ RSpec.describe "Support Category Type Setup", type: :system do
     expect(SiteSetting.empty_box_on_unsolved).to eq(true)
     category = Category.find_by(name: "Support")
     expect(category.custom_fields["enable_accepted_answers"]).to eq("true")
+    expect(category.custom_fields["solved_topics_auto_close_days"]).to eq("2")
     expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("48")
   end
 end
