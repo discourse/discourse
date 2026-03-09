@@ -88,6 +88,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "post-meta-data-infos",
   "post-meta-data-poster-name-suppress-similar-name",
   "post-notice-component",
+  "post-share-url",
   "post-show-topic-map",
   "post-small-action-class",
   "post-small-action-custom-component",
