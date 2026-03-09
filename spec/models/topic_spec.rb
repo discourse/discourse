@@ -3816,6 +3816,20 @@ RSpec.describe Topic do
 
       expect(topic.has_localization?("z")).to eq(false)
     end
+
+    it "returns true for a regional match (ja matches ja_JP)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "ja_JP")
+
+      expect(topic.has_localization?("ja")).to eq(true)
+    end
+
+    it "returns true for a base locale match (pt_BR matches pt)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "pt")
+
+      expect(topic.has_localization?("pt_BR")).to eq(true)
+    end
   end
 
   describe "#get_localization" do
