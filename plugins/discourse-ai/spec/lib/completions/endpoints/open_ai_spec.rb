@@ -1203,6 +1203,23 @@ TEXT
     let(:prompt) { compliance.generic_prompt }
     let(:dialect) { compliance.dialect(prompt: prompt) }
 
+    it "includes service_tier when set to auto" do
+      model.update!(provider_params: { service_tier: "auto" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("auto")
+    end
+
     it "includes service_tier when set to flex" do
       model.update!(provider_params: { service_tier: "flex" })
 
