@@ -19,6 +19,10 @@ class TagSettingsSerializer < ApplicationSerializer
     object.name
   end
 
+  def slug
+    object.slug_for_url
+  end
+
   def description
     object.description
   end
