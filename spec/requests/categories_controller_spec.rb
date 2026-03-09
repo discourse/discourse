@@ -648,6 +648,23 @@ RSpec.describe CategoriesController do
             expect(response.status).to eq(200)
             expect(SiteSetting.max_category_nesting).to eq(2)
           end
+
+          context "when the category type is not available" do
+            before { Categories::Types::Discussion.stubs(:available?).returns(false) }
+
+            it "does not create a category" do
+              post "/categories.json",
+                   params: {
+                     name: "Test Category",
+                     category_type: "discussion",
+                   }
+              expect(response.status).to eq(422)
+              expect(response.parsed_body["errors"]).to be_present
+              expect(response.parsed_body["errors"].first).to eq(
+                I18n.t("category_types.not_available", type_name: "Discussion"),
+              )
+            end
+          end
         end
       end
     end

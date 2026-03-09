@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
@@ -18,64 +18,58 @@ export default <template>
     <div class="staff-action-logs-controls__left">
       {{#if @controller.filtersExists}}
         <div class="staff-action-logs-filters">
-          <a
-            href
-            {{on "click" @controller.clearAllFilters}}
-            class="clear-filters filter btn"
-          >
-            <span class="label">{{i18n
-                "admin.logs.staff_actions.clear_filters"
-              }}</span>
-          </a>
+          <DButton
+            @action={{@controller.clearAllFilters}}
+            @label="admin.logs.staff_actions.clear_filters"
+            class="clear-filters filter btn-default"
+          />
           {{#if @controller.actionFilter}}
-            <a
-              href
-              {{on "click" (fn @controller.clearFilter "actionFilter")}}
-              class="filter btn"
-            >
-              <span class="label">{{i18n "admin.logs.action"}}</span>:
-              {{@controller.actionFilter}}
-              {{icon "circle-xmark"}}
-            </a>
+            <DButton
+              @action={{fn @controller.clearFilter "actionFilter"}}
+              @translatedLabel={{concat
+                (i18n "admin.logs.action")
+                ": "
+                @controller.actionFilter
+              }}
+              @suffixIcon="xmark"
+              class="filter btn-default"
+            />
           {{/if}}
           {{#if @controller.filters.acting_user}}
-            <a
-              href
-              {{on "click" (fn @controller.clearFilter "acting_user")}}
-              class="filter btn"
-            >
-              <span class="label">{{i18n
-                  "admin.logs.staff_actions.staff_user"
-                }}</span>:
-              {{@controller.filters.acting_user}}
-              {{icon "circle-xmark"}}
-            </a>
+            <DButton
+              @action={{fn @controller.clearFilter "acting_user"}}
+              @translatedLabel={{concat
+                (i18n "admin.logs.staff_actions.staff_user")
+                ": "
+                @controller.filters.acting_user
+              }}
+              @suffixIcon="xmark"
+              class="filter btn-default"
+            />
           {{/if}}
           {{#if @controller.filters.target_user}}
-            <a
-              href
-              {{on "click" (fn @controller.clearFilter "target_user")}}
-              class="filter btn"
-            >
-              <span class="label">{{i18n
-                  "admin.logs.staff_actions.target_user"
-                }}</span>:
-              {{@controller.filters.target_user}}
-              {{icon "circle-xmark"}}
-            </a>
+            <DButton
+              @action={{fn @controller.clearFilter "target_user"}}
+              @translatedLabel={{concat
+                (i18n "admin.logs.staff_actions.target_user")
+                ": "
+                @controller.filters.target_user
+              }}
+              @suffixIcon="xmark"
+              class="filter btn-default"
+            />
           {{/if}}
           {{#if @controller.filters.subject}}
-            <a
-              href
-              {{on "click" (fn @controller.clearFilter "subject")}}
-              class="filter btn"
-            >
-              <span class="label">{{i18n
-                  "admin.logs.staff_actions.subject"
-                }}</span>:
-              {{@controller.filters.subject}}
-              {{icon "circle-xmark"}}
-            </a>
+            <DButton
+              @action={{fn @controller.clearFilter "subject"}}
+              @translatedLabel={{concat
+                (i18n "admin.logs.staff_actions.subject")
+                ": "
+                @controller.filters.subject
+              }}
+              @suffixIcon="xmark"
+              class="filter btn-default"
+            />
           {{/if}}
         </div>
       {{else}}

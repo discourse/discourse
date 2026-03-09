@@ -43,6 +43,27 @@ class UserVisit < ActiveRecord::Base
     counts_by_day_query(start_date, end_date, group_id).where(mobile: true).count
   end
 
+  def self.counts_by_day_and_mobile(start_date, end_date, group_id: nil)
+    sql = <<~SQL
+      SELECT
+        visited_at,
+        mobile,
+        COUNT(*) AS visit_count,
+        SUM(COUNT(*)) OVER () AS total
+      FROM user_visits
+      #{"INNER JOIN group_users ON group_users.user_id = user_visits.user_id" if group_id}
+      WHERE visited_at >= :start_date AND visited_at <= :end_date
+      #{"AND group_users.group_id = :group_id" if group_id}
+      GROUP BY visited_at, mobile
+      ORDER BY visited_at
+    SQL
+
+    params = { start_date: start_date, end_date: end_date, prev_start: start_date - 30.days }
+    params[:group_id] = group_id.to_i if group_id
+
+    DB.query(sql, **params)
+  end
+
   def self.ensure_consistency!
     DB.exec <<~SQL
       UPDATE user_stats u set days_visited =
