@@ -85,16 +85,6 @@ module DiscourseAi
         def description_args
           { topic_id: parameters[:topic_id], category_id: parameters[:category_id] }
         end
-
-        private
-
-        def reason
-          parameters[:reason].to_s.strip
-        end
-
-        def error_response(message)
-          { status: "error", error: message }
-        end
       end
     end
   end

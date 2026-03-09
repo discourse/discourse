@@ -85,16 +85,6 @@ module DiscourseAi
             duration_hours: parameters[:duration_hours],
           }
         end
-
-        private
-
-        def reason
-          parameters[:reason].to_s.strip
-        end
-
-        def error_response(message)
-          { status: "error", error: message }
-        end
       end
     end
   end

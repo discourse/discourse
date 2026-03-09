@@ -284,6 +284,14 @@ module DiscourseAi
           Guardian.new(context.user || acting_user)
         end
 
+        def reason
+          parameters[:reason].to_s.strip
+        end
+
+        def error_response(message)
+          { status: "error", error: message }
+        end
+
         def description_args
           {}
         end

@@ -103,14 +103,6 @@ module DiscourseAi
             Group.find_by(name: parameters[:group_name])
           end
         end
-
-        def reason
-          parameters[:reason].to_s.strip
-        end
-
-        def error_response(message)
-          { status: "error", error: message }
-        end
       end
     end
   end

@@ -79,12 +79,6 @@ module DiscourseAi
         def description_args
           { post_id: parameters[:post_id] }
         end
-
-        private
-
-        def error_response(message)
-          { status: "error", error: message }
-        end
       end
     end
   end

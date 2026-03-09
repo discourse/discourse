@@ -46,10 +46,6 @@ module DiscourseAi
           !!parameters[:flag_post]
         end
 
-        def reason
-          parameters[:reason].to_s.strip
-        end
-
         def flag_type
           persona_flag_type = persona_option(:flag_type)
           (persona_flag_type.presence || feature_context[:flag_type].presence || "review").to_s
@@ -168,10 +164,6 @@ module DiscourseAi
           else
             I18n.t("discourse_ai.ai_bot.flag_post.reason", reason: reason)
           end
-        end
-
-        def error_response(message)
-          { status: "error", error: message }
         end
 
         def feature_context

@@ -70,16 +70,6 @@ module DiscourseAi
         def description_args
           { username: parameters[:username], badge_name: parameters[:badge_name] }
         end
-
-        private
-
-        def reason
-          parameters[:reason].to_s.strip
-        end
-
-        def error_response(message)
-          { status: "error", error: message }
-        end
       end
     end
   end
