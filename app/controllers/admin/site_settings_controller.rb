@@ -5,6 +5,10 @@ class Admin::SiteSettingsController < Admin::AdminController
     render_json_error e.message, status: 422
   end
 
+  rescue_from Discourse::InvalidHTMLParameters do |e|
+    render_json_error e.message, html_message: true, status: 422
+  end
+
   def index
     params.permit(:categories, :plugin, :names)
     render_json_dump(
@@ -43,7 +47,15 @@ class Admin::SiteSettingsController < Admin::AdminController
       },
     ) do
       on_success { head :no_content }
-      on_exceptions { |e| raise Discourse::InvalidParameters, e }
+      on_exceptions do |e|
+        raise(
+          if e.is_a?(Discourse::InvalidHTMLParameters)
+            e
+          else
+            Discourse::InvalidParameters.new(e.message)
+          end,
+        )
+      end
       on_failed_policy(:settings_are_not_deprecated) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end
