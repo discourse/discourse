@@ -10,16 +10,8 @@
   margin-left: 0.5em;
 }
 
-.admin-plugin-config-area {
-  &__settings {
-    .admin-filtered-site-settings {
-      padding: 0.5em 1em;
-    }
-
-    .setting-label {
-      margin-left: 18px;
-    }
-  }
+.admin-filtered-site-settings {
+  padding: 1em;
 }
 
 .admin-changes-banner {
