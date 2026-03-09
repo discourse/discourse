@@ -860,6 +860,7 @@ en:
           provider_quantizations: "Order of provider quantizations (comma delimited list eg: fp16,fp8)"
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
           reasoning_effort: "Reasoning effort (only applicable to reasoning models)"
+          service_tier: "Service tier (flex = lower cost/higher latency, priority = faster processing)"
           enable_reasoning: "Enable reasoning (only applicable to reasoning models)"
           adaptive_thinking: "Enable adaptive thinking (recommended for Claude 4.6 models)"
           enable_thinking: "Enable thinking (Gemini 2.5 models - uses token budget)"
