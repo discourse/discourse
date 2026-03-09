@@ -24,10 +24,11 @@ Ensure that you've run `pnpm install` recently
 
 Official themes/plugins, and the official skeletons, are all wired up for types. To enable it for your own plugin/theme, pull in the latest changes from the relevant skeleton (`package.json`, `tsconfig.json`)
 
-## Live types updates for bundled plugins and themes
+## Live type updates for bundled plugins and themes
 
-If you're adding or changing core types and rely on them at the same time in a bundled plugin or theme, you should use live types updates.
-To do that, temporarily change the plugin's `package.json` to:
+If you're adding or changing core types and need to use those changes immediately in a bundled plugin or theme, use live type updates.
+
+To do so, temporarily change the plugin or theme's `package.json` to:
 
 ```json
 {
@@ -36,9 +37,8 @@ To do that, temporarily change the plugin's `package.json` to:
     "discourse": "workspace:@discourse/types@*"
   }
 }
-```
 
-Then run `pnpm install` and start watching for types updates: `pnpm types:watch`
+Then run `pnpm install` and start the type watcher with `pnpm types:watch`.
 
 ## Enable checking for a file
 
