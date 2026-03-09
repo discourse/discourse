@@ -1,0 +1,58 @@
+name: Publish @discourse/types package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "lib/version.rb"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: publish
+    runs-on: ubuntu-latest
+    if: github.repository == 'discourse/discourse'
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate external type definitions
+        run: pnpm types:generate
+
+      - name: Generate type definitions
+        run: pnpm lint:types
+
+      - name: Prepare version
+        shell: bash
+        run: |
+          discourse_version=$(ruby -r ./lib/version.rb -e 'puts "#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}.#{Discourse::VERSION::TINY}"')
+          commit_hash=$(git rev-parse --short HEAD)
+          package_version="${discourse_version}-${commit_hash}"
+
+          echo "@discourse/types version: ${package_version}"
+          sed -i -E  "s/\"version\": \"0\.0\.0\"/\"version\": \"${package_version}\"/" frontend/discourse-types/package.json
+
+      - name: Publish the package
+        working-directory: frontend/discourse-types
+        run: pnpm publish --no-git-checks --tag latest

@@ -8,8 +8,12 @@
   "keywords": [
     "ember-addon"
   ],
+  "types": "src/index.d.ts",
   "exports": {
-    ".": "./src/index.js",
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
     "./addon-main.js": "./addon-main.cjs"
   },
   "files": [
