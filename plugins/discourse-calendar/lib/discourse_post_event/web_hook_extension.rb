@@ -12,6 +12,7 @@ module DiscoursePostEvent
           WebHook.enqueue_hooks(
             :calendar_event,
             event_name,
+            id: calendar_event.id,
             category_id: calendar_event.post&.topic&.category_id,
             tag_ids: calendar_event.post&.topic&.tags&.pluck(:id),
             payload: payload,
