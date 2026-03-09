@@ -13,6 +13,18 @@ describe "User invites", type: :system do
     sign_in(admin)
   end
 
+  describe "pending invites" do
+    let(:user_invite_pending_page) { PageObjects::Pages::UserInvitedPending.new }
+
+    it "can load more invites" do
+      SiteSetting.invites_per_page = 3
+
+      user_invite_pending_page.visit(user)
+
+      expect(user_invite_pending_page).to have_invite_count(invites_pending.size)
+    end
+  end
+
   describe "expired invites" do
     let(:user_invite_expired_page) { PageObjects::Pages::UserInvitedExpired.new }
     it "correctly shows expired invites" do
