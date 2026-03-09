@@ -67,10 +67,7 @@ module PageObjects
       end
 
       def has_invite_count?(count)
-        has_css?(
-          ".user-content .user-invite-list tbody tr",
-          count: count,
-        )
+        has_css?(".user-content .user-invite-list tbody tr", count: count)
       end
 
       def invites_list
