@@ -812,6 +812,9 @@ RSpec.configure do |config|
       channel: :chromium,
       headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
       args: apply_base_chrome_args,
+      # --disable-infobars can cause Chrome for Testing to crash with SIGSEGV in CI
+      # https://github.com/microsoft/playwright/issues/39158
+      ignoreDefaultArgs: ["--disable-infobars"],
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
