@@ -140,12 +140,13 @@ export default class UserInvitedShowController extends Controller {
       this.invitesLoading = true;
 
       try {
-        const inviteList = await Invite.findInvitedBy(
+        const result = await Invite.findInvitedBy(
           this.user,
           this.filter,
           this.searchTerm,
           model.invites.length
-        ).invites;
+        );
+        const inviteList = result.invites;
 
         this.invitesLoading = false;
         model.invites.push(...inviteList);
