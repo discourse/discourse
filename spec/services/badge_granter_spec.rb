@@ -570,6 +570,29 @@ RSpec.describe BadgeGranter do
 
       expect(user.reload.title).to be_nil
     end
+
+    it "does not clear titles of users who have a different badge with a matching custom name" do
+      custom_badge_title = "this is a badge title"
+      other_badge = Fabricate(:badge)
+      other_user = Fabricate(:user)
+
+      I18n.backend.store_translations(
+        :en,
+        { badges: { Badge.i18n_name(badge.name) => { name: "Badge 0" } } },
+      )
+      TranslationOverride.create!(
+        translation_key: badge.translation_key,
+        value: custom_badge_title,
+        locale: "en",
+      )
+
+      described_class.grant(other_badge, other_user)
+      other_user.update!(title: custom_badge_title)
+
+      described_class.revoke_all(badge)
+
+      expect(other_user.reload.title).to eq(custom_badge_title)
+    end
   end
 
   describe ".queue_badge_grant" do

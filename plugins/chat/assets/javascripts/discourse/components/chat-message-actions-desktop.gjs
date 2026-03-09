@@ -25,7 +25,8 @@ import ChatMessageReaction from "discourse/plugins/chat/discourse/components/cha
 import chatMessageContainer from "discourse/plugins/chat/discourse/lib/chat-message-container";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
-const MSG_ACTIONS_VERTICAL_PADDING = -10;
+const MSG_ACTIONS_USER_INFO_VERTICAL_OFFSET = -24;
+const MSG_ACTIONS_VERTICAL_OFFSET = -6;
 const FULL = "full";
 const REDUCED = "reduced";
 const REDUCED_WIDTH_THRESHOLD = 500;
@@ -75,7 +76,7 @@ export default class ChatMessageActionsDesktop extends Component {
       return;
     }
 
-    const boundary = this.messageContainer.closest(".chat-messages-scroller");
+    const boundary = container.closest(".chat-messages-scroller");
 
     if (!boundary) {
       return;
@@ -89,7 +90,9 @@ export default class ChatMessageActionsDesktop extends Component {
         strategy: "fixed",
         middleware: [
           offset({
-            mainAxis: MSG_ACTIONS_VERTICAL_PADDING,
+            mainAxis: this.chat.activeMessage?.hideUserInfo
+              ? MSG_ACTIONS_VERTICAL_OFFSET
+              : MSG_ACTIONS_USER_INFO_VERTICAL_OFFSET,
             crossAxis: -2,
           }),
           flip({

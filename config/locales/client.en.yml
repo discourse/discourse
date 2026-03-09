@@ -4630,6 +4630,7 @@ en:
 
       original_language: "This post was originally written in %{language}"
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
+      ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
       none: "(no category)"
@@ -6573,10 +6574,11 @@ en:
           all: "All"
           view_table: "table"
           view_graph: "graph"
-          refresh_report: "Refresh Report"
+          refresh_report: "Refresh"
           daily: Daily
           monthly: Monthly
           weekly: Weekly
+          chart_group_period: "Select a period"
           value_so_far: "%{value} (so far)"
           dates: "Dates (UTC)"
           groups: "All groups"
@@ -8756,7 +8758,7 @@ en:
           min_admin_password_length:
             prompt: "You're about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           block_common_passwords:

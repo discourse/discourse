@@ -183,7 +183,21 @@ class CategoriesController < ApplicationController
             site_setting_configuration_values: params[:category_type_site_settings],
             category_configuration_values: category_params[:custom_fields],
           },
-        )
+        ) do |result|
+          on_failed_policy(:type_is_available) do
+            return(
+              render json: {
+                       errors: [
+                         I18n.t(
+                           "category_types.not_available",
+                           type_name: category_type.capitalize,
+                         ),
+                       ],
+                     },
+                     status: :unprocessable_entity
+            )
+          end
+        end
       end
 
       Scheduler::Defer.later "Log staff action create category" do
@@ -206,12 +220,14 @@ class CategoriesController < ApplicationController
       category_params.delete(:position)
 
       old_custom_fields = cat.custom_fields.dup
-      if category_params[:custom_fields]
-        category_params[:custom_fields].each do |key, value|
-          if value.nil? || value == ""
-            cat.custom_fields.delete(key)
+      category_params[:custom_fields]&.each do |key, value|
+        if value.nil? || value == ""
+          cat.custom_fields.delete(key)
+        else
+          cat.custom_fields[key] = if value.is_a?(TrueClass) || value.is_a?(FalseClass)
+            value.to_s
           else
-            cat.custom_fields[key] = value
+            value
           end
         end
       end

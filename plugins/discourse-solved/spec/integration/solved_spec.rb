@@ -366,6 +366,29 @@ RSpec.describe "Managing Posts solved status" do
       end
     end
 
+    it "works when the post author has been deleted" do
+      reply = Fabricate(:post, post_number: 2, topic: topic)
+      reply.user.destroy!
+      reply.reload
+
+      post "/solution/accept.json", params: { id: reply.id }
+
+      expect(response.status).to eq(200)
+      expect(topic.solved.answer_post_id).to eq(reply.id)
+    end
+
+    it "works when the topic author has been deleted" do
+      SiteSetting.notify_on_staff_accept_solved = true
+      SiteSetting.solved_topics_auto_close_hours = 0
+      topic.user.destroy!
+      topic.reload
+
+      post "/solution/accept.json", params: { id: p1.id }
+
+      expect(response.status).to eq(200)
+      expect(topic.solved.answer_post_id).to eq(p1.id)
+    end
+
     it "does not set a timer when the topic is closed" do
       topic.update!(closed: true)
       post "/solution/accept.json", params: { id: p1.id }

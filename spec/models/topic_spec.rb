@@ -3350,6 +3350,38 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#remove_allowed_group" do
+    fab!(:pm_group, :group)
+
+    it "creates a small action post even when remover loses access via that group" do
+      pm_group.add(moderator)
+
+      private_topic =
+        Fabricate(
+          :private_message_topic,
+          title: "Private message with group",
+          user: admin,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: admin)],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: pm_group)],
+        )
+      Fabricate(:post, topic: private_topic, user: admin)
+
+      # Verify moderator only has access via the group
+      expect(private_topic.allowed_users).not_to include(moderator)
+      expect(private_topic.allowed_group_users).to include(moderator)
+
+      expect(private_topic.remove_allowed_group(moderator, pm_group.name)).to eq(true)
+      expect(private_topic.allowed_groups).not_to include(pm_group)
+
+      # Moderator no longer has access
+      expect(private_topic.reload.all_allowed_users.where(id: moderator.id).exists?).to eq(false)
+
+      small_action = private_topic.posts.where(action_code: "removed_group").last
+      expect(small_action).to be_present
+      expect(small_action.user).to eq(moderator)
+    end
+  end
+
   describe "#featured_link_root_domain" do
     let(:topic) { Fabricate.build(:topic) }
 

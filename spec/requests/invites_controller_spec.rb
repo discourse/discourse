@@ -1690,6 +1690,25 @@ RSpec.describe InvitesController do
       expect(response.status).to eq(403)
       expect(expired_invite.reload.deleted_at).to eq(nil)
     end
+
+    it "does not allow a moderator to delete another user's expired invites" do
+      moderator = Fabricate(:moderator)
+      sign_in(moderator)
+      post "/invites/destroy-all-expired", params: { username: user.username }
+
+      expect(response.status).to eq(403)
+      expect(expired_invite.reload.deleted_at).to eq(nil)
+    end
+
+    it "allows a moderator to delete their own expired invites" do
+      moderator = Fabricate(:moderator)
+      mod_expired_invite = Fabricate(:invite, invited_by: moderator, expires_at: 2.days.ago)
+      sign_in(moderator)
+      post "/invites/destroy-all-expired", params: { username: moderator.username }
+
+      expect(response.status).to eq(200)
+      expect(mod_expired_invite.reload.deleted_at).to be_present
+    end
   end
 
   describe "#resend_invite" do

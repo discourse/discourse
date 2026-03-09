@@ -499,21 +499,17 @@ describe DiscourseDataExplorer::QueryController do
 
           post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
                params: {
-                 limit: "ALL",
+                 limit: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT + 1,
                }
-          expect(response_json["rows"].count).to eq(3)
+          expect(response.status).to eq(400)
         end
 
         it "should limit the results in CSV download" do
-          begin
-            original_const = DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT
-            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
-
-            query = make_query <<~SQL
+          query = make_query <<~SQL
             SELECT id FROM posts
-            SQL
+          SQL
 
+          stub_const(DiscourseDataExplorer, "QUERY_RESULT_MAX_LIMIT", 2) do
             post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
@@ -527,16 +523,12 @@ describe DiscourseDataExplorer::QueryController do
                  }
             expect(response.body.split("\n").count).to eq(2)
 
-            # The value `ALL` is not supported in csv exports.
             post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
-                   limit: "ALL",
+                   limit: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT + 1,
                  }
-            expect(response.body.split("\n").count).to eq(1)
-          ensure
-            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", original_const)
+            expect(response.body.split("\n").count).to eq(3)
           end
         end
       end

@@ -11,7 +11,6 @@
         rel="modulepreload"
         href="<%= script_asset_path(asset[:name]) %>"
         nonce="<%= csp_nonce_placeholder %>"
-        data-plugin-name="<%= asset[:plugin].directory_name %>"
         <%= tag.attributes **asset[:plugin_attributes] %>
       >
     <% else %>
