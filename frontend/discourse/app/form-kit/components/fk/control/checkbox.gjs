@@ -5,7 +5,6 @@ import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import { eq, or } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
 
 export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";
@@ -35,7 +34,9 @@ export default class FKControlCheckbox extends Component {
             {{/if}}
           </span>
 
-          <FKRequired @field={{@field}} />
+          {{#if @field.required}}
+            <FKRequired @field={{@field}} />
+          {{/if}}
           <FKTooltip @field={{@field}} />
         </span>
 

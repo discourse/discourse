@@ -101,7 +101,7 @@ module(
         </template>
       );
 
-      assert.form().field("foo").hasTitle("Foo (optional)");
+      assert.form().field("foo").hasTitle("Foo");
     });
 
     test("when value is string 'true'", async function (assert) {
@@ -145,7 +145,7 @@ module(
         </template>
       );
 
-      assert.form().field("foo").hasTitle("Foo");
+      assert.form().field("foo").hasTitle("Foo (required)");
       await formKit().submit();
       assert.form().field("foo").hasError("Required");
 

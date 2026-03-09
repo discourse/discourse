@@ -24,8 +24,8 @@ module(
         </template>
       );
 
-      assert.form().field("foo").hasTitle("Foo (optional)");
-      assert.form().field("bar").hasTitle("Bar (optional)");
+      assert.form().field("foo").hasTitle("Foo");
+      assert.form().field("bar").hasTitle("Bar");
       assert.form().field("bar").hasDescription("A description");
     });
 
