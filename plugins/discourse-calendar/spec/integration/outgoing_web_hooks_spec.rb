@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Outgoing calendar event webhooks" do
-  let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   fab!(:web_hook, :outgoing_calendar_event_web_hook)
 
   before do
