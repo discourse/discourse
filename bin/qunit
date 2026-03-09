@@ -190,8 +190,7 @@ class QunitRunner
       elsif File.file?(path)
         expanded << path
       else
-        puts "Error: Path not found: #{path}"
-        exit 1
+        abort "Error: Path not found: #{path}"
       end
     end
 
