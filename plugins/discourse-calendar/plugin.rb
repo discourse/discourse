@@ -139,6 +139,7 @@ after_initialize do
   require_relative "lib/discourse_post_event/post_extension"
   require_relative "lib/discourse_post_event/rrule_generator"
   require_relative "lib/discourse_post_event/rrule_configurator"
+  require_relative "lib/discourse_post_event/web_hook_extension"
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
 
@@ -146,6 +147,7 @@ after_initialize do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
+    ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
   end
 
   add_to_class(:user, :can_create_discourse_post_event?) do
@@ -209,18 +211,45 @@ after_initialize do
     end,
   ) { DiscoursePostEvent::EventSerializer.new(object.event, scope: scope, root: false) }
 
-  on(:post_created) { |post| DiscoursePostEvent::Event.update_from_raw(post) }
+  on(:post_created) do |post|
+    DiscoursePostEvent::Event.update_from_raw(post)
+    post.reload
+    if SiteSetting.discourse_post_event_enabled && post.event
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+    end
+  end
 
-  on(:post_edited) { |post| DiscoursePostEvent::Event.update_from_raw(post) }
+  on(:post_edited) do |post|
+    event_before = post.event
+    had_event_before = event_before.present?
+    DiscoursePostEvent::Event.update_from_raw(post)
+    post.reload
+
+    if SiteSetting.discourse_post_event_enabled
+      if post.event && had_event_before
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
+      elsif post.event && !had_event_before
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+      elsif !post.event && had_event_before
+        payload = WebHook.build_calendar_event_payload(event_before)
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
+      end
+    end
+  end
 
   on(:post_destroyed) do |post|
     if SiteSetting.discourse_post_event_enabled && post.event
+      payload = WebHook.build_calendar_event_payload(post.event)
       post.event.update!(deleted_at: Time.now)
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, post.event, payload)
     end
   end
 
   on(:post_recovered) do |post|
-    post.event.update!(deleted_at: nil) if SiteSetting.discourse_post_event_enabled && post.event
+    if SiteSetting.discourse_post_event_enabled && post.event
+      post.event.update!(deleted_at: nil)
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+    end
   end
 
   add_preloaded_topic_list_custom_field DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT

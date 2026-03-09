@@ -79,7 +79,9 @@ module DiscoursePostEvent
       event = Event.find(params[:id])
       guardian.ensure_can_act_on_discourse_post_event!(event)
       event.publish_update!
-      event.destroy
+      payload = WebHook.build_calendar_event_payload(event)
+      event.destroy!
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event, payload)
       render json: success_json
     end
 
