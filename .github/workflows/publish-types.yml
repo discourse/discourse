@@ -46,7 +46,6 @@ jobs:
         run: pnpm lint:types
 
       - name: Prepare version
-        id: version
         shell: bash
         run: |
           discourse_version=$(ruby -r ./lib/version.rb -e 'puts "#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}.#{Discourse::VERSION::TINY}"')
@@ -56,8 +55,6 @@ jobs:
           echo "@discourse/types version: ${package_version}"
           sed -i -E  "s/\"version\": \"0\.0\.0\"/\"version\": \"${package_version}\"/" frontend/discourse-types/package.json
 
-          echo "package_version=$package_version" >> $GITHUB_OUTPUT
-
       - name: Publish the package
         working-directory: frontend/discourse-types
-        run: pnpm publish --no-git-checks --tag '${{ steps.version.outputs.package_version }}' --dry-run
+        run: pnpm publish --no-git-checks --tag latest --dry-run
