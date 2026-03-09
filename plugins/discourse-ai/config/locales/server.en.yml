@@ -529,6 +529,19 @@ en:
         random_picker: "Random Picker"
         categories: "List categories"
         flag_post: "Flag post"
+        close_topic: "Close topic"
+        unlist_topic: "Unlist topic"
+        lock_post: "Lock post"
+        delete_topic: "Delete topic"
+        edit_post: "Edit post"
+        edit_tags: "Edit tags"
+        edit_category: "Edit category"
+        set_topic_timer: "Set topic timer"
+        set_slow_mode: "Set slow mode"
+        move_posts: "Move posts"
+        grant_badge: "Grant badge"
+        assign: "Assign topic"
+        mark_as_solved: "Mark as solved"
         search: "Search"
         tags: "List tags"
         time: "Time"
@@ -558,6 +571,19 @@ en:
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
         flag_post: "Flag the current post for staff review"
+        close_topic: "Close or open a topic"
+        unlist_topic: "List or unlist a topic"
+        lock_post: "Lock or unlock a post"
+        delete_topic: "Delete a topic"
+        edit_post: "Edit the content of a post"
+        edit_tags: "Edit the tags on a topic"
+        edit_category: "Move a topic to a different category"
+        set_topic_timer: "Set a timer on a topic to close, open, delete, or bump it"
+        set_slow_mode: "Enable or disable slow mode on a topic"
+        move_posts: "Move posts to a new or existing topic"
+        grant_badge: "Grant a badge to a user"
+        assign: "Assign or unassign a topic to a user or group"
+        mark_as_solved: "Mark or unmark a post as the accepted solution"
         search: "Search all public topics on the forum"
         tags: "List all tags on the forum"
         time: "Find time in various time zones"
@@ -585,6 +611,19 @@ en:
         github_file_content: "Retrieved content of %{file_paths} from %{repo_name}@%{branch}"
         random_picker: "Picking from %{options}, picked: %{result}"
         flag_post: "Flagging post %{post_id} (flag_post: %{flag_post})"
+        close_topic: "Closing topic %{topic_id} (closed: %{closed})"
+        unlist_topic: "Unlisting topic %{topic_id} (unlisted: %{unlisted})"
+        lock_post: "Locking post %{post_id} (locked: %{locked})"
+        delete_topic: "Deleting topic %{topic_id} (deleted: %{deleted})"
+        edit_post: "Editing post %{post_id}"
+        edit_tags: "Editing tags on topic %{topic_id}: %{tags}"
+        edit_category: "Moving topic %{topic_id} to category %{category_id}"
+        set_topic_timer: "Setting %{timer_type} timer on topic %{topic_id} (%{duration_hours}h)"
+        set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
+        move_posts: "Moving posts %{post_ids} from topic %{topic_id}"
+        grant_badge: "Granting badge '%{badge_name}' to %{username}"
+        assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
+        mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
         time: "Time in %{timezone} is %{time}"
         summarize: "Summarized <a href='%{url}'>%{title}</a>"
@@ -632,6 +671,112 @@ en:
         already_flagged: "Post is already flagged for review."
         flagged: "Post flagged for review."
         reason: "AI bot flagged this post.\n\nReason: %{reason}"
+
+      close_topic:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to close or open this topic."
+          no_reason: "A reason is required to close or open a topic."
+        success: "Topic updated successfully."
+
+      unlist_topic:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to unlist or list this topic."
+          no_reason: "A reason is required to unlist or list a topic."
+        success: "Topic updated successfully."
+
+      lock_post:
+        errors:
+          not_found: "Post not found."
+          not_allowed: "You are not allowed to lock or unlock this post."
+          no_reason: "A reason is required to lock or unlock a post."
+        success: "Post updated successfully."
+
+      delete_topic:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to delete or recover this topic."
+          no_reason: "A reason is required to delete or recover a topic."
+        success: "Topic updated successfully."
+
+      edit_post:
+        errors:
+          not_found: "Post not found."
+          not_allowed: "You are not allowed to edit this post."
+          nothing_to_edit: "Either raw or title must be provided."
+          no_reason: "An edit reason is required."
+          revision_failed: "Failed to revise the post."
+        success: "Post edited successfully."
+
+      edit_tags:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to edit tags on this topic."
+          no_reason: "A reason is required to edit tags."
+          tagging_disabled: "Tagging is not enabled on this site."
+        success: "Tags updated successfully."
+
+      edit_category:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to move this topic."
+          category_not_found: "Category not found."
+          no_reason: "A reason is required to move a topic."
+          revision_failed: "Failed to move the topic."
+        success: "Topic moved successfully."
+
+      set_topic_timer:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to set a timer on this topic."
+          no_reason: "A reason is required to set a topic timer."
+          invalid_timer_type: "Invalid timer type. Must be one of: close, open, delete, silent_close, bump."
+        success: "Topic timer updated successfully."
+
+      set_slow_mode:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to set slow mode on this topic."
+          no_reason: "A reason is required to set slow mode."
+        success: "Slow mode updated successfully."
+
+      move_posts:
+        errors:
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to move posts in this topic."
+          no_reason: "A reason is required to move posts."
+          no_posts: "No post IDs provided."
+          no_destination: "Either destination_topic_id or new_title must be provided."
+          move_failed: "Failed to move posts."
+        success: "Posts moved successfully."
+
+      grant_badge:
+        errors:
+          user_not_found: "User not found."
+          badge_not_found: "Badge not found."
+          not_allowed: "You are not allowed to grant badges."
+          no_reason: "A reason is required to grant a badge."
+          badge_disabled: "Badge is not enabled."
+          grant_failed: "Failed to grant badge."
+        success: "Badge granted successfully."
+
+      assign:
+        errors:
+          plugin_not_installed: "The discourse-assign plugin is not installed."
+          not_found: "Topic not found."
+          not_allowed: "You are not allowed to assign this topic."
+          no_reason: "A reason is required to assign or unassign a topic."
+          assignee_not_found: "User or group not found."
+          assign_failed: "Failed to assign topic."
+        success: "Topic assignment updated successfully."
+
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "The discourse-solved plugin is not installed."
+          no_reason: "A reason is required to mark or unmark a post as solved."
+          action_failed: "Failed to update the solved status."
+        success: "Solved status updated successfully."
 
     summarization:
       configuration_hint:

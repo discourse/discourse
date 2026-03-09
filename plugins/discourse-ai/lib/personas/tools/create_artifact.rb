@@ -362,10 +362,6 @@ module DiscourseAi
         def success_response(artifact)
           { status: "success", artifact_id: artifact.id, message: "Artifact created successfully." }
         end
-
-        def error_response(message)
-          { status: "error", error: message }
-        end
       end
     end
   end
