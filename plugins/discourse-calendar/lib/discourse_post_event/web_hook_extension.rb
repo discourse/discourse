@@ -30,7 +30,7 @@ module DiscoursePostEvent
             description: calendar_event.description,
             location: calendar_event.location,
             url: calendar_event.url,
-            status: DiscoursePostEvent::Event.statuses.key(calendar_event.status)&.to_s,
+            status: DiscoursePostEvent::Event.statuses[calendar_event.status]&.to_s,
             starts_at: calendar_event.starts_at,
             ends_at: calendar_event.ends_at,
             recurrence: calendar_event.recurrence,
