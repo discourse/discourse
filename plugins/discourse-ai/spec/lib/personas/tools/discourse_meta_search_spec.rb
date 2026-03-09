@@ -61,6 +61,22 @@ RSpec.describe DiscourseAi::Personas::Tools::DiscourseMetaSearch do
     )
   end
 
+  it "strips max_posts when it is 0" do
+    stub_request(:get, "https://meta.discourse.org/search.json?q=test").to_return(
+      status: 200,
+      body: mock_search_json,
+      headers: {
+      },
+    )
+
+    search =
+      described_class.new({ search_query: "test", max_posts: 0 }, bot_user: bot_user, llm: llm)
+    results = search.invoke(&progress_blk)
+
+    expect(results[:args]).not_to have_key(:max_posts)
+    expect(results[:rows].length).to eq(20)
+  end
+
   it "passes on all search parameters" do
     url =
       "https://meta.discourse.org/search.json?q=test%20category:test%20user:test%20order:test%20max_posts:1%20tags:test%20before:test%20after:test%20status:test"

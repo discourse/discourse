@@ -79,6 +79,8 @@ module DiscourseAi
         end
 
         def invoke
+          parameters.delete(:max_posts) if parameters[:max_posts] == 0
+
           search_string =
             search_args.reduce(+parameters[:search_query].to_s) do |memo, (key, value)|
               return memo if value.blank?

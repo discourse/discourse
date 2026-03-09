@@ -100,6 +100,8 @@ module DiscourseAi
         end
 
         def invoke
+          parameters.delete(:max_posts) if parameters[:max_posts] == 0
+
           search_terms = []
           search_terms << options[:base_query] if options[:base_query].present?
           search_terms << search_query if search_query.present?
