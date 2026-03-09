@@ -88,6 +88,16 @@ RSpec.describe DiscourseAi::Personas::Tools::Search do
       expect(results[:rows].length).to eq(1)
     end
 
+    it "strips max_posts when it is 0" do
+      post1 = Fabricate(:post, topic: topic_with_tags)
+      search =
+        described_class.new({ search_query: post1.raw, max_posts: 0 }, bot_user: bot_user, llm: llm)
+
+      results = search.invoke(&progress_blk)
+      expect(results[:args]).not_to have_key(:max_posts)
+      expect(results[:rows].length).to eq(1)
+    end
+
     it "can handle no results" do
       _post1 = Fabricate(:post, topic: topic_with_tags)
       search =
