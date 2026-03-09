@@ -21,10 +21,9 @@ module DiscourseSolved
 
     def can_accept_answer?(topic, post)
       return false if !authenticated?
-      if !topic || topic.private_message? || !post || post.post_number <= 1 || post.whisper?
-        return false
-      end
-      return false if !allow_accepted_answers?(topic.category_id, topic.tags.map(&:name))
+      return false if !topic || !post || post.post_number <= 1 || post.whisper?
+      return false if !allow_accepted_answers?(topic.category_id, topic.tags.pluck(:name))
+      return false if !can_see_post?(post)
 
       return true if is_staff?
       if current_user.in_any_groups?(SiteSetting.accept_all_solutions_allowed_groups_map)
