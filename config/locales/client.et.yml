@@ -1296,6 +1296,7 @@ et:
     form_kit:
       reset: Lähtesta
       optional: valikuline
+      required: nõutud
       errors:
         required: "Nõutud"
     close: "Sulge"
@@ -2921,7 +2922,7 @@ et:
           all: "Kõik"
           view_table: "tabel"
           view_graph: "diagramm"
-          refresh_report: "Värskenda raportit"
+          refresh_report: "Värskenda"
           daily: Igapäevaselt
           monthly: Igakuiselt
           weekly: Iganädalaselt

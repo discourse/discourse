@@ -9,9 +9,19 @@ ar:
     blocks:
       ghost:
         status: "الحالة"
+        conditions: "الشروط"
+        arguments: "الوسيطات"
+        container_args: "وسيطات الحاوية"
         in_location: "في"
         hidden: "مخفي"
+        not_registered: "غير مسجل"
+        no_visible_children: "لا توجد تبعيات ظاهرة"
         failed: "فشل"
+      ghost_reasons:
+        optional_missing_hint: "لا يتم عرض هذه الكتلة الاختيارية لأنها غير مسجلة."
+        no_visible_children_hint: "لا يتم عرض كتلة الحاوية هذه لأنه لا توجد أي تبعيات ظاهرة."
+        condition_failed_hint: "لا يتم عرض هذه الكتلة نظرًا لإخفاق شروطها."
+        head_hidden_tail_hint: "لا يتم عرض هذه الكتلة لأنه يجري عرض كتلة أخرى أولًا في الحاوية `head`."
     carousel:
       go_to_slide: "الانتقال إلى الشريحة %{index}"
       previous: "الشريحة السابقة"
@@ -415,10 +425,13 @@ ar:
     skip_to_top: "تخطي إلى الأعلى"
     skip_user_nav: "التخطي إلى محتوى الملف الشخصي"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
+    emails_are_disabled_no_smtp: "تم تعطيل جميع رسائل البريد الإلكتروني الصادرة نظرًا لعدم وجود خادم SMTP تم تكوينه. لا يمكن إرسال أي نوع من الرسائل الإلكترونية."
     emails_are_disabled_non_staff: "تم إيقاف البريد الإلكتروني الصادر للمستخدمين من خارج فريق العمل."
     software_update_prompt:
       message: "لقد أجرينا تحديثًا على هذا الموقع، <span>يُرجى تحديث الصفحة</span> للحفاظ على سير الأمور بسلاسة."
       dismiss: "تجاهل"
+    notifications_tracking:
+      tooltip: "مستوى الإشعارات: %{level}"
     back_button: "الرجوع"
     welcome_banner:
       header:
@@ -438,12 +451,27 @@ ar:
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
     broken_transformer_alert: "حدث خطأ. قد لا يعمل موقعك بشكلٍ صحيح."
+    broken_block_alert: "تم اكتشاف خطأ في تكوين الكتلة. يرجى مراجعة وحدة تحكم المتصفح للاطلاع على التفاصيل."
+    broken_block_factory_alert: "تعذر تحميل إحدى الكتل. قد لا تظهر بعض عناصر واجهة المستخدم بشكل صحيح."
     critical_deprecation:
       notice: "<b>[إشعار المسؤول]</b> إن %{source} يحتوي على رمز بحاجة إلى تحديث. (المعرّف: %{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>معرفة المزيد</em></a>)"
       theme_source: "السمة <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "المكوِّن الإضافي \"%{name}\""
       unknown_source: "واحد من سماتك أو مكوِّناتك الإضافية"
+    dev_tools:
+      drag_to_move: "اسحب للتحريك"
+      toggle_plugin_outlet_debug: "تبديل وضع تصحيح أخطاء منفذ المكون الإضافي"
+      toggle_block_debug: "تبديل وضع تصحيح أخطاء الكتلة"
+      block_debug:
+        outlet_boundaries: "حدود المنفذ"
+        visual_overlay: "التراكب المرئي"
+        ghost_blocks: "الكتل المخفية"
+        condition_debugging: "تصحيح الأخطاء الشرطية"
+      toggle_safe_mode: "تبديل الوضع الآمن"
+      toggle_verbose_localization: "تبديل التوطين المطول"
+      toggle_mobile_view: "تبديل عرض الهاتف المحمول"
+      disable_dev_tools: "تعطيل أدوات المطورين"
     s3:
       regions:
         ap_northeast_1: "آسيا والمحيط الهادئ (طوكيو)"
@@ -549,9 +577,40 @@ ar:
       pill: "مُقترح"
       pm_title: "الرسائل المقترحة"
     admin_onboarding_banner:
+      launch_in_easy_steps: "الإطلاق عبر %{step_count} خطوات سهلة"
+      skipped: "تم الآن تخطي قائمة مراجعة إعداد المسؤول. إذا كنت ترغب في إعادة تمكينها، ابحث عن «تفعيل ضم مالك الموقع» في إعدادات الموقع."
+      congrats_onboarding_complete: "تهانينا على إكمال عملية الانضمام!"
+      invite_collaborators:
+        title: "دعوة المتعاونين"
+        description: "يساهم الأعضاء الأوائل في إثراء مجتمعك"
+        action: "إنشاء دعوة"
       start_posting:
+        title: "بدء النشر"
+        description: "امنح الناس موضوعًا يتحدثون عنه معًا"
+        action: "أفكار لكسر حالة السكوت"
+        choose_option: "كيف تود أن تبدأ؟"
+        predefined_topics: "قوالب لكسر حالة السكوت"
+        predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
+        predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
+        use_predefined: "تصفح القوالب"
+        start_with_this: "ابدأ بهذا"
         back: "رجوع"
+        icebreakers:
+          fun_facts:
+            title: "اذكر بعض الحقائق الممتعة عنك"
+            body: "مرحبًا بالجميع! أنا متحمسٌ جدًا للبدء في تأسيس هذا المجتمع الجديد. ولإطلاق شرارة البداية، دعونا نتشارك حقيقةً ممتعةً عن أنفسنا. سأبدأ أنا أولاً: أنا أعشق التنزه سيرًا على الأقدام واستكشاف مسارات جديدة! فما هو الشيء المثير للاهتمام بخصوصكم؟"
+          coolest_thing_you_have_seen_today:
+            title: "ما أروع شيء رأيته اليوم؟"
+            body: "ما أروع شيء رأيته أو عشته اليوم؟ يمكن أن يكون أي شيء، بدءًا من غروب شمس بديع، وصولًا إلى عمل إنساني عفوي. سأبدأ أنا أولًا: لقد رأيت كلبًا يساعد شخصًا مسنًا على عبور الشارع!"
+          introduce_yourself:
+            title: "عرّف بنفسك"
+            body: "أهلاً بكم في هذا المجتمع! دعونا نبدأ بالتعرف على بعضنا بعضًا؛ يُرجى تقديم أنفسكم ومشاركتنا نبذة يسيرة عن اهتماماتكم. سأبدأ أنا أولاً: أنا شغوفٌ جدًا بعالم التكنولوجيا وأعشق تعليم الآخرين!"
+          what_is_your_favorite_food:
+            title: "ما طعامك المفضل؟"
+            body: "شارك طعامك المفضل مع المجتمع! سأبدأ: أنا أحب البيتزا، وخاصة مع إضافة الجبن والبيبروني."
       spread_the_word:
+        title: "انشروا مجتمعنا!"
+        description: "شارك الرابط مع جميع الأشخاص في نطاقك"
         action: "نسخ الرابط"
         copied_to_clipboard: "تم نسخ الرابط إلى الحافظة!"
     about:
@@ -800,6 +859,10 @@ ar:
           few: "+%{count} مسودات أخرى"
           many: "+%{count} مسودة أخرى"
           other: "+%{count} مسودة أخرى"
+    embed_mode:
+      storage_access_prompt: "هل لديك بالفعل حساب %{site_name}؟ اسمح بالوصول إلى جلستك للتعليق بنفسك."
+      allow_access: "السماح بالوصول"
+      continue_as_guest: "المتابعة كضيف"
     topic_count_all:
       zero: "عرض %{count} موضوع جديد"
       one: "عرض موضوع واحد (%{count}) جديد"
@@ -889,13 +952,23 @@ ar:
       in_reply_to: "ردًا على"
       filtered_flagged_by: "تم الإبلاغ بواسطة"
       unknown:
+        title:
+          zero: "لديك عناصر قيد الانتظار في قائمة المراجعة من المكوِّن الإضافي المُعطّل:"
+          one: "لديك عناصر قيد الانتظار في قائمة المراجعة من المكوِّن الإضافي المُعطّل:"
+          two: "لديك عناصر قيد الانتظار في قائمة المراجعة من المكوِّنين الإضافيين المُعطّلين:"
+          few: "لديك عناصر قيد الانتظار في قائمة المراجعة من المكوِّنات الإضافية المُعطّلة:"
+          many: "لديك عناصر قيد الانتظار في قائمة المراجعة من المكوِّنات الإضافية المُعطّلة:"
+          other: "لديك عناصر قيد الانتظار في قائمة المراجعة من المكوِّنات الإضافية المُعطّلة:"
         instruction: "لا يمكن عرض تلك العناصر ما لم تفعّل المكوِّن الإضافي ذا الصلة. يُرجى تفعيل المكوِّن الإضافي ثم تحديث الصفحة. أو يمكنك تجاهلها. <a href='%{url}' target='_blank'>معرفة المزيد...</a>"
         reviewable_unknown_source: "%{reviewableType} (مكوِّن إضافي غير معروف)"
         reviewable_known_source: "%{reviewableType} (من المكوِّن الإضافي \"%{pluginName}\")"
         ignore_all: "تجاهل الكل"
         enable_plugins: "تفعيل المكوِّنات الإضافية"
+        delete_confirm: "هل ترغب بالتأكيد في حذف كل العناصر الموجودة في قائمة انتظار المراجعة التي أُنشِئت بواسطة المكوِّنات الإضافية المعطّلة؟"
+        ignore_success: "حُذفت كل العناصر الموجودة في قائمة انتظار المراجعة التي أُنشِئت بواسطة المكوِّنات الإضافية المعطّلة."
       explain:
         why: "اشرح سبب دخول هذا العنصر في قائمة الانتظار"
+        title: "تقييم العناصر الموجودة في قائمة انتظار المراجعة"
         formula: "المُعادلة"
         subtotal: "الإجمالي الفرعي"
         total: "الإجمالي"
@@ -909,8 +982,10 @@ ar:
           title: "يحصل المستخدمون الذين تم التحقُّق من صحة بلاغاتهم بشكلٍٍ متكرر على مكافأة."
         trust_level_bonus:
           name: "مستوى الثقة"
+          title: "تحظى البلاغات التي أنشأها مستخدمون من مستوى ثقة أعلى بتقييم أعلى."
         type_bonus:
           name: "مكافأة النوع"
+          title: "يمكن لفريق العمل تخصيص مكافأة لبعض أنواع البلاغات لمنحها أولوية أعلى."
       revise_and_reject_post:
         title: "مراجعة"
         reason: "السبب"
@@ -919,6 +994,7 @@ ar:
         custom_reason: "قدِّم وصفًا واضحًا للسبب"
         other_reason: "آخر..."
         optional: "اختياري"
+      stale_help: "تم حل هذا العنصر بواسطة <b>%{username}</b>."
       claim_help:
         optional: "يمكنك المطالبة بهذا العنصر لمنع الآخرين من مراجعته."
         required: "يجب عليك المطالبة بالعناصر قبل أن تتمكن من مراجعتها."
@@ -1953,6 +2029,13 @@ ar:
       undo_revoke_access: "التراجع عن إلغاء الوصول"
       api_approved: "تمت الموافقة عليها:"
       api_last_used_at: "آخر استخدام في:"
+      api_show_permissions:
+        zero: "الأذونات الممنوحة (%{count})"
+        one: "الأذونات الممنوحة (%{count})"
+        two: "الأذونات الممنوحة (%{count})"
+        few: "الأذونات الممنوحة (%{count})"
+        many: "الأذونات الممنوحة (%{count})"
+        other: "الأذونات الممنوحة (%{count})"
       theme: "السمة"
       save_to_change_theme: 'سيتم تحديث السمة بعد النقر على "%{save_text}"'
       home: "الصفحة الرئيسية المبدئية"
@@ -1965,6 +2048,13 @@ ar:
           few: '<span class="%{className}">%{count}</span> بلاغات مفيدة'
           many: '<span class="%{className}">%{count}</span> بلاغًا مفيدًا'
           other: '<span class="%{className}">%{count}</span> بلاغ مفيد'
+        flags:
+          zero: 'عدد البلاغات: <span class="%{className}">%{count}</span>'
+          one: 'عدد البلاغات: <span class="%{className}">%{count}</span>'
+          two: 'عدد البلاغات: <span class="%{className}">%{count}</span>'
+          few: 'عدد البلاغات: <span class="%{className}">%{count}</span>'
+          many: 'عدد البلاغات: <span class="%{className}">%{count}</span>'
+          other: 'عدد البلاغات: <span class="%{className}">%{count}</span>'
         deleted_posts:
           zero: '<span class="%{className}">%{count}</span> منشور تم حذفه'
           one: 'منشور واحد (<span class="%{className}">%{count}</span>) تم حذفه'
@@ -2800,6 +2890,14 @@ ar:
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
+      required: مطلوب
+      errors_summary_title:
+        zero: "أصلح هذا الخطأ للمتابعة"
+        one: "أصلح هذا الخطأ للمتابعة"
+        two: "أصلح هذين الخطأين للمتابعة"
+        few: "أصلح هذه الأخطاء للمتابعة"
+        many: "أصلح هذه الأخطاء للمتابعة"
+        other: "أصلح هذه الأخطاء للمتابعة"
       dirty_form: "لم ترسل التغييرات! هل تريد بالتأكيد المغادرة؟"
       errors:
         starts_with: "يجب أن يبدأ بـ %{prefix}"
@@ -2827,6 +2925,10 @@ ar:
           few: "يجب ألا يقل عن %{count} أحرف"
           many: "يجب ألا يقل عن %{count} حرفًا"
           other: "يجب ألا يقل عن %{count} حرف"
+      color:
+        available_presets: "الإعدادات المسبقة المتاحة"
+        already_used: "مستخدمة بالفعل"
+        edit_presets: "تعديل الإعدادات المسبقة للألوان"
     close: "إغلاق"
     assets_changed_confirm: "لقد تلقى هذا الموقع للتو تحديثًا للبرنامج. هل تريد الحصول على أحدث إصدار الآن؟"
     logout: "تم تسجيل خروجك."
@@ -2897,6 +2999,7 @@ ar:
         }.
     learn_more: "معرفة المزيد…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>اعرف المزيد…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>الملاحظات…</a>"
     mute: كتم
     unmute: إلغاء الكتم
     last_post: آخر منشور
@@ -3442,6 +3545,7 @@ ar:
       upload_description: "أدخِل وصف التحميل هنا"
       olist_title: "قائمة مرقَّمة"
       ulist_title: "قائمة منقَّطة"
+      list_title: "القوائم"
       list_item: "إدراج عنصر"
       toggle_direction: "تبديل الاتجاه"
       apply_wrap_title: "تطبيق عنصر الاحتواء"
@@ -3956,6 +4060,7 @@ ar:
         deleted_post: "(منشور محذوف)"
         post_number_with_topic_title: "المنشور #%{post_number} - %{title}"
         new_post_in_topic: "منشور جديد في %{title}"
+        new_post_in_deleted_topic: "منشور جديد في موضوع محذوف"
         user_requires_approval: "%{username} يتطلَّب الموافقة"
         default_item: "العنصر القابل للمراجعة #%{reviewable_id}"
     topics:
@@ -4092,6 +4197,27 @@ ar:
         notify: "إخطار المستخدمين بهذا التغيير."
         performing: "جارٍ تنفيذ عمليات جماعية، يُرجى الانتظار..."
         completed: "تم تنفيذ العمليات المجمعة بنجاح!"
+        completed_count:
+          zero: "تم تحديث <b>%{count}</b> من الموضوعات."
+          one: "تم تحديث موضوع واحد <b>%{count}</b>."
+          two: "تم تحديث موضوعين <b>%{count}</b>."
+          few: "تم تحديث <b>%{count}</b> موضوعات."
+          many: "تم تحديث <b>%{count}</b> موضوعًا."
+          other: "تم تحديث <b>%{count}</b> موضوع."
+        not_completed:
+          zero: "تعذر تحديث <b>%{count}</b> من الموضوعات:"
+          one: "تعذر تحديث موضوع واحد <b>%{count}</b>:"
+          two: "تعذر تحديث موضوعين <b>%{count}</b>:"
+          few: "تعذر تحديث <b>%{count}</b> موضوعات:"
+          many: "تعذر تحديث <b>%{count}</b> موضوعًا:"
+          other: "تعذر تحديث <b>%{count}</b> موضوع:"
+        skipped_count:
+          zero: "هناك <b>%{count}</b> من الموضوعات محدثة بالفعل."
+          one: "هناك موضوع واحد <b>%{count}</b> محدث بالفعل."
+          two: "هناك موضوعان <b>%{count}</b> محدثان بالفعل."
+          few: "هناك <b>%{count}</b> موضوعات محدثة بالفعل."
+          many: "هناك <b>%{count}</b> موضوعًا محدثًا بالفعل."
+          other: "هناك <b>%{count}</b> موضوع محدث بالفعل."
         error_topic_count:
           zero: "%{count} موضوعات"
           one: "موضوع واحد"
@@ -4164,6 +4290,7 @@ ar:
         other: "%{count} منشور في الموضوع"
       create: "موضوع جديد"
       create_long: "إنشاء موضوع جديد"
+      create_group: "موضوع جديد ومسودات جديدة"
       open_draft: "فتح المسودة"
       private_message: "إنشاء رسالة"
       archive_message:
@@ -5141,6 +5268,8 @@ ar:
       delete: "احذف الفئة"
       create: "فئة جديدة"
       create_long: "إنشاء فئة جديدة"
+      type_settings_schema:
+        site_settings: "إعدادات الموقع"
       save: "احفظ الفئة"
       unsaved_changes: "لديك تغييرات غير محفوظة"
       slug: "مسار الفئة"
@@ -5151,6 +5280,7 @@ ar:
       errors:
         self_lockout: "أنت على وشك تغيير أذونات الفئة بطريقة ستؤدي إلى إزالة صلاحية وصولك. هل أنت متأكد من رغبتك في المتابعة؟"
       validations:
+        emoji_required: "اختيار رمز تعبيري."
         icon_required: "تحديد أيقونة."
       name: "اسم الفئة"
       untitled: "فئة بلا عنوان"
@@ -5198,9 +5328,15 @@ ar:
         reply: "الرد"
         create: "إنشاء"
         no_groups_selected: "لم يتم منح إذن الوصول لأي مجموعة؛ لذا فإن هذه الفئة ستكون مرئية لفريق العمل فقط."
+        everyone_full_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات والرد عليها وإنشائها. لتقييد الأذونات، عليك إزالة واحد أو أكثر من الأذونات الممنوحة لمجموعة "%{everyone_group}".'
+        everyone_reply_access: 'هذه الفئة عامة، ويمكن للجميع رؤية الموضوعات والرد عليها. لتقييد الأذونات، قم بإزالة المجموعة "%{everyone_group}".'
+        everyone_see_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات. لتقييد الأذونات، قم بإزالة المجموعة "%{everyone_group}".'
         specific_groups_have_access: "هذه الفئة خاصة، ويمكن للمجموعات المختارة فقط رؤية المنشورات والرد عليها وإنشائها."
+        all_parent_groups_used: "تمت إضافة جميع المجموعات من الفئة الرئيسية. لإضافة مجموعات أكثر، أضفها أولاً إلى الفئة الرئيسية."
         toggle_reply: "إذن تفعيل الرد"
         toggle_full: "إذن تفعيل الإنشاء"
+        inherited: 'هذا الإذن مكتسب من "%{everyone_group}"'
+      special_warning: "هذه الفئة مصنَّفة مسبقًا ولا يمكن تعديل إعدادات الأمان لها. إذا كنت لا ترغب في استخدام هذه الفئة، فعليك حذفها بدلًا من إعادة توظيفها."
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك تعيين إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض تحديد الفئة، <a href="%{settingLink}">يُرجى إيقاف هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
       pending_permission_change_alert: "لم تُضف المجموعة %{group} إلى هذه الفئة، انقر على هذا الزر لإضافتها."
@@ -5243,6 +5379,9 @@ ar:
         group_restricted: "خاص"
         who_can_see: "من يمكنه رؤية هذه الفئة؟"
         who_can_post: "من يمكنه النشر في هذه الفئة"
+        which_groups_can_access: "المجموعات التي يمكن من خلالها الاطلاع على هذه الفئة والنشر فيها"
+        more_options_hint: "تتوفر المزيد من الأذونات في <a href>الإعدادات المتقدمة</a>."
+        inherited_from_parent: "الأذونات مكتسبة من الفئة الأصلية. للتعديل عليها، يُرجى الانتقال إلى <a href>الإعدادات المتقدمة</a>."
       num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكلٍ يومي:"
       auto_bump_cooldown_days: "الحد الأدنى لعدد الأيام قبل رفع الموضوع نفسه مرة أخرى:"
       navigate_to_first_post_after_read: "الانتقال إلى أول منشور بعد قراءة الموضوعات"
@@ -5845,6 +5984,7 @@ ar:
       category_restricted: "هذا الوسم مقيَّد بالفئات التي ليس لديك إذن بالوصول إليها."
       synonyms: "المرادفات"
       synonyms_description: "عند استخدام الوسوم التالية، سيتم استبدالها بالوسم <b>%{base_tag_name}</b>."
+      synonyms_inline: "سيتم استبدال هذه المرادفات بـ %{base_tag_name}:"
       save: "حفظ اسم الوسم ووصفه"
       tag_groups_info:
         zero: "هذا الوسم ينتمي إلى المجموعة: %{tag_groups}."
@@ -5853,6 +5993,13 @@ ar:
         few: "هذا الوسم ينتمي إلى المجموعات: %{tag_groups}."
         many: "هذا الوسم ينتمي إلى المجموعات: %{tag_groups}."
         other: "هذا الوسم ينتمي إلى المجموعات: %{tag_groups}."
+      tag_groups_info_prefix:
+        zero: "هذا الوسم ينتمي إلى المجموعة "
+        one: "هذا الوسم ينتمي إلى المجموعة "
+        two: "هذا الوسم ينتمي إلى المجموعتين: "
+        few: "هذا الوسم ينتمي إلى المجموعات: "
+        many: "هذا الوسم ينتمي إلى المجموعات: "
+        other: "هذا الوسم ينتمي إلى المجموعات: "
       category_restrictions:
         zero: "لا يمكن استخدامه إلا في هذه الفئة:"
         one: "لا يمكن استخدامه إلا في هذه الفئة:"
@@ -5860,6 +6007,8 @@ ar:
         few: "لا يمكن استخدامه إلا في هذه الفئات:"
         many: "لا يمكن استخدامه إلا في هذه الفئات:"
         other: "لا يمكن استخدامه إلا في هذه الفئات:"
+      restricted_to: "مقيد إلى"
+      no_synonyms: "هذا الوسم ليست له مرادفات."
       edit_synonyms: "تعديل المرادفات"
       add_synonyms_label: "إضافة المرادفات:"
       add_synonyms: "إضافة"
@@ -5894,17 +6043,31 @@ ar:
       description: "الوصف"
       settings:
         title: "الإعدادان"
+        edit_title: "تعديل الوسم: %{name}"
+        edit_tag_prefix: "تعديل الوسم:"
+        select_tag: "حدد وسمًا لتحريره"
         general: "عام"
         localizations: "التوطينات"
         back: "رجوع"
         name: "الاسم"
         slug: "المسار"
         name_placeholder: "اسم الوسم"
+        slug_placeholder: "مسار الوسم (اختياري، يُنشأ تلقائيًا من الاسم)"
+        saved: "حُفظت إعدادات الوسم"
+        no_synonyms: "لا توجد مرادفات محددة لهذا الوسم."
+        add_synonym_placeholder: "ابحث عن الوسوم لإضافتها كمرادفات..."
         synonyms_subtitle: "عند استخدام الوسوم التالية، سيتم استبدالها بالوسم %{name}"
+        save: "حفظ الوسم"
+        delete: "حذف الوسم"
+        synonyms_hint: "عند استخدام الوسوم السابقة، سيتم استبدالها بالوسم %{baseTagName}."
+        add_synonyms_confirm: "سيتحوَّل أي مكان يستخدم %{synonymNames} حاليًا إلى استخدام %{tagName} بدلًا منه. هل تريد بالتأكيد إجراء هذا التغيير؟"
       localization:
+        hint: "أضف خيارات التوطين لعرض أسماء وسوم مختلفة للمستخدمين بلغات مختلفة."
         locale: "اللغة"
         name: "الاسم"
         description: "الوصف"
+        add: "إضافة التوطين"
+        remove: "إزالة التوطين"
       sort_by: "الترتيب حسب:"
       sort_by_count: "العدد"
       sort_by_name: "الاسم"
@@ -6479,6 +6642,8 @@ ar:
       toggle_localized:
         translated: "تمت ترجمة الصفحة آليًا. انقر لعرض النسخة الأصلية."
         not_translated: "الصفحة غير مترجمة. انقر للترجمة."
+        translations_enabled: "تم تفعيل الترجمات"
+        translations_disabled: "تم تعطيل الترجمات"
     language_switcher:
       title: "تغيير لغة الموقع"
   admin_js:
@@ -6499,11 +6664,14 @@ ar:
         title: "قائمة التقارير المتاحة"
         sidebar_title: "التقارير"
         back: "العودة إلى جميع التقارير"
+        group_engagement: "التفاعل"
         group_traffic: "الزيارات"
         group_members: "الأعضاء"
+        group_content: "المحتوى والصحة"
         group_moderation: "الإشراف"
         group_security: "الأمان"
         group_other: "أخرى"
+        legacy_warning: "هذا تقرير قديم، وسيتم إيقافه قريبًا. يرجى الاتصال بالدعم الفني إذا كنت بحاجة إلى مساعدة في إيجاد بديل."
       config_sections:
         account:
           title: "الحساب"
@@ -6535,17 +6703,20 @@ ar:
         no_changes_to_save: "لا توجد تغييرات للحفظ"
         select_groups: "تحديد المجموعات…"
         opt_in_groups: "مجموعات الانضمام الاختياري"
+        show_related_settings: "إظهار الإعدادات ذات الصلة..."
         opt_in_groups_instructions: "يمكن استخدام مجموعات الانضمام الاختياري للسماح لمجموعة معينة من المستخدمين باختبار تغييرٍ ما قبل طرحه للجميع. يرجى ملاحظة أن هذه المجموعات لن تكون ذات صلة بمجرد انتقال التغيير إلى الحالة المستقرة."
         enabled_for_throttle: "لقد قمت بتغيير الأشخاص المفعَّلة لديهم هذه الميزة بسرعة كبيرة. يرجى الانتظار لبضع ثوانٍ قبل المحاولة مرة أخرى."
         change_enabled_for_success: "لقد فعلت هذا التغيير لـ %{enabledFor}"
         change_disabled: "تم إلغاء اشتراكك في هذا التغيير"
         permanent_notice: "أصبح هذا التغيير دائمًا وسيتم إزالته قريبًا. لم يعد بإمكانك إلغاء الاشتراك."
+        permanent_soon_notice: "سيصبح هذا التغيير دائمًا في أقرب وقت. لن تتمكن بعد الآن من إلغاء الاشتراك."
         permanent_no_group_selection: "لا ينطبق؛ حيث تسري التغييرات الدائمة على كافة المجموعات"
         no_changes: "لا توجد تغييرات قادمة في الوقت الحالي."
         preview: "معاينة"
         enabled_for_options:
           no_one: "لا أحد"
           everyone: "الجميع"
+          staff: "%{staffGroupName} فقط"
           specific_groups: "مجموعة (مجموعات) محددة"
           specific_groups_with_group_names:
             zero: "المجموعة %{groupNames}"
@@ -6570,7 +6741,10 @@ ar:
           search_placeholder: "تصفية حسب الاسم، أو الوصف، أو المكون الإضافي..."
           no_results: "لا توجد تغييرات قادمة تطابق معايير التصفية"
           all: "الكل"
+          enabled_all: "جميع الحالات المُفعّلة"
           enabled: "مفعَّلة"
+          enabled_for_staff: "مُفعّل لصالح %{staffGroupName}"
+          enabled_for_specific_groups: "مُفعّل لصالح مجموعات محددة"
           disabled: "متوقفة"
           impact_type_all: "كل أنواع التأثيرات"
           impact_type_feature: "الميزة"
@@ -6620,6 +6794,7 @@ ar:
           keywords: "اللغة|اللغة|المنطقة الزمنية|unicode|من اليسار إلى اليمين"
         upcoming_changes:
           title: "التغييرات القادمة"
+          header_description: "قائمة بالتغييرات القادمة في Discourse التي قد تؤثر في موقعك، إضافةً إلى الميزات التجريبية التي يمكنك الاشتراك فيها. يمكنك التصفية حسب مستوى التأثير، والنوع، والحالة.\n\nيمكن استخدام مجموعات الانضمام الاختياري لتمكين مجموعة محددة من المستخدمين من اختبار تغييرٍ ما قبل طرحه للجميع، مع العلم أن هذه المجموعات تصبح غير ذات صلة بمجرد انتقال التغيير إلى الحالة الدائمة."
         login:
           title: "تسجيل الدخول والمصادقة"
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقدِّمي المصادقة الثنائية، وغير ذلك"
@@ -6658,6 +6833,7 @@ ar:
               help_text: "الحجم الموصى به هو 600 × 80 بكسل."
             large_icon:
               title: "أيقونة مربعة"
+              description: "يُعرض إصدار مربع من صورة الشعار في الجزء العلوي من الموقع، ويُستخدم أيضًا كشعار لتطبيق الهاتف."
               help_text: "الحجم الموصى به هو 512 × 512 بكسل."
             square_icon_dark:
               required: "هل تريد استخدام أيقونة مربعة مختلفة للوضع الداكن؟"
@@ -6982,6 +7158,9 @@ ar:
         embedding:
           title: "التضمين"
           header_description: "يتمتع Discourse بالقدرة على تضمين التعليقات من أحد الموضوعات في موقع بعيد باستخدام واجهة برمجة تطبيقات Javascript التي تُنشئ IFRAME"
+        form_templates:
+          title: "قوالب النموذج"
+          header_description: "تتيح لك قوالب النماذج تطبيق نموذج منظم مع التحقق من صحة البيانات كجزء من عملية إنشاء الموضوع"
       theme_site_settings:
         setting: "الإعداد"
         overridden_by: "تم استبداله بواسطة"
@@ -7028,6 +7207,7 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
+          no_new_features_found: "لا توجد عناصر في الموجز أو أن عامل التصفية الذي اخترته لم يُظهر أي نتائج. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة على <a href='%{url}' target='_blank'>مجتمع Discourse Meta</a>."
           no_new_features_error: "حدث خطأ أثناء تحميل الموجز. يمكنك الاطلاع على الإعلانات السابقة للميزات الجديدة في <a href='%{url}' target='_blank'>مجتمع Discourse Meta</a>."
           learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"
@@ -7108,7 +7288,7 @@ ar:
           all: "الكل"
           view_table: "جدول"
           view_graph: "رسم بياني"
-          refresh_report: "تحديث التقرير "
+          refresh_report: "تحديث"
           daily: يوميًا
           monthly: شهريًا
           weekly: أسبوعيًا
@@ -7243,6 +7423,7 @@ ar:
         cancel: "إلغاء"
         continue: "متابعة"
         copy_key: "نسخ"
+        key_copied_to_clipboard: "تم نسخ مفتاح API إلى الحافظة"
         back: "العودة إلى مفاتيح API"
         revoke: "إلغاء"
         undo_revoke: "التراجع عن الإلغاء"
@@ -7900,6 +8081,8 @@ ar:
         delete: "حذف"
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         bulk_delete: "هل أنت متأكد؟"
+        bulk_themes_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت السمات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
+        bulk_components_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت المكوِّنات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
         color: "اللون"
         opacity: "الشفافية"
         copy: "تكرار"
@@ -9352,7 +9535,7 @@ ar:
           min_admin_password_length:
             prompt: "أنت على وشك تغيير سياسة كلمة المرور. سيؤثر هذا على جميع المسؤولين الذين سيغيرون كلمات مرورهم من الآن فصاعدًا. هل أنت متأكد أنك تريد المتابعة؟"
             confirm: "نعم، تحديث سياسة كلمة المرور"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "أنت على وشك تغيير سياسة كلمة المرور. سيؤثر هذا على جميع المستخدمين الذين سيغيرون كلمات مرورهم من الآن فصاعدًا. هل أنت متأكد أنك تريد المتابعة؟"
             confirm: "نعم، تحديث سياسة كلمة المرور"
           block_common_passwords:
@@ -9397,6 +9580,8 @@ ar:
         no_user_badges: "لم يُمنح %{name} أيّ شارة."
         no_badges: لا توجد شارات يمكن منحها.
         none_selected: "تحديد شارة للبدء"
+        filter_placeholder: "تصفية الشارات..."
+        no_badges_found: "لم يتم العثور على شارات"
         sections:
           design: تصميم
           query: استعلام

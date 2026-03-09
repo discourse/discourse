@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse Lábjegyzetek"
+  js:
+    footnote:
+      title: "Lábjegyzetek"
+      add: "Lábjegyzet hozzáadása"

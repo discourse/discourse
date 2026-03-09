@@ -6,8 +6,10 @@
 
 pt_BR:
   solved: "Resolvido"
+  unsolved: "Não solucionados"
   posted: "postou"
   by_username: "por @%{username}"
+  replied: "respondeu"
   vote_count:
     one: "%{count} voto"
     other: "%{count} votos"
@@ -19,3 +21,6 @@ pt_BR:
     other: "%{count} respostas"
   theme_metadata:
     description: "Um tema simples e elegante que melhora a experiência pronta para uso dos sites do Discourse."
+    settings:
+      topic_card_high_context:
+        description: "Quando ativado, exibe contexto adicional nos cartões de tópicos, incluindo tags, trechos, status de resolução, usuários atribuídos e contagem de votos (experimental)."

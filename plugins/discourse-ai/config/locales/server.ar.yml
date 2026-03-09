@@ -101,6 +101,7 @@ ar:
     ai_helper_enabled_features: "حدِّد الميزات التي تريد تفعيلها في مساعد الذكاء الاصطناعي."
     post_ai_helper_allowed_groups: "مجموعات المستخدمين المسموح لها بالوصول إلى ميزات مساعد الذكاء الاصطناعي في المنشورات"
     ai_helper_post_illustrator_persona: "الشخصية المراد استخدامها لميزة توضيح المنشور الخاصة بمساعد الذكاء الاصطناعي. ملاحظة: يجب عليك أيضًا إنشاء أداة لإنشاء الصور (المسؤول > المكوّنات الإضافية > Discourse AI > الأدوات) لكي تعمل هذه الميزة."
+    ai_helper_chat_thread_title_persona: "الشخصية التي سيتم استخدامها لإنشاء عناوين سلاسل المحادثات."
     ai_embeddings_selected_model: "استخدم النموذج المُحدَّد لتوليد التضمينات."
     ai_embeddings_generate_for_pms: "إنشاء تضمينات للرسائل الشخصية."
     ai_embeddings_semantic_related_topics_enabled: "استخدام البحث الدلالي للموضوعات ذات الصلة."
@@ -120,6 +121,7 @@ ar:
     ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المطلوب ملؤها في الساعة."
     ai_bot_enabled: "تفعيل وحدة روبوت الذكاء الاصطناعي"
     ai_bot_enabled_llms: "نماذج اللغات الكبيرة المتوفرة للاختيار لإدارة محادثات روبوتات الذكاء الاصطناعي"
+    ai_bot_enable_chat_warning: "عرض تحذير عند بدء الدردشة في رسالة خاصة. يمكن تجاوزه عن طريق تعديل سلسلة الترجمة: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "عندما يتمكن GPT Bot من الوصول إلى الرسالة الخاصة، فإنه سيرد على أعضاء هذه المجموعات."
     ai_bot_debugging_allowed_groups: "السماح لهذه المجموعات برؤية زر تصحيح الأخطاء في المنشورات التي تعرض طلب الذكاء الاصطناعي الأولي والرد"
     ai_bot_public_sharing_allowed_groups: "السماح لهذه المجموعات بمشاركة رسائل الذكاء الاصطناعي الشخصية مع العامة عبر رابط فريد متاح بشكلٍ علني. ملاحظة: إذا كان موقعك يتطلَّب تسجيل الدخول، فستتطلب المشاركة تسجيل الدخول أيضًا."
@@ -284,6 +286,23 @@ ar:
           name: "ابدأ من لا شيء..."
       name:
         characters: "يجب أن يحتوي فقط على أرقام، وحروف، وعلامات الشرطة السفلية"
+      secret_contracts:
+        invalid_payload: "العقود السرية يجب أن تكون مصفوفة."
+        invalid_contract: "العقد السري الموجود في الفهرس %{index} غير صالح."
+        alias_required: "العقد السري الموجود في الفهرس %{index} يجب أن يتضمن اسمًا مستعارًا."
+        alias_too_long: "الاسم المستعار السري `%{alias}` طويل جدًا."
+        alias_invalid: "يجب أن يتضمن الاسم السري `%{alias}` أرقامًا وحروفًا وشرطات سفلية فقط."
+        alias_not_unique: "الاسم المستعار السري `%{alias}` مكرر."
+      secret_bindings:
+        invalid_payload: "الروابط السرية يجب أن تكون مصفوفة."
+        secret_not_found: "بيانات الاعتماد المحددة غير موجودة."
+        alias_not_declared: "لم يتم الإعلان عن الاسم المستعار \"%{alias}\" في هذه الأداة."
+      secret_runtime:
+        alias_not_declared: "لم يتم الإعلان عن الاسم المستعار \"%{alias}\" لبيانات الاعتماد في هذه الأداة."
+        missing_binding: "الاسم المستعار \"%{alias}\" لبيانات الاعتماد مطلوب ولكنه غير مرتبط."
+        missing_required_aliases: "روابط بيانات الاعتماد المطلوبة مفقودة للأسماء المستعارة: %{aliases}."
+        secret_not_found: "الاسم المستعار \"%{alias}\" لبيانات الاعتماد مرتبط ببيانات اعتماد مفقودة."
+        unknown_error: "يتعذر حل بيانات الاعتماد المطلوبة."
     ai_helper:
       errors:
         completion_request_failed: "حدث خطأ في أثناء محاولة تقديم اقتراحات. يُرجى إعادة المحاولة."
@@ -318,6 +337,7 @@ ar:
       flag_reason: "تم الإبلاغ عنه كمحتوى عشوائي بواسطة <a href='%{url}'>Discourse AI</a>"
       silence_reason: "تم إسكات المستخدم تلقائيًا بواسطة <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "تم إدخال نوع خطأ غير صالح"
+      unexpected: "حدث خطأ غير متوقع"
       bot_user_update_failed: "فشل تحديث مستخدم روبوت فحص المحتوى العشوائي"
       configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكونات الإضافية > Discourse AI > المحتوى العشوائي' قبل التفعيل."
       logging_subject: "اكتشاف المحتوى العشوائي"
@@ -432,6 +452,9 @@ ar:
         discover:
           name: "اكتشف"
           description: "الشخصية الافتراضية المستخدمة في ميزة الاكتشافات (البحث التكميلي)"
+        chat_thread_titler:
+          name: "عنونة سلاسل المحادثات"
+          description: "الشخصية الافتراضية التي تدعم إنشاء عناوين سلاسل المحادثات تلقائيًا"
       topic_not_found: "الملخص غير متوفر، الموضوع غير موجود!"
       summarizing: "جارٍ تلخيص الموضوع"
       searching: "جارٍ البحث عن: '%{query}'"
@@ -668,6 +691,7 @@ ar:
         invalid_seeded_model: "لا يمكنك استخدام هذا النموذج مع هذه الميزة"
         invalid_persona_response_format: "يجب أن تحتوي الشخصية المختارة على تنسيق استجابة يشمل حقلًا منطقيًا باسم \"عشوائي\""
         must_select_model: "يجب عليك تحديد نموذج لغة كبير أولًا"
+        invalid_llm_id: "النموذج اللغوي الكبير المحدد غير صالح"
       endpoints:
         not_configured: "%{display_name} (لم يتم التكوين)"
         configuration_hint:
@@ -690,12 +714,18 @@ ar:
     embeddings:
       delete_failed: "هذا النموذج قيد الاستخدام حاليًا. قم بتحديث `ai embeddings selected model` أولًا."
       cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
+      secret_required: "يجب تحديد بيانات الاعتماد"
+      secret_not_found: "بيانات الاعتماد المحددة غير موجودة"
       configuration:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
         model_test_failed: "لقد فشلنا في إنشاء اختبار تضمين باستخدام هذا النموذج. تأكَّد من صحة إعداداته."
+    secrets:
+      delete_failed_in_use: "بيانات الاعتماد هذه قيد الاستخدام حاليًا بواسطة واحد أو أكثر من النماذج اللغوية الكبيرة، أو عمليات التضمين، أو الأدوات، ولا يمكن حذفها."
     llm_models:
       missing_provider_param: "لا يمكن ترك %{param} فارغة"
+      secret_required: "يجب تحديد بيانات الاعتماد"
+      secret_not_found: "بيانات الاعتماد المحددة غير موجودة"
       bedrock_invalid_url: "يُرجى ملء جميع الحقول لاستخدام هذا النموذج."
       bedrock_missing_auth: "يتطلب AWS Bedrock إما تكوين معرّف مفتاح الوصول أو معرّف ARN للدور"
     ai_staff_action_logger:
@@ -720,6 +750,26 @@ ar:
       persona_disabled: الشخصية المحدَّدة متوقفة. تحقَّق من معلمتَي persona_name أو persona_id.
       no_default_llm: يجب أن يكون للشخصية معلمة default_llm محدَّدة.
       user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
+      invalid_stream_resume_token: رمز resume_token غير صالح أو انتهت صلاحيته.
+      no_tool_results_specified: المعلمة tool_results مطلوبة عند استئناف الدفق.
+      invalid_custom_tools: "المعلمة Custom_tools غير صالحة: %{details}"
+      duplicate_custom_tools: "تحتوي المعلمة custom_tools على أسماء أدوات مكررة: %{names}"
+      too_many_custom_tools: "يمكن أن تتضمن المعلمة custom_tools على %{max} من الأدوات على الأكثر."
+      custom_tool_definition_too_large: "يجب ألا يتجاوز حجم تعريف كل أداة مخصصة %{max} بايت على الأكثر."
+      invalid_stream_param: "المعلمة %{key} غير صالحة: %{details}"
+      expected_array: "من المتوقع وجود مصفوفة"
+      expected_object: "من المتوقع وجود كائن"
+      ambiguous_tool_results: "حدد إما tool_results أو tool_result، وليس كليهما."
+      invalid_tool_results: "المعلمة tool_results غير صالحة: %{details}"
+      too_many_tool_results: "يمكن أن تتضمن المعلمة tool_results على %{max} من العناصر على الأكثر."
+      no_pending_tool_calls: لا توجد استدعاءات معلقة لأدوات لهذا الرمز المميز للاستئناف.
+      missing_tool_results: "نتائج الأداة مفقودة لمعرّف (معرّفات) tool_call_id: %{ids}"
+      unexpected_tool_results: "نتائج الأداة غير متوقعة لمعرّف (معرّفات) tool_call_id: %{ids}"
+      invalid_tool_result_content: "نتيجة الأداة لـ %{id} يجب أن تتضمن محتوى"
+      tool_result_content_too_large: "كل حمولة لمحتوى نتيجة الأداة يجب ألا تتجاوز %{max} بايت بحدٍ أقصى."
+      stream_reply_max_resume_rounds_reached: تم بلوغ الحد الأقصى لجولات استئناف الأداة المخصصة (%{max}).
+      stream_reply_state_too_large: "حالة التدفق كبيرة جدًا بحيث لا يمكن الاحتفاظ بها (الحد الأقصى %{max} بايت)."
+      stream_reply_unexpected_error: حدث خطأ غير متوقع أثناء تدفق الرد.
       prompt_message_length: تتجاوز الرسالة الحد الأقصى لعدد الحروف، والبالغ 1000 حرف، بمقدار %{idx}.
       persona_already_exists: يوجد بالفعل شخصية بالاسم %{name}.
       custom_tool_exists:

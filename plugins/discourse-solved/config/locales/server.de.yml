@@ -9,9 +9,11 @@ de:
   category_types:
     support:
       name: "Support"
-      title: "support"
+      title: "Support"
   discourse_solved:
     category_type:
+      allow_accepted_answers:
+        label: "Erlaube dem Ersteller des Themas und Team-Mitgliedern, eine Antwort als Lösung zu markieren"
       solved_topics_auto_close_hours:
         label: "Gelöste Themen automatisch schließen nach (Stunden)"
         description: "Thema nach so vielen Stunden automatisch schließen, wenn es als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."

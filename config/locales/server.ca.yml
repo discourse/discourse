@@ -789,7 +789,9 @@ ca:
       description: "Llista dels estats de les banderes incloent-hi la classe de bandera, el publicador, el reportador i el temps de resolució."
     visits:
       title: "Visites de l'usuari"
-      xaxis: "Dia"
+      xaxis:
+        desktop: "Escriptori"
+        mobile: "Mòbil"
       yaxis: "Nombre de visites"
     signups:
       title: "Registres"
@@ -826,10 +828,8 @@ ca:
     site_traffic:
       yaxis: "Dia"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >20%."
     daily_engaged_users:
       title: "Usuaris diaris compromesos"
       xaxis: "Dia"

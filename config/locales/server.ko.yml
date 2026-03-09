@@ -890,7 +890,9 @@ ko:
       description: "신고 유형, 게시자, 신고자 및 해결 시간을 포함한 신고 상태 목록입니다."
     visits:
       title: "사용자 방문 횟수"
-      xaxis: "일"
+      xaxis:
+        desktop: "데스크톱"
+        mobile: "모바일"
       yaxis: "방문 횟수"
     signups:
       title: "가입"
@@ -935,10 +937,8 @@ ko:
       yaxis: "일"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU / MAU"
       xaxis: "일"
       yaxis: "DAU / MAU"
-      description: "마지막 날에 로그인 한 회원 수를 지난 달에 로그인 한 회원 수로 나눈 값 – 커뮤니티 &#39;고착성&#39;을 나타내는 %를 반환합니다. 20 % 이상을 목표로하십시오."
     daily_engaged_users:
       title: "일일 참여 사용자"
       xaxis: "일"

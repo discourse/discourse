@@ -1211,9 +1211,10 @@ nl:
       description: "Lijst van statussen van markeringen, waaronder het type markering, schrijver, melder, en tijd tot resolutie."
     visits:
       title: "Gebruikersbezoeken"
-      xaxis: "Dag"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobiel"
       yaxis: "Aantal bezoeken"
-      description: "Aantal bezoeken van aangemelde gebruikers."
     signups:
       title: "Registraties"
       xaxis: "Dag"
@@ -1275,10 +1276,8 @@ nl:
       description: "Paginaweergaven voor aangemelde gebruikers, bekende crawlers en ander verkeer."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Dag"
       yaxis: "DAU/MAU"
-      description: "Aantal leden dat zich de afgelopen dag heeft aangemeld, gedeeld door het aantal leden dat zich de afgelopen maand heeft aangemeld – geeft een % terug dat retentie van de community aangeeft. Het streven is > 20%."
     daily_engaged_users:
       title: "Dagelijkse actieve gebruikers"
       xaxis: "Dag"

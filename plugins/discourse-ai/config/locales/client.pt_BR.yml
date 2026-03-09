@@ -14,6 +14,7 @@ pt_BR:
               search: "Permite pesquisa com IA"
               stream_completion: "Permite transmissão de conclusão com persona de IA"
               update_personas: "Permitir atualização de personas de IA"
+              manage_artifacts: "Permite gerenciar artefatos de IA (listar, visualizar, criar, atualizar, excluir)"
       site_settings:
         categories:
           discourse_ai: "Discourse IA"
@@ -44,6 +45,9 @@ pt_BR:
             create_ai_embedding: "Criar incorporação de IA"
             update_ai_embedding: "Atualizar incorporação de IA"
             delete_ai_embedding: "Excluir incorporação de IA"
+            create_ai_secret: "Criar segredo de IA"
+            update_ai_secret: "Atualizar segredo de IA"
+            delete_ai_secret: "Excluir segredo de IA"
             update_ai_spam_settings: "Atualizar configurações de spam de IA"
   js:
     discourse_automation:
@@ -113,6 +117,14 @@ pt_BR:
             persona_id:
               label: "Persona"
               description: "A persona de IA para usar na geração de relatórios"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "Ferramenta de IA"
+              description: "A ferramenta de IA a ser executada quando a automação for acionada."
+            llm_model:
+              label: "Modelo LLM"
+              description: "Modelo de linguagem para ferramentas que usam llm.generate() (opcional)"
         llm_persona_triage:
           fields:
             persona:
@@ -162,8 +174,12 @@ pt_BR:
             notify_author_pm:
               label: "Notificar o autor via PM"
               description: "Enviar uma mensagem pessoal ao autor da postagem quando os posts forem citados e deletados"
+            notify_author_pm_user:
+              label: "Remetente de mensagem privada"
+              description: "Usuário que enviará a mensagem privada (o padrão é o sistema)"
             notify_author_pm_message:
               label: "Conteúdo da mensagem pessoal"
+              description: "Mensagem personalizada opcional para enviar ao autor."
             include_personal_messages:
               label: "Incluir mensagens pessoais"
               description: "Também verificar e fazer triagem de mensagens pessoais"
@@ -177,9 +193,37 @@ pt_BR:
               label: "Máximo de tokens de saída"
               description: "Quando especificado, define um limite superior para o número máximo de tokens que o modelo pode gerar. Respeita o limite máximo de tokens de saída do LLM"
         llm_tagger:
+          tag_mode:
+            manual: "Usar uma lista de tags específica (configurada abaixo)"
+            discover: "Permitir que a IA descubra e utilize quaisquer tags do site."
           fields:
+            tagger_persona:
+              label: "Persona de IA"
+              description: "A persona de IA a ser usada para analisar e aplicar tags em tópicos."
+            tag_mode:
+              label: "Modo de seleção de tags"
+              description: "Escolha como a IA seleciona as tags."
             available_tags:
               label: "Tags disponíveis"
+              description: "Tags que a IA pode escolher (usadas apenas no modo manual)"
+            confidence_threshold:
+              label: "Limiar de confiança"
+              description: "Percentual mínimo de confiança (0-100) necessário para aplicar as tags sugeridas."
+            max_tags_per_post:
+              label: "Máximo de tags por postagem"
+              description: "Número máximo de tags que podem ser aplicadas a uma única publicação."
+            max_post_tokens:
+              label: "Número máximo de tokens de postagem"
+              description: "Número máximo de tokens do conteúdo da postagem a serem analisados."
+            allow_restricted_tags:
+              label: "Permitir tags restritas"
+              description: "Permitir que a IA sugira e aplique tags com permissões ou visibilidade restritas."
+            max_posts_for_context:
+              label: "Máximo de postagens por contexto"
+              description: "Número máximo de postagens do tópico a serem incluídas no contexto da análise (padrão: 5)"
+            allow_system_posts:
+              label: "Permitir postagens do sistema"
+              description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
       default_llm:
@@ -187,10 +231,12 @@ pt_BR:
         description: "O modelo de LLM padrão a ser usado para todos os recursos de IA. Será usado se nenhum LLM for especificado na persona ou configuração de recurso. Se nenhum LLM for especificado, será usado o LLM criado mais recentemente."
       llm_selector:
         none: "Nenhum"
+        saved: "Modelo LLM padrão atualizado com sucesso"
       features:
         short_title: "Recursos"
         description: "Estes recursos de IA estão disponíveis para quem acessar o seu site. Podem ser configurados para usar LLMs e personas específicas, além de poder ter o acesso controlado por grupos."
         back: "Voltar"
+        settings_save_error: "Algumas configurações não puderam ser salvas."
         disabled: "(desativada)"
         persona:
           one: "Persona:"
@@ -214,6 +260,7 @@ pt_BR:
           setting_groups:
             settings: "Configurações Básicas"
             access_control: "Controle de Acesso"
+            ui_settings: "Configurações da IU"
             integrations: "Integrações"
         nav:
           configured: "Configurado"
@@ -231,6 +278,8 @@ pt_BR:
           gists: "Resumos breves da lista de tópicos"
           setting_groups:
             settings: "Configurações Básicas"
+            gists: "Gists"
+            backfill: "Backfill"
         search:
           name: "Pesquisar"
           description: "Melhore a experiência de pesquisa ao fornecer respostas geradas por IA para as consultas"
@@ -244,6 +293,7 @@ pt_BR:
           setting_groups:
             model_settings: "Configurações de Modelo"
             related_topics: "Tópicos relacionados"
+            semantic_search: "Pesquisa semântica"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
@@ -259,6 +309,8 @@ pt_BR:
           deduplicate_concepts: "Deduplicação de conceitos"
           setting_groups:
             settings: "Configurações Básicas"
+            topic_criteria: "Critérios do tópico"
+            post_criteria: "Critérios da postagem"
             personas: "Personas"
         ai_helper:
           name: "Ajudante"
@@ -274,6 +326,7 @@ pt_BR:
           image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
+          chat_thread_titles: "Títulos de tópicos de chat"
           setting_groups:
             access_permissions: "Acessos e Permissões"
             enabled_features: "Recursos Habilitados"
@@ -294,6 +347,7 @@ pt_BR:
           setting_groups:
             settings: "Configurações Básicas"
             personas: "Personas"
+            backfill_and_limits: "Backfill e limites"
         spam:
           name: "Spam"
           description: "Identifica possíveis spams usando o LLM selecionado e os sinaliza para inspeção pela moderação do site na fila de revisão"
@@ -312,7 +366,16 @@ pt_BR:
       translations:
         title: "Traduções"
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
+        supported_locales: "Idiomas suportados"
+        supported_locales_description: "Esta configuração do site também permite que os visitantes contribuam com traduções das postagens."
+        admin_actions:
+          translation_settings: "Configurações de tradução"
+          localization_settings: "Configurações de localização"
+          enable_translations: "Ativar traduções automáticas"
         stats:
+          title: "Estatísticas de tradução"
+          backfill_disabled: "O backfilling está desativado; apenas as novas publicações serão traduzidas."
+          backfill_message: "<a href='%{settingsUrl}'>As configurações de backfill</a> estão configuradas para traduzir todas as postagens após %{date} — estima-se que isso leve %{eta}."
           eta_minutes:
             one: "%{count} minuto"
             other: "%{count} minutos"
@@ -323,9 +386,20 @@ pt_BR:
             one: "%{count} dia"
             other: "%{count} dias"
         progress_chart:
+          title: "Progresso da tradução"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} das %{total} postagens em idiomas diferentes de %{language} foram traduzidas"
           bar_done:
             one: "%{count} postagem"
             other: "%{count} postagens"
+        translations_menu:
+          translate:
+            label: "Traduzir postagem"
+            title: "Traduz esta postagem para todos os idiomas suportados."
+            confirm: "Isto atualizará todas as traduções existentes nesta postagem. Tem certeza?"
+            success: "A postagem foi enviada para tradução."
+        credit_limit_warning: "As traduções estão pausadas devido a limites de crédito. Elas serão retomadas quando os créditos forem zerados em %{reset_time}."
+        credit_limit_warning_no_time: "As traduções estão pausadas devido a limites de crédito. Elas serão retomadas quando os créditos forem zerados."
       spam:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
@@ -351,7 +425,10 @@ pt_BR:
           post_url_label: "Postar URL ou ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 ou ID da postagem"
           result: "Resultado"
+          reason: "Raciocínio"
           llm: "LLM"
+          scan_history: "Histórico de scan"
+          sent_message: "Mensagem enviada"
           system_prompt: "Prompt do sistema"
           scan_log: "Registro de verificação"
           run: "Executar teste"
@@ -374,6 +451,7 @@ pt_BR:
         feature: "Recurso"
         usage_count: "Contagem de usos"
         model: "Modelo"
+        credits_remaining: "Créditos restantes"
         models_breakdown: "Uso por modelo"
         users_breakdown: "Uso por usuário(a)"
         all_features: "Todos os recursos"
@@ -383,6 +461,8 @@ pt_BR:
         request_tokens: "Tokens de solicitação"
         response_tokens: "Tokens de resposta"
         net_request_tokens: "Tokens de solicitação de rede"
+        cache_read_tokens: "Tokens de leitura em cache"
+        cache_write_tokens: "Tokens de gravação em cache"
         cached_tokens: "Tokens em cache"
         cached_request_tokens: "Tokens de solicitação em cache"
         total_spending: "Custo estimado"
@@ -390,12 +470,18 @@ pt_BR:
         no_models: "Sem dados de uso de modelo encontrados"
         no_features: "Sem dados de uso de recurso encontrados"
         total: "Total"
+        included_in_plan: "Incluído no plano"
+        included_models: "Uso incluído"
+        billed_models: "Uso faturado"
+        cost: "Custo"
         subheader_description: "Tokens são unidades básicas usadas por LLMs para compreender e gerar texto. Os dados de uso podem afetar o custo"
         stat_tooltips:
           total_requests: "Todas as solicitações feitas para LLMs por meio do Discourse"
           total_tokens: "Todos os tokens usados ao enviar comandos para um LLM"
           request_tokens: "Tokens usados quando o LLM tentar compreender o que você está dizendo"
           response_tokens: "Tokens usados quando o LLM responder ao seu comando"
+          cache_read_tokens: "Tokens de solicitação processados anteriormente reutilizados do cache pelo LLM para otimizar o desempenho e reduzir custo"
+          cache_write_tokens: "Tokens de solicitação que foram gravados em cache para possível reutilização futura."
           cached_tokens: "Tokens de solicitação processados anteriormente reutilizados pelo LLM para otimizar o desempenho e reduzir custo"
           total_spending: "Custo cumulativo de todos os tokens usados por LLMs com base em métricas de custo específicas adicionadas às configurações do LLM"
         periods:
@@ -403,6 +489,7 @@ pt_BR:
           last_week: "Semana passada"
           last_month: "Mês passado"
           custom: "Personalizado..."
+        credit_allocations: "Alocações de crédito"
       ai_persona:
         ai_tools: "Ferramentas"
         tool_strategies:
@@ -419,6 +506,7 @@ pt_BR:
         overwrite: "Sobrescrever"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
+        use_parent_llm: "Use o modelo de linguagem da persona"
         max_context_posts: "Máximo de postagens de contexto"
         max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
         vision_enabled: Visão ativada
@@ -428,6 +516,8 @@ pt_BR:
           low: Baixa qualidade - menor custo (256x256)
           medium: Qualidade média (512x512)
           high: Alta qualidade - mais lento (1024x1024)
+        show_thinking: Mostrar raciocínio
+        show_thinking_help: Mostrará aos usuários finais o raciocínio interno e chamadas de ferramentas do modelo de linguagem.
         mentionable: Permitir menções
         mentionable_help: Ative para que os(as) usuários(as) nos grupos permitidos possam mencionar este(a) usuário(a) nas postagens. A IA responderá como esta persona.
         user: Usuário(a)
@@ -551,6 +641,11 @@ pt_BR:
         parameter_description: "Descrição do parâmetro"
         enum_value: "Valor da enumeração"
         add_enum_value: "Adicionar valor da enumeração"
+        secret_alias: "Alias de credencial"
+        secret_alias_help: "Alias referenciado em scripts via secrets.get(\"alias_name\"). Use letras, números e sublinhados."
+        secret_credential: "Credencial"
+        add_secret_contract: "Adicionar credencial"
+        remove_secret_contract: "Remover credencial"
         credential_not_set: "(não configurado)"
         edit: "Editar"
         test: "Testar"
@@ -563,14 +658,29 @@ pt_BR:
           result: "Resultado do teste"
       secrets:
         short_title: "Credenciais"
+        description: "Gerenciar as credenciais de autenticação compartilhadas entre LLMs, incorporações e ferramentas."
         name: "Nome"
         secret: "Valor"
+        select_secret: "Selecione uma credencial..."
+        create_new: "Nova credencial"
+        add_secret: "Adicionar credencial"
+        saved: "Credencial salva"
+        confirm_delete: "Você tem certeza de que deseja excluir esta credencial?"
+        delete_failed_in_use: "Essa credencial está em uso no momento e não pode ser excluída."
+        no_secrets: "Ainda não há credenciais"
+        new_title: "Nova credencial"
+        edit_title: "Editar credencial"
         back: "Voltar"
         save: "Salvar"
         edit: "Editar"
         delete: "Excluir"
+        used_by: "Usado por"
+        not_used: "Não está em uso"
         embedding: "Incorporar"
+        cannot_delete_in_use: "Esta credencial não pode ser excluída porque está em uso por:"
         tool: "Ferramenta"
+        modal:
+          title: "Criar nova credencial"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"
@@ -584,9 +694,12 @@ pt_BR:
         url: "URL do serviço da hospedagem do modelo"
         api_key: "Chave de API do serviço da hospedagem do modelo"
         vision_enabled: "Visão ativada"
+        allowed_attachment_types: "Anexos permitidos"
+        attachment_types_placeholder: "Selecione ou digite as extensões (ex.: pdf, txt, docx)"
         ai_bot_user: "Usuário(a) de bot de IA"
         cost_input: "Custo de entrada"
         cost_cached_input: "Custo de entrada em cache"
+        cost_cache_write: "Custo de gravação em cache"
         cost_output: "Custo de saída"
         save: "Salvar"
         edit: "Editar"
@@ -614,6 +727,11 @@ pt_BR:
           max_tokens_required: "Deve ser definida se o máximo de usos não estiver definido"
           max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada para cada usuário(a) individual e não é compartilhada no grupo."
           max_usages_required: "Deve ser definido se o máximo de tokens não estiver definido"
+        credit_allocation:
+          credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
+          soft_limit_warning: "Este modelo tem %{percentage}% de créditos de IA restantes hoje"
+          hard_limit_warning: "Você esgotou seus créditos de IA para este modelo. Os recursos de IA que utilizam este modelo ficarão indisponíveis até %{reset_date}"
+          next_reset: "Os créditos serão zerados em %{time}"
         usage:
           ai_bot: "Bot de IA"
           ai_helper: "Ajudante (%{persona})"
@@ -631,7 +749,17 @@ pt_BR:
           anthropic-claude-opus-4-6: "Modelo mais inteligente da Anthropic"
           anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
           anthropic-claude-haiku-4-5: "Rápido e econômico"
+          google-gemini-3-pro: "O modelo mais inteligente do Google"
+          google-gemini-3-flash: "Modelo rápido e econômico com raciocínio multimodal"
+          open_ai-gpt-5-2: "O modelo principal da OpenAI, muito adequado para a resolução de problemas em diversas áreas."
+          open_ai-gpt-5-mini: "Proporciona um equilíbrio entre inteligência, velocidade e custo."
           open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico"
+          open_router-deepseek-deepseek-v3-2: "O mais recente modelo de alto desempenho da DeepSeek"
+          open_router-moonshotai-kimi-k2-5: "Modelo multimodal da Moonshot com recursos de visão"
+          open_router-x-ai-grok-4-fast: "O modelo principal da xAI com visão"
+          open_router-minimax-minimax-m2-5: "Modelo multimodal do MiniMax com contexto amplo"
+          open_router-z-ai-glm-5: "Modelo multimodal da Z-AI com visão"
+          open_router-arcee-ai-trinity-large-preview-free: "Modelo gratuito de código aberto da Arcee AI"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"
@@ -648,6 +776,7 @@ pt_BR:
           title: "Executar teste"
           running: "Executando teste..."
           success: "Sucesso!"
+          invalid_config: "Primeiro, corrija os seguintes erros na sua configuração:"
           failure: "Erro retornado ao tentar entrar em contato com o modelo: %{error}"
         hints:
           max_prompt_tokens: "A quantidade máxima de tokens que o modelo pode processar em uma única solicitação"
@@ -655,7 +784,10 @@ pt_BR:
           display_name: "O nome usado para referenciar este modelo na interface do seu site."
           name: "Incluímos na chamada da API para especificar qual modelo será usado"
           vision_enabled: "Ative para a IA tentar entender as imagens. Depende do modelo usado na visão compatível. É compatível com os modelos mais recentes do Anthropic, Google e OpenAI."
+          allowed_attachment_types: "Escolher quais tipos de anexos serão encaminhados para o modelo. Deixe em branco para não permitir anexos. As imagens são controladas por visão computacional."
           cost_input: "O custo de entrada a cada 1 milhão de tokens para este modelo"
+          cost_cached_input: "O custo de entrada em cache por 1 milhão de tokens para este modelo (ao ler do cache de prompts)"
+          cost_cache_write: "O custo de gravação em cache por 1 milhão de tokens para este modelo (ao gravar no cache de prompts)"
           cost_output: "O custo de saída a cada 1 milhão de tokens para este modelo"
           cost_measure: "$/1 milhão de tokens"
         providers:
@@ -672,14 +804,17 @@ pt_BR:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Personalizados(as)"
         provider_fields:
           access_key_id: "ID da chave de acesso do AWS Bedrock"
+          role_arn: "AWS Bedrock Role ARN"
           region: "Região do AWS Bedrock"
           organization: "ID da organização opcional da OpenAI"
           disable_system_prompt: "Desativar mensagens de sistema nos prompts"
           enable_native_tool: "Ativar suporte para ferramenta nativa"
           disable_native_tools: "Desativar suporte para ferramenta nativa (usar ferramentas baseadas em XML)"
+          disable_native_structured_output: "Desativar a saída estruturada nativa (use o preenchimento automático de mensagens do assistente, necessário para o Claude 3.x e versões anteriores)."
           provider_order: "Ordem de provedores (lista separada por vírgula)"
           provider_quantizations: "Ordem de quantizações de provedores (lista separada por vírgula, por exemplo: fp16,fp8)"
           disable_streaming: "Desativar conclusões de transmissão (converter transmissão em pedidos que não forem desse tipo)"
@@ -689,6 +824,11 @@ pt_BR:
           reasoning_tokens: "Quantidade de tokens usados para raciocínio"
           disable_temperature: "Desativar temperatura (alguns modelos de pensamento não são compatíveis com temperatura)"
           disable_top_p: "Desativar P máximo (alguns modelos são incompatíveis com P máximo)"
+          prompt_caching: "Modo de cache do prompt"
+          prompt_caching_never: "Nunca – Não use o cache de prompts."
+          prompt_caching_tool_results: "Resultados da ferramenta - Armazenar em cache quando os resultados da ferramenta estiverem presentes (recomendado)"
+          prompt_caching_always: "Sempre – Sempre utilize o cache de prompts."
+          effort: "Nível de esforço"
       related_topics:
         title: "Tópicos relacionados"
         pill: "Relacionado(a)"
@@ -740,6 +880,13 @@ pt_BR:
           credits: "Legendado por IA"
           save_caption: "Salvar"
         no_content_error: "Primeiro adicione conteúdo para realizar ações de IA nele"
+      errors:
+        credit_limit_dialog:
+          title: "Limite de crédito de IA atingido"
+          message_user: "Esta comunidade atingiu o limite de créditos de IA para hoje. Tente novamente após %{reset_time} ou entre em contato com o administrador do site para obter mais informações."
+          message_without_time_user: "Esta comunidade atingiu o limite de créditos de IA para hoje. As respostas ficarão indisponíveis até que seu limite seja redefinido. Entre em contato com o administrador do site para mais informações."
+          message_admin: "Você atingiu o limite de crédito de IA para o seu plano. As respostas ficarão indisponíveis até que seu limite seja redefinido em %{reset_time}."
+          message_without_time_admin: "Você atingiu o limite de crédito de IA para o seu plano. As respostas ficarão indisponíveis até que seu limite seja redefinido."
       reviewables:
         model_used: "Modelo usado:"
         accuracy: "Precisão:"
@@ -794,10 +941,14 @@ pt_BR:
           model_name: "Nome do modelo"
         semantic_search: "Tópicos (semântica)"
         semantic_search_results:
+          toggle: "Resultados de IA"
           unavailable: "Resultados de IA indisponíveis"
+          zero_results_expanded: "Nenhum resultado encontrado; exibindo %{count} resultados de IA"
         semantic_search_tooltips:
           results_explanation: "Ao ativar esta opção, os resultados de pesquisa com IA são adicionados abaixo."
           invalid_sort: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
+          not_submitted: "Envie uma pesquisa para ativar os resultados da IA."
+          no_results: "Nenhum resultado de IA foi encontrado para esta pesquisa."
         semantic_search_unavailable_tooltip: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
         ai_generated_result: "Resultado de pesquisa encontrado usando IA"
         quick_search:
@@ -827,6 +978,8 @@ pt_BR:
           copy_response: "Copiar resposta"
           request_tokens: "Tokens de solicitação:"
           response_tokens: "Tokens de resposta:"
+          cache_read_tokens: "Tokens de leitura em cache:"
+          cache_write_tokens: "Tokens de gravação em cache:"
           request: "Solicitação"
           response: "Resposta"
           next_log: "Próximo"
@@ -910,7 +1063,23 @@ pt_BR:
         topic:
           title: "Resumo do tópico"
           close: "Fechar painel de resumo"
+          regenerate_ai_summaries: "Gerar novamente resumos de IA"
+          regen_modal_description: "Escolha o tipo de resumo de IA a ser gerado novamente para os tópicos selecionados."
+          bulk_regen_description: "Escolha o tipo de resumo de IA a ser gerado novamente para os tópicos selecionados."
+          regenerate_gists_option: "Resumos breves (gists)"
           regenerate_summaries_option: "Resumos de tópicos"
+          regenerate_gists_success:
+            one: "Resumo curto regerado com sucesso"
+            other: "%{count} resumos curtos regerados com sucesso"
+          regenerate_gists_error:
+            one: "Não foi possível gerar resumos curtos novamente"
+            other: "Não foi possível gerar %{count} resumos curtos novamente"
+          regenerate_topic_summary_success:
+            one: "Resumo do tópico regerado com sucesso"
+            other: "%{count} resumos de tópicos regerados com sucesso"
+          regenerate_topic_summary_error:
+            one: "Não foi possível gerar o resumo do tópico novamente"
+            other: "Não foi possível gerar %{count} resumos de tópico novamente"
         topic_list_layout:
           button:
             compact: "Compactar"
@@ -924,6 +1093,7 @@ pt_BR:
         loading_convo: "Carregando conversa"
         collapse: "Recolher"
         timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
+        user_setting: "Ativar descobertas de pesquisa com IA"
         tooltip:
           header: "Pesquisa alimentada por IA"
           content: "Pequisa em linguagem natural desenvolvida pelo %{model}"

@@ -10,6 +10,10 @@ it:
     support:
       name: "Sostienici"
       title: "sostienici"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Consenti al proprietario dell'argomento e allo staff di contrassegnare una risposta come soluzione"
   site_settings:
     solved_enabled: "Attiva il plugin 'solved', che consente agli autenti di selezionare soluzioni negli argomenti"
     allow_solved_on_all_topics: "Consenti agli utenti di selezionare soluzioni su tutti gli argomenti (se l'opzione è deselezionata, le soluzioni possono essere abilitate per categoria o etichetta)"

@@ -91,12 +91,12 @@ zh_CN:
     ai_helper_enabled: "启用 AI 助手。"
     composer_ai_helper_allowed_groups: "这些群组中的用户将在编辑器中看到 AI 助手按钮。"
     ai_helper_allowed_in_pm: "在私信中启用编辑器的 AI 助手。"
-    ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天对话标题之前的延迟（以分钟为单位）。"
-    ai_helper_automatic_chat_thread_title: "根据话题内容自动设置聊天对话标题。"
+    ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天消息串标题之前的延迟（以分钟为单位）。"
+    ai_helper_automatic_chat_thread_title: "根据消息串内容自动设置聊天消息串标题。"
     ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_post_illustrator_persona: "用于 AI 助手的帖子插图功能的角色。注意：要使此功能正常运行，您还必须创建一个图片生成工具（管理员 > 插件 > Discourse AI > 工具）。"
-    ai_helper_chat_thread_title_persona: "用于生成聊天主题标题的角色。"
+    ai_helper_chat_thread_title_persona: "用于生成聊天消息串标题的角色。"
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
     ai_embeddings_generate_for_pms: "为个人消息生成嵌入向量。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
@@ -277,22 +277,22 @@ zh_CN:
       name:
         characters: "只能包含数字、字母和下划线"
       secret_contracts:
-        invalid_payload: "密钥合约必须是一个数组。"
-        invalid_contract: "索引为 %{index} 的密钥合约无效。"
-        alias_required: "索引为 %{index} 的密钥合约必须包含别名。"
-        alias_too_long: "密钥别名 `%{alias}` 太长。"
-        alias_invalid: "密钥别名 `%{alias}` 只能包含数字、字母和下划线。"
-        alias_not_unique: "密钥别名 '%{alias}`重复。"
+        invalid_payload: "秘密合约必须是一个数组。"
+        invalid_contract: "索引为 %{index} 的秘密合约无效。"
+        alias_required: "索引为 %{index} 的秘密合约必须包含别名。"
+        alias_too_long: "秘密别名 `%{alias}` 过长。"
+        alias_invalid: "秘密别名 `%{alias}` 只能包含数字、字母和下划线。"
+        alias_not_unique: "秘密别名 `%{alias}` 重复。"
       secret_bindings:
-        invalid_payload: "密钥绑定必须是一个数组。"
-        secret_not_found: "所选凭证不存在."
+        invalid_payload: "秘密绑定必须是一个数组。"
+        secret_not_found: "所选凭据不存在。"
         alias_not_declared: "此工具中未声明别名 `%{alias}`。"
       secret_runtime:
         alias_not_declared: "此工具未声明凭据别名 `%{alias}`。"
-        missing_binding: "凭证别名 `%{alias}` 是必需的，但未绑定。"
-        missing_required_aliases: "缺少别名所需的凭据绑定： %{aliases}。"
-        secret_not_found: "凭据别名 `%{alias}` 已与丢失的证书绑定。"
-        unknown_error: "无法解析所请求的凭据。"
+        missing_binding: "凭据别名 `%{alias}` 为必选项，但未绑定。"
+        missing_required_aliases: "缺少别名所需的凭据绑定：%{aliases}。"
+        secret_not_found: "凭据别名 `%{alias}` 与丢失的凭据绑定。"
+        unknown_error: "无法解析请求的凭据。"
     ai_helper:
       errors:
         completion_request_failed: "尝试提供建议时出错。请重试。"
@@ -443,8 +443,8 @@ zh_CN:
           name: "发现"
           description: "发现功能中使用的默认角色（免费搜索）"
         chat_thread_titler:
-          name: "聊天主题标题"
-          description: "自动生成聊天主题标题的默认角色"
+          name: "聊天消息串标题"
+          description: "自动生成聊天消息串标题的默认角色"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"
@@ -636,7 +636,7 @@ zh_CN:
         invalid_seeded_model: "您无法在此模型中使用此功能"
         invalid_persona_response_format: "所选角色必须具有带有布尔字段名称“spam”的回答格式"
         must_select_model: "必须先选择一个 LLM"
-        invalid_llm_id: "所选的LLM模型无效"
+        invalid_llm_id: "所选 LLM 模型无效"
       endpoints:
         not_configured: "%{display_name}（未配置）"
         configuration_hint:
@@ -649,18 +649,18 @@ zh_CN:
     embeddings:
       delete_failed: "此模型目前正在使用中。请先更新 `ai embeddings selected model`。"
       cannot_edit_builtin: "您无法编辑内置模型。"
-      secret_required: "必须选择一种凭证。"
-      secret_not_found: "所选凭证不存在"
+      secret_required: "必须选择一个凭据"
+      secret_not_found: "所选凭据不存在"
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"
         model_test_failed: "我们无法使用此模型生成测试嵌入向量。请检查配置是否正确。"
     secrets:
-      delete_failed_in_use: "此凭证目前正被一个或多个LLM或嵌入使用，无法删除。"
+      delete_failed_in_use: "此凭据目前正被一个或多个 LLM 或嵌入向量使用，无法删除。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
-      secret_required: "必须选择一种凭证。"
-      secret_not_found: "所选凭证不存在"
+      secret_required: "必须选择一个凭据"
+      secret_not_found: "所选凭据不存在"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
       bedrock_missing_auth: "AWS Bedrock 需要配置访问密钥 ID 或角色 ARN。"
     ai_staff_action_logger:
@@ -687,23 +687,23 @@ zh_CN:
       user_not_allowed: 该用户无权参与该话题。
       invalid_stream_resume_token: resume_token 无效或已过期。
       no_tool_results_specified: 恢复数据流时需要使用 tool_results 参数。
-      invalid_custom_tools: "custom_tools 参数无效： %{details}"
-      duplicate_custom_tools: "custom_tools 参数包含重复的工具名称： %{names}"
+      invalid_custom_tools: "custom_tools 参数无效：%{details}"
+      duplicate_custom_tools: "custom_tools 参数包含重复的工具名称：%{names}"
       too_many_custom_tools: "custom_tools 参数最多可以包含 %{max} 个工具。"
       custom_tool_definition_too_large: "每个自定义工具定义的长度不得超过 %{max} 字节。"
-      invalid_stream_param: "%{key} 参数无效： %{details}"
-      expected_array: "期望一个数组"
-      expected_object: "期望一个对象"
+      invalid_stream_param: "%{key} 参数无效：%{details}"
+      expected_array: "应为数组"
+      expected_object: "应为对象"
       ambiguous_tool_results: "指定 tool_results 或 tool_result，不能同时指定。"
-      invalid_tool_results: "tool_results 参数无效： %{details}"
-      too_many_tool_results: "tool_results 参数最多可包含 %{max} 项。"
+      invalid_tool_results: "tool_results 参数无效：%{details}"
+      too_many_tool_results: "tool_results 参数最多可以包含 %{max} 个条目。"
       no_pending_tool_calls: 此恢复令牌没有待处理的工具调用。
-      missing_tool_results: "tool_call_id (s) 缺少工具结果： %{ids}"
-      unexpected_tool_results: "tool_call_id (s) 的意外工具结果： %{ids}"
+      missing_tool_results: "tool_call_id (s) 缺少工具结果：%{ids}"
+      unexpected_tool_results: "tool_call_id (s) 的意外工具结果：%{ids}"
       invalid_tool_result_content: "%{id} 的工具结果必须包含内容"
-      tool_result_content_too_large: "每个工具的结果内容有效载荷最多只能是 %{max} 字节。"
-      stream_reply_max_resume_rounds_reached: 已达到自定义工具恢复轮数上限（%{max}）。
-      stream_reply_state_too_large: "数据流状态太大，无法持续（最大 %{max} 字节）。"
+      tool_result_content_too_large: "每个工具结果内容有效负载最多为 %{max} 字节。"
+      stream_reply_max_resume_rounds_reached: 已达到自定义工具恢复轮数上限 (%{max})。
+      stream_reply_state_too_large: "数据流状态过大，无法持续（最大 %{max} 字节）。"
       stream_reply_unexpected_error: 流式传输回复时发生意外错误。
       prompt_message_length: 消息 %{idx} 超过 1000 个字符限制。
       persona_already_exists: 名称为“%{name}”的角色已存在。

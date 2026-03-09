@@ -215,6 +215,9 @@ th:
     flags_status:
       labels:
         flag: ชนิด
+    visits:
+      xaxis:
+        mobile: "โทรศัพท์"
     consolidated_page_views:
       labels:
         post: โพส

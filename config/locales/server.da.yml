@@ -925,7 +925,9 @@ da:
         flagger: Indberetter
     visits:
       title: "Brugerbesøg"
-      xaxis: "Dag"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobil"
       yaxis: "Antal besøg"
     signups:
       title: "Tilmeldinger"
@@ -979,7 +981,6 @@ da:
       yaxis: "Dag"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Dag"
       yaxis: "DAU/MAU"
     daily_engaged_users:

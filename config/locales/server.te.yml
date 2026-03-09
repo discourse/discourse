@@ -689,7 +689,9 @@ te:
         time_to_resolution: రిజల్యూషన్ సమయం
     visits:
       title: "సభ్యుని గణాంకాలు"
-      xaxis: "రోజు"
+      xaxis:
+        desktop: "డెస్క్‌టాప్"
+        mobile: "మొబైల్"
       yaxis: "దర్శనాల సంఖ్య"
     signups:
       title: "సైన్అప్‌లు"
@@ -732,7 +734,6 @@ te:
     site_traffic:
       yaxis: "రోజు"
     dau_by_mau:
-      title: "డిఏయూ/ఎంఏయూ"
       xaxis: "రోజు"
       yaxis: "డిఏయూ/ఎంఏయూ"
     daily_engaged_users:
