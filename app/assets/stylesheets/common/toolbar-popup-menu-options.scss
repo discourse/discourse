@@ -11,8 +11,11 @@
   }
 
   .fk-d-menu__inner-content {
-    --fade-height: 2em;
     flex-direction: column;
+  }
+
+  &.--scrollable .fk-d-menu__inner-content {
+    --fade-height: 2em;
 
     &::after {
       content: "";
