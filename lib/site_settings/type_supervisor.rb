@@ -289,7 +289,16 @@ class SiteSettings::TypeSupervisor
     if (v = @validators[name])
       validator = v[:class].new(v[:opts])
       unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters, "#{name}: #{validator.error_message}"
+        exception_class =
+          (
+            if validator.respond_to?(:html_safe_error_message?) &&
+                 validator.html_safe_error_message?
+              Discourse::InvalidHTMLParameters
+            else
+              Discourse::InvalidParameters
+            end
+          )
+        raise exception_class, "#{name}: #{validator.error_message}"
       end
     end
 

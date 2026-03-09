@@ -348,7 +348,8 @@ export default class SiteSettingComponent extends Component {
         let errorString = json.errors[0];
 
         if (json.html_message) {
-          errorString = htmlSafe(errorString);
+          errorString = htmlSafe(sanitize(errorString));
+          this.buffered.discardChanges();
         }
 
         this.setting.validationMessage = errorString;

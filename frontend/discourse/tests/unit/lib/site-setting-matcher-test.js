@@ -68,4 +68,47 @@ module("Unit | Lib | SiteSettingMatcher", function (hooks) {
     assert.true(matchingMatcher.isFuzzyNameMatch);
     assert.strictEqual(matchingMatcher.matchStrength, -1); // Smallest number of gaps.
   });
+
+  module("OR filter (| separator)", function () {
+    test("#isNameMatch returns true if any term matches", function (assert) {
+      assert.true(
+        new SiteSettingMatcher("short_title|foo", shortTitle).isNameMatch
+      );
+      assert.true(
+        new SiteSettingMatcher("foo|short_title", shortTitle).isNameMatch
+      );
+      assert.false(new SiteSettingMatcher("foo|bar", shortTitle).isNameMatch);
+    });
+
+    test("#isKeywordMatch returns true if any term matches a keyword", function (assert) {
+      assert.true(
+        new SiteSettingMatcher("intro|foo", shortTitle).isKeywordMatch
+      );
+      assert.false(
+        new SiteSettingMatcher("foo|bar", shortTitle).isKeywordMatch
+      );
+    });
+
+    test("#isDescriptionMatch returns true if any term matches the description", function (assert) {
+      assert.true(
+        new SiteSettingMatcher("launcher|foo", shortTitle).isDescriptionMatch
+      );
+      assert.false(
+        new SiteSettingMatcher("foo|bar", shortTitle).isDescriptionMatch
+      );
+    });
+
+    test("#isValueMatch returns true if any term matches the value", function (assert) {
+      assert.true(
+        new SiteSettingMatcher("heckers|foo", shortTitle).isValueMatch
+      );
+      assert.false(new SiteSettingMatcher("foo|bar", shortTitle).isValueMatch);
+    });
+
+    test("#isFuzzyNameMatch always returns false in OR mode", function (assert) {
+      assert.false(
+        new SiteSettingMatcher("s tle|foo", shortTitle).isFuzzyNameMatch
+      );
+    });
+  });
 });
