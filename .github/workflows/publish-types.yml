@@ -2,11 +2,9 @@ name: Publish @discourse/types package
 
 on:
   workflow_dispatch:
-  pull_request:
   push:
     branches:
       - main
-      - "0-a-types-again"
     paths:
       - "lib/version.rb"
 
@@ -57,4 +55,4 @@ jobs:
 
       - name: Publish the package
         working-directory: frontend/discourse-types
-        run: pnpm publish --no-git-checks --tag latest --dry-run
+        run: pnpm publish --no-git-checks --tag latest
