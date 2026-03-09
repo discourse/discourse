@@ -1187,10 +1187,6 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
-  def has_localization?(locale = I18n.locale)
-    get_localization(locale).present?
-  end
-
   private
 
   def access_control_post_id_for_upload
