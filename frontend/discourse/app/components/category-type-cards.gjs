@@ -55,7 +55,7 @@ export default class CategoryTypeCards extends Component {
           {{#unless type.available}}
             <span class="category-type-cards__card-badge">
               <PluginOutlet
-                @name="category-type-card-unavailable-badge"
+                @name="category-type-card-top-right-corner"
                 @outletArgs={{lazyHash type=type}}
               >
                 {{i18n "category.choose_type.requires_plugin"}}
