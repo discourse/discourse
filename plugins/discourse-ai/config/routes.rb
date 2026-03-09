@@ -32,7 +32,7 @@ DiscourseAi::Engine.routes.draw do
   end
 
   scope module: :discover, path: "/discoveries", defaults: { format: :json } do
-    get "reply" => "discoveries#reply"
+    post "reply" => "discoveries#reply"
     post "continue-convo" => "discoveries#continue_convo"
   end
 
