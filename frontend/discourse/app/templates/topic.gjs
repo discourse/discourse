@@ -27,6 +27,7 @@ import TopicCategory from "discourse/components/topic-category";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
 import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import TopicMap from "discourse/components/topic-map/index";
+import TopicMetadata from "discourse/components/topic-metadata";
 import TopicNavigation from "discourse/components/topic-navigation";
 import TopicProgress from "discourse/components/topic-progress";
 import TopicSkipLinks from "discourse/components/topic-skip-links";
@@ -42,8 +43,6 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import CategoryChooser from "discourse/select-kit/components/category-chooser";
-import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import booleanString from "../helpers/boolean-string";
@@ -121,71 +120,17 @@ export default <template>
                 @buffered={{@controller.buffered}}
               />
 
-              {{#if @controller.showCategoryChooser}}
-                <div class="edit-category__wrapper">
-                  <PluginOutlet
-                    @name="edit-topic-category"
-                    @outletArgs={{lazyHash
-                      model=@controller.model
-                      buffered=@controller.buffered
-                    }}
-                  >
-                    <CategoryChooser
-                      @value={{@controller.buffered.category_id}}
-                      @onChange={{@controller.topicCategoryChanged}}
-                      class="small"
-                    />
-                  </PluginOutlet>
-                </div>
-              {{/if}}
-
-              {{#if @controller.canEditTags}}
-                <div class="edit-tags__wrapper">
-                  <PluginOutlet
-                    @name="edit-topic-tags"
-                    @outletArgs={{lazyHash
-                      model=@controller.model
-                      buffered=@controller.buffered
-                    }}
-                  >
-                    <MiniTagChooser
-                      @value={{@controller.buffered.tags}}
-                      @onChange={{@controller.topicTagsChanged}}
-                      @options={{hash
-                        filterable=true
-                        categoryId=@controller.buffered.category_id
-                        minimum=@controller.minimumRequiredTags
-                        filterPlaceholder="tagging.choose_for_topic"
-                        useHeaderFilter=true
-                      }}
-                    />
-                  </PluginOutlet>
-                </div>
-              {{/if}}
-
-              <PluginOutlet
-                @name="edit-topic"
-                @connectorTagName="div"
-                @outletArgs={{lazyHash
-                  model=@controller.model
-                  buffered=@controller.buffered
-                }}
-              />
-
-              <div class="edit-controls">
-                <DButton
-                  @action={{@controller.finishedEditingTopic}}
-                  @icon="check"
-                  @ariaLabel="composer.save_edit"
-                  class="btn-primary submit-edit"
-                />
-                <DButton
-                  @action={{@controller.cancelEditingTopic}}
-                  @icon="xmark"
-                  @ariaLabel="composer.cancel"
-                  class="btn-default cancel-edit"
-                />
-
+              <TopicMetadata
+                @buffered={{@controller.buffered}}
+                @model={{@controller.model}}
+                @showCategoryChooser={{@controller.showCategoryChooser}}
+                @canEditTags={{@controller.canEditTags}}
+                @minimumRequiredTags={{@controller.minimumRequiredTags}}
+                @onSave={{@controller.finishedEditingTopic}}
+                @onCancel={{@controller.cancelEditingTopic}}
+                @topicCategoryChanged={{@controller.topicCategoryChanged}}
+                @topicTagsChanged={{@controller.topicTagsChanged}}
+              >
                 {{#if @controller.canRemoveTopicFeaturedLink}}
                   <a
                     href
@@ -197,7 +142,7 @@ export default <template>
                     {{@controller.featuredLinkDomain}}
                   </a>
                 {{/if}}
-              </div>
+              </TopicMetadata>
             </div>
 
           {{else}}

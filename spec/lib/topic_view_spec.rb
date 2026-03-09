@@ -28,6 +28,120 @@ RSpec.describe TopicView do
     end
   end
 
+  describe "#reset_post_collection" do
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:post2) { Fabricate(:post, topic: topic) }
+    fab!(:post3) { Fabricate(:post, topic: topic) }
+
+    it "replaces the posts collection" do
+      tv = TopicView.new(topic.id, evil_trout)
+      original_posts = tv.posts.to_a
+
+      new_posts = [post3]
+      tv.reset_post_collection(posts: new_posts)
+
+      expect(tv.posts).to eq(new_posts)
+      expect(tv.posts).not_to eq(original_posts)
+    end
+
+    it "clears memoized state derived from the previous posts" do
+      tv = TopicView.new(topic.id, evil_trout)
+
+      tv.all_post_actions
+      tv.reviewable_counts
+      tv.mentioned_users
+      tv.category_group_moderator_user_ids
+      tv.primary_group_names
+      tv.last_post
+
+      tv.reset_post_collection(posts: [post2])
+
+      expect(tv.all_post_actions).to be_a(Hash)
+      expect(tv.last_post).to eq(post2)
+      expect(tv.mentioned_users).to eq({})
+      expect(tv.primary_group_names).to be_a(Hash)
+    end
+
+    it "allows preload hooks to run on the new posts" do
+      tv = TopicView.new(topic.id, evil_trout)
+      preloaded_post_ids = nil
+      preloader = lambda { |view| preloaded_post_ids = view.posts.map(&:id) }
+
+      TopicView.on_preload(&preloader)
+
+      tv.reset_post_collection(posts: [post2, post3])
+      TopicView.preload(tv)
+
+      expect(preloaded_post_ids).to contain_exactly(post2.id, post3.id)
+    ensure
+      TopicView.cancel_preload(&preloader)
+    end
+
+    it "skips post loading when skip_post_loading is true" do
+      tv = TopicView.new(topic.id, evil_trout, skip_post_loading: true)
+
+      expect(tv.posts).to eq([])
+      expect(tv.filtered_posts.count).to eq(0)
+      expect(tv.topic).to eq(topic)
+
+      tv.reset_post_collection(posts: [post1, post2])
+      expect(tv.posts).to eq([post1, post2])
+    end
+  end
+
+  describe "#reset_post_collection (memoize_for_posts)" do
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:post2) { Fabricate(:post, topic: topic) }
+
+    it "clears all registered post-dependent caches when posts are replaced" do
+      tv = TopicView.new(topic.id, evil_trout)
+
+      # Force memoization of a registered cache
+      tv.all_post_actions
+      expect(tv.instance_variable_defined?(:@all_post_actions)).to eq(true)
+
+      tv.reset_post_collection(posts: [post1])
+
+      expect(tv.instance_variable_defined?(:@all_post_actions)).to eq(false)
+    end
+
+    it "clears caches with custom ivar names" do
+      tv = TopicView.new(topic.id, evil_trout)
+
+      # primary_group_names is registered as `memoize_for_posts :primary_group_names, :@group_names`
+      tv.primary_group_names
+      expect(tv.instance_variable_defined?(:@group_names)).to eq(true)
+
+      tv.reset_post_collection(posts: [post1])
+
+      expect(tv.instance_variable_defined?(:@group_names)).to eq(false)
+    end
+
+    it "allows plugins to register their own post-dependent caches" do
+      original_ivars = TopicView.post_dependent_ivars.dup
+      TopicView.memoize_for_posts(:test_plugin_cache)
+
+      tv = TopicView.new(topic.id, evil_trout)
+      tv.instance_variable_set(:@test_plugin_cache, { some: "data" })
+
+      tv.reset_post_collection(posts: [post1])
+
+      expect(tv.instance_variable_defined?(:@test_plugin_cache)).to eq(false)
+    ensure
+      TopicView.post_dependent_ivars = original_ivars
+    end
+
+    it "replaces @posts with the new collection" do
+      tv = TopicView.new(topic.id, evil_trout)
+
+      tv.reset_post_collection(posts: [post2])
+      expect(tv.posts).to eq([post2])
+
+      tv.reset_post_collection(posts: [post1, post2])
+      expect(tv.posts).to eq([post1, post2])
+    end
+  end
+
   it "raises a not found error if the topic doesn't exist" do
     expect { TopicView.new(1_231_232, evil_trout) }.to raise_error(Discourse::NotFound)
   end

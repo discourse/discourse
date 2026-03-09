@@ -187,7 +187,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_has_deleted?
-    object.guardian.can_see_deleted_posts?
+    !object.skip_post_loading && object.guardian.can_see_deleted_posts?
   end
 
   def expandable_first_post

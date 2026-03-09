@@ -14,6 +14,7 @@ import {
   defineTrackedProperty,
   enumerateTrackedKeys,
 } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -219,7 +220,8 @@ export default class Post extends RestModel {
   }
 
   get shareUrl() {
-    return this.customShare || resolveShareUrl(this.url, this.currentUser);
+    const url = this.customShare || resolveShareUrl(this.url, this.currentUser);
+    return applyValueTransformer("post-share-url", url, { post: this });
   }
 
   @computed("name", "username")
