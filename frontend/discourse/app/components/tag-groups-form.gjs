@@ -1,9 +1,7 @@
 /* eslint-disable ember/no-classic-components */
-import { cached } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -28,8 +26,7 @@ export default class TagGroupsForm extends Component {
     ({ id }) => id !== AUTO_GROUPS.everyone.id
   );
 
-  @cached
-  @dependentKeyCompat
+  @computed("model")
   get buffered() {
     return BufferedProxy.create({
       content: this.model,
