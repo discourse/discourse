@@ -30,6 +30,8 @@ module DiscourseAi
                   name: tool.name.capitalize,
                   tool_name: tool.tool_name,
                 ),
+              token_count:
+                DiscourseAi::Tokenizer::OpenAiCl100kTokenizer.size(tool.signature.to_json),
             }
           end
 

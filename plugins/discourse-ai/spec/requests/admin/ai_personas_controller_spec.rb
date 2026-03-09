@@ -25,6 +25,28 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       )
     end
 
+    it "includes token_count for custom tools" do
+      tool =
+        AiTool.create!(
+          name: "Token Test",
+          tool_name: "token_test",
+          description: "A test tool",
+          parameters: [{ name: "query", type: "string", description: "search query" }],
+          script: "function invoke(params) { return 'test'; }",
+          summary: "Test",
+          created_by_id: admin.id,
+          enabled: true,
+        )
+
+      get "/admin/plugins/discourse-ai/ai-personas.json"
+      expect(response).to be_successful
+
+      tools = response.parsed_body["meta"]["tools"]
+      custom_tool = tools.find { |t| t["id"] == "custom-#{tool.id}" }
+      expect(custom_tool["token_count"]).to be_a(Integer)
+      expect(custom_tool["token_count"]).to be > 0
+    end
+
     it "sideloads llms" do
       get "/admin/plugins/discourse-ai/ai-personas.json"
       expect(response).to be_successful
@@ -78,6 +100,8 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       search_tool = tools.find { |c| c["id"] == "Search" }
 
       expect(search_tool["help"]).to eq(I18n.t("discourse_ai.ai_bot.tool_help.search"))
+      expect(search_tool["token_count"]).to be_a(Integer)
+      expect(search_tool["token_count"]).to be > 0
 
       expect(search_tool["options"]).to eq(
         {

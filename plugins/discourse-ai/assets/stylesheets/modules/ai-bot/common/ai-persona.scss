@@ -246,6 +246,109 @@
     font-size: var(--font-down-1);
   }
 
+  &__tool-token-list {
+    list-style: none;
+    margin: 0 0 0.5em;
+    padding: 0;
+  }
+
+  &__tool-token-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.2em 0;
+    font-size: var(--font-down-1);
+  }
+
+  &__tool-token-count {
+    color: var(--primary-medium);
+  }
+
+  &__tool-context-cost {
+    margin-bottom: 1em;
+
+    @include viewport.from(lg) {
+      max-width: 55%;
+    }
+  }
+
+  &__tool-context-cost-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.35em;
+  }
+
+  &__tool-context-cost-label {
+    font-weight: bold;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__tool-context-cost-value {
+    font-weight: bold;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+
+    .--medium & {
+      color: var(--highlight);
+    }
+
+    .--high & {
+      color: var(--danger);
+    }
+  }
+
+  &__tool-context-cost-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(
+      to right,
+      var(--success) 0%,
+      var(--success) 33%,
+      var(--highlight) 33%,
+      var(--highlight) 66%,
+      var(--danger) 66%,
+      var(--danger) 100%
+    );
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 0.5em;
+  }
+
+  &__tool-context-cost-bar-fill {
+    height: 100%;
+    position: relative;
+    min-width: 4px;
+    max-width: 100%;
+  }
+
+  &__tool-context-cost-bar-indicator {
+    position: absolute;
+    right: -5px;
+    bottom: 100%;
+    margin-bottom: 2px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--primary-medium);
+  }
+
+  &__tool-context-cost-warning {
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    line-height: var(--line-height-large);
+
+    strong {
+      color: var(--highlight);
+    }
+
+    .--high & strong {
+      color: var(--danger);
+    }
+  }
+
   &__response-format {
     width: 100%;
     display: block;

@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
@@ -30,6 +31,11 @@ import AiPersonaToolOptions from "./ai-persona-tool-options";
 import AiToolSelector from "./ai-tool-selector";
 import RagOptionsFk from "./rag-options-fk";
 import RagUploader from "./rag-uploader";
+
+const TOOL_TOKEN_LOW_THRESHOLD = 2000;
+const TOOL_TOKEN_HIGH_THRESHOLD = 4000;
+const TOOL_TOKEN_BAR_MAX = 6000;
+const TOOL_COUNT_WARNING_THRESHOLD = 5;
 
 export default class PersonaEditor extends Component {
   @service router;
@@ -267,6 +273,63 @@ export default class PersonaEditor extends Component {
   }
 
   @action
+  selectedToolsWithTokens(tools) {
+    return tools.map((toolId) => {
+      const tool = this.allTools.find((t) => t.id === toolId);
+      return {
+        id: toolId,
+        name: tool?.name || toolId,
+        tokenCount: tool?.token_count || 0,
+      };
+    });
+  }
+
+  @action
+  totalToolTokens(tools) {
+    if (!tools) {
+      return 0;
+    }
+    return tools.reduce((sum, toolId) => {
+      const tool = this.allTools.find((t) => t.id === toolId);
+      return sum + (tool?.token_count || 0);
+    }, 0);
+  }
+
+  @action
+  toolTokenBarStyle(tools) {
+    const total = this.totalToolTokens(tools);
+    const percent = Math.min(100, (total / TOOL_TOKEN_BAR_MAX) * 100);
+    return htmlSafe(`width: ${percent}%`);
+  }
+
+  @action
+  toolTokenSeverity(tools) {
+    if (!tools) {
+      return "low";
+    }
+    const total = this.totalToolTokens(tools);
+    if (
+      total >= TOOL_TOKEN_HIGH_THRESHOLD ||
+      tools.length >= TOOL_COUNT_WARNING_THRESHOLD
+    ) {
+      return "high";
+    } else if (total >= TOOL_TOKEN_LOW_THRESHOLD) {
+      return "medium";
+    }
+    return "low";
+  }
+
+  @action
+  tooManyTools(tools) {
+    return tools.length >= TOOL_COUNT_WARNING_THRESHOLD;
+  }
+
+  @action
+  highTokenUsage(tools) {
+    return this.totalToolTokens(tools) >= TOOL_TOKEN_HIGH_THRESHOLD;
+  }
+
+  @action
   addExamplesPair(form, data) {
     const newExamples = [...data.examples, ["", ""]];
     form.set("examples", newExamples);
@@ -501,6 +564,77 @@ export default class PersonaEditor extends Component {
               />
             </field.Custom>
           </form.Field>
+
+          {{#if (gt data.tools.length 0)}}
+            <div
+              class="ai-persona-editor__tool-context-cost
+                {{if
+                  (eq (this.toolTokenSeverity data.tools) 'high')
+                  '--high'
+                  (if
+                    (eq (this.toolTokenSeverity data.tools) 'medium')
+                    '--medium'
+                    '--low'
+                  )
+                }}"
+            >
+              <ul class="ai-persona-editor__tool-token-list">
+                {{#each (this.selectedToolsWithTokens data.tools) as |tool|}}
+                  <li class="ai-persona-editor__tool-token-item">
+                    <span>{{tool.name}}</span>
+                    <span class="ai-persona-editor__tool-token-count">
+                      {{tool.tokenCount}}
+                      {{i18n "discourse_ai.ai_persona.tokens"}}
+                    </span>
+                  </li>
+                {{/each}}
+              </ul>
+              <div class="ai-persona-editor__tool-context-cost-header">
+                <span class="ai-persona-editor__tool-context-cost-label">
+                  {{i18n "discourse_ai.ai_persona.context_cost"}}
+                </span>
+                <span class="ai-persona-editor__tool-context-cost-value">
+                  {{i18n
+                    "discourse_ai.ai_persona.tool_tokens_total"
+                    tokens=(this.totalToolTokens data.tools)
+                  }}
+                </span>
+              </div>
+              <div class="ai-persona-editor__tool-context-cost-bar">
+                <div
+                  class="ai-persona-editor__tool-context-cost-bar-fill"
+                  style={{this.toolTokenBarStyle data.tools}}
+                >
+                  <span
+                    class="ai-persona-editor__tool-context-cost-bar-indicator"
+                  ></span>
+                </div>
+              </div>
+              {{#if (eq (this.toolTokenSeverity data.tools) "medium")}}
+                <div class="ai-persona-editor__tool-context-cost-warning">
+                  <strong>{{i18n
+                      "discourse_ai.ai_persona.tool_severity_medium"
+                    }}:</strong>
+                  {{i18n "discourse_ai.ai_persona.tool_tokens_warning"}}
+                </div>
+              {{/if}}
+              {{#if (eq (this.toolTokenSeverity data.tools) "high")}}
+                <div class="ai-persona-editor__tool-context-cost-warning">
+                  {{#if (this.tooManyTools data.tools)}}
+                    <strong>{{i18n
+                        "discourse_ai.ai_persona.tool_severity_too_many"
+                      }}:</strong>
+                    {{i18n "discourse_ai.ai_persona.tool_count_warning"}}
+                  {{else}}
+                    <strong>{{i18n
+                        "discourse_ai.ai_persona.tool_severity_high"
+                      }}:</strong>
+                    {{i18n "discourse_ai.ai_persona.tool_tokens_warning"}}
+                  {{/if}}
+                </div>
+              {{/if}}
+            </div>
+          {{/if}}
 
           {{#if (gt data.tools.length 0)}}
             <form.Field
