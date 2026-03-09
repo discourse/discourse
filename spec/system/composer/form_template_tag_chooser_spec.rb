@@ -43,7 +43,7 @@ describe "Composer Form Template", type: :system do
     find(".form-template-field__multi-select[name='cat-breed']").select("PERSIAN")
 
     preview = find(".d-editor-preview")
-    expect(preview).to have_content("persian")
+    expect(preview).to have_content("PERSIAN")
     expect(preview).to have_no_content(tag1.id.to_s)
   end
 end
