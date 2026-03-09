@@ -567,7 +567,7 @@ export default class AgentEditor extends Component {
 
           {{#if (gt data.tools.length 0)}}
             <div
-              class="ai-persona-editor__tool-context-cost
+              class="ai-agent-editor__tool-context-cost
                 {{if
                   (eq (this.toolTokenSeverity data.tools) 'high')
                   '--high'
@@ -578,58 +578,58 @@ export default class AgentEditor extends Component {
                   )
                 }}"
             >
-              <ul class="ai-persona-editor__tool-token-list">
+              <ul class="ai-agent-editor__tool-token-list">
                 {{#each (this.selectedToolsWithTokens data.tools) as |tool|}}
-                  <li class="ai-persona-editor__tool-token-item">
+                  <li class="ai-agent-editor__tool-token-item">
                     <span>{{tool.name}}</span>
-                    <span class="ai-persona-editor__tool-token-count">
+                    <span class="ai-agent-editor__tool-token-count">
                       {{tool.tokenCount}}
-                      {{i18n "discourse_ai.ai_persona.tokens"}}
+                      {{i18n "discourse_ai.ai_agent.tokens"}}
                     </span>
                   </li>
                 {{/each}}
               </ul>
-              <div class="ai-persona-editor__tool-context-cost-header">
-                <span class="ai-persona-editor__tool-context-cost-label">
-                  {{i18n "discourse_ai.ai_persona.context_cost"}}
+              <div class="ai-agent-editor__tool-context-cost-header">
+                <span class="ai-agent-editor__tool-context-cost-label">
+                  {{i18n "discourse_ai.ai_agent.context_cost"}}
                 </span>
-                <span class="ai-persona-editor__tool-context-cost-value">
+                <span class="ai-agent-editor__tool-context-cost-value">
                   {{i18n
-                    "discourse_ai.ai_persona.tool_tokens_total"
+                    "discourse_ai.ai_agent.tool_tokens_total"
                     tokens=(this.totalToolTokens data.tools)
                   }}
                 </span>
               </div>
-              <div class="ai-persona-editor__tool-context-cost-bar">
+              <div class="ai-agent-editor__tool-context-cost-bar">
                 <div
-                  class="ai-persona-editor__tool-context-cost-bar-fill"
+                  class="ai-agent-editor__tool-context-cost-bar-fill"
                   style={{this.toolTokenBarStyle data.tools}}
                 >
                   <span
-                    class="ai-persona-editor__tool-context-cost-bar-indicator"
+                    class="ai-agent-editor__tool-context-cost-bar-indicator"
                   ></span>
                 </div>
               </div>
               {{#if (eq (this.toolTokenSeverity data.tools) "medium")}}
-                <div class="ai-persona-editor__tool-context-cost-warning">
+                <div class="ai-agent-editor__tool-context-cost-warning">
                   <strong>{{i18n
-                      "discourse_ai.ai_persona.tool_severity_medium"
+                      "discourse_ai.ai_agent.tool_severity_medium"
                     }}:</strong>
-                  {{i18n "discourse_ai.ai_persona.tool_tokens_warning"}}
+                  {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
                 </div>
               {{/if}}
               {{#if (eq (this.toolTokenSeverity data.tools) "high")}}
-                <div class="ai-persona-editor__tool-context-cost-warning">
+                <div class="ai-agent-editor__tool-context-cost-warning">
                   {{#if (this.tooManyTools data.tools)}}
                     <strong>{{i18n
-                        "discourse_ai.ai_persona.tool_severity_too_many"
+                        "discourse_ai.ai_agent.tool_severity_too_many"
                       }}:</strong>
-                    {{i18n "discourse_ai.ai_persona.tool_count_warning"}}
+                    {{i18n "discourse_ai.ai_agent.tool_count_warning"}}
                   {{else}}
                     <strong>{{i18n
-                        "discourse_ai.ai_persona.tool_severity_high"
+                        "discourse_ai.ai_agent.tool_severity_high"
                       }}:</strong>
-                    {{i18n "discourse_ai.ai_persona.tool_tokens_warning"}}
+                    {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
                   {{/if}}
                 </div>
               {{/if}}
