@@ -3,8 +3,6 @@
 describe "Edit Category Settings", type: :system do
   fab!(:admin)
   fab!(:category)
-  fab!(:topic) { Fabricate(:topic, category: category) }
-  fab!(:post) { Fabricate(:post, topic: topic) }
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:category_default_view_select_kit) do
