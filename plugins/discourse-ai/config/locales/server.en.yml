@@ -675,30 +675,35 @@ en:
       close_topic:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to close or open this topic."
           no_reason: "A reason is required to close or open a topic."
         success: "Topic updated successfully."
 
       unlist_topic:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to unlist or list this topic."
           no_reason: "A reason is required to unlist or list a topic."
         success: "Topic updated successfully."
 
       lock_post:
         errors:
           not_found: "Post not found."
+          not_allowed: "You are not allowed to lock or unlock this post."
           no_reason: "A reason is required to lock or unlock a post."
         success: "Post updated successfully."
 
       delete_topic:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to delete or recover this topic."
           no_reason: "A reason is required to delete or recover a topic."
         success: "Topic updated successfully."
 
       edit_post:
         errors:
           not_found: "Post not found."
+          not_allowed: "You are not allowed to edit this post."
           nothing_to_edit: "Either raw or title must be provided."
           no_reason: "An edit reason is required."
           revision_failed: "Failed to revise the post."
@@ -707,6 +712,7 @@ en:
       edit_tags:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to edit tags on this topic."
           no_reason: "A reason is required to edit tags."
           tagging_disabled: "Tagging is not enabled on this site."
         success: "Tags updated successfully."
@@ -714,6 +720,7 @@ en:
       edit_category:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to move this topic."
           category_not_found: "Category not found."
           no_reason: "A reason is required to move a topic."
           revision_failed: "Failed to move the topic."
@@ -722,6 +729,7 @@ en:
       set_topic_timer:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to set a timer on this topic."
           no_reason: "A reason is required to set a topic timer."
           invalid_timer_type: "Invalid timer type. Must be one of: close, open, delete, silent_close, bump."
         success: "Topic timer updated successfully."
@@ -729,12 +737,14 @@ en:
       set_slow_mode:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to set slow mode on this topic."
           no_reason: "A reason is required to set slow mode."
         success: "Slow mode updated successfully."
 
       move_posts:
         errors:
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to move posts in this topic."
           no_reason: "A reason is required to move posts."
           no_posts: "No post IDs provided."
           no_destination: "Either destination_topic_id or new_title must be provided."
@@ -745,6 +755,7 @@ en:
         errors:
           user_not_found: "User not found."
           badge_not_found: "Badge not found."
+          not_allowed: "You are not allowed to grant badges."
           no_reason: "A reason is required to grant a badge."
           badge_disabled: "Badge is not enabled."
           grant_failed: "Failed to grant badge."
@@ -754,6 +765,7 @@ en:
         errors:
           plugin_not_installed: "The discourse-assign plugin is not installed."
           not_found: "Topic not found."
+          not_allowed: "You are not allowed to assign this topic."
           no_reason: "A reason is required to assign or unassign a topic."
           assignee_not_found: "User or group not found."
           assign_failed: "Failed to assign topic."

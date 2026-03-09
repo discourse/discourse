@@ -46,6 +46,10 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.edit_category.errors.not_found"))
           end
 
+          if !guardian.can_edit_topic?(topic)
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_category.errors.not_allowed"))
+          end
+
           category = Category.find_by(id: parameters[:category_id])
           if !category
             return(

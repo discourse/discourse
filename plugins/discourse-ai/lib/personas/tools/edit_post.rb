@@ -45,6 +45,10 @@ module DiscourseAi
           post = Post.find_by(id: parameters[:post_id])
           return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.not_found")) if !post
 
+          if !guardian.can_edit_post?(post)
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.not_allowed"))
+          end
+
           raw = parameters[:raw]
           title = parameters[:title]
           edit_reason = parameters[:edit_reason].to_s.strip

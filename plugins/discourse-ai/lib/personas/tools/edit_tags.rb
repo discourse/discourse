@@ -55,6 +55,10 @@ module DiscourseAi
           topic = Topic.find_by(id: parameters[:topic_id])
           return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.not_found")) if !topic
 
+          if !guardian.can_edit_tags?(topic)
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.not_allowed"))
+          end
+
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.no_reason"))
           end

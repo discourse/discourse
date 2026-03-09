@@ -56,4 +56,20 @@ RSpec.describe DiscourseAi::Personas::Tools::GrantBadge do
 
     expect(result[:status]).to eq("error")
   end
+
+  it "returns an error when context user lacks permission" do
+    regular_user = Fabricate(:user, trust_level: TrustLevel[0])
+    ctx = DiscourseAi::Personas::BotContext.new(user: regular_user)
+    t =
+      described_class.new(
+        { username: user.username, badge_name: badge.name, reason: "test" },
+        bot_user: bot_user,
+        llm: llm,
+        context: ctx,
+      )
+    result = t.invoke
+
+    expect(result[:status]).to eq("error")
+    expect(result[:error]).to include("not allowed")
+  end
 end

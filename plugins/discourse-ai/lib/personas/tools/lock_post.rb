@@ -39,6 +39,10 @@ module DiscourseAi
           post = Post.find_by(id: parameters[:post_id])
           return error_response(I18n.t("discourse_ai.ai_bot.lock_post.errors.not_found")) if !post
 
+          if !guardian.can_lock_post?(post)
+            return error_response(I18n.t("discourse_ai.ai_bot.lock_post.errors.not_allowed"))
+          end
+
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.lock_post.errors.no_reason"))
           end

@@ -51,4 +51,21 @@ RSpec.describe DiscourseAi::Personas::Tools::MarkAsSolved do
 
     expect(result[:status]).to eq("error")
   end
+
+  it "respects context user permissions via guardian" do
+    return unless defined?(::DiscourseSolved)
+
+    regular_user = Fabricate(:user, trust_level: TrustLevel[0])
+    ctx = DiscourseAi::Personas::BotContext.new(user: regular_user)
+    t =
+      described_class.new(
+        { post_id: reply.id, solved: true, reason: "test" },
+        bot_user: bot_user,
+        llm: llm,
+        context: ctx,
+      )
+    result = t.invoke
+
+    expect(result[:status]).to eq("error")
+  end
 end

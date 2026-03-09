@@ -50,8 +50,6 @@ module DiscourseAi
             return(error_response(I18n.t("discourse_ai.ai_bot.mark_as_solved.errors.no_reason")))
           end
 
-          guardian = Guardian.new(acting_user)
-
           if !!parameters[:solved]
             result =
               DiscourseSolved::AcceptAnswer.call(

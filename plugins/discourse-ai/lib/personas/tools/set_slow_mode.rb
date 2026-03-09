@@ -48,6 +48,10 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.not_found"))
           end
 
+          if !guardian.can_moderate_topic?(topic)
+            return error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.not_allowed"))
+          end
+
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.set_slow_mode.errors.no_reason"))
           end

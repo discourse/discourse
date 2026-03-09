@@ -41,6 +41,16 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.delete_topic.errors.not_found"))
           end
 
+          allowed =
+            if !!parameters[:deleted]
+              guardian.can_delete_topic?(topic)
+            else
+              guardian.can_recover_topic?(topic)
+            end
+          if !allowed
+            return error_response(I18n.t("discourse_ai.ai_bot.delete_topic.errors.not_allowed"))
+          end
+
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.delete_topic.errors.no_reason"))
           end

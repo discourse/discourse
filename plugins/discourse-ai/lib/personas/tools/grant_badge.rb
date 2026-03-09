@@ -36,6 +36,10 @@ module DiscourseAi
         end
 
         def invoke
+          if !guardian.can_grant_badges?(nil)
+            return error_response(I18n.t("discourse_ai.ai_bot.grant_badge.errors.not_allowed"))
+          end
+
           user = User.find_by(username: parameters[:username])
           if !user
             return error_response(I18n.t("discourse_ai.ai_bot.grant_badge.errors.user_not_found"))

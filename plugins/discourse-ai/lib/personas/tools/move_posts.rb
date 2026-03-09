@@ -57,6 +57,10 @@ module DiscourseAi
           topic = Topic.find_by(id: parameters[:topic_id])
           return error_response(I18n.t("discourse_ai.ai_bot.move_posts.errors.not_found")) if !topic
 
+          if !guardian.can_move_posts?(topic)
+            return error_response(I18n.t("discourse_ai.ai_bot.move_posts.errors.not_allowed"))
+          end
+
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.move_posts.errors.no_reason"))
           end

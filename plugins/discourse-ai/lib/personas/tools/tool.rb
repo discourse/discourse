@@ -280,6 +280,10 @@ module DiscourseAi
           bot_user || Discourse.system_user
         end
 
+        def guardian
+          Guardian.new(context.user || acting_user)
+        end
+
         def description_args
           {}
         end

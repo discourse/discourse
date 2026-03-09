@@ -66,4 +66,21 @@ RSpec.describe DiscourseAi::Personas::Tools::EditPost do
 
     expect(result[:status]).to eq("error")
   end
+
+  it "returns an error when context user lacks permission" do
+    regular_user = Fabricate(:user, trust_level: TrustLevel[0])
+    other_post = Fabricate(:post)
+    ctx = DiscourseAi::Personas::BotContext.new(user: regular_user)
+    t =
+      described_class.new(
+        { post_id: other_post.id, raw: "New content", edit_reason: "test" },
+        bot_user: bot_user,
+        llm: llm,
+        context: ctx,
+      )
+    result = t.invoke
+
+    expect(result[:status]).to eq("error")
+    expect(result[:error]).to include("not allowed")
+  end
 end

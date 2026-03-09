@@ -59,6 +59,10 @@ module DiscourseAi
           topic = Topic.find_by(id: parameters[:topic_id])
           return error_response(I18n.t("discourse_ai.ai_bot.assign.errors.not_found")) if !topic
 
+          if !guardian.can_assign?
+            return error_response(I18n.t("discourse_ai.ai_bot.assign.errors.not_allowed"))
+          end
+
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.assign.errors.no_reason"))
           end
