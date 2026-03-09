@@ -68,6 +68,13 @@ module DiscourseAi
           @reasoning_effort
         end
 
+        def service_tier
+          return @service_tier if defined?(@service_tier)
+          @service_tier = llm_model.lookup_custom_param("service_tier")
+          @service_tier = nil if !%w[auto flex priority].include?(@service_tier)
+          @service_tier
+        end
+
         def model_uri
           if llm_model.url.to_s.starts_with?("srv://")
             service = DiscourseAi::Utils::DnsSrv.lookup(llm_model.url.sub("srv://", ""))
@@ -85,6 +92,7 @@ module DiscourseAi
           reasoning_payload = { summary: "auto" }
           reasoning_payload[:effort] = reasoning_effort if reasoning_effort
           payload.merge!(reasoning: reasoning_payload)
+          payload[:service_tier] = service_tier if service_tier
 
           if @streaming_mode
             payload[:stream] = true
