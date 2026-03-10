@@ -15,7 +15,7 @@ export default class EditChannel extends Component {
       const value = this.args.model.channel.get(`data.${param.key}`);
 
       if (!value?.trim()) {
-        return false;
+        return param.required === false;
       }
 
       if (!param.regex) {
