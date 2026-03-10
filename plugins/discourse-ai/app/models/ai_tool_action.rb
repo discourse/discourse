@@ -12,14 +12,18 @@ end
 #
 #  id              :bigint           not null, primary key
 #  tool_name       :string           not null
-#  tool_parameters :jsonb            default({}), not null
-#  bot_user_id     :integer          not null
-#  post_id         :integer
+#  tool_parameters :jsonb            not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  ai_agent_id     :bigint           not null
+#  bot_user_id     :integer          not null
+#  post_id         :integer
 #
 # Indexes
 #
 #  index_ai_tool_actions_on_ai_agent_id  (ai_agent_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (ai_agent_id => ai_agents.id)
 #
