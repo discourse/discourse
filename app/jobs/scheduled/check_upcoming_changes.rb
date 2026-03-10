@@ -5,8 +5,6 @@ module Jobs
     every 20.minutes
 
     def execute(args)
-      return if !SiteSetting.enable_upcoming_changes
-
       site = RailsMultisite::ConnectionManagement.current_db
       verbose_log(
         site,

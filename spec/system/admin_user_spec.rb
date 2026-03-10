@@ -66,8 +66,6 @@ describe "Admin User Page", type: :system do
       fab!(:group2) { Fabricate(:group, name: "test_group_2") }
 
       before do
-        SiteSetting.enable_upcoming_changes = true
-
         mock_upcoming_change_metadata(
           {
             enable_upload_debug_mode: {
