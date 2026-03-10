@@ -7,12 +7,10 @@ module Categories
 
       class << self
         def find_matches
-          # NOTE (martin) This is obviously not correct, but we need some placeholder here.
-          # Like I say below, all categories are considered discussion categories,
-          # so we need to return an empty relation here.
-          #
-          # We probably won't need to have a count specifically for discussion categories,
-          # but we need to return something here to avoid errors.
+          # All categories are implicitly discussion categories, so there's no
+          # meaningful subset to count. Returning Category.none keeps count at 0,
+          # which means discussion always prefills — correct since it has no
+          # general_category_settings to prefill anyway.
           Category.none
         end
 
