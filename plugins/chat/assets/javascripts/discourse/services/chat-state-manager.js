@@ -11,6 +11,7 @@ const PREFERRED_MODE_KEY = "preferred_mode";
 const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
 const FULL_PAGE_CHAT = "FULL_PAGE_CHAT";
 const DRAWER_CHAT = "DRAWER_CHAT";
+const SIDE_PANEL_CHAT = "SIDE_PANEL_CHAT";
 
 let chatDrawerStateCallbacks = [];
 
@@ -32,6 +33,7 @@ export default class ChatStateManager extends Service {
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
   @tracked isDrawerActive = false;
+  @tracked isSidePanelMode = false;
   @tracked hasPreloadedChannels = false;
 
   @tracked _chatURL = null;
@@ -51,6 +53,10 @@ export default class ChatStateManager extends Service {
 
   prefersDrawer() {
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
+  }
+
+  prefersSidePanel() {
+    this._store.setObject({ key: PREFERRED_MODE_KEY, value: SIDE_PANEL_CHAT });
   }
 
   openSidePanel() {
@@ -78,6 +84,7 @@ export default class ChatStateManager extends Service {
 
     this.isDrawerActive = true;
     this.isDrawerExpanded = true;
+    this.isSidePanelMode = this.isSidePanelPreferred;
 
     if (url) {
       this.storeChatURL(url);
@@ -115,6 +122,7 @@ export default class ChatStateManager extends Service {
     this.chatDrawerRouter.currentRouteName = null;
     this.isDrawerActive = false;
     this.isDrawerExpanded = false;
+    this.isSidePanelMode = false;
     this.chat.updatePresence();
     this.#publishStateChange();
   }
@@ -132,6 +140,10 @@ export default class ChatStateManager extends Service {
   }
 
   didToggleDrawer() {
+    if (this.isSidePanelMode) {
+      return;
+    }
+
     this.isDrawerExpanded = !this.isDrawerExpanded;
     this.isDrawerActive = true;
     this.#publishStateChange();
@@ -144,12 +156,20 @@ export default class ChatStateManager extends Service {
     );
   }
 
+  get isSidePanelPreferred() {
+    return !!(
+      this.site.desktopView &&
+      this._store.getObject(PREFERRED_MODE_KEY) === SIDE_PANEL_CHAT
+    );
+  }
+
   get isDrawerPreferred() {
     return !!(
-      !this.isFullPagePreferred ||
-      (this.site.desktopView &&
-        (this.hasNoPreferredMode ||
-          this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
+      !this.isFullPagePreferred &&
+      !this.isSidePanelPreferred &&
+      this.site.desktopView &&
+      (this.hasNoPreferredMode ||
+        this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT)
     );
   }
 
@@ -159,6 +179,10 @@ export default class ChatStateManager extends Service {
 
   get isFullPageActive() {
     return this.router.currentRouteName?.startsWith("chat");
+  }
+
+  get isSidePanelActive() {
+    return this.isDrawerActive && this.isSidePanelMode;
   }
 
   get isActive() {
@@ -201,7 +225,9 @@ export default class ChatStateManager extends Service {
     // On mobile or drawer mode, default to starred channels if user has any
     // On desktop fullscreen, starred channels are shown in the sidebar
     if (
-      (this.site.mobileView || this.isDrawerPreferred) &&
+      (this.site.mobileView ||
+        this.isDrawerPreferred ||
+        this.isSidePanelPreferred) &&
       this.chatChannelsManager.hasStarredChannels
     ) {
       return "/chat/starred-channels";

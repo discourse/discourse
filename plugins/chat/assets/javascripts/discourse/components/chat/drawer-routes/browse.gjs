@@ -16,6 +16,7 @@ export default class ChatDrawerRoutesBrowse extends Component {
         <navbar.Title @title={{i18n "chat.browse.title"}} />
         <navbar.Actions as |a|>
           <a.NewChannelButton />
+          <a.SidePanelButton />
           <a.ToggleDrawerButton />
           <a.FullPageButton />
           <a.CloseDrawerButton />

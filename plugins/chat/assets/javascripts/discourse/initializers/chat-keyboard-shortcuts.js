@@ -100,7 +100,11 @@ export default {
       if (chatStateManager.isDrawerActive) {
         appEvents.trigger("chat:toggle-close", event);
       } else {
-        chatStateManager.prefersDrawer();
+        if (chatStateManager.isSidePanelPreferred) {
+          chatStateManager.prefersSidePanel();
+        } else {
+          chatStateManager.prefersDrawer();
+        }
         router.transitionTo(chatStateManager.lastKnownChatURL || "chat");
       }
     };

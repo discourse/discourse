@@ -8,6 +8,7 @@ const ChatRoutesStarredChannels = <template>
       <navbar.Title @title={{i18n "chat.starred"}} />
       <navbar.Actions as |action|>
 
+        <action.SidePanelButton />
         <action.OpenDrawerButton />
       </navbar.Actions>
     </Navbar>

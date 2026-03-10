@@ -31,6 +31,7 @@ export default class ChatDrawerRoutesChannelPins extends Component {
           />
           <navbar.Title @title={{this.title}} @icon="thumbtack" />
           <navbar.Actions as |a|>
+            <a.SidePanelButton />
             <a.ToggleDrawerButton />
             <a.FullPageButton />
             <a.CloseDrawerButton />

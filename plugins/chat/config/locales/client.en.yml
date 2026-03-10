@@ -136,6 +136,9 @@ en:
       remove: "Remove"
       collapse: "Collapse Chat Drawer"
       expand: "Expand Chat Drawer"
+      side_panel:
+        open: "Open chat side panel"
+        switch_to_drawer: "Switch to chat drawer"
       confirm_flag: "Are you sure you want to flag %{username}'s message?"
       deleted:
         one: "A message was deleted. [view]"

@@ -1,0 +1,108 @@
+// Chat side panel mode
+// When active, the chat drawer renders as a full-height panel on the right
+// side of the viewport, pushing the main content to make room.
+:root {
+  --chat-side-panel-width: 400px;
+}
+
+body.chat-side-panel-active {
+  // Push main content to make room for the side panel
+  &.has-sidebar-page #main-outlet-wrapper {
+    grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr) var(
+        --chat-side-panel-width
+      );
+  }
+
+  &:not(.has-sidebar-page) #main-outlet-wrapper {
+    grid-template-columns: 0 minmax(0, 1fr) var(--chat-side-panel-width);
+  }
+
+  // Reposition the drawer outlet as a full-height right panel
+  .chat-drawer-outlet-container {
+    position: fixed;
+    top: var(--header-offset);
+    right: var(--main-grid-gap, 0.5em);
+    bottom: var(--main-grid-gap, 0.5em);
+    left: unset;
+    width: var(--chat-side-panel-width);
+    max-height: none;
+    padding-bottom: 0;
+    pointer-events: auto !important;
+    transition: none;
+  }
+
+  .chat-drawer {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: none;
+
+    .chat-drawer-container {
+      border-radius: var(--d-border-radius-large);
+      border: 1px solid var(--content-border-color);
+      box-shadow: none;
+      height: 100%;
+    }
+  }
+
+  // Hide the drawer resizer in side panel mode
+  .chat-drawer-resizer {
+    display: none;
+  }
+
+  // Ensure the sidebar doesn't overlap
+  .sidebar-wrapper .sidebar-container {
+    height: unset;
+  }
+
+  // Position minimized composer draft bar under the chat panel
+  #reply-control.draft,
+  #reply-control.saving {
+    left: auto !important;
+    right: var(--main-grid-gap, 0.5em) !important;
+    bottom: var(--main-grid-gap, 0.5em) !important;
+    width: var(--chat-side-panel-width) !important;
+    max-width: var(--chat-side-panel-width) !important;
+    margin: 0 !important;
+    border-radius: var(--d-border-radius-large);
+  }
+
+  // When draft bar is visible, shrink the chat panel to make room
+  &:has(#reply-control.draft),
+  &:has(#reply-control.saving) {
+    .chat-drawer-outlet-container {
+      bottom: calc(45px + 0.5rem + var(--main-grid-gap, 0.5em));
+    }
+  }
+}
+
+// When the composer is fully open and side panel is active,
+// hide the side panel and restore the grid so the composer has full space.
+// The side panel state is preserved in JS so it reappears when the composer closes.
+html.composer-open {
+  body.chat-side-panel-active {
+    .chat-drawer-outlet-container {
+      display: none;
+    }
+
+    &.has-sidebar-page #main-outlet-wrapper {
+      grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
+    }
+
+    &:not(.has-sidebar-page) #main-outlet-wrapper {
+      grid-template-columns: 0 minmax(0, 1fr);
+    }
+  }
+}
+
+// Side panel toggle button icon flip (matches composer-peek pattern)
+.c-navbar__side-panel-button {
+  svg {
+    transform: scaleX(-1);
+  }
+
+  &.--active {
+    color: var(--tertiary);
+  }
+}

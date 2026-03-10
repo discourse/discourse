@@ -15,6 +15,7 @@ export default class ChatDrawerRoutesSearch extends Component {
       <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
         <navbar.Title @title={{i18n "chat.search.title"}} />
         <navbar.Actions as |action|>
+          <action.SidePanelButton />
           <action.ToggleDrawerButton />
           <action.FullPageButton />
           <action.CloseDrawerButton />

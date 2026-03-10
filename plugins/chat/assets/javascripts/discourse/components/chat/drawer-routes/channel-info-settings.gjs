@@ -28,6 +28,7 @@ export default class ChatDrawerRoutesSettings extends Component {
           />
           <navbar.ChannelTitle @channel={{@model.channel}} />
           <navbar.Actions as |a|>
+            <a.SidePanelButton />
             <a.ToggleDrawerButton />
             <a.FullPageButton />
             <a.CloseDrawerButton />

@@ -7,6 +7,7 @@ const ChatRoutesDirectMessages = <template>
     <Navbar as |navbar|>
       <navbar.Title @title={{i18n "chat.direct_messages.title"}} />
       <navbar.Actions as |action|>
+        <action.SidePanelButton />
         <action.OpenDrawerButton />
         <action.NewDirectMessageButton />
       </navbar.Actions>

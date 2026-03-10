@@ -7,6 +7,7 @@ const ChatRoutesChannels = <template>
     <Navbar as |navbar|>
       <navbar.Title @title={{i18n "chat.chat_channels"}} />
       <navbar.Actions as |action|>
+        <action.SidePanelButton />
         <action.OpenDrawerButton />
         <action.BrowseChannelsButton />
       </navbar.Actions>

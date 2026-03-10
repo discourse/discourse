@@ -8,6 +8,7 @@ const ChatRoutesThreads = <template>
       <navbar.Title @title={{i18n "chat.my_threads.title"}} />
 
       <navbar.Actions as |action|>
+        <action.SidePanelButton />
         <action.OpenDrawerButton />
       </navbar.Actions>
     </Navbar>

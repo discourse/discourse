@@ -11,6 +11,7 @@ import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/comp
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
 export default class ChatHeaderIcon extends Component {
+  @service composer;
   @service currentUser;
   @service site;
   @service chatStateManager;
@@ -35,7 +36,8 @@ export default class ChatHeaderIcon extends Component {
     return (
       this.args.isActive ||
       this.chatStateManager.isFullPageActive ||
-      this.chatStateManager.isDrawerActive
+      this.chatStateManager.isDrawerActive ||
+      this.chatStateManager.isSidePanelActive
     );
   }
 
@@ -71,7 +73,10 @@ export default class ChatHeaderIcon extends Component {
       return this.chatStateManager.lastKnownAppURL || "/";
     }
 
-    if (this.chatStateManager.isDrawerActive) {
+    if (
+      this.chatStateManager.isDrawerActive ||
+      this.chatStateManager.isSidePanelActive
+    ) {
       return "/chat";
     }
 
@@ -84,11 +89,27 @@ export default class ChatHeaderIcon extends Component {
 
   @action
   openChat() {
-    // Opening chat: explicitly set drawer preference before navigating
-    // This ensures the route's beforeModel respects drawer mode even on
+    // In side panel mode, shrink the composer to make room for the panel
+    if (
+      (this.chatStateManager.isSidePanelPreferred ||
+        this.chatStateManager.isSidePanelActive) &&
+      this.composer.isOpen
+    ) {
+      this.composer.shrink();
+
+      // If side panel is already open, shrinking the composer is enough
+      if (this.chatStateManager.isSidePanelActive) {
+        return;
+      }
+    }
+
+    // Opening chat: explicitly set drawer/side-panel preference before navigating
+    // This ensures the route's beforeModel respects the mode even on
     // full page loads (e.g., after browser refresh)
     if (this.chatStateManager.isDrawerPreferred) {
       this.chatStateManager.prefersDrawer();
+    } else if (this.chatStateManager.isSidePanelPreferred) {
+      this.chatStateManager.prefersSidePanel();
     }
     this.router.transitionTo(this.targetUrl);
   }

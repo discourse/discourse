@@ -26,8 +26,9 @@ export default class ChatRoute extends DiscourseRoute {
       return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
 
-    // Check if user prefers drawer mode and the route can be handled in drawer
+    // Check if user prefers drawer or side panel mode and the route can be handled
     const isDrawerPreferred = this.chatStateManager.isDrawerPreferred;
+    const isSidePanelPreferred = this.chatStateManager.isSidePanelPreferred;
     const canHandleInDrawer = this.chatDrawerRouter.canHandleRoute(
       transition.to
     );
@@ -39,7 +40,7 @@ export default class ChatRoute extends DiscourseRoute {
     // the address bar, show them full page chat (they explicitly chose it).
     // But if requiresRefresh caused a reload mid-session, respect drawer preference.
     if (
-      isDrawerPreferred &&
+      (isDrawerPreferred || isSidePanelPreferred) &&
       canHandleInDrawer &&
       (!fullPageReload || requiresRefresh)
     ) {

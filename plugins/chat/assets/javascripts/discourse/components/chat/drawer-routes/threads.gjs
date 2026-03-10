@@ -15,6 +15,7 @@ export default class ChatDrawerRoutesThreads extends Component {
         <navbar.Title @title={{i18n "chat.heading"}} />
         <navbar.Actions as |action|>
           <action.ThreadsListButton />
+          <action.SidePanelButton />
           <action.ToggleDrawerButton />
           <action.FullPageButton />
           <action.CloseDrawerButton />

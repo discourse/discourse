@@ -239,6 +239,10 @@ export default class ChatDrawer extends Component {
       {{bodyClass "chat-drawer-expanded"}}
     {{/if}}
 
+    {{#if this.chatStateManager.isSidePanelMode}}
+      {{bodyClass "chat-side-panel-active"}}
+    {{/if}}
+
     {{#if this.chatStateManager.isDrawerActive}}
       <div
         data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}

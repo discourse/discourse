@@ -51,6 +51,7 @@ export default class ChatDrawerRoutesChannelThread extends Component {
           />
           <navbar.Title @title={{this.threadTitle}} @icon="discourse-threads" />
           <navbar.Actions as |a|>
+            <a.SidePanelButton />
             <a.ToggleDrawerButton />
             <a.FullPageButton />
             <a.CloseDrawerButton />
