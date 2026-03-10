@@ -22,7 +22,7 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
-    "@ember/optional-features": "^2.3.0",
+    "@ember/optional-features": "^3.0.0",
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^2.0.0",
     "@types/jquery": "^3.5.33",
