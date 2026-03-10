@@ -125,7 +125,6 @@ acceptance("Category type setup page", function (needs) {
   needs.user({ admin: true, can_create_category: true });
   needs.settings({
     enable_simplified_category_creation: true,
-    enable_category_type_setup: true,
   });
   needs.pretender((server, helper) => {
     server.get("/categories/types", () => {
@@ -168,25 +167,6 @@ acceptance("Category type setup page", function (needs) {
     await click(
       ".category-type-cards__card:first-child .category-type-cards__card-select"
     );
-    assert.strictEqual(currentURL(), "/new-category/general");
-  });
-});
-
-acceptance("Category type setup disabled", function (needs) {
-  needs.user({ admin: true, can_create_category: true });
-  needs.settings({
-    enable_simplified_category_creation: true,
-    enable_category_type_setup: false,
-  });
-
-  test("Visiting /new-category goes directly to form", async function (assert) {
-    await visit("/new-category");
-    assert.strictEqual(currentURL(), "/new-category/general");
-    assert.dom(".edit-category").exists();
-  });
-
-  test("Visiting /new-category/setup redirects to new-category", async function (assert) {
-    await visit("/new-category/setup");
     assert.strictEqual(currentURL(), "/new-category/general");
   });
 });

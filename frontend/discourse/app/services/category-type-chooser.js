@@ -8,10 +8,7 @@ export default class CategoryTypeChooser extends Service {
   _setupComplete = false;
 
   get isEnabled() {
-    return (
-      this.siteSettings.enable_simplified_category_creation &&
-      this.siteSettings.enable_category_type_setup
-    );
+    return this.siteSettings.enable_simplified_category_creation;
   }
 
   get hasCompletedSetup() {

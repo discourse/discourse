@@ -151,9 +151,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def category_types
-    if !SiteSetting.enable_simplified_category_creation || !SiteSetting.enable_category_type_setup
-      return {}
-    end
+    return {} if !SiteSetting.enable_simplified_category_creation
     object.category_types
   end
 end

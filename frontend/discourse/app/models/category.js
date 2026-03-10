@@ -844,10 +844,6 @@ export default class Category extends RestModel {
   }
 
   _categoryTypeSaveProperties(id) {
-    if (!this.siteSettings.enable_category_type_setup) {
-      return {};
-    }
-
     const props = {
       category_type_site_settings: this.category_type_site_settings,
     };

@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def visit_new_category
-        page.visit("/new-category")
+        page.visit("/new-category/setup")
         self
       end
 

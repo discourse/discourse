@@ -4312,10 +4312,6 @@ experimental:
   experimental_topic_category_change_notification:
     default: false
     hidden: true
-  enable_category_type_setup:
-    default: false
-    hidden: true
-    client: true
   enable_upcoming_changes:
     default: false
     hidden: true

@@ -111,25 +111,21 @@ export default class EditCategoryTabsController extends Controller {
       data.category_setting = { ...(this.model.category_setting ?? {}) };
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
 
-      if (this.siteSettings.enable_category_type_setup) {
-        data.category_type_site_settings = {};
+      data.category_type_site_settings = {};
 
-        Object.values(this.model.category_types).forEach((categoryType) => {
-          categoryType.configuration_schema.category_custom_fields?.forEach(
-            (field) => {
-              data.custom_fields[field.key] ??= field.default;
-            }
-          );
+      Object.values(this.model.category_types).forEach((categoryType) => {
+        categoryType.configuration_schema.category_custom_fields?.forEach(
+          (field) => {
+            data.custom_fields[field.key] ??= field.default;
+          }
+        );
 
-          categoryType.configuration_schema.site_settings?.forEach(
-            (setting) => {
-              data.category_type_site_settings[setting.key] = this.model.id
-                ? setting.current
-                : setting.default;
-            }
-          );
+        categoryType.configuration_schema.site_settings?.forEach((setting) => {
+          data.category_type_site_settings[setting.key] = this.model.id
+            ? setting.current
+            : setting.default;
         });
-      }
+      });
     }
 
     return data;
