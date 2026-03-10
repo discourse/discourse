@@ -316,7 +316,7 @@ GEM
     mustache (1.1.2)
     net-http (0.9.1)
       uri (>= 0.11.1)
-    net-imap (0.5.12)
+    net-imap (0.6.3)
       date
       net-protocol
     net-pop (0.1.2)
@@ -679,7 +679,7 @@ GEM
     tiktoken_ruby (0.0.15.1-x86_64-darwin)
     tiktoken_ruby (0.0.15.1-x86_64-linux)
     tiktoken_ruby (0.0.15.1-x86_64-linux-musl)
-    timeout (0.6.0)
+    timeout (0.6.1)
     tokenizers (0.6.3)
       rb_sys
     tokenizers (0.6.3-aarch64-linux)
@@ -1077,7 +1077,7 @@ CHECKSUMS
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
   mustache (1.1.2) sha256=d420243400354da78ded2d81541b381ad8d94e8e9b95022d0d71d66f8ef36c00
   net-http (0.9.1) sha256=25ba0b67c63e89df626ed8fac771d0ad24ad151a858af2cc8e6a716ca4336996
-  net-imap (0.5.12) sha256=cb8cd05bd353fcc19b6cbc530a9cb06b577a969ea10b7ddb0f37787f74be4444
+  net-imap (0.6.3) sha256=9bab75f876596d09ee7bf911a291da478e0cd6badc54dfb82874855ccc82f2ad
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
@@ -1237,7 +1237,7 @@ CHECKSUMS
   tiktoken_ruby (0.0.15.1-x86_64-darwin) sha256=e7978a186e548c7c81ac5183f5ed2b57c69924aeec5d0a1ce2222892628fdab1
   tiktoken_ruby (0.0.15.1-x86_64-linux) sha256=cc53f9c43e8a4d434831b5a5b10d94d4eb07ad15d0582d568e0e9c8293447dfc
   tiktoken_ruby (0.0.15.1-x86_64-linux-musl) sha256=84c8fe1a94732cb241a3f353d2c191df56c6242614237d2433e510d8fab3ee26
-  timeout (0.6.0) sha256=6d722ad619f96ee383a0c557ec6eb8c4ecb08af3af62098a0be5057bf00de1af
+  timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb
   tokenizers (0.6.3) sha256=cb76b8e86893695f6cfe661861cb24680755bf1fb42dca1ddd3cdfef9f657994
   tokenizers (0.6.3-aarch64-linux) sha256=9d54a23f2e2246cc942d183af4549e3972b937d9b01f7a387cb146bf698eee84
   tokenizers (0.6.3-aarch64-linux-musl) sha256=c178d8556769256857d77fb396f8ab004b29d058f59c620a2cfc56b01b501e27
