@@ -8,22 +8,19 @@ module("Integration | Component | admin-report-chart", function (hooks) {
   module("hasIncompleteData", function () {
     module("daily grouping", function () {
       test("returns true when last data point is today in UTC", function (assert) {
-        const todayUtc = moment.utc().format("YYYY-MM-DD");
+        const today = moment.utc().format("YYYY-MM-DD");
 
         assert.true(
-          hasIncompleteData({ x: todayUtc, y: 5 }, "daily"),
+          hasIncompleteData({ x: today, y: 5 }, "daily"),
           "should show incomplete styling when last point is today"
         );
       });
 
       test("returns false when last data point is yesterday in UTC", function (assert) {
-        const yesterdayUtc = moment
-          .utc()
-          .subtract(1, "day")
-          .format("YYYY-MM-DD");
+        const yesterday = moment.utc().subtract(1, "day").format("YYYY-MM-DD");
 
         assert.false(
-          hasIncompleteData({ x: yesterdayUtc, y: 5 }, "daily"),
+          hasIncompleteData({ x: yesterday, y: 5 }, "daily"),
           "should not show incomplete styling when last point is yesterday"
         );
       });
@@ -31,22 +28,19 @@ module("Integration | Component | admin-report-chart", function (hooks) {
 
     module("weekly grouping", function () {
       test("returns true when last data point is this week in UTC", function (assert) {
-        const todayUtc = moment.utc().format("YYYY-MM-DD");
+        const today = moment.utc().format("YYYY-MM-DD");
 
         assert.true(
-          hasIncompleteData({ x: todayUtc, y: 5 }, "weekly"),
+          hasIncompleteData({ x: today, y: 5 }, "weekly"),
           "should show incomplete styling when last point is this week"
         );
       });
 
       test("returns false when last data point is last week in UTC", function (assert) {
-        const lastWeekUtc = moment
-          .utc()
-          .subtract(1, "week")
-          .format("YYYY-MM-DD");
+        const lastWeek = moment.utc().subtract(1, "week").format("YYYY-MM-DD");
 
         assert.false(
-          hasIncompleteData({ x: lastWeekUtc, y: 5 }, "weekly"),
+          hasIncompleteData({ x: lastWeek, y: 5 }, "weekly"),
           "should not show incomplete styling when last point is last week"
         );
       });
@@ -54,22 +48,22 @@ module("Integration | Component | admin-report-chart", function (hooks) {
 
     module("monthly grouping", function () {
       test("returns true when last data point is this month in UTC", function (assert) {
-        const todayUtc = moment.utc().format("YYYY-MM-DD");
+        const today = moment.utc().format("YYYY-MM-DD");
 
         assert.true(
-          hasIncompleteData({ x: todayUtc, y: 5 }, "monthly"),
+          hasIncompleteData({ x: today, y: 5 }, "monthly"),
           "should show incomplete styling when last point is this month"
         );
       });
 
       test("returns false when last data point is last month in UTC", function (assert) {
-        const lastMonthUtc = moment
+        const lastMonth = moment
           .utc()
           .subtract(1, "month")
           .format("YYYY-MM-DD");
 
         assert.false(
-          hasIncompleteData({ x: lastMonthUtc, y: 5 }, "monthly"),
+          hasIncompleteData({ x: lastMonth, y: 5 }, "monthly"),
           "should not show incomplete styling when last point is last month"
         );
       });
