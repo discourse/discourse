@@ -22,7 +22,7 @@ pt_BR:
       flag_types:
         review: "Adicionar postagem à fila de revisão"
         review_hide: "Adicionar postagem à fila de revisão e ocultar postagem"
-        review_delete: "Adicionar postagem à fila de análise e excluí-la"
+        review_delete: "Adicionar postagem à fila de revisão e excluí-la"
         review_delete_silence: "Adicionar postagem à fila de revisão, excluir publicação e silenciar usuário"
         spam: "Sinalizar como spam e ocultar postagem"
         spam_silence: "Sinalizar como spam, ocultar postagem e silenciar usuário(a)"
@@ -97,7 +97,7 @@ pt_BR:
     ai_helper_enabled_features: "Selecione os recursos para ativar no ajudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
     ai_helper_post_illustrator_persona: "A persona a ser usada para o recurso de ilustração de postagens do assistente de IA. Observação: você também precisa criar uma ferramenta de geração de imagens (Admin > Plugins > Discourse AI > Tools) para que esse recurso funcione."
-    ai_helper_chat_thread_title_persona: "A persona a ser usada para gerar títulos de tópicos de bate-papo."
+    ai_helper_chat_thread_title_persona: "A persona a ser usada para gerar títulos de threads de chat."
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
     ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
     ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."
@@ -446,7 +446,7 @@ pt_BR:
           description: "Persona padrão usada no recurso de descobertas (busca complementar)"
         chat_thread_titler:
           name: "Criador de títulos para threads de chat"
-          description: "Persona padrão que gera automaticamente títulos de tópicos de chat."
+          description: "Persona padrão que gera automaticamente títulos de threads de chat."
       topic_not_found: "Resumo indisponível, tópico não encontrado!"
       summarizing: "Resumindo tópico"
       searching: "Pesquisando: \"%{query}\""
@@ -501,8 +501,8 @@ pt_BR:
             description: "A consulta de base para usar na pesquisa. Exemplo: \"#urgent\" precederá \"#urgent\" para a consulta da pesquisa e incluirá apenas tópicos com a etiqueta ou categoria urgente."
         flag_post:
           flag_type:
-            name: "Tipo de sinalizador"
-            description: "Controla se a publicação será revisada, ocultada, excluída ou tratada como spam."
+            name: "Tipo de denúncia"
+            description: "Controla se a postagem será revisada, ocultada, excluída ou tratada como spam."
       tool_summary:
         read_artifact: "Ler um artefato da Web"
         update_artifact: "Atualizar um artefato da Web"
@@ -514,7 +514,7 @@ pt_BR:
         github_diff: "GitHub diff"
         random_picker: "Seletor aleatório"
         categories: "Listar categorias"
-        flag_post: "Sinalizar postagem"
+        flag_post: "Denunciar postagem"
         search: "Pesquisar"
         tags: "Listar etiquetas"
         time: "Hora"
@@ -540,10 +540,10 @@ pt_BR:
         github_search_code: "Procurar código no repositório do GitHub"
         github_search_files: "Procurar arquivos no repositório do GitHub"
         github_file_content: "Recuperar conteúdo de arquivos de um repositório do GitHub"
-        github_diff: "Recuperar uma solicitação de pull do GitHub ou commit diff."
+        github_diff: "Recuperar um pull request do GitHub ou commit diff."
         random_picker: "Escolha um número ou elemento aleatório de uma lista"
         categories: "Listar todas as categorias visíveis publicamente no fórum"
-        flag_post: "Marcar a postagem atual para análise pela equipe"
+        flag_post: "Denunciar a postagem atual para análise pela equipe"
         search: "Pesquisar todos os tópicos públicos no fórum"
         tags: "Listar todas as etiquetas no fórum"
         time: "Achar horário em vários fusos horários"
@@ -610,13 +610,13 @@ pt_BR:
           raw: "Durante a minha pesquisa por %{query}, você me mostrou as seguintes informações:\n\n%{context}\n\nVamos continuar a conversa."
       flag_post:
         errors:
-          no_context: "Não há contexto de postagem disponível para sinalização."
+          no_context: "Não há contexto de postagem disponível para denunciar."
           no_reason: "É necessário apresentar uma justificativa para denunciar uma postagem."
-          invalid_flag_type: "Tipo de sinalizador inválido."
-        skipped: "O veredicto foi falso; nenhuma denúncia foi criada."
-        already_flagged: "A publicação já foi marcada para revisão."
-        flagged: "Postagem marcada para revisão."
-        reason: "Este post foi marcado por um bot de IA.\n\nMotivo: %{reason}"
+          invalid_flag_type: "Tipo de denúncia inválida."
+        skipped: "O veredito era falso; nenhuma denúncia foi criada."
+        already_flagged: "A postagem já foi marcada para revisão."
+        flagged: "Postagem marcada para análise."
+        reason: "Esta postagem foi denunciada por um bot de IA.\n\nMotivo: %{reason}"
     summarization:
       configuration_hint:
         one: "Defina a configuração \"%{setting}\" primeiro."

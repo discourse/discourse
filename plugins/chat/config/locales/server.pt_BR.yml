@@ -154,7 +154,7 @@ pt_BR:
           title: "Manter mensagem"
           description: "Discordar da denúncia e manter o comentário inalterado."
         ignore:
-          title: "Ignorar sinalizações"
+          title: "Ignorar denúncia"
           description: "Remover da fila sem tomar nenhuma ação."
       direct_messages:
         transcript_title: "Transcrição de mensagens anteriores em %{channel_name}"
