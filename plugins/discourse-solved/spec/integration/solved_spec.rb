@@ -300,9 +300,12 @@ RSpec.describe "Managing Posts solved status" do
     end
 
     it "sends notifications to correct users" do
-      SiteSetting.notify_on_staff_accept_solved = true
       user = Fabricate(:user)
       topic = Fabricate(:topic, user: user)
+      topic.category.custom_fields[
+        DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
+      ] = "true"
+      topic.category.save_custom_fields
       post = Fabricate(:post, post_number: 2, topic: topic)
 
       op = topic.user
@@ -332,13 +335,16 @@ RSpec.describe "Managing Posts solved status" do
       fab!(:solution_accepter) { Fabricate(:user, trust_level: 4) }
       fab!(:author, :user)
 
-      before do
-        SiteSetting.notify_on_staff_accept_solved = true
-        MutedUser.create!(user_id: author.id, muted_user_id: solution_accepter.id)
+      before { MutedUser.create!(user_id: author.id, muted_user_id: solution_accepter.id) }
+
+      def enable_notify_on_staff_accept(category)
+        category.custom_fields[DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD] = "true"
+        category.save_custom_fields
       end
 
       it "does not send notification to post author" do
         topic = Fabricate(:topic, user: Fabricate(:user))
+        enable_notify_on_staff_accept(topic.category)
         post = Fabricate(:post, post_number: 2, topic: topic, user: author)
 
         expect {
@@ -353,6 +359,7 @@ RSpec.describe "Managing Posts solved status" do
 
       it "does not send notification to topic author" do
         topic = Fabricate(:topic, user: author)
+        enable_notify_on_staff_accept(topic.category)
         post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
 
         expect {
@@ -378,7 +385,10 @@ RSpec.describe "Managing Posts solved status" do
     end
 
     it "works when the topic author has been deleted" do
-      SiteSetting.notify_on_staff_accept_solved = true
+      topic.category.custom_fields[
+        DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
+      ] = "true"
+      topic.category.save_custom_fields
       SiteSetting.solved_topics_auto_close_hours = 0
       topic.user.destroy!
       topic.reload

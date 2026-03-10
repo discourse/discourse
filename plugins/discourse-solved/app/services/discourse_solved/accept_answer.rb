@@ -90,7 +90,11 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def should_notify_topic_owner(topic:, guardian:)
-    return unless SiteSetting.notify_on_staff_accept_solved
+    unless topic.category&.custom_fields&.[](
+             DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD,
+           ) == "true"
+      return
+    end
     return if guardian.user.id == topic.user_id || !User.exists?(topic.user_id)
     screener =
       UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: topic.user_id)

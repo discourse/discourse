@@ -135,7 +135,12 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       context "when notify_on_staff_accept_solved is enabled" do
-        before { SiteSetting.notify_on_staff_accept_solved = true }
+        before do
+          category.custom_fields[
+            DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
+          ] = "true"
+          category.save_custom_fields
+        end
 
         context "when a staff member accepts on behalf of the topic owner" do
           fab!(:acting_user, :admin)
@@ -163,7 +168,12 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       context "when notify_on_staff_accept_solved is disabled" do
-        before { SiteSetting.notify_on_staff_accept_solved = false }
+        before do
+          category.custom_fields[
+            DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
+          ] = "false"
+          category.save_custom_fields
+        end
 
         it "does not notify the topic owner" do
           expect { result }.not_to change {

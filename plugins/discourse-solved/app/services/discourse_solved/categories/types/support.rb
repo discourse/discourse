@@ -16,6 +16,10 @@ module DiscourseSolved
           end
 
           def configure_category(category, guardian:, configuration_values: {})
+            configuration_values.reverse_merge!(
+              DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD => "true",
+              DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD => "true",
+            )
             configuration_values.merge!(
               DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true",
             )
@@ -49,8 +53,6 @@ module DiscourseSolved
               },
               site_settings: {
                 show_filter_by_solved_status: true,
-                notify_on_staff_accept_solved: true,
-                empty_box_on_unsolved: true,
               },
               category_custom_fields: {
                 DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => {
@@ -69,6 +71,17 @@ module DiscourseSolved
                     I18n.t(
                       "discourse_solved.category_type.solved_topics_auto_close_hours.description",
                     ),
+                },
+                DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD => {
+                  default: true,
+                  type: :bool,
+                  label:
+                    I18n.t("discourse_solved.category_type.notify_on_staff_accept_solved.label"),
+                },
+                DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD => {
+                  default: true,
+                  type: :bool,
+                  label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
                 },
               },
             }
