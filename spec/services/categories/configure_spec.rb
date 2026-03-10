@@ -21,6 +21,12 @@ RSpec.describe Categories::Configure do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when category type is invalid" do
+      let(:params) { super().merge(category_type: "invalid_type") }
+
+      it { is_expected.to fail_a_contract }
+    end
+
     context "when category is not found" do
       let(:params) { super().merge(category_id: -1) }
 
@@ -61,15 +67,17 @@ RSpec.describe Categories::Configure do
       it "logs a staff action" do
         expect { result }.to change { UserHistory.count }.by(1)
         expect(UserHistory.last).to have_attributes(
+          action: UserHistory.actions[:custom_staff],
           custom_type: "configure_category_type",
           acting_user_id: admin.id,
         )
+        expect(UserHistory.last.details).to include("category_type")
       end
 
       it "clears the category type counts cache" do
-        Discourse.cache.write("category_type_counts", "cached_value")
+        Discourse.cache.write(Categories::TypeRegistry::COUNTS_CACHE_KEY, "cached_value")
         result
-        expect(Discourse.cache.read("category_type_counts")).to be_nil
+        expect(Discourse.cache.read(Categories::TypeRegistry::COUNTS_CACHE_KEY)).to be_nil
       end
     end
   end
