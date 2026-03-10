@@ -170,7 +170,7 @@ module Plugin
             relative_path = Pathname.new(file).relative_path_from(Rails.root)
             log "- #{relative_path}"
 
-            plugin = Discourse.plugins.find { |p| file.start_with?(p.directory) }
+            plugin = Discourse.plugins.find { |p| file.start_with?(p.resolved_dir) }
             changed_plugins << plugin if plugin
           end
 
