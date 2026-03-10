@@ -374,7 +374,9 @@ export default function setupTests(config) {
     window.location.href = window.location.origin + "/theme-qunit";
   }
 
-  const hasPluginJs = !!document.querySelector("script[data-plugin-name]");
+  const hasPluginJs = !!document.querySelector(
+    "link[rel=modulepreload][data-plugin-name], script[data-plugin-name]"
+  );
   const hasThemeJs = !!document.querySelector(
     "link[rel=modulepreload][data-theme-id], script[data-theme-id]"
   );
