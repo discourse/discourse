@@ -8,11 +8,18 @@ export default function () {
       this.route("near-message-with-thread", {
         path: "/:messageId/t/:threadId",
       });
+
       this.route("threads", { path: "/t" });
       this.route("thread", { path: "/t/:threadId" }, function () {
         this.route("near-message", { path: "/:messageId" });
       });
+
       this.route("pins");
+
+      this.route("info", function () {
+        this.route("members");
+        this.route("settings");
+      });
     });
 
     this.route("direct-messages");
@@ -22,21 +29,13 @@ export default function () {
 
     this.route("new-message");
 
-    this.route(
-      "channel.info",
-      { path: "/c/:channelTitle/:channelId/info" },
-      function () {
-        this.route("members");
-        this.route("settings");
-      }
-    );
-
     this.route("browse", function () {
       this.route("all");
       this.route("closed");
       this.route("open");
       this.route("archived");
     });
+
     this.route("message", { path: "/message/:messageId" });
   });
 }
