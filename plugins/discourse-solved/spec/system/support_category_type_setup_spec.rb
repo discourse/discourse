@@ -10,7 +10,6 @@ RSpec.describe "Support Category Type Setup", type: :system do
 
   before do
     SiteSetting.enable_simplified_category_creation = true
-    SiteSetting.enable_category_type_setup = true
     sign_in(admin)
   end
 

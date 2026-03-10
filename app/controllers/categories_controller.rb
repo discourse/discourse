@@ -173,8 +173,7 @@ class CategoriesController < ApplicationController
       @category.move_to(position.to_i) if position
 
       if category_type.present? &&
-           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
-           SiteSetting.enable_category_type_setup
+           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
         Categories::Configure.call(
           guardian:,
           params: {
@@ -233,8 +232,7 @@ class CategoriesController < ApplicationController
       end
       category_params.delete(:custom_fields)
 
-      if SiteSetting.enable_category_type_setup &&
-           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
+      if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
            params[:category_type_site_settings].present?
         # NOTE: The code in this block is pretty similar to what we are doing in
         # configure_site_settings in Categories::Types::Base, however here we
