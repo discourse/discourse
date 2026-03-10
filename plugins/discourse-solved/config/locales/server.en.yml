@@ -16,7 +16,7 @@ en:
         description: "Automatically close topic after this many hours once marked as solved. Set to 0 to disable."
       solved_topics_auto_close_days:
         label: "Auto close solved topics after N days"
-        description: "Automatically close topic after this many days once marked as solved. Set to 0 to fall back to 'solved topics auto close hours' site setting."
+        description: "Automatically close topic after this many days once marked as solved. Set to 0 to to disable."
 
   site_settings:
     solved_enabled: "Enable solved plugin, allow users to select solutions for topics"

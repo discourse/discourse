@@ -7,7 +7,10 @@ module DiscourseSolved::CategoryExtension
 
   def solved_auto_close_days
     days = custom_fields["solved_topics_auto_close_days"].to_i
-    days = (custom_fields["solved_topics_auto_close_hours"].to_i / 24.0).round if days.zero?
+    if days.zero?
+      hours = custom_fields["solved_topics_auto_close_hours"].to_i
+      days = [1, (hours / 24.0).round].max if hours > 0
+    end
     [days, DiscourseSolved::MAX_AUTO_CLOSE_DAYS].min
   end
 

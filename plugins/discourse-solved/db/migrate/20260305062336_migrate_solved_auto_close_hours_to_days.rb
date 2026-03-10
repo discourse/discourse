@@ -12,7 +12,7 @@ class MigrateSolvedAutoCloseHoursToDays < ActiveRecord::Migration[7.2]
              NOW()
         FROM category_custom_fields
        WHERE name = 'solved_topics_auto_close_hours'
-         AND value::numeric > 0
+         AND value ~ '^\d+\.?\d*$'
          AND NOT EXISTS (
            SELECT 1
              FROM category_custom_fields cf2
@@ -31,7 +31,7 @@ class MigrateSolvedAutoCloseHoursToDays < ActiveRecord::Migration[7.2]
              NOW()
         FROM site_settings
        WHERE name = 'solved_topics_auto_close_hours'
-         AND value::numeric > 0
+         AND value ~ '^\d+\.?\d*$'
          AND NOT EXISTS (
            SELECT 1
              FROM site_settings ss2
