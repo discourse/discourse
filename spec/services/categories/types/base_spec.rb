@@ -204,7 +204,13 @@ RSpec.describe Categories::Types::Base do
 
       schema = test_type.send(:resolved_configuration_schema)
       expect(schema.keys).to eq(
-        %i[general_category_settings site_settings category_settings category_custom_fields],
+        %i[
+          general_category_settings
+          site_settings
+          additional_site_settings
+          category_settings
+          category_custom_fields
+        ],
       )
 
       entry = schema[:site_settings].first
@@ -226,7 +232,13 @@ RSpec.describe Categories::Types::Base do
 
       schema = test_type.send(:resolved_configuration_schema)
       expect(schema.keys).to eq(
-        %i[general_category_settings site_settings category_settings category_custom_fields],
+        %i[
+          general_category_settings
+          site_settings
+          additional_site_settings
+          category_settings
+          category_custom_fields
+        ],
       )
 
       entry = schema[:category_settings].first

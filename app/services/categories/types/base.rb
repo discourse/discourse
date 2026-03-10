@@ -16,6 +16,9 @@ module Categories
           "site_settings" => {
             "type" => "object",
           },
+          "additional_site_settings" => {
+            "type" => "object",
+          },
           "category_custom_fields" => {
             "type" => "object",
             "additionalProperties" => {
@@ -181,10 +184,12 @@ module Categories
           end
 
           # Validate site_settings keys are real SiteSettings (runtime check)
-          schema_as_json["site_settings"]&.each_key do |setting_name|
-            unless SiteSetting.has_setting?(setting_name)
-              raise ArgumentError,
-                    "#{name}#configuration_schema[:site_settings] references unknown SiteSetting: #{setting_name.inspect}"
+          %w[site_settings additional_site_settings].each do |section|
+            schema_as_json[section]&.each_key do |setting_name|
+              unless SiteSetting.has_setting?(setting_name)
+                raise ArgumentError,
+                      "#{name}#configuration_schema[:#{section}] references unknown SiteSetting: #{setting_name.inspect}"
+              end
             end
           end
         end
@@ -226,11 +231,13 @@ module Categories
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
           category_type_settings =
-            configuration_schema[:site_settings]&.map do |setting_name, default_value|
-              {
-                setting_name: setting_name.to_s,
-                value: configuration_values.fetch(setting_name.to_s, default_value),
-              }
+            %i[site_settings additional_site_settings].flat_map do |section|
+              configuration_schema[section]&.map do |setting_name, default_value|
+                {
+                  setting_name: setting_name.to_s,
+                  value: configuration_values.fetch(setting_name.to_s, default_value),
+                }
+              end || []
             end
 
           return if category_type_settings.blank?
@@ -274,6 +281,7 @@ module Categories
           entries = {
             general_category_settings: [],
             site_settings: [],
+            additional_site_settings: [],
             category_settings: [],
             category_custom_fields: [],
           }
@@ -289,19 +297,21 @@ module Categories
             }
           end
 
-          schema[:site_settings]&.each do |setting_name, target_value|
-            meta = SiteSetting.setting_metadata_hash(setting_name)
-            entries[:site_settings] << {
-              key: setting_name.to_s,
-              default: target_value,
-              current: SiteSetting.public_send(setting_name),
-              type: meta[:type],
-              label: meta[:humanized_name],
-              description: meta[:description],
-              required: false,
-              show_on_create: true,
-              show_on_edit: true,
-            }
+          %i[site_settings additional_site_settings].each do |section|
+            schema[section]&.each do |setting_name, target_value|
+              meta = SiteSetting.setting_metadata_hash(setting_name)
+              entries[section] << {
+                key: setting_name.to_s,
+                default: target_value,
+                current: SiteSetting.public_send(setting_name),
+                type: meta[:type],
+                label: meta[:humanized_name],
+                description: meta[:description],
+                required: false,
+                show_on_create: true,
+                show_on_edit: true,
+              }
+            end
           end
 
           schema[:category_settings]&.each do |field_name, config|

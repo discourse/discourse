@@ -198,6 +198,37 @@
     margin-bottom: var(--space-4);
   }
 
+  .edit-category-type-schema-fields .emphasis .form-kit__object {
+    gap: var(--space-6);
+  }
+
+  .additional-site-settings-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0;
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:hover,
+    &:focus {
+      .d-icon {
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  .additional-site-settings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
   .edit-category-tab-localizations {
     .btn-default {
       align-self: start;
