@@ -538,18 +538,61 @@ after_initialize do
       fragment
         .css(".discourse-post-event")
         .each do |event_node|
+          tz = event_node["data-timezone"] || "UTC"
           starts_at = event_node["data-start"]
           ends_at = event_node["data-end"]
-          dates = "#{starts_at} (#{event_node["data-timezone"] || "UTC"})"
-          dates = "#{dates} → #{ends_at} (#{event_node["data-timezone"] || "UTC"})" if ends_at
+
+          formatted_start =
+            begin
+              DateTime.parse(starts_at).strftime("%B %-d, %Y %-I:%M %p")
+            rescue StandardError
+              starts_at
+            end
+          dates = "#{formatted_start} (#{tz})"
+
+          if ends_at
+            formatted_end =
+              begin
+                DateTime.parse(ends_at).strftime("%B %-d, %Y %-I:%M %p")
+              rescue StandardError
+                ends_at
+              end
+            dates = "#{dates} → #{formatted_end} (#{tz})"
+          end
 
           event_name = event_node["data-name"] || post.topic.title
-          event_node.replace <<~TXT
-          <div style='border:1px solid #dedede'>
-            <p><a href="#{Discourse.base_url}#{post.url}">#{CGI.escape_html(event_name)}</a></p>
-            <p>#{CGI.escape_html(dates)}</p>
-          </div>
-        TXT
+          location = event_node["data-location"]
+          url = event_node["data-url"]
+
+          rows = +""
+          rows << <<~HTML
+            <tr>
+              <td style="padding: 12px;">
+                <a href="#{Discourse.base_url}#{post.url}" style="font-weight: bold; font-size: 1.1em;">#{CGI.escape_html(event_name)}</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(dates)}</td>
+            </tr>
+          HTML
+
+          rows << <<~HTML if location.present?
+              <tr>
+                <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(location)}</td>
+              </tr>
+            HTML
+
+          rows << <<~HTML if url.present?
+              <tr>
+                <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(url)}">#{CGI.escape_html(url)}</a></td>
+              </tr>
+            HTML
+
+          event_node.replace <<~HTML
+            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px;">
+              #{rows}
+            </table>
+          HTML
         end
     end
   end
