@@ -11,6 +11,7 @@ hu:
         draft: "Vázlat"
         open: "Nyitott"
         approved: "Jóváhagyott"
+        merged: "Összefésült"
         closed: "Lezárva"
   admin_js:
     admin:

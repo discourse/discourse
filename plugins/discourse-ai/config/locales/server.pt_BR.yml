@@ -8,24 +8,52 @@ pt_BR:
   activerecord:
     attributes:
       llm_model:
+        name: "ID do modelo"
         max_prompt_tokens: "Janela de contexto"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "O modelo <a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> precisa de atenção. Na última hora, ele deixou de responder %{failed_calls} chamadas de um total de %{total_calls}."
+        other: "O modelo <a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> precisa de atenção. Nas últimas %{count} horas, ele deixou de responder %{failed_calls} chamadas de um total de %{total_calls}."
+      ai_credit_soft_limit: "%{model_name} tem apenas %{percentage_remaining}% de créditos restantes. Os créditos serão zerados em %{reset_date}. <a href='%{url}'>Visualizar modelos de IA</a>"
+      ai_credit_hard_limit: "Você ficou sem créditos de IA para %{model_name}. Os recursos de IA ficarão indisponíveis até %{reset_date}. <a href='%{url}'>Visualizar modelos de IA</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "Adicionar postagem à fila de revisão"
         review_hide: "Adicionar postagem à fila de revisão e ocultar postagem"
+        review_delete: "Adicionar postagem à fila de análise e excluí-la"
+        review_delete_silence: "Adicionar postagem à fila de revisão, excluir publicação e silenciar usuário"
         spam: "Sinalizar como spam e ocultar postagem"
         spam_silence: "Sinalizar como spam, ocultar postagem e silenciar usuário(a)"
     scriptables:
+      ai_tool_action:
+        title: Ação de ferramenta de IA
+        description: Executar uma ferramenta de IA quando a automação for acionada.
       llm_persona_triage:
         title: Fazer triagem de postagens com persona de IA
         description: "Responder a postagens com uma persona de IA específica"
       llm_triage:
         title: Postagens de triagem usando IA
         description: "Postagens de triagem usando um modelo de linguagem grande"
+        flagged_post: |
+          <div>Resposta do modelo:</div>
+          <p>%{llm_response}</p>
+          <b>Acionada pela regra <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
+        notify_author_pm:
+          subject: "Sua postagem foi temporariamente removida para análise"
+          body: |
+            Olá @%{username},
+
+            Sua postagem em “%{topic_title}” foi temporariamente removida e colocada em nossa fila de revisão para ser analisada por um moderador. Se aprovada, ela será restaurada automaticamente.
+
+            Referência: %{post_url}
       llm_report:
         title: Relatório periódico usando IA
         description: "Relatório periódico baseado em um modelo de linguagem grande"
+      llm_tagger:
+        title: Marcar tópicos usando IA
+        description: "Aplicar tags em tópicos automaticamente usando IA."
   site_settings:
     discourse_ai_enabled: "Ative o plugin de IA do Discourse."
     ai_default_llm_model: "O modelo de LLM padrão a ser usado para todos os recursos de IA"
@@ -58,6 +86,8 @@ pt_BR:
     ai_nsfw_flag_threshold_sexy: "Limite para uma imagem classificada como sensual ser considerada NSFW."
     ai_nsfw_models: "Modelos usados para inferência de NSFW."
     ai_spam_detection_enabled: "Ativar o módulo de detecção de spam por IA"
+    ai_spam_detection_max_post_count: "Número máximo de publicações que um usuário pode ter antes de deixar de ser verificado em busca de spam."
+    ai_spam_detection_max_trust_level: "Nível máximo de confiança dos usuários para verificar spam"
     ai_openai_api_key: "Chave de API para a API da OpenAI. Usada apenas para edição e criação de imagens. Para o GPT, use a aba de configuração do LLM"
     ai_helper_enabled: "Habilite o assistente de IA."
     composer_ai_helper_allowed_groups: "Os(as) usuários(as) desses grupos visualizarão o botão de assistência por IA no compositor."
@@ -66,6 +96,8 @@ pt_BR:
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
     ai_helper_enabled_features: "Selecione os recursos para ativar no ajudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
+    ai_helper_post_illustrator_persona: "A persona a ser usada para o recurso de ilustração de postagens do assistente de IA. Observação: você também precisa criar uma ferramenta de geração de imagens (Admin > Plugins > Discourse AI > Tools) para que esse recurso funcione."
+    ai_helper_chat_thread_title_persona: "A persona a ser usada para gerar títulos de tópicos de bate-papo."
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
     ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
     ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."
@@ -75,6 +107,8 @@ pt_BR:
     ai_embeddings_semantic_search_use_hyde: "Use o HyDE para pesquisas de semântica de página inteira. Usa um LLM para criar uma postagem hipotética do termo pesquisado pelo(a) usuário(a) para ajudar nas correspondências."
     ai_embeddings_semantic_quick_search_enabled: "Ative opção de busca semântica no pop-up no menu de busca."
     ai_embeddings_semantic_related_include_closed_topics: "Incluir tópicos fechados em resultados de pesquisa semântica"
+    ai_embeddings_semantic_related_age_penalty: "Aplicar uma penalidade exponencial de idade aos tópicos nos resultados da busca semântica. 0.0 = sem penalidade, 0.3 = leve viés em relação a conteúdo recentemente ativo, 1.0 ou mais = forte viés de conteúdo recente."
+    ai_embeddings_semantic_related_age_time_scale: "Escala de tempo em dias para o cálculo de penalidade por idade. Tópicos inativos por esse número de dias recebem ~50% de penalidade com penalty=1.0. Use 365 para escala anual, 90 para escala trimestral."
     ai_embeddings_per_post_enabled: Gerar incorporações para cada postagem
     ai_summarization_enabled: "Ativar o recurso de resumir"
     ai_summarization_persona: "A persona a ser usada para o recurso de resumir"
@@ -82,10 +116,16 @@ pt_BR:
     ai_summary_gists_enabled: "Gera automaticamente resumos breves das respostas mais recentes nos tópicos"
     ai_summary_backfill_maximum_topics_per_hour: "Quantidade de tópicos para preencher a cada hora."
     ai_bot_enabled: "Ative o módulo de Bot com IA."
+    ai_bot_enabled_llms: "LLMs disponíveis para selecionar em conversas com bots de IA"
+    ai_bot_enable_chat_warning: "Exibir um aviso quando o chat por MP for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Quando o Bot com GPT tiver acesso às MPs, ele responderá aos membros destes grupos."
     ai_bot_debugging_allowed_groups: "Permitir a exibição de um botão de depuração nestes grupos, em postagens em que são exibidas respostas e pedidos de IA não processados"
     ai_bot_public_sharing_allowed_groups: "Permita que estes grupos compartilhem mensagens pessoais de IA com o público por meio de um link exclusivo disponível publicamente. Observação: se for preciso entrar com sua conta no site, também será preciso para o compartilhamento."
+    ai_bot_add_to_header: "Exibir botão no cabeçalho para começar uma mensagem privada com um Bot de IA"
+    ai_bot_add_to_community_section: "Exibir um link na seção da comunidade na barra lateral para iniciar uma mensagem privada com um bot de IA."
     ai_bot_github_access_token: "Token de acesso do GitHub a ser usado com ferramentas de IA do GitHub (necessário para ter compatibilidade com pesquisa)"
+    ai_discover_enabled: "Ativar o recurso de pesquisa de descoberta"
+    ai_discover_persona: "Persona a ser usada no recurso de pesquisa de descoberta"
     ai_google_custom_search_api_key: "Chave de API para a API de pesquisa personalizada do Google. Veja: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX para API de pesquisa personalizada do Google"
     ai_discord_search_enabled: "Ativa o recurso de pesquisa do Discord"
@@ -94,8 +134,15 @@ pt_BR:
     ai_discord_search_mode: "Selecione o modo de pesquisa a ser usado para a pesquisa do Discord"
     ai_discord_search_persona: "A persona a ser usada para pesquisa do Discord."
     ai_discord_allowed_guilds: "As guildas do Discord (servidores) nas quais o bot tem permissão para pesquisar"
+    ai_translation_enabled: "Ativar o recurso de tradução por IA"
     ai_translation_backfill_limit_to_public_content: "Quando ativado, somente o contéudo nas categorias públicas será traduzido. Quando desativado, o conteúdo nas MPs de grupo e categorias privadas também será enviado para tradução."
+    ai_translation_include_bot_content: "Quando ativada, também enviará para tradução o conteúdo escrito por bots (IDs de usuário abaixo de 0)."
+    ai_translation_max_post_length: "O número máximo de caracteres para uma postagem ser traduzida. Postagens com mais caracteres do que esse limite não serão traduzidas."
     ai_translation_backfill_max_age_days: "A idade máxima da postagem ou tópico a ser traduzido. Postagens e tópicos mais antigos que esta não serão traduzidos. O valor 0 desativa o preenchimento sem desativar a tradução de postagens novas."
+    ai_translation_backfill_hourly_rate: "Número de posts e tópicos a serem traduzidos por hora durante operações de backfill. Defina como 0 para desativar o backfill automático de traduções para conteúdo existente."
+    ai_translation_max_tokens_multiplier: "Multiplicador para determinar o número máximo de tokens a serem usados na tradução. Por padrão, definimos o número máximo de tokens para aproximadamente duas a cinco vezes o número de caracteres da postagem. Esse multiplicador pode ser ajustado para permitir modelos de pensamento ou raciocínio que utilizem mais tokens."
+    ai_usage_rollup_after_days: "Número de dias para manter as estatísticas de uso de IA por solicitação antes de consolidá-las em agregados diários. Defina como 0 para desativar rollups."
+    ai_audit_logs_purge_after_days: "Excluir logs de auditoria da API de IA com mais de um determinado número de dias. O padrão é de aproximadamente 6 meses. Defina como 0 para manter para sempre."
   reviewables:
     reasons:
       flagged_by_toxicity: O plugin de IA sinalizou isto após classificar como tóxico.
@@ -215,17 +262,47 @@ pt_BR:
           name: "Taxa de troca"
         stock_quote:
           name: "Cotação de ação (AlphaVantage)"
+        image_generation_category:
+          name: "Geração de imagens..."
         image_generation_custom:
           name: "Personalizados(as)"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Começar do zero..."
       name:
         characters: "deve incluir apenas números, letras e sublinhados"
+      secret_contracts:
+        invalid_payload: "Os contratos secretos devem ser um array."
+        invalid_contract: "O contrato secreto no índice %{index} é inválido."
+        alias_required: "O contrato secreto no índice %{index} deve incluir um alias."
+        alias_too_long: "O alias secreto `%{alias}` está duplicado."
+        alias_invalid: "O alias secreto `%{alias}` deve conter apenas números, letras e sublinhados."
+        alias_not_unique: "O alias secreto `%{alias}` está duplicado."
+      secret_bindings:
+        invalid_payload: "As associações secretas devem ser um array."
+        secret_not_found: "A credencial selecionada não existe."
+        alias_not_declared: "O alias `%{alias}` não foi declarado nesta ferramenta."
+      secret_runtime:
+        alias_not_declared: "O alias de credencial `%{alias}` não foi declarado para esta ferramenta."
+        missing_binding: "O alias de credencial `%{alias}` é obrigatório, mas não está vinculado."
+        missing_required_aliases: "Ausência de associações de credenciais necessárias para aliases: %{aliases}."
+        secret_not_found: "O alias de credencial `%{alias}` está vinculado a uma credencial ausente."
+        unknown_error: "Não foi possível resolver a credencial solicitada."
     ai_helper:
       errors:
         completion_request_failed: "Algo deu errado ao tentar dar sugestões. Tente novamente."
+        no_illustrator_persona: "A persona do ilustrador de postagens não está configurada. Verifique as configurações do seu site."
+        no_image_generation_tool: "A persona do ilustrador de postagens deve ter uma ferramenta de geração de imagens associada. Configure uma ferramenta de geração de imagens para essa persona no painel de administração."
+        no_image_generated: "Não foi possível gerar a imagem. Tente novamente ou verifique a configuração da sua ferramenta."
+        llm_model_not_configured: "Nenhum modelo de linguagem está configurado para a geração de imagens. Configure um modelo de linguagem padrão nas configurações do seu site."
+        unknown_error: "Ocorreu um erro inesperado ao gerar as miniaturas. Tente novamente."
       prompts:
         translate: Traduzir para %{language}
         generate_titles: Sugerir títulos de tópicos
@@ -252,12 +329,14 @@ pt_BR:
       flag_reason: "Sinalizada como spam pelo <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Usuário(a) silenciado(a) automaticamente pelo <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Tipo inválido de erro fornecido"
+      unexpected: "Ocorreu um erro inesperado."
       bot_user_update_failed: "Falha ao atualizar usuário(a) do bot de verificação de spam"
       configuration_missing: "Não foi encontrada a configuração de detecção de spam de IA. Adicione a configuração em \"Administração > Plugins > Discourse AI > Spam\" antes de ativar."
       logging_subject: "Detecção de spam"
     ai_bot:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
+      thinking: "Pensando"
       personas:
         default_llm_required: "É preciso de um modelo de LLM padrão para ativar o bate-papo"
         cannot_delete_system_persona: "Personas de sistema não podem ser excluídas, desative"
@@ -325,6 +404,7 @@ pt_BR:
           description: "A persona padrão que alimenta o recurso de geração de tabelas do Markdown do Ajudante"
         post_illustrator:
           name: "Ilustrador de postagens"
+          description: "Gera imagens para ilustrar as postagens usando as ferramentas de geração de imagens disponíveis."
         proofreader:
           name: "Revisor"
           description: "A persona padrão que alimenta o recurso de revisão de texto do Ajudante"
@@ -361,6 +441,12 @@ pt_BR:
         report_runner:
           name: "Executor de relatórios"
           description: "A persona padrão usada no script de automatização de relatórios"
+        discover:
+          name: "Descobrir"
+          description: "Persona padrão usada no recurso de descobertas (busca complementar)"
+        chat_thread_titler:
+          name: "Criador de títulos para threads de chat"
+          description: "Persona padrão que gera automaticamente títulos de tópicos de chat."
       topic_not_found: "Resumo indisponível, tópico não encontrado!"
       summarizing: "Resumindo tópico"
       searching: "Pesquisando: \"%{query}\""
@@ -413,6 +499,10 @@ pt_BR:
           base_query:
             name: "Consulta de pesquisa básica"
             description: "A consulta de base para usar na pesquisa. Exemplo: \"#urgent\" precederá \"#urgent\" para a consulta da pesquisa e incluirá apenas tópicos com a etiqueta ou categoria urgente."
+        flag_post:
+          flag_type:
+            name: "Tipo de sinalizador"
+            description: "Controla se a publicação será revisada, ocultada, excluída ou tratada como spam."
       tool_summary:
         read_artifact: "Ler um artefato da Web"
         update_artifact: "Atualizar um artefato da Web"
@@ -421,6 +511,7 @@ pt_BR:
         github_search_files: "Arquivos de pesquisa do GitHub"
         github_search_code: "Pesquisa de código do GitHub"
         github_file_content: "Conteúdo de arquivo do GitHub"
+        github_diff: "GitHub diff"
         random_picker: "Seletor aleatório"
         categories: "Listar categorias"
         flag_post: "Sinalizar postagem"
@@ -449,8 +540,10 @@ pt_BR:
         github_search_code: "Procurar código no repositório do GitHub"
         github_search_files: "Procurar arquivos no repositório do GitHub"
         github_file_content: "Recuperar conteúdo de arquivos de um repositório do GitHub"
+        github_diff: "Recuperar uma solicitação de pull do GitHub ou commit diff."
         random_picker: "Escolha um número ou elemento aleatório de uma lista"
         categories: "Listar todas as categorias visíveis publicamente no fórum"
+        flag_post: "Marcar a postagem atual para análise pela equipe"
         search: "Pesquisar todos os tópicos públicos no fórum"
         tags: "Listar todas as etiquetas no fórum"
         time: "Achar horário em vários fusos horários"
@@ -477,6 +570,7 @@ pt_BR:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Conteúdo recuperado em %{file_paths} de %{repo_name}@%{branch}"
         random_picker: "Escolhendo %{options}, escolha: %{result}"
+        flag_post: "Denunciando postagem %{post_id} (denunciar postagem: %{flag_post})"
         read: "Lendo: <a href='%{url}'>%{title}</a>"
         time: "A hora em %{timezone} é %{time}"
         summarize: "Resumo de <a href='%{url}'>%{title}</a>"
@@ -514,6 +608,15 @@ pt_BR:
         continue_conversation:
           title: "Conversa do Discovery: pesquisar %{query}"
           raw: "Durante a minha pesquisa por %{query}, você me mostrou as seguintes informações:\n\n%{context}\n\nVamos continuar a conversa."
+      flag_post:
+        errors:
+          no_context: "Não há contexto de postagem disponível para sinalização."
+          no_reason: "É necessário apresentar uma justificativa para denunciar uma postagem."
+          invalid_flag_type: "Tipo de sinalizador inválido."
+        skipped: "O veredicto foi falso; nenhuma denúncia foi criada."
+        already_flagged: "A publicação já foi marcada para revisão."
+        flagged: "Postagem marcada para revisão."
+        reason: "Este post foi marcado por um bot de IA.\n\nMotivo: %{reason}"
     summarization:
       configuration_hint:
         one: "Defina a configuração \"%{setting}\" primeiro."
@@ -544,6 +647,7 @@ pt_BR:
         invalid_seeded_model: "Não é possível usar este modelo com este recurso"
         invalid_persona_response_format: "A persona selecionada deve ter formato de resposta com um campo booleano chamado \"spam\""
         must_select_model: "Selecione um LLM primeiro"
+        invalid_llm_id: "O modelo LLM selecionado não é válido."
       endpoints:
         not_configured: "%{display_name} (não configurado)"
         configuration_hint:
@@ -558,16 +662,31 @@ pt_BR:
     embeddings:
       delete_failed: "Este modelo está em uso no momento. Atualize o modelo selecionado de incorporações de IA primeiro."
       cannot_edit_builtin: "Não é possível editar um modelo integrado."
+      secret_required: "É necessário selecionar uma credencial."
+      secret_not_found: "A credencial selecionada não existe"
       configuration:
         disable_embeddings: "Você precisa desativar \"incorporações com IA ativadas\" primeiro."
         choose_model: "Defina o \"modelo selecionado de incorporações com IA\" primeiro."
+        model_test_failed: "Não foi possível gerar uma incorporação de teste com este modelo. Verifique se ele está configurado corretamente."
+    secrets:
+      delete_failed_in_use: "Esta credencial está atualmente em uso por um ou mais LLMs, incorporações ou ferramentas e não pode ser excluída."
     llm_models:
       missing_provider_param: "%{param} Não pode ficar em branco"
+      secret_required: "É necessário selecionar uma credencial."
+      secret_not_found: "A credencial selecionada não existe"
       bedrock_invalid_url: "Preencha todos os campos para usar este modelo."
+      bedrock_missing_auth: "O AWS Bedrock requer que o ID da chave de acesso ou o Role ARN sejam configurados."
     ai_staff_action_logger:
       updated: "atualizado(a)"
       set: "definido(a)"
       removed: "removido(a)"
+    translation:
+      errors:
+        disabled: "O recurso de tradução por IA não está totalmente configurado."
+        all_posts_translated: "Todas as postagens neste tópico já foram traduzidas."
+    llm_credit_allocation:
+      limit_exceeded_user: "Esta comunidade atingiu o limite de créditos de IA para hoje. Tente novamente após %{reset_time} ou entre em contato com o administrador do site para obter mais informações."
+      limit_exceeded_admin: "Você atingiu seu limite de créditos de IA. Tente novamente após %{reset_time}."
     errors:
       quota_exceeded: "Você ultrapassou a cota deste modelo. Tente novamente em %{relative_time}."
       quota_required: "Você deve especificar o máximo de tokens ou usos para este modelo"
@@ -579,6 +698,26 @@ pt_BR:
       persona_disabled: A persona especificada está desativada. Confira os parâmetros persona_name ou persona_id
       no_default_llm: A persona deve ter default_llm definida.
       user_not_allowed: O(a) usuário(a) não tem permissão para participar do tópico.
+      invalid_stream_resume_token: O resume_token é inválido ou expirou.
+      no_tool_results_specified: O parâmetro tool_results é obrigatório ao retomar um fluxo.
+      invalid_custom_tools: "O parâmetro custom_tools é inválido: %{details}"
+      duplicate_custom_tools: "O parâmetro custom_tools contém nomes de ferramentas duplicados: %{names}"
+      too_many_custom_tools: "O parâmetro custom_tools pode incluir no máximo %{max} ferramentas."
+      custom_tool_definition_too_large: "Cada definição de ferramenta personalizada deve ter no máximo %{max} bytes."
+      invalid_stream_param: "O parâmetro %{key} é inválido: %{details}"
+      expected_array: "esperava um array"
+      expected_object: "esperava um objeto"
+      ambiguous_tool_results: "Especifique tool_results ou tool_result, não ambos."
+      invalid_tool_results: "O parâmetro tool_results é inválido: %{details}"
+      too_many_tool_results: "O parâmetro tool_results pode incluir no máximo %{max} itens."
+      no_pending_tool_calls: Não há chamadas de ferramenta pendentes para este token de retomada.
+      missing_tool_results: "Resultados da ferramenta faltando para tool_call_id(s): %{ids}"
+      unexpected_tool_results: "Resultados inesperados da ferramenta para tool_call_id(s): %{ids}"
+      invalid_tool_result_content: "O resultado da ferramenta para %{id} precisa incluir conteúdo"
+      tool_result_content_too_large: "A carga útil do conteúdo de cada resultado da ferramenta deve ter no máximo %{max} bytes."
+      stream_reply_max_resume_rounds_reached: O número máximo de rodadas para a retomada de ferramenta personalizada foi atingido (%{max}).
+      stream_reply_state_too_large: "O estado do fluxo é muito grande para persistir (máximo %{max} bytes)."
+      stream_reply_unexpected_error: Ocorreu um erro inesperado durante o envio da resposta.
       prompt_message_length: A mensagem %{idx} excede o limite de 1000 caracteres.
       persona_already_exists: Já existe uma persona com o nome %{name}.
       custom_tool_exists:

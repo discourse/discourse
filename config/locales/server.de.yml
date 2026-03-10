@@ -2449,7 +2449,7 @@ de:
     welcome_banner_page_visibility: "Legt fest, auf welchen Seiten das Willkommensbanner erscheinen soll."
     welcome_banner_text_color: "Wenn du die Einstellung „Welcome banner image“ konfiguriert hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du keine Farbe wählst oder kein Hintergrundbild hochgeladen hast, wird die Farbe vom aktiven Theme bestimmt."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
-    splash_screen_image: "Ein SVG-Bild, das auf dem Bildschirm angezeigt wird, während die Website geladen wird. Animierte SVGs sollten nur CSS-Transformations oder - Deckkraftanimationen verwenden. Verwende eindeutige Namen für die Css-Klassen und Keyframes. Du kannst var(--primary), var(--secondary) und var(--tertiary) verwenden, um auf die Farben des Themes zu verweisen."
+    splash_screen_image: "Ein SVG-Bild, das auf dem Bildschirm angezeigt wird, während die Website geladen wird. Animierte SVGs sollten nur CSS-Transformations oder -Deckkraftanimationen verwenden. Verwende eindeutige Namen für die CSS-Klassen und Keyframes. Du kannst var(--primary), var(--secondary) und var(--tertiary) verwenden, um auf die Farben des Themes zu verweisen."
     navigation_menu: "Lege die Seitenleiste oder das Kopfzeilen-Drop-down als Hauptnavigationsmenü für deine Website fest. Die Seitenleiste wird empfohlen."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
@@ -2486,7 +2486,7 @@ de:
     rename_faq_to_guidelines: "Diese Änderung benennt die FAQ-Seite in „Richtlinien“ um. Die FAQ-Seite ist weiterhin unter /faq erreichbar. Die Einstellung „faq url“ funktioniert wie bisher."
     experimental_tag_settings_page: "Aktiviere eine eigene Einstellungsseite für Schlagwörter unter /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Ermöglicht eine vereinfachte Kategorienerstellung mit weniger Optionen und einer übersichtlicheren Oberfläche."
-    enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung \"Splash Screen Image\" hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
+    enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung „Splash Screen Image“ hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
     modernize_foundation_theme: "Diese Änderung führt Design-Änderungen am Foundation-Theme in Discourse ein."
     reporting_improvements: "Verbesserungen der Navigation, des Designs und der Benutzerfreundlichkeit für die Admin-Berichte in Discourse."
     errors:

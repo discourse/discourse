@@ -155,6 +155,8 @@ ar:
         chat_usage:
           title: نشاط الدردشة
           total_messages: إجمالي الرسائل
+          dm_messages: الرسائل المباشرة
+          unique_dm_channels: محادثات الرسائل المباشرة
           reactions_received: التفاعلات المستلمة
           avg_message_length: متوسط طول الرسالة
           favorite_channels: القنوات المفضلة
