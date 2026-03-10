@@ -37,5 +37,26 @@ module(
 
       assert.deepEqual(data.foo, "two");
     });
+
+    test("@title and @description", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.RadioGroup
+                @title="Pick one"
+                @description="Choose carefully"
+                as |RadioGroup|
+              >
+                <RadioGroup.Radio @value="one">One</RadioGroup.Radio>
+              </field.RadioGroup>
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".form-kit__fieldset-title").hasText("Pick one");
+      assert.dom(".form-kit__fieldset-description").hasText("Choose carefully");
+    });
   }
 );

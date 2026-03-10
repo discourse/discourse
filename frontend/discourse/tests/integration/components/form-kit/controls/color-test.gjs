@@ -1,4 +1,4 @@
-import { blur, fillIn, focus, render } from "@ember/test-helpers";
+import { blur, click, fillIn, focus, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -207,6 +207,37 @@ module(
       await blur(".form-kit__control-color-input-hex");
 
       assert.strictEqual(formKit().field("color").value(), "AABBCC");
+    });
+
+    test("@collapseSwatches and @collapseSwatchesLabel", async function (assert) {
+      const colors = ["FF0000", "00FF00", "0000FF"];
+      let data = { color: null };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="color" @title="Color" as |field|>
+              <field.Color
+                @colors={{colors}}
+                @collapseSwatches={{true}}
+                @collapseSwatchesLabel="Pick a preset"
+              />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom(".form-kit__control-color-swatches-btn")
+        .hasAttribute("title", "Pick a preset");
+      assert.dom(".form-kit__control-color-swatch").doesNotExist();
+
+      await click(".form-kit__control-color-swatches-btn");
+      await click('.form-kit__control-color-swatch[data-color="00FF00"]');
+      await formKit().submit();
+
+      assert.strictEqual(data.color, "00FF00");
     });
   }
 );
