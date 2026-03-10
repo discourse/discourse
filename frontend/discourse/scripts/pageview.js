@@ -1,4 +1,12 @@
 function trackPageView() {
+  const beaconEnabled = !!document.querySelector(
+    "meta[name=discourse-enable-beacon-pageview]"
+  );
+
+  if (!beaconEnabled) {
+    return;
+  }
+
   const isErrorPage =
     document.querySelector("meta#discourse-error")?.dataset.discourseError ===
     "true";
@@ -14,7 +22,7 @@ function trackPageView() {
     "meta[name=discourse-track-view-session-id]"
   )?.content;
 
-  fetch(`${root}/pageview`, {
+  fetch(`${root}/srv/pv`, {
     method: "POST",
     keepalive: true,
     headers: { "Content-Type": "application/json" },

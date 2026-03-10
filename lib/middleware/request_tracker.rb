@@ -522,20 +522,53 @@ class Middleware::RequestTracker
 
     # An HTML response to a GET request is tracked as a legacy page view.
     # The X-Discourse-TrackView header is included in the response when this is true.
-    track_view = !!(status == 200 && request.get? && !is_ajax_request && is_html_request)
+    implicit_track_view = status == 200 && request.get? && !is_ajax_request && is_html_request
 
-    # A POST to /pageview is a dedicated browser page view beacon sent via
+    # A POST to /srv/pv is a dedicated browser page view beacon sent via
     # fetch(..., { keepalive: true }). The view data is passed in the JSON body.
     #
     # See `scripts/pageview.js` and `instance-initializers/page-tracking.js`
-    is_pageview_request = request.post? && request.path_info == "/pageview"
-    body_data = is_pageview_request ? read_pageview_body(env) : nil
-    browser_page_view = is_pageview_request
+    is_pageview_request = request.post? && request.path_info == "/srv/pv"
 
-    topic_id = body_data&.[]("topic_id").to_i.nonzero?
-    tracking_url = body_data&.[]("url")&.slice(0, MAX_URL_LENGTH)
-    tracking_referrer = body_data&.[]("referrer")&.slice(0, MAX_URL_LENGTH)
-    tracking_session_id = body_data&.[]("session_id")&.slice(0, MAX_SESSION_ID_LENGTH)
+    topic_id = nil
+    tracking_url = nil
+    tracking_referrer = nil
+    tracking_session_id = nil
+    track_view = nil
+    browser_page_view = nil
+
+    if is_pageview_request
+      body_data = read_pageview_body(env)
+      topic_id = body_data&.[]("topic_id").to_i.nonzero?
+      tracking_url = body_data&.[]("url")&.slice(0, MAX_URL_LENGTH)
+      tracking_referrer = body_data&.[]("referrer")&.slice(0, MAX_URL_LENGTH)
+      tracking_session_id = body_data&.[]("session_id")&.slice(0, MAX_SESSION_ID_LENGTH)
+      track_view = !!implicit_track_view
+      browser_page_view = true
+    else
+      # When the beacon is not in use, browser page views are tracked via headers
+      # piggybacked on AJAX and MessageBus requests.
+
+      # This Discourse-Track-View request header is set in `lib/ajax.js` whenever
+      # the user navigates between Ember routes to indicate a browser page view.
+      env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
+      explicit_track_view = status == 200 && %w[1 true].include?(env_track_view)
+
+      # This Discourse-Track-View-Deferred header is piggybacked on a follow-up
+      # MessageBus request after a real browser loads a page to avoid bots
+      # influencing browser page views when loading HTML versions of a page.
+      env_deferred_track_view = env["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"]
+      deferred_track_view = %w[1 true].include?(env_deferred_track_view)
+
+      topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]&.to_i&.nonzero?
+      tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]&.slice(0, MAX_URL_LENGTH)
+      tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]&.slice(0, MAX_URL_LENGTH)
+      tracking_session_id =
+        env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]&.slice(0, MAX_SESSION_ID_LENGTH)
+      track_view = !!(implicit_track_view || explicit_track_view)
+      browser_page_view = !!(explicit_track_view || deferred_track_view)
+    end
+
     user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
 
     {
