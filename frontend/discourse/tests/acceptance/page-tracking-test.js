@@ -5,6 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Page tracking - initial load", function (needs) {
   needs.user();
+  needs.settings({ beacon_browser_page_view: true });
 
   needs.hooks.beforeEach(function () {
     this.fetchRequests = [];
@@ -27,13 +28,9 @@ acceptance("Page tracking - initial load", function (needs) {
   test("sends pageview on initial load with session_id", async function (assert) {
     await visit("/");
     const pageviewCall = this.fetchRequests.find((r) =>
-      r.url.includes("/pageview")
+      r.url.includes("/srv/pv")
     );
-    assert.notStrictEqual(
-      pageviewCall,
-      undefined,
-      "fetch called for /pageview"
-    );
+    assert.notStrictEqual(pageviewCall, undefined, "fetch called for /srv/pv");
     assert.true(pageviewCall.opts.keepalive);
     const body = JSON.parse(pageviewCall.opts.body);
     assert.strictEqual(body.session_id, "test-session-id");
@@ -41,7 +38,7 @@ acceptance("Page tracking - initial load", function (needs) {
 
   test("sends pageview with topic_id on topic route", async function (assert) {
     await visit("/t/some-topic/280");
-    const calls = this.fetchRequests.filter((r) => r.url.includes("/pageview"));
+    const calls = this.fetchRequests.filter((r) => r.url.includes("/srv/pv"));
     const topicCall = calls.find((c) => JSON.parse(c.opts.body).topic_id);
     assert.notStrictEqual(topicCall, undefined, "pageview sent with topic_id");
     assert.strictEqual(JSON.parse(topicCall.opts.body).topic_id, "280");

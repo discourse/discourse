@@ -433,6 +433,7 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.post("/clicks/track", success);
+  pretender.post("/srv/pv", success);
 
   pretender.get("/search", (request) => {
     if (
