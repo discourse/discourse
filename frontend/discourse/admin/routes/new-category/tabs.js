@@ -50,6 +50,7 @@ export default class NewCategoryTabs extends DiscourseRoute {
       parentParams: {},
       showTooltip: false,
     });
+    controller.initFormData();
     controller.setSelectedTab(selectedTab);
   }
 }
