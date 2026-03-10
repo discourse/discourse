@@ -34,7 +34,7 @@ export default class FKControlCheckbox extends FKBaseControl {
             {{#if @label}}
               {{@label}}
             {{else}}
-              {{@field.title}}
+              {{or @title @field.title}}
             {{/if}}
           </span>
 
