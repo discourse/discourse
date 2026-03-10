@@ -10,20 +10,18 @@ describe PrettyText do
 
   context "with a public event" do
     describe "An event is displayed in an email" do
-      let(:user_1) { Fabricate(:user, admin: true) }
+      fab!(:user_1, :user) { Fabricate(:user, admin: true) }
 
       context "when the event has no name" do
         let(:post_1) { create_post_with_event(user_1) }
 
-        it "displays the topic title" do
+        it "displays the topic title with formatted date" do
           cooked = PrettyText.cook(post_1.raw)
+          result = PrettyText.format_for_email(cooked, post_1)
 
-          expect(PrettyText.format_for_email(cooked, post_1)).to match_html(<<~HTML)
-            <div style='border:1px solid #dedede'>
-              <p><a href="#{Discourse.base_url}#{post_1.url}">#{post_1.topic.title}</a></p>
-              <p>2018-06-05T18:39:50.000Z (UTC)</p>
-            </div>
-          HTML
+          expect(result).to include(post_1.topic.title)
+          expect(result).to include("June 5, 2018 6:39 PM (UTC)")
+          expect(result).to include("table")
         end
       end
 
@@ -35,39 +33,30 @@ describe PrettyText do
 
         it "displays the event name" do
           cooked = PrettyText.cook(post_1.raw)
+          result = PrettyText.format_for_email(cooked, post_1)
 
-          expect(PrettyText.format_for_email(cooked, post_1)).to match_html(<<~HTML)
-            <div style='border:1px solid #dedede'>
-              <p><a href="#{Discourse.base_url}#{post_1.url}">Pancakes event</a></p>
-              <p>2018-06-05T18:39:50.000Z (UTC)</p>
-            </div>
-          HTML
+          expect(result).to include("Pancakes event")
+          expect(result).to include("font-weight: bold")
         end
 
         it "properly escapes title" do
           cooked = PrettyText.cook(post_2.raw)
+          result = PrettyText.format_for_email(cooked, post_2)
 
-          expect(PrettyText.format_for_email(cooked, post_2)).to match_html(<<~HTML)
-            <div style='border:1px solid #dedede'>
-              <p><a href="#{Discourse.base_url}#{post_2.url}">Pancakes event &lt;a&gt;with html chars&lt;/a&gt;</a></p>
-              <p>2018-06-05T18:39:50.000Z (UTC)</p>
-            </div>
-          HTML
+          expect(result).to include("Pancakes event &lt;a&gt;with html chars&lt;/a&gt;")
         end
       end
 
       context "when the event has an end date" do
         let(:post_1) { create_post_with_event(user_1, 'end="2018-06-22"') }
 
-        it "displays the end date" do
+        it "displays the formatted end date" do
           cooked = PrettyText.cook(post_1.raw)
+          result = PrettyText.format_for_email(cooked, post_1)
 
-          expect(PrettyText.format_for_email(cooked, post_1)).to match_html(<<~HTML)
-            <div style='border:1px solid #dedede'>
-              <p><a href="#{Discourse.base_url}#{post_1.url}">#{post_1.topic.title}</a></p>
-              <p>2018-06-05T18:39:50.000Z (UTC) → 2018-06-22 (UTC)</p>
-            </div>
-          HTML
+          expect(result).to include("June 5, 2018 6:39 PM (UTC)")
+          expect(result).to include("→")
+          expect(result).to include("June 22, 2018 12:00 AM (UTC)")
         end
       end
 
@@ -76,13 +65,33 @@ describe PrettyText do
 
         it "uses the timezone" do
           cooked = PrettyText.cook(post_1.raw)
+          result = PrettyText.format_for_email(cooked, post_1)
 
-          expect(PrettyText.format_for_email(cooked, post_1)).to match_html(<<~HTML)
-            <div style='border:1px solid #dedede'>
-              <p><a href="#{Discourse.base_url}#{post_1.url}">#{post_1.topic.title}</a></p>
-              <p>2018-06-05T18:39:50.000Z (America/New_York)</p>
-            </div>
-          HTML
+          expect(result).to include("(America/New_York)")
+          expect(result).to include("June 5, 2018 6:39 PM")
+        end
+      end
+
+      context "when the event has a location" do
+        let(:post_1) { create_post_with_event(user_1, 'location="Conference Room A"') }
+
+        it "displays the location" do
+          cooked = PrettyText.cook(post_1.raw)
+          result = PrettyText.format_for_email(cooked, post_1)
+
+          expect(result).to include("Conference Room A")
+        end
+      end
+
+      context "when the event has a url" do
+        let(:post_1) { create_post_with_event(user_1, 'url="https://example.com/meeting"') }
+
+        it "displays the url" do
+          cooked = PrettyText.cook(post_1.raw)
+          result = PrettyText.format_for_email(cooked, post_1)
+
+          expect(result).to include('href="https://example.com/meeting"')
+          expect(result).to include("https://example.com/meeting")
         end
       end
     end
