@@ -255,11 +255,14 @@
     // top means "in reply to expansion" above a post
     &.top {
       margin-left: 0;
-      border: none;
       width: calc(
         var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
           var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
       ); // 2px accounts for left and right borders
+
+      &.topic-body:first-of-type {
+        border-top: 1px solid var(--border-color);
+      }
 
       .collapse-down {
         transform: translate(17%, 230%);
@@ -328,5 +331,12 @@
     .arrow {
       color: var(--primary-med-or-secondary-high);
     }
+  }
+}
+
+.replies-above > div:last-child {
+  .topic-avatar,
+  .topic-body {
+    border: none;
   }
 }
