@@ -496,7 +496,7 @@ export default class Post extends Component {
                       class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
                     >
                       <DButton
-                        class="post__collapse-button post__collapse-button-down collapse-down"
+                        class="btn-default btn-small post__collapse-button post__collapse-button-down collapse-down"
                         @action={{this.toggleReplyAbove}}
                         @icon="chevron-down"
                         @title="post.collapse"
@@ -660,7 +660,7 @@ export default class Post extends Component {
                           {{/each}}
 
                           <DButton
-                            class="post__collapse-button post__collapse-button-up collapse-up"
+                            class="btn-default btn-small post__collapse-button post__collapse-button-up collapse-up"
                             @action={{this.toggleRepliesBelow}}
                             @ariaLabel="post.sr_collapse_replies"
                             @icon="chevron-up"
