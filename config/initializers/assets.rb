@@ -25,4 +25,7 @@ Rails.application.config.assets.excluded_paths.push(
   "#{Rails.root}/app/assets/stylesheets",
 )
 
-Rails.application.config.assets.compilers = []
+# We don't need/want most of Propshaft's preprocessing. Only keep the JS sourcemap handler
+Rails.application.config.assets.compilers.filter! do |type, compiler|
+  type == "text/javascript" && compiler == Propshaft::Compiler::SourceMappingUrls
+end
