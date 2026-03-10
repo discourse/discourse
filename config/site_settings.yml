@@ -4316,3 +4316,7 @@ experimental:
     default: false
     hidden: true
     client: true
+  enable_upcoming_changes:
+    default: false
+    hidden: true
+    client: true
