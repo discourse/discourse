@@ -37,6 +37,10 @@
 
   &__control-checkbox-description {
     @include default-description;
+
+    &:empty {
+      display: none;
+    }
   }
 }
 

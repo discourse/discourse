@@ -44,7 +44,6 @@ export default class FKControlCheckbox extends FKBaseControl {
           <FKTooltip @field={{@field}} />
         </span>
 
-
         {{#if (has-block)}}
           <span class="form-kit__control-checkbox-description">{{yield}}</span>
         {{/if}}

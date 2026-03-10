@@ -1,9 +1,8 @@
 .form-kit__section {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-3);
   width: 100%;
-  padding-bottom: 1.5rem;
 
   &.form-kit__actions {
     align-items: center;
