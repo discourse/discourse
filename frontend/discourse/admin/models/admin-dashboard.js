@@ -37,10 +37,12 @@ export default class AdminDashboard extends EmberObject {
   }
 
   static fetchProblems() {
-    return ajax("/admin/dashboard/problems.json").then((json) => {
-      const model = AdminDashboard.create(json);
-      model.set("loaded", true);
-      return model;
-    });
+    return ajax("/admin/dashboard/problems.json", { type: "POST" }).then(
+      (json) => {
+        const model = AdminDashboard.create(json);
+        model.set("loaded", true);
+        return model;
+      }
+    );
   }
 }
