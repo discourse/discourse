@@ -468,7 +468,7 @@ module Discourse
               imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
               plugin: plugin,
               type_module: true,
-              importmap_name: "discourse/plugins/#{plugin.directory_name}",
+              importmap_name: "discourse/plugins/#{plugin.name}",
             }
           end
         else
@@ -522,7 +522,7 @@ module Discourse
       asset[:plugin_attributes] = {
         "data-official": !!asset[:plugin].metadata&.official?,
         "data-preinstalled": asset[:plugin].preinstalled?,
-        "data-plugin-name": asset[:plugin].directory_name,
+        "data-plugin-name": asset[:plugin].name,
       }
     end
 
