@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
+import EditCategoryAdditionalSiteSettings from "discourse/components/edit-category-additional-site-settings";
 import icon from "discourse/helpers/d-icon";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
@@ -61,8 +62,6 @@ const SchemaFormField = <template>
 </template>;
 
 export default class EditCategoryTypeSchemaFields extends Component {
-  @tracked additionalSettingsExpanded = false;
-
   get schema() {
     return (
       this.args.category?.getType(this.args.categoryType)
@@ -85,12 +84,6 @@ export default class EditCategoryTypeSchemaFields extends Component {
     return this.schema.additional_site_settings ?? [];
   }
 
-  get additionalSettingsLabel() {
-    return i18n("category.type_settings_schema.more_settings", {
-      count: this.additionalSiteSettings.length,
-    });
-  }
-
   @bind
   shouldDisplayField(entry) {
     if (this.args.category.isCreated) {
@@ -98,11 +91,6 @@ export default class EditCategoryTypeSchemaFields extends Component {
     }
 
     return entry.show_on_create;
-  }
-
-  @bind
-  toggleAdditionalSettings() {
-    this.additionalSettingsExpanded = !this.additionalSettingsExpanded;
   }
 
   <template>
@@ -125,7 +113,11 @@ export default class EditCategoryTypeSchemaFields extends Component {
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >
-        <@form.Object @name="category_type_site_settings" as |siteSettings|>
+        <@form.Object
+          @name="category_type_site_settings"
+          class="site-settings-object"
+          as |siteSettings|
+        >
           {{#each this.schema.site_settings as |entry|}}
             <SchemaFormField
               @category={{@category}}
@@ -134,32 +126,12 @@ export default class EditCategoryTypeSchemaFields extends Component {
             />
           {{/each}}
 
-          {{#if this.additionalSiteSettings.length}}
-            <button
-              type="button"
-              class="btn-transparent additional-site-settings-toggle"
-              {{on "click" this.toggleAdditionalSettings}}
-            >
-              {{this.additionalSettingsLabel}}
-              {{#if this.additionalSettingsExpanded}}
-                {{icon "angle-up"}}
-              {{else}}
-                {{icon "angle-down"}}
-              {{/if}}
-            </button>
-
-            {{#if this.additionalSettingsExpanded}}
-              <div class="additional-site-settings">
-                {{#each this.additionalSiteSettings as |entry|}}
-                  <SchemaFormField
-                    @category={{@category}}
-                    @entry={{entry}}
-                    @formObject={{siteSettings}}
-                  />
-                {{/each}}
-              </div>
-            {{/if}}
-          {{/if}}
+          <EditCategoryAdditionalSiteSettings
+            @settings={{this.additionalSiteSettings}}
+            @category={{@category}}
+            @formObject={{siteSettings}}
+            @SchemaFormField={{SchemaFormField}}
+          />
         </@form.Object>
       </@form.Emphasis>
     </div>
