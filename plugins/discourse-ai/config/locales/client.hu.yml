@@ -44,7 +44,7 @@ hu:
         back: "Vissza"
         disabled: "(kikapcsolva)"
         groups: "Csoportok:"
-        no_persona: "Nincs beállítva"
+        no_agent: "Nincs beállítva"
         no_groups: "Egyik sem"
         edit: "Beállítások"
         expand_list:
@@ -99,7 +99,7 @@ hu:
         periods:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"
-      ai_persona:
+      ai_agent:
         back: "Vissza"
         name: "Név"
         edit: "Szerkesztés"

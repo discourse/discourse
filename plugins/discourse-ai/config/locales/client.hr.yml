@@ -42,7 +42,7 @@ hr:
         back: "Natrag"
         disabled: "(onemogućeno)"
         groups: "Grupe:"
-        no_persona: "Nije postavljeno"
+        no_agent: "Nije postavljeno"
         no_groups: "Ništa"
         edit: "Postavke"
         expand_list:
@@ -93,7 +93,7 @@ hr:
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."
-      ai_persona:
+      ai_agent:
         back: "Natrag"
         name: "Ime"
         edit: "Uredi"

@@ -3463,9 +3463,13 @@ uk:
         available:
           title: "Майбутні зміни"
           description: "'%{changeName}' доступний для попереднього перегляду"
+          description_two: "'%{changeName1}' та '%{changeName2}' доступні для попереднього перегляду"
+          description_many: "'%{changeName}' та %{otherChangeCount} інших змін доступні для попереднього перегляду"
         automatically_promoted:
           title: "Майбутні зміни"
           description: "'%{changeName}' було автоматично ввімкнено"
+          description_two: "'%{changeName1}' та '%{changeName2}' були автоматично ввімкнені"
+          description_many: "'%{changeName}' та %{otherChangeCount} інших змін було автоматично ввімкнено"
       dismiss_confirmation:
         body:
           default:
@@ -3532,6 +3536,8 @@ uk:
         votes_released: "голосування опубліковано"
         new_features: "випущено нові функції дискурсу"
         admin_problems: "нова порада на інформаційній панелі вашого сайту"
+        upcoming_change_available: "доступні нові майбутні зміни"
+        upcoming_change_automatically_promoted: "майбутні зміни було автоматично ввімкнено"
     upload_selector:
       change: "Змінити"
       delete: "Видалити"
@@ -4707,6 +4713,7 @@ uk:
           many: "Ви впевнені, що хочете об’єднати ці %{count} дописів?"
           other: "Ви впевнені, що хочете об’єднати ці %{count} дописів?"
       revisions:
+        diff_too_complex: "Різниця занадто складна для відображення. Спробуйте переглянути окремі менші редагування."
         locale:
           no_locale_set: "Мова не встановлена"
           locale_removed: "Мову вилучено"
@@ -4782,6 +4789,7 @@ uk:
         instructions: "Поширити посилання на цей допис:"
       original_language: "Цей пост був спочатку написаний мовою %{language}"
       original_language_and_outdated: "Цей пост був спочатку написаний мовою %{language}. Переклад може бути застарілим."
+      ai_translation_disclaimer: "Переклади, створені штучним інтелектом, можуть бути неточними."
     category:
       none: "(без розділу)"
       all: "Всі розділи"
@@ -4819,13 +4827,22 @@ uk:
         delete: "Вилучити"
         add: "Додайте необхідну групу теґів"
         placeholder: "Вибрати групу тегів…"
+        min_count: "Кількість тегів"
         tag_group: "Група тегів"
       topic_featured_link_allowed: "Дозволити популярні посилання в цьому розділі"
       delete: "Видалити категорію"
       create: "Нова категорія"
+      create_with_type: "Нова категорія %{typeName}"
       create_long: "Створити розділ"
+      settings_apply_to_all_of_type_warning: "Зміни будуть застосовані до всіх категорій цього типу"
       type_settings_schema:
+        category_settings: "Налаштування категорії"
+        category_custom_fields: "Налаштування категорії"
         site_settings: "Налаштування сайту"
+      choose_type:
+        title: "Виберіть тип категорії"
+        requires_plugin: "Потребує плагін"
+      create_category: "Створити категорію"
       save: "Зберегти категорію"
       unsaved_changes: "Є незбережені зміни"
       slug: "Посилання на розділ"
@@ -6116,6 +6133,7 @@ uk:
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
+    reset_filter: "Скинути фільтр"
     toggle_filters: "Перемкнути випадаючі фільтри"
     admin:
       title: "Адміністратор Discourse"
@@ -6745,6 +6763,7 @@ uk:
           daily: За день
           monthly: Щомісяця
           weekly: Щотижня
+          chart_group_period: "Виберіть період"
           value_so_far: "%{value} (поки що)"
           dates: "Дати (UTC)"
           groups: "Усі групи"
@@ -8157,6 +8176,7 @@ uk:
             upcoming_change_available: "доступні майбутні зміни"
             change_site_setting_groups: "змінити групи налаштувань сайту"
             discourse_id_regenerate_credentials: "відновити облікові дані Discourse ID"
+            configure_category_type: "налаштування типу категорії"
         screened_emails:
           title: "Перевірені адреси електронної пошти"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -8803,7 +8823,9 @@ uk:
         more_than_50_results: "Знайдено понад 50 результатів. Будь ласка виправте параметри пошуку."
         no_results: "Відповідних текстів на сайті не знайдено"
         interpolation_keys: "Доступні ключі інтерполяції:"
+        interpolation_key_insert: "Click to insert"
         interpolation_key_used: "Вже використано"
+        interpolation_key_invalid: "Невідомий ключ — інтерполяція не буде виконана"
         outdated:
           title: "Цей переклад застарів"
           description: "Переклад за замовчуванням для цього ключа змінився після створення цього перевизначення. Будь ласка, перевірте нижче, чи ваш переклад відповідає будь-яким змінам, які були внесені до оригіналу."

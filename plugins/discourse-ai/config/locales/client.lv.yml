@@ -82,7 +82,7 @@ lv:
         total: "Kopā"
         periods:
           last_day: "Pēdējās 24 stundas"
-      ai_persona:
+      ai_agent:
         back: "Atpakaļ"
         name: "Vārds"
         edit: "Labot"

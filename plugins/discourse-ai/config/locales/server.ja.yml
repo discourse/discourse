@@ -29,9 +29,6 @@ ja:
       ai_tool_action:
         title: AI ツールアクション
         description: 自動化がトリガーされたら AI ツールを実行します
-      llm_persona_triage:
-        title: AI ペルソナを使った投稿のトリアージ
-        description: "特定の AI ペルソナを使って投稿に返信します"
       llm_triage:
         title: AI を使った投稿のトリアージ
         description: "大規模言語モデルを使って投稿に優先順位を付けます"
@@ -95,7 +92,6 @@ ja:
     ai_helper_automatic_chat_thread_title: "スレッドのコンテンツに基づいてチャットスレッドのタイトルを自動的に設定する。"
     ai_helper_enabled_features: "AI ヘルパーで有効にする機能を選択します。"
     post_ai_helper_allowed_groups: "投稿内で AI ヘルパー機能にアクセスできるユーザーグループ"
-    ai_helper_post_illustrator_persona: "AI ヘルパーのイラスト投稿機能に使用するペルソナ。注意: この機能を使用するには、画像生成ツールも作成する必要があります (管理 > プラグイン > Discourse AI > ツール)。"
     ai_embeddings_selected_model: "選択したモデルを使用して、埋め込みを生成します。"
     ai_embeddings_generate_for_pms: "個人メッセージの埋め込みを生成します。"
     ai_embeddings_semantic_related_topics_enabled: "関連トピックのセマンティック検索を使用します。"
@@ -109,7 +105,6 @@ ja:
     ai_embeddings_semantic_related_age_time_scale: "年齢ペナルティ計算に使用する時間スケール (日数)。この日数以上非アクティブなトピックには penalty-1.0 で約 50% のペナルティが適用されます。年間スケールには 365、四半期スケールには 90 を使用します。"
     ai_embeddings_per_post_enabled: 各投稿の埋め込みを生成する
     ai_summarization_enabled: "要約機能を有効にする"
-    ai_summarization_persona: "要約機能に使用するペルソナ"
     ai_pm_summarization_allowed_groups: "PM での要約の作成と表示が許可されたグループ。"
     ai_summary_gists_enabled: "トピック内の最新の返信の簡単な要約を自動的に生成する"
     ai_summary_backfill_maximum_topics_per_hour: "1 時間あたりにバックフィルするトピック要約の数。"
@@ -122,14 +117,12 @@ ja:
     ai_bot_add_to_community_section: "サイドバーのコミュニティーセクションに、AI ボットとの PM を開始するためのリンクを表示する"
     ai_bot_github_access_token: "GitHub AI ツールで使用する GitHub アクセストークン (検索サポートに必要)"
     ai_discover_enabled: "発見検索機能を有効にする"
-    ai_discover_persona: "発見検索機能に使用するペルソナ"
     ai_google_custom_search_api_key: "Google カスタム検索 API の API キーは https://developers.google.com/custom-search を参照してください"
     ai_google_custom_search_cx: "Google カスタム検索 API の CX"
     ai_discord_search_enabled: "Discord 検索機能を有効にします"
     ai_discord_app_id: "Discord 検索を接続する Discord アプリケーションの ID"
     ai_discord_app_public_key: "Discord 検索を接続する Discord アプリケーションの公開鍵"
     ai_discord_search_mode: "Discord 検索に使用する検索モードを選択する"
-    ai_discord_search_persona: "Discord 検索に使用するペルソナ。"
     ai_discord_allowed_guilds: "ボットが検索できる Discord ギルド (サーバー)"
     ai_translation_enabled: "AI 翻訳機能を有効にする"
     ai_translation_backfill_limit_to_public_content: "有効にすると、公開カテゴリのコンテンツのみが翻訳されます。無効にすると、グループ PM と非公開カテゴリのコンテンツも翻訳対象として送信されます。"
@@ -277,8 +270,6 @@ ja:
     ai_helper:
       errors:
         completion_request_failed: "提案しようとしたときに問題が発生しました。もう一度お試しください。"
-        no_illustrator_persona: "投稿のイラストレーターペルソナが構成されていません。サイト設定を確認してください。"
-        no_image_generation_tool: "投稿のイラストレーターペルソナには画像生成ツールが接続されている必要があります。管理パネルでこのペルソナの画像生成ツールを構成してください。"
         no_image_generated: "画像の生成に失敗しまっした。もう一度お試しになるか、ツールの構成を確認してください。"
         llm_model_not_configured: "画像生成用の言語モデルが構成されていません。サイト設定でデフォルトの言語モデルを構成してください。"
         unknown_error: "サムネイルの生成中に予期しないエラーが発生しました。もう一度お試しください。"
@@ -315,10 +306,8 @@ ja:
       reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
       default_pm_prefix: "[無題の AI ボット PM]"
       thinking: "思考中"
-      personas:
+      agents:
         default_llm_required: "チャットを有効にする前に、デフォルトの LLM モデルが必要です"
-        cannot_delete_system_persona: "システムペルソナは削除できません。代わりに無効にしてください"
-        cannot_edit_system_persona: "システムペルソナは名前変更のみ可能です。ツールまたはシステムプロンプトは編集できません。代わりに無効にするかコピーを作成してください"
         cannot_have_duplicate_tools: "重複するツールは使用できません"
         github_helper:
           name: "GitHub ヘルパー"
@@ -358,10 +347,8 @@ ja:
           description: "インタラクティブなウェブアーティファクトの作成に特化した AI ボット"
         summarizer:
           name: "要約ツール"
-          description: "AI 要約を強化するために使用されるデフォルトのペルソナ"
         short_summarizer:
           name: "要約ツール (簡易)"
-          description: "AI でトピックリストの項目の簡単な要約を作成するために使用されるデフォルトのペルソナ"
         concept_finder:
           name: "概念検索ツール"
           description: "コンテンツ内の概念とテーマの識別を専門とする AI ボット"
@@ -373,31 +360,23 @@ ja:
           description: "概念の重複排除を専門とする AI ボット"
         custom_prompt:
           name: "カスタムプロンプト"
-          description: "ヘルパーのカスタムプロンプト機能を強化するデフォルトのペルソナ"
         smart_dates:
           name: "スマート日付"
-          description: "ヘルパーのスマート日時機能を強化するデフォルトのペルソナ"
         markdown_table_generator:
           name: "Markdown テーブルジェネレーター"
-          description: "ヘルパーの Markdown テーブルの生成機能を強化するデフォルトのペルソナ"
         post_illustrator:
           name: "イラスト投稿ツール"
           description: "利用可能な画像生成ツールを使用してイラスト投稿の画像を生成します"
         proofreader:
           name: "校正ツール"
-          description: "ヘルパーのテキストの校正機能を強化するデフォルトのペルソナ"
         titles_generator:
           name: "タイトルジェネレーター"
-          description: "ヘルパーのトピックタイトルの提案機能を強化するデフォルトのペルソナ"
         tutor:
           name: "学習アシスタント"
-          description: "ヘルパーの説明機能を強化するデフォルトのペルソナ"
         translator:
           name: "翻訳ツール"
-          description: "ヘルパーの翻訳機能を強化するデフォルトのペルソナ"
         image_captioner:
           name: "画像キャプション"
-          description: "ヘルパーの画像キャプション機能を強化するデフォルトのペルソナ"
         locale_detector:
           name: "ロケール検出ツール"
           description: "特定のテキスト (投稿、タイトルなど) のロケールを検出して翻訳機能を強化します"
@@ -412,16 +391,12 @@ ja:
           description: "一般的なテキスト翻訳ツールとして翻訳機能を強化します。カテゴリ名やタグなどの短いテキストに使用されます"
         spam_detector:
           name: "迷惑行為検出ツール"
-          description: "迷惑行為の検出機能を強化するデフォルトのペルソナ"
         content_creator:
           name: "コンテンツ作成ツール"
-          description: "HyDE 検索を強化するデフォルトのペルソナ"
         report_runner:
           name: "レポートランナー"
-          description: "レポートの自動化スクリプトで使用されるデフォルトのペルソナ"
         discover:
           name: "発見"
-          description: "発見機能に使用されるデフォルトのペルソナ (無料検索)"
       topic_not_found: "要約がありません。トピックが見つかりません！"
       summarizing: "トピックの要約を生成中"
       searching: "検索中: '%{query}'"
@@ -429,7 +404,6 @@ ja:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "調査に使用する言語モデル (デフォルトは現在のペルソナの LLM)"
           max_tokens_per_batch:
             name: "バッチあたりの最大トークン数"
             description: "調査の各バッチで使用するトークンの最大数"
@@ -490,6 +464,7 @@ ja:
         random_picker: "ランダムピッカー"
         categories: "カテゴリをリスト表示"
         flag_post: "投稿を通報"
+        edit_post: "投稿を編集する"
         search: "検索"
         tags: "タグをリスト"
         time: "時刻"
@@ -584,6 +559,33 @@ ja:
         already_flagged: "投稿はすでにレビュー対象として通報されています。"
         flagged: "投稿はレビュー対象として通報されました。"
         reason: "AI ボットはこの投稿を通報しまっした。\n\n理由: %{reason}"
+      close_topic:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      unlist_topic:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      delete_topic:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      edit_tags:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      edit_category:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      set_topic_timer:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      set_slow_mode:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      move_posts:
+        errors:
+          not_found: "トピックが見つかりませんでした."
+      assign:
+        errors:
+          not_found: "トピックが見つかりませんでした."
     summarization:
       configuration_hint:
         other: "先に次の設定を構成します: %{settings}"
@@ -611,7 +613,6 @@ ja:
         set_llm_first: "先に %{setting} を設定します"
         model_unreachable: "このモデルから応答を得られませんでした。まず設定を確認してください。"
         invalid_seeded_model: "この機能ではこのモデルを使用できません"
-        invalid_persona_response_format: "選択されたペルソナには、ブールフィール名「迷惑」を含む応答形式が必要です"
         must_select_model: "先に LLM を選択する必要があります"
       endpoints:
         not_configured: "%{display_name} (未構成)"
@@ -620,7 +621,7 @@ ja:
       delete_failed:
         other: "%{settings} が使用中であるため、このモデルを削除できませんでした。設定を更新してもう一度お試しください。"
       cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
-    personas:
+    agents:
       malformed_examples: "示された例の形式が誤っています。"
     embeddings:
       delete_failed: "このモデルは使用中です。先に `ai embeddings selected model` を更新してください。"
@@ -648,14 +649,9 @@ ja:
       quota_exceeded: "このモデルの使用量制限を超過しました。%{relative_time}後にもう一度お試しください。"
       quota_required: "このモデルのトークンまたは使用量の上限を指定する必要があります"
       no_query_specified: クエリパラメーターは必須です。指定してください。
-      no_user_for_persona: 指定されたペルソナにはユーザーが関連付けられていません。
-      persona_not_found: 指定されたペルソナは存在しません。persona_name または persona_id パラメーターを確認してください。
       no_user_specified: username または user_unique_id パラメーターは必須です。指定してください。
       user_not_found: 指定されたユーザーは存在しません。username パラメーターを確認してください。
-      persona_disabled: 指定されたペルソナは無効化されています。persona_name または persona_id パラメーターを確認してください。
-      no_default_llm: ペルソナには default_llm が定義されている必要があります。
       user_not_allowed: ユーザーはトピックに参加できません。
       prompt_message_length: メッセージ %{idx} は 1000 文字の上限を超えています。
-      persona_already_exists: '%{name} という名前のペルソナはすでに存在します。'
       custom_tool_exists:
         other: "%{names} という名前のカスタムツールはすでに存在します。"

@@ -1229,6 +1229,7 @@ zh_CN:
       title: "DAU / MAU"
       xaxis: "天"
       yaxis: "DAU/MAU"
+      description: "最后一天返回的月活跃会员比例。该百分比反映了用户回归的频率，也称为社区“粘性”。目标是高于 20%。"
     daily_engaged_users:
       title: "每日参与用户"
       xaxis: "天"
@@ -2411,7 +2412,6 @@ zh_CN:
     content_localization_crawler_param: "启用 'content localization enabled' 和 'set locale from param' 后，向网络爬虫提供本地化内容。支持的语言区域列表在 'content localization supported locales' 中定义。"
     content_localization_use_default_locale_when_unsupported: "向首选语言未列在 'content localization supported locales' 中的用户提供站点的默认语言区域的本地化内容。"
     content_localization_allow_author_localization: "允许作者通过帖子菜单更新自己话题和帖子的本地化。"
-    enable_upcoming_changes: "启用即将推出的更改"
     fake_upcoming_change: "这是用于测试目的虚假即将推出的更改。无需翻译此字符串。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
     rename_faq_to_guidelines: "此次更改将常见问题解答页面重命名为准则。常见问题解答页面仍可通过 /faq 访问。'faq url' 设置与以前一样有效。"

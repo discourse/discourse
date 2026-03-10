@@ -60,6 +60,7 @@ tr_TR:
         title: "gönderiniz çözüm olarak işaretlendi"
       category_type_support:
         title: "Destek"
+        not_support_type: "Dikkat! Bu kategoride gönderileri çözüm olarak işaretleme özelliğini devre dışı bıraktınız. Bu özelliği tekrar etkinleştirmek için Ayarlar sekmesinde ilgili ayarları bulabilirsiniz."
     topic_statuses:
       solved:
         help: "Bu konunun bir çözümü var"

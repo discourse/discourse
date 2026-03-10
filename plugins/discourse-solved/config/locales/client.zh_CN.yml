@@ -57,6 +57,7 @@ zh_CN:
         title: "您的帖子已被标记为解决方案"
       category_type_support:
         title: "支持"
+        not_support_type: "注意！您已经禁用了在此类别中将帖子标记为解决方案的功能。要重新打开，您可以在 \"设置 \"选项卡中找到相关设置。"
     topic_statuses:
       solved:
         help: "此话题有解决方案"

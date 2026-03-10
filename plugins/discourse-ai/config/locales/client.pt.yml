@@ -80,7 +80,7 @@ pt:
           one: "LLM:"
           other: "LLMs:"
         no_llm: "Nenhum LLM selecionado"
-        no_persona: "Não definido"
+        no_agent: "Não definido"
         no_groups: "Nenhuma"
         edit: "Configurações"
         expand_list:
@@ -169,8 +169,8 @@ pt:
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."
-      ai_persona:
-        back: "Retroceder"
+      ai_agent:
+        back: "Anterior"
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
@@ -191,6 +191,7 @@ pt:
         features_list:
           one: "Funcionalidade:"
           other: "Funcionalidades:"
+        llms_list: "LLM:"
       rag:
         uploads:
           title: "Uploads"

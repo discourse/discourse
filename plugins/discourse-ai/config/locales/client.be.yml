@@ -81,7 +81,7 @@ be:
         username: "Імя карыстальніка"
         total_requests: "Усяго запытаў"
         total: "Усяго"
-      ai_persona:
+      ai_agent:
         back: "Назад"
         name: "Імя"
         edit: "Рэдагаваць"
@@ -93,7 +93,7 @@ be:
         response_format:
           open_modal: "Рэдагаваць"
         filters:
-          reset: "скінуць"
+          reset: "Скінуць"
       rag:
         uploads:
           title: "Загрузкі"

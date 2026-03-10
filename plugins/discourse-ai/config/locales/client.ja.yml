@@ -12,8 +12,6 @@ ja:
           descriptions:
             discourse_ai:
               search: "AI 検索を許可します"
-              stream_completion: "ストリーミング AI ペルソナの補完を許可します"
-              update_personas: "AI ペルソナの更新を許可します"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -35,9 +33,6 @@ ja:
             create_ai_llm_model: "LLM モデルを作成"
             update_ai_llm_model: "LLM モデルを更新"
             delete_ai_llm_model: "LLM モデルを削除"
-            create_ai_persona: "AI ペルソナを作成"
-            update_ai_persona: "AI ペルソナを更新"
-            delete_ai_persona: "AI ペルソナを削除"
             create_ai_tool: "AI ツールを作成"
             update_ai_tool: "AI ツールを更新"
             delete_ai_tool: "AI ツールを削除"
@@ -110,9 +105,6 @@ ja:
             top_p:
               label: "Top P"
               description: "LLM に使用する Top P。値を増やすとランダム性が増加します (モデルのデフォルトを使用する場合は空白)"
-            persona_id:
-              label: "ペルソナ"
-              description: "レポートの生成に使用する AI ペルソナ"
         ai_tool_action:
           fields:
             tool:
@@ -121,22 +113,14 @@ ja:
             llm_model:
               label: "LLM モデル"
               description: "llm.generate() を使用するツールの言語モデル (オプション)"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "ペルソナ"
-              description: "トリアージに使用する AI ペルソナ (デフォルトの LLM とユーザーが設定されている必要があります)"
             whisper:
               label: "ささやきで返信"
-              description: "ペルソナの応答をささやきにするかどうか"
             silent_mode:
               label: "サイレントモード"
-              description: "サイレントモードでは、ペルソナはコンテンツを受信しますが、フォーラムには投稿しません。ツールを使ってトリアージを実行する場合に役立ちます"
         llm_triage:
           fields:
-            triage_persona:
-              label: "ペルソナ"
-              description: "トリアージに使用されるペルソナ。ユーザーがアクションのトリガーに使用できる 1 つの単語でプロンプトが応答できるようにしてください"
             max_post_tokens:
               label: "最大投稿トークン"
               description: "LLM トリアージを使用してスキャンするトークンの最大数"
@@ -182,9 +166,6 @@ ja:
             whisper:
               label: "ささやきで返信"
               description: "AI の応答をささやきにするかどうか"
-            reply_persona:
-              label: "返信ペルソナ"
-              description: "返信に使用する AI ペルソナ (デフォルトの LLM が必要です)。定型返信よりも優先されます。"
             max_output_tokens:
               label: "最大出力トークン"
               description: "指定すると、モデルが生成できるトークンの最大数に上限が設定されます。LLM の最大出力トークン制限に従います。"
@@ -193,9 +174,6 @@ ja:
             manual: "特定のタグリストを使用する (下で構成)"
             discover: "AI にあらゆるサイトタグの発見と使用を任せる"
           fields:
-            tagger_persona:
-              label: "AI ペルソナ"
-              description: "トピックの分析とタグ付けに使用する AI ペルソナ"
             tag_mode:
               label: "タグ選択モード"
               description: "AI によるタグの選択方法を選択します"
@@ -224,22 +202,18 @@ ja:
       title: "AI"
       default_llm:
         title: "デフォルトの LLM モデル"
-        description: "すべての AI 機能に使用するデフォルトの LLM モデル。これは、機能の構成またはペルソナで LLM が指定されていない場合に使用されます。デフォルトの LLM が指定されていない場合、最後に作成された LLM が使用されます。"
       llm_selector:
         none: "なし"
       features:
         short_title: "機能"
-        description: "これらは、サイトの訪問者が使用できる AI 機能です。これらは、特定のペルソナと LLM を使用するために構成することができ、グループごとにアクセスを制御できます。"
         back: "戻る"
         settings_save_error: "一部の設定を保存できませんでした。"
         disabled: "(無効)"
-        persona:
-          other: "ペルソナ:"
         groups: "グループ:"
         llm:
           other: "LLM:"
         no_llm: "LLM が選択されていません"
-        no_persona: "未設定"
+        no_agent: "未設定"
         no_groups: "なし"
         edit: "設定"
         expand_list:
@@ -259,7 +233,6 @@ ja:
           unconfigured: "未構成"
         filters:
           all: "すべて"
-          text: "機能、ペルソナ、LLM、またはグループを検索します..."
           no_results: "フィルタに一致する機能は見つかりませんでした。"
           reset: "リセット"
         no_automations: "まだ自動化はありません"
@@ -303,7 +276,6 @@ ja:
             settings: "基本設定"
             topic_criteria: "トピック基準"
             post_criteria: "投稿基準"
-            personas: "ペルソナ"
         ai_helper:
           name: "ヘルパー"
           description: "トピックの作成、投稿の作成、コンテンツの閲覧など、ユーザーのコミュニティー操作を支援します"
@@ -322,7 +294,6 @@ ja:
             access_permissions: "アクセスと権限"
             enabled_features: "有効な機能"
             automation: "自動化"
-            personas: "ペルソナ"
         translation:
           name: "翻訳"
           description: "コンテンツをサポートされている言語で翻訳します"
@@ -336,7 +307,6 @@ ja:
           schedule_topic_error: "翻訳をスケジュールできませんでした。もう一度お試しください。"
           setting_groups:
             settings: "基本設定"
-            personas: "ペルソナ"
             backfill_and_limits: "バックフィルと制限"
         spam:
           name: "迷惑"
@@ -390,7 +360,6 @@ ja:
         short_title: "迷惑"
         title: "迷惑処理の構成"
         select_llm: "LLM を選択してください"
-        select_persona: "ペルソナを選択"
         custom_instructions: "カスタム指示"
         custom_instructions_help: "AI による迷惑行為の識別を誘導しやすくする、サイト固有のカスタム指示。例: 「英語以外の投稿をより積極的にスキャンする」。"
         last_seven_days: "過去 7 日間"
@@ -476,7 +445,7 @@ ja:
           last_month: "先月"
           custom: "カスタム..."
         credit_allocations: "クレジットの割り当て"
-      ai_persona:
+      ai_agent:
         ai_tools: "ツール"
         tool_strategies:
           all: "すべての返信に適用"
@@ -487,7 +456,6 @@ ja:
         edit: "編集"
         export: "エクスポート"
         import: "インポート"
-        import_error_conflict: "%{name} のインポート中に競合が検出されました。既存のペルソナを更新しますか？"
         overwrite: "上書き"
         description: "説明"
         no_llm_selected: "言語モデルは選択されていません"
@@ -503,47 +471,32 @@ ja:
         show_thinking: 思考中を示す
         show_thinking_help: エンドユーザーに言語モデルの内部的な思考とツールの呼び出しを表示します。
         mentionable: メンションを許可
-        mentionable_help: 有効にすると、許可されているグループのユーザーは投稿内でこのユーザーをメンションでき、AI はこのペルソナとして返答します。
         user: ユーザー
         create_user: ユーザーを作成
-        create_user_help: オプションで、このペルソナにユーザーを関連付けられます。その場合、AI はこのユーザーを使用してリクエストに応答します。
         default_llm: デフォルトの言語モデル
-        default_llm_help: このペルソナに使用するデフォルトの言語モデル。公開投稿でペルソナをメンションする場合には必須です。
         question_consolidator_llm: 質問統合用の言語モデル
         question_consolidator_llm_help: 質問統合に使用する言語モデル。それほど強力でないモデルを選択してコストを節約することも可能です。
         system_prompt: システムプロンプト
         forced_tool_strategy: 強制されるツール戦略
         allow_chat_direct_messages: "チャットダイレクトメッセージを許可"
-        allow_chat_direct_messages_help: "有効にすると、許可されているグループのユーザーはこのペルソナにダイレクトメッセージを送信できます。"
         allow_chat_channel_mentions: "チャットチャンネルのメンションを許可"
-        allow_chat_channel_mentions_help: "有効にすると、許可されたグループ内のユーザーはチャットチャンネルでこのペルソナをメンションできます。"
         allow_personal_messages: "個人メッセージを許可"
-        allow_personal_messages_help: "有効にすると、許可されているグループのユーザーはこのペルソナに個人メッセージを送信できます。"
         allow_topic_mentions: "トピックのメンションを許可"
-        allow_topic_mentions_help: "有効にすると、許可されたグループ内のユーザーはトピックでこのペルソナをメンションできます。"
         force_default_llm: "常にデフォルトの言語モデルを使用する"
         save: "保存"
-        saved: "ペルソナが保存されました"
         enabled: "有効ですか？"
         tools: "有効なツール"
         forced_tools: "強制されたツール"
         allowed_groups: "許可されたグループ"
-        confirm_delete: "このペルソナを削除してもよろしいですか？"
-        new: "新しいペルソナ"
-        no_personas: "ペルソナをまだ作成していません"
-        title: "ペルソナ"
-        short_title: "ペルソナ"
         delete: "削除"
         temperature: "Temperature"
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
         top_p: "Top P"
         top_p_help: "LLM に使用する Top P。値を増やすとランダム性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～1.0 の値です)"
         priority: "優先度"
-        priority_help: "優先ペルソナはペルソナリストの先頭に表示されます。複数のペルソナが優先されている場合は、アルファベット順に並べ替えられます。"
         tool_options: "ツールのオプション"
         rag_conversation_chunks: "会話チャンクを検索"
         rag_conversation_chunks_help: "RAG モデル検索に使用するチャンクの数。値を増やすと、AI が使用できるコンテキストの量が増えます。"
-        persona_description: "ペルソナは、Discourse フォーラムの AI エンジンの動作をカスタマイズできる強力な機能です。AI の応答と対話を誘導する「システムメッセージ」として機能し、よりパーソナライズされた魅力的なユーザーエクスペリエンスの作成に役立ちます。"
         response_format:
           title: "JSON レスポンス形式"
           no_format: "JSON 形式が指定されていません"
@@ -563,11 +516,8 @@ ja:
           enabled: "AI ボット？"
         ai_bot:
           title: "AI ボットのオプション"
-          save_first: "ペルソナを保存すると、さらに多くの AI ボットオプションを利用できるようになります。"
         filters:
-          text: "ペルソナを探す"
           reset: "リセット"
-          no_results: "フィルタに一致するペルソナは見つかりませんでした。"
           all_features: "任意の機能"
         features_list:
           other: "機能:"
@@ -606,7 +556,6 @@ ja:
         name_help: "名前は Discourse UI に表示され、様々な設定で検索する際に使用する短い識別子です。一意である必要があります (必須)。"
         new: "新しいツール"
         tool_name: "ツール名"
-        tool_name_help: "ツール名は大規模言語モデルに提示されます。一意ではありませんが、ペルソナごとに異なります (保存時に検証されます)。"
         description: "説明"
         description_help: "言語モデルに対するツールの目的の明確な説明"
         subheader_description: "ツールは、ユーザー定義の JavaScript 関数を使用して、AI ボットの機能を拡張します。"
@@ -697,13 +646,12 @@ ja:
           next_reset: "クレジットは %{time} にリセットされます"
         usage:
           ai_bot: "AI ボット"
-          ai_helper: "ヘルパー (%{persona})"
+          ai_helper: "ヘルパー (%{agent})"
           ai_helper_image_caption: "画像キャプション"
-          ai_persona: "ペルソナ (%{persona})"
           ai_summarization: "要約"
           ai_embeddings_semantic_search: "AI 検索"
           ai_spam: "迷惑"
-          automation: "自動化 (%{persona})"
+          automation: "自動化 (%{agent})"
         in_use_warning:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
@@ -904,7 +852,6 @@ ja:
         collapse_view_label: "全画面表示を終了 (ESC または「戻る」ボタン)"
         click_to_run_label: "アーティファクトを実行"
       ai_bot:
-        persona: "ペルソナ"
         llm: "モデル"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"

@@ -12,6 +12,12 @@ zh_CN:
         categories:
           discourse_post_event: "Discourse Event"
           discourse_calendar: "日历与活动"
+      web_hooks:
+        calendar_event:
+          group_name: "日历活动"
+          calendar_event_created: "日历活动已创建"
+          calendar_event_updated: "日历活动已更新"
+          calendar_event_destroyed: "日历活动已删除"
   js:
     notifications:
       titles:
