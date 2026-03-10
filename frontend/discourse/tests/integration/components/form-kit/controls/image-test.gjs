@@ -97,5 +97,22 @@ module(
       assert.dom(".file-uploader__controls input[type='file']").isDisabled();
       assert.dom(".file-uploader__controls .btn-danger").isDisabled();
     });
+
+    test("@placeholderUrl", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="image_url" @title="Foo" as |field|>
+              <field.Image
+                @type="site_setting"
+                @placeholderUrl="/images/avatar.png"
+              />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".placeholder-overlay").exists();
+    });
   }
 );

@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import curryComponent from "ember-curry-component";
+import { modifier as modifierFn } from "ember-modifier";
 import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
@@ -21,34 +24,30 @@ import FKControlSelect from "discourse/form-kit/components/fk/control/select";
 import FKControlTagChooser from "discourse/form-kit/components/fk/control/tag-chooser";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
-import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
 import FKFieldData from "discourse/form-kit/components/fk/field-data";
+import FKLabel from "discourse/form-kit/components/fk/label";
+import FKMeta from "discourse/form-kit/components/fk/meta";
+import FKOptional from "discourse/form-kit/components/fk/optional";
 import FKRow from "discourse/form-kit/components/fk/row";
+import FKText from "discourse/form-kit/components/fk/text";
+import FKTooltip from "discourse/form-kit/components/fk/tooltip";
+import concatClass from "discourse/helpers/concat-class";
+import { eq } from "discourse/truth-helpers";
 
 export default class FKField extends Component {
   @action
   componentFor(component, field) {
-    const instance = this;
-    const baseArguments = {
-      get errors() {
-        return instance.args.errors;
-      },
-      unregisterField: instance.args.unregisterField,
-      registerField: instance.args.registerField,
-      component,
-      field,
-    };
-
     if (!component.controlType) {
       throw new Error(
         `Static property \`controlType\` is required on component:\n\n ${component}`
       );
     }
 
-    return curryComponent(FKControlWrapper, baseArguments, getOwner(this));
+    return curryComponent(component, { field }, getOwner(this));
   }
 
   <template>
+<<<<<<< HEAD
     <FKFieldData
       @name={{@name}}
       @data={{@data}}

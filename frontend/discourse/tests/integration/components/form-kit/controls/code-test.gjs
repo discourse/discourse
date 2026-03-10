@@ -31,6 +31,43 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     assert.form().field("foo").hasValue("bar");
   });
 
+  test("@height", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Code @height={{100}} />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.strictEqual(
+      document.querySelector(".form-kit__control-code").style.height,
+      "100px"
+    );
+  });
+
+  test("@lang", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Code @lang="sql" />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.strictEqual(
+      document
+        .querySelector(".form-kit__control-code")
+        .aceEditor.getSession()
+        .getMode().$id,
+      "ace/mode/sql"
+    );
+  });
+
   test("when disabled", async function (assert) {
     await render(
       <template>

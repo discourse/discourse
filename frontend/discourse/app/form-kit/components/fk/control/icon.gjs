@@ -1,9 +1,9 @@
-import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import IconPicker from "discourse/select-kit/components/icon-picker";
 
-export default class FKControlIcon extends Component {
+export default class FKControlIcon extends FKBaseControl {
   static controlType = "icon";
 
   @action

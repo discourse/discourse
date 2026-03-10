@@ -1,7 +1,7 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import concatClass from "discourse/helpers/concat-class";
 
 const SUPPORTED_TYPES = [
@@ -22,11 +22,11 @@ const SUPPORTED_TYPES = [
   "week",
 ];
 
-export default class FKControlInput extends Component {
+export default class FKControlInput extends FKBaseControl {
   static controlType = "input";
 
   constructor(owner, args) {
-    super(...arguments);
+    super(owner, args);
 
     if (["checkbox", "radio"].includes(args.type)) {
       throw new Error(
@@ -41,6 +41,8 @@ export default class FKControlInput extends Component {
         }", must be one of ${SUPPORTED_TYPES.join(", ")}!`
       );
     }
+
+    args.field.type = "input-" + (args.type ?? "text");
   }
 
   get type() {
@@ -100,6 +102,10 @@ export default class FKControlInput extends Component {
           (if @after "has-suffix")
         }}
         disabled={{@field.disabled}}
+        id={{@field.id}}
+        name={{@field.name}}
+        aria-invalid={{if @field.error "true"}}
+        aria-describedby={{if @field.error @field.errorId}}
         ...attributes
         {{on "focus" this.handleFocus}}
         {{on "blur" this.handleBlur}}
