@@ -222,6 +222,7 @@ class AiAgent < ActiveRecord::Base
       execution_mode
       max_turn_tokens
       compression_threshold
+      require_approval
     ]
 
     instance_attributes = {}

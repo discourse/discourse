@@ -44,6 +44,10 @@ module DiscourseAi
           "set_topic_timer"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           topic = Topic.find_by(id: parameters[:topic_id])
           if !topic

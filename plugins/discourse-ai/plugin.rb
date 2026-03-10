@@ -107,6 +107,7 @@ after_initialize do
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
+  register_reviewable_type ReviewableAiToolAction
 
   on(:reviewable_transitioned_to) do |new_status, reviewable|
     ModelAccuracy.adjust_model_accuracy(new_status, reviewable)

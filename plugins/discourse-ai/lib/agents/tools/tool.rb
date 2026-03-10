@@ -43,6 +43,10 @@ module DiscourseAi
             false
           end
 
+          def requires_approval?
+            false
+          end
+
           def inject_prompt(prompt:, context:, agent:)
           end
 

@@ -827,6 +827,16 @@ export default class AgentEditor extends Component {
             <field.Toggle />
           </form.Field>
 
+          <form.Field
+            @name="require_approval"
+            @title={{i18n "discourse_ai.ai_agent.require_approval"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.require_approval_help"}}
+            @format="large"
+            as |field|
+          >
+            <field.Checkbox />
+          </form.Field>
+
           {{#if @model.isNew}}
             <div>{{i18n "discourse_ai.ai_agent.ai_bot.save_first"}}</div>
           {{else}}

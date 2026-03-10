@@ -53,6 +53,10 @@ module DiscourseAi
           "move_posts"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           topic = Topic.find_by(id: parameters[:topic_id])
           return error_response(I18n.t("discourse_ai.ai_bot.move_posts.errors.not_found")) if !topic

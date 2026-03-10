@@ -37,6 +37,10 @@ module DiscourseAi
           "mark_as_solved"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           if !defined?(::DiscourseSolved)
             return(
