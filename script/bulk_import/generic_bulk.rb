@@ -1840,8 +1840,7 @@ class BulkImport::Generic < BulkImport::Base
         FROM user_custom_fields
     SQL
 
-    existing_names =
-      query(<<~SQL) { |rs| rs.map { |r| r["name"] } }
+    existing_names = query(<<~SQL) { |rs| rs.map { |r| r["name"] } }
         SELECT DISTINCT name FROM user_custom_fields
       SQL
 
@@ -1854,7 +1853,12 @@ class BulkImport::Generic < BulkImport::Base
       next if !user_id
       next if existing.include?([user_id, row["name"]])
 
-      { user_id: user_id, name: row["name"], value: row["value"], created_at: to_datetime(row["created_at"]) }
+      {
+        user_id: user_id,
+        name: row["name"],
+        value: row["value"],
+        created_at: to_datetime(row["created_at"]),
+      }
     end
 
     rows.close
