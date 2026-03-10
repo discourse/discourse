@@ -43,7 +43,7 @@ export default class ChatModalChannelSummary extends Component {
     }
 
     return ajax(`/discourse-ai/summarization/channels/${this.channelId}.json`, {
-      type: "GET",
+      type: "POST",
       data: {
         since,
       },
