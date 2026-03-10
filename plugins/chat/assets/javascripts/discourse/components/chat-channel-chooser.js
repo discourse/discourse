@@ -13,6 +13,8 @@ import ChatChannelChooserRow from "./chat-channel-chooser-row";
 })
 @pluginApiIdentifiers("chat-channel-chooser")
 export default class ChatChannelChooser extends ComboBoxComponent {
+  nameProperty = "title";
+
   modifyComponentForRow() {
     return ChatChannelChooserRow;
   }
