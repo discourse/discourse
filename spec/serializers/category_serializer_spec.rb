@@ -128,6 +128,39 @@ RSpec.describe CategorySerializer do
     end
   end
 
+  describe "#topic_approval_group_ids and #reply_approval_group_ids" do
+    fab!(:topic_group, :group)
+    fab!(:reply_group, :group)
+
+    before do
+      Fabricate(
+        :category_approval_group,
+        category: category,
+        group: topic_group,
+        approval_type: "topic",
+      )
+      Fabricate(
+        :category_approval_group,
+        category: category,
+        group: reply_group,
+        approval_type: "reply",
+      )
+    end
+
+    it "exposes topic_approval_group_ids and reply_approval_group_ids" do
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+      expect(json[:topic_approval_group_ids]).to contain_exactly(topic_group.id)
+      expect(json[:reply_approval_group_ids]).to contain_exactly(reply_group.id)
+    end
+
+    it "returns empty arrays when no approval groups are associated" do
+      other_category = Fabricate(:category)
+      json = described_class.new(other_category, scope: Guardian.new, root: false).as_json
+      expect(json[:topic_approval_group_ids]).to eq([])
+      expect(json[:reply_approval_group_ids]).to eq([])
+    end
+  end
+
   describe "name and description" do
     fab!(:category_with_localization) do
       Fabricate(:category, name: "Original Name", description: "Original Description", locale: "en")

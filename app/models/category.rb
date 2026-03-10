@@ -37,6 +37,15 @@ class Category < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
+  has_many :category_approval_groups, dependent: :destroy
+  has_many :topic_approval_groups,
+           -> { where(approval_type: "topic") },
+           class_name: "CategoryApprovalGroup",
+           dependent: :destroy
+  has_many :reply_approval_groups,
+           -> { where(approval_type: "reply") },
+           class_name: "CategoryApprovalGroup",
+           dependent: :destroy
   has_many :groups, through: :category_groups
   has_many :moderating_groups, through: :category_moderation_groups, source: :group
   has_many :topic_timers, dependent: :destroy
@@ -47,12 +56,13 @@ class Category < ActiveRecord::Base
   delegate :auto_bump_cooldown_days,
            :num_auto_bump_daily,
            :num_auto_bump_daily=,
-           :require_reply_approval,
-           :require_reply_approval=,
-           :require_reply_approval?,
-           :require_topic_approval,
-           :require_topic_approval=,
-           :require_topic_approval?,
+           to: :category_setting,
+           allow_nil: true
+
+  delegate :topic_approval_type,
+           :topic_approval_type=,
+           :reply_approval_type,
+           :reply_approval_type=,
            to: :category_setting,
            allow_nil: true
 
@@ -1031,6 +1041,14 @@ class Category < ActiveRecord::Base
 
   def moderating_group_ids
     category_moderation_groups.pluck(:group_id)
+  end
+
+  def topic_approval_group_ids
+    topic_approval_groups.pluck(:group_id)
+  end
+
+  def reply_approval_group_ids
+    reply_approval_groups.pluck(:group_id)
   end
 
   def self.find_by_slug_path(slug_path)

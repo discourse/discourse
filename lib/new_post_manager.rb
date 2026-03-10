@@ -129,19 +129,44 @@ class NewPostManager
   end
 
   def self.post_needs_approval_in_its_category?(manager)
+    user = manager.user
+
     if manager.args[:topic_id].present?
       cat = Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
       return false unless cat
-
-      topic = Topic.find(manager.args[:topic_id])
-      cat.require_reply_approval? && !manager.user.guardian.can_review_topic?(topic)
+      approval_needed?(user, cat, :reply)
     elsif manager.args[:category].present?
       cat = Category.find(manager.args[:category])
-      cat.require_topic_approval? && !manager.user.guardian.is_category_group_moderator?(cat)
+      approval_needed?(user, cat, :topic)
     else
       false
     end
   end
+
+  def self.approval_needed?(user, category, type)
+    case category.send(:"#{type}_approval_type").to_sym
+    when :none
+      false
+    when :all
+      true
+    when :except_groups
+      !user_in_category_approval_groups?(user, category, type)
+    when :only_groups
+      user_in_category_approval_groups?(user, category, type)
+    else
+      false
+    end
+  end
+  private_class_method :approval_needed?
+
+  def self.user_in_category_approval_groups?(user, category, type)
+    CategoryApprovalGroup
+      .joins("INNER JOIN group_users ON group_users.group_id = category_approval_groups.group_id")
+      .where(category: category, approval_type: type)
+      .where(group_users: { user_id: user.id })
+      .exists?
+  end
+  private_class_method :user_in_category_approval_groups?
 
   def self.default_handler(manager)
     reason = post_needs_approval?(manager)

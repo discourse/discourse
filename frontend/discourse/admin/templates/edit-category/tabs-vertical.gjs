@@ -60,6 +60,12 @@ const EditCategoryTabsVerticalTemplate = <template>
         @panels={{@controller.panels}}
         @selectedTab={{@controller.selectedTab}}
         @params={{@controller.parentParams}}
+        @tab="moderation"
+      />
+      <EditCategoryTab
+        @panels={{@controller.panels}}
+        @selectedTab={{@controller.selectedTab}}
+        @params={{@controller.parentParams}}
         @tab="images"
       />
       <EditCategoryTab

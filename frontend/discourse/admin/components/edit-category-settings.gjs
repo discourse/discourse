@@ -6,7 +6,6 @@ import { and, empty } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
 import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -16,7 +15,6 @@ import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategorySettings extends buildCategoryPanel(
@@ -154,28 +152,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
     ];
   }
 
-  @computed
-  get hiddenRelativeIntervals() {
-    return ["mins"];
-  }
-
-  @action
-  onAutoCloseDurationChange(minutes) {
-    let hours = minutes ? minutes / 60 : null;
-    this.set("category.auto_close_hours", hours);
-  }
-
-  @action
-  onDefaultSlowModeDurationChange(minutes) {
-    let seconds = minutes ? minutes * 60 : null;
-    this.set("category.default_slow_mode_seconds", seconds);
-  }
-
-  @action
-  onCategoryModeratingGroupsChange(groupIds) {
-    this.set("category.moderating_group_ids", groupIds);
-  }
-
   @action
   onFormCheckboxChange(field, event) {
     this.form.set(field, event.target.checked);
@@ -296,114 +272,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
           />
           {{i18n "category.allow_unlimited_owner_edits_on_first_post"}}
         </label>
-      </section>
-    </section>
-
-    <section>
-      <h3>{{i18n "category.settings_sections.moderation"}}</h3>
-      {{#if this.siteSettings.enable_category_group_moderation}}
-        <section class="field reviewable-by-group">
-          <label>{{i18n "category.reviewable_by_group"}}</label>
-          <GroupChooser
-            @content={{this.site.groups}}
-            @value={{this.category.moderating_group_ids}}
-            @onChange={{this.onCategoryModeratingGroupsChange}}
-          />
-        </section>
-      {{/if}}
-
-      <section class="field require-topic-approval">
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.category.category_setting.require_topic_approval}}
-          />
-          {{i18n "category.require_topic_approval"}}
-        </label>
-      </section>
-
-      <section class="field require-reply-approval">
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.category.category_setting.require_reply_approval}}
-          />
-          {{i18n "category.require_reply_approval"}}
-        </label>
-      </section>
-
-      <section class="field default-slow-mode">
-        <div class="control-group">
-          <label for="category-default-slow-mode">
-            {{i18n "category.default_slow_mode"}}
-          </label>
-          <div class="category-default-slow-mode-seconds">
-            <RelativeTimePicker
-              @id="category-default-slow-mode"
-              @durationMinutes={{this.category.defaultSlowModeMinutes}}
-              @onChange={{this.onDefaultSlowModeDurationChange}}
-            />
-          </div>
-        </div>
-      </section>
-
-      <section class="field auto-close">
-        <div class="control-group">
-          <label for="topic-auto-close">
-            {{i18n "topic.auto_close.label"}}
-          </label>
-          <div class="category-topic-auto-close-hours">
-            <RelativeTimePicker
-              @id="topic-auto-close"
-              @durationHours={{this.category.auto_close_hours}}
-              @hiddenIntervals={{this.hiddenRelativeIntervals}}
-              @onChange={{this.onAutoCloseDurationChange}}
-            />
-          </div>
-          <label class="checkbox-label">
-            <Input
-              @type="checkbox"
-              @checked={{this.category.auto_close_based_on_last_post}}
-            />
-            {{i18n "topic.auto_close.based_on_last_post"}}
-          </label>
-        </div>
-      </section>
-
-      <section class="field num-auto-bump-daily">
-        <label for="category-number-daily-bump">
-          {{i18n "category.num_auto_bump_daily"}}
-        </label>
-        <input
-          {{on
-            "input"
-            (withEventValue
-              (fn (mut this.category.category_setting.num_auto_bump_daily))
-            )
-          }}
-          value={{this.category.category_setting.num_auto_bump_daily}}
-          type="number"
-          min="0"
-          id="category-number-daily-bump"
-        />
-      </section>
-
-      <section class="field auto-bump-cooldown-days">
-        <label for="category-auto-bump-cooldown-days">
-          {{i18n "category.auto_bump_cooldown_days"}}
-        </label>
-        <input
-          {{on
-            "input"
-            (withEventValue
-              (fn (mut this.category.category_setting.auto_bump_cooldown_days))
-            )
-          }}
-          value={{this.category.category_setting.auto_bump_cooldown_days}}
-          type="number"
-          min="0"
-          id="category-auto-bump-cooldown-days"
-        />
       </section>
     </section>
 

@@ -4,12 +4,14 @@ import ChangesBanner from "discourse/admin/components/changes-banner";
 import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
 import EditCategoryImages from "discourse/admin/components/edit-category-images";
 import EditCategoryLocalizations from "discourse/admin/components/edit-category-localizations";
+import EditCategoryModeration from "discourse/admin/components/edit-category-moderation";
 import EditCategorySecurity from "discourse/admin/components/edit-category-security";
 import EditCategorySettings from "discourse/admin/components/edit-category-settings";
 import EditCategoryTags from "discourse/admin/components/edit-category-tags";
 import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
 import UpsertCategoryAppearance from "discourse/admin/components/upsert-category/appearance";
 import UpsertCategoryGeneral from "discourse/admin/components/upsert-category/general";
+import UpsertCategoryModeration from "discourse/admin/components/upsert-category/moderation";
 import UpsertCategorySecurity from "discourse/admin/components/upsert-category/security";
 import UpsertCategorySettings from "discourse/admin/components/upsert-category/settings";
 import UpsertCategoryTags from "discourse/admin/components/upsert-category/tags";
@@ -24,6 +26,7 @@ const TAB_COMPONENTS = {
   general: EditCategoryGeneral,
   security: EditCategorySecurity,
   settings: EditCategorySettings,
+  moderation: EditCategoryModeration,
   images: EditCategoryImages,
   "topic-template": EditCategoryTopicTemplate,
   tags: EditCategoryTags,
@@ -35,6 +38,7 @@ const TAB_COMPONENTS_V2 = {
   general: UpsertCategoryGeneral,
   security: UpsertCategorySecurity,
   settings: UpsertCategorySettings,
+  moderation: UpsertCategoryModeration,
   images: UpsertCategoryAppearance,
   "topic-template": EditCategoryTopicTemplate,
   tags: UpsertCategoryTags,

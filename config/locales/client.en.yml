@@ -4852,6 +4852,15 @@ en:
         all: "All topics"
         none: "No subcategories"
       colors_disabled: "You can’t select colors because you have a category style of none."
+      moderation: "Moderation"
+      topic_approval_type: "Topic posting approval"
+      reply_approval_type: "Reply posting approval"
+      approval_types:
+        no_one: "No approval required"
+        everyone: "Require approval from everyone"
+        except_groups: "Require approval from everyone except certain groups"
+        only_groups: "Require approval from certain groups only"
+      approval_groups_required: "Please select at least one group."
 
     anonymous_flagging:
       title: "Report illegal content"

@@ -1013,9 +1013,6 @@ RSpec.describe CategoriesController do
         end
 
         it "updates per-category settings correctly" do
-          category.require_topic_approval = false
-          category.require_reply_approval = false
-
           category.navigate_to_first_post_after_read = false
           category.save!
 
@@ -1026,15 +1023,11 @@ RSpec.describe CategoriesController do
                 text_color: category.text_color,
                 navigate_to_first_post_after_read: true,
                 category_setting_attributes: {
-                  require_reply_approval: true,
-                  require_topic_approval: true,
                   num_auto_bump_daily: 10,
                 },
               }
 
           category.reload
-          expect(category.require_topic_approval?).to eq(true)
-          expect(category.require_reply_approval?).to eq(true)
           expect(category.num_auto_bump_daily).to eq(10)
           expect(category.navigate_to_first_post_after_read).to eq(true)
         end
@@ -1232,6 +1225,130 @@ RSpec.describe CategoriesController do
             expect(response.status).to eq(200)
             expect(SiteSetting.max_category_nesting).to eq(3)
           end
+        end
+
+        it "sets topic_approval_type on the category setting" do
+          put "/categories/#{category.id}.json", params: { topic_approval_type: "all" }
+          expect(response.status).to eq(200)
+          expect(category.reload.topic_approval_type).to eq("all")
+        end
+
+        it "sets topic approval groups when topic_approval_type is except_groups" do
+          put "/categories/#{category.id}.json",
+              params: {
+                topic_approval_type: "except_groups",
+                topic_approval_group_ids: [mod_group_1.id],
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.topic_approval_groups.map(&:group_id)).to contain_exactly(
+            mod_group_1.id,
+          )
+        end
+
+        it "replaces topic approval groups on update" do
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: mod_group_2,
+            approval_type: "topic",
+          )
+          put "/categories/#{category.id}.json",
+              params: {
+                topic_approval_type: "except_groups",
+                topic_approval_group_ids: [mod_group_1.id, mod_group_3.id],
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.topic_approval_groups.map(&:group_id)).to contain_exactly(
+            mod_group_1.id,
+            mod_group_3.id,
+          )
+        end
+
+        it "clears topic approval groups when topic_approval_type changes to none" do
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: mod_group_1,
+            approval_type: "topic",
+          )
+          put "/categories/#{category.id}.json",
+              params: {
+                topic_approval_type: "none",
+                topic_approval_group_ids: [],
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.topic_approval_groups).to be_empty
+        end
+
+        it "rejects invalid group IDs for topic_approval_group_ids" do
+          put "/categories/#{category.id}.json",
+              params: {
+                topic_approval_type: "except_groups",
+                topic_approval_group_ids: [Group.maximum(:id) + 1],
+              }
+          expect(response.status).to eq(422)
+        end
+
+        it "sets reply_approval_type on the category setting" do
+          put "/categories/#{category.id}.json", params: { reply_approval_type: "all" }
+          expect(response.status).to eq(200)
+          expect(category.reload.reply_approval_type).to eq("all")
+        end
+
+        it "sets reply approval groups when reply_approval_type is except_groups" do
+          put "/categories/#{category.id}.json",
+              params: {
+                reply_approval_type: "except_groups",
+                reply_approval_group_ids: [mod_group_1.id],
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.reply_approval_groups.map(&:group_id)).to contain_exactly(
+            mod_group_1.id,
+          )
+        end
+
+        it "replaces reply approval groups on update" do
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: mod_group_2,
+            approval_type: "reply",
+          )
+          put "/categories/#{category.id}.json",
+              params: {
+                reply_approval_type: "except_groups",
+                reply_approval_group_ids: [mod_group_1.id, mod_group_3.id],
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.reply_approval_groups.map(&:group_id)).to contain_exactly(
+            mod_group_1.id,
+            mod_group_3.id,
+          )
+        end
+
+        it "clears reply approval groups when reply_approval_type changes to none" do
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: mod_group_1,
+            approval_type: "reply",
+          )
+          put "/categories/#{category.id}.json",
+              params: {
+                reply_approval_type: "none",
+                reply_approval_group_ids: [],
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.reply_approval_groups).to be_empty
+        end
+
+        it "rejects invalid group IDs for reply_approval_group_ids" do
+          put "/categories/#{category.id}.json",
+              params: {
+                reply_approval_type: "except_groups",
+                reply_approval_group_ids: [Group.maximum(:id) + 1],
+              }
+          expect(response.status).to eq(422)
         end
       end
     end

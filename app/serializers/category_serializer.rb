@@ -6,8 +6,8 @@ class CategorySerializer < SiteCategorySerializer
   class CategorySettingSerializer < ApplicationSerializer
     attributes :auto_bump_cooldown_days,
                :num_auto_bump_daily,
-               :require_reply_approval,
-               :require_topic_approval
+               :topic_approval_type,
+               :reply_approval_type
   end
 
   class CategoryLocalizationSerializer < ApplicationSerializer
@@ -33,6 +33,8 @@ class CategorySerializer < SiteCategorySerializer
              :topic_featured_link_allowed,
              :search_priority,
              :moderating_group_ids,
+             :topic_approval_group_ids,
+             :reply_approval_group_ids,
              :default_slow_mode_seconds,
              :style_type,
              :emoji,
