@@ -343,7 +343,7 @@ export default class ChatDrawerRouter extends Service {
 
     const redirectedRoute = this.drawerRoute.redirect?.(this);
     if (redirectedRoute) {
-      this.stateFor(this.#routeFromURL(redirectedRoute));
+      await this.stateFor(this.#routeFromURL(redirectedRoute));
     }
   }
 
