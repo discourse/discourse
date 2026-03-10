@@ -27,7 +27,7 @@ module DiscourseAi
       end
 
       def initialize(
-        persona:,
+        agent:,
         user:,
         topic:,
         query:,
@@ -37,7 +37,7 @@ module DiscourseAi
         resume_token:,
         tool_results:
       )
-        @persona = persona
+        @agent = agent
         @user = user
         @topic = topic
         @query = query
@@ -63,7 +63,7 @@ module DiscourseAi
 
         event_blk.call(
           :context,
-          { topic_id: @topic.id, bot_user_id: @reply_user.id, persona_id: @persona.id },
+          { topic_id: @topic.id, bot_user_id: @reply_user.id, agent_id: @agent.id },
         )
 
         run_single_completion_round!(&event_blk)
@@ -89,23 +89,23 @@ module DiscourseAi
         else
           post_params[:title] = I18n.t("discourse_ai.ai_bot.default_pm_prefix")
           post_params[:archetype] = Archetype.private_message
-          post_params[:target_usernames] = "#{@user.username},#{@persona.user.username}"
+          post_params[:target_usernames] = "#{@user.username},#{@agent.user.username}"
         end
 
         @source_post = PostCreator.create!(@user, post_params)
         @topic = @source_post.topic
         @source_post_number = @source_post.post_number
 
-        persona_class = DiscourseAi::Personas::Persona.find_by(id: @persona.id, user: @current_user)
-        raise ProtocolError, I18n.t("discourse_ai.errors.persona_not_found") if persona_class.nil?
+        agent_class = DiscourseAi::Agents::Agent.find_by(id: @agent.id, user: @current_user)
+        raise ProtocolError, I18n.t("discourse_ai.errors.agent_not_found") if agent_class.nil?
 
-        @bot = DiscourseAi::Personas::Bot.as(@persona.user, persona: persona_class.new)
+        @bot = DiscourseAi::Agents::Bot.as(@agent.user, agent: agent_class.new)
         @reply_user = @bot.bot_user
         @llm_model_id = @bot.model.id
 
-        max_context_posts = @bot.persona.class.max_context_posts || 40
+        max_context_posts = @bot.agent.class.max_context_posts || 40
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             post: @source_post,
             user: @user,
             custom_instructions: @custom_instructions,
@@ -113,20 +113,20 @@ module DiscourseAi
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 @source_post,
                 max_posts: max_context_posts,
-                include_uploads: @bot.persona.class.vision_enabled,
+                include_uploads: @bot.agent.class.vision_enabled,
                 bot_usernames: available_bot_usernames,
               ),
           )
 
-        @prompt = @bot.persona.craft_prompt(context, llm: @bot.llm)
-        # This endpoint supports caller-owned tool execution. We replace persona tools so every
+        @prompt = @bot.agent.craft_prompt(context, llm: @bot.llm)
+        # This endpoint supports caller-owned tool execution. We replace agent tools so every
         # emitted tool call can be completed through the resume protocol.
         @prompt.tools =
           @custom_tools.map do |tool|
             DiscourseAi::Completions::ToolDefinition.from_hash(tool.deep_symbolize_keys)
           end
-        @temperature = @bot.persona.temperature
-        @top_p = @bot.persona.top_p
+        @temperature = @bot.agent.temperature
+        @top_p = @bot.agent.top_p
       end
 
       def load_resume_state!
@@ -141,7 +141,7 @@ module DiscourseAi
           raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
         end
 
-        @persona = AiPersona.find(payload["persona_id"])
+        @agent = AiAgent.find(payload["agent_id"])
         @user = User.find(payload["user_id"])
         @topic = Topic.find(payload["topic_id"])
         @reply_user = User.find(payload["reply_user_id"])
@@ -194,7 +194,7 @@ module DiscourseAi
         # text-only call or finalize immediately — don't overshoot.
         if use_token_budget && @accumulated_tokens >= token_budget
           if @prompt.messages.last&.dig(:type) == :tool
-            DiscourseAi::Personas::Bot.inject_budget_exhausted_hint(@prompt)
+            DiscourseAi::Agents::Bot.inject_budget_exhausted_hint(@prompt)
             @prompt.tool_choice = :none
 
             final_reply = +""
@@ -271,7 +271,7 @@ module DiscourseAi
               )
             end
 
-            DiscourseAi::Personas::Bot.inject_budget_exhausted_hint(@prompt)
+            DiscourseAi::Agents::Bot.inject_budget_exhausted_hint(@prompt)
             @prompt.tool_choice = :none
 
             final_reply = +""
@@ -402,7 +402,7 @@ module DiscourseAi
         payload = {
           version: 1,
           current_user_id: @current_user&.id,
-          persona_id: @persona.id,
+          agent_id: @agent.id,
           user_id: @user.id,
           topic_id: @topic.id,
           reply_user_id: @reply_user.id,
@@ -489,7 +489,7 @@ module DiscourseAi
 
       def available_bot_usernames
         @available_bot_usernames ||=
-          AiPersona.joins(:user).pluck(:username).concat(available_bot_users.map(&:username))
+          AiAgent.joins(:user).pluck(:username).concat(available_bot_users.map(&:username))
       end
 
       def available_bot_users
@@ -497,21 +497,21 @@ module DiscourseAi
           User.joins("INNER JOIN llm_models llm ON llm.user_id = users.id").where(active: true)
       end
 
-      def resolve_persona_record
-        @_persona_record ||=
-          if @persona.is_a?(AiPersona)
-            @persona
+      def resolve_agent_record
+        @_agent_record ||=
+          if @agent.is_a?(AiAgent)
+            @agent
           else
-            AiPersona.find_by(id: @persona.id)
+            AiAgent.find_by(id: @agent.id)
           end
       end
 
       def resolve_token_budget
-        resolve_persona_record&.max_turn_tokens
+        resolve_agent_record&.max_turn_tokens
       end
 
       def resolve_execution_mode
-        resolve_persona_record&.execution_mode || "default"
+        resolve_agent_record&.execution_mode || "default"
       end
 
       def persist_reply_post!
@@ -526,20 +526,14 @@ module DiscourseAi
             custom_fields: {
               DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => llm_model.display_name,
               DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => @llm_model_id,
-              DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => @persona.id,
+              DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => @agent.id,
             },
           )
 
         if @source_post_number == 1 && @topic.private_message?
-          persona_class =
-            DiscourseAi::Personas::Persona.find_by(id: @persona.id, user: @current_user)
-          if persona_class
-            bot =
-              DiscourseAi::Personas::Bot.as(
-                @reply_user,
-                persona: persona_class.new,
-                model: llm_model,
-              )
+          agent_class = DiscourseAi::Agents::Agent.find_by(id: @agent.id, user: @current_user)
+          if agent_class
+            bot = DiscourseAi::Agents::Bot.as(@reply_user, agent: agent_class.new, model: llm_model)
             begin
               DiscourseAi::AiBot::Playground.new(bot).title_playground(reply_post, @user)
             rescue StandardError => e

@@ -35,6 +35,7 @@ hu:
         email: "E-mail:"
         amount_cents: "Összeg (centben)"
         rewards: "Jutalmak"
+        declined_since: "Felfüggeszett tagság"
         more_details:
           label: "Fizetések és további részletek"
           help_text:

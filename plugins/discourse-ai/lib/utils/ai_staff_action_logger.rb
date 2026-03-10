@@ -11,7 +11,7 @@ module DiscourseAi
         @staff_logger = ::StaffActionLogger.new(current_user)
       end
 
-      ## Logs the creation of an AI entity (LLM model or persona)
+      ## Logs the creation of an AI entity (LLM model or agent)
       ## @param entity_type [Symbol] The type of AI entity being created
       ## @param entity [Object] The entity object being created
       ## @param field_config [Hash] Configuration for how to handle different entity fields

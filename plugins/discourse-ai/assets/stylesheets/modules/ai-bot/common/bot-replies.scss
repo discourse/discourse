@@ -32,14 +32,14 @@ article.streaming {
   }
 
   @include viewport.until(sm) {
-    .persona-flair {
+    .agent-flair {
       display: none;
     }
   }
 }
 
 .ai-bot-pm {
-  .gpt-persona {
+  .gpt-agent {
     margin-bottom: 5px;
   }
 
@@ -86,7 +86,7 @@ article.streaming {
   }
 }
 
-.topic-body .persona-flair {
+.topic-body .agent-flair {
   order: 2;
   font-size: var(--font-down-1);
   transform: translateY(0.04em);

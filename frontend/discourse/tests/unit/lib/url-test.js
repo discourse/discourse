@@ -2,6 +2,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setPrefix } from "discourse/lib/get-url";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL, {
   getCanonicalUrl,
   getCategoryAndTagUrl,
@@ -189,6 +190,75 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(
       DiscourseURL.handleURL.calledWith(`/myfeed`),
       "navigates to the unmodified route"
+    );
+  });
+
+  test("routeTo applies route-to-url value transformer", async function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
+    sinon.stub(DiscourseURL, "handleURL");
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return { currentURL: "/bar" };
+    });
+
+    withPluginApi((api) => {
+      api.registerValueTransformer("route-to-url", ({ value }) => {
+        if (value === "/t/some-topic/123") {
+          return "/nested/some-topic/123";
+        }
+        return value;
+      });
+    });
+
+    DiscourseURL.routeTo("/t/some-topic/123");
+    assert.true(
+      DiscourseURL.handleURL.calledWith("/nested/some-topic/123"),
+      "the transformed URL is used for routing"
+    );
+  });
+
+  test("routeTo passes untransformed URLs through", async function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
+    sinon.stub(DiscourseURL, "handleURL");
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return { currentURL: "/bar" };
+    });
+
+    withPluginApi((api) => {
+      api.registerValueTransformer("route-to-url", ({ value }) => {
+        if (value.startsWith("/t/redirect-me")) {
+          return "/other/path";
+        }
+        return value;
+      });
+    });
+
+    DiscourseURL.routeTo("/some/other/path");
+    assert.true(
+      DiscourseURL.handleURL.calledWith("/some/other/path"),
+      "non-matching URLs pass through unchanged"
+    );
+  });
+
+  test("routeTo aborts when transformer returns null", async function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
+    sinon.stub(DiscourseURL, "handleURL");
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return { currentURL: "/bar" };
+    });
+
+    withPluginApi((api) => {
+      api.registerValueTransformer("route-to-url", () => null);
+    });
+
+    DiscourseURL.routeTo("/t/some-topic/123");
+    assert.false(
+      DiscourseURL.handleURL.called,
+      "handleURL is not called when transformer returns null"
+    );
+    assert.false(
+      DiscourseURL.redirectTo.called,
+      "redirectTo is not called when transformer returns null"
     );
   });
 

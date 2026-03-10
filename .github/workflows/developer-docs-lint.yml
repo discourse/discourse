@@ -34,7 +34,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           cache: "pnpm"
           cache-dependency-path: docs/developer-guides/pnpm-lock.yaml

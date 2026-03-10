@@ -5,15 +5,15 @@ RSpec.describe "AI Composer helper", type: :system do
   fab!(:non_member_group, :group)
   fab!(:embedding_definition)
 
-  fab!(:custom_prompts_persona) do
-    Fabricate(:ai_persona, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+  fab!(:custom_prompts_agent) do
+    Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
   end
 
   before do
     enable_current_plugin
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
     assign_fake_provider_to(:ai_default_llm_model)
-    SiteSetting.ai_helper_custom_prompt_persona = custom_prompts_persona.id
+    SiteSetting.ai_helper_custom_prompt_agent = custom_prompts_agent.id
     SiteSetting.ai_helper_enabled = true
     Jobs.run_immediately!
     sign_in(user)
@@ -121,7 +121,7 @@ RSpec.describe "AI Composer helper", type: :system do
 
     context "when not a member of custom prompt group" do
       let(:mode) { DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT }
-      before { custom_prompts_persona.update!(allowed_group_ids: [non_member_group.id]) }
+      before { custom_prompts_agent.update!(allowed_group_ids: [non_member_group.id]) }
 
       it "does not show custom prompt option" do
         trigger_composer_helper(input)

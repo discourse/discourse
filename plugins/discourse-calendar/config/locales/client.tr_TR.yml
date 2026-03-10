@@ -12,6 +12,12 @@ tr_TR:
         categories:
           discourse_post_event: "Discourse Etkinliği"
           discourse_calendar: "Takvim ve Etkinlikler"
+      web_hooks:
+        calendar_event:
+          group_name: "Takvim Etkinliği"
+          calendar_event_created: "Takvim etkinliği oluşturuldu"
+          calendar_event_updated: "Takvim etkinliği güncellendi"
+          calendar_event_destroyed: "Takvim etkinliği silindi"
   js:
     notifications:
       titles:

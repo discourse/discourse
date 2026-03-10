@@ -288,7 +288,7 @@ class TagsController < ::ApplicationController
 
     previous_tag_name = @tag.name
     @tag.name = DiscourseTagging.clean_tag(new_tag_name) if new_tag_name.present?
-    @tag.description = new_tag_description if new_tag_description.present?
+    @tag.description = new_tag_description if new_tag.has_key?(:description)
 
     if @tag.save
       if @tag.name != previous_tag_name

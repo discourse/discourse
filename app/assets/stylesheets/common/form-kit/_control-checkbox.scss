@@ -14,10 +14,6 @@
       color: var(--primary);
       font-size: var(--font-down-1-rem);
 
-      .form-kit__control-checkbox-title {
-        font-weight: 600 !important;
-      }
-
       .form-kit__field[data-disabled] & {
         cursor: not-allowed;
       }

@@ -44,15 +44,7 @@ class UpcomingChanges::Toggle
   def toggle(params:, guardian:, options:)
     context[:previous_value] = SiteSetting.public_send(params.setting_name)
 
-    # TODO (martin) Remove this once we release upcoming changes,
-    # otherwise it will be confusing for people to see log messages
-    # about upcoming changes via "What's new?" experimental toggles
-    # before we update that UI.
-    if SiteSetting.enable_upcoming_changes
-      SiteSetting.send("#{params.setting_name}=", params.enabled)
-    else
-      SiteSetting.public_send("#{params.setting_name}=", params.enabled)
-    end
+    SiteSetting.send("#{params.setting_name}=", params.enabled)
   end
 
   def clear_groups_if_disallowed(params:)
@@ -68,21 +60,15 @@ class UpcomingChanges::Toggle
   end
 
   def log_change(params:, guardian:, options:)
-    if SiteSetting.enable_upcoming_changes
-      StaffActionLogger.new(guardian.user).log_upcoming_change_toggle(
-        params.setting_name,
-        context[:previous_value],
-        params.enabled,
-        { context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled") },
-      )
-    else
-      SiteSetting.log(params.setting_name, params.enabled, context[:previous_value], guardian.user)
-    end
+    StaffActionLogger.new(guardian.user).log_upcoming_change_toggle(
+      params.setting_name,
+      context[:previous_value],
+      params.enabled,
+      { context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled") },
+    )
   end
 
   def log_event(params:, guardian:, options:)
-    return unless SiteSetting.enable_upcoming_changes
-
     UpcomingChangeEvent.create!(
       event_type: params.enabled ? :manual_opt_in : :manual_opt_out,
       upcoming_change_name: params.setting_name,

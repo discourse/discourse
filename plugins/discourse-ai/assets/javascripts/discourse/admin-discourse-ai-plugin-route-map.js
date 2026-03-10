@@ -4,10 +4,11 @@ export default {
   path: "/plugins",
 
   map() {
-    this.route("discourse-ai-personas", { path: "ai-personas" }, function () {
+    this.route("discourse-ai-agents", { path: "ai-agents" }, function () {
       this.route("new");
       this.route("edit", { path: "/:id/edit" });
     });
+    this.route("discourse-ai-agents-legacy", { path: "ai-personas/*path" });
 
     this.route("discourse-ai-llms", { path: "ai-llms" }, function () {
       this.route("new");

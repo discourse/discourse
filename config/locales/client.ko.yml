@@ -1772,6 +1772,7 @@ ko:
     form_kit:
       reset: 리셋
       optional: 선택 사항
+      required: 필수
       errors:
         required: "필수"
         too_short:
@@ -4023,7 +4024,7 @@ ko:
           all: "전체"
           view_table: "표"
           view_graph: "그래프"
-          refresh_report: "리포트 새로고침"
+          refresh_report: "새로 고침"
           daily: 매일
           monthly: 매달
           weekly: 매주

@@ -96,7 +96,6 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   server_name = ENV["RUN_PITCHFORK"] == "0" ? "unicorn" : "pitchfork"
   unicorn_pid = spawn(unicorn_env, "#{__dir__}/#{server_name}")
   ember_cli_pid = nil
-  tsc_pid = nil
 
   Thread.new do
     Open3.popen2e(pnpm_env, "pnpm", *args.to_a.flatten) do |i, oe, t|
@@ -117,25 +116,6 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
     end
   end
 
-  Thread.new do
-    Open3.popen2e(
-      pnpm_env,
-      "pnpm",
-      "ember-tsc",
-      "-b",
-      "--watch",
-      "--preserveWatchOutput",
-    ) do |i, oe, t|
-      tsc_pid = t.pid
-      puts "Ember TSC running on PID: #{tsc_pid}"
-      oe.each { |line| puts "[ember-tsc] #{line}" }
-    end
-    if process_running?(unicorn_pid)
-      puts "[bin/ember-cli] ember-tsc process stopped. Terminating unicorn."
-      Process.kill("TERM", unicorn_pid)
-    end
-  end
-
   trap("SIGINT") do
     # we got to swallow sigint to give time for
     # children to handle it
@@ -146,11 +126,6 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   if ember_cli_pid && process_running?(ember_cli_pid)
     puts "[bin/ember-cli] unicorn process stopped. Terminating ember-cli."
     Process.kill("TERM", ember_cli_pid)
-  end
-
-  if tsc_pid && process_running?(tsc_pid)
-    puts "[bin/ember-cli] unicorn process stopped. Terminating ember-tsc."
-    Process.kill("TERM", tsc_pid)
   end
 else
   exec(pnpm_env, "pnpm", *args.to_a.flatten)

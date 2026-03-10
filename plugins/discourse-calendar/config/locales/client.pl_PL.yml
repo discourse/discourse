@@ -12,6 +12,12 @@ pl_PL:
         categories:
           discourse_post_event: "Wydarzenie Discourse"
           discourse_calendar: "Kalendarz i wydarzenia"
+      web_hooks:
+        calendar_event:
+          group_name: "Wydarzenie w kalendarzu"
+          calendar_event_created: "Utworzono wydarzenie w kalendarzu"
+          calendar_event_updated: "Wydarzenie w kalendarzu zostało zaktualizowane"
+          calendar_event_destroyed: "Wydarzenie w kalendarzu zostało zniszczone"
   js:
     notifications:
       titles:

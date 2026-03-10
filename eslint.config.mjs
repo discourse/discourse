@@ -16,6 +16,7 @@ export default [
       "**/node_modules/",
       "spec/",
       "frontend/discourse/dist/",
+      "frontend/discourse-types/dts-generator.js",
       "tmp/",
     ],
   },

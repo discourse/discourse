@@ -934,11 +934,7 @@ export default <template>
   {{/if}}
 
   {{#if
-    (and
-      @controller.currentUser.staff
-      @controller.model.upcoming_changes_stats
-      @controller.siteSettings.enable_upcoming_changes
-    )
+    (and @controller.currentUser.staff @controller.model.upcoming_changes_stats)
   }}
     <section class="details">
       <h1>{{i18n "admin.user.upcoming_changes.title"}}</h1>

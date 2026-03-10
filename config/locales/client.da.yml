@@ -2014,6 +2014,7 @@ da:
     form_kit:
       reset: Nulstil
       optional: valgfri
+      required: krævet
       errors:
         required: "Obligatoriske"
         invalid_url: "Skal være en gyldig URL"
@@ -4635,7 +4636,7 @@ da:
           all: "Alle"
           view_table: "tabel"
           view_graph: "graf"
-          refresh_report: "Genopfrisk rapporten"
+          refresh_report: "Genindlæs"
           daily: Dagligt
           monthly: Månedligt
           weekly: Ugentligt
@@ -6181,7 +6182,7 @@ da:
             confirm: "Ja, opdater adgangskodepolitik"
           min_admin_password_length:
             confirm: "Ja, opdater adgangskodepolitik"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Ja, opdater adgangskodepolitik"
         job_status:
           completed: "Opdatering fuldført"

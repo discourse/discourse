@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 da:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Tillad ejer af emne og stab at markere svar som en løsning"
   reports:
     accepted_solutions:
       xaxis: "Dag"

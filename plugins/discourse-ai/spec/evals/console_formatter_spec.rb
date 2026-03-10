@@ -7,12 +7,7 @@ RSpec.describe DiscourseAi::Evals::ConsoleFormatter do
 
   it "prints a progress bar and a table summarizing results" do
     formatter =
-      described_class.new(
-        label: "eval-123",
-        output: output,
-        total_targets: 2,
-        persona_key: "default",
-      )
+      described_class.new(label: "eval-123", output: output, total_targets: 2, agent_key: "default")
 
     formatter.announce_start
 
@@ -63,12 +58,7 @@ RSpec.describe DiscourseAi::Evals::ConsoleFormatter do
 
   it "renders judged comparison outcomes in the table" do
     formatter =
-      described_class.new(
-        label: "eval-123",
-        output: output,
-        total_targets: 2,
-        persona_key: "default",
-      )
+      described_class.new(label: "eval-123", output: output, total_targets: 2, agent_key: "default")
 
     formatter.record_comparison_judged(
       row_prefix: "eval-123",
@@ -102,12 +92,7 @@ RSpec.describe DiscourseAi::Evals::ConsoleFormatter do
 
   it "marks ties with ratings and judge reason" do
     formatter =
-      described_class.new(
-        label: "eval-999",
-        output: output,
-        total_targets: 2,
-        persona_key: "default",
-      )
+      described_class.new(label: "eval-999", output: output, total_targets: 2, agent_key: "default")
 
     formatter.record_comparison_judged(
       row_prefix: "eval-999",

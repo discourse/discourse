@@ -1768,6 +1768,7 @@ bg:
     form_kit:
       reset: Нулиране
       optional: по избор
+      required: задължително
       errors:
         required: "Задъжителни"
     close: "Затвори"
@@ -3601,7 +3602,7 @@ bg:
           30_days_ago: "Преди 30 дни"
           all: "Всички"
           view_table: "таблица"
-          refresh_report: "Обнови доклада"
+          refresh_report: "Обнови"
           daily: Дневно
           monthly: Месечно
           weekly: Седмично

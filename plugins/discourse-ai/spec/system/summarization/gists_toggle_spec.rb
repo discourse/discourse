@@ -13,7 +13,7 @@ describe "Gists Toggle Functionality", type: :system do
     SiteSetting.ai_summary_gists_enabled = true
 
     group.add(admin)
-    assign_persona_to(:ai_summary_gists_persona, [group.id])
+    assign_agent_to(:ai_summary_gists_agent, [group.id])
     sign_in(admin)
   end
 
@@ -124,7 +124,7 @@ describe "Gists Toggle Functionality - Mobile", type: :system, mobile: true do
     SiteSetting.ai_summary_gists_enabled = true
 
     group.add(admin)
-    assign_persona_to(:ai_summary_gists_persona, [group.id])
+    assign_agent_to(:ai_summary_gists_agent, [group.id])
     sign_in(admin)
   end
 

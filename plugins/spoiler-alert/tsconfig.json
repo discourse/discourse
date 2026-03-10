@@ -1,12 +1,16 @@
 {
   "extends": "discourse/tsconfig-plugin",
   "include": [
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*"
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/spoiler-alert/*": ["./assets/javascripts/*"]
+      "discourse/plugins/spoiler-alert/*": ["./assets/javascripts/*"],
+      "discourse/plugins/spoiler-alert/admin/*": [
+        "./admin/assets/javascripts/admin/*"
+      ]
     }
   }
 }

@@ -905,7 +905,9 @@ hr:
         flag: Tip
     visits:
       title: "Posjete korisnika"
-      xaxis: "Dan"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobilni"
       yaxis: "Broj posjeta"
     signups:
       xaxis: "Dan"

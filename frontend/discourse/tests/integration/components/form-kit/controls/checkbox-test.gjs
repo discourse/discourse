@@ -101,7 +101,21 @@ module(
         </template>
       );
 
-      assert.form().field("foo").hasTitle("Foo (optional)");
+      assert.form().field("foo").hasTitle("Foo");
+    });
+
+    test("@title", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox @title="Bar" />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.form().field("foo").hasTitle("Bar");
     });
 
     test("when value is string 'true'", async function (assert) {
@@ -145,7 +159,7 @@ module(
         </template>
       );
 
-      assert.form().field("foo").hasTitle("Foo");
+      assert.form().field("foo").hasTitle("Foo (required)");
       await formKit().submit();
       assert.form().field("foo").hasError("Required");
 

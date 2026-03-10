@@ -1,13 +1,16 @@
 {
   "extends": "discourse/tsconfig-plugin",
   "include": [
-    "./package.json",
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*"
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-github/*": ["./assets/javascripts/*"]
+      "discourse/plugins/discourse-github/*": ["./assets/javascripts/*"],
+      "discourse/plugins/discourse-github/admin/*": [
+        "./admin/assets/javascripts/admin/*"
+      ]
     }
   }
 }

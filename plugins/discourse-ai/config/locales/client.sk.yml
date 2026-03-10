@@ -12,8 +12,6 @@ sk:
           descriptions:
             discourse_ai:
               search: "Umožňuje vyhľadávanie pomocou AI"
-              stream_completion: "Umožňuje streamovanie dokončovania AI persona"
-              update_personas: "Umožňuje aktualizovať AI personas"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -35,9 +33,6 @@ sk:
             create_ai_llm_model: "Vytvorenie modelu LLM"
             update_ai_llm_model: "Aktualizácia modelu LLM"
             delete_ai_llm_model: "Odstránenie modelu LLM"
-            create_ai_persona: "Vytvorenie persóny umelej inteligencie"
-            update_ai_persona: "Aktualizácia AI persona"
-            delete_ai_persona: "Odstránenie AI persona"
             create_ai_tool: "Vytvorenie nástroja AI"
             update_ai_tool: "Aktualizácia nástroja AI"
             delete_ai_tool: "Odstránenie nástroja AI"
@@ -110,24 +105,14 @@ sk:
             top_p:
               label: "Top P"
               description: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu)"
-            persona_id:
-              label: "Persona"
-              description: "AI Persona na použitie pri generovaní prehľadov"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Persona"
-              description: "AI persona, ktorá sa má použiť na triedenie (musí mať predvolené nastavenie LLM a User)"
             whisper:
               label: "Odpovedať ako šepot"
-              description: "Či má byť odpoveď persiona šepotom"
             silent_mode:
               label: "Tichý režim"
-              description: "V tichom režime bude persona dostávať obsah, ale nebude nič zverejňovať na fóre – užitočné pri vykonávaní triedenia pomocou nástrojov."
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
             max_post_tokens:
               label: "Maximálny počet tokenov príspevkov"
               description: "Maximálny počet tokenov na skenovanie pomocou LLM triage"
@@ -164,9 +149,6 @@ sk:
             whisper:
               label: "Odpovedať ako šepot"
               description: "Či by reakcia AI mala byť šepot"
-            reply_persona:
-              label: "Odpovedať Persona"
-              description: "Persona AI, ktorá sa použije pre odpovede (musí mať predvolený LLM), bude mať prednosť pred pripravenou odpoveďou."
             max_output_tokens:
               label: "Maximálny počet výstupných tokenov"
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
@@ -176,14 +158,8 @@ sk:
         none: "Žiadny"
       features:
         short_title: "Funkcie"
-        description: "Ide o funkcie AI, ktoré sú k dispozícii návštevníkom vášho webu. Možno ich nakonfigurovať tak, aby používali konkrétne persóny a LLM, a prístup k nim možno riadiť podľa skupín."
         back: "Späť"
         disabled: "(vypnuté)"
-        persona:
-          one: "Persona:"
-          few: "Personas:"
-          many: "Personas:"
-          other: "Personas:"
         groups: "Skupiny:"
         llm:
           one: "LLM:"
@@ -191,7 +167,7 @@ sk:
           many: "LLMs:"
           other: "LLMs:"
         no_llm: "Nie je vybraný žiadny LLM"
-        no_persona: "Nie je nastavené"
+        no_agent: "Nie je nastavené"
         no_groups: "Žiadny"
         edit: "Nastavení"
         expand_list:
@@ -209,7 +185,6 @@ sk:
           unconfigured: "Nekonfigurované"
         filters:
           all: "Všetky"
-          text: "Vyhľadávanie funkcií, personas, LLM alebo skupín..."
           no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."
           reset: "Resetovať"
         summarization:
@@ -235,8 +210,6 @@ sk:
           generate_concepts: "Inferencia konceptov"
           match_concepts: "Zhoda konceptov"
           deduplicate_concepts: "Deduplikácia konceptov"
-          setting_groups:
-            personas: "Personas"
         ai_helper:
           name: "Pomocník"
           description: "Pomáha používateľom pri interakcii s komunitou, ako je vytváranie tém, písanie príspevkov a čítanie obsahu"
@@ -253,7 +226,6 @@ sk:
           post_illustrator: "Ilustrátor príspevkov"
           setting_groups:
             automation: "Automatizácia"
-            personas: "Personas"
         translation:
           name: "Preklad"
           description: "Prekladá obsah do podporovaných jazykov"
@@ -261,8 +233,6 @@ sk:
           post_raw_translator: "Prekladač RAW"
           topic_title_translator: "Prekladač názvov tém"
           short_text_translator: "Prekladač krátkych textov"
-          setting_groups:
-            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifikuje potenciálny spam pomocou vybranej metódy LLM a označí ho moderátorom stránok na kontrolu v zozname kontrol."
@@ -300,7 +270,6 @@ sk:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
         select_llm: "Vyberte si LLM"
-        select_persona: "Vyberte persona"
         custom_instructions: "Vlastné pokyny"
         custom_instructions_help: "Prispôsobené pokyny špecifické pre vašu stránku, ktoré pomôžu umelej inteligencii identifikovať spam, napr. „Buďte agresívnejší pri skenovaní príspevkov, ktoré nie sú v angličtine“."
         last_seven_days: "Posledných 7 dní"
@@ -373,21 +342,20 @@ sk:
           last_week: "Minulý týždeň"
           last_month: "Minulý mesiac"
           custom: "Vlastné..."
-      ai_persona:
+      ai_agent:
         ai_tools: "Nástroje"
         tool_strategies:
           all: "Použiť na všetky odpovede"
           replies:
             one: "Použiť iba na prvú odpoveď"
             few: "Použiť na prvých %{count} odpovedí"
-            many: "Použiť na prvých %{count} odpovedí"
+            many: "Použiť na prvé %{count} odpovede"
             other: "Použiť na prvé %{count} odpovede"
         back: "Späť"
         name: "Meno"
         edit: "Upraviť"
         export: "Exportovať"
         import: "Import"
-        import_error_conflict: "Pri importovaní %{name}bol zistený konflikt, chcete aktualizovať existujúcu personu?"
         overwrite: "Prepísať"
         description: "Popis"
         no_llm_selected: "Nie je vybraný žiadny jazykový model"
@@ -401,47 +369,32 @@ sk:
           medium: Stredná kvalita (512x512)
           high: Vysoká kvalita - najpomalšie (1024x1024)
         mentionable: Povoliť zmienky
-        mentionable_help: Ak je táto možnosť povolená, používatelia v povolených skupinách môžu v príspevkoch spomenúť tohto používateľa a AI bude reagovať ako táto osoba.
         user: Používateľ
         create_user: Vytvoriť používateľa
-        create_user_help: K tejto persone môžete voliteľne priradiť používateľa. Ak tak urobíte, AI použije tohto používateľa na odpovedanie na požiadavky.
         default_llm: Predvolený jazykový model
-        default_llm_help: Predvolený jazykový model, ktorý sa má použiť pre túto persona. Vyžaduje sa, ak chcete uviesť persona vo verejných príspevkoch.
         question_consolidator_llm: Jazykový model pre konsolidátor otázok
         question_consolidator_llm_help: Jazykový model, ktorý sa má použiť pre konsolidátor otázok, môžete si vybrať menej výkonný model, aby ste ušetrili náklady.
         system_prompt: Systémová výzva
         forced_tool_strategy: Stratégia vynútených nástrojov
         allow_chat_direct_messages: "Povolenie priamych správ v chate"
-        allow_chat_direct_messages_help: "Ak je táto možnosť povolená, používatelia v povolených skupinách môžu tejto osobe posielať priame správy."
         allow_chat_channel_mentions: "Povolenie zmienok o kanáloch chatu"
-        allow_chat_channel_mentions_help: "Ak je táto možnosť povolená, používatelia v povolených skupinách môžu túto osobu spomenúť v chatových kanáloch."
         allow_personal_messages: "Povoliť osobné správy"
-        allow_personal_messages_help: "Ak je povolené, používatelia v povolených skupinách môžu posielať osobné správy tejto osobe."
         allow_topic_mentions: "Povoliť zmienky o témach"
-        allow_topic_mentions_help: "Ak je táto možnosť povolená, používatelia v povolených skupinách môžu túto osobu uvádzať v témach."
         force_default_llm: "Vždy používajte predvolený jazykový model"
         save: "Uložiť"
-        saved: "Persona uložená"
         enabled: "Povolené?"
         tools: "Povolené nástroje"
         forced_tools: "Vynútené nástroje"
         allowed_groups: "Povolené skupiny"
-        confirm_delete: "Naozaj chcete odstrániť túto personu?"
-        new: "Nová persona"
-        no_personas: "Zatiaľ ste nevytvorili žiadne persony"
-        title: "Personas"
-        short_title: "Personas"
         delete: "Odstrániť"
         temperature: "Teplota"
         temperature_help: "Teplota, ktorá sa má použiť pre LLM. Zvýšte pre zvýšenie kreativity (nechajte prázdne pre použitie predvolenej hodnoty modelu, zvyčajne hodnoty od 0,0 do 2,0)"
         top_p: "Top P"
         top_p_help: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu, zvyčajne hodnota od 0,0 do 1,0)"
         priority: "Priorita"
-        priority_help: "Prioritné personas sa používateľom zobrazujú na vrchole zoznamu personas. Ak má prioritu viacero persón, budú zoradené abecedne."
         tool_options: "Možnosti nástroja"
         rag_conversation_chunks: "Vyhľadávanie v častiach konverzácie"
         rag_conversation_chunks_help: "Počet častí, ktoré sa majú použiť na vyhľadávanie modelu RAG. Zvýšte, ak chcete zvýšiť množstvo kontextu, ktoré môže umelá inteligencia použiť."
-        persona_description: "Personas sú výkonnou funkciou, ktorá vám umožňuje prispôsobiť správanie mechanizmu AIvo vašom fóre Discourse. Fungujú ako \"systémová správa\", ktorá usmerňuje reakcie a interakcie AI a pomáha vytvárať personalizovanejšie a pútavejšie používateľské prostredie."
         response_format:
           title: "Formát odpovede JSON"
           no_format: "Nie je zadaný žiadny formát JSON"
@@ -461,16 +414,13 @@ sk:
           enabled: "AI Bot?"
         ai_bot:
           title: "Možnosti botov AI"
-          save_first: "Ďalšie možnosti botov AI budú k dispozícii po uložení persona."
         filters:
-          text: "Nájdite persona"
           reset: "Resetovať"
-          no_results: "Nenašli sa žiadne personas, ktoré by zodpovedali vašim filtrom."
           all_features: "Akákoľvek funkcia"
         features_list:
           one: "Funkcia:"
           few: "Funkcií:"
-          many: "Funkcií:"
+          many: "Funkcie:"
           other: "Funkcie:"
         llms_list: "LLM:"
       rag:
@@ -507,7 +457,6 @@ sk:
         name_help: "Názov sa zobrazí v používateľskom rozhraní Discourse a je to krátky identifikátor, ktorý budete používať na vyhľadávanie nástroja v rôznych nastaveniach, mal by byť zreteľný (je povinný)"
         new: "Nový nástroj"
         tool_name: "Názov nástroja"
-        tool_name_help: "Názov nástroja sa prezentuje na veľkom jazykovom modeli. Nie je zreteľný, ale je zreteľný na persona. (persona sa overí pri uložení)"
         description: "Popis"
         description_help: "Jasný opis účelu nástroja pre jazykový model"
         subheader_description: "Nástroje rozširujú možnosti AI botov pomocou používateľom definovaných funkcií JavaScriptu."
@@ -591,11 +540,10 @@ sk:
         usage:
           ai_bot: "AI bot"
           ai_helper_image_caption: "Popis obrázka"
-          ai_persona: "Persona (%{persona})"
           ai_summarization: "Zhrnúť"
           ai_embeddings_semantic_search: "Vyhľadávanie pomocou AI"
           ai_spam: "Spam"
-          automation: "Automatizácia (%{persona})"
+          automation: "Automatizácia (%{agent})"
         in_use_warning:
           one: "Tento model momentálne používa %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania."
           few: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
@@ -784,7 +732,6 @@ sk:
         collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
         click_to_run_label: "Spustiť artefakt"
       ai_bot:
-        persona: "Persona"
         llm: "Model"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"

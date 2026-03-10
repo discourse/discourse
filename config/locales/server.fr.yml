@@ -1211,9 +1211,10 @@ fr:
       description: "Liste des statuts de signalement : type de signalement, auteur, signaleur et temps de résolution."
     visits:
       title: "Visites d'utilisateurs"
-      xaxis: "Jour"
+      xaxis:
+        desktop: "Bureau"
+        mobile: "Mobile"
       yaxis: "Nombre de visites"
-      description: "Nombre de visites d'utilisateurs connectés."
     signups:
       title: "Inscriptions"
       xaxis: "Jour"
@@ -1275,10 +1276,8 @@ fr:
       description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et les autres trafics."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Jour"
       yaxis: "DAU/MAU"
-      description: "Nombre d'utilisateurs qui se sont connectés au cours de la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés au cours du dernier mois. Valeur exprimée en % qui représente le taux d'adhésion de la communauté. Viser > 20 %."
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"

@@ -46,6 +46,8 @@ es:
         description: "Destaca la respuesta y ayuda a los demás utilizando el botón de solución que hay debajo de la respuesta correcta."
       notification:
         title: "tu publicación se ha marcado como solución"
+      category_type_support:
+        title: "Soporte"
     topic_statuses:
       solved:
         help: "Este tema tiene una solución"

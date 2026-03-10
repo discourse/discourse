@@ -74,6 +74,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: pnpm lint:js
 
+      - name: Types
+        if: ${{ !cancelled() }}
+        run: pnpm lint:types
+
       - name: Prettier
         if: ${{ !cancelled() }}
         run: |
@@ -95,7 +99,3 @@ jobs:
       - name: English locale lint (core plugins)
         if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
-
-      - name: Types
-        if: ${{ !cancelled() }}
-        run: pnpm lint:types

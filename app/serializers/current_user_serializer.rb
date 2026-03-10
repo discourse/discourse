@@ -172,7 +172,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_has_new_upcoming_changes?
-    SiteSetting.enable_upcoming_changes && object.staff?
+    object.staff?
   end
 
   def has_new_upcoming_changes

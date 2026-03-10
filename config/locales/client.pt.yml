@@ -2273,6 +2273,7 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
+      required: obrigatório
       dirty_form: "Não submeteste as tuas alterações! Tens a certeza de que queres sair?"
       errors:
         starts_with: "Deve começar com %{prefix}"
@@ -4803,7 +4804,7 @@ pt:
           all: "Tudo"
           view_table: "tabela"
           view_graph: "grafo"
-          refresh_report: "Atualizar relatório"
+          refresh_report: "Atualizar"
           daily: Diário
           monthly: Mensal
           weekly: Semanal

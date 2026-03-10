@@ -2659,6 +2659,7 @@ pl_PL:
     form_kit:
       reset: Przywróć
       optional: opcjonalnie
+      required: wymagane
       errors_summary_title:
         one: "Napraw ten błąd, aby kontynuować"
         few: "Napraw te błędy, aby kontynuować"
@@ -4783,6 +4784,7 @@ pl_PL:
         instructions: "Udostępnij link do tego posta:"
       original_language: "Ten post został pierwotnie napisany w %{language}"
       original_language_and_outdated: "Ten post został pierwotnie napisany w %{language}. Tłumaczenie może być nieaktualne"
+      ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -4827,6 +4829,11 @@ pl_PL:
       create: "Nowa kategoria"
       create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
+      settings_apply_to_all_of_type_warning: "Poniższe zmiany będą dotyczyć wszystkich kategorii tego typu"
+      type_settings_schema:
+        category_settings: "Ustawienia kategorii"
+        category_custom_fields: "Ustawienia kategorii"
+        site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
         requires_plugin: "Wymaga wtyczki"
@@ -6745,10 +6752,11 @@ pl_PL:
           all: "Wszystkie"
           view_table: "tabela"
           view_graph: "wykres"
-          refresh_report: "Odśwież raport"
+          refresh_report: "Odśwież"
           daily: Dziennie
           monthly: Miesięcznie
           weekly: Tygodniowo
+          chart_group_period: "Wybierz okres"
           value_so_far: "%{value} (jak dotąd)"
           dates: "Daty (UTC)"
           groups: "Wszystkie grupy"
@@ -8161,6 +8169,7 @@ pl_PL:
             upcoming_change_available: "nadchodząca zmiana dostępna"
             change_site_setting_groups: "zmień grupy ustawień witryny"
             discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
+            configure_category_type: "skonfiguruj typ kategorii"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -8938,7 +8947,7 @@ pl_PL:
           min_admin_password_length:
             prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Od teraz będzie to dotyczyć wszystkich administratorów zmieniających hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "Zamierzasz zmienić swoją politykę dotyczącą haseł. Będzie to miało wpływ na wszystkich użytkowników, którzy od tej pory będą zmieniać swoje hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           block_common_passwords:

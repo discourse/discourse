@@ -762,6 +762,16 @@ RSpec.describe TagsController do
       expect(settings["tag_groups"][0]["name"]).to eq(tag_group.name)
     end
 
+    it "returns slug_for_url when tag has an empty slug" do
+      tag.update_column(:slug, "")
+      sign_in(admin)
+      get "/tag/#{tag.id}/settings.json"
+      expect(response.status).to eq(200)
+
+      settings = response.parsed_body["tag_settings"]
+      expect(settings["slug"]).to eq("#{tag.id}-tag")
+    end
+
     context "with content localization enabled" do
       before { SiteSetting.content_localization_enabled = true }
 
@@ -948,6 +958,15 @@ RSpec.describe TagsController do
 
       expect(response.status).to eq(200)
       expect(tag.reload.description).to eq("New description")
+    end
+
+    it "can clear the tag description" do
+      tag.update!(description: "existing description")
+
+      put "/tag/#{tag.name}.json", params: { tag: { description: "" } }
+
+      expect(response.status).to eq(200)
+      expect(tag.reload.description).to be_blank
     end
 
     it "returns 403 for non-admins" do

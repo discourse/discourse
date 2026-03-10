@@ -30,9 +30,6 @@ tr_TR:
       ai_tool_action:
         title: Yapay Zeka aracı eylemi
         description: Otomasyon tetiklendiğinde bir AI aracını çalıştırın
-      llm_persona_triage:
-        title: YZ Kişiliğini kullanarak gönderileri sınıflandırın
-        description: "Gönderilere belirli bir YZ kişiliği kullanarak yanıt verin"
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
@@ -96,8 +93,6 @@ tr_TR:
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
     ai_helper_enabled_features: "YZ yardımcıda etkinleştirilecek özellikleri seçin."
     post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcı özelliklerine erişmesine izin verilen kullanıcı grupları"
-    ai_helper_post_illustrator_persona: "AI yardımcısının resimleme özelliği için kullanılacak persona. Not: Bu özelliğin çalışması için bir resim oluşturma aracı da oluşturmanız gerekir (Yönetici > Eklentiler > Discourse AI > Araçlar)."
-    ai_helper_chat_thread_title_persona: "Sohbet dizisi başlıklarını oluşturmak için kullanılacak persona."
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
     ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
     ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
@@ -111,7 +106,6 @@ tr_TR:
     ai_embeddings_semantic_related_age_time_scale: "Yaş cezası hesaplaması için gün cinsinden zaman ölçeği. Bu kadar gün boyunca etkin olmayan konular, ceza=1,0 ile ~%50 ceza alır. Yıllık ölçek için 365, üç aylık ölçek için 90 kullanın."
     ai_embeddings_per_post_enabled: Her gönderi için yerleştirmeler oluşturun
     ai_summarization_enabled: "Özetleme özelliğini etkinleştirin"
-    ai_summarization_persona: "Özetleme özelliği için kullanılacak kişilik"
     ai_pm_summarization_allowed_groups: "Kişisel mesajlarda özet oluşturma ve görüntüleme yetkisi olan gruplar."
     ai_summary_gists_enabled: "Konulardaki son yanıtların kısa özetlerini otomatik olarak oluşturun"
     ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
@@ -125,14 +119,12 @@ tr_TR:
     ai_bot_add_to_community_section: "Kenar çubuğundaki topluluk bölümünde, AI Bot ile özel mesajlaşmaya başlamak için bir bağlantı gösterin."
     ai_bot_github_access_token: "GitHub AI araçlarıyla kullanım için GitHub erişim token'ı (arama desteği için gereklidir)"
     ai_discover_enabled: "Keşif arama özelliğini etkinleştir"
-    ai_discover_persona: "Keşif arama özelliği için kullanılacak persona"
     ai_google_custom_search_api_key: "Google Özel Arama API'sı için API anahtarı bkz.: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google Özel Arama API'sı için CX"
     ai_discord_search_enabled: "Discord arama özelliğini etkinleştirir"
     ai_discord_app_id: "Discord aramasını bağlamak istediğiniz Discord uygulamasının kimliği"
     ai_discord_app_public_key: "Discord aramasını bağlamak istediğiniz Discord uygulamasının herkese açık anahtarı"
     ai_discord_search_mode: "Discord araması için kullanılacak arama modunu seçin"
-    ai_discord_search_persona: "Discord araması için kullanılacak kişilik."
     ai_discord_allowed_guilds: "Botun arama yapmasına izin verilen Discord loncaları (sunucular)"
     ai_translation_enabled: "AI çeviri özelliğini etkinleştirin"
     ai_translation_backfill_limit_to_public_content: "Etkinleştirildiğinde, yalnızca herkese açık kategorilerdeki içerikler çevrilir. Devre dışı bırakıldığında, grup kişisel mesajları ve özel kategorilerdeki içerikler de çeviri için gönderilir."
@@ -285,9 +277,22 @@ tr_TR:
         alias_too_long: "Gizli takma ad `%{alias}` çok uzun."
         alias_invalid: "Gizli takma ad `%{alias}` yalnızca rakamlar, harfler ve alt çizgiler içermelidir."
         alias_not_unique: "Gizli takma ad `%{alias}` yineleniyor."
+      secret_bindings:
+        invalid_payload: "Gizli bağlamalar bir dizi olmalıdır."
+        secret_not_found: "Seçilen kimlik bilgisi mevcut değildir."
+        alias_not_declared: "Takma ad `%{alias}` bu araçta tanımlanmamıştır."
+      secret_runtime:
+        alias_not_declared: "Bu araç için `%{alias}` kimlik bilgisi takma adı tanımlanmamıştır."
+        missing_binding: "Kimlik bilgisi takma adı `%{alias}` gereklidir ancak bağlı değildir."
+        missing_required_aliases: "Takma adlar için gerekli kimlik bilgisi bağlamaları eksik: %{aliases}."
+        secret_not_found: "Kimlik bilgisi takma adı `%{alias}` eksik bir kimlik bilgisine bağlıdır."
+        unknown_error: "İstenen kimlik bilgisi çözülemiyor."
     ai_helper:
       errors:
         completion_request_failed: "Öneriler sunulmaya çalışılırken bir şeyler ters gitti. Lütfen tekrar deneyin."
+        no_image_generated: "Görüntü oluşturulamadı. Lütfen tekrar deneyin veya araç yapılandırmanızı kontrol edin."
+        llm_model_not_configured: "Görüntü oluşturma için herhangi bir dil modeli yapılandırılmamıştır. Lütfen site ayarlarınızda varsayılan bir dil modeli yapılandırın."
+        unknown_error: "Küçük resimler oluşturulurken beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
       prompts:
         translate: '%{language} diline çevir'
         generate_titles: Konu başlıkları öner
@@ -314,16 +319,16 @@ tr_TR:
       flag_reason: "<a href='%{url}'>Discourse AI</a> tarafından istenmeyen içerik olarak bayrak eklendi"
       silence_reason: "Kullanıcı <a href='%{url}'>Discourse AI</a> tarafından otomatik olarak susturuldu"
       invalid_error_type: "Geçersiz hata türü sağlandı"
+      unexpected: "Beklenmedik bir hata oluştu"
       bot_user_update_failed: "İstenmeyen içerik tarama botu kullanıcısı güncellenemedi"
       configuration_missing: "YZ spam algılama yapılandırması eksik. Etkinleştirmeden önce \"Yönetici > Eklentiler > Discourse YZ > Spam\" bölümüne yapılandırmayı ekleyin."
       logging_subject: "Spam tespiti"
     ai_bot:
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
-      personas:
+      thinking: "Düşünme"
+      agents:
         default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
-        cannot_delete_system_persona: "Sistem kişilikleri silinemez, lütfen bunun yerine devre dışı bırakın"
-        cannot_edit_system_persona: "Sistem kişileri yalnızca yeniden adlandırılabilir, araçları veya sistem istemini düzenleyemezsiniz, bunun yerine devre dışı bırakıp bir kopyasını oluşturabilirsiniz"
         cannot_have_duplicate_tools: "Eş kopya araçlara sahip olunamaz"
         github_helper:
           name: "GitHub Yardımcısı"
@@ -363,10 +368,8 @@ tr_TR:
           description: "Etkileşimli web artifact'leri oluşturma konusunda uzmanlaşmış YZ Bot"
         summarizer:
           name: "Özetleyici"
-          description: "YZ özetlerini desteklemek için kullanılan varsayılan kişilik"
         short_summarizer:
           name: "Özetleyici (kısa form)"
-          description: "Konu listelerinin ögeleri için YZ kısa özetlerini güçlendirmek üzere kullanılan varsayılan kişilik"
         concept_finder:
           name: "Konsept Bulucu"
           description: "İçerikteki kavram ve temaları belirleme konusunda uzmanlaşmış YZ Botu"
@@ -378,30 +381,23 @@ tr_TR:
           description: "Kavramların tekilleştirilmesini önleme konusunda uzmanlaşmış YZ Botu"
         custom_prompt:
           name: "Özel istem"
-          description: "Yardımcının özel istem özelliğini destekleyen varsayılan kişilik"
         smart_dates:
           name: "Akıllı tarihler"
-          description: "Yardımcının akıllı tarihler özelliğini destekleyen varsayılan kişilik"
         markdown_table_generator:
           name: "Markdown tablo oluşturucu"
-          description: "Yardımcının Markdown tablosu oluşturma özelliğini destekleyen varsayılan kişilik"
         post_illustrator:
           name: "Gönderi illüstratörü"
+          description: "Mevcut görüntü oluşturma araçlarını kullanarak gönderileri açıklamak için görüntüler oluşturur."
         proofreader:
           name: "Düzeltmen"
-          description: "Yardımcının metni düzeltme özelliğini destekleyen varsayılan kişilik"
         titles_generator:
           name: "Başlık oluşturucu"
-          description: "Yardımcının konu başlığı önerme özelliğini destekleyen varsayılan kişilik"
         tutor:
           name: "Öğretmen"
-          description: "Yardımcının açıklama özelliğini destekleyen varsayılan kişilik"
         translator:
           name: "Çevirmen"
-          description: "Yardımcının çevirmen özelliğini destekleyen varsayılan kişilik"
         image_captioner:
           name: "Görüntü yazıları"
-          description: "Yardımcının görüntü yazısı özelliğini destekleyen varsayılan kişilik"
         locale_detector:
           name: "Yerel ayar dedektörü"
           description: "Belirli bir metnin (yazılar, başlıklar vb.) yerel ayarlarını algılayarak çeviri özelliğini güçlendirir."
@@ -416,13 +412,14 @@ tr_TR:
           description: "Kategori adları veya etiketler gibi kısa metinler için kullanılan genel bir metin çevirmeni olarak çeviri özelliğini destekler"
         spam_detector:
           name: "Spam dedektörü"
-          description: "Spam algılama özelliğimizi destekleyen varsayılan kişilik"
         content_creator:
           name: "İçerik oluşturucu"
-          description: "HyDE aramasını destekleyen varsayılan kişilik"
         report_runner:
           name: "Rapor çalıştırıcı"
-          description: "Rapor otomasyon komut dosyasında kullanılan varsayılan kişilik"
+        discover:
+          name: "Keşfet"
+        chat_thread_titler:
+          name: "Sohbet Konu Başlığı"
       topic_not_found: "Özet mevcut değil, konu bulunamadı!"
       summarizing: "Konu özetleniyor"
       searching: "Aranıyor: \"%{query}\""
@@ -430,7 +427,6 @@ tr_TR:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "Araştırma için kullanılacak dil modeli (varsayılan olarak mevcut kişiliğin LLM'i)"
           max_tokens_per_batch:
             name: "Seri başına maksimum token sayısı"
             description: "Araştırmada her seri için kullanılacak maksimum token sayısı"
@@ -475,6 +471,10 @@ tr_TR:
           base_query:
             name: "Temel Arama Sorgusu"
             description: "Arama yaparken kullanılacak temel sorgu. Örnek: \"#acil\" arama sorgusuna \"#acil\" iadesini ekler ve yalnızca acil kategorisine veya etiketine sahip konuları içerir."
+        flag_post:
+          flag_type:
+            name: "Bayrak Türü"
+            description: "Gönderinin incelenip incelenmeyeceğini, gizlenip gizlenmeyeceğini, silinip silinmeyeceğini veya spam olarak değerlendirilip değerlendirilmeyeceğini kontrol eder."
       tool_summary:
         read_artifact: "Web artifact'i oku"
         update_artifact: "Web artifact'i güncelle"
@@ -483,9 +483,21 @@ tr_TR:
         github_search_files: "GitHub arama dosyaları"
         github_search_code: "GitHub kodu arama"
         github_file_content: "GitHub dosya içeriği"
+        github_diff: "GitHub farklılıkları"
         random_picker: "Rastgele Seçici"
         categories: "Kategorileri listele"
         flag_post: "Gönderiye bayrak ekle"
+        close_topic: "Konuyu kapat"
+        unlist_topic: "Konuyu listeden kaldır"
+        lock_post: "Gönderiyi kilitle"
+        delete_topic: "Konuyu sil"
+        edit_post: "Yazıyı düzenle"
+        edit_tags: "Etiketleri düzenle"
+        edit_category: "Kategoriyi düzenle"
+        set_topic_timer: "Konu zamanlayıcısını ayarla"
+        set_slow_mode: "Yavaş modu ayarla"
+        move_posts: "Gönderileri taşı"
+        grant_badge: "Rozet ver"
         search: "Ara"
         tags: "Etiketleri listele"
         time: "Saat"
@@ -511,8 +523,11 @@ tr_TR:
         github_search_code: "GitHub deposunda kod arayın"
         github_search_files: "GitHub deposunda dosya arayın"
         github_file_content: "Bir GitHub deposundan dosyaların içeriğini alın"
+        github_diff: "GitHub çekme isteğini veya commit farkını al"
         random_picker: "Rastgele bir sayı veya listenin rastgele bir ögesini seçin"
         categories: "Forumdaki herkese açık tüm kategorileri listeleyin"
+        flag_post: "Mevcut gönderiyi personel incelemesi için işaretle"
+        delete_topic: "Bir konu silin"
         search: "Forumdaki tüm herkese açık konuları arayın"
         tags: "Forumdaki tüm etiketleri listeleyin"
         time: "Çeşitli saat dilimlerinde zamanı bulun"
@@ -539,6 +554,7 @@ tr_TR:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "%{file_paths} içeriği %{repo_name}@%{branch} kaynağından alındı"
         random_picker: "%{options} adresinden seçiliyor, seçilen: %{result}"
+        flag_post: "İşaretleme gönderisi %{post_id} (işaretleme gönderisi: %{flag_post})"
         read: "Okunuyor: <a href='%{url}'>%{title}</a>"
         time: "%{timezone} saat diliminde saat %{time}"
         summarize: "<a href='%{url}'>%{title}</a> özetlendi"
@@ -576,6 +592,18 @@ tr_TR:
         continue_conversation:
           title: "Keşif konuşması: %{query} için arama yapın"
           raw: "%{query} aramamda bana şu bilgiyi gösterdiniz:\n\n%{context}\n\nKonuşmaya devam edelim."
+      flag_post:
+        errors:
+          no_context: "İşaretlemek için kullanılabilir gönderi bağlamı yok."
+          no_reason: "Bir gönderiyi işaretlemek için bir neden belirtmeniz gerekir."
+          invalid_flag_type: "Geçersiz bayrak türü."
+        skipped: "Karar yanlıştı; bayrak oluşturulmadı."
+        already_flagged: "Gönderi inceleme için işaretlendi."
+        flagged: "İnceleme için işaretlenmiş gönderi."
+        reason: "AI bot bu gönderiyi işaretledi\n\nSebep: %{reason}"
+      edit_category:
+        errors:
+          category_not_found: "Kategori bulunamadı."
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"
@@ -604,8 +632,8 @@ tr_TR:
         set_llm_first: "Önce %{setting} ayarlanmalı"
         model_unreachable: "Bu modelden yanıt alamadık. Önce ayarlarınızı kontrol edin."
         invalid_seeded_model: "Bu modeli bu özellikle kullanamazsınız"
-        invalid_persona_response_format: "Seçilen kişiliğin \"spam\" adlı bir Boole alan adına sahip bir yanıt biçimine sahip olması gerekiyor"
         must_select_model: "Öncelikle bir LLM seçmelisiniz"
+        invalid_llm_id: "Seçilen LLM modeli geçerli değil"
       endpoints:
         not_configured: "%{display_name} (yapılandırılmadı)"
         configuration_hint:
@@ -615,34 +643,64 @@ tr_TR:
         one: "%{settings} kullandığı için bu modeli silemedik. Ayarı güncelleyin ve tekrar deneyin."
         other: "%{settings} kullandığı için bu modeli silemedik. Ayarları güncelleyip tekrar deneyin."
       cannot_edit_builtin: "Yerleşik bir modeli düzenleyemezsiniz."
-    personas:
+    agents:
       malformed_examples: "Verilen örneklerin formatı yanlış."
     embeddings:
       delete_failed: "Bu model şu anda kullanımda. Öncelikle `ai embeddings selected model`ı güncelleyin."
       cannot_edit_builtin: "Yerleşik bir modeli düzenleyemezsiniz."
+      secret_required: "Bir kimlik bilgisi seçilmelidir."
+      secret_not_found: "Seçilen kimlik bilgisi mevcut değil"
       configuration:
         disable_embeddings: "Önce \"yz yerleştirmeleri etkin\" seçeneğini devre dışı bırakmanız gerekiyor."
         choose_model: "Önce 'ai embeddings selected model'ı ayarlayın."
+        model_test_failed: "Bu modelle bir test gömme oluşturmayı başaramadık. Doğru şekilde yapılandırıldığını kontrol edin."
+    secrets:
+      delete_failed_in_use: "Bu kimlik bilgisi şu anda bir veya daha fazla LLM, gömme veya araç tarafından kullanılmaktadır ve silinemez."
     llm_models:
       missing_provider_param: "%{param} boş olamaz"
+      secret_required: "Bir kimlik bilgisi seçilmelidir."
+      secret_not_found: "Seçilen kimlik bilgisi mevcut değil"
       bedrock_invalid_url: "Bu modeli kullanmak için lütfen tüm alanları doldurun."
+      bedrock_missing_auth: "AWS Bedrock, Access Key ID veya Role ARN'nin yapılandırılmasını gerektirir."
     ai_staff_action_logger:
       updated: "güncellendi"
       set: "ayarla"
       removed: "kaldırıldı"
+    translation:
+      errors:
+        disabled: "AI çeviri özelliği tam olarak yapılandırılmamıştır."
+        all_posts_translated: "Bu konudaki tüm gönderiler zaten çevrilmiştir."
+    llm_credit_allocation:
+      limit_exceeded_user: "Bu topluluk bugün için AI kredi limitine ulaşmıştır. Lütfen %{reset_time} sonra tekrar deneyin veya daha fazla bilgi için site yöneticinize başvurun."
+      limit_exceeded_admin: "AI kredi limitinize ulaştınız. Lütfen %{reset_time} sonra tekrar deneyin."
     errors:
       quota_exceeded: "Bu model için kotayı aştınız. Lütfen %{relative_time} içinde tekrar deneyin."
       quota_required: "Bu model için maksimum token veya kullanımları belirtmelisiniz"
       no_query_specified: Sorgu parametresi gerekli, lütfen belirtin.
-      no_user_for_persona: Belirtilen kişilik ile ilişkilendirilmiş bir kullanıcı yok.
-      persona_not_found: Belirtilen kişilik mevcut değil. persona_name veya persona_id parametrelerini kontrol edin.
       no_user_specified: Kullanıcı adı veya user_unique_id parametresi gerekli, lütfen belirtin.
       user_not_found: Belirtilen kullanıcı mevcut değil. Kullanıcı adı parametresini kontrol edin.
-      persona_disabled: Belirtilen kişilik devre dışı. persona_name veya persona_id parametrelerini kontrol edin.
-      no_default_llm: Kişiliğin tanımlanmış bir default_llm'si olmalıdır.
       user_not_allowed: Kullanıcının konuya katılmasına izin verilmiyor.
+      invalid_stream_resume_token: resume_token geçersiz veya süresi dolmuş.
+      no_tool_results_specified: Bir akışı yeniden başlatırken tool_results parametresi gereklidir.
+      invalid_custom_tools: "custom_tools parametresi geçersiz: %{details}"
+      duplicate_custom_tools: "custom_tools parametresi yinelenen araç adları içerir: %{names}"
+      too_many_custom_tools: "custom_tools parametresi en fazla %{max} araç içerebilir."
+      custom_tool_definition_too_large: "Her bir özel araç tanımı en fazla %{max} bayt olmalıdır."
+      invalid_stream_param: "%{key} parametresi geçersiz: %{details}"
+      expected_array: "bir dizi bekleniyor"
+      expected_object: "bir nesne bekleniyor"
+      ambiguous_tool_results: "tool_results veya tool_result'u belirtin, ikisini birden belirtmeyin."
+      invalid_tool_results: "tool_results parametresi geçersiz: %{details}"
+      too_many_tool_results: "tool_results parametresi en fazla %{max} öğe içerebilir."
+      no_pending_tool_calls: Bu özgeçmiş jetonu için bekleyen araç çağrısı yoktur.
+      missing_tool_results: "tool_call_id(ler) için eksik araç sonuçları: %{ids}"
+      unexpected_tool_results: "tool_call_id(ler) için beklenmedik araç sonuçları: %{ids}"
+      invalid_tool_result_content: "%{id} için araç sonucu içerik içermelidir"
+      tool_result_content_too_large: "Her araç sonucu içeriği yükü en fazla %{max} bayt olmalıdır."
+      stream_reply_max_resume_rounds_reached: Maksimum özel araç devam turu sayısına ulaşıldı (%{max}).
+      stream_reply_state_too_large: "Stream kalıcı olmak için çok büyük (maks. %{max} bayt)."
+      stream_reply_unexpected_error: Yanıtın aktarılması sırasında beklenmedik bir hata oluştu.
       prompt_message_length: '%{idx} mesajı 1000 karakter limitinin üzerinde.'
-      persona_already_exists: '%{name} adlı bir kişilik zaten mevcut.'
       custom_tool_exists:
         one: "%{names} adlı bir özel araç zaten mevcut."
         other: "%{names} adlı özel araçlar zaten mevcut."

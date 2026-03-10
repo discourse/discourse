@@ -10,7 +10,6 @@ RSpec.describe "Support Category Type Setup", type: :system do
 
   before do
     SiteSetting.enable_simplified_category_creation = true
-    SiteSetting.enable_category_type_setup = true
     sign_in(admin)
   end
 
@@ -64,6 +63,15 @@ RSpec.describe "Support Category Type Setup", type: :system do
           "checked"
         ],
       ).to eq(nil)
+    end
+  end
+
+  context "when visiting the Support tab for a non-support category" do
+    fab!(:category)
+
+    it "shows the not support type message" do
+      visit("/c/#{category.slug}/edit/support")
+      expect(page).to have_content(I18n.t("js.solved.category_type_support.not_support_type"))
     end
   end
 end

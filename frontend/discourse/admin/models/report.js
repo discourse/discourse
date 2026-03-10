@@ -1,5 +1,6 @@
 import EmberObject, { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { REPORT_MODES } from "discourse/admin/lib/constants";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
 import { durationTiny, number } from "discourse/lib/formatter";
@@ -221,13 +222,28 @@ export default class Report extends EmberObject {
     );
   }
 
+  get combinedData() {
+    if (this.modes?.includes(REPORT_MODES.stacked_chart)) {
+      return Object.values(
+        this.data
+          .flatMap((series) => series.data)
+          .reduce((acc, { x, y }) => {
+            acc[x] ??= { x, y: 0 };
+            acc[x].y += y;
+            return acc;
+          }, {})
+      );
+    }
+    return this.data;
+  }
+
   valueAt(numDaysAgo) {
-    if (this.data) {
+    if (this.combinedData) {
       const wantedDate = moment()
         .subtract(numDaysAgo, "days")
         .locale("en")
         .format("YYYY-MM-DD");
-      const item = this.data.find((d) => d.x === wantedDate);
+      const item = this.combinedData.find((d) => d.x === wantedDate);
       if (item) {
         return item.y;
       }
@@ -236,13 +252,13 @@ export default class Report extends EmberObject {
   }
 
   valueFor(startDaysAgo, endDaysAgo) {
-    if (this.data) {
+    if (this.combinedData) {
       const earliestDate = moment().subtract(endDaysAgo, "days").startOf("day");
       const latestDate = moment().subtract(startDaysAgo, "days").startOf("day");
       let d,
         sum = 0,
         count = 0;
-      this.data.forEach((datum) => {
+      this.combinedData.forEach((datum) => {
         d = moment(datum.x);
         if (d >= earliestDate && d <= latestDate) {
           sum += datum.y;

@@ -19,47 +19,35 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
       )
     end
 
-    context "when enable_upcoming_changes is disabled" do
-      before { SiteSetting.enable_upcoming_changes = false }
+    context "when upcoming change is enabled (opted in)" do
+      before { SiteSetting.enable_upload_debug_mode = true }
 
       it { expect(check).to be_chill_about_it }
     end
 
-    context "when enable_upcoming_changes is enabled" do
-      before { SiteSetting.enable_upcoming_changes = true }
+    context "when upcoming change is stable and not opted in" do
+      before { SiteSetting.enable_upload_debug_mode = false }
 
-      context "when upcoming change is enabled (opted in)" do
-        before { SiteSetting.enable_upload_debug_mode = true }
-
-        it { expect(check).to be_chill_about_it }
+      it do
+        expect(check).to have_a_problem.with_priority("low").with_target("enable_upload_debug_mode")
       end
+    end
 
-      context "when upcoming change is stable and not opted in" do
-        before { SiteSetting.enable_upload_debug_mode = false }
-
-        it do
-          expect(check).to have_a_problem.with_priority("low").with_target(
-            "enable_upload_debug_mode",
-          )
-        end
-      end
-
-      context "when upcoming change is not yet stable and not opted in" do
-        before do
-          mock_upcoming_change_metadata(
-            {
-              enable_upload_debug_mode: {
-                impact: "other,developers",
-                status: :alpha,
-                impact_type: "other",
-                impact_role: "developers",
-              },
+    context "when upcoming change is not yet stable and not opted in" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :alpha,
+              impact_type: "other",
+              impact_role: "developers",
             },
-          )
-        end
-
-        it { expect(check).to be_chill_about_it }
+          },
+        )
       end
+
+      it { expect(check).to be_chill_about_it }
     end
   end
 end

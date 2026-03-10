@@ -42,7 +42,7 @@ sv:
         back: "Tillbaka"
         disabled: "(inaktiverad)"
         groups: "Grupper:"
-        no_persona: "Inte inställd"
+        no_agent: "Inte inställd"
         no_groups: "Ingen"
         edit: "Inställningar"
         expand_list:
@@ -91,7 +91,7 @@ sv:
         periods:
           last_day: "Senaste 24 timmarna"
           custom: "Anpassad..."
-      ai_persona:
+      ai_agent:
         back: "Tillbaka"
         name: "Namn"
         edit: "Redigera"
