@@ -297,6 +297,7 @@ export default class EditCategoryTabsController extends Controller {
       }
 
       this.set("saving", false);
+      this.initFormData();
 
       this.toasts.success({
         duration: "short",
