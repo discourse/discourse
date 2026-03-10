@@ -22,6 +22,7 @@ module DiscourseAi
           raise ArgumentError, "Invalid JSON payload"
         end
 
+      normalize_legacy_format!
       validate_payload!
     end
 
@@ -55,6 +56,12 @@ module DiscourseAi
     end
 
     private
+
+    def normalize_legacy_format!
+      if @data.is_a?(Hash) && @data.key?("persona") && !@data.key?("agent")
+        @data["agent"] = @data.delete("persona")
+      end
+    end
 
     def validate_payload!
       unless @data.is_a?(Hash) && @data["agent"].is_a?(Hash)

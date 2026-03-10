@@ -115,7 +115,7 @@ module DiscourseAi
       end
 
       def import
-        name = params.dig(:agent, :name)
+        name = params.dig(:agent, :name) || params.dig(:persona, :name)
         existing_agent = AiAgent.find_by(name: name) if name.present?
         force_update = ActiveModel::Type::Boolean.new.cast(params[:force])
         import_payload = params.to_unsafe_h.except("controller", "action", "format", "force")

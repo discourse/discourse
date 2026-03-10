@@ -781,6 +781,64 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
+    context "with legacy persona format" do
+      let(:legacy_import_data) do
+        {
+          meta: {
+            version: "1.0",
+            exported_at: Time.zone.now.iso8601,
+          },
+          persona: {
+            name: "LegacyPersona",
+            description: "A legacy persona import",
+            system_prompt: "You are a legacy assistant",
+            temperature: 0.5,
+            top_p: 0.9,
+            response_format: [],
+            examples: [],
+            tools: ["SearchCommand"],
+          },
+          custom_tools: [],
+        }
+      end
+
+      it "imports a legacy persona payload" do
+        expect {
+          post "/admin/plugins/discourse-ai/ai-agents/import.json",
+               params: legacy_import_data,
+               as: :json
+          expect(response).to have_http_status(:created)
+        }.to change(AiAgent, :count).by(1)
+
+        agent = AiAgent.find_by(name: "LegacyPersona")
+        expect(agent).to be_present
+        expect(agent.description).to eq("A legacy persona import")
+      end
+
+      it "detects conflicts with legacy persona payload" do
+        Fabricate(:ai_agent, name: "LegacyPersona")
+
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: legacy_import_data,
+             as: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"].join).to include("LegacyPersona")
+      end
+
+      it "overwrites with force=true on legacy persona payload" do
+        existing = Fabricate(:ai_agent, name: "LegacyPersona", description: "Old")
+
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: legacy_import_data.merge(force: true),
+             as: :json
+
+        expect(response).to have_http_status(:ok)
+        existing.reload
+        expect(existing.description).to eq("A legacy persona import")
+      end
+    end
+
     it "logs staff action when importing a new agent" do
       post "/admin/plugins/discourse-ai/ai-agents/import.json", params: valid_import_data, as: :json
 

@@ -175,6 +175,64 @@ RSpec.describe DiscourseAi::AgentImporter do
       end
     end
 
+    context "with legacy persona format" do
+      let(:legacy_hash) do
+        {
+          "meta" => {
+            "version" => "1.0",
+          },
+          "persona" => {
+            "name" => "Legacy Agent",
+            "description" => "A legacy persona",
+            "system_prompt" => "You are a legacy assistant",
+            "temperature" => 0.7,
+            "top_p" => 0.9,
+            "response_format" => [],
+            "examples" => [],
+            "tools" => ["SearchCommand"],
+          },
+          "custom_tools" => [],
+        }
+      end
+
+      it "imports a legacy persona hash successfully" do
+        importer = described_class.new(json: legacy_hash)
+        agent = importer.import!
+
+        expect(agent).to be_persisted
+        expect(agent.name).to eq("Legacy Agent")
+        expect(agent.description).to eq("A legacy persona")
+      end
+
+      it "imports a legacy persona JSON string successfully" do
+        importer = described_class.new(json: legacy_hash.to_json)
+        agent = importer.import!
+
+        expect(agent).to be_persisted
+        expect(agent.name).to eq("Legacy Agent")
+      end
+
+      it "detects conflicts with legacy format" do
+        Fabricate(:ai_agent, name: "Legacy Agent")
+
+        importer = described_class.new(json: legacy_hash)
+
+        expect { importer.import! }.to raise_error(
+          DiscourseAi::AgentImporter::ImportError,
+        ) { |error| expect(error.conflicts[:agent]).to eq("Legacy Agent") }
+      end
+
+      it "overwrites with legacy format when overwrite: true" do
+        existing = Fabricate(:ai_agent, name: "Legacy Agent", description: "Old")
+
+        importer = described_class.new(json: legacy_hash)
+        agent = importer.import!(overwrite: true)
+
+        expect(agent.id).to eq(existing.id)
+        expect(agent.description).to eq("A legacy persona")
+      end
+    end
+
     context "with invalid payload" do
       it "raises an error for invalid JSON structure" do
         expect { described_class.new(json: "{}").import! }.to raise_error(

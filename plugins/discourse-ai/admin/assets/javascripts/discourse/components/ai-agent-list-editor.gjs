@@ -176,7 +176,7 @@ export default class AiAgentListEditor extends Component {
           this.dialog.confirm({
             message:
               i18n("discourse_ai.ai_agent.import_error_conflict", {
-                name: agentData.agent.name,
+                name: agentData.agent?.name ?? agentData.persona?.name,
               }) +
               "\n" +
               error.jqXHR.responseJSON?.errors?.join("\n"),
