@@ -3814,8 +3814,6 @@ RSpec.describe User do
     let(:admin_guardian) { Guardian.new(admin_user) }
 
     before do
-      SiteSetting.enable_upcoming_changes = true
-
       mock_upcoming_change_metadata(
         {
           enable_upload_debug_mode: {
