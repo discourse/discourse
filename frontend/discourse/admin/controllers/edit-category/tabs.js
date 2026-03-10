@@ -77,6 +77,7 @@ export default class EditCategoryTabsController extends Controller {
   @tracked
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
+  @tracked formData;
   @tracked selectedTab = "general";
   @tracked formApi = null;
   @autoTrackedArray panels = [];
@@ -91,7 +92,8 @@ export default class EditCategoryTabsController extends Controller {
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
-  get formData() {
+  @action
+  initFormData() {
     const enableSimplifiedCategoryCreation =
       this.siteSettings.enable_simplified_category_creation;
     const data = getProperties(
@@ -128,7 +130,7 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    return data;
+    this.formData = data;
   }
 
   @computed("saving", "deleting")
