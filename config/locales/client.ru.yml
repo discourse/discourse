@@ -2499,6 +2499,7 @@ ru:
     form_kit:
       reset: Сбросить
       optional: необязательно
+      required: Обязательное
       dirty_form: "Вы не отправили изменения! Действительно выйти?"
       errors:
         starts_with: "Должно начинаться с %{prefix}"
@@ -4554,6 +4555,8 @@ ru:
         tag_group: "Группа тегов"
       topic_featured_link_allowed: "Разрешить избранные ссылки в этой категории"
       create_long: "Создать новую категорию"
+      type_settings_schema:
+        site_settings: "Настройки сайта"
       unsaved_changes: "У вас есть несохраненные изменения"
       slug_placeholder: "(Необязат.) Слова для URL, разделённые дефисами"
       creation_error: При создании новой категории возникла ошибка.
@@ -6260,7 +6263,7 @@ ru:
           all: "Все"
           view_table: "Таблица"
           view_graph: "График"
-          refresh_report: "Обновить отчёт"
+          refresh_report: "Обновить"
           daily: За день
           monthly: За месяц
           weekly: За неделю
@@ -8383,7 +8386,7 @@ ru:
             confirm: "Да, изменить политику паролей"
           min_admin_password_length:
             confirm: "Да, изменить политику паролей"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Да, изменить политику паролей"
           block_common_passwords:
             confirm: "Да, изменить политику паролей"

@@ -1211,9 +1211,10 @@ fi:
       description: "Luettelo lippujen statuksista sisältäen lippujen tyypit, kirjoittajat, liputtajat ja selvitysajat."
     visits:
       title: "Käyttäjien vierailut"
-      xaxis: "Päivä"
+      xaxis:
+        desktop: "Työpöytä"
+        mobile: "Mobiili"
       yaxis: "Vierailujen määrä"
-      description: "Kirjautuneiden käyttäjien vierailujen määrä."
     signups:
       title: "Rekisteröitymiset"
       xaxis: "Päivä"
@@ -1275,10 +1276,8 @@ fi:
       description: "Kirjautuneiden käyttäjien, anonyymien käyttäjien, tunnettujen hakurobottien ja muun liikenteen sivunkatselut."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "PAK/KAK"
       xaxis: "Päivä"
       yaxis: "PAK/KAK"
-      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 20 prosenttiin."
     daily_engaged_users:
       title: "Sitoutuneet päivittäiskäyttäjät"
       xaxis: "Päivä"

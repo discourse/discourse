@@ -2303,6 +2303,7 @@ nl:
     form_kit:
       reset: Resetten
       optional: optioneel
+      required: vereist
       errors_summary_title:
         one: "Corrigeer deze fout om door te gaan"
         other: "Corrigeer deze fouten om door te gaan"
@@ -4139,6 +4140,8 @@ nl:
         tag_group: "Tag-groep"
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
       create_long: "Nieuwe categorie maken"
+      type_settings_schema:
+        site_settings: "Site-instellingen"
       unsaved_changes: "Je hebt niet-opgeslagen wijzigingen"
       slug_placeholder: "(Optioneel) met streepjes verbonden woorden voor URL"
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
@@ -5738,7 +5741,7 @@ nl:
           all: "Alles"
           view_table: "tabel"
           view_graph: "grafiek"
-          refresh_report: "Rapport vernieuwen"
+          refresh_report: "Vernieuwen"
           daily: Dagelijks
           monthly: Maandelijks
           weekly: Wekelijks
@@ -7786,7 +7789,7 @@ nl:
             confirm: "Ja, wachtwoordbeleid bijwerken"
           min_admin_password_length:
             confirm: "Ja, wachtwoordbeleid bijwerken"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Ja, wachtwoordbeleid bijwerken"
           block_common_passwords:
             confirm: "Ja, wachtwoordbeleid bijwerken"

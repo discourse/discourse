@@ -10,6 +10,10 @@ nl:
     support:
       name: "Steunen"
       title: "steunen"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Topiceigenaar en medewerkers toestaan een antwoord als oplossing te markeren"
   site_settings:
     solved_enabled: "Solved-plug-in inschakelen, gebruikers kunnen oplossingen voor topics selecteren"
     allow_solved_on_all_topics: "Sta gebruikers toe om oplossingen te selecteren voor alle topics (indien niet aangevinkt, kunnen oplossingen per categorie of tag worden ingeschakeld)"

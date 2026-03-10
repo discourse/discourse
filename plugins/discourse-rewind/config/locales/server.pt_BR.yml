@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  site_settings:
+    discourse_rewind_enabled: "Ativar o recurso Discourse Rewind para obter uma retrospectiva de fim de ano das atividades dos membros na comunidade."
+  discourse_rewind:
+    report_failed: "Não foi possível gerar o relatório do Discourse Rewind."
+    invalid_year: "O recurso Rewind só pode ser gerado em janeiro ou dezembro."
+    user_not_found: "Usuário não encontrado ou não pode ser visualizado."
+    reports_not_cached: "Os relatórios ainda não foram gerados. Atualize a página."
+    report_not_found: "Relatório não encontrado."
+    cannot_share_when_profile_hidden: "Para compartilhar o Rewind, você precisa permitir que outras pessoas vejam seu perfil público."

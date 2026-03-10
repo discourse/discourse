@@ -1366,9 +1366,10 @@ he:
       description: "רשימת מצבי גבלים לרבות סוג הדגל, מפרסם, מסמן בדגל וזמן הפתרון."
     visits:
       title: "ביקורי משתמש"
-      xaxis: "יום"
+      xaxis:
+        desktop: "מחשב-שולחני"
+        mobile: "נייד"
       yaxis: "מספר ביקורים"
-      description: "מספר המשתמשים המבקרים שנכנסו למערכת."
     signups:
       title: "הרשמות"
       xaxis: "יום"
@@ -1432,10 +1433,8 @@ he:
       description: "תצוגות דף עבור משתמשים מחוברים, משתמשים אלמוניים, וסורקים אוטומטיים (crawlers) ותעבורה מסוגים נוספים."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "יחס פעילות יומי/חודשי"
       xaxis: "יום"
       yaxis: "יחס פעילות יומי/חודשי"
-      description: "מספר החברים שנכנסו ביממה האחרונה לחלק במספר החברים שנכנסו בחודש האחרון – מחזירה אחוז שמציין את ‚דבקות’ הקהילה. עדיף לכוון לערך שעולה על 20%."
     daily_engaged_users:
       title: "משתמשים מעורבים יומית"
       xaxis: "יום"

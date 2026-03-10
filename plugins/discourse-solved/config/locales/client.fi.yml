@@ -46,6 +46,8 @@ fi:
         description: "Korosta vastaus ja auta muita käyttämällä oikean vastauksen alla olevaa ratkaisupainiketta."
       notification:
         title: "viestisi merkittiin ratkaisuksi"
+      category_type_support:
+        title: "Tuki"
     topic_statuses:
       solved:
         help: "Tämä ketju on ratkaistu"

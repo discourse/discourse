@@ -1105,9 +1105,10 @@ fa_IR:
         flagger: گزارش‌دهنده
     visits:
       title: "بازدید کاربران"
-      xaxis: "روز"
+      xaxis:
+        desktop: "کامپیوتر"
+        mobile: "موبایل"
       yaxis: "تعداد بازدید ها"
-      description: "تعداد بازدیدهای کاربران وارد شده"
     signups:
       title: "ثبت‌نام‌ها"
       xaxis: "روز"
@@ -1164,10 +1165,8 @@ fa_IR:
       description: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس، خزنده های شناخته شده و سایر ترافیک‌ها."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "روز"
       yaxis: "DAU/MAU"
-      description: "تعداد اعضایی که در روز گذشته وارد سیستم شده‌اند تقسیم بر تعداد اعضایی که در ماه گذشته وارد شده‌اند - درصدی را نشان می‌دهد که نشان‌دهنده «چسبندگی» انجمن است. بیش از ۲۰٪ را هدف بگیرید."
     daily_engaged_users:
       title: "کاربران فعال روزانه"
       xaxis: "روز"

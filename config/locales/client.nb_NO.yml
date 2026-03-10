@@ -1980,6 +1980,7 @@ nb_NO:
     form_kit:
       reset: Tilbakestill
       optional: valgfritt
+      required: nødvendig
       dirty_form: "Du har ikke sendt inn endringene dine! Er du sikker på at du vil dra?"
       errors:
         required: "Påkrevd"
@@ -4555,7 +4556,7 @@ nb_NO:
           all: "Alle"
           view_table: "tabell"
           view_graph: "graf"
-          refresh_report: "Refresh Rapport"
+          refresh_report: "Last inn siden på nytt"
           daily: Daglig
           monthly: Månedlig
           weekly: Ukentlig

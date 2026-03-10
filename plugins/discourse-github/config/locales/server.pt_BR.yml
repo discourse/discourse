@@ -12,6 +12,8 @@ pt_BR:
     github_linkback_access_token: 'Um token de acesso válido para o(a) usuário(a) que postar o linkback e contar confirmações/contribuições para conceder emblemas. Acesse <a href="https://meta.discourse.org/t/99895">aqui</a> para obter instruções de como receber um token.'
     github_linkback_maximum_links: "Número máximo de linkbacks para criar a partir de uma única postagem. Quando uma postagem contiver mais links, nenhum será criado."
     github_permalinks_enabled: "Ativar substituições de permalink do GitHub"
+    github_pr_status_enabled: "Exibir o status da solicitação de pull do GitHub em oneboxes (rascunho, aberto, aprovado, mesclado, fechado)"
+    github_webhook_secret: "Token secreto para verificação de assinatura do webhook do GitHub. Configure esse valor nas configurações do seu webhook do GitHub."
     github_permalinks_exclude: "Diretório ou nome do arquivo que deve ser excluído das substituições de permalink. Informe apenas o nome do arquivo ou caminho completo: user/repository/optional-directory/filename"
     github_badges_enabled: "Ativar emblemas do GitHub"
     github_badges_repos: "URLs do repositório do GitHub para verificar contribuições e confirmações"

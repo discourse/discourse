@@ -878,7 +878,9 @@ lt:
         flagger: Pranešėjas
     visits:
       title: "Nario aplankymai"
-      xaxis: "Diena"
+      xaxis:
+        desktop: "Darbalaukis"
+        mobile: "Mobilus"
       yaxis: "Apsilankymai"
     signups:
       title: "Registracijos"
@@ -922,10 +924,8 @@ lt:
       yaxis: "Diena"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Diena"
       yaxis: "DAU/MAU"
-      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >20 proc."
     daily_engaged_users:
       title: "Kasdien dalyvaujantys vartotojai"
       xaxis: "Diena"

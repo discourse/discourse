@@ -7,6 +7,7 @@
 pt_BR:
   discourse_subscriptions:
     customer_not_found: Cliente não encontrado(a)
+    subscription_not_found: Assinatura não encontrada
     card:
       declined: Cartão recusado
       invalid: Cartão inválido

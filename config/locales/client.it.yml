@@ -2256,6 +2256,7 @@ it:
     form_kit:
       reset: Annulla
       optional: facoltativo
+      required: obbligatorie
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
       errors:
         starts_with: "Deve iniziare con %{prefix}"
@@ -4072,6 +4073,8 @@ it:
         tag_group: "Gruppo di Etichette"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
       create_long: "Crea una nuova categoria"
+      type_settings_schema:
+        site_settings: "Impostazioni del sito"
       unsaved_changes: "Hai modifiche non salvate"
       slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
@@ -5670,7 +5673,7 @@ it:
           all: "Tutti"
           view_table: "tabella"
           view_graph: "grafico"
-          refresh_report: "Aggiorna Rapporto"
+          refresh_report: "Aggiorna"
           daily: Ogni giorno
           monthly: Mensile
           weekly: Settimanale
@@ -7717,7 +7720,7 @@ it:
             confirm: "Sì, aggiorna i criteri della password"
           min_admin_password_length:
             confirm: "Sì, aggiorna i criteri della password"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Sì, aggiorna i criteri della password"
           block_common_passwords:
             confirm: "Sì, aggiorna i criteri della password"

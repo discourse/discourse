@@ -50,6 +50,8 @@ he:
         description: "ניתן להדגיש את התשובה ולסייע לאחרים על ידי לחיצה על כפתור הפתרון שלהלן מתחת לתגובה הנכונה."
       notification:
         title: "הפוסט שלך סומן כפתרון"
+      category_type_support:
+        title: "תמיכה"
     topic_statuses:
       solved:
         help: "לנושא הזה יש פתרון"

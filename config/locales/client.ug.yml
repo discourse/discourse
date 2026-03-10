@@ -2342,6 +2342,7 @@ ug:
     form_kit:
       reset: ئەسلىگە قايتۇر
       optional: تاللاشچان
+      required: زۆرۈر
       dirty_form: "ئۆزگەرتىشلىرىڭىزنى تاپشۇرمىدىڭىز! راستتىنلا ئايرىلامسىز؟"
       errors:
         starts_with: "چوقۇم %{prefix} بىلەن باشلىنىدۇ"
@@ -4238,6 +4239,8 @@ ug:
       delete: "سەھىپە ئۆچۈر"
       create: "يېڭى سەھىپە"
       create_long: "يېڭى سەھىپە قۇرىدۇ"
+      type_settings_schema:
+        site_settings: "بېكەت تەڭشىكى"
       save: "سەھىپە ساقلا"
       unsaved_changes: "ساقلانمىغان ئۆزگەرتىشلىرىڭىز بار"
       slug: "سەھىپە قىسقارتما"
@@ -5939,7 +5942,7 @@ ug:
           all: "ھەممىسى"
           view_table: "جەدۋەل"
           view_graph: "گرافىك"
-          refresh_report: "دوكلاتنى يېڭىلا"
+          refresh_report: "يېڭىلا"
           daily: كۈندىلىك
           monthly: ئايلىق
           weekly: ھەپتىلىك
@@ -8018,7 +8021,7 @@ ug:
             confirm: "ھەئە، ئىم تۈزۈمىنى يېڭىلا"
           min_admin_password_length:
             confirm: "ھەئە، ئىم تۈزۈمىنى يېڭىلا"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "ھەئە، ئىم تۈزۈمىنى يېڭىلا"
           block_common_passwords:
             confirm: "ھەئە، ئىم تۈزۈمىنى يېڭىلا"

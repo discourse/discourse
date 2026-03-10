@@ -21,6 +21,7 @@ pl_PL:
     chat_duplicate_message_sensitivity: "Prawdopodobieństwo, że zduplikowana wiadomość od tego samego nadawcy zostanie zablokowana w krótkim czasie. Liczba dziesiętna z zakresu od 0 do 1,0, gdzie 1,0 jest najwyższym ustawieniem (blokuje wiadomości częściej w krótszym czasie). Ustaw na „0”, aby zezwolić na duplikaty wiadomości."
     chat_minimum_message_length: "Minimalna liczba znaków wiadomości na czacie."
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
+    chat_show_copy_button_on_codeblocks: "Pokaż przycisk kopiowania w blokach kodu w wiadomościach czatu."
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
     direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie czatów osobistych między użytkownikami. Uwaga: personel zawsze może tworzyć czaty osobiste, a użytkownicy będą mogli odpowiadać na czaty osobiste inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
     chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oznaczać flagami wiadomości czatu. Należy pamiętać, że administratorzy i moderatorzy zawsze mogą oznaczać flagami wiadomości czatu."

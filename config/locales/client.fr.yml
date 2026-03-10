@@ -2271,6 +2271,7 @@ fr:
     form_kit:
       reset: Réinitialiser
       optional: facultatif
+      required: obligatoire
       dirty_form: "Vous n'avez pas soumis vos modifications ! Voulez-vous vraiment partir ?"
       errors:
         starts_with: "Doit commencer par %{prefix}"
@@ -4101,6 +4102,8 @@ fr:
         tag_group: "Groupe d'étiquettes "
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       create_long: "Créer une nouvelle catégorie"
+      type_settings_schema:
+        site_settings: "Paramètres du site"
       unsaved_changes: "Vous avez des modifications non enregistrées"
       slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
@@ -5699,7 +5702,7 @@ fr:
           all: "Tous"
           view_table: "tableau"
           view_graph: "graphique"
-          refresh_report: "Actualiser le rapport"
+          refresh_report: "Actualiser"
           daily: Quotidien
           monthly: Mensuel
           weekly: Hebdomadaire
@@ -7746,7 +7749,7 @@ fr:
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           min_admin_password_length:
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           block_common_passwords:
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"

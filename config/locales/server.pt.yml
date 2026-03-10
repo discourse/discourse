@@ -742,7 +742,9 @@ pt:
         flag: Tipo
     visits:
       title: "Visitas do Utilizador"
-      xaxis: "Dia"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Móvel"
       yaxis: "Número de visitas"
     signups:
       xaxis: "Dia"

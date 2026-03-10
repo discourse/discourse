@@ -877,7 +877,9 @@ gl:
       description: "Listaxe do estado das alertas que inclúe o tipo de alerta, o usuario denunciado, o denunciante e o tempo de resolución."
     visits:
       title: "Visitas de usuarios"
-      xaxis: "Día"
+      xaxis:
+        desktop: "Escritorio"
+        mobile: "Móbil"
       yaxis: "Número de visitas"
     signups:
       title: "Rexistros"
@@ -922,10 +924,8 @@ gl:
       yaxis: "Día"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
-      description: "Número de membros que iniciaron sesión no último día entre o número de membros que iniciaron sesión no último mes - devolve a porcentaxe que indica o grao de permanencia da comunidade. Obxectivo: >20%."
     daily_engaged_users:
       title: "Usuarios comprometidos a diario"
       xaxis: "Día"
