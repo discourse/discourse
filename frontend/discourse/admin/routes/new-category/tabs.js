@@ -42,7 +42,7 @@ export default class NewCategoryTabs extends DiscourseRoute {
 
       // Only want to prefill the general settings (name etc) if it's the
       // first category of this type.
-      if (result.count === 0) {
+      if ((result.count ?? 0) === 0) {
         result.typeSchema.general_category_settings?.forEach((setting) => {
           model.set(setting.key, setting.default);
         });
