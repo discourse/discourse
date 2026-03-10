@@ -14,5 +14,5 @@ pt_BR:
       show: "Anotações de usuário(a) (%{count})"
       delete_confirm: "Tem certeza de que deseja excluir esta anotação de usuário(a)?"
       show_post: "Mostrar postagem"
-      show_flag: "Mostrar sinalização"
+      show_flag: "Mostrar denúncia"
       copy_reviewable_note: "Copiar anotação para 'Anotação do Usuário' no perfil de %{username}?"

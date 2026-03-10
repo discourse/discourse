@@ -211,7 +211,7 @@ pt_BR:
               description: "Percentual mínimo de confiança (0-100) necessário para aplicar as tags sugeridas."
             max_tags_per_post:
               label: "Máximo de tags por postagem"
-              description: "Número máximo de tags que podem ser aplicadas a uma única publicação."
+              description: "Número máximo de tags que podem ser aplicadas a uma única postagem."
             max_post_tokens:
               label: "Número máximo de tokens de postagem"
               description: "Número máximo de tokens do conteúdo da postagem a serem analisados."
@@ -326,7 +326,7 @@ pt_BR:
           image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
-          chat_thread_titles: "Títulos de tópicos de chat"
+          chat_thread_titles: "Títulos de threads de chat"
           setting_groups:
             access_permissions: "Acessos e Permissões"
             enabled_features: "Recursos Habilitados"
