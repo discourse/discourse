@@ -133,7 +133,9 @@ class CategoriesController < ApplicationController
     counts_by_type =
       Discourse
         .cache
-        .fetch("category_type_counts", expires_in: 1.hour) { Categories::TypeRegistry.counts }
+        .fetch(Categories::TypeRegistry::COUNTS_CACHE_KEY, expires_in: 1.hour) do
+          Categories::TypeRegistry.counts
+        end
 
     render json: { types: Categories::TypeRegistry.list, counts: counts_by_type }
   end
@@ -329,6 +331,7 @@ class CategoriesController < ApplicationController
   def destroy
     guardian.ensure_can_delete!(@category)
     @category.destroy
+    Discourse.cache.delete(Categories::TypeRegistry::COUNTS_CACHE_KEY)
 
     Scheduler::Defer.later "Log staff action delete category" do
       @staff_action_logger.log_category_deletion(@category)

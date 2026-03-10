@@ -2,9 +2,15 @@
 
 module Categories
   class TypeRegistry
+    COUNTS_CACHE_KEY = "category_type_counts"
+
     class << self
       def register(klass, plugin_identifier: nil)
         id = klass.type_id
+        unless id.to_s.match?(/\A[a-z0-9_]+\z/)
+          raise ArgumentError,
+                "Category type_id '#{id}' must only contain lowercase letters, digits, and underscores"
+        end
         if types.key?(id) && owners[id] != plugin_identifier
           raise ArgumentError,
                 "Category type '#{id}' is already registered#{owners[id] ? " by #{owners[id]}" : ""}"

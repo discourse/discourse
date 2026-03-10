@@ -82,7 +82,7 @@ module Categories
     end
 
     def clear_category_type_counts_cache
-      Discourse.cache.delete("category_type_counts")
+      Discourse.cache.delete(Categories::TypeRegistry::COUNTS_CACHE_KEY)
     end
   end
 end
