@@ -177,7 +177,7 @@ function buildDeprecationMessage(msg, options, raiseError) {
  * @returns {String} The console prefix
  */
 function getConsolePrefix(source) {
-  consolePrefix(null, source) || "";
+  return consolePrefix(null, source) || "";
 }
 
 /**
