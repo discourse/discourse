@@ -37,151 +37,8 @@ RSpec.describe UpcomingChanges::Toggle do
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
-      context "when enable_upcoming_changes is disabled" do
-        let(:setting_name) { :display_local_time_in_user_card }
-
-        context "when log_change is true" do
-          let(:options) { { log_change: true } }
-
-          context "when enabling the setting" do
-            let(:enabled) { true }
-
-            before { SiteSetting.display_local_time_in_user_card = false }
-
-            it "enables the specified setting" do
-              expect { result }.to change { SiteSetting.display_local_time_in_user_card }.to(true)
-            end
-
-            it "creates an entry in the staff action logs" do
-              expect { result }.to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:change_site_setting],
-                  subject: "display_local_time_in_user_card",
-                ).count
-              }.by(1)
-            end
-
-            it "logs the correct previous value" do
-              result
-              history =
-                UserHistory.find_by(
-                  action: UserHistory.actions[:change_site_setting],
-                  subject: "display_local_time_in_user_card",
-                )
-              expect(history.previous_value).to eq("false")
-              expect(history.new_value).to eq("true")
-            end
-
-            it "does not create an UpcomingChangeEvent" do
-              expect { result }.not_to change { UpcomingChangeEvent.count }
-            end
-
-            it "triggers the upcoming_change_enabled event" do
-              events =
-                DiscourseEvent
-                  .track_events { result }
-                  .select { |e| e[:event_name] == :upcoming_change_enabled }
-
-              expect(events.first[:params]).to eq([setting_name.to_s])
-            end
-          end
-
-          context "when disabling the setting" do
-            let(:enabled) { false }
-
-            before { SiteSetting.display_local_time_in_user_card = true }
-
-            it "disables the specified setting" do
-              expect { result }.to change { SiteSetting.display_local_time_in_user_card }.to(false)
-            end
-
-            it "creates an entry in the staff action logs" do
-              expect { result }.to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:change_site_setting],
-                  subject: "display_local_time_in_user_card",
-                ).count
-              }.by(1)
-            end
-
-            it "does not create an UpcomingChangeEvent" do
-              expect { result }.not_to change { UpcomingChangeEvent.count }
-            end
-
-            it "triggers the upcoming_change_disabled event" do
-              events =
-                DiscourseEvent
-                  .track_events { result }
-                  .select { |e| e[:event_name] == :upcoming_change_disabled }
-
-              expect(events.first[:params]).to eq([setting_name.to_s])
-            end
-          end
-        end
-
-        context "when log_change is false" do
-          let(:options) { { log_change: false } }
-
-          context "when enabling the setting" do
-            let(:enabled) { true }
-
-            before { SiteSetting.display_local_time_in_user_card = false }
-
-            it "enables the specified setting" do
-              expect { result }.to change { SiteSetting.display_local_time_in_user_card }.to(true)
-            end
-
-            it "does not create an entry in the staff action logs" do
-              expect { result }.not_to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:change_site_setting],
-                  subject: "display_local_time_in_user_card",
-                ).count
-              }
-            end
-
-            it "does not create an UpcomingChangeEvent" do
-              expect { result }.not_to change { UpcomingChangeEvent.count }
-            end
-          end
-
-          context "when disabling the setting" do
-            let(:enabled) { false }
-
-            before { SiteSetting.display_local_time_in_user_card = true }
-
-            it "disables the specified setting" do
-              expect { result }.to change { SiteSetting.display_local_time_in_user_card }.to(false)
-            end
-
-            it "does not create an entry in the staff action logs" do
-              expect { result }.not_to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:change_site_setting],
-                  subject: "display_local_time_in_user_card",
-                ).count
-              }
-            end
-
-            it "does not create an UpcomingChangeEvent" do
-              expect { result }.not_to change { UpcomingChangeEvent.count }
-            end
-
-            it "triggers the upcoming_change_disabled event" do
-              events =
-                DiscourseEvent
-                  .track_events { result }
-                  .select { |e| e[:event_name] == :upcoming_change_disabled }
-
-              expect(events.first[:params]).to eq([setting_name.to_s])
-            end
-          end
-        end
-      end
-
       context "when disallow_enabled_for_groups is true" do
         before do
-          SiteSetting.enable_upcoming_changes = true
           mock_upcoming_change_metadata(
             enable_form_templates: {
               impact: "feature,all_members",
@@ -234,160 +91,156 @@ RSpec.describe UpcomingChanges::Toggle do
         end
       end
 
-      context "when enable_upcoming_changes is enabled" do
-        before { SiteSetting.enable_upcoming_changes = true }
+      context "when log_change is true" do
+        let(:options) { { log_change: true } }
 
-        context "when log_change is true" do
-          let(:options) { { log_change: true } }
+        context "when enabling the setting" do
+          let(:enabled) { true }
 
-          context "when enabling the setting" do
-            let(:enabled) { true }
+          before { SiteSetting.enable_form_templates = false }
 
-            before { SiteSetting.enable_form_templates = false }
-
-            it "enables the specified setting" do
-              expect { result }.to change { SiteSetting.enable_form_templates }.to(true)
-            end
-
-            it "creates an entry in the staff action logs with correct context" do
-              expect { result }.to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "enable_form_templates",
-                ).count
-              }.by(1)
-
-              expect(UserHistory.last.context).to eq(
-                I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled"),
-              )
-            end
-
-            it "creates an UpcomingChangeEvent with manual_opt_in event_type" do
-              expect { result }.to change {
-                UpcomingChangeEvent.where(
-                  event_type: :manual_opt_in,
-                  upcoming_change_name: "enable_form_templates",
-                ).count
-              }.by(1)
-            end
-
-            it "triggers the upcoming_change_enabled event" do
-              events =
-                DiscourseEvent
-                  .track_events { result }
-                  .select { |e| e[:event_name] == :upcoming_change_enabled }
-
-              expect(events.first[:params]).to eq([setting_name.to_s])
-            end
+          it "enables the specified setting" do
+            expect { result }.to change { SiteSetting.enable_form_templates }.to(true)
           end
 
-          context "when disabling the setting" do
-            let(:enabled) { false }
+          it "creates an entry in the staff action logs with correct context" do
+            expect { result }.to change {
+              UserHistory.where(
+                action: UserHistory.actions[:upcoming_change_toggled],
+                subject: "enable_form_templates",
+              ).count
+            }.by(1)
 
-            before { SiteSetting.enable_form_templates = true }
+            expect(UserHistory.last.context).to eq(
+              I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled"),
+            )
+          end
 
-            it "disables the specified setting" do
-              expect { result }.to change { SiteSetting.enable_form_templates }.to(false)
-            end
+          it "creates an UpcomingChangeEvent with manual_opt_in event_type" do
+            expect { result }.to change {
+              UpcomingChangeEvent.where(
+                event_type: :manual_opt_in,
+                upcoming_change_name: "enable_form_templates",
+              ).count
+            }.by(1)
+          end
 
-            it "creates an entry in the staff action logs with correct context" do
-              expect { result }.to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "enable_form_templates",
-                ).count
-              }.by(1)
+          it "triggers the upcoming_change_enabled event" do
+            events =
+              DiscourseEvent
+                .track_events { result }
+                .select { |e| e[:event_name] == :upcoming_change_enabled }
 
-              expect(UserHistory.last.context).to eq(
-                I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled"),
-              )
-            end
-
-            it "creates an UpcomingChangeEvent with manual_opt_out event_type" do
-              expect { result }.to change {
-                UpcomingChangeEvent.where(
-                  event_type: :manual_opt_out,
-                  upcoming_change_name: "enable_form_templates",
-                ).count
-              }.by(1)
-            end
-
-            it "triggers the upcoming_change_disabled event" do
-              events =
-                DiscourseEvent
-                  .track_events { result }
-                  .select { |e| e[:event_name] == :upcoming_change_disabled }
-
-              expect(events.first[:params]).to eq([setting_name.to_s])
-            end
+            expect(events.first[:params]).to eq([setting_name.to_s])
           end
         end
 
-        context "when log_change is false" do
-          let(:options) { { log_change: false } }
+        context "when disabling the setting" do
+          let(:enabled) { false }
 
-          context "when enabling the setting" do
-            let(:enabled) { true }
+          before { SiteSetting.enable_form_templates = true }
 
-            before { SiteSetting.enable_form_templates = false }
-
-            it "enables the specified setting" do
-              expect { result }.to change { SiteSetting.enable_form_templates }.to(true)
-            end
-
-            it "does not create an entry in the staff action logs" do
-              expect { result }.not_to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "enable_form_templates",
-                ).count
-              }
-            end
-
-            it "does not create an UpcomingChangeEvent" do
-              expect { result }.not_to change { UpcomingChangeEvent.count }
-            end
-
-            it "triggers the upcoming_change_enabled event" do
-              events =
-                DiscourseEvent
-                  .track_events { result }
-                  .select { |e| e[:event_name] == :upcoming_change_enabled }
-
-              expect(events.first[:params]).to eq([setting_name.to_s])
-            end
+          it "disables the specified setting" do
+            expect { result }.to change { SiteSetting.enable_form_templates }.to(false)
           end
 
-          context "when disabling the setting" do
-            let(:enabled) { false }
+          it "creates an entry in the staff action logs with correct context" do
+            expect { result }.to change {
+              UserHistory.where(
+                action: UserHistory.actions[:upcoming_change_toggled],
+                subject: "enable_form_templates",
+              ).count
+            }.by(1)
 
-            before { SiteSetting.enable_form_templates = true }
+            expect(UserHistory.last.context).to eq(
+              I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled"),
+            )
+          end
 
-            it "disables the specified setting" do
-              expect { result }.to change { SiteSetting.enable_form_templates }.to(false)
-            end
+          it "creates an UpcomingChangeEvent with manual_opt_out event_type" do
+            expect { result }.to change {
+              UpcomingChangeEvent.where(
+                event_type: :manual_opt_out,
+                upcoming_change_name: "enable_form_templates",
+              ).count
+            }.by(1)
+          end
 
-            it "does not create an entry in the staff action logs" do
-              expect { result }.not_to change {
-                UserHistory.where(
-                  action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "enable_form_templates",
-                ).count
-              }
-            end
+          it "triggers the upcoming_change_disabled event" do
+            events =
+              DiscourseEvent
+                .track_events { result }
+                .select { |e| e[:event_name] == :upcoming_change_disabled }
 
-            it "does not create an UpcomingChangeEvent" do
-              expect { result }.not_to change { UpcomingChangeEvent.count }
-            end
+            expect(events.first[:params]).to eq([setting_name.to_s])
+          end
+        end
+      end
 
-            it "triggers the upcoming_change_disabled event" do
-              events =
-                DiscourseEvent
-                  .track_events { result }
-                  .select { |e| e[:event_name] == :upcoming_change_disabled }
+      context "when log_change is false" do
+        let(:options) { { log_change: false } }
 
-              expect(events.first[:params]).to eq([setting_name.to_s])
-            end
+        context "when enabling the setting" do
+          let(:enabled) { true }
+
+          before { SiteSetting.enable_form_templates = false }
+
+          it "enables the specified setting" do
+            expect { result }.to change { SiteSetting.enable_form_templates }.to(true)
+          end
+
+          it "does not create an entry in the staff action logs" do
+            expect { result }.not_to change {
+              UserHistory.where(
+                action: UserHistory.actions[:upcoming_change_toggled],
+                subject: "enable_form_templates",
+              ).count
+            }
+          end
+
+          it "does not create an UpcomingChangeEvent" do
+            expect { result }.not_to change { UpcomingChangeEvent.count }
+          end
+
+          it "triggers the upcoming_change_enabled event" do
+            events =
+              DiscourseEvent
+                .track_events { result }
+                .select { |e| e[:event_name] == :upcoming_change_enabled }
+
+            expect(events.first[:params]).to eq([setting_name.to_s])
+          end
+        end
+
+        context "when disabling the setting" do
+          let(:enabled) { false }
+
+          before { SiteSetting.enable_form_templates = true }
+
+          it "disables the specified setting" do
+            expect { result }.to change { SiteSetting.enable_form_templates }.to(false)
+          end
+
+          it "does not create an entry in the staff action logs" do
+            expect { result }.not_to change {
+              UserHistory.where(
+                action: UserHistory.actions[:upcoming_change_toggled],
+                subject: "enable_form_templates",
+              ).count
+            }
+          end
+
+          it "does not create an UpcomingChangeEvent" do
+            expect { result }.not_to change { UpcomingChangeEvent.count }
+          end
+
+          it "triggers the upcoming_change_disabled event" do
+            events =
+              DiscourseEvent
+                .track_events { result }
+                .select { |e| e[:event_name] == :upcoming_change_disabled }
+
+            expect(events.first[:params]).to eq([setting_name.to_s])
           end
         end
       end

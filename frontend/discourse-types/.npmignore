@@ -1,0 +1,5 @@
+tsconfig.tsbuildinfo
+declarations/tests/acceptance
+declarations/tests/addons
+declarations/tests/integration
+declarations/tests/unit
