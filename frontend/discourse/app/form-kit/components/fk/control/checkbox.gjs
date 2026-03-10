@@ -30,7 +30,7 @@ export default class FKControlCheckbox extends FKBaseControl {
       />
       <span class="form-kit__control-checkbox-content">
         <span class="form-kit__control-checkbox-title">
-          <span>{{@field.title}}</span>
+          <span>{{or @title @field.title}}</span>
 
           {{#if @field.required}}
             <FKRequired @field={{@field}} />

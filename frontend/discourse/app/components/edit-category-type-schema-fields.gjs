@@ -14,6 +14,7 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @validation={{if @entry.required "required"}}
       @format="full"
+      @showTitle={{false}}
       as |field|
     >
       <field.Checkbox>{{@entry.description}}</field.Checkbox>
