@@ -223,6 +223,10 @@ module PageObjects
         page.has_css?(".reviewable-ip-lookup")
       end
 
+      def has_no_ip_lookup_info?
+        page.has_no_css?(".reviewable-ip-lookup")
+      end
+
       def has_ip_location?(location)
         page.has_text?(location)
       end
