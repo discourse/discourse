@@ -166,6 +166,13 @@ export default class PostStream extends Component {
     const anchorElement =
       this.viewportTracker.postsOnScreen[post.post_number]?.element;
 
+    // Only on iOS browsers, loadMoreAbove gets triggered a second time after the
+    // refresh callback completes but before the post has been added to postsOnScreen.
+    // In this case, bail out so we don't load a second page of posts.
+    if (!anchorElement) {
+      return;
+    }
+
     // anchorTop is captured by the captureAnchor callback, which is called
     // inside prependMore after the fetch completes (when the loading spinner is
     // visible) but before new posts are inserted into the DOM.
