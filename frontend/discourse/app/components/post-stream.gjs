@@ -212,7 +212,12 @@ export default class PostStream extends Component {
           if (renderShift !== 0) {
             window.scrollBy(0, renderShift);
           }
-          this.suppressLoadAbove = false;
+          // Defer re-enabling the load-more sentinel to the next run loop
+          // turn so that all pending renders (new posts, spinner removal)
+          // have fully settled in the DOM before the sentinel can retrigger.
+          next(() => {
+            this.suppressLoadAbove = false;
+          });
         });
       },
     });
@@ -295,17 +300,15 @@ export default class PostStream extends Component {
         topicId=@topic.id
       }}
     >
-      {{#if
-        (and
-          @postStream.canPrependMore
-          (not @postStream.loadingAbove)
-          (not this.suppressLoadAbove)
-        )
-      }}
+      {{#if @postStream.canPrependMore}}
         <PostLoadMoreAccessible
           @action={{fn this.loadMoreAbove this.firstAvailablePost}}
           @canLoadMore={{@postStream.canPrependMore}}
           @direction="above"
+          @enabled={{and
+            (not @postStream.loadingAbove)
+            (not this.suppressLoadAbove)
+          }}
           @existingPostNumbers={{this.existingPostNumbers}}
           @firstAvailablePost={{this.firstAvailablePost}}
           @lastAvailablePost={{this.lastAvailablePost}}
@@ -418,31 +421,30 @@ export default class PostStream extends Component {
         {{/let}}
       {{/each}}
 
-      {{#unless @postStream.loadingBelow}}
-        {{#if @postStream.canAppendMore}}
-          <PostLoadMoreAccessible
-            @action={{fn this.loadMoreBelow this.lastAvailablePost}}
-            @canLoadMore={{@postStream.canAppendMore}}
-            @direction="below"
-            @existingPostNumbers={{this.existingPostNumbers}}
-            @firstAvailablePost={{this.firstAvailablePost}}
-            @lastAvailablePost={{this.lastAvailablePost}}
-            @postStream={{@postStream}}
-          />
-        {{else}}
-          <div
-            class="post-stream__bottom-boundary"
-            {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
-          ></div>
-          {{! this plugin outlet is only inserted when the real bottom of the post-stream is rendered
+      {{#if @postStream.canAppendMore}}
+        <PostLoadMoreAccessible
+          @action={{fn this.loadMoreBelow this.lastAvailablePost}}
+          @canLoadMore={{@postStream.canAppendMore}}
+          @direction="below"
+          @enabled={{not @postStream.loadingBelow}}
+          @existingPostNumbers={{this.existingPostNumbers}}
+          @firstAvailablePost={{this.firstAvailablePost}}
+          @lastAvailablePost={{this.lastAvailablePost}}
+          @postStream={{@postStream}}
+        />
+      {{else if (not @postStream.loadingBelow)}}
+        <div
+          class="post-stream__bottom-boundary"
+          {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
+        ></div>
+        {{! this plugin outlet is only inserted when the real bottom of the post-stream is rendered
            this is useful for plugins that want to render something at the bottom of the post-stream
            e.g. a "no more posts" message }}
-          <PluginOutlet
-            @name="post-stream-bottom"
-            @outletArgs={{lazyHash posts=this.posts topic=@topic}}
-          />
-        {{/if}}
-      {{/unless}}
+        <PluginOutlet
+          @name="post-stream-bottom"
+          @outletArgs={{lazyHash posts=this.posts topic=@topic}}
+        />
+      {{/if}}
 
       {{#if this.shouldShowFilteredNotice}}
         <PostFilteredNotice
