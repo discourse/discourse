@@ -15,6 +15,16 @@ module DiscourseSolved
             category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] == "true"
           end
 
+          def find_matches
+            Category
+              .joins(:_custom_fields)
+              .where(
+                "category_custom_fields.name = ?",
+                DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+              )
+              .where("category_custom_fields.value = ?", "true")
+          end
+
           def configure_category(category, guardian:, configuration_values: {})
             configuration_values.merge!(
               DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true",

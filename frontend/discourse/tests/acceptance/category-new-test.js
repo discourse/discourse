@@ -147,6 +147,10 @@ acceptance("Category type setup page", function (needs) {
             available: true,
           },
         ],
+        counts: {
+          discussion: 1,
+          support: 0,
+        },
       });
     });
   });
