@@ -1039,7 +1039,9 @@ sv:
       description: "Lista över flaggornas status, med typ av flagga, skribent, flaggare och tid för lösning."
     visits:
       title: "Användarbesök"
-      xaxis: "Dag"
+      xaxis:
+        desktop: "Skrivbord"
+        mobile: "Mobil"
       yaxis: "Antal besök"
     signups:
       title: "Registreringar"
@@ -1086,10 +1088,8 @@ sv:
       yaxis: "Dag"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAA/MAA"
       xaxis: "Dag"
       yaxis: "DAA/MAA"
-      description: "Antal medlemmar som loggade in den senaste dagen dividerat med antalet medlemmar som loggade in den senaste månaden - returnerar ett procenttal som indikerar forumets 'dragningskraft'. Sikta på > 20 %."
     daily_engaged_users:
       title: "Dagligen engagerade användare"
       xaxis: "Dag"

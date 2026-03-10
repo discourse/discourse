@@ -1971,6 +1971,7 @@ hy:
     form_kit:
       reset: Զրոյացնել
       optional: ընտրովի
+      required: պարտադիր է
       errors:
         required: "Պարտադիր"
         too_short:
@@ -4011,7 +4012,7 @@ hy:
           all: "Ամբողջը"
           view_table: "աղյուսակ"
           view_graph: "գրաֆիկ"
-          refresh_report: "Թարմացնել Հաշվետվությունը"
+          refresh_report: "Թարմացնել"
           daily: Օրվա Ընթացքում
           monthly: Ամսվա Ընթացքում
           weekly: Շաբաթվա Ընթացքում

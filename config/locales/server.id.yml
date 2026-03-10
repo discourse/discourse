@@ -924,7 +924,6 @@ id:
         time_to_resolution: Waktu resolusi
     visits:
       title: "Kunjungan Pengguna"
-      xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
       xaxis: "Hari"
@@ -965,10 +964,8 @@ id:
       yaxis: "Hari"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Hari"
       yaxis: "DAU/MAU"
-      description: "Jumlah anggota yang masuk pada hari terakhir dibagi dengan jumlah anggota yang masuk pada bulan lalu – menghasilkan % yang menunjukkan 'stickiness' komunitas. Bertujuan untuk >20%."
     daily_engaged_users:
       title: "Pengguna yang Terlibat Harian"
       xaxis: "Hari"

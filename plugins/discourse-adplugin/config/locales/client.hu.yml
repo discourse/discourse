@@ -12,18 +12,65 @@ hu:
     admin:
       site_settings:
         categories:
+          ad_plugin: "Hirdetés bővítmény"
+          dfp_plugin: "DFP/Hirdetéskezelő"
+          adsense_plugin: "AdSense"
           amazon_plugin: "Amazon"
+          carbonads_plugin: "Carbon-hirdetések"
+          adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "Hirdetés típusa"
+            house_ad_name:
+              label: "HouseAd név"
+            ad_placement:
+              label: "Hirdetés elhelyezése"
+            user_type:
+              label: "Felhasználói típus"
       adplugin:
         house_ads:
+          title: "Saját hirdetések"
           new: "Új"
           settings: "Beállítások"
+          new_name: "Új saját hirdetés"
           save: "Mentés"
           delete: "Törlés"
+          confirm_delete: "Biztosan törölni szeretné ezt a hirdetést?"
           html: "HTML"
           categories: "Kategóriák"
+          routes: "Útvonalak"
           groups: "Csoportok"
+          description: "Hozzon létre és kezeljen saját hirdetéseket, amelyeket az oldal különböző pontjain jeleníthet meg."
+          get_started: "Még nem hoztak létre saját hirdetéseket."
+          filter_placeholder: "Hirdetések kiválasztása..."
+          more_settings: "További beállítások"
+          show_to_anons: "Megjelenítés a névtelen felhasználók számára"
+          show_to_logged_in_users: "Megjelenítés a bejelentkezett felhasználók számára."
+          category_chooser_description: "Válassza ki a kategóriákat, ahol meg kívánja jeleníteni a hirdetést, vagy hagyja üresen, ha mindenhol meg szeretné jeleníteni. A no_ads_for_categories webhelybeállítás elsőbbséget élvez ezzel a beállítással szemben."
+          category_chooser_description_with_routes: "Válassza ki a kategóriákat, ahol meg kívánja jeleníteni a hirdetést. Hagyja üresen ezt és az útvonal-választókat, ha mindenhol meg szeretné jeleníteni. A no_ads_for_categories webhelybeállítás elsőbbséget élvez ezzel a beállítással szemben."
+          route_chooser_description: "Válassza ki azokat az oldalakat vagy útvonalakat, ahol meg szeretné jeleníteni ezt a hirdetést. Ha mindenhol meg szeretné jeleníteni, hagyja üresen ezt a mezőt és a kategóriaválasztásokat is."
+          group_chooser_description: "Válassza ki azokat a csoportokat, amelyek láthatják ezt a hirdetést, vagy hagyja üresen, ha minden bejelentkezett felhasználónak meg szeretné jeleníteni."
           preview: "Előnézet"
+          back: "Saját hirdetések"
           name: "Név"
           edit: "Szerkesztés"
           tabs:
+            ads: "Hirdetések"
             settings: "Beállítások"
+          topic_list_top:
+            title: "Témalista legnépszerűbb hirdetései"
+            description: "A témaoldalak tetején megjelenítendő hirdetések."
+          topic_above_post_stream:
+            title: "Téma a bejegyzésfolyam felett"
+            description: "A témaoldalon, a téma címe felett megjelenő hirdetések."
+          topic_above_suggested:
+            title: "Téma a javasolt témák felett"
+            description: "A téma utolsó bejegyzése után, a javasolt témák felett megjelenő hirdetések."
+          post_bottom:
+            title: "Bejegyzések között"
+            description: "A bejegyzések között, minden N. bejegyzés után megjelenő hirdetések."
+          topic_list_between:
+            title: "Témák között"
+            description: "A témák között, minden N. téma után megjelenő hirdetések."

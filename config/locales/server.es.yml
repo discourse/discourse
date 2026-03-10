@@ -1219,9 +1219,10 @@ es:
       description: "Lista de estados de denuncia que incluye el tipo de denuncia, el autor, el usuario que denuncia y el tiempo de resolución."
     visits:
       title: "Visitas de usuario"
-      xaxis: "Día"
+      xaxis:
+        desktop: "Escritorio"
+        mobile: "Móvil"
       yaxis: "Número de visitas"
-      description: "Número de visitas de usuarios registrados."
     signups:
       title: "Registros"
       xaxis: "Día"
@@ -1283,10 +1284,8 @@ es:
       description: "Páginas vistas por usuarios registrados, usuarios anónimos, crawlers conocidos y otro tráfico."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "UAD/UAM"
       xaxis: "Día"
       yaxis: "UAD/UAM"
-      description: "Número de miembros que han iniciado sesión durante el último día dividido entre el número de miembros que han iniciado sesión durante el último mes – resulta en un % que indica el grado de «permanencia» de la comunidad. Apuntar a >20 %."
     daily_engaged_users:
       title: "Usuarios involucrados a diario"
       xaxis: "Día"

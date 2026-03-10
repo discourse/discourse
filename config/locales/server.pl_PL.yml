@@ -920,10 +920,11 @@ pl_PL:
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
     uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
   category_types:
+    not_available: "Typ kategorii „%{type_name}” jest niedostępny"
     discussion:
       name: "Dyskusja"
       title: "dyskusja"
-      description: "Wszystko, co niezbędne do prowadzenia konwersacji w oparciu o akapity."
+      description: "Standardowa kategoria zawierająca wszystko, co niezbędne do prowadzenia konwersacji."
   trust_levels:
     admin: "Administracja"
     staff: "Zespół"
@@ -1385,9 +1386,11 @@ pl_PL:
       description: "Lista statusów flag, w tym rodzaj flagi, plakat, flagger i czas do rozwiązania."
     visits:
       title: "Wizyty użytkowników"
-      xaxis: "Dzień"
+      xaxis:
+        desktop: "Komputer"
+        mobile: "Mobilnie"
       yaxis: "Liczba wizyt"
-      description: "Liczba wizyt zalogowanych użytkowników."
+      description: "Liczba wizyt zalogowanych użytkowników według typu urządzenia."
     signups:
       title: "Podpisy"
       xaxis: "Dzień"
@@ -1454,7 +1457,7 @@ pl_PL:
       title: "DAU / MAU"
       xaxis: "Dzień"
       yaxis: "DAU / MAU"
-      description: "Liczba członków zalogowanych w ostatnim dniu podzielona przez liczbę członków zalogowanych w ostatnim miesiącu - zwraca % wskazujący 'lepkość' społeczności. Celuj na >20%."
+      description: "Odsetek aktywnych użytkowników miesięcznie, którzy wrócili w ciągu ostatniego dnia. Ten odsetek pokazuje, jak regularnie ludzie wracają; nazywany jest również „lepkością” społeczności. Celuj w > 20%."
     daily_engaged_users:
       title: "Zaangażowani użytkownicy dziennie"
       xaxis: "Dzień"
@@ -1955,6 +1958,7 @@ pl_PL:
     moderators_manage_categories: "Zezwól moderatorom na tworzenie i zarządzanie kategoriami"
     moderators_manage_groups: "Zezwól moderatorom na tworzenie i zarządzanie grupami"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
+    change_post_ownership_allowed_groups: "Zezwalaj użytkownikom w tych grupach na zmianę własności wpisów"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_allowlist: "Administratorzy mogą się zalogować tylko wtedy, gdy używają adresu IP zdefiniowanego na liście sprawdzonych adresów IP (Administrator > Logi > Sprawdzone adresy IP)."
     blocked_ip_blocks: "Lista prywatnych bloków IP, które nigdy nie powinny być indeksowane przez Discourse"

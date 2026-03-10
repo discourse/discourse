@@ -1596,6 +1596,7 @@ sr:
       search: "Pretraži"
     form_kit:
       optional: opciono
+      required: potrebno
       errors:
         required: "Potrebno"
     close: "Zatvori"
@@ -2755,7 +2756,7 @@ sr:
           30_days_ago: "Pre 30 Dana"
           all: "Sve"
           view_table: "tablica"
-          refresh_report: "Osveži Prijave"
+          refresh_report: "Osveži"
           daily: Top dnevne
           monthly: Top mesečne
           weekly: Top nedeljne

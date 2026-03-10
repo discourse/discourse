@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hy:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Թույլատրել թեմայի սեփականատիրոջը և անձնակազմին՝ նշել պատասխանը որպես լուծում"
   site_settings:
     solved_enabled: "Միացնել լուծված պլագինը, թույլատրել օգտատերերին ընտրել լուծումներ թեմաների համար"
     accept_all_solutions_trust_level: "Վստահության նվազագույն մակարդակը, որը պահանջվում է ցանկացած թեմայի լուծումը ընդունելու համար (նույնիսկ եթե OP չէ)"

@@ -1713,6 +1713,7 @@ sl:
     form_kit:
       reset: Ponastavi
       optional: neobvezno
+      required: zahtevano
       errors:
         required: "Zahtevano"
     close: "Zapri"
@@ -3940,7 +3941,7 @@ sl:
           all: "Vsi"
           view_table: "tabela"
           view_graph: "graf"
-          refresh_report: "Osveži poročilo"
+          refresh_report: "Osveži"
           daily: Dnevno
           monthly: Mesečno
           weekly: Tedensko

@@ -2555,6 +2555,7 @@ he:
     form_kit:
       reset: איפוס
       optional: רשות
+      required: נדרש
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
       errors:
         starts_with: "חייב להיפתח בקידומת %{prefix}"
@@ -4660,6 +4661,8 @@ he:
       delete: "מחיקת קטגוריה"
       create: "קטגוריה חדשה"
       create_long: "יצירת קטגוריה חדשה"
+      type_settings_schema:
+        site_settings: "הגדרות האתר"
       save: "שמירת קטגוריה"
       unsaved_changes: "יש שינויים שלא נשמרו"
       slug: "כתובת ייצוגית לקטגוריה"
@@ -6496,7 +6499,7 @@ he:
           all: "הכול"
           view_table: "טבלה"
           view_graph: "גרף"
-          refresh_report: "ריענון דוח"
+          refresh_report: "רענון"
           daily: יומי
           monthly: חודשי
           weekly: שבועי
@@ -8643,7 +8646,7 @@ he:
           min_admin_password_length:
             prompt: "הפעולה הזאת תשנה את מדיניות הסיסמאות שלך. היא תשפיע על כל המנהלים שישנו את הסיסמה שלהם מעתה ואילך. להמשיך?"
             confirm: "כן, לעדכן את מדיניות הסיסמאות"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "הפעולה הזאת תשנה את מדיניות הסיסמאות שלך. היא תשפיע על כל המשתמשים שישנו את הסיסמה שלהם מעתה ואילך. להמשיך?"
             confirm: "כן, לעדכן את מדיניות הסיסמאות"
           block_common_passwords:

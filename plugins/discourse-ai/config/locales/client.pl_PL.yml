@@ -527,6 +527,15 @@ pl_PL:
         use_parent_llm: "Użyj modelu językowego persony"
         max_context_posts: "Maksymalny kontekst postów"
         max_context_posts_help: "Maksymalna liczba postów do wykorzystania jako kontekst dla sztucznej inteligencji podczas odpowiadania użytkownikowi. (domyślnie puste)"
+        execution_mode: "Tryb wykonania"
+        execution_mode_help: "Kontroluje sposób, w jaki persona zarządza wykonywaniem narzędzi i kontekstem konwersacji. Domyślnie używane są stałe limity tur/narzędzi. Agentic korzysta z budżetu tokenów z automatyczną kompresją kontekstu, co zapewnia dłuższe i bardziej efektywne sesje korzystania z narzędzi."
+        execution_mode_options:
+          default: "Domyślne (stałe limity)"
+          agentic: "Agent (budżet tokenów)"
+        max_turn_tokens: "Maksymalna liczba żetonów tury"
+        max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Po ustawieniu zastępuje stałe limity ukończenia/narzędzi budżetem tokenów, umożliwiając bardziej efektywne działanie agenta. Pozostaw puste, aby zachować domyślne limity."
+        compression_threshold: "Próg kompresji"
+        compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
         vision_enabled: Wizja włączona
         vision_enabled_help: Jeśli jest włączona, sztuczna inteligencja będzie próbowała zrozumieć obrazy publikowane przez użytkowników w temacie, w zależności od używanego modelu wspierającego widzenie. Obsługiwane przez najnowsze modele Anthropic, Google i OpenAI.
         vision_max_pixels: Obsługiwany rozmiar obrazu
@@ -653,6 +662,7 @@ pl_PL:
         parameters: "Parametry"
         save: "Zapisz"
         parameter_type: "Typ parametru"
+        parameter_item_type: "Typ elementu"
         add_parameter: "Dodaj parametr"
         remove_parameter: "Usuń"
         parameter_required: "Wymagane"

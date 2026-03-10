@@ -2370,6 +2370,7 @@ hr:
     form_kit:
       reset: Resetirati
       optional: neobvezno
+      required: potrebno
       dirty_form: "Niste poslali promjene! Jeste li sigurni da želite otići?"
       errors:
         starts_with: "Mora početi sa %{prefix}"
@@ -4305,6 +4306,8 @@ hr:
         tag_group: "Grupa oznaka"
       topic_featured_link_allowed: "Dopusti istaknute poveznice u ovoj kategoriji"
       create_long: "Stvorite novu kategoriju"
+      type_settings_schema:
+        site_settings: "Postavke web-mjesta"
       unsaved_changes: "Imate nespremljene promjene"
       slug_placeholder: "(Neobavezno) spojene-riječi za url"
       creation_error: Dogodila se greška pri stvaranju kategorije.
@@ -5866,7 +5869,7 @@ hr:
           all: "Sve"
           view_table: "tablica"
           view_graph: "grafikon"
-          refresh_report: "Osvježi izvješće"
+          refresh_report: "Osvježi"
           daily: Dnevno
           monthly: Mjesečno
           weekly: Tjedno
@@ -7427,7 +7430,7 @@ hr:
         requires_confirmation_messages:
           min_admin_password_length:
             confirm: "Da, ažuriraj pravila o lozinkama"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Da, ažuriraj pravila o lozinkama"
       badges:
         status: Statust

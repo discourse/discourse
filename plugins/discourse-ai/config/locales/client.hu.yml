@@ -175,6 +175,10 @@ hu:
         providers:
           google: "Google"
           fake: "Egyéni"
+        provider_fields:
+          adaptive_thinking: "Adaptív gondolkodás engedélyezése (Claude 4.6 modellekhez javasolt)"
+          enable_thinking: "Gondolkodás engedélyezése (Gemini 2.5 modellek – token-keretet használ)"
+          thinking_level: "Gondolkodási szint (Gemini 3 modellek – a következtetési mélységet szabályozza)"
       related_topics:
         pill: "Kapcsolódó"
       ai_helper:

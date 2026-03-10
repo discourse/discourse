@@ -8,6 +8,7 @@ pt_BR:
   site_settings:
     policy_enabled: "Permitir políticas?"
     policy_restrict_to_staff_posts: "Políticas devem aparecer apenas nas postagens da equipe"
+    create_policy_allowed_groups: "É necessária ter associação ao grupo para adicionar políticas a publicações"
     policy_easy_revoke: "Exibir os botões de aceitar e revogar ao mesmo tempo"
   discourse_policy:
     errors:

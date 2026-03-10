@@ -2226,6 +2226,7 @@ ja:
     form_kit:
       reset: リセット
       optional: オプション
+      required: 必須
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
       errors:
         starts_with: "%{prefix} で始まる必要があります"
@@ -4024,6 +4025,8 @@ ja:
       delete: "カテゴリを削除する"
       create: "新しいカテゴリ"
       create_long: "新しいカテゴリを作成する"
+      type_settings_schema:
+        site_settings: "サイトの設定"
       save: "カテゴリを保存する"
       unsaved_changes: "保存されていない変更があります"
       slug: "カテゴリのスラッグ"
@@ -5736,7 +5739,7 @@ ja:
           all: "すべて"
           view_table: "テーブル"
           view_graph: "グラフ"
-          refresh_report: "レポートを更新"
+          refresh_report: "更新"
           daily: 日間
           monthly: 月間
           weekly: 週間
@@ -7823,7 +7826,7 @@ ja:
           min_admin_password_length:
             prompt: "パスワードポリシーを変更しようとしています。これは、今後すべての管理者のパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           block_common_passwords:

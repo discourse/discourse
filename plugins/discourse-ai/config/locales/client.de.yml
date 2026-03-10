@@ -230,7 +230,7 @@ de:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder Persona kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
       llm_selector:
-        none: "Keiner"
+        none: "Keine Auswahl"
         saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
@@ -820,6 +820,9 @@ de:
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
           reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
           enable_reasoning: "Argumentation aktivieren (nur für Argumentationsmodelle anwendbar)"
+          adaptive_thinking: "Aktiviere adaptives Denken (empfohlen für Claude-4.6-Modelle)"
+          enable_thinking: "Aktiviere das Denken (Gemini-2.5-Modelle – verwendet Token-Budget)"
+          thinking_level: "Denkgrad (Gemini-3-Modelle – regelt die Argumentationstiefe)"
           thinking_tokens: "Anzahl der zum Denken verwendeten Token"
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"

@@ -12,6 +12,9 @@ hu:
         dirty: "Futtatás előtt el kell mentenie a lekérdezést."
     explorer:
       default_query: "Alapértelmezett"
+      default_query_notice: "Ez egy alapértelmezett lekérdezés, az SQL nem szerkeszthető. Az SQL szerkesztéséhez hozzon létre egy új lekérdezést."
+      queries: "Lekérdezések"
+      query_created: "Lekérdezés létrehozva!"
       or: "vagy"
       admins_only: "Az adatfelfedező csak az adminok számára érhető el."
       allow_groups: "Engedélyezés csoportok számára, hogy hozzáférjenek ehhez a lekérdezéshez"
@@ -26,6 +29,10 @@ hu:
       help:
         label: "Súgó"
         modal_title: "Adatfelfedező súgó"
+        auto_resolution: "<h2>Automatikus entitásfeloldás</h2> <p>Amikor a lekérdezés entitásazonosítót ad vissza, az Adatkezelő automatikusan helyettesítheti azt az entitás nevével és más hasznos információkkal a lekérdezés eredményeiben. Automatikus felbontás érhető el a következő elemekhez: <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> és <i><b>badge_id</b></i>. Kipróbáláshoz futtasd a következő lekérdezést:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Egyéni paraméterek létrehozása</h2> <p>Egyéni paraméterek létrehozásához a lekérdezéseidhez írd ezt a lekérdezés elejére, és kövesd a következő formátumot:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Megjegyzés: az első sornak a [params] karakterlánccal kell rendelkeznie, a két előtte lévő kötőjellel együtt, valamint minden deklarálni kívánt egyéni paraméternek.</i></p>"
+        default_values: "<h3>Alapértelmezett értékek</h3> <p>Deklarálhatsz paramétereket alapértelmezett értékekkel vagy anélkül. Az alapértelmezett értékek egy szövegmezőben jelennek meg a lekérdezésszerkesztő alatt, amelyet igényeid szerint szerkeszthetsz. Az alapértelmezett érték nélkül deklarált paraméterek továbbra is létrehoznak egy szövegmezőt, de üresek és pirossal lesznek kiemelve.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Adattípusok</h3> <p>Íme néhány gyakori adattípus, amit használhatsz:</p> <ul> <li><b>egész szám</b> - előjeles négybájtos egész szám</li> <li><b>szöveg</b> - változó hosszúságú karakterlánc</li> <li><b>logikai érték</b> – igaz/hamis</li> <li><b>date</b> - naptári dátum (év, hónap, nap)</li> <li><b>current_user_id</b> - a lekérdezést futtató felhasználó azonosítója (automatikusan befecskendezve, hasznos csoportos jelentésekhez)</li> </ul> <p>Az adattípusokkal kapcsolatos további információkért látogassa meg <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>ezt a weboldalt</a>.</p>"
       schema:
         title: "Adatbázis-séma"
         filter: "Keresés…"
@@ -36,12 +43,15 @@ hu:
           no: "Nem"
           null_: "Null"
       export: "Exportálás"
+      view_json: "JSON megtekintése"
       view: "Megtekintés"
       save: "Módosítások mentése"
+      saverun: "Módosítások mentése és futtatása"
       run: "Futtatás"
       undo: "Változások elvetése"
       edit: "Szerkesztés"
       delete: "Törlés"
+      recover: "Lekérdezés törlésének visszavonása"
       download_json: "JSON"
       download_csv: "CSV"
       show_table: "Tábla"
@@ -51,6 +61,9 @@ hu:
       result_count:
         one: "%{count} találat."
         other: "%{count} találat."
+      max_result_count:
+        one: "Az első %{count} találat megjelenítése."
+        other: "Az első %{count} találat megjelenítése."
       query_name: "Lekérdezés"
       query_groups: "Csoportok"
       link: "Hivatkozás ehhez:"
@@ -60,8 +73,50 @@ hu:
       query_user: "Létrehozta:"
       column: "%{number}. oszlop"
       explain_label: "Beleveszi a lekérdezési tervet?"
+      save_params: "Beállítás alapértelmezettként"
       reset_params: "Alaphelyzetbe állítás"
       search_placeholder: "Keresés…"
       no_search_results: "Sajnos nem találtunk a szövegének megfelelő találatot."
+      form:
+        errors:
+          invalid: "Érvénytelen"
+          no_such_category: "Nincs ilyen kategória"
+          no_such_group: "Nincs ilyen csoport"
+          invalid_date: "%{date} egy érvénytelen dátum"
+          invalid_time: "%{time} egy érvénytelen időpont"
     group:
       reports: "Jelentések"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Adatkezelő lekérdezések futtatása. Az API-kulcsot lekérdezések egy halmazára korlátozhatja lekérdezésazonosítók megadásával."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Küldés felhasználónak, csoportnak vagy e-mail címre
+            query_id:
+              label: Adatkezelő lekérdezés
+            query_params:
+              label: Adatkezelő lekérdezési paraméterei
+            skip_empty:
+              label: Ha nincs eredmény, ne küldj privát üzenetet
+            attach_csv:
+              label: Csatolja a CSV fájlt a PÜ-hez
+            users_from_group:
+              label: Küldj privát üzenetet minden csoporttagnak
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: A téma, amelyben a lekérdezés eredményei közzétételre kerülnek
+            query_id:
+              label: Adatkezelő lekérdezés
+            query_params:
+              label: Adatkezelő lekérdezési paraméterei
+            skip_empty:
+              label: Ne küldj semmit, ha nincsenek eredmények
+            attach_csv:
+              label: Csatold a CSV fájlt a bejegyzéshez

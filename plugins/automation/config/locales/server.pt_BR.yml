@@ -8,6 +8,8 @@ pt_BR:
   site_settings:
     discourse_automation_enabled: "Ativar plugin discourse-automation"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(vazio)"
     models:
       automations:
         validations:
@@ -20,6 +22,9 @@ pt_BR:
         invalid_field: O componente do campo "%{component}" não pode ser usado em "%{target}:%{target_name}".
         invalid_metadata: Os dados para `%{field}` são inválidos ou o componente `%{component}` é desconhecido.
     triggerables:
+      post_flag_created:
+        title: Postar denúncia criada
+        description: Aciona uma automação quando uma postagem é denunciada.
       errors:
         custom_fields_or_user_profile_required: "Pelo menos um dos 'custom_fields' ou 'user_profile' deve ser fornecido."
       user_badge_granted:
@@ -67,6 +72,10 @@ pt_BR:
         description: A automatização será ativada quando as etiquetas forem alteradas.
       topic:
         title: Tópico
+        description: O script associado será usado apenas no tópico especificado, isso é útil para scripts fazendo validação, por exemplo
+      topic_closed:
+        title: Tópico fechado
+        description: Aciona a execução de um script quando um tópico é fechado.
       after_post_cook:
         title: Depois da falsificação da postagem
         description: Quando o conteúdo de uma postagem for falsificado, a automação será acionada
@@ -74,6 +83,24 @@ pt_BR:
         title: Após atualização do(a) usuário(a)
         description: Quando um(a) usuário(a) atualizar alguma informação, a automação será acionada
     scriptables:
+      email_on_flagged_post:
+        title: E-mail sobre postagem denunciada
+        description: Enviar um e-mail personalizado sempre que uma denúncia for criada em uma postagem.
+        subject: "Postagem denunciada: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Uma postagem foi denunciada.
+
+          Tópico: {{topic_title}} ({{topic_url}})
+          Postagem: {{post_url}} (#{{post_number}})
+          Tipo de denúncia: {{flag_type}}
+          Usuário denunciado: {{flagged_username}}
+          Denunciado por: {{flagger_username}}
+          Categoria: {{category}}
+          Tags: {{tags}}
+
+          --------
+          Trecho da postagem:
+          {{post_excerpt}}
       post:
         title: Criar uma postagem
         description: Criar uma postagem em um tópico específico
@@ -104,6 +131,10 @@ pt_BR:
         title: Troca de presentes
         description: Permite parear anonimamente os(as) usuários(as) de um grupo para trocarem presentes.
         doc: A troca de presentes requer um grupo existente com pelo menos três usuários(as). Na data escolhida, cada usuário(a) do grupo será pareado com um(a) presenteador(a) e um(a) presenteado(a).
+      remove_upload_markup_from_deleted_posts:
+        title: Remover marcação de upload em posts excluídos
+        description: Atua como usuário do sistema e adiciona uma revisão às postagens excluídas onde a marcação de upload foi removida. Combinado com a tarefa "clean up uploads", resulta na exclusão permanente de uploads nas postagens excluídas. Use com cautela!
+        edit_reason: A automação removeu a marcação de upload da postagem excluída.
       send_pms:
         title: Enviar MPs
         description: Permite o envio de MPs (possivelmente atrasadas).
@@ -159,3 +190,4 @@ pt_BR:
         description: "Atribua tópicos a um grupo aleatoriamente"
       set_topic_timer:
         title: "Definir timer do tópico"
+        description: "Definir um temporizador para um tópico."

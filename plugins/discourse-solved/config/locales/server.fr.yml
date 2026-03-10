@@ -10,6 +10,10 @@ fr:
     support:
       name: "Soutenir"
       title: "soutenir"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Autoriser l'auteur du sujet et les responsables à marquer une réponse comme solution"
   site_settings:
     solved_enabled: "Activer l'extension permettant aux utilisateurs de sélectionner des solutions aux sujets"
     allow_solved_on_all_topics: "Autoriser les utilisateurs à sélectionner des solutions sur tous les sujets (lorsque cette option n'est pas activée, les solutions peuvent être activées par catégorie ou étiquette)"

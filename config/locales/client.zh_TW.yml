@@ -2070,6 +2070,7 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
+      required: 必填
       dirty_form: "您尚未提交您的更改！您確實要離開嗎？"
       errors:
         required: "必要設定"
@@ -3680,6 +3681,8 @@ zh_TW:
         placeholder: "選擇標記群組…"
       topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
       create_long: "建立新的分類"
+      type_settings_schema:
+        site_settings: "網站設定"
       slug_placeholder: "(選填) 在 url 加上虛線"
       creation_error: 建立分類時發生錯誤。
       save_error: 儲存分類時發生錯誤。
@@ -5038,7 +5041,7 @@ zh_TW:
           all: "全部"
           view_table: "表格"
           view_graph: "圖表"
-          refresh_report: "重新整理報告"
+          refresh_report: "重新整理"
           daily: 日
           monthly: 月
           weekly: 周
@@ -6939,7 +6942,7 @@ zh_TW:
             confirm: "是的，更新密碼原則"
           min_admin_password_length:
             confirm: "是的，更新密碼原則"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "是的，更新密碼原則"
           block_common_passwords:
             confirm: "是的，更新密碼原則"

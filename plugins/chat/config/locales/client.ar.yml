@@ -54,6 +54,9 @@ ar:
         description: "الوصف"
         actions: "الإجراءات"
         settings: "الإعدادان"
+        no_channels: "لا توجد قنوات محادثات مرتبطة بهذه الفئة"
+        no_channels_body: "يمكنك إنشاء قنوات متعددة لكل فئة، ويمكن للأعضاء أنفسهم الوصول إليها بناءً على إعدادات الأمان الخاصة بالفئة. <a href='%{chatBrowseUrl}'>إنشاء قناة محادثة</a>."
+        include_subcategories: "تضمين قنوات الفئات الفرعية"
       text_copied: تم نسخ النص إلى الحافظة
       link_copied: تم نسخ الرابط إلى الحافظة
       back_to_forum: "المنتدى"
@@ -71,6 +74,14 @@ ar:
       starred: "مميز بنجمة"
       starred_channels: "القنوات المميزة بنجمة"
       starred_channels_empty: "لا توجد قنوات مميّزة بنجمة حتى الآن. أضِف نجمة إلى القنوات التي تهمك لتظهر هنا ويسهل الوصول إليها."
+      pinned_messages:
+        title: "الرسائل المثبتة"
+        close: "إغلاق الرسائل المثبتة"
+        pinned_by_you: "أنت ثبتها"
+        pinned_by_user: "ثبتها %{username}"
+      no_pinned_messages: "لا توجد رسائل مثبتة في هذه القناة."
+      pin_message: "تثبيت الرسالة"
+      unpin_message: "إلغاء تثبيت الرسالة"
       pinned: "مثبَّت"
       browse_all_channels: "استعراض كل القنوات"
       see_in: "رؤيتها في"
@@ -101,6 +112,8 @@ ar:
         unstar_channel: "إزالة تمييز القناة"
         close_channel: "إغلاق القناة"
         open_channel: "فتح القناة"
+        open_channel_disabled_archived: "لا يمكن إعادة فتح القنوات المؤرشفة."
+        open_channel_disabled_read_only: "لا يمكن إعادة فتح القنوات المخصصة للقراءة فقط."
         archive_channel: "أرشفة القناة"
         delete_channel: "حذف القناة"
         join_channel: "الانضمام إلى القناة"
@@ -691,7 +704,9 @@ ar:
           many: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
           other: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
       retention_reminders:
+        chat_settings: "إعدادات الدردشة"
         indefinitely_short: "إلى أجلٍ غير مسمى"
+        indefinitely_long: "تم ضبط %{chatSettingsLink} للاحتفاظ برسائل القناة إلى أجلٍ غير مسمى."
         short:
           zero: "%{count} يوم"
           one: "يوم واحد (%{count})"
@@ -699,6 +714,13 @@ ar:
           few: "%{count} أيام"
           many: "%{count} يومًا"
           other: "%{count} يوم"
+        long:
+          zero: "تم ضبط %{chatSettingsLink} للاحتفاظ برسائل القناة لمدة %{count} من الأيام."
+          one: "تم ضبط %{chatSettingsLink} للاحتفاظ برسائل القناة لمدة يوم واحد %{count}."
+          two: "تم ضبط %{chatSettingsLink} للاحتفاظ برسائل القناة لمدة يومين %{count}."
+          few: "تم ضبط %{chatSettingsLink} للاحتفاظ برسائل القناة لمدة %{count} أيام."
+          many: "تم ضبط %{chatSettingsLink} للاحتفاظ برسائل القناة لمدة %{count} يومًا."
+          other: "تم ضبط %{chatSettingsLink} للاحتفاظ برسائل القناة لمدة %{count} يوم."
       flags:
         off_topic: "هذه الرسالة ليست ذات صلة بالمناقشة الحالية كما هو محدَّد في عنوان القناة، وربما ينبغي نقلها إلى مكانٍ آخر."
         inappropriate: "تحتوي هذه الرسالة على محتوى قد يعتبره الشخص العاقل مسيئًا أو مهينًا أو ينتهك <a href=\"%{basePath}/guidelines\">إرشادات المجتمع</a> لدينا."

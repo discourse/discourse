@@ -10,9 +10,14 @@ pt_BR:
     support:
       name: "Apoio"
       title: "apoio"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Permitir que o(a) proprietário(a) do tópico e a equipe marquem uma resposta como a solução"
   site_settings:
     solved_enabled: "Ativar plugin solucionado, permite que usuários(a) selecionem soluções para tópicos"
     allow_solved_on_all_topics: "Permite que os(as) usuários(as) escolham soluções em todos os tópicos (quando esta opção estiver desmarcada, as soluções podem ser ativadas por categoria ou etiqueta)"
+    allow_solved_in_groups: "Permitir a marcação de soluções em mensagens de grupo para esses grupos."
     accept_all_solutions_trust_level: "Nível mínimo de confiança requerido para aceitar soluções em qualquer tópico (mesmo quando não for OP)"
     accept_all_solutions_allowed_groups: "Grupos com permissão para aceitar soluções em qualquer tópico (mesmo quando não for OP). Administradores(as) e moderadores(as) sempre têm permissão."
     empty_box_on_unsolved: "Apresentar uma caixa vazia próximo a tópicos não solucionados"
@@ -31,6 +36,7 @@ pt_BR:
   reports:
     accepted_solutions:
       title: "Soluções aceitas"
+      description: "Quantos tópicos tiveram uma solução aceita por dia num determinado intervalo de datas, com filtro de categoria opcional e um total de comparação de 30 dias."
       xaxis: "Dia"
       yaxis: "Total"
   solved:

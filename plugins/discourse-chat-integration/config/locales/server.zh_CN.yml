@@ -103,7 +103,7 @@ zh_CN:
         help: |
           *新建规则*：`/discourse [thread|watch|follow|mute] [category] [tag:name]`
           （您必须指定规则类型和至少一个类别或标签）
-          - *thread* – 在此频道有新话题和对话回复（如可能）时通知
+          - *thread* – 在此频道有新话题和消息串回复（如可能）时通知
           - *watch* – 在此频道有新话题和新回复时通知
           - *follow* – 在此频道有新话题时通知
           - *mute* – 屏蔽此频道的通知

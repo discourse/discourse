@@ -2056,6 +2056,7 @@ sq:
     form_kit:
       reset: Rivendosni
       optional: opsionale
+      required: i nevojshëm
       dirty_form: "Nuk i keni dorëzuar ndryshimet tuaja! Jeni të sigurt që dëshironi të largoheni?"
       errors:
         required: "E nevojshme"
@@ -4130,7 +4131,7 @@ sq:
           all: "Të Gjithë"
           view_table: "tabelë"
           view_graph: "grafik"
-          refresh_report: "Rifresko raportin"
+          refresh_report: "Rifresko"
           daily: Ditore
           monthly: Mujore
           weekly: Javore

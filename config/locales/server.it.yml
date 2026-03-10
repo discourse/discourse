@@ -1211,9 +1211,10 @@ it:
       description: "Elenco degli stati delle segnalazioni inclusi tipo di segnalazione, autore, segnalante e tempo di risoluzione."
     visits:
       title: "Visite Utente"
-      xaxis: "Giorno"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobile"
       yaxis: "Numero di visite"
-      description: "Numero di visite di utenti autenticati."
     signups:
       title: "Iscrizioni"
       xaxis: "Giorno"
@@ -1275,10 +1276,8 @@ it:
       description: "Visualizzazioni di pagina per utenti registrati, utenti anonimi, crawler noti e altro traffico."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Giorno"
       yaxis: "DAU/MAU"
-      description: "Numero di utenti che hanno effettuato l'accesso nell'ultimo giorno diviso per il numero di utenti che hanno effettuato l'accesso nell'ultimo mese: restituisce una % che rappresenta 'l'attaccamento' alla comunità. Obiettivo > 20%."
     daily_engaged_users:
       title: "Utenti Impegnati Giornalmente"
       xaxis: "Giorno"

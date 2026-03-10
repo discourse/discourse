@@ -2346,6 +2346,7 @@ el:
     form_kit:
       reset: Επαναφορά
       optional: προεραιτικό
+      required: απαραίτητο
       errors_summary_title:
         one: "Διορθώστε αυτό το σφάλμα για να συνεχίσετε"
         other: "Διορθώστε αυτά τα σφάλματα για να συνεχίσετε"
@@ -4230,6 +4231,8 @@ el:
       delete: "Διαγραφή κατηγορίας"
       create: "Νέα κατηγορία"
       create_long: "Δημιουργία νέας κατηγορίας"
+      type_settings_schema:
+        site_settings: "Ρυθμίσεις ιστότοπου"
       save: "Αποθήκευση κατηγορίας"
       unsaved_changes: "Έχετε μη αποθηκευμένες αλλαγές"
       parent: "Γονική κατηγορία"
@@ -5876,7 +5879,7 @@ el:
           all: "Όλα"
           view_table: "πίνακας"
           view_graph: "γράφημα"
-          refresh_report: "Ανανέωση αναφοράς"
+          refresh_report: "Ανανέωση"
           daily: Ημερήσιες
           monthly: Μηνιαίες
           weekly: Εβδομαδιαίες

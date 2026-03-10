@@ -1951,6 +1951,7 @@ ro:
     form_kit:
       reset: Resetare
       optional: opțional
+      required: necesar
       errors:
         starts_with: "Trebuie să înceapă cu %{prefix}"
         ends_with: "Trebuie să se termine cu %{suffix}"
@@ -3158,6 +3159,8 @@ ro:
         delete: "Șterge"
       topic_featured_link_allowed: "Permite link-uri promovate în această categorie."
       create_long: "Creează o categorie nouă"
+      type_settings_schema:
+        site_settings: "Setări site"
       unsaved_changes: "Ai modificări nesalvate"
       slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
@@ -4280,7 +4283,7 @@ ro:
           all: "Toate"
           view_table: "tabel"
           view_graph: "grafic"
-          refresh_report: "Reactualizează raportul"
+          refresh_report: "Reîmprospătează"
           daily: Zilnic
           monthly: Lunar
           weekly: Săptămânal

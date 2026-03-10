@@ -10,6 +10,13 @@ hu:
     support:
       name: "Támogatás"
       title: "támogatás"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Engedélyezi a téma tulajdonosának és a stábnak, hogy megoldásként jelöljenek meg egy bejegyzést"
+      solved_topics_auto_close_hours:
+        label: "Megoldott témák automatikus lezárása (óra)"
+        description: "A téma automatikus lezárása ennyi órával azután, hogy megoldottnak jelölték. A kikapcsoláshoz állítsa 0-ra."
   site_settings:
     solved_enabled: "Solved plugin engedélyezése, hogy a felhasználók kiválaszthassák a megoldást a témához"
     allow_solved_on_all_topics: "A felhasználók kiválaszthatják a megoldásokat az összes témában (ha nincs bejelölve, akkor a megoldások kategóriánként vagy címkénként kapcsolhatók be)"

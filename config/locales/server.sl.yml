@@ -591,6 +591,10 @@ sl:
       labels:
         flag: Tip
         poster: Odgovarja
+    visits:
+      xaxis:
+        desktop: "Namizno"
+        mobile: "Mobilno"
     consolidated_page_views:
       labels:
         post: Prispevek

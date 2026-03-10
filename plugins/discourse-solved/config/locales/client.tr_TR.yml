@@ -58,6 +58,8 @@ tr_TR:
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."
       notification:
         title: "gönderiniz çözüm olarak işaretlendi"
+      category_type_support:
+        title: "Destek"
     topic_statuses:
       solved:
         help: "Bu konunun bir çözümü var"

@@ -12,6 +12,8 @@ zh_CN:
       title: "支持"
   discourse_solved:
     category_type:
+      allow_accepted_answers:
+        label: "允许话题所有者和管理人员将回复标记为解决方案"
       solved_topics_auto_close_hours:
         label: "自动关闭已解决的主题（小时）"
         description: "帖子标记为已解决后，经过指定时间后自动关闭。设置为 0 可禁用此功能。"
@@ -37,7 +39,7 @@ zh_CN:
   reports:
     accepted_solutions:
       title: "已被接受的解决方案"
-      description: "在某个日期范围内，每天有多少个主题接受了解决方案，可选择类别过滤器和 30 天比较总数。"
+      description: "在某个日期范围内，每天有多少个话题接受了解决方案，可选择类别筛选器和 30 天比较总数。"
       xaxis: "天"
       yaxis: "总计"
   solved:

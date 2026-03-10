@@ -279,16 +279,21 @@ de:
       name:
         characters: "darf nur Zahlen, Buchstaben und Unterstriche enthalten"
       secret_contracts:
+        invalid_payload: "Secret Contracts müssen ein Array sein."
+        invalid_contract: "Secret Contract bei Index %{index} ist ungültig."
+        alias_required: "Secret Contract bei Index %{index} muss einen Alias beinhalten."
         alias_too_long: "Der geheime Alias „%{alias}“ ist zu lang."
         alias_invalid: "Der geheime Alias „%{alias}“ darf nur Zahlen, Buchstaben und Unterstriche enthalten."
         alias_not_unique: "Der geheime Alias „%{alias}“ ist doppelt vorhanden."
       secret_bindings:
+        invalid_payload: "Secret Bindings müssen ein Array sein."
         secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
+        alias_not_declared: "Alias „%{alias}“ ist in diesem Tool nicht deklariert."
       secret_runtime:
         alias_not_declared: "Der Alias „%{alias}“ ist für dieses Tool nicht definiert."
         missing_binding: "Der Alias „%{alias}“ ist erforderlich, aber nicht mit Anmeldedaten verknüpft."
         missing_required_aliases: "Für folgende Aliase fehlen erforderliche Verknüpfungen zu Anmeldedaten: %{aliases}."
-        secret_not_found: "Der Alias \"%{alias}\" ist mit nicht vorhandenen Anmeldedaten verknüpft."
+        secret_not_found: "Der Alias „%{alias}“ ist mit nicht vorhandenen Anmeldedaten verknüpft."
         unknown_error: "Die angeforderte Anmeldedaten konnten nicht ermittelt werden."
     ai_helper:
       errors:
@@ -693,11 +698,24 @@ de:
       persona_disabled: Die angegebene Persona ist deaktiviert. Überprüfe die Parameter persona_name oder persona_id.
       no_default_llm: Die Persona muss eine default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
+      invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.
+      no_tool_results_specified: Der Parameter tool_results ist beim Fortsetzen eines Streams erforderlich.
+      invalid_custom_tools: "Der Parameter custom_tools ist ungültig: %{details}"
+      duplicate_custom_tools: "Der Parameter custom_tools enthält doppelte Tool-Namen: %{names}"
+      too_many_custom_tools: "Der Parameter custom_tools kann maximal %{max} Tools enthalten."
       custom_tool_definition_too_large: "Jede benutzerdefinierte Werkzeugdefinition darf höchstens %{max} Bytes groß sein."
       invalid_stream_param: "Der Parameter %{key} ist ungültig: %{details}"
       expected_array: "erwartet ein Array"
       expected_object: "erwartet ein Objekt"
-      stream_reply_max_resume_rounds_reached: Die maximale Anzahl an Wiederholungsrunden mit benutzerdefinierten Werkzeugen wurde erreicht (%{max}).
+      ambiguous_tool_results: "Gib entweder tool_results oder tool_result an, nicht beides."
+      invalid_tool_results: "Der Parameter tool_results ist ungültig: %{details}"
+      too_many_tool_results: "Der Parameter tool_results kann maximal %{max} Elemente enthalten."
+      no_pending_tool_calls: Es gibt keine ausstehenden Tool-Aufrufe für dieses Fortsetzungstoken.
+      missing_tool_results: "Fehlende Tool-Ergebnisse für tool_call_id(s): %{ids}"
+      unexpected_tool_results: "Unerwartete Tool-Ergebnisse für tool_call_id(s): %{ids}"
+      invalid_tool_result_content: "Das Tool-Ergebnis für %{id} muss einen Inhalt enthalten"
+      tool_result_content_too_large: "Die Inhaltsnutzlast jedes Tool-Ergebnisses darf höchstens %{max} Bytes groß sein."
+      stream_reply_max_resume_rounds_reached: Die maximale Anzahl an Wiederholungsrunden mit benutzerdefinierten Tools wurde erreicht (%{max}).
       stream_reply_state_too_large: "Der Stream-Zustand ist zu groß, um ihn zu behalten (maximal %{max} Bytes)."
       stream_reply_unexpected_error: Beim Streaming der Antwort ist ein unerwarteter Fehler aufgetreten.
       prompt_message_length: Die Nachricht %{idx} hat die 1000-Zeichen-Grenze überschritten.

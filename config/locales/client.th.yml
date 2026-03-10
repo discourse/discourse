@@ -1199,6 +1199,7 @@ th:
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     form_kit:
       optional: ทางเลือก
+      required: ต้องการ
       errors:
         required: "ต้องการ"
     close: "ปิด"
@@ -2711,7 +2712,7 @@ th:
           all: "ทั้งหมด"
           view_table: "ตาราง"
           view_graph: "กราฟ"
-          refresh_report: "โหลดรายงานใหม่"
+          refresh_report: "รีเฟรช"
           daily: รายวัน
           monthly: รายเดือน
           weekly: รายสัปดาห์

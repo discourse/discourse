@@ -16,8 +16,6 @@ ar:
       title: Rewind
       loading: "جارٍ تجهيز الشبكات.."
       viewing_other_user: "أنت تشاهد تقرير <strong>%{username}</strong> في ميزة Discourse Rewind."
-      cannot_view_rewind_gibberish: >
-        [تم رفض الوصول:: فشل روتين إعادة تشغيل النظام الرئيسي]<br><br> جارٍ تهيئة سجل الشذوذ...<br><br> &nbsp;&nbsp;>> نقص في سعة المخزن المؤقت الكمي ⧛<br> &nbsp;&nbsp;>> انحراف التكافؤ بين العقد (Δ=004.33)<br> &nbsp;&nbsp;>> جزء من الحزمة ϟ عند الإزاحة ∇47<br> &nbsp;&nbsp;>> انتهت مهلة مصافحة قناة التدفق<br><br>
       cannot_view_rewind: >
         لا يتوفر عرض تقرير Discourse Rewind هذا. قد يكون المالك لم يشارك التقرير للجمهور؟<br><br>$> _<br><br>
       preferences:
@@ -155,6 +153,8 @@ ar:
         chat_usage:
           title: نشاط الدردشة
           total_messages: إجمالي الرسائل
+          dm_messages: الرسائل المباشرة
+          unique_dm_channels: محادثات الرسائل المباشرة
           reactions_received: التفاعلات المستلمة
           avg_message_length: متوسط طول الرسالة
           favorite_channels: القنوات المفضلة

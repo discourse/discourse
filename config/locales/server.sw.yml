@@ -530,7 +530,9 @@ sw:
         assigned: Imekabidhiwa
     visits:
       title: "Mtumiaji Ametembelea"
-      xaxis: "Siku"
+      xaxis:
+        desktop: "Eneo kazi la Kompyuta"
+        mobile: "Kifaa cha kiganjani"
       yaxis: "Idadi ya utembeleaji"
     signups:
       xaxis: "Siku"

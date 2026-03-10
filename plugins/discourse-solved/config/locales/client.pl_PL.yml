@@ -64,6 +64,8 @@ pl_PL:
         description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."
       notification:
         title: "twój post został oznaczony jako rozwiązanie"
+      category_type_support:
+        title: "Wsparcie"
     topic_statuses:
       solved:
         help: "Ten temat ma rozwiązanie"

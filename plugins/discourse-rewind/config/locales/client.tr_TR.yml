@@ -16,8 +16,6 @@ tr_TR:
       title: Rewind
       loading: "Ağ oluşturma eğrileri..."
       viewing_other_user: "<strong>%{username}'nin</strong> Discourse Rewind raporunu görüntülüyorsunuz."
-      cannot_view_rewind_gibberish: >
-        [ERİŞİM REDDEDİLDİ::GERİ SARMA ANA BİLGİSAYAR ALT PROGRAM HATASI]<br><br> Anormallik günlüğü başlatılıyor. <br><br> &nbsp;&nbsp;>> kuantum tampon yetersizliği ⧛<br> &nbsp;&nbsp;>> düğümler arası parite sapması (Δ=004.33)<br> &nbsp;&nbsp;>> ofset ∇47'de paket ϟ parçası<br> &nbsp;&nbsp;>> akı kanalı el sıkışma SÜRESİ DOLDU<br><br>
       cannot_view_rewind: >
         Bu Discourse Rewind raporunu görüntüleyemezsiniz. Belki de sahibi bunu herkese açık olarak paylaşmamıştır?<br><br> $> _<br><br>
       preferences:

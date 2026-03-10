@@ -58,6 +58,8 @@ hu:
         description: "Emelje ki a választ, és segítsen másoknak is a helyes válasz alatti megoldás gomb segítségével."
       notification:
         title: "hozzászólásod megoldásként lett megjelölve"
+      category_type_support:
+        title: "Támogatás"
     topic_statuses:
       solved:
         help: "Ez a téma tartalmaz egy megoldást"

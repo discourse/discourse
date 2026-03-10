@@ -2121,6 +2121,7 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
+      required: مورد نیاز
       dirty_form: "شما تغییرات خود را ارسال نکرده‌اید! آیا مطمئنید می‌خواهید بروید؟"
       errors:
         required: "مورد نیاز"
@@ -3838,6 +3839,8 @@ fa_IR:
       delete: "حذف دسته‌بندی"
       create: "دسته‌بندی جدید"
       create_long: "ایجاد یک دسته‌بندی جدید"
+      type_settings_schema:
+        site_settings: "تنظیمات سایت"
       save: "ذخیره دسته‌بندی"
       slug_placeholder: "(اختیاری) کلمه با - جدا شده برای پیوند"
       creation_error: خطایی در ساخت این دسته بروز کرد.
@@ -5170,7 +5173,7 @@ fa_IR:
           all: "همه"
           view_table: "جدول"
           view_graph: "نمودار"
-          refresh_report: "تازه کردن گزارش"
+          refresh_report: "تازه‌سازی"
           daily: روزانه
           monthly: ماهیانه
           weekly: هفتگی
@@ -6995,7 +6998,7 @@ fa_IR:
             confirm: "بله، سیاست رمز عبور را به روز کنید"
           min_admin_password_length:
             confirm: "بله، سیاست رمز عبور را به روز کنید"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "بله، سیاست رمز عبور را به روز کنید"
           block_common_passwords:
             confirm: "بله، سیاست رمز عبور را به روز کنید"

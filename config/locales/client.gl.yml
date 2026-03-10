@@ -1554,6 +1554,7 @@ gl:
     form_kit:
       reset: Restabelecer
       optional: opcional
+      required: obrigatorio
       errors:
         required: "Obrigatorio"
     close: "Pechar"
@@ -3639,7 +3640,7 @@ gl:
           all: "Todo"
           view_table: "táboa"
           view_graph: "gráfica"
-          refresh_report: "Actualizar informe"
+          refresh_report: "Actualizar"
           daily: Diario
           monthly: Mensual
           weekly: Semanal

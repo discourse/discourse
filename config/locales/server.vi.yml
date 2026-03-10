@@ -767,7 +767,9 @@ vi:
       description: "Danh sách các trạng thái của cờ bao gồm loại cờ, người đăng, người gắn cờ và thời gian giải quyết."
     visits:
       title: "Các thành viên truy cập"
-      xaxis: "Ngày"
+      xaxis:
+        desktop: "Máy tính để bàn"
+        mobile: "Điện thoại"
       yaxis: "Số lần truy cập"
     signups:
       xaxis: "Ngày"

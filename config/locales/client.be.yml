@@ -1210,6 +1210,7 @@ be:
       close: "закрыць"
     form_kit:
       reset: Скінуць
+      required: абавязкова
       errors:
         required: "Абавязковае"
     close: "Закрыць"
@@ -2158,6 +2159,7 @@ be:
           7_days_ago: "7 дзён таму"
           30_days_ago: "30 дзён таму"
           all: "Усё"
+          refresh_report: "Абнавіць"
           daily: штодня
           monthly: штомесяц
           weekly: штотыдзень

@@ -10,6 +10,10 @@ he:
     support:
       name: "תמיכה"
       title: "תמיכה"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "לאפשר למשתמשים לאשר תשובות"
   site_settings:
     solved_enabled: "הפעלת תוסף הפתרונות, מאפשר למשתמשים לבחור פתרונות לנושאים"
     allow_solved_on_all_topics: "לאפשר למשתמשים לבחור פתרונות בכל הנושאים (כשלא מסומן, ניתן להפעיל פתרונות לפי קטגוריה או תגית)"

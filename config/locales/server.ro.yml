@@ -681,9 +681,10 @@ ro:
         flag: Tip
     visits:
       title: "Vizite ale utilizatorilor"
-      xaxis: "Zi"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobil"
       yaxis: "Număr de vizite"
-      description: "Numărul de vizite ale utilizatorilor conectați."
     signups:
       xaxis: "Zi"
     new_contributors:

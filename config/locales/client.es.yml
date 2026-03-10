@@ -2328,6 +2328,7 @@ es:
     form_kit:
       reset: Restablecer
       optional: opcional
+      required: obligatorio
       dirty_form: "¡No has enviado tus cambios! ¿Seguro que quieres salir?"
       errors:
         starts_with: "Debe comenzar con %{prefix}"
@@ -4222,6 +4223,8 @@ es:
       delete: "Eliminar categoría"
       create: "Crear categoría"
       create_long: "Crear una nueva categoría"
+      type_settings_schema:
+        site_settings: "Ajustes del sitio"
       choose_type:
         requires_plugin: "Requiere plugin"
       create_category: "Crear categoría"
@@ -5946,7 +5949,7 @@ es:
           all: "Todo"
           view_table: "tabla"
           view_graph: "gráfico"
-          refresh_report: "Actualizar informe"
+          refresh_report: "Volver a cargar"
           daily: Diariamente
           monthly: Mensualmente
           weekly: Semanalmente
@@ -8026,7 +8029,7 @@ es:
             confirm: "Sí, actualizar la política de contraseñas"
           min_admin_password_length:
             confirm: "Sí, actualizar la política de contraseñas"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Sí, actualizar la política de contraseñas"
           block_common_passwords:
             confirm: "Sí, actualizar la política de contraseñas"

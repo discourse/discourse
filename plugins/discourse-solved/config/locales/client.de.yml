@@ -58,6 +58,8 @@ de:
         description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."
       notification:
         title: "dein Beitrag wurde als Lösung markiert"
+      category_type_support:
+        title: "Support"
     topic_statuses:
       solved:
         help: "Dieses Thema hat eine Lösung"

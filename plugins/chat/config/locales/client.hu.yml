@@ -50,6 +50,9 @@ hu:
         description: "Leírás"
         actions: "Műveletek"
         settings: "Beállítások"
+        no_channels: "Nincsenek ehhez a kategóriához tartozó csevegőcsatornák."
+        no_channels_body: "Kategóriánként több csatorna is létrehozható, amelyeket a kategória biztonsági beállításai alapján ugyanazok a tagok érhetnek el. <a href='%{chatBrowseUrl}'>Hozzon létre egy csevegőcsatornát</a>."
+        include_subcategories: "Alkategória-csatornák belefoglalása"
       text_copied: Szöveg vágólapra másolva
       link_copied: Hivatkozás vágólapra másolva
       back_to_forum: "Fórum"
@@ -67,6 +70,14 @@ hu:
       starred: "Csillagozott"
       starred_channels: "Csillagozott csatornák"
       starred_channels_empty: "Még nem csillagozott meg egyetlen csatornát sem. Csillagozd meg a csatornákat, hogy itt lásd őket a gyors hozzáférés érdekében."
+      pinned_messages:
+        title: "Rögzített üzenetek"
+        close: "Rögzített üzenetek bezárása"
+        pinned_by_you: "Általad rögzített"
+        pinned_by_user: "%{username} által rögzítve"
+      no_pinned_messages: "Nincs rögzített üzenet ebben a csatornában."
+      pin_message: "Üzenet rögzítése"
+      unpin_message: "Üzenet rögzítésének feloldása"
       pinned: "Kiemelt"
       browse_all_channels: "Összes csatorna tallózása"
       see_in: "Lásd itt"
@@ -89,6 +100,8 @@ hu:
         unstar_channel: "Csillag eltávolítása a csatornáról"
         close_channel: "Csatorna bezárása"
         open_channel: "Csatorna megnyitása"
+        open_channel_disabled_archived: "Az archivált csatornák nem nyithatók meg újra."
+        open_channel_disabled_read_only: "Az írásvédett csatornák nem nyithatók meg újra."
         archive_channel: "Csatorna archiválása"
         delete_channel: "Csatorna törlése"
         join_channel: "Csatlakozás a csatornához"
@@ -554,10 +567,15 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
+        chat_settings: "Csevegési beállítások"
         indefinitely_short: "határozatlan ideig"
+        indefinitely_long: "A %{chatSettingsLink} beállítása szerint a csatornaüzenetek határozatlan ideig megőrzésre kerülnek."
         short:
           one: "%{count} nap"
           other: "%{count} nap"
+        long:
+          one: "A %{chatSettingsLink} beállítása szerint a csatornaüzenetek %{count} napig megőrzésre kerülnek."
+          other: "A %{chatSettingsLink} beállítása szerint a csatornaüzenetek %{count} napig megőrzésre kerülnek."
       flags:
         off_topic: "Ez az üzenet nem tartozik a csatorna címében meghatározott jelenlegi vitához, és valószínűleg máshová kellene áthelyezni."
         inappropriate: "Ez az üzenet olyan elemeket tartalmaz, amelyet egy értelmes ember sértőnek, gorombának vagy <a href=\"%{basePath}/guidelines\">a közösségi irányelveket</a> megszegőnek tartana."

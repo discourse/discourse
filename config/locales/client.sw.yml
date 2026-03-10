@@ -1076,6 +1076,7 @@ sw:
     form_kit:
       reset: Anza Upya
       optional: sio muhimu
+      required: muhimu
       errors:
         required: "Muhimu na Inahitajika"
     close: "Funga"
@@ -2587,7 +2588,7 @@ sw:
           all: "Zote"
           view_table: "jedwali"
           view_graph: "grafu"
-          refresh_report: "Rudisha tena Ripoti"
+          refresh_report: "Rudisha Tena"
           daily: Kila siku
           monthly: Klla mwezi
           weekly: Kila wiki

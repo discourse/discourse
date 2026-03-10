@@ -2256,6 +2256,7 @@ fi:
     form_kit:
       reset: Palauta
       optional: valinnainen
+      required: pakollinen
       dirty_form: "Et lähettänyt muutoksiasi! Oletko varma, että haluat poistua?"
       errors:
         starts_with: "Täytyy alkaa %{prefix}"
@@ -4075,6 +4076,8 @@ fi:
         tag_group: "Tunnisteryhmä"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       create_long: "Luo uusi alue"
+      type_settings_schema:
+        site_settings: "Sivustoasetukset"
       unsaved_changes: "Sinulla on tallentamattomia muutoksia"
       slug_placeholder: "(Valinnainen) väliviivoilla erotettuja sanoja URL-osoitetta varten"
       creation_error: Alueen luonnissa tapahtui virhe.
@@ -5673,7 +5676,7 @@ fi:
           all: "Kaikki"
           view_table: "taulukko"
           view_graph: "kaavio"
-          refresh_report: "Päivitä raportti"
+          refresh_report: "Päivitä"
           daily: Päivittäin
           monthly: Kuukausittain
           weekly: Viikoittain
@@ -7727,7 +7730,7 @@ fi:
             confirm: "Kyllä, päivitä salasanakäytäntö"
           min_admin_password_length:
             confirm: "Kyllä, päivitä salasanakäytäntö"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Kyllä, päivitä salasanakäytäntö"
           block_common_passwords:
             confirm: "Kyllä, päivitä salasanakäytäntö"

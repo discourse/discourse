@@ -10,6 +10,10 @@ es:
     support:
       name: "Soporte"
       title: "soporte"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Permitir al propietario del tema y al staff marcar una respuesta como la solución"
   site_settings:
     solved_enabled: "Activar el complemento de solución, que permite a los usuarios seleccionar soluciones para temas"
     allow_solved_on_all_topics: "Permitir que los usuarios seleccionen soluciones en todos los temas (si no lo marcas, puedes activarlo individualmente por categoría o etiqueta)"

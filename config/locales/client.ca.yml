@@ -1468,6 +1468,7 @@ ca:
     form_kit:
       reset: Restableix
       optional: opcional
+      required: necessari
       errors:
         required: "Necessari"
     close: "Tanca"
@@ -3283,7 +3284,7 @@ ca:
           all: "Tot"
           view_table: "taula"
           view_graph: "gràfica"
-          refresh_report: "Actualitza el report"
+          refresh_report: "Actualitza"
           daily: Diàriament
           monthly: Mensualment
           weekly: Setmanalment

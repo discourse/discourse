@@ -13,10 +13,14 @@ de:
         arguments: "Argumente"
         container_args: "Container-Argumente"
         in_location: "in"
-        hidden: "versteckt"
+        hidden: "ausgeblendet"
         not_registered: "nicht registriert"
+        no_visible_children: "keine sichtbaren untergeordneten Elemente"
         failed: "fehlgeschlagen"
       ghost_reasons:
+        optional_missing_hint: "Dieser optionale Block wird nicht gerendert, da er nicht registriert ist."
+        no_visible_children_hint: "Dieser Containerblock wird nicht gerendert, da keines seiner untergeordneten Elemente sichtbar ist."
+        condition_failed_hint: "Dieser Block wird nicht gerendert, da seine Bedingungen nicht erfüllt sind."
         head_hidden_tail_hint: "Dieser Block wird nicht gerendert, weil ein anderer Block im `head`-Container zuerst gerendert wurde."
     carousel:
       go_to_slide: "Gehe zu Folie %{index}"
@@ -345,9 +349,16 @@ de:
       unknown_source: "Eines deiner Themes oder Plug-ins"
     dev_tools:
       drag_to_move: "Ziehe zum Verschieben"
-      toggle_safe_mode: "Abgesicherten Modus (de-)aktivieren"
+      toggle_plugin_outlet_debug: "Debugging des Plug-in-Outlets umschalten"
+      toggle_block_debug: "Block-Debugging umschalten"
+      block_debug:
+        outlet_boundaries: "Outlet-Grenzen"
+        visual_overlay: "Visuelles Overlay"
+        ghost_blocks: "Geisterblöcke"
+        condition_debugging: "Debugging der Bedingungen"
+      toggle_safe_mode: "Abgesicherten Modus umschalten"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
-      toggle_mobile_view: "Von/zu der mobilen Ansicht wechseln"
+      toggle_mobile_view: "Mobile Ansicht umschalten"
       disable_dev_tools: "Entwicklertools deaktivieren"
     s3:
       regions:
@@ -442,7 +453,7 @@ de:
       skipped: "Die Checkliste für das Onboarding von Administratoren wurde übersprungen. Um sie wieder zu aktivieren, suche in den Website-Einstellungen nach „enable site owner onboarding“."
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       invite_collaborators:
-        title: "Mitstreiter einladen"
+        title: "Mitwirkende einladen"
         description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
         action: "Einladung erstellen"
       start_posting:
@@ -2411,6 +2422,7 @@ de:
     form_kit:
       reset: Zurücksetzen
       optional: optional
+      required: erforderlich
       errors_summary_title:
         one: "Behebe diesen Fehler, um fortzufahren"
         other: "Behebe diese Fehler, um fortzufahren"
@@ -3133,9 +3145,13 @@ de:
         available:
           title: "Bevorstehende Änderungen"
           description: "'%{changeName}' ist zur Vorschau verfügbar"
+          description_two: "'%{changeName1}' und '%{changeName2}' sind zur Vorschau verfügbar"
+          description_many: "'%{changeName}' und %{otherChangeCount} weitere Änderungen sind zur Vorschau verfügbar"
         automatically_promoted:
           title: "Bevorstehende Änderungen"
           description: "'%{changeName}' wurde automatisch aktiviert"
+          description_two: "'%{changeName1}' und '%{changeName2}' wurden automatisch aktiviert"
+          description_many: "'%{changeName}' und %{otherChangeCount} weitere Änderungen wurden automatisch aktiviert"
       dismiss_confirmation:
         body:
           default:
@@ -3194,6 +3210,8 @@ de:
         votes_released: "Abstimmung wurde freigegeben"
         new_features: "neue Discourse-Funktionen wurden veröffentlicht"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
+        upcoming_change_available: "neue bevorstehende Änderungen sind verfügbar"
+        upcoming_change_automatically_promoted: "bevorstehende Änderungen wurden automatisch aktiviert"
     upload_selector:
       change: "Ändern"
       delete: "Löschen"
@@ -4341,7 +4359,10 @@ de:
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: "Kategorie löschen"
       create: "Neue Kategorie"
+      create_with_type: "Neue Kategorie des Typs „%{typeName}“"
       create_long: "Eine neue Kategorie erstellen"
+      type_settings_schema:
+        site_settings: "Website-Einstellungen"
       choose_type:
         title: "Kategorietyp wählen"
         requires_plugin: "Erfordert ein Plug-in"
@@ -5016,7 +5037,7 @@ de:
         slug_placeholder: "Sprechender Name des Schlagwortes (optional, wird automatisch aus dem Namen generiert)"
         saved: "Schlagwort-Einstellungen gespeichert"
         no_synonyms: "Für dieses Schlagwort sind keine Synonyme definiert."
-        add_synonym_placeholder: "Suche nach Schlagwörtern, die als Synonyme hinzugefügt werden sollen..."
+        add_synonym_placeholder: "Suche nach Schlagwörtern, die als Synonyme hinzugefügt werden sollen …"
         synonyms_subtitle: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch %{name} ersetzt"
         save: "Schlagwort speichern"
         delete: "Schlagwort löschen"
@@ -5601,7 +5622,7 @@ de:
         no_changes_to_save: "Keine Änderungen zu speichern"
         select_groups: "Gruppen auswählen …"
         opt_in_groups: "Gruppenweise Aktivierung"
-        show_related_settings: "Verwandte Einstellungen anzeigen..."
+        show_related_settings: "Verwandte Einstellungen anzeigen …"
         opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „stabil“ erreicht."
         enabled_for_throttle: "Du hast zu schnell geändert, für wen diese Änderung aktiviert ist. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
         change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
@@ -6158,7 +6179,7 @@ de:
           all: "Gesamt"
           view_table: "Tabelle"
           view_graph: "Diagramm"
-          refresh_report: "Bericht aktualisieren"
+          refresh_report: "Aktualisieren"
           daily: Täglich
           monthly: Monatlich
           weekly: Wöchentlich
@@ -8285,7 +8306,7 @@ de:
           min_admin_password_length:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Administratoren betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           block_common_passwords:
@@ -8330,7 +8351,7 @@ de:
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen, die verliehen werden können.
         none_selected: "Wähle ein Abzeichen aus, um loszulegen"
-        filter_placeholder: "Abzeichen filtern..."
+        filter_placeholder: "Abzeichen filtern …"
         no_badges_found: "Keine Abzeichen gefunden"
         sections:
           design: Design

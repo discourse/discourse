@@ -13,6 +13,9 @@ hu:
       editing:
         one: "szerkeszt"
         other: "szerkeszt"
+      translating:
+        one: "fordítás"
+        other: "fordítások"
       replying_to_topic:
         one: "válaszol"
         other: "válaszol"

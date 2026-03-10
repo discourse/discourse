@@ -37,9 +37,13 @@ ar:
           new_name: "New House Ad"
           save: "حفظ"
           delete: "حذف"
+          confirm_delete: "هل تريد بالتأكيد حذف هذا الإعلان؟"
           html: "HTML"
           categories: "الفئات"
+          routes: "المسارات"
           groups: "المجموعات"
+          description: "أنشئ إعلاناتك الخاصة وأدرها لعرضها في أماكن مختلفة عبر موقعك."
+          get_started: "لم تُنشأ أي إعلانات منزلية حتى الآن."
           filter_placeholder: "حدِّد الإعلانات..."
           more_settings: "إعدادات إضافية"
           show_to_anons: "العرض للمستخدمين المجهولين"
@@ -53,6 +57,7 @@ ar:
           name: "الاسم"
           edit: "تعديل"
           tabs:
+            ads: "الإعلانات"
             settings: "الإعدادان"
           topic_list_top:
             title: "الإعلانات أعلى قائمة الموضوعات"

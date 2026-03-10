@@ -18,10 +18,10 @@ zh_CN:
         no_visible_children: "没有可见子项"
         failed: "失败"
       ghost_reasons:
-        optional_missing_hint: "由于该可选代码块未注册，因此不会被渲染。"
-        no_visible_children_hint: "由于该容器块中的所有子元素都不可见，因此该容器块不会被渲染。"
-        condition_failed_hint: "由于条件不满足，此代码块未渲染。"
-        head_hidden_tail_hint: "由于 `head` 容器中已先渲染了另一个代码块，因此该代码块未被渲染。"
+        optional_missing_hint: "由于未注册，此可选代码块不会呈现。"
+        no_visible_children_hint: "由于所有子元素都不可见，此容器块不会呈现。"
+        condition_failed_hint: "由于条件不满足，此代码块不会呈现。"
+        head_hidden_tail_hint: "由于 `head` 容器中已先呈现了另一个代码块，此代码块不会呈现。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -285,13 +285,13 @@ zh_CN:
     skip_to_top: "跳转到顶部"
     skip_user_nav: "跳到个人资料内容"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
-    emails_are_disabled_no_smtp: "由于未配置SMTP服务器，所有外发邮件功能均已禁用。无法发送任何类型的邮件。"
+    emails_are_disabled_no_smtp: "由于未配置 SMTP 服务器，所有外发电子邮件均已禁用。无法发送任何类型的电子邮件。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
       message: "我们更新了网站，<span>请刷新</span>以保持网站顺利运行。"
       dismiss: "忽略"
     notifications_tracking:
-      tooltip: "通知级别： %{level}"
+      tooltip: "通知级别：%{level}"
     back_button: "返回"
     welcome_banner:
       header:
@@ -311,8 +311,8 @@ zh_CN:
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
-    broken_block_alert: "检测到区块配置错误。请查看浏览器控制台了解详情。"
-    broken_block_factory_alert: "区块加载失败。某些 UI 元素可能无法正确显示。"
+    broken_block_alert: "检测到块配置错误。请查看浏览器控制台了解详情。"
+    broken_block_factory_alert: "块加载失败。某些 UI 元素可能无法正确显示。"
     critical_deprecation:
       notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。（id：%{id}）"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>了解详情</em></a>)"
@@ -320,9 +320,9 @@ zh_CN:
       plugin_source: "插件 '%{name}'"
       unknown_source: "您的某个主题或插件"
     dev_tools:
-      drag_to_move: "拖动移动"
+      drag_to_move: "拖动以移动"
       toggle_plugin_outlet_debug: "切换插件出口调试"
-      toggle_block_debug: "切换区块调试"
+      toggle_block_debug: "切换块调试"
       block_debug:
         outlet_boundaries: "出口边界"
         visual_overlay: "视觉叠加"
@@ -417,21 +417,21 @@ zh_CN:
       pill: "推荐"
       pm_title: "建议的消息"
     admin_onboarding_banner:
-      launch_in_easy_steps: "启动只需 %{step_count} 个简单步骤"
-      skipped: "管理员入职培训清单现已跳过。如果您想重新启用该清单，请在网站设置中查找 ``enable site owner onboarding` 选项。"
-      congrats_onboarding_complete: "恭喜您完成入职流程！"
+      launch_in_easy_steps: "只需 %{step_count} 个简单步骤启动"
+      skipped: "管理员入门核对清单现已跳过。如果您想重新启用该清单，请在站点设置中查找 `enable site owner onboarding` 选项。"
+      congrats_onboarding_complete: "恭喜您完成入门流程！"
       invite_collaborators:
-        title: "邀请合作者"
-        description: "早期成员有助于让您的社区充满活力。"
+        title: "邀请协作者"
+        description: "早期成员有助于让您的社区充满活力"
         action: "创建邀请"
       start_posting:
         title: "开始发帖"
         description: "给人们一些共同谈论的话题"
         action: "破冰创意"
-        choose_option: "你想如何开始？"
+        choose_option: "您想如何开始？"
         predefined_topics: "破冰模板"
-        predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自己制作。"
-        predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论。"
+        predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自行制作。"
+        predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
         start_with_this: "从这里开始"
         back: "返回"
@@ -447,12 +447,12 @@ zh_CN:
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
           what_is_your_favorite_food:
             title: "你最喜欢吃什么？"
-            body: "与社区分享您最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
+            body: "与社区分享你最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
       spread_the_word:
         title: "广而告之！"
         description: "将链接分享给你社交网络中的所有人"
         action: "复制链接"
-        copied_to_clipboard: "链接已复制到剪贴板!"
+        copied_to_clipboard: "链接已复制到剪贴板！"
     about:
       edit: "编辑此页面"
       simple_title: "关于"
@@ -609,7 +609,7 @@ zh_CN:
         other_drafts:
           other: "+其他 %{count} 个草稿"
     embed_mode:
-      storage_access_prompt: "已有 %{site_name} 账户？允许访问你的会话，以你的身份发表评论。"
+      storage_access_prompt: "已有 %{site_name} 帐户？允许访问您的会话，以您的身份发表评论。"
       allow_access: "允许访问"
       continue_as_guest: "以访客身份继续"
     topic_count_all:
@@ -672,17 +672,17 @@ zh_CN:
       filtered_flagged_by: "举报者"
       unknown:
         title:
-          other: "您有来自已禁用插件的待审核队列项目："
+          other: "您有来自已禁用插件的待审核队列条目："
         instruction: "除非您启用相关插件，否则它们无法正确显示。请启用插件并刷新页面。或者，您可以忽略它们。<a href='%{url}' target='_blank'>了解详情…</a>"
         reviewable_unknown_source: "%{reviewableType}（未知插件）"
         reviewable_known_source: "%{reviewableType}（来自 '%{pluginName}' 插件）"
         ignore_all: "全部忽略"
         enable_plugins: "启用插件"
-        delete_confirm: "确定要删除所有由禁用插件创建的审核队列项目吗？"
-        ignore_success: "所有由禁用插件创建的审核已被删除。"
+        delete_confirm: "确定要删除所有由禁用插件创建的审核队列条目吗？"
+        ignore_success: "所有由禁用插件创建的审核队列条目均已被删除。"
       explain:
         why: "解释为什么此条目最终进入队列"
-        title: "审核队列项目评分"
+        title: "审核队列条目评分"
         formula: "公式"
         subtotal: "小计"
         total: "总计"
@@ -696,10 +696,10 @@ zh_CN:
           title: "所提交的举报一直都获得同意的用户将获得加分。"
         trust_level_bonus:
           name: "信任级别"
-          title: "由较高信任级别的用户创建的可审核条目具有较高的分数。"
+          title: "由较高信任级别的用户创建的举报具有较高的分数。"
         type_bonus:
           name: "奖励加分"
-          title: "某些可审核类型可以由管理人员分配加分，以使其具有更高的优先级。"
+          title: "某些举报类型可由管理人员指定加分，以使其具有更高的优先级。"
       revise_and_reject_post:
         title: "修订"
         reason: "原因"
@@ -708,7 +708,7 @@ zh_CN:
         custom_reason: "清楚地描述原因"
         other_reason: "其他…"
         optional: "可选"
-      stale_help: "此可审核条目已被 <b>%{username}</b> 解决。"
+      stale_help: "此条目已被 <b>%{username}</b> 解决。"
       claim_help:
         optional: "您可以认领此条目以避免被他人审核。"
         required: "您必须先认领条目才能进行审核。"
@@ -2301,8 +2301,9 @@ zh_CN:
     form_kit:
       reset: 重置
       optional: 可选
+      required: 必选
       errors_summary_title:
-        other: "修复这些错误以继续"
+        other: "修复错误以继续"
       dirty_form: "您没有提交更改！确定要离开吗？"
       errors:
         starts_with: "必须以 %{prefix} 开头"
@@ -2971,9 +2972,13 @@ zh_CN:
         available:
           title: "即将推出的更改"
           description: "'%{changeName}' 可供预览"
+          description_two: "'%{changeName1}' 和 '%{changeName2}' 可供预览"
+          description_many: "'%{changeName}' 和 %{otherChangeCount} ' 更多更改可供预览"
         automatically_promoted:
           title: "即将推出的更改"
           description: "'%{changeName}' 已自动启用"
+          description_two: "'%{changeName1}' 和 '%{changeName2}' 已自动启用"
+          description_many: "'%{changeName}' 和 %{otherChangeCount} 的更多更改已自动启用"
       dismiss_confirmation:
         body:
           default:
@@ -3028,6 +3033,8 @@ zh_CN:
         votes_released: "投票额度已释放"
         new_features: "新的 Discourse 功能已发布"
         admin_problems: "网站信息中心有新建议"
+        upcoming_change_available: "即将推出的新变化已发布"
+        upcoming_change_automatically_promoted: "即将发生的更改已自动启用"
     upload_selector:
       change: "更改"
       delete: "删除"
@@ -3209,7 +3216,7 @@ zh_CN:
         deleted_post: "（已删除的帖子）"
         post_number_with_topic_title: "帖子 #%{post_number} - %{title}"
         new_post_in_topic: "%{title} 中的新帖子"
-        new_post_in_deleted_topic: "在已删除的主题中发布新帖"
+        new_post_in_deleted_topic: "在已删除的话题中发布新帖"
         user_requires_approval: "%{username} 需要审批"
         default_item: "可审核条目 #%{reviewable_id}"
     topics:
@@ -3349,7 +3356,7 @@ zh_CN:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
       create_long: "创建新话题"
-      create_group: "新话题和草稿"
+      create_group: "新建话题和草稿"
       open_draft: "打开草稿"
       private_message: "开始消息"
       archive_message:
@@ -4060,6 +4067,7 @@ zh_CN:
         instructions: "分享此帖子的链接："
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
+      ai_translation_disclaimer: "AI 生成的翻译可能不准确。"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -4104,6 +4112,11 @@ zh_CN:
       create: "新建类别"
       create_with_type: "新 %{typeName} 类别"
       create_long: "创建新类别"
+      settings_apply_to_all_of_type_warning: "以下更改将适用于此类型的所有类别"
+      type_settings_schema:
+        category_settings: "类别设置"
+        category_custom_fields: "类别设置"
+        site_settings: "网站设置"
       choose_type:
         title: "选择类别类型"
         requires_plugin: "需要插件"
@@ -4119,7 +4132,7 @@ zh_CN:
         self_lockout: "您即将更改类别权限，这将移除您自己的访问权限。确定要继续吗？"
       validations:
         emoji_required: "选择一个表情符号。"
-        icon_required: "选择一个图标."
+        icon_required: "选择一个图标。"
       name: "类别名称"
       untitled: "无标题类别"
       description: "描述"
@@ -4166,15 +4179,15 @@ zh_CN:
         reply: "回复"
         create: "创建"
         no_groups_selected: "没有群组被授予访问权限；此类别仅对管理人员可见。"
-        everyone_full_access: '此类别是公开的，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予 "%{everyone_group}" 组的一个或多个权限。'
-        everyone_reply_access: '此分类为公开分类，所有人都可以查看和回复主题。如需限制权限，请移除 "%{everyone_group}" 组。'
-        everyone_see_access: '此分类为公开分类，所有人都可以查看帖子。如需限制权限，请移除 "%{everyone_group}" 分组。'
+        everyone_full_access: '此类别为公开类别，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予“%{everyone_group}”群组的一个或多个权限。'
+        everyone_reply_access: '此类别为公开类别，所有人都可以查看和回复话题。要限制权限，请移除“%{everyone_group}”群组。'
+        everyone_see_access: '此类别为公开类别，所有人都可以查看帖子。要限制权限，请移除“%{everyone_group}”群组。'
         specific_groups_have_access: "此类别为不公开类别，只有所选群组可以查看、回复和创建帖子。"
-        all_parent_groups_used: "父类别下的所有分组已添加。要添加更多分组，请先将其添加到父类别。"
+        all_parent_groups_used: "父类别下的所有群组均已添加。要添加更多群组，请先将其添加到父类别。"
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
-        inherited: '此权限继承自 "%{everyone_group}"'
-      special_warning: "这是一个预先设置好的分类，安全设置无法编辑。如果您不想使用此分类，请将其删除，而不是重新用于其他用途。"
+        inherited: '此权限继承自“%{everyone_group}”'
+      special_warning: "这是一个预先设置的类别，安全设置无法编辑。如果您不想使用此类别，请将其删除，而不是重新用于其他用途。"
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
       pending_permission_change_alert: "您还没有将 %{group} 添加到此类别；点击此按钮添加它们。"
@@ -4217,9 +4230,9 @@ zh_CN:
         group_restricted: "不公开"
         who_can_see: "谁可以查看此类别"
         who_can_post: "谁可以在此类别中发帖"
-        which_groups_can_access: "哪些群组可以查看和发布此类别的内容"
-        more_options_hint: "更多权限可在 <a href>高级设置</a>中找到。"
-        inherited_from_parent: "权限继承自父类别。要进行细化，请访问 <a href>高级设置</a>。"
+        which_groups_can_access: "哪些群组可以查看此类别以及在此类别下发帖"
+        more_options_hint: "更多权限可在<a href>高级设置</a>中找到。"
+        inherited_from_parent: "权限继承自父类别。要进行细化，请访问<a href>高级设置</a>。"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
@@ -4713,10 +4726,10 @@ zh_CN:
       tag_groups_info:
         other: "此标签属于以下组：%{tag_groups}。"
       tag_groups_info_prefix:
-        other: "此标签属于以下分组： "
+        other: "此标签属于群组： "
       category_restrictions:
         other: "它只能用于以下类别："
-      restricted_to: "仅限于"
+      restricted_to: "限于"
       no_synonyms: "此标签没有同义词。"
       edit_synonyms: "编辑同义词"
       add_synonyms_label: "添加同义词："
@@ -4737,7 +4750,7 @@ zh_CN:
       description: "描述"
       settings:
         title: "设置"
-        edit_title: "编辑标签： %{name}"
+        edit_title: "编辑标签：%{name}"
         edit_tag_prefix: "编辑标签："
         select_tag: "选择要编辑的标签"
         general: "常规"
@@ -4746,17 +4759,17 @@ zh_CN:
         name: "名称"
         slug: "缩略名"
         name_placeholder: "标签名称"
-        slug_placeholder: "标签别名（可选，根据名称自动生成）"
+        slug_placeholder: "标签缩略名（可选，根据名称自动生成）"
         saved: "标签设置已保存"
-        no_synonyms: "没有为此标签定义同义词。"
-        add_synonym_placeholder: "搜索可添加为同义词的标签..."
+        no_synonyms: "没有为此缩略名定义同义词。"
+        add_synonym_placeholder: "搜索可添加为同义词的标签…"
         synonyms_subtitle: "使用以下标签时，它们将被替换为 %{name}。"
         save: "保存标签"
         delete: "删除标签"
         synonyms_hint: "使用上述标签时，它们将被替换为 %{baseTagName}。"
-        add_synonyms_confirm: "当前使用 %{synonymNames} 的地方都将更改为使用 %{tagName} 。您确定要进行此更改吗？"
+        add_synonyms_confirm: "当前使用 %{synonymNames} 的地方都将更改为使用 %{tagName}。确定要进行此更改吗？"
       localization:
-        hint: "添加本地化功能，以便为不同语言的用户显示不同的标签名称。"
+        hint: "添加本地化，为不同语言的用户显示不同的标签名称。"
         locale: "语言区域"
         name: "名称"
         description: "描述"
@@ -5286,7 +5299,7 @@ zh_CN:
         group_moderation: "审核"
         group_security: "安全性"
         group_other: "其他"
-        legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系技术支持。"
+        legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系支持团队。"
       config_sections:
         account:
           title: "帐户"
@@ -5318,20 +5331,20 @@ zh_CN:
         no_changes_to_save: "没有要保存的更改"
         select_groups: "选择群组…"
         opt_in_groups: "选择加入的群组"
-        show_related_settings: "显示相关设置..."
+        show_related_settings: "显示相关设置…"
         opt_in_groups_instructions: "选择加入的群组可以用于让特定用户群组在向所有人发布更改前进行测试。请注意，当更改进入稳定状态后，这些群组将不再适用。"
         enabled_for_throttle: "您修改此更改启用对象的速度过快。请稍等片刻后再试。"
         change_enabled_for_success: "您已为 %{enabledFor} 启用此更改"
         change_disabled: "您已选择不加入此更改"
         permanent_notice: "此更改现已永久生效，并将很快被移除。您无法再选择退出。"
-        permanent_soon_notice: "这一变化将很快永久生效。您将无法再选择退出。"
+        permanent_soon_notice: "此更改将很快永久生效。您将无法再选择退出。"
         permanent_no_group_selection: "不适用，永久更改适用于所有群组。"
         no_changes: "目前暂无即将推出的更改"
         preview: "预览"
         enabled_for_options:
           no_one: "没有人"
           everyone: "所有人"
-          staff: "%{staffGroupName} 仅限"
+          staff: "仅限 %{staffGroupName}"
           specific_groups: "特定群组"
           specific_groups_with_group_names:
             other: "群组 %{groupNames}"
@@ -5353,8 +5366,8 @@ zh_CN:
           all: "所有"
           enabled_all: "所有已启用的状态"
           enabled: "已启用"
-          enabled_for_staff: "已启用 %{staffGroupName}"
-          enabled_for_specific_groups: "为特定群组启用"
+          enabled_for_staff: "已对 %{staffGroupName} 启用"
+          enabled_for_specific_groups: "已对特定群组启用"
           disabled: "已禁用"
           impact_type_all: "所有影响类型"
           impact_type_feature: "功能"
@@ -5404,7 +5417,7 @@ zh_CN:
           keywords: "语言区域|语言|时区|unicode|ltr"
         upcoming_changes:
           title: "即将推出的更改"
-          header_description: "即将到来的 Discourse 更新列表，可能会影响您的站点，以及您可以选择加入的实验性功能。您可以按影响程度、更改类型和状态进行筛选。\n\n选择加入组可用于让特定用户组在更新发布给所有人之前进行测试，不过一旦更新进入稳定状态，这些组就不再相关。"
+          header_description: "即将推出的 Discourse 更改列表，可能会影响您的站点，以及您可以选择加入的实验性功能。您可以按影响、类型和状态进行筛选。\n\n选择加入的群组可以用于让特定用户群组在向所有人发布更改前进行测试，当更改进入永久状态后，这些群组将不再适用。"
         login:
           title: "登录与身份验证"
           header_description: "配置用户登录和验证身份的方式、机密与密钥、OAuth2 提供商等。"
@@ -5443,7 +5456,7 @@ zh_CN:
               help_text: "建议尺寸为 600 x 80 像素。"
             large_icon:
               title: "方形图标"
-              description: "网站顶部会显示一个方形版本的徽标图像，该徽标同时也是移动应用程序的徽标。"
+              description: "方形版本的徽标图片会显示在站点顶部，也是移动应用徽标。"
               help_text: "建议尺寸为 512 x 512 像素。"
             square_icon_dark:
               required: "为深色模式使用不同的方形图标？"
@@ -5765,7 +5778,7 @@ zh_CN:
           header_description: "Discourse 能够使用创建 IFRAME 的 Javascript API 在远程网站中嵌入话题的评论"
         form_templates:
           title: "表单模板"
-          header_description: "表单模板允许您在主题创建流程中强制执行结构化表单和数据验证。"
+          header_description: "表单模板允许您在话题创建流程中强制执行结构化表单和数据验证。"
       theme_site_settings:
         setting: "设置"
         overridden_by: "覆盖者"
@@ -5807,8 +5820,8 @@ zh_CN:
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
-          no_new_features_found: "新闻源中没有项目，或者您所选的过滤器没有返回结果。 您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a> 上看到以前的新功能公告。"
-          no_new_features_error: "加载最新功能列表时出现错误。您可以在<a href='%{url}' target='_blank'>Discourse Meta 社区</a>查看以前的新功能公告。"
+          no_new_features_found: "Feed 中没有条目，或者您的所选筛选器没有返回结果。 您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上看到以前的新功能公告。"
+          no_new_features_error: "加载 Feed 时出错。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           learn_more: "了解详情…"
         last_checked: "上次检查"
         refresh_problems: "刷新"
@@ -5868,10 +5881,11 @@ zh_CN:
           all: "所有"
           view_table: "表格"
           view_graph: "图表"
-          refresh_report: "刷新报告"
+          refresh_report: "刷新"
           daily: 每天
           monthly: 每月
           weekly: 每周
+          chart_group_period: "选择一个时间段"
           value_so_far: "%{value}（目前为止）"
           dates: "日期 (UTC)"
           groups: "所有群组"
@@ -5988,7 +6002,7 @@ zh_CN:
         cancel: "取消"
         continue: "继续"
         copy_key: "复制"
-        key_copied_to_clipboard: "API密钥已复制到剪贴板"
+        key_copied_to_clipboard: "API 密钥已复制到剪贴板"
         back: "返回到 API 密钥"
         revoke: "撤销"
         undo_revoke: "取消撤销"
@@ -6626,8 +6640,8 @@ zh_CN:
         delete: "删除"
         delete_confirm: '确定要删除“%{theme_name}”吗？'
         bulk_delete: "确定吗？"
-        bulk_themes_delete_confirm: "这将卸载以下主题，您网站上的任何用户将无法再使用它们："
-        bulk_components_delete_confirm: "这将卸载以下主题组件，您网站上的任何用户将无法再使用它们："
+        bulk_themes_delete_confirm: "这将卸载以下主题，您站点上的任何用户将无法再使用它们："
+        bulk_components_delete_confirm: "这将卸载以下组件，您站点上的任何用户将无法再使用它们："
         color: "颜色"
         opacity: "不透明度"
         copy: "复制"
@@ -7242,6 +7256,7 @@ zh_CN:
             upcoming_change_available: "即将推出的更改已可用"
             change_site_setting_groups: "更改站点设置群组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭据"
+            configure_category_type: "配置类别类型"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -7955,7 +7970,7 @@ zh_CN:
           min_admin_password_length:
             prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的管理员。确定要继续吗？"
             confirm: "是，更新密码策略"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
           block_common_passwords:
@@ -8000,8 +8015,8 @@ zh_CN:
         no_user_badges: "%{name} 尚未被授予任何徽章。"
         no_badges: 没有可供授予的徽章。
         none_selected: "选择一个徽章以开始"
-        filter_placeholder: "筛选徽章……"
-        no_badges_found: "未找到徽章"
+        filter_placeholder: "筛选徽章…"
+        no_badges_found: "找不到徽章"
         sections:
           design: 设计
           query: 查询
