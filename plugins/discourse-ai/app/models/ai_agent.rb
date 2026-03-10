@@ -453,6 +453,7 @@ end
 #  rag_chunk_overlap_tokens     :integer          default(10), not null
 #  rag_chunk_tokens             :integer          default(374), not null
 #  rag_conversation_chunks      :integer          default(10), not null
+#  require_approval             :boolean          default(FALSE), not null
 #  response_format              :jsonb
 #  show_thinking                :boolean          default(TRUE), not null
 #  system                       :boolean          default(FALSE), not null
