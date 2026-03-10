@@ -60,7 +60,12 @@ RSpec.describe DiscourseAi::AiCreditsController do
 
         it "handles mixed valid and invalid IDs" do
           llm_model = Fabricate(:llm_model, id: -10)
-          ai_agent = Fabricate(:ai_agent, default_llm_id: llm_model.id)
+          ai_agent =
+            Fabricate(
+              :ai_agent,
+              default_llm_id: llm_model.id,
+              allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+            )
           Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
 
           get "/discourse-ai/credits/status.json", params: { agent_ids: [ai_agent.id, 99_999] }
@@ -72,7 +77,13 @@ RSpec.describe DiscourseAi::AiCreditsController do
 
       context "with agent_ids param" do
         fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
-        fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
+        fab!(:ai_agent) do
+          Fabricate(
+            :ai_agent,
+            default_llm_id: llm_model.id,
+            allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+          )
+        end
 
         it "returns empty for agent without credit allocation" do
           get "/discourse-ai/credits/status.json", params: { agent_ids: [ai_agent.id] }
@@ -112,12 +123,36 @@ RSpec.describe DiscourseAi::AiCreditsController do
             expect(agent_data["credit_status"]["hard_limit_reached"]).to eq(true)
             expect(agent_data["credit_status"]["credits_remaining"]).to eq(0)
           end
+
+          it "excludes disabled agents" do
+            ai_agent.update!(enabled: false)
+
+            get "/discourse-ai/credits/status.json", params: { agent_ids: [ai_agent.id] }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["agents"]).to eq({})
+          end
+
+          it "excludes agents the user does not have group access to" do
+            ai_agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:staff]])
+
+            get "/discourse-ai/credits/status.json", params: { agent_ids: [ai_agent.id] }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["agents"]).to eq({})
+          end
         end
       end
 
       context "with features param" do
         fab!(:llm_model) { Fabricate(:llm_model, id: -2) }
-        fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
+        fab!(:ai_agent) do
+          Fabricate(
+            :ai_agent,
+            default_llm_id: llm_model.id,
+            allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+          )
+        end
 
         before do
           SiteSetting.ai_discover_enabled = true
@@ -164,7 +199,13 @@ RSpec.describe DiscourseAi::AiCreditsController do
 
       context "with both agent_ids and features params" do
         fab!(:llm_model) { Fabricate(:llm_model, id: -3) }
-        fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
+        fab!(:ai_agent) do
+          Fabricate(
+            :ai_agent,
+            default_llm_id: llm_model.id,
+            allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+          )
+        end
         fab!(:llm_credit_allocation) do
           Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
         end
@@ -188,7 +229,20 @@ RSpec.describe DiscourseAi::AiCreditsController do
       end
 
       context "with llm_model_ids param" do
+        fab!(:admin)
         fab!(:llm_model) { Fabricate(:llm_model, id: -100) }
+
+        before { sign_in(admin) }
+
+        it "returns empty for non-staff users" do
+          sign_in(user)
+
+          Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
+          get "/discourse-ai/credits/status.json", params: { llm_model_ids: [llm_model.id] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["llm_models"]).to eq({})
+        end
 
         it "returns empty for model without credit allocation" do
           get "/discourse-ai/credits/status.json", params: { llm_model_ids: [llm_model.id] }
