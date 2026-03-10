@@ -505,14 +505,14 @@ class TopicsController < ApplicationController
       )
     end
 
-    success =
-      PostRevisor.new(topic.first_post, topic).revise!(
-        current_user,
-        { tags: },
-        validate_post: false,
-      )
+    revisor = PostRevisor.new(topic.first_post, topic)
+    revised = revisor.revise!(current_user, { tags: }, validate_post: false)
 
-    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+    if revised || topic.errors.blank?
+      render_serialized(topic, BasicTopicSerializer)
+    else
+      render_json_error(topic)
+    end
   end
 
   def feature_stats

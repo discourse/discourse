@@ -2362,6 +2362,15 @@ RSpec.describe TopicsController do
             end
           end
 
+          it "returns success when updating with empty tags on a topic with no tags" do
+            expect(topic.tags).to be_empty
+
+            put "/t/#{topic.id}/tags.json"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["errors"]).to be_nil
+          end
+
           it "can update tags" do
             expect do
               put "/t/#{topic.id}/tags.json", params: { tags: [{ id: tag.id, name: tag.name }] }
