@@ -71,6 +71,15 @@ class Plugin::Instance
     File.dirname(path)
   end
 
+  def resolved_dir
+    @resolved_dir ||=
+      if File.symlink?(root_dir)
+        File.expand_path(File.readlink(root_dir), "#{Rails.root}/plugins")
+      else
+        root_dir
+      end
+  end
+
   def seed_data
     @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
