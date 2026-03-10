@@ -589,7 +589,7 @@ after_initialize do
             HTML
 
           event_node.replace <<~HTML
-            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px;">
+            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px; width: 100%;">
               #{rows}
             </table>
           HTML
