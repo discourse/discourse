@@ -153,22 +153,20 @@ module PageObjects
       end
 
       def has_history_items?(count:)
-        expect(page).to have_css(".timeline-event", count: count)
+        page.has_css?(".timeline-event", count: count)
       end
 
       def has_claimed_history_item?(user)
-        expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
-        expect(page).to have_text("Claimed by")
+        page.has_css?(".timeline-event__icon .d-icon-user-plus") && page.has_text?("Claimed by")
       end
 
       def has_unclaimed_history_item?(user)
-        expect(page).to have_css(".timeline-event__icon .d-icon-user-xmark")
-        expect(page).to have_text("Unclaimed by")
+        page.has_css?(".timeline-event__icon .d-icon-user-xmark") && page.has_text?("Unclaimed by")
       end
 
       def has_created_at_history_item?
-        expect(page).to have_css(".timeline-event__icon .d-icon-pen-to-square")
-        expect(page).to have_text("Post created by")
+        page.has_css?(".timeline-event__icon .d-icon-pen-to-square") &&
+          page.has_text?("Post created by")
       end
 
       def click_timeline_tab
