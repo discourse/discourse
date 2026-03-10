@@ -28,5 +28,9 @@
 
   &__control-checkbox-description {
     color: var(--primary-medium);
+
+    &:empty {
+      display: none;
+    }
   }
 }
