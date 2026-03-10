@@ -354,4 +354,102 @@ RSpec.describe GroupUser do
     Promotion.expects(:recalculate).never
     group_user.destroy!
   end
+
+  describe ".bulk_set_category_notifications" do
+    fab!(:group)
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:category1, :category)
+    fab!(:category2, :category)
+
+    it "does nothing when group has no category notification defaults" do
+      expect { GroupUser.bulk_set_category_notifications(group, [user1.id]) }.not_to change {
+        CategoryUser.count
+      }
+    end
+
+    it "sets category notifications for multiple users" do
+      group.watching_category_ids = [category1.id]
+      group.tracking_category_ids = [category2.id]
+      group.save!
+
+      GroupUser.bulk_set_category_notifications(group, [user1.id, user2.id])
+
+      expect(
+        CategoryUser.where(user_id: user1.id, category_id: category1.id).first.notification_level,
+      ).to eq(CategoryUser.notification_levels[:watching])
+      expect(
+        CategoryUser.where(user_id: user1.id, category_id: category2.id).first.notification_level,
+      ).to eq(CategoryUser.notification_levels[:tracking])
+      expect(
+        CategoryUser.where(user_id: user2.id, category_id: category1.id).first.notification_level,
+      ).to eq(CategoryUser.notification_levels[:watching])
+    end
+
+    it "keeps the semantically higher notification level on conflict" do
+      CategoryUser.create!(
+        user_id: user1.id,
+        category_id: category1.id,
+        notification_level: CategoryUser.notification_levels[:watching],
+      )
+
+      group.tracking_category_ids = [category1.id]
+      group.save!
+
+      GroupUser.bulk_set_category_notifications(group, [user1.id])
+
+      expect(
+        CategoryUser.where(user_id: user1.id, category_id: category1.id).first.notification_level,
+      ).to eq(CategoryUser.notification_levels[:watching])
+    end
+  end
+
+  describe ".bulk_set_tag_notifications" do
+    fab!(:group)
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+
+    it "does nothing when group has no tag notification defaults" do
+      expect { GroupUser.bulk_set_tag_notifications(group, [user1.id]) }.not_to change {
+        TagUser.count
+      }
+    end
+
+    it "sets tag notifications for multiple users" do
+      group.watching_tags = [tag1.name]
+      group.tracking_tags = [tag2.name]
+      group.save!
+
+      GroupUser.bulk_set_tag_notifications(group, [user1.id, user2.id])
+
+      expect(TagUser.where(user_id: user1.id, tag_id: tag1.id).first.notification_level).to eq(
+        TagUser.notification_levels[:watching],
+      )
+      expect(TagUser.where(user_id: user1.id, tag_id: tag2.id).first.notification_level).to eq(
+        TagUser.notification_levels[:tracking],
+      )
+      expect(TagUser.where(user_id: user2.id, tag_id: tag1.id).first.notification_level).to eq(
+        TagUser.notification_levels[:watching],
+      )
+    end
+
+    it "keeps the semantically higher notification level on conflict" do
+      TagUser.create!(
+        user_id: user1.id,
+        tag_id: tag1.id,
+        notification_level: TagUser.notification_levels[:watching],
+      )
+
+      group.tracking_tags = [tag1.name]
+      group.save!
+
+      GroupUser.bulk_set_tag_notifications(group, [user1.id])
+
+      expect(TagUser.where(user_id: user1.id, tag_id: tag1.id).first.notification_level).to eq(
+        TagUser.notification_levels[:watching],
+      )
+    end
+  end
 end
