@@ -4,6 +4,12 @@ class AiAgent < ActiveRecord::Base
   # TODO remove tool_details from ignored_columns 01-02-2027
   self.ignored_columns = %i[tool_details]
 
+  # Between the regular migration (which creates ai_agents as a VIEW over
+  # ai_personas) and the post-migration (which does the actual rename_table),
+  # PostgreSQL views don't expose primary-key metadata, causing
+  # ActiveRecord::UnknownPrimaryKey. Declaring it explicitly avoids this.
+  self.primary_key = "id"
+
   # places a hard limit, so per site we cache a maximum of 500 classes
   MAX_AGENTS_PER_SITE = 500
 
