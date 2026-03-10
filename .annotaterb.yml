@@ -29,7 +29,7 @@
 :show_foreign_keys: true
 :show_indexes: true
 :simple_indexes: false
-:sort: false
+:sort: true
 :timestamp: false
 :trace: false
 :with_comment: false
