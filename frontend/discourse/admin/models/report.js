@@ -1,5 +1,6 @@
 import EmberObject, { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { REPORT_MODES } from "discourse/admin/lib/constants";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
 import { durationTiny, number } from "discourse/lib/formatter";
@@ -222,7 +223,7 @@ export default class Report extends EmberObject {
   }
 
   get combinedData() {
-    if (this.data[0].label) {
+    if (this.modes?.includes(REPORT_MODES.stacked_chart)) {
       return Object.values(
         this.data
           .flatMap((series) => series.data)

@@ -2,16 +2,12 @@
 
 describe "Admin Dashboard General Tab", type: :system do
   fab!(:admin)
+  fab!(:user)
+  fab!(:user_visit) { Fabricate(:user_visit, user: admin) }
+  fab!(:user_visit_2) { Fabricate(:user_visit, user: user, mobile: true) }
+  fab!(:user_visit_3) { Fabricate(:user_visit, user: user, visited_at: 1.day.ago) }
 
-  before do
-    freeze_time DateTime.parse("2026-03-09")
-
-    sign_in(current_user)
-
-    UserVisit.create!(user_id: current_user.id, visited_at: Date.today, mobile: false)
-    UserVisit.create!(user_id: Fabricate(:user).id, visited_at: Date.today, mobile: true)
-    UserVisit.create!(user_id: Fabricate(:user).id, visited_at: 1.day.ago.to_date, mobile: false)
-  end
+  before { sign_in(admin) }
 
   context "when reporting_improvements is enabled" do
     before { SiteSetting.reporting_improvements = true }
