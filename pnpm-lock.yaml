@@ -119,8 +119,8 @@ importers:
         specifier: ^7.28.5
         version: 7.29.0(@babel/core@7.29.0)(supports-color@8.1.1)
       '@babel/standalone':
-        specifier: ^7.28.5
-        version: 7.28.5
+        specifier: ^7.29.1
+        version: 7.29.1
       '@csstools/postcss-light-dark-function':
         specifier: ^3.0.0
         version: 3.0.0(postcss@8.5.8)
@@ -387,8 +387,8 @@ importers:
         specifier: ^7.28.5
         version: 7.29.0(supports-color@8.1.1)
       '@babel/standalone':
-        specifier: ^7.28.5
-        version: 7.28.5
+        specifier: ^7.29.1
+        version: 7.29.1
       '@colors/colors':
         specifier: ^1.6.0
         version: 1.6.0
@@ -1627,8 +1627,8 @@ packages:
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/standalone@7.28.5':
-    resolution: {integrity: sha512-1DViPYJpRU50irpGMfLBQ9B4kyfQuL6X7SS7pwTeWeZX0mNkjzPi0XFqxCjSdddZXUQy4AhnQnnesA/ZHnvAdw==}
+  '@babel/standalone@7.29.1':
+    resolution: {integrity: sha512-z42abD0C6fiHfgLyCWw8PYv6FCJ0IGVtSCxXk/NPykWO5LNIEGfdLDJ3HdYqlPcAhwtQ3oKH1PvNj2JGpTxQKg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.28.6':
@@ -10449,7 +10449,7 @@ snapshots:
 
   '@babel/runtime@7.28.4': {}
 
-  '@babel/standalone@7.28.5': {}
+  '@babel/standalone@7.29.1': {}
 
   '@babel/template@7.28.6':
     dependencies:
