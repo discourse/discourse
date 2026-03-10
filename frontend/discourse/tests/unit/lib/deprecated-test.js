@@ -6,7 +6,6 @@ import deprecated, {
   withSilencedDeprecations,
   withSilencedDeprecationsAsync,
 } from "discourse/lib/deprecated";
-import * as sourceIdentifier from "discourse/lib/source-identifier";
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import {
   disableRaiseOnDeprecation,
@@ -136,21 +135,20 @@ module("Unit | Utility | deprecated", function (hooks) {
   });
 
   test("includes console prefix from source identifier", function (assert) {
-    const consolePrefixStub = Sinon.stub(
-      sourceIdentifier,
-      "consolePrefix"
-    ).returns("[THEME 123 'test-theme']");
-
-    try {
-      deprecated("My message", { id: "discourse.test" });
-      assert.strictEqual(this.warnStub.callCount, 1);
-      assert.deepEqual(this.warnStub.args[0], [
-        "[THEME 123 'test-theme']",
-        "DEPRECATION NOTICE: My message [deprecation id: discourse.test]",
-      ]);
-    } finally {
-      consolePrefixStub.restore();
-    }
+    deprecated("My message", {
+      id: "discourse.test",
+      source: {
+        type: "theme",
+        id: "123",
+        name: "test-theme",
+        path: "/admin/customize/themes/123?safe_mode=no_themes",
+      },
+    });
+    assert.strictEqual(this.warnStub.callCount, 1);
+    assert.deepEqual(this.warnStub.args[0], [
+      "[THEME 123 'test-theme']",
+      "DEPRECATION NOTICE: My message [deprecation id: discourse.test]",
+    ]);
   });
 
   test("can silence individual deprecations in tests", function (assert) {
