@@ -338,6 +338,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   deleteCategory() {
+    if (this.deleteDisabled) {
+      return;
+    }
+
     this.set("deleting", true);
     this.dialog.deleteConfirm({
       title: i18n("category.delete_confirm"),
@@ -360,6 +364,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   toggleDeleteTooltip() {
+    if (this.deleteDisabled) {
+      return;
+    }
+
     this.toggleProperty("showTooltip");
   }
 

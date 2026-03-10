@@ -5,7 +5,7 @@ import { or } from "discourse/truth-helpers/index";
 
 export default class FKEmphasis extends Component {
   get type() {
-    return this.args.type || "info";
+    return this.args.type || "default";
   }
 
   <template>
@@ -13,7 +13,7 @@ export default class FKEmphasis extends Component {
       class={{concatClass
         "form-kit__section"
         "emphasis"
-        (concat "emphasis-" this.type)
+        (if this.type (concat "emphasis-" this.type))
         @class
       }}
       ...attributes
