@@ -76,6 +76,16 @@ module Categories
           raise NotImplementedError
         end
 
+        # Returns a relation for categories that match this type (for counting, listing, etc.).
+        # Override in subclasses that match a subset of categories (e.g. by custom_fields).
+        #
+        # Basically the same as category_matches but for a list instead.
+        #
+        # See Categories::TypeRegistry.counts for an example of how this is used.
+        def find_matches
+          raise NotImplementedError
+        end
+
         # Use this to enable any related plugin for the category type,
         # since we register category types without the plugin being enabled.
         #
