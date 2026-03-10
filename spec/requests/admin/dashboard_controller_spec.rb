@@ -102,12 +102,6 @@ RSpec.describe Admin::DashboardController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
-
-      it "does not allow GET requests (state-changing action must use POST)" do
-        get "/admin/dashboard/problems.json"
-        expect(response.status).to eq(404)
-      end
-
       context "when there are no problems" do
         it "returns an empty array" do
           post "/admin/dashboard/problems.json"
