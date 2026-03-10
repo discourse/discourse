@@ -54,39 +54,39 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
       it "adds information about forcing default llm to current_user_serializer" do
         Group.refresh_automatic_groups!
 
-        persona =
+        agent =
           Fabricate(
-            :ai_persona,
+            :ai_agent,
             enabled: true,
             allowed_group_ids: [bot_allowed_group.id],
             default_llm_id: claude_2.id,
             force_default_llm: true,
           )
-        persona.create_user!
+        agent.create_user!
 
         serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin))
         serializer = serializer.as_json
         bots = serializer[:current_user][:ai_enabled_chat_bots]
 
-        persona_bot = bots.find { |bot| bot["id"] == persona.user_id }
+        agent_bot = bots.find { |bot| bot["id"] == agent.user_id }
 
-        expect(persona_bot["username"]).to eq(persona.user.username)
-        expect(persona_bot["force_default_llm"]).to eq(true)
+        expect(agent_bot["username"]).to eq(agent.user.username)
+        expect(agent_bot["force_default_llm"]).to eq(true)
       end
 
-      it "includes user ids for all personas in the serializer" do
+      it "includes user ids for all agents in the serializer" do
         Group.refresh_automatic_groups!
 
-        persona = Fabricate(:ai_persona, enabled: true, allowed_group_ids: [bot_allowed_group.id])
-        persona.create_user!
+        agent = Fabricate(:ai_agent, enabled: true, allowed_group_ids: [bot_allowed_group.id])
+        agent.create_user!
 
         serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin))
         serializer = serializer.as_json
         bots = serializer[:current_user][:ai_enabled_chat_bots]
 
-        persona_bot = bots.find { |bot| bot["id"] == persona.user_id }
-        expect(persona_bot["username"]).to eq(persona.user.username)
-        expect(persona_bot["force_default_llm"]).to eq(false)
+        agent_bot = bots.find { |bot| bot["id"] == agent.user_id }
+        expect(agent_bot["username"]).to eq(agent.user.username)
+        expect(agent_bot["force_default_llm"]).to eq(false)
       end
 
       it "queues a job to generate a reply by the AI" do
@@ -178,9 +178,9 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
       end
     end
 
-    it "will include ai_search_discoveries field in the user_option if discover persona is enabled" do
+    it "will include ai_search_discoveries field in the user_option if discover agent is enabled" do
       SiteSetting.ai_discover_enabled = true
-      SiteSetting.ai_discover_persona = Fabricate(:ai_persona).id
+      SiteSetting.ai_discover_agent = Fabricate(:ai_agent).id
 
       user = Fabricate(:user)
       user.user_option.update!(ai_search_discoveries: true)

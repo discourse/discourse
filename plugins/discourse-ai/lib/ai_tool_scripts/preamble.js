@@ -168,11 +168,11 @@
  *      user_id_or_username (number | string): The ID or username of the user.
  *    Returns: Object (User details using UserSerializer structure) or null if not found.
  *
- *    discourse.getPersona(name): Gets an object representing another AI Persona configured on the site.
+ *    discourse.getAgent(name): Gets an object representing another AI Agent configured on the site.
  *    Parameters:
- *      name (string): The name of the target persona.
- *    Returns: Object { respondTo: function(params) } or null if persona not found.
- *      respondTo(params): Instructs the target persona to generate a response within the current context (e.g., replying to the same post or chat message).
+ *      name (string): The name of the target agent.
+ *    Returns: Object { respondTo: function(params) } or null if agent not found.
+ *      respondTo(params): Instructs the target agent to generate a response within the current context (e.g., replying to the same post or chat message).
  *      Parameters:
  *        params (Object, optional): { instructions: string, whisper: boolean }
  *      Returns: { success: boolean, post_id?: number, post_number?: number, message_id?: number } or { error: string }
@@ -240,8 +240,8 @@
  *    Invocation Contexts:
  *
  *    A) AI Bot Conversation (Post context):
- *       When a user mentions an AI persona in a topic or PM, tools run with:
- *         context.post_id (number): The post that triggered the persona.
+ *       When a user mentions an AI agent in a topic or PM, tools run with:
+ *         context.post_id (number): The post that triggered the agent.
  *         context.topic_id (number): The topic containing the post.
  *         context.private_message (boolean): Whether this is a PM.
  *         context.participants (string): Comma-separated usernames (in PMs).
@@ -249,7 +249,7 @@
  *         context.user_id (number): The user's ID.
  *
  *    B) Chat Context:
- *       When a user mentions an AI persona in a chat channel:
+ *       When a user mentions an AI agent in a chat channel:
  *         context.message_id (number): The chat message that triggered the tool.
  *         context.channel_id (number): The chat channel ID.
  *         context.username (string): The user who sent the message.

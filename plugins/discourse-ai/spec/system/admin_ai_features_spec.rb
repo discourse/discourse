@@ -3,7 +3,7 @@
 RSpec.describe "Admin AI features configuration", type: :system do
   fab!(:admin)
   fab!(:llm_model)
-  fab!(:summarization_persona, :ai_persona)
+  fab!(:summarization_agent, :ai_agent)
   fab!(:group_1, :group)
   fab!(:group_2, :group)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
@@ -12,15 +12,15 @@ RSpec.describe "Admin AI features configuration", type: :system do
 
   before do
     enable_current_plugin
-    summarization_persona.allowed_group_ids = [group_1.id, group_2.id]
-    summarization_persona.save!
+    summarization_agent.allowed_group_ids = [group_1.id, group_2.id]
+    summarization_agent.save!
     assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
-    SiteSetting.ai_summarization_persona = summarization_persona.id
+    SiteSetting.ai_summarization_agent = summarization_agent.id
     sign_in(admin)
   end
 
-  it "lists all persona backed AI features separated by configured/unconfigured" do
+  it "lists all agent backed AI features separated by configured/unconfigured" do
     ai_features_page.visit
     ai_features_page.toggle_configured
 
@@ -32,12 +32,12 @@ RSpec.describe "Admin AI features configuration", type: :system do
     expect(ai_features_page).to have_listed_modules(8)
   end
 
-  it "lists the persona used for the corresponding AI feature" do
+  it "lists the agent used for the corresponding AI feature" do
     ai_features_page.visit
 
     ai_features_page.toggle_configured
 
-    expect(ai_features_page).to have_feature_persona("topic_summaries", summarization_persona.name)
+    expect(ai_features_page).to have_feature_agent("topic_summaries", summarization_agent.name)
   end
 
   it "lists the groups allowed to use the AI feature" do

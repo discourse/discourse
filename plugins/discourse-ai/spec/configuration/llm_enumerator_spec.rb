@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Configuration::LlmEnumerator do
   fab!(:fake_model)
-  fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: fake_model.id) }
+  fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: fake_model.id) }
   fab!(:llm_model)
   fab!(:seeded_model)
   fab!(:automation) do
@@ -33,12 +33,12 @@ RSpec.describe DiscourseAi::Configuration::LlmEnumerator do
   describe "#global_usage" do
     it "returns a hash of Llm models in use globally" do
       assign_fake_provider_to(:ai_default_llm_model)
-      SiteSetting.ai_helper_proofreader_persona = ai_persona.id
+      SiteSetting.ai_helper_proofreader_agent = ai_agent.id
       SiteSetting.ai_helper_enabled = true
       expect(described_class.global_usage).to eq(
         fake_model.id => [{ type: :ai_helper }],
         fake_model.id => [
-          { id: ai_persona.id, name: ai_persona.name, type: :ai_persona },
+          { id: ai_agent.id, name: ai_agent.name, type: :ai_agent },
           { name: "Proofread text", type: :ai_helper },
         ],
       )
@@ -57,7 +57,7 @@ RSpec.describe DiscourseAi::Configuration::LlmEnumerator do
       usage = described_class.global_usage
 
       expect(usage).to eq(
-        fake_model.id => [{ id: ai_persona.id, name: ai_persona.name, type: :ai_persona }],
+        fake_model.id => [{ id: ai_agent.id, name: ai_agent.name, type: :ai_agent }],
         llm_model.id => [{ id: automation.id, name: automation.name, type: :automation }],
       )
     end

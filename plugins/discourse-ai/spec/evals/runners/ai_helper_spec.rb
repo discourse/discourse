@@ -8,11 +8,11 @@ RSpec.describe DiscourseAi::Evals::Runners::AiHelper do
     let(:llm) { Fabricate.build(:fake_model) }
     let(:execution_context) { DiscourseAi::Completions::ExecutionContext.new }
     let(:eval_case) { OpenStruct.new(args: { input: "We need new titles." }) }
-    let(:titles_persona) { DiscourseAi::Personas::TitlesGenerator.new }
+    let(:titles_agent) { DiscourseAi::Agents::TitlesGenerator.new }
     let(:runner) { described_class.new("title_suggestions") }
 
     before do
-      stub_runner_bot(persona: titles_persona) do |blk|
+      stub_runner_bot(agent: titles_agent) do |blk|
         structured_output =
           instance_double(
             DiscourseAi::Completions::StructuredOutput,

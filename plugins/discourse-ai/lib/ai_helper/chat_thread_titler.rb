@@ -22,21 +22,20 @@ module DiscourseAi
       private
 
       def call_llm(thread_content)
-        ai_persona =
-          AiPersona.find_by_id_from_cache(SiteSetting.ai_helper_chat_thread_title_persona)
-        return nil if ai_persona.blank?
+        ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_helper_chat_thread_title_agent)
+        return nil if ai_agent.blank?
 
-        persona_klass = ai_persona.class_instance
-        llm_model = Assistant.find_ai_helper_model(FEATURE_NAME, persona_klass)
+        agent_klass = ai_agent.class_instance
+        llm_model = Assistant.find_ai_helper_model(FEATURE_NAME, agent_klass)
         return nil if llm_model.blank?
 
-        persona = persona_klass.new
+        agent = agent_klass.new
         user = Discourse.system_user
 
-        bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm_model)
+        bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm_model)
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: user,
             skip_show_thinking: true,
             feature_name: FEATURE_NAME,

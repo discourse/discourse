@@ -20,7 +20,7 @@ module Jobs
       return if limit <= 0
 
       short_text_llm_model =
-        find_llm_model_for_persona(SiteSetting.ai_translation_short_text_translator_persona)
+        find_llm_model_for_agent(SiteSetting.ai_translation_short_text_translator_agent)
       return if short_text_llm_model.blank?
 
       tags =
@@ -62,13 +62,13 @@ module Jobs
 
     private
 
-    def find_llm_model_for_persona(persona_id)
-      return nil if persona_id.blank?
+    def find_llm_model_for_agent(agent_id)
+      return nil if agent_id.blank?
 
-      persona_klass = AiPersona.find_by_id_from_cache(persona_id)
-      return nil if persona_klass.blank?
+      agent_klass = AiAgent.find_by_id_from_cache(agent_id)
+      return nil if agent_klass.blank?
 
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
     end
   end
 end

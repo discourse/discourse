@@ -99,10 +99,10 @@ module Jobs
     end
 
     def find_llm_model
-      persona_klass = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
-      return nil if persona_klass.blank?
+      agent_klass = AiAgent.find_by_id_from_cache(SiteSetting.ai_summarization_agent)
+      return nil if agent_klass.blank?
 
-      DiscourseAi::Summarization.find_summarization_model(persona_klass)
+      DiscourseAi::Summarization.find_summarization_model(agent_klass)
     end
   end
 end

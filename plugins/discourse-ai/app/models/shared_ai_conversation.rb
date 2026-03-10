@@ -53,13 +53,13 @@ class SharedAiConversation < ActiveRecord::Base
   # but this name works
   class SharedPost
     attr_accessor :user
-    attr_reader :id, :user_id, :created_at, :cooked, :persona
+    attr_reader :id, :user_id, :created_at, :cooked, :agent
     def initialize(post)
       @id = post[:id]
       @user_id = post[:user_id]
       @created_at = DateTime.parse(post[:created_at])
       @cooked = post[:cooked]
-      @persona = post[:persona]
+      @agent = post[:agent]
     end
   end
 
@@ -142,9 +142,9 @@ class SharedAiConversation < ActiveRecord::Base
     llm_name = ActiveSupport::Inflector.humanize(llm_name) if llm_name
     llm_name ||= I18n.t("discourse_ai.unknown_model")
 
-    persona = nil
-    if persona_id = topic.custom_fields["ai_persona_id"]
-      persona = AiPersona.find_by(id: persona_id.to_i)&.name
+    agent = nil
+    if agent_id = topic.custom_fields["ai_agent_id"]
+      agent = AiAgent.find_by(id: agent_id.to_i)&.name
     end
 
     posts =
@@ -169,7 +169,7 @@ class SharedAiConversation < ActiveRecord::Base
             cooked: cook_artifacts(post),
           }
 
-          mapped[:persona] = persona if ai_bot_participant&.id == post.user_id
+          mapped[:agent] = agent if ai_bot_participant&.id == post.user_id
           mapped[:username] = post.user&.username if include_usernames
           mapped
         end,

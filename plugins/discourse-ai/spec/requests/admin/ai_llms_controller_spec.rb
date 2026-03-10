@@ -12,10 +12,10 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
   describe "GET #index" do
     fab!(:llm_model)
     fab!(:llm_model2, :llm_model)
-    fab!(:ai_persona) do
+    fab!(:ai_agent) do
       Fabricate(
-        :ai_persona,
-        name: "Cool persona",
+        :ai_agent,
+        name: "Cool agent",
         force_default_llm: true,
         default_llm_id: llm_model2.id,
       )
@@ -55,7 +55,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
       # setting the setting calls the model
       DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) do
-        SiteSetting.ai_helper_proofreader_persona = ai_persona.id
+        SiteSetting.ai_helper_proofreader_agent = ai_agent.id
         SiteSetting.ai_helper_enabled = true
       end
 
@@ -77,7 +77,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       model2_json = llms.find { |m| m["id"] == llm_model2.id }
 
       expect(model2_json["used_by"]).to contain_exactly(
-        { "type" => "ai_persona", "name" => "Cool persona", "id" => ai_persona.id },
+        { "type" => "ai_agent", "name" => "Cool agent", "id" => ai_agent.id },
         { "type" => "ai_helper", "name" => "Proofread text" },
       )
 
@@ -600,7 +600,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
   describe "DELETE #destroy" do
     fab!(:llm_model)
 
-    it "destroys the requested ai_persona" do
+    it "destroys the requested ai_agent" do
       expect {
         delete "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json"
 
@@ -627,7 +627,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     end
 
     context "with llms configured" do
-      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+      fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
 
       it "validates the model is not in use" do
         delete "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json"

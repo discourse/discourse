@@ -326,7 +326,7 @@ describe Jobs::LocalizePosts do
 
       # Should call LlmModel.find_by only twice for the entire batch:
       # 1. Once in credits_available_for_post_localization? check
-      # 2. Once in the job's find_llm_model_for_persona for caching
+      # 2. Once in the job's find_llm_model_for_agent for caching
       # Without caching, it would be called 2 + (number of posts) times
       expect(find_by_call_count).to eq(2)
     end

@@ -38,12 +38,12 @@ RSpec.describe "AI Bot - Homepage", type: :system do
     claude_2.reload.user
   end
   fab!(:bot) do
-    persona =
-      AiPersona
-        .find(DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::General])
+    agent =
+      AiAgent
+        .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
         .class_instance
         .new
-    DiscourseAi::Personas::Bot.as(bot_user, persona: persona)
+    DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
   end
 
   fab!(:pm) do
@@ -76,23 +76,23 @@ RSpec.describe "AI Bot - Homepage", type: :system do
   fab!(:topic_user) { Fabricate(:topic_user, topic: pm, user: user) }
   fab!(:topic_bot_user) { Fabricate(:topic_user, topic: pm, user: bot_user) }
 
-  fab!(:persona) do
-    persona =
-      AiPersona.create!(
-        name: "Test Persona",
-        description: "A test persona",
+  fab!(:agent) do
+    agent =
+      AiAgent.create!(
+        name: "Test Agent",
+        description: "A test agent",
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
         enabled: true,
         system_prompt: "You are a helpful bot",
       )
 
-    persona.create_user!
-    persona.update!(
+    agent.create_user!
+    agent.update!(
       default_llm_id: claude_2.id,
       allow_chat_channel_mentions: true,
       allow_topic_mentions: true,
     )
-    persona
+    agent
   end
 
   before do
@@ -242,33 +242,33 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       expect(sidebar).to have_section_link(pm.title)
     end
 
-    it "allows navigating to a specific LLM and persona" do
+    it "allows navigating to a specific LLM and agent" do
       # url encode name
-      persona_name = CGI.escape(persona.name)
+      agent_name = CGI.escape(agent.name)
       llm_name = CGI.escape(claude_2_dup.display_name)
-      visit "/discourse-ai/ai-bot/conversations?persona=#{persona_name}&llm=#{llm_name}"
+      visit "/discourse-ai/ai-bot/conversations?agent=#{agent_name}&llm=#{llm_name}"
 
-      ai_pm_homepage.persona_selector.expand # not needed, but helps to see what the list has
-      expect(ai_pm_homepage.persona_selector).to have_selected_name(persona.name)
+      ai_pm_homepage.agent_selector.expand # not needed, but helps to see what the list has
+      expect(ai_pm_homepage.agent_selector).to have_selected_name(agent.name)
       expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
     end
 
-    it "removes persona from selector when allow_personal_messages is disabled" do
+    it "removes agent from selector when allow_personal_messages is disabled" do
       begin
-        persona.update!(allow_personal_messages: false)
+        agent.update!(allow_personal_messages: false)
         ai_pm_homepage.visit
-        ai_pm_homepage.persona_selector.expand
-        expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+        ai_pm_homepage.agent_selector.expand
+        expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
       ensure
-        persona.update!(allow_personal_messages: true)
+        agent.update!(allow_personal_messages: true)
       end
     end
 
-    it "includes persona in selector when allow_personal_messages is enabled" do
+    it "includes agent in selector when allow_personal_messages is enabled" do
       # default is true
       ai_pm_homepage.visit
-      ai_pm_homepage.persona_selector.expand
-      expect(ai_pm_homepage.persona_selector).to have_option_name(persona.name)
+      ai_pm_homepage.agent_selector.expand
+      expect(ai_pm_homepage.agent_selector).to have_option_name(agent.name)
     end
 
     it "shows empty state when no PMs exist" do
@@ -388,7 +388,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       expect(sidebar).to have_no_section_link(pm.title)
     end
 
-    it "Allows choosing persona and LLM" do
+    it "Allows choosing agent and LLM" do
       ai_pm_homepage.visit
 
       ai_pm_homepage.llm_selector.expand

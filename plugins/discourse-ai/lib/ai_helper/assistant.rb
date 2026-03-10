@@ -37,8 +37,8 @@ module DiscourseAi
             next if !user.in_any_groups?(prompt[:allowed_group_ids])
 
             if prompt[:name] == ILLUSTRATE_POST
-              persona = AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
-              next if persona.blank? || !persona_has_image_generation_tool?(persona)
+              agent = AiAgent.find_by(id: SiteSetting.ai_helper_post_illustrator_agent)
+              next if agent.blank? || !agent_has_image_generation_tool?(agent)
             end
 
             # We cannot cache this. It depends on the user's effective_locale.
@@ -116,7 +116,7 @@ module DiscourseAi
         end
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: user,
             skip_show_thinking: true,
             feature_name: "ai_helper",
@@ -127,7 +127,7 @@ module DiscourseAi
         context = attach_user_context(context, user, force_default_locale: force_default_locale)
 
         bad_json = false
-        json_summary_schema_key = bot.persona.response_format&.first.to_h
+        json_summary_schema_key = bot.agent.response_format&.first.to_h
 
         schema_key = json_summary_schema_key["key"]&.to_sym
         schema_type = json_summary_schema_key["type"]
@@ -251,7 +251,7 @@ module DiscourseAi
         force_default_locale = false
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: user,
             skip_show_thinking: true,
             feature_name: IMAGE_CAPTION,
@@ -270,7 +270,7 @@ module DiscourseAi
           Proc.new do |partial, _, type|
             if type == :structured_output
               structured_output = partial
-              bot.persona.response_format&.first.to_h
+              bot.agent.response_format&.first.to_h
             end
           end
 
@@ -279,7 +279,7 @@ module DiscourseAi
         raw_caption = ""
 
         if structured_output
-          json_summary_schema_key = bot.persona.response_format&.first.to_h
+          json_summary_schema_key = bot.agent.response_format&.first.to_h
           raw_caption =
             structured_output.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
         end
@@ -289,41 +289,41 @@ module DiscourseAi
 
       private
 
-      def persona_has_image_generation_tool?(persona)
-        persona&.has_image_generation_tool?
+      def agent_has_image_generation_tool?(agent)
+        agent&.has_image_generation_tool?
       rescue StandardError => e
         Rails.logger.warn(
-          "Failed to check image generation tool for persona #{persona&.id}: #{e.message}",
+          "Failed to check image generation tool for agent #{agent&.id}: #{e.message}",
         )
         false
       end
 
       def build_bot(helper_mode, user)
-        persona_id = personas_prompt_map(include_image_caption: true).invert[helper_mode]
-        raise Discourse::InvalidParameters.new(:mode) if persona_id.blank?
+        agent_id = agents_prompt_map(include_image_caption: true).invert[helper_mode]
+        raise Discourse::InvalidParameters.new(:mode) if agent_id.blank?
 
-        persona_klass = AiPersona.find_by(id: persona_id)&.class_instance
-        return if persona_klass.nil?
+        agent_klass = AiAgent.find_by(id: agent_id)&.class_instance
+        return if agent_klass.nil?
 
-        llm_model = find_ai_helper_model(helper_mode, persona_klass)
+        llm_model = find_ai_helper_model(helper_mode, agent_klass)
 
-        DiscourseAi::Personas::Bot.as(user, persona: persona_klass.new, model: llm_model)
+        DiscourseAi::Agents::Bot.as(user, agent: agent_klass.new, model: llm_model)
       end
 
-      def find_ai_helper_model(helper_mode, persona_klass)
+      def find_ai_helper_model(helper_mode, agent_klass)
         if helper_mode == IMAGE_CAPTION && @image_caption_llm.is_a?(LlmModel)
           return @image_caption_llm
         end
 
         return @helper_llm if helper_mode != IMAGE_CAPTION && @helper_llm.is_a?(LlmModel)
-        self.class.find_ai_helper_model(helper_mode, persona_klass)
+        self.class.find_ai_helper_model(helper_mode, agent_klass)
       end
 
       # Priorities are:
-      #   1. Persona's default LLM
+      #   1. Agent's default LLM
       #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
-      def self.find_ai_helper_model(helper_mode, persona_klass)
-        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
+      def self.find_ai_helper_model(helper_mode, agent_klass)
+        model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
         if model_id.present?
           LlmModel.find_by(id: model_id)
@@ -332,31 +332,31 @@ module DiscourseAi
         end
       end
 
-      def personas_prompt_map(include_image_caption: false)
+      def agents_prompt_map(include_image_caption: false)
         map = {
-          SiteSetting.ai_helper_translator_persona.to_i => TRANSLATE,
-          SiteSetting.ai_helper_title_suggestions_persona.to_i => GENERATE_TITLES,
-          SiteSetting.ai_helper_proofreader_persona.to_i => PROOFREAD,
-          SiteSetting.ai_helper_markdown_tables_persona.to_i => MARKDOWN_TABLE,
-          SiteSetting.ai_helper_custom_prompt_persona.to_i => CUSTOM_PROMPT,
-          SiteSetting.ai_helper_explain_persona.to_i => EXPLAIN,
-          SiteSetting.ai_helper_post_illustrator_persona.to_i => ILLUSTRATE_POST,
-          SiteSetting.ai_helper_smart_dates_persona.to_i => REPLACE_DATES,
+          SiteSetting.ai_helper_translator_agent.to_i => TRANSLATE,
+          SiteSetting.ai_helper_title_suggestions_agent.to_i => GENERATE_TITLES,
+          SiteSetting.ai_helper_proofreader_agent.to_i => PROOFREAD,
+          SiteSetting.ai_helper_markdown_tables_agent.to_i => MARKDOWN_TABLE,
+          SiteSetting.ai_helper_custom_prompt_agent.to_i => CUSTOM_PROMPT,
+          SiteSetting.ai_helper_explain_agent.to_i => EXPLAIN,
+          SiteSetting.ai_helper_post_illustrator_agent.to_i => ILLUSTRATE_POST,
+          SiteSetting.ai_helper_smart_dates_agent.to_i => REPLACE_DATES,
         }
 
         if include_image_caption
-          image_caption_persona = SiteSetting.ai_helper_image_caption_persona.to_i
-          map[image_caption_persona] = IMAGE_CAPTION if image_caption_persona
+          image_caption_agent = SiteSetting.ai_helper_image_caption_agent.to_i
+          map[image_caption_agent] = IMAGE_CAPTION if image_caption_agent
         end
 
         map
       end
 
       def all_prompts
-        AiPersona
-          .where(id: personas_prompt_map.keys)
-          .map do |ai_persona|
-            prompt_name = personas_prompt_map[ai_persona.id]
+        AiAgent
+          .where(id: agents_prompt_map.keys)
+          .map do |ai_agent|
+            prompt_name = agents_prompt_map[ai_agent.id]
 
             if prompt_name
               {
@@ -367,7 +367,7 @@ module DiscourseAi
                 prompt_type: prompt_type(prompt_name),
                 icon: icon_map(prompt_name),
                 location: location_map(prompt_name),
-                allowed_group_ids: ai_persona.allowed_group_ids,
+                allowed_group_ids: ai_agent.allowed_group_ids,
               }
             end
           end

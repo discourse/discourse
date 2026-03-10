@@ -12,7 +12,7 @@ module DiscourseAi
         on_success do
           expires_in CREDIT_STATUS_CACHE_TTL, public: false
           render json: {
-                   personas: result[:personas],
+                   agents: result[:agents],
                    features: result[:features],
                    llm_models: result[:llm_models],
                  }.compact
@@ -26,7 +26,7 @@ module DiscourseAi
     private
 
     def status_params
-      params.permit(persona_ids: [], features: [], llm_model_ids: [])
+      params.permit(agent_ids: [], features: [], llm_model_ids: [])
     end
   end
 end

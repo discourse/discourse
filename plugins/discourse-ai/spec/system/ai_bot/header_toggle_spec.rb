@@ -23,8 +23,8 @@ RSpec.describe "AI Bot - Header Toggle", type: :system do
     group.add(user)
     group.save
 
-    allowed_persona = AiPersona.last
-    allowed_persona.update!(allowed_group_ids: [group.id], enabled: true)
+    allowed_agent = AiAgent.last
+    allowed_agent.update!(allowed_group_ids: [group.id], enabled: true)
 
     sign_in(user)
   end

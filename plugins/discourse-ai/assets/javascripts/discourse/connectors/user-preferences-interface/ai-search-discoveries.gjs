@@ -7,8 +7,8 @@ export default class AiSearchDiscoveries extends Component {
     return (
       siteSettings.discourse_ai_enabled &&
       siteSettings.ai_discover_enabled &&
-      siteSettings.ai_discover_persona &&
-      currentUser?.can_use_ai_discover_persona
+      siteSettings.ai_discover_agent &&
+      currentUser?.can_use_ai_discover_agent
     );
   }
 

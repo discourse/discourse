@@ -8,12 +8,12 @@ RSpec.describe DiscourseAi::AiHelper::ChatThreadTitler do
   fab!(:user)
   fab!(:llm_model)
 
-  let(:chat_thread_titler_persona) do
-    AiPersona.find_by(
-      id: DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ChatThreadTitler],
+  let(:chat_thread_titler_agent) do
+    AiAgent.find_by(
+      id: DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ChatThreadTitler],
     ) ||
       Fabricate(
-        :ai_persona,
+        :ai_agent,
         name: "Chat Thread Titler",
         system_prompt: "Generate a title",
         response_format: [{ "key" => "title", "type" => "string" }],
@@ -23,7 +23,7 @@ RSpec.describe DiscourseAi::AiHelper::ChatThreadTitler do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
-    SiteSetting.ai_helper_chat_thread_title_persona = chat_thread_titler_persona.id
+    SiteSetting.ai_helper_chat_thread_title_agent = chat_thread_titler_agent.id
   end
 
   describe "#suggested_title" do
@@ -46,8 +46,8 @@ RSpec.describe DiscourseAi::AiHelper::ChatThreadTitler do
       expect(result).to eq(expected_title)
     end
 
-    it "returns nil when persona is not found" do
-      SiteSetting.ai_helper_chat_thread_title_persona = 999_999
+    it "returns nil when agent is not found" do
+      SiteSetting.ai_helper_chat_thread_title_agent = 999_999
 
       result = titler.suggested_title
 

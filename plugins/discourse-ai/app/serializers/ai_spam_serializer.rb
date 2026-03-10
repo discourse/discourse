@@ -9,8 +9,8 @@ class AiSpamSerializer < ApplicationSerializer
              :flagging_username,
              :spam_score_type,
              :spam_scanning_user,
-             :ai_persona_id,
-             :available_personas
+             :ai_agent_id,
+             :available_agents
 
   def is_enabled
     object[:enabled]
@@ -20,9 +20,9 @@ class AiSpamSerializer < ApplicationSerializer
     settings&.llm_model&.id
   end
 
-  def ai_persona_id
-    settings&.ai_persona&.id ||
-      DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::SpamDetector]
+  def ai_agent_id
+    settings&.ai_agent_id || settings&.ai_agent&.id ||
+      DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::SpamDetector]
   end
 
   def custom_instructions
@@ -35,10 +35,8 @@ class AiSpamSerializer < ApplicationSerializer
     end
   end
 
-  def available_personas
-    DiscourseAi::Configuration::PersonaEnumerator.values.map do |h|
-      { id: h[:value], name: h[:name] }
-    end
+  def available_agents
+    DiscourseAi::Configuration::AgentEnumerator.values.map { |h| { id: h[:value], name: h[:name] } }
   end
 
   def flagging_username

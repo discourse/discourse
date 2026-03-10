@@ -120,7 +120,7 @@ module DiscourseAi
           if result.failure?
             failing_step = nil
             failing_step = "contract.default" if result[:"result.contract.default"]&.failure?
-            failing_step = "model.persona" if result[:"result.model.persona"]&.failure?
+            failing_step = "model.agent" if result[:"result.model.agent"]&.failure?
             failing_step = "policy.has_image_generation_tool" if result[
               :"result.policy.has_image_generation_tool"
             ]&.failure?
@@ -130,7 +130,7 @@ module DiscourseAi
               case failing_step
               when "contract.default"
                 422
-              when "model.persona"
+              when "model.agent"
                 404
               when "policy.has_image_generation_tool"
                 422
@@ -144,8 +144,8 @@ module DiscourseAi
               case failing_step
               when "contract.default"
                 "discourse_ai.ai_helper.errors.completion_request_failed"
-              when "model.persona"
-                "discourse_ai.ai_helper.errors.no_illustrator_persona"
+              when "model.agent"
+                "discourse_ai.ai_helper.errors.no_illustrator_agent"
               when "policy.has_image_generation_tool"
                 "discourse_ai.ai_helper.errors.no_image_generation_tool"
               when "model.llm_model"

@@ -3,10 +3,10 @@
 RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
   fab!(:admin)
   fab!(:llm) { Fabricate(:llm_model, name: "fake_llm", provider: "fake") }
-  fab!(:ai_persona) do
-    persona =
+  fab!(:ai_agent) do
+    agent =
       Fabricate(
-        :ai_persona,
+        :ai_agent,
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
         default_llm_id: llm.id,
         allow_personal_messages: true,
@@ -14,8 +14,8 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         max_turn_tokens: 5000,
         compression_threshold: 80,
       )
-    persona.create_user!
-    persona
+    agent.create_user!
+    agent
   end
 
   let(:custom_tools) do
@@ -37,7 +37,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
 
   def build_session(query: "test question", resume_token: nil, tool_results: nil)
     described_class.new(
-      persona: ai_persona,
+      agent: ai_agent,
       user: admin,
       topic: nil,
       query: query,
@@ -105,7 +105,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
     end
 
     it "triggers synthetic tool errors + final text when budget exhausted mid-round" do
-      ai_persona.update!(max_turn_tokens: 1)
+      ai_agent.update!(max_turn_tokens: 1)
 
       tool_call =
         DiscourseAi::Completions::ToolCall.new(

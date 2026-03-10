@@ -33,9 +33,9 @@ register_asset "stylesheets/modules/summarization/desktop/ai-summary.scss", :des
 register_asset "stylesheets/modules/summarization/common/ai-gists.scss"
 
 register_asset "stylesheets/modules/ai-bot/common/bot-replies.scss"
-register_asset "stylesheets/modules/ai-bot/common/ai-persona.scss"
+register_asset "stylesheets/modules/ai-bot/common/ai-agent.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
-register_asset "stylesheets/modules/ai-bot/mobile/ai-persona.scss", :mobile
+register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"
 
@@ -83,12 +83,12 @@ after_initialize do
   require_relative "discourse_automation/llm_triage"
   require_relative "discourse_automation/llm_report"
   require_relative "discourse_automation/ai_tool_action"
-  require_relative "discourse_automation/llm_persona_triage"
+  require_relative "discourse_automation/llm_agent_triage"
   require_relative "discourse_automation/llm_tagger"
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 
-  register_seedfu_fixtures(Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "personas"))
+  register_seedfu_fixtures(Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "agents"))
 
   [
     DiscourseAi::Embeddings::EntryPoint.new,
@@ -135,7 +135,7 @@ after_initialize do
 
   add_api_key_scope(
     :discourse_ai,
-    { update_personas: { actions: %w[discourse_ai/admin/ai_personas#update] } },
+    { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } },
   )
 
   add_api_key_scope(

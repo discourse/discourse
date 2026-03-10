@@ -32,7 +32,7 @@ import {
 import { clipboardHelpers } from "discourse/lib/utilities";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-persona-llm-selector";
+import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
 
 @tagName("")
 export default class AiBotConversations extends Component {
@@ -172,12 +172,12 @@ export default class AiBotConversations extends Component {
   }
 
   @action
-  async setPersonaId(id) {
-    this.aiBotConversationsHiddenSubmit.personaId = id;
-    // Only check persona credits if no LLM is explicitly selected
-    // (e.g., when persona has force_default_llm)
+  async setAgentId(id) {
+    this.aiBotConversationsHiddenSubmit.agentId = id;
+    // Only check agent credits if no LLM is explicitly selected
+    // (e.g., when agent has force_default_llm)
     if (!this.selectedLlmId) {
-      await this.#checkCreditStatus(id, "persona");
+      await this.#checkCreditStatus(id, "agent");
     }
   }
 
@@ -197,8 +197,8 @@ export default class AiBotConversations extends Component {
 
     try {
       this.creditStatus =
-        type === "persona"
-          ? await this.aiCredits.getPersonaCreditStatus(id)
+        type === "agent"
+          ? await this.aiCredits.getAgentCreditStatus(id)
           : await this.aiCredits.getLlmModelCreditStatus(id);
     } catch {
       // Fail open - allow usage if credit check fails
@@ -371,12 +371,12 @@ export default class AiBotConversations extends Component {
   <template>
     <div class="ai-bot-conversations" ...attributes>
       {{bodyClass "ai-bot-conversations-page"}}
-      <AiPersonaLlmSelector
+      <AiAgentLlmSelector
         @showLabels={{true}}
-        @setPersonaId={{this.setPersonaId}}
+        @setAgentId={{this.setAgentId}}
         @setLlmId={{this.setLlmId}}
         @setTargetRecipient={{this.setTargetRecipient}}
-        @personaName={{@controller.persona}}
+        @agentName={{@controller.agent}}
         @llmName={{@controller.llm}}
       />
 

@@ -114,7 +114,7 @@ module DiscourseAi
               AUTOMATION_TRIAGE,
               enabled_by_setting: "discourse_automation_enabled",
               features: DiscourseAi::Configuration::Feature.ai_automation_triage_scripts,
-              extra_check: -> { has_scripts?(%w[llm_triage llm_persona_triage]) },
+              extra_check: -> { has_scripts?(%w[llm_triage llm_agent_triage]) },
             )
           end
 

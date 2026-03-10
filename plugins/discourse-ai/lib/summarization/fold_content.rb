@@ -142,7 +142,7 @@ module DiscourseAi
         end
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: user,
             skip_show_thinking: true,
             feature_name: strategy.feature,
@@ -155,7 +155,7 @@ module DiscourseAi
         buffer_blk =
           Proc.new do |partial, _, type|
             if type == :structured_output
-              json_summary_schema_key = bot.persona.response_format&.first.to_h
+              json_summary_schema_key = bot.agent.response_format&.first.to_h
               partial_summary =
                 partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
 

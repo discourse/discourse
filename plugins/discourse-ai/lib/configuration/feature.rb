@@ -12,13 +12,13 @@ module DiscourseAi
           feature_cache[:summarization] ||= [
             new(
               "topic_summaries",
-              "ai_summarization_persona",
+              "ai_summarization_agent",
               DiscourseAi::Configuration::Module::SUMMARIZATION_ID,
               DiscourseAi::Configuration::Module::SUMMARIZATION,
             ),
             new(
               "gists",
-              "ai_summary_gists_persona",
+              "ai_summary_gists_agent",
               DiscourseAi::Configuration::Module::SUMMARIZATION_ID,
               DiscourseAi::Configuration::Module::SUMMARIZATION,
               enabled_by_setting: "ai_summary_gists_enabled",
@@ -30,7 +30,7 @@ module DiscourseAi
           feature_cache[:search] ||= [
             new(
               "discoveries",
-              "ai_discover_persona",
+              "ai_discover_agent",
               DiscourseAi::Configuration::Module::SEARCH_ID,
               DiscourseAi::Configuration::Module::SEARCH,
             ),
@@ -41,7 +41,7 @@ module DiscourseAi
           feature_cache[:discord] ||= [
             new(
               "search",
-              "ai_discord_search_persona",
+              "ai_discord_search_agent",
               DiscourseAi::Configuration::Module::DISCORD_ID,
               DiscourseAi::Configuration::Module::DISCORD,
             ),
@@ -52,19 +52,19 @@ module DiscourseAi
           feature_cache[:inference] ||= [
             new(
               "generate_concepts",
-              "inferred_concepts_generate_persona",
+              "inferred_concepts_generate_agent",
               DiscourseAi::Configuration::Module::INFERENCE_ID,
               DiscourseAi::Configuration::Module::INFERENCE,
             ),
             new(
               "match_concepts",
-              "inferred_concepts_match_persona",
+              "inferred_concepts_match_agent",
               DiscourseAi::Configuration::Module::INFERENCE_ID,
               DiscourseAi::Configuration::Module::INFERENCE,
             ),
             new(
               "deduplicate_concepts",
-              "inferred_concepts_deduplicate_persona",
+              "inferred_concepts_deduplicate_agent",
               DiscourseAi::Configuration::Module::INFERENCE_ID,
               DiscourseAi::Configuration::Module::INFERENCE,
             ),
@@ -75,61 +75,61 @@ module DiscourseAi
           feature_cache[:ai_helper] ||= [
             new(
               "proofread",
-              "ai_helper_proofreader_persona",
+              "ai_helper_proofreader_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "title_suggestions",
-              "ai_helper_title_suggestions_persona",
+              "ai_helper_title_suggestions_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "explain",
-              "ai_helper_explain_persona",
+              "ai_helper_explain_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "smart_dates",
-              "ai_helper_smart_dates_persona",
+              "ai_helper_smart_dates_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "markdown_tables",
-              "ai_helper_markdown_tables_persona",
+              "ai_helper_markdown_tables_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "translator",
-              "ai_helper_translator_persona",
+              "ai_helper_translator_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "custom_prompt",
-              "ai_helper_custom_prompt_persona",
+              "ai_helper_custom_prompt_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "image_caption",
-              "ai_helper_image_caption_persona",
+              "ai_helper_image_caption_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "post_illustrator",
-              "ai_helper_post_illustrator_persona",
+              "ai_helper_post_illustrator_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
               "chat_thread_titles",
-              "ai_helper_chat_thread_title_persona",
+              "ai_helper_chat_thread_title_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
               enabled_by_setting: "ai_helper_automatic_chat_thread_title",
@@ -144,7 +144,7 @@ module DiscourseAi
               nil,
               DiscourseAi::Configuration::Module::BOT_ID,
               DiscourseAi::Configuration::Module::BOT,
-              persona_ids_lookup: -> { lookup_bot_persona_ids },
+              agent_ids_lookup: -> { lookup_bot_agent_ids },
               llm_models_lookup: -> { lookup_bot_llms },
             ),
           ]
@@ -157,7 +157,7 @@ module DiscourseAi
               nil,
               DiscourseAi::Configuration::Module::SPAM_ID,
               DiscourseAi::Configuration::Module::SPAM,
-              persona_ids_lookup: -> { [AiModerationSetting.spam&.ai_persona_id].compact },
+              agent_ids_lookup: -> { [AiModerationSetting.spam&.ai_agent_id].compact },
               llm_models_lookup: -> { [AiModerationSetting.spam&.llm_model].compact },
             ),
           ]
@@ -167,15 +167,15 @@ module DiscourseAi
           feature_cache[:embeddings] ||= [
             new(
               "hyde",
-              "ai_embeddings_semantic_search_hyde_persona",
+              "ai_embeddings_semantic_search_hyde_agent",
               DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
               DiscourseAi::Configuration::Module::EMBEDDINGS,
             ),
           ]
         end
 
-        def lookup_bot_persona_ids
-          AiPersona
+        def lookup_bot_agent_ids
+          AiAgent
             .where(enabled: true)
             .where(
               "allow_chat_channel_mentions OR allow_chat_direct_messages OR allow_topic_mentions OR allow_personal_messages",
@@ -184,35 +184,35 @@ module DiscourseAi
         end
 
         def lookup_bot_llms
-          persona_llms = AiPersona.where(id: lookup_bot_persona_ids).pluck(:default_llm_id)
+          agent_llms = AiAgent.where(id: lookup_bot_agent_ids).pluck(:default_llm_id)
           enabled_chat_bot_llm_ids = LlmModel.enabled_chat_bot_ids
 
-          LlmModel.where(id: (persona_llms + enabled_chat_bot_llm_ids).uniq).to_a
+          LlmModel.where(id: (agent_llms + enabled_chat_bot_llm_ids).uniq).to_a
         end
 
         def translation_features
           feature_cache[:translation] ||= [
             new(
               "locale_detector",
-              "ai_translation_locale_detector_persona",
+              "ai_translation_locale_detector_agent",
               DiscourseAi::Configuration::Module::TRANSLATION_ID,
               DiscourseAi::Configuration::Module::TRANSLATION,
             ),
             new(
               "post_raw_translator",
-              "ai_translation_post_raw_translator_persona",
+              "ai_translation_post_raw_translator_agent",
               DiscourseAi::Configuration::Module::TRANSLATION_ID,
               DiscourseAi::Configuration::Module::TRANSLATION,
             ),
             new(
               "topic_title_translator",
-              "ai_translation_topic_title_translator_persona",
+              "ai_translation_topic_title_translator_agent",
               DiscourseAi::Configuration::Module::TRANSLATION_ID,
               DiscourseAi::Configuration::Module::TRANSLATION,
             ),
             new(
               "short_text_translator",
-              "ai_translation_short_text_translator_persona",
+              "ai_translation_short_text_translator_agent",
               DiscourseAi::Configuration::Module::TRANSLATION_ID,
               DiscourseAi::Configuration::Module::TRANSLATION,
             ),
@@ -227,7 +227,7 @@ module DiscourseAi
               SELECT (fields.metadata->>'value') AS value, automations.name AS automation_name, fields.name AS name
               FROM discourse_automation_fields fields
               INNER JOIN discourse_automation_automations automations ON automations.id = fields.automation_id
-              WHERE fields.name IN ('model', 'persona_id')
+              WHERE fields.name IN ('model', 'agent_id')
               AND automations.script = 'llm_report'
               AND automations.enabled
               LIMIT 20
@@ -250,7 +250,7 @@ module DiscourseAi
                 nil,
                 DiscourseAi::Configuration::Module::AUTOMATION_REPORTS_ID,
                 DiscourseAi::Configuration::Module::AUTOMATION_REPORTS,
-                persona_ids_lookup: -> { [fields.dig("persona_id")].compact.map(&:to_i) },
+                agent_ids_lookup: -> { [fields.dig("agent_id")].compact.map(&:to_i) },
                 llm_models_lookup: -> { [LlmModel.find_by(id: fields["model"])].compact },
               )
             end
@@ -265,8 +265,8 @@ module DiscourseAi
             SELECT (fields.metadata->>'value') AS value, automations.name AS automation_name, fields.name AS name
             FROM discourse_automation_fields fields
             INNER JOIN discourse_automation_automations automations ON automations.id = fields.automation_id
-            WHERE fields.name IN ('model', 'triage_persona', 'persona')
-            AND automations.script IN ('llm_triage', 'llm_persona_triage')
+            WHERE fields.name IN ('model', 'triage_agent', 'agent')
+            AND automations.script IN ('llm_triage', 'llm_agent_triage')
             AND automations.enabled
             LIMIT 20
           SQL
@@ -278,7 +278,7 @@ module DiscourseAi
                 if field.name == "model"
                   memo[field.automation_name][field.name] = field.value
                 else
-                  memo[field.automation_name]["persona_id"] = field.value
+                  memo[field.automation_name]["agent_id"] = field.value
                 end
 
                 memo
@@ -291,7 +291,7 @@ module DiscourseAi
                   if field["model"].present?
                     -> { [LlmModel.find_by(id: field["model"])].compact }
                   else
-                    nil # llm_persona_triage uses the persona default_llm_id.
+                    nil # llm_agent_triage uses the agent default_llm_id.
                   end
 
                 new(
@@ -299,7 +299,7 @@ module DiscourseAi
                   nil,
                   DiscourseAi::Configuration::Module::AUTOMATION_TRIAGE_ID,
                   DiscourseAi::Configuration::Module::AUTOMATION_TRIAGE,
-                  persona_ids_lookup: -> { [field.dig("persona_id")].compact.map(&:to_i) },
+                  agent_ids_lookup: -> { [field.dig("agent_id")].compact.map(&:to_i) },
                   llm_models_lookup: llm_models_lookup,
                 )
               end
@@ -322,54 +322,54 @@ module DiscourseAi
           ].flatten
         end
 
-        def find_features_using(persona_id:)
-          all.select { |feature| feature.persona_ids.include?(persona_id) }
+        def find_features_using(agent_id:)
+          all.select { |feature| feature.agent_ids.include?(agent_id) }
         end
       end
 
       def initialize(
         name,
-        persona_setting,
+        agent_setting,
         module_id,
         module_name,
         enabled_by_setting: "",
-        persona_ids_lookup: nil,
+        agent_ids_lookup: nil,
         llm_models_lookup: nil
       )
         @name = name
-        @persona_setting = persona_setting
+        @agent_setting = agent_setting
         @module_id = module_id
         @module_name = module_name
         @enabled_by_setting = enabled_by_setting
-        @persona_ids_lookup = persona_ids_lookup
+        @agent_ids_lookup = agent_ids_lookup
         @llm_models_lookup = llm_models_lookup
       end
 
       def llm_models
         return @llm_models_lookup.call if @llm_models_lookup
-        return if !persona_ids
+        return if !agent_ids
 
         llm_models = []
-        personas = AiPersona.where(id: persona_ids)
-        personas.each do |persona|
-          next if persona.blank?
+        agents = AiAgent.where(id: agent_ids)
+        agents.each do |agent|
+          next if agent.blank?
 
-          persona_klass = persona.class_instance
+          agent_klass = agent.class_instance
 
           llm_model =
             case module_name
             when DiscourseAi::Configuration::Module::SUMMARIZATION
-              DiscourseAi::Summarization.find_summarization_model(persona_klass)
+              DiscourseAi::Summarization.find_summarization_model(agent_klass)
             when DiscourseAi::Configuration::Module::AI_HELPER
-              DiscourseAi::AiHelper::Assistant.find_ai_helper_model(name, persona_klass)
+              DiscourseAi::AiHelper::Assistant.find_ai_helper_model(name, agent_klass)
             when DiscourseAi::Configuration::Module::TRANSLATION
-              DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
+              DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
             when DiscourseAi::Configuration::Module::EMBEDDINGS
-              DiscourseAi::Embeddings::SemanticSearch.new(nil).find_ai_hyde_model(persona_klass)
+              DiscourseAi::Embeddings::SemanticSearch.new(nil).find_ai_hyde_model(agent_klass)
             end
 
           if llm_model.blank?
-            llm_model_id = persona.default_llm_id || SiteSetting.ai_default_llm_model
+            llm_model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model
             llm_model = LlmModel.find_by(id: llm_model_id)
           end
 
@@ -379,17 +379,17 @@ module DiscourseAi
         llm_models.compact.uniq
       end
 
-      attr_reader :name, :persona_setting, :module_id, :module_name
+      attr_reader :name, :agent_setting, :module_id, :module_name
 
       def enabled?
         @enabled_by_setting.blank? || SiteSetting.get(@enabled_by_setting)
       end
 
-      def persona_ids
-        if @persona_ids_lookup
-          @persona_ids_lookup.call
+      def agent_ids
+        if @agent_ids_lookup
+          @agent_ids_lookup.call
         else
-          id = SiteSetting.get(persona_setting).to_i
+          id = SiteSetting.get(agent_setting).to_i
           if id != 0
             [id]
           else

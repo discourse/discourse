@@ -295,11 +295,11 @@ h1 h2 h3 h4 h5 h6 {
   color: var(--primary);
 }
 
-.post__date, .post__persona {
+.post__date, .post__agent {
   font-size: 0.8em;
 }
 
-.post__persona {
+.post__agent {
   color: var(--primary-600);
 }
 

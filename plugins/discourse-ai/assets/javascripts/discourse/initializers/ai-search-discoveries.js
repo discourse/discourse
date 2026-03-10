@@ -6,7 +6,8 @@ export default apiInitializer((api) => {
 
   if (
     !settings.ai_discover_enabled ||
-    !currentUser?.can_use_ai_discover_persona
+    (!currentUser?.can_use_ai_discover_agent &&
+      !currentUser?.can_use_ai_discover_agent)
   ) {
     return;
   }

@@ -18,7 +18,7 @@ describe DiscourseAi::GuardianExtensions do
 
   describe "#can_see_summary?" do
     context "when the user cannot generate a summary" do
-      before { assign_persona_to(:ai_summarization_persona, []) }
+      before { assign_agent_to(:ai_summarization_agent, []) }
 
       it "returns false" do
         expect(guardian.can_see_summary?(topic)).to eq(false)
@@ -32,7 +32,7 @@ describe DiscourseAi::GuardianExtensions do
     end
 
     context "when the user can generate a summary" do
-      before { assign_persona_to(:ai_summarization_persona, [group.id]) }
+      before { assign_agent_to(:ai_summarization_agent, [group.id]) }
 
       it "returns true if the user group is present in the ai_custom_summarization_allowed_groups_map setting" do
         expect(guardian.can_see_summary?(topic)).to eq(true)
@@ -40,7 +40,7 @@ describe DiscourseAi::GuardianExtensions do
     end
 
     context "when the topic is a PM" do
-      before { assign_persona_to(:ai_summarization_persona, [group.id]) }
+      before { assign_agent_to(:ai_summarization_agent, [group.id]) }
       let(:pm) { Fabricate(:private_message_topic) }
 
       it "returns false" do
@@ -67,7 +67,7 @@ describe DiscourseAi::GuardianExtensions do
   end
 
   describe "#can_see_gists?" do
-    before { assign_persona_to(:ai_summary_gists_persona, [group.id]) }
+    before { assign_agent_to(:ai_summary_gists_agent, [group.id]) }
     let(:guardian) { Guardian.new(user) }
 
     context "when access is restricted to the user's group" do
@@ -87,7 +87,7 @@ describe DiscourseAi::GuardianExtensions do
     end
 
     context "when access is set to everyone" do
-      before { assign_persona_to(:ai_summary_gists_persona, [Group::AUTO_GROUPS[:everyone]]) }
+      before { assign_agent_to(:ai_summary_gists_agent, [Group::AUTO_GROUPS[:everyone]]) }
 
       it "returns true" do
         expect(guardian.can_see_gists?).to eq(true)

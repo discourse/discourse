@@ -56,12 +56,12 @@ module PageObjects
         page.find(".sidebar-section-content a.sidebar-section-link").click
       end
 
-      def persona_selector
-        PageObjects::Components::SelectKit.new(".persona-llm-selector__persona-dropdown")
+      def agent_selector
+        PageObjects::Components::SelectKit.new(".agent-llm-selector__agent-dropdown")
       end
 
       def llm_selector
-        PageObjects::Components::SelectKit.new(".persona-llm-selector__llm-dropdown")
+        PageObjects::Components::SelectKit.new(".agent-llm-selector__llm-dropdown")
       end
 
       def has_sidebar_back_link?

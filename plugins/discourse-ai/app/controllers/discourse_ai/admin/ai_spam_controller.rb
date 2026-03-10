@@ -15,27 +15,25 @@ module DiscourseAi
         initial_data = {
           custom_instructions: initial_settings&.data&.dig("custom_instructions"),
           llm_model_id: initial_settings&.llm_model_id,
-          ai_persona_id: initial_settings&.ai_persona_id,
+          ai_agent_id: initial_settings&.ai_agent_id,
         }
-
-        initial_custom_instructions = initial_settings&.data&.dig("custom_instructions")
-        initial_llm_model_id = initial_settings&.llm_model_id
 
         updated_params = {}
         if allowed_params.key?(:llm_model_id)
-          llm_model_id = updated_params[:llm_model_id] = allowed_params[:llm_model_id]
+          updated_params[:llm_model_id] = allowed_params[:llm_model_id]
         end
 
-        if allowed_params.key?(:ai_persona_id)
-          updated_params[:ai_persona_id] = allowed_params[:ai_persona_id]
-          persona = AiPersona.find_by(id: allowed_params[:ai_persona_id])
-          if persona.nil? ||
-               persona.response_format.to_a.none? { |rf|
+        ai_agent_id = allowed_params[:ai_agent_id]
+        if ai_agent_id.present?
+          updated_params[:ai_agent_id] = ai_agent_id
+          agent = AiAgent.find_by(id: ai_agent_id)
+          if agent.nil? ||
+               agent.response_format.to_a.none? { |rf|
                  rf["key"] == "spam" && rf["type"] == "boolean"
                }
             return(
               render_json_error(
-                I18n.t("discourse_ai.llm.configuration.invalid_persona_response_format"),
+                I18n.t("discourse_ai.llm.configuration.invalid_agent_response_format"),
                 status: 422,
               )
             )
@@ -156,14 +154,14 @@ module DiscourseAi
           changes_to_log[:custom_instructions] = params[:custom_instructions]
         end
 
-        initial_ai_persona_id = initial_data[:ai_persona_id]
-        if params.key?(:ai_persona_id) && initial_ai_persona_id.to_s != params[:ai_persona_id].to_s
-          old_persona_name =
-            AiPersona.find_by(id: initial_ai_persona_id)&.name || initial_ai_persona_id
-          new_persona_name =
-            AiPersona.find_by(id: params[:ai_persona_id])&.name || params[:ai_persona_id]
+        initial_ai_agent_id = initial_data[:ai_agent_id]
+        updated_ai_agent_id = params[:ai_agent_id]
+        if updated_ai_agent_id.present? && initial_ai_agent_id.to_s != updated_ai_agent_id.to_s
+          old_agent_name = AiAgent.find_by(id: initial_ai_agent_id)&.name || initial_ai_agent_id
+          new_agent_name = AiAgent.find_by(id: updated_ai_agent_id)&.name || updated_ai_agent_id
 
-          changes_to_log[:ai_persona_id] = "#{old_persona_name} → #{new_persona_name}"
+          change_value = "#{old_agent_name} → #{new_agent_name}"
+          changes_to_log[:ai_agent_id] = change_value
         end
 
         if changes_to_log.present?
@@ -174,7 +172,7 @@ module DiscourseAi
       end
 
       def allowed_params
-        params.permit(:is_enabled, :llm_model_id, :custom_instructions, :ai_persona_id)
+        params.permit(:is_enabled, :llm_model_id, :custom_instructions, :ai_agent_id)
       end
 
       def spam_config
