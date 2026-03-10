@@ -13,6 +13,21 @@ describe "Admin Chat Incoming Webhooks", type: :system do
     sign_in(current_user)
   end
 
+  it "can filter channels in the channel chooser" do
+    other_channel = Fabricate(:chat_channel)
+    Fabricate.times(9, :chat_channel)
+
+    admin_incoming_webhooks_page.visit
+    admin_incoming_webhooks_page.click_new
+
+    chooser = admin_incoming_webhooks_page.channel_chooser
+    chooser.expand
+    chooser.search(chat_channel_1.title)
+
+    expect(chooser).to have_no_option_value(other_channel.id)
+    expect(chooser).to have_option_value(chat_channel_1.id)
+  end
+
   it "can create incoming webhooks" do
     admin_incoming_webhooks_page.visit
 
