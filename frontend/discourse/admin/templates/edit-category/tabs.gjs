@@ -128,19 +128,17 @@ export default <template>
           <form.Actions class="edit-category-footer">
             {{#if @controller.model.can_delete}}
               <form.Button
-                @disabled={{@controller.deleteDisabled}}
                 @action={{@controller.deleteCategory}}
                 @icon="trash-can"
                 @label="category.delete"
-                class="btn-danger"
+                class="btn-danger btn-small"
               />
             {{else}}
               <form.Button
-                @disabled={{@controller.deleteDisabled}}
                 @action={{@controller.toggleDeleteTooltip}}
                 @icon="circle-question"
                 @label="category.delete"
-                class="btn-default"
+                class="btn-default btn-small"
               />
             {{/if}}
           </form.Actions>
