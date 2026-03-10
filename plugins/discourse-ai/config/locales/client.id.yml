@@ -129,13 +129,12 @@ id:
         total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
-      ai_persona:
+      ai_agent:
         back: "Kembali"
         name: "Nama"
         edit: "Ubah"
         export: "Ekspor"
         description: "Deskripsi"
-        mentionable_help: Jika diaktifkan, pengguna di grup yang diizinkan dapat menyebut pengguna ini di posting, AI akan merespons sebagai persona ini.
         user: Pengguna
         question_consolidator_llm: Model Bahasa untuk Konsolidator Pertanyaan
         question_consolidator_llm_help: Model bahasa yang digunakan untuk konsolidator pertanyaan, Anda dapat memilih model yang kurang kuat untuk menghemat biaya.

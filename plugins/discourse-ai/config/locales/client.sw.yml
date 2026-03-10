@@ -73,7 +73,7 @@ sw:
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
         total: "Jumla"
-      ai_persona:
+      ai_agent:
         back: "Iliyopita"
         name: "Jina"
         edit: "Hariri"

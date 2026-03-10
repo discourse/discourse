@@ -84,7 +84,7 @@ gl:
         total: "Total"
         periods:
           custom: "Personalizar..."
-      ai_persona:
+      ai_agent:
         back: "Volver"
         name: "Nome"
         edit: "Editar"

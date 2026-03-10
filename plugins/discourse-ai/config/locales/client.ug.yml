@@ -52,7 +52,7 @@ ug:
         back: "كەينى"
         disabled: "(چەكلەندى)"
         groups: "گۇرۇپپا:"
-        no_persona: "تەڭشەلمىدى"
+        no_agent: "تەڭشەلمىدى"
         no_groups: "يوق"
         edit: "تەڭشەك"
         expand_list:
@@ -104,7 +104,7 @@ ug:
         total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
-      ai_persona:
+      ai_agent:
         back: "كەينى"
         name: "ئىسمى"
         edit: "تەھرىر"
@@ -120,6 +120,7 @@ ug:
             key_title: "ئاچقۇچ"
         filters:
           reset: "ئەسلىگە قايتۇر"
+        llms_list: "LLM:"
       rag:
         uploads:
           title: "يۈكلەنمە"

@@ -30,9 +30,6 @@ de:
       ai_tool_action:
         title: KI-Tool Aktion
         description: Führe ein KI-Tool aus, wenn die Automatisierung ausgelöst wird
-      llm_persona_triage:
-        title: Sichtung von Beiträgen mit KI-Persona
-        description: "Reagiere auf Beiträge mit einer bestimmten KI-Persona"
       llm_triage:
         title: Beiträge mithilfe von KI sortieren
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
@@ -96,8 +93,6 @@ de:
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
     ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
     post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
-    ai_helper_post_illustrator_persona: "Die Persona, die für die Funktion „Beitrag illustrieren“ des KI-Helfers verwendet werden soll. Hinweis: Du musst auch ein Tool zur Bilderzeugung erstellen (Administration > Plug-ins > KI > Tools), damit diese Funktion funktioniert."
-    ai_helper_chat_thread_title_persona: "Die Persona, die zum Generieren von Chat-Thread-Titeln verwendet wird."
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
     ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
     ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
@@ -111,7 +106,6 @@ de:
     ai_embeddings_semantic_related_age_time_scale: "Zeitskala in Tagen für die Berechnung der Altersstrafe. Themen, die so viele Tage inaktiv sind, erhalten ~50 % Strafe bei \"penalty\"=1,0. Verwende 365 für die jährliche Skala, 90 für die vierteljährliche Skala."
     ai_embeddings_per_post_enabled: Erstelle Einbettungen für jeden Beitrag
     ai_summarization_enabled: "Aktiviere die Zusammenfassungsfunktion"
-    ai_summarization_persona: "Persona, die für die Zusammenfassungsfunktion verwendet werden soll"
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
     ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
@@ -125,14 +119,12 @@ de:
     ai_bot_add_to_community_section: "Einen Link im Community-Bereich der Seitenleiste anzeigen, um eine PN mit einem KI-Bot zu starten"
     ai_bot_github_access_token: "GitHub-Zugangstoken für die Verwendung mit den GitHub-KI-Tools (erforderlich für die Suchunterstützung)"
     ai_discover_enabled: "Entdeckungs-Suchfunktion aktivieren"
-    ai_discover_persona: "Persona, die für die Entdeckungsfunktion verwendet werden soll"
     ai_google_custom_search_api_key: "API-Schlüssel für die Google Custom Search API, siehe: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX für Google Custom Search API"
     ai_discord_search_enabled: "Aktiviert die Discord-Suchfunktion"
     ai_discord_app_id: "Die ID der Discord-Anwendung, mit der du die Discord-Suche verbinden möchtest"
     ai_discord_app_public_key: "Der öffentliche Schlüssel der Discord-Anwendung, mit der du die Discord-Suche verbinden möchtest"
     ai_discord_search_mode: "Wähle den Suchmodus für die Discord-Suche aus"
-    ai_discord_search_persona: "Die Persona, die für die Discord-Suche verwendet wird."
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
     ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
@@ -298,8 +290,6 @@ de:
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
-        no_illustrator_persona: "Die Beitragsillustrator-Persona ist nicht konfiguriert. Bitte überprüfe deine Website-Einstellungen."
-        no_image_generation_tool: "Für die Beitragsillustrator-Persona muss ein Bilderzeugungstool verknüpft sein. Bitte konfiguriere im Administrationsbereich ein Bilderzeugungstool für diese Persona."
         no_image_generated: "Das Bild konnte nicht erstellt werden. Bitte versuche es erneut oder überprüfe die Konfiguration deines Tools."
         llm_model_not_configured: "Es ist kein Sprachmodell für die Bilderzeugung konfiguriert. Bitte konfiguriere ein Standard-Sprachmodell in deinen Website-Einstellungen."
         unknown_error: "Beim Erzeugen der Vorschaubilder ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut."
@@ -337,10 +327,8 @@ de:
       reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"
-      personas:
+      agents:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
-        cannot_delete_system_persona: "System-Personas können nicht gelöscht werden, bitte deaktiviere sie stattdessen"
-        cannot_edit_system_persona: "System-Personas können nur umbenannt werden. Du darfst keine Tools oder die System-Eingabeaufforderung bearbeiten, sondern musst sie deaktivieren und eine Kopie erstellen"
         cannot_have_duplicate_tools: "Es kann keine doppelten Werkzeuge geben"
         github_helper:
           name: "GitHub-Helfer"
@@ -380,10 +368,8 @@ de:
           description: "KI-Bot, spezialisiert auf die Erstellung interaktiver Web-Artefakte"
         summarizer:
           name: "Zusammenfasser"
-          description: "Standard-Persona für die KI-Zusammenfassungen"
         short_summarizer:
           name: "Zusammenfasser (Kurzform)"
-          description: "Standard-Persona zur Erstellung von KI-Kurzzusammenfassungen für die Elemente der Themenlisten"
         concept_finder:
           name: "Konzept-Finder"
           description: "KI-Bot spezialisiert auf die Identifizierung von Konzepten und Themen in Inhalten"
@@ -395,31 +381,23 @@ de:
           description: "KI-Bot spezialisiert auf das Entfernen von redundanten Daten in Konzepten"
         custom_prompt:
           name: "Benutzerdefinierte Eingabeaufforderung"
-          description: "Standard-Persona für die „Benutzerdefinierte Eingabeaufforderungs“-Funktion des Helfers"
         smart_dates:
           name: "Intelligente Termine"
-          description: "Standard-Persona für die „Intelligente Termine“-Funktion des Helfers"
         markdown_table_generator:
           name: "Markdown-Tabellengenerator"
-          description: "Standard-Persona für die „Generiere Markdown-Tabelle“-Funktion des Helfers"
         post_illustrator:
           name: "Beitragsillustrator"
           description: "Erzeugt Bilder zur Illustration von Beiträgen mithilfe verfügbarer Bilderzeugungstools"
         proofreader:
           name: "Korrekturleser"
-          description: "Standard-Persona für die „Korrekturlesen“-Funktion des Helfers"
         titles_generator:
           name: "Titelgenerator"
-          description: "Standard-Persona für die „Thementitel vorschlagen“-Funktion des Helfers"
         tutor:
           name: "Tutor"
-          description: "Standard-Persona für die „Erklären“-Funktion des Helfers"
         translator:
           name: "Übersetzer"
-          description: "Standard-Persona für die Übersetzerfunktion des Helfers"
         image_captioner:
           name: "Bildbeschriftungen"
-          description: "Standard-Persona für die Bildbeschriftungsfunktion des Helfers"
         locale_detector:
           name: "Sprachdetektor"
           description: "Unterstützt die Übersetzungsfunktion durch Erkennen der Sprache eines bestimmten Textes (Beiträge, Titel usw.)."
@@ -434,19 +412,14 @@ de:
           description: "Betreibt die Übersetzungsfunktion als generischer Textübersetzer, der für kurze Texte wie Kategorienamen oder Schlagwörter verwendet wird."
         spam_detector:
           name: "Spam-Detektor"
-          description: "Standard-Persona, die unsere Spam-Erkennungsfunktion betreibt"
         content_creator:
           name: "Inhaltsersteller"
-          description: "Standard-Persona für die HyDE-Suche"
         report_runner:
           name: "Berichtsausführer"
-          description: "Standard-Persona, die im Automatisierungsskript für Berichte verwendet wird."
         discover:
           name: "Entdecken"
-          description: "Standard-Persona, die in der Entdeckungsfunktion verwendet wird (ergänzende Suche)"
         chat_thread_titler:
           name: "Chat-Thread-Titelgenerator"
-          description: "Standard-Persona für die automatische Generierung von Chat-Thread-Titeln"
       topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
       summarizing: "Thema zusammenfassen"
       searching: "Suche nach: „%{query}“"
@@ -454,7 +427,6 @@ de:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "Für die Recherche zu verwendendes Sprachmodell (standardmäßig das LLM der aktuellen Persona)"
           max_tokens_per_batch:
             name: "Maximale Token pro Bündel"
             description: "Maximale Anzahl von Token, die für jedes Bündel in der Recherche verwendet werden"
@@ -515,6 +487,8 @@ de:
         random_picker: "Zufallsauswahl"
         categories: "Kategorien auflisten"
         flag_post: "Beitrag melden"
+        edit_post: "Beitrag bearbeiten"
+        move_posts: "Beiträge verschieben"
         search: "Suche"
         tags: "Schlagwörter auflisten"
         time: "Zeit"
@@ -544,6 +518,7 @@ de:
         random_picker: "Zufallszahl oder zufälliges Element aus einer Liste auswählen"
         categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
         flag_post: "Melde den aktuellen Beitrag zur Überprüfung durch das Team"
+        delete_topic: "Ein Thema löschen"
         search: "Alle öffentlichen Themen im Forum durchsuchen"
         tags: "Alle Schlagwörter im Forum auflisten"
         time: "Zeit in verschiedenen Zeitzonen finden"
@@ -617,6 +592,34 @@ de:
         already_flagged: "Der Beitrag wurde bereits zur Überprüfung markiert."
         flagged: "Der Beitrag wurde zur Überprüfung markiert."
         reason: "Der KI-Bot hat diesen Beitrag gemeldet.\n\nGrund: %{reason}"
+      close_topic:
+        errors:
+          not_found: "Thema nicht gefunden."
+      unlist_topic:
+        errors:
+          not_found: "Thema nicht gefunden."
+      delete_topic:
+        errors:
+          not_found: "Thema nicht gefunden."
+      edit_tags:
+        errors:
+          not_found: "Thema nicht gefunden."
+      edit_category:
+        errors:
+          not_found: "Thema nicht gefunden."
+          category_not_found: "Kategorie nicht gefunden."
+      set_topic_timer:
+        errors:
+          not_found: "Thema nicht gefunden."
+      set_slow_mode:
+        errors:
+          not_found: "Thema nicht gefunden."
+      move_posts:
+        errors:
+          not_found: "Thema nicht gefunden."
+      assign:
+        errors:
+          not_found: "Thema nicht gefunden."
     summarization:
       configuration_hint:
         one: "Konfiguriere zunächst die Einstellung `%{setting}`."
@@ -645,7 +648,6 @@ de:
         set_llm_first: "Stelle zuerst %{setting} ein"
         model_unreachable: "Wir konnten keine Antwort von diesem Modell abrufen. Überprüfe zuerst deine Einstellungen."
         invalid_seeded_model: "Du kannst dieses Modell nicht mit dieser Funktion verwenden"
-        invalid_persona_response_format: "Die ausgewählte Persona muss ein Antwortformat mit einem booleschen Feld namens „spam“ haben."
         must_select_model: "Du musst zuerst ein LLM auswählen"
         invalid_llm_id: "Das ausgewählte LLM-Modell ist nicht gültig"
       endpoints:
@@ -657,7 +659,7 @@ de:
         one: "Wir konnten dieses Modell nicht löschen, weil es von %{settings} verwendet wird. Aktualisiere die Einstellung und versuche es erneut."
         other: "Wir konnten dieses Modell nicht löschen, weil %{settings} es verwenden. Aktualisiere die Einstellungen und versuche es erneut."
       cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
-    personas:
+    agents:
       malformed_examples: "Die angegebenen Beispiele haben das falsche Format."
     embeddings:
       delete_failed: "Dieses Modell wird derzeit verwendet. Aktualisiere zuerst `ai embeddings selected model`."
@@ -691,12 +693,8 @@ de:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
-      no_user_for_persona: Die angegebene Persona hat keinen Benutzer, der mit ihr verbunden ist.
-      persona_not_found: Die angegebene Persona existiert nicht. Überprüfe die Parameter persona_name oder persona_id.
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
       user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
-      persona_disabled: Die angegebene Persona ist deaktiviert. Überprüfe die Parameter persona_name oder persona_id.
-      no_default_llm: Die Persona muss eine default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.
       no_tool_results_specified: Der Parameter tool_results ist beim Fortsetzen eines Streams erforderlich.
@@ -719,7 +717,6 @@ de:
       stream_reply_state_too_large: "Der Stream-Zustand ist zu groß, um ihn zu behalten (maximal %{max} Bytes)."
       stream_reply_unexpected_error: Beim Streaming der Antwort ist ein unerwarteter Fehler aufgetreten.
       prompt_message_length: Die Nachricht %{idx} hat die 1000-Zeichen-Grenze überschritten.
-      persona_already_exists: Eine Persona mit dem Namen %{name} existiert bereits.
       custom_tool_exists:
         one: "Ein benutzerdefiniertes Tool mit dem Namen %{names} existiert bereits."
         other: "Benutzerdefinierte Tools mit dem Namen %{names} existieren bereits."

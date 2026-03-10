@@ -2483,7 +2483,6 @@ de:
     content_localization_crawler_param: "Liefert lokalisierte Inhalte an Webcrawler, wenn 'content localization enabled' und 'set locale from param' aktiviert sind. Die Liste der unterstützten Sprachumgebungen ist in 'content localization supported locales' definiert."
     content_localization_use_default_locale_when_unsupported: "Biete Benutzern, deren bevorzugte Sprache nicht in 'content localization supported locales' konfiguriert ist, lokalisierte Inhalte in der Standardsprache der Website an."
     content_localization_allow_author_localization: "Ermögliche es Autoren, die Lokalisierungen ihrer eigenen Themen und Beiträge über das Beitragsmenü zu aktualisieren."
-    enable_upcoming_changes: "Aktiviere bevorstehende Änderungen"
     fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
     floating_dismiss_topics_on_mobile: "Zeigt auf dem Handy über der Themenliste eine schwebende „Verwerfen …“-Schaltfläche, um den Zugriff zu erleichtern und Platz im oberen Bereich der Themenliste freizugeben"
     rename_faq_to_guidelines: "Diese Änderung benennt die FAQ-Seite in „Richtlinien“ um. Die FAQ-Seite ist weiterhin unter /faq erreichbar. Die Einstellung „faq url“ funktioniert wie bisher."

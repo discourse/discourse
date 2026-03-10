@@ -22,7 +22,7 @@ pt_BR:
       flag_types:
         review: "Adicionar postagem à fila de revisão"
         review_hide: "Adicionar postagem à fila de revisão e ocultar postagem"
-        review_delete: "Adicionar postagem à fila de análise e excluí-la"
+        review_delete: "Adicionar postagem à fila de revisão e excluí-la"
         review_delete_silence: "Adicionar postagem à fila de revisão, excluir publicação e silenciar usuário"
         spam: "Sinalizar como spam e ocultar postagem"
         spam_silence: "Sinalizar como spam, ocultar postagem e silenciar usuário(a)"
@@ -30,9 +30,6 @@ pt_BR:
       ai_tool_action:
         title: Ação de ferramenta de IA
         description: Executar uma ferramenta de IA quando a automação for acionada.
-      llm_persona_triage:
-        title: Fazer triagem de postagens com persona de IA
-        description: "Responder a postagens com uma persona de IA específica"
       llm_triage:
         title: Postagens de triagem usando IA
         description: "Postagens de triagem usando um modelo de linguagem grande"
@@ -96,8 +93,6 @@ pt_BR:
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
     ai_helper_enabled_features: "Selecione os recursos para ativar no ajudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
-    ai_helper_post_illustrator_persona: "A persona a ser usada para o recurso de ilustração de postagens do assistente de IA. Observação: você também precisa criar uma ferramenta de geração de imagens (Admin > Plugins > Discourse AI > Tools) para que esse recurso funcione."
-    ai_helper_chat_thread_title_persona: "A persona a ser usada para gerar títulos de tópicos de bate-papo."
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
     ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
     ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."
@@ -111,7 +106,6 @@ pt_BR:
     ai_embeddings_semantic_related_age_time_scale: "Escala de tempo em dias para o cálculo de penalidade por idade. Tópicos inativos por esse número de dias recebem ~50% de penalidade com penalty=1.0. Use 365 para escala anual, 90 para escala trimestral."
     ai_embeddings_per_post_enabled: Gerar incorporações para cada postagem
     ai_summarization_enabled: "Ativar o recurso de resumir"
-    ai_summarization_persona: "A persona a ser usada para o recurso de resumir"
     ai_pm_summarization_allowed_groups: "Grupos autorizados a criar e visualizar resumos em PMs."
     ai_summary_gists_enabled: "Gera automaticamente resumos breves das respostas mais recentes nos tópicos"
     ai_summary_backfill_maximum_topics_per_hour: "Quantidade de tópicos para preencher a cada hora."
@@ -125,14 +119,12 @@ pt_BR:
     ai_bot_add_to_community_section: "Exibir um link na seção da comunidade na barra lateral para iniciar uma mensagem privada com um bot de IA."
     ai_bot_github_access_token: "Token de acesso do GitHub a ser usado com ferramentas de IA do GitHub (necessário para ter compatibilidade com pesquisa)"
     ai_discover_enabled: "Ativar o recurso de pesquisa de descoberta"
-    ai_discover_persona: "Persona a ser usada no recurso de pesquisa de descoberta"
     ai_google_custom_search_api_key: "Chave de API para a API de pesquisa personalizada do Google. Veja: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX para API de pesquisa personalizada do Google"
     ai_discord_search_enabled: "Ativa o recurso de pesquisa do Discord"
     ai_discord_app_id: "A ID do aplicativo do Discord ao qual você gostaria de conectar o Discord"
     ai_discord_app_public_key: "A chave pública do aplicativo do Discord ao qual você gostaria de conectar a pesquisa do Discord"
     ai_discord_search_mode: "Selecione o modo de pesquisa a ser usado para a pesquisa do Discord"
-    ai_discord_search_persona: "A persona a ser usada para pesquisa do Discord."
     ai_discord_allowed_guilds: "As guildas do Discord (servidores) nas quais o bot tem permissão para pesquisar"
     ai_translation_enabled: "Ativar o recurso de tradução por IA"
     ai_translation_backfill_limit_to_public_content: "Quando ativado, somente o contéudo nas categorias públicas será traduzido. Quando desativado, o conteúdo nas MPs de grupo e categorias privadas também será enviado para tradução."
@@ -298,8 +290,6 @@ pt_BR:
     ai_helper:
       errors:
         completion_request_failed: "Algo deu errado ao tentar dar sugestões. Tente novamente."
-        no_illustrator_persona: "A persona do ilustrador de postagens não está configurada. Verifique as configurações do seu site."
-        no_image_generation_tool: "A persona do ilustrador de postagens deve ter uma ferramenta de geração de imagens associada. Configure uma ferramenta de geração de imagens para essa persona no painel de administração."
         no_image_generated: "Não foi possível gerar a imagem. Tente novamente ou verifique a configuração da sua ferramenta."
         llm_model_not_configured: "Nenhum modelo de linguagem está configurado para a geração de imagens. Configure um modelo de linguagem padrão nas configurações do seu site."
         unknown_error: "Ocorreu um erro inesperado ao gerar as miniaturas. Tente novamente."
@@ -337,10 +327,8 @@ pt_BR:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
       thinking: "Pensando"
-      personas:
+      agents:
         default_llm_required: "É preciso de um modelo de LLM padrão para ativar o bate-papo"
-        cannot_delete_system_persona: "Personas de sistema não podem ser excluídas, desative"
-        cannot_edit_system_persona: "Personas de sistema só podem ser renomeadas, você não pode editar ferramentas ou prompt de sistema. Desative e faça uma cópia"
         cannot_have_duplicate_tools: "Não pode haver ferramentas duplicadas"
         github_helper:
           name: "Ajudante do GitHub"
@@ -380,10 +368,8 @@ pt_BR:
           description: "Bot especializado na criação de artefatos interativos da web"
         summarizer:
           name: "Resumidor"
-          description: "A persona padrão usada para alimentar resumos de IA"
         short_summarizer:
           name: "Resumidor (forma curta)"
-          description: "A persona padrão usada para alimentar resumos breves de IA para os itens das listas de tópicos"
         concept_finder:
           name: "Localizador de Conceitos"
           description: "Um bot de IA especializado na identificação de conceitos e temas no conteúdo"
@@ -395,31 +381,23 @@ pt_BR:
           description: "Um bot de IA especializado em deduplicação de conceitos"
         custom_prompt:
           name: "Prompt personalizado"
-          description: "A persona padrão que alimenta o recurso de prompt personalizado do Ajudante"
         smart_dates:
           name: "Datas inteligentes"
-          description: "A persona padrão que alimenta o recurso de datas inteligente do Ajudante"
         markdown_table_generator:
           name: "Gerador de tabelas do Markdown"
-          description: "A persona padrão que alimenta o recurso de geração de tabelas do Markdown do Ajudante"
         post_illustrator:
           name: "Ilustrador de postagens"
           description: "Gera imagens para ilustrar as postagens usando as ferramentas de geração de imagens disponíveis."
         proofreader:
           name: "Revisor"
-          description: "A persona padrão que alimenta o recurso de revisão de texto do Ajudante"
         titles_generator:
           name: "Gerador de títulos"
-          description: "A persona padrão que alimenta o recurso de sugestão de títulos de tópicos do Ajudante"
         tutor:
           name: "Tutor"
-          description: "A persona padrão que alimenta o recurso de explicação do Ajudante"
         translator:
           name: "Tradutor"
-          description: "A persona padrão que alimenta o recurso de tradução do Ajudante"
         image_captioner:
           name: "Legendas em imagens"
-          description: "A persona padrão que alimenta o recurso de legendas em imagens do Ajudante"
         locale_detector:
           name: "Detector de localidade"
           description: "Alimenta o recurso de tradução ao detectar a localidade de um determinado texto (postagens, títulos etc.)"
@@ -434,19 +412,14 @@ pt_BR:
           description: "Alimenta o recurso de tradução na função de tradutor de textos genéricos, usado para textos curtos, como etiquetas ou nomes de categorias"
         spam_detector:
           name: "Detector de spam"
-          description: "A persona padrão que alimenta nosso recurso de detector de spam"
         content_creator:
           name: "Criador de conteúdo"
-          description: "A persona padrão que alimenta a pesquisa com HyDE"
         report_runner:
           name: "Executor de relatórios"
-          description: "A persona padrão usada no script de automatização de relatórios"
         discover:
           name: "Descobrir"
-          description: "Persona padrão usada no recurso de descobertas (busca complementar)"
         chat_thread_titler:
           name: "Criador de títulos para threads de chat"
-          description: "Persona padrão que gera automaticamente títulos de tópicos de chat."
       topic_not_found: "Resumo indisponível, tópico não encontrado!"
       summarizing: "Resumindo tópico"
       searching: "Pesquisando: \"%{query}\""
@@ -454,7 +427,6 @@ pt_BR:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "O modelo de linguagem para usar nas pesquisas (o padrão é o LLM atual da persona)"
           max_tokens_per_batch:
             name: "Máximo de tokens por lote"
             description: "A quantidade máxima de tokens a serem usados para cada lote na pesquisa"
@@ -501,8 +473,8 @@ pt_BR:
             description: "A consulta de base para usar na pesquisa. Exemplo: \"#urgent\" precederá \"#urgent\" para a consulta da pesquisa e incluirá apenas tópicos com a etiqueta ou categoria urgente."
         flag_post:
           flag_type:
-            name: "Tipo de sinalizador"
-            description: "Controla se a publicação será revisada, ocultada, excluída ou tratada como spam."
+            name: "Tipo de denúncia"
+            description: "Controla se a postagem será revisada, ocultada, excluída ou tratada como spam."
       tool_summary:
         read_artifact: "Ler um artefato da Web"
         update_artifact: "Atualizar um artefato da Web"
@@ -514,7 +486,9 @@ pt_BR:
         github_diff: "GitHub diff"
         random_picker: "Seletor aleatório"
         categories: "Listar categorias"
-        flag_post: "Sinalizar postagem"
+        flag_post: "Denunciar postagem"
+        edit_post: "Editar postagem"
+        move_posts: "Mover postagens"
         search: "Pesquisar"
         tags: "Listar etiquetas"
         time: "Hora"
@@ -540,10 +514,11 @@ pt_BR:
         github_search_code: "Procurar código no repositório do GitHub"
         github_search_files: "Procurar arquivos no repositório do GitHub"
         github_file_content: "Recuperar conteúdo de arquivos de um repositório do GitHub"
-        github_diff: "Recuperar uma solicitação de pull do GitHub ou commit diff."
+        github_diff: "Recuperar um pull request do GitHub ou commit diff."
         random_picker: "Escolha um número ou elemento aleatório de uma lista"
         categories: "Listar todas as categorias visíveis publicamente no fórum"
-        flag_post: "Marcar a postagem atual para análise pela equipe"
+        flag_post: "Denunciar a postagem atual para análise pela equipe"
+        delete_topic: "Exclua um tópico"
         search: "Pesquisar todos os tópicos públicos no fórum"
         tags: "Listar todas as etiquetas no fórum"
         time: "Achar horário em vários fusos horários"
@@ -610,13 +585,41 @@ pt_BR:
           raw: "Durante a minha pesquisa por %{query}, você me mostrou as seguintes informações:\n\n%{context}\n\nVamos continuar a conversa."
       flag_post:
         errors:
-          no_context: "Não há contexto de postagem disponível para sinalização."
+          no_context: "Não há contexto de postagem disponível para denunciar."
           no_reason: "É necessário apresentar uma justificativa para denunciar uma postagem."
-          invalid_flag_type: "Tipo de sinalizador inválido."
-        skipped: "O veredicto foi falso; nenhuma denúncia foi criada."
-        already_flagged: "A publicação já foi marcada para revisão."
-        flagged: "Postagem marcada para revisão."
-        reason: "Este post foi marcado por um bot de IA.\n\nMotivo: %{reason}"
+          invalid_flag_type: "Tipo de denúncia inválida."
+        skipped: "O veredito era falso; nenhuma denúncia foi criada."
+        already_flagged: "A postagem já foi marcada para revisão."
+        flagged: "Postagem marcada para análise."
+        reason: "Esta postagem foi denunciada por um bot de IA.\n\nMotivo: %{reason}"
+      close_topic:
+        errors:
+          not_found: "Tópico não encontrado."
+      unlist_topic:
+        errors:
+          not_found: "Tópico não encontrado."
+      delete_topic:
+        errors:
+          not_found: "Tópico não encontrado."
+      edit_tags:
+        errors:
+          not_found: "Tópico não encontrado."
+      edit_category:
+        errors:
+          not_found: "Tópico não encontrado."
+          category_not_found: "Categoria não encontrada."
+      set_topic_timer:
+        errors:
+          not_found: "Tópico não encontrado."
+      set_slow_mode:
+        errors:
+          not_found: "Tópico não encontrado."
+      move_posts:
+        errors:
+          not_found: "Tópico não encontrado."
+      assign:
+        errors:
+          not_found: "Tópico não encontrado."
     summarization:
       configuration_hint:
         one: "Defina a configuração \"%{setting}\" primeiro."
@@ -645,7 +648,6 @@ pt_BR:
         set_llm_first: "Defina %{setting} primeiro"
         model_unreachable: "Não foi possível obter uma resposta deste modelo. Confira as configurações primeiro."
         invalid_seeded_model: "Não é possível usar este modelo com este recurso"
-        invalid_persona_response_format: "A persona selecionada deve ter formato de resposta com um campo booleano chamado \"spam\""
         must_select_model: "Selecione um LLM primeiro"
         invalid_llm_id: "O modelo LLM selecionado não é válido."
       endpoints:
@@ -657,7 +659,7 @@ pt_BR:
         one: "Não foi possível excluir este modelo, pois está sendo usado por %{settings}. Atualize a configuração e tente novamente."
         other: "Não foi possível excluir este modelo, pois está sendo usado por %{settings}. Atualize a configuração e tente novamente."
       cannot_edit_builtin: "Não é possível editar um modelo integrado."
-    personas:
+    agents:
       malformed_examples: "Os exemplos fornecidos têm o formato errado."
     embeddings:
       delete_failed: "Este modelo está em uso no momento. Atualize o modelo selecionado de incorporações de IA primeiro."
@@ -691,12 +693,8 @@ pt_BR:
       quota_exceeded: "Você ultrapassou a cota deste modelo. Tente novamente em %{relative_time}."
       quota_required: "Você deve especificar o máximo de tokens ou usos para este modelo"
       no_query_specified: Requer parâmetro de consulta, especifique um.
-      no_user_for_persona: A persona especificada não tem usuário(a) associado(a).
-      persona_not_found: A persona especificada não existe. Confira os parâmetros persona_name ou persona_id
       no_user_specified: Requer o parâmetro username ou user_unique_id. Insira-o.
       user_not_found: O(a) usuário(a) especificado(a) não existe. Confira o parâmetro username.
-      persona_disabled: A persona especificada está desativada. Confira os parâmetros persona_name ou persona_id
-      no_default_llm: A persona deve ter default_llm definida.
       user_not_allowed: O(a) usuário(a) não tem permissão para participar do tópico.
       invalid_stream_resume_token: O resume_token é inválido ou expirou.
       no_tool_results_specified: O parâmetro tool_results é obrigatório ao retomar um fluxo.
@@ -719,7 +717,6 @@ pt_BR:
       stream_reply_state_too_large: "O estado do fluxo é muito grande para persistir (máximo %{max} bytes)."
       stream_reply_unexpected_error: Ocorreu um erro inesperado durante o envio da resposta.
       prompt_message_length: A mensagem %{idx} excede o limite de 1000 caracteres.
-      persona_already_exists: Já existe uma persona com o nome %{name}.
       custom_tool_exists:
         one: "Já existe uma ferramenta personalizada chamada %{names}"
         other: "Já existem ferramentas personalizadas chamadas %{names}."

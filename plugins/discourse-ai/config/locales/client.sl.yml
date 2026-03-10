@@ -40,7 +40,7 @@ sl:
         back: "Nazaj"
         disabled: "(onemogočeno)"
         groups: "Skupine:"
-        no_persona: "Ni nastavljeno"
+        no_agent: "Ni nastavljeno"
         no_groups: "Brez"
         edit: "Nastavitve"
         expand_list:
@@ -96,7 +96,7 @@ sl:
         periods:
           last_day: "Zadnjih 24 ur"
           custom: "Po meri..."
-      ai_persona:
+      ai_agent:
         back: "Nazaj"
         name: "Ime"
         edit: "Uredi"

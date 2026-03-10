@@ -42,7 +42,7 @@ zh_TW:
         back: "上一步"
         disabled: "(停用)"
         groups: "群組:"
-        no_persona: "未設定"
+        no_agent: "未設定"
         no_groups: "無"
         edit: "設定"
         expand_list:
@@ -83,7 +83,7 @@ zh_TW:
         periods:
           last_day: "過去 24 小時"
           custom: "自訂..."
-      ai_persona:
+      ai_agent:
         back: "上一步"
         name: "名稱"
         edit: "編輯"

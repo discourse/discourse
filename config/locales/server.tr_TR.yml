@@ -2489,7 +2489,6 @@ tr_TR:
     content_localization_crawler_param: "'İçerik yerelleştirme etkin' ve ‘parametreden yerel ayarları belirle’ seçenekleri etkinleştirildiğinde, web tarayıcılarına yerelleştirilmiş içerik sunun. Desteklenen yerel ayarların listesi ‘içerik yerelleştirme desteklenen yerel ayarlar’ bölümünde tanımlanmıştır."
     content_localization_use_default_locale_when_unsupported: "Tercih edilen dili “içerik yerelleştirme desteklenen yerel ayarlar” listesinde bulunmayan kullanıcılara, sitenin varsayılan yerel ayarlarında yerelleştirilmiş içerik sunun."
     content_localization_allow_author_localization: "Yazarların, yazı menüsü aracılığıyla kendi konularının ve yazılarının yerelleştirmelerini güncellemesine izin verin."
-    enable_upcoming_changes: "Yaklaşan değişiklikleri etkinleştir"
     fake_upcoming_change: "Bu, test amaçlı sahte bir değişikliktir. Bu dizeyi çevirmenize gerek yoktur."
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     rename_faq_to_guidelines: "Bu değişiklikle SSS sayfası, Kılavuzlar olarak yeniden adlandırılmıştır. SSS sayfası hala /faq adresinde erişilebilir olacaktır. ‘faq url’ ayarı eskisi gibi çalışmaya devam edecektir."

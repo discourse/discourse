@@ -83,7 +83,7 @@ sr:
         total: "Ukupno"
         periods:
           last_day: "Последња 24 сата"
-      ai_persona:
+      ai_agent:
         back: "Nazad"
         name: "Ime foruma"
         edit: "Izmeni"

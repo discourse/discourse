@@ -20,6 +20,36 @@ sv:
         search: "Sök"
         time: "Tid"
         summarize: "Sammanfatta"
+      tool_help:
+        delete_topic: "Ta bort ett ämne"
+      close_topic:
+        errors:
+          not_found: "Ämnet hittades inte."
+      unlist_topic:
+        errors:
+          not_found: "Ämnet hittades inte."
+      delete_topic:
+        errors:
+          not_found: "Ämnet hittades inte."
+      edit_tags:
+        errors:
+          not_found: "Ämnet hittades inte."
+      edit_category:
+        errors:
+          not_found: "Ämnet hittades inte."
+          category_not_found: "Kategorin hittades inte."
+      set_topic_timer:
+        errors:
+          not_found: "Ämnet hittades inte."
+      set_slow_mode:
+        errors:
+          not_found: "Ämnet hittades inte."
+      move_posts:
+        errors:
+          not_found: "Ämnet hittades inte."
+      assign:
+        errors:
+          not_found: "Ämnet hittades inte."
     summarization:
       chat:
         no_targets: "Det fanns inga meddelanden under den valda perioden."

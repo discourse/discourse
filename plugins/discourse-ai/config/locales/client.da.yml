@@ -48,6 +48,7 @@ da:
         back: "Tilbage"
         disabled: "(deaktiveret)"
         groups: "Grupper:"
+        no_agent: "Ikke indstillet"
         no_groups: "Ingen"
         edit: "Indstillinger"
         expand_list:
@@ -98,7 +99,7 @@ da:
         periods:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."
-      ai_persona:
+      ai_agent:
         back: "Tilbage"
         name: "Navn"
         edit: "Rediger"

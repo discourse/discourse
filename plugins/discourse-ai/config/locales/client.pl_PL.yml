@@ -12,8 +12,8 @@ pl_PL:
           descriptions:
             discourse_ai:
               search: "Umożliwia wyszukiwanie AI"
-              stream_completion: "Umożliwia strumieniowe uzupełnianie osobowości AI"
-              update_personas: "Umożliwia aktualizację osobowości AI"
+              stream_completion: "Umożliwia strumieniowe uzupełnianie agentów AI"
+              update_agents: "Umożliwia aktualizację agentów AI"
               manage_artifacts: "Umożliwia zarządzanie artefaktami AI (listowanie, przeglądanie, tworzenie, aktualizowanie, usuwanie)"
       site_settings:
         categories:
@@ -36,9 +36,9 @@ pl_PL:
             create_ai_llm_model: "Utwórz model LLM"
             update_ai_llm_model: "Zaktualizuj model LLM"
             delete_ai_llm_model: "Usuń model LLM"
-            create_ai_persona: "Stwórz osobowość AI"
-            update_ai_persona: "Zaktualizuj osobowość AI"
-            delete_ai_persona: "Usuń osobowość AI"
+            create_ai_agent: "Utwórz agenta AI"
+            update_ai_agent: "Aktualizacja agenta AI"
+            delete_ai_agent: "Usuń agenta AI"
             create_ai_tool: "Utwórz narzędzie AI"
             update_ai_tool: "Zaktualizuj narzędzie AI"
             delete_ai_tool: "Usuń narzędzie AI"
@@ -114,9 +114,9 @@ pl_PL:
             top_p:
               label: "Top P"
               description: "Top P do użycia dla LLM, zwiększ, aby zwiększyć losowość (pozostaw puste, aby użyć domyślnego modelu)"
-            persona_id:
-              label: "Osobowość"
-              description: "Osobowość AI do wykorzystania w generowaniu raportów"
+            agent_id:
+              label: "Agent"
+              description: "Agent AI do wykorzystania w generowaniu raportów"
         ai_tool_action:
           fields:
             tool:
@@ -125,22 +125,22 @@ pl_PL:
             llm_model:
               label: "Model LLM"
               description: "Model języka dla narzędzi korzystających z llm.generate() (opcjonalnie)"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Osobowość"
-              description: "Osobowość AI do wykorzystania w triażu (musi mieć domyślny zestaw LLM i użytkownika)"
+            agent:
+              label: "Agent"
+              description: "Agent AI do wykorzystania w triażu (musi mieć domyślny zestaw LLM i użytkownika)"
             whisper:
               label: "Odpowiedz szeptem"
-              description: "Czy odpowiedź osoby powinna być szeptem"
+              description: "Czy odpowiedź agenta powinna być szeptem"
             silent_mode:
               label: "Tryb cichy"
-              description: "W trybie cichym persona otrzyma zawartość, ale nie opublikuje niczego na forum - przydatne podczas przeprowadzania selekcji przy użyciu narzędzi."
+              description: "W trybie cichym agent otrzyma zawartość, ale nie opublikuje niczego na forum - przydatne podczas przeprowadzania selekcji przy użyciu narzędzi."
         llm_triage:
           fields:
-            triage_persona:
-              label: "Osobowość"
-              description: "Osobowość używana do triażu powinna odpowiadać jednym słowem, którego możesz użyć do wywołania akcji"
+            triage_agent:
+              label: "Agent"
+              description: "Agent używany do triażu powinna odpowiadać jednym słowem, które możesz użyć do wywołania akcji"
             max_post_tokens:
               label: "Maksymalna ilość tokenów postu"
               description: "Maksymalna liczba tokenów do skanowania przy użyciu selekcji LLM"
@@ -186,9 +186,9 @@ pl_PL:
             whisper:
               label: "Odpowiedz szeptem"
               description: "Czy odpowiedź AI powinna być szeptem"
-            reply_persona:
-              label: "Persona odpowiedzi"
-              description: "AI Persona użyta do odpowiedzi (musi mieć domyślną wartość LLM), będzie traktowana priorytetowo nad gotową odpowiedzią"
+            reply_agent:
+              label: "Agent odpowiedzi"
+              description: "Agent AI używany do odpowiedzi (musi mieć domyślny LLM) będzie miał priorytet nad odpowiedziami z szablonu"
             max_output_tokens:
               label: "Maksymalna liczba tokenów wyjściowych"
               description: "Po określeniu, ustawia górną granicę maksymalnej liczby tokenów, jaką model może wygenerować. Szanuje limit maksymalnej liczby tokenów wyjściowych LLM."
@@ -197,9 +197,9 @@ pl_PL:
             manual: "Użyj konkretnej listy tagów (skonfigurowanej poniżej)"
             discover: "Pozwól AI odkrywać i używać dowolnych tagów witryny"
           fields:
-            tagger_persona:
-              label: "Osobowość AI"
-              description: "Osobowość AI do analizy i tagowania tematów"
+            tagger_agent:
+              label: "Agent AI"
+              description: "Agent AI do analizy i tagowania tematów"
             tag_mode:
               label: "Tryb wyboru tagów"
               description: "Wybierz sposób, w jaki AI wybiera tagi"
@@ -228,21 +228,21 @@ pl_PL:
       title: "AI"
       default_llm:
         title: "Domyślny model LLM"
-        description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub osobowości nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
+        description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
       llm_selector:
         none: "Brak"
         saved: "Domyślny model LLM został pomyślnie zaktualizowany"
       features:
         short_title: "Cechy"
-        description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych person i LLM, a dostęp do nich może być kontrolowany przez grupy."
+        description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych agentów i LLM, a dostęp do nich może być kontrolowany przez grupy."
         back: "Wstecz"
         settings_save_error: "Niektórych ustawień nie udało się zapisać."
         disabled: "(wyłączone)"
-        persona:
-          one: "Osobowość:"
-          few: "Persony:"
-          many: "Persony:"
-          other: "Persony:"
+        agent:
+          one: "Agent:"
+          few: "Agenty:"
+          many: "Agenty:"
+          other: "Agenty:"
         groups: "Grupy:"
         llm:
           one: "LLM:"
@@ -250,7 +250,7 @@ pl_PL:
           many: "LLM-y:"
           other: "LLM-y:"
         no_llm: "Nie wybrano LLM"
-        no_persona: "Nie ustawiony"
+        no_agent: "Nie ustawiony"
         no_groups: "Brak"
         edit: "Ustawień"
         expand_list:
@@ -273,7 +273,7 @@ pl_PL:
           unconfigured: "Nieskonfigurowany"
         filters:
           all: "Wszystkie"
-          text: "Wyszukaj funkcje, osobowości, LLM-y lub grupy..."
+          text: "Wyszukaj funkcje, agentów, LLM-y lub grupy..."
           no_results: "Nie znaleziono funkcji spełniających kryteria filtrów."
           reset: "Przywróć"
         no_automations: "Nie ma jeszcze żadnych automatyzacji"
@@ -317,7 +317,7 @@ pl_PL:
             settings: "Ustawienia podstawowe"
             topic_criteria: "Kryteria tematów"
             post_criteria: "Kryteria wpisów"
-            personas: "Persony"
+            agents: "Agenty"
         ai_helper:
           name: "Pomocnik"
           description: "Pomaga użytkownikom w interakcji ze społecznością, np. w tworzeniu tematów, pisaniu postów i czytaniu treści"
@@ -337,7 +337,7 @@ pl_PL:
             access_permissions: "Dostęp i uprawnienia"
             enabled_features: "Włączone funkcje"
             automation: "Automatyzacja"
-            personas: "Persony"
+            agents: "Agenty"
         translation:
           name: "Tłumaczenie"
           description: "Tłumaczy treści na obsługiwane języki"
@@ -354,7 +354,7 @@ pl_PL:
           schedule_topic_error: "Nie udało się zaplanować tłumaczeń. Spróbuj ponownie."
           setting_groups:
             settings: "Ustawienia podstawowe"
-            personas: "Persony"
+            agents: "Agenty"
             backfill_and_limits: "Uzupełnienie i ograniczenia"
         spam:
           name: "Spam"
@@ -420,7 +420,7 @@ pl_PL:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"
         select_llm: "Wybierz LLM"
-        select_persona: "Wybierz osobowość"
+        select_agent: "Wybierz agenta"
         custom_instructions: "Instrukcje niestandardowe"
         custom_instructions_help: "Niestandardowe instrukcje specyficzne dla Twojej witryny, aby pomóc sztucznej inteligencji w identyfikacji spamu, np. \"Bądź bardziej agresywny w skanowaniu postów nie w języku angielskim\"."
         last_seven_days: "Ostatnie 7 dni"
@@ -506,7 +506,7 @@ pl_PL:
           last_month: "Ostatni miesiąc"
           custom: "Niestandardowy..."
         credit_allocations: "Alokacje kredytów"
-      ai_persona:
+      ai_agent:
         ai_tools: "Narzędzia"
         tool_strategies:
           all: "Zastosuj do wszystkich odpowiedzi"
@@ -520,15 +520,15 @@ pl_PL:
         edit: "Edytuj"
         export: "Eksport"
         import: "Import"
-        import_error_conflict: "Wykryto konflikt podczas importowania %{name}. Czy chcesz zaktualizować istniejącą osobowość?"
+        import_error_conflict: "Wykryto konflikt podczas importowania %{name}. Czy chcesz zaktualizować istniejącego agenta?"
         overwrite: "Zastąp"
         description: "Opis"
         no_llm_selected: "Nie wybrano modelu językowego"
-        use_parent_llm: "Użyj modelu językowego persony"
+        use_parent_llm: "Użyj modelu językowego agenta"
         max_context_posts: "Maksymalny kontekst postów"
         max_context_posts_help: "Maksymalna liczba postów do wykorzystania jako kontekst dla sztucznej inteligencji podczas odpowiadania użytkownikowi. (domyślnie puste)"
         execution_mode: "Tryb wykonania"
-        execution_mode_help: "Kontroluje sposób, w jaki persona zarządza wykonywaniem narzędzi i kontekstem konwersacji. Domyślnie używane są stałe limity tur/narzędzi. Agentic korzysta z budżetu tokenów z automatyczną kompresją kontekstu, co zapewnia dłuższe i bardziej efektywne sesje korzystania z narzędzi."
+        execution_mode_help: "Kontroluje sposób, w jaki agent zarządza wykonywaniem narzędzi i kontekstem konwersacji. Domyślnie używane są stałe limity tur/narzędzi. Agentic korzysta z budżetu tokenów z automatyczną kompresją kontekstu, co zapewnia dłuższe i bardziej efektywne sesje korzystania z narzędzi."
         execution_mode_options:
           default: "Domyślne (stałe limity)"
           agentic: "Agent (budżet tokenów)"
@@ -546,47 +546,55 @@ pl_PL:
         show_thinking: Pokaż myślenie
         show_thinking_help: Pokaże użytkownikom końcowym wewnętrzne myślenie i wywołania narzędzi modelu językowego.
         mentionable: Zezwalaj na wzmianki
-        mentionable_help: Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tym użytkowniku w postach, a sztuczna inteligencja będzie reagować jako ta persona.
+        mentionable_help: Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tym użytkowniku w postach, a sztuczna inteligencja będzie reagować jako ten agent.
         user: Użytkownik
         create_user: Utwórz użytkownika
-        create_user_help: Opcjonalnie możesz przypisać użytkownika do tej osoby. Jeśli to zrobisz, sztuczna inteligencja użyje tego użytkownika do odpowiedzi na żądania.
+        create_user_help: Opcjonalnie możesz przypisać użytkownika do tego agenta. Jeśli to zrobisz, sztuczna inteligencja użyje tego użytkownika do odpowiedzi na żądania.
         default_llm: Domyślny model językowy
-        default_llm_help: Domyślny model językowy używany dla tej persony. Wymagane, jeśli chcesz wspomnieć o osobie w postach publicznych.
+        default_llm_help: Domyślny model językowy używany dla tego agenta. Wymagane, jeśli chcesz wspomnieć o agencie w postach publicznych.
         question_consolidator_llm: Model językowy dla konsolidatora pytań
         question_consolidator_llm_help: Model językowy, który należy zastosować w konsolidatorze pytań. Aby obniżyć koszty, można wybrać mniej wydajny model.
         system_prompt: Prompt systemowy
         forced_tool_strategy: Strategia wymuszonego narzędzia
         allow_chat_direct_messages: "Zezwalaj na bezpośrednie wiadomości czatu"
-        allow_chat_direct_messages_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup będą mogli wysyłać wiadomości bezpośrednie do tej osoby."
+        allow_chat_direct_messages_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup będą mogli wysyłać wiadomości bezpośrednie do tego agenta."
         allow_chat_channel_mentions: "Zezwalaj na wzmianki na kanale czatu"
-        allow_chat_channel_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tej osobie na kanałach czatu."
+        allow_chat_channel_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tym agencie na kanałach czatu."
         allow_personal_messages: "Zezwalaj na wiadomości osobiste"
-        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać osobiste wiadomości do tej persony."
+        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać osobiste wiadomości do tego agenta."
         allow_topic_mentions: "Zezwalaj na wzmianki o temacie"
-        allow_topic_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wspominać o tej personie w tematach."
+        allow_topic_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wspominać o tym agencie w tematach."
         force_default_llm: "Zawsze używaj domyślnego modelu języka"
         save: "Zapisz"
-        saved: "Persona zapisana"
+        saved: "Agent zapisany"
         enabled: "Włączona?"
         tools: "Włączone narzędzia"
+        tokens: "tokeny"
+        context_cost: "Koszt kontekstu"
+        tool_tokens_total: "~%{tokens} Tokeny"
+        tool_severity_medium: "Umiarkowana pojemność"
+        tool_severity_high: "Duża pojemność"
+        tool_severity_too_many: "Zbyt wiele narzędzi"
+        tool_tokens_warning: "Nadmiar narzędzi obniża wydajność sztucznej inteligencji, zajmując cenną pamięć konwersacyjną. Rozważ usunięcie zbędnych narzędzi."
+        tool_count_warning: "Definicja każdego narzędzia jest wysyłana do modelu przy każdym żądaniu. Duża liczba narzędzi zwiększa wykorzystanie tokenów i może dezorientować model, co prowadzi do gorszego doboru narzędzi. Zachowaj tylko te narzędzia, których ten agent faktycznie potrzebuje."
         forced_tools: "Narzędzia wymuszone"
         allowed_groups: "Dozwolone grupy"
-        confirm_delete: "Czy na pewno chcesz usunąć tę personę?"
-        new: "Nowa persona"
-        no_personas: "Nie utworzyłeś jeszcze żadnych person"
-        title: "Persony"
-        short_title: "Persony"
+        confirm_delete: "Czy na pewno chcesz usunąć tego agenta?"
+        new: "Nowy agent"
+        no_agents: "Nie utworzono jeszcze żadnych agentów"
+        title: "Agenty"
+        short_title: "Agenty"
         delete: "Usuń"
         temperature: "Temperatura"
         temperature_help: "Temperatura używana w LLM. Zwiększ, aby zwiększyć kreatywność (pozostaw puste, aby użyć domyślnej wartości modelu, zazwyczaj od 0,0 do 2,0)."
         top_p: "Top P"
         top_p_help: "Top P do użycia w LLM, zwiększ, aby zwiększyć losowość (pozostaw puste, aby użyć domyślnego modelu, zazwyczaj wartość od 0,0 do 1,0)."
         priority: "Priorytet"
-        priority_help: "Priorytetowe persony są wyświetlane użytkownikom na górze listy person. Jeśli wiele person ma priorytet, zostaną one posortowane alfabetycznie."
+        priority_help: "Priorytetowe agenty są wyświetlane użytkownikom na górze listy agentów. Jeśli wiele agentów ma priorytet, zostaną one posortowane alfabetycznie."
         tool_options: "Opcje narzędzi"
         rag_conversation_chunks: "Przeszukuj fragmenty rozmów"
         rag_conversation_chunks_help: "Liczba fragmentów używanych do przeszukiwania modelu RAG. Zwiększ ją, aby zwiększyć ilość kontekstu, z którego może korzystać sztuczna inteligencja."
-        persona_description: "Persony to potężna funkcja, która pozwala dostosować zachowanie silnika sztucznej inteligencji (AI) na forum Discourse. Działają one jak „komunikat systemowy”, który steruje odpowiedziami i interakcjami AI, pomagając w tworzeniu bardziej spersonalizowanego i angażującego doświadczenia użytkownika."
+        agent_description: "Agenty to potężna funkcja, która pozwala dostosować zachowanie silnika sztucznej inteligencji (AI) na forum Discourse. Działają one jak „komunikat systemowy”, który steruje odpowiedziami i interakcjami AI, pomagając w tworzeniu bardziej spersonalizowanego i angażującego doświadczenia użytkownika."
         response_format:
           title: "Format odpowiedzi JSON"
           no_format: "Nie określono formatu JSON"
@@ -606,11 +614,11 @@ pl_PL:
           enabled: "Bot AI?"
         ai_bot:
           title: "Opcje bota AI"
-          save_first: "Więcej opcji botów AI będzie dostępnych po zapisaniu osobowości."
+          save_first: "Więcej opcji botów AI będzie dostępnych po zapisaniu agentów."
         filters:
-          text: "Znajdź osobowość"
+          text: "Znajdź agenta"
           reset: "Przywróć"
-          no_results: "Nie znaleziono osobowości pasujących do Twoich filtrów."
+          no_results: "Nie znaleziono agentów spełniających kryteria filtrów."
           all_features: "Jakakolwiek funkcja"
         features_list:
           one: "Funkcja:"
@@ -652,7 +660,7 @@ pl_PL:
         name_help: "Nazwa pojawi się w interfejsie użytkownika Discourse i będzie krótkim identyfikatorem, którego będziesz używać do znajdowania narzędzia w różnych ustawieniach. Powinna być ona unikatowa (jest wymagana)"
         new: "Nowe narzędzie"
         tool_name: "Nazwa narzędzia"
-        tool_name_help: "Nazwa narzędzia jest prezentowana w dużym modelu językowym. Nie jest ona odrębna, ale jest odrębna dla każdej persony. (persona sprawdza poprawność przy zapisywaniu)"
+        tool_name_help: "Nazwa narzędzia jest prezentowana w dużym modelu językowym. Nie jest ona odrębna, ale jest odrębna dla każdego agenta. (agent sprawdza poprawność przy zapisywaniu)"
         description: "Opis"
         description_help: "Jasny opis celu narzędzia dla modelu językowego"
         subheader_description: "Narzędzia rozszerzają możliwości botów AI o zdefiniowane przez użytkownika funkcje JavaScript."
@@ -764,13 +772,13 @@ pl_PL:
           next_reset: "Zresetowano kredyty na %{time}"
         usage:
           ai_bot: "Bot AI"
-          ai_helper: "Pomocnik (%{persona})"
+          ai_helper: "Pomocnik (%{agent})"
           ai_helper_image_caption: "Podpis pod obrazkiem"
-          ai_persona: "Persona (%{persona})"
+          ai_agent: "Agent (%{agent})"
           ai_summarization: "Podsumuj"
           ai_embeddings_semantic_search: "Wyszukiwanie AI"
           ai_spam: "Spam"
-          automation: "Automatyzacja (%{persona})"
+          automation: "Automatyzacja (%{agent})"
         in_use_warning:
           one: "Ten model jest obecnie używany przez %{settings}. W przypadku nieprawidłowej konfiguracji funkcja nie będzie działać zgodnie z oczekiwaniami."
           few: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
@@ -851,6 +859,7 @@ pl_PL:
           provider_quantizations: "Kolejność kwantyzacji dostawców (lista rozdzielona przecinkami, np.: fp16,fp8)"
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
           reasoning_effort: "Wysiłek rozumowania (dotyczy tylko modeli rozumowania)"
+          service_tier: "Poziom usług (elastyczny = niższy koszt/większe opóźnienie, priorytet = szybsze przetwarzanie)"
           enable_reasoning: "Włącz wnioskowanie (dotyczy tylko modeli wnioskowania)"
           adaptive_thinking: "Włącz myślenie adaptacyjne (zalecane dla modeli Claude 4.6)"
           enable_thinking: "Włącz myślenie (modele Gemini 2.5 – wykorzystuje budżet tokenów)"
@@ -995,7 +1004,7 @@ pl_PL:
         collapse_view_label: "Wyjdź z trybu pełnoekranowego (przycisk ESC lub Wstecz)"
         click_to_run_label: "Uruchom Artifact"
       ai_bot:
-        persona: "Osobowość"
+        agent: "Agent"
         llm: "Model"
         pm_warning: "Wiadomości wysyłane przez chatboty AI są regularnie monitorowane przez moderatorów."
         cancel_streaming: "Zatrzymaj odpowiedź"

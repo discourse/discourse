@@ -12,8 +12,6 @@ pt_BR:
           descriptions:
             discourse_ai:
               search: "Permite pesquisa com IA"
-              stream_completion: "Permite transmissão de conclusão com persona de IA"
-              update_personas: "Permitir atualização de personas de IA"
               manage_artifacts: "Permite gerenciar artefatos de IA (listar, visualizar, criar, atualizar, excluir)"
       site_settings:
         categories:
@@ -36,9 +34,6 @@ pt_BR:
             create_ai_llm_model: "Criar modelo de LLM"
             update_ai_llm_model: "Elevar modelo de LLM"
             delete_ai_llm_model: "Excluir modelo de LLM"
-            create_ai_persona: "Criar persona de IA"
-            update_ai_persona: "Atualizar persona de IA"
-            delete_ai_persona: "Excluir persona de IA"
             create_ai_tool: "Criar ferramenta de IA"
             update_ai_tool: "Atualizar ferramenta de IA"
             delete_ai_tool: "Excluir ferramenta de IA"
@@ -114,9 +109,6 @@ pt_BR:
             top_p:
               label: "P Máximo"
               description: "P Máximo para usar no LLM, aumente para incrementar o fator aleatório (deixe vazio para usar o padrão do modelo)"
-            persona_id:
-              label: "Persona"
-              description: "A persona de IA para usar na geração de relatórios"
         ai_tool_action:
           fields:
             tool:
@@ -125,22 +117,14 @@ pt_BR:
             llm_model:
               label: "Modelo LLM"
               description: "Modelo de linguagem para ferramentas que usam llm.generate() (opcional)"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Persona"
-              description: "A persona de IA a ser usada para triagem (deve ter LLM padrão e definido por usuário(a))"
             whisper:
               label: "Responder como sussurro"
-              description: "Determina se a resposta da persona deve ser um sussurro"
             silent_mode:
               label: "Modo Silencioso"
-              description: "No modo silencioso, a persona recebe o conteúdo, mas não posta nada no fórum. É útil para realizar triagem com o uso de ferramentas"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
-              description: "A persona usada para triagem, verifique se responderá com uma única palavra que pode ser usada para acionar a ação"
             max_post_tokens:
               label: "Máximo de Tokens de Postagem"
               description: "A quantidade máxima de tokens para ler usando triagem por LLM"
@@ -186,9 +170,6 @@ pt_BR:
             whisper:
               label: "Responder como sussurro"
               description: "Determina se a resposta da IA deve ser um sussurro"
-            reply_persona:
-              label: "Persona da resposta"
-              description: "A persona de IA a ser usada para respostas (deve ter um LLM padrão), terá prioridade sobre a resposta definida"
             max_output_tokens:
               label: "Máximo de tokens de saída"
               description: "Quando especificado, define um limite superior para o número máximo de tokens que o modelo pode gerar. Respeita o limite máximo de tokens de saída do LLM"
@@ -197,9 +178,6 @@ pt_BR:
             manual: "Usar uma lista de tags específica (configurada abaixo)"
             discover: "Permitir que a IA descubra e utilize quaisquer tags do site."
           fields:
-            tagger_persona:
-              label: "Persona de IA"
-              description: "A persona de IA a ser usada para analisar e aplicar tags em tópicos."
             tag_mode:
               label: "Modo de seleção de tags"
               description: "Escolha como a IA seleciona as tags."
@@ -211,7 +189,7 @@ pt_BR:
               description: "Percentual mínimo de confiança (0-100) necessário para aplicar as tags sugeridas."
             max_tags_per_post:
               label: "Máximo de tags por postagem"
-              description: "Número máximo de tags que podem ser aplicadas a uma única publicação."
+              description: "Número máximo de tags que podem ser aplicadas a uma única postagem."
             max_post_tokens:
               label: "Número máximo de tokens de postagem"
               description: "Número máximo de tokens do conteúdo da postagem a serem analisados."
@@ -228,25 +206,20 @@ pt_BR:
       title: "IA"
       default_llm:
         title: "Modelo de LLM padrão"
-        description: "O modelo de LLM padrão a ser usado para todos os recursos de IA. Será usado se nenhum LLM for especificado na persona ou configuração de recurso. Se nenhum LLM for especificado, será usado o LLM criado mais recentemente."
       llm_selector:
         none: "Nenhum"
         saved: "Modelo LLM padrão atualizado com sucesso"
       features:
         short_title: "Recursos"
-        description: "Estes recursos de IA estão disponíveis para quem acessar o seu site. Podem ser configurados para usar LLMs e personas específicas, além de poder ter o acesso controlado por grupos."
         back: "Voltar"
         settings_save_error: "Algumas configurações não puderam ser salvas."
         disabled: "(desativada)"
-        persona:
-          one: "Persona:"
-          other: "Personas:"
         groups: "Grupos:"
         llm:
           one: "LLM:"
           other: "LLMs:"
         no_llm: "Nenhum LLM selecionado"
-        no_persona: "Não configurado"
+        no_agent: "Não configurado"
         no_groups: "Nenhum"
         edit: "Definições"
         expand_list:
@@ -267,7 +240,6 @@ pt_BR:
           unconfigured: "Não configurado"
         filters:
           all: "Tudo"
-          text: "Pesquisar recursos, personas, LLMs ou grupos..."
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
           reset: "Redefinir"
         no_automations: "Ainda não há nenhuma automação"
@@ -311,7 +283,6 @@ pt_BR:
             settings: "Configurações Básicas"
             topic_criteria: "Critérios do tópico"
             post_criteria: "Critérios da postagem"
-            personas: "Personas"
         ai_helper:
           name: "Ajudante"
           description: "Auxilia os(as) usuários(as) na interação com a comunidade, em atividades tais como criação de tópicos, escrita de postagens e leitura de conteúdo"
@@ -326,12 +297,11 @@ pt_BR:
           image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
-          chat_thread_titles: "Títulos de tópicos de chat"
+          chat_thread_titles: "Títulos de threads de chat"
           setting_groups:
             access_permissions: "Acessos e Permissões"
             enabled_features: "Recursos Habilitados"
             automation: "Automação"
-            personas: "Personas"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
@@ -346,7 +316,6 @@ pt_BR:
           schedule_topic_error: "Erro ao agendar traduções. Por favor tente novamente."
           setting_groups:
             settings: "Configurações Básicas"
-            personas: "Personas"
             backfill_and_limits: "Backfill e limites"
         spam:
           name: "Spam"
@@ -404,7 +373,6 @@ pt_BR:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
         select_llm: "Selecionar LLM"
-        select_persona: "Selecionar persona"
         custom_instructions: "Instruções personalizadas"
         custom_instructions_help: "Instruções específicas para seu site para ajudar a orientar a IA na identificação de spam, por exemplo: \"Verificar com mais intensidade postagens que não estão em inglês\"."
         last_seven_days: "Últimos sete dias"
@@ -490,7 +458,7 @@ pt_BR:
           last_month: "Mês passado"
           custom: "Personalizado..."
         credit_allocations: "Alocações de crédito"
-      ai_persona:
+      ai_agent:
         ai_tools: "Ferramentas"
         tool_strategies:
           all: "Aplicar a todas as respostas"
@@ -502,11 +470,9 @@ pt_BR:
         edit: "Editar"
         export: "Exportar"
         import: "Importar"
-        import_error_conflict: "Conflito detectado ao importar %{name}. Gostaria de atualizar a persona existente?"
         overwrite: "Sobrescrever"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
-        use_parent_llm: "Use o modelo de linguagem da persona"
         max_context_posts: "Máximo de postagens de contexto"
         max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
         vision_enabled: Visão ativada
@@ -519,47 +485,32 @@ pt_BR:
         show_thinking: Mostrar raciocínio
         show_thinking_help: Mostrará aos usuários finais o raciocínio interno e chamadas de ferramentas do modelo de linguagem.
         mentionable: Permitir menções
-        mentionable_help: Ative para que os(as) usuários(as) nos grupos permitidos possam mencionar este(a) usuário(a) nas postagens. A IA responderá como esta persona.
         user: Usuário(a)
         create_user: Criar usuário(a)
-        create_user_help: Como alternativa, você poderá anexar um(a) usuário(a) a esta persona. Se fizer isso, a IA usará este(a) usuário(a) para responder às solicitações.
         default_llm: Modelo de linguagem padrão
-        default_llm_help: O modelo de linguagem padrão a ser usado para esta persona. É obrigatório se você quiser mencionar a persona em postagens públicas.
         question_consolidator_llm: Modelo de linguagem para consolidador de pergunta
         question_consolidator_llm_help: O modelo de linguagem a ser usado para o consolidador de pergunta. Para economizar, você pode escolher um modelo menos robusto.
         system_prompt: Prompt do sistema
         forced_tool_strategy: Estratégia de ferramenta forçada
         allow_chat_direct_messages: "Permitir mensagens diretas do chat"
-        allow_chat_direct_messages_help: "Ative para que os(às) usuários(as) nos grupos permitidos possam enviar mensagens diretas a esta persona."
         allow_chat_channel_mentions: "Permitir menções no canal de chat"
-        allow_chat_channel_mentions_help: "Ative para os(as) usuários(as) nos grupos permitidos poderem mencionar esta persona nos canais de chat"
         allow_personal_messages: "Permitir mensagens pessoais"
-        allow_personal_messages_help: "Ative para que os(as) usuários(as) nos grupos permitidos possam enviar mensagens pessoais a esta persona."
         allow_topic_mentions: "Permitir menções de tópicos"
-        allow_topic_mentions_help: "Ative para os(as) usuários(as) nos grupos permitidos poderem mencionar esta persona nos tópicos."
         force_default_llm: "Usar sempre o modelo de linguagem padrão"
         save: "Salvar"
-        saved: "Persona salva"
         enabled: "Ativado(a)?"
         tools: "Ferramentas ativadas"
         forced_tools: "Ferramentas forçadas"
         allowed_groups: "Grupos permitidos"
-        confirm_delete: "Você tem certeza de que deseja excluir esta persona?"
-        new: "Nova persona"
-        no_personas: "Você ainda não criou nenhuma persona"
-        title: "Personas"
-        short_title: "Personas"
         delete: "Excluir"
         temperature: "Temperatura"
         temperature_help: "A Temperatura a ser usada para o LLM. Aumente para incrementar a criatividade (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0,0 e 2,0)"
         top_p: "P Máximo"
         top_p_help: "O P Máximo a ser usado para o LLM, aumente para incrementar o fator aleatório (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0.0 e 1.0)"
         priority: "Prioridade"
-        priority_help: "Personas de prioridade são exibidas aos(às) usuários(as) no topo da lista de personas. Se várias personas tiverem prioridade, serão escolhidas em ordem alfabética."
         tool_options: "Opções de ferramenta"
         rag_conversation_chunks: "Pesquisar pedaços de conversa"
         rag_conversation_chunks_help: "O número de pedaços a serem usados para pesquisas de modelo RAG. Aumente para incrementar a quantidade de contexto que a IA pode usar."
-        persona_description: "Personas são um recurso poderoso que permite personalizar o comportamento da engine de IA no seu fórum do Discourse. Atuam como uma \"mensagem de sistema\" que orienta as respostas e as interações da IA, ajudando a criar uma experiência mais personalizada e envolvente para o(a) usuário(a)."
         response_format:
           title: "Formato de resposta JSON"
           no_format: "Nenhum formato JSON especificado"
@@ -579,11 +530,8 @@ pt_BR:
           enabled: "Bot de IA?"
         ai_bot:
           title: "Opções de bot de IA"
-          save_first: "Mais opções de bot de IA estarão disponíveis ao salvar a persona."
         filters:
-          text: "Encontrar persona"
           reset: "Redefinir"
-          no_results: "Não foi encontrada nenhuma persona correspondente aos seus filtros."
           all_features: "Qualquer recurso"
         features_list:
           one: "Recurso:"
@@ -623,7 +571,6 @@ pt_BR:
         name_help: "O nome será exibido na interface do Discourse e será o identificador curto a ser usado para localizar a ferramenta em várias configurações. Deve ser um nome único (obrigatório)"
         new: "Nova ferramenta"
         tool_name: "Nome da ferramenta"
-        tool_name_help: "O nome da ferramenta é apresentado ao modelo de linguagem grande. Não é único, mas é único por persona. (A persona é validada ao salvar.)"
         description: "Descrição"
         description_help: "Descrição clara da finalidade da ferramenta para o modelo de linguagem"
         subheader_description: "As ferramentas estendem as funcionalidades dos bots de IA com funções de JavaScript definidas pelo(a) usuário(a)"
@@ -734,13 +681,12 @@ pt_BR:
           next_reset: "Os créditos serão zerados em %{time}"
         usage:
           ai_bot: "Bot de IA"
-          ai_helper: "Ajudante (%{persona})"
+          ai_helper: "Ajudante (%{agent})"
           ai_helper_image_caption: "Legenda em imagem"
-          ai_persona: "Persona (%{persona})"
           ai_summarization: "Resumir"
           ai_embeddings_semantic_search: "Pesquisa com IA"
           ai_spam: "Spam"
-          automation: "Automatização (%{persona})"
+          automation: "Automatização (%{agent})"
         in_use_warning:
           one: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, o recurso não funcionará como esperado."
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
@@ -958,7 +904,6 @@ pt_BR:
         collapse_view_label: "Sair de tela cheia (ESC ou botão de voltar)"
         click_to_run_label: "Rodar artefato"
       ai_bot:
-        persona: "Persona"
         llm: "Modelo"
         pm_warning: "Todas as mensagens do chatbot de IA são monitoradas regularmente por moderadores(as)."
         cancel_streaming: "Parar resposta"

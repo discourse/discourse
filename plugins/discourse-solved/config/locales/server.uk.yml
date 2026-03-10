@@ -10,6 +10,7 @@ uk:
     support:
       name: "Підтримка"
       title: "підтримка"
+      description: "Де учасники можуть ставити питання і відзначити відповіді як рішення."
   discourse_solved:
     category_type:
       allow_accepted_answers:
@@ -39,6 +40,7 @@ uk:
   reports:
     accepted_solutions:
       title: "Прийняті рішення"
+      description: "Скільки тем було прийнято рішення за день у діапазоні дат, з додатковим фільтром категорій та загальним показником порівняння за 30 днів."
       xaxis: "День"
       yaxis: "Всього"
   solved:

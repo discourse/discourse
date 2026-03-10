@@ -71,8 +71,8 @@ pt_BR:
               label: Categorias
               description: Acionar somente quando o tópico denunciado estiver nessas categorias.
             tags:
-              label: Etiquetas
-              description: Acionar apenas quando o tópico denunciado estiver nessas categorias.
+              label: Tags
+              description: Acionar apenas quando o tópico denunciado tiver essas tags.
         not_found: Não foi possível encontrar o acionador `%{trigger}` para automação `%{automation}`. Verifique se o plugin associado está instalado
         user_badge_granted:
           fields:
@@ -287,7 +287,7 @@ pt_BR:
           fields:
             email_template:
               label: Modelo de e-mail
-              description: Suporta placeholders para automação.
+              description: Suporta espaços reservados para automação.
             recipients:
               label: Destinatários
               description: Usuários ou endereços de e-mail a notificar

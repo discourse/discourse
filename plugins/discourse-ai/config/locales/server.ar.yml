@@ -34,9 +34,6 @@ ar:
       ai_tool_action:
         title: إجراء أداة الذكاء الاصطناعي
         description: تشغيل أداة الذكاء الاصطناعي عند تفعيل الأتمتة
-      llm_persona_triage:
-        title: فرز المنشورات باستخدام شخصيات الذكاء الاصطناعي
-        description: "الرد على المنشورات باستخدام شخصية محددة من شخصيات الذكاء الاصطناعي"
       llm_triage:
         title: فرز المنشورات باستخدام الذكاء الاصطناعي
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
@@ -100,8 +97,6 @@ ar:
     ai_helper_automatic_chat_thread_title: "تعيين عناوين سلسلة الدردشة تلقائيًا بناءً على محتويات السلسلة."
     ai_helper_enabled_features: "حدِّد الميزات التي تريد تفعيلها في مساعد الذكاء الاصطناعي."
     post_ai_helper_allowed_groups: "مجموعات المستخدمين المسموح لها بالوصول إلى ميزات مساعد الذكاء الاصطناعي في المنشورات"
-    ai_helper_post_illustrator_persona: "الشخصية المراد استخدامها لميزة توضيح المنشور الخاصة بمساعد الذكاء الاصطناعي. ملاحظة: يجب عليك أيضًا إنشاء أداة لإنشاء الصور (المسؤول > المكوّنات الإضافية > Discourse AI > الأدوات) لكي تعمل هذه الميزة."
-    ai_helper_chat_thread_title_persona: "الشخصية التي سيتم استخدامها لإنشاء عناوين سلاسل المحادثات."
     ai_embeddings_selected_model: "استخدم النموذج المُحدَّد لتوليد التضمينات."
     ai_embeddings_generate_for_pms: "إنشاء تضمينات للرسائل الشخصية."
     ai_embeddings_semantic_related_topics_enabled: "استخدام البحث الدلالي للموضوعات ذات الصلة."
@@ -115,7 +110,6 @@ ar:
     ai_embeddings_semantic_related_age_time_scale: "النطاق الزمني المقدر بالأيام والمستخدم في احتساب معامل خفض القيمة بناءً على العمر؛ فالمواضيع التي تظل غير نشطة طوال هذه المدة تخضع لخفض قدره 50% تقريبًا في حال ضبط الخفض عند 1.0. يمكن تعيين القيمة 365 لاعتماد مقياس سنوي، أو القيمة 90 لاعتماد مقياس ربع سنوي."
     ai_embeddings_per_post_enabled: إنشاء التضمينات لكل منشور
     ai_summarization_enabled: "تفعيل ميزة التلخيص"
-    ai_summarization_persona: "الشخصية المستخدمة لميزة التلخيص"
     ai_pm_summarization_allowed_groups: "المجموعات المسموح لها بإنشاء الملخصات وعرضها في الرسائل الخاصة"
     ai_summary_gists_enabled: "إنشاء ملخصات قصيرة لأحدث الردود في الموضوعات تلقائيًا"
     ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المطلوب ملؤها في الساعة."
@@ -129,14 +123,12 @@ ar:
     ai_bot_add_to_community_section: "عرض رابط في قسم المجتمع في الشريط الجانبي لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
     ai_bot_github_access_token: "رمز وصول GitHub للاستخدام مع أدوات الذكاء الاصطناعي من GitHub (مطلوب لدعم البحث)"
     ai_discover_enabled: "تفعيل ميزة البحث الاكتشافي"
-    ai_discover_persona: "الشخصية المستخدمة في ميزة البحث الاكتشافي"
     ai_google_custom_search_api_key: "مفتاح API لواجهة API الخاصة ببحث Google المخصَّص، راجع: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "معرّف CX لواجهة برمجة تطبيقات البحث المخصص من Google"
     ai_discord_search_enabled: "تفعيل ميزة البحث في Discord"
     ai_discord_app_id: "معرّف تطبيق Discord الذي ترغب في ربط ميزة البحث به"
     ai_discord_app_public_key: "المفتاح العام لتطبيق Discord الذي ترغب في ربط ميزة البحث به"
     ai_discord_search_mode: "حدد وضع البحث الذي تريد استخدامه للبحث في Discord"
-    ai_discord_search_persona: "الشخصية المستخدمة في بحث Discord."
     ai_discord_allowed_guilds: "مجتمعات (خوادم) Discord التي يُصرح للروبوت بالبحث فيها"
     ai_translation_enabled: "تفعيل ميزة الترجمة بالذكاء الاصطناعي"
     ai_translation_backfill_limit_to_public_content: "عند التفعيل، سيتم ترجمة المحتوى في الفئات العامة فقط. عند التعطيل، سيتم أيضًا إرسال المحتوى في الرسائل الجماعية الخاصة والفئات الخاصة للترجمة."
@@ -306,8 +298,6 @@ ar:
     ai_helper:
       errors:
         completion_request_failed: "حدث خطأ في أثناء محاولة تقديم اقتراحات. يُرجى إعادة المحاولة."
-        no_illustrator_persona: "لم يتم تكوين شخصية مُوضِّح المنشورات. يرجى التحقق من إعدادات موقعك."
-        no_image_generation_tool: "يجب أن تتضمن شخصية مُوضِّح المنشورات أداة لإنشاء الصور. يرجى تكوين أداة إنشاء الصور لهذه الشخصية في لوحة المسؤول."
         no_image_generated: "فشل إنشاء الصورة. يرجى المحاولة مرة أخرى أو التحقق من إعدادات الأداة."
         llm_model_not_configured: "لا يوجد نموذج لغة مُهيأ لإنشاء الصور. يرجى إعداد نموذج لغة افتراضي في إعدادات الموقع."
         unknown_error: "حدث خطأ غير متوقع أثناء إنشاء الصور المصغرة. يرجى المحاولة مرة أخرى."
@@ -345,10 +335,8 @@ ar:
       reply_error: "عذرًا، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
       thinking: "التفكير"
-      personas:
+      agents:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
-        cannot_delete_system_persona: "لا يمكن حذف شخصيات النظام، يُرجى إيقافها بدلًا من ذلك"
-        cannot_edit_system_persona: "يمكن إعادة تسمية شخصيات النظام فقط، ولا يجوز لك تعديل الأدوات أو رسائل مطالبة النظام. بل يمكنك تعطيلها وإنشاء نسخة منها."
         cannot_have_duplicate_tools: "لا يمكن وجود أدوات مكررة"
         github_helper:
           name: "مساعد GitHub"
@@ -384,14 +372,12 @@ ar:
           name: "مساعد Discourse"
           description: "روبوت ذكاء اصطناعي متخصص في المساعدة على المهام المتعلقة بمنصة Discourse"
         web_artifact_creator:
-          name: "مُنشئ أدوات الويب"
+          name: "مُنشئ الملفات الثانوية على الويب"
           description: "روبوت الذكاء الاصطناعي المتخصص في إنشاء أدوات ويب تفاعلية"
         summarizer:
           name: "المُلخّص"
-          description: "الشخصية الافتراضية المستخدمة لتشغيل ملخصات الذكاء الاصطناعي"
         short_summarizer:
           name: "ملخّص (نسخة قصيرة)"
-          description: "الشخصية الافتراضية المستخدمة لتوليد ملخصات قصيرة بالعناصر في قوائم الموضوعات"
         concept_finder:
           name: "مكتشف المفاهيم"
           description: "روبوت ذكاء اصطناعي متخصص في تحديد المفاهيم والموضوعات في المحتوى"
@@ -403,31 +389,23 @@ ar:
           description: "روبوت ذكاء اصطناعي متخصص في إزالة التكرارات للمفاهيم"
         custom_prompt:
           name: "رسالة مطالبة مخصَّصة"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة المطالبات المخصصة في المساعد"
         smart_dates:
           name: "التواريخ الذكية"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة التواريخ الذكية في المساعد"
         markdown_table_generator:
           name: "مولد جدول Markdown"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في إنشاء جداول Markdown"
         post_illustrator:
           name: "مُوضِّح المنشورات"
           description: "تنشئ صورًا بغرض توضيح المنشورات باستخدام أدوات إنشاء الصور المتاحة"
         proofreader:
           name: "مدقق لغوي"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في تدقيق النصوص"
         titles_generator:
           name: "مولّد العناوين"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في اقتراح عناوين الموضوعات"
         tutor:
           name: "مُدرس خاص"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في الشرح"
         translator:
           name: "مترجم"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في الترجمة"
         image_captioner:
           name: "تسميات الصور"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في تسميات الصور"
         locale_detector:
           name: "كاشف اللغة"
           description: "يشغّل ميزة الترجمة من خلال اكتشاف لغة النص المعطى (المنشورات، والعناوين، وغيرها)"
@@ -442,19 +420,14 @@ ar:
           description: "يشغّل ميزة الترجمة كمترجم نصوص عام، يُستخدم للنصوص القصيرة مثل أسماء الفئات أو الوسوم"
         spam_detector:
           name: "كاشف المحتوى العشوائي"
-          description: "الشخصية الافتراضية المسؤولة عن ميزة اكتشاف المحتوى العشوائي لدينا"
         content_creator:
           name: "مبدع المحتوى"
-          description: "الشخصية الافتراضية المسؤولة عن تشغيل بحث HyDE"
         report_runner:
           name: "مشغّل التقارير"
-          description: "الشخصية الافتراضية المستخدمة في البرنامج النصي لأتمتة التقارير"
         discover:
           name: "اكتشف"
-          description: "الشخصية الافتراضية المستخدمة في ميزة الاكتشافات (البحث التكميلي)"
         chat_thread_titler:
           name: "عنونة سلاسل المحادثات"
-          description: "الشخصية الافتراضية التي تدعم إنشاء عناوين سلاسل المحادثات تلقائيًا"
       topic_not_found: "الملخص غير متوفر، الموضوع غير موجود!"
       summarizing: "جارٍ تلخيص الموضوع"
       searching: "جارٍ البحث عن: '%{query}'"
@@ -462,7 +435,6 @@ ar:
         researcher:
           researcher_llm:
             name: "نموذج اللغة الكبير"
-            description: "نموذج اللغة المستخدم في البحث (افتراضيًا يستخدم نموذج اللغة الكبير الخاص بالشخصية الحالية)"
           max_tokens_per_batch:
             name: "الحد الأقصى من الرموز لكل دفعة"
             description: "الحد الأقصى لعدد الرموز التي يمكن استخدامها لكل دفعة في البحث"
@@ -523,6 +495,8 @@ ar:
         random_picker: "منتقي عشوائي"
         categories: "إدراج الفئات"
         flag_post: "الإبلاغ عن المنشور"
+        edit_post: "تعديل المنشور"
+        move_posts: "نقل المنشورات"
         search: "البحث"
         tags: "إدراج الوسوم"
         time: "الوقت"
@@ -552,6 +526,7 @@ ar:
         random_picker: "اختر رقمًا عشوائيًا أو عنصرًا عشوائيًا من القائمة"
         categories: "إدراج جميع الفئات المرئية بشكلٍ عام في المنتدى"
         flag_post: "أبلغ عن المنشور الحالي لمراجعته من قبل فريق العمل"
+        delete_topic: "حذف موضوع"
         search: "البحث في جميع الموضوعات العامة في المنتدى"
         tags: "إدراج جميع الوسوم في المنتدى"
         time: "البحث عن الوقت في مناطق زمنية مختلفة"
@@ -657,6 +632,34 @@ ar:
         already_flagged: "تم الإبلاغ عن المنشور بالفعل وهو قيد المراجعة."
         flagged: "تم الإبلاغ عن المنشور للمراجعة."
         reason: "قام روبوت الذكاء الاصطناعي بالإبلاغ عن هذا المنشور.\n\nالسبب: %{reason}"
+      close_topic:
+        errors:
+          not_found: "الموضوع غير موجود."
+      unlist_topic:
+        errors:
+          not_found: "الموضوع غير موجود."
+      delete_topic:
+        errors:
+          not_found: "الموضوع غير موجود."
+      edit_tags:
+        errors:
+          not_found: "الموضوع غير موجود."
+      edit_category:
+        errors:
+          not_found: "الموضوع غير موجود."
+          category_not_found: "لم يتم العثور على الفئة."
+      set_topic_timer:
+        errors:
+          not_found: "الموضوع غير موجود."
+      set_slow_mode:
+        errors:
+          not_found: "الموضوع غير موجود."
+      move_posts:
+        errors:
+          not_found: "الموضوع غير موجود."
+      assign:
+        errors:
+          not_found: "الموضوع غير موجود."
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
@@ -689,7 +692,6 @@ ar:
         set_llm_first: "اضبط %{setting} أولًا"
         model_unreachable: "لم نتمكن من الحصول على رد من هذا النموذج. تحقَّق من إعداداتك أولًا."
         invalid_seeded_model: "لا يمكنك استخدام هذا النموذج مع هذه الميزة"
-        invalid_persona_response_format: "يجب أن تحتوي الشخصية المختارة على تنسيق استجابة يشمل حقلًا منطقيًا باسم \"عشوائي\""
         must_select_model: "يجب عليك تحديد نموذج لغة كبير أولًا"
         invalid_llm_id: "النموذج اللغوي الكبير المحدد غير صالح"
       endpoints:
@@ -709,7 +711,7 @@ ar:
         many: "لم نتمكن من حذف هذا النموذج لأن %{settings} تستخدمه. قم بتحديث الإعدادات وحاول مرة أخرى."
         other: "لم نتمكن من حذف هذا النموذج لأن %{settings} تستخدمه. قم بتحديث الإعدادات وحاول مرة أخرى."
       cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
-    personas:
+    agents:
       malformed_examples: "الأمثلة المقدمة لا تتوافق مع التنسيق الصحيح."
     embeddings:
       delete_failed: "هذا النموذج قيد الاستخدام حاليًا. قم بتحديث `ai embeddings selected model` أولًا."
@@ -743,12 +745,8 @@ ar:
       quota_exceeded: "لقد تجاوزت الحصة المُخصَّصة لهذا النموذج. يُرجى إعادة المحاولة بعد %{relative_time}."
       quota_required: "يجب عليك تحديد الحد الأقصى للرموز أو الاستخدامات لهذا النموذج"
       no_query_specified: معلمة الاستعلام مطلوبة، يُرجى تحديدها.
-      no_user_for_persona: لا تملك الشخصية المحدَّدة مستخدمًا مرتبطًا بها.
-      persona_not_found: الشخصية المحدَّدة غير موجودة. تحقَّق من معلمتَي persona_name أو persona_id.
       no_user_specified: اسم المستخدم أو معلمة user_unique_id مطلوبة، يُرجى تحديدها.
       user_not_found: المستخدم المحدَّد غير موجود. تحقَّق من معلمة username.
-      persona_disabled: الشخصية المحدَّدة متوقفة. تحقَّق من معلمتَي persona_name أو persona_id.
-      no_default_llm: يجب أن يكون للشخصية معلمة default_llm محدَّدة.
       user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
       invalid_stream_resume_token: رمز resume_token غير صالح أو انتهت صلاحيته.
       no_tool_results_specified: المعلمة tool_results مطلوبة عند استئناف الدفق.
@@ -771,7 +769,6 @@ ar:
       stream_reply_state_too_large: "حالة التدفق كبيرة جدًا بحيث لا يمكن الاحتفاظ بها (الحد الأقصى %{max} بايت)."
       stream_reply_unexpected_error: حدث خطأ غير متوقع أثناء تدفق الرد.
       prompt_message_length: تتجاوز الرسالة الحد الأقصى لعدد الحروف، والبالغ 1000 حرف، بمقدار %{idx}.
-      persona_already_exists: يوجد بالفعل شخصية بالاسم %{name}.
       custom_tool_exists:
         zero: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
         one: "هناك أداة مخصصة تحمل الاسم %{names} بالفعل."

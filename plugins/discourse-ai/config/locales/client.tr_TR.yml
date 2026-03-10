@@ -12,8 +12,6 @@ tr_TR:
           descriptions:
             discourse_ai:
               search: "YZ aramasına izin verir"
-              stream_completion: "YZ kişilik tamamlamalarının yayınlanmasına izin verir"
-              update_personas: "YZ kişiliklerinin güncellenmesine izin verir"
               manage_artifacts: "AI artefaktlarını yönetmeye izin verir (liste, görüntüleme, oluşturma, güncelleme, silme)"
       site_settings:
         categories:
@@ -36,9 +34,6 @@ tr_TR:
             create_ai_llm_model: "LLM modeli oluştur"
             update_ai_llm_model: "LLM modelini güncelle"
             delete_ai_llm_model: "LLM modelini sil"
-            create_ai_persona: "YZ kişiliği yarat"
-            update_ai_persona: "YZ kişiliğini güncelle"
-            delete_ai_persona: "YZ kişiliğini sil"
             create_ai_tool: "YZ aracı oluştur"
             update_ai_tool: "YZ aracını güncelle"
             delete_ai_tool: "YZ aracını sil"
@@ -114,9 +109,6 @@ tr_TR:
             top_p:
               label: "Üst P"
               description: "LLM için kullanılacak en iyi P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın)"
-            persona_id:
-              label: "Kişilik"
-              description: "Rapor oluşturmada kullanılacak YZ Kişiliği"
         ai_tool_action:
           fields:
             tool:
@@ -125,22 +117,14 @@ tr_TR:
             llm_model:
               label: "LLM Modeli"
               description: "llm.generate() işlevini kullanan araçlar için dil modeli (isteğe bağlı)"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Kişilik"
-              description: "Sınıflandırma için kullanılacak YZ Kişiliği (varsayılan LLM'si ve belirli Kullanıcı olmalıdır)"
             whisper:
               label: "Fısıltı olarak yanıtla"
-              description: "Kişinin tepkisinin bir fısıltı olması gerekip gerekmediği"
             silent_mode:
               label: "Sessiz Mod"
-              description: "Sessiz modda, kişi içeriği alır ancak forumda hiçbir gönderi paylaşmaz. Bu, araçları kullanarak sınıflandırma yaparken kullanışlıdır"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Kişilik"
-              description: "Sınıflandırma için kullanılan kişilik. Eylemi tetiklemek için kullanabileceğiniz tek bir kelime ile yanıt verdiğinden emin olun"
             max_post_tokens:
               label: "Maksimum Gönderi Token'ı Sayısı"
               description: "LLM sınıflandırması kullanılarak taranacak maksimum token sayısı"
@@ -186,9 +170,6 @@ tr_TR:
             whisper:
               label: "Fısıltı olarak yanıtla"
               description: "YZ'nin tepkisinin bir fısıltı olması gerekip gerekmediği"
-            reply_persona:
-              label: "Yanıt Kişiliği"
-              description: "Yanıtlar için kullanılacak YZ Kişiliği (varsayılan LLM'ye sahip olmalı), hazır yanıtlara kıyasla öncelik verilir"
             max_output_tokens:
               label: "Maks. çıktı token'ları"
               description: "Belirtildiğinde, modelin üretebileceği maksimum token sayısına bir üst limit belirler. LLM'in maksimum çıktı token'ı limitine uyar"
@@ -197,9 +178,6 @@ tr_TR:
             manual: "Belirli etiket listesini kullanın (aşağıda yapılandırılmıştır)"
             discover: "AI'nın herhangi bir site etiketini keşfetmesine ve kullanmasına izin verin"
           fields:
-            tagger_persona:
-              label: "AI Kişiliği"
-              description: "Konuları analiz etmek ve etiketlemek için kullanılacak AI kişiliği"
             tag_mode:
               label: "Etiket Seçim Modu"
               description: "AI'nın etiketleri nasıl seçeceğini seçin"
@@ -228,25 +206,20 @@ tr_TR:
       title: "YZ"
       default_llm:
         title: "Varsayılan LLM modeli"
-        description: "Tüm YZ özellikleri için kullanılacak varsayılan LLM modeli. Özellik yapılandırmasında veya kişilikte herhangi bir LLM belirtilmemişse bu model kullanılır. Varsayılan bir LLM belirtilmemişse en son oluşturulan LLM modeli kullanılır."
       llm_selector:
         none: "Hiçbiri"
         saved: "Varsayılan LLM modeli başarıyla güncellendi"
       features:
         short_title: "Özellikler"
-        description: "Bunlar, sitenizdeki ziyaretçilerin kullanımına sunulan YZ özellikleridir. Bunlar, belirli kişileri ve LLM'leri kullanacak şekilde yapılandırılabilir ve gruplar tarafından erişim kontrolü sağlanabilir."
         back: "Geri"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
         disabled: "(devre Dışı)"
-        persona:
-          one: "Kişilik:"
-          other: "Kişilikler:"
         groups: "Gruplar:"
         llm:
           one: "LLM:"
           other: "LLM'ler:"
         no_llm: "LLM seçilmedi"
-        no_persona: "Ayarlanmamış"
+        no_agent: "Ayarlanmamış"
         no_groups: "Hiçbiri"
         edit: "Ayarlar"
         expand_list:
@@ -267,7 +240,6 @@ tr_TR:
           unconfigured: "Yapılandırılmamış"
         filters:
           all: "Tümü"
-          text: "Arama özellikleri, kişilikler, LLM'ler veya gruplar..."
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"
@@ -311,7 +283,6 @@ tr_TR:
             settings: "Temel Ayarlar"
             topic_criteria: "Konu Kriterleri"
             post_criteria: "Gönderi Kriterleri"
-            personas: "Kişilikler"
         ai_helper:
           name: "Yardımcı"
           description: "Kullanıcıların konu oluşturma, gönderi yazma ve içerik okuma gibi topluluk etkileşiminde bulunmasına yardımcı olur"
@@ -331,7 +302,6 @@ tr_TR:
             access_permissions: "Erişim ve İzinler"
             enabled_features: "Etkinleştirilmiş Özellikler"
             automation: "Otomasyon"
-            personas: "Kişilikler"
         translation:
           name: "Çeviri"
           description: "İçeriği desteklenen dillere çevirir"
@@ -346,7 +316,6 @@ tr_TR:
           schedule_topic_error: "Çevirilerin planlanması başarısız oldu. Lütfen tekrar deneyin."
           setting_groups:
             settings: "Temel Ayarlar"
-            personas: "Kişilikler"
             backfill_and_limits: "Dolgu ve Sınırlar"
         spam:
           name: "İstenmeyen içerik"
@@ -404,7 +373,6 @@ tr_TR:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
         select_llm: "LLM seç"
-        select_persona: "Kişilik seç"
         custom_instructions: "Özel talimatlar"
         custom_instructions_help: "YZ'nin istenmeyen içerikleri tespit etmesine yardımcı olmak için sitenize özel talimatlar, ör. \"İngilizce olmayan gönderileri tarama konusunda daha agresif ol\"."
         last_seven_days: "Son 7 gün"
@@ -490,7 +458,7 @@ tr_TR:
           last_month: "Geçen ay"
           custom: "Özel..."
         credit_allocations: "Kredi tahsisleri"
-      ai_persona:
+      ai_agent:
         ai_tools: "Araçlar"
         tool_strategies:
           all: "Tüm yanıtlara uygula"
@@ -502,15 +470,12 @@ tr_TR:
         edit: "Düzenle"
         export: "Dışa Aktar"
         import: "İçe Aktar"
-        import_error_conflict: "%{name} içe aktarılırken çakışma algılandı, mevcut kişiliği güncellemek ister misiniz?"
         overwrite: "Üzerine yaz"
         description: "Açıklama"
         no_llm_selected: "Dil modeli seçilmedi"
-        use_parent_llm: "Persona'nın dil modelini kullanın"
         max_context_posts: "Maksimum bağlam gönderisi sayısı"
         max_context_posts_help: "Bir kullanıcıya yanıt verirken YZ için bağlam olarak kullanılacak maksimum gönderi sayısı. (varsayılan için boş)"
         execution_mode: "Yürütme Modu"
-        execution_mode_help: "Persona'nın araç yürütme ve konuşma bağlamını nasıl yönettiğini kontrol eder. Varsayılan olarak sabit sıra/araç sınırları kullanılır. Agentic, daha uzun ve daha yetenekli araç kullanım oturumları için otomatik bağlam sıkıştırmalı bir jeton bütçesi kullanır."
         execution_mode_options:
           default: "Varsayılan (Sabit Limitler)"
           agentic: "Agentic (Token Bütçesi)"
@@ -528,47 +493,39 @@ tr_TR:
         show_thinking: Düşünceyi göster
         show_thinking_help: Son kullanıcılara dil modelinin içsel düşünce yapısını ve araç çağrılarını gösterecektir.
         mentionable: Bahsetmelere izin ver
-        mentionable_help: Etkinleştirilirse izin verilen gruplardaki kullanıcılar gönderilerde bu kullanıcıdan bahsedebilir, YZ bu kişi olarak yanıt verir.
         user: Kullanıcı
         create_user: Kullanıcı oluştur
-        create_user_help: İsteğe bağlı olarak bu kişiye bir kullanıcı ekleyebilirsiniz. Bunu yaparsanız YZ isteklere yanıt vermek için bu kullanıcıyı kullanır.
         default_llm: Varsayılan dil modeli
-        default_llm_help: Bu kişi için kullanılacak varsayılan dil modeli. Herkese açık gönderilerde kişiden bahsetmek istiyorsanız gereklidir.
         question_consolidator_llm: Soru Konsolidatörü için Dil Modeli
         question_consolidator_llm_help: Soru birleştirici için kullanılacak dil modeli, maliyetten tasarruf etmek için daha az güçlü bir model seçebilirsiniz.
         system_prompt: Sistem istemi
         forced_tool_strategy: Zorlanmış araç stratejisi
         allow_chat_direct_messages: "Doğrudan sohbet mesajlarına izin ver"
-        allow_chat_direct_messages_help: "Etkinleştirilirse izin verilen gruplardaki kullanıcılar bu kişiliğe doğrudan mesaj gönderebilir."
         allow_chat_channel_mentions: "Sohbet kanalından bahsetmeye izin ver"
-        allow_chat_channel_mentions_help: "Etkinleştirilirse izin verilen gruplardaki kullanıcılar sohbet kanallarında bu kişilikten bahsedebilir."
         allow_personal_messages: "Kişisel mesajlara izin ver"
-        allow_personal_messages_help: "Etkinleştirilirse izin verilen gruplardaki kullanıcılar bu kişiliğe kişisel mesaj gönderebilir."
         allow_topic_mentions: "Konu bahsetmelerine izin ver"
-        allow_topic_mentions_help: "Etkinleştirilirse izin verilen gruplardaki kullanıcılar konularda bu kişilikten bahsedebilir."
         force_default_llm: "Her zaman varsayılan dil modelini kullan"
         save: "Kaydet"
-        saved: "Kişilik kaydedildi"
         enabled: "Etkin mi?"
         tools: "Etkinleştirilmiş araçlar"
+        tokens: "jetonlar"
+        context_cost: "Bağlam Maliyeti"
+        tool_tokens_total: "~%{tokens} Jetonlar"
+        tool_severity_medium: "Orta kapasite"
+        tool_severity_high: "Yüksek kapasite"
+        tool_severity_too_many: "Çok fazla araç"
+        tool_tokens_warning: "Fazla araçlar, değerli konuşma belleğini kaplayarak AI performansını düşürür. Gerekli olmayan araçları kaldırmayı düşünün."
         forced_tools: "Zorlanmış araçlar"
         allowed_groups: "İzin verilen gruplar"
-        confirm_delete: "Bu kişiliği silmek istediğinizden emin misiniz?"
-        new: "Yeni kişilik"
-        no_personas: "Henüz herhangi bir kişilik oluşturmadınız"
-        title: "Kişilikler"
-        short_title: "Kişilikler"
         delete: "Sil"
         temperature: "Sıcaklık"
         temperature_help: "LLM için kullanılacak sıcaklık. Yaratıcılığı artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 2,0 arasında bir değer)"
         top_p: "Üst P"
         top_p_help: "LLM için kullanılacak en yüksek P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 1,0 arasında bir değer)"
         priority: "Öncelik"
-        priority_help: "Öncelikli kişilikler kullanıcılara kişilik listesinin en üstünde gösterilir. Birden fazla kişiliğin önceliği varsa bunlar alfabetik olarak sıralanır."
         tool_options: "Araç seçenekleri"
         rag_conversation_chunks: "Konuşma parçalarını ara"
         rag_conversation_chunks_help: "RAG modeli aramaları için kullanılacak parça sayısı. YZ'nin kullanabileceği bağlam miktarını artırmak için artırın."
-        persona_description: "Kişilikler, Discourse forumunuzdaki YZ motorunun davranışını özelleştirmenize olanak tanıyan güçlü bir özelliktir. YZ'nin yanıtlarını ve etkileşimlerini yönlendiren bir \"sistem mesajı\" olarak hareket ederek daha kişiselleştirilmiş ve ilgi çekici bir kullanıcı deneyimi oluşturmaya yardımcı olurlar."
         response_format:
           title: "JSON yanıt biçimi"
           no_format: "JSON biçimi belirtilmedi"
@@ -588,11 +545,8 @@ tr_TR:
           enabled: "YZ Botu?"
         ai_bot:
           title: "YZ botu seçenekleri"
-          save_first: "Kişiliği kaydettiğinizde daha fazla YZ botu seçeneği kullanılabilir hâle gelir."
         filters:
-          text: "Kişilik bul"
           reset: "Sıfırla"
-          no_results: "Filtrelerinizle eşleşen bir kişilik bulunamadı."
           all_features: "Herhangi bir özellik"
         features_list:
           one: "Özellik:"
@@ -632,7 +586,6 @@ tr_TR:
         name_help: "Ad, Discourse kullanıcı arayüzünde görünür ve aracı çeşitli ayarlarda bulmak için kullanacağınız kısa tanımlayıcıdır, farklı olmalıdır (gerekli)"
         new: "Yeni araç"
         tool_name: "Araç Adı"
-        tool_name_help: "Araç Adı büyük dil modeline sunulur. Farklı değildir ancak kişilik başına farklıdır. (kişilik, kaydetme sırasında doğrulanır)"
         description: "Açıklama"
         description_help: "Dil modeli için aracın amacının net bir açıklaması"
         subheader_description: "Araçlar, kullanıcı tanımlı JavaScript işlevleri ile YZ botlarının yeteneklerini genişletir."
@@ -744,13 +697,12 @@ tr_TR:
           next_reset: "Krediler %{time} tarihinde sıfırlandı."
         usage:
           ai_bot: "YZ botu"
-          ai_helper: "Yardımcı (%{persona})"
+          ai_helper: "Yardımcı (%{agent})"
           ai_helper_image_caption: "Görüntü yazısı"
-          ai_persona: "Kişilik (%{persona})"
           ai_summarization: "Özetle"
           ai_embeddings_semantic_search: "YZ araması"
           ai_spam: "İstenmeyen içerik"
-          automation: "Otomasyon (%{persona})"
+          automation: "Otomasyon (%{agent})"
         in_use_warning:
           one: "Bu model şu anda %{settings} tarafından kullanılıyor. Yanlış yapılandırılırsa özellik beklendiği gibi çalışmaz."
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
@@ -829,6 +781,7 @@ tr_TR:
           provider_quantizations: "Sağlayıcı nicelleştirmelerinin sırası (virgülle ayrılmış liste, ör.: fp16,fp8)"
           disable_streaming: "Akış tamamlamalarını devre dışı bırak (akışı akış dışı taleplere dönüştür)"
           reasoning_effort: "Muhakeme eforu (yalnızca muhakeme modelleri için)"
+          service_tier: "Hizmet katmanı (esnek = daha düşük maliyet/daha yüksek gecikme süresi, öncelik = daha hızlı işleme)"
           enable_reasoning: "Muhakemeyi etkinleştirin (yalnızca muhakeme modelleri için geçerlidir)"
           adaptive_thinking: "Uyarlanabilir düşünmeyi etkinleştir (Claude 4.6 modelleri için önerilir)"
           enable_thinking: "Düşünmeyi etkinleştir (Gemini 2.5 modelleri - jeton bütçesi kullanır)"
@@ -971,7 +924,6 @@ tr_TR:
         collapse_view_label: "Tam Ekrandan Çık (ESC veya Geri tuşu)"
         click_to_run_label: "Artifact'i çalıştır"
       ai_bot:
-        persona: "Kişilik"
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"

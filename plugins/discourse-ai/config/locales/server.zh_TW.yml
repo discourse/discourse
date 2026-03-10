@@ -20,6 +20,33 @@ zh_TW:
         search: "搜尋"
         time: "時間"
         summarize: "總結"
+      close_topic:
+        errors:
+          not_found: "未找到話題."
+      unlist_topic:
+        errors:
+          not_found: "未找到話題."
+      delete_topic:
+        errors:
+          not_found: "未找到話題."
+      edit_tags:
+        errors:
+          not_found: "未找到話題."
+      edit_category:
+        errors:
+          not_found: "未找到話題."
+      set_topic_timer:
+        errors:
+          not_found: "未找到話題."
+      set_slow_mode:
+        errors:
+          not_found: "未找到話題."
+      move_posts:
+        errors:
+          not_found: "未找到話題."
+      assign:
+        errors:
+          not_found: "未找到話題."
     sentiment:
       reports:
         post_emotion:

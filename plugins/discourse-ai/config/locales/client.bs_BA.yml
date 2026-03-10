@@ -80,7 +80,7 @@ bs_BA:
         summary: "Sažetak"
         username: "Nadimak"
         total: "Suma"
-      ai_persona:
+      ai_agent:
         back: "Prethodno"
         name: "Ime"
         edit: "Izmijeni"

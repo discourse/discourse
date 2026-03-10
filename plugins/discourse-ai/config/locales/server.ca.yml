@@ -19,6 +19,34 @@ ca:
       tool_summary:
         search: "Cerca"
         time: "Hora"
+      close_topic:
+        errors:
+          not_found: "Tema no trobat."
+      unlist_topic:
+        errors:
+          not_found: "Tema no trobat."
+      delete_topic:
+        errors:
+          not_found: "Tema no trobat."
+      edit_tags:
+        errors:
+          not_found: "Tema no trobat."
+      edit_category:
+        errors:
+          not_found: "Tema no trobat."
+          category_not_found: "Categoria no trobada."
+      set_topic_timer:
+        errors:
+          not_found: "Tema no trobat."
+      set_slow_mode:
+        errors:
+          not_found: "Tema no trobat."
+      move_posts:
+        errors:
+          not_found: "Tema no trobat."
+      assign:
+        errors:
+          not_found: "Tema no trobat."
     sentiment:
       reports:
         post_emotion:

@@ -19,6 +19,34 @@ hy:
       tool_summary:
         search: "Որոնում"
         time: "Ժամ"
+      close_topic:
+        errors:
+          not_found: "Թեման չի գտնվել."
+      unlist_topic:
+        errors:
+          not_found: "Թեման չի գտնվել."
+      delete_topic:
+        errors:
+          not_found: "Թեման չի գտնվել."
+      edit_tags:
+        errors:
+          not_found: "Թեման չի գտնվել."
+      edit_category:
+        errors:
+          not_found: "Թեման չի գտնվել."
+          category_not_found: "Կատեգորիան չի գտնվել."
+      set_topic_timer:
+        errors:
+          not_found: "Թեման չի գտնվել."
+      set_slow_mode:
+        errors:
+          not_found: "Թեման չի գտնվել."
+      move_posts:
+        errors:
+          not_found: "Թեման չի գտնվել."
+      assign:
+        errors:
+          not_found: "Թեման չի գտնվել."
     sentiment:
       reports:
         post_emotion:

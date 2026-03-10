@@ -12,8 +12,6 @@ he:
           descriptions:
             discourse_ai:
               search: "מאפשר חיפוש בינה מלאכותית"
-              stream_completion: "מאפשר הזרמת השלמות דמות בינה מלאכותית"
-              update_personas: "מאפשר לעדכן דמויות בינה מלאכותית"
       site_settings:
         categories:
           discourse_ai: "בינה מלאכותית ב־Discourse"
@@ -35,9 +33,6 @@ he:
             create_ai_llm_model: "יצירת מודל LLM"
             update_ai_llm_model: "עדכון מודל LLM"
             delete_ai_llm_model: "מחיקת מודל LLM"
-            create_ai_persona: "יצירת דמות בינה מלאכותית"
-            update_ai_persona: "עדכון דמות בינה מלאכותית"
-            delete_ai_persona: "מחיקת דמות בינה מלאכותית"
             create_ai_tool: "יצירת כלי בינה מלאכותית"
             update_ai_tool: "עדכון כלי בינה מלאכותית"
             delete_ai_tool: "מחיקת כלי בינה מלאכותית"
@@ -110,25 +105,14 @@ he:
             top_p:
               label: "ה־P המובילים"
               description: "ה־P המוביל לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את האקראיות (להשאיר ריק כדי להשתמש בברירת המחדל של הדגם)"
-            persona_id:
-              label: "דמות"
-              description: "דמות בינה מלאכותית לשימוש להפקת דוחות"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "דמות"
-              description: "דמות בינה מלאכותית למיון ראשוני (חייב להיות לה LLM/מש״ג ומשתמש מוגדרים כברירת מחדל)"
             whisper:
               label: "להגיב בלחישה"
-              description: "האם התגובה של הדמות צריכה להיות בלחישה"
             silent_mode:
               label: "מצב שקט"
-              description: "במצב שקט הדמות תקבל את התוכן אבל לא תפרסם שום דבר בפורום - שימושי לביצוע מיון ראשוני באמצעות כלים"
         llm_triage:
           fields:
-            triage_persona:
-              label: "דמות"
-              description: "הדמות שתשמש למיון ראשוני, נא לוודא שהתשובה היא מילה אחת בה ניתן להשתמש כדי להקפיץ את הפקודה"
             max_post_tokens:
               label: "כמות אסימונים מרבית לפוסט"
               description: "מספר האסימונים המרבי לסריקה בעזרת מיון ראשוני עם LLM"
@@ -174,9 +158,6 @@ he:
             whisper:
               label: "להגיב בלחישה"
               description: "האם התגובה של הבינה המלאכותית צריכה להיות לחישה"
-            reply_persona:
-              label: "דמות לתגובה"
-              description: "דמות בינה מלאכותית לשימוש לתגובות (חייב להיות LLM/מש״ג כברירת מחדל), יתועדף על פני תגובה מראש"
             max_output_tokens:
               label: "כמות אסימוני פלט מרבית"
         llm_tagger:
@@ -184,9 +165,6 @@ he:
             manual: "להשתמש ברשימת תגיות מסוימת (מוגדרת להלן)"
             discover: "לאפשר לבינה מלאכותית לגלות ולהשתמש בתגיות אתר כלשהן"
           fields:
-            tagger_persona:
-              label: "דמות בינה מלאכותית"
-              description: "דמות הבינה המלאכותית לשימוש לניתוח ותיוג נושאים"
             tag_mode:
               label: "מצב בחירת תגיות"
               description: "בחירה איך הבינה המלאכותית בוחר תגיות"
@@ -215,19 +193,12 @@ he:
       title: "בינה מלאכותית"
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
-        description: "מודל המש״ג (LLM) לשימוש כברירת מחדל לכל יכולות הבינה המלאכותית. אם לא צוין מש״ג בהגדרות היכולת או הדמות ייעשה שימוש בזה. אם לא צוין מש״ג כברירת מחדל, ייעשה שימוש במש״ג האחרון שנוצר."
       llm_selector:
         none: "ללא"
       features:
         short_title: "יכולות"
-        description: "אלו יכולות בינה מלאכותית שזמינות למבקרים באתר שלך. אפשר להגדיר אותן להשתמש בדמויות וב־LLMים (מש״גים) מסוימים ואפשר לשלוט בגישה אליהן על ידי קבוצות."
         back: "חזרה"
         disabled: "(כבוי)"
-        persona:
-          one: "דמות:"
-          two: "דמויות:"
-          many: "דמויות:"
-          other: "דמויות:"
         groups: "קבוצות:"
         llm:
           one: "LLM/מש״ג:"
@@ -235,7 +206,7 @@ he:
           many: "LLMים:"
           other: "LLMים:"
         no_llm: "לא נבחר מש״ג/LLM"
-        no_persona: "לא מוגדר"
+        no_agent: "לא מוגדר"
         no_groups: "ללא"
         edit: "הגדרות"
         expand_list:
@@ -253,7 +224,6 @@ he:
           unconfigured: "לא מוגדר"
         filters:
           all: "הכול"
-          text: "חיפוש יכולות, דמויות, LLMים/מש״גים או קבוצות…"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
         no_automations: "אין אוטומציות עדיין"
@@ -281,8 +251,6 @@ he:
           generate_concepts: "הסקת תפיסות"
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
-          setting_groups:
-            personas: "דמויות"
         ai_helper:
           name: "מסייע"
           proofread: הגהת הטקסט
@@ -296,8 +264,6 @@ he:
           image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
-          setting_groups:
-            personas: "דמויות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -311,8 +277,6 @@ he:
             two: "תזמון תרגום של שני פוסטים לא מתורגמים."
             many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
             other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
-          setting_groups:
-            personas: "דמויות"
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"
@@ -371,7 +335,6 @@ he:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
-        select_persona: "בחירת דמות"
         custom_instructions: "הנחיות מותאמות אישית"
         custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
@@ -447,21 +410,20 @@ he:
           last_week: "בשבוע שעבר"
           last_month: "בחודש שעבר"
           custom: "התאמה אישית…"
-      ai_persona:
+      ai_agent:
         ai_tools: "כלים"
         tool_strategies:
           all: "החלה על כל התגובות"
           replies:
             one: "החלה על התגובה הראשונה בלבד"
             two: "החלה על שתי התגובות הראשונות בלבד"
-            many: "החלה על %{count} התגובות הראשונות בלבד"
-            other: "החלה על %{count} התגובות הראשונות בלבד"
+            many: "החלה על שתי התגובות הראשונות בלבד"
+            other: "החלה על שתי התגובות הראשונות בלבד"
         back: "חזרה"
         name: "שם"
         edit: "עריכה"
         export: "ייצוא"
         import: "ייבוא"
-        import_error_conflict: "התגלתה סתירה בעת ייבוא %{name}, לעדכן את הדמות הקיימת?"
         overwrite: "לדרוס"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
@@ -476,47 +438,32 @@ he:
           high: איכות גבוהה - האיטית ביותר (1024×1024)
         show_thinking: הצגת חשיבה
         mentionable: לאפשר אזכורים
-        mentionable_help: אם האפשרות פעולה, משתמשים בקבוצות המורדות יכולים לאזכר את המשתמש הזה בפוסטים, הבינה המלאכותית תגיב בתור הדמות הזאת.
         user: משתמש
         create_user: יצירת משתמש
-        create_user_help: אפשר לצרף משתמש לדמות הזאת כרשות. אם האפשרות הזאת תסומן, הבינה המלאכותית תשתמש במשתמש הזה כדי להגיב לבקשות.
         default_llm: מודל שפה כברירת מחדל
-        default_llm_help: דגם ברירת המחדל לשימוש לדמות הזאת. נחוץ כדי לאזכר דמות בפוסטים ציבוריים.
         question_consolidator_llm: מודל שפה למגבש השאלות
         question_consolidator_llm_help: מודל השפה לשימוש עבור מגבש השאלות, אפשר לבחור במודל פחות חזק כדי לחסוך בעלויות.
         system_prompt: בקשת מערכת
         forced_tool_strategy: אסטרטגיית כלי כפוי
         allow_chat_direct_messages: "לאפשר הודעות ישירות בצ׳אט"
-        allow_chat_direct_messages_help: "אם האפשרות פעילה, משתמשים בקבוצות המורשות יכולים לשלוח הודעות ישירות לדמות הזאת."
         allow_chat_channel_mentions: "לאפשר אזכורים בערוצי צ׳אט"
-        allow_chat_channel_mentions_help: "אם האפשרות פעילה, משתמשים בקבוצות המורשות יכולים לאזכר את הדמות הזאת בערוצי צ׳אט."
         allow_personal_messages: "לאפשר הודעות פרטיות"
-        allow_personal_messages_help: "אם האפשרות פעילה, משתמשים בקבוצות המורשות יכולים לשלוח הודעות פרטיות לדמות הזאת."
         allow_topic_mentions: "לאפשר אזכורים בנושאים"
-        allow_topic_mentions_help: "אם האפשרות פעילה, משתמשים בקבוצות המורשות יכולים לאזכר את הדמות הזאת בנושאים."
         force_default_llm: "תמיד להשתמש במודל השפה כברירת מחדל"
         save: "שמירה"
-        saved: "הדמות נשמרה"
         enabled: "מאופשר?"
         tools: "כלים פעילים"
         forced_tools: "כלים נאכפים"
         allowed_groups: "קבוצות מורשות"
-        confirm_delete: "למחוק את הדמות?"
-        new: "דמות חדשה"
-        no_personas: "לא יצרת דמויות עדיין"
-        title: "דמויות"
-        short_title: "דמויות"
         delete: "מחיקה"
         temperature: "טמפרטורה"
         temperature_help: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 2.0)"
         top_p: "ה־P המובילים"
         top_p_help: "ה־P המובילים לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 1.0)"
         priority: "עדיפות"
-        priority_help: "דמויות בעדיפות גבוהה מוצגות למשתמשים בראש רשימת הדמויות. אם מספר דמויות הן בעדיפות הן תסודרנה לפי האלפבית."
         tool_options: "אפשרויות כלי"
         rag_conversation_chunks: "חיפוש בחלקי הדיון"
         rag_conversation_chunks_help: "מספר הנתחים לשימוש לחיפושים עם מודל ה־RAG. הגדלה תגדיל את כמות ההקשר בו יכולה להשתמש הבינה המלאכותית."
-        persona_description: "דמויות הן יכולות רבות עוצמה שמאפשר להתאים את התנהגות מנוע הבינה המלאכותית בפורום הדיסקורס שלך. הן מתנהגות כמו ‚הודעות מערכת’ שמנחות את תגובות והתנהלות הבינה המלאכותית, כדי לסייע ליצור חוויית משתמש מותאמת ומקרבת יותר."
         response_format:
           title: "תבנית תגובת JSON"
           no_format: "לא צוינה תבנית JSON"
@@ -535,11 +482,8 @@ he:
           enabled: "בוט בינה מלאכותית?"
         ai_bot:
           title: "אפשרויות בוט בינה מלאכותית"
-          save_first: "אפשרויות בוט בינה מלאכותית נוספות תהיינה זמינות לאחר שמירת הדמות."
         filters:
-          text: "איתור דמות"
           reset: "איפוס"
-          no_results: "לא נמצאו דמויות שתואמות למסננים שלך."
           all_features: "כל תכונה שהיא"
         features_list:
           one: "תכונה:"
@@ -580,7 +524,6 @@ he:
         name_help: "השם יופיע בממשק המשתמש של Discourse והוא המזהה הקצר שבו יש להשתמש כדי למצוא את הכלי בהגדרות שונות, הוא צריך להיות ייחודי (חובה)"
         new: "כלי חדש"
         tool_name: "שם הכלי"
-        tool_name_help: "שם הכלי מוצג למודל השפה הגדול. הוא לא ייחודי, אבל הוא ייחודי לכל דמות. (הדמות מאומתת בשמירה)"
         description: "תיאור"
         description_help: "תיאור ברור של מטרת הכלי למודל השפה"
         subheader_description: "כלים מרחיבים את היכולות של בוטים של בינה מלאכותית עם פונקציות JavaScript המוגדרות על ידי המשתמשים."
@@ -664,13 +607,12 @@ he:
           next_reset: "האסימונים מתאפסים ב־%{time}"
         usage:
           ai_bot: "בוט בינה מלאכותית"
-          ai_helper: "מסייע (%{persona})"
+          ai_helper: "מסייע (%{agent})"
           ai_helper_image_caption: "כותרת תמונה"
-          ai_persona: "דמות (%{persona})"
           ai_summarization: "סיכום"
           ai_embeddings_semantic_search: "חיפוש בינה מלאכותית"
           ai_spam: "ספאם"
-          automation: "אוטומציה (%{persona})"
+          automation: "אוטומציה (%{agent})"
         in_use_warning:
           one: "המודל הזה משמש את %{settings}. אם לא מוגדר כראוי, היכולת לא תעבוד כמצופה."
           two: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
@@ -858,7 +800,6 @@ he:
         collapse_view_label: "יציאה ממסך מלא (כפתורי ESC או Back)"
         click_to_run_label: "הרצת תוצר"
       ai_bot:
-        persona: "דמות"
         llm: "מודל"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"

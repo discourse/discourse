@@ -2381,7 +2381,6 @@ ja:
     content_localization_crawler_param: "'content localization enabled' と 'set locale from param' が有効な場合にローカライズされたコンテンツをウェブクローラーに配信する。サポートされたロケールのリストは 'content localization supported locales' に定義されています。"
     content_localization_use_default_locale_when_unsupported: "優先言語が 'content localization supported locales' に含まれていないユーザーに、サイトのデフォルトのロケールでローカライズされたコンテンツを配信する。"
     content_localization_allow_author_localization: "作成者が投稿メニューから自分のトピックと投稿を更新することを許可する。"
-    enable_upcoming_changes: "次回の変更を有効にする"
     fake_upcoming_change: "これは実際の次回の変更ではありません。テストを目的としているため、この文字列の翻訳は不要です。"
     floating_dismiss_topics_on_mobile: "モバイル版では、アクセスの簡易性とトピックリストの上部のスペースを空けるために「閉じる...」フローティングボタンを表示する"
     rename_faq_to_guidelines: "この変更によって FAQ ページの名前が「ガイドライン」に変更されます。FAQ ページは引き続き /faq で利用できます。'faq url' 設定はこれまで通り機能します。"

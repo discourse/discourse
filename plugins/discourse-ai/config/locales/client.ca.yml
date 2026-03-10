@@ -83,7 +83,7 @@ ca:
         total: "Total"
         periods:
           last_day: "Últimes 24 hores"
-      ai_persona:
+      ai_agent:
         back: "Enrere"
         name: "Nom"
         edit: "Edita"

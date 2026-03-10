@@ -8,6 +8,7 @@ uk:
   reports:
     currently_away:
       title: Користувачі зараз відсутні
+      description: "Користувачі, які зараз у відпустці або у відпустці, яких можна фільтрувати за групами."
       labels:
         username: Імʼя користувача
   discourse_automation:

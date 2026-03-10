@@ -17,9 +17,6 @@ sk:
         spam: "Nahlásiť ako spam a skryť príspevok"
         spam_silence: "Nahlásiť ako spam, skryť príspevok a umlčať používateľa"
     scriptables:
-      llm_persona_triage:
-        title: Triedenie príspevkov pomocou AI Persona
-        description: "Reagujte na príspevky pomocou špecifickej AI persona"
       llm_triage:
         title: Triážne príspevky pomocou AI
         description: "Triedenie príspevkov pomocou rozsiahleho jazykového modelu"
@@ -75,7 +72,6 @@ sk:
     ai_embeddings_semantic_related_include_closed_topics: "Zahrnutie uzavretých tém do výsledkov sémantického vyhľadávania"
     ai_embeddings_per_post_enabled: Generovanie vložených príspevkov pre každý príspevok
     ai_summarization_enabled: "Povolenie funkcie sumarizácie"
-    ai_summarization_persona: "Persona, ktorá sa má použiť pre funkciu zhrnutia"
     ai_pm_summarization_allowed_groups: "Skupiny môžu vytvárať a zobrazovať súhrny v PM."
     ai_summary_gists_enabled: "Automatické generovanie stručných zhrnutí najnovších odpovedí v témach"
     ai_summary_backfill_maximum_topics_per_hour: "Počet tematických súhrnov na doplnenie za hodinu."
@@ -90,7 +86,6 @@ sk:
     ai_discord_app_id: "ID aplikácie Discord, ku ktorej chcete pripojiť vyhľadávanie Discord"
     ai_discord_app_public_key: "Verejný kľúč aplikácie Discord, ku ktorej chcete prepojiť vyhľadávanie Discord"
     ai_discord_search_mode: "Vyberte režim vyhľadávania, ktorý chcete použiť na vyhľadávanie v službe Discord"
-    ai_discord_search_persona: "Persona, ktorá sa má použiť pri vyhľadávaní na Discorde."
     ai_discord_allowed_guilds: "Discord cechy (servery), kde môže bot vyhľadávať"
     ai_translation_backfill_limit_to_public_content: "Ak je táto možnosť povolená, preloží sa iba obsah verejných kategórií. Ak je vypnuté, na preklad sa bude posielať aj obsah v skupinových PM a súkromných kategóriách."
     ai_translation_backfill_max_age_days: "Maximálny vek príspevku a témy, ktoré sa majú preložiť. Príspevky a témy staršie ako táto hodnota nebudú preložené. Hodnota 0 zakáže spätné dopĺňanie, ale nezakáže preklad nových príspevkov."
@@ -258,10 +253,8 @@ sk:
     ai_bot:
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
-      personas:
+      agents:
         default_llm_required: "Predvolený model LLM sa vyžaduje pred povolením funkcie Chat"
-        cannot_delete_system_persona: "Systémové personas nie je možné odstrániť, radšej ich vypnite."
-        cannot_edit_system_persona: "Systémové personas je možné iba premenovať, nástroje ani systémové výzvy nemôžete upravovať, namiesto toho ich môžete zakázať a vytvoriť kópiu."
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"
         github_helper:
           name: "Pomocník GitHub"
@@ -301,10 +294,8 @@ sk:
           description: "AI Bot špecializovaný na vytváranie interaktívnych webových artefaktov"
         summarizer:
           name: "Sumarizátor"
-          description: "Predvolená persona používaná na napájanie súhrnov umelej inteligencie"
         short_summarizer:
           name: "Sumarizátor (skrátená forma)"
-          description: "Predvolená persona používaná na vytváranie krátkych súhrnov položiek zoznamov tém pomocou umelej inteligencie"
         concept_finder:
           name: "Vyhľadávač konceptov"
           description: "AI Bot sa špecializuje na identifikáciu konceptov a tém v obsahu"
@@ -316,30 +307,22 @@ sk:
           description: "AI Bot špecializovaný na deduplikáciu konceptov"
         custom_prompt:
           name: "Vlastná výzva"
-          description: "Predvolená persona, ktorá poháňa funkciu vlastných výziev Pomocníka"
         smart_dates:
           name: "Inteligentné dátumy"
-          description: "Predvolená persona, ktorá poháňa funkciu inteligentných dátumov v Pomocníkovi"
         markdown_table_generator:
           name: "Generátor tabuliek Markdown"
-          description: "Predvolená persona, ktorá poháňa funkciu generovania tabuliek Markdown v Helperovi"
         post_illustrator:
           name: "Ilustrátor príspevkov"
         proofreader:
           name: "Korektor"
-          description: "Predvolená persona, ktorá obsluhuje funkciu korektúry textu pomocníka"
         titles_generator:
           name: "Generátor titulov"
-          description: "Predvolená persona, ktorá poháňa funkciu navrhovania názvov tém Pomocníka"
         tutor:
           name: "Školiteľ"
-          description: "Predvolená persona, ktorá ovláda funkciu vysvetlenia pomocníka"
         translator:
           name: "Prekladateľ"
-          description: "Predvolená persona, ktorá ovláda funkciu prekladača Pomocníka"
         image_captioner:
           name: "Popisy obrázkov"
-          description: "Predvolená persona, ktorá ovláda funkciu popisu obrázkov Pomocníka"
         locale_detector:
           name: "Detektor lokality"
           description: "Napája funkciu prekladu zisťovaním lokality daného textu (príspevky, názvy atď.)"
@@ -354,13 +337,10 @@ sk:
           description: "Používa funkciu prekladu ako všeobecný textový prekladač, ktorý sa používa pre krátke texty, ako sú názvy kategórií alebo značky"
         spam_detector:
           name: "Detektor spamu"
-          description: "Predvolená persona, ktorá poháňa našu funkciu detekcie spamu"
         content_creator:
           name: "Tvorca obsahu"
-          description: "Predvolená persona, ktorá ovláda vyhľadávanie HyDE"
         report_runner:
           name: "Správca"
-          description: "Predvolená persona použitá v skripte automatizácie zostáv"
       topic_not_found: "Súhrn nie je k dispozícii, téma sa nenašla!"
       summarizing: "Zhrnutie témy"
       searching: "Hľadá sa: '%{query}'"
@@ -368,7 +348,6 @@ sk:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "Jazykový model, ktorý sa má použiť na výskum (predvolene LLM aktuálna persona)"
           max_tokens_per_batch:
             name: "Maximálny počet tokenov na dávku"
             description: "Maximálny počet tokenov, ktoré sa majú použiť pre každú dávku vo výskume"
@@ -451,6 +430,7 @@ sk:
         github_file_content: "Získavanie obsahu súborov z úložiska GitHub"
         random_picker: "Výber náhodného čísla alebo náhodného prvku zoznamu"
         categories: "Zoznam všetkých verejne viditeľných kategórií na fóre"
+        delete_topic: "Odstránenie témy"
         search: "Vyhľadávanie vo všetkých verejných témach na fóre"
         tags: "Zoznam všetkých značiek na fóre"
         time: "Zisťovanie času v rôznych časových pásmach"
@@ -530,6 +510,34 @@ sk:
         continue_conversation:
           title: "Konverzácia o objavovaní: Hľadať %{query}"
           raw: "Pri hľadaní na stránke %{query}ste mi ukázali tieto informácie:\n\n%{context}\n\nPokračujme v konverzácii."
+      close_topic:
+        errors:
+          not_found: "Téma sa nenašla."
+      unlist_topic:
+        errors:
+          not_found: "Téma sa nenašla."
+      delete_topic:
+        errors:
+          not_found: "Téma sa nenašla."
+      edit_tags:
+        errors:
+          not_found: "Téma sa nenašla."
+      edit_category:
+        errors:
+          not_found: "Téma sa nenašla."
+          category_not_found: "Kategória sa nenašla."
+      set_topic_timer:
+        errors:
+          not_found: "Téma sa nenašla."
+      set_slow_mode:
+        errors:
+          not_found: "Téma sa nenašla."
+      move_posts:
+        errors:
+          not_found: "Téma sa nenašla."
+      assign:
+        errors:
+          not_found: "Téma sa nenašla."
     summarization:
       configuration_hint:
         one: "Najprv nakonfigurujte nastavenie `%{setting}`."
@@ -559,7 +567,6 @@ sk:
         set_llm_first: "Najprv nastavte %{setting}"
         model_unreachable: "Od tohto modelu sa nám nepodarilo získať odpoveď. Najprv skontrolujte nastavenia."
         invalid_seeded_model: "Tento model s touto funkciou nemôžete použiť"
-        invalid_persona_response_format: "Vybraná persona musí mať formát odpovede s boolovským názvom polí „spam“."
         must_select_model: "Najprv si musíte vybrať LLM"
       endpoints:
         not_configured: "%{display_name} (nenakonfigurované)"
@@ -574,7 +581,7 @@ sk:
         many: "Tento model sa nám nepodarilo odstrániť, pretože ho používa %{settings} . Aktualizujte nastavenie a skúste to znova."
         other: "Tento model sa nám nepodarilo odstrániť, pretože ho používa %{settings} . Aktualizujte nastavenie a skúste to znova."
       cannot_edit_builtin: "Vstavaný model nie je možné upravovať."
-    personas:
+    agents:
       malformed_examples: "Uvedené príklady majú nesprávny formát."
     embeddings:
       delete_failed: "Tento model sa momentálne používa. Najprv aktualizujte „vybraný model vloženia AI“."
@@ -593,15 +600,10 @@ sk:
       quota_exceeded: "Prekročili ste kvótu pre tento model. Skúste to prosím znova na stránke %{relative_time}."
       quota_required: "Pre tento model je potrebné zadať maximálny počet tokenov alebo použití"
       no_query_specified: Parameter dopytu je povinný, prosím, zadajte ho.
-      no_user_for_persona: K zadanej persona nie je priradený žiadny používateľ.
-      persona_not_found: Zadaná persona neexistuje. Skontrolujte parametre persona_name alebo persona_id.
       no_user_specified: Používateľské meno alebo parameter user_unique_id je povinný, prosím, zadajte ho.
       user_not_found: Zadaný používateľ neexistuje. Skontrolujte parameter používateľské meno.
-      persona_disabled: Zadaná persona je zakázaná. Skontrolujte parametre persona_name alebo persona_id.
-      no_default_llm: Persona musí mať definovaný default_llm.
       user_not_allowed: Používateľ sa nemôže zapojiť do témy.
       prompt_message_length: Správa %{idx} prekračuje limit 1000 znakov.
-      persona_already_exists: Persona s menom %{name} už existuje.
       custom_tool_exists:
         one: "Vlastný nástroj s názvom %{names} už existuje."
         few: "Vlastné nástroje s názvom %{names} už existujú."

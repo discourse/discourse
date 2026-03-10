@@ -40,7 +40,7 @@ te:
         none: "ఏదీ లేదు"
       features:
         back: "వెనుకకు"
-        no_persona: "సెట్ చేయబడలేదు"
+        no_agent: "సెట్ చేయబడలేదు"
         no_groups: "ఏదీ లేదు"
         edit: "అమరికలు"
         expand_list:
@@ -79,7 +79,7 @@ te:
         username: "సభ్యనామం"
         total_requests: "మొత్తం అభ్యర్థనలు"
         total: "మొత్తం"
-      ai_persona:
+      ai_agent:
         back: "వెనుకకు"
         name: "పేరు"
         edit: "సవరించండి"

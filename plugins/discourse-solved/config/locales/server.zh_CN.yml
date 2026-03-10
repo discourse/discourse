@@ -10,6 +10,7 @@ zh_CN:
     support:
       name: "支持"
       title: "支持"
+      description: "成员可以在这里提问并将回复标记为解决方案。"
   discourse_solved:
     category_type:
       allow_accepted_answers:

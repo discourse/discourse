@@ -29,7 +29,7 @@ lt:
       image_caption:
         attribution: "Antraštė teikiama AI"
     ai_bot:
-      personas:
+      agents:
         custom_prompt:
           name: "Pasirinktinis raginimas"
         smart_dates:
@@ -66,6 +66,34 @@ lt:
         already_flagged: "Įrašas jau pažymėtas peržiūrai."
         flagged: "Įrašas pažymėtas peržiūrai."
         reason: "Dirbtinio intelekto robotas pažymėjo šį įrašą.\n\nPriežastis: %{reason}"
+      close_topic:
+        errors:
+          not_found: "Tema nerasta."
+      unlist_topic:
+        errors:
+          not_found: "Tema nerasta."
+      delete_topic:
+        errors:
+          not_found: "Tema nerasta."
+      edit_tags:
+        errors:
+          not_found: "Tema nerasta."
+      edit_category:
+        errors:
+          not_found: "Tema nerasta."
+          category_not_found: "Kategorijos nėra."
+      set_topic_timer:
+        errors:
+          not_found: "Tema nerasta."
+      set_slow_mode:
+        errors:
+          not_found: "Tema nerasta."
+      move_posts:
+        errors:
+          not_found: "Tema nerasta."
+      assign:
+        errors:
+          not_found: "Tema nerasta."
     sentiment:
       reports:
         post_emotion:
