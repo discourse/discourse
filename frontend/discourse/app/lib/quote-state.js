@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { waitForPromise } from "@ember/test-waiters";
 import toMarkdown from "discourse/lib/to-markdown";
 
 export default class QuoteState {
@@ -23,8 +24,8 @@ export default class QuoteState {
     }
 
     if (!this.#markdownPromise) {
-      this.#markdownPromise = toMarkdown(this.#selectedHtml).then(
-        (result) => result || this.buffer
+      this.#markdownPromise = waitForPromise(
+        toMarkdown(this.#selectedHtml).then((result) => result || this.buffer)
       );
     }
 

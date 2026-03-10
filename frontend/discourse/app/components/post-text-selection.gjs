@@ -365,11 +365,13 @@ export default class PostTextSelection extends Component {
     const _selectedElement = getElement(selectedNode());
     const postId = cooked.closest(".boxed, .reply")?.dataset?.postId;
 
+    const range = selectedRange();
+    const cookedRange = document.createRange();
+    cookedRange.selectNodeContents(cooked);
     let opts = {
       full:
-        selectedRange().startOffset > 0
-          ? false
-          : plainText.trim() === cooked.textContent.trim(),
+        range.compareBoundaryPoints(Range.START_TO_START, cookedRange) <= 0 &&
+        range.compareBoundaryPoints(Range.END_TO_END, cookedRange) >= 0,
     };
 
     for (

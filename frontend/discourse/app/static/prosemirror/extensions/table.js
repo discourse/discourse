@@ -21,12 +21,11 @@ function validateTable(node) {
   let hasHead = false;
   let firstRowHasHeaderCells = false;
   let columnCount = 0;
-  let hasMultilineCell = false;
   let isFirstRow = true;
   let hasInconsistentColumns = false;
 
   node.forEach((group) => {
-    if (hasMultilineCell && hasInconsistentColumns) {
+    if (hasInconsistentColumns) {
       return;
     }
 
@@ -35,7 +34,7 @@ function validateTable(node) {
     }
 
     group.forEach((row) => {
-      if (hasMultilineCell && hasInconsistentColumns) {
+      if (hasInconsistentColumns) {
         return;
       }
 
@@ -57,34 +56,15 @@ function validateTable(node) {
         }
         isFirstRow = false;
       }
-
-      if (!hasMultilineCell) {
-        row.forEach((cell) => {
-          if (hasMultilineCell) {
-            return;
-          }
-          cell.descendants((n) => {
-            if (n.type.name === "hard_break") {
-              hasMultilineCell = true;
-              return false;
-            }
-          });
-        });
-      }
     });
   });
 
   const hasValidHeader = hasHead || firstRowHasHeaderCells;
 
   return {
-    isValid:
-      hasValidHeader &&
-      columnCount >= 2 &&
-      !hasMultilineCell &&
-      !hasInconsistentColumns,
+    isValid: hasValidHeader && columnCount >= 2 && !hasInconsistentColumns,
     hasHead: hasValidHeader,
     columnCount,
-    hasMultilineCell,
     hasInconsistentColumns,
   };
 }
@@ -225,17 +205,16 @@ const extension = {
     table(state, node) {
       state.flushClose(1);
 
-      const prevInTable = state.inTable;
-      state.inTable = true;
-
       // Check if table is valid for markdown format
       const tableInfo = validateTable(node);
 
       if (!tableInfo.isValid) {
         serializeTableAsText(state, node);
-        state.inTable = prevInTable;
         return;
       }
+
+      const prevInTable = state.inTable;
+      state.inTable = true;
 
       // leading newline, it seems to have issues in a line just below a > blockquote otherwise
       if (state.out) {

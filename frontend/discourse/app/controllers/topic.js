@@ -538,11 +538,15 @@ export default class TopicController extends Controller {
   async selectText() {
     const { postId, opts } = this.quoteState;
     const postStream = this.get("model.postStream");
+    const composer = this.composer;
     const buffer = await this.quoteState.markdown();
+
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     const loadedPost = postStream.findLoadedPost(postId);
     const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
-
-    const composer = this.composer;
     const viewOpen = composer.get("model.viewOpen");
 
     // If we can't create a post, delegate to reply as new topic

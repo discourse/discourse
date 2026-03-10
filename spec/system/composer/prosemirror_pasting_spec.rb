@@ -358,7 +358,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("|  |\n|----|\n\nAfter table")
+      expect(composer).to have_value("\nAfter table")
     end
   end
 end
