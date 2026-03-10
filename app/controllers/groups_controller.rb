@@ -419,40 +419,7 @@ class GroupsController < ApplicationController
       )
     else
       notify = params[:notify_users]&.to_s == "true"
-      uniq_users = users.uniq
-
-      if uniq_users.length > 1
-        added_user_ids = group.bulk_add(uniq_users.map(&:id))
-
-        if added_user_ids.any?
-          added_id_set = added_user_ids.to_set
-          new_users = uniq_users.select { |u| added_id_set.include?(u.id) }
-
-          GroupUser.bulk_set_category_notifications(group, added_user_ids)
-          GroupUser.bulk_set_tag_notifications(group, added_user_ids)
-
-          new_users.each { |user| group.trigger_user_added_event(user, false) }
-          group.bulk_publish_category_updates(new_users)
-
-          now = Time.now
-          GroupHistory.insert_all(
-            new_users.map do |user|
-              {
-                group_id: group.id,
-                acting_user_id: current_user.id,
-                target_user_id: user.id,
-                action: GroupHistory.actions[:add_user_to_group],
-                created_at: now,
-                updated_at: now,
-              }
-            end,
-          )
-
-          new_users.each { |user| group.notify_added_to_group(user) } if notify
-        end
-      else
-        add_user_to_group(group, uniq_users.first, notify)
-      end
+      add_users_to_group(group, users.uniq, notify: notify)
 
       emails.each do |email|
         begin
@@ -475,7 +442,7 @@ class GroupsController < ApplicationController
         end
       end
 
-      render json: success_json.merge!(usernames: uniq_users.map(&:username), emails: emails)
+      render json: success_json.merge!(usernames: users.uniq.map(&:username), emails: emails)
     end
   end
 
@@ -489,11 +456,10 @@ class GroupsController < ApplicationController
     users = users_from_params
     group_action_logger = GroupActionLogger.new(current_user, group)
 
+    users_to_add = users.reject { |user| group.users.exists?(id: user.id) }
+    add_users_to_group(group, users_to_add) if users_to_add.any?
+
     users.each do |user|
-      if !group.users.include?(user)
-        group.add(user)
-        group_action_logger.log_add_user_to_group(user)
-      end
       group.group_users.where(user_id: user.id).update_all(owner: true)
       group_action_logger.log_make_user_group_owner(user)
 
@@ -516,7 +482,7 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidAccess unless group.public_admission
 
     return if group.users.exists?(id: current_user.id)
-    add_user_to_group(group, current_user)
+    add_users_to_group(group, [current_user])
   end
 
   def handle_membership_request
@@ -541,10 +507,7 @@ class GroupsController < ApplicationController
       )
 
     ActiveRecord::Base.transaction do
-      if params[:accept]
-        group.add(user)
-        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-      end
+      add_users_to_group(group, [user]) if params[:accept]
 
       GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
     end
@@ -609,49 +572,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
-    removed_users = []
-    skipped_users = []
-
-    if users.length > 1
-      in_group_ids =
-        GroupUser.where(group_id: group.id, user_id: users.map(&:id)).pluck(:user_id).to_set
-      actually_in_group, skipped_users = users.partition { |u| in_group_ids.include?(u.id) }
-      skipped_users = skipped_users.map(&:username)
-
-      if actually_in_group.any?
-        group.bulk_remove(actually_in_group.map(&:id))
-
-        now = Time.now
-        GroupHistory.insert_all(
-          actually_in_group.map do |user|
-            {
-              group_id: group.id,
-              acting_user_id: current_user.id,
-              target_user_id: user.id,
-              action: GroupHistory.actions[:remove_user_from_group],
-              created_at: now,
-              updated_at: now,
-            }
-          end,
-        )
-
-        removed_users = actually_in_group.map(&:username)
-      end
-    else
-      users.each do |user|
-        if group.remove(user)
-          removed_users << user.username
-          GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
-        else
-          if group.users.exclude?(user)
-            skipped_users << user.username
-          else
-            raise Discourse::InvalidParameters
-          end
-        end
-      end
-    end
-
+    removed_users, skipped_users = remove_users_from_group(group, users)
     render json: success_json.merge!(usernames: removed_users, skipped_usernames: skipped_users)
   end
 
@@ -665,9 +586,7 @@ class GroupsController < ApplicationController
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_exit
 
-    if group.remove(current_user)
-      GroupActionLogger.new(current_user, group).log_remove_user_from_group(current_user)
-    end
+    remove_users_from_group(group, [current_user])
   end
 
   MAX_NOTIFIED_OWNERS = 20
@@ -841,14 +760,63 @@ class GroupsController < ApplicationController
 
   private
 
-  def add_user_to_group(group, user, notify = false)
-    group.add(user)
-    GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-    group.notify_added_to_group(user) if notify
-  rescue ActiveRecord::RecordNotUnique
-    # Under concurrency, we might attempt to insert two records quickly and hit a DB
-    # constraint. In this case we can safely ignore the error and act as if the user
-    # was added to the group.
+  # This method replicates the side effects of group.add callbacks
+  # in bulk for API performance reasons.
+  # This method should be updated to match those callbacks whenever they change.
+  def add_users_to_group(group, users, notify: false)
+    added_user_ids = group.bulk_add(users.map(&:id))
+    return if added_user_ids.empty?
+
+    added_id_set = added_user_ids.to_set
+    new_users = users.select { |u| added_id_set.include?(u.id) }
+
+    GroupUser.bulk_set_category_notifications(group, added_user_ids)
+    GroupUser.bulk_set_tag_notifications(group, added_user_ids)
+
+    new_users.each { |user| group.trigger_user_added_event(user, false) }
+    group.bulk_publish_category_updates(new_users)
+
+    now = Time.now
+    GroupHistory.insert_all(
+      new_users.map do |user|
+        {
+          group_id: group.id,
+          acting_user_id: current_user.id,
+          target_user_id: user.id,
+          action: GroupHistory.actions[:add_user_to_group],
+          created_at: now,
+          updated_at: now,
+        }
+      end,
+    )
+
+    new_users.each { |user| group.notify_added_to_group(user) } if notify
+  end
+
+  def remove_users_from_group(group, users)
+    in_group_ids =
+      GroupUser.where(group_id: group.id, user_id: users.map(&:id)).pluck(:user_id).to_set
+    actually_in_group, not_in_group = users.partition { |u| in_group_ids.include?(u.id) }
+
+    if actually_in_group.any?
+      group.bulk_remove(actually_in_group.map(&:id))
+
+      now = Time.now
+      GroupHistory.insert_all(
+        actually_in_group.map do |user|
+          {
+            group_id: group.id,
+            acting_user_id: current_user.id,
+            target_user_id: user.id,
+            action: GroupHistory.actions[:remove_user_from_group],
+            created_at: now,
+            updated_at: now,
+          }
+        end,
+      )
+    end
+
+    [actually_in_group.map(&:username), not_in_group.map(&:username)]
   end
 
   def group_params(automatic: false)
