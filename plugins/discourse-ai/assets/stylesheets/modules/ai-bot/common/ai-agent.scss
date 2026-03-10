@@ -273,6 +273,20 @@
     @include viewport.from(lg) {
       max-width: 480px;
     }
+
+    &:has(.--token:hover) {
+      .ai-agent-editor__tool-context-cost-bar-indicator.--token {
+        color: var(--primary);
+        transform: translateX(-50%) scale(1.4);
+      }
+    }
+
+    &:has(.--count:hover) {
+      .ai-agent-editor__tool-context-cost-bar-indicator.--count {
+        color: var(--primary);
+        transform: translateX(-50%) scale(1.4);
+      }
+    }
   }
 
   &__tool-context-cost-header {
@@ -359,20 +373,6 @@
 
     &.--count {
       top: 100%;
-    }
-  }
-
-  &__tool-context-cost:has(&__tool-context-cost-legend-item.--token:hover) {
-    .ai-agent-editor__tool-context-cost-bar-indicator.--token {
-      color: var(--primary);
-      transform: translateX(-50%) scale(1.4);
-    }
-  }
-
-  &__tool-context-cost:has(&__tool-context-cost-legend-item.--count:hover) {
-    .ai-agent-editor__tool-context-cost-bar-indicator.--count {
-      color: var(--primary);
-      transform: translateX(-50%) scale(1.4);
     }
   }
 
