@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FinalizeAiAgentsSchema < ActiveRecord::Migration[7.2]
+  disable_ddl_transaction!
+
   PERSONA_TO_AGENT_SETTINGS = {
     "ai_helper_proofreader_persona" => "ai_helper_proofreader_agent",
     "ai_helper_title_suggestions_persona" => "ai_helper_title_suggestions_agent",
@@ -35,6 +37,8 @@ class FinalizeAiAgentsSchema < ActiveRecord::Migration[7.2]
       rename_table :ai_personas, :ai_agents
     end
 
+    raise "ai_agents table must exist at this point" unless table_exists?(:ai_agents)
+
     if table_exists?(:ai_moderation_settings) &&
          column_exists?(:ai_moderation_settings, :ai_persona_id)
       rename_column :ai_moderation_settings, :ai_persona_id, :ai_agent_id
@@ -58,6 +62,7 @@ class FinalizeAiAgentsSchema < ActiveRecord::Migration[7.2]
         UPDATE site_settings
         SET name = '#{new_name}'
         WHERE name = '#{old_name}'
+          AND NOT EXISTS (SELECT 1 FROM site_settings WHERE name = '#{new_name}')
       SQL
 
     # 3. Rename custom fields
@@ -137,13 +142,11 @@ class FinalizeAiAgentsSchema < ActiveRecord::Migration[7.2]
     SQL
 
     # 4. Ensure stale columns are gone (idempotent cleanup)
-    if table_exists?(:ai_agents)
-      remove_column :ai_agents, :default_llm if column_exists?(:ai_agents, :default_llm)
-      if column_exists?(:ai_agents, :question_consolidator_llm)
-        remove_column :ai_agents, :question_consolidator_llm
-      end
-      remove_column :ai_agents, :tool_details if column_exists?(:ai_agents, :tool_details)
+    remove_column :ai_agents, :default_llm if column_exists?(:ai_agents, :default_llm)
+    if column_exists?(:ai_agents, :question_consolidator_llm)
+      remove_column :ai_agents, :question_consolidator_llm
     end
+    remove_column :ai_agents, :tool_details if column_exists?(:ai_agents, :tool_details)
   end
 
   def down
