@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import CategoryLogo from "discourse/components/category-logo";
@@ -28,7 +28,7 @@ export default class CategoriesBoxes extends Component {
   }
 
   categoryName(category) {
-    return htmlSafe(
+    return trustHTML(
       categoryBadgeHTML(category, {
         allowUncategorized: true,
         link: false,

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 export default class CategoryElement extends Component {
   get boxStyle() {
@@ -7,12 +7,12 @@ export default class CategoryElement extends Component {
     if (this.args.definition.parent_color) {
       style += `; --parent-category-badge-color: #${this.args.definition.parent_color}`;
     }
-    return htmlSafe(style);
+    return trustHTML(style);
   }
 
   get parentBadgeStyle() {
     return this.args.definition.parent_color
-      ? htmlSafe(
+      ? trustHTML(
           `--category-badge-color: #${this.args.definition.parent_color}`
         )
       : null;

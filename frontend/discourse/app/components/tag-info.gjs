@@ -8,7 +8,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { and, reads } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { tagName } from "@ember-decorators/component";
@@ -346,7 +346,7 @@ export default class TagInfo extends Component {
             </div>
             {{#if this.tagInfo.description}}
               <div class="tag-description-wrapper">
-                <span>{{htmlSafe this.tagInfo.description}}</span>
+                <span>{{trustHTML this.tagInfo.description}}</span>
               </div>
             {{/if}}
           {{/if}}
@@ -366,9 +366,9 @@ export default class TagInfo extends Component {
             {{#if this.tagInfo.category_restricted}}
               {{i18n "tagging.category_restricted"}}
             {{else}}
-              {{htmlSafe (i18n "tagging.default_info")}}
+              {{trustHTML (i18n "tagging.default_info")}}
               {{#if this.canAdminTag}}
-                {{htmlSafe (i18n "tagging.staff_info" basePath=(basePath))}}
+                {{trustHTML (i18n "tagging.staff_info" basePath=(basePath))}}
               {{/if}}
             {{/if}}
           {{/if~}}
@@ -376,7 +376,7 @@ export default class TagInfo extends Component {
         {{#if this.synonyms}}
           <div class="synonyms-list">
             <h3>{{i18n "tagging.synonyms"}}</h3>
-            <div>{{htmlSafe
+            <div>{{trustHTML
                 (i18n
                   "tagging.synonyms_description" base_tag_name=this.tagInfo.name
                 )

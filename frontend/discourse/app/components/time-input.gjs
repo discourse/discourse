@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -126,7 +126,7 @@ export default class TimeInput extends Component {
           .diff(this.relativeDate, "minutes");
 
         if (diff < 1440) {
-          label = htmlSafe(
+          label = trustHTML(
             `${name} <small>(${convertMinutesToDurationString(diff)})</small>`
           );
         }

@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { not, or, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
@@ -56,7 +56,7 @@ export default class PopupInputTip extends Component {
     super.didReceiveAttrs(...arguments);
     let reason = this.get("validation.reason");
     if (reason) {
-      this.set("tipReason", htmlSafe(`${reason}`));
+      this.set("tipReason", trustHTML(`${reason}`));
     } else {
       this.set("tipReason", null);
     }

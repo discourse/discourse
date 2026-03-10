@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ChooseMessage from "discourse/components/choose-message";
 import ChooseTopic from "discourse/components/choose-topic";
@@ -246,7 +246,7 @@ export default class MoveToTopic extends Component {
           {{#if this.canSplitTopic}}
             {{#if this.newMessage}}
               <p>
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topic.move_to_new_message.instructions"
                     count=@model.selectedPostsCount
@@ -273,7 +273,7 @@ export default class MoveToTopic extends Component {
 
           {{#if this.existingMessage}}
             <p>
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "topic.move_to_existing_message.instructions"
                   count=@model.selectedPostsCount
@@ -349,7 +349,7 @@ export default class MoveToTopic extends Component {
 
           {{#if this.existingTopic}}
             <p>
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "topic.merge_topic.instructions"
                   count=@model.selectedPostsCount
@@ -380,7 +380,7 @@ export default class MoveToTopic extends Component {
           {{#if this.canSplitTopic}}
             {{#if this.newTopic}}
               <p>
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topic.split_topic.instructions"
                     count=@model.selectedPostsCount
@@ -444,7 +444,7 @@ export default class MoveToTopic extends Component {
           {{#if this.canSplitTopic}}
             {{#if this.newMessage}}
               <p>
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topic.move_to_new_message.instructions"
                     count=@model.selectedPostsCount

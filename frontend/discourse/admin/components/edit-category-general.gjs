@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -191,10 +191,10 @@ export default class EditCategoryGeneral extends Component {
 
   get categoryDescription() {
     if (this.args.category.description) {
-      return htmlSafe(this.args.category.description);
+      return trustHTML(this.args.category.description);
     }
 
-    return htmlSafe(i18n("category.no_description"));
+    return trustHTML(i18n("category.no_description"));
   }
 
   get canSelectParentCategory() {
@@ -210,7 +210,7 @@ export default class EditCategoryGeneral extends Component {
     <div class={{this.panelClass}}>
       {{#if this.showWarning}}
         <@form.Alert @type="warning" @icon="triangle-exclamation">
-          {{htmlSafe
+          {{trustHTML
             (i18n
               "category.uncategorized_general_warning"
               settingLink=this.uncategorizedSiteSettingLink
@@ -314,7 +314,7 @@ export default class EditCategoryGeneral extends Component {
           @validation="required"
           as |field|
         >
-          {{htmlSafe (this.categoryBadgePreview @transientData)}}
+          {{trustHTML (this.categoryBadgePreview @transientData)}}
           <field.Select as |select|>
             {{#each this.styleTypes as |styleType|}}
               <select.Option @value={{styleType.id}}>

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import FKCharCounter from "discourse/form-kit/components/fk/char-counter";
 import FKErrors from "discourse/form-kit/components/fk/errors";
 
@@ -25,7 +25,7 @@ export default class FKMeta extends Component {
     {{#if this.shouldRenderMeta}}
       <div
         class="form-kit__meta"
-        style={{htmlSafe (concat "width: " this.width)}}
+        style={{trustHTML (concat "width: " this.width)}}
       >
         {{#if @error}}
           <FKErrors @id={{@field.errorId}} @error={{@error}} />

@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -118,14 +118,14 @@ export default class SecondFactorAddTotp extends Component {
 
             <div class="control-group totp-description">
               <div class="controls">
-                {{htmlSafe (i18n "user.second_factor.enable_description")}}
+                {{trustHTML (i18n "user.second_factor.enable_description")}}
               </div>
             </div>
 
             <div class="control-group totp-qr">
               <div class="controls">
                 <div class="qr-code">
-                  <img src={{htmlSafe this.secondFactorImage}} />
+                  <img src={{trustHTML this.secondFactorImage}} />
                 </div>
                 <p class="key-code">
                   {{#if this.showSecondFactorKey}}

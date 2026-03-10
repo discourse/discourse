@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { Promise } from "rsvp";
 import DeleteUserPostsProgressModal from "discourse/admin/components/modal/delete-user-posts-progress";
 import PenalizeUserModal from "discourse/admin/components/modal/penalize-user";
@@ -81,7 +81,7 @@ export default class AdminToolsService extends Service {
       : Promise.resolve();
 
     return tryEmail.then(() => {
-      let message = htmlSafe(
+      let message = trustHTML(
         I18n.messageFormat("flagging.delete_confirm_MF", {
           POSTS: adminUser.get("post_count"),
           TOPICS: adminUser.get("topic_count"),

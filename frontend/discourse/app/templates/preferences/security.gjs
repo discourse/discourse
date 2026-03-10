@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -111,7 +111,7 @@ export default <template>
               />
             {{/unless}}
             <div class="auth-token-first">
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "user.auth_tokens.device_location"
                   device=token.device
@@ -122,11 +122,11 @@ export default <template>
             </div>
             <div class="auth-token-second">
               {{#if token.is_active}}
-                {{htmlSafe
+                {{trustHTML
                   (i18n "user.auth_tokens.browser_active" browser=token.browser)
                 }}
               {{else}}
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "user.auth_tokens.browser_last_seen"
                     browser=token.browser

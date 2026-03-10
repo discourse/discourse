@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { userPath } from "discourse/lib/url";
@@ -10,7 +10,7 @@ export default class ChatUserAvatar extends Component {
   @service chat;
 
   get avatar() {
-    return htmlSafe(
+    return trustHTML(
       renderAvatar(this.args.user, { imageSize: this.avatarSize })
     );
   }

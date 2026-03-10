@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
   APPROVED,
@@ -84,7 +84,7 @@ export function newReviewableStatus(status, type) {
     </div>
   `;
 
-  return htmlSafe(html);
+  return trustHTML(html);
 }
 
 export function htmlStatus(status, type) {
@@ -104,5 +104,5 @@ export function htmlStatus(status, type) {
 }
 
 export default function (status, type) {
-  return htmlSafe(htmlStatus(status, type));
+  return trustHTML(htmlStatus(status, type));
 }

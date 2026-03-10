@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
+import { trustHTML as htmlSafeTemplateHelper } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";

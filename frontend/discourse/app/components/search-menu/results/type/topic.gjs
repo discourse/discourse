@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import Blurb from "discourse/components/search-menu/results/blurb";
@@ -36,7 +36,7 @@ export default class Results extends Component {
             )
           }}
             <a href={{if @withTopicUrl @result.url}}>
-              {{replaceEmoji (htmlSafe @result.topic_title_headline)}}
+              {{replaceEmoji (trustHTML @result.topic_title_headline)}}
             </a>
           {{else}}
             <a href={{if @withTopicUrl @result.url}}>

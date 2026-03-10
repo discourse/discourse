@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DEditor from "discourse/components/d-editor";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import concatClass from "discourse/helpers/concat-class";
@@ -18,7 +18,7 @@ export default class FKControlComposer extends FKBaseControl {
       return;
     }
 
-    return htmlSafe(`height: ${escapeExpression(this.args.height)}px`);
+    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
   <template>

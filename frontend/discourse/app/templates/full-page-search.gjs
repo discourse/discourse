@@ -1,7 +1,7 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import GoogleSearch from "discourse/components/google-search";
@@ -39,7 +39,7 @@ export default <template>
       <h1 class="search-page-heading">
         {{#if @controller.hasResults}}
           <div class="result-count" id="search-result-count" aria-live="polite">
-            {{htmlSafe @controller.resultCountLabel}}
+            {{trustHTML @controller.resultCountLabel}}
           </div>
         {{else}}
           <div class="search-page-heading__page-title">

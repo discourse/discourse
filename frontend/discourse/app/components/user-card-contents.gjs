@@ -5,7 +5,7 @@ import EmberObject, { action, computed, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { compare, isEmpty } from "@ember/utils";
 import {
   attributeBindings,
@@ -488,7 +488,7 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.hasStatus}}
                   <div class="user-status">
-                    {{htmlSafe this.userStatusEmoji}}
+                    {{trustHTML this.userStatusEmoji}}
                     <span class="user-status__description">
                       {{this.user.status.description}}
                     </span>
@@ -599,7 +599,7 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="suspension-reason-title">{{i18n
                         "user.suspended_reason"
                       }}</span>
-                    <span class="suspension-reason-description">{{htmlSafe
+                    <span class="suspension-reason-description">{{trustHTML
                         this.user.suspend_reason
                       }}</span>
                   </div>
@@ -622,7 +622,7 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="silence-reason-title">{{i18n
                         "user.silenced_reason"
                       }}</span>
-                    <span class="silence-reason-description">{{htmlSafe
+                    <span class="silence-reason-description">{{trustHTML
                         this.user.silence_reason
                       }}</span>
                   </div>
@@ -631,7 +631,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#unless this.isRestricted}}
                 <div class="bio">
                   <HtmlWithLinks>
-                    {{htmlSafe this.user.bio_excerpt}}
+                    {{trustHTML this.user.bio_excerpt}}
                   </HtmlWithLinks>
                 </div>
               {{/unless}}
@@ -649,7 +649,7 @@ export default class UserCardContents extends CardContentsBase {
                     this.user.featured_topic.id
                   }}
                 >{{replaceEmoji
-                    (htmlSafe this.user.featured_topic.fancy_title)
+                    (trustHTML this.user.featured_topic.fancy_title)
                   }}</LinkTo>
               </div>
             </div>

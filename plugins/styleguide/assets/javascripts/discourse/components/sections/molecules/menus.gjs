@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -28,14 +28,14 @@ export default class Menus extends Component {
   @tracked maxWidth = MENU.options.maxWidth;
   @tracked identifier;
   @tracked offset = MENU.options.offset;
-  @tracked _content = htmlSafe("<ul><li>Hello</li><li>World!</li></ul>");
+  @tracked _content = trustHTML("<ul><li>Hello</li><li>World!</li></ul>");
 
   get content() {
     return this._content;
   }
 
   set content(value) {
-    this._content = htmlSafe(value);
+    this._content = trustHTML(value);
   }
 
   get templateCode() {

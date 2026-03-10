@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import RSVP from "rsvp";
 import concatClass from "discourse/helpers/concat-class";
@@ -183,19 +183,19 @@ export default class GoogleAdsense extends AdComponent {
 
   @computed("placement", "showAd")
   get classForSlot() {
-    return this.showAd ? htmlSafe(`adsense-${this.placement}`) : "";
+    return this.showAd ? trustHTML(`adsense-${this.placement}`) : "";
   }
 
   @computed("isResponsive", "isFluid")
   get autoAdFormat() {
     return this.isResponsive
-      ? htmlSafe(this.isFluid ? "fluid" : "auto")
+      ? trustHTML(this.isFluid ? "fluid" : "auto")
       : false;
   }
 
   @computed("ad_width", "ad_height", "isResponsive")
   get adWrapperStyle() {
-    return htmlSafe(
+    return trustHTML(
       this.isResponsive
         ? ""
         : `width: ${this.ad_width}; height: ${this.ad_height};`
@@ -204,7 +204,7 @@ export default class GoogleAdsense extends AdComponent {
 
   @computed("adWrapperStyle", "isResponsive")
   get adInsStyle() {
-    return htmlSafe(
+    return trustHTML(
       `display: ${this.isResponsive ? "block" : "inline-block"}; ${this.adWrapperStyle}`
     );
   }

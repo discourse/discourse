@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isHex } from "discourse/components/sidebar/section-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -42,7 +42,7 @@ export default class SidebarSectionLinkPrefix extends Component {
   <template>
     {{#if @prefixType}}
       <span
-        style={{if @prefixColor (htmlSafe (concat "color: " @prefixColor))}}
+        style={{if @prefixColor (trustHTML (concat "color: " @prefixColor))}}
         class={{concatClass
           "sidebar-section-link-prefix"
           @prefixType
@@ -61,7 +61,7 @@ export default class SidebarSectionLinkPrefix extends Component {
           {{replaceEmoji this.prefixValue class="prefix-emoji"}}
         {{else if (eq @prefixType "square")}}
           <span
-            style={{htmlSafe
+            style={{trustHTML
               (concat
                 "background: linear-gradient(90deg, " this.prefixValue ")"
               )

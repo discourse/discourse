@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
@@ -40,7 +40,7 @@ export default class ReadingTime extends Component {
         </h2>
         <div class="rewind-card">
           <p class="reading-time__text">
-            {{htmlSafe this.bookComparisonText}}
+            {{trustHTML this.bookComparisonText}}
           </p>
           <div class="reading-time__book">
             <div class="book">
