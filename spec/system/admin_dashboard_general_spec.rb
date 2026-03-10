@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Dashboard General Tab", type: :system do
-  fab!(:current_user, :admin)
+  fab!(:admin)
 
   before do
     freeze_time DateTime.parse("2026-03-09")
