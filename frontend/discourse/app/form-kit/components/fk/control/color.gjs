@@ -1,10 +1,10 @@
-import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import {
@@ -60,7 +60,7 @@ function colorLuminanceClass(color) {
   return calculateLuminance(color) > 0.5 ? "--is-light" : "--is-dark";
 }
 
-export default class FKControlColor extends Component {
+export default class FKControlColor extends FKBaseControl {
   static controlType = "color";
 
   @service currentUser;
@@ -174,6 +174,10 @@ export default class FKControlColor extends Component {
           maxlength={{this.maxLength}}
           class="form-kit__control-color-input-hex"
           disabled={{@field.disabled}}
+          id={{@field.id}}
+          name={{@field.name}}
+          aria-invalid={{if @field.error "true"}}
+          aria-describedby={{if @field.error @field.errorId}}
           {{on "input" this.handleTextInput}}
           {{on "blur" this.handleBlur}}
           {{on "paste" this.handlePaste}}
