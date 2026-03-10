@@ -12,7 +12,7 @@ require_relative "runners/inference"
 require_relative "runners/spam"
 require_relative "runners/summarization"
 require_relative "judge"
-require_relative "persona_prompt_loader"
+require_relative "agent_prompt_loader"
 require_relative "console_formatter"
 
 module DiscourseAi
@@ -25,32 +25,32 @@ module DiscourseAi
     # keeps higher-level scripts (`evals/run`) simple while centralizing
     # instrumentation and error handling.
     class Workbench
-      def initialize(output: $stdout, judge_llm: nil, persona_variants: nil, comparison: nil)
+      def initialize(output: $stdout, judge_llm: nil, agent_variants: nil, comparison: nil)
         @output = output
         @judge_llm = judge_llm
-        @persona_variants = persona_variants
+        @agent_variants = agent_variants
         @comparison = comparison
       end
 
-      def run_evals(eval_cases:, llms: nil, persona_variants: nil)
-        persona_variants ||= @persona_variants || [{ key: :default, prompt: nil }]
+      def run_evals(eval_cases:, llms: nil, agent_variants: nil)
+        agent_variants ||= @agent_variants || [{ key: :default, prompt: nil }]
 
         formatter =
-          build_formatter(eval_cases: eval_cases, llms: llms, persona_variants: persona_variants)
+          build_formatter(eval_cases: eval_cases, llms: llms, agent_variants: agent_variants)
         formatter.announce_start
 
         if running_comparisons?
           compare(
             eval_cases: eval_cases,
             llms: llms,
-            persona_variants: persona_variants,
+            agent_variants: agent_variants,
             formatter: formatter,
           )
         else
           run(
             eval_cases: eval_cases,
             llms: llms,
-            persona_variants: persona_variants,
+            agent_variants: agent_variants,
             formatter: formatter,
           )
         end
@@ -58,25 +58,20 @@ module DiscourseAi
         formatter&.finalize
       end
 
-      def compare(
-        eval_cases:,
-        llms:,
-        persona_variants: [{ key: :default, prompt: nil }],
-        formatter:
-      )
+      def compare(eval_cases:, llms:, agent_variants: [{ key: :default, prompt: nil }], formatter:)
         aggregate_scores = Hash.new { |h, k| h[k] = { passes: 0, evals: eval_cases.length } }
 
         eval_cases.each do |eval_case|
-          persona_compare = persona_variants.length > 1 && llms.length == 1
-          total_targets = persona_compare ? persona_variants.length : llms.length
-          persona_label = persona_compare ? "multiple" : persona_variants.first&.dig(:key)
+          agent_compare = agent_variants.length > 1 && llms.length == 1
+          total_targets = agent_compare ? agent_variants.length : llms.length
+          agent_label = agent_compare ? "multiple" : agent_variants.first&.dig(:key)
 
           recorder =
             Recorder.with_cassette(
               eval_case,
               output: output,
               total_targets: total_targets,
-              persona_key: persona_label,
+              agent_key: agent_label,
               formatter: formatter,
               announce_formatter: false,
               finalize_formatter: false,
@@ -84,11 +79,11 @@ module DiscourseAi
           execution_context = recorder.execution_context
           candidates = []
 
-          persona_variants.each do |variant|
+          agent_variants.each do |variant|
             llms.each do |llm|
               llm_name = llm.display_name || llm.name
               start_time = Time.now.utc
-              display_label = table_label_for(variant, llm_name, persona_compare)
+              display_label = table_label_for(variant, llm_name, agent_compare)
 
               execution =
                 execute_eval(eval_case, llm, variant, skip_judge: true, execution_context:)
@@ -118,7 +113,7 @@ module DiscourseAi
                 variant: variant,
                 llm_name: llm_name,
                 execution: execution,
-                persona_compare: persona_compare,
+                agent_compare: agent_compare,
                 display_label: display_label,
               )
             rescue DiscourseAi::Evals::Eval::EvalError => e
@@ -146,7 +141,7 @@ module DiscourseAi
             recorder,
             eval_case,
             candidates,
-            persona_variants.first&.dig(:key),
+            agent_variants.first&.dig(:key),
             aggregate_scores,
             execution_context:,
           )
@@ -155,18 +150,18 @@ module DiscourseAi
         end
       end
 
-      def run(eval_cases:, llms:, persona_variants: [{ key: :default, prompt: nil }], formatter:)
-        # We only allow one persona at a time here.
+      def run(eval_cases:, llms:, agent_variants: [{ key: :default, prompt: nil }], formatter:)
+        # We only allow one agent at a time here.
         # If not specified, will contain an element with the default key.
-        variant = persona_variants.first
+        variant = agent_variants.first
 
         eval_cases.each do |eval_case|
           recorder =
             Recorder.with_cassette(
               eval_case,
               output: output,
-              total_targets: persona_variants.length * llms.length,
-              persona_key: variant&.dig(:key),
+              total_targets: agent_variants.length * llms.length,
+              agent_key: variant&.dig(:key),
               formatter: formatter,
               announce_formatter: false,
               finalize_formatter: false,
@@ -235,7 +230,7 @@ module DiscourseAi
       def execute_eval(
         eval_case,
         llm,
-        persona_variant = { key: :default, prompt: nil },
+        agent_variant = { key: :default, prompt: nil },
         skip_judge: false,
         execution_context: nil
       )
@@ -252,7 +247,7 @@ module DiscourseAi
           )
         end
 
-        runner = DiscourseAi::Evals::Runners::Base.find_runner(feature, persona_variant[:prompt])
+        runner = DiscourseAi::Evals::Runners::Base.find_runner(feature, agent_variant[:prompt])
 
         raw =
           if runner
@@ -288,7 +283,7 @@ module DiscourseAi
 
       private
 
-      attr_reader :output, :judge_llm, :persona_variants, :comparison
+      attr_reader :output, :judge_llm, :agent_variants, :comparison
 
       def normalize_entries(raw)
         raw.is_a?(Array) ? raw : [raw]
@@ -312,13 +307,13 @@ module DiscourseAi
         recorder,
         eval_case,
         candidates,
-        persona_key,
+        agent_key,
         aggregate_scores,
         execution_context: nil
       )
         return if candidates.length < 2
 
-        mode_label = comparison_mode_label(persona_key, candidates)
+        mode_label = comparison_mode_label(agent_key, candidates)
 
         if judge_llm.present? || eval_case.judge.present?
           judged =
@@ -329,13 +324,13 @@ module DiscourseAi
           recorder.announce_comparison_judged(
             eval_case_id: eval_case.id,
             mode_label: mode_label,
-            persona_key: persona_key,
+            agent_key: agent_key,
             result: judged,
             candidates: candidates,
           )
           recorder.announce_comparison_aggregate(
             mode_label: mode_label,
-            persona_key: persona_key,
+            agent_key: agent_key,
             aggregate_scores: aggregate_scores,
           )
         else
@@ -360,7 +355,7 @@ module DiscourseAi
           recorder.announce_comparison_expected(
             eval_case_id: eval_case.id,
             mode_label: mode_label,
-            persona_key: persona_key,
+            agent_key: agent_key,
             winner: winner,
             status_line: status_line,
             failures: failures,
@@ -368,7 +363,7 @@ module DiscourseAi
           )
           recorder.announce_comparison_aggregate(
             mode_label: mode_label,
-            persona_key: persona_key,
+            agent_key: agent_key,
             aggregate_scores: aggregate_scores,
           )
         end
@@ -393,19 +388,19 @@ module DiscourseAi
         entries.join(" -- ")
       end
 
-      def comparison_mode_label(persona_key, candidates)
-        unique_personas = candidates.map { |c| c[:persona_label] }.compact.uniq
-        unique_personas.length > 1 ? "personas" : "LLMs"
+      def comparison_mode_label(agent_key, candidates)
+        unique_agents = candidates.map { |c| c[:agent_label] }.compact.uniq
+        unique_agents.length > 1 ? "agents" : "LLMs"
       end
 
-      def table_label_for(variant, llm_name, persona_compare)
-        persona_key = variant[:key]
-        persona_label = persona_key.presence || :default
+      def table_label_for(variant, llm_name, agent_compare)
+        agent_key = variant[:key]
+        agent_label = agent_key.presence || :default
 
-        if persona_compare
-          persona_label
-        elsif persona_label != :default && persona_label != "default"
-          "#{llm_name} (#{persona_label})"
+        if agent_compare
+          agent_label
+        elsif agent_label != :default && agent_label != "default"
+          "#{llm_name} (#{agent_label})"
         else
           llm_name
         end
@@ -427,19 +422,19 @@ module DiscourseAi
         variant:,
         llm_name:,
         execution:,
-        persona_compare:,
+        agent_compare:,
         display_label:
       )
         output =
           normalize_candidate_output(
             eval_case,
             execution[:raw_entries],
-            persona_compare ? variant[:key] : llm_name,
+            agent_compare ? variant[:key] : llm_name,
           )
         {
-          label: persona_compare ? variant[:key] : llm_name,
+          label: agent_compare ? variant[:key] : llm_name,
           display_label: display_label,
-          persona_label: variant[:key],
+          agent_label: variant[:key],
           classified_entries: execution[:classified],
           output: output,
         }
@@ -512,17 +507,17 @@ module DiscourseAi
         end
       end
 
-      def print_persona_heading(variant)
+      def print_agent_heading(variant)
         return unless variant[:key]
 
         label =
-          if variant[:key] == DiscourseAi::Evals::PersonaPromptLoader::DEFAULT_PERSONA_KEY
+          if variant[:key] == DiscourseAi::Evals::AgentPromptLoader::DEFAULT_AGENT_KEY
             "default (built-in)"
           else
             variant[:key]
           end
 
-        output.puts "\n=== Persona: #{label} ==="
+        output.puts "\n=== Agent: #{label} ==="
       end
 
       def judge_result(eval_case, result, execution_context: nil)
@@ -539,24 +534,24 @@ module DiscourseAi
         )
       end
 
-      def build_formatter(eval_cases:, llms:, persona_variants:)
-        persona_variants ||= [{ key: :default, prompt: nil }]
+      def build_formatter(eval_cases:, llms:, agent_variants:)
+        agent_variants ||= [{ key: :default, prompt: nil }]
         total_targets =
           if running_comparisons?
-            persona_compare = persona_variants.length > 1 && llms.length == 1
-            persona_compare ? persona_variants.length : llms.length
+            agent_compare = agent_variants.length > 1 && llms.length == 1
+            agent_compare ? agent_variants.length : llms.length
           else
-            persona_variants.length * llms.length
+            agent_variants.length * llms.length
           end
 
         run_label = "eval run (#{eval_cases.length} cases)"
-        persona_key = persona_variants.first&.dig(:key)
+        agent_key = agent_variants.first&.dig(:key)
 
         DiscourseAi::Evals::ConsoleFormatter.new(
           label: run_label,
           output: output,
           total_targets: total_targets,
-          persona_key: persona_key,
+          agent_key: agent_key,
         )
       end
 

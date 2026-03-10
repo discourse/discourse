@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
-import AiPersonaFlair from "../components/post/ai-persona-flair";
+import AiAgentFlair from "../components/post/ai-agent-flair";
 import AiCancelStreaming from "../components/post/meta-data/ai-cancel-streaming";
 import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
 import AiDebugButton from "../components/post-menu/ai-debug-button";
@@ -53,8 +53,8 @@ function initializeAIBotReplies(api) {
   });
 }
 
-function initializePersonaDecorator(api) {
-  api.renderAfterWrapperOutlet("post-meta-data-poster-name", AiPersonaFlair);
+function initializeAgentDecorator(api) {
+  api.renderAfterWrapperOutlet("post-meta-data-poster-name", AiAgentFlair);
 }
 
 function initializePauseButton(api) {
@@ -148,11 +148,10 @@ function initializeShareTopicButton(api) {
       showShareConversationModal(modal, this.topic.id);
     },
     classNames: ["share-ai-conversation-button"],
-    dependentKeys: ["topic.ai_persona_name"],
+    dependentKeys: ["topic.ai_agent_name"],
     displayed() {
       return (
-        currentUser?.can_share_ai_bot_conversations &&
-        this.topic.ai_persona_name
+        currentUser?.can_share_ai_bot_conversations && this.topic.ai_agent_name
       );
     },
   });
@@ -170,7 +169,7 @@ export default {
       withPluginApi((api) => {
         attachHeaderIcon(api);
         initializeAIBotReplies(api);
-        initializePersonaDecorator(api);
+        initializeAgentDecorator(api);
         initializeDebugButton(api, container);
         initializeShareButton(api, container);
         initializeShareTopicButton(api, container);

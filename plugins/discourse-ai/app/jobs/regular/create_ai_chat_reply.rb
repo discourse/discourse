@@ -11,12 +11,11 @@ module Jobs
       message = ::Chat::Message.find_by(id: args[:message_id])
       return if message.blank?
 
-      personaClass =
-        DiscourseAi::Personas::Persona.find_by(id: args[:persona_id], user: message.user)
-      return if personaClass.blank?
+      agentClass = DiscourseAi::Agents::Agent.find_by(id: args[:agent_id], user: message.user)
+      return if agentClass.blank?
 
-      user = User.find_by(id: personaClass.user_id)
-      bot = DiscourseAi::Personas::Bot.as(user, persona: personaClass.new)
+      user = User.find_by(id: agentClass.user_id)
+      bot = DiscourseAi::Agents::Bot.as(user, agent: agentClass.new)
 
       DiscourseAi::AiBot::Playground.new(bot).reply_to_chat_message(
         message,

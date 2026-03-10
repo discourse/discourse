@@ -36,7 +36,7 @@ module DiscourseAi
       def initialize(
         sender_username:,
         model:,
-        persona_id:,
+        agent_id:,
         sample_size:,
         instructions:,
         tokens_per_post:,
@@ -70,7 +70,7 @@ module DiscourseAi
         @email_receivers = receivers&.filter { |r| r.include? "@" }
         @title = title.presence || I18n.t("discourse_automation.scriptables.llm_report.title")
         @model = LlmModel.find_by(id: model)
-        @persona = AiPersona.find(persona_id).class_instance.new
+        @agent = AiAgent.find(agent_id).class_instance.new
         @category_ids = category_ids
         @tags = tags
         @allow_secure_categories = allow_secure_categories
@@ -137,7 +137,7 @@ module DiscourseAi
         INPUT
 
         report_ctx =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: Discourse.system_user,
             skip_show_thinking: true,
             feature_name: "ai_report",
@@ -147,8 +147,8 @@ module DiscourseAi
         puts if Rails.env.development? && @debug_mode
 
         result = +""
-        bot = DiscourseAi::Personas::Bot.as(Discourse.system_user, persona: @persona, model: @model)
-        json_summary_schema_key = @persona.response_format&.first.to_h
+        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: @agent, model: @model)
+        json_summary_schema_key = @agent.response_format&.first.to_h
 
         buffer_blk =
           Proc.new do |partial, _, type|

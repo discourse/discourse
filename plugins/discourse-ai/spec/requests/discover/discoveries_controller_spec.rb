@@ -11,11 +11,11 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
 
   describe "#reply" do
     fab!(:group)
-    fab!(:ai_persona) { Fabricate(:ai_persona, allowed_group_ids: [group.id], default_llm_id: 1) }
+    fab!(:ai_agent) { Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: 1) }
 
-    before { SiteSetting.ai_discover_persona = ai_persona.id }
+    before { SiteSetting.ai_discover_agent = ai_agent.id }
 
-    context "when the user doesn't have access to the persona" do
+    context "when the user doesn't have access to the agent" do
       it "returns a 403" do
         post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
 
@@ -25,7 +25,7 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
 
     context "when the user is allowed to use discover" do
       before do
-        SiteSetting.ai_discover_persona = ai_persona.id
+        SiteSetting.ai_discover_agent = ai_agent.id
         group.add(user)
       end
 
@@ -48,17 +48,17 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
   describe "#continue_convo" do
     fab!(:group)
     fab!(:llm_model)
-    fab!(:ai_persona) do
-      persona = Fabricate(:ai_persona, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
-      persona.create_user!
-      persona
+    fab!(:ai_agent) do
+      agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+      agent.create_user!
+      agent
     end
     let(:query) { "What is Discourse?" }
     let(:context) { "Discourse is an open-source discussion platform." }
 
     context "when the user is allowed to discover" do
       before do
-        SiteSetting.ai_discover_persona = ai_persona.id
+        SiteSetting.ai_discover_agent = ai_agent.id
         group.add(user)
       end
 
@@ -105,7 +105,7 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
       describe "group-based restrictions" do
         fab!(:staff_group) { Group[:staff] }
 
-        before { ai_persona.update(allowed_group_ids: [staff_group.id]) }
+        before { ai_agent.update(allowed_group_ids: [staff_group.id]) }
 
         it "forbid users without group access from creating conversations" do
           expect(user.in_any_groups?([staff_group.id])).to be_falsey

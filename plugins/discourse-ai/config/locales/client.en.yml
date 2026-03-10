@@ -6,8 +6,8 @@ en:
           descriptions:
             discourse_ai:
               search: "Allows AI search"
-              stream_completion: "Allows streaming AI persona completions"
-              update_personas: "Allows updating AI personas"
+              stream_completion: "Allows streaming AI agent completions"
+              update_agents: "Allows updating AI agents"
               manage_artifacts: "Allows managing AI artifacts (list, view, create, update, delete)"
 
       site_settings:
@@ -31,9 +31,9 @@ en:
             create_ai_llm_model: "Create LLM model"
             update_ai_llm_model: "Update LLM model"
             delete_ai_llm_model: "Delete LLM model"
-            create_ai_persona: "Create AI persona"
-            update_ai_persona: "Update AI persona"
-            delete_ai_persona: "Delete AI persona"
+            create_ai_agent: "Create AI agent"
+            update_ai_agent: "Update AI agent"
+            delete_ai_agent: "Delete AI agent"
             create_ai_tool: "Create AI tool"
             update_ai_tool: "Update AI tool"
             delete_ai_tool: "Delete AI tool"
@@ -110,9 +110,9 @@ en:
             top_p:
               label: "Top P"
               description: "Top P to use for the LLM, increase to increase randomness (leave empty to use model default)"
-            persona_id:
-              label: "Persona"
-              description: "AI Persona to use for report generation"
+            agent_id:
+              label: "Agent"
+              description: "AI agent to use for report generation"
 
         ai_tool_action:
           fields:
@@ -123,22 +123,22 @@ en:
               label: "LLM Model"
               description: "Language model for tools that use llm.generate() (optional)"
 
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Persona"
-              description: "AI Persona to use for triage (must have default LLM and User set)"
+            agent:
+              label: "Agent"
+              description: "AI agent to use for triage (must have default LLM and User set)"
             whisper:
               label: "Reply as Whisper"
-              description: "Whether the persona's response should be a whisper"
+              description: "Whether the agent's response should be a whisper"
             silent_mode:
               label: "Silent Mode"
-              description: "In silent mode persona will receive the content but will not post anything on the forum - useful when performing triage using tools"
+              description: "In silent mode the agent will receive the content but will not post anything on the forum - useful when performing triage using tools"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
-              description: "Persona used to triage, be sure for it to reply with a single word you can use to trigger the action"
+            triage_agent:
+              label: "Agent"
+              description: "Agent used to triage, be sure for it to reply with a single word you can use to trigger the action"
             max_post_tokens:
               label: "Max Post Tokens"
               description: "The maximum number of tokens to scan using LLM triage"
@@ -184,9 +184,9 @@ en:
             whisper:
               label: "Reply as Whisper"
               description: "Whether the AI's response should be a whisper"
-            reply_persona:
-              label: "Reply Persona"
-              description: "AI Persona to use for replies (must have default LLM), will be prioritized over canned reply"
+            reply_agent:
+              label: "Reply Agent"
+              description: "AI agent to use for replies (must have default LLM), will be prioritized over canned reply"
             max_output_tokens:
               label: "Max output tokens"
               description: "When specified, sets an upper bound to the maximum number of tokens the model can generate. Respects LLM's max output tokens limit"
@@ -195,9 +195,9 @@ en:
             manual: "Use specific tag list (configured below)"
             discover: "Let AI discover and use any site tags"
           fields:
-            tagger_persona:
-              label: "AI Persona"
-              description: "The AI persona to use for analyzing and tagging topics"
+            tagger_agent:
+              label: "AI Agent"
+              description: "The AI agent to use for analyzing and tagging topics"
             tag_mode:
               label: "Tag Selection Mode"
               description: "Choose how the AI selects tags"
@@ -228,7 +228,7 @@ en:
 
       default_llm:
         title: "Default LLM model"
-        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or persona. If no default LLM is specified, the last created LLM will be used."
+        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or agent. If no default LLM is specified, the last created LLM will be used."
 
       llm_selector:
         none: "None"
@@ -236,19 +236,19 @@ en:
 
       features:
         short_title: "Features"
-        description: "These are the AI features available to visitors on your site. These can be configured to use specific personas and LLMs, and can be access controlled by groups."
+        description: "These are the AI features available to visitors on your site. These can be configured to use specific agents and LLMs, and can be access controlled by groups."
         back: "Back"
         settings_save_error: "Some settings could not be saved."
         disabled: "(disabled)"
-        persona:
-          one: "Persona:"
-          other: "Personas:"
+        agent:
+          one: "Agent:"
+          other: "Agents:"
         groups: "Groups:"
         llm:
           one: "LLM:"
           other: "LLMs:"
         no_llm: "No LLM selected"
-        no_persona: "Not set"
+        no_agent: "Not set"
         no_groups: "None"
         edit: "Settings"
         expand_list:
@@ -269,7 +269,7 @@ en:
           unconfigured: "Unconfigured"
         filters:
           all: "All"
-          text: "Search features, personas, LLMs, or groups..."
+          text: "Search features, agents, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
 
@@ -315,7 +315,7 @@ en:
             settings: "Basic Settings"
             topic_criteria: "Topic Criteria"
             post_criteria: "Post Criteria"
-            personas: "Personas"
+            agents: "Agents"
 
         ai_helper:
           name: "Helper"
@@ -336,7 +336,7 @@ en:
             access_permissions: "Access & Permissions"
             enabled_features: "Enabled Features"
             automation: "Automation"
-            personas: "Personas"
+            agents: "Agents"
 
         translation:
           name: "Translation"
@@ -352,7 +352,7 @@ en:
           schedule_topic_error: "Failed to schedule translations. Please try again."
           setting_groups:
             settings: "Basic Settings"
-            personas: "Personas"
+            agents: "Agents"
             backfill_and_limits: "Backfill & Limits"
 
         spam:
@@ -417,7 +417,7 @@ en:
         short_title: "Spam"
         title: "Configure spam handling"
         select_llm: "Select LLM"
-        select_persona: "Select persona"
+        select_agent: "Select agent"
         custom_instructions: "Custom instructions"
         custom_instructions_help: "Custom instructions specific to your site to help guide the AI in identifying spam, e.g. 'Be more aggressive about scanning posts not in English'."
         last_seven_days: "Last 7 days"
@@ -505,7 +505,7 @@ en:
           custom: "Custom..."
         credit_allocations: "Credit allocations"
 
-      ai_persona:
+      ai_agent:
         ai_tools: "Tools"
         tool_strategies:
           all: "Apply to all replies"
@@ -517,15 +517,15 @@ en:
         edit: "Edit"
         export: "Export"
         import: "Import"
-        import_error_conflict: "Conflict detected importing %{name}, would you like to update the existing persona?"
+        import_error_conflict: "Conflict detected importing %{name}, would you like to update the existing agent?"
         overwrite: "Overwrite"
         description: "Description"
         no_llm_selected: "No language model selected"
-        use_parent_llm: "Use persona's language model"
+        use_parent_llm: "Use agent's language model"
         max_context_posts: "Max context posts"
         max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
         execution_mode: "Execution Mode"
-        execution_mode_help: "Controls how the persona manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
+        execution_mode_help: "Controls how the agent manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
         execution_mode_options:
           default: "Default (Fixed Limits)"
           agentic: "Agentic (Token Budget)"
@@ -543,27 +543,27 @@ en:
         show_thinking: Show thinking
         show_thinking_help: Will show end users the internal thinking and tool calls of the language model.
         mentionable: Allow mentions
-        mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this persona.
+        mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this agent.
         user: User
         create_user: Create user
-        create_user_help: You can optionally attach a user to this persona. If you do, the AI will use this user to respond to requests.
+        create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
         default_llm: Default language model
-        default_llm_help: The default language model to use for this persona. Required if you wish to mention persona on public posts.
+        default_llm_help: The default language model to use for this agent. Required if you wish to mention the agent on public posts.
         question_consolidator_llm: Language Model for Question Consolidator
         question_consolidator_llm_help: The language model to use for the question consolidator, you may choose a less powerful model to save costs.
         system_prompt: System prompt
         forced_tool_strategy: Forced tool strategy
         allow_chat_direct_messages: "Allow chat direct messages"
-        allow_chat_direct_messages_help: "If enabled, users in allowed groups can send direct messages to this persona."
+        allow_chat_direct_messages_help: "If enabled, users in allowed groups can send direct messages to this agent."
         allow_chat_channel_mentions: "Allow chat channel mentions"
-        allow_chat_channel_mentions_help: "If enabled, users in allowed groups can mention this persona in chat channels."
+        allow_chat_channel_mentions_help: "If enabled, users in allowed groups can mention this agent in chat channels."
         allow_personal_messages: "Allow personal messages"
-        allow_personal_messages_help: "If enabled, users in allowed groups can send personal messages to this persona."
+        allow_personal_messages_help: "If enabled, users in allowed groups can send personal messages to this agent."
         allow_topic_mentions: "Allow topic mentions"
-        allow_topic_mentions_help: "If enabled, users in allowed groups can mention this persona in topics."
+        allow_topic_mentions_help: "If enabled, users in allowed groups can mention this agent in topics."
         force_default_llm: "Always use default language model"
         save: "Save"
-        saved: "Persona saved"
+        saved: "Agent saved"
         enabled: "Enabled?"
         tools: "Enabled tools"
         tokens: "tokens"
@@ -573,25 +573,25 @@ en:
         tool_severity_high: "High capacity"
         tool_severity_too_many: "Too many tools"
         tool_tokens_warning: "Excess tools degrade AI performance by taking up valuable conversation memory. Consider removing non-essential tools."
-        tool_count_warning: "Each tool's definition is sent to the model on every request. Having many tools increases token usage and can confuse the model, leading to worse tool selection. Only keep tools this persona actually needs."
+        tool_count_warning: "Each tool's definition is sent to the model on every request. Having many tools increases token usage and can confuse the model, leading to worse tool selection. Only keep tools this agent actually needs."
         forced_tools: "Forced tools"
         allowed_groups: "Allowed groups"
-        confirm_delete: "Are you sure you want to delete this persona?"
-        new: "New persona"
-        no_personas: "You have not created any personas yet"
-        title: "Personas"
-        short_title: "Personas"
+        confirm_delete: "Are you sure you want to delete this agent?"
+        new: "New agent"
+        no_agents: "You have not created any agents yet"
+        title: "Agents"
+        short_title: "Agents"
         delete: "Delete"
         temperature: "Temperature"
         temperature_help: "Temperature to use for the LLM. Increase to increase creativity (leave empty to use model default, generally a value from 0.0 to 2.0)"
         top_p: "Top P"
         top_p_help: "Top P to use for the LLM, increase to increase randomness (leave empty to use model default, generally a value from 0.0 to 1.0)"
         priority: "Priority"
-        priority_help: "Priority personas are displayed to users at the top of the persona list. If multiple personas have priority, they will be sorted alphabetically."
+        priority_help: "Priority agents are displayed to users at the top of the agent list. If multiple agents have priority, they will be sorted alphabetically."
         tool_options: "Tool options"
         rag_conversation_chunks: "Search conversation chunks"
         rag_conversation_chunks_help: "The number of chunks to use for the RAG model searches. Increase to increase the amount of context the AI can use."
-        persona_description: "Personas are a powerful feature that allows you to customize the behavior of the AI engine in your Discourse forum. They act as a 'system message' that guides the AI's responses and interactions, helping to create a more personalized and engaging user experience."
+        agent_description: "Agents are a powerful feature that allows you to customize the behavior of the AI engine in your Discourse forum. They act as a 'system message' that guides the AI's responses and interactions, helping to create a more personalized and engaging user experience."
         response_format:
           title: "JSON response format"
           no_format: "No JSON format specified"
@@ -613,12 +613,12 @@ en:
 
         ai_bot:
           title: "AI bot options"
-          save_first: "More AI bot options will become available once you save the persona."
+          save_first: "More AI bot options will become available once you save the agent."
 
         filters:
-          text: "Find a persona"
+          text: "Find an agent"
           reset: "Reset"
-          no_results: "No personas found matching your filters."
+          no_results: "No agents found matching your filters."
           all_features: "Any feature"
 
         features_list:
@@ -662,7 +662,7 @@ en:
         name_help: "Name will show up in the Discourse UI and is the short identifier you will use to find the tool in various settings, it should be distinct (it is required)"
         new: "New tool"
         tool_name: "Tool Name"
-        tool_name_help: "Tool Name is presented to the large language model. It is not distinct, but it is distinct per persona. (persona validates on save)"
+        tool_name_help: "Tool Name is presented to the large language model. It is not distinct, but it is distinct per agent. (agent validates on save)"
         description: "Description"
         description_help: "A clear description of the tool's purpose for the language model"
         subheader_description: "Tools extend the capabilities of AI bots with user-defined JavaScript functions."
@@ -777,13 +777,13 @@ en:
           next_reset: "Credits reset on %{time}"
         usage:
           ai_bot: "AI bot"
-          ai_helper: "Helper (%{persona})"
+          ai_helper: "Helper (%{agent})"
           ai_helper_image_caption: "Image caption"
-          ai_persona: "Persona (%{persona})"
+          ai_agent: "Agent (%{agent})"
           ai_summarization: "Summarize"
           ai_embeddings_semantic_search: "AI search"
           ai_spam: "Spam"
-          automation: "Automation (%{persona})"
+          automation: "Automation (%{agent})"
         in_use_warning:
           one: "This model is currently used by %{settings}. If misconfigured, the feature won't work as expected."
           other: "This model is currently used by the following: %{settings}. If misconfigured, features won't work as expected. "
@@ -1019,7 +1019,7 @@ en:
         click_to_run_label: "Run Artifact"
 
       ai_bot:
-        persona: "Persona"
+        agent: "Agent"
         llm: "Model"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
