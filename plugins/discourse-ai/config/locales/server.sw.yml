@@ -17,3 +17,31 @@ sw:
       tool_summary:
         search: "Tafuta"
         time: "Muda"
+      close_topic:
+        errors:
+          not_found: "Mada haijapatikana."
+      unlist_topic:
+        errors:
+          not_found: "Mada haijapatikana."
+      delete_topic:
+        errors:
+          not_found: "Mada haijapatikana."
+      edit_tags:
+        errors:
+          not_found: "Mada haijapatikana."
+      edit_category:
+        errors:
+          not_found: "Mada haijapatikana."
+          category_not_found: "Kategoria haijapatikana."
+      set_topic_timer:
+        errors:
+          not_found: "Mada haijapatikana."
+      set_slow_mode:
+        errors:
+          not_found: "Mada haijapatikana."
+      move_posts:
+        errors:
+          not_found: "Mada haijapatikana."
+      assign:
+        errors:
+          not_found: "Mada haijapatikana."

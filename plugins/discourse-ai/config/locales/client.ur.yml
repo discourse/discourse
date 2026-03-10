@@ -32,9 +32,6 @@ ur:
             create_ai_llm_model: "ایل ایل ایم ماڈل بنائیں"
             update_ai_llm_model: "ایل ایل ایم ماڈل کو اپ ڈیٹ کریں"
             delete_ai_llm_model: "ایل ایل ایم ماڈل حذف کریں"
-            create_ai_persona: "اے آئی پرسونا تخلیق کریں"
-            update_ai_persona: "اے آئی پرسونا اپڈیٹ کریں"
-            delete_ai_persona: "اے آئی پرسونا حذف کریں"
             create_ai_tool: "اے آئی ٹول بنائیں"
             update_ai_tool: "اے آئی ٹول اپ ڈیٹ کریں"
             delete_ai_tool: "اے آئی ٹول حذف کریں"
@@ -68,6 +65,7 @@ ur:
         back: "واپس"
         disabled: "(غیر فعال)"
         groups: "گروپس:"
+        no_agent: "سیٹ نہیں"
         no_groups: "کوئی نہیں"
         edit: "سیٹِنگ"
         expand_list:
@@ -125,23 +123,24 @@ ur:
           last_week: "گزشتہ ہفتے"
           last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
-      ai_persona:
+      ai_agent:
         back: "واپس"
         name: "نام"
         edit: "ترمیم کریں"
         export: "برآمد"
         import: "درآمد"
         description: "تفصیل"
-        user: صارف
+        user: رکن
         save: "محفوظ کریں"
         enabled: "فعال؟"
-        delete: "مٹائیں"
+        delete: "حذف کریں"
         response_format:
           open_modal: "ترمیم کریں"
           modal:
             key_title: "کی"
         filters:
           reset: "رِی سَیٹ"
+        llms_list: "ایل ایل ایم:"
       rag:
         uploads:
           title: "اَپ لوڈز"

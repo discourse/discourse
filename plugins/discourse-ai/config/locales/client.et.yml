@@ -79,7 +79,7 @@ et:
         username: "Kasutajanimi"
         total_requests: "Kokku päringuid"
         total: "Kokku"
-      ai_persona:
+      ai_agent:
         back: "Tagasi"
         name: "Nimi"
         edit: "Muuda"

@@ -20,6 +20,36 @@ da:
         search: "Søg"
         time: "Tidspunkt"
         summarize: "Opsummer"
+      tool_help:
+        delete_topic: "Slet et emne"
+      close_topic:
+        errors:
+          not_found: "Emne ikke fundet."
+      unlist_topic:
+        errors:
+          not_found: "Emne ikke fundet."
+      delete_topic:
+        errors:
+          not_found: "Emne ikke fundet."
+      edit_tags:
+        errors:
+          not_found: "Emne ikke fundet."
+      edit_category:
+        errors:
+          not_found: "Emne ikke fundet."
+          category_not_found: "Denne kategori blev ikke fundet."
+      set_topic_timer:
+        errors:
+          not_found: "Emne ikke fundet."
+      set_slow_mode:
+        errors:
+          not_found: "Emne ikke fundet."
+      move_posts:
+        errors:
+          not_found: "Emne ikke fundet."
+      assign:
+        errors:
+          not_found: "Emne ikke fundet."
     sentiment:
       reports:
         post_emotion:

@@ -12,8 +12,6 @@ de:
           descriptions:
             discourse_ai:
               search: "Ermöglicht KI-Suche"
-              stream_completion: "Ermöglicht das Streamen von KI-Persona-Vervollständigungen"
-              update_personas: "Ermöglicht die Aktualisierung von KI-Personas"
               manage_artifacts: "Ermöglicht die Verwaltung von KI-Artefakten (auflisten, anzeigen, erstellen, aktualisieren, löschen)"
       site_settings:
         categories:
@@ -36,9 +34,6 @@ de:
             create_ai_llm_model: "LLM-Modell erstellen"
             update_ai_llm_model: "LLM-Modell aktualisieren"
             delete_ai_llm_model: "LLM-Modell löschen"
-            create_ai_persona: "KI-Persona erstellen"
-            update_ai_persona: "KI-Persona aktualisieren"
-            delete_ai_persona: "KI-Persona löschen"
             create_ai_tool: "KI-Tool erstellen"
             update_ai_tool: "KI-Tool aktualisieren"
             delete_ai_tool: "KI-Tool löschen"
@@ -114,9 +109,6 @@ de:
             top_p:
               label: "Top P"
               description: "Top P für die LLM, erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
-            persona_id:
-              label: "Persona"
-              description: "KI Persona zur Berichtserstellung"
         ai_tool_action:
           fields:
             tool:
@@ -125,22 +117,14 @@ de:
             llm_model:
               label: "LLM-Modell"
               description: "Sprachmodell für Werkzeuge, die llm.generate() verwenden (optional)"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Persona"
-              description: "KI-Persona, die für die Sichtung verwendet werden soll (Standard-LLM und -Benutzer müssen eingestellt sein)"
             whisper:
               label: "Als Flüstern antworten"
-              description: "Ob die Antwort der Persona ein Flüstern sein soll"
             silent_mode:
               label: "Stiller Modus"
-              description: "Im stillen Modus empfängt die Persona den Inhalt, schreibt aber nichts in das Forum – nützlich bei der Sichtung mit Tools"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
-              description: "Persona, die für die Triage verwendet wird. Achte darauf, dass sie mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
             max_post_tokens:
               label: "Max. Beitrags-Token"
               description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
@@ -186,9 +170,6 @@ de:
             whisper:
               label: "Als Flüstern antworten"
               description: "Ob die Antwort der KI ein Flüstern sein soll"
-            reply_persona:
-              label: "Antwort-Persona"
-              description: "KI-Persona, die für Antworten verwendet werden soll (muss Standard-LLM haben), wird gegenüber vorgefertigten Antworten bevorzugt"
             max_output_tokens:
               label: "Maximale Ausgabetoken"
               description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
@@ -197,9 +178,6 @@ de:
             manual: "Spezifische Schlagwort-Liste verwenden (unten konfiguriert)"
             discover: "Lassen die KI beliebige Schlagwörter auf der Website entdecken und verwenden"
           fields:
-            tagger_persona:
-              label: "KI-Persona"
-              description: "Die KI-Persona, die Themen analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -228,25 +206,20 @@ de:
       title: "KI"
       default_llm:
         title: "Standard-LLM-Modell"
-        description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder Persona kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
       llm_selector:
         none: "Keine Auswahl"
         saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
-        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
-        persona:
-          one: "Persona:"
-          other: "Personas:"
         groups: "Gruppen:"
         llm:
           one: "LLM:"
           other: "LLM:"
         no_llm: "Kein LLM ausgewählt"
-        no_persona: "Nicht festgelegt"
+        no_agent: "Nicht festgelegt"
         no_groups: "Keine"
         edit: "Einstellungen"
         expand_list:
@@ -267,7 +240,6 @@ de:
           unconfigured: "Nicht konfiguriert"
         filters:
           all: "Gesamt"
-          text: "Suche nach Funktionen, Personas, LLMs oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
@@ -311,7 +283,6 @@ de:
             settings: "Grundlegende Einstellungen"
             topic_criteria: "Kriterien für Themen"
             post_criteria: "Kriterien für Beiträge"
-            personas: "Personas"
         ai_helper:
           name: "Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
@@ -331,7 +302,6 @@ de:
             access_permissions: "Zugriff & Berechtigungen"
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
-            personas: "Personas"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -346,7 +316,6 @@ de:
           schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
           setting_groups:
             settings: "Grundlegende Einstellungen"
-            personas: "Personas"
             backfill_and_limits: "Rückwirkende Übersetzung & Grenzwerte"
         spam:
           name: "Spam"
@@ -404,7 +373,6 @@ de:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
-        select_persona: "Persona auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
         last_seven_days: "Letzte 7 Tage"
@@ -490,7 +458,7 @@ de:
           last_month: "Letzter Monat"
           custom: "Benutzerdefiniert …"
         credit_allocations: "Guthabenzuweisungen"
-      ai_persona:
+      ai_agent:
         ai_tools: "Tools"
         tool_strategies:
           all: "Auf alle Antworten anwenden"
@@ -502,11 +470,9 @@ de:
         edit: "Bearbeiten"
         export: "Exportieren"
         import: "Importieren"
-        import_error_conflict: "Beim Importieren von %{name} wurde ein Konflikt erkannt. Möchtest du die vorhandene Persona aktualisieren?"
         overwrite: "Überschreiben"
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
-        use_parent_llm: "Verwende das Sprachmodell der Persona"
         max_context_posts: "Max. Kontext-Beiträge"
         max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
         vision_enabled: Sehen aktiviert
@@ -519,47 +485,32 @@ de:
         show_thinking: Denken anzeigen
         show_thinking_help: Zeigt den Endbenutzern die internen Denkprozesse und Werkzeugaufrufe des Sprachmodells.
         mentionable: Erwähnungen zulassen
-        mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
-        user: Benutzer
+        user: Nutzer
         create_user: Benutzer erstellen
-        create_user_help: Du kannst dieser Persona optional einen Nutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
         default_llm: Standard-Sprachmodell
-        default_llm_help: Das Standard-Sprachmodell, das für diese Persona verwendet werden soll. Erforderlich, wenn du die Persona in öffentlichen Beiträgen erwähnen möchtest.
         question_consolidator_llm: Sprachmodell für Fragenkonsolidierer
         question_consolidator_llm_help: Das Sprachmodell, das für den Fragenkonsolidierer verwendet werden soll. Du kannst ein weniger leistungsfähiges Modell wählen, um Kosten zu sparen.
         system_prompt: System-Eingabeaufforderung
         forced_tool_strategy: Erzwungene Tool-Strategie
         allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"
-        allow_chat_direct_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen Direktnachrichten an diese Person senden."
         allow_chat_channel_mentions: "Chat-Kanal-Erwähnungen zulassen"
-        allow_chat_channel_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diese Persona in Chatkanälen erwähnen."
         allow_personal_messages: "Persönliche Nachrichten zulassen"
-        allow_personal_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen persönliche Nachrichten an diese Persona senden."
         allow_topic_mentions: "Themenerwähnungen zulassen"
-        allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diese Persona in Themen erwähnen."
         force_default_llm: "Immer das Standard-Sprachmodell verwenden"
         save: "Speichern"
-        saved: "Persona gespeichert"
         enabled: "Aktiviert?"
         tools: "Aktivierte Tools"
         forced_tools: "Erzwungene Tools"
         allowed_groups: "Zulässige Gruppen"
-        confirm_delete: "Bist du sicher, dass du diese Persona löschen willst?"
-        new: "Neue Persona"
-        no_personas: "Du hast noch keine Personas erstellt"
-        title: "Personas"
-        short_title: "Personas"
         delete: "Löschen"
         temperature: "Temperatur"
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
         priority: "Priorität"
-        priority_help: "Personas mit Priorität werden den Benutzern am Anfang der Persona-Liste angezeigt. Wenn mehrere Personas Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
         rag_conversation_chunks: "Suchunterhaltungs-Chunks"
         rag_conversation_chunks_help: "Die Anzahl der Chunks, die für die RAG-Modell-Suche verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann."
-        persona_description: "Personas sind eine leistungsstarke Funktion, mit der du das Verhalten der KI-Engine in deinem Discourse-Forum anpassen kannst. Sie fungieren als „Systemnachricht“, welche die Antworten und Interaktionen der KI steuert und dazu beiträgt, ein persönlicheres und ansprechenderes Erlebnis für Benutzer zu schaffen."
         response_format:
           title: "JSON-Antwortformat"
           no_format: "Kein JSON-Format angegeben"
@@ -579,11 +530,8 @@ de:
           enabled: "KI-Bot?"
         ai_bot:
           title: "KI-Bot-Optionen"
-          save_first: "Weitere KI-Bot-Optionen werden verfügbar, sobald du die Persona gespeichert hast."
         filters:
-          text: "Finde eine Persona"
           reset: "Zurücksetzen"
-          no_results: "Es wurden keine Personas gefunden, die deinen Filtern entsprechen."
           all_features: "Jede Funktion"
         features_list:
           one: "Funktion:"
@@ -623,7 +571,6 @@ de:
         name_help: "Der Name wird in der Discourse-Benutzeroberfläche angezeigt und ist die Kurzkennung, die du verwendest, um das Tool in verschiedenen Einstellungen zu finden. Er sollte eindeutig sein (er ist erforderlich)."
         new: "Neues Tool"
         tool_name: "Name des Tools"
-        tool_name_help: "Der Werkzeugname wird dem großen Sprachmodell präsentiert. Es ist nicht eindeutig, aber es ist von Person zu Person unterschiedlich. (Persona wird beim Speichern validiert)"
         description: "Beschreibung"
         description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
         subheader_description: "Tools erweitern die Fähigkeiten von KI-Bots mit benutzerdefinierten JavaScript-Funktionen."
@@ -734,13 +681,12 @@ de:
           next_reset: "Guthaben wird am %{time} Uhr zurückgesetzt"
         usage:
           ai_bot: "KI-Bot"
-          ai_helper: "Helfer (%{persona})"
+          ai_helper: "Helfer (%{agent})"
           ai_helper_image_caption: "Bildbeschriftungen"
-          ai_persona: "Persona (%{persona})"
           ai_summarization: "Zusammenfassen"
           ai_embeddings_semantic_search: "KI-Suche"
           ai_spam: "Spam"
-          automation: "Automatisierung (%{persona})"
+          automation: "Automatisierung (%{agent})"
         in_use_warning:
           one: "Dieses Modell wird derzeit von %{settings} verwendet. Wenn es falsch konfiguriert ist, wird die Funktion nicht wie erwartet funktionieren."
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
@@ -961,7 +907,6 @@ de:
         collapse_view_label: "Vollbild verlassen (ESC- oder Zurück-Taste)"
         click_to_run_label: "Artefakt ausführen"
       ai_bot:
-        persona: "Persona"
         llm: "Modell"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"

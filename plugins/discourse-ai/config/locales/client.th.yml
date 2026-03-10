@@ -73,7 +73,7 @@ th:
         total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
-      ai_persona:
+      ai_agent:
         back: "กลับ"
         name: "ชื่อ"
         edit: "แก้ไข"

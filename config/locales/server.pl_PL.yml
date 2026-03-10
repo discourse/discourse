@@ -2643,7 +2643,6 @@ pl_PL:
     content_localization_crawler_param: "Wyświetlaj zlokalizowaną treść robotom indeksującym sieć, gdy włączona jest opcja „lokalizacja treści” i „ustaw ustawienia regionalne z parametrów”. Lista obsługiwanych ustawień regionalnych jest zdefiniowana w sekcji „Obsługiwane ustawienia regionalne lokalizacji treści”."
     content_localization_use_default_locale_when_unsupported: "Wyświetlaj zlokalizowaną treść w domyślnych ustawieniach regionalnych witryny użytkownikom, których preferowany język nie znajduje się na liście „ustawień regionalnych obsługiwanych przez lokalizację treści”."
     content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i wpisów poprzez menu wpisów."
-    enable_upcoming_changes: "Włącz nadchodzące zmiany"
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."

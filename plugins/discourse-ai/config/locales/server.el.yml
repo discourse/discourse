@@ -39,20 +39,51 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
-      personas:
+      agents:
         post_raw_translator:
           name: "Μεταφραστής ανάρτησης"
           description: "Ενισχύει τη λειτουργία μετάφρασης μεταφράζοντας αναρτήσεις που περιέχουν Discourse Markdown"
       tool_summary:
         flag_post: "Αναφορά ανάρτησης"
+        edit_post: "Επεξεργασία ανάρτησης"
         search: "Αναζήτηση"
         time: "Ώρα"
         summarize: "Συνοψίστε"
+      tool_help:
+        delete_topic: "Διαγραφή θέματος"
       tool_description:
         web_browser: "Γίνεται ανάγνωση <a href='%{url}'>%{url}</a>"
       discoveries:
         continue_conversation:
           raw: "Στην αναζήτησή μου για %{query}, μου δείξατε τις ακόλουθες πληροφορίες:\n\n%{context}\n\nΑς συνεχίσουμε τη συζήτηση."
+      close_topic:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      unlist_topic:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      delete_topic:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      edit_tags:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      edit_category:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+          category_not_found: "Η κατηγορία δεν βρέθηκε."
+      set_topic_timer:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      set_slow_mode:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      move_posts:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      assign:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
     ai_staff_action_logger:
       updated: "ενημερώθηκε"
       removed: "αφαιρέθηκε"

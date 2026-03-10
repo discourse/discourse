@@ -40,7 +40,7 @@ sq:
         back: "Kthehu mbrapa"
         disabled: "(e çaktivizuar)"
         groups: "Grupet:"
-        no_persona: "Nuk është vendosur"
+        no_agent: "Nuk është vendosur"
         no_groups: "Asnjë"
         edit: "Rregullimet"
         expand_list:
@@ -83,7 +83,7 @@ sq:
         total: "Total"
         periods:
           custom: "Me porosi..."
-      ai_persona:
+      ai_agent:
         back: "Kthehu mbrapa"
         name: "Emri"
         edit: "Redaktoni"

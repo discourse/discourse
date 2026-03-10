@@ -45,6 +45,33 @@ ro:
         search: "Caută"
         time: "Oră"
         summarize: "Rezumat"
+      close_topic:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      unlist_topic:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      delete_topic:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      edit_tags:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      edit_category:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      set_topic_timer:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      set_slow_mode:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      move_posts:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      assign:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
     llm:
       configuration:
         disable_modules_first: "Mai întâi trebuie să dezactivezi aceste module: %{settings}"

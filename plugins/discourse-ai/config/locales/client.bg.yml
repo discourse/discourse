@@ -40,7 +40,7 @@ bg:
         back: "Назад"
         disabled: "(деактивирани)"
         groups: "Групи:"
-        no_persona: "Не е зададено"
+        no_agent: "Не е зададено"
         no_groups: "Без"
         edit: "Настройки"
         expand_list:
@@ -85,15 +85,15 @@ bg:
         periods:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."
-      ai_persona:
+      ai_agent:
         back: "Назад"
-        name: "Име "
+        name: "Име"
         edit: "Редактирай"
         export: "Експорт "
         import: "Импорт"
         description: "Описание"
         user: Потребител
-        save: "Запази "
+        save: "Запази"
         enabled: "Да е включен?"
         delete: "Изтрий"
         response_format:
