@@ -960,6 +960,15 @@ RSpec.describe TagsController do
       expect(tag.reload.description).to eq("New description")
     end
 
+    it "can clear the tag description" do
+      tag.update!(description: "existing description")
+
+      put "/tag/#{tag.name}.json", params: { tag: { description: "" } }
+
+      expect(response.status).to eq(200)
+      expect(tag.reload.description).to be_blank
+    end
+
     it "returns 403 for non-admins" do
       sign_in(regular_user)
       put "/tag/#{tag.name}.json", params: { tag: { description: "New description" } }
