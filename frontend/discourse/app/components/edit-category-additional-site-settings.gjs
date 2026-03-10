@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/components/d-button";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -14,6 +13,10 @@ export default class EditCategoryAdditionalSiteSettings extends Component {
     });
   }
 
+  get icon() {
+    return this.expanded ? "angle-up" : "angle-down";
+  }
+
   @bind
   toggle() {
     this.expanded = !this.expanded;
@@ -21,18 +24,12 @@ export default class EditCategoryAdditionalSiteSettings extends Component {
 
   <template>
     {{#if @settings.length}}
-      <button
-        type="button"
-        class="btn-transparent additional-site-settings-toggle"
-        {{on "click" this.toggle}}
-      >
-        {{this.label}}
-        {{#if this.expanded}}
-          {{icon "angle-up"}}
-        {{else}}
-          {{icon "angle-down"}}
-        {{/if}}
-      </button>
+      <DButton
+        @action={{this.toggle}}
+        @translatedLabel={{this.label}}
+        @icon={{this.icon}}
+        class="btn-default additional-site-settings-toggle"
+      />
 
       {{#if this.expanded}}
         <div class="additional-site-settings">
