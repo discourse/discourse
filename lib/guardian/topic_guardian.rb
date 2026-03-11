@@ -316,7 +316,8 @@ module TopicGuardian
   end
 
   def can_banner_topic?(topic)
-    topic && authenticated? && !topic.private_message? && is_staff?
+    topic && authenticated? && !topic.private_message? && !topic.category&.read_restricted? &&
+      is_staff?
   end
 
   def can_change_archetype?(topic, new_archetype)
