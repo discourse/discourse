@@ -3,6 +3,59 @@
 RSpec.describe Migrations::Database::Schema do
   after { described_class.reset! }
 
+  describe ".validate" do
+    it "includes resolved schema validation errors" do
+      validator = instance_double(Migrations::Database::Schema::DSL::Validator, validate: [])
+      resolved =
+        Migrations::Database::Schema::Definition.new(
+          tables: [
+            Migrations::Database::Schema::TableDefinition.new(
+              name: "users",
+              columns: [],
+              indexes: [],
+              primary_key_column_names: ["missing_id"],
+              constraints: [],
+              model_mode: nil,
+            ),
+          ],
+          enums: [],
+        )
+      resolver =
+        instance_double(Migrations::Database::Schema::DSL::SchemaResolver, resolve: resolved)
+
+      allow(described_class).to receive(:ensure_ready!).with(database: :test_db)
+      allow(Migrations::Database::Schema::DSL::Validator).to receive(:new).with(
+        described_class,
+      ).and_return(validator)
+      allow(Migrations::Database::Schema::DSL::SchemaResolver).to receive(:new).with(
+        described_class,
+      ).and_return(resolver)
+
+      errors = described_class.validate(database: :test_db)
+
+      expect(errors).to include(match(/primary key references missing columns: missing_id/))
+    end
+
+    it "returns static validation errors without attempting resolution" do
+      validator =
+        instance_double(
+          Migrations::Database::Schema::DSL::Validator,
+          validate: ["Table 'users': bad config"],
+        )
+
+      allow(described_class).to receive(:ensure_ready!).with(database: :test_db)
+      allow(Migrations::Database::Schema::DSL::Validator).to receive(:new).with(
+        described_class,
+      ).and_return(validator)
+      allow(Migrations::Database::Schema::DSL::SchemaResolver).to receive(:new)
+
+      errors = described_class.validate(database: :test_db)
+
+      expect(errors).to eq(["Table 'users': bad config"])
+      expect(Migrations::Database::Schema::DSL::SchemaResolver).not_to have_received(:new)
+    end
+  end
+
   describe ".ensure_ready!" do
     def write_minimal_config(tmpdir)
       config_dir = File.join(tmpdir, "config", "schema", "test_db")

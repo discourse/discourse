@@ -77,4 +77,20 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       expect(Migrations::Database::Schema).not_to have_received(:resolve)
     end
   end
+
+  describe "#validate" do
+    it "treats resolved schema errors as validation failures" do
+      allow(command).to receive(:load_rails!)
+      allow(command).to receive(:options).and_return({ database: "intermediate_db" })
+      allow(command).to receive(:puts)
+      allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
+        %w[intermediate_db],
+      )
+      allow(Migrations::Database::Schema).to receive(:validate).with(
+        database: "intermediate_db",
+      ).and_return(["resolved schema problem"])
+
+      expect { command.validate }.to raise_error(SystemExit)
+    end
+  end
 end

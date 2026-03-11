@@ -99,7 +99,11 @@ module Migrations::Database
 
     def self.validate(database: :intermediate_db)
       ensure_ready!(database:)
-      DSL::Validator.new(self).validate
+      errors = DSL::Validator.new(self).validate
+      return errors if errors.any?
+
+      resolved = DSL::SchemaResolver.new(self).resolve
+      errors + DSL::ResolvedSchemaValidator.new(resolved).validate
     end
 
     def self.resolve(database: :intermediate_db)
