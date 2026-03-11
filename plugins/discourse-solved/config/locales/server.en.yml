@@ -17,7 +17,7 @@ en:
       notify_on_staff_accept_solved:
         label: "Notify topic creator when staff marks a solution"
       empty_box_on_unsolved:
-        label: "Display an empty box next to unsolved topics"
+        label: "Display an empty checkbox next to unsolved topics in the topic list"
 
   site_settings:
     solved_enabled: "Enable solved plugin, allow users to select solutions for topics"
