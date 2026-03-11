@@ -160,62 +160,61 @@ module Migrations::CLI
     end
 
     def display_diff(result, verbose: false)
-      has_changes = false
+      sections = []
 
       if result.unconfigured_tables.any?
-        has_changes = true
-        puts "Unconfigured tables (add to tables/ or ignored.rb):"
+        lines = ["Unconfigured tables (add to tables/ or ignored.rb):"]
         result.unconfigured_tables.each do |t|
           plugin_info = t.plugin ? " [#{t.plugin}]" : ""
-          puts "  + #{t.name}#{plugin_info}"
+          lines << "  + #{t.name}#{plugin_info}"
         end
-        puts
+        sections << lines.join("\n")
       end
 
       if result.missing_tables.any?
-        has_changes = true
-        puts "Missing tables (configured but not in database):"
-        result.missing_tables.each { |t| puts "  - #{t.name}" }
-        puts
+        lines = ["Missing tables (configured but not in database):"]
+        result.missing_tables.each { |t| lines << "  - #{t.name}" }
+        sections << lines.join("\n")
       end
 
       if result.stale_ignored_tables.any?
-        has_changes = true
-        puts "Stale ignored tables (no longer in database):"
-        result.stale_ignored_tables.each { |t| puts "  ~ #{t.name}" }
-        puts
+        lines = ["Stale ignored tables (no longer in database):"]
+        result.stale_ignored_tables.each { |t| lines << "  ~ #{t.name}" }
+        sections << lines.join("\n")
       end
 
       table_diffs = filter_table_diffs(result.table_diffs, verbose:)
 
       if table_diffs.any?
-        has_changes = true
-        puts "Column differences:"
+        lines = ["Column differences:"]
         table_diffs.each do |table_diff|
-          puts "  #{table_diff.table_name}:"
+          lines << "  #{table_diff.table_name}:"
 
           table_diff.unconfigured_columns.each do |c|
             plugin_info = c.plugin ? " [#{c.plugin}]" : ""
-            puts "    + #{c.name}#{plugin_info}"
+            lines << "    + #{c.name}#{plugin_info}"
           end
 
-          table_diff.missing_columns.each { |c| puts "    - #{c.name}" }
-
-          table_diff.stale_ignored_columns.each { |c| puts "    ~ #{c.name} (ignored but gone)" }
+          table_diff.missing_columns.each { |c| lines << "    - #{c.name}" }
+          table_diff.stale_ignored_columns.each do |c|
+            lines << "    ~ #{c.name} (ignored but gone)"
+          end
 
           if verbose
             table_diff.auto_ignored_columns.each do |c|
-              puts "      #{c.name} [#{c.plugin}] (auto-ignored from plugin)"
+              lines << "      #{c.name} [#{c.plugin}] (auto-ignored from plugin)"
             end
           end
         end
-        puts
+        sections << lines.join("\n")
       end
 
-      if has_changes
+      if sections.any?
+        puts sections.join("\n\n")
+        puts
         puts "Suggested actions:"
-        puts "  migrations/bin/cli schema add <table>         Create config for a new table"
-        puts "  migrations/bin/cli schema ignore <table> [--reason \"...\"]  Add table to ignored.rb"
+        puts "  migrations/bin/cli schema add <table>"
+        puts "  migrations/bin/cli schema ignore <table> [--reason \"...\"]"
       else
         puts "✓ No differences found".green
       end

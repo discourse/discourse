@@ -265,22 +265,20 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       command.diff
 
       expect(command).to have_received(:puts).with(
-        "Unconfigured tables (add to tables/ or ignored.rb):",
-      )
-      expect(command).to have_received(:puts).with("  + chat_channels [chat]")
-      expect(command).to have_received(:puts).with(
-        "Missing tables (configured but not in database):",
-      )
-      expect(command).to have_received(:puts).with("  - users")
-      expect(command).to have_received(:puts).with("Stale ignored tables (no longer in database):")
-      expect(command).to have_received(:puts).with("  ~ legacy_users")
-      expect(command).to have_received(:puts).with("Column differences:")
-      expect(command).to have_received(:puts).with("  topics:")
-      expect(command).to have_received(:puts).with("    + chat_enabled [chat]")
-      expect(command).to have_received(:puts).with("    - title")
-      expect(command).to have_received(:puts).with("    ~ old_column (ignored but gone)")
-      expect(command).to have_received(:puts).with(
-        "      poll_enabled [poll] (auto-ignored from plugin)",
+        a_string_including(
+          "Unconfigured tables",
+          "+ chat_channels [chat]",
+          "Missing tables",
+          "- users",
+          "Stale ignored tables",
+          "~ legacy_users",
+          "Column differences",
+          "topics:",
+          "+ chat_enabled [chat]",
+          "- title",
+          "~ old_column (ignored but gone)",
+          "poll_enabled [poll] (auto-ignored from plugin)",
+        ),
       )
       expect(command).to have_received(:puts).with("Suggested actions:")
     end
