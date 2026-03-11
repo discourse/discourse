@@ -34,8 +34,10 @@ module Migrations::Database::Schema::DSL
       introspector = PluginIntrospector.new(plugins_path: @plugins_path)
       result = introspector.introspect
 
-      if @data != result
-        @data = result
+      should_write = !available? || @data != result
+      @data = result
+
+      if should_write
         FileUtils.mkdir_p(File.dirname(@manifest_path))
         File.write(@manifest_path, format_yaml(@data))
       end

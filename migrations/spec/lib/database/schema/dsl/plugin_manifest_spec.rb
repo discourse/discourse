@@ -152,6 +152,29 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
   end
 
   describe "#regenerate!" do
+    it "writes the manifest file when generated data matches the default empty state" do
+      stable_data = {
+        "plugins" => {
+        },
+        "plugin_checksums" => {
+        },
+        "failed_plugins" => [],
+        "incomplete" => false,
+      }
+
+      introspector = instance_double(Migrations::Database::Schema::DSL::PluginIntrospector)
+      allow(introspector).to receive(:introspect).and_return(stable_data)
+      allow(Migrations::Database::Schema::DSL::PluginIntrospector).to receive(:new).and_return(
+        introspector,
+      )
+
+      manifest = build_manifest
+      manifest.regenerate!
+
+      expect(File).to exist(manifest_path)
+      expect(described_class.new(manifest_path:, plugins_path:).fresh?).to be true
+    end
+
     it "does not rewrite file when manifest content is unchanged" do
       stable_data = {
         "plugins" => {

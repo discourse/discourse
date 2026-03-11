@@ -45,6 +45,7 @@ module Migrations::Database::Schema::DSL
     def append_to_tables_group(content, tables_group, table_name)
       all_names = (tables_group[:names] + [table_name]).sort
       replacement = "tables " + all_names.map { |n| ":#{n}" }.join(", ")
+      replacement += ", #{tables_group[:keyword_source]}" if tables_group[:keyword_source]
 
       content.byteslice(0, tables_group[:start_offset]) + replacement +
         content.byteslice(tables_group[:end_offset]..)
@@ -88,6 +89,7 @@ module Migrations::Database::Schema::DSL
               start_offset: last_tables.location.start_offset,
               end_offset: last_tables.location.end_offset,
               names: table_names_from(last_tables),
+              keyword_source: trailing_keyword_source(last_tables, content),
             },
       }
     end
@@ -123,6 +125,14 @@ module Migrations::Database::Schema::DSL
     def table_names_from(call_node)
       args = call_node.arguments&.arguments || []
       args.filter_map { |arg| arg.unescaped if arg.is_a?(Prism::SymbolNode) }
+    end
+
+    def trailing_keyword_source(call_node, content)
+      args = call_node.arguments&.arguments || []
+      keyword_hash = args.find { |arg| arg.is_a?(Prism::KeywordHashNode) }
+      return nil unless keyword_hash
+
+      content.byteslice(keyword_hash.location.start_offset...keyword_hash.location.end_offset)
     end
 
     def extract_all_table_names(block_node)

@@ -89,7 +89,14 @@ module Migrations::Database::Schema::DSL
         .sort_by(&:first)
         .each do |plugin_name, migration_paths|
           result, failed = introspect_plugin(plugin_name, migration_paths, stderr)
-          failed_plugins << plugin_name if failed
+          if failed
+            failed_plugins << plugin_name
+            stderr.puts(
+              "  Warning: stopping plugin introspection after '#{plugin_name}' failed to avoid partial manifest data",
+            )
+            break
+          end
+
           plugin_data[plugin_name] = result if result
         end
 
@@ -97,18 +104,17 @@ module Migrations::Database::Schema::DSL
     end
 
     def introspect_plugin(plugin_name, migration_paths, stderr)
-      failed = false
       snapshot_before = snapshot_schema
 
       begin
         run_plugin_migrations(migration_paths)
       rescue StandardError => e
-        failed = true
         stderr.puts "  Warning: '#{plugin_name}' migration error: #{e.message}"
+        return nil, true
       end
 
       snapshot_after = snapshot_schema
-      [diff_schema(snapshot_before, snapshot_after), failed]
+      [diff_schema(snapshot_before, snapshot_after), false]
     end
 
     def snapshot_schema
