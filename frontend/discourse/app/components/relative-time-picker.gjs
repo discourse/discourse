@@ -123,12 +123,10 @@ export default class RelativeTimePicker extends Component {
       this.interval = "days";
     }
 
-    const durationMins = this.minutesFromInputValueAndInterval(
+    this.duration = this.minutesFromInputValueAndInterval(
       this.inputValue,
       this.interval
     );
-
-    this.duration = durationMins;
   }
 
   @action
