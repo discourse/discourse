@@ -41,7 +41,7 @@ module DiscourseSolved::CategoryExtension
   private
 
   def coerce_boolean_value(value)
-    return false if value.blank?
+    return "false" if value.blank?
     %w[true false].include?(value.to_s) ? value.to_s : "false"
   end
 
