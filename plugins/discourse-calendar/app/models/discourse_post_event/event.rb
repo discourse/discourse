@@ -133,7 +133,7 @@ module DiscoursePostEvent
 
     def on_going_event_invitees
       return [] if self.starts_at.nil? # Can't determine ongoing status without start time
-      return [] if !self.ends_at && self.starts_at < Time.now
+      return [] if !self.ends_at && !self.all_day && self.starts_at < Time.now
 
       if self.ends_at
         extended_ends_at =
@@ -329,6 +329,19 @@ module DiscoursePostEvent
         parsed_recurrence_until =
           event_params[:"recurrence-until"] ? tz.parse(event_params[:"recurrence-until"]) : nil
 
+        parsed_all_day = event_params[:"all-day"] == "true"
+        if parsed_all_day
+          parsed_starts_at = Time.utc(*event_params[:start].split("-").map(&:to_i))
+          parsed_ends_at =
+            (
+              if event_params[:end]
+                Time.utc(*event_params[:end].split("-").map(&:to_i)).end_of_day
+              else
+                nil
+              end
+            )
+        end
+
         params = {
           name: event_params[:name],
           original_starts_at: parsed_starts_at,
@@ -347,6 +360,7 @@ module DiscoursePostEvent
           closed: event_params[:closed] || false,
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
           max_attendees: event_params[:"max-attendees"]&.to_i,
+          all_day: parsed_all_day,
         }
 
         params[:custom_fields] = {}
