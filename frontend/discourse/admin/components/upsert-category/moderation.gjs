@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import concatClass from "discourse/helpers/concat-class";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -67,6 +68,20 @@ export default class UpsertCategoryModeration extends Component {
   get showReplyApprovalGroups() {
     const type = this.replyApprovalType;
     return type === "except_groups" || type === "only_groups";
+  }
+
+  get topicApprovalGroupsLabel() {
+    if (this.topicApprovalType === "except_groups") {
+      return htmlSafe(i18n("category.approval_groups_except"));
+    }
+    return i18n("category.approval_groups_only");
+  }
+
+  get replyApprovalGroupsLabel() {
+    if (this.replyApprovalType === "except_groups") {
+      return htmlSafe(i18n("category.approval_groups_except"));
+    }
+    return i18n("category.approval_groups_only");
   }
 
   get topicApprovalGroupIds() {
@@ -146,7 +161,7 @@ export default class UpsertCategoryModeration extends Component {
             @title={{i18n "category.topic_approval_type"}}
             as |field|
           >
-            <field.Select as |select|>
+            <field.Select @includeNone={{false}} as |select|>
               {{#each this.approvalTypeOptions as |opt|}}
                 <select.Option @value={{opt.value}}>{{opt.name}}</select.Option>
               {{/each}}
@@ -156,6 +171,7 @@ export default class UpsertCategoryModeration extends Component {
 
         {{#if this.showTopicApprovalGroups}}
           <div class="topic-approval-groups">
+            <label>{{this.topicApprovalGroupsLabel}}</label>
             <GroupChooser
               @content={{this.site.groups}}
               @value={{this.topicApprovalGroupIds}}
@@ -170,7 +186,7 @@ export default class UpsertCategoryModeration extends Component {
             @title={{i18n "category.reply_approval_type"}}
             as |field|
           >
-            <field.Select as |select|>
+            <field.Select @includeNone={{false}} as |select|>
               {{#each this.approvalTypeOptions as |opt|}}
                 <select.Option @value={{opt.value}}>{{opt.name}}</select.Option>
               {{/each}}
@@ -180,6 +196,7 @@ export default class UpsertCategoryModeration extends Component {
 
         {{#if this.showReplyApprovalGroups}}
           <div class="reply-approval-groups">
+            <label>{{this.replyApprovalGroupsLabel}}</label>
             <GroupChooser
               @content={{this.site.groups}}
               @value={{this.replyApprovalGroupIds}}

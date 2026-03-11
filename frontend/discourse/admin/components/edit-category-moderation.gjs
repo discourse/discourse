@@ -3,6 +3,7 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -55,6 +56,20 @@ export default class EditCategoryModeration extends buildCategoryPanel(
   get showReplyApprovalGroups() {
     const t = this.replyApprovalType;
     return t === "except_groups" || t === "only_groups";
+  }
+
+  get topicApprovalGroupsLabel() {
+    if (this.topicApprovalType === "except_groups") {
+      return htmlSafe(i18n("category.approval_groups_except"));
+    }
+    return i18n("category.approval_groups_only");
+  }
+
+  get replyApprovalGroupsLabel() {
+    if (this.replyApprovalType === "except_groups") {
+      return htmlSafe(i18n("category.approval_groups_except"));
+    }
+    return i18n("category.approval_groups_only");
   }
 
   @action
@@ -131,6 +146,7 @@ export default class EditCategoryModeration extends buildCategoryPanel(
 
       {{#if this.showTopicApprovalGroups}}
         <section class="field topic-approval-groups">
+          <label>{{this.topicApprovalGroupsLabel}}</label>
           <GroupChooser
             @content={{this.site.groups}}
             @value={{this.category.topic_approval_group_ids}}
@@ -161,6 +177,7 @@ export default class EditCategoryModeration extends buildCategoryPanel(
 
       {{#if this.showReplyApprovalGroups}}
         <section class="field reply-approval-groups">
+          <label>{{this.replyApprovalGroupsLabel}}</label>
           <GroupChooser
             @content={{this.site.groups}}
             @value={{this.category.reply_approval_group_ids}}
