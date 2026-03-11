@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Migrations::Importer::BadgeNameFinder do
+RSpec.describe Migrations::Importer::BadgeNameFinder do
   subject(:finder) { described_class.new(shared_data) }
 
-  let(:discourse_db) { ::Migrations::Importer::DiscourseDB.new }
-  let(:shared_data) { ::Migrations::Importer::SharedData.new(discourse_db) }
+  let(:discourse_db) { Migrations::Importer::DiscourseDB.new }
+  let(:shared_data) { Migrations::Importer::SharedData.new(discourse_db) }
 
   let(:badges) do
     [
@@ -17,7 +17,7 @@ RSpec.describe ::Migrations::Importer::BadgeNameFinder do
 
   let(:badge_rows) { badges.map { |badge| badge[:name].downcase } }
   let(:badges_query_result) do
-    ::Migrations::Importer::DiscourseDB::QueryResult.new(rows: badge_rows, column_count: 1)
+    Migrations::Importer::DiscourseDB::QueryResult.new(rows: badge_rows, column_count: 1)
   end
 
   before do

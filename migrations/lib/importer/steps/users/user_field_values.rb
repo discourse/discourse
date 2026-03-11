@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class UserFieldValues < ::Migrations::Importer::CopyStep
+  class UserFieldValues < Migrations::Importer::CopyStep
     depends_on :users, :user_fields
 
     requires_set :existing_user_field_values, <<~SQL

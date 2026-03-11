@@ -30,13 +30,13 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(user_id:, suspended_at:, reason: nil, suspended_by_id: nil, suspended_till: nil)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         user_id,
-        ::Migrations::Database.format_datetime(suspended_at),
+        Migrations::Database.format_datetime(suspended_at),
         reason,
         suspended_by_id,
-        ::Migrations::Database.format_datetime(suspended_till),
+        Migrations::Database.format_datetime(suspended_till),
       )
     end
   end

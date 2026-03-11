@@ -30,13 +30,13 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(group_id:, user_id:, created_at: nil, notification_level: nil, owner: nil)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         group_id,
         user_id,
-        ::Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(created_at),
         notification_level,
-        ::Migrations::Database.format_boolean(owner),
+        Migrations::Database.format_boolean(owner),
       )
     end
   end

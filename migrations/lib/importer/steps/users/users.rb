@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class Users < ::Migrations::Importer::CopyStep
+  class Users < Migrations::Importer::CopyStep
     INSERT_MAPPED_USERNAMES_SQL = <<~SQL
       INSERT INTO mapped.usernames (discourse_user_id, original_username, discourse_username)
       VALUES (?, ?, ?)
@@ -73,7 +73,7 @@ module Migrations::Importer::Steps
     private
 
     def setup
-      @unique_name_finder = ::Migrations::Importer::UsernameFinder.new(@shared_data)
+      @unique_name_finder = Migrations::Importer::UsernameFinder.new(@shared_data)
       @always_allow_reserved_names = @config[:always_allow_reserved_usernames] || false
       insert_sanitized_users
     end

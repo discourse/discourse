@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class Categories < ::Migrations::Importer::CopyStep
+  class Categories < Migrations::Importer::CopyStep
     DEFAULT_COLOR = "0088CC"
     DEFAULT_LIST_FILTER = "all"
     DEFAULT_TOP_PERIOD = "all"
@@ -123,7 +123,7 @@ module Migrations::Importer::Steps
       @mapped_category_ids = @intermediate_db.query_array(<<~SQL, MappingType::CATEGORIES).to_h
         SELECT original_id, discourse_id FROM  mapped.ids WHERE type = ?
       SQL
-      @unique_name_finder = ::Migrations::Importer::CategoryNameFinder.new(@shared_data)
+      @unique_name_finder = Migrations::Importer::CategoryNameFinder.new(@shared_data)
 
       super
     end

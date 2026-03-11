@@ -28,11 +28,11 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(tag_id:, user_id:, created_at: nil, notification_level:)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         tag_id,
         user_id,
-        ::Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(created_at),
         notification_level,
       )
     end

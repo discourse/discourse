@@ -32,10 +32,10 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(original_id:, created_at: nil, description: nil, locale: nil, name:, slug:)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         original_id,
-        ::Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(created_at),
         description,
         locale,
         name,

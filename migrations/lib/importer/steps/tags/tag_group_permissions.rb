@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TagGroupPermissions < ::Migrations::Importer::CopyStep
+  class TagGroupPermissions < Migrations::Importer::CopyStep
     PERMISSION_TYPES = TagGroupPermission.permission_types.values.to_set.freeze
     DEFAULT_PERMISSION_TYPE = TagGroupPermission.permission_types[:full]
 

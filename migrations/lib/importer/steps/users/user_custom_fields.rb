@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class UserCustomFields < ::Migrations::Importer::CopyStep
+  class UserCustomFields < Migrations::Importer::CopyStep
     depends_on :users
 
     requires_set :existing_user_custom_fields, <<~SQL

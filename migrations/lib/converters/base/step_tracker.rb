@@ -20,23 +20,23 @@ module Migrations::Converters::Base
     end
 
     def log_info(message, details: nil)
-      log(::Migrations::Database::IntermediateDB::LogEntry::INFO, message, details:)
+      log(Migrations::Database::IntermediateDB::LogEntry::INFO, message, details:)
     end
 
     def log_warning(message, exception: nil, details: nil)
       @stats.warning_count += 1
-      log(::Migrations::Database::IntermediateDB::LogEntry::WARNING, message, exception:, details:)
+      log(Migrations::Database::IntermediateDB::LogEntry::WARNING, message, exception:, details:)
     end
 
     def log_error(message, exception: nil, details: nil)
       @stats.error_count += 1
-      log(::Migrations::Database::IntermediateDB::LogEntry::ERROR, message, exception:, details:)
+      log(Migrations::Database::IntermediateDB::LogEntry::ERROR, message, exception:, details:)
     end
 
     private
 
     def log(type, message, exception: nil, details: nil)
-      ::Migrations::Database::IntermediateDB::LogEntry.create(type:, message:, exception:, details:)
+      Migrations::Database::IntermediateDB::LogEntry.create(type:, message:, exception:, details:)
     end
   end
 end

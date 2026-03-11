@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TopicAllowedUsers < ::Migrations::Importer::CopyStep
+  class TopicAllowedUsers < Migrations::Importer::CopyStep
     depends_on :topics, :users
 
     requires_set :existing_topic_allowed_users,

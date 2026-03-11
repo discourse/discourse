@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Discourse
-  class Badges < ::Migrations::Converters::Base::ProgressStep
+  class Badges < Migrations::Converters::Base::ProgressStep
     attr_accessor :source_db
 
     def execute

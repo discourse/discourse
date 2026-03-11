@@ -2,8 +2,8 @@
 
 module Migrations::Importer
   class Step
-    MappingType = ::Migrations::Importer::MappingType
-    Enums = ::Migrations::Database::IntermediateDB::Enums
+    MappingType = Migrations::Importer::MappingType
+    Enums = Migrations::Database::IntermediateDB::Enums
 
     class << self
       # stree-ignore
@@ -22,13 +22,13 @@ module Migrations::Importer
       end
 
       def depends_on(*step_names)
-        steps_module = ::Migrations::Importer::Steps
+        steps_module = Migrations::Importer::Steps
         classes =
           step_names.map do |name|
             name = name.to_s.camelize
             klass = steps_module.const_get(name) if steps_module.const_defined?(name)
 
-            unless klass.is_a?(Class) && klass < ::Migrations::Importer::Step
+            unless klass.is_a?(Class) && klass < Migrations::Importer::Step
               raise NameError, "Class #{class_name} not found"
             end
 
@@ -110,7 +110,7 @@ module Migrations::Importer
       print "    #{I18n.t("importer.loading_required_data")} "
 
       runtime =
-        ::Migrations::DateHelper.track_time do
+        Migrations::DateHelper.track_time do
           required_shared_data.each { |name| instance_variable_set("@#{name}", @shared_data[name]) }
 
           required_mappings.each do |name, sql|
@@ -122,7 +122,7 @@ module Migrations::Importer
           end
         end
 
-      puts ::Migrations::DateHelper.human_readable_time(runtime) if runtime >= 1
+      puts Migrations::DateHelper.human_readable_time(runtime) if runtime >= 1
     end
 
     def update_progressbar(increment_by: 1)
@@ -135,7 +135,7 @@ module Migrations::Importer
     end
 
     def with_progressbar(max_progress)
-      ::Migrations::ExtendedProgressBar
+      Migrations::ExtendedProgressBar
         .new(max_progress:)
         .run do |progressbar|
           @progressbar = progressbar

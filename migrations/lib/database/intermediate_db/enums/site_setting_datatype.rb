@@ -6,7 +6,7 @@
 
 module Migrations::Database::IntermediateDB::Enums
   module SiteSettingDatatype
-    extend ::Migrations::Enum
+    extend Migrations::Enum
 
     STRING = 1
     TIME = 2

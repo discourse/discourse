@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class UserFieldOptions < ::Migrations::Importer::CopyStep
+  class UserFieldOptions < Migrations::Importer::CopyStep
     depends_on :user_fields
 
     requires_set :existing_user_field_options, "SELECT user_field_id, value FROM user_field_options"

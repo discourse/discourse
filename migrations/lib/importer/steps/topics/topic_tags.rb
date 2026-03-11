@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TopicTags < ::Migrations::Importer::CopyStep
+  class TopicTags < Migrations::Importer::CopyStep
     depends_on :topics, :tags
 
     requires_set :existing_topic_tags, "SELECT topic_id, tag_id FROM topic_tags"

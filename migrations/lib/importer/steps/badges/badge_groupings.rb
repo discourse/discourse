@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class BadgeGroupings < ::Migrations::Importer::CopyStep
+  class BadgeGroupings < Migrations::Importer::CopyStep
     MAX_NAME_LENGTH = 100
     MAX_DESCRIPTION_LENGTH = 500
 

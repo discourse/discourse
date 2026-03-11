@@ -3,7 +3,7 @@
 module Migrations::Importer
   class Executor
     def initialize(config, options)
-      @intermediate_db = ::Migrations::Database.connect(config[:intermediate_db])
+      @intermediate_db = Migrations::Database.connect(config[:intermediate_db])
       @discourse_db = DiscourseDB.new
       @shared_data = SharedData.new(@discourse_db)
       @config = config[:config]
@@ -15,29 +15,29 @@ module Migrations::Importer
 
     def start
       runtime =
-        ::Migrations::DateHelper.track_time do
+        Migrations::DateHelper.track_time do
           optimize_intermediate_db
           execute_steps
         ensure
           cleanup
         end
 
-      puts I18n.t("importer.done", runtime: ::Migrations::DateHelper.human_readable_time(runtime))
+      puts I18n.t("importer.done", runtime: Migrations::DateHelper.human_readable_time(runtime))
     end
 
     private
 
     def attach_mappings_db(db_path, reset)
-      ::Migrations::Database.reset!(db_path) if reset
-      migrate_and_attach(db_path, ::Migrations::Database::MAPPINGS_DB_SCHEMA_PATH, "mapped")
+      Migrations::Database.reset!(db_path) if reset
+      migrate_and_attach(db_path, Migrations::Database::MAPPINGS_DB_SCHEMA_PATH, "mapped")
     end
 
     def attach_uploads_db(db_path)
-      migrate_and_attach(db_path, ::Migrations::Database::UPLOADS_DB_SCHEMA_PATH, "files")
+      migrate_and_attach(db_path, Migrations::Database::UPLOADS_DB_SCHEMA_PATH, "files")
     end
 
     def migrate_and_attach(db_path, schema_path, alias_name)
-      ::Migrations::Database.migrate(db_path, migrations_path: schema_path)
+      Migrations::Database.migrate(db_path, migrations_path: schema_path)
       @intermediate_db.execute("ATTACH DATABASE ? AS #{alias_name}", db_path)
     end
 
@@ -46,16 +46,16 @@ module Migrations::Importer
     end
 
     def step_classes
-      steps_module = ::Migrations::Importer::Steps
+      steps_module = Migrations::Importer::Steps
       classes =
         steps_module
           .constants
           .map { |c| steps_module.const_get(c) }
-          .select { |klass| klass.is_a?(Class) && klass < ::Migrations::Importer::Step }
+          .select { |klass| klass.is_a?(Class) && klass < Migrations::Importer::Step }
 
       filtered_classes =
-        ::Migrations::ClassFilter.filter(classes, only: @options[:only], skip: @options[:skip])
-      ::Migrations::TopologicalSorter.sort(filtered_classes)
+        Migrations::ClassFilter.filter(classes, only: @options[:only], skip: @options[:skip])
+      Migrations::TopologicalSorter.sort(filtered_classes)
     end
 
     def execute_steps

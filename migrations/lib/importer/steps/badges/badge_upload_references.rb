@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class BadgeUploadReferences < ::Migrations::Importer::Step
+  class BadgeUploadReferences < Migrations::Importer::Step
     depends_on :badges
 
     def execute

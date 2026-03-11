@@ -57,18 +57,18 @@ module Migrations::Database::IntermediateDB
       notifications_reason_id: nil,
       total_msecs_viewed: nil
     )
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         topic_id,
         user_id,
-        ::Migrations::Database.format_datetime(cleared_pinned_at),
-        ::Migrations::Database.format_datetime(first_visited_at),
+        Migrations::Database.format_datetime(cleared_pinned_at),
+        Migrations::Database.format_datetime(first_visited_at),
         last_emailed_post_number,
-        ::Migrations::Database.format_datetime(last_posted_at),
+        Migrations::Database.format_datetime(last_posted_at),
         last_read_post_number,
-        ::Migrations::Database.format_datetime(last_visited_at),
+        Migrations::Database.format_datetime(last_visited_at),
         notification_level,
-        ::Migrations::Database.format_datetime(notifications_changed_at),
+        Migrations::Database.format_datetime(notifications_changed_at),
         notifications_reason_id,
         total_msecs_viewed,
       )

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class PermalinkNormalizations < ::Migrations::Importer::Step
+  class PermalinkNormalizations < Migrations::Importer::Step
     def execute
       super
 

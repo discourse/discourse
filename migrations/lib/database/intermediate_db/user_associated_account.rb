@@ -39,13 +39,13 @@ module Migrations::Database::IntermediateDB
       last_used: nil,
       provider_uid:
     )
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         user_id,
         provider_name,
-        ::Migrations::Database.format_datetime(created_at),
-        ::Migrations::Database.to_json(info),
-        ::Migrations::Database.format_datetime(last_used),
+        Migrations::Database.format_datetime(created_at),
+        Migrations::Database.to_json(info),
+        Migrations::Database.format_datetime(last_used),
         provider_uid,
       )
     end

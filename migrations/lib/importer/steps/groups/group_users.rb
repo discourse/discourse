@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class GroupUsers < ::Migrations::Importer::CopyStep
+  class GroupUsers < Migrations::Importer::CopyStep
     NOTIFICATION_LEVELS = GroupUser.notification_levels.values.to_set.freeze
     DEFAULT_NOTIFICATION_LEVEL = GroupUser.notification_levels[:tracking]
 

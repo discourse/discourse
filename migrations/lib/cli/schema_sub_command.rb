@@ -4,7 +4,7 @@ module Migrations::CLI
   class SchemaSubCommand < Thor
     remove_command :tree
 
-    Schema = ::Migrations::Database::Schema
+    Schema = Migrations::Database::Schema
 
     class_option :database,
                  aliases: %w[--db],
@@ -130,7 +130,7 @@ module Migrations::CLI
     private
 
     def load_rails!
-      ::Migrations.load_rails_environment(quiet: true)
+      Migrations.load_rails_environment(quiet: true)
     end
 
     def validate_database_option!(database)

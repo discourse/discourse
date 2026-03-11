@@ -13,7 +13,7 @@ module Migrations::Database::Schema
     end
 
     def output_table(table, output_stream, custom_code: nil)
-      module_name = ::Migrations::Database::Schema::Helpers.to_singular_classname(table.name)
+      module_name = Migrations::Database::Schema::Helpers.to_singular_classname(table.name)
       columns = table.sorted_columns
 
       output_stream.puts "# frozen_string_literal: true"
@@ -44,7 +44,7 @@ module Migrations::Database::Schema
       output_stream.puts "    def self.create("
       output_stream.puts method_parameters(columns)
       output_stream.puts "    )"
-      output_stream.puts "      ::#{@model_namespace}.insert("
+      output_stream.puts "      #{@model_namespace}.insert("
       output_stream.puts "        SQL,"
       output_stream.puts insertion_arguments(columns)
       output_stream.puts "      )"
@@ -112,9 +112,9 @@ module Migrations::Database::Schema
       line = +"    # @param #{param_name}   [#{datatypes}]"
 
       if (enum = column.enum)
-        module_name = ::Migrations::Database::Schema::Helpers.to_singular_classname(enum.name)
+        module_name = Migrations::Database::Schema::Helpers.to_singular_classname(enum.name)
         first_const =
-          ::Migrations::Database::Schema::Helpers.to_const_name(
+          Migrations::Database::Schema::Helpers.to_const_name(
             enum.values.min_by { |_k, v| v }.first,
           )
 
@@ -171,17 +171,17 @@ module Migrations::Database::Schema
           argument =
             case c.datatype
             when :datetime
-              "::Migrations::Database.format_datetime(#{c.name})"
+              "Migrations::Database.format_datetime(#{c.name})"
             when :date
-              "::Migrations::Database.format_date(#{c.name})"
+              "Migrations::Database.format_date(#{c.name})"
             when :boolean
-              "::Migrations::Database.format_boolean(#{c.name})"
+              "Migrations::Database.format_boolean(#{c.name})"
             when :inet
-              "::Migrations::Database.format_ip_address(#{c.name})"
+              "Migrations::Database.format_ip_address(#{c.name})"
             when :blob
-              "::Migrations::Database.to_blob(#{c.name})"
+              "Migrations::Database.to_blob(#{c.name})"
             when :json
-              "::Migrations::Database.to_json(#{c.name})"
+              "Migrations::Database.to_json(#{c.name})"
             when :float, :integer, :numeric, :text
               c.name
             else
@@ -193,7 +193,7 @@ module Migrations::Database::Schema
     end
 
     def escape_identifier(identifier)
-      ::Migrations::Database::Schema::Helpers.escape_identifier(identifier)
+      Migrations::Database::Schema::Helpers.escape_identifier(identifier)
     end
   end
 end

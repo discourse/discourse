@@ -31,11 +31,11 @@ module Migrations::Database::IntermediateDB
     #
     # @see Migrations::Database::IntermediateDB::Enums::SiteSettingImportMode
     def self.create(name:, import_mode:, last_changed_at: nil, value: nil)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         name,
         import_mode,
-        ::Migrations::Database.format_datetime(last_changed_at),
+        Migrations::Database.format_datetime(last_changed_at),
         value,
       )
     end

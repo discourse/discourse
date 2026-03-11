@@ -44,15 +44,15 @@ module Migrations::Uploader
       path = type == :uploads ? settings[:output_db_path] : settings[:source_db_path]
 
       # TODO: Using "raw" db connection here for now
-      #       Investigate using ::Migrations::Database::IntermediateDB.setup(db)
-      #       Should we have a ::Migrations::Database::UploadsDB.setup(db)?
-      ::Migrations::Database.connect(path)
+      #       Investigate using Migrations::Database::IntermediateDB.setup(db)
+      #       Should we have a Migrations::Database::UploadsDB.setup(db)?
+      Migrations::Database.connect(path)
     end
 
     def run_uploads_db_migrations
-      ::Migrations::Database.migrate(
+      Migrations::Database.migrate(
         settings[:output_db_path],
-        migrations_path: ::Migrations::Database::UPLOADS_DB_SCHEMA_PATH,
+        migrations_path: Migrations::Database::UPLOADS_DB_SCHEMA_PATH,
       )
     end
 

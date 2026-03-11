@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Discourse
-  class UserOptions < ::Migrations::Converters::Base::ProgressStep
+  class UserOptions < Migrations::Converters::Base::ProgressStep
     attr_accessor :source_db
 
     def max_progress

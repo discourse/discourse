@@ -91,7 +91,7 @@ module Migrations::Database::Schema::DSL
     private
 
     def normalize_plugin_name(name)
-      ::Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
+      Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
     end
 
     def empty_data

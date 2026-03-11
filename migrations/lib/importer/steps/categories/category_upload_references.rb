@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class CategoryUploadReferences < ::Migrations::Importer::Step
+  class CategoryUploadReferences < Migrations::Importer::Step
     depends_on :categories
 
     def execute

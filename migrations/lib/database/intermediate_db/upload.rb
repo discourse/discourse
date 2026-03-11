@@ -27,7 +27,7 @@ module Migrations::Database::IntermediateDB
       user_id: nil
     )
       create(
-        id: ::Migrations::ID.hash(path),
+        id: Migrations::ID.hash(path),
         filename: filename || File.basename(path),
         path:,
         type:,
@@ -38,15 +38,7 @@ module Migrations::Database::IntermediateDB
     end
 
     def self.create_for_url(url:, filename:, type: nil, description: nil, origin: nil, user_id: nil)
-      create(
-        id: ::Migrations::ID.hash(url),
-        filename:,
-        url:,
-        type:,
-        description:,
-        origin:,
-        user_id:,
-      )
+      create(id: Migrations::ID.hash(url), filename:, url:, type:, description:, origin:, user_id:)
     end
 
     def self.create_for_data(
@@ -58,9 +50,9 @@ module Migrations::Database::IntermediateDB
       user_id: nil
     )
       create(
-        id: ::Migrations::ID.hash(data),
+        id: Migrations::ID.hash(data),
         filename:,
-        data: ::Migrations::Database.to_blob(data),
+        data: Migrations::Database.to_blob(data),
         type:,
         description:,
         origin:,
@@ -79,7 +71,7 @@ module Migrations::Database::IntermediateDB
       origin: nil,
       user_id: nil
     )
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         id,
         filename,

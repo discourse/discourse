@@ -63,22 +63,22 @@ module Migrations::Database::IntermediateDB
       show_on_signup: nil,
       show_on_user_card: nil
     )
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         original_id,
-        ::Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(created_at),
         description,
-        ::Migrations::Database.format_boolean(editable),
+        Migrations::Database.format_boolean(editable),
         external_name,
         external_type,
         field_type_enum,
         name,
         position,
         requirement,
-        ::Migrations::Database.format_boolean(searchable),
-        ::Migrations::Database.format_boolean(show_on_profile),
-        ::Migrations::Database.format_boolean(show_on_signup),
-        ::Migrations::Database.format_boolean(show_on_user_card),
+        Migrations::Database.format_boolean(searchable),
+        Migrations::Database.format_boolean(show_on_profile),
+        Migrations::Database.format_boolean(show_on_signup),
+        Migrations::Database.format_boolean(show_on_user_card),
       )
     end
   end

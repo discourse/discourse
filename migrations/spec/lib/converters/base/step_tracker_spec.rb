@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Migrations::Converters::Base::StepTracker do
+RSpec.describe Migrations::Converters::Base::StepTracker do
   subject(:tracker) { described_class.new }
 
-  before { allow(::Migrations::Database::IntermediateDB::LogEntry).to receive(:create) }
+  before { allow(Migrations::Database::IntermediateDB::LogEntry).to receive(:create) }
 
   describe "#initialize" do
     it "starts at the correct values" do
@@ -24,11 +24,7 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
   describe "#stats" do
     it "returns correct stats" do
       expect(tracker.stats).to eq(
-        ::Migrations::Converters::Base::StepStats.new(
-          progress: 1,
-          warning_count: 0,
-          error_count: 0,
-        ),
+        Migrations::Converters::Base::StepStats.new(progress: 1, warning_count: 0, error_count: 0),
       )
 
       tracker.progress = 5
@@ -36,11 +32,7 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
       3.times { tracker.log_error("Foo") }
 
       expect(tracker.stats).to eq(
-        ::Migrations::Converters::Base::StepStats.new(
-          progress: 5,
-          warning_count: 2,
-          error_count: 3,
-        ),
+        Migrations::Converters::Base::StepStats.new(progress: 5, warning_count: 2, error_count: 3),
       )
     end
   end
@@ -52,21 +44,13 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
       3.times { tracker.log_error("Foo") }
 
       expect(tracker.stats).to eq(
-        ::Migrations::Converters::Base::StepStats.new(
-          progress: 5,
-          warning_count: 2,
-          error_count: 3,
-        ),
+        Migrations::Converters::Base::StepStats.new(progress: 5, warning_count: 2, error_count: 3),
       )
 
       tracker.reset_stats!
 
       expect(tracker.stats).to eq(
-        ::Migrations::Converters::Base::StepStats.new(
-          progress: 1,
-          warning_count: 0,
-          error_count: 0,
-        ),
+        Migrations::Converters::Base::StepStats.new(progress: 1, warning_count: 0, error_count: 0),
       )
     end
   end
@@ -75,8 +59,8 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
     it "logs an info message" do
       tracker.log_info("Info message")
 
-      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
-        type: ::Migrations::Database::IntermediateDB::LogEntry::INFO,
+      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
+        type: Migrations::Database::IntermediateDB::LogEntry::INFO,
         message: "Info message",
         exception: nil,
         details: nil,
@@ -86,8 +70,8 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
     it "logs an info message with details" do
       tracker.log_info("Info message", details: { key: "value" })
 
-      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
-        type: ::Migrations::Database::IntermediateDB::LogEntry::INFO,
+      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
+        type: Migrations::Database::IntermediateDB::LogEntry::INFO,
         message: "Info message",
         exception: nil,
         details: {
@@ -103,8 +87,8 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
         tracker.stats.warning_count
       }.by(1)
 
-      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
-        type: ::Migrations::Database::IntermediateDB::LogEntry::WARNING,
+      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
+        type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
         message: "Warning message",
         exception: nil,
         details: nil,
@@ -118,8 +102,8 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
         tracker.log_warning("Warning message", exception:, details: { key: "value" })
       }.to change { tracker.stats.warning_count }.by(1)
 
-      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
-        type: ::Migrations::Database::IntermediateDB::LogEntry::WARNING,
+      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
+        type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
         message: "Warning message",
         exception:,
         details: {
@@ -133,8 +117,8 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
     it "logs an error message and increments error_count" do
       expect { tracker.log_error("Error message") }.to change { tracker.stats.error_count }.by(1)
 
-      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
-        type: ::Migrations::Database::IntermediateDB::LogEntry::ERROR,
+      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
+        type: Migrations::Database::IntermediateDB::LogEntry::ERROR,
         message: "Error message",
         exception: nil,
         details: nil,
@@ -148,8 +132,8 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
         tracker.log_error("Error message", exception:, details: { key: "value" })
       }.to change { tracker.stats.error_count }.by(1)
 
-      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
-        type: ::Migrations::Database::IntermediateDB::LogEntry::ERROR,
+      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create).with(
+        type: Migrations::Database::IntermediateDB::LogEntry::ERROR,
         message: "Error message",
         exception:,
         details: {

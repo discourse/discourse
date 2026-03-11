@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Discourse
-  class SiteSettings < ::Migrations::Converters::Base::ProgressStep
+  class SiteSettings < Migrations::Converters::Base::ProgressStep
     attr_accessor :source_db
 
     def execute

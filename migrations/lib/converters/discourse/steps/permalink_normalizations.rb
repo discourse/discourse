@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Discourse
-  class PermalinkNormalizations < ::Migrations::Converters::Base::Step
+  class PermalinkNormalizations < Migrations::Converters::Base::Step
     attr_accessor :source_db
 
     def execute

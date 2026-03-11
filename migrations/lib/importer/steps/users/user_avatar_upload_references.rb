@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class UserAvatarUploadReferences < ::Migrations::Importer::Step
+  class UserAvatarUploadReferences < Migrations::Importer::Step
     depends_on :user_avatars
 
     def execute

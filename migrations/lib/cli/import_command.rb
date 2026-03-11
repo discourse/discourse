@@ -7,9 +7,9 @@ module Migrations::CLI
     end
 
     def execute
-      ::Migrations.load_rails_environment(quiet: true)
+      Migrations.load_rails_environment(quiet: true)
 
-      ::Migrations::Importer.execute(@options)
+      Migrations::Importer.execute(@options)
     end
   end
 end

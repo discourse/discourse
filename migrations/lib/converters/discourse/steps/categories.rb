@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Discourse
-  class Categories < ::Migrations::Converters::Base::ProgressStep
+  class Categories < Migrations::Converters::Base::ProgressStep
     SEEDED_CATEGORY_SETTINGS = %w[
       uncategorized_category_id
       meta_category_id

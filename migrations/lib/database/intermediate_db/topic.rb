@@ -81,28 +81,28 @@ module Migrations::Database::IntermediateDB
       visibility_reason_id: nil,
       visible: nil
     )
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         original_id,
         archetype,
-        ::Migrations::Database.format_boolean(archived),
-        ::Migrations::Database.format_datetime(bannered_until),
+        Migrations::Database.format_boolean(archived),
+        Migrations::Database.format_datetime(bannered_until),
         category_id,
-        ::Migrations::Database.format_boolean(closed),
-        ::Migrations::Database.format_datetime(created_at),
-        ::Migrations::Database.format_datetime(deleted_at),
+        Migrations::Database.format_boolean(closed),
+        Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(deleted_at),
         deleted_by_id,
         external_id,
         featured_link,
-        ::Migrations::Database.format_datetime(pinned_at),
-        ::Migrations::Database.format_boolean(pinned_globally),
-        ::Migrations::Database.format_datetime(pinned_until),
+        Migrations::Database.format_datetime(pinned_at),
+        Migrations::Database.format_boolean(pinned_globally),
+        Migrations::Database.format_datetime(pinned_until),
         subtype,
         title,
         user_id,
         views,
         visibility_reason_id,
-        ::Migrations::Database.format_boolean(visible),
+        Migrations::Database.format_boolean(visible),
       )
     end
   end

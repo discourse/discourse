@@ -26,11 +26,11 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(user_id:, muted_user_id:, created_at: nil)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         user_id,
         muted_user_id,
-        ::Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(created_at),
       )
     end
   end
