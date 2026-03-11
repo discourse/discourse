@@ -542,6 +542,53 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       .dom(".upcoming-events-list__event-name")
       .hasText("Awesome Event", "displays the event name");
   });
+
+  test("with all-day multi-day event shows correct date range", async function (assert) {
+    pretender.get("/discourse-post-event/events", () => {
+      return response({
+        events: [
+          {
+            id: 67510,
+            starts_at: "2100-02-05",
+            ends_at: "2100-02-08",
+            timezone: "America/Chicago",
+            post: {
+              id: 67510,
+              post_number: 1,
+              url: "/t/all-day-event/18460/1",
+              topic: { id: 18460, title: "All day conference" },
+            },
+            name: "All Day Conference",
+            category_id: 1,
+            all_day: true,
+          },
+        ],
+      });
+    });
+
+    await render(<template><UpcomingEventsList /></template>);
+
+    this.appEvents.trigger("page:changed", { url: "/" });
+
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    assert
+      .dom(".upcoming-events-list__event")
+      .exists({ count: 1 }, "all-day event is displayed");
+
+    assert
+      .dom(".upcoming-events-list__event-name")
+      .hasText("All Day Conference", "displays the event name");
+
+    const eventTime = document.querySelector(
+      ".upcoming-events-list__event-time"
+    ).innerText;
+
+    assert.true(eventTime.includes("February"), "contains month name");
+    assert.true(eventTime.includes("5"), "contains start day");
+    assert.true(eventTime.includes("8"), "contains end day");
+    assert.true(eventTime.includes("2100"), "contains year");
+  });
 });
 
 function twoEventsResponseHandler({ queryParams }) {
