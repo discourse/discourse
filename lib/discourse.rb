@@ -243,6 +243,10 @@ module Discourse
   class InvalidParameters < StandardError
   end
 
+  # Same as InvalidParameters, but contains HTML
+  class InvalidHTMLParameters < InvalidParameters
+  end
+
   # When they don't have permission to do something
   class InvalidAccess < StandardError
     attr_reader :obj

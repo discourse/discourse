@@ -12,6 +12,13 @@ class LanguageSwitcherSettingValidator
   end
 
   def error_message
-    I18n.t("site_settings.errors.content_localization_language_switcher_requirements")
+    I18n.t(
+      "site_settings.errors.content_localization_language_switcher_requirements",
+      base_path: Discourse.base_path,
+    )
+  end
+
+  def html_safe_error_message?
+    true
   end
 end

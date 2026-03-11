@@ -84,6 +84,32 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".validation-error h1").doesNotExist();
   });
 
+  test("error response with html_message discards changes", async function (assert) {
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "test_setting",
+        value: "original",
+        type: "input-setting-string",
+      })
+    );
+
+    pretender.put("/admin/site_settings/test_setting", () => {
+      return response(422, {
+        html_message: true,
+        errors: ["<a href='/somewhere'>Fix this</a>"],
+      });
+    });
+
+    await render(
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
+    );
+    await fillIn(".setting input", "new value");
+    await click(".setting .d-icon-check");
+
+    assert.dom(".setting input").hasValue("original");
+  });
+
   test("displays file types list setting", async function (assert) {
     this.set(
       "setting",
