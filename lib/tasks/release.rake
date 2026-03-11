@@ -128,6 +128,9 @@ module ReleaseUtils
         git "push", "origin", "#{branch}:#{base}"
         break
       else
+        if !gh("pr", "ready", branch) # remove draft status
+          puts "Failed to mark PR as ready-for-review... trying to merge anyway"
+        end
         success = gh("pr", "merge", branch, "--rebase", "--delete-branch")
         break if success
         puts "Merge failed. Maybe the PR isn't approved yet, or there's a conflict."
