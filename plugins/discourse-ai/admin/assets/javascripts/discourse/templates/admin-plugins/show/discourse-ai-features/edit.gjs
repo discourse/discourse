@@ -39,7 +39,7 @@ export default <template>
                       (if
                         (eq setting.type "enum")
                         "select"
-                        (if (eq setting.type "list") "custom" "input-text")
+                        (if (eq setting.type "list") "custom" "input")
                       )
                     )
                   }}

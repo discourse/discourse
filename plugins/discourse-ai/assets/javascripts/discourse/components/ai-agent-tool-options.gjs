@@ -57,7 +57,7 @@ export default class AiAgentToolOptions extends Component {
       case "text":
         return "textarea";
       default:
-        return "input-text";
+        return "input";
     }
   }
 

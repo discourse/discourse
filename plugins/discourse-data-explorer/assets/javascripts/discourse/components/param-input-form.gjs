@@ -173,7 +173,7 @@ export default class ParamInputForm extends Component {
       case "group_list":
         return "custom";
       default:
-        return "input-text";
+        return "input";
     }
   }
 
