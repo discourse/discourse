@@ -1144,7 +1144,7 @@ RSpec.describe TopicView do
           :category,
           user: admin,
           category_setting_attributes: {
-            require_topic_approval: true,
+            topic_approval_type: :all,
           },
         )
       manager =
@@ -1222,7 +1222,7 @@ RSpec.describe TopicView do
 
       context "when category is moderated" do
         before do
-          category.require_reply_approval = true
+          category.reply_approval_type = :all
           category.save!
         end
 

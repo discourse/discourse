@@ -168,17 +168,6 @@ describe "Simplified Category Creation" do
     end
   end
 
-  describe "Settings Tab" do
-    it "enables topic approval requirement" do
-      category_page.visit_settings(category)
-
-      form.field("category_setting.require_topic_approval").toggle
-      category_page.save_settings
-
-      expect(category.reload.require_topic_approval?).to eq(true)
-    end
-  end
-
   describe "Images Tab" do
     before do
       SiteSetting.authorized_extensions = ""

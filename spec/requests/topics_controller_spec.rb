@@ -2066,7 +2066,7 @@ RSpec.describe TopicsController do
       end
 
       it "can not move to a category that requires topic approval" do
-        category.require_topic_approval = true
+        category.topic_approval_type = :all
         category.save!
 
         put "/t/#{topic.id}.json", params: { category_id: category.id }

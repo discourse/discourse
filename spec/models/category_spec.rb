@@ -987,18 +987,15 @@ RSpec.describe Category do
   describe "require topic/post approval" do
     fab!(:category, :category_with_definition)
 
-    it "delegates methods to category settings" do
-      expect(category).to delegate_method(:require_reply_approval).to(:category_setting)
-      expect(category).to delegate_method(:require_reply_approval=).with_arguments(true).to(
+    it "delegates approval type methods to category settings" do
+      expect(category).to delegate_method(:topic_approval_type).to(:category_setting)
+      expect(category).to delegate_method(:topic_approval_type=).with_arguments(:all).to(
         :category_setting,
       )
-      expect(category).to delegate_method(:require_reply_approval?).to(:category_setting)
-
-      expect(category).to delegate_method(:require_topic_approval).to(:category_setting)
-      expect(category).to delegate_method(:require_topic_approval=).with_arguments(true).to(
+      expect(category).to delegate_method(:reply_approval_type).to(:category_setting)
+      expect(category).to delegate_method(:reply_approval_type=).with_arguments(:all).to(
         :category_setting,
       )
-      expect(category).to delegate_method(:require_topic_approval?).to(:category_setting)
     end
   end
 
