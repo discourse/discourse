@@ -1,24 +1,11 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
-import { modifier as modifierFn } from "ember-modifier";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class FKControlTextarea extends FKBaseControl {
   static controlType = "textarea";
-
-  resizeObserver = modifierFn((element) => {
-    const observer = new ResizeObserver(() => {
-      this.args.field.controlWidth = element.offsetWidth;
-    });
-
-    observer.observe(element);
-
-    return () => {
-      observer.disconnect();
-    };
-  });
 
   @action
   handleInput(event) {
@@ -64,7 +51,6 @@ export default class FKControlTextarea extends FKBaseControl {
       aria-invalid={{if @field.error "true"}}
       aria-describedby={{if @field.error @field.errorId}}
       ...attributes
-      {{this.resizeObserver}}
       {{on "input" this.handleInput}}
       {{on "keydown" this.onKeyDown}}
     />

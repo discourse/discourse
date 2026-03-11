@@ -10,7 +10,6 @@ import uniqueId from "discourse/helpers/unique-id";
  */
 export default class FKFieldData extends Component {
   @tracked type;
-  @tracked controlWidth = "auto";
 
   /**
    * Unique identifier for the field.
