@@ -53,7 +53,7 @@ class LlmModel < ActiveRecord::Base
   end
 
   def self.provider_params
-    {
+    params = {
       aws_bedrock: {
         access_key_id: :secret,
         role_arn: :text,
@@ -243,6 +243,15 @@ class LlmModel < ActiveRecord::Base
         disable_top_p: :checkbox,
       },
     }
+
+    unless SiteSetting.ai_llm_temperature_top_p_enabled
+      params.each_value do |provider_config|
+        provider_config.delete(:disable_temperature)
+        provider_config.delete(:disable_top_p)
+      end
+    end
+
+    params
   end
 
   def to_llm

@@ -21,7 +21,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq, gt, or } from "discourse/truth-helpers";
+import { and, eq, gt, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
 import { toPlainObject } from "../lib/utilities";
@@ -474,6 +474,7 @@ export default class AgentEditor extends Component {
           @name="vision_enabled"
           @title={{i18n "discourse_ai.ai_agent.vision_enabled"}}
           @tooltip={{i18n "discourse_ai.ai_agent.vision_enabled_help"}}
+          @showTitle={{false}}
           @format="large"
           as |field|
         >
@@ -498,7 +499,11 @@ export default class AgentEditor extends Component {
           </form.Field>
         {{/if}}
 
-        {{#unless data.system}}
+        {{#if
+          (and
+            (not data.system) this.siteSettings.ai_llm_temperature_top_p_enabled
+          )
+        }}
           <form.Field
             @name="temperature"
             @title={{i18n "discourse_ai.ai_agent.temperature"}}
@@ -520,7 +525,7 @@ export default class AgentEditor extends Component {
           >
             <field.Input @type="number" step="any" lang="en" />
           </form.Field>
-        {{/unless}}
+        {{/if}}
 
         <form.Section
           @title={{i18n "discourse_ai.ai_agent.examples.title"}}
@@ -733,6 +738,7 @@ export default class AgentEditor extends Component {
             @name="show_thinking"
             @title={{i18n "discourse_ai.ai_agent.show_thinking"}}
             @tooltip={{i18n "discourse_ai.ai_agent.show_thinking_help"}}
+            @showTitle={{false}}
             @format="large"
             as |field|
           >
@@ -828,6 +834,7 @@ export default class AgentEditor extends Component {
               <form.Field
                 @name="force_default_llm"
                 @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
+                @showTitle={{false}}
                 @format="large"
                 as |field|
               >
@@ -870,6 +877,7 @@ export default class AgentEditor extends Component {
                 @tooltip={{i18n
                   "discourse_ai.ai_agent.allow_personal_messages_help"
                 }}
+                @showTitle={{false}}
                 @format="large"
                 as |field|
               >
@@ -882,6 +890,7 @@ export default class AgentEditor extends Component {
                 @tooltip={{i18n
                   "discourse_ai.ai_agent.allow_topic_mentions_help"
                 }}
+                @showTitle={{false}}
                 @format="large"
                 as |field|
               >
@@ -897,6 +906,7 @@ export default class AgentEditor extends Component {
                   @tooltip={{i18n
                     "discourse_ai.ai_agent.allow_chat_direct_messages_help"
                   }}
+                  @showTitle={{false}}
                   @format="large"
                   as |field|
                 >
@@ -911,6 +921,7 @@ export default class AgentEditor extends Component {
                   @tooltip={{i18n
                     "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
                   }}
+                  @showTitle={{false}}
                   @format="large"
                   as |field|
                 >
