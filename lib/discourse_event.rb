@@ -12,6 +12,14 @@ class DiscourseEvent
     events[event_name].each { |event| event.call(*args, **kwargs) }
   end
 
+  def self.trigger_isolated(event_name, *args, **kwargs)
+    events[event_name].each do |event|
+      event.call(*args, **kwargs)
+    rescue => e
+      Discourse.warn_exception(e, message: "on(:#{event_name}) handler error")
+    end
+  end
+
   def self.on(event_name, &block)
     case event_name
     when :user_badge_removed
