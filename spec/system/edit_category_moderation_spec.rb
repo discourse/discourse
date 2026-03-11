@@ -14,8 +14,8 @@ describe "Edit Category Moderation", type: :system do
     it "shows approval type dropdowns on the moderation tab" do
       category_page.visit_moderation(category)
 
-      expect(page).to have_css(".topic-approval-type select")
-      expect(page).to have_css(".reply-approval-type select")
+      expect(page).to have_css(".topic-approval-type .combo-box")
+      expect(page).to have_css(".reply-approval-type .combo-box")
     end
 
     it "shows GroupChooser when except_groups is selected" do
@@ -39,11 +39,21 @@ describe "Edit Category Moderation", type: :system do
       expect(page).to have_no_css(".topic-approval-groups .group-chooser")
     end
 
-    it "shows validation error when groups required but none selected" do
+    it "shows validation error and disables save when groups required but none selected" do
       category_page.visit_moderation(category)
       category_page.select_topic_approval_type("except_groups")
 
       expect(category_page).to have_topic_approval_groups_error
+      expect(category_page).to have_save_button_disabled
+    end
+
+    it "enables save button after selecting required groups" do
+      category_page.visit_moderation(category)
+      category_page.select_topic_approval_type("except_groups")
+
+      expect(category_page).to have_save_button_disabled
+      category_page.select_topic_approval_groups(group.name)
+      expect(category_page).to have_save_button_enabled
     end
 
     it "saves approval type and groups successfully" do

@@ -222,6 +222,19 @@ class CategoriesController < ApplicationController
 
     %i[topic reply].each do |type|
       ids = params[:"#{type}_approval_group_ids"]&.filter_map { |id| id.to_i if id.present? }
+
+      approval_type =
+        params.dig(:category_setting_attributes, :"#{type}_approval_type") ||
+          @category.category_setting&.send(:"#{type}_approval_type")
+      if approval_type.in?(%w[except_groups only_groups]) && ids.blank?
+        return(
+          render json: {
+                   errors: [I18n.t("category.approval_groups_required")],
+                 },
+                 status: :unprocessable_entity
+        )
+      end
+
       next if ids.blank?
       invalid = ids - Group.where(id: ids).pluck(:id)
       if invalid.any?

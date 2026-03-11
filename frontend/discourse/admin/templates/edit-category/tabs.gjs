@@ -149,7 +149,11 @@ export default <template>
         {{/if}}
       {{else}}
         <form.Actions class="edit-category-footer">
-          <form.Submit @label={{@controller.saveLabel}} id="save-category" />
+          <form.Submit
+            @label={{@controller.saveLabel}}
+            @disabled={{@controller.saveDisabled}}
+            id="save-category"
+          />
 
           {{#if @controller.model.can_delete}}
             <form.Button

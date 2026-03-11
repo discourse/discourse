@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import concatClass from "discourse/helpers/concat-class";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -72,14 +71,14 @@ export default class UpsertCategoryModeration extends Component {
 
   get topicApprovalGroupsLabel() {
     if (this.topicApprovalType === "except_groups") {
-      return htmlSafe(i18n("category.approval_groups_except"));
+      return i18n("category.approval_groups_except");
     }
     return i18n("category.approval_groups_only");
   }
 
   get replyApprovalGroupsLabel() {
     if (this.replyApprovalType === "except_groups") {
-      return htmlSafe(i18n("category.approval_groups_except"));
+      return i18n("category.approval_groups_except");
     }
     return i18n("category.approval_groups_only");
   }
@@ -155,55 +154,63 @@ export default class UpsertCategoryModeration extends Component {
           </@form.Container>
         {{/if}}
 
-        <@form.Object @name="category_setting" as |object|>
-          <object.Field
-            @name="topic_approval_type"
-            @title={{i18n "category.topic_approval_type"}}
-            as |field|
-          >
-            <field.Select @includeNone={{false}} as |select|>
-              {{#each this.approvalTypeOptions as |opt|}}
-                <select.Option @value={{opt.value}}>{{opt.name}}</select.Option>
-              {{/each}}
-            </field.Select>
-          </object.Field>
-        </@form.Object>
+        <@form.Section @title={{i18n "category.topic_approval_heading"}}>
+          <@form.Object @name="category_setting" as |object|>
+            <object.Field
+              @name="topic_approval_type"
+              @title={{i18n "category.topic_approval_type"}}
+              as |field|
+            >
+              <field.Select @includeNone={{false}} as |select|>
+                {{#each this.approvalTypeOptions as |opt|}}
+                  <select.Option
+                    @value={{opt.value}}
+                  >{{opt.name}}</select.Option>
+                {{/each}}
+              </field.Select>
+            </object.Field>
+          </@form.Object>
 
-        {{#if this.showTopicApprovalGroups}}
-          <div class="topic-approval-groups">
-            <label>{{this.topicApprovalGroupsLabel}}</label>
-            <GroupChooser
-              @content={{this.site.groups}}
-              @value={{this.topicApprovalGroupIds}}
-              @onChange={{this.onTopicApprovalGroupsChange}}
-            />
-          </div>
-        {{/if}}
+          {{#if this.showTopicApprovalGroups}}
+            <div class="topic-approval-groups">
+              <label>{{this.topicApprovalGroupsLabel}}</label>
+              <GroupChooser
+                @content={{this.site.groups}}
+                @value={{this.topicApprovalGroupIds}}
+                @onChange={{this.onTopicApprovalGroupsChange}}
+              />
+            </div>
+          {{/if}}
+        </@form.Section>
 
-        <@form.Object @name="category_setting" as |object|>
-          <object.Field
-            @name="reply_approval_type"
-            @title={{i18n "category.reply_approval_type"}}
-            as |field|
-          >
-            <field.Select @includeNone={{false}} as |select|>
-              {{#each this.approvalTypeOptions as |opt|}}
-                <select.Option @value={{opt.value}}>{{opt.name}}</select.Option>
-              {{/each}}
-            </field.Select>
-          </object.Field>
-        </@form.Object>
+        <@form.Section @title={{i18n "category.reply_approval_heading"}}>
+          <@form.Object @name="category_setting" as |object|>
+            <object.Field
+              @name="reply_approval_type"
+              @title={{i18n "category.reply_approval_type"}}
+              as |field|
+            >
+              <field.Select @includeNone={{false}} as |select|>
+                {{#each this.approvalTypeOptions as |opt|}}
+                  <select.Option
+                    @value={{opt.value}}
+                  >{{opt.name}}</select.Option>
+                {{/each}}
+              </field.Select>
+            </object.Field>
+          </@form.Object>
 
-        {{#if this.showReplyApprovalGroups}}
-          <div class="reply-approval-groups">
-            <label>{{this.replyApprovalGroupsLabel}}</label>
-            <GroupChooser
-              @content={{this.site.groups}}
-              @value={{this.replyApprovalGroupIds}}
-              @onChange={{this.onReplyApprovalGroupsChange}}
-            />
-          </div>
-        {{/if}}
+          {{#if this.showReplyApprovalGroups}}
+            <div class="reply-approval-groups">
+              <label>{{this.replyApprovalGroupsLabel}}</label>
+              <GroupChooser
+                @content={{this.site.groups}}
+                @value={{this.replyApprovalGroupIds}}
+                @onChange={{this.onReplyApprovalGroupsChange}}
+              />
+            </div>
+          {{/if}}
+        </@form.Section>
 
         <@form.Container @title={{i18n "category.default_slow_mode"}}>
           <RelativeTimePicker

@@ -191,12 +191,16 @@ module PageObjects
       end
 
       def select_topic_approval_type(value)
-        find(".topic-approval-type select").find("option[value='#{value}']").select_option
+        chooser = PageObjects::Components::SelectKit.new(".topic-approval-type .combo-box")
+        chooser.expand
+        chooser.select_row_by_value(value)
         self
       end
 
       def select_reply_approval_type(value)
-        find(".reply-approval-type select").find("option[value='#{value}']").select_option
+        chooser = PageObjects::Components::SelectKit.new(".reply-approval-type .combo-box")
+        chooser.expand
+        chooser.select_row_by_value(value)
         self
       end
 
@@ -215,6 +219,14 @@ module PageObjects
 
       def has_no_topic_approval_groups_error?
         has_no_css?(".topic-approval-groups .form-kit__errors")
+      end
+
+      def has_save_button_disabled?
+        has_css?("#save-category[disabled]")
+      end
+
+      def has_save_button_enabled?
+        has_css?("#save-category:not([disabled])")
       end
     end
   end

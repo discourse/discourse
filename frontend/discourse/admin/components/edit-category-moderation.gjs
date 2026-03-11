@@ -1,14 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import withEventValue from "discourse/helpers/with-event-value";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const APPROVAL_TYPES = ["none", "all", "except_groups", "only_groups"];
@@ -19,6 +18,27 @@ export default class EditCategoryModeration extends buildCategoryPanel(
   @tracked _topicApprovalType = null;
   @tracked _replyApprovalType = null;
 
+  init() {
+    super.init(...arguments);
+    this.registerValidator?.(() => this._validateApprovalGroups());
+  }
+
+  _validateApprovalGroups() {
+    if (
+      this.showTopicApprovalGroups &&
+      !this.category?.topic_approval_group_ids?.length
+    ) {
+      return true;
+    }
+    if (
+      this.showReplyApprovalGroups &&
+      !this.category?.reply_approval_group_ids?.length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   @computed
   get hiddenRelativeIntervals() {
     return ["mins"];
@@ -28,7 +48,7 @@ export default class EditCategoryModeration extends buildCategoryPanel(
   get approvalTypeOptions() {
     return APPROVAL_TYPES.map((value) => ({
       value,
-      label: i18n(`category.approval_types.${value}`),
+      name: i18n(`category.approval_types.${value}`),
     }));
   }
 
@@ -60,14 +80,14 @@ export default class EditCategoryModeration extends buildCategoryPanel(
 
   get topicApprovalGroupsLabel() {
     if (this.topicApprovalType === "except_groups") {
-      return htmlSafe(i18n("category.approval_groups_except"));
+      return i18n("category.approval_groups_except");
     }
     return i18n("category.approval_groups_only");
   }
 
   get replyApprovalGroupsLabel() {
     if (this.replyApprovalType === "except_groups") {
-      return htmlSafe(i18n("category.approval_groups_except"));
+      return i18n("category.approval_groups_except");
     }
     return i18n("category.approval_groups_only");
   }
@@ -129,67 +149,65 @@ export default class EditCategoryModeration extends buildCategoryPanel(
         </section>
       {{/if}}
 
-      <section class="field topic-approval-type">
-        <label>{{i18n "category.topic_approval_type"}}</label>
-        <select
-          value={{this.topicApprovalType}}
-          {{on "change" (withEventValue this.onTopicApprovalTypeChange)}}
-        >
-          {{#each this.approvalTypeOptions as |opt|}}
-            <option
-              value={{opt.value}}
-              selected={{eq this.topicApprovalType opt.value}}
-            >{{opt.label}}</option>
-          {{/each}}
-        </select>
+      <section class="field topic-approval">
+        <h4>{{i18n "category.topic_approval_heading"}}</h4>
+        <section class="field topic-approval-type">
+          <label>{{i18n "category.topic_approval_type"}}</label>
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.approvalTypeOptions}}
+            @value={{this.topicApprovalType}}
+            @onChange={{this.onTopicApprovalTypeChange}}
+            @options={{hash placementStrategy="absolute"}}
+          />
+        </section>
+
+        {{#if this.showTopicApprovalGroups}}
+          <section class="field topic-approval-groups">
+            <label>{{this.topicApprovalGroupsLabel}}</label>
+            <GroupChooser
+              @content={{this.site.groups}}
+              @value={{this.category.topic_approval_group_ids}}
+              @onChange={{this.onTopicApprovalGroupsChange}}
+            />
+            {{#unless this.category.topic_approval_group_ids.length}}
+              <p class="form-kit__errors">{{i18n
+                  "category.approval_groups_required"
+                }}</p>
+            {{/unless}}
+          </section>
+        {{/if}}
       </section>
 
-      {{#if this.showTopicApprovalGroups}}
-        <section class="field topic-approval-groups">
-          <label>{{this.topicApprovalGroupsLabel}}</label>
-          <GroupChooser
-            @content={{this.site.groups}}
-            @value={{this.category.topic_approval_group_ids}}
-            @onChange={{this.onTopicApprovalGroupsChange}}
+      <section class="field reply-approval">
+        <h4>{{i18n "category.reply_approval_heading"}}</h4>
+        <section class="field reply-approval-type">
+          <label>{{i18n "category.reply_approval_type"}}</label>
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.approvalTypeOptions}}
+            @value={{this.replyApprovalType}}
+            @onChange={{this.onReplyApprovalTypeChange}}
+            @options={{hash placementStrategy="absolute"}}
           />
-          {{#unless this.category.topic_approval_group_ids.length}}
-            <p class="form-kit__errors">{{i18n
-                "category.approval_groups_required"
-              }}</p>
-          {{/unless}}
         </section>
-      {{/if}}
 
-      <section class="field reply-approval-type">
-        <label>{{i18n "category.reply_approval_type"}}</label>
-        <select
-          value={{this.replyApprovalType}}
-          {{on "change" (withEventValue this.onReplyApprovalTypeChange)}}
-        >
-          {{#each this.approvalTypeOptions as |opt|}}
-            <option
-              value={{opt.value}}
-              selected={{eq this.replyApprovalType opt.value}}
-            >{{opt.label}}</option>
-          {{/each}}
-        </select>
+        {{#if this.showReplyApprovalGroups}}
+          <section class="field reply-approval-groups">
+            <label>{{this.replyApprovalGroupsLabel}}</label>
+            <GroupChooser
+              @content={{this.site.groups}}
+              @value={{this.category.reply_approval_group_ids}}
+              @onChange={{this.onReplyApprovalGroupsChange}}
+            />
+            {{#unless this.category.reply_approval_group_ids.length}}
+              <p class="form-kit__errors">{{i18n
+                  "category.approval_groups_required"
+                }}</p>
+            {{/unless}}
+          </section>
+        {{/if}}
       </section>
-
-      {{#if this.showReplyApprovalGroups}}
-        <section class="field reply-approval-groups">
-          <label>{{this.replyApprovalGroupsLabel}}</label>
-          <GroupChooser
-            @content={{this.site.groups}}
-            @value={{this.category.reply_approval_group_ids}}
-            @onChange={{this.onReplyApprovalGroupsChange}}
-          />
-          {{#unless this.category.reply_approval_group_ids.length}}
-            <p class="form-kit__errors">{{i18n
-                "category.approval_groups_required"
-              }}</p>
-          {{/unless}}
-        </section>
-      {{/if}}
 
       <section class="field default-slow-mode">
         <div class="control-group">
