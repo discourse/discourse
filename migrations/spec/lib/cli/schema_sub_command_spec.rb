@@ -188,8 +188,8 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
   end
 
   describe "#list" do
-    it "prints configured tables, enums, and ignored table count" do
-      ignored = double(table_names: Set["z", "a"])
+    it "prints configured tables, enums, and ignored table counts" do
+      ignored = double(table_names: Set["z", "a"], ignored_plugin_names: %w[chat])
 
       stub_command
       allow(schema).to receive(:ensure_ready!).with(database: "intermediate_db")
@@ -198,6 +198,9 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       )
       allow(schema).to receive(:enums).and_return({ "visibility" => double, "status" => double })
       allow(schema).to receive(:ignored_tables).and_return(ignored)
+      allow(schema).to receive(:effective_ignored_table_names).with(
+        database: "intermediate_db",
+      ).and_return(Set["z", "a", "chat_messages"])
 
       command.list
 
@@ -207,7 +210,8 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       expect(command).to have_received(:puts).with("Enums (2):")
       expect(command).to have_received(:puts).with("  status")
       expect(command).to have_received(:puts).with("  visibility")
-      expect(command).to have_received(:puts).with("Ignored tables: 2")
+      expect(command).to have_received(:puts).with("Ignored tables: 2 explicit, 3 effective")
+      expect(command).to have_received(:puts).with("Ignored plugins: 1")
     end
   end
 
