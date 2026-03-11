@@ -30,6 +30,7 @@ export default class TagInfo extends Component {
   @service router;
   @service site;
   @service siteSettings;
+  @service store;
 
   @tracked tagInfo;
   @tracked newSynonyms;
@@ -92,10 +93,6 @@ export default class TagInfo extends Component {
 
   @action
   async loadTagInfo() {
-    if (this.loading) {
-      return;
-    }
-
     this.loading = true;
 
     try {
