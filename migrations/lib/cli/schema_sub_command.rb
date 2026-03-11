@@ -42,11 +42,9 @@ module Migrations::CLI
       load_rails!
 
       database = selected_database
-
-      errors = Schema.validate(database:)
-      print_validation_errors(errors)
-
-      resolved = Schema.resolve(database:)
+      preflight = Schema.preflight(database:)
+      print_validation_errors(preflight.errors)
+      resolved = preflight.resolved
 
       puts "Resolved Schema"
       puts "==============="
@@ -108,7 +106,10 @@ module Migrations::CLI
     desc "ignore TABLE", "Add a table to ignored.rb"
     method_option :reason, type: :string, desc: "Optional reason for ignoring the table"
     def ignore(table_name)
+      load_rails!
+
       database = selected_database
+      validate_ignore_target!(table_name, database:)
       Schema.ignore_table(table_name, reason: options[:reason], database:)
       puts "✓ Added #{table_name} to ignored.rb".green
     end
@@ -146,7 +147,7 @@ module Migrations::CLI
 
       manifest = Schema.plugin_manifest
 
-      if options[:force] || !manifest.fresh?
+      if options[:force] || !manifest.fresh? || manifest.incomplete?
         puts "Detecting plugin tables and columns..."
         manifest.regenerate!
         if manifest.incomplete?
@@ -191,6 +192,20 @@ module Migrations::CLI
       database = options[:database].to_s
       validate_database_option!(database)
       database
+    end
+
+    def validate_ignore_target!(table_name, database:)
+      Schema.ensure_ready!(database:)
+
+      if Schema.find_table(table_name)
+        raise Schema::ConfigError, "Table '#{table_name}' is already configured"
+      end
+
+      ActiveRecord::Base.with_connection do |connection|
+        next if connection.tables.include?(table_name)
+
+        raise Schema::ConfigError, "Table '#{table_name}' does not exist in the database"
+      end
     end
 
     def print_validation_errors(errors)

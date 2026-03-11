@@ -11,12 +11,20 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         ignored_path = File.join(tmpdir, "ignored.rb")
         File.write(ignored_path, "Migrations::Database::Schema.ignored do\nend\n")
 
+        connection = instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter)
         allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
           %w[intermediate_db],
         )
+        allow(Migrations::Database::Schema).to receive(:ensure_ready!).with(
+          database: "intermediate_db",
+        )
+        allow(Migrations::Database::Schema).to receive(:find_table).with("users").and_return(nil)
         allow(Migrations::Database::Schema).to receive(:config_path).with(
           "intermediate_db",
         ).and_return(tmpdir)
+        allow(ActiveRecord::Base).to receive(:with_connection).and_yield(connection)
+        allow(connection).to receive(:tables).and_return(%w[users])
+        allow(command).to receive(:load_rails!)
         allow(command).to receive(:puts)
         allow(command).to receive(:options).and_return({ database: "intermediate_db" })
 
@@ -62,15 +70,18 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
 
   describe "#resolve" do
     it "fails fast when validation errors are present" do
+      preflight =
+        Migrations::Database::Schema::PreflightResult.new(resolved: nil, errors: ["bad config"])
+
       allow(command).to receive(:load_rails!)
       allow(command).to receive(:options).and_return({ database: "intermediate_db" })
       allow(command).to receive(:puts)
       allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
         %w[intermediate_db],
       )
-      allow(Migrations::Database::Schema).to receive(:validate).with(
+      allow(Migrations::Database::Schema).to receive(:preflight).with(
         database: "intermediate_db",
-      ).and_return(["bad config"])
+      ).and_return(preflight)
       allow(Migrations::Database::Schema).to receive(:resolve)
 
       expect { command.resolve }.to raise_error(SystemExit)
