@@ -72,7 +72,7 @@ jobs:
 
       - name: ESLint
         if: ${{ !cancelled() }}
-        run: pnpm lint:js
+        run: pnpm lint:js --max-warnings 0
 
       - name: Types
         if: ${{ !cancelled() }}
