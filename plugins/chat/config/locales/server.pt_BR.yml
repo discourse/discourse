@@ -123,7 +123,7 @@ pt_BR:
           description: "Excluir a mensagem permanentemente."
         restore_message:
           title: "Restaurar mensagem"
-          description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."
+          description: "Restaurar a mensagem para que os(as) usuários(as) possam vê-las."
         agree:
           title: "Concordo..."
         agree_and_keep_message:

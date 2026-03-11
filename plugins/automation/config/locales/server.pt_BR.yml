@@ -72,7 +72,7 @@ pt_BR:
         description: A automatização será ativada quando as etiquetas forem alteradas.
       topic:
         title: Tópico
-        description: O script associado será usado apenas no tópico especificado, isso é útil para scripts fazendo validação, por exemplo
+        description: O script associado será usado apenas no tópico especificado, isso é útil para scripts que fazem validação, por exemplo
       topic_closed:
         title: Tópico fechado
         description: Aciona a execução de um script quando um tópico é fechado.
@@ -133,7 +133,7 @@ pt_BR:
         doc: A troca de presentes requer um grupo existente com pelo menos três usuários(as). Na data escolhida, cada usuário(a) do grupo será pareado com um(a) presenteador(a) e um(a) presenteado(a).
       remove_upload_markup_from_deleted_posts:
         title: Remover marcação de upload em posts excluídos
-        description: Atua como usuário do sistema e adiciona uma revisão às postagens excluídas onde a marcação de upload foi removida. Combinado com a tarefa "clean up uploads", resulta na exclusão permanente de uploads nas postagens excluídas. Use com cautela!
+        description: Atua como usuário do sistema e adiciona uma revisão às postagens excluídas onde a marcação de upload foi removida. Combinado com a tarefa 'clean up uploads', resulta na exclusão permanente de uploads nas postagens excluídas. Use com cautela!
         edit_reason: A automação removeu a marcação de upload da postagem excluída.
       send_pms:
         title: Enviar MPs
@@ -189,5 +189,5 @@ pt_BR:
         title: "Atribuição aleatória"
         description: "Atribua tópicos a um grupo aleatoriamente"
       set_topic_timer:
-        title: "Definir timer do tópico"
+        title: "Definir temporizador do tópico"
         description: "Definir um temporizador para um tópico."

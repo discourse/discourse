@@ -61,7 +61,7 @@ pt_BR:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
     too_many_urls: "Não é possível converter mais de 10 URLs em oneboxes inline numa única solicitação."
-    concurrency_not_allowed: "Não são permitidas solicitações simultâneas para converter URLs em oneboxes embutidos. Envie uma solicitação por vez."
+    concurrency_not_allowed: "Não são permitidas solicitações simultâneas para converter URLs em oneboxes inline. Envie uma solicitação por vez."
   components:
     enabled_filter: "Ativado(a)"
     disabled_filter: "Desativado(a)"
@@ -144,8 +144,8 @@ pt_BR:
         invalid_type: "%{type} não é um tipo válido"
         humanize_not_valid_string_value: "A propriedade no Ponteiro JSON \"%{property_json_pointer}\" deve ser uma string."
         not_valid_string_value: "deve ser uma string"
-        humanize_not_valid_datetime_value: "A propriedade no ponteiro JSON \"%{property_json_pointer}\" deve ser uma data-hora válida."
-        not_valid_datetime_value: "deve ser uma data e hora válidas"
+        humanize_not_valid_datetime_value: "A propriedade no ponteiro JSON \"%{property_json_pointer}\" deve conter uma data e hora válidas."
+        not_valid_datetime_value: "deve ser conter uma data e hora válidas"
         humanize_not_valid_integer_value: "A propriedade no Ponteiro JSON \"%{property_json_pointer}\" deve ser um inteiro."
         not_valid_integer_value: "deve ser um inteiro"
         humanize_not_valid_float_value: "A propriedade no Ponteiro JSON \"%{property_json_pointer}\" deve ser do tipo flutuante."
@@ -398,7 +398,7 @@ pt_BR:
     redemption_count_less_than_max: "deve ser menor que %{max_redemptions_allowed}."
     email_xor_domain: "Campos de e-mail e domínio não são permitidos ao mesmo tempo"
     existing_user_success: "Link do convite resgatado com sucesso"
-    email_invites_disabled: "O envio de e-mails de convite está desativado."
+    email_invites_disabled: "O envio de e-mails de convite foi desativado."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
     max_rows: "Os primeiros %{max_bulk_invites} convites foram enviados. Tente dividir o arquivo em partes menores."
@@ -1146,7 +1146,7 @@ pt_BR:
     deny: "Cancelar"
     read: "ler"
     read_write: "ler/escrever"
-    logged_in_as: "Logado como"
+    logged_in_as: "Logado(a) como"
     permissions_header: 'Isso permitirá que "%{application_name}":'
     redirect_warning: "A autorização redirecionará você para"
     instructions: 'Acabamos de gerar uma nova chave de API de usuário(a) para você usar com "%{application_name}", cole a seguinte chave em seu aplicativo:'
@@ -1610,7 +1610,7 @@ pt_BR:
         one: "A sondagem do e-mail gerou um erro nas últimas 24 horas. Consulte <a href='%{base_path}/logs' target='_blank'>os registros</a> para obter mais detalhes."
         other: "A sondagem do e-mail gerou %{count} erros nas últimas 24 horas. Consulte <a href='%{base_path}/logs' target='_blank'>os registros</a> para obter mais detalhes."
       missing_mailgun_api_key: "O servidor está configurado para enviar e-mails pelo Mailgun, mas você não informou a chave de API usada para verificar as mensagens do webhook."
-      qq_mail_smtp: "Seu servidor SMTP (%{smtp_address}) é conhecido por causar e-mails duplicados com o Discourse. O QQ Mail não retorna confirmações adequadas, fazendo com que o Discourse tente reenviar mensagens que já foram entregues com sucesso. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>Veja alternativas recomendadas</a>."
+      qq_mail_smtp: "Seu servidor SMTP (%{smtp_address}) é conhecido por enviar e-mails duplicados com o Discourse. O QQ Mail não retorna confirmações adequadas, fazendo com que o Discourse tente reenviar mensagens que já foram entregues com sucesso. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>Veja alternativas recomendadas</a>."
       bad_favicon_url: "O favicon está falhando ao carregar. Verifique sua configuração de favicon nas <a href='%{base_path}/admin/site_settings'>configurações do site</a> ."
       poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a> e selecione um provedor de serviço."
       poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a>."
@@ -1716,7 +1716,7 @@ pt_BR:
     logo: "A imagem do logotipo no canto superior à esquerda do seu site. Use uma imagem retangular larga com 120 de altura e proporção maior que 3:1. Se for deixada em branco, o texto do título do site será exibido."
     logo_small: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Use uma imagem quadrada de 120×120. Se for deixada em branco, um glifo de página inicial será exibido."
     digest_logo: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Use uma imagem retangular larga. Não use uma imagem SVG. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
-    mobile_logo: "O logotipo usado na versão do seu site para dispositivos móveis. Recomendamos um ícone quadrado para evitar sobrecarregar o cabeçalho, mas você pode usar uma imagem retangular larga com altura de 120 pixels e proporção maior que 3:1. Se este campo for deixado em branco, será usada a imagem de configuração do logotipo."
+    mobile_logo: "O logotipo usado na versão móvel do seu site. Recomendamos um ícone quadrado para evitar sobrecarregar o cabeçalho, mas você pode usar uma imagem retangular larga com altura de 120 pixels e proporção maior que 3:1. Se este campo for deixado em branco, será usada a imagem de configuração do logotipo."
     logo_dark: "Esquema escuro alternativo para a configuração do site \"logotipo\"."
     logo_small_dark: "Esquema escuro alternativo para a configuração do site \"logotipo pequeno\"."
     mobile_logo_dark: "Esquema escuro alternativo para a configuração do site \"logotipo para dispositivo móvel\"."
@@ -1731,8 +1731,8 @@ pt_BR:
     email_custom_headers: "Uma lista de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
-    enforce_second_factor: "Exija que os(as) usuários(as) ativem autenticação de dois fatores (2FA) antes de acessarem a IU do Discourse. Esta configuração não afeta a autenticação por API ou \"DiscourseConnect provider\". Se enforce_second_factor_on_external_auth estiver ativado, os(as) usuários(as) não poderão fazer login com provedores de autenticação externos após a configuração da 2FA."
-    enforce_second_factor_on_external_auth: "Exija que os(as) usuários(as) ativem autenticação de dois fatores (2FA) todas as vezes. Quando ativada, esta funcionalidade impede o acesso com métodos de autenticação externos, como plugins de redes sociais, se houver 2FA ativada. Quando desativada, os(as) usuários(as) precisam apenas confirmar a 2FA ao acessarem com nome de usuário(a) e senha. Confira também a configuração \"enforce_second_factor\"."
+    enforce_second_factor: "Exija que os(as) usuários(as) ativem autenticação de dois fatores (2FA) antes de acessarem a IU do Discourse. Esta configuração não afeta a autenticação por API ou 'DiscourseConnect provider'. Se `enforce_second_factor_on_external_auth` estiver ativado, os(as) usuários(as) não poderão fazer login com provedores de autenticação externos após a configuração da 2FA."
+    enforce_second_factor_on_external_auth: "Exija que os(as) usuários(as) ativem autenticação de dois fatores (2FA) todas as vezes. Quando ativada, esta funcionalidade impede o acesso com métodos de autenticação externos, como plugins de redes sociais, se houver 2FA ativada. Quando desativada, os(as) usuários(as) precisam apenas confirmar a 2FA ao acessarem com nome de usuário(a) e senha. Confira também a configuração `enforce_second_factor`."
     force_https: "Obrigue seu site a usar apenas HTTPS. AVISO: NÃO ative até ter verificado se o HTTPS está totalmente configurado e funcionando em todos os lugares! Você verificou se seu CDN, todas as entradas com conta de rede social e logotipos e dependências externas também são compatíveis com HTTPS?"
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída em \"Resumir este tópico\" "
     summary_posts_required: "Quantidade mínima de postagens em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
@@ -1846,8 +1846,8 @@ pt_BR:
     whispers_allowed_groups: "Permitir comunicação privada dentro de tópicos para membros de grupos especificados."
     hidden_post_visible_groups: "Permita que membros destes grupos visualizem postagens ocultas. Usuários(as) da equipe sempre podem ser postagens ocultas."
     allow_index_in_robots_txt: "Especifique no robots.txt que este site tem permissão para ser indexado por mecanismos de pesquisa da web. Você pode <a href='%{base_path}/admin/customize/robots'>substituir seu robots.txt aqui.</a> <b>WARNING</b>: regras configuradas incorretamente poderão impedir que seu site seja rastreado como o esperado."
-    blocked_email_domains: "Uma lista de domínios de e-mail onde os usuários não têm permissão para registrar contas. Subdomínios são automaticamente processados para os domínios especificados. Os símbolos-curinga * e ? não são suportados. Exemplo: mailinator.com"
-    allowed_email_domains: "Uma lista de domínios de e-mail com os quais os usuários DEVEM registrar contas. Os subdomínios são tratados para os domínios específicos. Símbolos-curinga * e ? não são permitidos. AVISO: usuários(as) com domínios de e-mail que não sejam os listados aqui não terão permissão de acesso!"
+    blocked_email_domains: "Uma lista de domínios de e-mail onde os usuários não têm permissão para registrar contas. Subdomínios são automaticamente processados para os domínios especificados. Os símbolos-curinga `*` e `?` não são suportados. Exemplo: mailinator.com"
+    allowed_email_domains: "Uma lista de domínios de e-mail onde os usuários DEVEM registrar contas. Os subdomínios são tratados para os domínios específicos. Símbolos-curinga `*` e `?` não são permitidos. AVISO: usuários(as) com domínios de e-mail que não sejam os listados aqui não terão permissão de acesso!"
     normalize_emails: "Verifique se o e-mail normalizado é único. E-mails normalizados removem todos os pontos do nome do(a) usuário(a) e tudo entre os símbolos + e @."
     auto_approve_email_domains: "Usuários(as) com endereços de e-mail desta lista de domínios serão aprovados automaticamente. Subdomínios são tratados automaticamente para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis."
     hide_email_address_taken: "Não informe ao(as) usuários(as) que uma conta existe com um determinado endereço de e-mail durante o cadastro ou processo de recuperação de senha. Exija o e-mail completo para solicitações de \"senha esquecida\"."
@@ -1962,7 +1962,7 @@ pt_BR:
     invite_link_max_redemptions_limit_users: "A quantidade máxima de resgates de links de convite gerados por usuário(a) não pode exceder este valor."
     alert_admins_if_errors_per_minute: "Quantidade de erros por minuto para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
     alert_admins_if_errors_per_hour: "Quantidade de erros por hora para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
-    categories_topics: 'Número de tópicos a serem exibidos na página /categories. Se zero, um valor será automaticamente definido para manter as duas colunas simétricas. Relevante apenas para "categorias e tópicos mais recentes ou principais" <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">estilos de página de categoria</a>.'
+    categories_topics: 'Número de tópicos a serem exibidos na página `/categories`. Se zero, um valor será automaticamente definido para manter as duas colunas simétricas. Relevante apenas para "categorias e tópicos mais recentes ou principais" <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">estilos de página de categoria</a>.'
     suggested_topics: "Quantidade de tópicos sugeridos exibidos no final de um tópico."
     limit_suggested_to_category: "Exiba apenas tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dia(s)."
@@ -2136,7 +2136,7 @@ pt_BR:
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder por e-mail a endereços de e-mail recebidos. Por exemplo:%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Use HTML em vez de texto para e-mail recebido."
     strip_incoming_email_lines: "Remova os espaços em branco iniciais e finais de cada linha de e-mails recebidos."
-    disable_emails: "Evitar que o Discourse envie qualquer tipo de e-mail. Selecione \"yes\" para desativar os e-mails de saída de todos(as) os(as) usuários(as). Selecione 'non-staff' para desativar os e-mails apenas para usuários(as) que não fizerem parte da equipe."
+    disable_emails: "Evita que o Discourse envie qualquer tipo de e-mail. Selecione 'yes' para desativar os e-mails de saída de todos(as) os(as) usuários(as). Selecione 'non-staff' para desativar os e-mails apenas para usuários(as) que não fizerem parte da equipe."
     allow_email_invites: "Quando desativada, essa opção impedirá que os usuários enviem e-mails de convite pelo Discourse."
     strip_images_from_short_emails: "Tirar imagens de e-mails cujo tamanho seja menor que 2.800 bytes"
     short_email_length: "Defina o tamanho máximo, em bytes, para que um e-mail seja classificado como \"curto\" para compactação de imagem. Se o tamanho do e-mail não exceder esta configuração, as imagens no e-mail (como avatar e emojis) serão removidas."
@@ -2480,7 +2480,7 @@ pt_BR:
     content_localization_allow_author_localization: "Permitir que os autores atualizem a localização de seus próprios tópicos e postagens por meio do menu da postagem."
     fake_upcoming_change: "Esta é uma alteração prevista fictícia para fins de teste. Não é necessário traduzir esta string."
     floating_dismiss_topics_on_mobile: "Exibe um botão flutuante \"Fechar...\" na lista de tópicos em dispositivos móveis para facilitar o acesso e liberar espaço na parte superior da lista."
-    rename_faq_to_guidelines: "Esta alteração renomeia a página de perguntas frequentes para \"Diretrizes\". A página de perguntas frequentes continuará disponível em /faq. A configuração \"URL da FAQ\" funciona como antes."
+    rename_faq_to_guidelines: "Esta alteração renomeia a página de perguntas frequentes para \"Diretrizes\". A página de perguntas frequentes continuará disponível em `/faq`. A configuração \"URL da FAQ\" funciona como antes."
     experimental_tag_settings_page: "Ativar uma página de configurações dedicada para tags em /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Ativa um fluxo de criação de categorias simplificado, com menos opções e uma interface mais limpa."
     enable_custom_splash_screen: "Permite personalizar a tela de carregamento com sua própria imagem SVG. Faça o upload de uma imagem através da configuração 'splash screen image'. Aviso: Isso pode afetar negativamente as pontuações do LCP e a indexação do Google."
@@ -2532,11 +2532,11 @@ pt_BR:
       reply_by_email_disabled: "Você deve ativar \"responder por e-mail\" antes de ativar esta configuração primeiro."
       discourse_connect_url_is_empty: "É preciso definir uma \"url de conexão do Discourse\" antes de ativar esta configuração."
       enable_local_logins_disabled: "Você deve ativar \"ativar entradas com e-mail em modo local\" antes de ativar esta configuração."
-      min_username_length_exists: "Você não pode definir 'min username length' com um número maior que o comprimento do nome do(a) usuário(a) mais curto (%{username})."
-      min_group_name_length_exists: "Você não pode definir 'min username length' com um número maior que o comprimento do nome do grupo mais longo (%{group_name})."
+      min_username_length_exists: "Não é possível definir 'min username length' com um número maior que o comprimento do nome do(a) usuário(a) mais curto (%{username})."
+      min_group_name_length_exists: "Não é possível definir 'min username length' com um número maior que o comprimento do nome do grupo mais longo (%{group_name})."
       min_username_length_range: "Não é possível definir 'max username length' com um valor menor que definido em 'min username length'."
-      max_username_length_exists: "Você não pode definir 'max username length' com um número menor que o comprimento do nome do(a) usuário(a) mais longo (%{username})."
-      max_group_name_length_exists: "Você não pode definir 'max username length' com um número menor que o comprimento do nome do grupo mais longo (%{group_name})."
+      max_username_length_exists: "Não é possível definir 'max username length' com um número menor que o comprimento do nome do(a) usuário(a) mais longo (%{username})."
+      max_group_name_length_exists: "Não é possível definir 'max username length' com um número menor que o comprimento do nome do grupo mais longo (%{group_name})."
       max_username_length_range: "Não é possível definir 'max username length' menor que 'min username length'."
       invalid_hex_value: "Os valores de cor precisam ser códigos hexadecimais de seis dígitos."
       empty_selectable_avatars: "É preciso enviar pelo menos dois avatares selecionáveis antes de ativar esta configuração."
@@ -2552,7 +2552,7 @@ pt_BR:
         other: "A lista deve conter exatamente %{count} valores."
       markdown_linkify_tlds: "Você não pode incluir um valor de '*'."
       google_oauth2_hd_groups: "Você deve configurar \"google oauth2 hd\" antes de ativar esta configuração."
-      discourse_id_registration: "Não foi possível registrar-se automaticamente com o ID do Discourse. Isso pode ser devido a problemas de conectividade de rede, restrições de firewall ou, porque o serviço de ID do Discourse está inaccessível. Verifique os logs do servidor para mais informações ou entre em contato com o suporte."
+      discourse_id_registration: "Não foi possível registrar-se automaticamente com o ID do Discourse. Isso pode ser devido a problemas de conectividade de rede, restrições de firewall ou, porque o serviço de Discourse ID está inaccessível. Verifique os logs do servidor para mais informações ou entre em contato com o suporte."
       linkedin_oidc_credentials: "Você deve configurar as credenciais do LinkedIn OIDC ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') antes de habilitar esta configuração."
       search_tokenize_chinese_enabled: "Você deve desativar o 'search_tokenize_chinese' antes de ativar esta configuração."
       search_tokenize_japanese_enabled: "Você deve desativar o 'search_tokenize_japanese' antes de ativar esta configuração."
@@ -2854,7 +2854,7 @@ pt_BR:
         updating_user_ids: "Atualizando ids de usuário(a)…"
         deleting_source_user: "Excluindo usuário de origem…"
   user:
-    anonymized: "[removido devido à anonimização do usuário]"
+    anonymized: "[removido devido à anonimização do(a) usuário(a)]"
     deactivated: "Desativado(a) por causa de muitos e-mails devolvidos para \"%{email}\"."
     deactivated_by_staff: "Desativado pela equipe"
     deactivated_by_inactivity:
@@ -3746,7 +3746,7 @@ pt_BR:
 
         Algumas postagens de novos(as) usuários(as) foram removidas pela moderação e estão aguardando revisão. [Aprove-as ou rejeite-as aqui](%{base_url}/review?type=ReviewableQueuedPost).
     user_posts_deleted:
-      title: "Postagens do usuário excluídas"
+      title: "Postagens do(a) usuário(a) excluídas"
       subject_template: "Todas as postagens de %{user} foram excluídas"
       text_body_template:
         one: "%{count} postagem de @%{user} foi excluída por @%{staff_user}."
@@ -5047,8 +5047,8 @@ pt_BR:
   rss_by_tag: "Tópicos etiquetados com %{tag}"
   finish_installation:
     congratulations: "Parabéns, você instalou o Discourse!"
-    login_with_discourse_id: "Entrar com o ID do Discourse."
-    discourse_id_help: "Faça login com seu ID do Discourse usando o botão abaixo. <br/><br/>Certifique-se de usar uma conta de ID do Discourse com um e-mail principal que corresponda à variável de ambiente `DISCOURSE_DEVELOPER_EMAILS`."
+    login_with_discourse_id: "Entrar com o Discourse ID."
+    discourse_id_help: "Faça login com o Discourse ID usando o botão abaixo. <br/><br/>Certifique-se de usar uma conta Discourse ID com um e-mail principal que corresponda à variável de ambiente `DISCOURSE_DEVELOPER_EMAILS`."
     discourse_id_error_help: "Você optou por pular a configuração de e-mail por enquanto. Infelizmente, devido à mensagem de erro acima, a configuração não poderá prosseguir. Por favor, relate este problema em <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Cadastrar"
@@ -5062,7 +5062,7 @@ pt_BR:
       title: "Enviar novamente e-mail de ativação"
       message: "<p>Reenviamos o e-mail de confirmação para <b>%{email}</b>"
     discourse_id:
-      help: "Estamos configurando seu ID do Discourse."
+      help: "Estamos configurando seu Discourse ID."
       no_allowed_emails: "Não há endereços de e-mail permitidos configurados em DISCOURSE_DEVELOPER_EMAILS. Não é possível continuar com a configuração do site."
       global_notice: "Nenhum administrador fez login ainda. Faça login usando uma conta Discourse ID com um e-mail que corresponda à variável de ambiente `DISCOURSE_DEVELOPER_EMAILS` para concluir a instalação."
   safe_mode:
@@ -5096,15 +5096,15 @@ pt_BR:
             description: "Sua comunidade é pública ou privada?"
             choices:
               public:
-                label: "Público(a)"
+                label: "Pública"
               private:
-                label: "Privado(a)"
+                label: "Privada"
           invite_only:
             label: "Cadastro"
             description: "Como os membros podem participar desta comunidade?"
             choices:
               sign_up:
-                label: "Cadastrar-se"
+                label: "Cadastrando-se"
               invite_only:
                 label: "Apenas convites"
           must_approve_users:
@@ -5365,7 +5365,7 @@ pt_BR:
       reject_and_keep_deleted_standalone:
         title: "Não, mantenha a postagem excluída"
       scrub:
-        title: Registro removido
+        title: Remover registro
       approve_and_restore:
         title: "Sim"
         complete: "Postagem aprovada e restaurada."
@@ -5398,17 +5398,17 @@ pt_BR:
         bundle_title: "O que você deseja fazer com o(a) usuário(a)?"
       silence_user:
         title: "Silenciar usuário(a)"
-        description: "Impedir que o usuário faça postagens"
+        description: "Impedir que o(a) usuário(a) faça postagens"
         complete: "Usuário(a) silenciado(a)"
-        reason: "Usuário silenciado via fila de revisão"
+        reason: "Usuário(a) silenciado(a) via fila de revisão"
       suspend_user:
         title: "Suspender usuário(a)"
         description: "Suspender a conta do usuário"
         complete: "Usuário(a) suspenso(a)."
-        reason: "Usuário suspenso via fila de revisão"
+        reason: "Usuário(a) suspenso(a) via fila de revisão"
       delete_user:
         title: "Excluir usuário(a)"
-        description: "Excluir este usuário do fórum."
+        description: "Excluir este(a) usuário(a) do fórum."
         complete: "Usuário(a) excluído(a)."
         reason: "Excluído(a) via fila de revisão"
       delete_and_block_user:
@@ -5463,9 +5463,9 @@ pt_BR:
       unsafe_description: "tem uma descrição HTML não segura"
       invalid_tag_group: "tem grupo de etiquetas inválido: %{tag_group_name}"
   discourse_id:
-    already_registered: "Este site já está registrado com o ID do Discourse."
+    already_registered: "Este site já está registrado com o Discourse ID."
     errors:
-      not_configured: "O ID do Discourse não está configurado. Por favor, habilite o ID do Discourse primeiro."
+      not_configured: "O Discourse ID não está configurado. Por favor, ative o Discourse ID primeiro."
       regenerate_failed: "Não foi possível regerar as credenciais. Tente novamente mais tarde."
   activemodel:
     errors:

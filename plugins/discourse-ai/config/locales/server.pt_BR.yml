@@ -83,7 +83,7 @@ pt_BR:
     ai_nsfw_flag_threshold_sexy: "Limite para uma imagem classificada como sensual ser considerada NSFW."
     ai_nsfw_models: "Modelos usados para inferência de NSFW."
     ai_spam_detection_enabled: "Ativar o módulo de detecção de spam por IA"
-    ai_spam_detection_max_post_count: "Número máximo de publicações que um usuário pode ter antes de deixar de ser verificado em busca de spam."
+    ai_spam_detection_max_post_count: "Número máximo de postagens que um usuário pode ter antes de deixar de ser verificado em busca de spam."
     ai_spam_detection_max_trust_level: "Nível máximo de confiança dos usuários para verificar spam"
     ai_openai_api_key: "Chave de API para a API da OpenAI. Usada apenas para edição e criação de imagens. Para o GPT, use a aba de configuração do LLM"
     ai_helper_enabled: "Habilite o assistente de IA."
