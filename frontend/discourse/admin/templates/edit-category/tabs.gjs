@@ -1,5 +1,5 @@
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ChangesBanner from "discourse/admin/components/changes-banner";
 import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
 import EditCategoryImages from "discourse/admin/components/edit-category-images";
@@ -119,7 +119,7 @@ export default <template>
 
       {{#if @controller.showDeleteReason}}
         <form.Alert @type="warning" class="edit-category-delete-warning">
-          {{htmlSafe @controller.model.cannot_delete_reason}}
+          {{trustHTML @controller.model.cannot_delete_reason}}
         </form.Alert>
       {{/if}}
 

@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import EmbeddableHost from "discourse/admin/components/embeddable-host";
@@ -17,7 +17,7 @@ export default <template>
         class="admin-embedding-index__code"
       >
         <:content>
-          {{htmlSafe (i18n "admin.embedding.sample")}}
+          {{trustHTML (i18n "admin.embedding.sample")}}
           <HighlightedCode @code={{@controller.embeddingCode}} @lang="html" />
         </:content>
       </AdminConfigAreaCard>

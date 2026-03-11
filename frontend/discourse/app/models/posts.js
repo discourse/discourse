@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
@@ -19,7 +19,7 @@ export default class Posts extends RestModel {
     const { latest_posts } = await ajax("/posts.json", { data });
     return latest_posts.map((post) => {
       post.category = Category.findById(post.category_id);
-      post.topic_html_title = htmlSafe(post.topic_html_title);
+      post.topic_html_title = trustHTML(post.topic_html_title);
       return Post.create(post);
     });
   }

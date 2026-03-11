@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import A11yDialog from "a11y-dialog";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -66,7 +66,7 @@ export default class DialogHolder extends Component {
                     @model={{this.dialog.bodyComponentModel}}
                   />
                 {{else if this.dialog.message}}
-                  <p>{{htmlSafe this.dialog.message}}</p>
+                  <p>{{trustHTML this.dialog.message}}</p>
                 {{/if}}
               </div>
             {{/if}}

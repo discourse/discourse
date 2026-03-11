@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AvatarFlair from "discourse/components/avatar-flair";
 import DButton from "discourse/components/d-button";
 import GroupInfo from "discourse/components/group-info";
@@ -111,7 +111,7 @@ export default <template>
 
       {{#if @controller.model.bio_cooked}}
         <div class="group-bio">
-          {{htmlSafe @controller.model.bio_cooked}}
+          {{trustHTML @controller.model.bio_cooked}}
         </div>
       {{/if}}
 

@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -431,7 +431,7 @@ export default class BookmarkModal extends Component {
               @_itsatrap={{this._itsatrap}}
             />
           {{else}}
-            <div class="alert alert-info">{{htmlSafe
+            <div class="alert alert-info">{{trustHTML
                 (i18n "bookmarks.no_timezone" basePath=(basePath))
               }}</div>
           {{/if}}

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import decoratePollOption from "../modifiers/decorate-poll-option";
@@ -102,7 +102,7 @@ export default class PollResultsStandardComponent extends Component {
               <div class="bar-back">
                 <div
                   class="bar"
-                  style={{htmlSafe (concat "width:" option.percentage "%")}}
+                  style={{trustHTML (concat "width:" option.percentage "%")}}
                 />
               </div>
             {{/unless}}

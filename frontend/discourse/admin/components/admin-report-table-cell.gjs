@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
 
@@ -26,7 +26,7 @@ export default class AdminReportTableCell extends Component {
       class={{concatClass "admin-report-table-cell" this.type this.property}}
       ...attributes
     >
-      {{htmlSafe this.formattedValue}}
+      {{trustHTML this.formattedValue}}
     </td>
   </template>
 }

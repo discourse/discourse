@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -17,7 +17,7 @@ export default class ChatThreadListHeader extends Component {
       title += " - " + replaceEmoji(this.args.channel.escapedTitle);
     }
 
-    return htmlSafe(title);
+    return trustHTML(title);
   }
 
   <template>

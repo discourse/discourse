@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import DButton from "discourse/components/d-button";
@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TopicTimerInfo extends Component {
-  clockIcon = htmlSafe(`${iconHTML("far-clock")}`);
+  clockIcon = trustHTML(`${iconHTML("far-clock")}`);
   trashLabel = i18n("post.controls.remove_timer");
 
   title = null;
@@ -121,8 +121,8 @@ export default class TopicTimerInfo extends Component {
 
       options = Object.assign(options, this.additionalOpts());
       this.setProperties({
-        title: htmlSafe(`${moment(this.executeAt).format("LLLL")}`),
-        notice: htmlSafe(`${i18n(this._noticeKey(), options)}`),
+        title: trustHTML(`${moment(this.executeAt).format("LLLL")}`),
+        notice: trustHTML(`${i18n(this._noticeKey(), options)}`),
         showTopicTimer: true,
       });
 

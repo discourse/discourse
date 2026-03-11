@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
@@ -15,7 +15,7 @@ export default class AdminConfigAreaEmptyList extends Component {
 
   <template>
     <div class="admin-config-area-empty-list">
-      {{htmlSafe this.emptyLabel}}
+      {{trustHTML this.emptyLabel}}
 
       {{#if @ctaLabel}}
         <DButton

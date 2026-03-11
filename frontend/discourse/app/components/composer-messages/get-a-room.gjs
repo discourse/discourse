@@ -1,5 +1,5 @@
 import { fn } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ComposerTipCloseButton from "discourse/components/composer-tip-close-button";
 import DButton from "discourse/components/d-button";
 
@@ -8,7 +8,7 @@ const GetARoomComposerMessage = <template>
 
   <div class="composer-popup__content">
 
-    {{htmlSafe @message.body}}
+    {{trustHTML @message.body}}
 
     <DButton
       @label="user.private_message"

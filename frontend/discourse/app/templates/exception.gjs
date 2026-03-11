@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -14,7 +14,7 @@ export default <template>
   >
     <div class="container">
       {{#if (and @controller.errorHtml @controller.isForbidden)}}
-        <div class="not-found">{{htmlSafe @controller.errorHtml}}</div>
+        <div class="not-found">{{trustHTML @controller.errorHtml}}</div>
       {{else}}
         <div class="error-page">
           <div class="face">:(</div>

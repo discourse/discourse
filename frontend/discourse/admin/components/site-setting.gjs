@@ -8,7 +8,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
@@ -149,7 +149,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get themeSiteSettingWarningText() {
-    return htmlSafe(
+    return trustHTML(
       i18n("admin.theme_site_settings.site_setting_warning", {
         basePath,
         defaultThemeName: sanitize(this.defaultTheme.name),
@@ -187,7 +187,7 @@ export default class SiteSettingComponent extends Component {
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
-      return htmlSafe(`<div class="preview">${escapedValue}</div>`);
+      return trustHTML(`<div class="preview">${escapedValue}</div>`);
     }
     return null;
   }
@@ -348,7 +348,7 @@ export default class SiteSettingComponent extends Component {
         let errorString = json.errors[0];
 
         if (json.html_message) {
-          errorString = htmlSafe(errorString);
+          errorString = trustHTML(errorString);
         }
 
         this.setting.validationMessage = errorString;

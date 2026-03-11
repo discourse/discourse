@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AvatarFlair from "discourse/components/avatar-flair";
 import GroupInfo from "discourse/components/group-info";
 import GroupMembershipButton from "discourse/components/group-membership-button";
@@ -37,7 +37,7 @@ const GroupCard = <template>
         </span>
       </div>
 
-      <div class="group-description">{{htmlSafe @group.bio_excerpt}}</div>
+      <div class="group-description">{{trustHTML @group.bio_excerpt}}</div>
 
       <div class="group-membership">
         <GroupMembershipButton

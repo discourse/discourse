@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DNavigationItem from "discourse/components/d-navigation-item";
 import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
 import icon from "discourse/helpers/d-icon";
@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   {{#if @controller.showWarningsWarning}}
-    <div class="alert alert-info">{{htmlSafe
+    <div class="alert alert-info">{{trustHTML
         (i18n "admin.user.warnings_list_warning")
       }}</div>
   {{/if}}

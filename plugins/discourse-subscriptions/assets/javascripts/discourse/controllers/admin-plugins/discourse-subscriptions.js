@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -39,7 +39,7 @@ export default class AdminPluginsDiscourseSubscriptionsController extends Contro
   createOneClickCampaign() {
     this.dialog.yesNoConfirm({
       title: i18n("discourse_subscriptions.campaign.confirm_creation_title"),
-      message: htmlSafe(
+      message: trustHTML(
         i18n("discourse_subscriptions.campaign.confirm_creation")
       ),
       didConfirm: () => {

@@ -4,7 +4,7 @@ import EmberObject from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -91,7 +91,7 @@ export default class Revisions extends Component {
       {{/if}}
       {{#if @model.title_changes}}
         <div class="row">
-          <h2 class="revision__title">{{htmlSafe @titleDiff}}</h2>
+          <h2 class="revision__title">{{trustHTML @titleDiff}}</h2>
         </div>
       {{/if}}
       {{#if @mobileView}}
@@ -126,13 +126,13 @@ export default class Revisions extends Component {
         {{#if (and @model.category_id_changes (not @model.archetype_changes))}}
           <div class="row">
             {{#if @previousCategory}}
-              {{htmlSafe @previousCategory}}
+              {{trustHTML @previousCategory}}
             {{else}}
               {{icon "far-eye-slash" class="diff-del"}}
             {{/if}}
             &rarr;
             {{#if @currentCategory}}
-              {{htmlSafe @currentCategory}}
+              {{trustHTML @currentCategory}}
             {{else}}
               {{icon "far-eye-slash" class="diff-ins"}}
             {{/if}}
@@ -181,7 +181,7 @@ export default class Revisions extends Component {
         {{didUpdate @calculateBodyDiff @bodyDiffHTML}}
         class="row body-diff"
       >
-        {{htmlSafe @bodyDiff}}
+        {{trustHTML @bodyDiff}}
       </LinksRedirect>
     </div>
   </template>

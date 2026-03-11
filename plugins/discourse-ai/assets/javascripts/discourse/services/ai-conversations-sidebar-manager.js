@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -335,7 +335,7 @@ export default class AiConversationsSidebarManager extends Service {
           }
 
           get text() {
-            return htmlSafe(sec.title);
+            return trustHTML(sec.title);
           }
 
           get links() {

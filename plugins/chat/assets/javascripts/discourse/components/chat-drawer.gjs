@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -101,7 +101,7 @@ export default class ChatDrawer extends Component {
     const { width, height } = this.chatDrawerSize.size;
     let style = `width: ${escapeExpression((width || "0").toString())}px;`;
     style += `height: ${escapeExpression((height || "0").toString())}px;`;
-    this.set("drawerStyle", htmlSafe(style));
+    this.set("drawerStyle", trustHTML(style));
   }
 
   get drawerActions() {

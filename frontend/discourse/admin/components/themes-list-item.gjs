@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -142,7 +142,7 @@ export default class ThemesListItem extends Component {
 
         {{#if this.displayComponents}}
           <div class="components-list">
-            <span class="components">{{htmlSafe this.childrenString}}</span>
+            <span class="components">{{trustHTML this.childrenString}}</span>
 
             {{#if this.displayHasMore}}
               <a

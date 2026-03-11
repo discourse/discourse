@@ -2,7 +2,7 @@ import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import AddTopicStatusClasses from "discourse/components/add-topic-status-classes";
 import AnonymousTopicFooterButtons from "discourse/components/anonymous-topic-footer-buttons";
@@ -174,7 +174,7 @@ export default <template>
                   {{on "click" @controller.handleTitleClick}}
                   class="fancy-title"
                 >
-                  {{htmlSafe @controller.model.fancyTitle~}}
+                  {{trustHTML @controller.model.fancyTitle~}}
                   {{~#if @controller.model.details.can_edit~}}
                     <span class="edit-topic__wrapper">
                       {{icon "pencil" class="edit-topic"}}
@@ -493,7 +493,7 @@ export default <template>
                 {{#if @controller.model.queued_posts_count}}
                   <div class="has-pending-posts">
                     <div>
-                      {{htmlSafe
+                      {{trustHTML
                         (i18n
                           "review.topic_has_pending"
                           count=@controller.model.queued_posts_count
@@ -631,7 +631,7 @@ export default <template>
       <div class="container">
         <ConditionalLoadingSpinner @condition={{@controller.noErrorYet}}>
           {{#if @controller.model.errorHtml}}
-            <div class="not-found">{{htmlSafe
+            <div class="not-found">{{trustHTML
                 @controller.model.errorHtml
               }}</div>
           {{else}}

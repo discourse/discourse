@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -38,7 +38,7 @@ export default class SolvedAcceptedAnswer extends Component {
       return "";
     }
 
-    return htmlSafe(this.acceptedAnswer.excerpt);
+    return trustHTML(this.acceptedAnswer.excerpt);
   }
 
   get showMarkedBy() {

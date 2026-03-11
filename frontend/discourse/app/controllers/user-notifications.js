@@ -3,7 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import RelativeDate from "discourse/components/relative-date";
@@ -68,7 +68,7 @@ export default class UserNotificationsController extends Controller {
   }
 
   get emptyStateBody() {
-    return htmlSafe(
+    return trustHTML(
       i18n("user.no_notifications_page_body", {
         preferencesUrl: getURL("/my/preferences/notifications"),
         icon: iconHTML("bell"),

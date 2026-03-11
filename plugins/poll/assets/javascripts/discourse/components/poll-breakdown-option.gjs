@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { propertyEqual } from "discourse/lib/computed";
 import loadChartJS from "discourse/lib/load-chart-js";
@@ -50,7 +50,7 @@ export default class PollBreakdownOption extends Component {
   get colorBackgroundStyle() {
     if (this.highlighted) {
       // TODO: Use CSS variables (#10341)
-      return htmlSafe("background: rgba(0, 0, 0, 0.1);");
+      return trustHTML("background: rgba(0, 0, 0, 0.1);");
     }
   }
 
@@ -60,7 +60,7 @@ export default class PollBreakdownOption extends Component {
       ? this.Chart?.helpers.getHoverColor(this.optionColors[this.index])
       : this.optionColors[this.index];
 
-    return htmlSafe(`background: ${color};`);
+    return trustHTML(`background: ${color};`);
   }
 
   <template>

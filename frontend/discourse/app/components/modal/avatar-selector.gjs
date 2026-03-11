@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AvatarUploader from "discourse/components/avatar-uploader";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -241,7 +241,7 @@ export default class AvatarSelectorModal extends Component {
                   "large"
                 }}
                 <span>
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "user.change_avatar.gravatar"
                       gravatarName=this.siteSettings.gravatar_name

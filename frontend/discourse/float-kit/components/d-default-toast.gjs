@@ -1,6 +1,6 @@
 import { concat, fn, hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -35,7 +35,7 @@ const DDefaultToast = <template>
         {{#if @data.message}}
           <div class="fk-d-default-toast__message">
             {{#if @data.isHtmlMessage}}
-              {{htmlSafe @data.message}}
+              {{trustHTML @data.message}}
             {{else}}
               {{@data.message}}
             {{/if}}

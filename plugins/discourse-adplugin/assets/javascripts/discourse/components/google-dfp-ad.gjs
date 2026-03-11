@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
@@ -297,14 +297,14 @@ export default class GoogleDfpAd extends AdComponent {
   @computed("width", "height")
   get adWrapperStyle() {
     if (this.width !== "fluid") {
-      return htmlSafe(`width: ${this.width}px; height: ${this.height}px;`);
+      return trustHTML(`width: ${this.width}px; height: ${this.height}px;`);
     }
   }
 
   @computed("width")
   get adTitleStyleMobile() {
     if (this.width !== "fluid") {
-      return htmlSafe(`width: ${this.width}px;`);
+      return trustHTML(`width: ${this.width}px;`);
     }
   }
 

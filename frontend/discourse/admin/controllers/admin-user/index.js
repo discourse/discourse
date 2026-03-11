@@ -3,7 +3,7 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -64,7 +64,7 @@ export default class AdminUserIndexController extends Controller {
   get automaticGroups() {
     return this.model.automaticGroups
       .map((group) => {
-        const name = htmlSafe(group.name);
+        const name = trustHTML(group.name);
         return `<a href="/g/${name}">${name}</a>`;
       })
       .join(", ");

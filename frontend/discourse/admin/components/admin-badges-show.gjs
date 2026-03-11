@@ -4,7 +4,7 @@ import { concat, fn, hash } from "@ember/helper";
 import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import BadgePreviewModal from "discourse/admin/components/modal/badge-preview";
 import Form from "discourse/components/form";
@@ -81,7 +81,7 @@ export default class AdminBadgesShow extends Component {
   }
 
   sanitizeDescription(text) {
-    return htmlSafe(sanitize(text));
+    return trustHTML(sanitize(text));
   }
 
   hasQuery(query) {

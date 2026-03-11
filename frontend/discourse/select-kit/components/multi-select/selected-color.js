@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import SelectedNameComponent from "discourse/select-kit/components/selected-name";
 
@@ -7,7 +7,7 @@ import SelectedNameComponent from "discourse/select-kit/components/selected-name
 export default class SelectedColor extends SelectedNameComponent {
   @computed("name")
   get footerContent() {
-    return htmlSafe(
+    return trustHTML(
       `<span class="color-preview" style="background:#${this.name}"></span>`
     );
   }

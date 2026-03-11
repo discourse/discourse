@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 import loadPluginFeatures from "./features";
 import MentionsParser from "./mentions-parser";
@@ -13,7 +13,7 @@ export function buildEngine(options, omitFromDefault) {
 
 // Use this to easily create an instance with proper options
 export function cook(text, options) {
-  return htmlSafe(buildEngine(options).cook(text));
+  return trustHTML(buildEngine(options).cook(text));
 }
 
 // Warm up the engine with a set of options and return a function

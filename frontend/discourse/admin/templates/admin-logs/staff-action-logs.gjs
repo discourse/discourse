@@ -1,7 +1,7 @@
 import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import StaffActions from "discourse/admin/components/staff-actions";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -176,7 +176,7 @@ export default <template>
                   }}</td>
                 <td class="col value details">
                   <div>
-                    {{htmlSafe item.formattedDetails}}
+                    {{trustHTML item.formattedDetails}}
                     {{#if item.useCustomModalForDetails}}
                       <a
                         href
@@ -198,7 +198,7 @@ export default <template>
                 </td>
                 <td class="col value context">
                   {{#if (fn @controller.showHtmlSafeContext item)}}
-                    {{htmlSafe item.context}}
+                    {{trustHTML item.context}}
                   {{else}}
                     {{item.context}}
                   {{/if}}

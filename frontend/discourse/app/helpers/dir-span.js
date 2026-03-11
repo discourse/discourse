@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { helperContext } from "discourse/lib/helpers";
 import { escapeExpression } from "discourse/lib/utilities";
 
@@ -15,5 +15,5 @@ export default function dirSpan(str, params = {}) {
     isHtmlSafe = params.htmlSafe === "true";
   }
   let text = isHtmlSafe ? str : escapeExpression(str);
-  return htmlSafe(setDir(text));
+  return trustHTML(setDir(text));
 }

@@ -7,7 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
@@ -299,7 +299,7 @@ export default class AgentEditor extends Component {
   toolTokenBarStyle(tools) {
     const total = this.totalToolTokens(tools);
     const percent = Math.min(100, (total / TOOL_TOKEN_BAR_MAX) * 100);
-    return htmlSafe(`width: ${percent}%`);
+    return trustHTML(`width: ${percent}%`);
   }
 
   @action

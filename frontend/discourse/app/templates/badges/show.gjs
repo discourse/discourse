@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import BadgeCard from "discourse/components/badge-card";
 import BadgeTitle from "discourse/components/badge-title";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -84,7 +84,7 @@ export default <template>
                 class="badge-info"
               >
                 <div class="granted-on">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n "badges.granted_on" date=(formatDate ub.granted_at))
                   }}
                 </div>
@@ -93,7 +93,7 @@ export default <template>
                   <a
                     class="post-link"
                     href="{{ub.topic.url}}/{{ub.post_number}}"
-                  >{{htmlSafe ub.topic.fancyTitle}}</a>
+                  >{{trustHTML ub.topic.fancyTitle}}</a>
                 {{/if}}
               </UserInfo>
             {{/each}}

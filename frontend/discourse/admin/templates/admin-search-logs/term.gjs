@@ -1,6 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import Chart from "discourse/admin/components/chart";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HighlightSearch from "discourse/components/highlight-search";
@@ -56,10 +56,10 @@ export default <template>
                 <TopicStatus @topic={{result.topic}} @disableActions={{true}} />
                 <span class="topic-title">
                   {{#if result.useTopicTitleHeadline}}
-                    {{htmlSafe result.topicTitleHeadline}}
+                    {{trustHTML result.topicTitleHeadline}}
                   {{else}}
                     <HighlightSearch @highlight={{@controller.q}}>
-                      {{htmlSafe result.topic.fancyTitle}}
+                      {{trustHTML result.topic.fancyTitle}}
                     </HighlightSearch>
                   {{/if}}
                 </span>
@@ -86,10 +86,10 @@ export default <template>
 
               {{#if result.blurb}}
                 {{#if @controller.siteSettings.use_pg_headlines_for_excerpt}}
-                  {{htmlSafe result.blurb}}
+                  {{trustHTML result.blurb}}
                 {{else}}
                   <HighlightSearch @highlight={{@controller.highlightQuery}}>
-                    {{htmlSafe result.blurb}}
+                    {{trustHTML result.blurb}}
                   </HighlightSearch>
                 {{/if}}
               {{/if}}
