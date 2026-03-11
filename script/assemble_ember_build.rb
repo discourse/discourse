@@ -124,7 +124,7 @@ def download_prebuild_assets!
   FileUtils.mv("#{DOWNLOAD_EXTRACT_DIR}/core", "#{EMBER_APP_DIR}/dist")
 
   FileUtils.rm_rf("#{EMBER_APP_DIR}/app/assets/generated")
-  FileUtils.mv("#{DOWNLOAD_EXTRACT_DIR}/plugins", "#{EMBER_APP_DIR}/app/assets/generated")
+  FileUtils.mv("#{DOWNLOAD_EXTRACT_DIR}/plugins", "./app/assets/generated")
 
   puts "Prebuilt assets downloaded and extracted successfully."
   true
