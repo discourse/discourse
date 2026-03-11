@@ -74,6 +74,24 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
   end
 
   describe "#generate" do
+    it "raises a generation error when preflight returns validation failures" do
+      Dir.mktmpdir do |tmpdir|
+        configure_output(tmpdir)
+
+        allow(Migrations::Database::Schema).to receive(:preflight).and_return(
+          Migrations::Database::Schema::PreflightResult.new(
+            resolved: nil,
+            errors: ["Table 'users': bad config"],
+          ),
+        )
+
+        expect { described_class.new(Migrations::Database::Schema).generate }.to raise_error(
+          Migrations::Database::Schema::GenerationError,
+          /Schema validation failed with 1 error/,
+        )
+      end
+    end
+
     it "generates SQL, model, and enum files" do
       Dir.mktmpdir do |tmpdir|
         paths = configure_output(tmpdir)
@@ -206,6 +224,24 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
         expect(regenerated).to include("# -- custom code --")
         expect(regenerated).to include("def self.create_for_file(path:)")
         expect(regenerated).to include("# -- end custom code --")
+      end
+    end
+
+    it "raises when an extended model contains invalid Ruby" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+
+        table = make_table("uploads", model_mode: :extended)
+        definition = Migrations::Database::Schema::Definition.new(tables: [table], enums: [])
+        stub_validation_and_resolution(definition)
+
+        FileUtils.mkdir_p(paths[:models])
+        File.write(File.join(paths[:models], "upload.rb"), "def broken(\n")
+
+        expect { described_class.new(Migrations::Database::Schema).generate }.to raise_error(
+          Migrations::Database::Schema::GenerationError,
+          /Failed to parse/,
+        )
       end
     end
 
