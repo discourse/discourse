@@ -44,6 +44,17 @@ module DiscoursePostEvent
           },
           unique_by: "idx_topic_custom_fields_topic_post_event_ends_at",
         )
+
+        TopicCustomField.upsert(
+          {
+            topic_id: self.event.post.topic_id,
+            name: TOPIC_POST_EVENT_ALL_DAY,
+            value: self.event.all_day || false,
+            created_at: Time.now,
+            updated_at: Time.now,
+          },
+          unique_by: "idx_topic_custom_fields_topic_post_event_all_day",
+        )
       end
     end
 

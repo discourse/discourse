@@ -52,6 +52,11 @@ module DiscoursePostEvent
           topic_id: self.post.topic_id,
           name: TOPIC_POST_EVENT_ENDS_AT,
         ).delete_all
+
+        TopicCustomField.where(
+          topic_id: self.post.topic_id,
+          name: TOPIC_POST_EVENT_ALL_DAY,
+        ).delete_all
       end
     end
 
