@@ -1,0 +1,11 @@
+en:
+  site_settings:
+    discourse_boosts_enabled: "Enable the Boosts feature, allowing users to add micro-reactions to posts."
+    discourse_boosts_max_per_user_per_post: "Maximum number of boosts a user can add to a single post."
+    discourse_boosts_max_per_post: "Maximum total number of boosts allowed on a single post."
+  discourse_boosts:
+    boost_too_long: "Boost must be 16 characters or fewer."
+    boost_blank: "Boost cannot be blank."
+    boost_limit_reached: "You have reached the maximum number of boosts for this post."
+    post_boost_limit_reached: "This post has reached the maximum number of boosts."
+    boost_own_post: "You cannot boost your own post."

@@ -1,0 +1,31 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_boosts: "Boosts"
+  js:
+    notifications:
+      titles:
+        boost: "Boost"
+    discourse_boosts:
+      boost_button_title: "Add a boost"
+      boost_input_placeholder: "Boost %{username}..."
+      cancel: "Cancel"
+      submit: "Boost"
+      delete_boost: "Remove boost"
+      boosts_title: "Boosts"
+      notification: "boosted your post"
+      notification_2_users: "%{username} and %{username2}"
+      notification_multiple_users:
+        one: "%{username} and %{count} other"
+        other: "%{username} and %{count} others"
+      notification_single_user_description:
+        one: "boosted your post %{count} time"
+        other: "boosted your post %{count} times"
+      user_option:
+        boost_notifications_level: "Boost notifications"
+        boost_notifications_levels:
+          all: "All boost notifications"
+          consolidated: "Consolidate boost notifications"
+          disabled: "Disable boost notifications"
