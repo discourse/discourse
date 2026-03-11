@@ -42,7 +42,6 @@ describe "Edit Category Moderation", type: :system do
     it "shows validation error when groups required but none selected" do
       category_page.visit_moderation(category)
       category_page.select_topic_approval_type("except_groups")
-      category_page.save_settings
 
       expect(category_page).to have_topic_approval_groups_error
     end
@@ -68,7 +67,7 @@ describe "Edit Category Moderation", type: :system do
 
     it "routes posts from non-group members through the review queue" do
       sign_in(regular_user)
-      visit "/c/#{category.slug}"
+      visit "/c/#{category.slug}/#{category.id}"
 
       find("#create-topic").click
       composer.fill_title("Approval test topic")
@@ -83,7 +82,7 @@ describe "Edit Category Moderation", type: :system do
     it "allows group members to post without approval" do
       Fabricate(:group_user, group: group, user: regular_user)
       sign_in(regular_user)
-      visit "/c/#{category.slug}"
+      visit "/c/#{category.slug}/#{category.id}"
 
       find("#create-topic").click
       composer.fill_title("Allowed topic")

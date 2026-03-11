@@ -181,6 +181,18 @@
               ]
             }
         },
+        "topic_approval_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "reply_approval_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
         "category_setting": {
           "type": "object",
           "additionalProperties": false,
@@ -194,17 +206,11 @@
                 "null"
               ]
             },
-            "require_reply_approval": {
-              "type": [
-                "boolean",
-                "null"
-              ]
+            "topic_approval_type": {
+              "type": "string"
             },
-            "require_topic_approval": {
-              "type": [
-                "boolean",
-                "null"
-              ]
+            "reply_approval_type": {
+              "type": "string"
             }
           }
         },

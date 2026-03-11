@@ -786,8 +786,7 @@ RSpec.describe PostsController do
       sign_in(post.user)
 
       category = Fabricate(:category)
-      category.require_topic_approval = true
-      category.save!
+      category.category_setting.update!(topic_approval_type: :all)
 
       put "/posts/#{post.id}.json",
           params: {

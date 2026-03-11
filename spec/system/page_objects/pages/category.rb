@@ -202,7 +202,10 @@ module PageObjects
 
       def select_topic_approval_groups(*group_names)
         chooser = PageObjects::Components::SelectKit.new(".topic-approval-groups .group-chooser")
-        group_names.each { |name| chooser.expand.select_row_by_name(name) }
+        group_names.each do |name|
+          chooser.expand
+          chooser.select_row_by_name(name)
+        end
         self
       end
 
