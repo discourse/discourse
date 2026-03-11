@@ -26,9 +26,21 @@ class Emoji
       "#{extras}|#{pattern}"
     end
 
-    # Convert emoji keys to sorted UTF-16 code unit sequences
+    VARIATION_SELECTOR = 0xFE0F
+
+    # Convert emoji keys to sorted UTF-16 code unit sequences.
+    # Also adds FE0F (variation selector) variants so the regex matches
+    # emoji typed with or without the variation selector (e.g. ☠ and ☠️).
     def build_sequences
-      Emoji.unicode_replacements.keys.map { |key| to_utf16_code_units(key.codepoints) }.sort.uniq
+      sequences = []
+      Emoji.unicode_replacements.each_key do |key|
+        codepoints = key.codepoints
+        seq = to_utf16_code_units(codepoints)
+        sequences << seq
+        sequences << seq + [VARIATION_SELECTOR] unless codepoints.last == VARIATION_SELECTOR
+      end
+      sequences.sort!.uniq!
+      sequences
     end
 
     # Convert Unicode codepoints to JavaScript UTF-16 code units (surrogate pairs for > 0xFFFF)
