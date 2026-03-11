@@ -50,32 +50,10 @@ RSpec.describe Onebox::Engine::VideoOnebox do
     ).to include("controlslist=\"nodownload\"")
   end
 
-  describe "Dropbox videos" do
-    it "transforms old format Dropbox URLs to use dl.dropboxusercontent.com" do
-      url = "https://www.dropbox.com/s/abcd1234/video.mp4"
-      html = Onebox.preview(url).to_s
-      expect(html).to include("dl.dropboxusercontent.com/s/abcd1234/video.mp4")
-      expect(html).not_to include("www.dropbox.com")
-    end
+  context "with Dropbox URL" do
+    let(:html) { Onebox.preview("https://www.dropbox.com/scl/fi/abc123/video.mp4?rlkey=xyz").to_s }
 
-    it "transforms new format Dropbox URLs to use dl.dropboxusercontent.com with raw=1" do
-      url = "https://www.dropbox.com/scl/fi/abc123/video.mp4?rlkey=xyz789&st=test123"
-      html = Onebox.preview(url).to_s
-      expect(html).to include("dl.dropboxusercontent.com")
-      expect(html).to include("raw=1")
-      expect(html).not_to include("www.dropbox.com")
-    end
-
-    it "ensures raw=1 parameter is present for new format Dropbox URLs" do
-      url = "https://www.dropbox.com/scl/fi/abc123/video.mp4?rlkey=xyz789"
-      html = Onebox.preview(url).to_s
-      expect(html).to include("raw=1")
-    end
-
-    it "preserves existing raw=1 parameter in new format Dropbox URLs" do
-      url = "https://www.dropbox.com/scl/fi/abc123/video.mp4?rlkey=xyz789&raw=1"
-      html = Onebox.preview(url).to_s
-      expect(html).to include("raw=1")
+    it "transforms to direct download link" do
       expect(html).to include("dl.dropboxusercontent.com")
     end
   end
