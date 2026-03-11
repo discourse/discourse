@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "rake"
-require "syntax_tree/rake_tasks"
-
 module Migrations::Database::Schema
   class EnumWriter
     def initialize(namespace, header)

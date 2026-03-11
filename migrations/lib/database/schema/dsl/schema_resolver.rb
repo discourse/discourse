@@ -84,17 +84,13 @@ module Migrations::Database::Schema::DSL
         all_names = db_columns.keys
         ignored = table_def.ignored_column_names.to_set
         globally_ignored = @conventions ? @conventions.ignored_columns.to_set : Set.new
-        plugin_ignored = plugin_ignored_columns(table_def)
+        plugin_ignored = @scope.plugin_ignored_column_names(table_def)
         forced = table_def.forced_column_names&.to_set || Set.new
         all_names.reject do |n|
           ignored.include?(n) ||
             ((globally_ignored.include?(n) || plugin_ignored.include?(n)) && forced.exclude?(n))
         end
       end
-    end
-
-    def plugin_ignored_columns(table_def)
-      @scope.plugin_ignored_column_names(table_def)
     end
 
     def resolve_column(
@@ -132,6 +128,8 @@ module Migrations::Database::Schema::DSL
         elsif convention_required == false
           true
         else
+          # Columns with defaults are treated as nullable because converters
+          # don't need to supply a value — the DB default will apply.
           db_col.null || db_col.default.present?
         end
 
@@ -226,17 +224,7 @@ module Migrations::Database::Schema::DSL
 
     def normalize_datatype(type)
       type = type.to_sym
-
-      case type
-      when :binary
-        :blob
-      when :string, :enum, :uuid
-        :text
-      when :jsonb
-        :json
-      else
-        type
-      end
+      Migrations::Database::Schema::Helpers::DATATYPE_ALIASES.fetch(type, type)
     end
   end
 end

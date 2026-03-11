@@ -256,23 +256,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def known_type_override?(type)
-      %w[
-        binary
-        blob
-        boolean
-        date
-        datetime
-        enum
-        float
-        inet
-        integer
-        json
-        jsonb
-        numeric
-        string
-        text
-        uuid
-      ].include?(type)
+      Migrations::Database::Schema::Helpers::VALID_TYPE_OVERRIDES.include?(type)
     end
   end
 end

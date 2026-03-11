@@ -2,6 +2,22 @@
 
 module Migrations::Database::Schema
   module Helpers
+    # Canonical datatypes after normalization (used in resolved schema validation)
+    VALID_DATATYPES = %i[blob boolean date datetime float inet integer json numeric text].freeze
+
+    # Pre-normalization aliases that map to a canonical datatype
+    DATATYPE_ALIASES = {
+      binary: :blob,
+      string: :text,
+      enum: :text,
+      uuid: :text,
+      jsonb: :json,
+    }.freeze
+
+    # All types accepted as DSL type overrides (pre-normalization)
+    VALID_TYPE_OVERRIDES =
+      (VALID_DATATYPES.map(&:to_s) + DATATYPE_ALIASES.keys.map(&:to_s)).to_set.freeze
+
     SQLITE_KEYWORDS = %w[
       abort
       action

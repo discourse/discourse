@@ -18,9 +18,7 @@ module Migrations
         exit(1)
       end
 
-      private
-
-      def self.handle_unknown_class_names_error(error)
+      private_class_method def self.handle_unknown_class_names_error(error)
         all_suggestions_found = true
 
         error.missing_names.each do |missing_name|

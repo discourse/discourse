@@ -27,7 +27,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def incomplete?
-      @data["incomplete"] || failed_plugins.any?
+      failed_plugins.any?
     end
 
     def regenerate!

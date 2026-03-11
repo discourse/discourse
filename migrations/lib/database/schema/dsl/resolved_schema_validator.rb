@@ -2,8 +2,6 @@
 
 module Migrations::Database::Schema::DSL
   class ResolvedSchemaValidator
-    VALID_DATATYPES = %i[blob boolean date datetime float inet integer json numeric text].freeze
-
     def initialize(resolved_schema)
       @schema = resolved_schema
       @errors = []
@@ -16,10 +14,6 @@ module Migrations::Database::Schema::DSL
       @schema.enums.each { |enum| validate_enum(enum) }
 
       @errors
-    end
-
-    def valid?
-      validate.empty?
     end
 
     private
@@ -35,7 +29,7 @@ module Migrations::Database::Schema::DSL
 
     def validate_columns(table)
       table.columns.each do |column|
-        if VALID_DATATYPES.exclude?(column.datatype)
+        if Migrations::Database::Schema::Helpers::VALID_DATATYPES.exclude?(column.datatype)
           @errors << "Table '#{table.name}': column '#{column.name}' has invalid datatype '#{column.datatype}'"
         end
 
@@ -62,8 +56,6 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_indexes(table, column_names)
-      return unless table.indexes
-
       table.indexes.each do |index|
         missing = index.column_names.reject { |col| column_names.include?(col) }
         if missing.any?
@@ -80,8 +72,6 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_constraints(table)
-      return unless table.constraints
-
       table.constraints.each do |constraint|
         @errors << "Table '#{table.name}': constraint has empty name" if constraint.name.blank?
 
