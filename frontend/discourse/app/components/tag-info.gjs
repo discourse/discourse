@@ -289,7 +289,7 @@ export default class TagInfo extends Component {
                   "input"
                   (withEventValue (fn (mut this.newTagDescription)))
                 }}
-                value={{this.descriptionWithNewLines}}
+                @value={{this.descriptionWithNewLines}}
                 placeholder={{i18n "tagging.description"}}
                 maxlength={{1000}}
                 autofocus="true"
