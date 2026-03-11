@@ -267,9 +267,9 @@ class PostCreator
 
   def trigger_after_events
     unless @opts[:topic_id]
-      DiscourseEvent.trigger_isolated(:topic_created, @post.topic, @opts, @user)
+      DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user, continue_on_error: true)
     end
-    DiscourseEvent.trigger_isolated(:post_created, @post, @opts, @user)
+    DiscourseEvent.trigger(:post_created, @post, @opts, @user, continue_on_error: true)
   end
 
   def self.track_post_stats

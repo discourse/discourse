@@ -75,7 +75,7 @@ RSpec.describe DiscourseEvent do
     end
   end
 
-  describe ".trigger_isolated" do
+  describe ".trigger with continue_on_error" do
     let(:sprigatito) { OpenStruct.new(name: "Sprigatito", type: "Grass") }
 
     it "continues executing subsequent handlers when one raises" do
@@ -87,7 +87,7 @@ RSpec.describe DiscourseEvent do
       DiscourseEvent.on(:evolve, &meowth_handler)
       DiscourseEvent.on(:evolve, &evolve_handler)
 
-      DiscourseEvent.trigger_isolated(:evolve, sprigatito)
+      DiscourseEvent.trigger(:evolve, sprigatito, continue_on_error: true)
 
       expect(sprigatito.name).to eq("Ditto")
       expect(sprigatito.type).to eq("Grass/Dark")

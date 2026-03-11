@@ -8,14 +8,11 @@ class DiscourseEvent
     @events ||= Hash.new { |hash, key| hash[key] = Set.new }
   end
 
-  def self.trigger(event_name, *args, **kwargs)
-    events[event_name].each { |event| event.call(*args, **kwargs) }
-  end
-
-  def self.trigger_isolated(event_name, *args, **kwargs)
+  def self.trigger(event_name, *args, continue_on_error: false, **kwargs)
     events[event_name].each do |event|
       event.call(*args, **kwargs)
     rescue => e
+      raise unless continue_on_error
       Discourse.warn_exception(e, message: "on(:#{event_name}) handler error")
     end
   end
