@@ -18,7 +18,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Loader do
       expect(conventions.effective_name("id")).to eq("original_id")
 
       ignored = Migrations::Database::Schema.ignored_tables
-      expect(ignored.ignored?(:schema_migrations)).to be true
+      expect(ignored.table_names).to include("schema_migrations")
 
       enums = Migrations::Database::Schema.enums
       expect(enums["visibility"]).to be_a(Migrations::Database::Schema::DSL::EnumDef)

@@ -69,7 +69,7 @@ module Migrations::Database::Schema::DSL
 
     private
 
-    def yield_columns_from_ignored_plugins(manifest, ignored, table_name)
+    def yield_columns_from_ignored_plugins(manifest, ignored, table_name, &)
       ignored.ignored_plugin_names.each do |plugin_name|
         manifest
           .columns_for_plugin(plugin_name, table: table_name)
@@ -77,7 +77,7 @@ module Migrations::Database::Schema::DSL
       end
     end
 
-    def yield_columns_from_table_plugins(manifest, ignored, table_def, table_name)
+    def yield_columns_from_table_plugins(manifest, ignored, table_def, table_name, &)
       return if !table_def.ignore_plugin_columns?
 
       plugin_filter = table_def.ignore_plugin_names&.to_set

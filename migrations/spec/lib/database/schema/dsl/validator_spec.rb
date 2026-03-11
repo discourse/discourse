@@ -384,10 +384,10 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
           },
         )
 
-      stub_database(connection, db_tables: %i[user_archive], table_columns: {})
+      stub_database(connection, db_tables: [], table_columns: {})
 
       errors = described_class.new(schema).validate
-      expect(errors).to include(match(/source table 'users' does not exist/))
+      expect(errors).to contain_exactly(match(/source table 'users' does not exist in database/))
     end
 
     it "does not report copy_structure_from source tables as unconfigured" do

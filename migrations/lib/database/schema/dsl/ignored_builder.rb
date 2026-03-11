@@ -10,10 +10,6 @@ module Migrations::Database::Schema::DSL
         entries.map(&:name).to_set
       end
 
-      def ignored?(name)
-        table_names.include?(name.to_s)
-      end
-
       def reason_for(name)
         entries.find { |e| e.name == name.to_s }&.reason
       end

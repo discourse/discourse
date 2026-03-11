@@ -11,9 +11,9 @@ RSpec.describe Migrations::Database::Schema::DSL::IgnoredBuilder do
       end
 
       ignored = Migrations::Database::Schema.ignored_tables
-      expect(ignored.ignored?(:schema_migrations)).to be true
-      expect(ignored.ignored?(:ar_internal_metadata)).to be true
-      expect(ignored.ignored?(:users)).to be false
+      expect(ignored.table_names).to include("schema_migrations")
+      expect(ignored.table_names).to include("ar_internal_metadata")
+      expect(ignored.table_names).not_to include("users")
     end
 
     it "supports batch ignore with shared reason" do

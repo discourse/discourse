@@ -119,8 +119,6 @@ module Migrations::CLI
       load_rails!
 
       database = selected_database
-      Schema.ensure_ready!(database:)
-
       result = Schema.diff(database:)
       display_diff(result, verbose: options[:verbose])
     end
@@ -130,8 +128,6 @@ module Migrations::CLI
       load_rails!
 
       database = selected_database
-      Schema.ensure_ready!(database:)
-
       path = Schema.add_table(table_name, database:)
       puts "✓ Created #{path}".green
       puts

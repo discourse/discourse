@@ -203,9 +203,7 @@ module Migrations::Database
         puts "Detected #{manifest.table_count} plugin tables, #{manifest.column_count} plugin columns."
       end
     rescue StandardError => e
-      message = "Skipped — #{e.message} (use 'schema refresh-plugins --force' to retry)"
-      puts message
-      raise ConfigError, message
+      raise ConfigError, "Skipped — #{e.message} (use 'schema refresh-plugins --force' to retry)"
     end
 
     def self.available_databases
