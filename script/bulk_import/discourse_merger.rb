@@ -366,12 +366,10 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       next unless category_id
       category = Category.find_by_id(category_id)
       next if category.name == "Uncategorized"
-      category_settings = CategorySetting.find_by(category_id: category_id)
+      category_settings = category.category_setting
       next unless category_settings
-      category_settings["require_topic_approval"] = row["require_topic_approval"]
-      category_settings["require_reply_approval"] = row["require_reply_approval"]
-      category_settings["num_auto_bump_daily"] = row["num_auto_bump_daily"]
-      category_settings["auto_bump_cooldown_days"] = row["auto_bump_cooldown_days"]
+      category_settings.num_auto_bump_daily = row["num_auto_bump_daily"]
+      category_settings.auto_bump_cooldown_days = row["auto_bump_cooldown_days"]
       category_settings.save!
     end
   end
@@ -528,7 +526,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       )
     end
 
-    [CategoryFeaturedTopic, CategoryFormTemplate, CategorySearchData].each { |k| copy_model(k) }
+    [
+      CategoryFeaturedTopic,
+      CategoryFormTemplate,
+      CategoryPostingReviewGroup,
+      CategorySearchData,
+    ].each { |k| copy_model(k) }
 
     # Copy custom fields
     [CategoryCustomField].each do |k|
