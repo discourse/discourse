@@ -78,8 +78,15 @@ module ReleaseUtils
     end
 
     def next_revision
-      raise "next_revision can only be called on development versions" unless development?
       self.class.new("#{major}.#{minor}.#{patch}-#{pre}.#{revision.to_i + 1}")
+    end
+
+    def release_version
+      self.class.new("#{major}.#{minor}.#{patch}")
+    end
+
+    def next_patch
+      self.class.new("#{major}.#{minor}.#{patch + 1}")
     end
 
     def to_s
