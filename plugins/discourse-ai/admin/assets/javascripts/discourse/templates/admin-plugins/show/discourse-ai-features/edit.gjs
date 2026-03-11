@@ -30,9 +30,23 @@ export default <template>
                   }}
                   @format="large"
                   @validation={{@controller.getValidationFor setting}}
-                  as |field|
+                  @type={{if
+                    (eq setting.type "bool")
+                    "checkbox"
+                    (if
+                      (eq setting.type "integer")
+                      "input-number"
+                      (if
+                        (eq setting.type "enum")
+                        "select"
+                        (if (eq setting.type "list") "custom" "input-text")
+                      )
+                    )
+                  }}
+                  as |Control field|
                 >
                   <AiFeatureSettingField
+                    @Control={{Control}}
                     @setting={{setting}}
                     @field={{field}}
                   />

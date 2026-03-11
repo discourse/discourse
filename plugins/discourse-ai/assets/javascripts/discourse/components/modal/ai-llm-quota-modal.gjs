@@ -91,16 +91,17 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.group"}}
             @validation="required"
             @format="large"
-            as |field|
+            @type="custom"
+            as |Control field|
           >
-            <field.Custom>
+            <Control>
               <GroupChooser
                 @value={{data.group_id}}
                 @content={{this.availableGroups}}
                 @onChange={{fn this.setGroupId field}}
                 @options={{hash maximum=1}}
               />
-            </field.Custom>
+            </Control>
           </form.Field>
 
           <form.Field
@@ -108,9 +109,10 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.max_tokens"}}
             @tooltip={{i18n "discourse_ai.llms.quotas.max_tokens_help"}}
             @format="large"
-            as |field|
+            @type="input-number"
+            as |Control|
           >
-            <field.Input @type="number" min="1" />
+            <Control min="1" />
           </form.Field>
 
           <form.Field
@@ -118,9 +120,10 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.max_usages"}}
             @tooltip={{i18n "discourse_ai.llms.quotas.max_usages_help"}}
             @format="large"
-            as |field|
+            @type="input-number"
+            as |Control|
           >
-            <field.Input @type="number" min="1" />
+            <Control min="1" />
           </form.Field>
 
           <form.Field
@@ -128,14 +131,15 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.duration"}}
             @validation="required"
             @format="large"
-            as |field|
+            @type="custom"
+            as |Control field|
           >
-            <field.Custom>
+            <Control>
               <DurationSelector
                 @value={{data.duration_seconds}}
                 @onChange={{field.set}}
               />
-            </field.Custom>
+            </Control>
           </form.Field>
 
           <form.Submit

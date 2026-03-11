@@ -26,8 +26,13 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
         <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
           <form.Collection @name="foo" as |collection|>
             <collection.Object as |object|>
-              <object.Field @name="bar" @title="Bar" as |field|>
-                <field.Input />
+              <object.Field
+                @type="input-text"
+                @name="bar"
+                @title="Bar"
+                as |Control|
+              >
+                <Control />
               </object.Field>
             </collection.Object>
           </form.Collection>
@@ -42,8 +47,8 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
       <template>
         <Form @data={{hash foo=(array 1 2)}} as |form|>
           <form.Collection @name="foo" as |collection|>
-            <collection.Field @title="Bar" as |field|>
-              <field.Input />
+            <collection.Field @type="input-text" @title="Bar" as |Control|>
+              <Control />
             </collection.Field>
           </form.Collection>
         </Form>
@@ -60,8 +65,13 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
         <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
           <form.Collection @name="foo" as |collection index|>
             <collection.Object as |object|>
-              <object.Field @name="bar" @title="Bar" as |field|>
-                <field.Input />
+              <object.Field
+                @type="input-text"
+                @name="bar"
+                @title="Bar"
+                as |Control|
+              >
+                <Control />
               </object.Field>
 
               <form.Button
@@ -94,8 +104,13 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
         >
           <form.Collection @name="foo" as |collection index|>
             <collection.Object @name="bar" as |object|>
-              <object.Field @name="baz" @title="Baz" as |field|>
-                <field.Input />
+              <object.Field
+                @type="input-text"
+                @name="baz"
+                @title="Baz"
+                as |Control|
+              >
+                <Control />
               </object.Field>
 
               <form.Button
@@ -138,8 +153,13 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
                 <third.Object @name="three" as |fourth|>
                   <fourth.Collection as |fifth thirdIndex|>
                     <fifth.Object as |sixth|>
-                      <sixth.Field @name="foo" @title="Foo" as |field|>
-                        <field.Input />
+                      <sixth.Field
+                        @type="input-text"
+                        @name="foo"
+                        @title="Foo"
+                        as |Control|
+                      >
+                        <Control />
                       </sixth.Field>
                     </fifth.Object>
 
@@ -181,8 +201,8 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
       <template>
         <Form @data={{hash foo=(array)}} as |form|>
           <form.Collection @name="foo" @tagName="ul" as |collection|>
-            <collection.Field @title="Bar" as |field|>
-              <field.Input />
+            <collection.Field @type="input-text" @title="Bar" as |Control|>
+              <Control />
             </collection.Field>
           </form.Collection>
         </Form>
@@ -209,8 +229,8 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
           as |form|
         >
           <form.Collection @name="animals" as |collection|>
-            <collection.Field @title="cat" as |field|>
-              <field.Input />
+            <collection.Field @type="input-text" @title="cat" as |Control|>
+              <Control />
             </collection.Field>
           </form.Collection>
           <form.Submit />

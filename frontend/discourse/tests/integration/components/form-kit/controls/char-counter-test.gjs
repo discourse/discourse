@@ -17,12 +17,13 @@ module(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
             <form.Field
+              @type="input-text"
               @name="foo"
               @title="Foo"
               @validation="length:0,5"
-              as |field|
+              as |Control|
             >
-              <field.Input />
+              <Control />
             </form.Field>
           </Form>
         </template>

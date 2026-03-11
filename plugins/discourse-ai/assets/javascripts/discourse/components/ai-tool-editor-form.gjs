@@ -241,9 +241,10 @@ export default class AiToolEditorForm extends Component {
         @validation="required|length:1,100"
         @format="large"
         @tooltip={{i18n "discourse_ai.tools.name_help"}}
-        as |field|
+        @type="input-text"
+        as |Control|
       >
-        <field.Input class="ai-tool-editor__name" />
+        <Control class="ai-tool-editor__name" />
       </form.Field>
 
       {{! TOOL NAME }}
@@ -253,9 +254,10 @@ export default class AiToolEditorForm extends Component {
         @validation="required|length:1,100"
         @format="large"
         @tooltip={{i18n "discourse_ai.tools.tool_name_help"}}
-        as |field|
+        @type="input-text"
+        as |Control|
       >
-        <field.Input class="ai-tool-editor__tool_name" />
+        <Control class="ai-tool-editor__tool_name" />
       </form.Field>
 
       {{! DESCRIPTION }}
@@ -265,9 +267,10 @@ export default class AiToolEditorForm extends Component {
         @validation="required|length:1,1000"
         @format="full"
         @tooltip={{i18n "discourse_ai.tools.description_help"}}
-        as |field|
+        @type="textarea"
+        as |Control|
       >
-        <field.Textarea
+        <Control
           @height={{60}}
           class="ai-tool-editor__description"
           placeholder={{i18n "discourse_ai.tools.description_help"}}
@@ -281,9 +284,10 @@ export default class AiToolEditorForm extends Component {
         @validation="required|length:1,255"
         @format="large"
         @tooltip={{i18n "discourse_ai.tools.summary_help"}}
-        as |field|
+        @type="input-text"
+        as |Control|
       >
-        <field.Input class="ai-tool-editor__summary" />
+        <Control class="ai-tool-editor__summary" />
       </form.Field>
 
       {{! PARAMETERS }}
@@ -296,9 +300,10 @@ export default class AiToolEditorForm extends Component {
                 @title={{i18n "discourse_ai.tools.parameter_name"}}
                 @validation="required|length:1,100"
                 @format="full"
-                as |field|
+                @type="input-text"
+                as |Control|
               >
-                <field.Input />
+                <Control />
               </collection.Field>
             </row.Col>
 
@@ -308,15 +313,16 @@ export default class AiToolEditorForm extends Component {
                 @title={{i18n "discourse_ai.tools.parameter_type"}}
                 @validation="required"
                 @format="full"
-                as |field|
+                @type="select"
+                as |Control|
               >
-                <field.Select as |select|>
+                <Control as |select|>
                   {{#each this.PARAMETER_TYPES as |type|}}
                     <select.Option
                       @value={{type.id}}
                     >{{type.name}}</select.Option>
                   {{/each}}
-                </field.Select>
+                </Control>
               </collection.Field>
             </row.Col>
 
@@ -326,15 +332,16 @@ export default class AiToolEditorForm extends Component {
                   @name="item_type"
                   @title={{i18n "discourse_ai.tools.parameter_item_type"}}
                   @format="full"
-                  as |field|
+                  @type="select"
+                  as |Control|
                 >
-                  <field.Select as |select|>
+                  <Control as |select|>
                     {{#each this.ITEM_TYPES as |type|}}
                       <select.Option
                         @value={{type.id}}
                       >{{type.name}}</select.Option>
                     {{/each}}
-                  </field.Select>
+                  </Control>
                 </collection.Field>
               </row.Col>
             {{/if}}
@@ -347,9 +354,10 @@ export default class AiToolEditorForm extends Component {
                 @title={{i18n "discourse_ai.tools.parameter_description"}}
                 @validation="required|length:1,1000"
                 @format="full"
-                as |field|
+                @type="input-text"
+                as |Control|
               >
-                <field.Input class="ai-tool-editor__parameter-description" />
+                <Control class="ai-tool-editor__parameter-description" />
               </collection.Field>
             </row.Col>
           </form.Row>
@@ -359,9 +367,10 @@ export default class AiToolEditorForm extends Component {
               <collection.Field
                 @name="required"
                 @title={{i18n "discourse_ai.tools.parameter_required"}}
-                as |field|
+                @type="checkbox"
+                as |Control|
               >
-                <field.Checkbox />
+                <Control />
               </collection.Field>
             </row.Col>
 
@@ -370,9 +379,10 @@ export default class AiToolEditorForm extends Component {
                 @name="isEnum"
                 @title={{i18n "discourse_ai.tools.parameter_enum"}}
                 @onSet={{this.toggleIsEnum}}
-                as |field|
+                @type="checkbox"
+                as |Control|
               >
-                <field.Checkbox />
+                <Control />
               </collection.Field>
             </row.Col>
 
@@ -383,9 +393,10 @@ export default class AiToolEditorForm extends Component {
                     <child.Field
                       @title={{i18n "discourse_ai.tools.enum_value"}}
                       @validation="required"
-                      as |field|
+                      @type="input-text"
+                      as |Control|
                     >
-                      <field.Input />
+                      <Control />
 
                       {{#if
                         (and
@@ -453,9 +464,10 @@ export default class AiToolEditorForm extends Component {
                 @validation="required|length:1,100"
                 @format="full"
                 @tooltip={{i18n "discourse_ai.tools.secret_alias_help"}}
-                as |field|
+                @type="input-text"
+                as |Control|
               >
-                <field.Input />
+                <Control />
               </collection.Field>
             </row.Col>
 
@@ -464,15 +476,16 @@ export default class AiToolEditorForm extends Component {
                 @name="ai_secret_id"
                 @title={{i18n "discourse_ai.tools.secret_credential"}}
                 @format="full"
-                as |field|
+                @type="custom"
+                as |Control field|
               >
-                <field.Custom>
+                <Control>
                   <AiSecretSelector
                     @value={{field.value}}
                     @secrets={{this.secretOptions}}
                     @onChange={{field.set}}
                   />
-                </field.Custom>
+                </Control>
               </collection.Field>
             </row.Col>
           </form.Row>
@@ -507,9 +520,10 @@ export default class AiToolEditorForm extends Component {
         @title={{i18n "discourse_ai.tools.script"}}
         @validation="required|length:1,100000"
         @format="full"
-        as |field|
+        @type="code"
+        as |Control|
       >
-        <field.Code @lang="javascript" @height={{600}} />
+        <Control @lang="javascript" @height={{600}} />
       </form.Field>
 
       {{! UPLOADS }}
@@ -519,9 +533,10 @@ export default class AiToolEditorForm extends Component {
           @title={{i18n "discourse_ai.rag.uploads.title"}}
           @tooltip={{this.ragUploadsDescription}}
           @format="full"
-          as |field|
+          @type="custom"
+          as |Control|
         >
-          <field.Custom>
+          <Control>
             <RagUploader
               @target={{@editingModel}}
               @updateUploads={{fn this.updateUploads form.addItemToCollection}}
@@ -534,7 +549,7 @@ export default class AiToolEditorForm extends Component {
               @llms={{@llms}}
               @allowImages={{@settings.rag_images_enabled}}
             />
-          </field.Custom>
+          </Control>
         </form.Field>
       {{/if}}
 

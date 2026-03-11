@@ -146,15 +146,16 @@ export default class AdminUserFieldsForm extends Component {
         @title={{i18n "admin.user_fields.type"}}
         @format="large"
         @validation="required"
-        as |field|
+        @type="select"
+        as |Control|
       >
-        <field.Select as |select|>
+        <Control as |select|>
           {{#each this.fieldTypes as |fieldType|}}
             <select.Option
               @value={{fieldType.id}}
             >{{fieldType.name}}</select.Option>
           {{/each}}
-        </field.Select>
+        </Control>
       </form.Field>
 
       <form.Field
@@ -162,9 +163,10 @@ export default class AdminUserFieldsForm extends Component {
         @title={{i18n "admin.user_fields.name"}}
         @format="large"
         @validation="required"
-        as |field|
+        @type="input-text"
+        as |Control|
       >
-        <field.Input class="user-field-name" maxlength="255" />
+        <Control class="user-field-name" maxlength="255" />
       </form.Field>
 
       <form.Field
@@ -172,9 +174,10 @@ export default class AdminUserFieldsForm extends Component {
         @title={{i18n "admin.user_fields.description"}}
         @format="large"
         @validation="required"
-        as |field|
+        @type="input-text"
+        as |Control|
       >
-        <field.Input class="user-field-desc" maxlength="1000" />
+        <Control class="user-field-desc" maxlength="1000" />
       </form.Field>
 
       {{#if
@@ -188,15 +191,16 @@ export default class AdminUserFieldsForm extends Component {
           @title={{i18n "admin.user_fields.options"}}
           @format="large"
           @validation="required"
-          as |field|
+          @type="custom"
+          as |Control field|
         >
-          <field.Custom>
+          <Control>
             <ValueList
               @values={{transientData.options}}
               @inputType="array"
               @onChange={{field.set}}
             />
-          </field.Custom>
+          </Control>
         </form.Field>
       {{/if}}
 
@@ -206,9 +210,10 @@ export default class AdminUserFieldsForm extends Component {
         @validation="required"
         @onSet={{this.setRequirement}}
         @format="full"
-        as |field|
+        @type="radio-group"
+        as |Control|
       >
-        <field.RadioGroup as |radioGroup|>
+        <Control as |radioGroup|>
           <radioGroup.Radio @value="optional">
             {{i18n "admin.user_fields.requirement.optional.title"}}
           </radioGroup.Radio>
@@ -224,7 +229,7 @@ export default class AdminUserFieldsForm extends Component {
                 "admin.user_fields.requirement.on_signup.description"
               }}</radio.Description>
           </radioGroup.Radio>
-        </field.RadioGroup>
+        </Control>
       </form.Field>
 
       <div class="user-field-preferences">
@@ -237,43 +242,46 @@ export default class AdminUserFieldsForm extends Component {
             @showTitle={{false}}
             @onSet={{this.setEditable}}
             @title={{i18n "admin.user_fields.editable.title"}}
-            as |field|
+            @type="checkbox"
+            as |Control|
           >
-            <field.Checkbox disabled={{this.editableDisabled}} />
+            <Control disabled={{this.editableDisabled}} />
           </group.Field>
           <group.Field
             @name="show_on_profile"
             @showTitle={{false}}
             @title={{i18n "admin.user_fields.show_on_profile.title"}}
-            as |field|
+            @type="checkbox"
+            as |Control|
           >
-            <field.Checkbox />
+            <Control />
           </group.Field>
           <group.Field
             @name="show_on_user_card"
             @showTitle={{false}}
             @title={{i18n "admin.user_fields.show_on_user_card.title"}}
-            as |field|
+            @type="checkbox"
+            as |Control|
           >
-            <field.Checkbox />
+            <Control />
           </group.Field>
           <group.Field
             @name="searchable"
             @showTitle={{false}}
             @title={{i18n "admin.user_fields.searchable.title"}}
-            as |field|
+            @type="checkbox"
+            as |Control|
           >
-            <field.Checkbox />
+            <Control />
           </group.Field>
           <group.Field
             @name="show_on_signup"
             @showTitle={{false}}
             @title={{i18n "admin.user_fields.show_on_signup.title"}}
-            as |field|
+            @type="checkbox"
+            as |Control|
           >
-            <field.Checkbox
-              disabled={{this.showOnSignupDisabled transientData}}
-            />
+            <Control disabled={{this.showOnSignupDisabled transientData}} />
           </group.Field>
         </form.CheckboxGroup>
       </div>

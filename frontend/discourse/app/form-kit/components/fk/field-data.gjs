@@ -9,9 +9,7 @@ import uniqueId from "discourse/helpers/unique-id";
  * Represents a field in a form with validation, registration, and field data management capabilities.
  */
 export default class FKFieldData extends Component {
-  // Set by `FKBaseControl` and its subclasses
-  // eslint-disable-next-line discourse/no-unnecessary-tracked
-  @tracked type;
+  @tracked controlWidth = "auto";
 
   /**
    * Unique identifier for the field.
@@ -24,6 +22,10 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   errorId = uniqueId();
+
+  // Set by legacy controls in their constructor (during render),
+  // read by the applyControlType modifier (post-render)
+  _legacyControlType;
 
   /**
    * Initializes the FKFieldData component.
@@ -85,6 +87,18 @@ export default class FKFieldData extends Component {
    */
   get title() {
     return this.args.title;
+  }
+
+  get hasExplicitType() {
+    return this.args.type !== undefined;
+  }
+
+  get type() {
+    return this.args.type ?? this._legacyControlType;
+  }
+
+  set type(value) {
+    this._legacyControlType = value;
   }
 
   /**

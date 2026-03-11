@@ -106,9 +106,10 @@ export default class AiSecretEditorForm extends Component {
         @title={{i18n "discourse_ai.secrets.name"}}
         @validation="required|length:1,100"
         @format="large"
-        as |field|
+        @type="input-text"
+        as |Control|
       >
-        <field.Input />
+        <Control />
       </form.Field>
 
       <form.Field
@@ -116,9 +117,10 @@ export default class AiSecretEditorForm extends Component {
         @title={{i18n "discourse_ai.secrets.secret"}}
         @validation="required"
         @format="large"
-        as |field|
+        @type="password"
+        as |Control|
       >
-        <field.Password autocomplete="off" />
+        <Control autocomplete="off" />
       </form.Field>
 
       <form.Actions>

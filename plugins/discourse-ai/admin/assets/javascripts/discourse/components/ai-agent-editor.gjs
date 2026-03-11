@@ -409,9 +409,10 @@ export default class AgentEditor extends Component {
           @validation="required|length:1,100"
           @disabled={{data.system}}
           @format="large"
-          as |field|
+          @type="input-text"
+          as |Control|
         >
-          <field.Input />
+          <Control />
         </form.Field>
 
         <form.Field
@@ -420,9 +421,10 @@ export default class AgentEditor extends Component {
           @validation="required|length:1,100"
           @disabled={{data.system}}
           @format="large"
-          as |field|
+          @type="textarea"
+          as |Control|
         >
-          <field.Textarea />
+          <Control />
         </form.Field>
 
         <form.Field
@@ -431,9 +433,10 @@ export default class AgentEditor extends Component {
           @validation="required|length:1,100000"
           @disabled={{data.system}}
           @format="large"
-          as |field|
+          @type="textarea"
+          as |Control|
         >
-          <field.Textarea />
+          <Control />
         </form.Field>
 
         <AiAgentResponseFormatEditor @form={{form}} @data={{data}} />
@@ -443,31 +446,33 @@ export default class AgentEditor extends Component {
           @title={{i18n "discourse_ai.ai_agent.default_llm"}}
           @tooltip={{i18n "discourse_ai.ai_agent.default_llm_help"}}
           @format="large"
-          as |field|
+          @type="custom"
+          as |Control field|
         >
-          <field.Custom>
+          <Control>
             <AiLlmSelector
               @value={{field.value}}
               @llms={{@agents.resultSetMeta.llms}}
               @onChange={{field.set}}
               class="ai-agent-editor__llms"
             />
-          </field.Custom>
+          </Control>
         </form.Field>
 
         <form.Field
           @name="allowed_group_ids"
           @title={{i18n "discourse_ai.ai_agent.allowed_groups"}}
           @format="large"
-          as |field|
+          @type="custom"
+          as |Control field|
         >
-          <field.Custom>
+          <Control>
             <GroupChooser
               @value={{data.allowed_group_ids}}
               @content={{this.allGroups}}
               @onChange={{field.set}}
             />
-          </field.Custom>
+          </Control>
         </form.Field>
 
         <form.Field
@@ -476,9 +481,10 @@ export default class AgentEditor extends Component {
           @tooltip={{i18n "discourse_ai.ai_agent.vision_enabled_help"}}
           @showTitle={{false}}
           @format="large"
-          as |field|
+          @type="checkbox"
+          as |Control|
         >
-          <field.Checkbox />
+          <Control />
         </form.Field>
 
         {{#if data.vision_enabled}}
@@ -487,15 +493,16 @@ export default class AgentEditor extends Component {
             @title={{i18n "discourse_ai.ai_agent.vision_max_pixels"}}
             @onSet={{this.onChangeMaxPixels}}
             @format="large"
-            as |field|
+            @type="select"
+            as |Control|
           >
-            <field.Select @includeNone={{false}} as |select|>
+            <Control @includeNone={{false}} as |select|>
               {{#each this.maxPixelValues as |pixelValue|}}
                 <select.Option
                   @value={{pixelValue.id}}
                 >{{pixelValue.name}}</select.Option>
               {{/each}}
-            </field.Select>
+            </Control>
           </form.Field>
         {{/if}}
 
@@ -510,9 +517,10 @@ export default class AgentEditor extends Component {
             @tooltip={{i18n "discourse_ai.ai_agent.temperature_help"}}
             @disabled={{data.system}}
             @format="large"
-            as |field|
+            @type="input-number"
+            as |Control|
           >
-            <field.Input @type="number" step="any" lang="en" />
+            <Control step="any" lang="en" />
           </form.Field>
 
           <form.Field
@@ -521,9 +529,10 @@ export default class AgentEditor extends Component {
             @tooltip={{i18n "discourse_ai.ai_agent.top_p_help"}}
             @disabled={{data.system}}
             @format="large"
-            as |field|
+            @type="input-number"
+            as |Control|
           >
-            <field.Input @type="number" step="any" lang="en" />
+            <Control step="any" lang="en" />
           </form.Field>
         {{/if}}
 
@@ -558,16 +567,17 @@ export default class AgentEditor extends Component {
             @name="tools"
             @title={{i18n "discourse_ai.ai_agent.tools"}}
             @format="large"
-            as |field|
+            @type="custom"
+            as |Control field|
           >
-            <field.Custom>
+            <Control>
               <AiToolSelector
                 @value={{field.value}}
                 @disabled={{data.system}}
                 @onChange={{fn this.updateToolNames form data}}
                 @content={{@agents.resultSetMeta.tools}}
               />
-            </field.Custom>
+            </Control>
           </form.Field>
 
           {{#if (gt data.tools.length 0)}}
@@ -646,16 +656,17 @@ export default class AgentEditor extends Component {
               @name="forcedTools"
               @title={{i18n "discourse_ai.ai_agent.forced_tools"}}
               @format="large"
-              as |field|
+              @type="custom"
+              as |Control field|
             >
-              <field.Custom>
+              <Control>
                 <AiToolSelector
                   @value={{field.value}}
                   @disabled={{data.system}}
                   @onChange={{field.set}}
                   @content={{this.availableForcedTools data.tools}}
                 />
-              </field.Custom>
+              </Control>
             </form.Field>
           {{/if}}
 
@@ -664,13 +675,14 @@ export default class AgentEditor extends Component {
               @name="forced_tool_count"
               @title={{i18n "discourse_ai.ai_agent.forced_tool_strategy"}}
               @format="large"
-              as |field|
+              @type="select"
+              as |Control|
             >
-              <field.Select @includeNone={{false}} as |select|>
+              <Control @includeNone={{false}} as |select|>
                 {{#each this.forcedToolStrategies as |fts|}}
                   <select.Option @value={{fts.id}}>{{fts.name}}</select.Option>
                 {{/each}}
-              </field.Select>
+              </Control>
             </form.Field>
           {{/if}}
 
@@ -680,13 +692,14 @@ export default class AgentEditor extends Component {
             @tooltip={{i18n "discourse_ai.ai_agent.execution_mode_help"}}
             @format="large"
             @onSet={{this.onExecutionModeChange}}
-            as |field|
+            @type="select"
+            as |Control|
           >
-            <field.Select @includeNone={{false}} as |select|>
+            <Control @includeNone={{false}} as |select|>
               {{#each this.executionModes as |mode|}}
                 <select.Option @value={{mode.id}}>{{mode.name}}</select.Option>
               {{/each}}
-            </field.Select>
+            </Control>
           </form.Field>
 
           {{#if (eq data.execution_mode "agentic")}}
@@ -695,9 +708,10 @@ export default class AgentEditor extends Component {
               @title={{i18n "discourse_ai.ai_agent.max_turn_tokens"}}
               @tooltip={{i18n "discourse_ai.ai_agent.max_turn_tokens_help"}}
               @format="large"
-              as |field|
+              @type="input-number"
+              as |Control|
             >
-              <field.Input @type="number" @min={{1}} lang="en" />
+              <Control @min={{1}} lang="en" />
             </form.Field>
 
             <form.Field
@@ -707,9 +721,10 @@ export default class AgentEditor extends Component {
                 "discourse_ai.ai_agent.compression_threshold_help"
               }}
               @format="large"
-              as |field|
+              @type="input-number"
+              as |Control|
             >
-              <field.Input @type="number" @min={{20}} @max={{99}} lang="en" />
+              <Control @min={{20}} @max={{99}} lang="en" />
             </form.Field>
           {{/if}}
 
@@ -719,9 +734,10 @@ export default class AgentEditor extends Component {
               @title={{i18n "discourse_ai.ai_agent.max_context_posts"}}
               @tooltip={{i18n "discourse_ai.ai_agent.max_context_posts_help"}}
               @format="large"
-              as |field|
+              @type="input-number"
+              as |Control|
             >
-              <field.Input @type="number" lang="en" />
+              <Control lang="en" />
             </form.Field>
           {{/unless}}
 
@@ -740,9 +756,10 @@ export default class AgentEditor extends Component {
             @tooltip={{i18n "discourse_ai.ai_agent.show_thinking_help"}}
             @showTitle={{false}}
             @format="large"
-            as |field|
+            @type="checkbox"
+            as |Control|
           >
-            <field.Checkbox />
+            <Control />
           </form.Field>
         </form.Section>
 
@@ -752,9 +769,10 @@ export default class AgentEditor extends Component {
               @name="rag_uploads"
               @title={{i18n "discourse_ai.rag.uploads.title"}}
               @format="full"
-              as |field|
+              @type="custom"
+              as |Control field|
             >
-              <field.Custom>
+              <Control>
                 <RagUploader
                   @target={{data}}
                   @targetName="AiAgent"
@@ -762,7 +780,7 @@ export default class AgentEditor extends Component {
                   @onRemove={{fn this.removeUpload form data field.value}}
                   @allowImages={{@agents.resultSetMeta.settings.rag_images_enabled}}
                 />
-              </field.Custom>
+              </Control>
             </form.Field>
 
             <RagOptionsFk
@@ -778,9 +796,10 @@ export default class AgentEditor extends Component {
                   "discourse_ai.ai_agent.rag_conversation_chunks_help"
                 }}
                 @format="large"
-                as |field|
+                @type="input-number"
+                as |Control|
               >
-                <field.Input @type="number" step="any" lang="en" />
+                <Control step="any" lang="en" />
               </form.Field>
 
               <form.Field
@@ -792,16 +811,17 @@ export default class AgentEditor extends Component {
                   "discourse_ai.ai_agent.question_consolidator_llm_help"
                 }}
                 @format="large"
-                as |field|
+                @type="custom"
+                as |Control field|
               >
-                <field.Custom>
+                <Control>
                   <AiLlmSelector
                     @value={{field.value}}
                     @llms={{@agents.resultSetMeta.llms}}
                     @onChange={{field.set}}
                     class="ai-agent-editor__llms"
                   />
-                </field.Custom>
+                </Control>
               </form.Field>
             </RagOptionsFk>
           </form.Section>
@@ -812,9 +832,10 @@ export default class AgentEditor extends Component {
             @name="enabled"
             @title={{i18n "discourse_ai.ai_agent.enabled"}}
             @onSet={{fn this.toggleEnabled data}}
-            as |field|
+            @type="toggle"
+            as |Control|
           >
-            <field.Toggle />
+            <Control />
           </form.Field>
 
           <form.Field
@@ -822,9 +843,10 @@ export default class AgentEditor extends Component {
             @title={{i18n "discourse_ai.ai_agent.priority"}}
             @onSet={{fn this.togglePriority data}}
             @tooltip={{i18n "discourse_ai.ai_agent.priority_help"}}
-            as |field|
+            @type="toggle"
+            as |Control|
           >
-            <field.Toggle />
+            <Control />
           </form.Field>
 
           {{#if @model.isNew}}
@@ -836,9 +858,10 @@ export default class AgentEditor extends Component {
                 @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
                 @showTitle={{false}}
                 @format="large"
-                as |field|
+                @type="checkbox"
+                as |Control|
               >
-                <field.Checkbox />
+                <Control />
               </form.Field>
             {{/if}}
 
@@ -879,9 +902,10 @@ export default class AgentEditor extends Component {
                 }}
                 @showTitle={{false}}
                 @format="large"
-                as |field|
+                @type="checkbox"
+                as |Control|
               >
-                <field.Checkbox />
+                <Control />
               </form.Field>
 
               <form.Field
@@ -892,9 +916,10 @@ export default class AgentEditor extends Component {
                 }}
                 @showTitle={{false}}
                 @format="large"
-                as |field|
+                @type="checkbox"
+                as |Control|
               >
-                <field.Checkbox />
+                <Control />
               </form.Field>
 
               {{#if this.chatPluginEnabled}}
@@ -908,9 +933,10 @@ export default class AgentEditor extends Component {
                   }}
                   @showTitle={{false}}
                   @format="large"
-                  as |field|
+                  @type="checkbox"
+                  as |Control|
                 >
-                  <field.Checkbox />
+                  <Control />
                 </form.Field>
 
                 <form.Field
@@ -923,9 +949,10 @@ export default class AgentEditor extends Component {
                   }}
                   @showTitle={{false}}
                   @format="large"
-                  as |field|
+                  @type="checkbox"
+                  as |Control|
                 >
-                  <field.Checkbox />
+                  <Control />
                 </form.Field>
               {{/if}}
             {{/if}}

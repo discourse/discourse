@@ -19,8 +19,13 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.TagChooser />
+            <form.Field
+              @type="tag-chooser"
+              @name="foo"
+              @title="Foo"
+              as |Control|
+            >
+              <Control />
             </form.Field>
           </Form>
         </template>
@@ -41,8 +46,14 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-              <field.TagChooser />
+            <form.Field
+              @type="tag-chooser"
+              @name="foo"
+              @title="Foo"
+              @disabled={{true}}
+              as |Control|
+            >
+              <Control />
             </form.Field>
           </Form>
         </template>
@@ -65,8 +76,13 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.TagChooser
+            <form.Field
+              @type="tag-chooser"
+              @name="foo"
+              @title="Foo"
+              as |Control|
+            >
+              <Control
                 @showAllTags={{true}}
                 @excludeSynonyms={{true}}
                 @excludeTagsWithSynonyms={{true}}
@@ -89,8 +105,13 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.TagChooser @placeholder="groups.selector_placeholder" />
+            <form.Field
+              @type="tag-chooser"
+              @name="foo"
+              @title="Foo"
+              as |Control|
+            >
+              <Control @placeholder="groups.selector_placeholder" />
             </form.Field>
           </Form>
         </template>
@@ -110,8 +131,13 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.TagChooser />
+            <form.Field
+              @type="tag-chooser"
+              @name="foo"
+              @title="Foo"
+              as |Control|
+            >
+              <Control />
             </form.Field>
           </Form>
         </template>
@@ -127,8 +153,13 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.TagChooser @allowCreate={{true}} />
+            <form.Field
+              @type="tag-chooser"
+              @name="foo"
+              @title="Foo"
+              as |Control|
+            >
+              <Control @allowCreate={{true}} />
             </form.Field>
           </Form>
         </template>
@@ -150,8 +181,13 @@ module(
       await render(
         <template>
           <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.TagChooser @unlimited={{true}} />
+            <form.Field
+              @type="tag-chooser"
+              @name="foo"
+              @title="Foo"
+              as |Control|
+            >
+              <Control @unlimited={{true}} />
             </form.Field>
           </Form>
         </template>

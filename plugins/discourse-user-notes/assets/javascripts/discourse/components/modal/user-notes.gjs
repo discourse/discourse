@@ -94,9 +94,10 @@ export default class UserNotesModal extends Component {
           @title={{i18n "user_notes.attach_note_description"}}
           @format="full"
           @validation="required:trim"
-          as |field|
+          @type="textarea"
+          as |Control|
         >
-          <field.Textarea />
+          <Control />
         </form.Field>
 
         <form.Actions>

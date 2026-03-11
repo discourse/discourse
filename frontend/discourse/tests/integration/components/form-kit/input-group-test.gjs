@@ -17,11 +17,21 @@ module(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
             <form.InputGroup as |inputGroup|>
-              <inputGroup.Field @title="Foo" @name="foo" as |field|>
-                <field.Input />
+              <inputGroup.Field
+                @type="input-text"
+                @title="Foo"
+                @name="foo"
+                as |Control|
+              >
+                <Control />
               </inputGroup.Field>
-              <inputGroup.Field @title="Bar" @name="bar" as |field|>
-                <field.Input />
+              <inputGroup.Field
+                @type="input-text"
+                @title="Bar"
+                @name="bar"
+                as |Control|
+              >
+                <Control />
               </inputGroup.Field>
             </form.InputGroup>
           </Form>

@@ -45,9 +45,10 @@ export default class UpsertCategoryTags extends Component {
         @name="minimum_required_tags"
         @title={{i18n "category.minimum_required_tags"}}
         @format="max"
-        as |field|
+        @type="input-number"
+        as |Control|
       >
-        <field.Input type="number" min="0" id="category-minimum-tags" />
+        <Control min="0" id="category-minimum-tags" />
       </@form.Field>
 
       <@form.Field
@@ -58,9 +59,10 @@ export default class UpsertCategoryTags extends Component {
           (i18n "category.tags_allowed_tags_new_category")
         }}
         @format="max"
-        as |field|
+        @type="tag-chooser"
+        as |Control|
       >
-        <field.TagChooser
+        <Control
           @showAllTags={{true}}
           @excludeSynonyms={{true}}
           @unlimited={{true}}
@@ -92,9 +94,10 @@ export default class UpsertCategoryTags extends Component {
         @title={{i18n "category.allow_global_tags_label"}}
         @format="max"
         @disabled={{this.disableAllowGlobalTags}}
-        as |field|
+        @type="checkbox"
+        as |Control|
       >
-        <field.Checkbox />
+        <Control />
       </@form.Field>
 
       <@form.Alert @type="info">
@@ -109,9 +112,10 @@ export default class UpsertCategoryTags extends Component {
                 @name="min_count"
                 @title={{i18n "category.required_tag_group.min_count"}}
                 @validation="required"
-                as |field|
+                @type="input-number"
+                as |Control|
               >
-                <field.Input @type="number" min="1" />
+                <Control min="1" />
               </collection.Field>
             </row.Col>
 
@@ -120,9 +124,10 @@ export default class UpsertCategoryTags extends Component {
                 @name="name"
                 @title={{i18n "category.required_tag_group.tag_group"}}
                 @validation="required"
-                as |field|
+                @type="custom"
+                as |Control field|
               >
-                <field.Custom>
+                <Control>
                   <TagGroupChooser
                     @tagGroups={{if field.value (array field.value) (array)}}
                     @onChange={{fn this.onTagGroupFieldChange field}}
@@ -131,7 +136,7 @@ export default class UpsertCategoryTags extends Component {
                       filterPlaceholder="category.required_tag_group.placeholder"
                     }}
                   />
-                </field.Custom>
+                </Control>
               </collection.Field>
             </row.Col>
 

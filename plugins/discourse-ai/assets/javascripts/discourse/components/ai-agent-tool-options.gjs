@@ -46,6 +46,21 @@ export default class AiAgentToolOptions extends Component {
     return availableOptions;
   }
 
+  fieldTypeForOption(type) {
+    switch (type) {
+      case "enum":
+        return "select";
+      case "llm":
+        return "custom";
+      case "boolean":
+        return "checkbox";
+      case "text":
+        return "textarea";
+      default:
+        return "input-text";
+    }
+  }
+
   <template>
     {{#if this.showToolOptions}}
       <@form.Container
@@ -72,29 +87,30 @@ export default class AiAgentToolOptions extends Component {
                         @title={{optionMeta.name}}
                         @helpText={{optionMeta.description}}
                         @format="full"
-                        as |field|
+                        @type={{this.fieldTypeForOption optionMeta.type}}
+                        as |Control field|
                       >
                         {{#if (eq optionMeta.type "enum")}}
-                          <field.Select @includeNone={{false}} as |select|>
+                          <Control @includeNone={{false}} as |select|>
                             {{#each optionMeta.values as |v|}}
                               <select.Option @value={{v}}>{{v}}</select.Option>
                             {{/each}}
-                          </field.Select>
+                          </Control>
                         {{else if (eq optionMeta.type "llm")}}
-                          <field.Custom>
+                          <Control>
                             <AiLlmSelector
                               @value={{field.value}}
                               @llms={{@llms}}
                               @onChange={{field.set}}
                               class="ai-agent-tool-option-editor__llms"
                             />
-                          </field.Custom>
+                          </Control>
                         {{else if (eq optionMeta.type "boolean")}}
-                          <field.Checkbox />
+                          <Control />
                         {{else if (eq optionMeta.type "text")}}
-                          <field.Textarea />
+                          <Control />
                         {{else}}
-                          <field.Input />
+                          <Control />
                         {{/if}}
                       </optionsObj.Field>
                     {{/let}}

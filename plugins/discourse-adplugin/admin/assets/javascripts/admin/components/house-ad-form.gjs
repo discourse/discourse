@@ -174,9 +174,10 @@ export default class HouseAdForm extends Component {
         @title={{i18n "admin.adplugin.house_ads.name"}}
         @validation="required"
         @format="large"
-        as |field|
+        @type="input-text"
+        as |Control|
       >
-        <field.Input />
+        <Control />
       </form.Field>
 
       <form.Field
@@ -184,25 +185,28 @@ export default class HouseAdForm extends Component {
         @title={{i18n "admin.adplugin.house_ads.html"}}
         @validation="required"
         @format="full"
-        as |field|
+        @type="code"
+        as |Control|
       >
-        <field.Code @lang="html" @height={{270}} />
+        <Control @lang="html" @height={{270}} />
       </form.Field>
 
       <form.Field
         @name="visible_to_logged_in_users"
         @title={{i18n "admin.adplugin.house_ads.show_to_logged_in_users"}}
-        as |field|
+        @type="checkbox"
+        as |Control|
       >
-        <field.Checkbox />
+        <Control />
       </form.Field>
 
       <form.Field
         @name="visible_to_anons"
         @title={{i18n "admin.adplugin.house_ads.show_to_anons"}}
-        as |field|
+        @type="checkbox"
+        as |Control|
       >
-        <field.Checkbox />
+        <Control />
       </form.Field>
 
       <form.Field
@@ -210,15 +214,16 @@ export default class HouseAdForm extends Component {
         @title={{i18n "admin.adplugin.house_ads.categories"}}
         @description={{this.categoryDescription}}
         @format="large"
-        as |field|
+        @type="custom"
+        as |Control field|
       >
-        <field.Custom>
+        <Control>
           <HouseAdsCategorySelector
             @categories={{this.site.categories}}
             @selectedCategories={{field.value}}
             @onChange={{field.set}}
           />
-        </field.Custom>
+        </Control>
       </form.Field>
 
       {{#if this.routesEnabled}}
@@ -229,14 +234,15 @@ export default class HouseAdForm extends Component {
             "admin.adplugin.house_ads.route_chooser_description"
           }}
           @format="large"
-          as |field|
+          @type="custom"
+          as |Control field|
         >
-          <field.Custom>
+          <Control>
             <HouseAdsRouteSelector
               @value={{field.value}}
               @onChange={{field.set}}
             />
-          </field.Custom>
+          </Control>
         </form.Field>
       {{/if}}
 
@@ -247,15 +253,16 @@ export default class HouseAdForm extends Component {
           "admin.adplugin.house_ads.group_chooser_description"
         }}
         @format="large"
-        as |field|
+        @type="custom"
+        as |Control field|
       >
-        <field.Custom>
+        <Control>
           <GroupChooser
             @content={{this.site.groups}}
             @value={{field.value}}
             @onChange={{field.set}}
           />
-        </field.Custom>
+        </Control>
       </form.Field>
 
       <form.Actions>

@@ -108,6 +108,17 @@ export default class AiEmbeddingEditor extends Component {
     return !this.selectedPreset && this.args.model.isNew;
   }
 
+  fieldTypeForProviderParam(type) {
+    switch (type) {
+      case "enum":
+        return "select";
+      case "checkbox":
+        return "checkbox";
+      default:
+        return `input-${type}`;
+    }
+  }
+
   get metaProviderParams() {
     const provider = this.currentProvider;
     if (!provider) {
@@ -359,9 +370,10 @@ export default class AiEmbeddingEditor extends Component {
           @validation="required|length:1,100"
           @format="large"
           class="ai-embedding-editor__display-name"
-          as |field|
+          @type="input-text"
+          as |Control|
         >
-          <field.Input />
+          <Control />
         </form.Field>
 
         <form.Field
@@ -371,15 +383,16 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           @onSet={{this.setProvider}}
           class="ai-embedding-editor__provider"
-          as |field|
+          @type="select"
+          as |Control|
         >
-          <field.Select as |select|>
+          <Control as |select|>
             {{#each this.selectedProviders as |provider|}}
               <select.Option
                 @value={{provider.id}}
               >{{provider.name}}</select.Option>
             {{/each}}
-          </field.Select>
+          </Control>
         </form.Field>
 
         <form.Field
@@ -388,9 +401,10 @@ export default class AiEmbeddingEditor extends Component {
           @validation="required"
           @format="large"
           class="ai-embedding-editor__url"
-          as |field|
+          @type="input-text"
+          as |Control|
         >
-          <field.Input />
+          <Control />
         </form.Field>
 
         <form.Field
@@ -398,15 +412,16 @@ export default class AiEmbeddingEditor extends Component {
           @title={{i18n "discourse_ai.embeddings.api_key"}}
           @format="large"
           class="ai-embedding-editor__api-key"
-          as |field|
+          @type="custom"
+          as |Control field|
         >
-          <field.Custom>
+          <Control>
             <AiSecretSelector
               @value={{data.ai_secret_id}}
               @secrets={{this.availableSecrets}}
               @onChange={{field.set}}
             />
-          </field.Custom>
+          </Control>
         </form.Field>
 
         <form.Field
@@ -415,15 +430,16 @@ export default class AiEmbeddingEditor extends Component {
           @validation="required"
           @format="large"
           class="ai-embedding-editor__tokenizer"
-          as |field|
+          @type="select"
+          as |Control|
         >
-          <field.Select as |select|>
+          <Control as |select|>
             {{#each @embeddings.resultSetMeta.tokenizers as |tokenizer|}}
               <select.Option
                 @value={{tokenizer.id}}
               >{{tokenizer.name}}</select.Option>
             {{/each}}
-          </field.Select>
+          </Control>
         </form.Field>
 
         <form.Field
@@ -436,15 +452,10 @@ export default class AiEmbeddingEditor extends Component {
             (i18n "discourse_ai.embeddings.hints.dimensions_warning")
           }}
           class="ai-embedding-editor__dimensions"
-          as |field|
+          @type="input-number"
+          as |Control|
         >
-          <field.Input
-            @type="number"
-            step="any"
-            min="0"
-            lang="en"
-            disabled={{not @model.isNew}}
-          />
+          <Control step="any" min="0" lang="en" disabled={{not @model.isNew}} />
         </form.Field>
 
         <form.Field
@@ -455,9 +466,10 @@ export default class AiEmbeddingEditor extends Component {
           }}
           @format="large"
           class="ai-embedding-editor__matryoshka_dimensions"
-          as |field|
+          @type="checkbox"
+          as |Control|
         >
-          <field.Checkbox />
+          <Control />
         </form.Field>
 
         <form.Field
@@ -466,9 +478,10 @@ export default class AiEmbeddingEditor extends Component {
           @tooltip={{i18n "discourse_ai.embeddings.hints.embed_prompt"}}
           @format="large"
           class="ai-embedding-editor__embed_prompt"
-          as |field|
+          @type="textarea"
+          as |Control|
         >
-          <field.Textarea />
+          <Control />
         </form.Field>
 
         <form.Field
@@ -477,9 +490,10 @@ export default class AiEmbeddingEditor extends Component {
           @tooltip={{i18n "discourse_ai.embeddings.hints.search_prompt"}}
           @format="large"
           class="ai-embedding-editor__search_prompt"
-          as |field|
+          @type="textarea"
+          as |Control|
         >
-          <field.Textarea />
+          <Control />
         </form.Field>
 
         <form.Field
@@ -489,9 +503,10 @@ export default class AiEmbeddingEditor extends Component {
           @validation="required"
           @format="large"
           class="ai-embedding-editor__max_sequence_length"
-          as |field|
+          @type="input-number"
+          as |Control|
         >
-          <field.Input @type="number" step="any" min="0" lang="en" />
+          <Control step="any" min="0" lang="en" />
         </form.Field>
 
         <form.Field
@@ -501,13 +516,14 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           @validation="required"
           class="ai-embedding-editor__distance_functions"
-          as |field|
+          @type="select"
+          as |Control|
         >
-          <field.Select @includeNone={{false}} as |select|>
+          <Control @includeNone={{false}} as |select|>
             {{#each this.distanceFunctions as |df|}}
               <select.Option @value={{df.id}}>{{df.name}}</select.Option>
             {{/each}}
-          </field.Select>
+          </Control>
         </form.Field>
 
         {{! provider-specific content }}
@@ -524,20 +540,21 @@ export default class AiEmbeddingEditor extends Component {
                     @format="large"
                     @validation="required"
                     class="ai-embedding-editor-provider-param__{{params.type}}"
-                    as |field|
+                    @type={{this.fieldTypeForProviderParam params.type}}
+                    as |Control|
                   >
                     {{#if (eq params.type "enum")}}
-                      <field.Select @includeNone={{false}} as |select|>
+                      <Control @includeNone={{false}} as |select|>
                         {{#each params.values as |option|}}
                           <select.Option
                             @value={{option.id}}
                           >{{option.name}}</select.Option>
                         {{/each}}
-                      </field.Select>
+                      </Control>
                     {{else if (eq params.type "checkbox")}}
-                      <field.Checkbox />
+                      <Control />
                     {{else}}
-                      <field.Input @type={{params.type}} />
+                      <Control />
                     {{/if}}
                   </object.Field>
                 {{/if}}

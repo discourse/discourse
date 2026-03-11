@@ -53,12 +53,10 @@ export default class MathEditModal extends Component {
             @name="text"
             @title={{i18n "discourse_math.edit_modal.label"}}
             @format="full"
-            as |field|
+            @type="textarea"
+            as |Control|
           >
-            <field.Textarea
-              class="math-edit-modal__textarea"
-              autofocus={{true}}
-            />
+            <Control class="math-edit-modal__textarea" autofocus={{true}} />
           </form.Field>
         </Form>
       </:body>

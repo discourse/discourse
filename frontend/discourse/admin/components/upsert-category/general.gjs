@@ -358,9 +358,10 @@ export default class UpsertCategoryGeneral extends Component {
           @title={{i18n "category.name"}}
           @format="max"
           @validation="required"
-          as |field|
+          @type="input-text"
+          as |Control|
         >
-          <field.Input
+          <Control
             placeholder={{i18n "category.name_placeholder"}}
             @maxlength="50"
             class="category-name"
@@ -375,9 +376,10 @@ export default class UpsertCategoryGeneral extends Component {
         @format="max"
         @validation="required"
         @onSet={{this.onBackgroundColorSet}}
-        as |field|
+        @type="color"
+        as |Control|
       >
-        <field.Color
+        <Control
           @colors={{this.backgroundColors}}
           @usedColors={{this.usedBackgroundColors}}
           @collapseSwatches={{true}}
@@ -418,9 +420,10 @@ export default class UpsertCategoryGeneral extends Component {
                   @showTitle={{false}}
                   @format="max"
                   @validate={{this.validateIcon}}
-                  as |field|
+                  @type="custom"
+                  as |Control field|
                 >
-                  <field.Custom>
+                  <Control>
                     <IconPicker
                       @value={{readonly field.value}}
                       @onlyAvailable={{true}}
@@ -437,7 +440,7 @@ export default class UpsertCategoryGeneral extends Component {
                         (concat "--icon-color: #" @transientData.color ";")
                       }}
                     />
-                  </field.Custom>
+                  </Control>
                 </@form.Field>
               </Content>
 
@@ -448,9 +451,10 @@ export default class UpsertCategoryGeneral extends Component {
                   @showTitle={{false}}
                   @format="max"
                   @validate={{this.validateEmoji}}
-                  as |field|
+                  @type="custom"
+                  as |Control field|
                 >
-                  <field.Custom>
+                  <Control>
                     <EmojiPicker
                       @emoji={{field.value}}
                       @didSelectEmoji={{field.set}}
@@ -461,7 +465,7 @@ export default class UpsertCategoryGeneral extends Component {
                         (i18n "category.select_emoji")
                       }}
                     />
-                  </field.Custom>
+                  </Control>
                 </@form.Field>
               </Content>
 
@@ -483,9 +487,10 @@ export default class UpsertCategoryGeneral extends Component {
           @title={{i18n "category.subcategory_of"}}
           @format="max"
           @onSet={{this.onParentCategorySet}}
-          as |field|
+          @type="custom"
+          as |Control field|
         >
-          <field.Custom>
+          <Control>
             <CategoryChooser
               @value={{@transientData.parent_category_id}}
               @onChange={{field.set}}
@@ -501,7 +506,7 @@ export default class UpsertCategoryGeneral extends Component {
                 displayCategoryDescription=false
               }}
             />
-          </field.Custom>
+          </Control>
         </@form.Field>
       {{/unless}}
 

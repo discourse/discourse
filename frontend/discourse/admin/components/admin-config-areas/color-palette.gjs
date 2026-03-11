@@ -282,10 +282,11 @@ export default class AdminConfigAreasColorPalette extends Component {
                 @validation="required"
                 @format="full"
                 @onSet={{this.handleNameChange}}
-                as |field|
+                @type="input-text"
+                as |Control|
               >
                 <div class="admin-config-color-palettes__name-control">
-                  <field.Input />
+                  <Control />
                   <DButton
                     class="btn-primary admin-config-color-palettes__save-name"
                     @icon="check"
@@ -359,9 +360,10 @@ export default class AdminConfigAreasColorPalette extends Component {
                   }}
                   @format="full"
                   @onSet={{this.handleDefaultLightOnThemeChange}}
-                  as |field|
+                  @type="toggle"
+                  as |Control|
                 >
-                  <field.Toggle />
+                  <Control />
                 </form.Field>
               </form.Row>
               <form.Row>
@@ -377,9 +379,10 @@ export default class AdminConfigAreasColorPalette extends Component {
                   }}
                   @format="full"
                   @onSet={{this.handleDefaultDarkOnThemeChange}}
-                  as |field|
+                  @type="toggle"
+                  as |Control|
                 >
-                  <field.Toggle />
+                  <Control />
                 </form.Field>
               </form.Row>
               <form.Row>
@@ -394,9 +397,10 @@ export default class AdminConfigAreasColorPalette extends Component {
                   }}
                   @format="full"
                   @onSet={{this.handleUserSelectableChange}}
-                  as |field|
+                  @type="toggle"
+                  as |Control|
                 >
-                  <field.Toggle />
+                  <Control />
                 </form.Field>
               </form.Row>
             </:content>
@@ -410,14 +414,15 @@ export default class AdminConfigAreasColorPalette extends Component {
                 @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
                 @showTitle={{false}}
                 @format="full"
-                as |field|
+                @type="custom"
+                as |Control|
               >
-                <field.Custom>
+                <Control>
                   <ColorPaletteEditor
                     @colors={{transientData.colors}}
                     @onColorChange={{this.onColorChange}}
                   />
-                </field.Custom>
+                </Control>
               </form.Field>
             </:content>
           </AdminConfigAreaCard>

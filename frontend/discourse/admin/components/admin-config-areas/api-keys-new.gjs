@@ -280,9 +280,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.description"}}
                   @format="large"
                   @validation="required"
-                  as |field|
+                  @type="input-text"
+                  as |Control|
                 >
-                  <field.Input />
+                  <Control />
                 </form.Field>
 
                 <form.Field
@@ -290,15 +291,16 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.user_mode"}}
                   @format="large"
                   @validation="required"
-                  as |field|
+                  @type="select"
+                  as |Control|
                 >
-                  <field.Select as |select|>
+                  <Control as |select|>
                     {{#each this.userModes as |userMode|}}
                       <select.Option
                         @value={{userMode.id}}
                       >{{userMode.name}}</select.Option>
                     {{/each}}
-                  </field.Select>
+                  </Control>
                 </form.Field>
 
                 {{#if (eq transientData.user_mode "single")}}
@@ -307,9 +309,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     @title={{i18n "admin.api.user"}}
                     @format="large"
                     @validation="required"
-                    as |field|
+                    @type="custom"
+                    as |Control field|
                   >
-                    <field.Custom>
+                    <Control>
                       <EmailGroupUserChooser
                         @value={{this.username}}
                         @onChange={{fn this.updateUsername field}}
@@ -318,7 +321,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                           filterPlaceholder="admin.api.user_placeholder"
                         }}
                       />
-                    </field.Custom>
+                    </Control>
                   </form.Field>
                 {{/if}}
 
@@ -327,15 +330,16 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.scope_mode"}}
                   @format="large"
                   @validation="required"
-                  as |field|
+                  @type="select"
+                  as |Control|
                 >
-                  <field.Select as |select|>
+                  <Control as |select|>
                     {{#each this.scopeModes as |scopeMode|}}
                       <select.Option
                         @value={{scopeMode.id}}
                       >{{scopeMode.name}}</select.Option>
                     {{/each}}
-                  </field.Select>
+                  </Control>
                 </form.Field>
 
                 {{#if (eq transientData.scope_mode "granular")}}
@@ -385,9 +389,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       collectionData.key
                                     )
                                   }}
-                                  as |field|
+                                  @type="checkbox"
+                                  as |Control|
                                 >
-                                  <field.Checkbox />
+                                  <Control />
                                 </topicsCollection.Field>
                               </td>
                               <td>
@@ -413,9 +418,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       @name={{name}}
                                       @title={{name}}
                                       @showTitle={{false}}
-                                      as |field|
+                                      @type="input-text"
+                                      as |Control|
                                     >
-                                      <field.Input placeholder={{name}} />
+                                      <Control placeholder={{name}} />
                                     </paramsObject.Field>
                                   {{/each}}
                                 </topicsCollection.Object>
