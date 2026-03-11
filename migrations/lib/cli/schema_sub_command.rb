@@ -37,7 +37,7 @@ module Migrations::CLI
       puts "✓ Generated #{tables_str}, #{enums_str}".green
     end
 
-    desc "list", "List configured tables and enums, plus ignored table count"
+    desc "list", "List configured tables and enums, plus ignored table counts"
     def list
       load_rails!
       database = selected_database
@@ -45,6 +45,7 @@ module Migrations::CLI
 
       tables = Schema.tables
       ignored = Schema.ignored_tables
+      effective_ignored = Schema.effective_ignored_table_names(database:)
       enums = Schema.enums
 
       puts "Configured tables (#{tables.size}):"
@@ -55,8 +56,12 @@ module Migrations::CLI
       enums.keys.sort.each { |e| puts "  #{e}" }
       puts
 
-      ignored_count = ignored ? ignored.table_names.size : 0
-      puts "Ignored tables: #{ignored_count}"
+      explicit_ignored_count = ignored ? ignored.table_names.size : 0
+      effective_ignored_count = effective_ignored.size
+      ignored_plugin_count = ignored ? ignored.ignored_plugin_names.size : 0
+
+      puts "Ignored tables: #{explicit_ignored_count} explicit, #{effective_ignored_count} effective"
+      puts "Ignored plugins: #{ignored_plugin_count}"
     end
 
     desc "ignore TABLE", "Add a table to ignored.rb"

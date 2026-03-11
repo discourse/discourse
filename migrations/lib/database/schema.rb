@@ -91,6 +91,11 @@ module Migrations::Database
       registry.ignored_tables
     end
 
+    def self.effective_ignored_table_names(database: :intermediate_db)
+      ensure_ready!(database:)
+      DSL::ColumnScope.new(self).ignored_table_name_set
+    end
+
     def self.plugin_manifest
       @plugin_manifest ||=
         DSL::PluginManifest.new(manifest_path:, plugins_path: File.join(Rails.root, "plugins"))
