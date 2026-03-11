@@ -49,11 +49,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
 
   def stub_validation_and_resolution(definition)
     allow(Migrations::Database::Schema).to receive(:preflight).and_return(
-      Migrations::Database::Schema::PreflightResult.new(
-        resolved: definition,
-        static_errors: [],
-        resolved_errors: [],
-      ),
+      Migrations::Database::Schema::PreflightResult.new(resolved: definition, errors: []),
     )
 
     allow(Migrations::Database::Schema::Helpers).to receive(:format_ruby_files)

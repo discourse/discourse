@@ -22,8 +22,7 @@ RSpec.describe Migrations::Database::Schema do
       allow(described_class).to receive(:preflight).with(database: :test_db).and_return(
         described_class::PreflightResult.new(
           resolved:,
-          static_errors: [],
-          resolved_errors: ["Table 'users': primary key references missing columns: missing_id"],
+          errors: ["Table 'users': primary key references missing columns: missing_id"],
         ),
       )
 
@@ -34,11 +33,7 @@ RSpec.describe Migrations::Database::Schema do
 
     it "returns static validation errors without attempting resolution" do
       allow(described_class).to receive(:preflight).with(database: :test_db).and_return(
-        described_class::PreflightResult.new(
-          resolved: nil,
-          static_errors: ["Table 'users': bad config"],
-          resolved_errors: [],
-        ),
+        described_class::PreflightResult.new(resolved: nil, errors: ["Table 'users': bad config"]),
       )
 
       errors = described_class.validate(database: :test_db)
