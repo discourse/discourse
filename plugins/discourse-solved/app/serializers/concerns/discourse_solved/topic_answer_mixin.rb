@@ -21,9 +21,7 @@ module DiscourseSolved
     end
 
     def include_can_have_answer?
-      SiteSetting.solved_enabled &&
-        object.category&.custom_fields&.[](DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD) ==
-          "true"
+      SiteSetting.solved_enabled && object.category&.empty_box_on_unsolved?
     end
   end
 end

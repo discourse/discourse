@@ -136,9 +136,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
       context "when notify_on_staff_accept_solved is enabled" do
         before do
-          category.custom_fields[
-            DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
-          ] = "true"
+          category.notify_on_staff_accept_solved = true
           category.save_custom_fields
         end
 
@@ -169,9 +167,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
       context "when notify_on_staff_accept_solved is disabled" do
         before do
-          category.custom_fields[
-            DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
-          ] = "false"
+          category.notify_on_staff_accept_solved = false
           category.save_custom_fields
         end
 

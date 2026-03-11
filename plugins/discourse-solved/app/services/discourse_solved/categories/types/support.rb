@@ -12,7 +12,7 @@ module DiscourseSolved
           end
 
           def category_matches?(category)
-            category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] == "true"
+            category.enable_accepted_answers?
           end
 
           def find_matches
