@@ -168,7 +168,11 @@ export default class ChatChannelThreadSubscriptionManager {
       return;
     }
 
-    if (this.currentUser.staff || this.currentUser.id === targetMsg.user.id) {
+    if (
+      this.currentUser.staff ||
+      this.thread.channel.canModerate ||
+      this.currentUser.id === targetMsg.user.id
+    ) {
       targetMsg.deletedAt = data.deleted_at;
       targetMsg.deletedById = data.deleted_by_id;
       targetMsg.expanded = false;

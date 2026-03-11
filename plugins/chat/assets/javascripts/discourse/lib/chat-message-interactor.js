@@ -126,6 +126,7 @@ export default class ChatMessageInteractor {
     return (
       this.message?.deletedAt &&
       (this.currentUser.staff ||
+        this.message?.channel?.canModerate ||
         (this.message?.user?.id === this.currentUser.id &&
           this.message?.deletedById === this.currentUser.id)) &&
       this.message.channel?.canModifyMessages?.(this.currentUser)

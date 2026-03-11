@@ -118,6 +118,61 @@ module(
         "/uploads/short-url/server-thread"
       );
     });
+
+    test("channel manager keeps deleted messages visible for category moderators", function (assert) {
+      const channel = this.fabricators.channel({
+        id: 13,
+        meta: { can_moderate: true },
+      });
+      const message = this.fabricators.message({
+        id: 201,
+        channel,
+        user: { id: 2, username: "other_user" },
+      });
+      channel.messagesManager.addMessages([message]);
+
+      const manager = new ChatChannelSubscriptionManager(this, channel);
+      manager.currentUser = { id: 1, staff: false };
+
+      manager.handleDeleteMessage({
+        deleted_id: message.id,
+        deleted_at: "2026-03-11T10:00:00.000Z",
+        deleted_by_id: 1,
+      });
+
+      assert.strictEqual(channel.messagesManager.messages.length, 1);
+      assert.strictEqual(message.deletedById, 1);
+      assert.strictEqual(message.deletedAt, "2026-03-11T10:00:00.000Z");
+      assert.false(message.expanded);
+    });
+
+    test("thread manager keeps deleted messages visible for category moderators", function (assert) {
+      const channel = this.fabricators.channel({
+        id: 14,
+        meta: { can_moderate: true },
+      });
+      const thread = this.fabricators.thread({ id: 223, channel });
+      const message = this.fabricators.message({
+        id: 202,
+        channel,
+        user: { id: 2, username: "other_user" },
+      });
+      thread.messagesManager.addMessages([message]);
+
+      const manager = new ChatChannelThreadSubscriptionManager(this, thread);
+      manager.currentUser = { id: 1, staff: false };
+
+      manager.handleDeleteMessage({
+        deleted_id: message.id,
+        deleted_at: "2026-03-11T10:00:00.000Z",
+        deleted_by_id: 1,
+      });
+
+      assert.strictEqual(thread.messagesManager.messages.length, 1);
+      assert.strictEqual(message.deletedById, 1);
+      assert.strictEqual(message.deletedAt, "2026-03-11T10:00:00.000Z");
+      assert.false(message.expanded);
+    });
   }
 );
 

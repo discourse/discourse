@@ -246,7 +246,7 @@ module Chat
       if message.user_id == current_user.id
         case chatable
         when Category
-          return message.deleted_by_id == current_user.id || can_see_category?(chatable)
+          return message.deleted_by_id == current_user.id || can_moderate_chat?(chatable)
         when Chat::DirectMessage
           return message.deleted_by_id == current_user.id || is_staff?
         end
