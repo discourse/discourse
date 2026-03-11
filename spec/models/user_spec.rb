@@ -2134,7 +2134,11 @@ RSpec.describe User do
           status: Reviewable.statuses[:approved],
         )
 
-        expect(user.number_of_rejected_posts.to_i).to eq(0)
+        expect(user.number_of_rejected_posts).to eq(0)
+      end
+
+      it "returns 0 when user has no rejected posts" do
+        expect(user.number_of_rejected_posts).to eq(0)
       end
     end
 
@@ -2163,6 +2167,16 @@ RSpec.describe User do
         # ignores other users' history
         Fabricate(:user_history, action: UserHistory.actions[:silence_user])
         expect(user.reload.number_of_silencings).to eq(3)
+      end
+
+      it "returns 0 when user has no silencings" do
+        expect(user.number_of_silencings).to eq(0)
+      end
+    end
+
+    describe "#number_of_suspensions" do
+      it "returns 0 when user has no suspensions" do
+        expect(user.number_of_suspensions).to eq(0)
       end
     end
   end

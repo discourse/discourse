@@ -1650,7 +1650,7 @@ class User < ActiveRecord::Base
         .where(status: "rejected", target_created_by_id: ids)
         .group(:target_created_by_id)
         .count
-    end
+    end || 0
   end
 
   def number_of_flags_given
@@ -1667,7 +1667,7 @@ class User < ActiveRecord::Base
         .where(target_user_id: ids, action: UserHistory.actions[:silence_user])
         .group(:target_user_id)
         .count
-    end
+    end || 0
   end
 
   def number_of_suspensions
@@ -1676,7 +1676,7 @@ class User < ActiveRecord::Base
         .where(target_user_id: ids, action: UserHistory.actions[:suspend_user])
         .group(:target_user_id)
         .count
-    end
+    end || 0
   end
 
   def create_user_profile
