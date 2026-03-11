@@ -47,27 +47,23 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-gem-
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
-        shell: bash
         run: |
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
+          bundle install --jobs $(($(nproc) - 1))
           bundle clean
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: build and release assets
         env:
           GITHUB_TOKEN: ${{ secrets.DISCOURSE_ASSETS_RELEASE_TOKEN }}
         run: |
-          script/publish_built_assets.rb
+          bundle exec script/publish_built_assets.rb
