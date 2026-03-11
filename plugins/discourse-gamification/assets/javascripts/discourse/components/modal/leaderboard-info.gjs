@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DModal from "discourse/components/d-modal";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -11,7 +11,7 @@ const LeaderboardInfo = <template>
   >
     <:body>
       {{icon "award"}}
-      {{htmlSafe (i18n "gamification.leaderboard.modal.text")}}
+      {{trustHTML (i18n "gamification.leaderboard.modal.text")}}
     </:body>
   </DModal>
 </template>;

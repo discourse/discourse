@@ -1,7 +1,7 @@
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import LoadMore from "discourse/components/load-more";
 import formatDuration from "discourse/helpers/format-duration";
 import { i18n } from "discourse-i18n";
@@ -64,11 +64,11 @@ export default <template>
                   @route="patrons.show"
                   @model={{payment.payment_intent_id}}
                 >
-                  {{htmlSafe payment.payment_intent_id}}
+                  {{trustHTML payment.payment_intent_id}}
                 </LinkTo>
               </td>
               <td>{{payment.receipt_email}}</td>
-              <td>{{htmlSafe (formatDuration payment.created_at_age)}}</td>
+              <td>{{trustHTML (formatDuration payment.created_at_age)}}</td>
               <td class="amount">{{payment.amount_currency}}</td>
             </tr>
           {{/each}}

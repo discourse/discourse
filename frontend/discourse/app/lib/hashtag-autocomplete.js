@@ -1,5 +1,5 @@
 import { cancel } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import RichHashtagAutocompleteResults from "discourse/components/rich-hashtag-autocomplete-results";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -120,7 +120,7 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
     .then((response) => {
       response.results?.forEach((result) => {
         // Convert :emoji: in the result text to HTML safely.
-        result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
+        result.text = trustHTML(emojiUnescape(escapeExpression(result.text)));
 
         let opts = {
           preloaded: true,

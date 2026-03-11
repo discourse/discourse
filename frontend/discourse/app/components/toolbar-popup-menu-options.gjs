@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -125,7 +125,7 @@ export default class ToolbarPopupMenuOptions extends Component {
       });
     }
 
-    return htmlSafe(htmlLabel);
+    return trustHTML(htmlLabel);
   }
 
   get convertedContent() {

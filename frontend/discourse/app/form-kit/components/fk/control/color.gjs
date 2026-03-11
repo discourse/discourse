@@ -2,7 +2,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import concatClass from "discourse/helpers/concat-class";
@@ -22,7 +22,7 @@ function isColorUsed(usedColors, color) {
 }
 
 function colorStyle(color) {
-  return htmlSafe(`background-color: #${color};`);
+  return trustHTML(`background-color: #${color};`);
 }
 
 function colorLabel(usedColors, color) {

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DecoratedHtml from "discourse/components/decorated-html";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
@@ -108,7 +108,7 @@ export default class ReviewableTimeline extends Component {
           user: score.user,
           icon: "flag",
           titleKey: "review.timeline.flagged_as_by",
-          description: htmlSafe(flaggedDescription),
+          description: trustHTML(flaggedDescription),
           score: {
             count: 0,
             type: score.score_type.type,
@@ -166,7 +166,7 @@ export default class ReviewableTimeline extends Component {
         user: note.user,
         icon: "far-pen-to-square",
         titleKey: "review.timeline.note_added_by",
-        description: htmlSafe(`<p>${escape(note.content)}</p>`),
+        description: trustHTML(`<p>${escape(note.content)}</p>`),
         noteId: note.id,
         canDelete:
           this.currentUser &&

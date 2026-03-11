@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
@@ -120,7 +120,7 @@ export default class AboutPageExtraGroups extends Component {
             <a href="/g/{{group.name}}">{{this.groupName group}}</a>
           </h3>
           {{#if this.showGroupDescription}}
-            <p>{{htmlSafe group.bio_cooked}}</p>
+            <p>{{trustHTML group.bio_cooked}}</p>
           {{/if}}
           <AboutPageUsers
             @users={{group.members}}

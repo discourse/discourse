@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
@@ -25,7 +25,7 @@ export default class FeaturedTopic extends Component {
 
   <template>
     <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
-    <a href={{this.topic.lastUnreadUrl}} class="title">{{htmlSafe
+    <a href={{this.topic.lastUnreadUrl}} class="title">{{trustHTML
         this.topic.fancyTitle
       }}</a>
     <TopicPostBadges

@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
@@ -21,7 +21,7 @@ export default class ChatMessageReaction extends Component {
     }
 
     const instance = this.tooltip.register(element, {
-      content: htmlSafe(this.popoverContent),
+      content: trustHTML(this.popoverContent),
       identifier: "chat-message-reaction-tooltip",
       animated: false,
       placement: "top",

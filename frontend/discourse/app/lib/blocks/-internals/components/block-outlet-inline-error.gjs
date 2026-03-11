@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import FlashMessage from "discourse/components/flash-message";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 
@@ -15,7 +15,7 @@ export default class BlockOutletInlineError extends Component {
     const errorInfo = extractErrorInfo(this.args.error, undefined, {
       skipConsoleError: true,
     });
-    return errorInfo.html ? htmlSafe(errorInfo.message) : errorInfo.message;
+    return errorInfo.html ? trustHTML(errorInfo.message) : errorInfo.message;
   }
 
   <template>

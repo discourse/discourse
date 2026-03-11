@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { relativeAge } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
@@ -18,12 +18,12 @@ export default class PollInfoComponent extends Component {
 
     if (max > 0) {
       if (min === max && min > 1) {
-        return htmlSafe(i18n("poll.multiple.help.x_options", { count: min }));
+        return trustHTML(i18n("poll.multiple.help.x_options", { count: min }));
       }
 
       if (min > 1) {
         if (max < optionsCount) {
-          return htmlSafe(
+          return trustHTML(
             i18n("poll.multiple.help.between_min_and_max_options", {
               min,
               max,
@@ -31,13 +31,13 @@ export default class PollInfoComponent extends Component {
           );
         }
 
-        return htmlSafe(
+        return trustHTML(
           i18n("poll.multiple.help.at_least_min_options", { count: min })
         );
       }
 
       if (max <= optionsCount) {
-        return htmlSafe(
+        return trustHTML(
           i18n("poll.multiple.help.up_to_max_options", { count: max })
         );
       }
@@ -110,7 +110,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get resultsOnVoteTitle() {
-    return htmlSafe(i18n("poll.results.vote.title"));
+    return trustHTML(i18n("poll.results.vote.title"));
   }
 
   get resultsOnClose() {
@@ -118,7 +118,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get resultsOnCloseTitle() {
-    return htmlSafe(i18n("poll.results.closed.title"));
+    return trustHTML(i18n("poll.results.closed.title"));
   }
 
   get resultsStaffOnly() {
@@ -129,7 +129,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get resultsStaffOnlyTitle() {
-    return htmlSafe(i18n("poll.results.staff.title"));
+    return trustHTML(i18n("poll.results.staff.title"));
   }
 
   get publicTitle() {
@@ -142,7 +142,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get publicTitleLabel() {
-    return htmlSafe(i18n("poll.public.title"));
+    return trustHTML(i18n("poll.public.title"));
   }
 
   get showInstructionsSection() {

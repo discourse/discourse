@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import PostQuotedContent from "discourse/components/post/quoted-content";
 
@@ -47,7 +47,7 @@ export default function quoteControls(element, context) {
     if (titleEl) {
       // Remove existing quote controls if present
       titleEl.querySelector(".quote-controls")?.remove();
-      title = htmlSafe(titleEl.innerHTML);
+      title = trustHTML(titleEl.innerHTML);
     }
 
     // Get quote content
@@ -55,7 +55,7 @@ export default function quoteControls(element, context) {
 
     // Build props for PostQuotedContent component
     const componentProps = {
-      collapsedContent: htmlSafe(blockquote?.innerHTML),
+      collapsedContent: trustHTML(blockquote?.innerHTML),
       decoratorState,
       expanded: expanded === "true",
       fullQuote: full === "true",

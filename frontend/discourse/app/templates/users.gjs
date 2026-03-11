@@ -1,7 +1,7 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DirectoryTable from "discourse/components/directory-table";
@@ -113,7 +113,7 @@ export default <template>
                   (i18n "directory.no_results_with_search")
                   (if
                     @controller.currentUser.staff
-                    (htmlSafe
+                    (trustHTML
                       (i18n
                         "directory.no_results.extra_body" basePath=(basePath)
                       )

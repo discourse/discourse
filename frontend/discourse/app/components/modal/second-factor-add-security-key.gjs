@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -180,7 +180,7 @@ export default class SecondFactorAddSecurityKey extends Component {
 
           <div class="control-group">
             <div class="controls">
-              {{htmlSafe
+              {{trustHTML
                 (i18n "user.second_factor.enable_security_key_description")
               }}
             </div>

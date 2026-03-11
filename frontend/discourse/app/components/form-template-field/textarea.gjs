@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 
@@ -55,7 +55,7 @@ export default class FormTemplateFieldTextarea extends Component {
 
       {{#if @attributes.description}}
         <span class="form-template-field__description">
-          {{htmlSafe @attributes.description}}
+          {{trustHTML @attributes.description}}
         </span>
       {{/if}}
 

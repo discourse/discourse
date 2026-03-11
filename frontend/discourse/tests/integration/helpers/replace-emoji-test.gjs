@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -31,7 +31,7 @@ module("Integration | Helper | replace-emoji", function (hooks) {
   test("it renders html-safe text", async function (assert) {
     await render(
       <template>
-        <span>{{replaceEmoji (htmlSafe "safe text")}}</span>
+        <span>{{replaceEmoji (trustHTML "safe text")}}</span>
       </template>
     );
 

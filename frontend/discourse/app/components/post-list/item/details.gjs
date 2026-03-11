@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
@@ -33,7 +33,7 @@ export default class PostListItemDetails extends Component {
     return this.args.titlePath
       ? this.args.titlePath === "titleHtml" ||
         this.args.titlePath === "topic_html_title"
-        ? htmlSafe(this.args.post[this.args.titlePath])
+        ? trustHTML(this.args.post[this.args.titlePath])
         : this.args.post[this.args.titlePath]
       : this.args.post.title;
   }

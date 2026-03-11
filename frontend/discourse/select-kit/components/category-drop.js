@@ -1,6 +1,6 @@
 import { action, computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
@@ -156,7 +156,7 @@ export default class CategoryDrop extends ComboBoxComponent {
     if (this.value) {
       const category = Category.findById(this.value);
       content.title = category.title;
-      content.label = htmlSafe(
+      content.label = trustHTML(
         categoryBadgeHTML(category, {
           link: false,
           allowUncategorized: true,

@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DTextarea from "discourse/components/d-textarea";
 import ShareSource from "discourse/components/share-source";
@@ -73,7 +73,7 @@ export default class SharePanel extends Component {
 
   <template>
     <div class="header">
-      <h3 class="title">{{htmlSafe this.shareTitle}}</h3>
+      <h3 class="title">{{trustHTML this.shareTitle}}</h3>
     </div>
 
     <div class="body">

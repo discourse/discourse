@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -119,7 +119,7 @@ export default <template>
                 {{#if @controller.model.second_factor_enabled}}
                   <div class="details">
                     {{#if @controller.model.second_factor_backup_enabled}}
-                      {{htmlSafe
+                      {{trustHTML
                         (i18n
                           "user.second_factor_backup.manage"
                           count=@controller.model.second_factor_remaining_backup_codes

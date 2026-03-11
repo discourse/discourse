@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
@@ -31,7 +31,7 @@ export default class AdminStaffActionLogComponent extends Component {
       class="history-modal"
     >
       <:body>
-        {{htmlSafe this.diff}}
+        {{trustHTML this.diff}}
       </:body>
       <:footer>
         <DButton class="btn-primary" @action={{@closeModal}} @label="close" />

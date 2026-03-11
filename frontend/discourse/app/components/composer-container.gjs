@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ComposerActionTitle from "discourse/components/composer-action-title";
 import ComposerBody from "discourse/components/composer-body";
 import ComposerEditor from "discourse/components/composer-editor";
@@ -569,7 +569,7 @@ export default class ComposerContainer extends Component {
           <div class="draft-text">
             {{#if this.composer.model.topic}}
               {{icon "share"}}
-              {{htmlSafe this.composer.draftTitle}}
+              {{trustHTML this.composer.draftTitle}}
             {{else}}
               {{i18n "composer.saved_draft"}}
             {{/if}}
