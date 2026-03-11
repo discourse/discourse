@@ -40,7 +40,7 @@ def bundle(name:, env:, compress:)
   FileUtils.rm_rf("frontend/discourse/dist")
   FileUtils.rm_rf("app/assets/generated")
 
-  system({ **COMMON_ENV, **env }, "#{__dir__}/assemble_ember_build.rb")
+  system({ **COMMON_ENV, **env }, "#{__dir__}/assemble_ember_build.rb", exception: true)
 
   out_dir = "#{TMP_DIR}/#{name}"
   FileUtils.mkdir_p(out_dir)
