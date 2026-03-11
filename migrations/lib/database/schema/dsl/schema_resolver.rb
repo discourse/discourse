@@ -116,22 +116,11 @@ module Migrations::Database::Schema::DSL
         datatype = enum.datatype
       end
 
-      convention_required = convention&.required
+      required = required_override.nil? ? convention&.required : required_override
 
-      nullable =
-        if required_override == true
-          false
-        elsif required_override == false
-          true
-        elsif convention_required == true
-          false
-        elsif convention_required == false
-          true
-        else
-          # Columns with defaults are treated as nullable because converters
-          # don't need to supply a value — the DB default will apply.
-          db_col.null || db_col.default.present?
-        end
+      # Columns with defaults are treated as nullable because converters
+      # don't need to supply a value — the DB default will apply.
+      nullable = required.nil? ? db_col.null || db_col.default.present? : !required
 
       max_length = (max_length_override || db_col.limit if datatype == :text)
 
