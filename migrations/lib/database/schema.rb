@@ -3,6 +3,16 @@
 module Migrations::Database
   module Schema
     Definition = Data.define(:tables, :enums)
+    PreflightResult =
+      Data.define(:resolved, :static_errors, :resolved_errors) do
+        def errors
+          static_errors + resolved_errors
+        end
+
+        def valid?
+          errors.empty?
+        end
+      end
     TableDefinition =
       Data.define(
         :name,
@@ -97,13 +107,22 @@ module Migrations::Database
 
     # --- Validation, Resolution & Generation ---
 
-    def self.validate(database: :intermediate_db)
+    def self.preflight(database: :intermediate_db)
       ensure_ready!(database:)
-      errors = DSL::Validator.new(self).validate
-      return errors if errors.any?
+
+      static_errors = DSL::Validator.new(self).validate
+      if static_errors.any?
+        return PreflightResult.new(resolved: nil, static_errors:, resolved_errors: [])
+      end
 
       resolved = DSL::SchemaResolver.new(self).resolve
-      errors + DSL::ResolvedSchemaValidator.new(resolved).validate
+      resolved_errors = DSL::ResolvedSchemaValidator.new(resolved).validate
+
+      PreflightResult.new(resolved:, static_errors: [], resolved_errors:)
+    end
+
+    def self.validate(database: :intermediate_db)
+      preflight(database:).errors
     end
 
     def self.resolve(database: :intermediate_db)

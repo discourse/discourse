@@ -13,9 +13,10 @@ module Migrations::Database::Schema::DSL
     end
 
     def generate
-      validate_dsl!
-      resolved = resolve_schema
-      validate_resolved_schema!(resolved)
+      preflight = @schema.preflight
+      validate!(preflight.static_errors, "DSL validation")
+      validate!(preflight.resolved_errors, "Resolved schema validation")
+      resolved = preflight.resolved
       generate_sql(resolved)
       generate_enums(resolved)
       generate_models(resolved)
@@ -24,20 +25,6 @@ module Migrations::Database::Schema::DSL
     end
 
     private
-
-    def validate_dsl!
-      errors = Validator.new(@schema).validate
-      validate!(errors, "DSL validation")
-    end
-
-    def resolve_schema
-      SchemaResolver.new(@schema).resolve
-    end
-
-    def validate_resolved_schema!(resolved)
-      errors = ResolvedSchemaValidator.new(resolved).validate
-      validate!(errors, "Resolved schema validation")
-    end
 
     def validate!(errors, label)
       return if errors.empty?

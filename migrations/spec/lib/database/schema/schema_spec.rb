@@ -5,7 +5,6 @@ RSpec.describe Migrations::Database::Schema do
 
   describe ".validate" do
     it "includes resolved schema validation errors" do
-      validator = instance_double(Migrations::Database::Schema::DSL::Validator, validate: [])
       resolved =
         Migrations::Database::Schema::Definition.new(
           tables: [
@@ -20,16 +19,13 @@ RSpec.describe Migrations::Database::Schema do
           ],
           enums: [],
         )
-      resolver =
-        instance_double(Migrations::Database::Schema::DSL::SchemaResolver, resolve: resolved)
-
-      allow(described_class).to receive(:ensure_ready!).with(database: :test_db)
-      allow(Migrations::Database::Schema::DSL::Validator).to receive(:new).with(
-        described_class,
-      ).and_return(validator)
-      allow(Migrations::Database::Schema::DSL::SchemaResolver).to receive(:new).with(
-        described_class,
-      ).and_return(resolver)
+      allow(described_class).to receive(:preflight).with(database: :test_db).and_return(
+        described_class::PreflightResult.new(
+          resolved:,
+          static_errors: [],
+          resolved_errors: ["Table 'users': primary key references missing columns: missing_id"],
+        ),
+      )
 
       errors = described_class.validate(database: :test_db)
 
@@ -37,6 +33,20 @@ RSpec.describe Migrations::Database::Schema do
     end
 
     it "returns static validation errors without attempting resolution" do
+      allow(described_class).to receive(:preflight).with(database: :test_db).and_return(
+        described_class::PreflightResult.new(
+          resolved: nil,
+          static_errors: ["Table 'users': bad config"],
+          resolved_errors: [],
+        ),
+      )
+
+      errors = described_class.validate(database: :test_db)
+
+      expect(errors).to eq(["Table 'users': bad config"])
+    end
+
+    it "runs static validation before resolution in preflight" do
       validator =
         instance_double(
           Migrations::Database::Schema::DSL::Validator,
@@ -49,9 +59,9 @@ RSpec.describe Migrations::Database::Schema do
       ).and_return(validator)
       allow(Migrations::Database::Schema::DSL::SchemaResolver).to receive(:new)
 
-      errors = described_class.validate(database: :test_db)
+      result = described_class.preflight(database: :test_db)
 
-      expect(errors).to eq(["Table 'users': bad config"])
+      expect(result.errors).to eq(["Table 'users': bad config"])
       expect(Migrations::Database::Schema::DSL::SchemaResolver).not_to have_received(:new)
     end
   end
