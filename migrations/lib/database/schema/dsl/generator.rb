@@ -7,13 +7,14 @@ module Migrations::Database::Schema::DSL
     CUSTOM_CODE_START = "# -- custom code --"
     CUSTOM_CODE_END = "# -- end custom code --"
 
-    def initialize(schema_module)
+    def initialize(schema_module, database: :intermediate_db)
       @schema = schema_module
+      @database = database
       @output_config = schema_module.config.output_config
     end
 
     def generate
-      preflight = @schema.preflight
+      preflight = @schema.preflight(database: @database)
       validate!(preflight.static_errors, "DSL validation")
       validate!(preflight.resolved_errors, "Resolved schema validation")
       resolved = preflight.resolved

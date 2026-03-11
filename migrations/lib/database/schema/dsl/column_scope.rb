@@ -38,7 +38,8 @@ module Migrations::Database::Schema::DSL
         names = table_def.included_column_names.to_set
       else
         ignored = table_def.ignored_column_names.to_set
-        names = db_column_names - ignored - (globally_ignored_columns - forced)
+        auto_ignored = (globally_ignored_columns | plugin_ignored_column_names(table_def)) - forced
+        names = db_column_names - ignored - auto_ignored
       end
 
       added = table_def.added_columns.map(&:name)

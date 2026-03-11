@@ -5,7 +5,7 @@ module Migrations::Importer::Steps
     title "Importing site settings with dependencies"
 
     # TODO Add :emojis as dependency
-    depends_on :categories, :groups, :tags, :uploads, :users
+    depends_on :categories, :groups, :tags, :topics, :uploads, :users
 
     private
 

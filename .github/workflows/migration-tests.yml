@@ -119,7 +119,7 @@ jobs:
           migrations/bin/cli schema generate --db=intermediate_db
 
           # Check if generated output matches what's committed
-          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/)" ]; then
+          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/)" ]; then
             echo ""
             echo "=========================================="
             echo "IntermediateDB schema is not up to date."
@@ -140,7 +140,7 @@ jobs:
             echo "  4. Commit the updated config and generated files"
             echo ""
             echo "Generated file diff:"
-            git -c color.ui=always diff migrations/db/intermediate_db_schema/
+            git -c color.ui=always diff -- migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/
             exit 1
           fi
 

@@ -132,7 +132,7 @@ module Migrations::Database
 
     def self.generate(database: :intermediate_db)
       ensure_ready!(database:)
-      DSL::Generator.new(self).generate
+      DSL::Generator.new(self, database:).generate
     end
 
     def self.diff(database: :intermediate_db)
