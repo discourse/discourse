@@ -18,6 +18,7 @@ module Migrations::Importer::Steps::Base
         Enums::SiteSettingDatatype::GROUP_LIST,
         Enums::SiteSettingDatatype::TAG_GROUP_LIST,
         Enums::SiteSettingDatatype::TAG_LIST,
+        Enums::SiteSettingDatatype::TOPIC,
         Enums::SiteSettingDatatype::UPLOAD,
         Enums::SiteSettingDatatype::UPLOADED_IMAGE_LIST,
         Enums::SiteSettingDatatype::USERNAME,
