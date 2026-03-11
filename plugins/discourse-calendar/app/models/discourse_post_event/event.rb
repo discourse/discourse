@@ -577,4 +577,5 @@ end
 #  recurrence_until   :datetime
 #  show_local_time    :boolean          default(FALSE), not null
 #  max_attendees      :integer
+#  all_day            :boolean          default(FALSE), not null
 #
