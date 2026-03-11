@@ -12,6 +12,7 @@ require_relative "../lib/version"
 
 DOWNLOAD_PRE_BUILT_ASSETS = ENV["DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS"] != "0"
 DOWNLOAD_TEMP_FILE = "#{__dir__}/../tmp/assets.tar.gz"
+DOWNLOAD_EXTRACT_DIR = "#{__dir__}/../tmp/extracted_assets"
 
 PRE_BUILD_ROOT = "https://get.discourse.org/discourse-assets"
 
@@ -111,27 +112,24 @@ def download_prebuild_assets!
     return false
   end
 
-  FileUtils.rm_rf("#{EMBER_APP_DIR}/dist")
-  FileUtils.mkdir_p("#{EMBER_APP_DIR}/dist")
   begin
-    system(
-      "tar",
-      "--strip-components=1",
-      "-xzf",
-      DOWNLOAD_TEMP_FILE,
-      "-C",
-      "#{EMBER_APP_DIR}/dist",
-      exception: true,
-    )
+    system("tar", "-xzf", DOWNLOAD_TEMP_FILE, "-C", DOWNLOAD_EXTRACT_DIR, exception: true)
   rescue RuntimeError => e
     log "Failed to extract prebuilt assets: #{e.message}"
     return false
   end
 
+  FileUtils.rm_rf("#{EMBER_APP_DIR}/dist")
+  FileUtils.mv("#{DOWNLOAD_EXTRACT_DIR}/core", "#{EMBER_APP_DIR}/dist")
+
+  FileUtils.rm_rf("#{EMBER_APP_DIR}/app/assets/generated")
+  FileUtils.mv("#{DOWNLOAD_EXTRACT_DIR}/plugins", "#{EMBER_APP_DIR}/app/assets/generated")
+
   puts "Prebuilt assets downloaded and extracted successfully."
   true
 ensure
   FileUtils.rm_f(DOWNLOAD_TEMP_FILE) if File.exist?(DOWNLOAD_TEMP_FILE)
+  FileUtils.rm_rf(DOWNLOAD_EXTRACT_DIR) if File.exist?(DOWNLOAD_EXTRACT_DIR)
 end
 
 build_cmd = %w[pnpm ember build]
