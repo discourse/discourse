@@ -37,10 +37,8 @@ end
 #  id                      :bigint           not null, primary key
 #  auto_bump_cooldown_days :integer          default(1)
 #  num_auto_bump_daily     :integer          default(0)
-#  reply_approval_type     :integer          default(0), not null
-#  require_reply_approval  :boolean          default(FALSE)
-#  require_topic_approval  :boolean          default(FALSE)
-#  topic_approval_type     :integer          default(0), not null
+#  reply_approval_type     :integer          default("none"), not null
+#  topic_approval_type     :integer          default("none"), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  category_id             :bigint           not null
