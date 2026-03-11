@@ -10,6 +10,12 @@ class AddApprovalTypeColumnsToCategorySettings < ActiveRecord::Migration[8.0]
       SET topic_approval_type = CASE WHEN require_topic_approval = true THEN 1 ELSE 0 END,
           reply_approval_type = CASE WHEN require_reply_approval = true THEN 1 ELSE 0 END
     SQL
+
+    change_column_default :category_settings, :require_topic_approval, nil
+    change_column_default :category_settings, :require_reply_approval, nil
+
+    Migration::ColumnDropper.mark_readonly(:category_settings, :require_topic_approval)
+    Migration::ColumnDropper.mark_readonly(:category_settings, :require_reply_approval)
   end
 
   def down
