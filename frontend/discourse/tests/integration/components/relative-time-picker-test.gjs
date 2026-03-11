@@ -284,4 +284,52 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     assert.strictEqual(selectKit().header().value(), "years");
     assert.dom(".relative-time-duration").hasValue("2");
   });
+
+  test("durationOutputUnit hours passes duration in hours to onChange", async function (assert) {
+    let updatedValue;
+    const update = (value) => (updatedValue = value);
+    await render(
+      <template>
+        <RelativeTimePicker @onChange={{update}} @durationOutputUnit="hours" />
+      </template>
+    );
+
+    await typeIn(".relative-time-duration", "2");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "days",
+      "dropdown has 'days' preselected"
+    );
+    assert.strictEqual(
+      updatedValue,
+      48,
+      "onChange called with 2 days in hours (2 * 24)"
+    );
+
+    await selectKit().expand();
+    await selectKit().selectRowByValue("hours");
+    assert.strictEqual(
+      updatedValue,
+      2,
+      "onChange called with 2 when interval is hours (2 hours)"
+    );
+
+    await fillIn(".relative-time-duration", "1");
+    assert.strictEqual(updatedValue, 1, "onChange called with 1 hour");
+  });
+
+  test("durationOutputUnit default passes duration in minutes to onChange", async function (assert) {
+    let updatedValue;
+    const update = (value) => (updatedValue = value);
+    await render(
+      <template><RelativeTimePicker @onChange={{update}} /></template>
+    );
+
+    await typeIn(".relative-time-duration", "2");
+    assert.strictEqual(
+      updatedValue,
+      2 * 60 * 24,
+      "onChange called with 2 days in minutes when durationOutputUnit is not set"
+    );
+  });
 });
