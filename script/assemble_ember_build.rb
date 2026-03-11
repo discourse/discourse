@@ -112,6 +112,7 @@ def download_prebuild_assets!
     return false
   end
 
+  FileUtils.mkdir_p(DOWNLOAD_EXTRACT_DIR)
   begin
     system("tar", "-xzf", DOWNLOAD_TEMP_FILE, "-C", DOWNLOAD_EXTRACT_DIR, exception: true)
   rescue RuntimeError => e
