@@ -132,7 +132,7 @@ export default class BoostsList extends Component {
               {{#if (eq this.selectedBoostId boost.id)}}
                 <button
                   type="button"
-                  class="discourse-boosts__delete btn-transparent"
+                  class="discourse-boosts__delete btn-transparent --danger"
                   {{on "click" (fn this.deleteBoost boost.id)}}
                 >{{icon "trash-can"}}</button>
               {{/if}}
@@ -144,6 +144,7 @@ export default class BoostsList extends Component {
               <DMenu
                 @identifier="discourse-boosts"
                 @icon="rocket"
+                @autofocus={{true}}
                 @title="discourse_boosts.boost_button_title"
                 @modalForMobile={{false}}
                 @onRegisterApi={{this.onRegisterApi}}
