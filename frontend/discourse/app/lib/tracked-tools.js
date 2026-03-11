@@ -208,7 +208,7 @@ function ensureTrackedArray(value, propertyName) {
 
 /**
  * @decorator
- * Same as @tracked, but initializes the value as a TrackedArray.
+ * Same as `@tracked`, but initializes the value as a TrackedArray.
  *
  * @param {Object} target - The target object
  * @param {string|Symbol} key - The property key
