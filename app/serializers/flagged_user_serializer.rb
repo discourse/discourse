@@ -44,15 +44,15 @@ class FlaggedUserSerializer < BasicUserSerializer
   end
 
   def silenced_count
-    object.number_of_silencings.to_i
+    object.number_of_silencings
   end
 
   def suspended_count
-    object.number_of_suspensions.to_i
+    object.number_of_suspensions
   end
 
   def rejected_posts_count
-    object.number_of_rejected_posts.to_i
+    object.number_of_rejected_posts
   end
 
   def custom_fields
