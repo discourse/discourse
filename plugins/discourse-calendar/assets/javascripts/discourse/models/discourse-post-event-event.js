@@ -29,6 +29,7 @@ export default class DiscoursePostEventEvent {
   @tracked categoryId;
   @tracked startsAt;
   @tracked endsAt;
+  @tracked allDay;
   @tracked duration;
   @tracked rawInvitees;
   @tracked location;
@@ -66,6 +67,7 @@ export default class DiscoursePostEventEvent {
     this.categoryId = args.category_id;
     this.startsAt = args.starts_at;
     this.endsAt = args.ends_at;
+    this.allDay = args.all_day || false;
     this.duration = args.duration;
     this.rawInvitees = args.raw_invitees;
     this.sampleInvitees = args.sample_invitees || [];
@@ -154,6 +156,7 @@ export default class DiscoursePostEventEvent {
     this.name = event.name;
     this.startsAt = event.startsAt;
     this.endsAt = event.endsAt;
+    this.allDay = event.allDay;
     this.duration = event.duration;
     this.location = event.location;
     this.url = event.url;
