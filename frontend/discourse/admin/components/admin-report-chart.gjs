@@ -14,8 +14,9 @@ function getCSSColor(varName) {
 }
 
 export function isInCurrentPeriod(timestamp, grouping) {
-  const date = moment(timestamp);
-  const now = moment();
+  // Report data uses UTC dates, so compare in UTC
+  const date = moment.utc(timestamp);
+  const now = moment.utc();
 
   switch (grouping) {
     case "weekly":
