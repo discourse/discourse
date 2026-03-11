@@ -173,6 +173,9 @@ export default class AdminReportStackedChart extends Component {
             mode: "index",
             intersect: false,
             backgroundColor: getCSSColor("--primary"),
+            titleColor: getCSSColor("--secondary"),
+            bodyColor: getCSSColor("--secondary"),
+            footerColor: getCSSColor("--secondary"),
             titleMarginBottom: 16,
             footerMarginTop: 16,
             padding: {

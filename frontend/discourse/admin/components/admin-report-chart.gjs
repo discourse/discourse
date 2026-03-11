@@ -113,6 +113,9 @@ export default class AdminReportChart extends Component {
         plugins: {
           tooltip: {
             backgroundColor: getCSSColor("--primary"),
+            titleColor: getCSSColor("--secondary"),
+            bodyColor: getCSSColor("--secondary"),
+            footerColor: getCSSColor("--secondary"),
             titleMarginBottom: 16,
             footerMarginTop: 16,
             padding: {
