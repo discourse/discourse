@@ -6,3 +6,5 @@
 
 # converters within this directory should be ignored
 /private/
+
+/tmp/
