@@ -86,9 +86,9 @@ export default class TagInfo extends Component {
     );
   }
 
-  get updateDisabled() {
+  get showSave() {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    return this.newTagName?.replace(filterRegexp, "").trim().length === 0 ?? true;
+    return this.newTagName?.replace(filterRegexp, "").trim()?.length > 0;
   }
 
   @action
@@ -299,14 +299,14 @@ export default class TagInfo extends Component {
               />
 
               <div class="edit-controls">
-                {{#unless this.updateDisabled}}
+                {{#if this.showSave}}
                   <DButton
                     @action={{this.finishedEditing}}
                     @icon="check"
                     @ariaLabel="tagging.save"
                     class="btn-primary submit-edit"
                   />
-                {{/unless}}
+                {{/if}}
                 <DButton
                   @action={{this.cancelEditing}}
                   @icon="xmark"
