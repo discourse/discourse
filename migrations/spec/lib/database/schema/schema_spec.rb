@@ -61,6 +61,53 @@ RSpec.describe Migrations::Database::Schema do
     end
   end
 
+  describe ".ignore_table" do
+    let(:editor) do
+      instance_double(Migrations::Database::Schema::DSL::IgnoredFileEditor, add_table: nil)
+    end
+
+    it "adds the table to ignored.rb after validating it" do
+      connection =
+        instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter, tables: %w[users])
+
+      allow(described_class).to receive(:ensure_ready!).with(database: :test_db)
+      allow(described_class).to receive(:find_table).with("users").and_return(nil)
+      allow(described_class).to receive(:config_path).with(:test_db).and_return("/tmp/schema")
+      allow(Migrations::Database::Schema::DSL::IgnoredFileEditor).to receive(:new).with(
+        "/tmp/schema",
+      ).and_return(editor)
+      allow(ActiveRecord::Base).to receive(:with_connection).and_yield(connection)
+
+      described_class.ignore_table("users", reason: "legacy", database: :test_db)
+
+      expect(editor).to have_received(:add_table).with("users", reason: "legacy")
+    end
+
+    it "rejects ignoring a table that is already configured" do
+      allow(described_class).to receive(:ensure_ready!).with(database: :test_db)
+      allow(described_class).to receive(:find_table).with("users").and_return(double)
+
+      expect { described_class.ignore_table("users", database: :test_db) }.to raise_error(
+        described_class::ConfigError,
+        /already configured/,
+      )
+    end
+
+    it "rejects ignoring a table that does not exist in the database" do
+      connection =
+        instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter, tables: %w[posts])
+
+      allow(described_class).to receive(:ensure_ready!).with(database: :test_db)
+      allow(described_class).to receive(:find_table).with("users").and_return(nil)
+      allow(ActiveRecord::Base).to receive(:with_connection).and_yield(connection)
+
+      expect { described_class.ignore_table("users", database: :test_db) }.to raise_error(
+        described_class::ConfigError,
+        /does not exist in the database/,
+      )
+    end
+  end
+
   describe ".ensure_ready!" do
     def write_minimal_config(tmpdir)
       config_dir = File.join(tmpdir, "config", "schema", "test_db")

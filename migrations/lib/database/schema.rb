@@ -135,6 +135,16 @@ module Migrations::Database
     end
 
     def self.ignore_table(table_name, reason: nil, database: :intermediate_db)
+      ensure_ready!(database:)
+
+      raise ConfigError, "Table '#{table_name}' is already configured" if find_table(table_name)
+
+      ActiveRecord::Base.with_connection do |connection|
+        if connection.tables.exclude?(table_name)
+          raise ConfigError, "Table '#{table_name}' does not exist in the database"
+        end
+      end
+
       DSL::IgnoredFileEditor.new(config_path(database)).add_table(table_name, reason:)
     end
 

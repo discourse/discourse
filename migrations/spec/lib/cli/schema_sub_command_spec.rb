@@ -170,45 +170,19 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
 
   describe "#ignore" do
     it "allows adding ignored tables without a reason" do
-      Dir.mktmpdir do |tmpdir|
-        ignored_path = File.join(tmpdir, "ignored.rb")
-        File.write(ignored_path, "Migrations::Database::Schema.ignored do\nend\n")
-
-        connection = instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter)
-        stub_command
-        allow(schema).to receive(:ensure_ready!).with(database: "intermediate_db")
-        allow(schema).to receive(:find_table).with("users").and_return(nil)
-        allow(schema).to receive(:config_path).with("intermediate_db").and_return(tmpdir)
-        allow(ActiveRecord::Base).to receive(:with_connection).and_yield(connection)
-        allow(connection).to receive(:tables).and_return(%w[users])
-
-        command.ignore("users")
-
-        content = File.read(ignored_path)
-        expect(content).to include("table :users")
-      end
-    end
-
-    it "rejects ignoring a table that is already configured" do
       stub_command
-      allow(schema).to receive(:ensure_ready!).with(database: "intermediate_db")
-      allow(schema).to receive(:find_table).with("users").and_return(table_config)
+      allow(schema).to receive(:ignore_table).with(
+        "users",
+        reason: nil,
+        database: "intermediate_db",
+      )
 
-      expect { command.ignore("users") }.to raise_error(schema::ConfigError, /already configured/)
-    end
+      command.ignore("users")
 
-    it "rejects ignoring a table that does not exist in the database" do
-      connection = instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter)
-
-      stub_command
-      allow(schema).to receive(:ensure_ready!).with(database: "intermediate_db")
-      allow(schema).to receive(:find_table).with("users").and_return(nil)
-      allow(ActiveRecord::Base).to receive(:with_connection).and_yield(connection)
-      allow(connection).to receive(:tables).and_return(%w[posts])
-
-      expect { command.ignore("users") }.to raise_error(
-        schema::ConfigError,
-        /does not exist in the database/,
+      expect(schema).to have_received(:ignore_table).with(
+        "users",
+        reason: nil,
+        database: "intermediate_db",
       )
     end
   end

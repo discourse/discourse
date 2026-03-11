@@ -109,7 +109,6 @@ module Migrations::CLI
       load_rails!
 
       database = selected_database
-      validate_ignore_target!(table_name, database:)
       Schema.ignore_table(table_name, reason: options[:reason], database:)
       puts "✓ Added #{table_name} to ignored.rb".green
     end
@@ -192,20 +191,6 @@ module Migrations::CLI
       database = options[:database].to_s
       validate_database_option!(database)
       database
-    end
-
-    def validate_ignore_target!(table_name, database:)
-      Schema.ensure_ready!(database:)
-
-      if Schema.find_table(table_name)
-        raise Schema::ConfigError, "Table '#{table_name}' is already configured"
-      end
-
-      ActiveRecord::Base.with_connection do |connection|
-        next if connection.tables.include?(table_name)
-
-        raise Schema::ConfigError, "Table '#{table_name}' does not exist in the database"
-      end
     end
 
     def print_validation_errors(errors)
