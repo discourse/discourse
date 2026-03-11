@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   SCROLLER_HEIGHT,
   timelineDate,
@@ -10,7 +10,7 @@ import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 
 export default class TopicTimelineScroller extends Component {
-  style = htmlSafe(`height: ${SCROLLER_HEIGHT}px`);
+  style = trustHTML(`height: ${SCROLLER_HEIGHT}px`);
 
   get repliesShort() {
     return i18n(`topic.timeline.replies_short`, {

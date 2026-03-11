@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
@@ -26,11 +26,11 @@ export default class ChatRetentionReminderText extends Component {
     const count = this.#countForChannelType;
 
     if (count > 0) {
-      return htmlSafe(
+      return trustHTML(
         i18n(`chat.retention_reminders.${this.type}`, { ...opts, count })
       );
     } else {
-      return htmlSafe(
+      return trustHTML(
         i18n(`chat.retention_reminders.indefinitely_${this.type}`, opts)
       );
     }

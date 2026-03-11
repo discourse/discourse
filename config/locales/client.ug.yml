@@ -10,8 +10,12 @@ ug:
       ghost:
         status: "ھالەت"
         conditions: "شەرت"
+        arguments: "ئۆزگەرگۈچى"
+        container_args: "يۈكدان ئۆزگەرگۈچىسى"
         in_location: "دا"
         hidden: "يوشۇرۇن"
+        not_registered: "خەتلەتمىگەن"
+        no_visible_children: "كۆرۈنۈشچان تارماق تۈرى يوق"
         failed: "مەغلۇب بولدى"
     carousel:
       go_to_slide: "%{index}-سىيرىلمىغا يۆتكەل"
@@ -2362,6 +2366,9 @@ ug:
         too_short:
           one: "كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
           other: "كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك"
+      color:
+        already_used: "ئىشلىتىلگەن"
+        edit_presets: "رەڭ ئالدىن تەڭشىكىنى تەھرىرلەيدۇ"
     close: "تاقا"
     assets_changed_confirm: "بۇ تور بېكەت يۇمشاق دېتال يېڭىلاشنى تاپشۇرۇۋالدى. ھازىر ئەڭ يېڭى نەشرىگە ئېرىشسۇنمۇ؟"
     logout: "سىز تىزىمدىن چىققان."
@@ -2408,6 +2415,7 @@ ug:
         } چېكىدىن ئېشىپ كەتتى.
     learn_more: "مول بىلىم…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>مول بىلىم…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>قايتۇرما ئىنكاس…</a>"
     mute: ئۈنسىز
     unmute: ئۈنلۈك
     last_post: يوللانغان ۋاقىت
@@ -2891,6 +2899,7 @@ ug:
       upload_description: "بۇ جايغا يۈكلەش چۈشەندۈرۈشى كىرگۈزۈلىدۇ"
       olist_title: "نومۇرلۇق تىزىم"
       ulist_title: "بەلگە تىزىمى"
+      list_title: "تىزىم"
       list_item: "تىزىم تۈرى"
       toggle_direction: "يۆنىلىش ئالماشتۇر"
       apply_wrap_title: "ئوراشنى قوللان"
@@ -2976,6 +2985,9 @@ ug:
       image: "سۈرەت"
       grid_label: "بۇ شادا سۈپىتىدە كۆرسىتىلىدۇ"
       grid_mode_grid: "شادا"
+      grid_mode_carousel: "نۆۋەتلىشىپ تارقىتىش"
+      grid_mode_title: "سۈرەتدان ئۇسلۇبىنى %{mode} غا تەڭشەيدۇ"
+      remove_grid: "شادىنى چىقىرىۋەت"
       image_scale_button: "سۈرەتنى %%{percent} كە تەڭشە"
       delete_image_button: سۈرەت ئۆچۈر
       toggle_image_grid: سۈرەت سېتكىسىنى ئالماشتۇر

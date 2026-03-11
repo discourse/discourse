@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { formatUsername, postUrl } from "discourse/lib/utilities";
@@ -86,7 +86,7 @@ export default class NotificationTypeBase {
   get description() {
     const description = emojiUnescape(this.notification.fancy_title);
     if (description) {
-      return htmlSafe(description);
+      return trustHTML(description);
     } else {
       return this.notification.data.topic_title;
     }

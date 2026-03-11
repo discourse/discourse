@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 
@@ -23,7 +23,7 @@ export default class CategoriesBoxesTopic extends Component {
       {{icon this.topicStatusIcon}}
 
       <a href={{this.topic.lastUnreadUrl}} class="title">
-        {{htmlSafe this.topic.fancyTitle}}
+        {{trustHTML this.topic.fancyTitle}}
       </a>
     </li>
   </template>

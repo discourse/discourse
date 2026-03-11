@@ -414,4 +414,48 @@ RSpec.describe Onebox::Helpers do
       expect(described_class.uri_encode(url)).to eq(url)
     end
   end
+
+  describe ".normalize_dropbox_url" do
+    subject(:result) { described_class.normalize_dropbox_url(url) }
+
+    context "with non-Dropbox URL" do
+      let(:url) { "https://example.com/video.mp4" }
+
+      it "returns unchanged" do
+        expect(result).to eq(url)
+      end
+    end
+
+    context "with old /s/ format" do
+      let(:url) { "https://www.dropbox.com/s/abc123/file.mp4" }
+
+      it "converts to direct download domain" do
+        expect(result).to eq("https://dl.dropboxusercontent.com/s/abc123/file.mp4")
+      end
+    end
+
+    context "with new /scl/ format" do
+      let(:url) { "https://www.dropbox.com/scl/fi/abc123/file.mp4?rlkey=xyz789&st=test" }
+
+      it "converts to direct download domain" do
+        expect(result).to include("dl.dropboxusercontent.com")
+      end
+
+      it "adds raw=1 for direct file access" do
+        expect(result).to include("raw=1")
+      end
+
+      it "preserves authentication parameters" do
+        expect(result).to include("rlkey=xyz789", "st=test")
+      end
+    end
+
+    context "with /scl/ format without query string" do
+      let(:url) { "https://www.dropbox.com/scl/fi/abc123/file.mp4" }
+
+      it "adds raw=1 for direct file access" do
+        expect(result).to include("raw=1")
+      end
+    end
+  end
 end

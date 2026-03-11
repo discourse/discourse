@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 let usernameDecorators = [];
 export function addUsernameSelectorDecorator(decorator) {
@@ -16,7 +16,7 @@ export function decorateUsername(username) {
     decorations.push(decorator(username));
   });
 
-  return decorations.length ? htmlSafe(decorations.join("")) : "";
+  return decorations.length ? trustHTML(decorations.join("")) : "";
 }
 
 export default function decorateUsernameSelector(username) {

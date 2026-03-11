@@ -1,5 +1,6 @@
 import { computed } from "@ember/object";
-import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
+import { trustHTML as htmlSafeTemplateHelper } from "@ember/template";
+import deprecated from "discourse/lib/deprecated";
 import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
@@ -88,19 +89,33 @@ export function computedI18n(...args) {
 export { computedI18n as i18n };
 
 /**
-  Returns htmlSafe version of a string.
+  Returns trustHTML version of a string.
 
-  @method htmlSafe
-  @params {String} properties* to htmlify
+  @method trustHTML
+  @params {String} properties* to trustHTML
   @return {Function} computedProperty function
 **/
-export function htmlSafe(...args) {
+export function trustHTML(...args) {
   return computed(...args, {
     get() {
       const path = args.pop();
       return htmlSafeTemplateHelper(this.get(path));
     },
   });
+}
+
+/**
+  @deprecated Use `trustHTML` instead.
+**/
+export function htmlSafe(...args) {
+  deprecated(
+    "`htmlSafe` from 'discourse/lib/computed' is deprecated. Use `trustHTML` instead.",
+    {
+      id: "discourse.computed-html-safe",
+      since: "2026.3.0",
+    }
+  );
+  return trustHTML(...args);
 }
 
 /**

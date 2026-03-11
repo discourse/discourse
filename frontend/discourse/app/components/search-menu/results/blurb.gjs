@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 
@@ -12,7 +12,7 @@ export default class Blurb extends Component {
       {{ageWithTooltip @result.created_at}}
       <span class="blurb__separator"> - </span>
       {{#if this.siteSettings.use_pg_headlines_for_excerpt}}
-        <span>{{htmlSafe @result.blurb}}</span>
+        <span>{{trustHTML @result.blurb}}</span>
       {{else}}
         <span class="blurb__text">
           <HighlightedSearch @string={{@result.blurb}} />

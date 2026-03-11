@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
@@ -35,7 +35,7 @@ export default class BestPosts extends Component {
               <span class="best-posts --rank"></span>
               <span class="best-posts --rank"></span>
               <div class="best-posts__post">
-                <p>{{htmlSafe post.excerpt}}</p>
+                <p>{{trustHTML post.excerpt}}</p>
               </div>
               <div class="best-posts__metadata">
                 <span class="best-posts__likes">

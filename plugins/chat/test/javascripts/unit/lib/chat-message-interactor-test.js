@@ -12,8 +12,9 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    logIn(getOwner(this));
-    const message = new ChatFabricators(getOwner(this)).message();
+    this.currentUser = logIn(getOwner(this));
+    this.chatFabricators = new ChatFabricators(getOwner(this));
+    const message = this.chatFabricators.message();
     this.messageInteractor = new ChatMessageInteractor(getOwner(this), message);
     this.emojiStore = getOwner(this).lookup("service:emoji-store");
     this.siteSettings = getOwner(this).lookup("service:site-settings");
@@ -132,6 +133,51 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
     assert.deepEqual(
       this.messageInteractor.emojiReactions.map((r) => r.emoji),
       ["+1", "butterfly", "heart"]
+    );
+  });
+
+  test("canRestoreMessage allows moderators to restore deleted messages", function (assert) {
+    updateCurrentUser({ admin: false, moderator: false, staff: false });
+
+    const otherUser = this.chatFabricators.coreFabricators.user();
+    const channel = this.chatFabricators.channel({
+      meta: { can_moderate: true },
+    });
+    const message = this.chatFabricators.message({
+      channel,
+      user: otherUser,
+      deleted_at: new Date(),
+      deleted_by_id: otherUser.id,
+    });
+
+    const interactor = new ChatMessageInteractor(getOwner(this), message);
+
+    assert.true(interactor.canRestoreMessage);
+    assert.true(
+      interactor.secondaryActions.some(({ id }) => id === "restore"),
+      "restore action is visible to moderators"
+    );
+  });
+
+  test("canRestoreMessage disallows regular users from restoring moderator-deleted messages", function (assert) {
+    updateCurrentUser({ admin: false, moderator: false, staff: false });
+
+    const channel = this.chatFabricators.channel({
+      meta: { can_moderate: false },
+    });
+    const message = this.chatFabricators.message({
+      channel,
+      user: this.currentUser,
+      deleted_at: new Date(),
+      deleted_by_id: this.currentUser.id + 1,
+    });
+
+    const interactor = new ChatMessageInteractor(getOwner(this), message);
+
+    assert.false(interactor.canRestoreMessage);
+    assert.false(
+      interactor.secondaryActions.some(({ id }) => id === "restore"),
+      "restore action stays hidden for non-moderators"
     );
   });
 });

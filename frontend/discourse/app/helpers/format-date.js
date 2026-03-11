@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
 /**
@@ -23,7 +23,7 @@ export default function formatDate(val, params = {}) {
 
   if (val) {
     let date = new Date(val);
-    return htmlSafe(
+    return trustHTML(
       autoUpdatingRelativeAge(date, {
         format,
         title,

@@ -102,10 +102,9 @@ RSpec.describe Admin::DashboardController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
-
       context "when there are no problems" do
         it "returns an empty array" do
-          get "/admin/dashboard/problems.json"
+          post "/admin/dashboard/problems.json"
 
           expect(response.status).to eq(200)
           json = response.parsed_body
@@ -120,7 +119,7 @@ RSpec.describe Admin::DashboardController do
         end
 
         it "returns an array of strings" do
-          get "/admin/dashboard/problems.json"
+          post "/admin/dashboard/problems.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["problems"].size).to eq(2)
@@ -137,7 +136,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "returns a list of problems" do
-        get "/admin/dashboard/problems.json"
+        post "/admin/dashboard/problems.json"
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -149,7 +148,7 @@ RSpec.describe Admin::DashboardController do
       before { sign_in(user) }
 
       it "denies access with a 404 response" do
-        get "/admin/dashboard/problems.json"
+        post "/admin/dashboard/problems.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))

@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
@@ -10,7 +10,7 @@ const AssignsListEmptyState = <template>
     </span>
     <div class="empty-state-body">
       <p>
-        {{htmlSafe
+        {{trustHTML
           (i18n
             "user.no_assignments_body"
             icon=(icon "user-plus")

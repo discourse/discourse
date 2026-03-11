@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import discourseLater from "discourse/lib/later";
@@ -58,7 +58,7 @@ export default class ShareModal extends Component {
       context.push(`<p><b>${post.username}:</b></p>`);
       context.push(post.cooked);
     }
-    this.htmlContext = htmlSafe(context.join("\n"));
+    this.htmlContext = trustHTML(context.join("\n"));
   }
 
   @action

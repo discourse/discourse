@@ -480,4 +480,68 @@ RSpec.describe EmbedController do
       end
     end
   end
+
+  describe "#count" do
+    fab!(:embeddable_host)
+
+    it "returns counts for public topics" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "http://eviltrout.com/public-article")
+
+      get "/embed/count.json", params: { embed_url: ["http://eviltrout.com/public-article"] }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["counts"]).to have_key("http://eviltrout.com/public-article")
+    end
+
+    it "does not return counts for topics in restricted categories" do
+      restricted_category = Fabricate(:category)
+      restricted_category.set_permissions(staff: :full)
+      restricted_category.save!
+
+      restricted_topic = Fabricate(:topic, category: restricted_category, posts_count: 5)
+      Fabricate(
+        :topic_embed,
+        post: Fabricate(:post, topic: restricted_topic),
+        topic: restricted_topic,
+        embed_url: "http://eviltrout.com/private-article",
+      )
+
+      get "/embed/count.json", params: { embed_url: ["http://eviltrout.com/private-article"] }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["counts"]).not_to have_key("http://eviltrout.com/private-article")
+    end
+
+    it "returns counts only for visible topics when both public and restricted are requested" do
+      public_topic = Fabricate(:topic, posts_count: 3)
+      Fabricate(
+        :topic_embed,
+        post: Fabricate(:post, topic: public_topic),
+        topic: public_topic,
+        embed_url: "http://eviltrout.com/public-post",
+      )
+
+      restricted_category = Fabricate(:category)
+      restricted_category.set_permissions(staff: :full)
+      restricted_category.save!
+
+      restricted_topic = Fabricate(:topic, category: restricted_category, posts_count: 5)
+      Fabricate(
+        :topic_embed,
+        post: Fabricate(:post, topic: restricted_topic),
+        topic: restricted_topic,
+        embed_url: "http://eviltrout.com/secret-post",
+      )
+
+      get "/embed/count.json",
+          params: {
+            embed_url: %w[http://eviltrout.com/public-post http://eviltrout.com/secret-post],
+          }
+
+      expect(response.status).to eq(200)
+      counts = response.parsed_body["counts"]
+      expect(counts).to have_key("http://eviltrout.com/public-post")
+      expect(counts).not_to have_key("http://eviltrout.com/secret-post")
+    end
+  end
 end

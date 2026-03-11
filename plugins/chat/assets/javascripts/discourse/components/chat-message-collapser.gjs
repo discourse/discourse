@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
@@ -46,7 +46,7 @@ export default class ChatMessageCollapser extends Component {
     } else {
       name = i18n("chat.uploaded_files", { count: this.args.uploads.length });
     }
-    return htmlSafe(
+    return trustHTML(
       `<span class="chat-message-collapser-link-small">${escapeExpression(
         name
       )}</span>`
@@ -104,7 +104,7 @@ export default class ChatMessageCollapser extends Component {
         if (this.siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {
           const link = escapeExpression(videoAttributes.url);
           const title = videoAttributes.title;
-          const header = htmlSafe(
+          const header = trustHTML(
             `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`
           );
 
@@ -132,7 +132,7 @@ export default class ChatMessageCollapser extends Component {
           : e.firstElementChild.href;
 
         link = escapeExpression(link);
-        const header = htmlSafe(
+        const header = trustHTML(
           `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${link}</a>`
         );
         acc.push({ header, body: e.outerHTML, needsCollapser: true });
@@ -148,7 +148,7 @@ export default class ChatMessageCollapser extends Component {
       if (imagePredicate(e)) {
         const link = escapeExpression(e.firstElementChild.src);
         const alt = escapeExpression(e.firstElementChild.alt);
-        const header = htmlSafe(
+        const header = trustHTML(
           `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${
             alt || link
           }</a>`
@@ -169,7 +169,7 @@ export default class ChatMessageCollapser extends Component {
           e.firstElementChild.firstElementChild.textContent
         );
         e.firstElementChild.removeChild(e.firstElementChild.firstElementChild);
-        const header = htmlSafe(
+        const header = trustHTML(
           `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${title}</a>`
         );
         acc.push({ header, body: e.outerHTML, needsCollapser: true });
@@ -184,7 +184,7 @@ export default class ChatMessageCollapser extends Component {
     <div class="chat-message-collapser">
       {{#if this.hasUploads}}
         <DecoratedHtml
-          @html={{htmlSafe @cooked}}
+          @html={{trustHTML @cooked}}
           @decorate={{@decorate}}
           @className="chat-cooked"
         />
@@ -216,7 +216,7 @@ export default class ChatMessageCollapser extends Component {
                 </div>
               {{else}}
                 <DecoratedHtml
-                  @html={{htmlSafe cooked.body}}
+                  @html={{trustHTML cooked.body}}
                   @decorate={{@decorate}}
                   @className="chat-cooked"
                 />
@@ -224,7 +224,7 @@ export default class ChatMessageCollapser extends Component {
             </Collapser>
           {{else}}
             <DecoratedHtml
-              @html={{htmlSafe cooked.body}}
+              @html={{trustHTML cooked.body}}
               @decorate={{@decorate}}
               @className="chat-cooked"
             />

@@ -60,7 +60,7 @@ pt_BR:
           description: "Concordar com a denúncia e silenciar o(a) usuário(a)."
         disagree_and_restore:
           title: "Discordar e restaurar comentário"
-          description: "Restaure o comentário para que todos(as) usuários(as) possam ver."
+          description: "Restaurar o comentário para que todos(as) usuários(as) possam vê-lo."
         disagree:
           title: "Manter comentário"
           description: "Discordar da denúncia e manter o comentário inalterado."

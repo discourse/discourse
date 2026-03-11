@@ -141,6 +141,30 @@ RSpec.describe StylesheetsController do
   end
 
   describe "#color_scheme" do
+    it "does not use a non-user-selectable theme_id for anonymous users" do
+      scheme = ColorScheme.create_from_base(name: "hidden scheme", colors: [])
+      non_selectable_theme = Fabricate(:theme, user_selectable: false, color_scheme_id: scheme.id)
+
+      get "/color-scheme-stylesheet/-1/#{non_selectable_theme.id}.json"
+
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["color_scheme_id"]).not_to eq(scheme.id)
+    end
+
+    it "does not use a non-user-selectable theme_id for regular users" do
+      scheme = ColorScheme.create_from_base(name: "hidden scheme", colors: [])
+      non_selectable_theme = Fabricate(:theme, user_selectable: false, color_scheme_id: scheme.id)
+      user = Fabricate(:user)
+      sign_in(user)
+
+      get "/color-scheme-stylesheet/-1/#{non_selectable_theme.id}.json"
+
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["color_scheme_id"]).not_to eq(scheme.id)
+    end
+
     it "works as expected" do
       scheme = ColorScheme.last
       get "/color-scheme-stylesheet/#{scheme.id}.json"

@@ -156,13 +156,13 @@ pt_BR:
               label: "Sinalizar postagem"
               description: "Sinaliza a postagem (como spam ou para revisão)"
             notify_author_pm:
-              label: "Notificar o autor via PM"
+              label: "Notificar o autor via mensagem privada"
               description: "Enviar uma mensagem pessoal ao autor da postagem quando os posts forem citados e deletados"
             notify_author_pm_user:
               label: "Remetente de mensagem privada"
               description: "Usuário que enviará a mensagem privada (o padrão é o sistema)"
             notify_author_pm_message:
-              label: "Conteúdo da mensagem pessoal"
+              label: "Conteúdo da mensagem privada"
               description: "Mensagem personalizada opcional para enviar ao autor."
             include_personal_messages:
               label: "Incluir mensagens pessoais"
@@ -343,7 +343,7 @@ pt_BR:
           enable_translations: "Ativar traduções automáticas"
         stats:
           title: "Estatísticas de tradução"
-          backfill_disabled: "O backfilling está desativado; apenas as novas publicações serão traduzidas."
+          backfill_disabled: "O backfilling está desativado; apenas novas postagens serão traduzidas."
           backfill_message: "<a href='%{settingsUrl}'>As configurações de backfill</a> estão configuradas para traduzir todas as postagens após %{date} — estima-se que isso leve %{eta}."
           eta_minutes:
             one: "%{count} minuto"

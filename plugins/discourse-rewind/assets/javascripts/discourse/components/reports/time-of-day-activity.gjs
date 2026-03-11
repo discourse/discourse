@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
@@ -138,7 +138,7 @@ export default class TimeOfDayActivity extends Component {
   get gridLines() {
     return Array.from({ length: 5 }, (_, i) => ({
       y: this.SVG_PADDING + (i * (this.SVG_HEIGHT - 2 * this.SVG_PADDING)) / 4,
-      style: htmlSafe(`opacity: ${i === 0 || i === 4 ? 0.3 : 0.15}`),
+      style: trustHTML(`opacity: ${i === 0 || i === 4 ? 0.3 : 0.15}`),
     }));
   }
 

@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import concatClass from "discourse/helpers/concat-class";
@@ -356,7 +356,7 @@ export default class Rewind extends Component {
             {{willDestroy this.cleanup}}
           >
             {{#unless (eq this.currentUser.id @user.id)}}
-              <p class="rewind-other-user">{{htmlSafe
+              <p class="rewind-other-user">{{trustHTML
                   (i18n
                     "discourse_rewind.viewing_other_user"
                     username=@user.username
@@ -380,7 +380,7 @@ export default class Rewind extends Component {
                     <span class="rewind-gibberish__code-line">>> flux conduit
                       handshake TIMED OUT</span><br /></p>
                 </div>
-                {{htmlSafe (i18n "discourse_rewind.cannot_view_rewind")}}
+                {{trustHTML (i18n "discourse_rewind.cannot_view_rewind")}}
               </div>
             {{/if}}
 

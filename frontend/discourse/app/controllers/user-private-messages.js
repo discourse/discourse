@@ -3,7 +3,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
@@ -85,7 +85,7 @@ export default class extends Controller {
       );
     }, userMsgsCount);
     if (userMsgsCount && this.showCount) {
-      inboxName = htmlSafe(`${inboxName}&nbsp;(${userMsgsCount})`);
+      inboxName = trustHTML(`${inboxName}&nbsp;(${userMsgsCount})`);
     }
     const content = [
       {
@@ -108,7 +108,7 @@ export default class extends Controller {
         );
       }, groupMsgsCount);
       if (groupMsgsCount && this.showCount) {
-        groupName = htmlSafe(`${name}&nbsp;(${groupMsgsCount})`);
+        groupName = trustHTML(`${name}&nbsp;(${groupMsgsCount})`);
       }
       content.push({
         id: this.router.urlFor(

@@ -7,7 +7,7 @@ import { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
@@ -239,7 +239,7 @@ export default class AdminThemeEditor extends Component {
       {{/if}}
 
       {{#if this.warning}}
-        <pre class="field-warning">{{htmlSafe this.warning}}</pre>
+        <pre class="field-warning">{{trustHTML this.warning}}</pre>
       {{/if}}
 
       <div class="field-info">

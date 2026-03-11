@@ -163,11 +163,7 @@ export default class FKField extends Component {
                   >{{field.helpText}}</FKText>
                 {{/if}}
 
-                <FKMeta
-                  @field={{field}}
-                  @error={{field.error}}
-                  @controlWidth={{field.controlWidth}}
-                />
+                <FKMeta @field={{field}} @error={{field.error}} />
               </div>
             </div>
           {{else}}

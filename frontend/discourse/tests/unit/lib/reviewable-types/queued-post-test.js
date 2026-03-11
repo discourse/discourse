@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { emojiUnescape } from "discourse/lib/text";
@@ -35,7 +35,7 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
     );
     assert.deepEqual(
       director.description,
-      htmlSafe(
+      trustHTML(
         i18n("user_menu.reviewable.new_post_in_topic", {
           title: `This is safe title &lt;a&gt; ${emojiUnescape(":heart:")}`,
         })
@@ -47,7 +47,7 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
     reviewable.payload_title = "This is unsafe title <a> :heart:";
     assert.deepEqual(
       director.description,
-      htmlSafe(
+      trustHTML(
         i18n("user_menu.reviewable.new_post_in_topic", {
           title: `This is unsafe title &lt;a&gt; ${emojiUnescape(":heart:")}`,
         })

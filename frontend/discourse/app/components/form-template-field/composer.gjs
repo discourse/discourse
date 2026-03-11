@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DEditor from "discourse/components/d-editor";
 import icon from "discourse/helpers/d-icon";
 
@@ -30,7 +30,7 @@ export default class FormTemplateFieldComposer extends Component {
 
       {{#if @attributes.description}}
         <span class="form-template-field__description">
-          {{htmlSafe @attributes.description}}
+          {{trustHTML @attributes.description}}
         </span>
       {{/if}}
       <input type="hidden" name={{@id}} value={{this.composerValue}} />

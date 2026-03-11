@@ -4243,6 +4243,7 @@ el:
         emoji_required: "Επιλέξτε ένα emoji."
         icon_required: "Επιλέξτε ένα εικονίδιο."
       name: "Όνομα κατηγορίας"
+      untitled: "Κατηγορία χωρίς τίτλο"
       description: "Περιγραφή"
       logo: "Εικόνα λογότυπου κατηγορίας"
       logo_dark: "Εικόνα λογότυπου κατηγορίας σκοτεινής λειτουργίας"
@@ -4480,6 +4481,8 @@ el:
       personal_message:
         title: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
         help: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
+      visibility_reasons:
+        bulk_action: "Η ορατότητα αυτού του θέματος άλλαξε λόγω μιας μαζικής ενέργειας που πραγματοποιήθηκε από έναν χρήστη"
     posts: "Αναρτήσεις"
     pending_posts:
       label: "Εκκρεμή"
@@ -5487,6 +5490,8 @@ el:
               title: "Ρυθμίσεις"
             authenticators:
               title: "Συνδέσεις κοινωνικών δικτύων"
+            discourseconnect:
+              title: "Discourse Connect"
             discourse_id:
               title: "Discourse ID"
         discourse_id:
@@ -5790,6 +5795,7 @@ el:
       search:
         modal_title: "Αναζητήστε τα πάντα στη διαχείριση"
         title: "Αναζήτηση"
+        instructions: "Αναζητήστε τα πάντα στη διαχείριση..."
         full_page_link: "Εναλλαγή σε αναζήτηση πλήρους σελίδας"
         no_results: 'Δεν μπορέσαμε να βρούμε κάτι που να αντιστοιχεί με "%{filter}".'
         result_count:
@@ -5807,8 +5813,8 @@ el:
         critical_available: "Μια κρίσιμη ενημέρωση είναι διαθέσιμη"
         updates_available: "Υπάρχουν διαθέσιμες ενημερώσεις"
         please_update: "Παρακαλούμε ενημερώστε!"
-        no_check_performed: "Δεν έγινε έλεγχος για ενημερώσεις. Βεβαιώσου πως το sidekiq τρέχει."
-        stale_data: "Δεν έγινε έλεγχος για ενημερώσεις εδώ και αρκετό καιρό. Βεβαιώσου πως το sidekiq τρέχει."
+        no_check_performed: "Δεν έγινε έλεγχος για ενημερώσεις. Βεβαιωθείτε ότι το Sidekiq εκτελείται."
+        stale_data: "Δεν έγινε έλεγχος για ενημερώσεις τον τελευταίο καιρό. Βεβαιωθείτε ότι το Sidekiq εκτελείται."
         version_check_pending: "Φαίνεται ότι ενημερώσατε πρόσφατα. Φανταστικά!"
         installed_version: "Εγκατεστημένα"
         latest_version: "Τελευταία"
@@ -5993,6 +5999,7 @@ el:
         cancel: "Ακύρωση"
         continue: "Συνεχίστε"
         copy_key: "Αντιγραφή"
+        key_copied_to_clipboard: "Το κλειδί API αντιγράφηκε στο πρόχειρο"
         back: "Επιστροφή στα κλειδιά API"
         revoke: "Ανακάλεσε"
         undo_revoke: "Αναίρεση ανάκλησης"
@@ -6273,12 +6280,15 @@ el:
           emoji: "Emoji"
           navigation: "Πλοήγηση"
           themes_and_components:
+            title: "Θέματα και στοιχεία"
             keywords: "επέκταση"
           site_texts: "Κείμενα ιστότοπου"
       email_settings:
         title: "Ρυθμίσεις ηλεκτρονικού ταχυδρομείου"
         sidebar_link:
           appearance: "Εμφάνιση"
+          server_setup:
+            title: "Εγκατάσταση & αρχεία καταγραφής διακομιστή"
       security:
         title: "Ασφάλεια"
         sidebar_link:
@@ -6919,7 +6929,7 @@ el:
           email_addresses:
             see_more: "[Δείτε περισσότερα...]"
       moderation_history:
-        performed_by: "Εκτελεσμένο από"
+        performed_by: "Εκτελέστηκε από"
         no_results: "Δεν υπάρχει διαθέσιμο ιστορικό συντονισμού."
         actions:
           delete_user: "Ο χρήστης διαγράφηκε"
@@ -7062,7 +7072,7 @@ el:
             delete_flag: "διαγραφή αναφοράς"
             stop_impersonating: "σταμάτα την πλαστοπροσωπία"
         screened_emails:
-          description: "Όταν κάποιος φτιάξει έναν λογαριασμό, οι παρακάτω διευθύνσεις email θα ελεγχθούν και η εγγραφή θα αποκλειστεί ή θα συμβεί κάποια άλλη ενέργεια."
+          description: "Όταν κάποιος προσπαθήσει να φτιάξει έναν νέο λογαριασμό, οι παρακάτω διευθύνσεις email θα ελεγχθούν και η εγγραφή θα αποκλειστεί ή θα συμβεί κάποια άλλη ενέργεια."
           actions:
             allow: "Επίτρεψε"
         screened_urls:
@@ -7086,13 +7096,16 @@ el:
             text: "Σύνοψη"
             title: "Δημιουργεί νέες εγγραφές για τον αποκλεισμό υποδικτύων αν υπάρχουν τουλάχιστον 'min_ban_entries_for_roll_up' εγγραφές."
         search_logs:
+          title: "Αναζήτηση καταγραφών"
           term: "Όρος"
           searches: "Αναζητήσεις"
           click_through_rate: "CTR"
           types:
             all_search_types: "Όλοι οι τύποι αναζήτησης"
             header: "Header"
+            full_page: "Πλήρης σελίδα"
             click_through_only: "Όλα (μόνο για κλικ)"
+          header_search_results: "Αποτελέσματα αναζήτησης κεφαλίδας"
       watched_words:
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"

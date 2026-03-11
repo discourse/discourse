@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -27,10 +28,18 @@ const SchemaFormField = <template>
       @validation={{if @entry.required "required"}}
       @titleFormat="full"
       @descriptionFormat="full"
-      @format="small"
+      @format="full"
       as |field|
     >
-      <field.Input @type="number" />
+      {{#if (eq @entry.subtype "duration")}}
+        <RelativeTimePicker
+          @durationHours={{field.value}}
+          @durationOutputUnit="hours"
+          @onChange={{field.set}}
+        />
+      {{else}}
+        <field.Input @type="number" />
+      {{/if}}
     </@formObject.Field>
   {{else}}
     <@formObject.Field
@@ -57,10 +66,12 @@ export default class EditCategoryTypeSchemaFields extends Component {
   }
 
   get className() {
-    let classes = ["edit-category-type-schema-fields"];
-    classes.push(`--category-type-${this.args.categoryType}`);
+    let classes = [
+      "edit-category-type-schema-fields",
+      `--category-type-${this.args.categoryType}`,
+    ];
     if (this.args.active) {
-      classes.push(" active");
+      classes.push("active");
     }
     return classes.join(" ");
   }

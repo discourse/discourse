@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import EmptyState from "discourse/components/empty-state";
@@ -19,7 +19,7 @@ import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 function channelColorStyle(channel) {
-  return htmlSafe(`color: #${channel.chatable?.color || "000"}`);
+  return trustHTML(`color: #${channel.chatable?.color || "000"}`);
 }
 
 function channelIcon(channel) {
@@ -146,7 +146,7 @@ export default class EditCategoryChat extends Component {
         {{else}}
           <EmptyState
             @title={{i18n "chat.edit_category.no_channels"}}
-            @body={{htmlSafe
+            @body={{trustHTML
               (i18n
                 "chat.edit_category.no_channels_body"
                 chatBrowseUrl=(getURL "/chat/browse/open")

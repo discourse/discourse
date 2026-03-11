@@ -2,7 +2,7 @@
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import Service, { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { bind } from "discourse/lib/decorators";
@@ -81,7 +81,7 @@ export default class LogsNoticeService extends Service {
 
   @computed("text")
   get message() {
-    return htmlSafe(this.text);
+    return trustHTML(this.text);
   }
 
   @computed("isEmpty", "isAdmin")

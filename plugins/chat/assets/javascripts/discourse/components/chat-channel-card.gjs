@@ -1,6 +1,6 @@
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -16,7 +16,7 @@ import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
         (if @channel.isClosed "--closed")
         (if @channel.isArchived "--archived")
       }}
-      style={{htmlSafe
+      style={{trustHTML
         (concat "--chat-channel-card-border: #" @channel.chatable.color)
       }}
       data-channel-id={{@channel.id}}

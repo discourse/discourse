@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AceEditor from "discourse/components/ace-editor";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -19,7 +19,7 @@ export default class FKControlCode extends FKBaseControl {
       return;
     }
 
-    return htmlSafe(`height: ${escapeExpression(this.args.height)}px`);
+    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
   <template>

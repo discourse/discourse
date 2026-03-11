@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
@@ -214,7 +214,7 @@ export default class TopicEntrance extends Component {
       class="btn-default full jump-top"
     >
       {{icon "backward-step"}}
-      {{htmlSafe this.topDate}}
+      {{trustHTML this.topDate}}
     </DButton>
 
     <DButton
@@ -226,7 +226,7 @@ export default class TopicEntrance extends Component {
       title={{i18n "topic_entrance.jump_bottom_button_title"}}
       class="btn-default full jump-bottom"
     >
-      {{htmlSafe this.bottomDate}}
+      {{trustHTML this.bottomDate}}
       {{icon "forward-step"}}
     </DButton>
   </template>

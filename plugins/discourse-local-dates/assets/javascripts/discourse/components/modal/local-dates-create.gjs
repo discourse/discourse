@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import EmberObject, { action, computed } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
@@ -503,7 +503,7 @@ export default class LocalDatesCreate extends Component {
                   <label class="control-label">
                     {{i18n "discourse_local_dates.create.form.recurring_title"}}
                   </label>
-                  <p>{{htmlSafe
+                  <p>{{trustHTML
                       (i18n
                         "discourse_local_dates.create.form.recurring_description"
                       )

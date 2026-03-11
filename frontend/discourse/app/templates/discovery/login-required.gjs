@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
@@ -24,7 +24,7 @@ export default <template>
           <PluginOutlet @name="above-static" />
 
           <div class="login-content">
-            {{htmlSafe @controller.model.html}}
+            {{trustHTML @controller.model.html}}
           </div>
 
           <PluginOutlet @name="below-static" />
