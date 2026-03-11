@@ -495,7 +495,12 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
 
-    tags = params[:tags] || []
+    tags =
+      if params[:tags].is_a?(ActionController::Parameters)
+        params[:tags].values
+      else
+        params[:tags] || []
+      end
 
     if tags.present? && tags.first.is_a?(String)
       Discourse.deprecate(

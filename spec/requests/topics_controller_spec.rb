@@ -2380,6 +2380,23 @@ RSpec.describe TopicsController do
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
+          it "can update tags when params are form-encoded as indexed hash" do
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: {
+                      "0" => {
+                        id: tag.id,
+                        name: tag.name,
+                      },
+                    },
+                  }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
           it "can create a new tag" do
             SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
