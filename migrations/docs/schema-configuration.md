@@ -1,6 +1,8 @@
 # Schema Configuration DSL
 
-The schema DSL defines the structure of a database used during migrations. It maps source Discourse tables to a schema, letting you control which columns to include, rename columns, override types, add synthetic columns, and define enums.
+The schema DSL defines the structure of a database used during migrations. It maps source Discourse
+tables to a schema, letting you control which columns to include, rename columns, override types,
+add synthetic columns, and define enums.
 
 Config files live in `migrations/config/schema/<database>/` (e.g. `intermediate_db`).
 
@@ -22,17 +24,17 @@ migrations/config/schema/intermediate_db/
 
 ## CLI commands
 
-| Command | Description |
-|---------|-------------|
-| `schema add TABLE` | Create a config file for a new table |
-| `schema validate` | Validate config against the database |
-| `schema diff` | Show differences between config and database |
-| `schema resolve` | Show the resolved schema (for debugging) |
-| `schema generate` | Generate SQL schema, Ruby models, and enum files |
-| `schema list` | List configured tables and enums, plus ignored table count |
-| `schema show TABLE` | Show configuration details for a table |
-| `schema ignore TABLE [--reason "..."]` | Add a table to `ignored.rb` |
-| `schema refresh-plugins` | Regenerate the plugin manifest |
+| Command                                | Description                                                |
+|----------------------------------------|------------------------------------------------------------|
+| `schema add TABLE`                     | Create a config file for a new table                       |
+| `schema validate`                      | Validate config against the database                       |
+| `schema diff`                          | Show differences between config and database               |
+| `schema resolve`                       | Show the resolved schema (for debugging)                   |
+| `schema generate`                      | Generate SQL schema, Ruby models, and enum files           |
+| `schema list`                          | List configured tables and enums, plus ignored table count |
+| `schema show TABLE`                    | Show configuration details for a table                     |
+| `schema ignore TABLE [--reason "..."]` | Add a table to `ignored.rb`                                |
+| `schema refresh-plugins`               | Regenerate the plugin manifest                             |
 
 All commands accept `--db NAME` (default: `intermediate_db`).
 
@@ -64,7 +66,9 @@ end
 
 #### `include`
 
-Include only specific columns. Remaining columns must be explicitly passed to `ignore` — the validator requires every database column to be accounted for, so new columns are never silently excluded.
+Include only specific columns. Remaining columns must be explicitly passed to `ignore` — the
+validator requires every database column to be accounted for, so new columns are never silently
+excluded.
 
 ```ruby
 Migrations::Database::Schema.table :users do
@@ -75,18 +79,20 @@ end
 
 #### `include!`
 
-Include columns that are globally ignored (via conventions) or auto-ignored (via plugins). Regular `include` will produce a validation error for such columns; use `include!` to explicitly override.
+Include columns that are globally ignored (via conventions) or auto-ignored (via plugins). Regular
+`include` will produce a validation error for such columns; use `include!` to explicitly override.
 
 ```ruby
 Migrations::Database::Schema.table :users do
   include :id, :username
-  include! :updated_at  # override global ignore from conventions
+  include! :updated_at # override global ignore from conventions
 end
 ```
 
 #### `ignore`
 
-Exclude specific columns; all others are included (implies `include_all`). You should provide a reason.
+Exclude specific columns; all others are included (implies `include_all`). You should provide a
+reason.
 
 ```ruby
 Migrations::Database::Schema.table :topics do
@@ -110,6 +116,7 @@ end
 ```
 
 Available options:
+
 - `type:` - Override the column type (`:text`, `:numeric`, `:boolean`, `:datetime`, `:blob`)
 - `required:` - Mark the column as NOT NULL (`true` or `false`)
 - `max_length:` - Set a maximum length constraint
@@ -139,6 +146,7 @@ end
 ```
 
 Options:
+
 - `required:` - Mark as NOT NULL (default: `false`)
 - `enum:` - Reference a defined enum for validation
 
@@ -159,7 +167,8 @@ Single-column primary keys detected from the source are used automatically.
 
 #### `copy_structure_from`
 
-Use a different database table as the column source. The resolver reads the actual database columns from the specified table — it does not copy another table's DSL configuration.
+Use a different database table as the column source. The resolver reads the actual database columns
+from the specified table — it does not copy another table's DSL configuration.
 
 ```ruby
 Migrations::Database::Schema.table :user_field_values do
@@ -193,10 +202,12 @@ index :status, name: :idx_custom_name
 ```
 
 Options:
+
 - `name:` - Override the index name (default: auto-generated from table and column names)
 - `where:` - Add a partial index condition (SQL expression)
 
-Column names are required (one or more). They must reference columns that are included, added, or renamed in the table configuration.
+Column names are required (one or more). They must reference columns that are included, added, or
+renamed in the table configuration.
 
 ### Constraints
 
@@ -207,12 +218,15 @@ check :positive_score, "score >= 0"
 ```
 
 Arguments:
+
 - First: constraint name (symbol or string)
 - Second: SQL condition (string)
 
 ### Plugin support
 
-Columns from plugins listed in `ignored.rb` are always auto-ignored automatically. Use `ignore_plugin_columns!` for non-ignored plugins whose columns you don't want in the intermediate schema.
+Columns from plugins listed in `ignored.rb` are always auto-ignored automatically. Use
+`ignore_plugin_columns!` for non-ignored plugins whose columns you don't want in the intermediate
+schema.
 
 Auto-ignore columns from all non-ignored plugins:
 
@@ -236,9 +250,11 @@ end
 
 Controls how `schema generate` handles the Ruby model file for this table. There are three modes:
 
-**Default** (no `model` declaration) — the model file is fully regenerated on every run. Any manual edits will be overwritten.
+**Default** (no `model` declaration) — the model file is fully regenerated on every run. Any manual
+edits will be overwritten.
 
-**`model :extended`** — the model file is regenerated, but custom code between the marker comments is preserved:
+**`model :extended`** — the model file is regenerated, but custom code between the marker comments
+is preserved:
 
 ```ruby
 model :extended
@@ -248,13 +264,14 @@ The generated file will contain a section like this:
 
 ```ruby
     # -- custom code --
-    # your custom methods and logic here
-    # -- end custom code --
+# your custom methods and logic here
+# -- end custom code --
 ```
 
 Code between the markers survives regeneration. Code outside the markers is overwritten.
 
-**`model :manual`** — the model file is not generated at all. Use this when you need full control and will write the model yourself.
+**`model :manual`** — the model file is not generated at all. Use this when you need full control
+and will write the model yourself.
 
 ```ruby
 model :manual
@@ -286,6 +303,7 @@ end
 ```
 
 Convention methods:
+
 - `column :name` - Match a specific column name, then set `rename_to`, `type`, `required`
 - `columns_matching /pattern/` - Match columns by regex pattern
 - `ignore_columns :col1, :col2` - Globally ignore columns across all tables
@@ -294,7 +312,8 @@ Conventions are applied during schema resolution. Per-table `column` options tak
 
 ## Enums
 
-Enums define named value sets. Defined in `enums/`. All values in an enum must be the same type — either all integers or all strings.
+Enums define named value sets. Defined in `enums/`. All values in an enum must be the same type —
+either all integers or all strings.
 
 Integer enum:
 
@@ -342,7 +361,8 @@ end
 
 ## Output configuration
 
-Controls where `schema generate` writes the SQL schema file, Ruby models, and enum modules. Defined in `config.rb`:
+Controls where `schema generate` writes the SQL schema file, Ruby models, and enum modules. Defined
+in `config.rb`:
 
 ```ruby
 Migrations::Database::Schema.configure do
