@@ -45,6 +45,9 @@
             "type": "string",
             "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
           },
+          "all_day": {
+            "type": "boolean"
+          },
           "post": {
             "type": "object",
             "additionalProperties": false,
