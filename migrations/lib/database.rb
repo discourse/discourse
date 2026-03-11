@@ -66,12 +66,12 @@ module Migrations
 
     def self.to_blob(value)
       return nil if value.blank?
-      ::Extralite::Blob.new(value)
+      Extralite::Blob.new(value)
     end
 
     def self.to_json(value)
       return nil if value.nil?
-      ::Oj.dump(value, mode: :compat)
+      Oj.dump(value, mode: :compat)
     end
 
     def self.to_date(text)
