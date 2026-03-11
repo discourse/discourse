@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
 
@@ -37,7 +37,7 @@ export default class FKControlTextarea extends FKBaseControl {
       return;
     }
 
-    return htmlSafe(`height: ${escapeExpression(this.args.height)}px`);
+    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
   <template>
