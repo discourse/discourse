@@ -11,33 +11,30 @@ module DiscourseSolved::CategoryExtension
   end
 
   def enable_accepted_answers?
-    custom_fields&.[](DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD) == "true"
+    custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] == "true"
   end
 
   def enable_accepted_answers=(value)
-    return if custom_fields.blank?
     custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = coerce_boolean_value(
       value,
     )
   end
 
   def notify_on_staff_accept_solved?
-    custom_fields&.[](DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD) == "true"
+    custom_fields[DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD] == "true"
   end
 
   def notify_on_staff_accept_solved=(value)
-    return if custom_fields.blank?
     custom_fields[
       DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
     ] = coerce_boolean_value(value)
   end
 
   def empty_box_on_unsolved?
-    custom_fields&.[](DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD) == "true"
+    custom_fields[DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD] == "true"
   end
 
   def empty_box_on_unsolved=(value)
-    return if custom_fields.blank?
     custom_fields[DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD] = coerce_boolean_value(value)
   end
 
