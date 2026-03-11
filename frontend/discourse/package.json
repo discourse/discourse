@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
-    "@babel/standalone": "^7.28.5",
+    "@babel/standalone": "^7.29.1",
     "@colors/colors": "^1.6.0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -120,7 +120,7 @@
     "ember-async-data": "^2.0.1",
     "ember-auto-import": "^2.12.1",
     "ember-buffered-proxy": "^2.1.1",
-    "ember-cli": "~6.10.0",
+    "ember-cli": "~6.11.0",
     "ember-cli-app-version": "^7.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-deprecation-workflow": "^4.0.1",
