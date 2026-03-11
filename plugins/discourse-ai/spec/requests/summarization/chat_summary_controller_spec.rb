@@ -22,7 +22,7 @@ RSpec.describe DiscourseAi::Summarization::ChatSummaryController do
       fab!(:channel, :category_channel)
       fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
-      before { assign_persona_to(:ai_summarization_persona, [group.id]) }
+      before { assign_agent_to(:ai_summarization_agent, [group.id]) }
 
       it "returns a summary" do
         summary = "This is a summary"
