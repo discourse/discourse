@@ -37,31 +37,6 @@ module Migrations::CLI
       puts "✓ Generated #{tables_str}, #{enums_str}".green
     end
 
-    desc "resolve", "Show the resolved schema (for debugging)"
-    def resolve
-      load_rails!
-
-      database = selected_database
-      preflight = Schema.preflight(database:)
-      print_validation_errors(preflight.errors)
-      resolved = preflight.resolved
-
-      puts "Resolved Schema"
-      puts "==============="
-      puts
-      puts "Tables (#{resolved.tables.size}):"
-      resolved.tables.each do |table|
-        pk_names = table.primary_key_column_names
-        pk = pk_names&.any? ? pk_names.join(", ") : "none"
-        puts "  #{table.name} (PK: #{pk}, #{table.columns.size} columns)"
-      end
-      puts
-      puts "Enums (#{resolved.enums.size}):"
-      resolved.enums.each do |enum|
-        puts "  #{enum.name}: #{enum.values.size} values (#{enum.datatype})"
-      end
-    end
-
     desc "list", "List configured tables and enums, plus ignored table count"
     def list
       load_rails!
@@ -82,25 +57,6 @@ module Migrations::CLI
 
       ignored_count = ignored ? ignored.table_names.size : 0
       puts "Ignored tables: #{ignored_count}"
-    end
-
-    desc "show TABLE", "Show configuration details for a table"
-    def show(table_name)
-      load_rails!
-      database = selected_database
-      Schema.ensure_ready!(database:)
-
-      table = Schema.find_table(table_name)
-
-      unless table
-        puts "Table '#{table_name}' not found in configuration.".red
-        puts
-        puts "Available tables:"
-        Schema.tables.keys.sort.each { |t| puts "  #{t}" }
-        exit 1
-      end
-
-      display_table(table)
     end
 
     desc "ignore TABLE", "Add a table to ignored.rb"
@@ -201,71 +157,6 @@ module Migrations::CLI
       error_count = errors.size
       puts "#{error_count} #{"error".pluralize(error_count)}"
       exit 1
-    end
-
-    def display_table(table)
-      puts "Table: #{table.name}"
-      puts "  Source: #{table.source_table_name}" if table.source_table_name != table.name
-      puts
-
-      if table.primary_key_columns
-        puts "  Primary Key: #{table.primary_key_columns.join(", ")}"
-        puts
-      end
-
-      if table.included_column_names
-        puts "  Included Columns (#{table.included_column_names.size}):"
-        table.included_column_names.sort.each do |col|
-          opts = table.column_options_for(col)
-          extra = []
-          extra << "type: #{opts.type}" if opts&.type
-          extra << "required" if opts&.required
-          extra_str = extra.any? ? " (#{extra.join(", ")})" : ""
-          puts "    #{col}#{extra_str}"
-        end
-      else
-        puts "  Columns: all (no explicit include list)"
-      end
-      puts
-
-      if table.added_columns.any?
-        puts "  Added Columns (#{table.added_columns.size}):"
-        table.added_columns.each do |col|
-          extra = []
-          extra << "enum: #{col.enum}" if col.enum
-          extra << "required" if col.required
-          extra_str = extra.any? ? " (#{extra.join(", ")})" : ""
-          puts "    #{col.name}: #{col.type}#{extra_str}"
-        end
-        puts
-      end
-
-      if table.ignored_column_names.any?
-        puts "  Ignored Columns (#{table.ignored_column_names.size}):"
-        table.ignored_column_names.sort.each do |col|
-          reason = table.ignore_reason_for(col)
-          puts "    #{col}: #{reason}"
-        end
-        puts
-      end
-
-      if table.indexes.any?
-        puts "  Indexes (#{table.indexes.size}):"
-        table.indexes.each do |idx|
-          unique_str = idx.unique ? "UNIQUE " : ""
-          where_str = idx.condition ? " WHERE #{idx.condition}" : ""
-          puts "    #{unique_str}#{idx.name} (#{idx.column_names.join(", ")})#{where_str}"
-        end
-        puts
-      end
-
-      if table.constraints.any?
-        puts "  Constraints (#{table.constraints.size}):"
-        table.constraints.each { |c| puts "    #{c.name}: #{c.condition}" }
-        puts
-      end
-
-      puts "  Auto-ignore plugin columns: #{table.ignore_plugin_columns?}"
     end
 
     def display_diff(result, verbose: false)

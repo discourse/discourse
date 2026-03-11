@@ -114,11 +114,6 @@ module Migrations::Database
       preflight(database:).errors
     end
 
-    def self.resolve(database: :intermediate_db)
-      ensure_ready!(database:)
-      DSL::SchemaResolver.new(self).resolve
-    end
-
     def self.generate(database: :intermediate_db)
       ensure_ready!(database:)
       DSL::Generator.new(self, database:).generate
