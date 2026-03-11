@@ -102,11 +102,11 @@ module Migrations::Database::Schema::DSL
       rename_to_override: nil
     )
       col_name = db_col.name
+      convention = @conventions&.convention_for(col_name)
 
-      effective_name = rename_to_override || @conventions&.effective_name(col_name) || col_name
+      effective_name = rename_to_override || convention&.rename_to || col_name
 
-      raw_type =
-        type_override || @conventions&.convention_for(col_name)&.type_override || db_col.type
+      raw_type = type_override || convention&.type_override || db_col.type
 
       datatype = normalize_datatype(raw_type)
 
@@ -116,7 +116,7 @@ module Migrations::Database::Schema::DSL
         datatype = enum.datatype
       end
 
-      convention_required = @conventions&.convention_for(col_name)&.required
+      convention_required = convention&.required
 
       nullable =
         if required_override == true
