@@ -1223,8 +1223,11 @@ class User < ActiveRecord::Base
       index = (num * hex_length) + num
       colors[index, hex_length]
     else
-      color = LetterAvatar::COLORS[color_index(username, LetterAvatar::COLORS.length)]
-      color.map { |c| c.to_s(16).rjust(2, "0") }.join
+      hue = LetterAvatar::Identity.from_username(username).color
+      LetterAvatar
+        .oklch_to_rgb(LetterAvatar::LIGHTNESS, LetterAvatar::CHROMA, hue)
+        .map { |c| c.to_s(16).rjust(2, "0") }
+        .join
     end
   end
 
