@@ -88,7 +88,7 @@ export default class TagInfo extends Component {
 
   get updateDisabled() {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    return this.newTagName?.replace(filterRegexp, "").trim().length === 0 || 0;
+    return this.newTagName?.replace(filterRegexp, "").trim().length === 0 ?? true;
   }
 
   @action
