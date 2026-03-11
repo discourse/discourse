@@ -149,6 +149,8 @@ class EmbedController < ApplicationController
       topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
       topic_embeds.each do |te|
+        next if te.topic.present? && !guardian.can_see?(te.topic)
+
         url = te.embed_url
         url = "#{url}#discourse-comments" if params[:embed_url].exclude?(url)
         if te.topic.present?
