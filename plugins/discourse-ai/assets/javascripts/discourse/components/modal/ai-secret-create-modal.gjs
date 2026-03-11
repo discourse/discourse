@@ -48,7 +48,7 @@ export default class AiSecretCreateModal extends Component {
           @title={{i18n "discourse_ai.secrets.name"}}
           @validation="required|length:1,100"
           @format="large"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control />

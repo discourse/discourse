@@ -57,7 +57,7 @@ export default <template>
                   @title={{i18n "explorer.create_placeholder"}}
                   @validation="required"
                   @format="large"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />

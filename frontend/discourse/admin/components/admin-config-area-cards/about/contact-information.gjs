@@ -80,7 +80,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @title={{i18n "admin.config_areas.about.community_owner"}}
         @description={{i18n "admin.config_areas.about.community_owner_help"}}
         @format="large"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control
@@ -94,11 +94,12 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @name="contactEmail"
         @title={{i18n "admin.config_areas.about.contact_email"}}
         @description={{i18n "admin.config_areas.about.contact_email_help"}}
-        @type="email"
+        @type="input"
         @format="large"
         as |Control|
       >
         <Control
+          @type="email"
           placeholder={{i18n
             "admin.config_areas.about.contact_email_placeholder"
           }}
@@ -109,11 +110,12 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @name="contactURL"
         @title={{i18n "admin.config_areas.about.contact_url"}}
         @description={{i18n "admin.config_areas.about.contact_url_help"}}
-        @type="url"
+        @type="input"
         @format="large"
         as |Control|
       >
         <Control
+          @type="url"
           placeholder={{i18n
             "admin.config_areas.about.contact_url_placeholder"
           }}

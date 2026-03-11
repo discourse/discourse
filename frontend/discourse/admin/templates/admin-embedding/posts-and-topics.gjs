@@ -28,7 +28,7 @@ export default <template>
       @name="embed_post_limit"
       @title={{i18n "admin.embedding.embed_post_limit"}}
       @format="large"
-      @type="input-text"
+      @type="input"
       as |Control|
     >
       <Control />
@@ -37,7 +37,7 @@ export default <template>
       @name="embed_title_scrubber"
       @title={{i18n "admin.embedding.embed_title_scrubber"}}
       @format="large"
-      @type="input-text"
+      @type="input"
       as |Control|
     >
       <Control placeholder="- site.com$" />

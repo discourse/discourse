@@ -58,6 +58,7 @@ const CONTROL_COMPONENTS = {
   emoji: FKControlEmoji,
   icon: FKControlIcon,
   image: FKControlImage,
+  input: FKControlInput,
   menu: FKControlMenu,
   password: FKControlPassword,
   question: FKControlQuestion,

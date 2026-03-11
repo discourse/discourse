@@ -136,7 +136,7 @@ export default class AdminFlagsForm extends Component {
                 @title={{i18n "admin.permalink.form.url"}}
                 @validation="required"
                 @format="large"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control />
@@ -176,7 +176,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.topic_id"}}
                   @format="small"
                   @validation="required"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />
@@ -188,7 +188,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.post_id"}}
                   @format="small"
                   @validation="required"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />
@@ -200,7 +200,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.category_id"}}
                   @format="small"
                   @validation="required"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />
@@ -212,7 +212,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.tag_name"}}
                   @format="small"
                   @validation="required"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />
@@ -224,7 +224,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.external_url"}}
                   @format="large"
                   @validation="required"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />
@@ -236,7 +236,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.user_id"}}
                   @format="small"
                   @validation="required"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />

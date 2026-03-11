@@ -241,7 +241,7 @@ export default class AiToolEditorForm extends Component {
         @validation="required|length:1,100"
         @format="large"
         @tooltip={{i18n "discourse_ai.tools.name_help"}}
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control class="ai-tool-editor__name" />
@@ -254,7 +254,7 @@ export default class AiToolEditorForm extends Component {
         @validation="required|length:1,100"
         @format="large"
         @tooltip={{i18n "discourse_ai.tools.tool_name_help"}}
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control class="ai-tool-editor__tool_name" />
@@ -284,7 +284,7 @@ export default class AiToolEditorForm extends Component {
         @validation="required|length:1,255"
         @format="large"
         @tooltip={{i18n "discourse_ai.tools.summary_help"}}
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control class="ai-tool-editor__summary" />
@@ -300,7 +300,7 @@ export default class AiToolEditorForm extends Component {
                 @title={{i18n "discourse_ai.tools.parameter_name"}}
                 @validation="required|length:1,100"
                 @format="full"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control />
@@ -354,7 +354,7 @@ export default class AiToolEditorForm extends Component {
                 @title={{i18n "discourse_ai.tools.parameter_description"}}
                 @validation="required|length:1,1000"
                 @format="full"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control class="ai-tool-editor__parameter-description" />
@@ -393,7 +393,7 @@ export default class AiToolEditorForm extends Component {
                     <child.Field
                       @title={{i18n "discourse_ai.tools.enum_value"}}
                       @validation="required"
-                      @type="input-text"
+                      @type="input"
                       as |Control|
                     >
                       <Control />
@@ -464,7 +464,7 @@ export default class AiToolEditorForm extends Component {
                 @validation="required|length:1,100"
                 @format="full"
                 @tooltip={{i18n "discourse_ai.tools.secret_alias_help"}}
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control />

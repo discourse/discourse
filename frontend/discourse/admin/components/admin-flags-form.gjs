@@ -146,7 +146,7 @@ export default class AdminFlagsForm extends Component {
                 @title={{i18n "admin.config_areas.flags.form.name"}}
                 @validation="required|length:3,200"
                 @format="large"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control />

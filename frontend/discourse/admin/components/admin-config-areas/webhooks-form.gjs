@@ -126,7 +126,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
                   @title={{i18n "admin.web_hooks.payload_url"}}
                   @format="large"
                   @validation="required|url"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control
@@ -159,7 +159,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
                   @description={{i18n "admin.web_hooks.secret_placeholder"}}
                   @format="large"
                   @validation="length:12"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />

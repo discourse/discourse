@@ -90,7 +90,7 @@ export default class WrapAttributesModal extends Component {
           <form.Field
             @name="name"
             @title={{i18n "composer.wrap_modal.name_label"}}
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control autocomplete="off" />
@@ -108,7 +108,7 @@ export default class WrapAttributesModal extends Component {
                 <div class="wrap-modal__attribute-row">
                   <object.Field
                     @name="key"
-                    @type="input-text"
+                    @type="input"
                     @title="Key"
                     @validation="required"
                     as |Control|
@@ -118,7 +118,7 @@ export default class WrapAttributesModal extends Component {
 
                   <object.Field
                     @name="value"
-                    @type="input-text"
+                    @type="input"
                     @title="Value"
                     @validation="required"
                     as |Control|

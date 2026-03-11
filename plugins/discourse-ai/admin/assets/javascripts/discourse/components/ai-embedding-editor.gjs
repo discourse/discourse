@@ -370,7 +370,7 @@ export default class AiEmbeddingEditor extends Component {
           @validation="required|length:1,100"
           @format="large"
           class="ai-embedding-editor__display-name"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control />
@@ -401,7 +401,7 @@ export default class AiEmbeddingEditor extends Component {
           @validation="required"
           @format="large"
           class="ai-embedding-editor__url"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control />

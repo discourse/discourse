@@ -116,7 +116,7 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_server"
-              @type="input-text"
+              @type="input"
               @title={{i18n "groups.manage.email.credentials.smtp_server"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_server"}}
@@ -128,7 +128,7 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="email_username"
-              @type="input-text"
+              @type="input"
               @title={{i18n "groups.manage.email.credentials.username"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "email_username"}}
@@ -184,7 +184,7 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="email_from_alias"
-              @type="input-text"
+              @type="input"
               @title={{i18n "groups.manage.email.settings.from_alias"}}
               @description={{i18n
                 "groups.manage.email.settings.from_alias_hint"

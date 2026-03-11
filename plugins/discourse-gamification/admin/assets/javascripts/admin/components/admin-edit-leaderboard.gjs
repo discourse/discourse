@@ -76,7 +76,7 @@ export default class AdminEditLeaderboard extends Component {
         @name="name"
         @title={{i18n "gamification.leaderboard.name"}}
         @validation="required"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />

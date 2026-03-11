@@ -280,7 +280,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.description"}}
                   @format="large"
                   @validation="required"
-                  @type="input-text"
+                  @type="input"
                   as |Control|
                 >
                   <Control />
@@ -418,7 +418,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       @name={{name}}
                                       @title={{name}}
                                       @showTitle={{false}}
-                                      @type="input-text"
+                                      @type="input"
                                       as |Control|
                                     >
                                       <Control placeholder={{name}} />

@@ -502,7 +502,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control
@@ -527,7 +527,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control
@@ -552,7 +552,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control
@@ -606,7 +606,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control

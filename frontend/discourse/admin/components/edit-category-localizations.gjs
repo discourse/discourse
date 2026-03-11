@@ -58,7 +58,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             @name="name"
             @title={{i18n "category.localization.name"}}
             @validation="required|length:1,50"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control

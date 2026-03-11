@@ -358,7 +358,7 @@ export default class UpsertCategoryGeneral extends Component {
           @title={{i18n "category.name"}}
           @format="max"
           @validation="required"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control

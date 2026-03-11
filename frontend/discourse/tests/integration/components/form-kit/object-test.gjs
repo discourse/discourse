@@ -13,20 +13,10 @@ module("Integration | Component | FormKit | Object", function (hooks) {
       <template>
         <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
           <form.Object @name="foo" as |object|>
-            <object.Field
-              @type="input-text"
-              @name="bar"
-              @title="bar"
-              as |Control|
-            >
+            <object.Field @type="input" @name="bar" @title="bar" as |Control|>
               <Control />
             </object.Field>
-            <object.Field
-              @type="input-text"
-              @name="baz"
-              @title="baz"
-              as |Control|
-            >
+            <object.Field @type="input" @name="baz" @title="baz" as |Control|>
               <Control />
             </object.Field>
           </form.Object>
@@ -61,7 +51,7 @@ module("Integration | Component | FormKit | Object", function (hooks) {
             <one.Object @name="two" as |two|>
               <two.Object @name="three" as |three|>
                 <three.Field
-                  @type="input-text"
+                  @type="input"
                   @name="foo"
                   @title="foo"
                   as |Control|
@@ -69,7 +59,7 @@ module("Integration | Component | FormKit | Object", function (hooks) {
                   <Control />
                 </three.Field>
                 <three.Field
-                  @type="input-text"
+                  @type="input"
                   @name="bar"
                   @title="bar"
                   as |Control|
@@ -100,12 +90,7 @@ module("Integration | Component | FormKit | Object", function (hooks) {
         >
           <form.Object @name="one" as |one|>
             <one.Collection @name="two" as |two twoIndex|>
-              <two.Field
-                @type="input-text"
-                @name="foo"
-                @title="foo"
-                as |Control|
-              >
+              <two.Field @type="input" @name="foo" @title="foo" as |Control|>
                 <Control />
               </two.Field>
               <form.Button

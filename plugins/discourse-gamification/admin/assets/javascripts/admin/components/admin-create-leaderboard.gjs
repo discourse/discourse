@@ -67,7 +67,7 @@ export default class AdminCreateLeaderboard extends Component {
             @showTitle={{false}}
             class="new-leaderboard__name"
             @validation="required"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control

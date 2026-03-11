@@ -65,7 +65,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @title={{i18n "admin.config_areas.about.community_name"}}
         @validation="required"
         @format="large"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control
@@ -79,7 +79,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @name="summary"
         @title={{i18n "admin.config_areas.about.community_summary"}}
         @format="large"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />
@@ -99,7 +99,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @title={{i18n "admin.config_areas.about.community_title"}}
         @description={{i18n "admin.config_areas.about.community_title_help"}}
         @format="large"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />

@@ -163,7 +163,7 @@ export default class AdminUserFieldsForm extends Component {
         @title={{i18n "admin.user_fields.name"}}
         @format="large"
         @validation="required"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control class="user-field-name" maxlength="255" />
@@ -174,7 +174,7 @@ export default class AdminUserFieldsForm extends Component {
         @title={{i18n "admin.user_fields.description"}}
         @format="large"
         @validation="required"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control class="user-field-desc" maxlength="1000" />

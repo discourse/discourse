@@ -223,7 +223,7 @@ export default class UpsertHyperlink extends Component {
           >
             <form.Field
               @name="linkUrl"
-              @type="input-text"
+              @type="input"
               @title={{i18n "composer.link_url_label"}}
               @format="full"
               @validation="required"
@@ -266,7 +266,7 @@ export default class UpsertHyperlink extends Component {
 
             <form.Field
               @name="linkText"
-              @type="input-text"
+              @type="input"
               @title={{i18n "composer.link_text_label"}}
               @format="full"
               as |Control|

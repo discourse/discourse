@@ -84,7 +84,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @name="name"
         @title={{i18n "chat.incoming_webhooks.name"}}
         @validation="required"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />
@@ -103,7 +103,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @name="username"
         @title={{i18n "chat.incoming_webhooks.username"}}
         @description={{i18n "chat.incoming_webhooks.username_instructions"}}
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />

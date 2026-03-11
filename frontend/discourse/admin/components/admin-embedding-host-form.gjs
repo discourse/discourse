@@ -74,7 +74,7 @@ export default class AdminEmbeddingHostForm extends Component {
                 @title={{i18n "admin.embedding.host"}}
                 @validation="required"
                 @format="large"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control placeholder="example.com" />
@@ -83,7 +83,7 @@ export default class AdminEmbeddingHostForm extends Component {
                 @name="allowed_paths"
                 @title={{i18n "admin.embedding.allowed_paths"}}
                 @format="large"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control placeholder="/blog/.*" />

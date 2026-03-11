@@ -286,7 +286,7 @@ export default class AdminBadgesShow extends Component {
             @name="name"
             @disabled={{this.readOnly}}
             @validation="required"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control />

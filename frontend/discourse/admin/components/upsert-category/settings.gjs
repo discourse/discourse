@@ -118,7 +118,7 @@ export default class UpsertCategorySettings extends Component {
         @name="slug"
         @title={{i18n "category.slug"}}
         @format="max"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control
@@ -310,7 +310,7 @@ export default class UpsertCategorySettings extends Component {
             @name="email_in"
             @title={{i18n "category.email_in"}}
             @format="max"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control @maxlength="255" />

@@ -282,7 +282,7 @@ export default class AdminConfigAreasColorPalette extends Component {
                 @validation="required"
                 @format="full"
                 @onSet={{this.handleNameChange}}
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <div class="admin-config-color-palettes__name-control">

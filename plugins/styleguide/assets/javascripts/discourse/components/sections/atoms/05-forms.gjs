@@ -9,19 +9,19 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Username" @name="username" @type="input-text" as |Control|>
+    <form.Field @title="Username" @name="username" @type="input" as |Control|>
       <Control placeholder="Username" />
     </form.Field>
     <form.Field @title="Age" @name="age" @type="input-number" as |Control|>
       <Control placeholder="Age" @format="small" />
     </form.Field>
-    <form.Field @title="Website" @name="website" @type="input-text" as |Control|>
+    <form.Field @title="Website" @name="website" @type="input" as |Control|>
       <Control @before="https://" @after=".com" @format="large" />
     </form.Field>
-    <form.Field @title="After" @name="after" @type="input-text" as |Control|>
+    <form.Field @title="After" @name="after" @type="input" as |Control|>
       <Control @after=".com" />
     </form.Field>
-    <form.Field @title="Before" @name="before" @type="input-text" as |Control|>
+    <form.Field @title="Before" @name="before" @type="input" as |Control|>
       <Control @before="https://" />
     </form.Field>
     <form.Field
@@ -286,10 +286,10 @@ const USED_COLORS = ["00FF00"];
 <template>
   <Form as |form|>
     <form.InputGroup as |inputGroup|>
-      <inputGroup.Field @title="Username" @name="username" @type="input-text" as |Control|>
+      <inputGroup.Field @title="Username" @name="username" @type="input" as |Control|>
         <Control />
       </inputGroup.Field>
-      <inputGroup.Field @title="Email" @name="email" @type="input-text" as |Control|>
+      <inputGroup.Field @title="Email" @name="email" @type="input" as |Control|>
         <Control />
       </inputGroup.Field>
     </form.InputGroup>
@@ -311,13 +311,13 @@ import Form from "discourse/components/form";
     <form.Collection @name="foo" as |collection index|>
       <form.Row as |row|>
         <row.Col @size={{6}}>
-          <collection.Field @title="Bar" @name="bar" @type="input-text" as |Control|>
+          <collection.Field @title="Bar" @name="bar" @type="input" as |Control|>
             <Control />
           </collection.Field>
         </row.Col>
 
         <row.Col @size={{4}}>
-          <collection.Field @title="Baz" @name="baz" @type="input-text" as |Control|>
+          <collection.Field @title="Baz" @name="baz" @type="input" as |Control|>
             <Control />
           </collection.Field>
         </row.Col>
@@ -343,13 +343,13 @@ import Form from "discourse/components/form";
           @title="Username"
           @name="username"
           @validation="required"
-          @type="input-text" as |Control|
+          @type="input" as |Control|
         >
           <Control />
         </form.Field>
       </row.Col>
       <row.Col @size={{4}}>
-        <form.Field @title="Email" @name="email" @type="input-text" as |Control|>
+        <form.Field @title="Email" @name="email" @type="input" as |Control|>
           <Control />
         </form.Field>
       </row.Col>
@@ -372,19 +372,19 @@ import Form from "discourse/components/form";
           @title="Username"
           @name="username"
           @validation="required"
-          @type="input-text" as |Control|
+          @type="input" as |Control|
         >
           <Control />
         </form.Field>
       </row.Col>
       <row.Col @size={{6}}>
-        <form.Field @title="Email" @name="email" @type="input-text" as |Control|>
+        <form.Field @title="Email" @name="email" @type="input" as |Control|>
           <Control />
         </form.Field>
       </row.Col>
 
       <row.Col @size={{12}}>
-        <form.Field @title="Address" @name="address" @type="input-text" as |Control|>
+        <form.Field @title="Address" @name="address" @type="input" as |Control|>
           <Control />
         </form.Field>
       </row.Col>
@@ -402,7 +402,7 @@ import Form from "discourse/components/form";
       @title="Username"
       @name="username"
       @validation="required"
-      @type="input-text" as |Control|
+      @type="input" as |Control|
     >
       <Control />
     </form.Field>
@@ -429,7 +429,7 @@ import Form from "discourse/components/form";
         <form.Field
           @title="Username"
           @name="username"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control placeholder="Username" />
@@ -437,28 +437,13 @@ import Form from "discourse/components/form";
         <form.Field @title="Age" @name="age" @type="input-number" as |Control|>
           <Control placeholder="Age" @format="small" />
         </form.Field>
-        <form.Field
-          @title="Website"
-          @name="website"
-          @type="input-text"
-          as |Control|
-        >
+        <form.Field @title="Website" @name="website" @type="input" as |Control|>
           <Control @before="https://" @after=".com" @format="large" />
         </form.Field>
-        <form.Field
-          @title="After"
-          @name="after"
-          @type="input-text"
-          as |Control|
-        >
+        <form.Field @title="After" @name="after" @type="input" as |Control|>
           <Control @after=".com" />
         </form.Field>
-        <form.Field
-          @title="Before"
-          @name="before"
-          @type="input-text"
-          as |Control|
-        >
+        <form.Field @title="Before" @name="before" @type="input" as |Control|>
           <Control @before="https://" />
         </form.Field>
         <form.Field
@@ -688,7 +673,7 @@ import Form from "discourse/components/form";
           <inputGroup.Field
             @title="Username"
             @name="username"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control />
@@ -696,7 +681,7 @@ import Form from "discourse/components/form";
           <inputGroup.Field
             @title="Email"
             @name="email"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control />
@@ -721,7 +706,7 @@ import Form from "discourse/components/form";
               <collection.Field
                 @title="Bar"
                 @name="bar"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control />
@@ -732,7 +717,7 @@ import Form from "discourse/components/form";
               <collection.Field
                 @title="Baz"
                 @name="baz"
-                @type="input-text"
+                @type="input"
                 as |Control|
               >
                 <Control />
@@ -759,19 +744,14 @@ import Form from "discourse/components/form";
               @title="Username"
               @name="username"
               @validation="required"
-              @type="input-text"
+              @type="input"
               as |Control|
             >
               <Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{4}}>
-            <form.Field
-              @title="Email"
-              @name="email"
-              @type="input-text"
-              as |Control|
-            >
+            <form.Field @title="Email" @name="email" @type="input" as |Control|>
               <Control />
             </form.Field>
           </row.Col>
@@ -790,19 +770,14 @@ import Form from "discourse/components/form";
               @title="Username"
               @name="username"
               @validation="required"
-              @type="input-text"
+              @type="input"
               as |Control|
             >
               <Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
-            <form.Field
-              @title="Email"
-              @name="email"
-              @type="input-text"
-              as |Control|
-            >
+            <form.Field @title="Email" @name="email" @type="input" as |Control|>
               <Control />
             </form.Field>
           </row.Col>
@@ -811,7 +786,7 @@ import Form from "discourse/components/form";
             <form.Field
               @title="Address"
               @name="address"
-              @type="input-text"
+              @type="input"
               as |Control|
             >
               <Control />
@@ -829,7 +804,7 @@ import Form from "discourse/components/form";
           @title="Username"
           @name="username"
           @validation="required"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control />

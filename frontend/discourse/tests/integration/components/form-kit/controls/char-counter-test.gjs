@@ -17,7 +17,7 @@ module(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
             <form.Field
-              @type="input-text"
+              @type="input"
               @name="foo"
               @title="Foo"
               @validation="length:0,5"

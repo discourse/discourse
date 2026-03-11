@@ -230,7 +230,7 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.name"}}
             @format="large"
             @validation="required"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control
@@ -245,7 +245,7 @@ export default class EditCategoryGeneral extends Component {
           @name="slug"
           @title={{i18n "category.slug"}}
           @format="large"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control

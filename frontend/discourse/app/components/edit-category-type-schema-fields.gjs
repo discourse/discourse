@@ -57,7 +57,7 @@ const SchemaFormField = <template>
   {{else}}
     <@formObject.Field
       @name={{@entry.key}}
-      @type="input-text"
+      @type="input"
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}

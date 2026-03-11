@@ -174,7 +174,7 @@ export default class HouseAdForm extends Component {
         @title={{i18n "admin.adplugin.house_ads.name"}}
         @validation="required"
         @format="large"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />

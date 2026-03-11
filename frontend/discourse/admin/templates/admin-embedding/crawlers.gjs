@@ -13,7 +13,7 @@ export default <template>
       @name="allowed_embed_selectors"
       @title={{i18n "admin.embedding.allowed_embed_selectors"}}
       @format="large"
-      @type="input-text"
+      @type="input"
       as |Control|
     >
       <Control placeholder="article, #story, .post" />
@@ -22,7 +22,7 @@ export default <template>
       @name="blocked_embed_selectors"
       @title={{i18n "admin.embedding.blocked_embed_selectors"}}
       @format="large"
-      @type="input-text"
+      @type="input"
       as |Control|
     >
       <Control placeholder=".ad-unit, header" />
@@ -31,7 +31,7 @@ export default <template>
       @name="allowed_embed_classnames"
       @title={{i18n "admin.embedding.allowed_embed_classnames"}}
       @format="large"
-      @type="input-text"
+      @type="input"
       as |Control|
     >
       <Control placeholder="emoji, classname" />

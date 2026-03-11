@@ -324,7 +324,7 @@ export default class AiLlmEditorForm extends Component {
         @format="large"
         @tooltip={{i18n "discourse_ai.llms.hints.display_name"}}
         @disabled={{@model.seeded}}
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />
@@ -337,7 +337,7 @@ export default class AiLlmEditorForm extends Component {
         @validation="required"
         @format="large"
         @disabled={{@model.seeded}}
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />
@@ -368,7 +368,7 @@ export default class AiLlmEditorForm extends Component {
             @title={{i18n "discourse_ai.llms.url"}}
             @validation="required"
             @format="large"
-            @type="input-text"
+            @type="input"
             as |Control|
           >
             <Control />

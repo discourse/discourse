@@ -18,7 +18,7 @@ module(
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
             <form.InputGroup as |inputGroup|>
               <inputGroup.Field
-                @type="input-text"
+                @type="input"
                 @title="Foo"
                 @name="foo"
                 as |Control|
@@ -26,7 +26,7 @@ module(
                 <Control />
               </inputGroup.Field>
               <inputGroup.Field
-                @type="input-text"
+                @type="input"
                 @title="Bar"
                 @name="bar"
                 as |Control|

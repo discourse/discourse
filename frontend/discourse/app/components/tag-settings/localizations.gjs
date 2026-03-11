@@ -65,7 +65,7 @@ export default class TagSettingsLocalizations extends Component {
           <row.Col @size={{3}}>
             <collection.Field
               @name="name"
-              @type="input-text"
+              @type="input"
               @title={{i18n "tagging.localization.name"}}
               @validation="required|length:1,50"
               as |Control|

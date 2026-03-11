@@ -302,7 +302,7 @@ export default class TagSettings extends Component {
         {{#if (eq @selectedTab "general")}}
           <form.Field
             @name="name"
-            @type="input-text"
+            @type="input"
             @title={{i18n "tagging.settings.name"}}
             @format="large"
             @validation="required"
@@ -317,7 +317,7 @@ export default class TagSettings extends Component {
 
           <form.Field
             @name="slug"
-            @type="input-text"
+            @type="input"
             @title={{i18n "tagging.settings.slug"}}
             @format="large"
             as |Control|

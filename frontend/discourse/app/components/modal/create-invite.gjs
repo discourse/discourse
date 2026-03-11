@@ -351,7 +351,7 @@ export default class CreateInvite extends Component {
           >
             <form.Field
               @name="description"
-              @type="input-text"
+              @type="input"
               @title={{i18n "user.invited.invite.description"}}
               @format="large"
               @validation={{this.descriptionValidation}}
@@ -361,7 +361,7 @@ export default class CreateInvite extends Component {
             </form.Field>
             <form.Field
               @name="restrictTo"
-              @type="input-text"
+              @type="input"
               @title={{i18n "user.invited.invite.restrict"}}
               @format="large"
               @onSet={{this.handleRestrictToChange}}

@@ -340,7 +340,7 @@ export default class UpsertCategoryAppearance extends Component {
         @name="read_only_banner"
         @title={{i18n "category.read_only_banner"}}
         @format="max"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control @maxlength="255" />

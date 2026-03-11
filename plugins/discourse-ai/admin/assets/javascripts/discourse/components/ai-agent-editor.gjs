@@ -409,7 +409,7 @@ export default class AgentEditor extends Component {
           @validation="required|length:1,100"
           @disabled={{data.system}}
           @format="large"
-          @type="input-text"
+          @type="input"
           as |Control|
         >
           <Control />
