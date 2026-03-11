@@ -8,7 +8,6 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
@@ -16,6 +15,7 @@ import basePath from "discourse/helpers/base-path";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTag from "discourse/helpers/discourse-tag";
+import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
@@ -41,7 +41,7 @@ export default class TagInfo extends Component {
   @tracked editing = false;
   newTagDescription;
 
-  updateTagInfo = modifierFn(() => {
+  updateTagInfo = helperFn(() => {
     this.loadTagInfo();
   });
 
@@ -269,7 +269,9 @@ export default class TagInfo extends Component {
   }
 
   <template>
-    <section {{this.updateTagInfo}} class="tag-info">
+    {{this.updateTagInfo}}
+
+    <section class="tag-info">
       {{#if this.loading}}
         <div>{{i18n "loading"}}</div>
       {{else if this.tagInfo}}
