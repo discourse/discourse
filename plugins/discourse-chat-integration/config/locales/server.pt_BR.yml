@@ -51,8 +51,8 @@ pt_BR:
     chat_integration_flowdock_excerpt_length: "Tamanho do trecho da postagem do Flowdock"
     chat_integration_groupme_enabled: "Ative o provedor de integração de chat do GroupMe"
     chat_integration_groupme_excerpt_length: "Tamanho do trecho da postagem do GroupMe"
-    chat_integration_groupme_bot_ids: "IDs de Robô *necessárias*, separadas por \",\", se houver várias"
-    chat_integration_groupme_instance_names: " Nome do chat do GroupMe *necessário*, separado por \",\", se houver vários (mesma ordem que IDs de Robô)"
+    chat_integration_groupme_bot_ids: "IDs de Robô *obrigatórias*, separadas por \",\", se houver várias"
+    chat_integration_groupme_instance_names: " Nome do chat do GroupMe *obrigatório*, separado por \",\", se houver vários (mesma ordem que IDs de Robô)"
     chat_integration_teams_enabled: "Ativar o provedor de integração de chat do Microsoft Teams"
     chat_integration_teams_excerpt_length: "Tamanho do trecho da postagem do Microsoft Teams"
     chat_integration_powerautomate_enabled: "Ativar o provedor de integração de chat do Microsoft Power Automate"
@@ -96,7 +96,7 @@ pt_BR:
           error: "Desculpe, ocorreu um erro ao criar essa regra."
         delete:
           success: "Regra excluída com sucesso"
-          error: "Desculpe, ocorreu um erro ao excluir essa regra. Execute \"/discourse status\" para obter uma lista de regras."
+          error: "Desculpe, ocorreu um erro ao excluir essa regra. Execute `/discourse status` para obter uma lista de regras."
         not_found:
           tag: "A etiqueta *%{name}* não pode ser encontrada."
           category: "A categoria *%{name}* não pode ser encontrada. Categorias disponíveis: *%{list}*"
@@ -195,7 +195,7 @@ pt_BR:
           error: "Desculpe, ocorreu um erro ao criar essa regra."
         delete:
           success: "Regra excluída com sucesso"
-          error: "Desculpe, ocorreu um erro ao excluir essa regra. Execute \"/discourse status\" para obter uma lista de regras."
+          error: "Desculpe, ocorreu um erro ao excluir essa regra. Execute `/discourse status` para obter uma lista de regras."
         not_found:
           tag: "A etiqueta *%{name}* não pode ser encontrada."
           category: "A categoria *%{name}* não pode ser encontrada. Categorias disponíveis: *%{list}*"
