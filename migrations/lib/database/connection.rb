@@ -11,7 +11,7 @@ module Migrations::Database
       path = File.expand_path(path, Migrations.root_path)
       FileUtils.mkdir_p(File.dirname(path))
 
-      db = ::Extralite::Database.new(path)
+      db = Extralite::Database.new(path)
       db.pragma(
         busy_timeout: 60_000, # 60 seconds
         journal_mode: "wal",

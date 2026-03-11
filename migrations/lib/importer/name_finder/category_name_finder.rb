@@ -7,7 +7,7 @@ module Migrations::Importer
 
       @last_suffixes_by_parent_id = Hash.new { |h, k| h[k] = {} }
       @truncations_by_parent_id =
-        Hash.new { |h, k| h[k] = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE) }
+        Hash.new { |h, k| h[k] = LruRedux::Cache.new(TRUNCATION_CACHE_SIZE) }
     end
 
     def find_available_name(name, parent_id)

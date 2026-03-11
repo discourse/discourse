@@ -182,7 +182,7 @@ module Migrations::Importer
 
     def init_caches
       @last_suffixes = {}
-      @truncations = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE)
+      @truncations = LruRedux::Cache.new(TRUNCATION_CACHE_SIZE)
     end
 
     def extract_max_suffixes_from_existing_names
