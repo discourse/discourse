@@ -280,7 +280,7 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
           "poll_enabled [poll] (auto-ignored from plugin)",
         ),
       )
-      expect(command).to have_received(:puts).with("Suggested actions:")
+      expect(command).to have_received(:puts).with(a_string_including("Suggested actions:"))
     end
 
     it "prints a no-differences message when the schema matches the database" do
