@@ -53,14 +53,22 @@ class PopulateSolvedCategoryCustomFieldsFromSiteSettings < ActiveRecord::Migrati
       INSERT INTO category_custom_fields (category_id, name, value, created_at, updated_at)
       SELECT solved_cats.category_id, 'notify_on_staff_accept_solved', :notify_value, NOW(), NOW()
       FROM (#{category_ids_sql}) solved_cats
-      ON CONFLICT (category_id, name) DO NOTHING
+      WHERE NOT EXISTS (
+        SELECT 1 FROM category_custom_fields existing
+        WHERE existing.category_id = solved_cats.category_id
+          AND existing.name = 'notify_on_staff_accept_solved'
+      )
     SQL
 
     DB.exec(<<~SQL, empty_box_value: empty_box_value)
       INSERT INTO category_custom_fields (category_id, name, value, created_at, updated_at)
       SELECT solved_cats.category_id, 'empty_box_on_unsolved', :empty_box_value, NOW(), NOW()
       FROM (#{category_ids_sql}) solved_cats
-      ON CONFLICT (category_id, name) DO NOTHING
+      WHERE NOT EXISTS (
+        SELECT 1 FROM category_custom_fields existing
+        WHERE existing.category_id = solved_cats.category_id
+          AND existing.name = 'empty_box_on_unsolved'
+      )
     SQL
   end
 
