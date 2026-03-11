@@ -31,7 +31,7 @@ export default class MyForm extends Component {
         @name="username"
         @title="Username"
         @validation="required"
-        @type="input-text"
+        @type="input"
         as |Control|
       >
         <Control />
@@ -114,7 +114,7 @@ get formData() {
 
 ```hbs
 <Form @data={{hash foo="bar"}} as |form|>
-  <form.Field @name="foo" @type="input-text" as |Control|>
+  <form.Field @name="foo" @type="input" as |Control|>
     <!-- This input will have "bar" as its initial value -->
     <Control />
   </form.Field>
@@ -167,7 +167,7 @@ handleSubmit({ username, age }) {
 
 ```hbs
 <Form @onSubmit={{this.handleSubmit}} as |form|>
-  <form.Field @name="username" @type="input-text" as |Control|>
+  <form.Field @name="username" @type="input" as |Control|>
     <Control />
   </form.Field>
   <form.Field @name="age" @type="input-number" as |Control|>
@@ -238,13 +238,13 @@ A field must have a title. It will be displayed above the control and is also us
 
 A field must have a type. This determines which control component is rendered. The available types are:
 
-- **Input types**: `input-text`, `input-number`, `input-email`, `input-password`, `input-url`, `input-tel`, `input-date`, `input-time`, `input-datetime-local`, `input-color`, `input-month`, `input-week`, `input-range`, `input-search`, `input-hidden`
+- **Input types**: `input` (defaults to text), `input-number`, `input-email`, `input-password`, `input-url`, `input-tel`, `input-date`, `input-time`, `input-datetime-local`, `input-color`, `input-month`, `input-week`, `input-range`, `input-search`, `input-hidden`
 - **Other controls**: `checkbox`, `code`, `calendar`, `color`, `composer`, `custom`, `emoji`, `icon`, `image`, `menu`, `password`, `question`, `radio-group`, `select`, `tag-chooser`, `textarea`, `toggle`
 
 **Example**
 
 ```hbs
-<form.Field @name="foo" @type="input-text" />
+<form.Field @name="foo" @type="input" />
 ```
 
 ## @description
@@ -296,7 +296,7 @@ You can pass a string or a `<DTooltip />` component.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="foo" @title="Foo" @type="input-text" @tooltip="a nice input" as |Control|>
+  <form.Field @name="foo" @title="Foo" @type="input" @tooltip="a nice input" as |Control|>
     <Control />
   </form.Field>
 </Form>
@@ -307,7 +307,7 @@ You can pass a string or a `<DTooltip />` component.
   <form.Field
     @name="foo"
     @title="Foo"
-    @type="input-text"
+    @type="input"
     @tooltip={{component DTooltip content="a nice input"}}
     as |Control|
   >
@@ -338,7 +338,7 @@ handleFooChange(value, { set }) {
 ```
 
 ```hbs
-<form.Field @name="foo" @type="input-text" @onSet={{this.handleFooChange}} as |Control|>
+<form.Field @name="foo" @type="input" @onSet={{this.handleFooChange}} as |Control|>
   <Control />
 </form.Field>
 ```
@@ -357,7 +357,7 @@ handleFooChange(value, { set }) {
 
 ```hbs
 <Form @data={{this.model}} as |form|>
-  <form.Field @name="foo" @type="input-text" @onSet={{this.handleFooChange}} as |Control|>
+  <form.Field @name="foo" @type="input" @onSet={{this.handleFooChange}} as |Control|>
     <Control />
   </form.Field>
 </Form>
@@ -368,7 +368,7 @@ handleFooChange(value, { set }) {
 The field yields two positional parameters: the control component and the field data object.
 
 ```hbs
-<form.Field @name="foo" @type="input-text" as |Control field|>
+<form.Field @name="foo" @type="input" as |Control field|>
   <Control />
 </form.Field>
 ```
@@ -401,7 +401,7 @@ Controls, as we use the term here, refer to the UI widgets that allow a user to 
   <form.Field
     @name="query"
     @title="Query"
-    @type="input-text"
+    @type="input"
     @description="You should make sure the query doesn't include bots."
     as |Control|
   >
@@ -598,10 +598,11 @@ Renders an `<input>` element.
 
 ### @type
 
-The input variant is specified as part of the field's `@type` using the `input-` prefix. For example, `@type="input-text"`, `@type="input-number"`, etc. Defaults to `input-text`.
+The input variant is specified as part of the field's `@type` using the `input-` prefix. For example, `@type="input"`, `@type="input-number"`, etc. `@type="input"` defaults to text.
 
 ### Allowed Types
 
+- `input` (defaults to text)
 - `input-color`
 - `input-date`
 - `input-datetime-local`
@@ -613,7 +614,6 @@ The input variant is specified as part of the field's `@type` using the `input-`
 - `input-range`
 - `input-search`
 - `input-tel`
-- `input-text`
 - `input-time`
 - `input-url`
 - `input-week`
@@ -627,7 +627,7 @@ The input variant is specified as part of the field's `@type` using the `input-`
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="input-text" as |Control|>
+  <form.Field @name="email" @title="Email" @type="input" as |Control|>
     <Control />
   </form.Field>
 
@@ -645,7 +645,7 @@ Renders text before the input
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="input-text" as |Control|>
+  <form.Field @name="email" @title="Email" @type="input" as |Control|>
     <Control @before="mailto:" />
   </form.Field>
 </Form>
@@ -659,7 +659,7 @@ Renders text after the input
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="input-text" as |Control|>
+  <form.Field @name="email" @title="Email" @type="input" as |Control|>
     <Control @after=".com" />
   </form.Field>
 </Form>
@@ -990,10 +990,10 @@ Input group allows to group multiple inputs together on one line.
 ```hbs
 <Form as |form|>
   <form.InputGroup as |inputGroup|>
-    <inputGroup.Field @title="Foo" @name="foo" @type="input-text" as |Control|>
+    <inputGroup.Field @title="Foo" @name="foo" @type="input" as |Control|>
       <Control />
     </inputGroup.Field>
-    <inputGroup.Field @title="Bar" @name="bar" @type="input-text" as |Control|>
+    <inputGroup.Field @title="Bar" @name="bar" @type="input" as |Control|>
       <Control />
     </inputGroup.Field>
   </form.InputGroup>
@@ -1028,12 +1028,12 @@ To customize the `Reset` button further, you can pass additional parameters as n
 <Form as |form|>
   <form.Row as |row|>
     <row.Col @size={{4}}>
-      <form.Field @name="foo" @title="Foo" @type="input-text" as |Control|>
+      <form.Field @name="foo" @title="Foo" @type="input" as |Control|>
         <Control />
       </form.Field>
     </row.Col>
     <row.Col @size={{8}}>
-      <form.Field @name="bar" @title="Bar" @type="input-text" as |Control|>
+      <form.Field @name="bar" @title="Bar" @type="input" as |Control|>
         <Control />
       </form.Field>
     </row.Col>
@@ -1082,10 +1082,10 @@ The object component allows to handle an object in your form.
 ```hbs
 <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
   <form.Object @name="foo" as |object data|>
-    <object.Field @name="bar" @title="Bar" @type="input-text" as |Control|>
+    <object.Field @name="bar" @title="Bar" @type="input" as |Control|>
       <Control />
     </object.Field>
-    <object.Field @name="baz" @title="Baz" @type="input-text" as |Control|>
+    <object.Field @name="baz" @title="Baz" @type="input" as |Control|>
       <Control />
     </object.Field>
   </form.Object>
@@ -1112,7 +1112,7 @@ An object can accept a nested Object or Collection.
 <Form @data={{hash foo=(hash bar=(hash baz=1 bol=2))}} as |form|>
   <form.Object @name="foo" as |parentObject|>
     <parentObject.Object @name="bar" as |childObject data|>
-      <childObject.Field @name="baz" @title="Baz" @type="input-text" as |Control|>
+      <childObject.Field @name="baz" @title="Baz" @type="input" as |Control|>
         <Control />
       </childObject.Field>
     </parentObject.Object>
@@ -1122,7 +1122,7 @@ An object can accept a nested Object or Collection.
 <Form @data={{hash foo=(hash bar=(array 1 2))}} as |form|>
   <form.Object @name="foo" as |parentObject|>
     <parentObject.Collection @name="bar" as |collection index|>
-      <collection.Field @title="Baz" @type="input-text" as |Control|>
+      <collection.Field @title="Baz" @type="input" as |Control|>
         <Control />
       </collection.Field>
       <form.Button
@@ -1143,7 +1143,7 @@ The collection component allows to handle array of objects in your form.
 ```hbs
 <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
   <form.Collection @name="foo" as |collection index|>
-    <collection.Field @name="bar" @title="Bar" @type="input-text" as |Control|>
+    <collection.Field @name="bar" @title="Bar" @type="input" as |Control|>
       <Control placeholder={{concat "item-" index}} />
     </collection.Field>
   </form.Collection>
@@ -1181,7 +1181,7 @@ If the shape of your data is an array of primitives, eg: [1, 2, 3], form-kit is 
 ```hbs
 <Form @data={{hash foo=(array 1 2)}} as |form|>
   <form.Collection @name="foo" as |collection|>
-    <collection.Field @title="Baz" @type="input-text" as |Control|>
+    <collection.Field @title="Baz" @type="input" as |Control|>
       <Control />
     </collection.Field>
   </form.Collection>
@@ -1201,7 +1201,7 @@ A collection can accept a nested Object or Collection.
 >
   <form.Collection @name="foo" as |collection|>
     <collection.Object @name="bar" as |object|>
-      <object.Field @name="baz" @title="Baz" @type="input-text" as |Control|>
+      <object.Field @name="baz" @title="Baz" @type="input" as |Control|>
         <Control />
       </object.Field>
     </collection.Object>
@@ -1216,7 +1216,7 @@ A collection can accept a nested Object or Collection.
 >
   <form.Collection @name="foo" as |parent parentIndex|>
     <parent.Collection @name="bar" as |child childIndex|>
-      <child.Field @name="baz" @title="Baz" @type="input-text" as |Control|>
+      <child.Field @name="baz" @title="Baz" @type="input" as |Control|>
         <Control />
       </child.Field>
     </parent.Collection>
@@ -1237,7 +1237,7 @@ The `<Form />` component yielded object has a `addItemToCollection` function tha
   </form.Button>
 
   <form.Collection @name="foo" as |collection index|>
-    <collection.Field @name="bar" @title="Bar" @type="input-text" as |Control|>
+    <collection.Field @name="bar" @title="Bar" @type="input" as |Control|>
       <Control placeholder={{concat "item-" index}} />
     </collection.Field>
   </form.Collection>
@@ -1253,7 +1253,7 @@ The `<Collection />` component yielded object has a `remove` function that you c
 ```hbs
 <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
   <form.Collection @name="foo" as |collection index|>
-    <collection.Field @name="bar" @title="Bar" @type="input-text" as |Control|>
+    <collection.Field @name="bar" @title="Bar" @type="input" as |Control|>
       <Control />
       <form.Button @action={{fn collection.remove index}}>
         Remove
@@ -1288,7 +1288,7 @@ Checks that the input's value is over a given length, or between two length valu
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input-text" @validation="length:5,16" as |Control|>
+<form.Field @name="username" @type="input" @validation="length:5,16" as |Control|>
   <Control />
 </form.Field>
 ```
@@ -1302,7 +1302,7 @@ Checks if the input is a valid number as evaluated by `isNaN()`.
 **Example**
 
 ```hbs
-<form.Field @name="amount" @type="input-text" @validation="number" as |Control|>
+<form.Field @name="amount" @type="input" @validation="number" as |Control|>
   <Control />
 </form.Field>
 ```
@@ -1314,7 +1314,7 @@ Checks if the input is empty.
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input-text" @validation="required" as |Control|>
+<form.Field @name="username" @type="input" @validation="required" as |Control|>
   <Control />
 </form.Field>
 ```
@@ -1374,7 +1374,7 @@ Rules can be combined using the pipe operator: `|`.
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input-text" @validation="required|length:5,16" as |Control|>
+<form.Field @name="username" @type="input" @validation="required|length:5,16" as |Control|>
   <Control />
 </form.Field>
 ```
@@ -1515,7 +1515,7 @@ FormKit works seamlessly with `<PluginOutlet />`. You can use plugin outlets ins
 Then, in your connector, you can use the outlet arguments to add custom fields:
 
 ```hbs title="connectors/above-foo-form/bar-input.hbs"
-<@outletArgs.form.Field @name="bar" @type="input-text" as |Control|>
+<@outletArgs.form.Field @name="bar" @type="input" as |Control|>
   <Control />
 </@outletArgs.form.Field>
 ```
@@ -1526,7 +1526,7 @@ All FormKit components propagate attributes, allowing you to set classes and dat
 
 ```hbs
 <Form class="my-form" as |form|>
-  <form.Field @name="foo" @type="input-text" class="my-field" as |Control|>
+  <form.Field @name="foo" @type="input" class="my-field" as |Control|>
     <Control class="my-control" />
   </form.Field>
 </Form>
@@ -1844,7 +1844,7 @@ test("fill in input", async function (assert) {
   await render(
     <template>
       <Form class="my-form" as |form data|>
-        <form.Field @name="foo" @type="input-text" as |Control|>
+        <form.Field @name="foo" @type="input" as |Control|>
           <Control />
         </form.Field>
       </Form>
@@ -1883,7 +1883,7 @@ formKit().reset();
 
 ### fillIn()
 
-Can be used on `@type="input-text"`, `@type="code"`, `@type="textarea"`, and `@type="composer"` fields.
+Can be used on `@type="input"`, `@type="code"`, `@type="textarea"`, and `@type="composer"` fields.
 
 **Parameters**
 
@@ -2093,7 +2093,7 @@ field.toggle
 
 ### fill_in
 
-Allows filling a field with a given value. Only available for: `@type="input-text"`, `@type="textarea"`, `@type="code"`, and `@type="composer"`.
+Allows filling a field with a given value. Only available for: `@type="input"`, `@type="textarea"`, `@type="code"`, and `@type="composer"`.
 
 **Example**
 
