@@ -23,6 +23,7 @@ plugins:
       - chat_message_revisions
       - chat_message_search_data
       - chat_messages
+      - chat_pinned_messages
       - chat_thread_custom_fields
       - chat_threads
       - chat_webhook_events
@@ -56,6 +57,7 @@ plugins:
     columns: {}
   discourse-ai:
     tables:
+      - ai_agents
       - ai_api_audit_logs
       - ai_api_request_stats
       - ai_artifact_key_values
@@ -63,11 +65,11 @@ plugins:
       - ai_artifacts
       - ai_document_fragments_embeddings
       - ai_moderation_settings
-      - ai_personas
       - ai_posts_embeddings
       - ai_secrets
       - ai_spam_logs
       - ai_summaries
+      - ai_tool_secret_bindings
       - ai_tools
       - ai_topics_embeddings
       - chat_message_custom_prompts
@@ -188,10 +190,10 @@ plugins:
     columns: {}
 plugin_checksums:
   automation: 1a7a1a0ed72263e1670a93e1b4358a20
-  chat: 652922de78d37bd2f140c157d2579132
+  chat: f6a5eace25193e9262d42ecd6c89ce1a
   discourse-adplugin: 26617136cf403f817126535540626758
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: 9bf12bc8a0d238f2e4445ca6d5e17057
+  discourse-ai: 49513fb5fe139624e8fef8dc030e8c7b
   discourse-assign: 65afd026c76ff19a8d4f0ed1d9c21aa1
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-calendar: 6cf8588e5212ba3dbead6ae5fa53e2b7

@@ -129,8 +129,7 @@ Migrations::Database::Schema.ignored do
 
   tables :incoming_domains, :incoming_emails, :incoming_links, :incoming_referers
 
-  tables :reviewable_action_logs,
-         :reviewable_claimed_topics,
+  tables :reviewable_claimed_topics,
          :reviewable_histories,
          :reviewable_notes,
          :reviewable_scores,
