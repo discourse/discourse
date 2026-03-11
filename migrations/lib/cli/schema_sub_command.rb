@@ -62,7 +62,7 @@ module Migrations::CLI
       end
     end
 
-    desc "list", "List all configured, ignored tables and enums"
+    desc "list", "List configured tables and enums, plus ignored table count"
     def list
       load_rails!
       database = selected_database
@@ -134,7 +134,7 @@ module Migrations::CLI
       puts
       puts "Next steps:"
       puts "  1. Edit the file to configure columns"
-      puts "  2. Run 'bin/cli schema validate'"
+      puts "  2. Run 'migrations/bin/cli schema validate'"
     end
 
     desc "refresh-plugins", "Regenerate the plugin manifest"
@@ -338,8 +338,8 @@ module Migrations::CLI
 
       if has_changes
         puts "Suggested actions:"
-        puts "  bin/cli schema add <table>         Create config for a new table"
-        puts "  bin/cli schema ignore <table> [--reason \"...\"]  Add table to ignored.rb"
+        puts "  migrations/bin/cli schema add <table>         Create config for a new table"
+        puts "  migrations/bin/cli schema ignore <table> [--reason \"...\"]  Add table to ignored.rb"
       else
         puts "✓ No differences found".green
       end
