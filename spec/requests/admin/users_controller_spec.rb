@@ -2522,6 +2522,15 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "post batch deletion possible"
+
+      context "when target user is another moderator" do
+        fab!(:target_moderator, :moderator)
+
+        it "denies access with a 403 response" do
+          put "/admin/users/#{target_moderator.id}/delete_posts_batch.json"
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -2605,6 +2614,15 @@ RSpec.describe Admin::UsersController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
       include_examples "delete_posts_decider accessible", :moderator
+
+      context "when target user is another moderator" do
+        fab!(:target_moderator, :moderator)
+
+        it "denies access with a 403 response" do
+          post "/admin/users/#{target_moderator.id}/delete_posts_decider.json"
+          expect(response.status).to eq(403)
+        end
+      end
 
       context "when user has too many posts to delete" do
         fab!(:target_user) do

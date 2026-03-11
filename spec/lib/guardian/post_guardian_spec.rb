@@ -861,6 +861,11 @@ RSpec.describe PostGuardian do
         expect(Guardian.new(actor).can_delete_all_posts?(admin)).to be_falsey
       end
 
+      it "is false if user is a moderator" do
+        another_moderator = Fabricate(:moderator, created_at: 1.day.ago)
+        expect(Guardian.new(actor).can_delete_all_posts?(another_moderator)).to be_falsey
+      end
+
       it "is true if number of posts is small" do
         user = Fabricate(:user, created_at: 1.day.ago)
         user.user_stat.update!(post_count: 1)
@@ -902,6 +907,11 @@ RSpec.describe PostGuardian do
 
       it "is false if user is an admin" do
         expect(Guardian.new(actor).can_delete_all_posts?(admin)).to be_falsey
+      end
+
+      it "is true if user is a moderator" do
+        another_moderator = Fabricate(:moderator, created_at: 1.day.ago)
+        expect(Guardian.new(actor).can_delete_all_posts?(another_moderator)).to be_truthy
       end
 
       it "is true if number of posts is small" do
