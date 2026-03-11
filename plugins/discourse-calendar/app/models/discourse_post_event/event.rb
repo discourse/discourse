@@ -435,7 +435,8 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date
       return nil unless next_starts_at
 
-      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      event_duration =
+        original_ends_at ? original_ends_at - original_starts_at : (all_day ? 86_400 : 3600)
       next_ends_at = next_starts_at + event_duration
       [next_starts_at, next_ends_at]
     end
@@ -449,7 +450,8 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date_from(from_time)
       return nil unless next_starts_at
 
-      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      event_duration =
+        original_ends_at ? original_ends_at - original_starts_at : (all_day ? 86_400 : 3600)
       next_ends_at = next_starts_at + event_duration
       { starts_at: next_starts_at, ends_at: next_ends_at }
     end
