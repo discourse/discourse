@@ -65,12 +65,7 @@ module Migrations::Database::Schema::DSL
         db.start
 
         db.with_env do
-          ActiveRecord::Base.establish_connection(
-            adapter: "postgresql",
-            database: "discourse",
-            port: db.pg_port,
-            host: "localhost",
-          )
+          ActiveRecord::Base.establish_connection(db.connection_hash)
 
           yield stderr
         end

@@ -87,6 +87,10 @@ class TemporaryDb
     restore_discourse_pg_port
   end
 
+  def connection_hash
+    { adapter: "postgresql", database: "discourse", port: pg_port, host: "localhost" }
+  end
+
   def with_env(&block)
     old_host = ENV["PGHOST"]
     old_user = ENV["PGUSER"]
@@ -116,12 +120,7 @@ class TemporaryDb
 
   def migrate
     raise "Error: the database must be started before it can be migrated." if !@started
-    ActiveRecord::Base.establish_connection(
-      adapter: "postgresql",
-      database: "discourse",
-      port: pg_port,
-      host: "localhost",
-    )
+    ActiveRecord::Base.establish_connection(connection_hash)
 
     puts "Running migrations on blank database!"
 
