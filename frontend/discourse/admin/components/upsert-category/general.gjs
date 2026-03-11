@@ -91,6 +91,10 @@ export default class UpsertCategoryGeneral extends Component {
 
     const parentId = this.args.transientData.parent_category_id;
     const parentCategory = Category.findById(parentId);
+    if (!parentCategory?.permissions) {
+      return groups;
+    }
+
     const parentGroupIds = new Set(
       parentCategory.permissions.map((p) => p.group_id)
     );
@@ -100,7 +104,17 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeAccessGroups(groupIds) {
+    const existingPermissions = this.permissions || [];
+
     const newPermissions = groupIds.map((groupId) => {
+      const existingPermission = existingPermissions.find(
+        (p) => p.group_id === groupId
+      );
+
+      if (existingPermission) {
+        return existingPermission;
+      }
+
       return {
         group_id: groupId,
         group_name: this.site.groupsById[groupId]?.name,
