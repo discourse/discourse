@@ -122,14 +122,14 @@ module DiscourseAi
 
         begin
           importer = DiscourseAi::AgentImporter.new(json: import_payload)
+          initial_attributes = existing_agent&.attributes&.dup if force_update
 
           if existing_agent && force_update
-            initial_attributes = existing_agent.attributes.dup
             agent = importer.import!(overwrite: true)
             log_ai_agent_update(agent, initial_attributes)
             render_ai_agent_resource(agent)
           else
-            agent = importer.import!
+            agent = importer.import!(overwrite: force_update)
             log_ai_agent_creation(agent)
             render_ai_agent_resource(agent, status: :created)
           end
