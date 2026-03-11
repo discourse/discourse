@@ -8,7 +8,7 @@ module Migrations::Database::Schema::DSL
       discover_plugins(plugins_path).transform_values { |paths| checksum_for_paths(paths) }
     end
 
-    def self.checksum_for_paths(paths)
+    private_class_method def self.checksum_for_paths(paths)
       files =
         paths.select { |p| File.directory?(p) }.flat_map { |p| Dir[File.join(p, "*.rb")].sort }.uniq
 
@@ -32,13 +32,11 @@ module Migrations::Database::Schema::DSL
       plugins
     end
 
-    def self.plugin_migration_paths(plugin_dir)
+    private_class_method def self.plugin_migration_paths(plugin_dir)
       %w[db/migrate db/post_migrate]
         .map { |sub| File.join(plugin_dir, sub) }
         .select { |path| File.directory?(path) }
     end
-
-    private_class_method :checksum_for_paths, :plugin_migration_paths
 
     def initialize(plugins_path: nil)
       @plugins_path = plugins_path || File.join(Rails.root, "plugins")

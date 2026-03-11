@@ -186,11 +186,11 @@ module Migrations::Database
       File.join(schema_root_path, database.to_s)
     end
 
-    def self.manifest_path
+    private_class_method def self.manifest_path
       File.join(Migrations.root_path, "config", "schema", "plugin_manifest.yml")
     end
 
-    def self.refresh_plugin_manifest!
+    private_class_method def self.refresh_plugin_manifest!
       manifest = plugin_manifest
       return if manifest.fresh?
 
@@ -219,9 +219,8 @@ module Migrations::Database
       @plugin_manifest = nil
     end
 
-    def self.registry
+    private_class_method def self.registry
       @registry ||= DSL::Registry.new
     end
-    private_class_method :registry, :manifest_path, :refresh_plugin_manifest!
   end
 end
