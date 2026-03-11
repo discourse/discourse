@@ -32,14 +32,30 @@ export default class PostEventBuilder extends Component {
   @tracked isSaving = false;
   @tracked maxAttendeesInput = this.args.model.event.maxAttendees;
 
-  @tracked startsAt = moment(this.event.startsAt).tz(
-    this.event.timezone || "UTC"
-  );
+  @tracked allDay = this.event.allDay || false;
+  @tracked startsAt = this.#initStartsAt();
+  @tracked endsAt = this.#initEndsAt();
 
-  @tracked
-  endsAt =
-    this.event.endsAt &&
-    moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+  #initStartsAt() {
+    if (this.event.allDay) {
+      return moment(this.event.startsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
+  }
+
+  #initEndsAt() {
+    if (!this.event.endsAt) {
+      return null;
+    }
+    if (this.event.allDay) {
+      return moment(this.event.endsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+  }
+
+  get showTime() {
+    return !this.allDay;
+  }
 
   get isEditing() {
     return this.args.model.event.id || this.args.model.onUpdate;
@@ -195,6 +211,21 @@ export default class PostEventBuilder extends Component {
     this.event.endsAt = dates.to;
     this.startsAt = dates.from;
     this.endsAt = dates.to;
+  }
+
+  @action
+  setAllDay(e) {
+    this.allDay = e.target.checked;
+    this.event.allDay = e.target.checked;
+    if (e.target.checked) {
+      // snap times to start/end of day in the event's timezone
+      if (this.startsAt) {
+        this.startsAt = this.startsAt.clone().startOf("day");
+      }
+      if (this.endsAt) {
+        this.endsAt = this.endsAt.clone().endOf("day");
+      }
+    }
   }
 
   @action
@@ -385,7 +416,27 @@ export default class PostEventBuilder extends Component {
                   @to={{this.endsAt}}
                   @timezone={{@model.event.timezone}}
                   @onChange={{this.onChangeDates}}
+                  @showFromTime={{this.showTime}}
+                  @showToTime={{this.showTime}}
                 />
+              </EventField>
+
+              <EventField
+                @label="discourse_post_event.builder_modal.all_day.label"
+                class="all-day"
+              >
+                <label class="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={{this.allDay}}
+                    {{on "input" this.setAllDay}}
+                  />
+                  <span class="message">
+                    {{i18n
+                      "discourse_post_event.builder_modal.all_day.description"
+                    }}
+                  </span>
+                </label>
               </EventField>
 
               <EventField

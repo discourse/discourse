@@ -99,6 +99,9 @@ export default class EventDate extends Component {
   }
 
   _parsedDate(date) {
+    if (this.args.topic.event_all_day) {
+      return moment(date, "YYYY-MM-DD");
+    }
     const timezone = this.args.topic.event_show_local_time
       ? this.args.topic.event_timezone
       : moment.tz.guess();

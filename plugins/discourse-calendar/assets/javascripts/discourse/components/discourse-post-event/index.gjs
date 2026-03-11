@@ -54,7 +54,9 @@ export default class DiscoursePostEvent extends Component {
   });
 
   getDisplayTime(time) {
-    if (this.event.showLocalTime) {
+    if (this.event.allDay) {
+      return moment(time, "YYYY-MM-DD");
+    } else if (this.event.showLocalTime) {
       return moment.tz(time, this.event.timezone || "UTC");
     } else {
       return moment
