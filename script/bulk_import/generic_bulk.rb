@@ -66,6 +66,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_histories
     import_user_notes
     import_user_note_counts
+    import_user_custom_fields
     import_user_followers
 
     import_user_avatars
@@ -528,7 +529,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
 
       next if user_id.nil?
-      next if existing_group_user_ids.include?([group_id, user_id])
+      next unless existing_group_user_ids.add?([group_id, user_id])
 
       { group_id: group_id, user_id: user_id, owner: row["owner"] }
     end
@@ -1829,6 +1830,57 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_note_counts.close
+  end
+
+  def import_user_custom_fields
+    puts "", "Importing user custom fields..."
+
+    rows = query(<<~SQL)
+      SELECT user_id, name, value, created_at
+        FROM user_custom_fields
+    SQL
+
+    existing_names = query(<<~SQL) { |rs| rs.map { |r| r["name"] } }
+        SELECT DISTINCT name FROM user_custom_fields
+      SQL
+
+    return if existing_names.empty?
+
+    existing = UserCustomField.where(name: existing_names).pluck(:user_id, :name).to_set
+
+    create_user_custom_fields(rows) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if !user_id
+      next if existing.include?([user_id, row["name"]])
+
+      {
+        user_id: user_id,
+        name: row["name"],
+        value: row["value"],
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    rows.close
+
+    puts "", "Cooking signature_cooked from signature_raw..."
+
+    sig_rows = query(<<~SQL)
+      SELECT user_id, value
+        FROM user_custom_fields
+       WHERE name = 'signature_raw'
+    SQL
+
+    cooked_existing = UserCustomField.where(name: "signature_cooked").pluck(:user_id).to_set
+
+    create_user_custom_fields(sig_rows) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if !user_id || cooked_existing.include?(user_id)
+      raw_sig = row["value"].to_s.strip
+      next if raw_sig.empty?
+      { user_id: user_id, name: "signature_cooked", value: PrettyText.cook(raw_sig) }
+    end
+    sig_rows.close
   end
 
   def import_user_followers
