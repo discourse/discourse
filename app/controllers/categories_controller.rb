@@ -220,6 +220,33 @@ class CategoriesController < ApplicationController
   def update
     guardian.ensure_can_edit!(@category)
 
+    %i[topic reply].each do |type|
+      ids = params[:"#{type}_approval_group_ids"]&.filter_map { |id| id.to_i if id.present? }
+
+      approval_type =
+        params.dig(:category_setting_attributes, :"#{type}_approval_type") ||
+          @category.category_setting&.send(:"#{type}_approval_type")
+      if approval_type.in?(%w[except_groups only_groups]) && ids.blank?
+        return(
+          render json: {
+                   errors: [I18n.t("category.approval_groups_required")],
+                 },
+                 status: :unprocessable_entity
+        )
+      end
+
+      next if ids.blank?
+      invalid = ids - Group.where(id: ids).pluck(:id)
+      if invalid.any?
+        return(
+          render json: {
+                   errors: ["Invalid group IDs: #{invalid.join(", ")}"],
+                 },
+                 status: :unprocessable_entity
+        )
+      end
+    end
+
     json_result(@category, serializer: CategorySerializer) do |cat|
       old_category_params = category_params.dup
 
@@ -278,6 +305,17 @@ class CategoriesController < ApplicationController
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
+        sync_approval_groups(
+          cat,
+          :topic,
+          params[:topic_approval_group_ids]&.filter_map { |id| id.to_i if id.present? },
+        )
+        sync_approval_groups(
+          cat,
+          :reply,
+          params[:reply_approval_group_ids]&.filter_map { |id| id.to_i if id.present? },
+        )
+
         Category.preload_user_fields!(guardian, [cat])
 
         Scheduler::Defer.later "Log staff action change category settings" do
@@ -637,6 +675,8 @@ class CategoriesController < ApplicationController
           :allow_global_tags,
           :read_only_banner,
           :default_list_filter,
+          :topic_approval_type,
+          :reply_approval_type,
           *conditional_param_keys,
         ]
 
@@ -647,12 +687,7 @@ class CategoriesController < ApplicationController
         result =
           params.permit(
             *permitted_params,
-            category_setting_attributes: %i[
-              auto_bump_cooldown_days
-              num_auto_bump_daily
-              require_reply_approval
-              require_topic_approval
-            ],
+            category_setting_attributes: %i[auto_bump_cooldown_days num_auto_bump_daily],
             custom_fields: {
             },
             permissions: [*p.try(:keys)],
@@ -757,4 +792,31 @@ class CategoriesController < ApplicationController
   def initialize_staff_action_logger
     @staff_action_logger = StaffActionLogger.new(current_user)
   end
+
+  def sync_approval_groups(category, type, group_ids)
+    return unless group_ids
+
+    if category.send(:"#{type}_approval_type").in?(%w[none all]) || group_ids.empty?
+      CategoryApprovalGroup.where(category: category, approval_type: type).delete_all
+      return
+    end
+
+    valid_ids = group_ids.map(&:to_i)
+    existing_ids =
+      CategoryApprovalGroup.where(category: category, approval_type: type).pluck(:group_id)
+    to_remove = existing_ids - valid_ids
+    to_add = valid_ids - existing_ids
+
+    if to_remove.any?
+      CategoryApprovalGroup.where(
+        category: category,
+        approval_type: type,
+        group_id: to_remove,
+      ).delete_all
+    end
+    to_add.each do |gid|
+      CategoryApprovalGroup.create!(category: category, approval_type: type, group_id: gid)
+    end
+  end
+  private :sync_approval_groups
 end

@@ -2253,7 +2253,7 @@ RSpec.describe PostCreator do
     fab!(:category)
 
     before do
-      category.require_topic_approval = true
+      category.topic_approval_type = :all
       category.save!
     end
 

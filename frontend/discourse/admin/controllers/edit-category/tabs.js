@@ -72,6 +72,8 @@ const SIMPLIFIED_FIELD_LIST = [
   "minimum_required_tags",
   "allow_global_tags",
   "default_slow_mode_seconds",
+  "topic_approval_group_ids",
+  "reply_approval_group_ids",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -150,6 +152,33 @@ export default class EditCategoryTabsController extends Controller {
   @computed("saving", "deleting")
   get deleteDisabled() {
     return this.deleting || this.saving || false;
+  }
+
+  @computed(
+    "model.category_setting.topic_approval_type",
+    "model.topic_approval_group_ids.[]",
+    "model.category_setting.reply_approval_type",
+    "model.reply_approval_group_ids.[]"
+  )
+  get saveDisabled() {
+    const topicType = this.model?.category_setting?.topic_approval_type;
+    const replyType = this.model?.category_setting?.reply_approval_type;
+
+    if (
+      (topicType === "except_groups" || topicType === "only_groups") &&
+      !this.model?.topic_approval_group_ids?.length
+    ) {
+      return true;
+    }
+
+    if (
+      (replyType === "except_groups" || replyType === "only_groups") &&
+      !this.model?.reply_approval_group_ids?.length
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   @computed("name")
@@ -236,6 +265,29 @@ export default class EditCategoryTabsController extends Controller {
 
     if (hasGeneralTabErrors) {
       this.selectedTab = "general";
+    }
+
+    const topicType = data.category_setting?.topic_approval_type;
+    const replyType = data.category_setting?.reply_approval_type;
+
+    if (
+      (topicType === "except_groups" || topicType === "only_groups") &&
+      !data.topic_approval_group_ids?.length
+    ) {
+      addError("topic_approval_group_ids", {
+        title: i18n("category.topic_approval_heading"),
+        message: i18n("category.approval_groups_required"),
+      });
+    }
+
+    if (
+      (replyType === "except_groups" || replyType === "only_groups") &&
+      !data.reply_approval_group_ids?.length
+    ) {
+      addError("reply_approval_group_ids", {
+        title: i18n("category.reply_approval_heading"),
+        message: i18n("category.approval_groups_required"),
+      });
     }
   }
 

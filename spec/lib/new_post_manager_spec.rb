@@ -59,8 +59,7 @@ RSpec.describe NewPostManager do
       tag3 = Fabricate(:tag)
       tag_group = Fabricate(:tag_group, tags: [tag2])
       category = Fabricate(:category, tags: [tag1], tag_groups: [tag_group])
-      category.require_topic_approval = true
-      category.save!
+      category.update!(topic_approval_type: :all)
 
       manager =
         NewPostManager.new(
@@ -508,8 +507,7 @@ RSpec.describe NewPostManager do
     context "when new topics require approval" do
       before do
         SiteSetting.tagging_enabled = true
-        category.require_topic_approval = true
-        category.save
+        category.update!(topic_approval_type: :all)
       end
 
       it "enqueues new topics" do
@@ -526,8 +524,14 @@ RSpec.describe NewPostManager do
         expect(result.reason).to eq(:category)
       end
 
-      it "does not enqueue the topic when the poster is a category group moderator" do
-        SiteSetting.enable_category_group_moderation = true
+      it "does not enqueue the topic when the poster is in the approval exception group" do
+        category.update!(topic_approval_type: :except_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: review_group,
+          approval_type: "topic",
+        )
         review_group.users << user
 
         manager =
@@ -634,10 +638,7 @@ RSpec.describe NewPostManager do
     context "when new posts require approval" do
       let!(:topic) { Fabricate(:topic, category: category) }
 
-      before do
-        category.require_reply_approval = true
-        category.save
-      end
+      before { category.update!(reply_approval_type: :all) }
 
       it "enqueues new posts" do
         manager = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id)
@@ -654,8 +655,14 @@ RSpec.describe NewPostManager do
         end.not_to raise_error
       end
 
-      it "does not enqueue the post when the poster is a category group moderator" do
-        SiteSetting.enable_category_group_moderation = true
+      it "does not enqueue the post when the poster is in the approval exception group" do
+        category.update!(reply_approval_type: :except_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: review_group,
+          approval_type: "reply",
+        )
         review_group.users << user
 
         manager = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id)
@@ -663,6 +670,154 @@ RSpec.describe NewPostManager do
         result = manager.perform
         expect(result.action).to eq(:create_post)
         expect(result).to be_success
+      end
+    end
+  end
+
+  context "when posting in the category uses group-based approval" do
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:approval_group, :group)
+    fab!(:category)
+
+    context "for topic creation" do
+      it "does not enqueue when topic_approval_type is none" do
+        category.update!(topic_approval_type: :none)
+        result =
+          NewPostManager.new(user, raw: "content", title: "Title", category: category.id).perform
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues for all users when topic_approval_type is all" do
+        category.update!(topic_approval_type: :all)
+        result =
+          NewPostManager.new(user, raw: "content", title: "Title", category: category.id).perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "does not enqueue when topic_approval_type is except_groups and user is in approval group" do
+        category.update!(topic_approval_type: :except_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "topic",
+        )
+        Fabricate(:group_user, group: approval_group, user: user)
+        result =
+          NewPostManager.new(user, raw: "content", title: "Title", category: category.id).perform
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues when topic_approval_type is except_groups and user is not in approval group" do
+        category.update!(topic_approval_type: :except_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "topic",
+        )
+        result =
+          NewPostManager.new(user, raw: "content", title: "Title", category: category.id).perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "enqueues when topic_approval_type is only_groups and user is in approval group" do
+        category.update!(topic_approval_type: :only_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "topic",
+        )
+        Fabricate(:group_user, group: approval_group, user: user)
+        result =
+          NewPostManager.new(user, raw: "content", title: "Title", category: category.id).perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "does not enqueue when topic_approval_type is only_groups and user is not in approval group" do
+        category.update!(topic_approval_type: :only_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "topic",
+        )
+        result =
+          NewPostManager.new(user, raw: "content", title: "Title", category: category.id).perform
+        expect(result.action).to eq(:create_post)
+      end
+    end
+
+    context "for reply creation" do
+      fab!(:topic) { Fabricate(:topic, category: category) }
+
+      it "does not enqueue when reply_approval_type is none" do
+        category.update!(reply_approval_type: :none)
+        result = NewPostManager.new(user, raw: "content", topic_id: topic.id).perform
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues for all users when reply_approval_type is all" do
+        category.update!(reply_approval_type: :all)
+        result = NewPostManager.new(user, raw: "content", topic_id: topic.id).perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "does not enqueue when reply_approval_type is except_groups and user is in approval group" do
+        category.update!(reply_approval_type: :except_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "reply",
+        )
+        Fabricate(:group_user, group: approval_group, user: user)
+        result = NewPostManager.new(user, raw: "content", topic_id: topic.id).perform
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues when reply_approval_type is except_groups and user is not in approval group" do
+        category.update!(reply_approval_type: :except_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "reply",
+        )
+        result = NewPostManager.new(user, raw: "content", topic_id: topic.id).perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "enqueues when reply_approval_type is only_groups and user is in approval group" do
+        category.update!(reply_approval_type: :only_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "reply",
+        )
+        Fabricate(:group_user, group: approval_group, user: user)
+        result = NewPostManager.new(user, raw: "content", topic_id: topic.id).perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "does not enqueue when reply_approval_type is only_groups and user is not in approval group" do
+        category.update!(reply_approval_type: :only_groups)
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: approval_group,
+          approval_type: "reply",
+        )
+        result = NewPostManager.new(user, raw: "content", topic_id: topic.id).perform
+        expect(result.action).to eq(:create_post)
       end
     end
   end

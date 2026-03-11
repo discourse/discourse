@@ -87,6 +87,87 @@ RSpec.describe Category do
         ).count,
       ).to eq(0)
     end
+
+    describe "#category_approval_groups" do
+      fab!(:group)
+      fab!(:category)
+
+      it "has a base category_approval_groups association" do
+        topic_ag =
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: group,
+            approval_type: "topic",
+          )
+        reply_ag =
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: Fabricate(:group),
+            approval_type: "reply",
+          )
+        expect(category.category_approval_groups).to contain_exactly(topic_ag, reply_ag)
+      end
+
+      it "scopes topic_approval_groups to approval_type topic" do
+        topic_ag =
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: group,
+            approval_type: "topic",
+          )
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: Fabricate(:group),
+          approval_type: "reply",
+        )
+        expect(category.topic_approval_groups).to contain_exactly(topic_ag)
+      end
+
+      it "scopes reply_approval_groups to approval_type reply" do
+        reply_ag =
+          Fabricate(
+            :category_approval_group,
+            category: category,
+            group: group,
+            approval_type: "reply",
+          )
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: Fabricate(:group),
+          approval_type: "topic",
+        )
+        expect(category.reply_approval_groups).to contain_exactly(reply_ag)
+      end
+
+      it "destroys topic_approval_groups when category is destroyed" do
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: group,
+          approval_type: "topic",
+        )
+        expect { category.destroy! }.to change {
+          CategoryApprovalGroup.where(category: category, approval_type: "topic").count
+        }.by(-1)
+      end
+
+      it "destroys reply_approval_groups when category is destroyed" do
+        Fabricate(
+          :category_approval_group,
+          category: category,
+          group: group,
+          approval_type: "reply",
+        )
+        expect { category.destroy! }.to change {
+          CategoryApprovalGroup.where(category: category, approval_type: "reply").count
+        }.by(-1)
+      end
+    end
   end
 
   describe "slug" do
@@ -906,18 +987,15 @@ RSpec.describe Category do
   describe "require topic/post approval" do
     fab!(:category, :category_with_definition)
 
-    it "delegates methods to category settings" do
-      expect(category).to delegate_method(:require_reply_approval).to(:category_setting)
-      expect(category).to delegate_method(:require_reply_approval=).with_arguments(true).to(
+    it "delegates approval type methods to category settings" do
+      expect(category).to delegate_method(:topic_approval_type).to(:category_setting)
+      expect(category).to delegate_method(:topic_approval_type=).with_arguments(:all).to(
         :category_setting,
       )
-      expect(category).to delegate_method(:require_reply_approval?).to(:category_setting)
-
-      expect(category).to delegate_method(:require_topic_approval).to(:category_setting)
-      expect(category).to delegate_method(:require_topic_approval=).with_arguments(true).to(
+      expect(category).to delegate_method(:reply_approval_type).to(:category_setting)
+      expect(category).to delegate_method(:reply_approval_type=).with_arguments(:all).to(
         :category_setting,
       )
-      expect(category).to delegate_method(:require_topic_approval?).to(:category_setting)
     end
   end
 

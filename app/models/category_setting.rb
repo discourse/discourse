@@ -3,6 +3,18 @@
 class CategorySetting < ActiveRecord::Base
   belongs_to :category
 
+  # TODO: drop columns require_topic_approval, require_reply_approval in a future migration
+  self.ignored_columns += %i[require_topic_approval require_reply_approval]
+
+  enum :topic_approval_type,
+       { none: 0, all: 1, except_groups: 2, only_groups: 3 }.freeze,
+       scopes: false
+
+  enum :reply_approval_type,
+       { none: 0, all: 1, except_groups: 2, only_groups: 3 }.freeze,
+       scopes: false,
+       instance_methods: false
+
   validates :num_auto_bump_daily,
             numericality: {
               only_integer: true,
@@ -23,13 +35,14 @@ end
 # Table name: category_settings
 #
 #  id                      :bigint           not null, primary key
-#  category_id             :bigint           not null
-#  require_topic_approval  :boolean          default(FALSE)
-#  require_reply_approval  :boolean          default(FALSE)
+#  auto_bump_cooldown_days :integer          default(1)
 #  num_auto_bump_daily     :integer          default(0)
+#  reply_approval_type     :integer          default("none"), not null
+#  topic_approval_type     :integer          default("none"), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  auto_bump_cooldown_days :integer          default(1)
+#  category_id             :bigint           not null
+#
 # Indexes
 #
 #  index_category_settings_on_category_id  (category_id) UNIQUE

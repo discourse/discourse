@@ -81,7 +81,7 @@ describe PostRevisor do
 
     it "does not revise category when the destination category requires topic approval" do
       new_category = Fabricate(:category)
-      new_category.require_topic_approval = true
+      new_category.topic_approval_type = :all
       new_category.save!
 
       post = create_post
@@ -90,7 +90,7 @@ describe PostRevisor do
       post.revise(post.user, category_id: new_category.id)
       expect(post.reload.topic.category_id).to eq(old_category_id)
 
-      new_category.require_topic_approval = false
+      new_category.topic_approval_type = :none
       new_category.save!
 
       post.revise(post.user, category_id: new_category.id)
