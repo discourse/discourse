@@ -88,12 +88,22 @@ export default class UpcomingEventsCalendar extends Component {
         backgroundColor = `#${categoryColor}`;
       }
 
+      const isAllDay =
+        event.allDay || !isNotFullDayEvent(moment(startsAt), moment(endsAt));
+
+      // FullCalendar treats end as exclusive for allDay events,
+      // so add one day to make the end date inclusive
+      let calendarEnd = endsAt || startsAt;
+      if (isAllDay && calendarEnd) {
+        calendarEnd = moment(calendarEnd).add(1, "day").format("YYYY-MM-DD");
+      }
+
       return {
         extendedProps: { postEvent: event },
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
-        end: endsAt || startsAt,
-        allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
+        end: calendarEnd,
+        allDay: isAllDay,
         url: getURL(`/t/-/${post?.topic?.id}/${post?.post_number}`),
         backgroundColor,
       };

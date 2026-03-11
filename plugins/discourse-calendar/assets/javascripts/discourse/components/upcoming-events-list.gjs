@@ -163,8 +163,14 @@ export default class UpcomingEventsList extends Component {
   }
 
   formatDateRange(event) {
-    const start = new Date(event.starts_at);
-    const end = new Date(event.ends_at);
+    // Date-only strings (all-day events) must be parsed as local dates;
+    // new Date("YYYY-MM-DD") treats them as UTC, shifting the day in western timezones
+    const start = event.all_day
+      ? new Date(event.starts_at + "T00:00:00")
+      : new Date(event.starts_at);
+    const end = event.all_day
+      ? new Date(event.ends_at + "T00:00:00")
+      : new Date(event.ends_at);
     return new Intl.DateTimeFormat(moment.locale(), {
       month: "long",
       day: "numeric",
