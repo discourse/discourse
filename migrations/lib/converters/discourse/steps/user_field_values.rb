@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Discourse
-  class UserFieldValues < ::Migrations::Converters::Base::ProgressStep
+  class UserFieldValues < Migrations::Converters::Base::ProgressStep
     USER_FIELD_PREFIX = "user_field_"
 
     attr_accessor :source_db

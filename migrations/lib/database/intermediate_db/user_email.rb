@@ -28,12 +28,12 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(user_id:, email:, created_at: nil, primary: nil)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         user_id,
         email,
-        ::Migrations::Database.format_datetime(created_at),
-        ::Migrations::Database.format_boolean(primary),
+        Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_boolean(primary),
       )
     end
   end

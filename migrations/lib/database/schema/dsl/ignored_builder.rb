@@ -19,7 +19,7 @@ module Migrations::Database::Schema::DSL
       end
 
       def plugin_ignored?(name)
-        normalized = ::Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
+        normalized = Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
         plugin_entries.any? { |e| e.name == normalized }
       end
     end
@@ -46,7 +46,7 @@ module Migrations::Database::Schema::DSL
               "Ignored plugin :#{name} must have a reason."
       end
 
-      normalized_name = ::Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
+      normalized_name = Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
       if @plugin_entry_names.key?(normalized_name)
         raise Migrations::Database::Schema::ConfigError,
               "Ignored plugin :#{normalized_name} is already declared."

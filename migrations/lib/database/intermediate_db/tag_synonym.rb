@@ -24,7 +24,7 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(synonym_tag_id:, target_tag_id:)
-      ::Migrations::Database::IntermediateDB.insert(SQL, synonym_tag_id, target_tag_id)
+      Migrations::Database::IntermediateDB.insert(SQL, synonym_tag_id, target_tag_id)
     end
   end
 end

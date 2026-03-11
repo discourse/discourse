@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class Badges < ::Migrations::Importer::CopyStep
+  class Badges < Migrations::Importer::CopyStep
     DEFAULT_ICON = "certificate"
     DUPLICATE_SUFFIX = "_1"
     VALID_TRIGGERS =
@@ -62,7 +62,7 @@ module Migrations::Importer::Steps
     private
 
     def setup
-      @unique_name_finder = ::Migrations::Importer::BadgeNameFinder.new(@shared_data)
+      @unique_name_finder = Migrations::Importer::BadgeNameFinder.new(@shared_data)
     end
 
     def transform_row(row)

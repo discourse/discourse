@@ -81,27 +81,27 @@ module Migrations::Database::IntermediateDB
       target_posts: nil,
       trigger: nil
     )
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         original_id,
-        ::Migrations::Database.format_boolean(allow_title),
-        ::Migrations::Database.format_boolean(auto_revoke),
+        Migrations::Database.format_boolean(allow_title),
+        Migrations::Database.format_boolean(auto_revoke),
         badge_grouping_id,
         badge_type_id,
-        ::Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(created_at),
         description,
-        ::Migrations::Database.format_boolean(enabled),
+        Migrations::Database.format_boolean(enabled),
         existing_id,
         icon,
         image_upload_id,
-        ::Migrations::Database.format_boolean(listable),
+        Migrations::Database.format_boolean(listable),
         long_description,
-        ::Migrations::Database.format_boolean(multiple_grant),
+        Migrations::Database.format_boolean(multiple_grant),
         name,
         query,
-        ::Migrations::Database.format_boolean(show_in_post_header),
-        ::Migrations::Database.format_boolean(show_posts),
-        ::Migrations::Database.format_boolean(target_posts),
+        Migrations::Database.format_boolean(show_in_post_header),
+        Migrations::Database.format_boolean(show_posts),
+        Migrations::Database.format_boolean(target_posts),
         trigger,
       )
     end

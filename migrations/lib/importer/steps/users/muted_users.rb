@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class MutedUsers < ::Migrations::Importer::CopyStep
+  class MutedUsers < Migrations::Importer::CopyStep
     depends_on :users
 
     requires_set :existing_muted_users, "SELECT user_id, muted_user_id FROM muted_users"

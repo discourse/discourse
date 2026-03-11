@@ -128,7 +128,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
         described_class.new(Migrations::Database::Schema).generate
 
         model_content = File.read(File.join(paths[:models], "user.rb"))
-        expect(model_content).to include("::Test::Models.insert(")
+        expect(model_content).to include("Test::Models.insert(")
         expect(model_content).not_to include("IntermediateDB.insert(")
       end
     end

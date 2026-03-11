@@ -9,14 +9,14 @@ module Migrations::CLI
     def execute
       puts "Starting uploads..."
 
-      ::Migrations.load_rails_environment(quiet: true)
+      Migrations.load_rails_environment(quiet: true)
 
       adjust_db_pool_size
 
       validate_settings_file!
       settings = load_settings
 
-      ::Migrations::Uploader::Uploads.perform!(settings)
+      Migrations::Uploader::Uploads.perform!(settings)
 
       puts ""
     end
@@ -24,7 +24,7 @@ module Migrations::CLI
     private
 
     def load_settings
-      settings = ::Migrations::SettingsParser.parse!(@options.settings)
+      settings = Migrations::SettingsParser.parse!(@options.settings)
       merge_settings_from_cli_args!(settings)
 
       settings
@@ -38,7 +38,7 @@ module Migrations::CLI
     def validate_settings_file!
       path = @options.settings
 
-      raise ::Migrations::NoSettingsFound, "Settings file not found: #{path}" if !File.exist?(path)
+      raise Migrations::NoSettingsFound, "Settings file not found: #{path}" if !File.exist?(path)
     end
 
     def adjust_db_pool_size

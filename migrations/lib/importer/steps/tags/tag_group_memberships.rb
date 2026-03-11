@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TagGroupMemberships < ::Migrations::Importer::CopyStep
+  class TagGroupMemberships < Migrations::Importer::CopyStep
     depends_on :tag_groups, :tags
 
     requires_set :existing_tag_group_memberships,

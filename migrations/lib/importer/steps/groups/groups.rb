@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class Groups < ::Migrations::Importer::CopyStep
+  class Groups < Migrations::Importer::CopyStep
     DEFAULT_VISIBILITY_LEVEL = Group.visibility_levels[:public]
     DEFAULT_ALIAS_LEVEL = Group::ALIAS_LEVELS[:nobody]
     DEFAULT_NOTIFICATION_LEVEL = GroupUser.notification_levels[:watching]
@@ -78,7 +78,7 @@ module Migrations::Importer::Steps
     private
 
     def setup
-      @unique_name_finder = ::Migrations::Importer::GroupNameFinder.new(@shared_data)
+      @unique_name_finder = Migrations::Importer::GroupNameFinder.new(@shared_data)
       @max_domains = SiteSetting.max_automatic_membership_email_domains
     end
 

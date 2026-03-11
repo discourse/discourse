@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TopicAllowedGroups < ::Migrations::Importer::CopyStep
+  class TopicAllowedGroups < Migrations::Importer::CopyStep
     depends_on :topics, :groups
 
     requires_set :existing_topic_allowed_groups,

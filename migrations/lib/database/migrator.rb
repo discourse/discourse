@@ -3,7 +3,7 @@
 module Migrations::Database
   class Migrator
     def initialize(db_path)
-      @db_path = File.expand_path(db_path, ::Migrations.root_path)
+      @db_path = File.expand_path(db_path, Migrations.root_path)
       @db = nil
     end
 
@@ -61,7 +61,7 @@ module Migrations::Database
 
     def migrate_from_path(migration_path, performed_migrations)
       file_pattern = File.join(migration_path, "*.sql")
-      root_path = @migrations_path || ::Migrations.root_path
+      root_path = @migrations_path || Migrations.root_path
 
       Dir[file_pattern].sort.each do |path|
         relative_path = Pathname(path).relative_path_from(root_path).to_s

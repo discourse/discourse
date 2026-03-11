@@ -6,7 +6,7 @@
 
 module Migrations::Database::IntermediateDB::Enums
   module UploadType
-    extend ::Migrations::Enum
+    extend Migrations::Enum
 
     AVATAR = 0
     CARD_BACKGROUND = 1

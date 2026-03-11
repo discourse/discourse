@@ -30,12 +30,12 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(original_id:, created_at: nil, name:, one_per_topic: nil, parent_tag_id: nil)
-      ::Migrations::Database::IntermediateDB.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         original_id,
-        ::Migrations::Database.format_datetime(created_at),
+        Migrations::Database.format_datetime(created_at),
         name,
-        ::Migrations::Database.format_boolean(one_per_topic),
+        Migrations::Database.format_boolean(one_per_topic),
         parent_tag_id,
       )
     end

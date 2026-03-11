@@ -6,10 +6,10 @@ module Migrations::Converters::Base
       @step = step
       @tracker = step.tracker
 
-      @offline_connection = ::Migrations::Database::OfflineConnection.new
+      @offline_connection = Migrations::Database::OfflineConnection.new
 
-      ::Migrations::ForkManager.after_fork_child do
-        ::Migrations::Database::IntermediateDB.setup(@offline_connection)
+      Migrations::ForkManager.after_fork_child do
+        Migrations::Database::IntermediateDB.setup(@offline_connection)
       end
     end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class CategoryCustomFields < ::Migrations::Importer::CopyStep
+  class CategoryCustomFields < Migrations::Importer::CopyStep
     depends_on :categories
 
     requires_set :existing_custom_fields,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class UserAssociatedAccounts < ::Migrations::Importer::CopyStep
+  class UserAssociatedAccounts < Migrations::Importer::CopyStep
     EMPTY_JSON_OBJECT = "{}"
 
     depends_on :users

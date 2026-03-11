@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps::Base
-  class SiteSettings < ::Migrations::Importer::Step
+  class SiteSettings < Migrations::Importer::Step
     class << self
       def inherited(klass)
         super

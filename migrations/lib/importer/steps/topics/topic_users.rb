@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TopicUsers < ::Migrations::Importer::CopyStep
+  class TopicUsers < Migrations::Importer::CopyStep
     NOTIFICATION_LEVELS = TopicUser.notification_levels.values.to_set.freeze
     DEFAULT_NOTIFICATION_LEVEL = TopicUser.notification_levels[:regular]
     NOTIFICATION_REASONS = TopicUser.notification_reasons.values.to_set.freeze

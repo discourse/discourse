@@ -88,7 +88,7 @@ module Migrations::Database::Schema
     end
 
     def escape_identifier(identifier)
-      ::Migrations::Database::Schema::Helpers.escape_identifier(identifier)
+      Migrations::Database::Schema::Helpers.escape_identifier(identifier)
     end
 
     def output_indexes(table)

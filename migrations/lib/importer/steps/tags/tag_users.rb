@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TagUsers < ::Migrations::Importer::CopyStep
+  class TagUsers < Migrations::Importer::CopyStep
     NOTIFICATION_LEVELS = TagUser.notification_levels.values.to_set.freeze
     DEFAULT_NOTIFICATION_LEVEL = TagUser.notification_levels[:regular]
 

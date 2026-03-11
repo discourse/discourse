@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps::Base
-  class Tags < ::Migrations::Importer::CopyStep
+  class Tags < Migrations::Importer::CopyStep
     include ::HasSanitizableFields
 
     MAX_DESCRIPTION_LENGTH = 1000

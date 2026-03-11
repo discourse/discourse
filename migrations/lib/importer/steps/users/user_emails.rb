@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class UserEmails < ::Migrations::Importer::CopyStep
+  class UserEmails < Migrations::Importer::CopyStep
     depends_on :users
 
     requires_set :existing_user_ids, "SELECT DISTINCT user_id FROM user_emails"

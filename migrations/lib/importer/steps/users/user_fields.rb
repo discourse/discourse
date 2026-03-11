@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class UserFields < ::Migrations::Importer::CopyStep
+  class UserFields < Migrations::Importer::CopyStep
     include ::HasSanitizableFields
 
     SANITIZER_ATTRIBUTES = %w[target].freeze

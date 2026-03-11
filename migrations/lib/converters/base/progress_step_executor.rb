@@ -70,7 +70,7 @@ module Migrations::Converters::Base
         message =
           I18n.t(
             "converter.max_progress_calculation",
-            duration: ::Migrations::DateHelper.human_readable_time(duration),
+            duration: Migrations::DateHelper.human_readable_time(duration),
           )
         puts "    #{message}"
       end
@@ -79,7 +79,7 @@ module Migrations::Converters::Base
     end
 
     def with_progressbar
-      ::Migrations::ExtendedProgressBar
+      Migrations::ExtendedProgressBar
         .new(max_progress: @max_progress)
         .run { |progressbar| yield progressbar }
     end
@@ -91,7 +91,7 @@ module Migrations::Converters::Base
         with_progressbar do |progressbar|
           while (parametrized_insert_statements, stats = worker_output_queue.pop)
             parametrized_insert_statements.each do |sql, parameters|
-              ::Migrations::Database::IntermediateDB.insert(sql, *parameters)
+              Migrations::Database::IntermediateDB.insert(sql, *parameters)
             end
 
             progressbar.update(
@@ -109,7 +109,7 @@ module Migrations::Converters::Base
 
       Process.warmup
 
-      ::Migrations::ForkManager.batch_forks do
+      Migrations::ForkManager.batch_forks do
         WORKER_COUNT.times do |index|
           job = ParallelJob.new(@step)
           workers << Worker.new(index, work_queue, worker_output_queue, job).start

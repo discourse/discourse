@@ -6,7 +6,7 @@
 
 module Migrations::Database::IntermediateDB::Enums
   module SiteSettingImportMode
-    extend ::Migrations::Enum
+    extend Migrations::Enum
 
     AUTO = 0
     OVERRIDE = 1

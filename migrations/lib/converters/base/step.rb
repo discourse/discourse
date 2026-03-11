@@ -2,8 +2,8 @@
 
 module Migrations::Converters::Base
   class Step
-    IntermediateDB = ::Migrations::Database::IntermediateDB
-    Enums = ::Migrations::Database::IntermediateDB::Enums
+    IntermediateDB = Migrations::Database::IntermediateDB
+    Enums = Migrations::Database::IntermediateDB::Enums
 
     attr_accessor :settings
     attr_reader :tracker

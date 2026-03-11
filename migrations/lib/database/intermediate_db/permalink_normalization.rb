@@ -22,7 +22,7 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(normalization:)
-      ::Migrations::Database::IntermediateDB.insert(SQL, normalization)
+      Migrations::Database::IntermediateDB.insert(SQL, normalization)
     end
   end
 end

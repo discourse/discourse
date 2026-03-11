@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class Topics < ::Migrations::Importer::CopyStep
+  class Topics < Migrations::Importer::CopyStep
     ARCHETYPES = Archetype.list.map(&:id).to_set.freeze
     DEFAULT_ARCHETYPE = Archetype.default
     SUBTYPES = TopicSubtype.instance_variable_get(:@subtypes).keys.to_set.freeze

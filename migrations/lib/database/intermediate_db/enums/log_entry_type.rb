@@ -6,7 +6,7 @@
 
 module Migrations::Database::IntermediateDB::Enums
   module LogEntryType
-    extend ::Migrations::Enum
+    extend Migrations::Enum
 
     ERROR = "error"
     INFO = "info"

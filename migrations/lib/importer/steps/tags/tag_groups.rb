@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class TagGroups < ::Migrations::Importer::CopyStep
+  class TagGroups < Migrations::Importer::CopyStep
     MAX_NAME_LENGTH = 100
 
     depends_on :tags

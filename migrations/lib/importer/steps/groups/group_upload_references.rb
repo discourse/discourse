@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class GroupUploadReferences < ::Migrations::Importer::Step
+  class GroupUploadReferences < Migrations::Importer::Step
     depends_on :groups
 
     def execute

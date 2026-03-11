@@ -101,7 +101,7 @@ module Migrations::Importer
     end
 
     def fetch_rows
-      skip_row_marker = ::Migrations::Importer::DiscourseDB::SKIP_ROW_MARKER
+      skip_row_marker = Migrations::Importer::DiscourseDB::SKIP_ROW_MARKER
 
       Enumerator.new do |enumerator|
         query, parameters = self.class.rows_query

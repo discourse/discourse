@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class DefaultTagGroupPermissions < ::Migrations::Importer::Step
+  class DefaultTagGroupPermissions < Migrations::Importer::Step
     depends_on :tag_group_permissions
 
     def execute

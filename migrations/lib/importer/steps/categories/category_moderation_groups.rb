@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class CategoryModerationGroups < ::Migrations::Importer::CopyStep
+  class CategoryModerationGroups < Migrations::Importer::CopyStep
     depends_on :categories, :groups
 
     column_names %i[category_id group_id]

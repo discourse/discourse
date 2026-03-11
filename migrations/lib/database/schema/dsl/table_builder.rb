@@ -132,7 +132,7 @@ module Migrations::Database::Schema::DSL
       @ignore_plugin_columns = true
       @ignore_plugin_names =
         plugin_names.flatten.map do |name|
-          ::Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
+          Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
         end if plugin_names.any?
     end
 

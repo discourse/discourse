@@ -26,11 +26,11 @@ module Migrations::Converters::Base
       STDERR.puts "\nAborted"
       exit(1)
     ensure
-      ::Migrations::Database::IntermediateDB.close
+      Migrations::Database::IntermediateDB.close
     end
 
     def steps
-      step_class = ::Migrations::Converters::Base::Step
+      step_class = Migrations::Converters::Base::Step
       current_module = self.class.name.deconstantize.constantize
 
       current_module
@@ -66,14 +66,14 @@ module Migrations::Converters::Base
     private
 
     def create_database
-      db_path = File.expand_path(settings[:intermediate_db][:path], ::Migrations.root_path)
-      ::Migrations::Database.migrate(
+      db_path = File.expand_path(settings[:intermediate_db][:path], Migrations.root_path)
+      Migrations::Database.migrate(
         db_path,
-        migrations_path: ::Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+        migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
       )
 
-      db = ::Migrations::Database.connect(db_path)
-      ::Migrations::Database::IntermediateDB.setup(db)
+      db = Migrations::Database.connect(db_path)
+      Migrations::Database::IntermediateDB.setup(db)
     end
 
     def create_step(step_class)
@@ -84,7 +84,7 @@ module Migrations::Converters::Base
     end
 
     def filter_steps(step_classes, only_steps, skip_steps)
-      ::Migrations::ClassFilter.filter(step_classes, only: only_steps, skip: skip_steps)
+      Migrations::ClassFilter.filter(step_classes, only: only_steps, skip: skip_steps)
     end
   end
 end

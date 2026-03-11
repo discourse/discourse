@@ -7,5 +7,5 @@ def reset_memoization(instance, *variables)
 end
 
 def fixture_root
-  @fixture_root ||= File.join(::Migrations.root_path, "spec", "support", "fixtures")
+  @fixture_root ||= File.join(Migrations.root_path, "spec", "support", "fixtures")
 end

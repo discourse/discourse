@@ -8,7 +8,7 @@ module Migrations::Database
     PREPARED_STATEMENT_CACHE_SIZE = 5
 
     def self.open_database(path:)
-      path = File.expand_path(path, ::Migrations.root_path)
+      path = File.expand_path(path, Migrations.root_path)
       FileUtils.mkdir_p(File.dirname(path))
 
       db = ::Extralite::Database.new(path)
@@ -26,7 +26,7 @@ module Migrations::Database
     attr_reader :db, :path
 
     def initialize(path:, transaction_batch_size: TRANSACTION_BATCH_SIZE)
-      @path = File.expand_path(path, ::Migrations.root_path)
+      @path = File.expand_path(path, Migrations.root_path)
       @transaction_batch_size = transaction_batch_size
       @db = self.class.open_database(path:)
       @statement_counter = 0
@@ -39,8 +39,8 @@ module Migrations::Database
       close_connection(keep_path: false)
 
       before_hook, after_hook = @fork_hooks
-      ::Migrations::ForkManager.remove_before_fork_hook(before_hook)
-      ::Migrations::ForkManager.remove_after_fork_parent_hook(after_hook)
+      Migrations::ForkManager.remove_before_fork_hook(before_hook)
+      Migrations::ForkManager.remove_after_fork_parent_hook(after_hook)
     end
 
     def closed?
@@ -106,10 +106,10 @@ module Migrations::Database
     end
 
     def setup_fork_handling
-      before_hook = ::Migrations::ForkManager.before_fork { close_connection(keep_path: true) }
+      before_hook = Migrations::ForkManager.before_fork { close_connection(keep_path: true) }
 
       after_hook =
-        ::Migrations::ForkManager.after_fork_parent do
+        Migrations::ForkManager.after_fork_parent do
           @db = self.class.open_database(path: @path) if @path
         end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class CategoryUsers < ::Migrations::Importer::CopyStep
+  class CategoryUsers < Migrations::Importer::CopyStep
     DEFAULT_NOTIFICATION_LEVEL = CategoryUser.default_notification_level
     VALID_NOTIFICATION_LEVELS = CategoryUser.notification_levels.values.to_set.freeze
 
