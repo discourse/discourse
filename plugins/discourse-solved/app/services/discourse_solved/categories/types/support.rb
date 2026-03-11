@@ -73,11 +73,14 @@ module DiscourseSolved
                 :solved_topics_auto_close_hours => {
                   default: 48,
                   type: :integer,
+                  subtype: :duration,
                   label:
-                    I18n.t("discourse_solved.category_type.solved_topics_auto_close_hours.label"),
+                    I18n.t(
+                      "discourse_solved.category_type.solved_topics_auto_close_duration.label",
+                    ),
                   description:
                     I18n.t(
-                      "discourse_solved.category_type.solved_topics_auto_close_hours.description",
+                      "discourse_solved.category_type.solved_topics_auto_close_duration.description",
                     ),
                 },
               },

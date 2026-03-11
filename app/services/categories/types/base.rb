@@ -40,6 +40,10 @@ module Categories
                 "type" => "string",
                 "minLength" => 1,
               },
+              "subtype" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
               "label" => {
                 "type" => "string",
                 "minLength" => 1,
@@ -306,6 +310,7 @@ module Categories
               default: config[:default],
               type: config[:type].to_s,
               label: config[:label],
+              subtype: config[:subtype]&.to_s,
               description: config[:description],
               required: config[:required],
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
@@ -318,6 +323,7 @@ module Categories
               key: field_name.to_s,
               default: config[:default],
               type: config[:type].to_s,
+              subtype: config[:subtype]&.to_s,
               label: config[:label],
               description: config[:description],
               required: config[:required],
