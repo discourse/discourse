@@ -9,8 +9,9 @@ import uniqueId from "discourse/helpers/unique-id";
  * Represents a field in a form with validation, registration, and field data management capabilities.
  */
 export default class FKFieldData extends Component {
+  // Set by `FKBaseControl` and its subclasses
+  // eslint-disable-next-line discourse/no-unnecessary-tracked
   @tracked type;
-  @tracked controlWidth = "auto";
 
   /**
    * Unique identifier for the field.

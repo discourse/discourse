@@ -1053,6 +1053,10 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
+  pretender.post("/admin/dashboard/problems.json", () => {
+    return response(200, fixturesByUrl["/admin/dashboard/problems.json"]);
+  });
+
   pretender.get("/admin/customize/watched_words", () => {
     return response(200, fixturesByUrl["/admin/customize/watched_words.json"]);
   });

@@ -149,6 +149,56 @@ describe "Tags", type: :system do
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
     end
 
+    it "highlights the selected tag in the tag-drop dropdown" do
+      ditto = Fabricate(:tag, name: "ditto")
+      bulbasaur = Fabricate(:tag, name: "bulbasaur")
+      sprigatito = Fabricate(:tag, name: "sprigatito")
+      tag_category = Fabricate(:category)
+
+      [ditto, bulbasaur, sprigatito].each do |tag|
+        Fabricate(:topic, category: tag_category, tags: [tag]).tap do |t|
+          Fabricate(:post, topic: t)
+        end
+      end
+      CategoryTagStat.update_topic_counts
+
+      sign_in(user_tl1)
+
+      # visit tag page, tag-drop should highlight the active tag
+      tag_page.visit_tag(ditto)
+      discovery.tag_drop.expand
+      expect(discovery.tag_drop).to have_selected_row_name("ditto")
+
+      # search for the active tag, result should still be highlighted
+      discovery.tag_drop.search(ditto.name)
+      expect(discovery.tag_drop).to have_selected_row_name("ditto")
+
+      # search for a different tag, no row should be highlighted
+      discovery.tag_drop.search(bulbasaur.name)
+      expect(discovery.tag_drop).to have_no_selected_row
+
+      # select a different tag, navigate, verify new selection
+      discovery.tag_drop.select_row_by_name("bulbasaur")
+      expect(page).to have_current_path("/tag/#{bulbasaur.slug}/#{bulbasaur.id}")
+
+      discovery.tag_drop.expand
+      expect(discovery.tag_drop).to have_selected_row_name("bulbasaur")
+
+      # "remove filter" navigates back with no selected tag
+      discovery.tag_drop.select_row_by_value("all-tags")
+      expect(page).to have_current_path("/")
+
+      discovery.tag_drop.expand
+      expect(discovery.tag_drop).to have_no_selected_row
+
+      # "no tags" filter shows untagged topics
+      discovery.tag_drop.select_row_by_value("no-tags")
+      expect(page).to have_current_path("/tag/none")
+
+      discovery.tag_drop.expand
+      expect(discovery.tag_drop).to have_no_selected_row
+    end
+
     it "filters to untagged topics when selecting 'no tags' from tag drop" do
       sign_in(user_tl1)
       visit "/latest"

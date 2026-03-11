@@ -32,7 +32,7 @@ export default class ChatModalChannelSummary extends Component {
   }
 
   @action
-  summarize(since) {
+  async summarize(since) {
     this.sinceHours = since;
     this.loading = true;
 
@@ -42,24 +42,27 @@ export default class ChatModalChannelSummary extends Component {
       return;
     }
 
-    return ajax(`/discourse-ai/summarization/channels/${this.channelId}.json`, {
-      type: "GET",
-      data: {
-        since,
-      },
-    })
-      .then((data) => {
-        this.availableSummaries[this.sinceHours] = data.summary;
-        this.summary = this.availableSummaries[this.sinceHours];
-      })
-      .catch((error) => {
-        if (isAiCreditLimitError(error)) {
-          popupAiCreditLimitError(error);
-        } else {
-          popupAjaxError(error);
+    try {
+      const data = await ajax(
+        `/discourse-ai/summarization/channels/${this.channelId}.json`,
+        {
+          type: "POST",
+          data: {
+            since,
+          },
         }
-      })
-      .finally(() => (this.loading = false));
+      );
+      this.availableSummaries[this.sinceHours] = data.summary;
+      this.summary = this.availableSummaries[this.sinceHours];
+    } catch (error) {
+      if (isAiCreditLimitError(error)) {
+        popupAiCreditLimitError(error);
+      } else {
+        popupAjaxError(error);
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 
   <template>

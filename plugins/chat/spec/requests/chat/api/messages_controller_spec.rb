@@ -186,6 +186,17 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
 
       it_behaves_like "chat_message_restoration"
+
+      it "doesn't allow a regular user to restore their own message deleted by staff" do
+        message = Fabricate(:chat_message, chat_channel: chat_channel, user: current_user)
+        message.trash!(admin)
+
+        sign_in(current_user)
+
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
+        expect(response.status).to eq(403)
+        expect(message.reload.deleted_at).not_to be_nil
+      end
     end
 
     describe "for dm channel" do

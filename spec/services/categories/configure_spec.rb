@@ -1,88 +1,83 @@
 # frozen_string_literal: true
 
 RSpec.describe Categories::Configure do
-  fab!(:admin)
-  fab!(:category)
-
-  let(:guardian) { Guardian.new(admin) }
+  describe Categories::Configure::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:category_id) }
+    it { is_expected.to validate_presence_of(:category_type) }
+  end
 
   describe ".call" do
-    context "with valid params" do
-      it "configures the discussion type successfully" do
-        result =
-          described_class.call(
-            guardian:,
-            params: {
-              category_id: category.id,
-              category_type: "discussion",
-            },
-          )
+    subject(:result) { described_class.call(params:, **dependencies) }
 
-        expect(result).to be_success
-      end
+    fab!(:admin)
+    fab!(:category)
 
-      it "logs a staff action" do
-        described_class.call(
-          guardian:,
-          params: {
-            category_id: category.id,
-            category_type: "discussion",
-          },
-        )
+    let(:params) { { category_id: category.id, category_type: "discussion" } }
+    let(:dependencies) { { guardian: admin.guardian } }
 
-        log =
-          UserHistory.find_by(
-            acting_user_id: admin.id,
-            action: UserHistory.actions[:custom_staff],
-            custom_type: "configure_category_type",
-          )
-        expect(log).to be_present
-        expect(log.details).to include("category_type")
-      end
+    context "when params are invalid" do
+      let(:params) { { category_id: nil, category_type: nil } }
+
+      it { is_expected.to fail_a_contract }
     end
 
-    context "with invalid category_id" do
-      it "fails with model not found" do
-        result =
-          described_class.call(guardian:, params: { category_id: -1, category_type: "discussion" })
+    context "when category type is invalid" do
+      let(:params) { super().merge(category_type: "invalid_type") }
 
-        expect(result).to be_failure
-        expect(result["result.model.category"].not_found).to be true
-      end
+      it { is_expected.to fail_a_contract }
     end
 
-    context "with invalid category_type" do
-      it "fails with contract error" do
-        result =
-          described_class.call(
-            guardian:,
-            params: {
-              category_id: category.id,
-              category_type: "invalid_type",
-            },
-          )
+    context "when category is not found" do
+      let(:params) { super().merge(category_id: -1) }
 
-        expect(result).to be_failure
-        expect(result["result.contract.default"].errors[:category_type]).to be_present
-      end
+      it { is_expected.to fail_to_find_a_model(:category) }
     end
 
     context "when user cannot modify category" do
       fab!(:user)
-      let(:guardian) { Guardian.new(user) }
+      let(:dependencies) { { guardian: user.guardian } }
 
-      it "fails with policy error" do
-        result =
-          described_class.call(
-            guardian:,
-            params: {
-              category_id: category.id,
-              category_type: "discussion",
-            },
-          )
+      it { is_expected.to fail_a_policy(:can_modify_category) }
+    end
 
-        expect(result).to be_failure
-        expect(result["result.policy.can_modify_category"]).to be_failure
+    context "when type is not available" do
+      before { allow(Categories::Types::Discussion).to receive(:available?).and_return(false) }
+
+      it { is_expected.to fail_a_policy(:type_is_available) }
+    end
+
+    context "when everything's ok" do
+      it { is_expected.to run_successfully }
+
+      it "calls enable_plugin on the type class" do
+        Categories::Types::Discussion.expects(:enable_plugin).once
+        result
+      end
+
+      it "calls configure_site_settings on the type class" do
+        Categories::Types::Discussion.expects(:configure_site_settings).once
+        result
+      end
+
+      it "calls configure_category on the type class" do
+        Categories::Types::Discussion.expects(:configure_category).once
+        result
+      end
+
+      it "logs a staff action" do
+        expect { result }.to change { UserHistory.count }.by(1)
+        expect(UserHistory.last).to have_attributes(
+          action: UserHistory.actions[:custom_staff],
+          custom_type: "configure_category_type",
+          acting_user_id: admin.id,
+        )
+        expect(UserHistory.last.details).to include("category_type")
+      end
+
+      it "clears the category type counts cache" do
+        Discourse.cache.write(Categories::TypeRegistry::COUNTS_CACHE_KEY, "cached_value")
+        result
+        expect(Discourse.cache.read(Categories::TypeRegistry::COUNTS_CACHE_KEY)).to be_nil
       end
     end
   end
