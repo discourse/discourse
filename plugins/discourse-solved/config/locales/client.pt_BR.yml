@@ -40,7 +40,17 @@ pt_BR:
       no_solved_topics_title_others: "%{username} ainda não respondeu a nenhum tópico"
       no_solved_topics_body: "Quando você fornecer uma resposta útil a um tópico, ela poderá ser selecionada como uma solução pelo(a) proprietário(a) ou equipe do tópico."
       marked_solved_by: "Marcado como resolvido por %{user}"
+      confirm_move_solution_title: "Mover postagem da solução"
+      confirm_move_solution:
+        one: "A postagem que você selecionou está marcada como solução para este tópico. Se você a mover, o tópico mudará para o estado \"não resolvido\"."
+        other: "Uma das postagens que você selecionou está marcada como solução para este tópico. Se você movê-la, o tópico mudará para o estado \"não resolvido\"."
+      move_post_confirm:
+        one: "Mover postagem"
+        other: "Mover postagens"
       move_post_cancel: "Cancelar"
+      dont_show_again: "Entendi, não me mostre isso novamente."
+      confirm_solved_removal_title: "A solução será removida."
+      confirm_solved_removal: "Esta alteração desativará as soluções para este tópico e removerá a solução aceita."
       confirm_solved_removal_confirm: "Confirmar"
       confirm_solved_removal_cancel: "Cancelar"
       no_answer:
@@ -48,6 +58,8 @@ pt_BR:
         description: "Destaque a resposta e ajude as outras pessoas ao usar o botão de solução abaixo para responder corretamente."
       notification:
         title: "sua postagem foi marcada como uma solução"
+      category_type_support:
+        title: "Apoio"
     topic_statuses:
       solved:
         help: "Este tópico tem uma solução"

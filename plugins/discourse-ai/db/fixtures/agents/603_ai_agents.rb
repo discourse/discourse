@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+# during transition period prior to rename of persona table
+# it is a view, we can not write to it, post migration will take care
+ai_agents_is_view =
+  DB.query_single(
+    "SELECT 1 FROM pg_class WHERE relname = 'ai_agents' AND relkind IN ('v')",
+  ).present?
+return if ai_agents_is_view
+
 summarization_agents = [DiscourseAi::Agents::Summarizer, DiscourseAi::Agents::ShortSummarizer]
 
 def from_setting(setting_name)

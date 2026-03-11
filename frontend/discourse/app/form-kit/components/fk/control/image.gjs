@@ -1,9 +1,9 @@
-import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 
-export default class FKControlImage extends Component {
+export default class FKControlImage extends FKBaseControl {
   static controlType = "image";
 
   @action
@@ -28,7 +28,7 @@ export default class FKControlImage extends Component {
       @onUploadDeleted={{this.removeImage}}
       @type={{@type}}
       @disabled={{@field.disabled}}
-      @placeholderUrl={{@field.args.placeholderUrl}}
+      @placeholderUrl={{@placeholderUrl}}
       class="form-kit__control-image no-repeat contain-image"
     />
   </template>

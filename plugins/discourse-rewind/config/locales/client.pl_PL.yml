@@ -16,8 +16,6 @@ pl_PL:
       title: Rewind
       loading: "Łączenie siatki..."
       viewing_other_user: "Przeglądasz raport <strong>%{username}w Discourse Rewind</strong> ."
-      cannot_view_rewind_gibberish: >
-        [ODMOWA DOSTĘPU::AWARIA PODPROCEDURY REWIND MAINFRAME]<br><br> Dziennik anomalii bootstrappingu...<br><br> &nbsp;&nbsp;>> Niedobór bufora kwantowego ⧛<br> &nbsp;&nbsp;>> Dryft parzystości między węzłami (Δ=004.33)<br> &nbsp;&nbsp;>> Fragment pakietu ϟ na przesunięciu ∇47<br> &nbsp;&nbsp;>> PRZEKROCZONO CZAS uzgadniania kanału strumienia<br><br>
       cannot_view_rewind: >
         Nie możesz wyświetlić tego raportu Discourse Rewind. Być może właściciel nie udostępnił go publicznie?<br><br> $> _<br><br>
       preferences:

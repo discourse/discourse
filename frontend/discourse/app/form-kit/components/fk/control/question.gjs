@@ -1,12 +1,12 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import uniqueId from "discourse/helpers/unique-id";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-export default class FKControlQuestion extends Component {
+export default class FKControlQuestion extends FKBaseControl {
   static controlType = "question";
 
   @action
@@ -25,6 +25,7 @@ export default class FKControlQuestion extends Component {
             checked={{eq @field.value true}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
+            aria-describedby={{if @field.error @field.errorId}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}
@@ -47,6 +48,7 @@ export default class FKControlQuestion extends Component {
             checked={{eq @field.value false}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
+            aria-describedby={{if @field.error @field.errorId}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}

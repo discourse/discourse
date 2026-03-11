@@ -1466,6 +1466,7 @@ bs_BA:
     form_kit:
       reset: Resetovati
       optional: opciono
+      required: required
       errors:
         required: "Required"
     close: "Zatvori"
@@ -3371,7 +3372,7 @@ bs_BA:
           all: "All"
           view_table: "View as Table"
           view_graph: "graph"
-          refresh_report: "Refresh Report"
+          refresh_report: "Refresh"
           daily: Dnevno
           monthly: Mesečno
           weekly: Sedmično

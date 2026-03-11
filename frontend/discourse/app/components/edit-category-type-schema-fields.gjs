@@ -14,6 +14,7 @@ const SchemaFormField = <template>
       @title={{@entry.label}}
       @validation={{if @entry.required "required"}}
       @format="full"
+      @showTitle={{false}}
       as |field|
     >
       <field.Checkbox>{{@entry.description}}</field.Checkbox>
@@ -90,7 +91,6 @@ export default class EditCategoryTypeSchemaFields extends Component {
       </@form.Section>
 
       <@form.Emphasis
-        @type="info"
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >

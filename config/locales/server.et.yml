@@ -549,7 +549,9 @@ et:
         poster: Postitaja
     visits:
       title: "Kasutajakülastused"
-      xaxis: "Päev"
+      xaxis:
+        desktop: "Töölaud"
+        mobile: "Mobiil"
       yaxis: "Külastajate arv"
     signups:
       xaxis: "Päev"

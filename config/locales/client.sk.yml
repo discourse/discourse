@@ -2381,6 +2381,7 @@ sk:
     form_kit:
       reset: Resetovať
       optional: nepovinné
+      required: povinné
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
       errors:
         starts_with: "Musí začínať s %{prefix}"
@@ -4395,6 +4396,8 @@ sk:
         placeholder: "Vybrať skupinu značiek…"
       topic_featured_link_allowed: "Povoliť odporúčané odkazy v tejto kategórii"
       create_long: "Vytvoriť novú kategóriu"
+      type_settings_schema:
+        site_settings: "Nastavenia stránky"
       unsaved_changes: "Máte neuložené zmeny"
       slug_placeholder: "(Voliteľné) pomlčkou-prerušované-slová pre url"
       creation_error: Nastala chyba počas vytvárania kategórie.
@@ -6088,7 +6091,7 @@ sk:
           all: "Všetky"
           view_table: "tabuľka"
           view_graph: "graf"
-          refresh_report: "Obnoviť report"
+          refresh_report: "Obnoviť"
           daily: Denne
           monthly: Mesačne
           weekly: Týždenne
@@ -8191,7 +8194,7 @@ sk:
             confirm: "Áno, aktualizujte zásady používania hesiel"
           min_admin_password_length:
             confirm: "Áno, aktualizujte zásady používania hesiel"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Áno, aktualizujte zásady používania hesiel"
           block_common_passwords:
             confirm: "Áno, aktualizujte zásady používania hesiel"

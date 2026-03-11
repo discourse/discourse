@@ -134,6 +134,23 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
   });
 
+  test("includes console prefix from source identifier", function (assert) {
+    deprecated("My message", {
+      id: "discourse.test",
+      source: {
+        type: "theme",
+        id: "123",
+        name: "test-theme",
+        path: "/admin/customize/themes/123?safe_mode=no_themes",
+      },
+    });
+    assert.strictEqual(this.warnStub.callCount, 1);
+    assert.deepEqual(this.warnStub.args[0], [
+      "[THEME 123 'test-theme']",
+      "DEPRECATION NOTICE: My message [deprecation id: discourse.test]",
+    ]);
+  });
+
   test("can silence individual deprecations in tests", function (assert) {
     withSilencedDeprecations("discourse.one", () =>
       deprecated("message", { id: "discourse.one" })

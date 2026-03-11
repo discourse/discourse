@@ -7,6 +7,7 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
 
   before do
@@ -17,6 +18,7 @@ describe "Simplified Category Creation" do
   describe "General Tab" do
     it "creates a basic category with name and color" do
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
       form.field("color").fill_in("FF5733")
@@ -82,6 +84,7 @@ describe "Simplified Category Creation" do
 
     it "shows error when icon is missing" do
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
 
@@ -109,6 +112,7 @@ describe "Simplified Category Creation" do
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
@@ -139,6 +143,7 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".group-chooser")
 
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
       expect(page).to have_no_css(".group-chooser")
     end
 

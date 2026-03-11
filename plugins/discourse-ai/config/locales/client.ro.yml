@@ -29,9 +29,6 @@ ro:
               label: "Etichete"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Personaj"
-              description: "Personajul este folosit pentru triaj, asigură-te că răspunde cu un singur cuvânt pe care îl poți folosi pentru a declanșa acțiunea."
             category:
               label: "Categorie"
             tags:
@@ -56,7 +53,6 @@ ro:
     discourse_ai:
       default_llm:
         title: "Model LLM implicit"
-        description: "Modelul LLM implicit de utilizat pentru toate funcțiile IA. Acesta va fi utilizat dacă nu este specificat niciun LLM în configurația funcționalității sau în personaj. Dacă nu este specificat niciun LLM implicit, se va utiliza ultimul LLM creat."
       llm_selector:
         none: "Nimic"
       features:
@@ -133,7 +129,7 @@ ro:
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
-      ai_persona:
+      ai_agent:
         back: "Înapoi"
         name: "Nume"
         edit: "Editează"
@@ -196,7 +192,7 @@ ro:
         credit_allocation:
           soft_limit_warning: "Acest model are %{percentage}% din creditele IA rămase astăzi"
         usage:
-          ai_helper: "Ajutor (%{persona})"
+          ai_helper: "Ajutor (%{agent})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:

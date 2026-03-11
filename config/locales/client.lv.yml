@@ -1466,6 +1466,7 @@ lv:
     form_kit:
       reset: Atlikt
       optional: pēc izvēles
+      required: obligāts
       errors:
         required: "Nepieciešams"
     close: "Aizvērt"
@@ -3025,7 +3026,7 @@ lv:
           all: "Visi"
           view_table: "tabula"
           view_graph: "grafiks"
-          refresh_report: "Pārlādēt ziņojumu"
+          refresh_report: "Pārlādēt"
           daily: Dienas
           monthly: Mēneša
           weekly: Nedēļas

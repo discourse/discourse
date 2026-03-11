@@ -19,7 +19,8 @@ export default class CategoryTypeCards extends Component {
       type.id,
       type.name,
       type.configuration_schema,
-      type.title
+      type.title,
+      this.args.counts[type.id]
     );
     this.router.transitionTo("newCategory.tabs", "general");
   }

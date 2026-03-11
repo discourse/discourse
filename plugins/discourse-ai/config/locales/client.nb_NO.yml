@@ -40,7 +40,7 @@ nb_NO:
         back: "Forrige"
         disabled: "(deaktivert)"
         groups: "Grupper:"
-        no_persona: "Ikke angitt"
+        no_agent: "Ikke angitt"
         no_groups: "Ingen"
         edit: "Innstillinger"
         expand_list:
@@ -85,7 +85,7 @@ nb_NO:
         total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
-      ai_persona:
+      ai_agent:
         back: "Forrige"
         name: "Navn"
         edit: "Rediger"

@@ -10,7 +10,6 @@ RSpec.describe "Support Category Type Setup", type: :system do
 
   before do
     SiteSetting.enable_simplified_category_creation = true
-    SiteSetting.enable_category_type_setup = true
     sign_in(admin)
   end
 
@@ -41,6 +40,30 @@ RSpec.describe "Support Category Type Setup", type: :system do
     expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("48")
     expect(category.custom_fields["notify_on_staff_accept_solved"]).to eq("true")
     expect(category.custom_fields["empty_box_on_unsolved"]).to eq("true")
+  end
+
+  context "when there is a support category already configured" do
+    fab!(:category)
+
+    before do
+      DiscourseSolved::Categories::Types::Support.configure_category(
+        category,
+        guardian: admin.guardian,
+      )
+    end
+
+    it "does not preload basic data for the support category type" do
+      visit("/new-category/setup")
+      category_type_card.find_type_card("support").click
+
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
+      expect(form.field("name").value).to eq("")
+      expect(
+        form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
+          "checked"
+        ],
+      ).to eq(nil)
+    end
   end
 
   context "when visiting the Support tab for a non-support category" do

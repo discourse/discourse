@@ -116,5 +116,21 @@ module(
 
       assert.deepEqual(data, { foo: "bar" });
     });
+
+    test("@height", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Textarea @height={{42}} />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom(".form-kit__control-textarea")
+        .hasAttribute("style", "height: 42px");
+    });
   }
 );

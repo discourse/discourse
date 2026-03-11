@@ -47,6 +47,8 @@ ja:
         description: "適切な返信の下にある解決策ボタンを使って回答をハイライトし、他のユーザーを助けましょう。"
       notification:
         title: "あなたの投稿が解決策としてマークされました"
+      category_type_support:
+        title: "支援する"
     topic_statuses:
       solved:
         help: "このトピックには解決策があります"

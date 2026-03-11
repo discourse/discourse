@@ -2025,6 +2025,7 @@ lt:
     form_kit:
       reset: Atstatyti
       optional: pasirinktinai
+      required: privalomi
       errors:
         required: "Privalomi"
         date_before_or_equal: "Turi būti prieš arba lygu %{date}"
@@ -4350,7 +4351,7 @@ lt:
           all: "Visi"
           view_table: "table"
           view_graph: "grafikas"
-          refresh_report: "Refresh Report"
+          refresh_report: "Atnaujinti"
           daily: Kasdien
           monthly: Kas mėnesį
           weekly: Kas savaitę

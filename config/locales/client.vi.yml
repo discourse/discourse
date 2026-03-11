@@ -2225,6 +2225,7 @@ vi:
     form_kit:
       reset: Cài lại
       optional: tùy chọn
+      required: bắt buộc
       dirty_form: "Bạn chưa gửi các thay đổi của mình! Bạn có chắc muốn thoát?"
       errors:
         starts_with: "Phải bắt đầu bằng %{prefix}"
@@ -4027,6 +4028,8 @@ vi:
       delete: "Xóa chuyên mục"
       create: "Chuyên mục mới"
       create_long: "Tạo Chủ đề mới"
+      type_settings_schema:
+        site_settings: "Cài đặt trang web"
       save: "Lưu chuyên mục"
       unsaved_changes: "Bạn có những thay đổi chưa được lưu"
       slug: "Đường dẫn chuyên mục"
@@ -5747,7 +5750,7 @@ vi:
           all: "Tất cả"
           view_table: "bảng"
           view_graph: "đồ thị"
-          refresh_report: "Làm mới báo cáo"
+          refresh_report: "Làm mới"
           daily: hằng ngày
           monthly: Hàng tháng
           weekly: Hàng tuần
@@ -7839,7 +7842,7 @@ vi:
           min_admin_password_length:
             prompt: "Bạn sắp thay đổi chính sách mật khẩu. Điều này sẽ ảnh hưởng đến tất cả quản trị viên khi họ thay đổi mật khẩu kể từ bây giờ. Bạn có chắc muốn tiếp tục?"
             confirm: "Có, cập nhật chính sách mật khẩu"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "Bạn sắp thay đổi chính sách mật khẩu của mình. Điều này sẽ ảnh hưởng đến tất cả thành viên khi thay đổi mật khẩu kể từ bây giờ. Bạn có chắc muốn tiếp tục?"
             confirm: "Có, cập nhật chính sách mật khẩu"
           block_common_passwords:

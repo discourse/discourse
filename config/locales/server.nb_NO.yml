@@ -660,7 +660,9 @@ nb_NO:
         time_to_resolution: Løsningstid
     visits:
       title: "Brukerbesøk"
-      xaxis: "Dag"
+      xaxis:
+        desktop: "Skrivebord"
+        mobile: "Mobil"
       yaxis: "Antall besøk"
     signups:
       title: "Nye brukere"
@@ -689,7 +691,6 @@ nb_NO:
     site_traffic:
       yaxis: "Dag"
     dau_by_mau:
-      title: "DAB/MAB"
       xaxis: "Dag"
       yaxis: "DAB/MAB"
     daily_engaged_users:

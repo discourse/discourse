@@ -23,9 +23,6 @@ he:
         spam: "סימון כזבל והסתרת הפוסט"
         spam_silence: "סימון כזבל, הסתרת הפוסט והשתקת המשתמש"
     scriptables:
-      llm_persona_triage:
-        title: מיון ראשוני של פוסטים באמצעות דמות בינה מלאכותית
-        description: "תגובה לפוסטים באמצעות דמות בינה מלאכותית מסוימת"
       llm_triage:
         title: מיון ראשוני של פוסטים באמצעות בינה מלאכותית
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
@@ -93,7 +90,6 @@ he:
     ai_embeddings_semantic_related_include_closed_topics: "כולל נושאים סגורים בתוצאות החיפוש הסמנטיות"
     ai_embeddings_per_post_enabled: יצירת הטמעות בכל פוסט בנפרד
     ai_summarization_enabled: "הפעלת יכולת הסיכום"
-    ai_summarization_persona: "דמות לשימוש ליכולת הסיכום"
     ai_pm_summarization_allowed_groups: "קבוצות שמורשות ליצור ולצפות בתקצירים בהודעות פרטיות."
     ai_summary_gists_enabled: "יצירת תקצירים של התגובות האחרונות בנושאים אוטומטית"
     ai_summary_backfill_maximum_topics_per_hour: "מספר תקצירי הנושאים למילוי חוזר בשעה."
@@ -105,14 +101,12 @@ he:
     ai_bot_add_to_community_section: "הצגת קישור בסרגל הצד כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
     ai_bot_github_access_token: "אסימון גישה ל־GitHub לשימוש עם כלי הבינה המלאכותית של GitHub (נחוץ לתמיכה בחיפוש)"
     ai_discover_enabled: "הפעלת יכולת חיפוש גילוי"
-    ai_discover_persona: "דמות לשימוש ליכולת חיפוש גילוי"
     ai_google_custom_search_api_key: "מפתח API ל־API החיפוש המותאם אישית של Google, ר׳: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX ל־API החיפוש המותאם אישית של Google"
     ai_discord_search_enabled: "הפעלת יכולת החיפוש ב־Discord"
     ai_discord_app_id: "המזהה של יישום ה־Discord שברצונך לחבר אליו את החיפוש ב־Discord"
     ai_discord_app_public_key: "המפתח הציבורי של יישום ה־Discord שברצונך לחבר אליו את החיפוש ב־Discord"
     ai_discord_search_mode: "נא לבחור את מצב החיפוש לחיפוש ב־Discord"
-    ai_discord_search_persona: "הדמות לשימוש בחיפוש Discord."
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_backfill_limit_to_public_content: "כשהאפשרות פעילה, רק תוכן בקטגוריות ציבוריות יתורגם. כשהאפשרות מושבתת, התוכן בהודעות קבוצתיות פרטיות וקטגוריות פרטיות יישלח גם הוא לתרגום."
@@ -255,8 +249,6 @@ he:
     ai_helper:
       errors:
         completion_request_failed: "משהו השתבש במהלך הניסיון לספק הצעות. נא לנסות שוב."
-        no_illustrator_persona: "לא מוגדר דמות איור לפוסטים. נא לבדוק את הגדרות האתר שלך."
-        no_image_generation_tool: "לדמות איור הפוסטים חייב להיות מוצמד כלי יצירת תמונות. נא להגדיר כלי יצירת תמונות לדמות הזאת בלוח הניהול."
         no_image_generated: "יצירת תמונות נכשלה. נא לנסות שוב או לבדוק את הגדרות הכלי שלך."
         llm_model_not_configured: "לא מוגדר מודל שפה ליצירת תמונות. נא להגדיר מודל שפה כברירת מחדל בהגדרות האתר שלך."
         unknown_error: "אירעה שגיאה מפתיעה בעת יצירת תמונות ממוזערות. נא לנסות שוב."
@@ -292,10 +284,8 @@ he:
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
-      personas:
+      agents:
         default_llm_required: "ברירת מחדל של מודל שפה הגדול נחוצה בטרם הפעלת הצ׳אט"
-        cannot_delete_system_persona: "אי אפשר למחוק דמויות מערכת, נא להשבית אותן במקום"
-        cannot_edit_system_persona: "לדמויות מערכת אפשר רק לשנות את השם, אסור לערוך כלים או את בקשת הבסיס של המערכת, במקום יש להשבית ולשבט"
         cannot_have_duplicate_tools: "לא יכולים להיות כלים כפולים"
         github_helper:
           name: "מסייע GitHub"
@@ -335,10 +325,8 @@ he:
           description: "בוט בינה מלאכותית שמתמחה ביצירת תוצרים אינטרנטיים אינטראקטיביים"
         summarizer:
           name: "מסכם"
-          description: "דמות ברירת מחדל שעליה מופעלים תקצירי בינה מלאכותית"
         short_summarizer:
           name: "מסכם (מקוצר)"
-          description: "דמות ברירת מחדל שמסכמת עם פריטי רשימות נושאים עם בינה מלאכותית"
         concept_finder:
           name: "איתור מושגים"
           description: "בוט בינה מלאכותית שמתמחה בזיהוי מושגים וערכות עיצוב בתוכן"
@@ -350,31 +338,23 @@ he:
           description: "בוט בינה מלאכותית שמתמחה בהסרת מושגים כפולים"
         custom_prompt:
           name: "בקשה מותאמת אישית"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת הבקשה המותאמת של המסייע"
         smart_dates:
           name: "תאריכים חכמים"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת התאריכים החכמים של המסייע"
         markdown_table_generator:
           name: "יצירת טבלאות ב־Markdown"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת יצירת הטבלאות ב־Markdown של המסייע"
         post_illustrator:
           name: "איור פוסטים"
           description: "יצירת תמונות לאיור פוסטים באמצעות כלי יצירת תמונות זמינים"
         proofreader:
           name: "הגהה"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת הגהת הטקסט של המסייע"
         titles_generator:
           name: "יצירת כותרות"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת הצעת כותרות הנושאים של המסייע"
         tutor:
           name: "הדרכה"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת ההסבר של המסייע"
         translator:
           name: "תרגום"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת התרגום של המסייע"
         image_captioner:
           name: "תיאור תמונות"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת תיאור התמונות של המסייע"
         locale_detector:
           name: "מזהה שפה ומקום"
           description: "על גביו פועלת יכולת התרגום על ידי זיהוי השפה והניב של טקסט מסוים (פוסטים, כותרות וכו׳)"
@@ -388,16 +368,12 @@ he:
           name: "מתרגם טקסטים קצרים"
         spam_detector:
           name: "זיהוי זבל"
-          description: "דמות ברירת מחדל שעליה פועלת יכולת זיהוי הזבל שלנו"
         content_creator:
           name: "יצירת תוכן"
-          description: "דמות ברירת המחדל שעליה פועל חיפוש HyDE"
         report_runner:
           name: "אצן דוחות"
-          description: "דמות ברירת המחדל שסקריפט אוטומציית הדוחות משתמש בה"
         discover:
           name: "גילוי"
-          description: "דמות ברירת מחדל לשימוש ביכולת הגילויים (חיפוש משלים)"
       topic_not_found: "תקציר לא זמין, לא נמצא נושא!"
       summarizing: "הנושא מסוכם"
       searching: "חיפוש אחר: ‚%{query}’"
@@ -405,7 +381,6 @@ he:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "מודל שפה לשימוש למחקר (ברירת המחדל היא ה־LLM של הדמות הנוכחית)"
           max_tokens_per_batch:
             name: "מספר אסימונים מרבי לאצווה"
             description: "מספר האסימונים המרבי לשימוש לכל אצווה (ריכוז של פעולות) מחקר"
@@ -461,6 +436,7 @@ he:
         random_picker: "בורר אקראי"
         categories: "הצגת קטגוריות"
         flag_post: "סימון פוסט"
+        edit_post: "עריכת פוסט"
         search: "חיפוש"
         tags: "הצגת תגיות"
         time: "מועד"
@@ -488,6 +464,7 @@ he:
         github_file_content: "משיכת תוכן של קבצים ממאגר ב־GitHub"
         random_picker: "נא לבחור מספר אקראי או רכיב אקראי מרשימה"
         categories: "הצגת כל הקטגוריות החשופות לציבור בפורום"
+        delete_topic: "מחיקת נושא"
         search: "חיפוש בכל הנושאים הציבוריים בפורום"
         tags: "הצגת כל התגיות בפורום"
         time: "איתור זמן באזורי זמן שונים"
@@ -567,6 +544,34 @@ he:
         continue_conversation:
           title: "שיחת גילוי: חיפוש אחר %{query}"
           raw: "בחיפוש שלי אחר %{query}, הצגת לי את המידע הבא:\n\n%{context}\n\nאפשר להמשיך את השיחה."
+      close_topic:
+        errors:
+          not_found: "הנושא לא נמצא."
+      unlist_topic:
+        errors:
+          not_found: "הנושא לא נמצא."
+      delete_topic:
+        errors:
+          not_found: "הנושא לא נמצא."
+      edit_tags:
+        errors:
+          not_found: "הנושא לא נמצא."
+      edit_category:
+        errors:
+          not_found: "הנושא לא נמצא."
+          category_not_found: "לא נמצאה קטגוריה."
+      set_topic_timer:
+        errors:
+          not_found: "הנושא לא נמצא."
+      set_slow_mode:
+        errors:
+          not_found: "הנושא לא נמצא."
+      move_posts:
+        errors:
+          not_found: "הנושא לא נמצא."
+      assign:
+        errors:
+          not_found: "הנושא לא נמצא."
     summarization:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
@@ -597,7 +602,6 @@ he:
         set_llm_first: "קודם יש להגדיר את %{setting}"
         model_unreachable: "לא הצלחנו לקבל תגובה מהמודל הזה. נא לוודא שההגדרות שלך נכונות קודם."
         invalid_seeded_model: "אי אפשר להשתמש במודל הזה עם היכולת הזאת"
-        invalid_persona_response_format: "לדמות הנבחרת חייבת להיות תבנית תגובה עם שדה בוליאני בשם „spam”"
         must_select_model: "קודם יש לבחור LLM"
       endpoints:
         not_configured: "%{display_name} (לא מוגדר)"
@@ -612,7 +616,7 @@ he:
         many: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
         other: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
-    personas:
+    agents:
       malformed_examples: "הדוגמה הבאה היא בתבנית שגויה."
     embeddings:
       delete_failed: "זה המודל שנמצא בשימוש. יש לעדכן את `ai embeddings selected model`."
@@ -637,15 +641,10 @@ he:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
       no_query_specified: משתנה השאילתה נחוץ, נא לציין אותו.
-      no_user_for_persona: לדמות שצוינה אין משתמש שמשויך אליה.
-      persona_not_found: הדמות שצוינה לא קיימת. נא לבדוק את המשתנים persona_name או persona_id.
       no_user_specified: המשתנים username או user_unique_id נחוצים, נא לציין לפחות אחד מהם.
       user_not_found: המשתמש שצוין לא קיים. נא לבדוק את המשתנה username.
-      persona_disabled: הדמות שצוינה הושבתה. נא לבדוק את המשתנים persona_name או persona_id.
-      no_default_llm: לדמות חייב להיות מוגדר default_llm (מודל ברירת מחדל).
       user_not_allowed: המשתמש לא מורשה להשתתף בנושא.
       prompt_message_length: ההודעה %{idx} חורגת ממגבלת 1000 התווים.
-      persona_already_exists: כבר קיימת דמות בשם %{name}.
       custom_tool_exists:
         one: "כבר קיים כלי מותאם בשם %{names}."
         two: "כבר קיימים כלים מותאמים בשמות %{names}."

@@ -1505,9 +1505,11 @@ class BulkImport::Base
         existing_category_id = existing_category_id.to_i
       end
 
-      @categories[category[:imported_id].to_i] = existing_category_id
-      category[:skip] = true
-      return category
+      if existing_category_id && Category.exists?(id: existing_category_id)
+        @categories[category[:imported_id].to_i] = existing_category_id
+        category[:skip] = true
+        return category
+      end
     end
 
     category[:id] ||= @last_category_id += 1
