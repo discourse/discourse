@@ -4,40 +4,50 @@
 # update the configuration files in "migrations/config/schema/" and then run
 # `migrations/bin/cli schema generate` to regenerate this file.
 
-module Migrations::Database::IntermediateDB
-  module TagGroup
-    SQL = <<~SQL
-      INSERT INTO tag_groups (
-        original_id,
-        created_at,
-        name,
-        one_per_topic,
-        parent_tag_id
-      )
-      VALUES (
-        ?, ?, ?, ?, ?
-      )
-    SQL
-    private_constant :SQL
+module Migrations
+  module Database
+    module IntermediateDB
+      module TagGroup
+        SQL = <<~SQL
+          INSERT INTO tag_groups (
+            original_id,
+            created_at,
+            name,
+            one_per_topic,
+            parent_tag_id
+          )
+          VALUES (
+            ?, ?, ?, ?, ?
+          )
+        SQL
+        private_constant :SQL
 
-    # Creates a new `tag_groups` record in the IntermediateDB.
-    #
-    # @param original_id     [Integer, String]
-    # @param created_at      [Time, nil]
-    # @param name            [String]
-    # @param one_per_topic   [Boolean, nil]
-    # @param parent_tag_id   [Integer, String, nil]
-    #
-    # @return [void]
-    def self.create(original_id:, created_at: nil, name:, one_per_topic: nil, parent_tag_id: nil)
-      Migrations::Database::IntermediateDB.insert(
-        SQL,
-        original_id,
-        Migrations::Database.format_datetime(created_at),
-        name,
-        Migrations::Database.format_boolean(one_per_topic),
-        parent_tag_id,
-      )
+        # Creates a new `tag_groups` record in the IntermediateDB.
+        #
+        # @param original_id     [Integer, String]
+        # @param created_at      [Time, nil]
+        # @param name            [String]
+        # @param one_per_topic   [Boolean, nil]
+        # @param parent_tag_id   [Integer, String, nil]
+        #
+        # @return [void]
+        def self.create(
+          original_id:,
+          created_at: nil,
+          name:,
+          one_per_topic: nil,
+          parent_tag_id: nil
+        )
+          IntermediateDB.insert(
+            SQL,
+            original_id,
+            Database.format_datetime(created_at),
+            name,
+            Database.format_boolean(one_per_topic),
+            parent_tag_id,
+          )
+        end
+      end
     end
   end
 end
