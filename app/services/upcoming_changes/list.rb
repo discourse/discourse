@@ -3,6 +3,8 @@
 class UpcomingChanges::List
   include Service::Base
 
+  options { attribute :filter_status, :symbol, default: nil }
+
   policy :current_user_is_admin
   model :upcoming_changes, optional: true
   step :load_upcoming_change_groups
@@ -15,13 +17,20 @@ class UpcomingChanges::List
     guardian.is_admin?
   end
 
-  def fetch_upcoming_changes
+  def fetch_upcoming_changes(options:)
     SiteSetting
       .all_settings(
         only_upcoming_changes: true,
         include_hidden: true,
         include_locale_setting: false,
       )
+      .select do |setting|
+        if options.filter_status.present?
+          UpcomingChanges.change_status(setting[:setting]) == options.filter_status.to_sym
+        else
+          true
+        end
+      end
       .each do |setting|
         setting[:value] = setting[:value] == "true"
 

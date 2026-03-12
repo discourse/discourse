@@ -71,6 +71,23 @@ RSpec.describe UpcomingChanges do
       expect(result[:width]).to eq(244)
       expect(result[:height]).to eq(66)
     end
+
+    context "when include_file_path is true" do
+      it "returns the image URL, width, height, and file path" do
+        result = described_class.image_data(setting_name, include_file_path: true)
+
+        expect(result[:file_path]).to eq(
+          File.join(
+            Rails.root,
+            "spec",
+            "fixtures",
+            "images",
+            "upcoming_changes",
+            "#{setting_name}.png",
+          ),
+        )
+      end
+    end
   end
 
   describe ".change_metadata" do
