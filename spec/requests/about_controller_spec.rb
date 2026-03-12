@@ -72,10 +72,6 @@ RSpec.describe AboutController do
         response.parsed_body["about"]["#{key}_ids"] || []
       end
 
-      def users_array
-        response.parsed_body["users"] || []
-      end
-
       context "when hide_user_profiles_from_public is enabled" do
         before { SiteSetting.hide_user_profiles_from_public = true }
 
@@ -131,8 +127,7 @@ RSpec.describe AboutController do
         fab!(:group, :public_group)
         fab!(:category_mod) { Fabricate(:user, last_seen_at: 1.day.ago) }
         fab!(:category)
-
-        before do
+        fab!(:category_moderation_group) do
           group.add(category_mod)
           Fabricate(:category_moderation_group, category: category, group: group)
         end
@@ -152,10 +147,9 @@ RSpec.describe AboutController do
           get "/about.json"
 
           expect(response.status).to eq(200)
-          cat_mods = response.parsed_body["about"]["category_moderators"]
           all_mod_ids =
-            cat_mods.flat_map do |cm|
-              (cm["moderator_ids"] || cm["moderators"]&.map { |m| m["id"] })
+            response.parsed_body["about"]["category_moderators"].flat_map do |cm|
+              cm["moderator_ids"]
             end
           expect(all_mod_ids).not_to include(category_mod.id)
         end

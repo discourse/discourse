@@ -80,19 +80,19 @@ class About
 
   def admins
     @admins ||=
-      DiscoursePluginRegistry.apply_modifier(
-        :about_admins,
-        if guardian.public_can_see_profiles?
+      if guardian.public_can_see_profiles?
+        DiscoursePluginRegistry.apply_modifier(
+          :about_admins,
           apply_hidden_profile(
             apply_excluded_groups(
               User.where(admin: true).human_users.order(last_seen_at: :desc),
               ignore_groups: [Group::AUTO_GROUPS[:moderators]],
             ),
-          )
-        else
-          []
-        end,
-      )
+          ),
+        )
+      else
+        []
+      end
   end
 
   def stats
@@ -148,15 +148,7 @@ class About
     cats = Category.where(id: results.map(&:category_id)).index_by(&:id)
     mods = User.where(id: results.map(&:user_ids).flatten.uniq).index_by(&:id)
 
-    if !guardian.is_staff? && SiteSetting.allow_users_to_hide_profile
-      hidden_ids = UserOption.where(user_id: mods.keys, hide_profile: true).pluck(:user_id).to_set
-      mods.reject! { |id, _| hidden_ids.include?(id) }
-    end
-
-    results.filter_map do |row|
-      visible_mods = row.user_ids.filter_map { |id| mods[id] }
-      CategoryMods.new(cats[row.category_id], visible_mods) if visible_mods.present?
-    end
+    results.map { |row| CategoryMods.new(cats[row.category_id], mods.values_at(*row.user_ids)) }
   end
 
   def category_mods_limit
