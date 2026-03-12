@@ -2,6 +2,8 @@
 
 module Migrations::CLI
   class SchemaSubCommand < Thor
+    remove_command :tree
+
     Schema = ::Migrations::Database::Schema
 
     class_option :database,
