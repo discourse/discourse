@@ -138,12 +138,6 @@ const extension = {
       // Normalize table structure
       node = normalizeTable(node);
 
-      const tableInfo = validateTable(node);
-      if (!tableInfo.isValid) {
-        serializeTableAsText(state, node);
-        return;
-      }
-
       const prevInTable = state.inTable;
       state.inTable = true;
 
@@ -322,76 +316,6 @@ function normalizeTable(tableNode) {
   const bodyRows = createBodyRows(tbody, 1, maxColumns, schema);
   const body = schema.nodes.table_body.create({}, bodyRows);
   return schema.nodes.table.create({}, [header, body]);
-}
-
-function validateTable(node) {
-  let hasHead = false;
-  let firstRowHasHeaderCells = false;
-  let columnCount = 0;
-  let isFirstRow = true;
-  let hasInconsistentColumns = false;
-
-  node.forEach((group) => {
-    if (hasInconsistentColumns) {
-      return;
-    }
-
-    if (group.type.name === "table_head") {
-      hasHead = true;
-    }
-
-    group.forEach((row) => {
-      if (hasInconsistentColumns) {
-        return;
-      }
-
-      if (columnCount === 0) {
-        columnCount = row.childCount;
-      } else if (row.childCount !== columnCount) {
-        hasInconsistentColumns = true;
-      }
-
-      if (isFirstRow) {
-        let allHeaderCells = true;
-        row.forEach((cell) => {
-          if (cell.type.name !== "table_header_cell") {
-            allHeaderCells = false;
-          }
-        });
-        if (allHeaderCells && row.childCount > 0) {
-          firstRowHasHeaderCells = true;
-        }
-        isFirstRow = false;
-      }
-    });
-  });
-
-  const hasValidHeader = hasHead || firstRowHasHeaderCells;
-
-  return {
-    isValid: hasValidHeader && columnCount >= 2 && !hasInconsistentColumns,
-    hasHead: hasValidHeader,
-    columnCount,
-    hasInconsistentColumns,
-  };
-}
-
-function serializeTableAsText(state, node) {
-  if (state.out) {
-    state.out += "\n";
-  }
-
-  node.forEach((group) => {
-    group.forEach((row) => {
-      row.forEach((cell, cellOffset, cellIndex) => {
-        if (cellIndex > 0) {
-          state.out += " ";
-        }
-        state.renderInline(cell);
-      });
-      state.out += "\n";
-    });
-  });
 }
 
 export default extension;

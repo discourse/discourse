@@ -191,9 +191,13 @@ module("Unit | Utility | to-markdown", function (hooks) {
     </table>`;
     let markdown = `| Title |  |\n|----|----|\n| Column A | Column B |\n| Value 1 | Value 2 |`;
     assert.strictEqual(await toMarkdown(html), markdown);
+
+    html = `<table><tr><td>Lorem</td><td><strong>sit amet</strong></td></tr></table>`;
+    markdown = `| Lorem | **sit amet** |\n|----|----|`;
+    assert.strictEqual(await toMarkdown(html), markdown);
   });
 
-  test("replace pipes with spaces if table format not supported", async function (assert) {
+  test("converts single-column tables", async function (assert) {
     let html = `<table>
       <thead> <tr><th>Heading 1</th></tr> </thead>
         <tbody>
@@ -201,11 +205,7 @@ module("Unit | Utility | to-markdown", function (hooks) {
           <tr><td><i>sit amet</i></td></tr></tbody>
   </table>
     `;
-    let markdown = `Heading 1\nLorem\n*sit amet*`;
-    assert.strictEqual(await toMarkdown(html), markdown);
-
-    html = `<table><tr><td>Lorem</td><td><strong>sit amet</strong></td></tr></table>`;
-    markdown = `Lorem **sit amet**`;
+    let markdown = `| Heading 1 |\n|----|\n| Lorem |\n| *sit amet* |`;
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
