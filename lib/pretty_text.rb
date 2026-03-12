@@ -140,6 +140,8 @@ module PrettyText
 
     DiscoursePluginRegistry.vendored_pretty_text.each { |vpt| ctx.eval(File.read(vpt)) }
 
+    ctx.low_memory_notification # GC to free up memory used during init
+
     ctx
   end
 
