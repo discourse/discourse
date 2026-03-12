@@ -133,6 +133,7 @@ Trace every code path in the original implementation against the new service. Li
 Review for security concerns. List every issue found by criticality.
 
 - Access control: are policies enforced consistently regardless of caller?
+- Category moderation: for category-scoped resources, never rely on `user.moderator?` / `guardian.is_moderator?` alone. Verify whether category moderators for the specific category should be allowed, and whether the actor can see or act on that exact resource via an existing guardian/policy method or `guardian.is_category_group_moderator?(category)` plus the relevant visibility check.
 - MessageBus: secure audience applied to all publishes on secured channels?
 - Data leakage: can non-privileged users infer existence of soft-deleted or private resources?
 
