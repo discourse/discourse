@@ -33,7 +33,7 @@ import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import deprecated from "discourse/lib/deprecated";
-import { eq } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 
 const RowColWrapper = <template>
   <FKRow as |row|>
@@ -193,7 +193,7 @@ export default class FKField extends Component {
               {{didInsert (fn @registerField field.name field)}}
               {{willDestroy (fn @unregisterField field.name)}}
             >
-              {{#if field.showTitle}}
+              {{#if (and field.showTitle (not (eq field.type "checkbox")))}}
                 <FKLabel
                   class={{concatClass
                     "form-kit__container-title"
