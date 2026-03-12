@@ -73,6 +73,8 @@ export default function quoteControls(element, context) {
       wrapperElement: aside,
     };
 
+    aside.setAttribute("role", "none");
+
     // Render the PostQuotedContent component in place of original quote
     helper.renderGlimmer(
       aside,
