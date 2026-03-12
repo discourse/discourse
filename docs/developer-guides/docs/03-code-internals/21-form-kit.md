@@ -397,13 +397,13 @@ The field yields a single field object. The control component determined by `@ty
 
 The yielded `field` object provides access to the field's data and helpers:
 
-| Name      | Description                                          |
-| --------- | ---------------------------------------------------- |
-| `Control` | Contextual component for the control set by `@type`  |
-| `id`      | ID to be used on the control for accessibility       |
-| `name`    | Name of the field                                    |
-| `value`   | The value of the field                               |
-| `set`     | Function to set the field's value                    |
+| Name      | Description                                         |
+| --------- | --------------------------------------------------- |
+| `Control` | Contextual component for the control set by `@type` |
+| `id`      | ID to be used on the control for accessibility      |
+| `name`    | Name of the field                                   |
+| `value`   | The value of the field                              |
+| `set`     | Function to set the field's value                   |
 
 # Controls
 
@@ -1315,12 +1315,7 @@ Checks that the input's value is over a given length, or between two length valu
 **Example**
 
 ```hbs
-<form.Field
-  @name="username"
-  @type="input"
-  @validation="length:5,16"
-  as |field|
->
+<form.Field @name="username" @type="input" @validation="length:5,16" as |field|>
   <field.Control />
 </form.Field>
 ```
@@ -1601,13 +1596,13 @@ Creating a custom control is straightforward with the properties yielded by `for
 
 ### Available Parameters on `field`
 
-| Name      | Description                                          |
-| --------- | ---------------------------------------------------- |
-| `Control` | Contextual component for the control set by `@type`  |
-| `id`      | ID to be used on the control for accessibility       |
-| `name`    | Name of the field                                    |
-| `value`   | The value of the field                               |
-| `set`     | Function to set the field's value                    |
+| Name      | Description                                         |
+| --------- | --------------------------------------------------- |
+| `Control` | Contextual component for the control set by `@type` |
+| `id`      | ID to be used on the control for accessibility      |
+| `name`    | Name of the field                                   |
+| `value`   | The value of the field                              |
+| `set`     | Function to set the field's value                   |
 
 # Custom Validation
 
