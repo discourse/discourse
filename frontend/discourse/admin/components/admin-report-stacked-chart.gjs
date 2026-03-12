@@ -98,17 +98,6 @@ export default class AdminReportStackedChart extends Component {
       })),
     };
 
-    // max Y value so chart remains constant when data changes
-    const stackedTotals = [];
-    for (let i = 0; i < chartData[0].data.length; i++) {
-      let total = 0;
-      for (const value of chartData) {
-        total += value.data[i]?.y || 0;
-      }
-      stackedTotals.push(total);
-    }
-    const maxStackedValue = Math.max(...stackedTotals);
-
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
@@ -213,7 +202,6 @@ export default class AdminReportStackedChart extends Component {
           y: {
             stacked: true,
             display: true,
-            max: maxStackedValue,
             grid: {
               color: getCSSColor("--primary-very-low"),
             },
