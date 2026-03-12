@@ -17,7 +17,6 @@ This is what the Discourse engineering and design teams have aligned on using. I
 It is generally a good idea to make a distinct block level CSS class per reusable Ember component, which you can then attach element CSS classes and modifiers to.
 
 - You use default BEM for block and element in the format `.block__element` for example `.header__item` or `.admin-new-feature-item__screenshot`.
-
   - A block is a standalone component. Blocks can be used within blocks.
   - An element is a part of a block that can not be used outside of that block's context, for example an inner element.
   - A modifier you can use mainly for changing the appearance, if different than the default. This can be created standalone, because this can sometimes be re-used and because this reduces pure BEM verbosity by a lot.
