@@ -87,7 +87,6 @@ export default class FKField extends Component {
       {
         id: "discourse.form-kit.legacy-field-yield",
         since: "2026.3",
-        dropFrom: "2026.4",
       }
     );
 
