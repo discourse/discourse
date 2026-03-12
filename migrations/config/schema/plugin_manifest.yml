@@ -212,7 +212,7 @@ plugin_checksums:
   discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
   discourse-rewind: b326377c101cdfdec3260e6843043109
   discourse-rss-polling: adb232423452557f71219f3b61ff0465
-  discourse-solved: fdf0441c0886229f92af57fdfd8175c3
+  discourse-solved: 88ac1f71ea5f4a5cc1c9dcd0ce457511
   discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 663ca32927a64fb6a1c19c0384024a09
