@@ -138,6 +138,10 @@ const extension = {
       // Normalize table structure
       node = normalizeTable(node);
 
+      if (!node.textContent.trim()) {
+        return;
+      }
+
       const prevInTable = state.inTable;
       state.inTable = true;
 

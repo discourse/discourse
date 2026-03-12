@@ -323,18 +323,12 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
       # Nested tables are flattened - the inner table content is preserved
       # The outer table structure is dropped since ProseMirror can't represent nested tables
       markdown = <<~MARKDOWN
-
-
         | CLOSED DOWNSTREAM |  |
         |----|----|
         |  |  |
         | Alias: | None |
         | Product: | name |
         | Component: | general |
-
-
-        |  |  |
-        |----|----|
 
       MARKDOWN
 
@@ -358,7 +352,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("\nAfter table")
+      expect(composer).to have_value("After table")
     end
   end
 end
