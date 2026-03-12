@@ -248,6 +248,7 @@ export default class ComposerContainer extends Component {
                       @icon="pen-to-square"
                       class="display-edit-reason
                         {{if this.composer.showEditReason '--active'}}"
+                      title={{i18n "composer.edit_reason"}}
                     >
                       <TextField
                         @value={{this.composer.editReason}}
