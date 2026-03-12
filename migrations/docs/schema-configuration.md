@@ -29,10 +29,8 @@ migrations/config/schema/intermediate_db/
 | `schema add TABLE`                     | Create a config file for a new table                       |
 | `schema validate`                      | Validate config against the database                       |
 | `schema diff`                          | Show differences between config and database               |
-| `schema resolve`                       | Show the resolved schema (for debugging)                   |
 | `schema generate`                      | Generate SQL schema, Ruby models, and enum files           |
 | `schema list`                          | List configured tables and enums, plus ignored table count |
-| `schema show TABLE`                    | Show configuration details for a table                     |
 | `schema ignore TABLE [--reason "..."]` | Add a table to `ignored.rb`                                |
 | `schema refresh-plugins`               | Regenerate the plugin manifest                             |
 
