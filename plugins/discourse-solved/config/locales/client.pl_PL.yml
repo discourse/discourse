@@ -20,6 +20,8 @@ pl_PL:
       title: "Rozwiązany"
       allow_accepted_answers: "Pozwól użytkownikom na akceptowanie rozwiązań"
       solved_topics_auto_close_hours: "Zamknij temat automatycznie po (n) godzinach od ostatniej odpowiedzi, gdy temat został oznaczony jako rozwiązany."
+      notify_on_staff_accept_solved: "Powiadom twórcę tematu, gdy personel oznaczy rozwiązanie"
+      empty_box_on_unsolved: "Wyświetl puste pole wyboru obok nierozwiązanych tematów na liście tematów"
       accept_answer: "Zaznacz, jeśli ta odpowiedź rozwiązuje Twój problem"
       accepted_description: "To zaakceptowane rozwiązanie tego tematu."
       has_no_accepted_answer: "Ten temat nie ma rozwiązania"

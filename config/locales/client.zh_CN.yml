@@ -5304,7 +5304,7 @@ zh_CN:
         account:
           title: "帐户"
         reports:
-          title: "举报"
+          title: "报告"
         community:
           title: "社区"
         appearance:
@@ -5639,7 +5639,7 @@ zh_CN:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传内容"
         reports:
-          title: "举报"
+          title: "报告"
           header_description: "报告是帮助您了解站点上所发生事情的强大工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
           sub_pages:
             settings:
