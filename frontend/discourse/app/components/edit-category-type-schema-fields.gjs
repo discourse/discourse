@@ -1,8 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import EditCategoryAdditionalSiteSettings from "discourse/components/edit-category-additional-site-settings";
-import icon from "discourse/helpers/d-icon";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
