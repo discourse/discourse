@@ -91,8 +91,8 @@ module DiscoursePostEvent
     def self.filter_by_dates(events, params)
       return events if params[:before].blank? && params[:after].blank?
 
-      before_date = params[:before]&.to_datetime
-      after_date = params[:after]&.to_datetime
+      before_date = params[:before] == "now" ? Time.current : params[:before]&.to_datetime
+      after_date = params[:after] == "now" ? Time.current : params[:after]&.to_datetime
 
       recurring_scope = build_recurring_date_scope(after_date, before_date)
       non_recurring_scope = build_non_recurring_date_scope(after_date, before_date)

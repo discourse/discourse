@@ -222,6 +222,17 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
 
+    describe "with after=now" do
+      let!(:past_event) { Fabricate(:event, original_starts_at: 2.hours.ago) }
+      let!(:future_event) { Fabricate(:event, original_starts_at: 2.hours.from_now) }
+
+      it "resolves 'now' to the current time" do
+        results = finder.search(current_user, { after: "now" })
+        expect(results).not_to include(past_event)
+        expect(results).to include(future_event)
+      end
+    end
+
     describe "expired events" do
       let!(:expired_event) do
         Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 1.hour.ago)
