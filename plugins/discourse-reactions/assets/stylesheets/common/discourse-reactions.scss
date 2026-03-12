@@ -470,6 +470,12 @@ html.discourse-reactions-no-select {
   align-items: center;
   text-align: center;
   cursor: pointer;
+  border-radius: var(--d-button-border-radius);
+
+  &:focus-visible {
+    outline: none;
+    background: var(--d-post-control-background--hover);
+  }
 
   .reactions-counter {
     font-size: $font-up-1;
