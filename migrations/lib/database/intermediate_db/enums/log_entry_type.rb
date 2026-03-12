@@ -4,12 +4,18 @@
 # update the configuration files in "migrations/config/schema/" and then run
 # `migrations/bin/cli schema generate` to regenerate this file.
 
-module Migrations::Database::IntermediateDB::Enums
-  module LogEntryType
-    extend Migrations::Enum
+module Migrations
+  module Database
+    module IntermediateDB
+      module Enums
+        module LogEntryType
+          extend Migrations::Enum
 
-    ERROR = "error"
-    INFO = "info"
-    WARNING = "warning"
+          ERROR = "error"
+          INFO = "info"
+          WARNING = "warning"
+        end
+      end
+    end
   end
 end

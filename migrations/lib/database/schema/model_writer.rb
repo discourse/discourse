@@ -8,6 +8,9 @@ module Migrations
           @model_namespace = model_namespace
           @enum_namespace = enum_namespace
           @header = header.gsub(/^/, "# ")
+          @namespace_parts = model_namespace.split("::")
+          @innermost = @namespace_parts.last
+          @base_indent = "  " * (@namespace_parts.size - 1)
         end
 
         def self.filename_for(table)
@@ -15,75 +18,66 @@ module Migrations
         end
 
         def output_table(table, output_stream, custom_code: nil)
+          @out = output_stream
           module_name = Helpers.to_singular_classname(table.name)
           columns = table.sorted_columns
 
-          output_stream.puts "# frozen_string_literal: true"
-          output_stream.puts
-          output_stream.puts @header
-          output_stream.puts
-          output_stream.puts "module #{@model_namespace}"
-          output_stream.puts "  module #{module_name}"
-          output_stream.puts "    SQL = <<~SQL"
-          output_stream.puts "      INSERT INTO #{escape_identifier(table.name)} ("
-          output_stream.puts column_names(columns)
-          output_stream.puts "      )"
-          output_stream.puts "      VALUES ("
-          output_stream.puts value_placeholders(columns)
-          output_stream.puts "      )"
-          output_stream.puts "    SQL"
-          output_stream.puts "    private_constant :SQL"
-          output_stream.puts
+          emit "# frozen_string_literal: true"
+          emit
+          emit @header
+          emit
+          @namespace_parts.each { |part| emit "module #{part}" }
+          emit "  module #{module_name}"
+          emit "    SQL = <<~SQL"
+          emit "      INSERT INTO #{escape_identifier(table.name)} ("
+          emit column_names(columns)
+          emit "      )"
+          emit "      VALUES ("
+          emit "        #{value_placeholders(columns)}"
+          emit "      )"
+          emit "    SQL"
+          emit "    private_constant :SQL"
+          emit
 
           if table.model_mode == :extended
-            output_stream.puts "    # -- custom code --"
-            output_stream.puts custom_code if custom_code.present?
-            output_stream.puts "    # -- end custom code --"
-            output_stream.puts
+            emit "    # -- custom code --"
+            emit custom_code if custom_code.present?
+            emit "    # -- end custom code --"
+            emit
           end
 
-          output_stream.puts method_documentation(table.name, columns)
-          output_stream.puts "    def self.create("
-          output_stream.puts method_parameters(columns)
-          output_stream.puts "    )"
-          output_stream.puts "      #{@model_namespace}.insert("
-          output_stream.puts "        SQL,"
-          output_stream.puts insertion_arguments(columns)
-          output_stream.puts "      )"
-          output_stream.puts "    end"
-          output_stream.puts "  end"
-          output_stream.puts "end"
+          emit method_documentation(table.name, columns)
+          emit "    def self.create("
+          emit method_parameters(columns)
+          emit "    )"
+          emit "      #{@innermost}.insert("
+          emit "        SQL,"
+          emit insertion_arguments(columns)
+          emit "      )"
+          emit "    end"
+          (@namespace_parts.size + 1).times { emit "  end" }
+        ensure
+          @out = nil
         end
 
         private
+
+        def emit(text = nil)
+          if text.nil?
+            @out.puts
+          else
+            text.each_line(chomp: true) do |line|
+              @out.puts(line.empty? ? "" : "#{@base_indent}#{line}")
+            end
+          end
+        end
 
         def column_names(columns)
           columns.map { |c| "        #{escape_identifier(c.name)}" }.join(",\n")
         end
 
         def value_placeholders(columns)
-          indentation = "        "
-          max_length = 100 - indentation.length
-          placeholder = "?, "
-          placeholder_count = columns.size
-
-          current_length = 0
-          placeholders = indentation.dup
-
-          (1..placeholder_count).each do |index|
-            placeholder = "?" if index == placeholder_count
-
-            if current_length + placeholder.length > max_length
-              placeholders.rstrip!
-              placeholders << "\n" << indentation
-              current_length = 0
-            end
-
-            placeholders << placeholder
-            current_length += placeholder.length
-          end
-
-          placeholders
+          (["?"] * columns.size).join(", ")
         end
 
         def method_documentation(table_name, columns)
@@ -170,17 +164,17 @@ module Migrations
               argument =
                 case c.datatype
                 when :datetime
-                  "Migrations::Database.format_datetime(#{c.name})"
+                  "Database.format_datetime(#{c.name})"
                 when :date
-                  "Migrations::Database.format_date(#{c.name})"
+                  "Database.format_date(#{c.name})"
                 when :boolean
-                  "Migrations::Database.format_boolean(#{c.name})"
+                  "Database.format_boolean(#{c.name})"
                 when :inet
-                  "Migrations::Database.format_ip_address(#{c.name})"
+                  "Database.format_ip_address(#{c.name})"
                 when :blob
-                  "Migrations::Database.to_blob(#{c.name})"
+                  "Database.to_blob(#{c.name})"
                 when :json
-                  "Migrations::Database.to_json(#{c.name})"
+                  "Database.to_json(#{c.name})"
                 when :float, :integer, :numeric, :text
                   c.name
                 else
