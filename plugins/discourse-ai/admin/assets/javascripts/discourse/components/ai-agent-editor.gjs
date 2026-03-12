@@ -744,6 +744,17 @@ export default class AgentEditor extends Component {
           >
             <field.Checkbox />
           </form.Field>
+
+          <form.Field
+            @name="require_approval"
+            @title={{i18n "discourse_ai.ai_agent.require_approval"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.require_approval_help"}}
+            @showTitle={{false}}
+            @format="large"
+            as |field|
+          >
+            <field.Checkbox />
+          </form.Field>
         </form.Section>
 
         {{#if this.siteSettings.ai_embeddings_enabled}}
@@ -825,16 +836,6 @@ export default class AgentEditor extends Component {
             as |field|
           >
             <field.Toggle />
-          </form.Field>
-
-          <form.Field
-            @name="require_approval"
-            @title={{i18n "discourse_ai.ai_agent.require_approval"}}
-            @tooltip={{i18n "discourse_ai.ai_agent.require_approval_help"}}
-            @format="large"
-            as |field|
-          >
-            <field.Checkbox />
           </form.Field>
 
           {{#if @model.isNew}}
