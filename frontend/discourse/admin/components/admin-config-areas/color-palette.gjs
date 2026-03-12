@@ -283,10 +283,10 @@ export default class AdminConfigAreasColorPalette extends Component {
                 @format="full"
                 @onSet={{this.handleNameChange}}
                 @type="input"
-                as |Control|
+                as |field|
               >
                 <div class="admin-config-color-palettes__name-control">
-                  <Control />
+                  <field.Control />
                   <DButton
                     class="btn-primary admin-config-color-palettes__save-name"
                     @icon="check"
@@ -361,9 +361,9 @@ export default class AdminConfigAreasColorPalette extends Component {
                   @format="full"
                   @onSet={{this.handleDefaultLightOnThemeChange}}
                   @type="toggle"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               </form.Row>
               <form.Row>
@@ -380,9 +380,9 @@ export default class AdminConfigAreasColorPalette extends Component {
                   @format="full"
                   @onSet={{this.handleDefaultDarkOnThemeChange}}
                   @type="toggle"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               </form.Row>
               <form.Row>
@@ -398,9 +398,9 @@ export default class AdminConfigAreasColorPalette extends Component {
                   @format="full"
                   @onSet={{this.handleUserSelectableChange}}
                   @type="toggle"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               </form.Row>
             </:content>
@@ -415,14 +415,14 @@ export default class AdminConfigAreasColorPalette extends Component {
                 @showTitle={{false}}
                 @format="full"
                 @type="custom"
-                as |Control|
+                as |field|
               >
-                <Control>
+                <field.Control>
                   <ColorPaletteEditor
                     @colors={{transientData.colors}}
                     @onColorChange={{this.onColorChange}}
                   />
-                </Control>
+                </field.Control>
               </form.Field>
             </:content>
           </AdminConfigAreaCard>

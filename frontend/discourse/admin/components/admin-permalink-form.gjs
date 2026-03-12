@@ -137,9 +137,9 @@ export default class AdminFlagsForm extends Component {
                 @validation="required"
                 @format="large"
                 @type="input"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </form.Field>
 
               <form.Field
@@ -147,9 +147,9 @@ export default class AdminFlagsForm extends Component {
                 @title={{i18n "admin.permalink.form.permalink_type"}}
                 @validation="required"
                 @type="select"
-                as |Control|
+                as |field|
               >
-                <Control as |select|>
+                <field.Control as |select|>
                   <select.Option @value="topic">{{i18n
                       "admin.permalink.topic_title"
                     }}</select.Option>
@@ -168,7 +168,7 @@ export default class AdminFlagsForm extends Component {
                   <select.Option @value="user">{{i18n
                       "admin.permalink.user_title"
                     }}</select.Option>
-                </Control>
+                </field.Control>
               </form.Field>
               {{#if (eq transientData.permalinkType "topic")}}
                 <form.Field
@@ -177,9 +177,9 @@ export default class AdminFlagsForm extends Component {
                   @format="small"
                   @validation="required"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "post")}}
@@ -189,9 +189,9 @@ export default class AdminFlagsForm extends Component {
                   @format="small"
                   @validation="required"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "category")}}
@@ -201,9 +201,9 @@ export default class AdminFlagsForm extends Component {
                   @format="small"
                   @validation="required"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "tag")}}
@@ -213,9 +213,9 @@ export default class AdminFlagsForm extends Component {
                   @format="small"
                   @validation="required"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "external_url")}}
@@ -225,9 +225,9 @@ export default class AdminFlagsForm extends Component {
                   @format="large"
                   @validation="required"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "user")}}
@@ -237,9 +237,9 @@ export default class AdminFlagsForm extends Component {
                   @format="small"
                   @validation="required"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               {{/if}}
 

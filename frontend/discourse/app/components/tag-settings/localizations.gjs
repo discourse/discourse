@@ -38,9 +38,9 @@ export default class TagSettingsLocalizations extends Component {
           @title="tag_id"
           @showTitle={{false}}
           @disabled={{true}}
-          as |Control|
+          as |field|
         >
-          <Control @value={{@tagId}} />
+          <field.Control @value={{@tagId}} />
         </collection.Field>
 
         <@form.Row as |row|>
@@ -50,15 +50,15 @@ export default class TagSettingsLocalizations extends Component {
               @type="select"
               @title={{i18n "tagging.localization.locale"}}
               @validation="required"
-              as |Control|
+              as |field|
             >
-              <Control as |select|>
+              <field.Control as |select|>
                 {{#each this.selectableLocales as |locale|}}
                   <select.Option
                     @value={{locale.value}}
                   >{{locale.name}}</select.Option>
                 {{/each}}
-              </Control>
+              </field.Control>
             </collection.Field>
           </row.Col>
 
@@ -68,9 +68,9 @@ export default class TagSettingsLocalizations extends Component {
               @type="input"
               @title={{i18n "tagging.localization.name"}}
               @validation="required|length:1,50"
-              as |Control|
+              as |field|
             >
-              <Control
+              <field.Control
                 placeholder={{i18n "tagging.settings.name_placeholder"}}
                 @maxlength="50"
               />
@@ -83,9 +83,9 @@ export default class TagSettingsLocalizations extends Component {
               @type="textarea"
               @title={{i18n "tagging.localization.description"}}
               @validation="length:0,1000"
-              as |Control|
+              as |field|
             >
-              <Control @height={{80}} />
+              <field.Control @height={{80}} />
             </collection.Field>
           </row.Col>
 

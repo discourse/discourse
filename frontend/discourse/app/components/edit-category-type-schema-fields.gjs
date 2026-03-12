@@ -17,12 +17,11 @@ const SchemaFormField = <template>
       @validation={{if @entry.required "required"}}
       @format="full"
       @showTitle={{false}}
-      as |Control|
+      as |field|
     >
-      <Control>{{@entry.description}}</Control>
+      <field.Control>{{@entry.description}}</field.Control>
     </@formObject.Field>
   {{else if (eq @entry.subtype "duration")}}
-
     <@formObject.Field
       @name={{@entry.key}}
       @title={{@entry.label}}
@@ -50,9 +49,9 @@ const SchemaFormField = <template>
       @descriptionFormat="full"
       @format="full"
       @type="input-number"
-      as |Control|
+      as |field|
     >
-      <Control />
+      <field.Control />
     </@formObject.Field>
   {{else}}
     <@formObject.Field
@@ -64,9 +63,9 @@ const SchemaFormField = <template>
       @titleFormat="full"
       @descriptionFormat="full"
       @format="large"
-      as |Control|
+      as |field|
     >
-      <Control />
+      <field.Control />
     </@formObject.Field>
   {{/if}}
 </template>;

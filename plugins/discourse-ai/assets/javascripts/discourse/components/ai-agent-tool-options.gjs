@@ -88,29 +88,29 @@ export default class AiAgentToolOptions extends Component {
                         @helpText={{optionMeta.description}}
                         @format="full"
                         @type={{this.fieldTypeForOption optionMeta.type}}
-                        as |Control field|
+                        as |field|
                       >
                         {{#if (eq optionMeta.type "enum")}}
-                          <Control @includeNone={{false}} as |select|>
+                          <field.Control @includeNone={{false}} as |select|>
                             {{#each optionMeta.values as |v|}}
                               <select.Option @value={{v}}>{{v}}</select.Option>
                             {{/each}}
-                          </Control>
+                          </field.Control>
                         {{else if (eq optionMeta.type "llm")}}
-                          <Control>
+                          <field.Control>
                             <AiLlmSelector
                               @value={{field.value}}
                               @llms={{@llms}}
                               @onChange={{field.set}}
                               class="ai-agent-tool-option-editor__llms"
                             />
-                          </Control>
+                          </field.Control>
                         {{else if (eq optionMeta.type "boolean")}}
-                          <Control />
+                          <field.Control />
                         {{else if (eq optionMeta.type "text")}}
-                          <Control />
+                          <field.Control />
                         {{else}}
-                          <Control />
+                          <field.Control />
                         {{/if}}
                       </optionsObj.Field>
                     {{/let}}

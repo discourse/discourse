@@ -281,9 +281,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @format="large"
                   @validation="required"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
 
                 <form.Field
@@ -292,15 +292,15 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @format="large"
                   @validation="required"
                   @type="select"
-                  as |Control|
+                  as |field|
                 >
-                  <Control as |select|>
+                  <field.Control as |select|>
                     {{#each this.userModes as |userMode|}}
                       <select.Option
                         @value={{userMode.id}}
                       >{{userMode.name}}</select.Option>
                     {{/each}}
-                  </Control>
+                  </field.Control>
                 </form.Field>
 
                 {{#if (eq transientData.user_mode "single")}}
@@ -310,9 +310,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     @format="large"
                     @validation="required"
                     @type="custom"
-                    as |Control field|
+                    as |field|
                   >
-                    <Control>
+                    <field.Control>
                       <EmailGroupUserChooser
                         @value={{this.username}}
                         @onChange={{fn this.updateUsername field}}
@@ -321,7 +321,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                           filterPlaceholder="admin.api.user_placeholder"
                         }}
                       />
-                    </Control>
+                    </field.Control>
                   </form.Field>
                 {{/if}}
 
@@ -331,15 +331,15 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @format="large"
                   @validation="required"
                   @type="select"
-                  as |Control|
+                  as |field|
                 >
-                  <Control as |select|>
+                  <field.Control as |select|>
                     {{#each this.scopeModes as |scopeMode|}}
                       <select.Option
                         @value={{scopeMode.id}}
                       >{{scopeMode.name}}</select.Option>
                     {{/each}}
-                  </Control>
+                  </field.Control>
                 </form.Field>
 
                 {{#if (eq transientData.scope_mode "granular")}}
@@ -390,9 +390,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                     )
                                   }}
                                   @type="checkbox"
-                                  as |Control|
+                                  as |field|
                                 >
-                                  <Control />
+                                  <field.Control />
                                 </topicsCollection.Field>
                               </td>
                               <td>
@@ -419,9 +419,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       @title={{name}}
                                       @showTitle={{false}}
                                       @type="input"
-                                      as |Control|
+                                      as |field|
                                     >
-                                      <Control placeholder={{name}} />
+                                      <field.Control placeholder={{name}} />
                                     </paramsObject.Field>
                                   {{/each}}
                                 </topicsCollection.Object>

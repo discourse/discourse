@@ -92,16 +92,16 @@ export default class AiLlmQuotaModal extends Component {
             @validation="required"
             @format="large"
             @type="custom"
-            as |Control field|
+            as |field|
           >
-            <Control>
+            <field.Control>
               <GroupChooser
                 @value={{data.group_id}}
                 @content={{this.availableGroups}}
                 @onChange={{fn this.setGroupId field}}
                 @options={{hash maximum=1}}
               />
-            </Control>
+            </field.Control>
           </form.Field>
 
           <form.Field
@@ -110,9 +110,9 @@ export default class AiLlmQuotaModal extends Component {
             @tooltip={{i18n "discourse_ai.llms.quotas.max_tokens_help"}}
             @format="large"
             @type="input-number"
-            as |Control|
+            as |field|
           >
-            <Control min="1" />
+            <field.Control min="1" />
           </form.Field>
 
           <form.Field
@@ -121,9 +121,9 @@ export default class AiLlmQuotaModal extends Component {
             @tooltip={{i18n "discourse_ai.llms.quotas.max_usages_help"}}
             @format="large"
             @type="input-number"
-            as |Control|
+            as |field|
           >
-            <Control min="1" />
+            <field.Control min="1" />
           </form.Field>
 
           <form.Field
@@ -132,14 +132,14 @@ export default class AiLlmQuotaModal extends Component {
             @validation="required"
             @format="large"
             @type="custom"
-            as |Control field|
+            as |field|
           >
-            <Control>
+            <field.Control>
               <DurationSelector
                 @value={{data.duration_seconds}}
                 @onChange={{field.set}}
               />
-            </Control>
+            </field.Control>
           </form.Field>
 
           <form.Submit

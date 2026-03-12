@@ -369,9 +369,9 @@ export default class AdminWelcomeBannerForm extends Component {
           }}
           @format="large"
           @type="custom"
-          as |Control field|
+          as |field|
         >
-          <Control>
+          <field.Control>
             <DMultiSelect
               @loadFn={{this.loadThemes}}
               @selection={{field.value}}
@@ -387,7 +387,7 @@ export default class AdminWelcomeBannerForm extends Component {
                 {{theme.name}}
               </:result>
             </DMultiSelect>
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -400,9 +400,9 @@ export default class AdminWelcomeBannerForm extends Component {
           }}
           @onSet={{fn this.handleUpload "welcomeBannerImage"}}
           @type="image"
-          as |Control|
+          as |field|
         >
-          <Control @type="site_setting" />
+          <field.Control @type="site_setting" />
         </form.Field>
 
         <form.Field
@@ -413,9 +413,9 @@ export default class AdminWelcomeBannerForm extends Component {
           }}
           @format="large"
           @type="color"
-          as |Control|
+          as |field|
         >
-          <Control @allowNamedColors={{true}} />
+          <field.Control @allowNamedColors={{true}} />
         </form.Field>
 
         <form.Field
@@ -427,9 +427,9 @@ export default class AdminWelcomeBannerForm extends Component {
             "admin.config.welcome_banner.form.page_visibility.description"
           }}
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control @includeNone={{false}} as |select|>
+          <field.Control @includeNone={{false}} as |select|>
             <select.Option @value="top_menu_pages">{{i18n
                 "admin.config.welcome_banner.form.page_visibility.options.top_menu_pages"
               }}</select.Option>
@@ -442,7 +442,7 @@ export default class AdminWelcomeBannerForm extends Component {
             <select.Option @value="all_pages">{{i18n
                 "admin.config.welcome_banner.form.page_visibility.options.all_pages"
               }}</select.Option>
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -452,16 +452,16 @@ export default class AdminWelcomeBannerForm extends Component {
             "admin.config.welcome_banner.form.location.description"
           }}
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control @includeNone={{false}} as |select|>
+          <field.Control @includeNone={{false}} as |select|>
             <select.Option @value="above_topic_content">{{i18n
                 "admin.config.welcome_banner.form.location.options.above_topic_content"
               }}</select.Option>
             <select.Option @value="below_site_header">{{i18n
                 "admin.config.welcome_banner.form.location.options.below_site_header"
               }}</select.Option>
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Section
@@ -475,9 +475,9 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @type="custom"
-            as |Control|
+            as |field|
           >
-            <Control>
+            <field.Control>
               <ComboBox
                 @valueProperty="value"
                 @content={{this.availableLocales}}
@@ -486,7 +486,7 @@ export default class AdminWelcomeBannerForm extends Component {
                 @options={{hash filterable=true}}
                 class="translation-selector"
               />
-            </Control>
+            </field.Control>
           </form.Field>
 
           <form.Field
@@ -503,9 +503,9 @@ export default class AdminWelcomeBannerForm extends Component {
             @validation="required"
             @disabled={{this.isLoadingLocale}}
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_new_members.placeholder"
                 site_name="%{site_name}"
@@ -528,9 +528,9 @@ export default class AdminWelcomeBannerForm extends Component {
             @validation="required"
             @disabled={{this.isLoadingLocale}}
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_logged_in.placeholder"
                 site_name="%{site_name}"
@@ -553,9 +553,9 @@ export default class AdminWelcomeBannerForm extends Component {
             @validation="required"
             @disabled={{this.isLoadingLocale}}
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_anonymous.placeholder"
                 site_name="%{site_name}"
@@ -574,9 +574,9 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @disabled={{this.isLoadingLocale}}
             @type="textarea"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
 
           <form.Field
@@ -590,9 +590,9 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @disabled={{this.isLoadingLocale}}
             @type="textarea"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
 
           <form.Field
@@ -607,9 +607,9 @@ export default class AdminWelcomeBannerForm extends Component {
             @validation="required"
             @disabled={{this.isLoadingLocale}}
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.search_placeholder.placeholder"
               }}

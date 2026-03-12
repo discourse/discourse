@@ -81,9 +81,9 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @description={{i18n "admin.config_areas.about.community_owner_help"}}
         @format="large"
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control
+        <field.Control
           placeholder={{i18n
             "admin.config_areas.about.community_owner_placeholder"
           }}
@@ -96,9 +96,9 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @description={{i18n "admin.config_areas.about.contact_email_help"}}
         @type="input"
         @format="large"
-        as |Control|
+        as |field|
       >
-        <Control
+        <field.Control
           @type="email"
           placeholder={{i18n
             "admin.config_areas.about.contact_email_placeholder"
@@ -112,9 +112,9 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @description={{i18n "admin.config_areas.about.contact_url_help"}}
         @type="input"
         @format="large"
-        as |Control|
+        as |field|
       >
-        <Control
+        <field.Control
           @type="url"
           placeholder={{i18n
             "admin.config_areas.about.contact_url_placeholder"
@@ -129,15 +129,15 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @onSet={{this.setContactUsername}}
         @format="large"
         @type="custom"
-        as |Control field|
+        as |field|
       >
-        <Control>
+        <field.Control>
           <UserChooser
             @value={{field.value}}
             @options={{hash maximum=1}}
             @onChange={{field.set}}
           />
-        </Control>
+        </field.Control>
       </form.Field>
 
       <form.Field
@@ -147,16 +147,16 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @onSet={{this.setContactGroup}}
         @format="large"
         @type="custom"
-        as |Control field|
+        as |field|
       >
-        <Control>
+        <field.Control>
           <GroupChooser
             @content={{this.site.groups}}
             @value={{this.contactGroupId}}
             @options={{hash maximum=1}}
             @onChange={{field.set}}
           />
-        </Control>
+        </field.Control>
       </form.Field>
 
       <form.Submit

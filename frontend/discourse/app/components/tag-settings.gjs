@@ -306,9 +306,9 @@ export default class TagSettings extends Component {
             @title={{i18n "tagging.settings.name"}}
             @format="large"
             @validation="required"
-            as |Control|
+            as |field|
           >
-            <Control
+            <field.Control
               placeholder={{i18n "tagging.settings.name_placeholder"}}
               @maxlength={{this.siteSettings.max_tag_length}}
               class="tag-name-input"
@@ -320,9 +320,11 @@ export default class TagSettings extends Component {
             @type="input"
             @title={{i18n "tagging.settings.slug"}}
             @format="large"
-            as |Control|
+            as |field|
           >
-            <Control placeholder={{i18n "tagging.settings.slug_placeholder"}} />
+            <field.Control
+              placeholder={{i18n "tagging.settings.slug_placeholder"}}
+            />
           </form.Field>
 
           <form.Field
@@ -331,9 +333,9 @@ export default class TagSettings extends Component {
             @title={{i18n "tagging.description"}}
             @format="large"
             @validation="length:0,1000"
-            as |Control|
+            as |field|
           >
-            <Control @height={{80}} />
+            <field.Control @height={{80}} />
           </form.Field>
 
           <form.Field
@@ -345,9 +347,9 @@ export default class TagSettings extends Component {
               name=@tag.name
             }}
             @format="large"
-            as |Control|
+            as |field|
           >
-            <Control>
+            <field.Control>
               <MiniTagChooser
                 @value={{transientData.synonyms}}
                 @onChange={{this.handleSynonymChange}}
@@ -359,7 +361,7 @@ export default class TagSettings extends Component {
                   maximum=200
                 }}
               />
-            </Control>
+            </field.Control>
           </form.Field>
         {{else if (eq @selectedTab "localizations")}}
           <TagSettingsLocalizations

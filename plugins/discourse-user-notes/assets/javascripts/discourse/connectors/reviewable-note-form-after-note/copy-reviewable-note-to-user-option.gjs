@@ -18,9 +18,9 @@ export default class CopyReviewableNoteToUserOption extends Component {
       @title={{i18n "user_notes.copy_reviewable_note" username=this.username}}
       @format="full"
       @type="checkbox"
-      as |Control|
+      as |field|
     >
-      <Control />
+      <field.Control />
     </@form.Field>
   </template>
 }

@@ -355,9 +355,9 @@ export default class CreateInvite extends Component {
               @title={{i18n "user.invited.invite.description"}}
               @format="large"
               @validation={{this.descriptionValidation}}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
             <form.Field
               @name="restrictTo"
@@ -365,9 +365,9 @@ export default class CreateInvite extends Component {
               @title={{i18n "user.invited.invite.restrict"}}
               @format="large"
               @onSet={{this.handleRestrictToChange}}
-              as |Control|
+              as |field|
             >
-              <Control
+              <field.Control
                 placeholder={{i18n
                   "user.invited.invite.email_or_domain_placeholder"
                 }}
@@ -381,9 +381,12 @@ export default class CreateInvite extends Component {
                 @type="input-number"
                 @format="small"
                 @validation="required"
-                as |Control|
+                as |field|
               >
-                <Control min="1" max={{this.maxRedemptionsAllowedLimit}} />
+                <field.Control
+                  min="1"
+                  max={{this.maxRedemptionsAllowedLimit}}
+                />
               </form.Field>
             {{/unless}}
 
@@ -394,16 +397,16 @@ export default class CreateInvite extends Component {
                 @title={{i18n "user.invited.invite.expires_at"}}
                 @format="large"
                 @validation="required"
-                as |Control field|
+                as |field|
               >
-                <Control>
+                <field.Control>
                   <FutureDateInput
                     @clearable={{true}}
                     @input={{field.value}}
                     @noRelativeOptions={{true}}
                     @onChangeInput={{field.set}}
                   />
-                </Control>
+                </field.Control>
               </form.Field>
             {{else}}
               <form.Field
@@ -412,15 +415,15 @@ export default class CreateInvite extends Component {
                 @title={{i18n "user.invited.invite.expires_after"}}
                 @format="large"
                 @validation="required"
-                as |Control|
+                as |field|
               >
-                <Control as |select|>
+                <field.Control as |select|>
                   {{#each this.expireAfterOptions as |option|}}
                     <select.Option
                       @value={{option.value}}
                     >{{option.text}}</select.Option>
                   {{/each}}
-                </Control>
+                </field.Control>
               </form.Field>
             {{/if}}
 
@@ -430,16 +433,16 @@ export default class CreateInvite extends Component {
                 @type="custom"
                 @title={{i18n "user.invited.invite.invite_to_topic"}}
                 @format="large"
-                as |Control field|
+                as |field|
               >
-                <Control>
+                <field.Control>
                   <TopicChooser
                     @value={{field.value}}
                     @content={{this.topics}}
                     @onChange={{fn this.onChangeTopic field.set}}
                     @options={{hash additionalFilters="status:public"}}
                   />
-                </Control>
+                </field.Control>
               </form.Field>
             {{/if}}
 
@@ -449,16 +452,16 @@ export default class CreateInvite extends Component {
                 @type="custom"
                 @title={{i18n "user.invited.invite.add_to_groups"}}
                 @format="large"
-                as |Control field|
+                as |field|
               >
-                <Control>
+                <field.Control>
                   <GroupChooser
                     @content={{this.allGroups}}
                     @value={{field.value}}
                     @labelProperty="name"
                     @onChange={{field.set}}
                   />
-                </Control>
+                </field.Control>
               </form.Field>
             {{/if}}
 
@@ -468,9 +471,9 @@ export default class CreateInvite extends Component {
                 @type="textarea"
                 @title={{i18n "user.invited.invite.custom_message"}}
                 @format="full"
-                as |Control|
+                as |field|
               >
-                <Control
+                <field.Control
                   height={{100}}
                   placeholder={{i18n
                     "user.invited.invite.custom_message_placeholder"

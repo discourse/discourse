@@ -43,10 +43,10 @@ export default <template>
                       )
                     )
                   }}
-                  as |Control field|
+                  as |field|
                 >
                   <AiFeatureSettingField
-                    @Control={{Control}}
+                    @Control={{field.Control}}
                     @setting={{setting}}
                     @field={{field}}
                   />

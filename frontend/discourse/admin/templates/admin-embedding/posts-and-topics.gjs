@@ -13,52 +13,52 @@ export default <template>
       @title={{i18n "admin.embedding.embed_by_username"}}
       @validation="required"
       @type="custom"
-      as |Control field|
+      as |field|
     >
-      <Control>
+      <field.Control>
         <UserChooser
           @value={{field.value}}
           @onChange={{field.set}}
           @options={{hash maximum=1 excludeCurrentUser=false}}
           class="admin-embedding-posts-and-topics-form__embed_by_username"
         />
-      </Control>
+      </field.Control>
     </form.Field>
     <form.Field
       @name="embed_post_limit"
       @title={{i18n "admin.embedding.embed_post_limit"}}
       @format="large"
       @type="input"
-      as |Control|
+      as |field|
     >
-      <Control />
+      <field.Control />
     </form.Field>
     <form.Field
       @name="embed_title_scrubber"
       @title={{i18n "admin.embedding.embed_title_scrubber"}}
       @format="large"
       @type="input"
-      as |Control|
+      as |field|
     >
-      <Control placeholder="- site.com$" />
+      <field.Control placeholder="- site.com$" />
     </form.Field>
     <form.CheckboxGroup as |checkboxGroup|>
       <checkboxGroup.Field
         @name="embed_truncate"
         @title={{i18n "admin.embedding.embed_truncate"}}
         @type="checkbox"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </checkboxGroup.Field>
 
       <checkboxGroup.Field
         @name="embed_unlisted"
         @title={{i18n "admin.embedding.embed_unlisted"}}
         @type="checkbox"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </checkboxGroup.Field>
     </form.CheckboxGroup>
     <form.Submit @label="admin.embedding.save" />

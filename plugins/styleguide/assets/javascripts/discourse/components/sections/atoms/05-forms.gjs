@@ -9,28 +9,28 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Username" @name="username" @type="input" as |Control|>
-      <Control placeholder="Username" />
+    <form.Field @title="Username" @name="username" @type="input" as |field|>
+      <field.Control placeholder="Username" />
     </form.Field>
-    <form.Field @title="Age" @name="age" @type="input-number" as |Control|>
-      <Control placeholder="Age" @format="small" />
+    <form.Field @title="Age" @name="age" @type="input-number" as |field|>
+      <field.Control placeholder="Age" @format="small" />
     </form.Field>
-    <form.Field @title="Website" @name="website" @type="input" as |Control|>
-      <Control @before="https://" @after=".com" @format="large" />
+    <form.Field @title="Website" @name="website" @type="input" as |field|>
+      <field.Control @before="https://" @after=".com" @format="large" />
     </form.Field>
-    <form.Field @title="After" @name="after" @type="input" as |Control|>
-      <Control @after=".com" />
+    <form.Field @title="After" @name="after" @type="input" as |field|>
+      <field.Control @after=".com" />
     </form.Field>
-    <form.Field @title="Before" @name="before" @type="input" as |Control|>
-      <Control @before="https://" />
+    <form.Field @title="Before" @name="before" @type="input" as |field|>
+      <field.Control @before="https://" />
     </form.Field>
     <form.Field
       @title="Secret"
       @name="secret"
       @description="An important password"
-      @type="password" as |Control|
+      @type="password" as |field|
     >
-      <Control />
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -41,8 +41,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Enabled" @name="enabled" @type="question" as |Control|>
-      <Control />
+    <form.Field @title="Enabled" @name="enabled" @type="question" as |field|>
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -53,8 +53,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Enabled" @name="enabled" @type="toggle" as |Control|>
-      <Control />
+    <form.Field @title="Enabled" @name="enabled" @type="toggle" as |field|>
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -65,8 +65,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Query" @name="query" @type="composer" as |Control|>
-      <Control />
+    <form.Field @title="Query" @name="query" @type="composer" as |field|>
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -77,8 +77,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Query" @name="query" @type="code" as |Control|>
-      <Control />
+    <form.Field @title="Query" @name="query" @type="code" as |field|>
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -89,8 +89,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Query" @name="query" @type="textarea" as |Control|>
-      <Control />
+    <form.Field @title="Query" @name="query" @type="textarea" as |field|>
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -101,11 +101,11 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Enabled" @name="enabled" @type="select" as |Control|>
-      <Control as |select|>
+    <form.Field @title="Enabled" @name="enabled" @type="select" as |field|>
+      <field.Control as |select|>
         <select.Option @value="true">Yes</select.Option>
         <select.Option @value="false">No</select.Option>
-      </Control>
+      </field.Control>
     </form.Field>
   </Form>
 </template>`;
@@ -123,17 +123,17 @@ export default class Forms extends Component {
       <checkboxGroup.Field
         @title="Use my email for any purpose."
         @name="contract"
-        @type="checkbox" as |Control|
+        @type="checkbox" as |field|
       >
-        <Control>Including signing up for services I can't unsubscribe
-          to.</Control>
+        <field.Control>Including signing up for services I can't unsubscribe
+          to.</field.Control>
       </checkboxGroup.Field>
       <checkboxGroup.Field
         @title="Sign my soul away."
         @name="contract2"
-        @type="checkbox" as |Control|
+        @type="checkbox" as |field|
       >
-        <Control>Will severly impact the afterlife experience.</Control>
+        <field.Control>Will severly impact the afterlife experience.</field.Control>
       </checkboxGroup.Field>
     </form.CheckboxGroup>
   </Form>
@@ -145,8 +145,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Image" @name="image" @type="image" as |Control|>
-      <Control @type="avatar" />
+    <form.Field @title="Image" @name="image" @type="image" as |field|>
+      <field.Control @type="avatar" />
     </form.Field>
   </Form>
 </template>`;
@@ -157,8 +157,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Icon" @name="icon" @type="icon" as |Control|>
-      <Control />
+    <form.Field @title="Icon" @name="icon" @type="icon" as |field|>
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -169,8 +169,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Tags" @name="tags" @type="tag-chooser" as |Control|>
-      <Control />
+    <form.Field @title="Tags" @name="tags" @type="tag-chooser" as |field|>
+      <field.Control />
     </form.Field>
   </Form>
 </template>`;
@@ -181,12 +181,12 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form data|>
-    <form.Field @title="Enabled" @name="enabled" @type="menu" as |Control|>
-      <Control @selection={{data.enabled}} as |menu|>
+    <form.Field @title="Enabled" @name="enabled" @type="menu" as |field|>
+      <field.Control @selection={{data.enabled}} as |menu|>
         <menu.Item @value="true">Yes</menu.Item>
         <menu.Divider />
         <menu.Item @value="false">No</menu.Item>
-      </Control>
+      </field.Control>
     </form.Field>
   </Form>
 </template>`;
@@ -197,8 +197,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Enabled" @name="enabled" @format="full" @type="radio-group" as |Control|>
-      <Control as |radioGroup|>
+    <form.Field @title="Enabled" @name="enabled" @format="full" @type="radio-group" as |field|>
+      <field.Control as |radioGroup|>
         <radioGroup.Radio @value="true">Yes</radioGroup.Radio>
         <radioGroup.Radio @value="false" as |radio|>
           <radio.Title>No</radio.Title>
@@ -206,7 +206,7 @@ export default class Forms extends Component {
             Choosing no, will make you ineligible for the contest.
           </radio.Description>
         </radioGroup.Radio>
-      </Control>
+      </field.Control>
     </form.Field>
   </Form>
 </template>`;
@@ -217,8 +217,8 @@ export default class Forms extends Component {
 
 <template>
   <Form as |form|>
-    <form.Field @title="Color" @name="color" @type="color" as |Control|>
-      <Control placeholder="RRGGBB" />
+    <form.Field @title="Color" @name="color" @type="color" as |field|>
+      <field.Control placeholder="RRGGBB" />
     </form.Field>
   </Form>
 </template>`;
@@ -233,8 +233,8 @@ const USED_COLORS = ["00FF00"];
 
 <template>
   <Form as |form|>
-    <form.Field @title="Color" @name="color" @type="color" as |Control|>
-      <Control
+    <form.Field @title="Color" @name="color" @type="color" as |field|>
+      <field.Control
         @colors={{COLORS}}
         @usedColors={{USED_COLORS}}
         placeholder="RRGGBB"
@@ -249,8 +249,8 @@ const USED_COLORS = ["00FF00"];
 
 <template>
   <Form as |form|>
-    <form.Field @title="Color" @name="color" @type="color" as |Control|>
-      <Control @allowNamedColors={{true}} placeholder="red, FF0000" />
+    <form.Field @title="Color" @name="color" @type="color" as |field|>
+      <field.Control @allowNamedColors={{true}} placeholder="red, FF0000" />
     </form.Field>
   </Form>
 </template>`;
@@ -286,11 +286,11 @@ const USED_COLORS = ["00FF00"];
 <template>
   <Form as |form|>
     <form.InputGroup as |inputGroup|>
-      <inputGroup.Field @title="Username" @name="username" @type="input" as |Control|>
-        <Control />
+      <inputGroup.Field @title="Username" @name="username" @type="input" as |field|>
+        <field.Control />
       </inputGroup.Field>
-      <inputGroup.Field @title="Email" @name="email" @type="input" as |Control|>
-        <Control />
+      <inputGroup.Field @title="Email" @name="email" @type="input" as |field|>
+        <field.Control />
       </inputGroup.Field>
     </form.InputGroup>
   </Form>
@@ -311,14 +311,14 @@ import Form from "discourse/components/form";
     <form.Collection @name="foo" as |collection index|>
       <form.Row as |row|>
         <row.Col @size={{6}}>
-          <collection.Field @title="Bar" @name="bar" @type="input" as |Control|>
-            <Control />
+          <collection.Field @title="Bar" @name="bar" @type="input" as |field|>
+            <field.Control />
           </collection.Field>
         </row.Col>
 
         <row.Col @size={{4}}>
-          <collection.Field @title="Baz" @name="baz" @type="input" as |Control|>
-            <Control />
+          <collection.Field @title="Baz" @name="baz" @type="input" as |field|>
+            <field.Control />
           </collection.Field>
         </row.Col>
 
@@ -343,14 +343,14 @@ import Form from "discourse/components/form";
           @title="Username"
           @name="username"
           @validation="required"
-          @type="input" as |Control|
+          @type="input" as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
       </row.Col>
       <row.Col @size={{4}}>
-        <form.Field @title="Email" @name="email" @type="input" as |Control|>
-          <Control />
+        <form.Field @title="Email" @name="email" @type="input" as |field|>
+          <field.Control />
         </form.Field>
       </row.Col>
       <row.Col @size={{2}}>
@@ -372,20 +372,20 @@ import Form from "discourse/components/form";
           @title="Username"
           @name="username"
           @validation="required"
-          @type="input" as |Control|
+          @type="input" as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
       </row.Col>
       <row.Col @size={{6}}>
-        <form.Field @title="Email" @name="email" @type="input" as |Control|>
-          <Control />
+        <form.Field @title="Email" @name="email" @type="input" as |field|>
+          <field.Control />
         </form.Field>
       </row.Col>
 
       <row.Col @size={{12}}>
-        <form.Field @title="Address" @name="address" @type="input" as |Control|>
-          <Control />
+        <form.Field @title="Address" @name="address" @type="input" as |field|>
+          <field.Control />
         </form.Field>
       </row.Col>
     </form.Row>
@@ -402,9 +402,9 @@ import Form from "discourse/components/form";
       @title="Username"
       @name="username"
       @validation="required"
-      @type="input" as |Control|
+      @type="input" as |field|
     >
-      <Control />
+      <field.Control />
     </form.Field>
 
     <form.Field
@@ -412,9 +412,9 @@ import Form from "discourse/components/form";
       @title="Accept terms"
       @validation="required"
       @format="large"
-      @type="checkbox" as |Control|
+      @type="checkbox" as |field|
     >
-      <Control />
+      <field.Control />
     </form.Field>
 
     <form.Submit />
@@ -426,34 +426,29 @@ import Form from "discourse/components/form";
     <h2>Controls</h2>
     <StyleguideExample @title="Input" @code={{this.inputCode}}>
       <Form as |form|>
-        <form.Field
-          @title="Username"
-          @name="username"
-          @type="input"
-          as |Control|
-        >
-          <Control placeholder="Username" />
+        <form.Field @title="Username" @name="username" @type="input" as |field|>
+          <field.Control placeholder="Username" />
         </form.Field>
-        <form.Field @title="Age" @name="age" @type="input-number" as |Control|>
-          <Control placeholder="Age" @format="small" />
+        <form.Field @title="Age" @name="age" @type="input-number" as |field|>
+          <field.Control placeholder="Age" @format="small" />
         </form.Field>
-        <form.Field @title="Website" @name="website" @type="input" as |Control|>
-          <Control @before="https://" @after=".com" @format="large" />
+        <form.Field @title="Website" @name="website" @type="input" as |field|>
+          <field.Control @before="https://" @after=".com" @format="large" />
         </form.Field>
-        <form.Field @title="After" @name="after" @type="input" as |Control|>
-          <Control @after=".com" />
+        <form.Field @title="After" @name="after" @type="input" as |field|>
+          <field.Control @after=".com" />
         </form.Field>
-        <form.Field @title="Before" @name="before" @type="input" as |Control|>
-          <Control @before="https://" />
+        <form.Field @title="Before" @name="before" @type="input" as |field|>
+          <field.Control @before="https://" />
         </form.Field>
         <form.Field
           @title="Secret"
           @name="secret"
           @description="An important password"
           @type="password"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
@@ -464,62 +459,52 @@ import Form from "discourse/components/form";
           @title="Enabled"
           @name="enabled"
           @type="question"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Toggle" @code={{this.toggleCode}}>
       <Form as |form|>
-        <form.Field
-          @title="Enabled"
-          @name="enabled"
-          @type="toggle"
-          as |Control|
-        >
-          <Control />
+        <form.Field @title="Enabled" @name="enabled" @type="toggle" as |field|>
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Composer" @code={{this.composerCode}}>
       <Form as |form|>
-        <form.Field @title="Query" @name="query" @type="composer" as |Control|>
-          <Control />
+        <form.Field @title="Query" @name="query" @type="composer" as |field|>
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Code" @code={{this.codeCode}}>
       <Form as |form|>
-        <form.Field @title="Query" @name="query" @type="code" as |Control|>
-          <Control />
+        <form.Field @title="Query" @name="query" @type="code" as |field|>
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Textarea" @code={{this.textareaCode}}>
       <Form as |form|>
-        <form.Field @title="Query" @name="query" @type="textarea" as |Control|>
-          <Control />
+        <form.Field @title="Query" @name="query" @type="textarea" as |field|>
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Select" @code={{this.selectCode}}>
       <Form as |form|>
-        <form.Field
-          @title="Enabled"
-          @name="enabled"
-          @type="select"
-          as |Control|
-        >
-          <Control as |select|>
+        <form.Field @title="Enabled" @name="enabled" @type="select" as |field|>
+          <field.Control as |select|>
             <select.Option @value="true">Yes</select.Option>
             <select.Option @value="false">No</select.Option>
-          </Control>
+          </field.Control>
         </form.Field>
       </Form>
     </StyleguideExample>
@@ -534,17 +519,18 @@ import Form from "discourse/components/form";
             @title="Use my email for any purpose."
             @name="contract"
             @type="checkbox"
-            as |Control|
+            as |field|
           >
-            <Control>Including signing up for services I can't unsubscribe to.</Control>
+            <field.Control>Including signing up for services I can't unsubscribe
+              to.</field.Control>
           </checkboxGroup.Field>
           <checkboxGroup.Field
             @title="Sign my soul away."
             @name="contract2"
             @type="checkbox"
-            as |Control|
+            as |field|
           >
-            <Control>Will severly impact the afterlife experience.</Control>
+            <field.Control>Will severly impact the afterlife experience.</field.Control>
           </checkboxGroup.Field>
         </form.CheckboxGroup>
       </Form>
@@ -552,36 +538,36 @@ import Form from "discourse/components/form";
 
     <StyleguideExample @title="Image" @code={{this.imageCode}}>
       <Form as |form|>
-        <form.Field @title="Image" @name="image" @type="image" as |Control|>
-          <Control @type="avatar" />
+        <form.Field @title="Image" @name="image" @type="image" as |field|>
+          <field.Control @type="avatar" />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Icon" @code={{this.iconCode}}>
       <Form as |form|>
-        <form.Field @title="Icon" @name="icon" @type="icon" as |Control|>
-          <Control />
+        <form.Field @title="Icon" @name="icon" @type="icon" as |field|>
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="TagChooser" @code={{this.tagChooserCode}}>
       <Form as |form|>
-        <form.Field @title="Tags" @name="tags" @type="tag-chooser" as |Control|>
-          <Control />
+        <form.Field @title="Tags" @name="tags" @type="tag-chooser" as |field|>
+          <field.Control />
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Menu" @code={{this.menuCode}}>
       <Form as |form data|>
-        <form.Field @title="Enabled" @name="enabled" @type="menu" as |Control|>
-          <Control @selection={{data.enabled}} as |menu|>
+        <form.Field @title="Enabled" @name="enabled" @type="menu" as |field|>
+          <field.Control @selection={{data.enabled}} as |menu|>
             <menu.Item @value="true">Yes</menu.Item>
             <menu.Divider />
             <menu.Item @value="false">No</menu.Item>
-          </Control>
+          </field.Control>
         </form.Field>
       </Form>
     </StyleguideExample>
@@ -593,9 +579,9 @@ import Form from "discourse/components/form";
           @name="enabled"
           @format="full"
           @type="radio-group"
-          as |Control|
+          as |field|
         >
-          <Control as |radioGroup|>
+          <field.Control as |radioGroup|>
             <radioGroup.Radio @value="true">Yes</radioGroup.Radio>
             <radioGroup.Radio @value="false" as |radio|>
               <radio.Title>No</radio.Title>
@@ -603,15 +589,15 @@ import Form from "discourse/components/form";
                 Choosing no, will make you ineligible for the contest.
               </radio.Description>
             </radioGroup.Radio>
-          </Control>
+          </field.Control>
         </form.Field>
       </Form>
     </StyleguideExample>
 
     <StyleguideExample @title="Color" @code={{this.colorCode}}>
       <Form as |form|>
-        <form.Field @title="Color" @name="color" @type="color" as |Control|>
-          <Control placeholder="RRGGBB" />
+        <form.Field @title="Color" @name="color" @type="color" as |field|>
+          <field.Control placeholder="RRGGBB" />
         </form.Field>
       </Form>
     </StyleguideExample>
@@ -621,8 +607,8 @@ import Form from "discourse/components/form";
       @code={{this.colorWithSwatchesCode}}
     >
       <Form as |form|>
-        <form.Field @title="Color" @name="color" @type="color" as |Control|>
-          <Control
+        <form.Field @title="Color" @name="color" @type="color" as |field|>
+          <field.Control
             @colors={{array
               "FF0000"
               "00FF00"
@@ -643,8 +629,8 @@ import Form from "discourse/components/form";
       @code={{this.colorNamedCode}}
     >
       <Form as |form|>
-        <form.Field @title="Color" @name="color" @type="color" as |Control|>
-          <Control @allowNamedColors={{true}} placeholder="red, FF0000" />
+        <form.Field @title="Color" @name="color" @type="color" as |field|>
+          <field.Control @allowNamedColors={{true}} placeholder="red, FF0000" />
         </form.Field>
       </Form>
     </StyleguideExample>
@@ -674,17 +660,17 @@ import Form from "discourse/components/form";
             @title="Username"
             @name="username"
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </inputGroup.Field>
           <inputGroup.Field
             @title="Email"
             @name="email"
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </inputGroup.Field>
         </form.InputGroup>
       </Form>
@@ -707,9 +693,9 @@ import Form from "discourse/components/form";
                 @title="Bar"
                 @name="bar"
                 @type="input"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </collection.Field>
             </row.Col>
 
@@ -718,9 +704,9 @@ import Form from "discourse/components/form";
                 @title="Baz"
                 @name="baz"
                 @type="input"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </collection.Field>
             </row.Col>
 
@@ -745,14 +731,14 @@ import Form from "discourse/components/form";
               @name="username"
               @validation="required"
               @type="input"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{4}}>
-            <form.Field @title="Email" @name="email" @type="input" as |Control|>
-              <Control />
+            <form.Field @title="Email" @name="email" @type="input" as |field|>
+              <field.Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{2}}>
@@ -771,14 +757,14 @@ import Form from "discourse/components/form";
               @name="username"
               @validation="required"
               @type="input"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
-            <form.Field @title="Email" @name="email" @type="input" as |Control|>
-              <Control />
+            <form.Field @title="Email" @name="email" @type="input" as |field|>
+              <field.Control />
             </form.Field>
           </row.Col>
 
@@ -787,9 +773,9 @@ import Form from "discourse/components/form";
               @title="Address"
               @name="address"
               @type="input"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
         </form.Row>
@@ -805,9 +791,9 @@ import Form from "discourse/components/form";
           @name="username"
           @validation="required"
           @type="input"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -816,9 +802,9 @@ import Form from "discourse/components/form";
           @validation="required"
           @format="large"
           @type="checkbox"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Submit />

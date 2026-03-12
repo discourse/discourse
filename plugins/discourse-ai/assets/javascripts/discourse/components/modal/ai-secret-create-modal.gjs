@@ -49,9 +49,9 @@ export default class AiSecretCreateModal extends Component {
           @validation="required|length:1,100"
           @format="large"
           @type="input"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -60,9 +60,9 @@ export default class AiSecretCreateModal extends Component {
           @validation="required"
           @format="large"
           @type="password"
-          as |Control|
+          as |field|
         >
-          <Control autocomplete="off" />
+          <field.Control autocomplete="off" />
         </form.Field>
 
         <form.Actions>

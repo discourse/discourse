@@ -62,9 +62,9 @@ export default class SolvedSettingsUpsert extends Component {
               @title={{i18n "solved.allow_accepted_answers"}}
               @onSet={{this.onToggleAcceptedAnswers}}
               @type="checkbox"
-              as |Control|
+              as |field|
             >
-              <Control checked={{this.enableAcceptedAnswers}} />
+              <field.Control checked={{this.enableAcceptedAnswers}} />
             </customFields.Field>
           {{/unless}}
 
@@ -72,9 +72,9 @@ export default class SolvedSettingsUpsert extends Component {
             @name="solved_topics_auto_close_hours"
             @title={{i18n "solved.solved_topics_auto_close_hours"}}
             @type="input-number"
-            as |Control|
+            as |field|
           >
-            <Control min="0" />
+            <field.Control min="0" />
           </customFields.Field>
 
           <customFields.Field

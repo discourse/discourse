@@ -17,17 +17,17 @@ module(
                 @type="checkbox"
                 @name="foo"
                 @title="Foo"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </checkboxGroup.Field>
               <checkboxGroup.Field
                 @type="checkbox"
                 @name="bar"
                 @title="Bar"
-                as |Control|
+                as |field|
               >
-                <Control>A description</Control>
+                <field.Control>A description</field.Control>
               </checkboxGroup.Field>
             </form.CheckboxGroup>
           </Form>
@@ -48,9 +48,9 @@ module(
                 @type="checkbox"
                 @name="foo"
                 @title="Foo"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </checkboxGroup.Field>
             </form.CheckboxGroup>
           </Form>
@@ -71,9 +71,9 @@ module(
                 @type="checkbox"
                 @name="foo"
                 @title="Foo"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </checkboxGroup.Field>
             </form.CheckboxGroup>
           </Form>

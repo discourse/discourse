@@ -21,17 +21,17 @@ module(
                 @type="input"
                 @title="Foo"
                 @name="foo"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </inputGroup.Field>
               <inputGroup.Field
                 @type="input"
                 @title="Bar"
                 @name="bar"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </inputGroup.Field>
             </form.InputGroup>
           </Form>

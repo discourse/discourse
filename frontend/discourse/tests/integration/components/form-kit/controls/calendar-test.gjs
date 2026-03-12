@@ -27,8 +27,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |Control|>
-              <Control />
+            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -47,8 +47,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |Control|>
-              <Control />
+            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -59,8 +59,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |Control|>
-              <Control @includeTime={{false}} />
+            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+              <field.Control @includeTime={{false}} />
             </form.Field>
           </Form>
         </template>
@@ -73,8 +73,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |Control|>
-              <Control />
+            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -86,8 +86,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="calendar" @name="foo" @title="Foo" as |Control|>
-              <Control @expandedDatePickerOnDesktop={{false}} />
+            <form.Field @type="calendar" @name="foo" @title="Foo" as |field|>
+              <field.Control @expandedDatePickerOnDesktop={{false}} />
             </form.Field>
           </Form>
         </template>
@@ -111,9 +111,9 @@ module(
               @validation={{validation}}
               @name="foo"
               @title="Foo"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -145,9 +145,9 @@ module(
               @validation={{validation}}
               @name="foo"
               @title="Foo"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -174,9 +174,9 @@ module(
               @name="foo"
               @title="Foo"
               @disabled={{true}}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </Form>
         </template>

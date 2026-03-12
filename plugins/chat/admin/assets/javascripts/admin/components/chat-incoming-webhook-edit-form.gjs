@@ -85,18 +85,18 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @title={{i18n "chat.incoming_webhooks.name"}}
         @validation="required"
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
         @name="description"
         @title={{i18n "chat.incoming_webhooks.description"}}
         @type="textarea"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -104,9 +104,9 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @title={{i18n "chat.incoming_webhooks.username"}}
         @description={{i18n "chat.incoming_webhooks.username_instructions"}}
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -114,15 +114,15 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @title={{i18n "chat.incoming_webhooks.post_to"}}
         @validation="required"
         @type="custom"
-        as |Control field|
+        as |field|
       >
-        <Control>
+        <field.Control>
           <ChatChannelChooser
             @content={{@chatChannels}}
             @value={{field.value}}
             @onChange={{field.set}}
           />
-        </Control>
+        </field.Control>
       </form.Field>
 
       <form.Field
@@ -131,9 +131,9 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @description={{i18n "chat.incoming_webhooks.emoji_instructions"}}
         @size="large"
         @type="custom"
-        as |Control field|
+        as |field|
       >
-        <Control>
+        <field.Control>
           {{#if field.value}}
             {{i18n "chat.incoming_webhooks.current_emoji"}}
 
@@ -155,7 +155,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
               />
             </row.Col>
           </form.Row>
-        </Control>
+        </field.Control>
       </form.Field>
 
       {{#if @webhook.url}}

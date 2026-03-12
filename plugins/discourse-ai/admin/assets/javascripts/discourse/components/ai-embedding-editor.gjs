@@ -371,9 +371,9 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__display-name"
           @type="input"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -384,15 +384,15 @@ export default class AiEmbeddingEditor extends Component {
           @onSet={{this.setProvider}}
           class="ai-embedding-editor__provider"
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control as |select|>
+          <field.Control as |select|>
             {{#each this.selectedProviders as |provider|}}
               <select.Option
                 @value={{provider.id}}
               >{{provider.name}}</select.Option>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -402,9 +402,9 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__url"
           @type="input"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -413,15 +413,15 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__api-key"
           @type="custom"
-          as |Control field|
+          as |field|
         >
-          <Control>
+          <field.Control>
             <AiSecretSelector
               @value={{data.ai_secret_id}}
               @secrets={{this.availableSecrets}}
               @onChange={{field.set}}
             />
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -431,15 +431,15 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__tokenizer"
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control as |select|>
+          <field.Control as |select|>
             {{#each @embeddings.resultSetMeta.tokenizers as |tokenizer|}}
               <select.Option
                 @value={{tokenizer.id}}
               >{{tokenizer.name}}</select.Option>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -453,9 +453,14 @@ export default class AiEmbeddingEditor extends Component {
           }}
           class="ai-embedding-editor__dimensions"
           @type="input-number"
-          as |Control|
+          as |field|
         >
-          <Control step="any" min="0" lang="en" disabled={{not @model.isNew}} />
+          <field.Control
+            step="any"
+            min="0"
+            lang="en"
+            disabled={{not @model.isNew}}
+          />
         </form.Field>
 
         <form.Field
@@ -467,9 +472,9 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__matryoshka_dimensions"
           @type="checkbox"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -479,9 +484,9 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__embed_prompt"
           @type="textarea"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -491,9 +496,9 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__search_prompt"
           @type="textarea"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -504,9 +509,9 @@ export default class AiEmbeddingEditor extends Component {
           @format="large"
           class="ai-embedding-editor__max_sequence_length"
           @type="input-number"
-          as |Control|
+          as |field|
         >
-          <Control step="any" min="0" lang="en" />
+          <field.Control step="any" min="0" lang="en" />
         </form.Field>
 
         <form.Field
@@ -517,13 +522,13 @@ export default class AiEmbeddingEditor extends Component {
           @validation="required"
           class="ai-embedding-editor__distance_functions"
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control @includeNone={{false}} as |select|>
+          <field.Control @includeNone={{false}} as |select|>
             {{#each this.distanceFunctions as |df|}}
               <select.Option @value={{df.id}}>{{df.name}}</select.Option>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
 
         {{! provider-specific content }}
@@ -541,20 +546,20 @@ export default class AiEmbeddingEditor extends Component {
                     @validation="required"
                     class="ai-embedding-editor-provider-param__{{params.type}}"
                     @type={{this.fieldTypeForProviderParam params.type}}
-                    as |Control|
+                    as |field|
                   >
                     {{#if (eq params.type "enum")}}
-                      <Control @includeNone={{false}} as |select|>
+                      <field.Control @includeNone={{false}} as |select|>
                         {{#each params.values as |option|}}
                           <select.Option
                             @value={{option.id}}
                           >{{option.name}}</select.Option>
                         {{/each}}
-                      </Control>
+                      </field.Control>
                     {{else if (eq params.type "checkbox")}}
-                      <Control />
+                      <field.Control />
                     {{else}}
-                      <Control />
+                      <field.Control />
                     {{/if}}
                   </object.Field>
                 {{/if}}

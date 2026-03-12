@@ -228,9 +228,9 @@ export default class UpsertHyperlink extends Component {
               @format="full"
               @validation="required"
               @onSet={{this.search}}
-              as |Control|
+              as |field|
             >
-              <Control
+              <field.Control
                 placeholder={{i18n "composer.link_url_placeholder"}}
                 class="link-url"
                 autofocus="autofocus"
@@ -269,9 +269,9 @@ export default class UpsertHyperlink extends Component {
               @type="input"
               @title={{i18n "composer.link_text_label"}}
               @format="full"
-              as |Control|
+              as |field|
             >
-              <Control
+              <field.Control
                 placeholder={{i18n "composer.link_optional_text"}}
                 class="link-text"
               />

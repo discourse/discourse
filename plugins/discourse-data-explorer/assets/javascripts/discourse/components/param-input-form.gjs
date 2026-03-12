@@ -472,10 +472,10 @@ export default class ParamInputForm extends Component {
                 @validation={{info.validation}}
                 @validate={{info.validate}}
                 @type={{this.fieldTypeFor info}}
-                as |Control field|
+                as |field|
               >
                 <info.component
-                  @Control={{Control}}
+                  @Control={{field.Control}}
                   @field={{field}}
                   @info={{info}}
                 />

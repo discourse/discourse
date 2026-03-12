@@ -231,9 +231,9 @@ export default class EditCategoryGeneral extends Component {
             @format="large"
             @validation="required"
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control
+            <field.Control
               placeholder={{i18n "category.name_placeholder"}}
               @maxlength="50"
               class="category-name"
@@ -246,9 +246,9 @@ export default class EditCategoryGeneral extends Component {
           @title={{i18n "category.slug"}}
           @format="large"
           @type="input"
-          as |Control|
+          as |field|
         >
-          <Control
+          <field.Control
             placeholder={{i18n "category.slug_placeholder"}}
             @maxlength="255"
           />
@@ -262,9 +262,9 @@ export default class EditCategoryGeneral extends Component {
           @format="large"
           class="parent-category"
           @type="custom"
-          as |Control field|
+          as |field|
         >
-          <Control>
+          <field.Control>
             <CategoryChooser
               @value={{@transientData.parent_category_id}}
               @allowSubCategories={{true}}
@@ -277,7 +277,7 @@ export default class EditCategoryGeneral extends Component {
                 none=true
               }}
             />
-          </Control>
+          </field.Control>
         </@form.Field>
       {{/if}}
 
@@ -316,16 +316,16 @@ export default class EditCategoryGeneral extends Component {
           @format="large"
           @validation="required"
           @type="select"
-          as |Control|
+          as |field|
         >
           {{trustHTML (this.categoryBadgePreview @transientData)}}
-          <Control as |select|>
+          <field.Control as |select|>
             {{#each this.styleTypes as |styleType|}}
               <select.Option @value={{styleType.id}}>
                 {{styleType.name}}
               </select.Option>
             {{/each}}
-          </Control>
+          </field.Control>
         </@form.Field>
 
         {{#if (eq @transientData.style_type "emoji")}}
@@ -335,9 +335,9 @@ export default class EditCategoryGeneral extends Component {
             @format="small"
             @validation="required"
             @type="emoji"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </@form.Field>
         {{else if (eq @transientData.style_type "icon")}}
           <@form.Field
@@ -346,9 +346,9 @@ export default class EditCategoryGeneral extends Component {
             @format="small"
             @validation="required"
             @type="icon"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </@form.Field>
         {{/if}}
 
@@ -360,9 +360,9 @@ export default class EditCategoryGeneral extends Component {
           @validation="required"
           @onSet={{this.setBackgroundColor}}
           @type="color"
-          as |Control|
+          as |field|
         >
-          <Control
+          <field.Control
             @colors={{this.backgroundColors}}
             @usedColors={{this.usedBackgroundColors}}
           />
@@ -375,9 +375,9 @@ export default class EditCategoryGeneral extends Component {
           @validate={{this.validateColor}}
           @validation="required"
           @type="color"
-          as |Control|
+          as |field|
         >
-          <Control @colors={{CATEGORY_TEXT_COLORS}} />
+          <field.Control @colors={{CATEGORY_TEXT_COLORS}} />
         </@form.Field>
       </@form.Section>
     </div>

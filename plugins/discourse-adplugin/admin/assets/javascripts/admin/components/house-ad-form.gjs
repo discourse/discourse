@@ -175,9 +175,9 @@ export default class HouseAdForm extends Component {
         @validation="required"
         @format="large"
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -186,27 +186,27 @@ export default class HouseAdForm extends Component {
         @validation="required"
         @format="full"
         @type="code"
-        as |Control|
+        as |field|
       >
-        <Control @lang="html" @height={{270}} />
+        <field.Control @lang="html" @height={{270}} />
       </form.Field>
 
       <form.Field
         @name="visible_to_logged_in_users"
         @title={{i18n "admin.adplugin.house_ads.show_to_logged_in_users"}}
         @type="checkbox"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
         @name="visible_to_anons"
         @title={{i18n "admin.adplugin.house_ads.show_to_anons"}}
         @type="checkbox"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -215,15 +215,15 @@ export default class HouseAdForm extends Component {
         @description={{this.categoryDescription}}
         @format="large"
         @type="custom"
-        as |Control field|
+        as |field|
       >
-        <Control>
+        <field.Control>
           <HouseAdsCategorySelector
             @categories={{this.site.categories}}
             @selectedCategories={{field.value}}
             @onChange={{field.set}}
           />
-        </Control>
+        </field.Control>
       </form.Field>
 
       {{#if this.routesEnabled}}
@@ -235,14 +235,14 @@ export default class HouseAdForm extends Component {
           }}
           @format="large"
           @type="custom"
-          as |Control field|
+          as |field|
         >
-          <Control>
+          <field.Control>
             <HouseAdsRouteSelector
               @value={{field.value}}
               @onChange={{field.set}}
             />
-          </Control>
+          </field.Control>
         </form.Field>
       {{/if}}
 
@@ -254,15 +254,15 @@ export default class HouseAdForm extends Component {
         }}
         @format="large"
         @type="custom"
-        as |Control field|
+        as |field|
       >
-        <Control>
+        <field.Control>
           <GroupChooser
             @content={{this.site.groups}}
             @value={{field.value}}
             @onChange={{field.set}}
           />
-        </Control>
+        </field.Control>
       </form.Field>
 
       <form.Actions>

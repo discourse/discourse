@@ -17,11 +17,11 @@ module(
               @name="foo"
               @title="Foo"
               @description="Bar"
-              as |Control|
+              as |field|
             >
-              <Control>
+              <field.Control>
                 <input class="custom-test" />
-              </Control>
+              </field.Control>
             </form.Field>
           </Form>
         </template>

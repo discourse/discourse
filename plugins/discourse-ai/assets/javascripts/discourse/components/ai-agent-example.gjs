@@ -48,9 +48,9 @@ export default class AiAgentCollapsableExample extends Component {
           @validation="required|length:1,5000"
           @disabled={{@system}}
           @type="textarea"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </exPair.Field>
       </@examplesCollection.Collection>
 

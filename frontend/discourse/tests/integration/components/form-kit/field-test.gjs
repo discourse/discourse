@@ -49,9 +49,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @disabled={{data.disabled}}
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
 
           <form.Button class="test" @action={{fn form.set "disabled" false}} />
@@ -79,9 +79,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @description="foo foo"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -103,9 +103,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo.bar"
             @title="Foo"
             @size={{8}}
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -125,8 +125,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @type="input" @name="foo" @size={{8}} as |Control|>
-            <Control />
+          <form.Field @type="input" @name="foo" @size={{8}} as |field|>
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -145,9 +145,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @type="checkbox"
             @title={{htmlTitle}}
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -168,18 +168,18 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @validation="required"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
           <form.Field
             @type="input"
             @name="bar"
             @title="Bar"
             @validation="required"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -213,9 +213,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @validate={{validate}}
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
 
           <form.Submit />
@@ -240,8 +240,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @showTitle={{false}}
-            as |Control|
-          ><Control /></form.Field>
+            as |field|
+          ><field.Control /></form.Field>
         </Form>
       </template>
     );
@@ -259,8 +259,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @title="Foo"
             @description="foo description"
             @format="full"
-            as |Control|
-          ><Control /></form.Field>
+            as |field|
+          ><field.Control /></form.Field>
         </Form>
       </template>
     );
@@ -287,8 +287,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @description="foo description"
             @format="full"
             @descriptionFormat="large"
-            as |Control|
-          ><Control /></form.Field>
+            as |field|
+          ><field.Control /></form.Field>
         </Form>
       </template>
     );
@@ -311,8 +311,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @title="Foo"
             @format="full"
             @titleFormat="large"
-            as |Control|
-          ><Control /></form.Field>
+            as |field|
+          ><field.Control /></form.Field>
         </Form>
       </template>
     );
@@ -350,9 +350,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
               @name="foo"
               @title="Foo"
               @onSet={{onSet}}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </object.Field>
           </form.Object>
         </Form>
@@ -371,9 +371,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @tooltip="text"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -391,9 +391,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @tooltip={{component DTooltip content="component"}}
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </Form>
       </template>

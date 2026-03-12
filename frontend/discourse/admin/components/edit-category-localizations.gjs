@@ -41,15 +41,15 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             @format="full"
             @validation="required"
             @type="select"
-            as |Control|
+            as |field|
           >
-            <Control as |select|>
+            <field.Control as |select|>
               {{#each this.selectableLocales as |locale|}}
                 <select.Option
                   @value={{locale.value}}
                 >{{locale.name}}</select.Option>
               {{/each}}
-            </Control>
+            </field.Control>
           </collection.Field>
         </row.Col>
 
@@ -59,9 +59,9 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             @title={{i18n "category.localization.name"}}
             @validation="required|length:1,50"
             @type="input"
-            as |Control|
+            as |field|
           >
-            <Control
+            <field.Control
               placeholder={{i18n "category.name_placeholder"}}
               @maxlength="50"
               class="category-name"
@@ -74,9 +74,9 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             @name="description"
             @title={{i18n "category.localization.description"}}
             @type="textarea"
-            as |Control|
+            as |field|
           >
-            <Control @height={{60}} />
+            <field.Control @height={{60}} />
           </collection.Field>
         </row.Col>
 

@@ -14,8 +14,8 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     await render(
       <template>
         <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @type="code" @name="foo" @title="Foo" as |Control|>
-            <Control @height={{100}} style="width: 200px" />
+          <form.Field @type="code" @name="foo" @title="Foo" as |field|>
+            <field.Control @height={{100}} style="width: 200px" />
           </form.Field>
         </Form>
       </template>
@@ -35,8 +35,8 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @type="code" @name="foo" @title="Foo" as |Control|>
-            <Control @height={{100}} />
+          <form.Field @type="code" @name="foo" @title="Foo" as |field|>
+            <field.Control @height={{100}} />
           </form.Field>
         </Form>
       </template>
@@ -52,8 +52,8 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @type="code" @name="foo" @title="Foo" as |Control|>
-            <Control @lang="sql" />
+          <form.Field @type="code" @name="foo" @title="Foo" as |field|>
+            <field.Control @lang="sql" />
           </form.Field>
         </Form>
       </template>
@@ -77,9 +77,9 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
             @name="foo"
             @title="Foo"
             @disabled={{true}}
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </Form>
       </template>

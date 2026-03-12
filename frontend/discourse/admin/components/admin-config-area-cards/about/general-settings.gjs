@@ -66,9 +66,9 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @validation="required"
         @format="large"
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control
+        <field.Control
           placeholder={{i18n
             "admin.config_areas.about.community_name_placeholder"
           }}
@@ -80,18 +80,18 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @title={{i18n "admin.config_areas.about.community_summary"}}
         @format="large"
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
         @name="extendedDescription"
         @title={{i18n "admin.config_areas.about.community_description"}}
         @type="composer"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -100,9 +100,9 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @description={{i18n "admin.config_areas.about.community_title_help"}}
         @format="large"
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -111,9 +111,9 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @helpText={{i18n "admin.config_areas.about.banner_image_help"}}
         @onSet={{this.setImage}}
         @type="image"
-        as |Control|
+        as |field|
       >
-        <Control @type="site_setting" />
+        <field.Control @type="site_setting" />
       </form.Field>
 
       <form.Submit

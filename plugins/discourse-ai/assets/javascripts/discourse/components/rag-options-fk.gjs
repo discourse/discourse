@@ -41,9 +41,9 @@ export default class RagOptionsFk extends Component {
         @tooltip={{i18n "discourse_ai.rag.options.rag_chunk_tokens_help"}}
         @format="large"
         @type="input-number"
-        as |Control|
+        as |field|
       >
-        <Control step="any" lang="en" />
+        <field.Control step="any" lang="en" />
       </@form.Field>
 
       <@form.Field
@@ -54,9 +54,9 @@ export default class RagOptionsFk extends Component {
         }}
         @format="large"
         @type="input-number"
-        as |Control|
+        as |field|
       >
-        <Control step="any" lang="en" />
+        <field.Control step="any" lang="en" />
       </@form.Field>
 
       {{#if @allowImages}}
@@ -66,16 +66,16 @@ export default class RagOptionsFk extends Component {
           @tooltip={{i18n "discourse_ai.rag.options.rag_llm_model_help"}}
           @format="large"
           @type="custom"
-          as |Control field|
+          as |field|
         >
-          <Control>
+          <field.Control>
             <AiLlmSelector
               @value={{field.value}}
               @llms={{this.visionLlms}}
               @onChange={{field.set}}
               class="ai-agent-editor__llms"
             />
-          </Control>
+          </field.Control>
         </@form.Field>
       {{/if}}
       {{yield}}

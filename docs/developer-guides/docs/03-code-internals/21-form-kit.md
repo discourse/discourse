@@ -32,13 +32,13 @@ export default class MyForm extends Component {
         @title="Username"
         @validation="required"
         @type="input"
-        as |Control|
+        as |field|
       >
-        <Control />
+        <field.Control />
       </form.Field>
 
-      <form.Field @name="age" @title="Age" @type="input-number" as |Control|>
-        <Control />
+      <form.Field @name="age" @title="Age" @type="input-number" as |field|>
+        <field.Control />
       </form.Field>
 
       <form.Submit />
@@ -75,13 +75,13 @@ The `Form` component yields a `form` object containing components and helpers.
 
 ```hbs
 <Form as |form transientData|>
-  <form.Field @name="amount" @type="input-number" as |Control|>
-    <Control />
+  <form.Field @name="amount" @type="input-number" as |field|>
+    <field.Control />
   </form.Field>
 
   {{#if (gt transientData.amount 200)}}
-    <form.Field @name="confirmed" @type="checkbox" as |Control|>
-      <Control>I know what I'm doing</Control>
+    <form.Field @name="confirmed" @type="checkbox" as |field|>
+      <field.Control>I know what I'm doing</field.Control>
     </form.Field>
   {{/if}}
 </Form>
@@ -114,9 +114,9 @@ get formData() {
 
 ```hbs
 <Form @data={{hash foo="bar"}} as |form|>
-  <form.Field @name="foo" @type="input" as |Control|>
+  <form.Field @name="foo" @type="input" as |field|>
     <!-- This input will have "bar" as its initial value -->
-    <Control />
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -167,11 +167,11 @@ handleSubmit({ username, age }) {
 
 ```hbs
 <Form @onSubmit={{this.handleSubmit}} as |form|>
-  <form.Field @name="username" @type="input" as |Control|>
-    <Control />
+  <form.Field @name="username" @type="input" as |field|>
+    <field.Control />
   </form.Field>
-  <form.Field @name="age" @type="input-number" as |Control|>
-    <Control />
+  <form.Field @name="age" @type="input-number" as |field|>
+    <field.Control />
   </form.Field>
   <form.Submit />
 </Form>
@@ -301,9 +301,9 @@ You can pass a string or a `<DTooltip />` component.
     @title="Foo"
     @type="input"
     @tooltip="a nice input"
-    as |Control|
+    as |field|
   >
-    <Control />
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -315,9 +315,9 @@ You can pass a string or a `<DTooltip />` component.
     @title="Foo"
     @type="input"
     @tooltip={{component DTooltip content="a nice input"}}
-    as |Control|
+    as |field|
   >
-    <Control />
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -348,9 +348,9 @@ handleFooChange(value, { set }) {
   @name="foo"
   @type="input"
   @onSet={{this.handleFooChange}}
-  as |Control|
+  as |field|
 >
-  <Control />
+  <field.Control />
 </form.Field>
 ```
 
@@ -372,37 +372,38 @@ handleFooChange(value, { set }) {
     @name="foo"
     @type="input"
     @onSet={{this.handleFooChange}}
-    as |Control|
+    as |field|
   >
-    <Control />
+    <field.Control />
   </form.Field>
 </Form>
 ```
 
 ## Yielded Parameters
 
-The field yields two positional parameters: the control component and the field data object.
+The field yields a single field object. The control component determined by `@type` is available as `field.Control`.
 
 ```hbs
-<form.Field @name="foo" @type="input" as |Control field|>
-  <Control />
+<form.Field @name="foo" @type="input" as |field|>
+  <field.Control />
 </form.Field>
 ```
 
-### Control
+### field.Control
 
-The first yielded parameter is the control component determined by `@type`. You can pass control-specific attributes directly to it (e.g., `@height`, `@lang`, `placeholder`).
+`field.Control` is the control component determined by `@type`. You can pass control-specific attributes directly to it (e.g., `@height`, `@lang`, `placeholder`).
 
 ### field
 
-The second yielded parameter provides access to the field's data and helpers:
+The yielded `field` object provides access to the field's data and helpers:
 
-| Name    | Description                                    |
-| ------- | ---------------------------------------------- |
-| `id`    | ID to be used on the control for accessibility |
-| `name`  | Name of the field                              |
-| `value` | The value of the field                         |
-| `set`   | Function to set the field's value              |
+| Name      | Description                                          |
+| --------- | ---------------------------------------------------- |
+| `Control` | Contextual component for the control set by `@type`  |
+| `id`      | ID to be used on the control for accessibility       |
+| `name`    | Name of the field                                    |
+| `value`   | The value of the field                               |
+| `set`     | Function to set the field's value                    |
 
 # Controls
 
@@ -419,9 +420,9 @@ Controls, as we use the term here, refer to the UI widgets that allow a user to 
     @title="Query"
     @type="input"
     @description="You should make sure the query doesn't include bots."
-    as |Control|
+    as |field|
   >
-    <Control placeholder="Foo" />
+    <field.Control placeholder="Foo" />
   </form.Field>
 </Form>
 ```
@@ -462,8 +463,8 @@ Renders an `<input type="checkbox">` element.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="approved" @title="Approved" @type="checkbox" as |Control|>
-    <Control />
+  <form.Field @name="approved" @title="Approved" @type="checkbox" as |field|>
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -484,8 +485,8 @@ Sets the language of the editor.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="query" @title="Query" @type="code" as |Control|>
-    <Control @lang="sql" @height={{400}} />
+  <form.Field @name="query" @title="Query" @type="code" as |field|>
+    <field.Control @lang="sql" @height={{400}} />
   </form.Field>
 </Form>
 ```
@@ -502,8 +503,8 @@ Displays the time input or not. Defaults to true.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="start" @title="Start" @type="calendar" as |Control|>
-    <Control @includeTime={{false}} />
+  <form.Field @name="start" @title="Start" @type="calendar" as |field|>
+    <field.Control @includeTime={{false}} />
   </form.Field>
 </Form>
 ```
@@ -516,8 +517,8 @@ Displays date picker expanded on desktop. Defaults to true.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="start" @title="Start" @type="calendar" as |Control|>
-    <Control @expandedDatePickerOnDesktop={{false}} />
+  <form.Field @name="start" @title="Start" @type="calendar" as |field|>
+    <field.Control @expandedDatePickerOnDesktop={{false}} />
   </form.Field>
 </Form>
 ```
@@ -534,8 +535,8 @@ Sets the height of the composer.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="message" @title="Message" @type="composer" as |Control|>
-    <Control @height={{400}} />
+  <form.Field @name="message" @title="Message" @type="composer" as |field|>
+    <field.Control @height={{400}} />
   </form.Field>
 </Form>
 ```
@@ -548,8 +549,8 @@ Controls the display the composer preview. Defaults to `false`.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="message" @title="Message" @type="composer" as |Control|>
-    <Control @preview={{true}} />
+  <form.Field @name="message" @title="Message" @type="composer" as |field|>
+    <field.Control @preview={{true}} />
   </form.Field>
 </Form>
 ```
@@ -562,8 +563,8 @@ Renders an `<IconPicker />` component.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="icon" @title="Icon" @type="icon" as |Control|>
-    <Control />
+  <form.Field @name="icon" @title="Icon" @type="icon" as |field|>
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -591,9 +592,9 @@ handleUpload(upload, { set }) {
     @title="Upload"
     @type="image"
     @onSet={{this.handleUpload}}
-    as |Control|
+    as |field|
   >
-    <Control />
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -602,8 +603,8 @@ handleUpload(upload, { set }) {
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="upload" @title="Upload" @type="image" as |Control|>
-    <Control />
+  <form.Field @name="upload" @title="Upload" @type="image" as |field|>
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -643,12 +644,12 @@ The input variant is specified as part of the field's `@type` using the `input-`
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="input" as |Control|>
-    <Control />
+  <form.Field @name="email" @title="Email" @type="input" as |field|>
+    <field.Control />
   </form.Field>
 
-  <form.Field @name="age" @title="Age" @type="input-number" as |Control|>
-    <Control />
+  <form.Field @name="age" @title="Age" @type="input-number" as |field|>
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -661,8 +662,8 @@ Renders text before the input
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="input" as |Control|>
-    <Control @before="mailto:" />
+  <form.Field @name="email" @title="Email" @type="input" as |field|>
+    <field.Control @before="mailto:" />
   </form.Field>
 </Form>
 ```
@@ -675,8 +676,8 @@ Renders text after the input
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="input" as |Control|>
-    <Control @after=".com" />
+  <form.Field @name="email" @title="Email" @type="input" as |field|>
+    <field.Control @after=".com" />
   </form.Field>
 </Form>
 ```
@@ -713,15 +714,15 @@ Renders a div which will have for content the yielded content.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="menu" as |Control|>
-    <Control as |menu|>
+  <form.Field @name="email" @title="Email" @type="menu" as |field|>
+    <field.Control as |menu|>
       <menu.Item @value={{1}} @icon="pencil-alt">Edit</menu.Item>
       <menu.Divider />
       <menu.Container class="foo">
         Bar
       </menu.Container>
       <menu.Item @action={{this.doSomething}}>Something</menu.Item>
-    </Control>
+    </field.Control>
   </form.Field>
 </Form>
 ```
@@ -734,8 +735,8 @@ Renders an `<input />` of type password. This control also includes a button whi
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="secret" @title="Secret" @type="password" as |Control|>
-    <Control />
+  <form.Field @name="secret" @title="Secret" @type="password" as |field|>
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -756,8 +757,8 @@ Allows to customize the negative label.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="email" @title="Email" @type="question" as |Control|>
-    <Control @yesLabel="Correct" @noLabel="Wrong" />
+  <form.Field @name="email" @title="Email" @type="question" as |field|>
+    <field.Control @yesLabel="Correct" @noLabel="Wrong" />
   </form.Field>
 </Form>
 ```
@@ -770,12 +771,12 @@ Renders a list of radio buttons sharing a common name.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="foo" @title="Foo" @type="radio-group" as |Control|>
-    <Control as |radioGroup|>
+  <form.Field @name="foo" @title="Foo" @type="radio-group" as |field|>
+    <field.Control as |radioGroup|>
       <radioGroup.Radio @value="one">One</radioGroup.Radio>
       <radioGroup.Radio @value="two">Two</radioGroup.Radio>
       <radioGroup.Radio @value="three">Three</radioGroup.Radio>
-    </Control>
+    </field.Control>
   </form.Field>
 </Form>
 ```
@@ -790,12 +791,12 @@ Allows to render a title.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="foo" @title="Foo" @type="radio-group" as |Control|>
-    <Control as |RadioGroup|>
+  <form.Field @name="foo" @title="Foo" @type="radio-group" as |field|>
+    <field.Control as |RadioGroup|>
       <RadioGroup.Radio @value="one" as |radio|>
         <radio.Title>One title</radio.Title>
       </RadioGroup.Radio>
-    </Control>
+    </field.Control>
   </form.Field>
 </Form>
 ```
@@ -808,12 +809,12 @@ Allows to render a description.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="foo" @title="Foo" @type="radio-group" as |Control|>
-    <Control as |RadioGroup|>
+  <form.Field @name="foo" @title="Foo" @type="radio-group" as |field|>
+    <field.Control as |RadioGroup|>
       <RadioGroup.Radio @value="one" as |radio|>
         <radio.Description>One description</radio.Description>
       </RadioGroup.Radio>
-    </Control>
+    </field.Control>
   </form.Field>
 </Form>
 ```
@@ -826,12 +827,12 @@ Renders a `<select>` element.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="fruits" @title="Fruits" @type="select" as |Control|>
-    <Control as |select|>
+  <form.Field @name="fruits" @title="Fruits" @type="select" as |field|>
+    <field.Control as |select|>
       <select.Option @value="1">Mango</select.Option>
       <select.Option @value="2">Apple</select.Option>
       <select.Option @value="3">Coconut</select.Option>
-    </Control>
+    </field.Control>
   </form.Field>
 </Form>
 ```
@@ -852,9 +853,9 @@ Sets the height of the textarea.
     @name="description"
     @title="Description"
     @type="textarea"
-    as |Control|
+    as |field|
   >
-    <Control @height={{120}} />
+    <field.Control @height={{120}} />
   </form.Field>
 </Form>
 ```
@@ -869,8 +870,8 @@ Renders a `<DToggleSwitch />` component.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="allowed" @title="Allowed" @type="toggle" as |Control|>
-    <Control />
+  <form.Field @name="allowed" @title="Allowed" @type="toggle" as |field|>
+    <field.Control />
   </form.Field>
 </Form>
 ```
@@ -931,16 +932,16 @@ Specifies the type of alert. Allowed types: `success`, `error`, `warning`, or `i
 
 ```hbs
 <form.CheckboxGroup @title="Preferences" as |group|>
-  <group.Field @name="editable" @title="Editable" @type="checkbox" as |Control|>
-    <Control />
+  <group.Field @name="editable" @title="Editable" @type="checkbox" as |field|>
+    <field.Control />
   </group.Field>
   <group.Field
     @name="searchable"
     @title="Searchable"
     @type="checkbox"
-    as |Control|
+    as |field|
   >
-    <Control />
+    <field.Control />
   </group.Field>
 </form.CheckboxGroup>
 ```
@@ -1016,11 +1017,11 @@ Input group allows to group multiple inputs together on one line.
 ```hbs
 <Form as |form|>
   <form.InputGroup as |inputGroup|>
-    <inputGroup.Field @title="Foo" @name="foo" @type="input" as |Control|>
-      <Control />
+    <inputGroup.Field @title="Foo" @name="foo" @type="input" as |field|>
+      <field.Control />
     </inputGroup.Field>
-    <inputGroup.Field @title="Bar" @name="bar" @type="input" as |Control|>
-      <Control />
+    <inputGroup.Field @title="Bar" @name="bar" @type="input" as |field|>
+      <field.Control />
     </inputGroup.Field>
   </form.InputGroup>
 </Form>
@@ -1054,13 +1055,13 @@ To customize the `Reset` button further, you can pass additional parameters as n
 <Form as |form|>
   <form.Row as |row|>
     <row.Col @size={{4}}>
-      <form.Field @name="foo" @title="Foo" @type="input" as |Control|>
-        <Control />
+      <form.Field @name="foo" @title="Foo" @type="input" as |field|>
+        <field.Control />
       </form.Field>
     </row.Col>
     <row.Col @size={{8}}>
-      <form.Field @name="bar" @title="Bar" @type="input" as |Control|>
-        <Control />
+      <form.Field @name="bar" @title="Bar" @type="input" as |field|>
+        <field.Control />
       </form.Field>
     </row.Col>
   </form.Row>
@@ -1108,11 +1109,11 @@ The object component allows to handle an object in your form.
 ```hbs
 <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
   <form.Object @name="foo" as |object data|>
-    <object.Field @name="bar" @title="Bar" @type="input" as |Control|>
-      <Control />
+    <object.Field @name="bar" @title="Bar" @type="input" as |field|>
+      <field.Control />
     </object.Field>
-    <object.Field @name="baz" @title="Baz" @type="input" as |Control|>
-      <Control />
+    <object.Field @name="baz" @title="Baz" @type="input" as |field|>
+      <field.Control />
     </object.Field>
   </form.Object>
 </Form>
@@ -1138,8 +1139,8 @@ An object can accept a nested Object or Collection.
 <Form @data={{hash foo=(hash bar=(hash baz=1 bol=2))}} as |form|>
   <form.Object @name="foo" as |parentObject|>
     <parentObject.Object @name="bar" as |childObject data|>
-      <childObject.Field @name="baz" @title="Baz" @type="input" as |Control|>
-        <Control />
+      <childObject.Field @name="baz" @title="Baz" @type="input" as |field|>
+        <field.Control />
       </childObject.Field>
     </parentObject.Object>
   </form.Object>
@@ -1148,8 +1149,8 @@ An object can accept a nested Object or Collection.
 <Form @data={{hash foo=(hash bar=(array 1 2))}} as |form|>
   <form.Object @name="foo" as |parentObject|>
     <parentObject.Collection @name="bar" as |collection index|>
-      <collection.Field @title="Baz" @type="input" as |Control|>
-        <Control />
+      <collection.Field @title="Baz" @type="input" as |field|>
+        <field.Control />
       </collection.Field>
       <form.Button
         class={{concat "remove-" index}}
@@ -1169,8 +1170,8 @@ The collection component allows to handle array of objects in your form.
 ```hbs
 <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
   <form.Collection @name="foo" as |collection index|>
-    <collection.Field @name="bar" @title="Bar" @type="input" as |Control|>
-      <Control placeholder={{concat "item-" index}} />
+    <collection.Field @name="bar" @title="Bar" @type="input" as |field|>
+      <field.Control placeholder={{concat "item-" index}} />
     </collection.Field>
   </form.Collection>
 </Form>
@@ -1207,8 +1208,8 @@ If the shape of your data is an array of primitives, eg: [1, 2, 3], form-kit is 
 ```hbs
 <Form @data={{hash foo=(array 1 2)}} as |form|>
   <form.Collection @name="foo" as |collection|>
-    <collection.Field @title="Baz" @type="input" as |Control|>
-      <Control />
+    <collection.Field @title="Baz" @type="input" as |field|>
+      <field.Control />
     </collection.Field>
   </form.Collection>
 </Form>
@@ -1227,8 +1228,8 @@ A collection can accept a nested Object or Collection.
 >
   <form.Collection @name="foo" as |collection|>
     <collection.Object @name="bar" as |object|>
-      <object.Field @name="baz" @title="Baz" @type="input" as |Control|>
-        <Control />
+      <object.Field @name="baz" @title="Baz" @type="input" as |field|>
+        <field.Control />
       </object.Field>
     </collection.Object>
   </form.Collection>
@@ -1242,8 +1243,8 @@ A collection can accept a nested Object or Collection.
 >
   <form.Collection @name="foo" as |parent parentIndex|>
     <parent.Collection @name="bar" as |child childIndex|>
-      <child.Field @name="baz" @title="Baz" @type="input" as |Control|>
-        <Control />
+      <child.Field @name="baz" @title="Baz" @type="input" as |field|>
+        <field.Control />
       </child.Field>
     </parent.Collection>
   </form.Collection>
@@ -1263,8 +1264,8 @@ The `<Form />` component yielded object has a `addItemToCollection` function tha
   </form.Button>
 
   <form.Collection @name="foo" as |collection index|>
-    <collection.Field @name="bar" @title="Bar" @type="input" as |Control|>
-      <Control placeholder={{concat "item-" index}} />
+    <collection.Field @name="bar" @title="Bar" @type="input" as |field|>
+      <field.Control placeholder={{concat "item-" index}} />
     </collection.Field>
   </form.Collection>
 </Form>
@@ -1279,8 +1280,8 @@ The `<Collection />` component yielded object has a `remove` function that you c
 ```hbs
 <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
   <form.Collection @name="foo" as |collection index|>
-    <collection.Field @name="bar" @title="Bar" @type="input" as |Control|>
-      <Control />
+    <collection.Field @name="bar" @title="Bar" @type="input" as |field|>
+      <field.Control />
       <form.Button @action={{fn collection.remove index}}>
         Remove
       </form.Button>
@@ -1302,8 +1303,8 @@ The value must be `"yes"`, `"on"`, `true`, `1`, or `"true"`. Useful for checkbox
 **Example**
 
 ```hbs
-<form.Field @name="terms" @type="checkbox" @validation="accepted" as |Control|>
-  <Control />
+<form.Field @name="terms" @type="checkbox" @validation="accepted" as |field|>
+  <field.Control />
 </form.Field>
 ```
 
@@ -1318,9 +1319,9 @@ Checks that the input's value is over a given length, or between two length valu
   @name="username"
   @type="input"
   @validation="length:5,16"
-  as |Control|
+  as |field|
 >
-  <Control />
+  <field.Control />
 </form.Field>
 ```
 
@@ -1333,8 +1334,8 @@ Checks if the input is a valid number as evaluated by `isNaN()`.
 **Example**
 
 ```hbs
-<form.Field @name="amount" @type="input" @validation="number" as |Control|>
-  <Control />
+<form.Field @name="amount" @type="input" @validation="number" as |field|>
+  <field.Control />
 </form.Field>
 ```
 
@@ -1345,8 +1346,8 @@ Checks if the input is empty.
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input" @validation="required" as |Control|>
-  <Control />
+<form.Field @name="username" @type="input" @validation="required" as |field|>
+  <field.Control />
 </form.Field>
 ```
 
@@ -1357,8 +1358,8 @@ Checks if the input value appears to be a properly formatted URL including the p
 **Example**
 
 ```hbs
-<form.Field @name="endpoint" @type="input-url" @validation="url" as |Control|>
-  <Control />
+<form.Field @name="endpoint" @type="input-url" @validation="url" as |field|>
+  <field.Control />
 </form.Field>
 ```
 
@@ -1369,8 +1370,8 @@ Checks if the input value is an integer.
 **Example**
 
 ```hbs
-<form.Field @name="age" @type="input-number" @validation="integer" as |Control|>
-  <Control />
+<form.Field @name="age" @type="input-number" @validation="integer" as |field|>
+  <field.Control />
 </form.Field>
 ```
 
@@ -1385,9 +1386,9 @@ Checks if the calendar data is after or equal to the specified date. Format must
   @name="start"
   @type="calendar"
   @validation="dateAfterOrEqual:2022-02-01"
-  as |Control|
+  as |field|
 >
-  <Control />
+  <field.Control />
 </form.Field>
 ```
 
@@ -1402,9 +1403,9 @@ Checks if the calendar data is before or equal to the specified date. Format mus
   @name="start"
   @type="calendar"
   @validation="dateBeforeOrEqual:2022-02-01"
-  as |Control|
+  as |field|
 >
-  <Control />
+  <field.Control />
 </form.Field>
 ```
 
@@ -1419,9 +1420,9 @@ Rules can be combined using the pipe operator: `|`.
   @name="username"
   @type="input"
   @validation="required|length:5,16"
-  as |Control|
+  as |field|
 >
-  <Control />
+  <field.Control />
 </form.Field>
 ```
 
@@ -1561,8 +1562,8 @@ FormKit works seamlessly with `<PluginOutlet />`. You can use plugin outlets ins
 Then, in your connector, you can use the outlet arguments to add custom fields:
 
 ```hbs title="connectors/above-foo-form/bar-input.hbs"
-<@outletArgs.form.Field @name="bar" @type="input" as |Control|>
-  <Control />
+<@outletArgs.form.Field @name="bar" @type="input" as |field|>
+  <field.Control />
 </@outletArgs.form.Field>
 ```
 
@@ -1572,8 +1573,8 @@ All FormKit components propagate attributes, allowing you to set classes and dat
 
 ```hbs
 <Form class="my-form" as |form|>
-  <form.Field @name="foo" @type="input" class="my-field" as |Control|>
-    <Control class="my-control" />
+  <form.Field @name="foo" @type="input" class="my-field" as |field|>
+    <field.Control class="my-control" />
   </form.Field>
 </Form>
 ```
@@ -1584,10 +1585,10 @@ Creating a custom control is straightforward with the properties yielded by `for
 
 ```hbs
 <Form as |form|>
-  <form.Field @type="custom" class="my-field" as |Control field|>
-    <Control>
+  <form.Field @type="custom" class="my-field" as |field|>
+    <field.Control>
       <MyCustomControl id={{field.id}} @onChange={{field.set}} />
-    </Control>
+    </field.Control>
   </form.Field>
 </Form>
 ```
@@ -1600,12 +1601,13 @@ Creating a custom control is straightforward with the properties yielded by `for
 
 ### Available Parameters on `field`
 
-| Name    | Description                                    |
-| ------- | ---------------------------------------------- |
-| `id`    | ID to be used on the control for accessibility |
-| `name`  | Name of the field                              |
-| `value` | The value of the field                         |
-| `set`   | Function to set the field's value              |
+| Name      | Description                                          |
+| --------- | ---------------------------------------------------- |
+| `Control` | Contextual component for the control set by `@type`  |
+| `id`      | ID to be used on the control for accessibility       |
+| `name`    | Name of the field                                    |
+| `value`   | The value of the field                               |
+| `set`     | Function to set the field's value                    |
 
 # Custom Validation
 
@@ -1890,8 +1892,8 @@ test("fill in input", async function (assert) {
   await render(
     <template>
       <Form class="my-form" as |form data|>
-        <form.Field @name="foo" @type="input" as |Control|>
-          <Control />
+        <form.Field @name="foo" @type="input" as |field|>
+          <field.Control />
         </form.Field>
       </Form>
     </template>

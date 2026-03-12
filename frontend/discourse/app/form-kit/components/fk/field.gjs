@@ -130,9 +130,15 @@ export default class FKField extends Component {
   }
 
   @action
+  explicitYield(field) {
+    field.Control = this.controlFor(field);
+    return field;
+  }
+
+  @action
   legacyYield(field) {
     deprecated(
-      `<form.Field> without @type is deprecated. Use \`<form.Field @type="..." as |Control field|>\` instead of \`<form.Field as |field|><field.Input />\`.`,
+      `<form.Field> without @type is deprecated. Use \`<form.Field @type="..." as |field|><field.Control />\` instead of \`<form.Field as |field|><field.Input />\`.`,
       {
         id: "discourse.form-kit.legacy-field-yield",
         since: "2026.3",
@@ -221,7 +227,7 @@ export default class FKField extends Component {
                 }}
               >
                 {{#if field.hasExplicitType}}
-                  {{yield (this.controlFor field) field}}
+                  {{yield (this.explicitYield field)}}
                 {{else}}
                   {{yield (this.legacyYield field)}}
                 {{/if}}

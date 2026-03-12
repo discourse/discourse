@@ -410,9 +410,9 @@ export default class AgentEditor extends Component {
           @disabled={{data.system}}
           @format="large"
           @type="input"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -422,9 +422,9 @@ export default class AgentEditor extends Component {
           @disabled={{data.system}}
           @format="large"
           @type="textarea"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -434,9 +434,9 @@ export default class AgentEditor extends Component {
           @disabled={{data.system}}
           @format="large"
           @type="textarea"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <AiAgentResponseFormatEditor @form={{form}} @data={{data}} />
@@ -447,16 +447,16 @@ export default class AgentEditor extends Component {
           @tooltip={{i18n "discourse_ai.ai_agent.default_llm_help"}}
           @format="large"
           @type="custom"
-          as |Control field|
+          as |field|
         >
-          <Control>
+          <field.Control>
             <AiLlmSelector
               @value={{field.value}}
               @llms={{@agents.resultSetMeta.llms}}
               @onChange={{field.set}}
               class="ai-agent-editor__llms"
             />
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -464,15 +464,15 @@ export default class AgentEditor extends Component {
           @title={{i18n "discourse_ai.ai_agent.allowed_groups"}}
           @format="large"
           @type="custom"
-          as |Control field|
+          as |field|
         >
-          <Control>
+          <field.Control>
             <GroupChooser
               @value={{data.allowed_group_ids}}
               @content={{this.allGroups}}
               @onChange={{field.set}}
             />
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -482,9 +482,9 @@ export default class AgentEditor extends Component {
           @showTitle={{false}}
           @format="large"
           @type="checkbox"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         {{#if data.vision_enabled}}
@@ -494,15 +494,15 @@ export default class AgentEditor extends Component {
             @onSet={{this.onChangeMaxPixels}}
             @format="large"
             @type="select"
-            as |Control|
+            as |field|
           >
-            <Control @includeNone={{false}} as |select|>
+            <field.Control @includeNone={{false}} as |select|>
               {{#each this.maxPixelValues as |pixelValue|}}
                 <select.Option
                   @value={{pixelValue.id}}
                 >{{pixelValue.name}}</select.Option>
               {{/each}}
-            </Control>
+            </field.Control>
           </form.Field>
         {{/if}}
 
@@ -518,9 +518,9 @@ export default class AgentEditor extends Component {
             @disabled={{data.system}}
             @format="large"
             @type="input-number"
-            as |Control|
+            as |field|
           >
-            <Control step="any" lang="en" />
+            <field.Control step="any" lang="en" />
           </form.Field>
 
           <form.Field
@@ -530,9 +530,9 @@ export default class AgentEditor extends Component {
             @disabled={{data.system}}
             @format="large"
             @type="input-number"
-            as |Control|
+            as |field|
           >
-            <Control step="any" lang="en" />
+            <field.Control step="any" lang="en" />
           </form.Field>
         {{/if}}
 
@@ -568,16 +568,16 @@ export default class AgentEditor extends Component {
             @title={{i18n "discourse_ai.ai_agent.tools"}}
             @format="large"
             @type="custom"
-            as |Control field|
+            as |field|
           >
-            <Control>
+            <field.Control>
               <AiToolSelector
                 @value={{field.value}}
                 @disabled={{data.system}}
                 @onChange={{fn this.updateToolNames form data}}
                 @content={{@agents.resultSetMeta.tools}}
               />
-            </Control>
+            </field.Control>
           </form.Field>
 
           {{#if (gt data.tools.length 0)}}
@@ -657,16 +657,16 @@ export default class AgentEditor extends Component {
               @title={{i18n "discourse_ai.ai_agent.forced_tools"}}
               @format="large"
               @type="custom"
-              as |Control field|
+              as |field|
             >
-              <Control>
+              <field.Control>
                 <AiToolSelector
                   @value={{field.value}}
                   @disabled={{data.system}}
                   @onChange={{field.set}}
                   @content={{this.availableForcedTools data.tools}}
                 />
-              </Control>
+              </field.Control>
             </form.Field>
           {{/if}}
 
@@ -676,13 +676,13 @@ export default class AgentEditor extends Component {
               @title={{i18n "discourse_ai.ai_agent.forced_tool_strategy"}}
               @format="large"
               @type="select"
-              as |Control|
+              as |field|
             >
-              <Control @includeNone={{false}} as |select|>
+              <field.Control @includeNone={{false}} as |select|>
                 {{#each this.forcedToolStrategies as |fts|}}
                   <select.Option @value={{fts.id}}>{{fts.name}}</select.Option>
                 {{/each}}
-              </Control>
+              </field.Control>
             </form.Field>
           {{/if}}
 
@@ -693,13 +693,13 @@ export default class AgentEditor extends Component {
             @format="large"
             @onSet={{this.onExecutionModeChange}}
             @type="select"
-            as |Control|
+            as |field|
           >
-            <Control @includeNone={{false}} as |select|>
+            <field.Control @includeNone={{false}} as |select|>
               {{#each this.executionModes as |mode|}}
                 <select.Option @value={{mode.id}}>{{mode.name}}</select.Option>
               {{/each}}
-            </Control>
+            </field.Control>
           </form.Field>
 
           {{#if (eq data.execution_mode "agentic")}}
@@ -709,9 +709,9 @@ export default class AgentEditor extends Component {
               @tooltip={{i18n "discourse_ai.ai_agent.max_turn_tokens_help"}}
               @format="large"
               @type="input-number"
-              as |Control|
+              as |field|
             >
-              <Control @min={{1}} lang="en" />
+              <field.Control @min={{1}} lang="en" />
             </form.Field>
 
             <form.Field
@@ -722,9 +722,9 @@ export default class AgentEditor extends Component {
               }}
               @format="large"
               @type="input-number"
-              as |Control|
+              as |field|
             >
-              <Control @min={{20}} @max={{99}} lang="en" />
+              <field.Control @min={{20}} @max={{99}} lang="en" />
             </form.Field>
           {{/if}}
 
@@ -735,9 +735,9 @@ export default class AgentEditor extends Component {
               @tooltip={{i18n "discourse_ai.ai_agent.max_context_posts_help"}}
               @format="large"
               @type="input-number"
-              as |Control|
+              as |field|
             >
-              <Control lang="en" />
+              <field.Control lang="en" />
             </form.Field>
           {{/unless}}
 
@@ -757,9 +757,9 @@ export default class AgentEditor extends Component {
             @showTitle={{false}}
             @format="large"
             @type="checkbox"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
         </form.Section>
 
@@ -770,9 +770,9 @@ export default class AgentEditor extends Component {
               @title={{i18n "discourse_ai.rag.uploads.title"}}
               @format="full"
               @type="custom"
-              as |Control field|
+              as |field|
             >
-              <Control>
+              <field.Control>
                 <RagUploader
                   @target={{data}}
                   @targetName="AiAgent"
@@ -780,7 +780,7 @@ export default class AgentEditor extends Component {
                   @onRemove={{fn this.removeUpload form data field.value}}
                   @allowImages={{@agents.resultSetMeta.settings.rag_images_enabled}}
                 />
-              </Control>
+              </field.Control>
             </form.Field>
 
             <RagOptionsFk
@@ -797,9 +797,9 @@ export default class AgentEditor extends Component {
                 }}
                 @format="large"
                 @type="input-number"
-                as |Control|
+                as |field|
               >
-                <Control step="any" lang="en" />
+                <field.Control step="any" lang="en" />
               </form.Field>
 
               <form.Field
@@ -812,16 +812,16 @@ export default class AgentEditor extends Component {
                 }}
                 @format="large"
                 @type="custom"
-                as |Control field|
+                as |field|
               >
-                <Control>
+                <field.Control>
                   <AiLlmSelector
                     @value={{field.value}}
                     @llms={{@agents.resultSetMeta.llms}}
                     @onChange={{field.set}}
                     class="ai-agent-editor__llms"
                   />
-                </Control>
+                </field.Control>
               </form.Field>
             </RagOptionsFk>
           </form.Section>
@@ -833,9 +833,9 @@ export default class AgentEditor extends Component {
             @title={{i18n "discourse_ai.ai_agent.enabled"}}
             @onSet={{fn this.toggleEnabled data}}
             @type="toggle"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
 
           <form.Field
@@ -844,9 +844,9 @@ export default class AgentEditor extends Component {
             @onSet={{fn this.togglePriority data}}
             @tooltip={{i18n "discourse_ai.ai_agent.priority_help"}}
             @type="toggle"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
 
           {{#if @model.isNew}}
@@ -859,9 +859,9 @@ export default class AgentEditor extends Component {
                 @showTitle={{false}}
                 @format="large"
                 @type="checkbox"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </form.Field>
             {{/if}}
 
@@ -903,9 +903,9 @@ export default class AgentEditor extends Component {
                 @showTitle={{false}}
                 @format="large"
                 @type="checkbox"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </form.Field>
 
               <form.Field
@@ -917,9 +917,9 @@ export default class AgentEditor extends Component {
                 @showTitle={{false}}
                 @format="large"
                 @type="checkbox"
-                as |Control|
+                as |field|
               >
-                <Control />
+                <field.Control />
               </form.Field>
 
               {{#if this.chatPluginEnabled}}
@@ -934,9 +934,9 @@ export default class AgentEditor extends Component {
                   @showTitle={{false}}
                   @format="large"
                   @type="checkbox"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
 
                 <form.Field
@@ -950,9 +950,9 @@ export default class AgentEditor extends Component {
                   @showTitle={{false}}
                   @format="large"
                   @type="checkbox"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
               {{/if}}
             {{/if}}

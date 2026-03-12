@@ -58,9 +58,9 @@ export default <template>
                   @validation="required"
                   @format="large"
                   @type="input"
-                  as |Control|
+                  as |field|
                 >
-                  <Control />
+                  <field.Control />
                 </form.Field>
                 <form.Actions>
                   <form.Submit @label="explorer.create" @icon="plus" />

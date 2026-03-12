@@ -20,9 +20,9 @@ module(
               @type="input-number"
               @name="foo"
               @title="Foo"
-              as |Control|
+              as |field|
             >
-              <Control step="any" lang="en" />
+              <field.Control step="any" lang="en" />
             </form.Field>
           </Form>
         </template>
@@ -50,10 +50,10 @@ module(
               @type="input-number"
               @name="foo"
               @title="Foo"
-              as |Control|
+              as |field|
             >
 
-              <Control />
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -77,9 +77,9 @@ module(
               @name="foo"
               @title="Foo"
               @validation="required"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </Form>
         </template>

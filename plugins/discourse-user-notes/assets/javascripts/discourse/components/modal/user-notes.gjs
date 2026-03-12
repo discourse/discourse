@@ -95,9 +95,9 @@ export default class UserNotesModal extends Component {
           @format="full"
           @validation="required:trim"
           @type="textarea"
-          as |Control|
+          as |field|
         >
-          <Control />
+          <field.Control />
         </form.Field>
 
         <form.Actions>

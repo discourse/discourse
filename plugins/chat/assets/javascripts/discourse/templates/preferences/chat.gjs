@@ -179,9 +179,9 @@ export default class Chat extends Component {
         @name="chat_enabled"
         @format="large"
         @type="checkbox"
-        as |Control field|
+        as |field|
       >
-        <Control @value={{field.value}} />
+        <field.Control @value={{field.value}} />
       </form.Field>
 
       <form.Section @title={{i18n "chat.chat_notifications_title"}}>
@@ -190,18 +190,18 @@ export default class Chat extends Component {
           @name="only_chat_push_notifications"
           @format="large"
           @type="checkbox"
-          as |Control field|
+          as |field|
         >
-          <Control @value={{field.value}} />
+          <field.Control @value={{field.value}} />
         </form.Field>
         <form.Field
           @title={{i18n "chat.ignore_channel_wide_mention.title"}}
           @name="ignore_channel_wide_mention"
           @format="large"
           @type="checkbox"
-          as |Control field|
+          as |field|
         >
-          <Control @value={{field.value}} />
+          <field.Control @value={{field.value}} />
         </form.Field>
 
         <form.Field
@@ -210,15 +210,15 @@ export default class Chat extends Component {
           @format="large"
           @onSet={{this.handleChatSoundSet}}
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control @includeNone={{true}} as |select|>
+          <field.Control @includeNone={{true}} as |select|>
             {{#each this.chatSounds as |sound|}}
               <select.Option @value={{sound.value}}>
                 {{sound.name}}
               </select.Option>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -226,30 +226,30 @@ export default class Chat extends Component {
           @name="chat_header_indicator_preference"
           @format="large"
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control @includeNone={{false}} as |select|>
+          <field.Control @includeNone={{false}} as |select|>
             {{#each this.headerIndicatorOptions as |option|}}
               <select.Option @value={{option.value}}>
                 {{option.name}}
               </select.Option>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
         <form.Field
           @title={{i18n "chat.separate_sidebar_mode.title"}}
           @name="chat_separate_sidebar_mode"
           @format="large"
           @type="select"
-          as |Control|
+          as |field|
         >
-          <Control @includeNone={{false}} as |select|>
+          <field.Control @includeNone={{false}} as |select|>
             {{#each this.chatSeparateSidebarModeOptions as |option|}}
               <select.Option @value={{option.value}}>
                 {{option.name}}
               </select.Option>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
       </form.Section>
       <form.Section @title={{i18n "chat.personalization_title"}}>
@@ -258,15 +258,15 @@ export default class Chat extends Component {
           @name="chat_quick_reaction_type"
           @format="large"
           @type="radio-group"
-          as |Control|
+          as |field|
         >
-          <Control as |radioGroup|>
+          <field.Control as |radioGroup|>
             {{#each this.chatQuickReactionTypes as |option|}}
               <radioGroup.Radio @value={{option.value}}>
                 {{option.label}}
               </radioGroup.Radio>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
 
         {{#if (eq data.chat_quick_reaction_type "custom")}}
@@ -275,9 +275,9 @@ export default class Chat extends Component {
             @name="chat_quick_reactions_custom"
             @format="large"
             @type="custom"
-            as |Control field|
+            as |field|
           >
-            <Control>
+            <field.Control>
               {{#each data.chat_quick_reactions_custom as |emoji index|}}
                 <EmojiPicker
                   @emoji={{emoji}}
@@ -286,7 +286,7 @@ export default class Chat extends Component {
                   @didSelectEmoji={{fn this.handleEmojiSet index field}}
                 />
               {{/each}}
-            </Control>
+            </field.Control>
           </form.Field>
         {{/if}}
         <form.Field
@@ -294,15 +294,15 @@ export default class Chat extends Component {
           @name="chat_send_shortcut"
           @format="large"
           @type="radio-group"
-          as |Control|
+          as |field|
         >
-          <Control as |radioGroup|>
+          <field.Control as |radioGroup|>
             {{#each this.chatSendShortcutOptions as |option|}}
               <radioGroup.Radio @value={{option.value}}>
                 {{option.label}}
               </radioGroup.Radio>
             {{/each}}
-          </Control>
+          </field.Control>
         </form.Field>
       </form.Section>
       <div class="save-controls">

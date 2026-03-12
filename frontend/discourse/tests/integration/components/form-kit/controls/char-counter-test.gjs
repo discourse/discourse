@@ -21,9 +21,9 @@ module(
               @name="foo"
               @title="Foo"
               @validation="length:0,5"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </Form>
         </template>

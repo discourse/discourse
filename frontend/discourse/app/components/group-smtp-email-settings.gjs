@@ -120,9 +120,9 @@ export default class GroupSmtpEmailSettings extends Component {
               @title={{i18n "groups.manage.email.credentials.smtp_server"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_server"}}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
@@ -132,9 +132,9 @@ export default class GroupSmtpEmailSettings extends Component {
               @title={{i18n "groups.manage.email.credentials.username"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "email_username"}}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
 
@@ -145,9 +145,9 @@ export default class GroupSmtpEmailSettings extends Component {
               @title={{i18n "groups.manage.email.credentials.smtp_port"}}
               @validation="required|integer"
               @onSet={{fn this.resetTestingSettings "smtp_port"}}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
@@ -157,9 +157,9 @@ export default class GroupSmtpEmailSettings extends Component {
               @title={{i18n "groups.manage.email.credentials.password"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "email_password"}}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
 
@@ -170,15 +170,15 @@ export default class GroupSmtpEmailSettings extends Component {
               @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_ssl_mode"}}
-              as |Control|
+              as |field|
             >
-              <Control as |select|>
+              <field.Control as |select|>
                 {{#each this.sslModes as |sslMode|}}
                   <select.Option
                     @value={{sslMode.value}}
                   >{{sslMode.name}}</select.Option>
                 {{/each}}
-              </Control>
+              </field.Control>
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
@@ -189,9 +189,9 @@ export default class GroupSmtpEmailSettings extends Component {
               @description={{i18n
                 "groups.manage.email.settings.from_alias_hint"
               }}
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           </row.Col>
         </form.Row>

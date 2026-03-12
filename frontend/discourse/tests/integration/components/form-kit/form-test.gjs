@@ -30,13 +30,8 @@ module("Integration | Component | FormKit | Form", function (hooks) {
           >Add</form.Button>
 
           <form.Collection @name="foo" as |collection|>
-            <collection.Field
-              @type="input"
-              @name="bar"
-              @title="Bar"
-              as |Control|
-            >
-              <Control />
+            <collection.Field @type="input" @name="bar" @title="Bar" as |field|>
+              <field.Control />
             </collection.Field>
           </form.Collection>
         </Form>
@@ -87,18 +82,18 @@ module("Integration | Component | FormKit | Form", function (hooks) {
             @name="foo"
             @title="Foo"
             @validation="required"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
           <form.Field
             @type="input"
             @name="bar"
             @title="Bar"
             @validation="required"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
           <form.Submit />
         </Form>
@@ -194,8 +189,8 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @data={{model}} @onRegisterApi={{registerApi}} as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" as |Control|>
-            <Control />
+          <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -242,12 +237,12 @@ module("Integration | Component | FormKit | Form", function (hooks) {
             @title="Foo"
             @name="foo"
             @validation="required"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
-          <form.Field @type="input" @title="Bar" @name="bar" as |Control|>
-            <Control />
+          <form.Field @type="input" @title="Bar" @name="bar" as |field|>
+            <field.Control />
           </form.Field>
           <form.Button class="set-bar" @action={{fn form.set "bar" 2}} />
         </Form>
@@ -273,8 +268,8 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @data={{data}} as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" as |Control|>
-            <Control />
+          <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+            <field.Control />
           </form.Field>
           <form.Button class="set-foo" @action={{fn form.set "foo" 2}} />
         </Form>
@@ -360,9 +355,9 @@ module("Integration | Component | FormKit | Form", function (hooks) {
               @title="Foo"
               @name="foo"
               @validation="required"
-              as |Control|
+              as |field|
             >
-              <Control />
+              <field.Control />
             </form.Field>
           {{/if}}
 
@@ -416,9 +411,9 @@ module("Integration | Component | FormKit | Form", function (hooks) {
             @name="foo"
             @title="Foo"
             @validation="required"
-            as |Control|
+            as |field|
           >
-            <Control />
+            <field.Control />
           </form.Field>
           <form.Submit />
         </Form>
@@ -440,10 +435,10 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await render(
       <template>
         <Form @validate={{validate}} as |form|>
-          <form.Field @name="foo" @type="custom" @title="Foo" as |Control|>
-            <Control>
+          <form.Field @name="foo" @type="custom" @title="Foo" as |field|>
+            <field.Control>
               <div class="not-focusable">Custom content</div>
-            </Control>
+            </field.Control>
           </form.Field>
           <form.Submit />
         </Form>
