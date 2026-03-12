@@ -18,12 +18,12 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Select as |select|>
+            <form.Field @type="select" @name="foo" @title="Foo" as |field|>
+              <field.Control as |select|>
                 <select.Option @value="option-1">Option 1</select.Option>
                 <select.Option @value="option-2">Option 2</select.Option>
                 <select.Option @value="option-3">Option 3</select.Option>
-              </field.Select>
+              </field.Control>
             </form.Field>
           </Form>
         </template>
@@ -45,10 +45,16 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-              <field.Select as |select|>
+            <form.Field
+              @type="select"
+              @name="foo"
+              @title="Foo"
+              @disabled={{true}}
+              as |field|
+            >
+              <field.Control as |select|>
                 <select.Option @value="option-1">Option 1</select.Option>
-              </field.Select>
+              </field.Control>
             </form.Field>
           </Form>
         </template>
@@ -62,12 +68,13 @@ module(
         <template>
           <Form as |form|>
             <form.Field
+              @type="select"
               @name="foo"
               @title="Foo"
               @validation="required"
               as |field|
             >
-              <field.Select />
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -82,12 +89,13 @@ module(
         <template>
           <Form @data={{hash foo="1"}} as |form|>
             <form.Field
+              @type="select"
               @name="foo"
               @title="Foo"
               @validation="required"
               as |field|
             >
-              <field.Select />
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -104,8 +112,8 @@ module(
       await render(
         <template>
           <Form @data={{hash foo="1"}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Select />
+            <form.Field @type="select" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -122,8 +130,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Select />
+            <form.Field @type="select" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -140,8 +148,8 @@ module(
       await render(
         <template>
           <Form @data={{hash foo="1"}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Select @includeNone={{false}} />
+            <form.Field @type="select" @name="foo" @title="Foo" as |field|>
+              <field.Control @includeNone={{false}} />
             </form.Field>
           </Form>
         </template>

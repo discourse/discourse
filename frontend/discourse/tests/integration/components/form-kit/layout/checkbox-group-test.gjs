@@ -13,11 +13,21 @@ module(
         <template>
           <Form as |form|>
             <form.CheckboxGroup as |checkboxGroup|>
-              <checkboxGroup.Field @name="foo" @title="Foo" as |field|>
-                <field.Checkbox />
+              <checkboxGroup.Field
+                @type="checkbox"
+                @name="foo"
+                @title="Foo"
+                as |field|
+              >
+                <field.Control />
               </checkboxGroup.Field>
-              <checkboxGroup.Field @name="bar" @title="Bar" as |field|>
-                <field.Checkbox>A description</field.Checkbox>
+              <checkboxGroup.Field
+                @type="checkbox"
+                @name="bar"
+                @title="Bar"
+                as |field|
+              >
+                <field.Control>A description</field.Control>
               </checkboxGroup.Field>
             </form.CheckboxGroup>
           </Form>
@@ -34,8 +44,13 @@ module(
         <template>
           <Form as |form|>
             <form.CheckboxGroup @title="bar" as |checkboxGroup|>
-              <checkboxGroup.Field @name="foo" @title="Foo" as |field|>
-                <field.Checkbox />
+              <checkboxGroup.Field
+                @type="checkbox"
+                @name="foo"
+                @title="Foo"
+                as |field|
+              >
+                <field.Control />
               </checkboxGroup.Field>
             </form.CheckboxGroup>
           </Form>
@@ -52,8 +67,13 @@ module(
         <template>
           <Form as |form|>
             <form.CheckboxGroup @description="bar" as |checkboxGroup|>
-              <checkboxGroup.Field @name="foo" @title="Foo" as |field|>
-                <field.Checkbox />
+              <checkboxGroup.Field
+                @type="checkbox"
+                @name="foo"
+                @title="Foo"
+                as |field|
+              >
+                <field.Control />
               </checkboxGroup.Field>
             </form.CheckboxGroup>
           </Form>

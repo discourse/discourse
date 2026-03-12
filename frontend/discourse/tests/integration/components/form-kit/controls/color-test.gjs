@@ -16,8 +16,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -35,8 +35,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -49,8 +49,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color @allowNamedColors={{true}} />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @allowNamedColors={{true}} />
             </form.Field>
           </Form>
         </template>
@@ -67,8 +67,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color @colors={{colors}} />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @colors={{colors}} />
             </form.Field>
           </Form>
         </template>
@@ -90,8 +90,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color @colors={{colors}} @usedColors={{usedColors}} />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @colors={{colors}} @usedColors={{usedColors}} />
             </form.Field>
           </Form>
         </template>
@@ -110,8 +110,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color @colors={{colors}} @usedColors={{usedColors}} />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @colors={{colors}} @usedColors={{usedColors}} />
             </form.Field>
           </Form>
         </template>
@@ -131,12 +131,13 @@ module(
         <template>
           <Form as |form|>
             <form.Field
+              @type="color"
               @name="color"
               @title="Color"
               @disabled={{true}}
               as |field|
             >
-              <field.Color @colors={{colors}} />
+              <field.Control @colors={{colors}} />
             </form.Field>
           </Form>
         </template>
@@ -155,8 +156,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -177,8 +178,8 @@ module(
       await render(
         <template>
           <Form @data={{data}} as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color @allowNamedColors={{true}} />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @allowNamedColors={{true}} />
             </form.Field>
           </Form>
         </template>
@@ -195,8 +196,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color @fallbackValue="AABBCC" />
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @fallbackValue="AABBCC" />
             </form.Field>
           </Form>
         </template>
@@ -217,8 +218,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="color" @title="Color" as |field|>
-              <field.Color
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control
                 @colors={{colors}}
                 @collapseSwatches={{true}}
                 @collapseSwatchesLabel="Pick a preset"
