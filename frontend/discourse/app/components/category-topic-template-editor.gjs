@@ -14,6 +14,15 @@ export default class CategoryTopicTemplateEditor extends Component {
   @service siteSettings;
 
   @tracked _showFormTemplateOverride;
+  @tracked _localTopicTemplate;
+
+  get topicTemplate() {
+    return this._localTopicTemplate ?? this.args.category?.topic_template;
+  }
+
+  set topicTemplate(value) {
+    this._localTopicTemplate = value;
+  }
 
   get showInsertLinkButton() {
     if (this.args.showInsertLinkButton === undefined) {
@@ -26,9 +35,9 @@ export default class CategoryTopicTemplateEditor extends Component {
     if (this._showFormTemplateOverride !== undefined) {
       return this._showFormTemplateOverride;
     }
-    return Boolean(
-      this.args.category && this.args.category.get("form_template_ids.length")
-    );
+
+    const formTemplateIds = this.args.category?.form_template_ids;
+    return Boolean(formTemplateIds && formTemplateIds.length > 0);
   }
 
   set showFormTemplate(value) {
@@ -49,19 +58,31 @@ export default class CategoryTopicTemplateEditor extends Component {
 
     if (!this.showFormTemplate) {
       // Clear associated form templates if switching to freeform
-      this.args.category.set("form_template_ids", []);
-    }
-
-    if (this.args.onChange) {
-      this.args.onChange();
+      if (this.args.onChange) {
+        this.args.onChange("form_template_ids", []);
+      } else {
+        this.args.category.set("form_template_ids", []);
+      }
     }
   }
 
   @action
   handleFormTemplateChange(value) {
-    this.args.category.set("form_template_ids", value);
     if (this.args.onChange) {
-      this.args.onChange();
+      this.args.onChange("form_template_ids", value);
+    } else {
+      this.args.category.set("form_template_ids", value);
+    }
+  }
+
+  @action
+  handleTopicTemplateChange(event) {
+    const value = event.target.value;
+    this.topicTemplate = value;
+    if (this.args.onChange) {
+      this.args.onChange("topic_template", value);
+    } else {
+      this.args.category.set("topic_template", value);
     }
   }
 
@@ -96,14 +117,16 @@ export default class CategoryTopicTemplateEditor extends Component {
         </div>
       {{else}}
         <DEditor
-          @value={{@category.topic_template}}
+          @value={{this.topicTemplate}}
           @showLink={{this.showInsertLinkButton}}
+          @change={{this.handleTopicTemplateChange}}
         />
       {{/if}}
     {{else}}
       <DEditor
-        @value={{@category.topic_template}}
+        @value={{this.topicTemplate}}
         @showLink={{this.showInsertLinkButton}}
+        @change={{this.handleTopicTemplateChange}}
       />
     {{/if}}
   </template>
