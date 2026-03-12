@@ -28,7 +28,7 @@ discourse_solved:
     validator: "AtLeastOneGroupValidator"
   empty_box_on_unsolved:
     default: false
-    client: true
+    hidden: true
   solved_quote_length:
     default: 300
     client: false
@@ -41,6 +41,7 @@ discourse_solved:
     client: true
   notify_on_staff_accept_solved:
     default: false
+    hidden: true
   disable_solved_education_message:
     default: false
   accept_solutions_topic_author:

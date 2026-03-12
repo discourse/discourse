@@ -35,11 +35,11 @@ RSpec.describe "Support Category Type Setup", type: :system do
     expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Support"))
     expect(SiteSetting.solved_enabled).to eq(true)
     expect(SiteSetting.show_filter_by_solved_status).to eq(true)
-    expect(SiteSetting.notify_on_staff_accept_solved).to eq(true)
-    expect(SiteSetting.empty_box_on_unsolved).to eq(true)
     category = Category.find_by(name: "Support")
     expect(category.custom_fields["enable_accepted_answers"]).to eq("true")
     expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("48")
+    expect(category.custom_fields["notify_on_staff_accept_solved"]).to eq("true")
+    expect(category.custom_fields["empty_box_on_unsolved"]).to eq("true")
   end
 
   context "when there is a support category already configured" do

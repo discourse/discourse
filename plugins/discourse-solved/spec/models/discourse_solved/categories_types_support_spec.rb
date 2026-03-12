@@ -26,8 +26,6 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
       described_class.configure_site_settings(category, guardian: admin.guardian)
 
       expect(SiteSetting.show_filter_by_solved_status).to eq(true)
-      expect(SiteSetting.notify_on_staff_accept_solved).to eq(true)
-      expect(SiteSetting.empty_box_on_unsolved).to eq(true)
     end
 
     it "uses provided configuration_values over defaults" do
@@ -36,13 +34,10 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
         guardian: admin.guardian,
         configuration_values: {
           "show_filter_by_solved_status" => false,
-          "empty_box_on_unsolved" => false,
         },
       )
 
       expect(SiteSetting.show_filter_by_solved_status).to eq(false)
-      expect(SiteSetting.notify_on_staff_accept_solved).to eq(true)
-      expect(SiteSetting.empty_box_on_unsolved).to eq(false)
     end
   end
 
@@ -86,6 +81,22 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
       )
 
       expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("72")
+    end
+
+    it "sets notify_on_staff_accept_solved custom field" do
+      described_class.configure_category(category, guardian: admin.guardian)
+
+      expect(
+        category.custom_fields[DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD],
+      ).to eq("true")
+    end
+
+    it "sets empty_box_on_unsolved custom field" do
+      described_class.configure_category(category, guardian: admin.guardian)
+
+      expect(category.custom_fields[DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD]).to eq(
+        "true",
+      )
     end
   end
 
