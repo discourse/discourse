@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, waitFor } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
@@ -141,6 +141,8 @@ module("Integration | Component | Dates", function (hooks) {
       await render(
         <template><Dates @event={{events.endsDiffYear}} /></template>
       );
+
+      await waitFor(".event-dates");
 
       assert
         .dom(".event-dates")
