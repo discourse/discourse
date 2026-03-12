@@ -181,6 +181,18 @@ module("Unit | Utility | to-markdown", function (hooks) {
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
+  test("normalizes table without thead", async function (assert) {
+    let html = `<table>
+      <tbody>
+        <tr><td>Title</td></tr>
+        <tr><td>Column A</td><td>Column B</td></tr>
+        <tr><td>Value 1</td><td>Value 2</td></tr>
+      </tbody>
+    </table>`;
+    let markdown = `| Title |  |\n|----|----|\n| Column A | Column B |\n| Value 1 | Value 2 |`;
+    assert.strictEqual(await toMarkdown(html), markdown);
+  });
+
   test("replace pipes with spaces if table format not supported", async function (assert) {
     let html = `<table>
       <thead> <tr><th>Heading 1</th></tr> </thead>

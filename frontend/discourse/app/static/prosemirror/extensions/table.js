@@ -17,76 +17,6 @@ class TableNodeView {
   }
 }
 
-function validateTable(node) {
-  let hasHead = false;
-  let firstRowHasHeaderCells = false;
-  let columnCount = 0;
-  let isFirstRow = true;
-  let hasInconsistentColumns = false;
-
-  node.forEach((group) => {
-    if (hasInconsistentColumns) {
-      return;
-    }
-
-    if (group.type.name === "table_head") {
-      hasHead = true;
-    }
-
-    group.forEach((row) => {
-      if (hasInconsistentColumns) {
-        return;
-      }
-
-      if (columnCount === 0) {
-        columnCount = row.childCount;
-      } else if (row.childCount !== columnCount) {
-        hasInconsistentColumns = true;
-      }
-
-      if (isFirstRow) {
-        let allHeaderCells = true;
-        row.forEach((cell) => {
-          if (cell.type.name !== "table_header_cell") {
-            allHeaderCells = false;
-          }
-        });
-        if (allHeaderCells && row.childCount > 0) {
-          firstRowHasHeaderCells = true;
-        }
-        isFirstRow = false;
-      }
-    });
-  });
-
-  const hasValidHeader = hasHead || firstRowHasHeaderCells;
-
-  return {
-    isValid: hasValidHeader && columnCount >= 2 && !hasInconsistentColumns,
-    hasHead: hasValidHeader,
-    columnCount,
-    hasInconsistentColumns,
-  };
-}
-
-function serializeTableAsText(state, node) {
-  if (state.out) {
-    state.out += "\n";
-  }
-
-  node.forEach((group) => {
-    group.forEach((row) => {
-      row.forEach((cell, cellOffset, cellIndex) => {
-        if (cellIndex > 0) {
-          state.out += " ";
-        }
-        state.renderInline(cell);
-      });
-      state.out += "\n";
-    });
-  });
-}
-
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   nodeViews: { table: TableNodeView },
@@ -205,9 +135,10 @@ const extension = {
     table(state, node) {
       state.flushClose(1);
 
-      // Check if table is valid for markdown format
-      const tableInfo = validateTable(node);
+      // Normalize table structure
+      node = normalizeTable(node);
 
+      const tableInfo = validateTable(node);
       if (!tableInfo.isValid) {
         serializeTableAsText(state, node);
         return;
@@ -274,88 +205,6 @@ const extension = {
     table_cell() {},
   },
   plugins({ pmState: { Plugin }, pmModel: { Slice, Fragment } }) {
-    function findMaxColumns(tbody) {
-      let maxColumns = 0;
-      tbody.forEach((row) => {
-        maxColumns = Math.max(maxColumns, row.childCount);
-      });
-      return maxColumns;
-    }
-
-    function createHeaderRow(firstRow, maxColumns, schema) {
-      const headerCells = [];
-      for (let i = 0; i < maxColumns; i++) {
-        if (i < firstRow.childCount) {
-          const cell = firstRow.child(i);
-          headerCells.push(
-            schema.nodes.table_header_cell.create(cell.attrs, cell.content)
-          );
-        } else {
-          headerCells.push(schema.nodes.table_header_cell.create());
-        }
-      }
-      return schema.nodes.table_row.create({}, headerCells);
-    }
-
-    function createBodyRows(tbody, maxColumns, schema) {
-      const bodyRows = [];
-      tbody.content.content.slice(1).forEach((row) => {
-        const cells = [];
-        for (let i = 0; i < maxColumns; i++) {
-          if (i < row.childCount) {
-            cells.push(row.child(i));
-          } else {
-            cells.push(schema.nodes.table_cell.create());
-          }
-        }
-        bodyRows.push(schema.nodes.table_row.create({}, cells));
-      });
-      return bodyRows;
-    }
-
-    function normalizeTable(tableNode, schema) {
-      let tbody, thead;
-      tableNode.descendants((node) => {
-        if (node.type.name === "table_body") {
-          tbody = node;
-          return false;
-        }
-        if (node.type.name === "table_head") {
-          thead = node;
-          return false;
-        }
-      });
-
-      if (thead || !tbody) {
-        return tableNode;
-      }
-
-      const maxColumns = findMaxColumns(tbody);
-      const firstRow = tbody.firstChild;
-
-      if (!firstRow || maxColumns === 0) {
-        return tableNode;
-      }
-
-      const header = schema.nodes.table_head.create(
-        {},
-        createHeaderRow(firstRow, maxColumns, schema)
-      );
-
-      const body = schema.nodes.table_body.create(
-        {},
-        createBodyRows(tbody, maxColumns, schema)
-      );
-
-      return schema.nodes.table.create({}, [header, body]);
-    }
-
-    /**
-     * Checks if a fragment contains any table nodes.
-     *
-     * @param {Fragment} fragment - The ProseMirror fragment to check
-     * @returns {boolean} True if any table nodes exist
-     */
     function hasTableNodes(fragment) {
       let found = false;
       fragment.descendants((node) => {
@@ -369,16 +218,14 @@ const extension = {
 
     return new Plugin({
       props: {
-        transformPasted(paste, view) {
+        transformPasted(paste) {
           if (!hasTableNodes(paste.content)) {
             return paste;
           }
 
-          const schema = view.state.schema;
-
           function transformNode(node) {
             if (node.type.name === "table") {
-              return normalizeTable(node, schema);
+              return normalizeTable(node);
             }
 
             if (node.content?.size > 0) {
@@ -401,5 +248,154 @@ const extension = {
     });
   },
 };
+
+function findMaxColumns(tbody) {
+  let maxColumns = 0;
+  tbody.forEach((row) => {
+    maxColumns = Math.max(maxColumns, row.childCount);
+  });
+  return maxColumns;
+}
+
+function createHeaderRow(firstRow, maxColumns, schema) {
+  const headerCells = [];
+  for (let i = 0; i < maxColumns; i++) {
+    if (i < firstRow.childCount) {
+      const cell = firstRow.child(i);
+      headerCells.push(
+        schema.nodes.table_header_cell.create(cell.attrs, cell.content)
+      );
+    } else {
+      headerCells.push(schema.nodes.table_header_cell.create());
+    }
+  }
+  return schema.nodes.table_row.create({}, headerCells);
+}
+
+function createBodyRows(tbody, startIndex, maxColumns, schema) {
+  const bodyRows = [];
+  tbody.content.content.slice(startIndex).forEach((row) => {
+    const cells = [];
+    for (let i = 0; i < maxColumns; i++) {
+      if (i < row.childCount) {
+        cells.push(row.child(i));
+      } else {
+        cells.push(schema.nodes.table_cell.create());
+      }
+    }
+    bodyRows.push(schema.nodes.table_row.create({}, cells));
+  });
+  return bodyRows;
+}
+
+function normalizeTable(tableNode) {
+  const schema = tableNode.type.schema;
+  let tbody, thead;
+
+  tableNode.descendants((node) => {
+    if (node.type.name === "table_body") {
+      tbody = node;
+      return false;
+    }
+    if (node.type.name === "table_head") {
+      thead = node;
+      return false;
+    }
+  });
+
+  if (thead || !tbody) {
+    return tableNode;
+  }
+
+  const maxColumns = findMaxColumns(tbody);
+  const firstRow = tbody.firstChild;
+
+  if (!firstRow || maxColumns === 0) {
+    return tableNode;
+  }
+
+  const header = schema.nodes.table_head.create(
+    {},
+    createHeaderRow(firstRow, maxColumns, schema)
+  );
+
+  const bodyRows = createBodyRows(tbody, 1, maxColumns, schema);
+  if (bodyRows.length === 0) {
+    return tableNode;
+  }
+
+  const body = schema.nodes.table_body.create({}, bodyRows);
+  return schema.nodes.table.create({}, [header, body]);
+}
+
+function validateTable(node) {
+  let hasHead = false;
+  let firstRowHasHeaderCells = false;
+  let columnCount = 0;
+  let isFirstRow = true;
+  let hasInconsistentColumns = false;
+
+  node.forEach((group) => {
+    if (hasInconsistentColumns) {
+      return;
+    }
+
+    if (group.type.name === "table_head") {
+      hasHead = true;
+    }
+
+    group.forEach((row) => {
+      if (hasInconsistentColumns) {
+        return;
+      }
+
+      if (columnCount === 0) {
+        columnCount = row.childCount;
+      } else if (row.childCount !== columnCount) {
+        hasInconsistentColumns = true;
+      }
+
+      if (isFirstRow) {
+        let allHeaderCells = true;
+        row.forEach((cell) => {
+          if (cell.type.name !== "table_header_cell") {
+            allHeaderCells = false;
+          }
+        });
+        if (allHeaderCells && row.childCount > 0) {
+          firstRowHasHeaderCells = true;
+        }
+        isFirstRow = false;
+      }
+    });
+  });
+
+  const hasValidHeader = hasHead || firstRowHasHeaderCells;
+
+  return {
+    isValid: hasValidHeader && columnCount >= 2 && !hasInconsistentColumns,
+    hasHead: hasValidHeader,
+    columnCount,
+    hasInconsistentColumns,
+  };
+}
+
+function serializeTableAsText(state, node) {
+  if (state.out) {
+    state.out += "\n";
+  }
+
+  node.forEach((group) => {
+    group.forEach((row) => {
+      row.forEach((cell, cellOffset, cellIndex) => {
+        if (cellIndex > 0) {
+          state.out += " ";
+        }
+        state.renderInline(cell);
+      });
+      state.out += "\n";
+    });
+  });
+}
 
 export default extension;
