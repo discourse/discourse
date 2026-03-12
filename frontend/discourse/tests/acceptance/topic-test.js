@@ -481,6 +481,11 @@ acceptance(`Topic pinning/unpinning as a staff member`, function (needs) {
 
 acceptance(`Topic pinning/unpinning as a group moderator`, function (needs) {
   needs.user({ moderator: false, admin: false, trust_level: 1 });
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/2480/1.json"]);
+    delete topicResponse.details.can_banner_topic;
+    server.get("/t/2480.json", () => helper.response(topicResponse));
+  });
 
   test("Group category moderator pinning topic", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");

@@ -783,6 +783,9 @@
         "can_pin_unpin_topic": {
           "type": "boolean"
         },
+        "can_banner_topic": {
+          "type": "boolean"
+        },
         "can_moderate_category": {
           "type": "boolean"
         },
