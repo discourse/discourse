@@ -43,7 +43,7 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
     end
   end
 
-  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter) }
+  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) }
 
   describe "#resolve" do
     it "resolves a simple table with all DB columns" do

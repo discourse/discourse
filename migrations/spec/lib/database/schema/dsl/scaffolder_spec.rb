@@ -3,7 +3,7 @@
 RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
   after { Migrations::Database::Schema.reset! }
 
-  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter) }
+  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) }
 
   def mock_db_columns(columns_hash)
     columns_hash.map do |name, attrs|

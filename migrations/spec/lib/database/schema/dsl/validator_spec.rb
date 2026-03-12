@@ -43,7 +43,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
     end
   end
 
-  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter) }
+  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) }
 
   describe "#validate" do
     it "returns no errors for a valid configuration" do
