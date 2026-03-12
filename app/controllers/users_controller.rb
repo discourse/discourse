@@ -1928,10 +1928,15 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
+        bookmark_query = Bookmark.with_reminders.where(user_id: user.id)
+
+        if params[:after].present?
+          after_date = params[:after] == "now" ? Time.current : params[:after].to_datetime
+          bookmark_query = bookmark_query.where("reminder_at >= ?", after_date)
+        end
+
         @bookmark_reminders =
-          Bookmark
-            .with_reminders
-            .where(user_id: user.id)
+          bookmark_query
             .order(:reminder_at)
             .map do |bookmark|
               bookmark.registered_bookmarkable.serializer.new(
