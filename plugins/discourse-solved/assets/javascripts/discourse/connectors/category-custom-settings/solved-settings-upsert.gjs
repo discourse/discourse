@@ -61,40 +61,36 @@ export default class SolvedSettingsUpsert extends Component {
               @name="enable_accepted_answers"
               @title={{i18n "solved.allow_accepted_answers"}}
               @onSet={{this.onToggleAcceptedAnswers}}
-              @type="checkbox"
               as |field|
             >
-              <field.Control checked={{this.enableAcceptedAnswers}} />
+              <field.Checkbox checked={{this.enableAcceptedAnswers}} />
             </customFields.Field>
           {{/unless}}
 
           <customFields.Field
             @name="solved_topics_auto_close_hours"
             @title={{i18n "solved.solved_topics_auto_close_hours"}}
-            @type="input-number"
             as |field|
           >
-            <field.Control min="0" />
+            <field.Input @type="number" min="0" />
           </customFields.Field>
 
           <customFields.Field
             @name="notify_on_staff_accept_solved"
             @title={{i18n "solved.notify_on_staff_accept_solved"}}
             @onSet={{this.onToggleNotifyOnStaffAcceptSolved}}
-            @type="checkbox"
             as |field|
           >
-            <field.Control checked={{this.notifyOnStaffAcceptSolved}} />
+            <field.Checkbox checked={{this.notifyOnStaffAcceptSolved}} />
           </customFields.Field>
 
           <customFields.Field
             @name="empty_box_on_unsolved"
             @title={{i18n "solved.empty_box_on_unsolved"}}
             @onSet={{this.onToggleEmptyBoxOnUnsolved}}
-            @type="checkbox"
             as |field|
           >
-            <field.Control checked={{this.emptyBoxOnUnsolved}} />
+            <field.Checkbox checked={{this.emptyBoxOnUnsolved}} />
           </customFields.Field>
         </form.Object>
       </form.Section>

@@ -48,21 +48,21 @@ export default class AiFeatureSettingField extends Component {
 
   <template>
     {{#if (eq this.controlType "bool")}}
-      <@Control>
+      <@field.Checkbox>
         {{@setting.description}}
-      </@Control>
+      </@field.Checkbox>
     {{else if (eq this.controlType "integer")}}
-      <@Control />
+      <@field.Input @type="number" />
     {{else if (eq this.controlType "enum")}}
-      <@Control as |select|>
+      <@field.Select as |select|>
         {{#each @setting.valid_values as |option|}}
           <select.Option @value={{option.value}}>
             {{option.name}}
           </select.Option>
         {{/each}}
-      </@Control>
+      </@field.Select>
     {{else if (eq this.controlType "group_list")}}
-      <@Control>
+      <@field.Custom>
         <ListSetting
           @value={{this.parseList @field.value}}
           @choices={{this.groupChoices}}
@@ -71,9 +71,9 @@ export default class AiFeatureSettingField extends Component {
           @valueProperty="id"
           @onChange={{this.serializeList @field.set}}
         />
-      </@Control>
+      </@field.Custom>
     {{else if (eq this.controlType "compact_list")}}
-      <@Control>
+      <@field.Custom>
         <ListSetting
           @value={{this.parseList @field.value}}
           @choices={{this.compactListChoices}}
@@ -82,9 +82,9 @@ export default class AiFeatureSettingField extends Component {
           @valueProperty={{if this.hasEnumChoices "value"}}
           @onChange={{this.serializeList @field.set}}
         />
-      </@Control>
+      </@field.Custom>
     {{else}}
-      <@Control />
+      <@field.Input />
     {{/if}}
   </template>
 }

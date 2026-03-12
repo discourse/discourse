@@ -12,32 +12,13 @@ const SchemaFormField = <template>
   {{#if (eq @entry.type "bool")}}
     <@formObject.Field
       @name={{@entry.key}}
-      @type="checkbox"
       @title={{@entry.label}}
       @validation={{if @entry.required "required"}}
       @format="full"
       @showTitle={{false}}
       as |field|
     >
-      <field.Control>{{@entry.description}}</field.Control>
-    </@formObject.Field>
-  {{else if (eq @entry.subtype "duration")}}
-    <@formObject.Field
-      @name={{@entry.key}}
-      @title={{@entry.label}}
-      @description={{@entry.description}}
-      @validation={{if @entry.required "required"}}
-      @titleFormat="full"
-      @descriptionFormat="full"
-      @format="full"
-      @type="custom"
-      as |field|
-    >
-      <RelativeTimePicker
-        @durationHours={{field.value}}
-        @durationOutputUnit="hours"
-        @onChange={{field.set}}
-      />
+      <field.Checkbox>{{@entry.description}}</field.Checkbox>
     </@formObject.Field>
   {{else if (eq @entry.type "integer")}}
     <@formObject.Field
@@ -48,15 +29,21 @@ const SchemaFormField = <template>
       @titleFormat="full"
       @descriptionFormat="full"
       @format="full"
-      @type="input-number"
       as |field|
     >
-      <field.Control />
+      {{#if (eq @entry.subtype "duration")}}
+        <RelativeTimePicker
+          @durationHours={{field.value}}
+          @durationOutputUnit="hours"
+          @onChange={{field.set}}
+        />
+      {{else}}
+        <field.Input @type="number" />
+      {{/if}}
     </@formObject.Field>
   {{else}}
     <@formObject.Field
       @name={{@entry.key}}
-      @type="input"
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
@@ -65,7 +52,7 @@ const SchemaFormField = <template>
       @format="large"
       as |field|
     >
-      <field.Control />
+      <field.Input />
     </@formObject.Field>
   {{/if}}
 </template>;

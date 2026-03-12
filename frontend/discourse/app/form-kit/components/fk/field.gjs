@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -32,8 +32,7 @@ import FKRow from "discourse/form-kit/components/fk/row";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
-import deprecated from "discourse/lib/deprecated";
-import { and, eq, not } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 
 const RowColWrapper = <template>
   <FKRow as |row|>
@@ -49,9 +48,6 @@ const EmptyWrapper = <template>
 </template>;
 
 export default class FKField extends Component {
-  // Modifier for setting control type class/data-attribute.
-  // Used by legacy path where type is set post-render by the control constructor.
-  // Also runs on the new path where type is set via @type, will be removed when legacy path is removed.
   applyControlType = modifierFn((element, [field]) => {
     const type = field.type;
 
@@ -70,7 +66,7 @@ export default class FKField extends Component {
   }
 
   @action
-  legacyComponentFor(component, field) {
+  componentFor(component, field) {
     if (!component.controlType) {
       throw new Error(
         `Static property \`controlType\` is required on component:\n\n ${component}`
@@ -78,43 +74,6 @@ export default class FKField extends Component {
     }
 
     return curryComponent(component, { field }, getOwner(this));
-  }
-
-  @action
-  legacyYield(field) {
-    deprecated(
-      '<form.Field> without @type is deprecated. Use `<form.Field @type="..." as |field|><field.Control />` instead of `<form.Field as |field|><field.Input />`.',
-      {
-        id: "discourse.form-kit.legacy-field-yield",
-        since: "2026.3",
-      }
-    );
-
-    return {
-      Custom: this.legacyComponentFor(FKControlCustom, field),
-      Code: this.legacyComponentFor(FKControlCode, field),
-      Question: this.legacyComponentFor(FKControlQuestion, field),
-      Textarea: this.legacyComponentFor(FKControlTextarea, field),
-      Checkbox: this.legacyComponentFor(FKControlCheckbox, field),
-      Color: this.legacyComponentFor(FKControlColor, field),
-      Image: this.legacyComponentFor(FKControlImage, field),
-      Password: this.legacyComponentFor(FKControlPassword, field),
-      Composer: this.legacyComponentFor(FKControlComposer, field),
-      Icon: this.legacyComponentFor(FKControlIcon, field),
-      Emoji: this.legacyComponentFor(FKControlEmoji, field),
-      Toggle: this.legacyComponentFor(FKControlToggle, field),
-      Menu: this.legacyComponentFor(FKControlMenu, field),
-      Select: this.legacyComponentFor(FKControlSelect, field),
-      TagChooser: this.legacyComponentFor(FKControlTagChooser, field),
-      Input: this.legacyComponentFor(FKControlInput, field),
-      RadioGroup: this.legacyComponentFor(FKControlRadioGroup, field),
-      Calendar: this.legacyComponentFor(FKControlCalendar, field),
-      errorId: field.errorId,
-      id: field.id,
-      name: field.name,
-      set: field.set,
-      value: field.value,
-    };
   }
 
   <template>
@@ -137,7 +96,7 @@ export default class FKField extends Component {
               {{didInsert (fn @registerField field.name field)}}
               {{willDestroy (fn @unregisterField field.name)}}
             >
-              {{#if (and field.showTitle (not (eq field.type "checkbox")))}}
+              {{#if field.showTitle}}
                 <FKLabel
                   class={{concatClass
                     "form-kit__container-title"
@@ -170,11 +129,33 @@ export default class FKField extends Component {
                   (if field.format (concat "--" field.format))
                 }}
               >
-                {{#if field.hasExplicitType}}
-                  {{yield field}}
-                {{else}}
-                  {{yield (this.legacyYield field)}}
-                {{/if}}
+                {{yield
+                  (hash
+                    Custom=(this.componentFor FKControlCustom field)
+                    Code=(this.componentFor FKControlCode field)
+                    Question=(this.componentFor FKControlQuestion field)
+                    Textarea=(this.componentFor FKControlTextarea field)
+                    Checkbox=(this.componentFor FKControlCheckbox field)
+                    Color=(this.componentFor FKControlColor field)
+                    Image=(this.componentFor FKControlImage field)
+                    Password=(this.componentFor FKControlPassword field)
+                    Composer=(this.componentFor FKControlComposer field)
+                    Icon=(this.componentFor FKControlIcon field)
+                    Emoji=(this.componentFor FKControlEmoji field)
+                    Toggle=(this.componentFor FKControlToggle field)
+                    Menu=(this.componentFor FKControlMenu field)
+                    Select=(this.componentFor FKControlSelect field)
+                    TagChooser=(this.componentFor FKControlTagChooser field)
+                    Input=(this.componentFor FKControlInput field)
+                    RadioGroup=(this.componentFor FKControlRadioGroup field)
+                    Calendar=(this.componentFor FKControlCalendar field)
+                    errorId=field.errorId
+                    id=field.id
+                    name=field.name
+                    set=field.set
+                    value=field.value
+                  )
+                }}
 
                 {{#if field.helpText}}
                   <FKText

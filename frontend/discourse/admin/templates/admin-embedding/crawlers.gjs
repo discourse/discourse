@@ -13,28 +13,25 @@ export default <template>
       @name="allowed_embed_selectors"
       @title={{i18n "admin.embedding.allowed_embed_selectors"}}
       @format="large"
-      @type="input"
       as |field|
     >
-      <field.Control placeholder="article, #story, .post" />
+      <field.Input placeholder="article, #story, .post" />
     </form.Field>
     <form.Field
       @name="blocked_embed_selectors"
       @title={{i18n "admin.embedding.blocked_embed_selectors"}}
       @format="large"
-      @type="input"
       as |field|
     >
-      <field.Control placeholder=".ad-unit, header" />
+      <field.Input placeholder=".ad-unit, header" />
     </form.Field>
     <form.Field
       @name="allowed_embed_classnames"
       @title={{i18n "admin.embedding.allowed_embed_classnames"}}
       @format="large"
-      @type="input"
       as |field|
     >
-      <field.Control placeholder="emoji, classname" />
+      <field.Input placeholder="emoji, classname" />
     </form.Field>
     <form.Submit @label="admin.embedding.save" />
   </Form>

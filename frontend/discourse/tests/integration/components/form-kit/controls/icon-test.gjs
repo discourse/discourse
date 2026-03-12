@@ -21,8 +21,8 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
     await render(
       <template>
         <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @type="icon" @name="foo" @title="Foo" as |field|>
-            <field.Control />
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Icon />
           </form.Field>
         </Form>
       </template>
@@ -39,14 +39,8 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field
-            @type="icon"
-            @name="foo"
-            @title="Foo"
-            @disabled={{true}}
-            as |field|
-          >
-            <field.Control />
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Icon />
           </form.Field>
         </Form>
       </template>

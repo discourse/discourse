@@ -351,23 +351,21 @@ export default class CreateInvite extends Component {
           >
             <form.Field
               @name="description"
-              @type="input"
               @title={{i18n "user.invited.invite.description"}}
               @format="large"
               @validation={{this.descriptionValidation}}
               as |field|
             >
-              <field.Control />
+              <field.Input />
             </form.Field>
             <form.Field
               @name="restrictTo"
-              @type="input"
               @title={{i18n "user.invited.invite.restrict"}}
               @format="large"
               @onSet={{this.handleRestrictToChange}}
               as |field|
             >
-              <field.Control
+              <field.Input
                 placeholder={{i18n
                   "user.invited.invite.email_or_domain_placeholder"
                 }}
@@ -378,12 +376,13 @@ export default class CreateInvite extends Component {
               <form.Field
                 @name="maxRedemptions"
                 @title={{i18n "user.invited.invite.max_redemptions_allowed"}}
-                @type="input-number"
+                @type="number"
                 @format="small"
                 @validation="required"
                 as |field|
               >
-                <field.Control
+                <field.Input
+                  @type="number"
                   min="1"
                   max={{this.maxRedemptionsAllowedLimit}}
                 />
@@ -393,87 +392,82 @@ export default class CreateInvite extends Component {
             {{#if this.inviteCreated}}
               <form.Field
                 @name="expiresAt"
-                @type="custom"
                 @title={{i18n "user.invited.invite.expires_at"}}
                 @format="large"
                 @validation="required"
                 as |field|
               >
-                <field.Control>
+                <field.Custom>
                   <FutureDateInput
                     @clearable={{true}}
                     @input={{field.value}}
                     @noRelativeOptions={{true}}
                     @onChangeInput={{field.set}}
                   />
-                </field.Control>
+                </field.Custom>
               </form.Field>
             {{else}}
               <form.Field
                 @name="expiresAfterDays"
-                @type="select"
                 @title={{i18n "user.invited.invite.expires_after"}}
                 @format="large"
                 @validation="required"
                 as |field|
               >
-                <field.Control as |select|>
+                <field.Select as |select|>
                   {{#each this.expireAfterOptions as |option|}}
                     <select.Option
                       @value={{option.value}}
                     >{{option.text}}</select.Option>
                   {{/each}}
-                </field.Control>
+                </field.Select>
               </form.Field>
             {{/if}}
 
             {{#if this.canArriveAtTopic}}
               <form.Field
                 @name="inviteToTopic"
-                @type="custom"
                 @title={{i18n "user.invited.invite.invite_to_topic"}}
                 @format="large"
                 as |field|
               >
-                <field.Control>
+                <field.Custom>
                   <TopicChooser
                     @value={{field.value}}
                     @content={{this.topics}}
                     @onChange={{fn this.onChangeTopic field.set}}
                     @options={{hash additionalFilters="status:public"}}
                   />
-                </field.Control>
+                </field.Custom>
               </form.Field>
             {{/if}}
 
             {{#if this.canInviteToGroup}}
               <form.Field
                 @name="inviteToGroups"
-                @type="custom"
                 @title={{i18n "user.invited.invite.add_to_groups"}}
                 @format="large"
                 as |field|
               >
-                <field.Control>
+                <field.Custom>
                   <GroupChooser
                     @content={{this.allGroups}}
                     @value={{field.value}}
                     @labelProperty="name"
                     @onChange={{field.set}}
                   />
-                </field.Control>
+                </field.Custom>
               </form.Field>
             {{/if}}
 
             {{#if this.canSendEmailInvite}}
               <form.Field
                 @name="customMessage"
-                @type="textarea"
                 @title={{i18n "user.invited.invite.custom_message"}}
                 @format="full"
                 as |field|
               >
-                <field.Control
+                <field.Textarea
                   height={{100}}
                   placeholder={{i18n
                     "user.invited.invite.custom_message_placeholder"

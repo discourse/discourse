@@ -12,7 +12,7 @@ export default class CategoryIdInput extends Component {
   }
 
   <template>
-    <@Control id={{@field.id}}>
+    <@field.Custom id={{@field.id}}>
       <CategoryChooser
         @value={{this.data.value}}
         @onChange={{@field.set}}
@@ -23,6 +23,6 @@ export default class CategoryIdInput extends Component {
         }}
         name={{@info.identifier}}
       />
-    </@Control>
+    </@field.Custom>
   </template>
 }

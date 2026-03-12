@@ -332,7 +332,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
   test("required", async function (assert) {
     let errors = await new Validator(" ", {
       required: { trim: true },
-    }).validate("input");
+    }).validate("input-text");
 
     assert.deepEqual(
       errors,
@@ -342,7 +342,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     errors = await new Validator(undefined, {
       required: {},
-    }).validate("input");
+    }).validate("input-text");
 
     assert.deepEqual(
       errors,
@@ -352,7 +352,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     errors = await new Validator(null, {
       required: {},
-    }).validate("input");
+    }).validate("input-text");
 
     assert.deepEqual(
       errors,
@@ -362,7 +362,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     errors = await new Validator(" ", {
       required: { trim: false },
-    }).validate("input");
+    }).validate("input-text");
 
     assert.deepEqual(
       errors,

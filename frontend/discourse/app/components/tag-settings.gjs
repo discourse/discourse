@@ -302,13 +302,12 @@ export default class TagSettings extends Component {
         {{#if (eq @selectedTab "general")}}
           <form.Field
             @name="name"
-            @type="input"
             @title={{i18n "tagging.settings.name"}}
             @format="large"
             @validation="required"
             as |field|
           >
-            <field.Control
+            <field.Input
               placeholder={{i18n "tagging.settings.name_placeholder"}}
               @maxlength={{this.siteSettings.max_tag_length}}
               class="tag-name-input"
@@ -317,30 +316,27 @@ export default class TagSettings extends Component {
 
           <form.Field
             @name="slug"
-            @type="input"
             @title={{i18n "tagging.settings.slug"}}
             @format="large"
             as |field|
           >
-            <field.Control
+            <field.Input
               placeholder={{i18n "tagging.settings.slug_placeholder"}}
             />
           </form.Field>
 
           <form.Field
             @name="description"
-            @type="textarea"
             @title={{i18n "tagging.description"}}
             @format="large"
             @validation="length:0,1000"
             as |field|
           >
-            <field.Control @height={{80}} />
+            <field.Textarea @height={{80}} />
           </form.Field>
 
           <form.Field
             @name="synonyms"
-            @type="custom"
             @title={{i18n "tagging.synonyms"}}
             @description={{i18n
               "tagging.settings.synonyms_subtitle"
@@ -349,7 +345,7 @@ export default class TagSettings extends Component {
             @format="large"
             as |field|
           >
-            <field.Control>
+            <field.Custom>
               <MiniTagChooser
                 @value={{transientData.synonyms}}
                 @onChange={{this.handleSynonymChange}}
@@ -361,7 +357,7 @@ export default class TagSettings extends Component {
                   maximum=200
                 }}
               />
-            </field.Control>
+            </field.Custom>
           </form.Field>
         {{else if (eq @selectedTab "localizations")}}
           <TagSettingsLocalizations
