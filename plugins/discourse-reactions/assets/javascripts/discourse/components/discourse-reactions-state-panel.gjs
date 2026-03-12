@@ -70,7 +70,12 @@ export default class DiscourseReactionsStatePanel extends Component {
 
   @action
   focusContainer(element) {
-    schedule("afterRender", () => element.focus());
+    schedule("afterRender", () => {
+      const counter = element.closest(".discourse-reactions-counter");
+      if (counter?.matches(":focus-visible")) {
+        element.focus();
+      }
+    });
   }
 
   <template>
