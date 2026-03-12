@@ -113,6 +113,8 @@ class About
     per_cat_limit = category_mods_limit / category_ids.size
     per_cat_limit = 1 if per_cat_limit < 1
 
+    filter_hidden_profiles = !guardian.is_staff? && SiteSetting.allow_users_to_hide_profile
+
     results = DB.query(<<~SQL, category_ids:)
       WITH moderator_users AS (
         SELECT
@@ -125,7 +127,9 @@ class About
           ON cmg.group_id = gu.group_id
         INNER JOIN users u
           ON gu.user_id = u.id
+        #{"LEFT JOIN user_options uo ON uo.user_id = u.id" if filter_hidden_profiles}
         WHERE cmg.category_id IN (:category_ids)
+        #{"AND uo.hide_profile IS NOT TRUE" if filter_hidden_profiles}
       )
       SELECT id AS category_id, user_ids
       FROM categories
