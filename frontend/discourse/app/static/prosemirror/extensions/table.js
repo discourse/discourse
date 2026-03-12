@@ -320,10 +320,6 @@ function normalizeTable(tableNode) {
   );
 
   const bodyRows = createBodyRows(tbody, 1, maxColumns, schema);
-  if (bodyRows.length === 0) {
-    return tableNode;
-  }
-
   const body = schema.nodes.table_body.create({}, bodyRows);
   return schema.nodes.table.create({}, [header, body]);
 }
