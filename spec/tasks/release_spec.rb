@@ -52,6 +52,7 @@ RSpec.describe "tasks/release" do
       File.write("versions.json", JSON.pretty_generate(versions))
 
       git "init"
+      git "config", "commit.gpgsign", "false"
       git "checkout", "-b", "main"
       git "add", "."
       git "commit", "-m", "Initial commit"
@@ -482,15 +483,15 @@ RSpec.describe "tasks/release" do
         git "checkout", "-b", "security-fix-one"
         File.write("firstfile.txt", "contents")
         git "add", "firstfile.txt"
-        git "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit one"
+        git "commit", "-m", "security fix one, commit one"
         File.write("secondfile.txt", "contents")
         git "add", "secondfile.txt"
-        git "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit two"
+        git "commit", "-m", "security fix one, commit two"
         git "checkout", "main"
         git "checkout", "-b", "security-fix-two"
         File.write("somefile.txt", "contents")
         git "add", "somefile.txt"
-        git "-c", "commit.gpgsign=false", "commit", "-m", "security fix two"
+        git "commit", "-m", "security fix two"
       end
     end
 
@@ -553,14 +554,14 @@ RSpec.describe "tasks/release" do
           git "checkout", "-b", base_branch
           File.write("lib/version.rb", fake_version_rb("2025.6.0"))
           git "add", "lib/version.rb"
-          git "-c", "commit.gpgsign=false", "commit", "-m", "Initial release branch commit"
+          git "commit", "-m", "Initial release branch commit"
           git "config", "receive.denyCurrentBranch", "ignore"
           git "checkout", "main"
 
           git "checkout", "-b", "security-fix-for-release-branch"
           File.write("releasefile.txt", "contents")
           git "add", "releasefile.txt"
-          git "-c", "commit.gpgsign=false", "commit", "-m", "security fix for release branch"
+          git "commit", "-m", "security fix for release branch"
         end
 
         Dir.chdir(local_path) { git "fetch", "origin" }
