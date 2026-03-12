@@ -27,6 +27,12 @@ function dataFor(status, type) {
             name: "approved_user",
             cssClass: "approved",
           };
+        case "ReviewableAiToolAction":
+          return {
+            icon: "check",
+            name: "approved_tool_action",
+            cssClass: "approved",
+          };
         default:
           return {
             icon: "check",
@@ -46,6 +52,12 @@ function dataFor(status, type) {
           return {
             icon: "xmark",
             name: "rejected_user",
+            cssClass: "rejected",
+          };
+        case "ReviewableAiToolAction":
+          return {
+            icon: "xmark",
+            name: "rejected_tool_action",
             cssClass: "rejected",
           };
         default:
