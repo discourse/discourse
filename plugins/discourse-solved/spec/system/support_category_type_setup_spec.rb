@@ -86,16 +86,13 @@ RSpec.describe "Support Category Type Setup", type: :system do
       find(".additional-site-settings-toggle").click
       expect(page).to have_css(".additional-site-settings")
 
-      form.field("category_type_site_settings.solved_quote_length").fill_in("500")
       form.field("category_type_site_settings.disable_solved_education_message").toggle
       category_page.save_settings
 
-      expect(SiteSetting.solved_quote_length).to eq(500)
       expect(SiteSetting.disable_solved_education_message).to eq(true)
 
       visit("/c/#{category.slug}/edit/support")
       find(".additional-site-settings-toggle").click
-      expect(form.field("category_type_site_settings.solved_quote_length").value).to eq("500")
       expect(
         form.field("category_type_site_settings.disable_solved_education_message").value,
       ).to eq(true)

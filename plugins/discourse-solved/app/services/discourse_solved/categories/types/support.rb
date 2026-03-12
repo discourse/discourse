@@ -67,7 +67,6 @@ module DiscourseSolved
                 show_who_marked_solved: false,
               },
               additional_site_settings: {
-                solved_quote_length: 300,
                 disable_solved_education_message: false,
               },
               category_custom_fields: {

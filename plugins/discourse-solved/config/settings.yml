@@ -13,11 +13,6 @@ discourse_solved:
     default: ""
     allow_any: false
     refresh: true
-  accept_all_solutions_trust_level:
-    default: 4
-    client: true
-    enum: "TrustLevelSetting"
-    hidden: true
   accept_all_solutions_allowed_groups:
     default: "1|2|14" # auto group admin, moderators and trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
@@ -29,9 +24,6 @@ discourse_solved:
   empty_box_on_unsolved:
     default: false
     hidden: true
-  solved_quote_length:
-    default: 300
-    client: false
   solved_topics_auto_close_hours:
     default: 0
     min: 0

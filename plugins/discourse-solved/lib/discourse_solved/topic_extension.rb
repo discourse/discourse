@@ -17,13 +17,11 @@ module DiscourseSolved::TopicExtension
     answer_post_user = answer_post.user || Discourse.system_user
     accepter = solved.accepter || self.user || Discourse.system_user
 
-    excerpt = SiteSetting.solved_quote_length > 0 ? answer_post.cooked : nil
-
     accepted_answer = {
       post_number: answer_post.post_number,
       username: answer_post_user.username,
       name: answer_post_user.name,
-      excerpt:,
+      excerpt: answer_post.cooked,
     }
 
     if SiteSetting.show_who_marked_solved
