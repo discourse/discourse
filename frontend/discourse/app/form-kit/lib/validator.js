@@ -121,6 +121,7 @@ export default class Validator {
     let error = false;
 
     switch (type) {
+      case "input":
       case "input-text":
         if (rule.trim) {
           value = value?.trim();

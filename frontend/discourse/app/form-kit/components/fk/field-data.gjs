@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import curryComponent from "ember-curry-component";
+import { resolveFieldControl } from "discourse/form-kit/lib/field-control";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
@@ -9,10 +12,6 @@ import uniqueId from "discourse/helpers/unique-id";
  * Represents a field in a form with validation, registration, and field data management capabilities.
  */
 export default class FKFieldData extends Component {
-  // Set by `FKBaseControl` and its subclasses
-  // eslint-disable-next-line discourse/no-unnecessary-tracked
-  @tracked type;
-
   /**
    * Unique identifier for the field.
    * @type {string}
@@ -24,6 +23,10 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   errorId = uniqueId();
+
+  // Set by legacy controls in their constructor (during render),
+  // read by the applyControlType modifier (post-render)
+  _legacyControlType;
 
   /**
    * Initializes the FKFieldData component.
@@ -85,6 +88,29 @@ export default class FKFieldData extends Component {
    */
   get title() {
     return this.args.title;
+  }
+
+  get hasExplicitType() {
+    return this.args.type !== undefined;
+  }
+
+  get type() {
+    return this.args.type ?? this._legacyControlType;
+  }
+
+  set type(value) {
+    this._legacyControlType = value;
+  }
+
+  /**
+   * Contextual component for the control set by `@type`.
+   * @type {Component}
+   */
+  @cached
+  get Control() {
+    const { component, args } = resolveFieldControl(this.type);
+
+    return curryComponent(component, { field: this, ...args }, getOwner(this));
   }
 
   /**

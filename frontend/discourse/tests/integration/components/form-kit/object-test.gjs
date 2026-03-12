@@ -13,11 +13,11 @@ module("Integration | Component | FormKit | Object", function (hooks) {
       <template>
         <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
           <form.Object @name="foo" as |object|>
-            <object.Field @name="bar" @title="bar" as |field|>
-              <field.Input />
+            <object.Field @type="input" @name="bar" @title="bar" as |field|>
+              <field.Control />
             </object.Field>
-            <object.Field @name="baz" @title="baz" as |field|>
-              <field.Input />
+            <object.Field @type="input" @name="baz" @title="baz" as |field|>
+              <field.Control />
             </object.Field>
           </form.Object>
         </Form>
@@ -50,11 +50,11 @@ module("Integration | Component | FormKit | Object", function (hooks) {
           <form.Object @name="one" as |one|>
             <one.Object @name="two" as |two|>
               <two.Object @name="three" as |three|>
-                <three.Field @name="foo" @title="foo" as |field|>
-                  <field.Input />
+                <three.Field @type="input" @name="foo" @title="foo" as |field|>
+                  <field.Control />
                 </three.Field>
-                <three.Field @name="bar" @title="bar" as |field|>
-                  <field.Input />
+                <three.Field @type="input" @name="bar" @title="bar" as |field|>
+                  <field.Control />
                 </three.Field>
               </two.Object>
             </one.Object>
@@ -80,8 +80,8 @@ module("Integration | Component | FormKit | Object", function (hooks) {
         >
           <form.Object @name="one" as |one|>
             <one.Collection @name="two" as |two twoIndex|>
-              <two.Field @name="foo" @title="foo" as |field|>
-                <field.Input />
+              <two.Field @type="input" @name="foo" @title="foo" as |field|>
+                <field.Control />
               </two.Field>
               <form.Button
                 class={{concat "remove-" twoIndex}}

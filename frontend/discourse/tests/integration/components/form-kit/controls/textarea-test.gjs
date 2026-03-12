@@ -17,8 +17,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Textarea />
+            <form.Field @type="textarea" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -40,8 +40,14 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-              <field.Textarea />
+            <form.Field
+              @type="textarea"
+              @name="foo"
+              @title="Foo"
+              @disabled={{true}}
+              as |field|
+            >
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -61,8 +67,13 @@ module(
             @onRegisterApi={{registerApi}}
             as |form|
           >
-            <form.Field @name="content" @title="Content" as |field|>
-              <field.Textarea />
+            <form.Field
+              @type="textarea"
+              @name="content"
+              @title="Content"
+              as |field|
+            >
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -100,8 +111,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Textarea />
+            <form.Field @type="textarea" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -121,8 +132,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Textarea @height={{42}} />
+            <form.Field @type="textarea" @name="foo" @title="Foo" as |field|>
+              <field.Control @height={{42}} />
             </form.Field>
           </Form>
         </template>
