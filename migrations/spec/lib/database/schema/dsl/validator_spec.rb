@@ -43,7 +43,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
     end
   end
 
-  let(:connection) { double("database_connection") } # rubocop:disable RSpec/VerifiedDoubles
+  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter) }
 
   describe "#validate" do
     it "returns no errors for a valid configuration" do

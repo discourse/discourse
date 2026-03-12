@@ -3,7 +3,7 @@
 RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
   after { Migrations::Database::Schema.reset! }
 
-  let(:connection) { double("database_connection") } # rubocop:disable RSpec/VerifiedDoubles
+  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter) }
 
   def mock_db_columns(columns_hash)
     columns_hash.map do |name, attrs|
@@ -20,9 +20,13 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
   end
 
   def mock_index(name:, columns:, unique: false, where: nil)
-    idx = double("index_#{name}") # rubocop:disable RSpec/VerifiedDoubles
-    allow(idx).to receive_messages(name:, columns:, unique:, where:)
-    idx
+    instance_double(
+      ActiveRecord::ConnectionAdapters::IndexDefinition,
+      name:,
+      columns:,
+      unique:,
+      where:,
+    )
   end
 
   def stub_database(connection, db_tables:, table_columns: {}, primary_keys: {}, indexes: {})

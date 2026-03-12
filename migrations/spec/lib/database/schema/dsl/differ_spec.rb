@@ -3,7 +3,7 @@
 RSpec.describe Migrations::Database::Schema::DSL::Differ do
   after { Migrations::Database::Schema.reset! }
 
-  let(:connection) { double("database_connection") } # rubocop:disable RSpec/VerifiedDoubles
+  let(:connection) { instance_double(ActiveRecord::ConnectionAdapters::AbstractAdapter) }
 
   def mock_db_columns(names)
     names.map do |name|
