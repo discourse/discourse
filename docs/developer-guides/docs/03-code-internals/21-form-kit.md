@@ -296,7 +296,13 @@ You can pass a string or a `<DTooltip />` component.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="foo" @title="Foo" @type="input" @tooltip="a nice input" as |Control|>
+  <form.Field
+    @name="foo"
+    @title="Foo"
+    @type="input"
+    @tooltip="a nice input"
+    as |Control|
+  >
     <Control />
   </form.Field>
 </Form>
@@ -338,7 +344,12 @@ handleFooChange(value, { set }) {
 ```
 
 ```hbs
-<form.Field @name="foo" @type="input" @onSet={{this.handleFooChange}} as |Control|>
+<form.Field
+  @name="foo"
+  @type="input"
+  @onSet={{this.handleFooChange}}
+  as |Control|
+>
   <Control />
 </form.Field>
 ```
@@ -357,7 +368,12 @@ handleFooChange(value, { set }) {
 
 ```hbs
 <Form @data={{this.model}} as |form|>
-  <form.Field @name="foo" @type="input" @onSet={{this.handleFooChange}} as |Control|>
+  <form.Field
+    @name="foo"
+    @type="input"
+    @onSet={{this.handleFooChange}}
+    as |Control|
+  >
     <Control />
   </form.Field>
 </Form>
@@ -832,7 +848,12 @@ Sets the height of the textarea.
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="description" @title="Description" @type="textarea" as |Control|>
+  <form.Field
+    @name="description"
+    @title="Description"
+    @type="textarea"
+    as |Control|
+  >
     <Control @height={{120}} />
   </form.Field>
 </Form>
@@ -913,7 +934,12 @@ Specifies the type of alert. Allowed types: `success`, `error`, `warning`, or `i
   <group.Field @name="editable" @title="Editable" @type="checkbox" as |Control|>
     <Control />
   </group.Field>
-  <group.Field @name="searchable" @title="Searchable" @type="checkbox" as |Control|>
+  <group.Field
+    @name="searchable"
+    @title="Searchable"
+    @type="checkbox"
+    as |Control|
+  >
     <Control />
   </group.Field>
 </form.CheckboxGroup>
@@ -1288,7 +1314,12 @@ Checks that the input's value is over a given length, or between two length valu
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input" @validation="length:5,16" as |Control|>
+<form.Field
+  @name="username"
+  @type="input"
+  @validation="length:5,16"
+  as |Control|
+>
   <Control />
 </form.Field>
 ```
@@ -1350,7 +1381,12 @@ Checks if the calendar data is after or equal to the specified date. Format must
 **Example**
 
 ```hbs
-<form.Field @name="start" @type="calendar" @validation="dateAfterOrEqual:2022-02-01" as |Control|>
+<form.Field
+  @name="start"
+  @type="calendar"
+  @validation="dateAfterOrEqual:2022-02-01"
+  as |Control|
+>
   <Control />
 </form.Field>
 ```
@@ -1362,7 +1398,12 @@ Checks if the calendar data is before or equal to the specified date. Format mus
 **Example**
 
 ```hbs
-<form.Field @name="start" @type="calendar" @validation="dateBeforeOrEqual:2022-02-01" as |Control|>
+<form.Field
+  @name="start"
+  @type="calendar"
+  @validation="dateBeforeOrEqual:2022-02-01"
+  as |Control|
+>
   <Control />
 </form.Field>
 ```
@@ -1374,7 +1415,12 @@ Rules can be combined using the pipe operator: `|`.
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input" @validation="required|length:5,16" as |Control|>
+<form.Field
+  @name="username"
+  @type="input"
+  @validation="required|length:5,16"
+  as |Control|
+>
   <Control />
 </form.Field>
 ```
