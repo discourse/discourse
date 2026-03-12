@@ -143,6 +143,12 @@ after_initialize do
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
 
+  add_api_parameter_route(
+    methods: :get,
+    actions: "discourse_post_event/events#index",
+    formats: :ics,
+  )
+
   reloadable_patch do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
