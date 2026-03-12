@@ -83,10 +83,9 @@ export default class MathInsertModal extends Component {
             @title={{i18n "discourse_math.insert_modal.label"}}
             @format="full"
             @validation="required"
-            @type="textarea"
             as |field|
           >
-            <field.Control
+            <field.Textarea
               class="math-insert-modal__textarea"
               placeholder={{i18n "discourse_math.insert_modal.placeholder"}}
               autofocus={{true}}

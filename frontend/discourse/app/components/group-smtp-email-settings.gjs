@@ -116,82 +116,76 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_server"
-              @type="input"
               @title={{i18n "groups.manage.email.credentials.smtp_server"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_server"}}
               as |field|
             >
-              <field.Control />
+              <field.Input />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
             <form.Field
               @name="email_username"
-              @type="input"
               @title={{i18n "groups.manage.email.credentials.username"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "email_username"}}
               as |field|
             >
-              <field.Control />
+              <field.Input />
             </form.Field>
           </row.Col>
 
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_port"
-              @type="input-number"
               @title={{i18n "groups.manage.email.credentials.smtp_port"}}
               @validation="required|integer"
               @onSet={{fn this.resetTestingSettings "smtp_port"}}
               as |field|
             >
-              <field.Control />
+              <field.Input @type="number" />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
             <form.Field
               @name="email_password"
-              @type="password"
               @title={{i18n "groups.manage.email.credentials.password"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "email_password"}}
               as |field|
             >
-              <field.Control />
+              <field.Password />
             </form.Field>
           </row.Col>
 
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_ssl_mode"
-              @type="select"
               @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_ssl_mode"}}
               as |field|
             >
-              <field.Control as |select|>
+              <field.Select as |select|>
                 {{#each this.sslModes as |sslMode|}}
                   <select.Option
                     @value={{sslMode.value}}
                   >{{sslMode.name}}</select.Option>
                 {{/each}}
-              </field.Control>
+              </field.Select>
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
             <form.Field
               @name="email_from_alias"
-              @type="input"
               @title={{i18n "groups.manage.email.settings.from_alias"}}
               @description={{i18n
                 "groups.manage.email.settings.from_alias_hint"
               }}
               as |field|
             >
-              <field.Control />
+              <field.Input />
             </form.Field>
           </row.Col>
         </form.Row>

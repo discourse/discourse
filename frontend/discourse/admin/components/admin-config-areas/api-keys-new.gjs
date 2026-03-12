@@ -280,10 +280,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.description"}}
                   @format="large"
                   @validation="required"
-                  @type="input"
                   as |field|
                 >
-                  <field.Control />
+                  <field.Input />
                 </form.Field>
 
                 <form.Field
@@ -291,16 +290,15 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.user_mode"}}
                   @format="large"
                   @validation="required"
-                  @type="select"
                   as |field|
                 >
-                  <field.Control as |select|>
+                  <field.Select as |select|>
                     {{#each this.userModes as |userMode|}}
                       <select.Option
                         @value={{userMode.id}}
                       >{{userMode.name}}</select.Option>
                     {{/each}}
-                  </field.Control>
+                  </field.Select>
                 </form.Field>
 
                 {{#if (eq transientData.user_mode "single")}}
@@ -309,10 +307,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     @title={{i18n "admin.api.user"}}
                     @format="large"
                     @validation="required"
-                    @type="custom"
                     as |field|
                   >
-                    <field.Control>
+                    <field.Custom>
                       <EmailGroupUserChooser
                         @value={{this.username}}
                         @onChange={{fn this.updateUsername field}}
@@ -321,7 +318,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                           filterPlaceholder="admin.api.user_placeholder"
                         }}
                       />
-                    </field.Control>
+                    </field.Custom>
                   </form.Field>
                 {{/if}}
 
@@ -330,16 +327,15 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.scope_mode"}}
                   @format="large"
                   @validation="required"
-                  @type="select"
                   as |field|
                 >
-                  <field.Control as |select|>
+                  <field.Select as |select|>
                     {{#each this.scopeModes as |scopeMode|}}
                       <select.Option
                         @value={{scopeMode.id}}
                       >{{scopeMode.name}}</select.Option>
                     {{/each}}
-                  </field.Control>
+                  </field.Select>
                 </form.Field>
 
                 {{#if (eq transientData.scope_mode "granular")}}
@@ -389,10 +385,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       collectionData.key
                                     )
                                   }}
-                                  @type="checkbox"
                                   as |field|
                                 >
-                                  <field.Control />
+                                  <field.Checkbox />
                                 </topicsCollection.Field>
                               </td>
                               <td>
@@ -418,10 +413,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       @name={{name}}
                                       @title={{name}}
                                       @showTitle={{false}}
-                                      @type="input"
                                       as |field|
                                     >
-                                      <field.Control placeholder={{name}} />
+                                      <field.Input placeholder={{name}} />
                                     </paramsObject.Field>
                                   {{/each}}
                                 </topicsCollection.Object>

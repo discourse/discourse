@@ -80,10 +80,9 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @title={{i18n "admin.config_areas.about.community_owner"}}
         @description={{i18n "admin.config_areas.about.community_owner_help"}}
         @format="large"
-        @type="input"
         as |field|
       >
-        <field.Control
+        <field.Input
           placeholder={{i18n
             "admin.config_areas.about.community_owner_placeholder"
           }}
@@ -94,11 +93,11 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @name="contactEmail"
         @title={{i18n "admin.config_areas.about.contact_email"}}
         @description={{i18n "admin.config_areas.about.contact_email_help"}}
-        @type="input-email"
+        @type="email"
         @format="large"
         as |field|
       >
-        <field.Control
+        <field.Input
           placeholder={{i18n
             "admin.config_areas.about.contact_email_placeholder"
           }}
@@ -109,11 +108,11 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @name="contactURL"
         @title={{i18n "admin.config_areas.about.contact_url"}}
         @description={{i18n "admin.config_areas.about.contact_url_help"}}
-        @type="input-url"
+        @type="url"
         @format="large"
         as |field|
       >
-        <field.Control
+        <field.Input
           placeholder={{i18n
             "admin.config_areas.about.contact_url_placeholder"
           }}
@@ -126,16 +125,15 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @description={{i18n "admin.config_areas.about.site_contact_name_help"}}
         @onSet={{this.setContactUsername}}
         @format="large"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <UserChooser
             @value={{field.value}}
             @options={{hash maximum=1}}
             @onChange={{field.set}}
           />
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       <form.Field
@@ -144,17 +142,16 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @description={{i18n "admin.config_areas.about.site_contact_group_help"}}
         @onSet={{this.setContactGroup}}
         @format="large"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <GroupChooser
             @content={{this.site.groups}}
             @value={{this.contactGroupId}}
             @options={{hash maximum=1}}
             @onChange={{field.set}}
           />
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       <form.Submit

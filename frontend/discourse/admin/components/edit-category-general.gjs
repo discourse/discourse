@@ -230,10 +230,9 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.name"}}
             @format="large"
             @validation="required"
-            @type="input"
             as |field|
           >
-            <field.Control
+            <field.Input
               placeholder={{i18n "category.name_placeholder"}}
               @maxlength="50"
               class="category-name"
@@ -245,10 +244,9 @@ export default class EditCategoryGeneral extends Component {
           @name="slug"
           @title={{i18n "category.slug"}}
           @format="large"
-          @type="input"
           as |field|
         >
-          <field.Control
+          <field.Input
             placeholder={{i18n "category.slug_placeholder"}}
             @maxlength="255"
           />
@@ -261,10 +259,9 @@ export default class EditCategoryGeneral extends Component {
           @title={{i18n "category.parent"}}
           @format="large"
           class="parent-category"
-          @type="custom"
           as |field|
         >
-          <field.Control>
+          <field.Custom>
             <CategoryChooser
               @value={{@transientData.parent_category_id}}
               @allowSubCategories={{true}}
@@ -277,7 +274,7 @@ export default class EditCategoryGeneral extends Component {
                 none=true
               }}
             />
-          </field.Control>
+          </field.Custom>
         </@form.Field>
       {{/if}}
 
@@ -315,17 +312,16 @@ export default class EditCategoryGeneral extends Component {
           @title={{i18n "category.styles.type"}}
           @format="large"
           @validation="required"
-          @type="select"
           as |field|
         >
           {{trustHTML (this.categoryBadgePreview @transientData)}}
-          <field.Control as |select|>
+          <field.Select as |select|>
             {{#each this.styleTypes as |styleType|}}
               <select.Option @value={{styleType.id}}>
                 {{styleType.name}}
               </select.Option>
             {{/each}}
-          </field.Control>
+          </field.Select>
         </@form.Field>
 
         {{#if (eq @transientData.style_type "emoji")}}
@@ -334,10 +330,9 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.styles.emoji"}}
             @format="small"
             @validation="required"
-            @type="emoji"
             as |field|
           >
-            <field.Control />
+            <field.Emoji />
           </@form.Field>
         {{else if (eq @transientData.style_type "icon")}}
           <@form.Field
@@ -345,10 +340,9 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.styles.icon"}}
             @format="small"
             @validation="required"
-            @type="icon"
             as |field|
           >
-            <field.Control />
+            <field.Icon />
           </@form.Field>
         {{/if}}
 
@@ -359,10 +353,9 @@ export default class EditCategoryGeneral extends Component {
           @validate={{this.validateColor}}
           @validation="required"
           @onSet={{this.setBackgroundColor}}
-          @type="color"
           as |field|
         >
-          <field.Control
+          <field.Color
             @colors={{this.backgroundColors}}
             @usedColors={{this.usedBackgroundColors}}
           />
@@ -374,10 +367,9 @@ export default class EditCategoryGeneral extends Component {
           @format="full"
           @validate={{this.validateColor}}
           @validation="required"
-          @type="color"
           as |field|
         >
-          <field.Control @colors={{CATEGORY_TEXT_COLORS}} />
+          <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
         </@form.Field>
       </@form.Section>
     </div>

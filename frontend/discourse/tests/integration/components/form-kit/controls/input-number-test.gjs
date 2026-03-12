@@ -16,13 +16,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field
-              @type="input-number"
-              @name="foo"
-              @title="Foo"
-              as |field|
-            >
-              <field.Control step="any" lang="en" />
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Input @type="number" step="any" lang="en" />
             </form.Field>
           </Form>
         </template>
@@ -46,14 +41,9 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field
-              @type="input-number"
-              @name="foo"
-              @title="Foo"
-              as |field|
-            >
+            <form.Field @name="foo" @title="Foo" as |field|>
 
-              <field.Control />
+              <field.Input @type="number" />
             </form.Field>
           </Form>
         </template>
@@ -73,13 +63,12 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="input-number"
               @name="foo"
               @title="Foo"
               @validation="required"
               as |field|
             >
-              <field.Control />
+              <field.Input @type="number" />
             </form.Field>
           </Form>
         </template>

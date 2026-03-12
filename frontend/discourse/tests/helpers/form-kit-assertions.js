@@ -57,7 +57,6 @@ class FieldHelper {
       }
       case "password":
         return this.element.querySelector(".form-kit__control-password").value;
-      case "input":
       case "input-number":
       case "input-text":
         return this.element.querySelector(".form-kit__control-input").value;

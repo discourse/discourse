@@ -16,8 +16,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="checkbox" @name="foo" @title="Foo" as |field|>
-              <field.Control />
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
             </form.Field>
           </Form>
         </template>
@@ -42,8 +42,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="checkbox" @name="foo" @title="Foo" as |field|>
-              <field.Control />
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
             </form.Field>
           </Form>
         </template>
@@ -64,14 +64,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field
-              @type="checkbox"
-              @name="foo"
-              @title="Foo"
-              @disabled={{true}}
-              as |field|
-            >
-              <field.Control />
+            <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+              <field.Checkbox />
             </form.Field>
           </Form>
         </template>
@@ -84,14 +78,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field
-              @type="checkbox"
-              @tooltip="test"
-              @name="foo"
-              @title="Foo"
-              as |field|
-            >
-              <field.Control />
+            <form.Field @tooltip="test" @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
             </form.Field>
           </Form>
         </template>
@@ -106,8 +94,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="checkbox" @name="foo" @title="Foo" as |field|>
-              <field.Control />
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
             </form.Field>
           </Form>
         </template>
@@ -120,8 +108,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="checkbox" @name="foo" @title="Foo" as |field|>
-              <field.Control @title="Bar" />
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox @title="Bar" />
             </form.Field>
           </Form>
         </template>
@@ -137,8 +125,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="checkbox" @name="foo" @title="Foo" as |field|>
-              <field.Control />
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
             </form.Field>
           </Form>
         </template>
@@ -160,13 +148,12 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="checkbox"
               @name="foo"
               @title="Foo"
               @validation="required"
               as |field|
             >
-              <field.Control />
+              <field.Checkbox />
             </form.Field>
           </Form>
         </template>

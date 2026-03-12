@@ -84,45 +84,41 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @name="name"
         @title={{i18n "chat.incoming_webhooks.name"}}
         @validation="required"
-        @type="input"
         as |field|
       >
-        <field.Control />
+        <field.Input />
       </form.Field>
 
       <form.Field
         @name="description"
         @title={{i18n "chat.incoming_webhooks.description"}}
-        @type="textarea"
         as |field|
       >
-        <field.Control />
+        <field.Textarea />
       </form.Field>
 
       <form.Field
         @name="username"
         @title={{i18n "chat.incoming_webhooks.username"}}
         @description={{i18n "chat.incoming_webhooks.username_instructions"}}
-        @type="input"
         as |field|
       >
-        <field.Control />
+        <field.Input />
       </form.Field>
 
       <form.Field
         @name="chat_channel_id"
         @title={{i18n "chat.incoming_webhooks.post_to"}}
         @validation="required"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <ChatChannelChooser
             @content={{@chatChannels}}
             @value={{field.value}}
             @onChange={{field.set}}
           />
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       <form.Field
@@ -130,10 +126,9 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @title={{i18n "chat.incoming_webhooks.emoji"}}
         @description={{i18n "chat.incoming_webhooks.emoji_instructions"}}
         @size="large"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           {{#if field.value}}
             {{i18n "chat.incoming_webhooks.current_emoji"}}
 
@@ -155,7 +150,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
               />
             </row.Col>
           </form.Row>
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       {{#if @webhook.url}}

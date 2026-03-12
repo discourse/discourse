@@ -76,10 +76,9 @@ export default class AdminEditLeaderboard extends Component {
         @name="name"
         @title={{i18n "gamification.leaderboard.name"}}
         @validation="required"
-        @type="input"
         as |field|
       >
-        <field.Control />
+        <field.Input />
       </form.Field>
 
       <form.Row as |row|>
@@ -87,10 +86,9 @@ export default class AdminEditLeaderboard extends Component {
           <form.Field
             @name="from_date"
             @title={{i18n "gamification.leaderboard.date.from"}}
-            @type="input-date"
             as |field|
           >
-            <field.Control />
+            <field.Input @type="date" />
           </form.Field>
         </row.Col>
 
@@ -98,10 +96,9 @@ export default class AdminEditLeaderboard extends Component {
           <form.Field
             @name="to_date"
             @title={{i18n "gamification.leaderboard.date.to"}}
-            @type="input-date"
             as |field|
           >
-            <field.Control />
+            <field.Input @type="date" />
           </form.Field>
         </row.Col>
       </form.Row>
@@ -109,10 +106,9 @@ export default class AdminEditLeaderboard extends Component {
       <form.Field
         @name="included_groups_ids"
         @title={{i18n "gamification.leaderboard.included_groups"}}
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <GroupChooser
             @id="leaderboard-edit__included-groups"
             @content={{this.siteGroups}}
@@ -120,16 +116,15 @@ export default class AdminEditLeaderboard extends Component {
             @labelProperty="name"
             @onChange={{field.set}}
           />
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       <form.Field
         @name="excluded_groups_ids"
         @title={{i18n "gamification.leaderboard.excluded_groups"}}
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <GroupChooser
             @id="leaderboard-edit__excluded-groups"
             @content={{this.siteGroups}}
@@ -137,16 +132,15 @@ export default class AdminEditLeaderboard extends Component {
             @labelProperty="name"
             @onChange={{field.set}}
           />
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       <form.Field
         @name="visible_to_groups_ids"
         @title={{i18n "gamification.leaderboard.visible_to_groups"}}
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <GroupChooser
             @id="leaderboard-edit__visible-groups"
             @content={{this.siteGroups}}
@@ -154,28 +148,26 @@ export default class AdminEditLeaderboard extends Component {
             @labelProperty="name"
             @onChange={{field.set}}
           />
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       <form.Field
         @name="default_period"
         @title={{i18n "gamification.leaderboard.default_period"}}
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <PeriodInput @value={{field.value}} @onChange={{field.set}} />
-        </field.Control>
+        </field.Custom>
       </form.Field>
 
       <form.Field
         @name="period_filter_disabled"
         @title={{i18n "gamification.leaderboard.period_filter_disabled"}}
         @showTitle={{false}}
-        @type="checkbox"
         as |field|
       >
-        <field.Control @value={{field.value}} />
+        <field.Checkbox @value={{field.value}} />
       </form.Field>
       <form.Submit />
     </Form>

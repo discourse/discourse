@@ -211,20 +211,18 @@ export default class UpsertCategoryAppearance extends Component {
         @name="text_color"
         @title={{i18n "category.foreground_color"}}
         @format="max"
-        @type="color"
         as |field|
       >
-        <field.Control @colors={{CATEGORY_TEXT_COLORS}} />
+        <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
       </@form.Field>
 
       <@form.Field
         @name="default_view"
         @title={{i18n "category.default_view"}}
         @format="max"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <ComboBox
             @id="category-default-view"
             @content={{this.availableViews}}
@@ -233,17 +231,16 @@ export default class UpsertCategoryAppearance extends Component {
             @onChange={{field.set}}
             @options={{hash none="category.sort_options.default"}}
           />
-        </field.Control>
+        </field.Custom>
       </@form.Field>
 
       <@form.Field
         @name="default_top_period"
         @title={{i18n "category.default_top_period"}}
         @format="max"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <ComboBox
             @id="category-default-top-period"
             @content={{this.topPeriods}}
@@ -252,17 +249,16 @@ export default class UpsertCategoryAppearance extends Component {
             @onChange={{field.set}}
             @options={{hash none="category.sort_options.default"}}
           />
-        </field.Control>
+        </field.Custom>
       </@form.Field>
 
       <@form.Field
         @name="sort_order"
         @title={{i18n "category.sort_order"}}
         @format="max"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <ComboBox
             @id="category-sort-order"
             @content={{this.sortOrders}}
@@ -282,17 +278,16 @@ export default class UpsertCategoryAppearance extends Component {
               @options={{hash none="category.sort_options.default"}}
             />
           {{/unless}}
-        </field.Control>
+        </field.Custom>
       </@form.Field>
 
       <@form.Field
         @name="default_list_filter"
         @title={{i18n "category.default_list_filter"}}
         @format="max"
-        @type="custom"
         as |field|
       >
-        <field.Control>
+        <field.Custom>
           <ComboBox
             @id="category-default-list-filter"
             @content={{this.listFilters}}
@@ -301,7 +296,7 @@ export default class UpsertCategoryAppearance extends Component {
             @onChange={{field.set}}
             @options={{hash none="category.sort_options.default"}}
           />
-        </field.Control>
+        </field.Custom>
       </@form.Field>
 
       {{#if this.isParentCategory}}
@@ -309,10 +304,9 @@ export default class UpsertCategoryAppearance extends Component {
           @name="show_subcategory_list"
           @title={{i18n "category.show_subcategory_list"}}
           @format="max"
-          @type="checkbox"
           as |field|
         >
-          <field.Control />
+          <field.Checkbox />
         </@form.Field>
 
         {{#if @transientData.show_subcategory_list}}
@@ -320,10 +314,9 @@ export default class UpsertCategoryAppearance extends Component {
             @name="subcategory_list_style"
             @title={{i18n "category.subcategory_list_style"}}
             @format="max"
-            @type="custom"
             as |field|
           >
-            <field.Control>
+            <field.Custom>
               <ComboBox
                 @id="subcategory-list-style"
                 @content={{this.subcategoryListStyles}}
@@ -331,7 +324,7 @@ export default class UpsertCategoryAppearance extends Component {
                 @valueProperty="value"
                 @onChange={{field.set}}
               />
-            </field.Control>
+            </field.Custom>
           </@form.Field>
         {{/if}}
       {{/if}}
@@ -340,10 +333,9 @@ export default class UpsertCategoryAppearance extends Component {
         @name="read_only_banner"
         @title={{i18n "category.read_only_banner"}}
         @format="max"
-        @type="input"
         as |field|
       >
-        <field.Control @maxlength="255" />
+        <field.Input @maxlength="255" />
       </@form.Field>
 
       <PluginOutlet

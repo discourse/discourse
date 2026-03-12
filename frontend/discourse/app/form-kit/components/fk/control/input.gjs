@@ -42,11 +42,7 @@ export default class FKControlInput extends FKBaseControl {
       );
     }
 
-    // Legacy path: when @type is not set on <form.Field />,
-    // set the specific input type (e.g. "input-number") on the field.
-    if (!args.field.hasExplicitType) {
-      args.field.type = "input-" + (args.type ?? "text");
-    }
+    args.field.type = "input-" + (args.type ?? "text");
   }
 
   get type() {
