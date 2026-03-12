@@ -366,13 +366,11 @@ export default class PostTextSelection extends Component {
     const postId = cooked.closest(".boxed, .reply")?.dataset?.postId;
 
     const range = selectedRange();
-    const cookedRange = document.createRange();
-    cookedRange.selectNodeContents(cooked);
-    let opts = {
-      full:
-        range.compareBoundaryPoints(Range.START_TO_START, cookedRange) <= 0 &&
-        range.compareBoundaryPoints(Range.END_TO_END, cookedRange) >= 0,
-    };
+    const startNode = range.startContainer;
+    const canBeFull =
+      range.startOffset === 0 &&
+      (startNode === cooked || startNode.parentNode === cooked);
+    let opts = { full: false };
 
     for (
       let element = _selectedElement;
@@ -388,7 +386,13 @@ export default class PostTextSelection extends Component {
     }
 
     const quoteState = this.args.quoteState;
-    quoteState.selected(postId, plainText, opts, html);
+    quoteState.selected(
+      postId,
+      plainText,
+      opts,
+      html,
+      canBeFull ? cooked.innerHTML : null
+    );
     return quoteState;
   }
 

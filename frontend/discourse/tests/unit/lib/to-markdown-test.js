@@ -169,7 +169,7 @@ module("Unit | Utility | to-markdown", function (hooks) {
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
-  test("replace pipes with spaces if table format not supported", async function (assert) {
+  test("table with br in header is still a valid table", async function (assert) {
     let html = `<table>
       <thead> <tr><th>Headi<br><br>ng 1</th><th>Head 2</th></tr> </thead>
         <tbody>
@@ -177,17 +177,19 @@ module("Unit | Utility | to-markdown", function (hooks) {
           <tr><td><a href="http://example.com"><img src="http://dolor.com/image.png" /></a></td> <td><i>sit amet</i></td></tr></tbody>
   </table>
     `;
-    let markdown = `Headi\n\nng 1 Head 2\nLorem ipsum\n[![](http://dolor.com/image.png)](http://example.com) *sit amet*`;
+    let markdown = `| Headi<br><br>ng 1 | Head 2 |\n|----|----|\n| Lorem | ipsum |\n| [![](http://dolor.com/image.png)](http://example.com) | *sit amet* |`;
     assert.strictEqual(await toMarkdown(html), markdown);
+  });
 
-    html = `<table>
+  test("replace pipes with spaces if table format not supported", async function (assert) {
+    let html = `<table>
       <thead> <tr><th>Heading 1</th></tr> </thead>
         <tbody>
           <tr><td>Lorem</td></tr>
           <tr><td><i>sit amet</i></td></tr></tbody>
   </table>
     `;
-    markdown = `Heading 1\nLorem\n*sit amet*`;
+    let markdown = `Heading 1\nLorem\n*sit amet*`;
     assert.strictEqual(await toMarkdown(html), markdown);
 
     html = `<table><tr><td>Lorem</td><td><strong>sit amet</strong></td></tr></table>`;

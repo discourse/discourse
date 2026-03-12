@@ -800,8 +800,9 @@ export default class TopicController extends Controller {
     }
 
     const quotedPost = postStream.findLoadedPost(quoteState.postId);
+    const quoteOpts = quoteState.opts;
     const buffer = await quoteState.markdown();
-    const quotedText = buildQuote(quotedPost, buffer, quoteState.opts);
+    const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
 
     quoteState.clear();
 
@@ -1410,8 +1411,9 @@ export default class TopicController extends Controller {
   async replyAsNewTopic(post) {
     const composerController = this.composer;
     const { quoteState } = this;
+    const opts = quoteState.opts;
     const buffer = await quoteState.markdown();
-    const quotedText = buildQuote(post, buffer, quoteState.opts);
+    const quotedText = buildQuote(post, buffer, opts);
 
     quoteState.clear();
 
