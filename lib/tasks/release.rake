@@ -44,6 +44,12 @@ module ReleaseUtils
     File.write("lib/version.rb", read_version_rb.sub(/STRING = ".*"/, "STRING = \"#{version}\""))
   end
 
+  def self.commit_version_bump(version, message)
+    write_version(version)
+    git "add", "lib/version.rb"
+    git "commit", "-m", message
+  end
+
   def self.update_versions_json(new_version)
     today_date = DateTime.now.utc.strftime("%Y-%m-%d")
 
@@ -202,20 +208,25 @@ namespace :release do
 
     raise "New version is smaller than old version" if new_version < previous_version
 
-    ReleaseUtils.git("branch", previous_version.branch_name, "#{check_ref}^1")
-    puts "Created new branch #{previous_version.branch_name}"
+    branch_name = previous_version.branch_name
+    release_version = previous_version.release_version
 
-    File.write(
-      ENV["GITHUB_OUTPUT"] || "/dev/null",
-      "new_branch_name=#{previous_version.branch_name}\n",
-      mode: "a",
-    )
+    ReleaseUtils.with_clean_worktree("main") do
+      ReleaseUtils.git("checkout", "#{check_ref}^1")
+      ReleaseUtils.git("checkout", "-b", branch_name)
 
-    if ReleaseUtils.dry_run?
-      puts "[DRY RUN] Skipping pushing branch #{previous_version.branch_name} to origin"
-    else
-      ReleaseUtils.git("push", "--set-upstream", "origin", previous_version.branch_name)
-      puts "Pushed branch #{previous_version.branch_name} to origin"
+      ReleaseUtils.commit_version_bump(release_version, "DEV: Bump version to v#{release_version}")
+
+      puts "Created new branch #{branch_name} with version #{release_version}"
+
+      File.write(ENV["GITHUB_OUTPUT"] || "/dev/null", "new_branch_name=#{branch_name}\n", mode: "a")
+
+      if ReleaseUtils.dry_run?
+        puts "[DRY RUN] Skipping pushing branch #{branch_name} to origin"
+      else
+        ReleaseUtils.git("push", "--set-upstream", "origin", branch_name)
+        puts "Pushed branch #{branch_name} to origin"
+      end
     end
 
     puts "Done!"
@@ -355,9 +366,7 @@ namespace :release do
   DESC
   task "stage_security_fixes", [:base] do |t, args|
     base = args[:base]
-    if !base.start_with?("release/") && !%w[stable main].include?(base)
-      raise "Unknown base: #{base.inspect}"
-    end
+    raise "Unknown base: #{base.inspect}" unless base.start_with?("release/") || base == "main"
 
     fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
     private_mirror_pr_numbers = []
@@ -425,9 +434,13 @@ namespace :release do
              "Bump the `latest` branch revision to #{ReleaseUtils::Version.current.next_revision}? This should only be done for security-fix merges which are not part of a regular monthly release.",
            )
         new_version = ReleaseUtils::Version.current.next_revision
-        ReleaseUtils.write_version(new_version)
-        ReleaseUtils.git "add", "lib/version.rb"
-        ReleaseUtils.git "commit", "-m", "DEV: Bump development branch to v#{new_version}"
+        ReleaseUtils.commit_version_bump(
+          new_version,
+          "DEV: Bump development branch to v#{new_version}",
+        )
+      elsif base.start_with?("release/")
+        new_version = ReleaseUtils::Version.current.next_patch
+        ReleaseUtils.commit_version_bump(new_version, "DEV: Bump release branch to v#{new_version}")
       end
 
       puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"
