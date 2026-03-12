@@ -18,7 +18,7 @@ export default class GroupInput extends Component {
   }
 
   <template>
-    <@field.Custom id={{@field.id}}>
+    <@Control id={{@field.id}}>
       <GroupChooser
         @content={{this.allGroups}}
         @value={{@field.value}}
@@ -28,6 +28,6 @@ export default class GroupInput extends Component {
         @options={{this.groupChooserOption}}
         name={{@info.identifier}}
       />
-    </@field.Custom>
+    </@Control>
   </template>
 }

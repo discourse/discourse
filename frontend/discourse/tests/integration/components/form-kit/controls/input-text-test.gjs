@@ -16,8 +16,8 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Input />
+            <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -38,8 +38,14 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-              <field.Input />
+            <form.Field
+              @type="input"
+              @name="foo"
+              @title="Foo"
+              @disabled={{true}}
+              as |field|
+            >
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -55,8 +61,8 @@ module(
       await render(
         <template>
           <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Input />
+            <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
@@ -72,8 +78,8 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Input @before="https://" @after=".com" />
+            <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+              <field.Control @before="https://" @after=".com" />
             </form.Field>
           </Form>
         </template>

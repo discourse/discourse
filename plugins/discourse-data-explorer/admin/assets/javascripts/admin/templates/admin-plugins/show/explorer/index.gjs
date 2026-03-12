@@ -60,9 +60,10 @@ export default <template>
                   @title={{i18n "explorer.create_placeholder"}}
                   @validation="required"
                   @format="large"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
                 <form.Actions>
                   <form.Submit @label="explorer.create" @icon="plus" />
