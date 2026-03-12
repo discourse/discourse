@@ -1,13 +1,13 @@
 import { on } from "@ember/modifier";
-import CountI18n from "discourse/components/count-i18n";
 import CategoriesDisplay from "discourse/components/discovery/categories-display";
 import Layout from "discourse/components/discovery/layout";
 import Navigation from "discourse/components/discovery/navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and } from "discourse/truth-helpers";
+import CountI18n from "discourse/ui-kit/d-count-i18n";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default <template>
   <Layout @model={{@controller.model}} @listClass="--categories">

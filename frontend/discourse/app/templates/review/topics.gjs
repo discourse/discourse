@@ -1,10 +1,10 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import NavItem from "discourse/components/nav-item";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import TopicStatus from "discourse/components/topic-status";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import NavItem from "discourse/ui-kit/d-nav-item";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -1,10 +1,10 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageHeader from "discourse/components/d-page-header";
 import TextField from "discourse/components/text-field";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -1,7 +1,7 @@
 import { concat, fn, hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import InputTip from "discourse/components/input-tip";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import InputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 import UserFieldBase from "./base";
 

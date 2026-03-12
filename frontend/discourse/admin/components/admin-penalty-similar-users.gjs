@@ -5,12 +5,12 @@ import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import avatar from "discourse/helpers/avatar";
-import formatDuration from "discourse/helpers/format-duration";
-import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { not } from "discourse/truth-helpers";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import formatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import number from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class AdminPenaltySimilarUsers extends Component {

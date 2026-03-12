@@ -1,5 +1,5 @@
-import CookText from "discourse/components/cook-text";
-import icon from "discourse/helpers/d-icon";
+import CookText from "discourse/ui-kit/d-cook-text";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 const DiscoursePostEventLocation = <template>
   {{#if @location}}

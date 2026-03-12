@@ -3,9 +3,9 @@ import { scheduleOnce } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import RSVP from "rsvp";
-import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component";
 

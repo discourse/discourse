@@ -1,4 +1,4 @@
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 

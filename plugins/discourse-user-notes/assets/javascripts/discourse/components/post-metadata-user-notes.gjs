@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { showUserNotes, updatePostUserNotesCount } from "../lib/user-notes";
 
 export default class PostMetadataUserNotes extends Component {

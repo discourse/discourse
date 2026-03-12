@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
-import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class CreateTopicButton extends Component {
   @service router;

@@ -1,9 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { fillIn, render, settled, typeIn } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import RelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 
 module("Integration | Component | relative-time-picker", function (hooks) {
   setupRenderingTest(hooks);

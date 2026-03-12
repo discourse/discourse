@@ -4,8 +4,8 @@ import { fn } from "@ember/helper";
 import { computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import discourseTag from "discourse/helpers/discourse-tag";
+import DButton from "discourse/ui-kit/d-button";
+import discourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 
 @tagName("")
 export default class SelectedCollection extends Component {

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class GridNodeView extends Component {

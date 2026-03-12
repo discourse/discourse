@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
 import helperFn from "discourse/helpers/helper-fn";
 import { gt } from "discourse/truth-helpers";
+import UserLink from "discourse/ui-kit/d-user-link";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class TopicPresenceDisplay extends Component {

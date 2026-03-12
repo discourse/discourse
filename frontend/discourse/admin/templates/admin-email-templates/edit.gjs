@@ -4,12 +4,12 @@ import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SaveControls from "discourse/components/save-controls";
-import icon from "discourse/helpers/d-icon";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor/d-editor";
+import SaveControls from "discourse/ui-kit/d-save-controls";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

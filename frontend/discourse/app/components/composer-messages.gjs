@@ -8,7 +8,6 @@ import { schedule } from "@ember/runloop";
 import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -17,6 +16,7 @@ import {
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { autoTrackedArray } from "../lib/tracked-tools";
 

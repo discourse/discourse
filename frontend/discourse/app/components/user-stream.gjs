@@ -7,9 +7,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
 import PostList from "discourse/components/post-list";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
@@ -17,6 +14,9 @@ import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserStreamComponent extends Component {

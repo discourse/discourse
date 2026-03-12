@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import RegionInput from "../../components/region-input";
 import { TIME_ZONE_TO_REGION } from "../../lib/regions";

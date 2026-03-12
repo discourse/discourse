@@ -1,6 +1,6 @@
 import { trustHTML } from "@ember/template";
 import DashboardNewFeatures from "discourse/admin/components/dashboard-new-features";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>

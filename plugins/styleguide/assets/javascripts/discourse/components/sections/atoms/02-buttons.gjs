@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import concatClass from "discourse/helpers/concat-class";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class Buttons extends Component {
   get btnIconSizesCode() {
     return `
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 // Size classes: btn-large, btn-default, btn-small
 <template>
@@ -23,7 +23,7 @@ import DButton from "discourse/components/d-button";
 
   get btnIconStatesCode() {
     return `
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 // Available states: normal, hover, disabled
 <template>
@@ -36,8 +36,8 @@ import DButton from "discourse/components/d-button";
 
   get btnTextSizesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonSizes as |bs|}}
@@ -53,8 +53,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnTextStatesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonStates as |bs|}}
@@ -70,8 +70,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnDefaultIconTextSizesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonSizes as |bs|}}
@@ -88,8 +88,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnDefaultIconTextStatesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonStates as |bs|}}
@@ -106,8 +106,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnPrimaryIconTextSizesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonSizes as |bs|}}
@@ -124,8 +124,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnPrimaryIconTextStatesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonStates as |bs|}}
@@ -142,8 +142,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnDangerIconTextSizesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonSizes as |bs|}}
@@ -160,8 +160,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnDangerIconTextStatesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonStates as |bs|}}
@@ -178,8 +178,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnFlatSizesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonSizes as |bs|}}
@@ -196,8 +196,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnFlatStatesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonStates as |bs|}}
@@ -214,8 +214,8 @@ import concatClass from "discourse/helpers/concat-class";
 
   get btnTransparentStatesCode() {
     return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 <template>
   {{#each @dummy.buttonStates as |bs|}}
@@ -232,7 +232,7 @@ import concatClass from "discourse/helpers/concat-class";
 
   get buttonLinkCode() {
     return `
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 <template>
   {{#each @dummy.buttonStates as |bs|}}
@@ -252,7 +252,7 @@ import DButton from "discourse/components/d-button";
     return `
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { not } from "discourse/truth-helpers";
 
 <template>

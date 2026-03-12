@@ -12,11 +12,9 @@ import { trustHTML } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
@@ -30,7 +28,9 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DAutocompleteModifier from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
 

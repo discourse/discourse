@@ -9,11 +9,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SmallUserList, {
-  smallUserAttrs,
-} from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import {
@@ -22,6 +18,10 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { and } from "discourse/truth-helpers";
+import SmallUserList, {
+  smallUserAttrs,
+} from "discourse/ui-kit/d-small-user-list";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";

@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import number from "discourse/ui-kit/helpers/d-number";
 
 @tagName("")
 export default class AdminReportEmotion extends Component {

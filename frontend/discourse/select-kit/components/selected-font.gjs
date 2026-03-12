@@ -1,5 +1,5 @@
-import concatClass from "discourse/helpers/concat-class";
 import SelectedNameComponent from "discourse/select-kit/components/selected-name";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class SelectedFont extends SelectedNameComponent {
   <template>

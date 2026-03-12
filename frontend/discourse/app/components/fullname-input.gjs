@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import InputTip from "discourse/components/input-tip";
 import TextField from "discourse/components/text-field";
 import valueEntered from "discourse/helpers/value-entered";
+import InputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 
 export default class FullnameInput extends Component {

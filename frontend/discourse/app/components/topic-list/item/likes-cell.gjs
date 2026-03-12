@@ -1,6 +1,6 @@
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import { gt } from "discourse/truth-helpers";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import number from "discourse/ui-kit/helpers/d-number";
 
 const LikesCell = <template>
   <td class="num likes topic-list-data">

@@ -5,15 +5,15 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import {
   bufferToBase64,
   isWebauthnSupported,
   stringToBuffer,
 } from "discourse/lib/webauthn";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorAddSecurityKey extends Component {

@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
-import DateInput from "discourse/components/date-input";
-import DatePicker from "discourse/components/date-picker";
-import DateTimeInput from "discourse/components/date-time-input";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
-import FutureDateInput from "discourse/components/future-date-input";
-import TimeInput from "discourse/components/time-input";
+import DateInput from "discourse/ui-kit/d-date-input";
+import DatePicker from "discourse/ui-kit/d-date-picker/d-date-picker";
+import DateTimeInput from "discourse/ui-kit/d-date-time-input";
+import DateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import FutureDateInput from "discourse/ui-kit/d-future-date-input";
+import TimeInput from "discourse/ui-kit/d-time-input";
 import CalendarDateTimeInput from "discourse/plugins/styleguide/discourse/components/styleguide/calendar-date-time-input";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class DateTimeInputs extends Component {
   get timeInputCode() {
     return `
-import TimeInput from "discourse/components/time-input";
+import TimeInput from "discourse/ui-kit/d-time-input";
 
 <template>
   <TimeInput />
@@ -21,7 +21,7 @@ import TimeInput from "discourse/components/time-input";
 
   get dateInputCode() {
     return `
-import DateInput from "discourse/components/date-input";
+import DateInput from "discourse/ui-kit/d-date-input";
 
 <template>
   <DateInput />
@@ -31,7 +31,7 @@ import DateInput from "discourse/components/date-input";
 
   get dateTimeInputCode() {
     return `
-import DateTimeInput from "discourse/components/date-time-input";
+import DateTimeInput from "discourse/ui-kit/d-date-time-input";
 
 <template>
   <DateTimeInput @clearable={{true}} />
@@ -41,7 +41,7 @@ import DateTimeInput from "discourse/components/date-time-input";
 
   get dateTimeInputRangeCode() {
     return `
-import DateTimeInputRange from "discourse/components/date-time-input-range";
+import DateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
 
 <template>
   <DateTimeInputRange />
@@ -51,7 +51,7 @@ import DateTimeInputRange from "discourse/components/date-time-input-range";
 
   get dateTimeInputRangeNoTimeCode() {
     return `
-import DateTimeInputRange from "discourse/components/date-time-input-range";
+import DateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
 
 <template>
   <DateTimeInputRange @showFromTime={{false}} @showToTime={{false}} />
@@ -61,7 +61,7 @@ import DateTimeInputRange from "discourse/components/date-time-input-range";
 
   get futureDateInputCode() {
     return `
-import FutureDateInput from "discourse/components/future-date-input";
+import FutureDateInput from "discourse/ui-kit/d-future-date-input";
 
 <template>
   <FutureDateInput @displayLabelIcon="far-clock" @clearable={{true}} />
@@ -71,7 +71,7 @@ import FutureDateInput from "discourse/components/future-date-input";
 
   get datePickerCode() {
     return `
-import DatePicker from "discourse/components/date-picker";
+import DatePicker from "discourse/ui-kit/d-date-picker/d-date-picker";
 
 <template>
   <DatePicker @defaultDate="YYYY-MM-DD" />

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import number from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 

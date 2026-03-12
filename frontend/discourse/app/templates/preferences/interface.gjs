@@ -1,11 +1,11 @@
 import { fn, hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import SaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -1,9 +1,9 @@
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import coldAgeClass from "discourse/helpers/cold-age-class";
-import concatClass from "discourse/helpers/concat-class";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
 
 const ActivityCell = <template>
   <td

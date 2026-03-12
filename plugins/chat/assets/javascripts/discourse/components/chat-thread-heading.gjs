@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class ChatThreadHeading extends Component {
   get showHeading() {

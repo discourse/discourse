@@ -1,10 +1,10 @@
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { gt } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 

@@ -1,5 +1,5 @@
-import concatClass from "discourse/helpers/concat-class";
 import { notEq } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const FKControlConditionalContentItem = <template>
   <div

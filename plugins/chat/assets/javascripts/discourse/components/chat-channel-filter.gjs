@@ -5,15 +5,15 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import FilterInput from "discourse/components/filter-input";
 import closeOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import autoFocus from "discourse/modifiers/auto-focus";
 import { gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import FilterInput from "discourse/ui-kit/d-filter-input";
+import autoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class ChatChannelFilter extends Component {

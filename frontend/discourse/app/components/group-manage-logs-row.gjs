@@ -3,9 +3,9 @@ import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
+import DButton from "discourse/ui-kit/d-button";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

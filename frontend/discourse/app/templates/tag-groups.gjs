@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

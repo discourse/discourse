@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import onResize from "discourse/modifiers/on-resize";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import onResize from "discourse/ui-kit/modifiers/d-on-resize";
 
 export default class ToolbarScrollContainer extends Component {
   @tracked hasLeftScroll = false;

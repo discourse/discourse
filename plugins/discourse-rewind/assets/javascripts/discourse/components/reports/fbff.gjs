@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import avatar from "discourse/helpers/bound-avatar-template";
 import getURL from "discourse/lib/get-url";
+import avatar from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class FBFF extends Component {

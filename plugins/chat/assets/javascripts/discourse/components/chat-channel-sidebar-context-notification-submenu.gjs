@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ChatChannelSidebarContextNotificationSubmenu extends Component {
   @service chatApi;

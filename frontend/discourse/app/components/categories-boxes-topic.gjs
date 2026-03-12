@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("")
 export default class CategoriesBoxesTopic extends Component {

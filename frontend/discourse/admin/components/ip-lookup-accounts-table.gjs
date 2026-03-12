@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import avatar from "discourse/helpers/avatar";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 const IpLookupAccountsTable = <template>

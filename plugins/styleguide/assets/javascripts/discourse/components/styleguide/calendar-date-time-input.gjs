@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
-import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
-import DatePicker from "discourse/components/date-picker";
+import CalendarDateTimeInput from "discourse/ui-kit/d-calendar-date-time-input";
+import DatePicker from "discourse/ui-kit/d-date-picker/d-date-picker";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
@@ -28,7 +28,7 @@ export default class StyleguideCalendarDateTimeInput extends Component {
 
   get calendarDateTimeInputCode() {
     return `
-import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
+import CalendarDateTimeInput from "discourse/ui-kit/d-calendar-date-time-input";
 
 <template>
   <CalendarDateTimeInput

@@ -1,5 +1,5 @@
 import { trustHTML } from "@ember/template";
-import avatar from "discourse/helpers/avatar";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 
 const Post = <template>
   {{#if @ctx.post}}

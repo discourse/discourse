@@ -11,8 +11,8 @@ import {
   offset,
   shift,
 } from "@floating-ui/dom";
-import emoji from "discourse/helpers/emoji";
 import { bind } from "discourse/lib/decorators";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 const DISPLAY_MAX_USERS = 19;

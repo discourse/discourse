@@ -20,7 +20,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import DAutocompleteModifier from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**

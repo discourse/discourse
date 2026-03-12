@@ -11,7 +11,6 @@ import { trustHTML } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
-import Avatar from "discourse/helpers/bound-avatar-template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
@@ -22,6 +21,7 @@ import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, gt, not, or } from "discourse/truth-helpers";
+import Avatar from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
 import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
 import { toPlainObject } from "../lib/utilities";

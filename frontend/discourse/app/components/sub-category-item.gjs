@@ -2,8 +2,8 @@ import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryUnread from "discourse/components/category-unread";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import categoryLink from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
 
 export default class SubCategoryItem extends CategoryListItem {
   <template>

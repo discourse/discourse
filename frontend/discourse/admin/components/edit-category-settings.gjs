@@ -6,9 +6,7 @@ import { and, empty } from "@ember/object/computed";
 import { trustHTML } from "@ember/template";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
 import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { setting } from "discourse/lib/computed";
@@ -17,6 +15,8 @@ import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import RelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategorySettings extends buildCategoryPanel(

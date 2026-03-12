@@ -4,9 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DEditor from "discourse/components/d-editor";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
+import DEditor from "discourse/ui-kit/d-editor/d-editor";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryTopicTemplateEditor extends Component {

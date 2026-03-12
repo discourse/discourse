@@ -1,7 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DNavigation from "discourse/components/d-navigation";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DNavigation from "discourse/ui-kit/d-navigation";
 
 module("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);

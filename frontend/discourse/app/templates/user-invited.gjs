@@ -1,6 +1,6 @@
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import NavItem from "discourse/components/nav-item";
 import bodyClass from "discourse/helpers/body-class";
+import HorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import NavItem from "discourse/ui-kit/d-nav-item";
 
 export default <template>
   {{#if @controller.can_see_invite_details}}

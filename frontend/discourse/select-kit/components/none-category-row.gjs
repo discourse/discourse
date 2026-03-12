@@ -1,9 +1,9 @@
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import dirSpan from "discourse/helpers/dir-span";
 import CategoryRowComponent from "discourse/select-kit/components/category-row";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dirSpan from "discourse/ui-kit/helpers/d-dir-span";
 
 @classNames("none category-row")
 export default class NoneCategoryRow extends CategoryRowComponent {

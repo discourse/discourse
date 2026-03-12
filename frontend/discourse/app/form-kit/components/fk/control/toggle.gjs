@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 
 export default class FKControlToggle extends FKBaseControl {
   static controlType = "toggle";

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import BadgeButton from "discourse/components/badge-button";
+import BadgeButton from "discourse/ui-kit/d-badge-button";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesList extends Component {

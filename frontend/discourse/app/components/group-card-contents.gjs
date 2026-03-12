@@ -5,15 +5,15 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
-import AvatarFlair from "discourse/components/avatar-flair";
 import CardContentsBase from "discourse/components/card-contents-base";
-import DButton from "discourse/components/d-button";
 import GroupMembershipButton from "discourse/components/group-membership-button";
-import boundAvatar from "discourse/helpers/bound-avatar";
 import routeAction from "discourse/helpers/route-action";
 import { setting } from "discourse/lib/computed";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
+import AvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import DButton from "discourse/ui-kit/d-button";
+import boundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 import { i18n } from "discourse-i18n";
 
 const maxMembersToDisplay = 10;

@@ -6,11 +6,11 @@ import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { propertyEqual } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

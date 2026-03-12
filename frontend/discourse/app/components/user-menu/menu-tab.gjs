@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class UserMenuTab extends Component {
   get isActive() {

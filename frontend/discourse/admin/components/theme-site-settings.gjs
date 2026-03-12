@@ -5,13 +5,13 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import AsyncContent from "discourse/components/async-content";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import basePath from "discourse/helpers/base-path";
 import { ajax } from "discourse/lib/ajax";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
+import AsyncContent from "discourse/ui-kit/d-async-content";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import basePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
 export default class ThemeSiteSettings extends Component {

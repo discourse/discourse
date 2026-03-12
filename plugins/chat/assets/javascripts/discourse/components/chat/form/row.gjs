@@ -1,6 +1,6 @@
 import { LinkTo } from "@ember/routing";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 const ChatFormRow = <template>
   {{#if @route}}

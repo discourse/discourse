@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import ChildTree from "discourse/admin/components/schema-setting/editor/child-tree";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { gt } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class SchemaSettingNewEditorTreeNode extends Component {
   @tracked text;

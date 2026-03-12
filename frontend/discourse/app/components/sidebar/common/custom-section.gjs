@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
 import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
 import { or } from "discourse/truth-helpers";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import MoreSectionLink from "../more-section-link";
 import MoreSectionLinks from "../more-section-links";
 import SectionComponent from "../section";

@@ -1,8 +1,8 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>

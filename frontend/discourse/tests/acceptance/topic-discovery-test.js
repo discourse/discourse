@@ -1,9 +1,5 @@
 import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
-import {
-  disableLoadMoreObserver,
-  enableLoadMoreObserver,
-} from "discourse/components/load-more";
 import { cloneJSON } from "discourse/lib/object";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topFixtures from "discourse/tests/fixtures/top-fixtures";
@@ -12,6 +8,10 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({

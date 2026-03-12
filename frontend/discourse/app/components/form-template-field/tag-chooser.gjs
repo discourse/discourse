@@ -6,9 +6,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { not } from "discourse/truth-helpers";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class TagChooserField extends Component {

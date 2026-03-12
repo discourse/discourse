@@ -1,8 +1,8 @@
-import CustomHtml from "discourse/components/custom-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import dashIfEmpty from "discourse/helpers/dash-if-empty";
 import lazyHash from "discourse/helpers/lazy-hash";
+import CustomHtml from "discourse/ui-kit/d-custom-html";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const VersionChecks = <template>

@@ -7,9 +7,9 @@ import {
   setupOnerror,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
-import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import InterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import UserLink from "discourse/ui-kit/d-user-link";
 import I18n, { I18nMissingInterpolationArgument } from "discourse-i18n";
 
 module("Integration | Component | InterpolatedTranslation", function (hooks) {

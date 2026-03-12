@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
+import InterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 
 export default class AddSynonymsConfirmation extends Component {
   get synonymNames() {

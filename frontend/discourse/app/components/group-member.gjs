@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("")
 export default class GroupMember extends Component {

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import { renderAvatar } from "discourse/helpers/user-avatar";
 import { userPath } from "discourse/lib/url";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 
 export default class ChatUserAvatar extends Component {
   @service chatStateManager;

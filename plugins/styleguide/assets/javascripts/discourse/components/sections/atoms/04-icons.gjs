@@ -5,7 +5,7 @@ import StyleguideIcons from "discourse/plugins/styleguide/discourse/components/s
 
 export default class Icons extends Component {
   get codeSample() {
-    return `import icon from "discourse/helpers/d-icon";
+    return `import icon from "discourse/ui-kit/helpers/d-icon";
 
 <template>
   {{icon "link"}}

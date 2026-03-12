@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
 import { i18n } from "discourse-i18n";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;

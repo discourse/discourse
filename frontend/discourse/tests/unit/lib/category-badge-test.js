@@ -3,8 +3,8 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import $ from "jquery";
 import { module, test } from "qunit";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { helperContext } from "discourse/lib/helpers";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 
 module("Unit | Utility | category-badge", function (hooks) {
   setupTest(hooks);

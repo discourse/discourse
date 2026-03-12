@@ -1,4 +1,4 @@
-import avatar from "discourse/helpers/avatar";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 
 const AssignedTo = <template>
   <div class="assigned-to-user">

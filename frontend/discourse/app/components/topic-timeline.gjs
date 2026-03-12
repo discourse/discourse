@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import Container from "discourse/components/topic-timeline/container";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class TopicTimeline extends Component {
   @tracked docked = false;

@@ -1,8 +1,8 @@
 import { Textarea } from "@ember/component";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default <template>

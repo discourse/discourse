@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import LikedUsersList from "../liked-users-list";
 
 export default class PostMenuLikeButton extends Component {

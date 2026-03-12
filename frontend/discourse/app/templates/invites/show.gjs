@@ -1,25 +1,25 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import FullnameInput from "discourse/components/fullname-input";
-import InputTip from "discourse/components/input-tip";
 import LoginButtons from "discourse/components/login-buttons";
 import PasswordField from "discourse/components/password-field";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import UserField from "discourse/components/user-field";
-import UserInfo from "discourse/components/user-info";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import InputTip from "discourse/ui-kit/d-input-tip";
+import TogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import UserInfo from "discourse/ui-kit/d-user-info";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatComposerUpload extends Component {

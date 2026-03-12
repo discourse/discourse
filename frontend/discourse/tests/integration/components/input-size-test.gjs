@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
 
 module(
   "Integration | Component | consistent input/dropdown/button sizes",

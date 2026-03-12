@@ -8,22 +8,11 @@ import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActivityCell from "discourse/components/topic-list/item/activity-cell";
 import TopicStatus from "discourse/components/topic-status";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -36,6 +25,17 @@ import {
 } from "discourse/lib/click-track";
 import BulkSelectBookmarksDropdown from "discourse/select-kit/components/bulk-select-bookmarks-dropdown";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import { i18n } from "discourse-i18n";
 
 @classNames("bookmark-list-wrapper")

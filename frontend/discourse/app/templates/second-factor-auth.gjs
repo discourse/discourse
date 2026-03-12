@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import { gt, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import SecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import { i18n } from "discourse-i18n";
 
 export default <template>

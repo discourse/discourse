@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AiAgentCollapsableExample extends Component {

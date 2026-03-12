@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu-options";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ComposerToolbarButtons extends Component {
   @action

@@ -1,5 +1,5 @@
-import EmptyState from "discourse/components/empty-state";
 import UserStream from "discourse/components/user-stream";
+import EmptyState from "discourse/ui-kit/d-empty-state";
 
 export default <template>
   {{#if @controller.model.stream.noContent}}

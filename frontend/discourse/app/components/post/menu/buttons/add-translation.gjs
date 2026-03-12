@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import PostTranslationsModal from "discourse/components/modal/post-translations";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import Composer from "discourse/models/composer";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DEditorOriginalTranslationPreview from "discourse/ui-kit/d-editor/d-editor-original-translation-preview";
 import { i18n } from "discourse-i18n";
 
 export default class PostMenuAddTranslationButton extends Component {

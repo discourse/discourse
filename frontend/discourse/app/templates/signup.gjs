@@ -1,28 +1,28 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import FlashMessage from "discourse/components/flash-message";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
-import InputTip from "discourse/components/input-tip";
 import LoginButtons from "discourse/components/login-buttons";
 import PasswordField from "discourse/components/password-field";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SignupPageCta from "discourse/components/signup-page-cta";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import UserField from "discourse/components/user-field";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
 import { and, not } from "discourse/truth-helpers";
+import FlashMessage from "discourse/ui-kit/d-flash-message";
+import InputTip from "discourse/ui-kit/d-input-tip";
+import TogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>

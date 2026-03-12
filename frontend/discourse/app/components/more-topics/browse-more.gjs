@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class BrowseMore extends Component {

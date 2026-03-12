@@ -3,8 +3,8 @@ import { trustHTML } from "@ember/template";
 import AdminWatchedWord from "discourse/admin/components/admin-watched-word";
 import WatchedWordForm from "discourse/admin/components/watched-word-form";
 import WatchedWordUploader from "discourse/admin/components/watched-word-uploader";
-import DButton from "discourse/components/d-button";
-import basePath from "discourse/helpers/base-path";
+import DButton from "discourse/ui-kit/d-button";
+import basePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
 export default <template>

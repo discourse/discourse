@@ -1,15 +1,15 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DButton from "discourse/components/d-button";
-import DiscourseBanner from "discourse/components/discourse-banner";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagList from "discourse/components/tag-list";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DiscourseBanner from "discourse/ui-kit/d-discourse-banner";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import { i18n } from "discourse-i18n";
 
 export default <template>

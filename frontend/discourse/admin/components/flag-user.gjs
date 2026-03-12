@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { tagName } from "@ember-decorators/component";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 
 @tagName("")
 export default class FlagUser extends Component {

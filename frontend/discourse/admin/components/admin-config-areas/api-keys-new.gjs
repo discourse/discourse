@@ -6,16 +6,16 @@ import { service } from "@ember/service";
 import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import { API_KEY_SCOPE_MODES } from "discourse/admin/lib/constants";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { clipboardCopy } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasApiKeysNew extends Component {

@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { dasherize } from "@ember/string";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import ReviewFilters from "discourse/components/review-filters";
 import ReviewableItem from "discourse/components/reviewable/item";
 import { bind } from "discourse/lib/decorators";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexRefresh extends Component {

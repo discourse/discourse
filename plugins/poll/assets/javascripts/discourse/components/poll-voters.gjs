@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/bound-avatar-template";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import avatar from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import PollVotersRankedChoice from "./poll-voters-ranked-choice";
 
 export default class PollVotersComponent extends Component {

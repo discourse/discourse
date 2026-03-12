@@ -2,10 +2,10 @@ import { hash } from "@ember/helper";
 import IgnoredUserList from "discourse/components/ignored-user-list";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import SaveControls from "discourse/ui-kit/d-save-controls";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import LoadMore from "discourse/components/load-more";
+import LoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class PostLoadMoreAccessible extends Component {

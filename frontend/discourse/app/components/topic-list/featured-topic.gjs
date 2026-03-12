@@ -2,8 +2,8 @@ import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 
 const onTimestampClick = function (event) {
   if (wantsNewWindow(event)) {

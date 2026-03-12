@@ -1,7 +1,7 @@
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import number from "discourse/ui-kit/helpers/d-number";
 
 const ViewsCell = <template>
   <td class={{concatClass "num views topic-list-data" @topic.viewsHeat}}>

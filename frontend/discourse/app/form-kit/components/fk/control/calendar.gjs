@@ -1,9 +1,9 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DatePicker from "discourse/components/date-picker";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import withEventValue from "discourse/helpers/with-event-value";
+import DatePicker from "discourse/ui-kit/d-date-picker/d-date-picker";
 
 export default class FKControlCalendar extends FKBaseControl {
   static controlType = "calendar";

@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import ComboBoxHeaderComponent from "discourse/select-kit/components/combo-box/combo-box-header";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("future-date-input-selector-header")
 export default class FutureDateInputSelectorHeader extends ComboBoxHeaderComponent {

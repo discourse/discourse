@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostA11yHeading from "discourse/components/post/a11y-heading";
@@ -22,7 +21,6 @@ import PostMetaData from "discourse/components/post/meta-data";
 import PostMetaDataReplyToTab from "discourse/components/post/meta-data/reply-to-tab";
 import PostNotice from "discourse/components/post/notice";
 import TopicMap from "discourse/components/topic-map";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
 import { relativeAge } from "discourse/lib/formatter";
@@ -36,6 +34,8 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {

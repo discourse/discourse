@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
-import DSelect from "discourse/components/d-select";
 import {
   BUMP_TYPE,
   CLOSE_AFTER_LAST_POST_STATUS_TYPE,
@@ -16,16 +15,17 @@ import {
   OPEN_STATUS_TYPE,
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
 } from "discourse/components/modal/edit-topic-timer";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
-import icon from "discourse/helpers/d-icon";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import RelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import DSelect from "discourse/ui-kit/d-select";
+import TimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class EditTopicTimerForm extends Component {

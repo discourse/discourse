@@ -6,16 +6,16 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import EmptyState from "discourse/components/empty-state";
-import categoryBadge from "discourse/helpers/category-badge";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { or } from "discourse/truth-helpers";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import EmptyState from "discourse/ui-kit/d-empty-state";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 function channelColorStyle(channel) {

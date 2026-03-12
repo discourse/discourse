@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatar from "discourse/components/user-avatar";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import UserAvatar from "discourse/ui-kit/d-user-avatar";
+import UserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class PostAvatar extends Component {
   @cached

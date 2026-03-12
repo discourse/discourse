@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 
 export default class Blurb extends Component {
   @service siteSettings;

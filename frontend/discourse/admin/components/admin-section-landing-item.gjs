@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { and } from "discourse/truth-helpers";
 import {
   DangerButton,
   DefaultButton,
   PrimaryButton,
-} from "discourse/components/d-page-action-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import element from "discourse/helpers/element";
-import { and } from "discourse/truth-helpers";
+} from "discourse/ui-kit/d-page-action-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import element from "discourse/ui-kit/helpers/d-element";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSectionLandingItem extends Component {

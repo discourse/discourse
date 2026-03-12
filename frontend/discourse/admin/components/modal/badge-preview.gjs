@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
 import { escapeExpression } from "discourse/lib/utilities";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BadgePreview extends Component {

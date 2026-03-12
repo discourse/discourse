@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import EditBadgeGroupingsModal from "discourse/admin/components/modal/edit-badge-groupings";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import NavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadges extends Component {

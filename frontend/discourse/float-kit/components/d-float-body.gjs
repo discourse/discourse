@@ -6,10 +6,10 @@ import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
-import concatClass from "discourse/helpers/concat-class";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import TrapTab from "discourse/modifiers/trap-tab";
 import { and } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import closeOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
+import TrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 export default class DFloatBody extends Component {
   closeOnScroll = modifierFn(() => {

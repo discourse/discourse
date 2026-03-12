@@ -1,7 +1,7 @@
 import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DateTimeInput from "discourse/components/date-time-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DateTimeInput from "discourse/ui-kit/d-date-time-input";
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 

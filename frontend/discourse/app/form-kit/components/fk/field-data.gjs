@@ -6,7 +6,7 @@ import curryComponent from "ember-curry-component";
 import { resolveFieldControl } from "discourse/form-kit/lib/field-control";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
-import uniqueId from "discourse/helpers/unique-id";
+import uniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
 /**
  * Represents a field in a form with validation, registration, and field data management capabilities.

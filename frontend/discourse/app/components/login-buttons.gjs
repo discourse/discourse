@@ -7,10 +7,10 @@ import { tagName } from "@ember-decorators/component";
 import GoogleIcon from "discourse/components/google-icon";
 import PasskeyLoginButton from "discourse/components/passkey-login-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

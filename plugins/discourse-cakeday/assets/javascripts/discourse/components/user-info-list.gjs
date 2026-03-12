@@ -1,4 +1,4 @@
-import UserInfo from "discourse/components/user-info";
+import UserInfo from "discourse/ui-kit/d-user-info";
 import { i18n } from "discourse-i18n";
 
 function cakedayDate(val, { isBirthday }) {

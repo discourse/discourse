@@ -23,7 +23,6 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
@@ -40,12 +39,13 @@ import {
 import { optionalRequire } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
-import DAutocompleteModifier, {
-  SKIP,
-} from "discourse/modifiers/d-autocomplete";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { not, or } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DAutocompleteModifier, {
+  SKIP,
+} from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";

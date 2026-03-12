@@ -1,8 +1,8 @@
 import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
-import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DiscourseBanner from "discourse/ui-kit/d-discourse-banner";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const Layout = <template>
   <DiscourseBanner />

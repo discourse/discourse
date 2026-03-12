@@ -1,9 +1,9 @@
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SingleSelectHeaderComponent from "discourse/select-kit/components/select-kit/single-select-header";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("dropdown-select-box-header")
 @classNameBindings("btnClassName", "btnStyleClass", "btnCustomClasses")

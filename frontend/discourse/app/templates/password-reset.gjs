@@ -1,16 +1,16 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
-import InputTip from "discourse/components/input-tip";
 import PasswordField from "discourse/components/password-field";
 import SecondFactorForm from "discourse/components/second-factor-form";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import DButton from "discourse/ui-kit/d-button";
+import InputTip from "discourse/ui-kit/d-input-tip";
+import SecondFactorInput from "discourse/ui-kit/d-second-factor-input";
+import TogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

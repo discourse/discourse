@@ -14,11 +14,8 @@ import SettingValidationMessage from "discourse/admin/components/setting-validat
 import Description from "discourse/admin/components/site-settings/description";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
 import SiteSetting from "discourse/admin/models/site-setting";
-import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import basePath from "discourse/helpers/base-path";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -26,6 +23,9 @@ import { deepEqual } from "discourse/lib/object";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import basePath from "discourse/ui-kit/helpers/d-base-path";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const CUSTOM_TYPES = [

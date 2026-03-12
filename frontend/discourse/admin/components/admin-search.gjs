@@ -5,13 +5,13 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { escapeExpression } from "discourse/lib/utilities";
-import autoFocus from "discourse/modifiers/auto-focus";
 import { and, not } from "discourse/truth-helpers";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import autoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSearch extends Component {

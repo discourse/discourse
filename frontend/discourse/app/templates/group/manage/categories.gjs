@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
-import icon from "discourse/helpers/d-icon";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

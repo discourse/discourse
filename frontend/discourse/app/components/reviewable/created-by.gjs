@@ -1,7 +1,7 @@
 import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
+import UserLink from "discourse/ui-kit/d-user-link";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**

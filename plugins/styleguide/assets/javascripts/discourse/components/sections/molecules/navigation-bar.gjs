@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import MobileNav from "discourse/components/mobile-nav";
-import NavigationBar from "discourse/components/navigation-bar";
 import GroupDropdown from "discourse/select-kit/components/group-dropdown";
+import NavigationBar from "discourse/ui-kit/d-navigation-bar";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class NavigationBarMolecule extends Component {

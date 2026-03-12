@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import CreateTopicButton from "discourse/components/create-topic-button";
-import NavigationBar from "discourse/components/navigation-bar";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
+import NavigationBar from "discourse/ui-kit/d-navigation-bar";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class Navigation extends Component {
   get navigationCode() {
     return `import BreadCrumbs from "discourse/components/bread-crumbs";
 import CreateTopicButton from "discourse/components/create-topic-button";
-import NavigationBar from "discourse/components/navigation-bar";
+import NavigationBar from "discourse/ui-kit/d-navigation-bar";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
 
 <template>

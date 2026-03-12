@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostListItemDetails extends Component {

@@ -6,12 +6,12 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");

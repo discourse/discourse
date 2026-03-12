@@ -1,15 +1,15 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import BadgeCard from "discourse/components/badge-card";
-import BadgeTitle from "discourse/components/badge-title";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserInfo from "discourse/components/user-info";
-import formatDate from "discourse/helpers/format-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
+import BadgeCard from "discourse/ui-kit/d-badge-card";
+import BadgeTitle from "discourse/ui-kit/d-badge-title";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import UserInfo from "discourse/ui-kit/d-user-info";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default <template>

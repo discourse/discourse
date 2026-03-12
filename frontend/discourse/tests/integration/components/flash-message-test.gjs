@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import FlashMessage from "discourse/components/flash-message";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import FlashMessage from "discourse/ui-kit/d-flash-message";
 
 module("Integration | Component | flash-message", function (hooks) {
   setupRenderingTest(hooks);

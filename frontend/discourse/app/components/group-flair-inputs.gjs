@@ -5,7 +5,6 @@ import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
-import AvatarFlair from "discourse/components/avatar-flair";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
@@ -15,6 +14,7 @@ import getURL from "discourse/lib/get-url";
 import { convertIconClass } from "discourse/lib/icon-library";
 import IconPicker from "discourse/select-kit/components/icon-picker";
 import { or } from "discourse/truth-helpers";
+import AvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

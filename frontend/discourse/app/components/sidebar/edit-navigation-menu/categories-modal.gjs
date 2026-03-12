@@ -6,19 +6,19 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DecoratedHtml from "discourse/components/decorated-html";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { serializedAction, splitWhere } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { gt, has } from "discourse/truth-helpers";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {

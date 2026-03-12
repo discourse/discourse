@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class DiscourseTagBound extends Component {

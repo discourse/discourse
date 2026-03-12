@@ -5,8 +5,6 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
-import PickFilesButton from "discourse/components/pick-files-button";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import {
   autoTrackedArray,
@@ -14,6 +12,8 @@ import {
 } from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import PickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldUpload extends Component {
   @service appEvents;

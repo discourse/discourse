@@ -2,9 +2,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreaCard extends Component {

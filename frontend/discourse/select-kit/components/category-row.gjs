@@ -6,10 +6,10 @@ import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import Category from "discourse/models/category";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryRow extends Component {

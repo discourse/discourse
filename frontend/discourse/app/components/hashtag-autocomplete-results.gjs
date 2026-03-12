@@ -7,10 +7,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { eq } from "discourse/truth-helpers";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import scrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").HashtagAutocompleteResult} HashtagAutocompleteResult

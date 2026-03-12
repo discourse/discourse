@@ -1,6 +1,6 @@
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 export default <template>

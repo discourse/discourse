@@ -1,10 +1,10 @@
 import { render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import LoadMore, {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
-} from "discourse/components/load-more";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+} from "discourse/ui-kit/d-load-more";
 
 module("Integration | Component | load-more", function (hooks) {
   setupRenderingTest(hooks);

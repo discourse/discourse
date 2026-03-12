@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { dasherize } from "@ember/string";
-import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import PostNoticeCustom from "./notice/custom";
 import PostNoticeNewUser from "./notice/new-user";
 import PostNoticeReturningUser from "./notice/returning-user";

@@ -1,4 +1,4 @@
-import CookText from "discourse/components/cook-text";
+import CookText from "discourse/ui-kit/d-cook-text";
 
 const DiscoursePostEventDescription = <template>
   {{#if @description}}

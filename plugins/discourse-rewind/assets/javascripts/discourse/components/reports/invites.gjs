@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import avatar from "discourse/helpers/bound-avatar-template";
-import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
+import avatar from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import number from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 

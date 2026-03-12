@@ -6,16 +6,16 @@ import { tagName } from "@ember-decorators/component";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
+import lazyHash from "discourse/helpers/lazy-hash";
+import DecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import categoryLink, {
   categoryBadgeHTML,
-} from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
-import lazyHash from "discourse/helpers/lazy-hash";
+} from "discourse/ui-kit/helpers/d-category-link";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dirSpan from "discourse/ui-kit/helpers/d-dir-span";
 
 @tagName("")
 export default class CategoriesBoxes extends Component {

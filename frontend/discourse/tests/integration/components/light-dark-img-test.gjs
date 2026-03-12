@@ -1,8 +1,8 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import LightDarkImg from "discourse/components/light-dark-img";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import LightDarkImg from "discourse/ui-kit/d-light-dark-img";
 
 const lightSrc = { url: "/images/light.jpg", width: 376, height: 500 };
 const darkSrc = { url: "/images/light.jpg", width: 432, height: 298 };

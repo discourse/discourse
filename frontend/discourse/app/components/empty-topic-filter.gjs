@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import EmptyState from "discourse/components/empty-state";
 import SvgDocumentsCheckmark from "discourse/components/svg/documents-checkmark";
-import basePath from "discourse/helpers/base-path";
+import EmptyState from "discourse/ui-kit/d-empty-state";
+import basePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
 export default class EmptyTopicFilter extends Component {

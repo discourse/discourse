@@ -5,8 +5,8 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

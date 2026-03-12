@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 /** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-/** @type {import("discourse/helpers/element.gjs").default} */
-import element from "discourse/helpers/element";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
+import element from "discourse/ui-kit/helpers/d-element";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import devToolsState from "../state";
 

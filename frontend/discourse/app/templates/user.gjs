@@ -1,20 +1,20 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserNav from "discourse/components/user-nav";
 import UserProfileAvatar from "discourse/components/user-profile-avatar";
-import UserStatusMessage from "discourse/components/user-status-message";
-import icon from "discourse/helpers/d-icon";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import userStatus from "discourse/helpers/user-status";
 import UserNotificationsDropdown from "discourse/select-kit/components/user-notifications-dropdown";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import HtmlWithLinks from "discourse/ui-kit/d-html-with-links";
+import UserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import CollapsedInfo from "./user/collapsed-info";
 

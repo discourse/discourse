@@ -14,18 +14,10 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
-import DButton from "discourse/components/d-button";
-import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserBadge from "discourse/components/user-badge";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
@@ -36,6 +28,14 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
+import HtmlWithLinks from "discourse/ui-kit/d-html-with-links";
+import UserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import boundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import formatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 @classNames("user-card")

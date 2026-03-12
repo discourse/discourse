@@ -5,8 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import {
   isValidHex,
   normalizeHex,
@@ -14,6 +12,8 @@ import {
 } from "discourse/lib/color-transformations";
 import getUrl from "discourse/lib/get-url";
 import { and } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function isColorUsed(usedColors, color) {

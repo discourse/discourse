@@ -5,7 +5,7 @@ import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKObject from "discourse/form-kit/components/fk/object";
-import element from "discourse/helpers/element";
+import element from "discourse/ui-kit/helpers/d-element";
 
 export default class FKCollection extends Component {
   @action

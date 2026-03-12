@@ -6,11 +6,11 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import Permalink from "discourse/admin/models/permalink";
-import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import { fmt } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

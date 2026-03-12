@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { emojiUnescape } from "discourse/lib/text";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

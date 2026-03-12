@@ -2,8 +2,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
-import uniqueId from "discourse/helpers/unique-id";
 import { eq } from "discourse/truth-helpers";
+import uniqueId from "discourse/ui-kit/helpers/d-unique-id";
 import { i18n } from "discourse-i18n";
 
 export default class FKControlQuestion extends FKBaseControl {

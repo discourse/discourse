@@ -5,8 +5,8 @@ import { alias, not } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import List from "discourse/components/topic-list/list";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class BasicTopicList extends Component {

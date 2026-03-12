@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { modifier } from "ember-modifier";
-import UserStatusMessage from "discourse/components/user-status-message";
 import { userPath } from "discourse/lib/url";
+import UserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 

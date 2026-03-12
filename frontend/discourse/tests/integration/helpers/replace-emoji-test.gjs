@@ -1,8 +1,8 @@
 import { trustHTML } from "@ember/template";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 module("Integration | Helper | replace-emoji", function (hooks) {
   setupRenderingTest(hooks);

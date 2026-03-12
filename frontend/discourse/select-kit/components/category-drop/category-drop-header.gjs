@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import ComboBoxSelectBoxHeaderComponent from "discourse/select-kit/components/combo-box/combo-box-header";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("category-drop-header")
 export default class CategoryDropHeader extends ComboBoxSelectBoxHeaderComponent {

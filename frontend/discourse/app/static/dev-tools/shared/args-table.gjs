@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { logArgToConsole } from "../lib/console-logger";
 import { formatValue, getTypeInfo } from "../lib/value-formatter";
 

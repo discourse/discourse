@@ -4,13 +4,13 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DMenu from "discourse/float-kit/components/d-menu";
-import categoryBadge from "discourse/helpers/category-badge";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 
 export default class AiSplitTopicSuggester extends Component {
   @service site;

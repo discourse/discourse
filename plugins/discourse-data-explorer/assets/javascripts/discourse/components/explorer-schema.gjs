@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import { debounce } from "discourse/lib/decorators";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import OneTable from "./explorer-schema/one-table";
 
 export default class ExplorerSchema extends Component {

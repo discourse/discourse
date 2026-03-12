@@ -5,17 +5,17 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import {
   MAX_SECOND_FACTOR_NAME_LENGTH,
   SECOND_FACTOR_METHODS,
 } from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import SecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorAddTotp extends Component {

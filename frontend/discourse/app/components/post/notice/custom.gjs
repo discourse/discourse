@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import ConditionalInElement from "discourse/components/conditional-in-element";
-import UserLink from "discourse/components/user-link";
-import icon from "discourse/helpers/d-icon";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import ConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
+import UserLink from "discourse/ui-kit/d-user-link";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostNoticeCustom extends Component {

@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { and } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {

@@ -3,11 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
@@ -18,6 +15,9 @@ import {
   NOT_BOOKMARKED,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BookmarkMenu extends Component {

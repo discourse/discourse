@@ -1,12 +1,12 @@
 import { fn } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
 import Categories from "discourse/components/user-preferences/categories";
 import Tags from "discourse/components/user-preferences/tags";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import SaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>

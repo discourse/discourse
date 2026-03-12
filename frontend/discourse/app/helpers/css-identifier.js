@@ -1,4 +1,4 @@
-import dasherize from "discourse/helpers/dasherize";
+import dasherize from "discourse/ui-kit/helpers/d-dasherize";
 
 /**
  * Converts a string to a valid CSS identifier (class name, ID, etc.).

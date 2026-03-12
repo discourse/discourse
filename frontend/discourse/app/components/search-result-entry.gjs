@@ -14,14 +14,14 @@ import HighlightSearch from "discourse/components/highlight-search";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
 import TrackSelected from "discourse/components/track-selected";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("div")
 @classNames("fps-result")

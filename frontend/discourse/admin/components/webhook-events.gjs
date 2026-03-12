@@ -9,16 +9,16 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import WebhookEvent from "discourse/admin/components/webhook-event";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CountI18n from "discourse/components/count-i18n";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import CountI18n from "discourse/ui-kit/d-count-i18n";
+import LoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class WebhookEvents extends Component {

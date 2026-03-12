@@ -3,8 +3,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class AdminConfigAreaCardSection extends Component {
   @tracked collapsed = this.args.collapsed;

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import categoryBadge from "discourse/helpers/category-badge";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class Categories extends Component {

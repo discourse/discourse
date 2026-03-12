@@ -1,12 +1,12 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DatePickerPast from "discourse/components/date-picker-past";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DatePickerPast from "discourse/ui-kit/d-date-picker/d-date-picker-past";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default <template>

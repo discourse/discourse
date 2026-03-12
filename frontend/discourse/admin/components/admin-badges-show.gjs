@@ -9,13 +9,13 @@ import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import BadgePreviewModal from "discourse/admin/components/modal/badge-preview";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
-import iconOrImage from "discourse/helpers/icon-or-image";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { sanitize } from "discourse/lib/text";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import iconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import { i18n } from "discourse-i18n";
 
 const FORM_FIELDS = [

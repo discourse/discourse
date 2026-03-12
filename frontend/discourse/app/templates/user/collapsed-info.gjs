@@ -1,10 +1,10 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 const CollapsedInfo = <template>

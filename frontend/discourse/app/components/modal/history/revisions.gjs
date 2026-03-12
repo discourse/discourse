@@ -8,11 +8,11 @@ import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import Avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import Avatar from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function tagClasses(tagChanges, state, className) {

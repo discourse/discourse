@@ -3,10 +3,10 @@ import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { compare } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import routeAction from "discourse/helpers/route-action";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class AnonymousTopicFooterButtons extends Component {

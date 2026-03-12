@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import $ from "jquery";
-import icon from "discourse/helpers/d-icon";
 import cookie from "discourse/lib/cookie";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 let numTopicsOpened = 0;

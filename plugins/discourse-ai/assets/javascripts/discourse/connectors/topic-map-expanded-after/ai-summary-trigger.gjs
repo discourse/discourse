@@ -6,7 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import AiSummaryModal from "../../components/modal/ai-summary-modal";
 
 export default class AiSummaryTrigger extends Component {

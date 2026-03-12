@@ -6,14 +6,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import DMenu from "discourse/float-kit/components/d-menu";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;

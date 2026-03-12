@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import autoFocus from "discourse/modifiers/auto-focus";
+import autoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 
 export default class ExpandingTextArea extends Component {
   setTextarea = modifier((element) => {

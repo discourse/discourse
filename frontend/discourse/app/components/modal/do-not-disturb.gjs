@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import TapTile from "discourse/components/tap-tile";
-import TapTileGrid from "discourse/components/tap-tile-grid";
 import { extractError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import TapTile from "discourse/ui-kit/d-tap-tile";
+import TapTileGrid from "discourse/ui-kit/d-tap-tile-grid";
 import { i18n } from "discourse-i18n";
 
 export default class DoNotDisturb extends Component {

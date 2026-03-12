@@ -11,15 +11,15 @@ import { isEmpty } from "@ember/utils";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import PasswordField from "discourse/components/password-field";
 import SecondFactorForm from "discourse/components/second-factor-form";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
-import icon from "discourse/helpers/d-icon";
 import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import SecondFactorInput from "discourse/ui-kit/d-second-factor-input";
+import TogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class LocalLoginForm extends Component {

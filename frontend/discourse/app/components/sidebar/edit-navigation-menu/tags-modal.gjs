@@ -6,12 +6,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { gt, has, or } from "discourse/truth-helpers";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import EditNavigationMenuModal from "./modal";
 

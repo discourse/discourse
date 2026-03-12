@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
-import RelativeDate from "discourse/components/relative-date";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import RelativeDate from "discourse/ui-kit/d-relative-date";
 import { i18n } from "discourse-i18n";
 
 const _beforeLoadMoreCallbacks = [];

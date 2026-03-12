@@ -1,4 +1,4 @@
-import categoryLink from "discourse/helpers/category-link";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default <template>

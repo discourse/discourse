@@ -1,4 +1,4 @@
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 const NewDay = <template>
   <div class="group-timezone-new-day">

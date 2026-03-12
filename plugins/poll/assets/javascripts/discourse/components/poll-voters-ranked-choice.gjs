@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import avatar from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class PollVotersComponent extends Component {
   groupVotersByRank = (voters) => {

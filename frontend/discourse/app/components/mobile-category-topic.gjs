@@ -4,9 +4,9 @@ import { classNameBindings, tagName } from "@ember-decorators/component";
 import $ from "jquery";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicStatus from "discourse/components/topic-status";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import coldAgeClass from "discourse/helpers/cold-age-class";
-import topicLink from "discourse/helpers/topic-link";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 
 export function showEntrance(e) {
   let target = $(e.target);

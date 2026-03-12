@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import {
@@ -12,6 +11,7 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { eq, or } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import HeaderActivityCell from "./header/activity-cell";
 import HeaderBulkSelectCell from "./header/bulk-select-cell";

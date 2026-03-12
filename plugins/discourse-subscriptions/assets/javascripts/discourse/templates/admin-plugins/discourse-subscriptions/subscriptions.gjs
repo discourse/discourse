@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import loadingSpinner from "discourse/helpers/loading-spinner";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import formatUnixDate from "../../../helpers/format-unix-date";
 

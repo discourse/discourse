@@ -10,15 +10,8 @@ import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-ar
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import InstallComponentModal from "discourse/admin/components/modal/install-theme";
 import { COMPONENTS } from "discourse/admin/models/theme";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
@@ -26,6 +19,13 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const STATUS_FILTER_OPTIONS = [

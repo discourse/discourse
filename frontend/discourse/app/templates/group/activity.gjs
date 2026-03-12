@@ -1,6 +1,6 @@
 import GroupActivityFilter from "discourse/components/group-activity-filter";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import HorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 export default <template>
   <section class="user-secondary-navigation">

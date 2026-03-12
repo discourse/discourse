@@ -5,10 +5,10 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidSearchTerm, translateResults } from "discourse/lib/search";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
 const MAX_RESULTS_FOR_ADDING_AI = 3;
 

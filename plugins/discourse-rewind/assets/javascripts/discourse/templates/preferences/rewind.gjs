@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import SaveControls from "discourse/components/save-controls";
+import SaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>

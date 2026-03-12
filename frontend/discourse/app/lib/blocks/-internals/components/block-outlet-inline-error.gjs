@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import FlashMessage from "discourse/components/flash-message";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
+import FlashMessage from "discourse/ui-kit/d-flash-message";
 
 /**
  * Displays an error inline within a block outlet.

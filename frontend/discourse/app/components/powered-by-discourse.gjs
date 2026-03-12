@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { modifier as modifierFn } from "ember-modifier";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PoweredByDiscourse extends Component {

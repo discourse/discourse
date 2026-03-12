@@ -1,13 +1,13 @@
 import { fn } from "@ember/helper";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import TextField from "discourse/components/text-field";
 import DMenu from "discourse/float-kit/components/d-menu";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import TopicStatus from "discourse/components/topic-status";
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class TopicStatuses extends Component {
   get noStatusCode() {
     return `
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 
 <template>
   {{topicLink @dummy.topic}}
@@ -16,7 +16,7 @@ import topicLink from "discourse/helpers/topic-link";
 
   get invisibleCode() {
     return `
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import TopicStatus from "discourse/components/topic-status";
 
 <template>
@@ -28,7 +28,7 @@ import TopicStatus from "discourse/components/topic-status";
 
   get closedCode() {
     return `
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import TopicStatus from "discourse/components/topic-status";
 
 <template>
@@ -40,7 +40,7 @@ import TopicStatus from "discourse/components/topic-status";
 
   get pinnedCode() {
     return `
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import TopicStatus from "discourse/components/topic-status";
 
 <template>
@@ -52,7 +52,7 @@ import TopicStatus from "discourse/components/topic-status";
 
   get unpinnedCode() {
     return `
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import TopicStatus from "discourse/components/topic-status";
 
 <template>
@@ -64,7 +64,7 @@ import TopicStatus from "discourse/components/topic-status";
 
   get archivedCode() {
     return `
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import TopicStatus from "discourse/components/topic-status";
 
 <template>
@@ -76,7 +76,7 @@ import TopicStatus from "discourse/components/topic-status";
 
   get warningCode() {
     return `
-import topicLink from "discourse/helpers/topic-link";
+import topicLink from "discourse/ui-kit/helpers/d-topic-link";
 import TopicStatus from "discourse/components/topic-status";
 
 <template>

@@ -3,9 +3,9 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 /** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 /** @type {import("../shared/args-table.gjs").default} */
 import ArgsTable from "../shared/args-table";
 

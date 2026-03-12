@@ -3,12 +3,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import loadChartJS from "discourse/lib/load-chart-js";
 import {
   applyHtmlDecorators,
   NON_STREAM_HTML_DECORATOR,
   NULL_HELPER,
-} from "discourse/components/decorated-html";
-import loadChartJS from "discourse/lib/load-chart-js";
+} from "discourse/ui-kit/d-decorated-html";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 

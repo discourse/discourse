@@ -4,12 +4,12 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, eq, not } from "discourse/truth-helpers";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import boundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class Revision extends Component {

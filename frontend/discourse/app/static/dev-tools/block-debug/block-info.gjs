@@ -3,7 +3,7 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 /** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 /** @type {import("../shared/args-table.gjs").default} */
 import ArgsTable from "../shared/args-table";
 /** @type {import("./conditions-tree.gjs").default} */

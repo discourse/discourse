@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import { not } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class PostMetaDataPosterNameIcon extends Component {
   get emojis() {

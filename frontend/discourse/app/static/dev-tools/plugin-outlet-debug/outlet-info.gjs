@@ -4,9 +4,9 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import ArgsTable from "../shared/args-table";
 import devToolsState from "../state";
 

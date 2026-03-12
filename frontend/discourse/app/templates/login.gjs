@@ -1,17 +1,17 @@
 import { hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import FlashMessage from "discourse/components/flash-message";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
 import LoginPageCta from "discourse/components/login-page-cta";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and } from "discourse/truth-helpers";
+import FlashMessage from "discourse/ui-kit/d-flash-message";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default <template>

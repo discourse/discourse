@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import AvatarFlair from "discourse/components/avatar-flair";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import AvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class DiscoursePostEventInvitee extends Component {

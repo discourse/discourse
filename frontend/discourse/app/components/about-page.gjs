@@ -6,10 +6,10 @@ import { isBlank } from "@ember/utils";
 import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const pluginActivitiesFuncs = [];

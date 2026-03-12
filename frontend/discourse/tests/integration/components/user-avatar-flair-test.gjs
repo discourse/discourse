@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import { resetFlair } from "discourse/lib/avatar-flair";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import UserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
 
 function setupSiteGroups(that) {
   that.site.groups = [

@@ -4,8 +4,8 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
-import concatClass from "discourse/helpers/concat-class";
 import { and, not } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class SchemaSettingTypeString extends Component {

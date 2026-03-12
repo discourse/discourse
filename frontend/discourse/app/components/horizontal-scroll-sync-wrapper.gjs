@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
-import onResize from "discourse/modifiers/on-resize";
+import onResize from "discourse/ui-kit/modifiers/d-on-resize";
 
 export default class HorizontalScrollSyncWrapper extends Component {
   scrollableElement;

@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import { eq } from "discourse/truth-helpers";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import AiSecretEditorForm from "./ai-secret-editor-form";
 

@@ -2,10 +2,10 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import boundCategoryLink from "discourse/helpers/bound-category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import boundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 
 // Injections don't occur without a class
 @tagName("")

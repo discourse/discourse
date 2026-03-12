@@ -4,17 +4,17 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { prefixProtocol } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertHyperlink extends Component {

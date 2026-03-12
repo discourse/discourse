@@ -1,13 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKControlMenuContainer from "discourse/form-kit/components/fk/control/menu/container";
 import FKControlMenuDivider from "discourse/form-kit/components/fk/control/menu/divider";
 import FKControlMenuItem from "discourse/form-kit/components/fk/control/menu/item";
-import icon from "discourse/helpers/d-icon";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FKControlMenu extends FKBaseControl {
   static controlType = "menu";

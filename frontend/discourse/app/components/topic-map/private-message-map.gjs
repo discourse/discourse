@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import { groupPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import avatar from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class PrivateMessageMap extends Component {
   @service site;

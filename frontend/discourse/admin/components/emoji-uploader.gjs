@@ -8,11 +8,11 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const DEFAULT_GROUP = "default";

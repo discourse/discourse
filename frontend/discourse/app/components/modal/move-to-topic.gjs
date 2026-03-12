@@ -8,8 +8,6 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ChooseMessage from "discourse/components/choose-message";
 import ChooseTopic from "discourse/components/choose-topic";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
@@ -21,6 +19,8 @@ import { mergeTopic, movePosts } from "discourse/models/topic";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {

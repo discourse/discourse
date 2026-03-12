@@ -3,7 +3,7 @@ import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
 import ReviewableItem from "discourse/components/reviewable/item";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class extends Component {

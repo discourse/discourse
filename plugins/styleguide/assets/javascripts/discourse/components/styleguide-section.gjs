@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import sectionTitle from "discourse/plugins/styleguide/discourse/helpers/section-title";
 

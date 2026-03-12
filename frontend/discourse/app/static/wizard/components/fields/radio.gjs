@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class Radio extends Component {
   constructor() {

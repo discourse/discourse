@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import avatar from "discourse/helpers/avatar";
 import { emojiUrlFor } from "discourse/lib/text";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 
 export default class DiscourseReactionsReactionEmoji extends Component {
   get emojiUrl() {

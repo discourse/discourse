@@ -8,16 +8,16 @@ import { service } from "@ember/service";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiSecretSelector from "./ai-secret-selector";
 

@@ -3,21 +3,16 @@ import BlockOutlet from "discourse/blocks/block-outlet";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
-import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
-import CustomHtml from "discourse/components/custom-html";
 import DDocument from "discourse/components/d-document";
 import DStyles from "discourse/components/d-styles";
 import DVirtualHeight from "discourse/components/d-virtual-height";
 import DiscourseRoot from "discourse/components/discourse-root";
-import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
-import GlobalNotice from "discourse/components/global-notice";
 import LoadingSliderFallbackSpinner from "discourse/components/loading-slider-fallback-spinner";
 import ModalContainer from "discourse/components/modal-container";
 import NotificationConsentBanner from "discourse/components/notification-consent-banner";
 import OfflineIndicator from "discourse/components/offline-indicator";
-import PageLoadingSlider from "discourse/components/page-loading-slider";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
 import PwaInstallBanner from "discourse/components/pwa-install-banner";
@@ -34,6 +29,11 @@ import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { eq } from "discourse/truth-helpers";
+import CardContainer from "discourse/ui-kit/d-card-container";
+import CustomHtml from "discourse/ui-kit/d-custom-html";
+import FooterNav from "discourse/ui-kit/d-footer-nav";
+import GlobalNotice from "discourse/ui-kit/d-global-notice";
+import PageLoadingSlider from "discourse/ui-kit/d-page-loading-slider";
 
 export default <template>
   <DStyles />

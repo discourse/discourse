@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import { or } from "discourse/truth-helpers";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import number from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import sum from "../helpers/sum";
 

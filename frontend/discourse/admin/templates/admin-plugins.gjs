@@ -1,7 +1,7 @@
-import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsContainer from "discourse/ui-kit/d-breadcrumbs-container";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import HorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import NavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import CookText from "discourse/ui-kit/d-cook-text";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
 import { i18n } from "discourse-i18n";
 import { jsonToHtml } from "../../lib/utilities";
 

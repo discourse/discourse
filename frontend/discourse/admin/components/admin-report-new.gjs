@@ -1,15 +1,15 @@
 import { concat, fn } from "@ember/helper";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import AdminReport from "discourse/admin/components/admin-report";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import number from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 <template>

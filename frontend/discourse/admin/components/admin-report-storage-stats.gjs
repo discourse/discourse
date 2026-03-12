@@ -4,10 +4,10 @@ import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import { setting } from "discourse/lib/computed";
 import getUrl from "discourse/lib/get-url";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 @tagName("")

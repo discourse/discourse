@@ -1,5 +1,5 @@
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 import UserInfoList from "../../../components/user-info-list";
 

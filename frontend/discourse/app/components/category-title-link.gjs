@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import dirSpan from "discourse/helpers/dir-span";
-import element from "discourse/helpers/element";
 import { or } from "discourse/truth-helpers";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dirSpan from "discourse/ui-kit/helpers/d-dir-span";
+import element from "discourse/ui-kit/helpers/d-element";
 
 export default class CategoryTitleLink extends Component {
   get displayName() {

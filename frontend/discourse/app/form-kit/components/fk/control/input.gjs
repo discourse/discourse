@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const SUPPORTED_TYPES = [
   "color",

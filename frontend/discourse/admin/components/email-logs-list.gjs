@@ -5,14 +5,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import EmailLog from "discourse/admin/models/email-log";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
-import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class EmailLogsList extends Component {

@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
-import DEditor from "discourse/components/d-editor";
-import icon from "discourse/helpers/d-icon";
+import DEditor from "discourse/ui-kit/d-editor/d-editor";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldComposer extends Component {
   @tracked composerValue = this.args.value || "";

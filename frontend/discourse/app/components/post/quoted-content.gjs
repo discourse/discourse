@@ -5,17 +5,17 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import element from "discourse/helpers/element";
 import elementClass from "discourse/helpers/element-class";
 import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse/lib/helpers";
 import highlightHTML from "discourse/lib/highlight-html";
 import { postUrl } from "discourse/lib/utilities";
 import { eq } from "discourse/truth-helpers";
+import AsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import element from "discourse/ui-kit/helpers/d-element";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import PostCookedHtml from "./cooked-html";
 
 export default class PostQuotedContent extends Component {

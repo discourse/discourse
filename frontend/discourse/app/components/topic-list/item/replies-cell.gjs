@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import element from "discourse/helpers/element";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
+import element from "discourse/ui-kit/helpers/d-element";
+import number from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class RepliesCell extends Component {

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import InputTip from "discourse/components/input-tip";
+import InputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 
 export default class ChannelParamRow extends Component {

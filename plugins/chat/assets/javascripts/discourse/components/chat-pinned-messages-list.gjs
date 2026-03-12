@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 

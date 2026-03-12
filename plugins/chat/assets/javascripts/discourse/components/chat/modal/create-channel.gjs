@@ -8,12 +8,8 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isBlank, isPresent } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -22,6 +18,10 @@ import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_HINT = trustHTML(

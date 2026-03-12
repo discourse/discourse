@@ -4,7 +4,7 @@ import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class AdminReportTableCell extends Component {

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ThreadNotificationsTracking from "discourse/plugins/chat/discourse/components/thread-notifications-tracking";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 

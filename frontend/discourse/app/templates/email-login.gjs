@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import SecondFactorForm from "discourse/components/second-factor-form";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
+import DButton from "discourse/ui-kit/d-button";
+import SecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import { i18n } from "discourse-i18n";
 
 export default <template>

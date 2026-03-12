@@ -6,9 +6,9 @@ import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import { TOOLTIP } from "discourse/float-kit/lib/constants";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { and } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DTooltip extends Component {
   @service tooltip;

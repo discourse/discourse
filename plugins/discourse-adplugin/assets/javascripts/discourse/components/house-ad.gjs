@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import AdComponent from "./ad-component";
 
 const adIndex = {

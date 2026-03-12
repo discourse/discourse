@@ -1,5 +1,5 @@
-import SaveControls from "discourse/components/save-controls";
 import Tags from "discourse/components/user-preferences/tags";
+import SaveControls from "discourse/ui-kit/d-save-controls";
 
 export default <template>
   <Tags

@@ -9,13 +9,13 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DButton from "discourse/components/d-button";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
-import element_ from "discourse/helpers/element";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
+import element_ from "discourse/ui-kit/helpers/d-element";
 
 module("Integration | Component | FloatKit | d-menu", function (hooks) {
   setupRenderingTest(hooks);

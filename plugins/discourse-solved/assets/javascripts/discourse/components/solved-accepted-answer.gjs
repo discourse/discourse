@@ -4,12 +4,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import PostCookedHtml from "discourse/components/post/cooked-html";
-import UserLink from "discourse/components/user-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import InterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import UserLink from "discourse/ui-kit/d-user-link";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedAcceptedAnswer extends Component {

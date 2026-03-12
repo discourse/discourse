@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import BrowseMore from "discourse/components/more-topics/browse-more";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export let registeredTabs = [];
 

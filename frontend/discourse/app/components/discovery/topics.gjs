@@ -3,23 +3,23 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CountI18n from "discourse/components/count-i18n";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";
-import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import List from "discourse/components/topic-list/list";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { or } from "discourse/truth-helpers";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import CountI18n from "discourse/ui-kit/d-count-i18n";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
 export default class DiscoveryTopics extends Component {
   @service documentTitle;

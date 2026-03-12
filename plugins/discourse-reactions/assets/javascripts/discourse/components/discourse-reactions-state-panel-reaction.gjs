@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import UserAvatar from "discourse/components/user-avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import { gt } from "discourse/truth-helpers";
+import UserAvatar from "discourse/ui-kit/d-user-avatar";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MAX_USERS_COUNT = 26;

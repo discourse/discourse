@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import EmptyState from "./empty-state";
 import Item from "./item";
 

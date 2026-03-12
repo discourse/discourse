@@ -6,9 +6,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
@@ -19,6 +16,9 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import IconPicker from "discourse/select-kit/components/icon-picker";
 import { eq, or } from "discourse/truth-helpers";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryGeneral extends Component {

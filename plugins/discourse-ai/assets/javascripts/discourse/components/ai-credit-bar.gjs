@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
 import { number } from "discourse/lib/formatter";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 /**

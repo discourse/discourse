@@ -2,14 +2,14 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import DirectoryItemUserFieldValue from "discourse/components/directory-item-user-field-value";
-import UserInfo from "discourse/components/user-info";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
 import directoryItemLabel from "discourse/helpers/directory-item-label";
 import directoryItemValue from "discourse/helpers/directory-item-value";
-import formatDuration from "discourse/helpers/format-duration";
 import { propertyEqual } from "discourse/lib/computed";
+import UserInfo from "discourse/ui-kit/d-user-info";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import formatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

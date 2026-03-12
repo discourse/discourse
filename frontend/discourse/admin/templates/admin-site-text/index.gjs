@@ -1,11 +1,11 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import SiteTextSummary from "discourse/admin/components/site-text-summary";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default <template>

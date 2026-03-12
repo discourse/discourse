@@ -4,15 +4,15 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import User from "discourse/models/user";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import FutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class IgnoreDurationModal extends Component {

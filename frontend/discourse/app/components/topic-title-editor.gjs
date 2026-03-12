@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import autoFocus from "discourse/modifiers/auto-focus";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import autoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 

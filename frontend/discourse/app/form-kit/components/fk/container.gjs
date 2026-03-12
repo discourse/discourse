@@ -1,6 +1,6 @@
 import { concat } from "@ember/helper";
 import FormText from "discourse/form-kit/components/fk/text";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const FKContainer = <template>
   <div

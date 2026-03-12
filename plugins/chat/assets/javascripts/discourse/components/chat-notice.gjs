@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import MentionWithoutMembership from "discourse/plugins/chat/discourse/components/chat/notices/mention_without_membership";
 
 const COMPONENT_DICT = {

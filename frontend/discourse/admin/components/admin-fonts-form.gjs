@@ -9,13 +9,13 @@ import {
   MAIN_FONTS,
   MORE_FONTS,
 } from "discourse/admin/lib/constants";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];

@@ -2,16 +2,16 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
 import DismissNew from "discourse/components/modal/dismiss-new";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const _customButtons = [];

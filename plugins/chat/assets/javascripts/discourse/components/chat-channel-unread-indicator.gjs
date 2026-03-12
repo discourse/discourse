@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const MAX_UNREAD_COUNT = 99;
 

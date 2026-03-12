@@ -6,10 +6,10 @@ import { isPresent } from "@ember/utils";
 import InstallThemeModal from "discourse/admin/components/modal/install-theme";
 import ThemesGrid from "discourse/admin/components/themes-grid";
 import { THEMES } from "discourse/admin/models/theme";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasThemes extends Component {

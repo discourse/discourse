@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import PermissionType from "discourse/models/permission-type";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryPermissionRow extends Component {

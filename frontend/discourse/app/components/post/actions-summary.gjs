@@ -1,6 +1,6 @@
-import UserAvatar from "discourse/components/user-avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
+import UserAvatar from "discourse/ui-kit/d-user-avatar";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 const PostActionsSummary = <template>
   {{#each @post.actionsSummary key="id" as |actionSummary|}}

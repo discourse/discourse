@@ -6,15 +6,15 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AvatarUploader from "discourse/components/avatar-uploader";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
 import RadioButton from "discourse/components/radio-button";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { allowsImages } from "discourse/lib/uploads";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal/d-modal-cancel";
+import boundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
 
 export default class AvatarSelectorModal extends Component {

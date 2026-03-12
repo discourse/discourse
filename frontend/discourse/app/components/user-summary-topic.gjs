@@ -3,10 +3,10 @@ import Component from "@ember/component";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import number from "discourse/ui-kit/helpers/d-number";
 
 @tagName("")
 export default class UserSummaryTopic extends Component {

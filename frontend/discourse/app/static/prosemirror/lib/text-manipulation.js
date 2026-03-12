@@ -13,7 +13,7 @@ import {
 import { Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import DAutocompleteModifier from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 

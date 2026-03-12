@@ -1,7 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { formatValue } from "../lib/value-formatter";
 
 /**

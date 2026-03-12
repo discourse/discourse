@@ -6,10 +6,10 @@ import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-ar
 import AdminFilteredSiteSettings from "discourse/admin/components/admin-filtered-site-settings";
 import AdminSiteSettingsChangesBanner from "discourse/admin/components/admin-site-settings-changes-banner";
 import SiteSetting from "discourse/admin/models/site-setting";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class AdminAreaSettings extends Component {

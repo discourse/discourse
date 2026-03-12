@@ -1,12 +1,12 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import AvatarFlair from "discourse/components/avatar-flair";
 import GroupInfo from "discourse/components/group-info";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import AvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const GroupCard = <template>

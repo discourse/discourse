@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import UserInfo from "discourse/components/user-info";
+import DButton from "discourse/ui-kit/d-button";
+import UserInfo from "discourse/ui-kit/d-user-info";
 import { i18n } from "discourse-i18n";
 
 export default class AboutPageUsers extends Component {

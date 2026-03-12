@@ -2,17 +2,17 @@ import { Input } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import UserField from "discourse/components/user-field";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor/d-editor";
+import SaveControls from "discourse/ui-kit/d-save-controls";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default <template>

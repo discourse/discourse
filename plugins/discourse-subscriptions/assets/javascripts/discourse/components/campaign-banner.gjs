@@ -9,12 +9,12 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import formatCurrency from "../helpers/format-currency";
 

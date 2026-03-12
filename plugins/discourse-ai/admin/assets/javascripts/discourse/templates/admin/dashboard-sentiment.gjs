@@ -2,7 +2,7 @@ import { LinkTo } from "@ember/routing";
 import AdminReport from "discourse/admin/components/admin-report";
 import DashboardPeriodSelector from "discourse/admin/components/dashboard-period-selector";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

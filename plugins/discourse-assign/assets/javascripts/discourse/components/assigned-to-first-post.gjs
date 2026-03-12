@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   assignedToGroupPath,

@@ -5,11 +5,11 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import Blurb from "discourse/components/search-menu/results/blurb";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { and } from "discourse/truth-helpers";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class Results extends Component {
   @service siteSettings;

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class Button extends Component {
   @tracked interacting = false;

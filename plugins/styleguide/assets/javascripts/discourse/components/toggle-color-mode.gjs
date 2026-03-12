@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { loadColorSchemeStylesheet } from "discourse/lib/color-scheme-picker";
 import { currentThemeId } from "discourse/lib/theme-selector";
+import DButton from "discourse/ui-kit/d-button";
 
 const DARK = "dark";
 const LIGHT = "light";

@@ -1,12 +1,12 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
-import { addGlobalNotice } from "discourse/components/global-notice";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
-import dasherize from "discourse/helpers/dasherize";
 import { bind } from "discourse/lib/decorators";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
+import { addGlobalNotice } from "discourse/ui-kit/d-global-notice";
+import dasherize from "discourse/ui-kit/helpers/d-dasherize";
 import { i18n } from "discourse-i18n";
 
 const REPLACEMENT_URLS = {};

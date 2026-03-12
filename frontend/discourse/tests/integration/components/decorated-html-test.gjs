@@ -5,11 +5,11 @@ import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
-import DecoratedHtml, {
-  registerHtmlDecorator,
-} from "discourse/components/decorated-html";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DecoratedHtml, {
+  registerHtmlDecorator,
+} from "discourse/ui-kit/d-decorated-html";
 import { WIDGET_DECOMMISSION_OPTIONS } from "discourse/widgets/widget";
 
 module("Integration | Component | <DecoratedHtml />", function (hooks) {

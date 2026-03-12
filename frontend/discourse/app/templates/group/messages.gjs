@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import HorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import { i18n } from "discourse-i18n";
 
 export default <template>

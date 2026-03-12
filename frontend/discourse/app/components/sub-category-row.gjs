@@ -1,9 +1,9 @@
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import DecoratedHtml from "discourse/components/decorated-html";
 import SubCategoryItem from "discourse/components/sub-category-item";
 import borderColor from "discourse/helpers/border-color";
-import dirSpan from "discourse/helpers/dir-span";
+import DecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dirSpan from "discourse/ui-kit/helpers/d-dir-span";
 
 export default class SubCategoryRow extends CategoryListItem {
   <template>

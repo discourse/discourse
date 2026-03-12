@@ -16,7 +16,7 @@ import Post from "discourse/models/post";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import DAutocompleteModifier from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 const translateResultsCallbacks = [];

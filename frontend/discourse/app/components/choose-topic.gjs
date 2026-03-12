@@ -5,12 +5,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty, isPresent } from "@ember/utils";
-import AsyncContent from "discourse/components/async-content";
 import TopicStatus from "discourse/components/topic-status";
-import boundCategoryLink from "discourse/helpers/bound-category-link";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { searchForTerm } from "discourse/lib/search";
 import { eq, or } from "discourse/truth-helpers";
+import AsyncContent from "discourse/ui-kit/d-async-content";
+import boundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 // args:

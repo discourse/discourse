@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import DatePicker from "discourse/components/date-picker";
+import DButton from "discourse/ui-kit/d-button";
+import DatePicker from "discourse/ui-kit/d-date-picker/d-date-picker";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
 export default class JumpToPost extends Component {

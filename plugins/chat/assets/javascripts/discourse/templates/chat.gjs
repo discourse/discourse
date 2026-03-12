@@ -1,6 +1,6 @@
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ChannelsList from "discourse/plugins/chat/discourse/components/channels-list";
 import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
 

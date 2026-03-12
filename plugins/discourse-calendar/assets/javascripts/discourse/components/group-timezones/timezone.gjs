@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import UserAvatar from "discourse/components/user-avatar";
-import concatClass from "discourse/helpers/concat-class";
+import UserAvatar from "discourse/ui-kit/d-user-avatar";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class GroupTimezone extends Component {
   get formattedTime() {

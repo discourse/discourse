@@ -1,6 +1,6 @@
 import ActivationEmailForm from "discourse/components/activation-email-form";
-import DButton from "discourse/components/d-button";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
+import DButton from "discourse/ui-kit/d-button";
 
 export default <template>
   <SignupProgressBar @step="activate" />

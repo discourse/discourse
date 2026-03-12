@@ -8,13 +8,13 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DButton from "discourse/ui-kit/d-button";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress";
 

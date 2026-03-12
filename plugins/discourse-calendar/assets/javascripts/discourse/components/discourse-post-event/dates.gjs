@@ -5,12 +5,12 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { bbcodeAttributeEncode } from "discourse/lib/bbcode-attributes";
 import { generateIcsData } from "discourse/lib/download-calendar";
 import discourseLater from "discourse/lib/later";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DiscoursePostEventDates extends Component {
   @service siteSettings;

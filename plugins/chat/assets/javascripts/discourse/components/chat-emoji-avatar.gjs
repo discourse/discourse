@@ -1,4 +1,4 @@
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 const ChatEmojiAvatar = <template>
   <div class="chat-emoji-avatar">

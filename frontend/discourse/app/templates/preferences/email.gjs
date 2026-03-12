@@ -1,11 +1,11 @@
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
-import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import InputTip from "discourse/ui-kit/d-input-tip";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

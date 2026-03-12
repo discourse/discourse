@@ -1,10 +1,10 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import NavItem from "discourse/components/nav-item";
 import ReviewIndex from "discourse/components/reviewable/index";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import NavItem from "discourse/ui-kit/d-nav-item";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 <template>

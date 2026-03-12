@@ -7,7 +7,7 @@ import {
 } from "@ember-decorators/component";
 import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import TopicStatus from "./topic-status";
 
 @classNameBindings(":featured-topic")

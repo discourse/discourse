@@ -1,9 +1,9 @@
-import DNavigationItem from "discourse/components/d-navigation-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import HorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

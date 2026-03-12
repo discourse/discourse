@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import periodTitle from "discourse/helpers/period-title";
 import DropdownSelectBoxHeaderComponent from "discourse/select-kit/components/dropdown-select-box/dropdown-select-box-header";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("period-chooser-header", "btn-flat")
 export default class PeriodChooserHeader extends DropdownSelectBoxHeaderComponent {

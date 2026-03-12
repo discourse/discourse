@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ChatNavbarOpenDrawerButton extends Component {
   @service chatStateManager;

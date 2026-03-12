@@ -5,9 +5,9 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { USER_FIELD_FLAGS } from "discourse/admin/lib/constants";
 import UserField from "discourse/admin/models/user-field";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class AdminUserFieldItem extends Component {

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import formatDate from "discourse/helpers/format-date";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class ThreadPreview extends Component {
   get lastReplyDate() {

@@ -2,12 +2,12 @@ import { computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isNone } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import CategoryRow from "discourse/select-kit/components/category-row";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 

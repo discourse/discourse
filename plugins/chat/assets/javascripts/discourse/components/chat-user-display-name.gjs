@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
 import { formatUsername } from "discourse/lib/utilities";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ChatUserDisplayName extends Component {
   @service siteSettings;

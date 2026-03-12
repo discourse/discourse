@@ -4,14 +4,14 @@ import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
-import PopupInputTip from "discourse/components/popup-input-tip";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import FutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
+import PopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class FeatureTopic extends Component {

@@ -3,15 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { exportEntity } from "discourse/lib/export-csv";
 import { cook } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import {
   buildParams,

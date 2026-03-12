@@ -1,8 +1,8 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import TimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | time-shortcut-picker", function (hooks) {

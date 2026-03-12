@@ -1,7 +1,7 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 const Checkbox = <template>
   <div class="control-group form-template-field" data-field-type="checkbox">

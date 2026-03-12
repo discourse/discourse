@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import onResize from "discourse/modifiers/on-resize";
+import onResize from "discourse/ui-kit/modifiers/d-on-resize";
 
 const ChatMessagesContainer = <template>
   <div

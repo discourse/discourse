@@ -4,10 +4,10 @@ import { computed } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import discourseTag from "discourse/helpers/discourse-tag";
 import Category from "discourse/models/category";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import discourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

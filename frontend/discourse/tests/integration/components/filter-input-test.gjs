@@ -1,8 +1,8 @@
 import { hash } from "@ember/helper";
 import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import FilterInput from "discourse/components/filter-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import FilterInput from "discourse/ui-kit/d-filter-input";
 
 module("Integration | Component | FilterInput", function (hooks) {
   setupRenderingTest(hooks);

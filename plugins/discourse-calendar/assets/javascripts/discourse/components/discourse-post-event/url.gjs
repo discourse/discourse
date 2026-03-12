@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DiscoursePostEventUrl extends Component {
   get url() {

@@ -3,16 +3,16 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import CookText from "discourse/components/cook-text";
 import RawEmailModal from "discourse/components/modal/raw-email";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import ReviewableTags from "discourse/components/reviewable-tags";
-import categoryBadge from "discourse/helpers/category-badge";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
+import CookText from "discourse/ui-kit/d-cook-text";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewableQueuedPost extends Component {

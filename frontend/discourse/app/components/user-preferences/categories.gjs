@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const Categories = <template>

@@ -3,11 +3,11 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import DEditor from "discourse/components/d-editor";
 import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import PostLocalization from "discourse/models/post-localization";
+import DEditor from "discourse/ui-kit/d-editor/d-editor";
 import { i18n } from "discourse-i18n";
 
 export default class PostTranslationEditor extends Component {

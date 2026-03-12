@@ -2,14 +2,14 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

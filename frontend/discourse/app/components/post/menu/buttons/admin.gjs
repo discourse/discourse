@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class PostMenuAdminButton extends Component {
   static shouldRender(args, context) {

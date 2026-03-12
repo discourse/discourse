@@ -4,13 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 

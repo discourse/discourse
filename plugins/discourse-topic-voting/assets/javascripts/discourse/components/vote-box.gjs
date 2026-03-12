@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import VoteButton from "./vote-button";
 import VoteCount from "./vote-count";
 

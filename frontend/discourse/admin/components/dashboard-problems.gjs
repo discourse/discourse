@@ -3,14 +3,14 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { compare } from "@ember/utils";
 import AdminNotice from "discourse/admin/components/admin-notice";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DashboardProblems extends Component {

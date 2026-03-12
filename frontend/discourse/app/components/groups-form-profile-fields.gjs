@@ -5,15 +5,15 @@ import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import DEditor from "discourse/components/d-editor";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
-import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import Group from "discourse/models/group";
+import DEditor from "discourse/ui-kit/d-editor/d-editor";
+import InputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

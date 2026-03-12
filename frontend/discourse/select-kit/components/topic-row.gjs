@@ -1,8 +1,8 @@
 import { classNames } from "@ember-decorators/component";
 import TopicStatus from "discourse/components/topic-status";
-import boundCategoryLink from "discourse/helpers/bound-category-link";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
+import boundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 @classNames("topic-row")
 export default class TopicRow extends SelectKitRowComponent {

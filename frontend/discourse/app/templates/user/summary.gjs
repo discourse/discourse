@@ -1,8 +1,6 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserStat from "discourse/components/user-stat";
 import UserSummaryCategorySearch from "discourse/components/user-summary-category-search";
 import UserSummarySection from "discourse/components/user-summary-section";
 import UserSummaryTopic from "discourse/components/user-summary-topic";
@@ -10,9 +8,11 @@ import UserSummaryTopicsList from "discourse/components/user-summary-topics-list
 import UserSummaryUser from "discourse/components/user-summary-user";
 import UserSummaryUsersList from "discourse/components/user-summary-users-list";
 import bodyClass from "discourse/helpers/body-class";
-import categoryLink from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
 import shortenUrl from "discourse/helpers/shorten-url";
+import BadgeCard from "discourse/ui-kit/d-badge-card";
+import UserStat from "discourse/ui-kit/d-user-stat";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default <template>

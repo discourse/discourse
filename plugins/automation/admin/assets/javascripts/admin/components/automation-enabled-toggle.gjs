@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 const AutomationEnabledToggle = <template>

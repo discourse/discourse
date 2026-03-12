@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 import AiSearchDiscoveriesTooltip from "../../components/ai-search-discoveries-tooltip";

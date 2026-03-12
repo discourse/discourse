@@ -5,11 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MAX_COMPONENTS = 4;

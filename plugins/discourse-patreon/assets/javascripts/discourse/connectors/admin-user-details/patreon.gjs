@@ -3,10 +3,10 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

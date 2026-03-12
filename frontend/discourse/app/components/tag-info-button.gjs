@@ -4,10 +4,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import discourseTags from "discourse/helpers/discourse-tags";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import { i18n } from "discourse-i18n";
 
 export default class TagInfoButton extends Component {

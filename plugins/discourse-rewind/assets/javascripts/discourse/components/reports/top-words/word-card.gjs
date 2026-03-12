@@ -3,9 +3,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import emoji from "discourse/helpers/emoji";
 import discourseLater from "discourse/lib/later";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
 
 const MYSTERY_EMOJIS = [
   "floppy_disk",

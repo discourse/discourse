@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
 
 const SKIPPED_HEADERS = [
   { key: "admin.email.user" },

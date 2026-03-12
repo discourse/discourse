@@ -1,8 +1,8 @@
 import { next } from "@ember/runloop";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DOTP from "discourse/components/d-otp";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DOTP from "discourse/ui-kit/d-otp";
 
 module("Integration | Component | DOTP", function (hooks) {
   setupRenderingTest(hooks);

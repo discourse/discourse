@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import DButton from "discourse/ui-kit/d-button";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class DashboardPeriodSelector extends Component {

@@ -1,5 +1,5 @@
-import concatClass from "discourse/helpers/concat-class";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import DominatingTopicComposerMessage from "./composer-messages/dominating-topic";
 import EducationComposerMessage from "./composer-messages/education";
 import GetARoomComposerMessage from "./composer-messages/get-a-room";

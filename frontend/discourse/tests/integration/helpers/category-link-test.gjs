@@ -1,8 +1,8 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import categoryLink from "discourse/helpers/category-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
 
 module("Integration | Helper | category-link", function (hooks) {
   setupRenderingTest(hooks);

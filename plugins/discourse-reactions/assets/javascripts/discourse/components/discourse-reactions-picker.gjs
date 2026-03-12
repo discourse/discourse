@@ -3,10 +3,10 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
-import concatClass from "discourse/helpers/concat-class";
-import emoji from "discourse/helpers/emoji";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class DiscourseReactionsPicker extends Component {

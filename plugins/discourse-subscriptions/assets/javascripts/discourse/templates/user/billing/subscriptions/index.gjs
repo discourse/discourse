@@ -1,6 +1,6 @@
-import DButton from "discourse/components/d-button";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import loadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import formatUnixDate from "../../../../helpers/format-unix-date";
 

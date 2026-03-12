@@ -1,6 +1,6 @@
-import AvatarFlair from "discourse/components/avatar-flair";
-import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
+import AvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 const Group = <template>
   <div class="group-result {{if @result.flairUrl '--with-flair'}}">

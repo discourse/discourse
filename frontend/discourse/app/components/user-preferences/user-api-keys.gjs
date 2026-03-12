@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 class UserApiKeyRow extends Component {

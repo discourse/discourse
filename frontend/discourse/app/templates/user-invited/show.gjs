@@ -1,22 +1,22 @@
 import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
 import TextField from "discourse/components/text-field";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
-import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import EmptyState from "discourse/ui-kit/d-empty-state";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import formatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import number from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default <template>

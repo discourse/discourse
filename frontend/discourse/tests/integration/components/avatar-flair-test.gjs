@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import AvatarFlair from "discourse/components/avatar-flair";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import AvatarFlair from "discourse/ui-kit/d-avatar-flair";
 
 function renderComponent(flairArgs) {
   return render(

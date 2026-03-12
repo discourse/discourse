@@ -1,13 +1,13 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import UserLink from "discourse/ui-kit/d-user-link";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

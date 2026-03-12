@@ -1,14 +1,14 @@
 import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import ResponsiveTable from "discourse/components/responsive-table";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
 import TextField from "discourse/components/text-field";
-import UserInfo from "discourse/components/user-info";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import ResponsiveTable from "discourse/ui-kit/d-responsive-table";
+import TableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
+import UserInfo from "discourse/ui-kit/d-user-info";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 export default <template>

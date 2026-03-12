@@ -1,15 +1,15 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserBadge from "discourse/components/user-badge";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

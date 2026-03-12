@@ -9,8 +9,8 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DMultiSelect from "discourse/components/d-multi-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
 
 class TestComponent extends Component {
   @tracked selection = this.args.selection ?? [];

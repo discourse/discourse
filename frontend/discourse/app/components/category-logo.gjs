@@ -1,4 +1,4 @@
-import LightDarkImg from "discourse/components/light-dark-img";
+import LightDarkImg from "discourse/ui-kit/d-light-dark-img";
 
 const CategoryLogo = <template>
   <div class="category-logo aspect-image" ...attributes>

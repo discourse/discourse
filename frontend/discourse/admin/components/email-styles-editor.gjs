@@ -6,7 +6,7 @@ import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

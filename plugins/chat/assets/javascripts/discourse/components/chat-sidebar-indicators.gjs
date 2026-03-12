@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import UserStatusMessage from "discourse/components/user-status-message";
-import icon from "discourse/helpers/d-icon";
+import UserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 /**
  * Displays unread indicators and user status for chat channels in the sidebar.

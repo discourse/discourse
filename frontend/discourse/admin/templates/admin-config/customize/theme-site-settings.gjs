@@ -1,6 +1,6 @@
 import ThemeSiteSettings from "discourse/admin/components/theme-site-settings";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageSubheader from "discourse/components/d-page-subheader";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default <template>

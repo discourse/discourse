@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelIcon extends Component {

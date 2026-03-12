@@ -1,8 +1,8 @@
 import { hash } from "@ember/helper";
 import About from "discourse/admin/components/admin-config-areas/about";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import basePath from "discourse/helpers/base-path";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import basePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class SignupProgressBar extends Component {
   @service siteSettings;

@@ -5,18 +5,18 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import CategoryLogo from "discourse/components/category-logo";
-import DNavigation from "discourse/components/d-navigation";
 import AccessibleDiscoveryHeading from "discourse/components/discovery/accessible-discovery-heading";
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
+import DNavigation from "discourse/ui-kit/d-navigation";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DiscoveryNavigation extends Component {
   @service categoryTypeChooser;

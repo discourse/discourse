@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import SmallUserList from "discourse/components/small-user-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import SmallUserList from "discourse/ui-kit/d-small-user-list";
 
 module("Integration | Component | SmallUserList", function (hooks) {
   setupRenderingTest(hooks);

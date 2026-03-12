@@ -2,8 +2,8 @@ import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import ReviewableTags from "discourse/components/reviewable-tags";
 import TopicStatus from "discourse/components/topic-status";
-import categoryBadge from "discourse/helpers/category-badge";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
+import categoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
 
 /**

@@ -1,13 +1,13 @@
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DNavigationItem from "discourse/components/d-navigation-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import HorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

@@ -5,9 +5,9 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("summary")

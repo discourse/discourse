@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 
 module("Integration | Component | <DropdownMenu />", function (hooks) {
   setupRenderingTest(hooks);

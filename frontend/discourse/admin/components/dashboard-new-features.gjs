@@ -5,10 +5,10 @@ import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DashboardNewFeatureItem from "discourse/admin/components/dashboard-new-feature-item";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class DashboardNewFeatures extends Component {

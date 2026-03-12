@@ -1,6 +1,6 @@
 import BasicTopicList from "discourse/components/basic-topic-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
 
 export default <template>
   <LoadMore @action={{@controller.loadMore}} class="paginated-topics-list">

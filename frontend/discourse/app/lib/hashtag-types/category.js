@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { iconHTML } from "discourse/lib/icon-library";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import HashtagTypeBase from "./base";
 
 export default class CategoryHashtagType extends HashtagTypeBase {

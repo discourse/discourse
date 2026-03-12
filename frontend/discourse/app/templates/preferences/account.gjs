@@ -1,22 +1,22 @@
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
 import EmailDropdown from "discourse/components/email-dropdown";
 import GoogleIcon from "discourse/components/google-icon";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SaveControls from "discourse/components/save-controls";
 import TextField from "discourse/components/text-field";
-import UserStatusMessage from "discourse/components/user-status-message";
 import UsernamePreference from "discourse/components/username-preference";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import icon from "discourse/helpers/d-icon";
-import dasherize from "discourse/helpers/dasherize";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FlairChooser from "discourse/select-kit/components/flair-chooser";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import SaveControls from "discourse/ui-kit/d-save-controls";
+import UserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import boundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import dasherize from "discourse/ui-kit/helpers/d-dasherize";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

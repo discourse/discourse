@@ -1,8 +1,5 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DecoratedHtml, {
-  applyHtmlDecorators,
-} from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
@@ -10,6 +7,9 @@ import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import highlightHTML from "discourse/lib/highlight-html";
+import DecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePost extends Component {

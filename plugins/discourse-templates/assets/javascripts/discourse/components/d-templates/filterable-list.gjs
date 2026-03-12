@@ -4,7 +4,6 @@ import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import TextField from "discourse/components/text-field";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -13,6 +12,7 @@ import {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/select-kit/components/tag-drop";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 import Item from "./item";
 import TagDrop from "./tag-drop";

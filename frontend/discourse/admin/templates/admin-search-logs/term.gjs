@@ -2,15 +2,15 @@ import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import Chart from "discourse/admin/components/chart";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HighlightSearch from "discourse/components/highlight-search";
 import TopicStatus from "discourse/components/topic-status";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTag from "discourse/helpers/discourse-tag";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import discourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import { i18n } from "discourse-i18n";
 
 export default <template>

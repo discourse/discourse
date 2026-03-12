@@ -1,5 +1,5 @@
 import { on } from "@ember/modifier";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 
 const Toggle = <template>
   <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />

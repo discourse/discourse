@@ -4,9 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import emoji from "discourse/helpers/emoji";
 import lazyHash from "discourse/helpers/lazy-hash";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryTypeCards extends Component {

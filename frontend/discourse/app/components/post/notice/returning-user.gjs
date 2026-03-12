@@ -1,5 +1,5 @@
-import emoji from "discourse/helpers/emoji";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import emoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 import PostNoticeNewUser from "./new-user";
 

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { isEmpty } from "@ember/utils";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "./channel-title";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";

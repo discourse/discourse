@@ -1,7 +1,7 @@
 import { focus, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import tabToSibling from "discourse/modifiers/tab-to-sibling";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import tabToSibling from "discourse/ui-kit/modifiers/d-tab-to-sibling";
 
 module("Integration | Modifier | tabToSibling", function (hooks) {
   setupRenderingTest(hooks);

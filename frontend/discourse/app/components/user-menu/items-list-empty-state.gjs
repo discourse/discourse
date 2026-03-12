@@ -1,4 +1,4 @@
-import EmptyState from "discourse/components/empty-state";
+import EmptyState from "discourse/ui-kit/d-empty-state";
 import { i18n } from "discourse-i18n";
 
 const ItemsListEmptyState = <template>

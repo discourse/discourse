@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import avatar from "discourse/helpers/avatar";
-import number from "discourse/helpers/number";
 import { or } from "discourse/truth-helpers";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import number from "discourse/ui-kit/helpers/d-number";
 import fullnumber from "../helpers/fullnumber";
 
 @tagName("")

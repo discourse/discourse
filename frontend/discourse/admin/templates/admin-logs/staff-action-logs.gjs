@@ -3,14 +3,14 @@ import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import StaffActions from "discourse/admin/components/staff-actions";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
-import LoadMore from "discourse/components/load-more";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import LoadMore from "discourse/ui-kit/d-load-more";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

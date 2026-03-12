@@ -1,4 +1,4 @@
-import RelativeTimePicker from "discourse/components/relative-time-picker";
+import RelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

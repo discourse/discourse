@@ -1,7 +1,7 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DStatTiles from "discourse/components/d-stat-tiles";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DStatTiles from "discourse/ui-kit/d-stat-tiles";
 
 const content = "This is a tooltip";
 const label = "Stat Label";

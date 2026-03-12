@@ -7,10 +7,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import { formatUsername } from "discourse/lib/utilities";
-import scrollIntoView from "discourse/modifiers/scroll-into-view";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import scrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").UserEmailGroupResult} UserEmailGroupResult

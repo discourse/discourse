@@ -7,10 +7,10 @@ import { action } from "@ember/object";
 import { throttle } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const plusOne = helper(([val]) => val + 1);

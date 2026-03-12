@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
-import AsyncContent from "discourse/components/async-content";
+import { bind } from "discourse/lib/decorators";
+import { eq } from "discourse/truth-helpers";
+import AsyncContent from "discourse/ui-kit/d-async-content";
 import SmallUserList, {
   smallUserAttrs,
-} from "discourse/components/small-user-list";
-import icon from "discourse/helpers/d-icon";
-import { bind } from "discourse/lib/decorators";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import { eq } from "discourse/truth-helpers";
+} from "discourse/ui-kit/d-small-user-list";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import closeOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
 import { whoVoted } from "../lib/post-voting-utilities";
 

@@ -8,7 +8,7 @@ import { trustHTML } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import $ from "jquery";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("ul")
 @classNames("mobile-nav")

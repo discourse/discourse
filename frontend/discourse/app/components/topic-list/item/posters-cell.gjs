@@ -1,5 +1,5 @@
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
+import UserLink from "discourse/ui-kit/d-user-link";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 
 const PostersCell = <template>
   <td class="posters topic-list-data">

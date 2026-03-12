@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import concatClass from "discourse/helpers/concat-class";
 import { or } from "discourse/truth-helpers/index";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class FKEmphasis extends Component {
   get type() {

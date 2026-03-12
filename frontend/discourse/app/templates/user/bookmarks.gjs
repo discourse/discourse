@@ -1,10 +1,10 @@
 import { Input } from "@ember/component";
 import BookmarkList from "discourse/components/bookmark-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import EmptyState from "discourse/ui-kit/d-empty-state";
 import { i18n } from "discourse-i18n";
 
 export default <template>

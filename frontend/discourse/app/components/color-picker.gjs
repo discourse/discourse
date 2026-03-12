@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import ColorPickerChoice from "discourse/components/color-picker-choice";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

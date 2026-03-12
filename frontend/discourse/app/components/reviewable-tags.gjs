@@ -1,4 +1,4 @@
-import discourseTags from "discourse/helpers/discourse-tags";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 
 const ReviewableTags = <template>
   {{#if @tags}}

@@ -1,6 +1,6 @@
 import { LinkTo } from "@ember/routing";
 import checkIcon from "discourse/admin/helpers/check-icon";
-import icon from "discourse/helpers/d-icon";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

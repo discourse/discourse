@@ -8,7 +8,7 @@ import discourseLater from "discourse/lib/later";
 import { cloneJSON } from "discourse/lib/object";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 let cache = {},

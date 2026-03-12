@@ -6,18 +6,18 @@ import ThemeSettingEditor from "discourse/admin/components/theme-setting-editor"
 import ThemeSettingRelativesSelector from "discourse/admin/components/theme-setting-relatives-selector";
 import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
 import ThemeTranslation from "discourse/admin/components/theme-translation";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserLink from "discourse/components/user-link";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import UserLink from "discourse/ui-kit/d-user-link";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>

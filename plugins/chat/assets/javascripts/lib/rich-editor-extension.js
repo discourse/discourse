@@ -1,5 +1,5 @@
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 /** @type {RichEditorExtension} */

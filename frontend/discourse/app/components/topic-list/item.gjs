@@ -12,12 +12,6 @@ import PostCountOrBadges from "discourse/components/topic-list/post-count-or-bad
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import {
@@ -31,6 +25,12 @@ import {
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { and, eq } from "discourse/truth-helpers";
+import UserLink from "discourse/ui-kit/d-user-link";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
+import categoryLink from "discourse/ui-kit/helpers/d-category-link";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import discourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import formatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class Item extends Component {

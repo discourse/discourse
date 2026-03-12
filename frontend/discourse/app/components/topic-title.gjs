@@ -5,7 +5,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import observeIntersection from "discourse/modifiers/observe-intersection";
+import observeIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
 
 export default class TopicTitle extends Component {
   @service header;

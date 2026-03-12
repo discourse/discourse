@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

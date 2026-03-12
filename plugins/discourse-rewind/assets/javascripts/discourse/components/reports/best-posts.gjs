@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 

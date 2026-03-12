@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import NavItem from "discourse/components/nav-item";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import NavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>

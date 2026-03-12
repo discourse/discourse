@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class AdminReportTableHeader extends Component {

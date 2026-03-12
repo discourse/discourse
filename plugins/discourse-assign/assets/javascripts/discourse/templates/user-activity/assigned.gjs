@@ -1,10 +1,10 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import BasicTopicList from "discourse/components/basic-topic-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import withEventValue from "discourse/helpers/with-event-value";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import EmptyState from "discourse/ui-kit/d-empty-state";
+import LoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default <template>

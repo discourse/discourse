@@ -3,10 +3,10 @@ import loaderShim from "discourse/lib/loader-shim";
 
 // Soon-to-be-deprecated discourse-common imports
 loaderShim("discourse-common/helpers/base-path", () =>
-  importSync("discourse/helpers/base-path")
+  importSync("discourse/ui-kit/helpers/d-base-path")
 );
 loaderShim("discourse-common/helpers/base-url", () =>
-  importSync("discourse/helpers/base-url")
+  importSync("discourse/ui-kit/helpers/d-base-url")
 );
 loaderShim("discourse-common/helpers/bound-i18n", () =>
   importSync("discourse/helpers/bound-i18n")
@@ -18,7 +18,7 @@ loaderShim("discourse-common/helpers/component-for-row", () =>
   importSync("discourse/helpers/component-for-row")
 );
 loaderShim("discourse-common/helpers/d-icon", () =>
-  importSync("discourse/helpers/d-icon")
+  importSync("discourse/ui-kit/helpers/d-icon")
 );
 loaderShim("discourse-common/helpers/fa-icon", () =>
   importSync("discourse/helpers/fa-icon")
@@ -27,13 +27,13 @@ loaderShim("discourse-common/helpers/get-url", () =>
   importSync("discourse/lib/get-url")
 );
 loaderShim("discourse-common/helpers/html-safe", () =>
-  importSync("discourse/helpers/html-safe")
+  importSync("discourse/ui-kit/helpers/d-html-safe")
 );
 loaderShim("discourse-common/helpers/i18n-yes-no", () =>
   importSync("discourse/helpers/i18n-yes-no")
 );
 loaderShim("discourse-common/helpers/i18n", () =>
-  importSync("discourse/helpers/i18n")
+  importSync("discourse/ui-kit/helpers/d-i18n")
 );
 
 loaderShim("discourse-common/lib/attribute-hook", () =>

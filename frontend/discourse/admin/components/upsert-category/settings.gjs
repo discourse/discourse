@@ -5,8 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
@@ -14,6 +12,8 @@ import getUrl from "discourse/lib/get-url";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
+import RelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySettings extends Component {

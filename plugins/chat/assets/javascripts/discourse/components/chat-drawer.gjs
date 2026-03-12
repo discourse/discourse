@@ -8,13 +8,13 @@ import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
 @tagName("")

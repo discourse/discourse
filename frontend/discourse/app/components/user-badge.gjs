@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import BadgeButton from "discourse/components/badge-button";
+import BadgeButton from "discourse/ui-kit/d-badge-button";
 
 export default class UserBadge extends Component {
   get showGrantCount() {

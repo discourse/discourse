@@ -1,5 +1,5 @@
 import { concat } from "@ember/helper";
-import concatClass from "discourse/helpers/concat-class";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const PostVisitedLine = <template>

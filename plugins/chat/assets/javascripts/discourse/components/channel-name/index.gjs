@@ -3,9 +3,9 @@ import { get } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserStatusMessage from "discourse/components/user-status-message";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import UserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
 export default class ChatChannelName extends Component {

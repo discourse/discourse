@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { escapeExpression } from "discourse/lib/utilities";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ThreadUnreadIndicator from "discourse/plugins/chat/discourse/components/thread-unread-indicator";
 
 export default class ChatThreadTitle extends Component {

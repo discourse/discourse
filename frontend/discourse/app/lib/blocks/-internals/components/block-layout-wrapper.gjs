@@ -11,8 +11,8 @@
  */
 import Component from "@glimmer/component";
 import curryComponent from "ember-curry-component";
-import concatClass from "discourse/helpers/concat-class";
 import cssIdentifier from "discourse/helpers/css-identifier";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
  * @typedef {import("ember-curry-component").CurriedComponent} CurriedComponent

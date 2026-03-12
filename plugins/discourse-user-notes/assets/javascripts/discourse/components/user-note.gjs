@@ -1,12 +1,12 @@
 import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserLink from "discourse/components/user-link";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import CookText from "discourse/ui-kit/d-cook-text";
+import UserLink from "discourse/ui-kit/d-user-link";
+import ageWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import avatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 const UserNote = <template>

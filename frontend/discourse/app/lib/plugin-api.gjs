@@ -11,13 +11,7 @@ import {
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import {
-  NON_STREAM_HTML_DECORATOR,
-  registerHtmlDecorator,
-} from "discourse/components/decorated-html";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
-import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
@@ -46,12 +40,7 @@ import { registerFullPageSearchType } from "discourse/controllers/full-page-sear
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
-import {
-  addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
-} from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
-import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
@@ -139,6 +128,17 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
+import {
+  NON_STREAM_HTML_DECORATOR,
+  registerHtmlDecorator,
+} from "discourse/ui-kit/d-decorated-html";
+import { addToolbarCallback } from "discourse/ui-kit/d-editor/d-editor";
+import { addGlobalNotice } from "discourse/ui-kit/d-global-notice";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/ui-kit/helpers/d-category-link";
+import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
 import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 

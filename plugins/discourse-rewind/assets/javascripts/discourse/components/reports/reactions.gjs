@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class Reactions extends Component {

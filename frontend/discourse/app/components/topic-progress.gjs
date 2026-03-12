@@ -5,8 +5,8 @@ import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings("docked")

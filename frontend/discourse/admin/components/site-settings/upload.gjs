@@ -6,14 +6,14 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import PickFilesButton from "discourse/components/pick-files-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions, isImage } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DButton from "discourse/ui-kit/d-button";
+import PickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BACKGROUND_SIZE_COVER_SETTINGS = ["welcome_banner_image"];

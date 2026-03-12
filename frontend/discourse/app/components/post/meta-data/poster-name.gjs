@@ -5,10 +5,6 @@ import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import UserBadge from "discourse/components/user-badge";
-import UserLink from "discourse/components/user-link";
-import UserStatusMessage from "discourse/components/user-status-message";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
@@ -17,6 +13,10 @@ import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { formatUsername } from "discourse/lib/utilities";
 import { and, or } from "discourse/truth-helpers";
+import UserLink from "discourse/ui-kit/d-user-link";
+import UserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataPosterName extends Component {

@@ -6,12 +6,12 @@ import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 import CategoriesOnly from "discourse/components/categories-only";
 import CategoriesWithFeaturedTopics from "discourse/components/categories-with-featured-topics";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
+import ConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import LoadMore from "discourse/ui-kit/d-load-more";
 
 const subcategoryComponents = {
   boxes_with_featured_topics: CategoriesBoxesWithTopics,

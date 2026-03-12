@@ -4,7 +4,6 @@ import { trustHTML } from "@ember/template";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import CategoryUnread from "discourse/components/category-unread";
-import DecoratedHtml from "discourse/components/decorated-html";
 import MobileCategoryTopic from "discourse/components/mobile-category-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubCategoryItem from "discourse/components/sub-category-item";
@@ -12,9 +11,10 @@ import SubCategoryRow from "discourse/components/sub-category-row";
 import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { gt } from "discourse/truth-helpers";
+import DecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class ParentCategoryRow extends CategoryListItem {

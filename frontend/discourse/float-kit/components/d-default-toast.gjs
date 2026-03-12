@@ -1,10 +1,10 @@
 import { concat, fn, hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 const DDefaultToast = <template>
   <div

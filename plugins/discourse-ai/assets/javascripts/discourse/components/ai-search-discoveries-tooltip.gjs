@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AiSearchDiscoveriesTooltip extends Component {

@@ -5,11 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import CopyButton from "discourse/components/copy-button";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
-import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
 import { INVITE_DESCRIPTION_MAX_LENGTH } from "discourse/lib/constants";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
@@ -21,6 +17,10 @@ import { FORMAT as DATE_INPUT_FORMAT } from "discourse/select-kit/components/fut
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TopicChooser from "discourse/select-kit/components/topic-chooser";
 import { and, notEq, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import CopyButton from "discourse/ui-kit/d-copy-button";
+import FutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal/d-modal";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class CreateInvite extends Component {

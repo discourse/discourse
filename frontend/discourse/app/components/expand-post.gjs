@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ExpandPost extends Component {
   @tracked expanded = false;

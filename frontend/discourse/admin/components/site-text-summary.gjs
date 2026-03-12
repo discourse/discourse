@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import highlightHTML from "discourse/lib/highlight-html";
+import DButton from "discourse/ui-kit/d-button";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class SiteTextSummary extends Component {
   @action

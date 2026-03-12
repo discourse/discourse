@@ -6,10 +6,10 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import {

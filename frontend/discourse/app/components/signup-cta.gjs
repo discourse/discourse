@@ -4,10 +4,10 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
-import DButton from "discourse/components/d-button";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import discourseLater from "discourse/lib/later";
+import DButton from "discourse/ui-kit/d-button";
+import replaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

@@ -5,13 +5,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidSearchTerm, translateResults } from "discourse/lib/search";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const AI_RESULTS_TOGGLED = "full-page-search:ai-results-toggled";

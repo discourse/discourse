@@ -4,14 +4,14 @@ import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DButtonTooltip from "discourse/float-kit/components/d-button-tooltip";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ColorPaletteListItem extends Component {

@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import EmojiPicker from "discourse/components/emoji-picker";
-import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import autoFocus from "discourse/modifiers/auto-focus";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import autoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class UserStatusPicker extends Component {

@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import GeneratedInviteLink from "discourse/components/generated-invite-link";
 import TextField from "discourse/components/text-field";
@@ -16,6 +15,7 @@ import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

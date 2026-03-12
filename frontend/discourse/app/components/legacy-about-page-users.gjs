@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import UserInfo from "discourse/components/user-info";
+import UserInfo from "discourse/ui-kit/d-user-info";
 
 export default class LegacyAboutPageUsers extends Component {
   get users() {

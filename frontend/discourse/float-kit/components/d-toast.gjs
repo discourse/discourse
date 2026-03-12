@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import autoCloseToast from "discourse/float-kit/modifiers/auto-close-toast";
-import concatClass from "discourse/helpers/concat-class";
 import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
-import swipe from "discourse/modifiers/swipe";
 import { and } from "discourse/truth-helpers";
+import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import swipe from "discourse/ui-kit/modifiers/d-swipe";
 
 const VELOCITY_THRESHOLD = -1.2;
 
