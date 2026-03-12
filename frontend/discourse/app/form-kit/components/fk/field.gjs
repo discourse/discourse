@@ -48,27 +48,6 @@ const EmptyWrapper = <template>
   {{yield}}
 </template>;
 
-const CONTROL_COMPONENTS = {
-  calendar: FKControlCalendar,
-  checkbox: FKControlCheckbox,
-  code: FKControlCode,
-  color: FKControlColor,
-  composer: FKControlComposer,
-  custom: FKControlCustom,
-  emoji: FKControlEmoji,
-  icon: FKControlIcon,
-  image: FKControlImage,
-  input: FKControlInput,
-  menu: FKControlMenu,
-  password: FKControlPassword,
-  question: FKControlQuestion,
-  "radio-group": FKControlRadioGroup,
-  select: FKControlSelect,
-  "tag-chooser": FKControlTagChooser,
-  textarea: FKControlTextarea,
-  toggle: FKControlToggle,
-};
-
 export default class FKField extends Component {
   // Modifier for setting control type class/data-attribute.
   // Used by legacy path where type is set post-render by the control constructor.
@@ -91,11 +70,6 @@ export default class FKField extends Component {
   }
 
   @action
-  componentFor(component, field, args = {}) {
-    return curryComponent(component, { field, ...args }, getOwner(this));
-  }
-
-  @action
   legacyComponentFor(component, field) {
     if (!component.controlType) {
       throw new Error(
@@ -104,35 +78,6 @@ export default class FKField extends Component {
     }
 
     return curryComponent(component, { field }, getOwner(this));
-  }
-
-  @action
-  controlFor(field) {
-    if (!field.type) {
-      throw new Error("@type is required on `<form.Field />`.");
-    }
-
-    if (field.type.startsWith("input-")) {
-      return this.componentFor(FKControlInput, field, {
-        type: field.type.slice("input-".length),
-      });
-    }
-
-    const component = CONTROL_COMPONENTS[field.type];
-
-    if (!component) {
-      throw new Error(
-        `Unsupported \`<form.Field @type>\` value: "${field.type}".`
-      );
-    }
-
-    return this.componentFor(component, field);
-  }
-
-  @action
-  explicitYield(field) {
-    field.Control = this.controlFor(field);
-    return field;
   }
 
   @action
@@ -227,7 +172,7 @@ export default class FKField extends Component {
                 }}
               >
                 {{#if field.hasExplicitType}}
-                  {{yield (this.explicitYield field)}}
+                  {{yield field}}
                 {{else}}
                   {{yield (this.legacyYield field)}}
                 {{/if}}

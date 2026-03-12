@@ -1,5 +1,9 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import curryComponent from "ember-curry-component";
+import { resolveFieldControl } from "discourse/form-kit/lib/field-control";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
@@ -96,6 +100,17 @@ export default class FKFieldData extends Component {
 
   set type(value) {
     this._legacyControlType = value;
+  }
+
+  /**
+   * Contextual component for the control set by `@type`.
+   * @type {Component}
+   */
+  @cached
+  get Control() {
+    const { component, args } = resolveFieldControl(this.type);
+
+    return curryComponent(component, { field: this, ...args }, getOwner(this));
   }
 
   /**
