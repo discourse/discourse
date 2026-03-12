@@ -28,8 +28,8 @@ module(
       await render(
         <template>
           <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Emoji />
+            <form.Field @type="emoji" @name="foo" @title="Foo" as |field|>
+              <field.Control />
             </form.Field>
           </Form>
         </template>
