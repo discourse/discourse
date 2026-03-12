@@ -115,7 +115,6 @@ def log_task_duration(task_description, &task)
   task_start = current_timestamp
   task.call
   STDERR.puts "Done '#{task_description}' : #{(current_timestamp - task_start).round(2)} secs"
-  STDERR.puts
 end
 
 task "assets:precompile:compress_js": "environment" do
@@ -145,7 +144,6 @@ task "assets:precompile:compress_js": "environment" do
 
           proc.call do
             log_task_duration(digested_path) do
-              STDERR.puts "Compressing: #{digested_path}"
               gzip(file_path)
               brotli(file_path)
             end
