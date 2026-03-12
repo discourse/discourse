@@ -41,83 +41,26 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
     schema::Definition.new(tables: [table], enums: [enum])
   end
 
-  def table_config(
-    name: "users",
-    source_table_name: "users",
-    primary_key_columns: ["id"],
-    included_column_names: %w[id username],
-    column_options: {},
-    added_columns: [],
-    indexes: [],
-    constraints: [],
-    ignored_columns_map: {},
-    ignore_plugin_columns: false
-  )
-    Struct
-      .new(
-        :name,
-        :source_table_name,
-        :primary_key_columns,
-        :included_column_names,
-        :column_options,
-        :added_columns,
-        :indexes,
-        :constraints,
-        :ignored_columns_map,
-        :ignore_plugin_columns,
-        keyword_init: true,
-      ) do
-        def column_options_for(col)
-          column_options[col.to_s]
-        end
-
-        def ignored_column_names
-          ignored_columns_map.keys
-        end
-
-        def ignore_reason_for(col)
-          ignored_columns_map[col.to_s]
-        end
-
-        def ignore_plugin_columns?
-          ignore_plugin_columns
-        end
-      end
-      .new(
-        name:,
-        source_table_name:,
-        primary_key_columns:,
-        included_column_names:,
-        column_options:,
-        added_columns:,
-        indexes:,
-        constraints:,
-        ignored_columns_map:,
-        ignore_plugin_columns:,
-      )
-  end
-
   def diff_result(
     unconfigured_tables: [],
     missing_tables: [],
     stale_ignored_tables: [],
     table_diffs: []
   )
-    Struct.new(
-      :unconfigured_tables,
-      :missing_tables,
-      :stale_ignored_tables,
-      :table_diffs,
-      keyword_init: true,
-    ).new(unconfigured_tables:, missing_tables:, stale_ignored_tables:, table_diffs:)
+    Data.define(:unconfigured_tables, :missing_tables, :stale_ignored_tables, :table_diffs).new(
+      unconfigured_tables:,
+      missing_tables:,
+      stale_ignored_tables:,
+      table_diffs:,
+    )
   end
 
   def table_info(name, plugin: nil)
-    Struct.new(:name, :plugin, keyword_init: true).new(name:, plugin:)
+    Data.define(:name, :plugin).new(name:, plugin:)
   end
 
   def column_info(name, plugin: nil)
-    Struct.new(:name, :plugin, keyword_init: true).new(name:, plugin:)
+    Data.define(:name, :plugin).new(name:, plugin:)
   end
 
   def table_diff(
@@ -127,13 +70,12 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
     stale_ignored_columns: [],
     auto_ignored_columns: []
   )
-    Struct.new(
+    Data.define(
       :table_name,
       :unconfigured_columns,
       :missing_columns,
       :stale_ignored_columns,
       :auto_ignored_columns,
-      keyword_init: true,
     ).new(
       table_name:,
       unconfigured_columns:,
@@ -193,9 +135,7 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
 
       stub_command
       allow(schema).to receive(:ensure_ready!).with(database: "intermediate_db")
-      allow(schema).to receive(:tables).and_return(
-        { "users" => table_config, "posts" => table_config(name: "posts") },
-      )
+      allow(schema).to receive(:tables).and_return({ "users" => double, "posts" => double })
       allow(schema).to receive(:enums).and_return({ "visibility" => double, "status" => double })
       allow(schema).to receive(:ignored_tables).and_return(ignored)
       allow(schema).to receive(:effective_ignored_table_names).with(
