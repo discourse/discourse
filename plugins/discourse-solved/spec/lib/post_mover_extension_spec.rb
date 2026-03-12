@@ -23,7 +23,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
 
     topic.move_posts(admin, post_ids, destination_topic_id: destination_topic.id)
 
-    expect(DiscourseSolved::SolvedTopic.find_by(id: solved.id)).to be_nil
+    expect(topic.reload.solved).to be_nil
     expect(destination_topic.reload.solved).to be_present
   end
 

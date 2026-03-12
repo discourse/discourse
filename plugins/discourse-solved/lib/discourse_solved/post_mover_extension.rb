@@ -4,6 +4,7 @@ module DiscourseSolved
   module PostMoverExtension
     private
 
+    # original_topic and post_ids are attr_readers on PostMover
     def move_posts_to(topic)
       solved_topic = DiscourseSolved::SolvedTopic.find_by(topic_id: original_topic.id)
 
