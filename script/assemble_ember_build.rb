@@ -2,11 +2,14 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/NoChdir
 
+require "bundler/setup"
 require "fileutils"
 require "tempfile"
 require "open3"
 require "json"
 require "time"
+require "parallel"
+require "etc"
 
 require_relative "../lib/version"
 
@@ -185,5 +188,20 @@ else
     log "Running full core build..."
     system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
     File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
+  end
+end
+
+if ARGV.include?("--compress")
+  files = [*Dir.glob("#{EMBER_APP_DIR}/dist/**/*.js"), *Dir.glob("app/assets/generated/**/*.js")]
+  Parallel.map(files, in_threads: 4) do |file|
+    next if File.exist?("#{file}.gz") && File.exist?("#{file}.br")
+
+    start = Time.now
+
+    system("brotli", "-f", "--quality=11", "-o", "#{file}.br", file, exception: true)
+    IO.popen(["gzip", "-f", "-9", "-c", file], "rb") { |io| File.write("#{file}.gz", io.read) }
+    raise "gzip failed for #{file}" unless $?.success?
+
+    puts "Compressed #{file} in #{(Time.now - start).round(2)}s"
   end
 end

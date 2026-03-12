@@ -66,4 +66,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.DISCOURSE_ASSETS_RELEASE_TOKEN }}
         run: |
-          bundle exec script/publish_built_assets.rb
+          script/publish_built_assets.rb

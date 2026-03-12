@@ -5,8 +5,6 @@
 require "fileutils"
 require_relative "../lib/version"
 require "open3"
-require "parallel"
-require "etc"
 
 core_commit_hash = `git rev-parse HEAD`.strip
 version_string = "v#{Discourse::VERSION::STRING}-#{core_commit_hash.slice(0, 8)}"
@@ -40,25 +38,17 @@ def bundle(name:, env:, compress:)
   FileUtils.rm_rf("frontend/discourse/dist")
   FileUtils.rm_rf("app/assets/generated")
 
-  system({ **COMMON_ENV, **env }, "#{__dir__}/assemble_ember_build.rb", exception: true)
+  system(
+    { **COMMON_ENV, **env },
+    "#{__dir__}/assemble_ember_build.rb",
+    "--compress",
+    exception: true,
+  )
 
   out_dir = "#{TMP_DIR}/#{name}"
   FileUtils.mkdir_p(out_dir)
   FileUtils.mv("frontend/discourse/dist", "#{out_dir}/core")
   FileUtils.mv("app/assets/generated", "#{out_dir}/plugins")
-
-  if compress
-    files = Dir.glob("#{out_dir}/**/*.js")
-    Parallel.map(files, in_threads: 4) do |file|
-      start = Time.now
-
-      system("brotli", "-f", "--quality=11", "-o", "#{file}.br", file, exception: true)
-      IO.popen(["gzip", "-f", "-9", "-c", file], "rb") { |io| File.write("#{file}.gz", io.read) }
-      raise "gzip failed for #{file}" unless $?.success?
-
-      puts "Compressed #{file} in #{(Time.now - start).round(2)}s"
-    end
-  end
 
   system(
     "tar",
