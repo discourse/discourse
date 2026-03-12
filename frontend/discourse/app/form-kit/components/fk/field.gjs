@@ -83,7 +83,7 @@ export default class FKField extends Component {
   @action
   legacyYield(field) {
     deprecated(
-      `<form.Field> without @type is deprecated. Use \`<form.Field @type="..." as |field|><field.Control />\` instead of \`<form.Field as |field|><field.Input />\`.`,
+      '<form.Field> without @type is deprecated. Use `<form.Field @type="..." as |field|><field.Control />` instead of `<form.Field as |field|><field.Input />`.',
       {
         id: "discourse.form-kit.legacy-field-yield",
         since: "2026.3",
