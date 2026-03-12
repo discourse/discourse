@@ -81,18 +81,20 @@ export default class SolvedSettingsUpsert extends Component {
             @name="notify_on_staff_accept_solved"
             @title={{i18n "solved.notify_on_staff_accept_solved"}}
             @onSet={{this.onToggleNotifyOnStaffAcceptSolved}}
+            @type="checkbox"
             as |field|
           >
-            <field.Checkbox checked={{this.notifyOnStaffAcceptSolved}} />
+            <field.Control checked={{this.notifyOnStaffAcceptSolved}} />
           </customFields.Field>
 
           <customFields.Field
             @name="empty_box_on_unsolved"
             @title={{i18n "solved.empty_box_on_unsolved"}}
             @onSet={{this.onToggleEmptyBoxOnUnsolved}}
+            @type="checkbox"
             as |field|
           >
-            <field.Checkbox checked={{this.emptyBoxOnUnsolved}} />
+            <field.Control checked={{this.emptyBoxOnUnsolved}} />
           </customFields.Field>
         </form.Object>
       </form.Section>
