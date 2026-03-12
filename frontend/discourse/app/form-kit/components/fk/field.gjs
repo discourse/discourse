@@ -72,7 +72,7 @@ const CONTROL_COMPONENTS = {
 export default class FKField extends Component {
   // Modifier for setting control type class/data-attribute.
   // Used by legacy path where type is set post-render by the control constructor.
-  // Also runs (harmlessly) on the new path where type is set via @type.
+  // Also runs on the new path where type is set via @type, will be removed when legacy path is removed.
   applyControlType = modifierFn((element, [field]) => {
     const type = field.type;
 

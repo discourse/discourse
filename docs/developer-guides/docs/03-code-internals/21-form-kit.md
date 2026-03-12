@@ -1594,16 +1594,6 @@ Creating a custom control is straightforward with the properties yielded by `for
 | ----- | ----------------------------------------------------------------- |
 | `set` | Allows you to set the value of any field by name: `set("bar", 1)` |
 
-### Available Parameters on `field`
-
-| Name      | Description                                         |
-| --------- | --------------------------------------------------- |
-| `Control` | Contextual component for the control set by `@type` |
-| `id`      | ID to be used on the control for accessibility      |
-| `name`    | Name of the field                                   |
-| `value`   | The value of the field                              |
-| `set`     | Function to set the field's value                   |
-
 # Custom Validation
 
 ## Field

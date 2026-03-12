@@ -94,12 +94,11 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @name="contactEmail"
         @title={{i18n "admin.config_areas.about.contact_email"}}
         @description={{i18n "admin.config_areas.about.contact_email_help"}}
-        @type="input"
+        @type="input-email"
         @format="large"
         as |field|
       >
         <field.Control
-          @type="email"
           placeholder={{i18n
             "admin.config_areas.about.contact_email_placeholder"
           }}
@@ -110,12 +109,11 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @name="contactURL"
         @title={{i18n "admin.config_areas.about.contact_url"}}
         @description={{i18n "admin.config_areas.about.contact_url_help"}}
-        @type="input"
+        @type="input-url"
         @format="large"
         as |field|
       >
         <field.Control
-          @type="url"
           placeholder={{i18n
             "admin.config_areas.about.contact_url_placeholder"
           }}
