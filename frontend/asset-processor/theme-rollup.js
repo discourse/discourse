@@ -4,7 +4,7 @@ import { babel, getBabelOutputPlugin } from "@rollup/plugin-babel";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
-import { precompile } from "ember-source/ember-template-compiler";
+import { precompile } from "ember-source/ember-template-compiler/index.js";
 import EmberThisFallback from "ember-this-fallback";
 import { memfs } from "memfs";
 import transformActionSyntax from "discourse-plugins/transform-action-syntax";
