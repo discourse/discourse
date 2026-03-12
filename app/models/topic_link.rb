@@ -183,6 +183,7 @@ class TopicLink < ActiveRecord::Base
         .joins(:post, :user)
         .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
         .where(topic_id: topic.id, reflection: false)
+        .where(posts: { hidden: false })
         .last(200)
 
     lookup = {}
