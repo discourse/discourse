@@ -321,7 +321,26 @@ acceptance(`Topic featured links`, function (needs) {
     await click(".topic-admin-visible .btn");
 
     await click(".toggle-admin-menu");
-    assert.dom(".topic-admin-pin").exists("should show the multi select menu");
+    assert.dom(".topic-admin-pin").exists("should show the pin menu item");
+  });
+
+  test("Bannering unlisted topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-visible .btn");
+
+    await click(".toggle-admin-menu");
+    assert
+      .dom(".topic-admin-pin")
+      .exists(
+        "should show the pin menu item for unlisted topics with can_banner_topic"
+      );
+
+    await click(".topic-admin-pin .btn");
+    assert
+      .dom(".make-banner")
+      .exists("should show the banner button for unlisted topics");
   });
 
   test("selecting posts", async function (assert) {
