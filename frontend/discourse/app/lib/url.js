@@ -118,9 +118,19 @@ class DiscourseURL extends EmberObject {
       if (opts.anchor) {
         selector = `#main #${opts.anchor}, a[name=${opts.anchor}]`;
         holder = document.querySelector(selector);
+
+        if (!holder) {
+          // Anchor not found — post may be cloaked. Scroll to the post
+          // placeholder to trigger uncloaking, then let LockOn retry
+          // until the anchor element appears in the rendered content.
+          const postHolder = document.querySelector(holderId);
+          if (postHolder) {
+            postHolder.scrollIntoView(true);
+          }
+        }
       }
 
-      if (!holder) {
+      if (!holder && !opts.anchor) {
         selector = holderId;
         holder = document.querySelector(selector);
       }

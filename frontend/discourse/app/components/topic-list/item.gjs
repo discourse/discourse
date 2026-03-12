@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe, isHTMLSafe } from "@ember/template";
+import { isHTMLSafe, trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
@@ -267,7 +267,7 @@ export default class Item extends Component {
     });
 
     if (safeParts.length) {
-      return htmlSafe(safeParts.join("\n"));
+      return trustHTML(safeParts.join("\n"));
     }
   }
 

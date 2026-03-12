@@ -67,5 +67,22 @@ module(
 
       assert.deepEqual(data.foo, null, "it nullifies the value");
     });
+
+    test("@before and @after", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Input @before="https://" @after=".com" />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".form-kit__before-input").hasText("https://");
+      assert.dom(".form-kit__after-input").hasText(".com");
+      assert.dom(".form-kit__control-input").hasClass("has-prefix");
+      assert.dom(".form-kit__control-input").hasClass("has-suffix");
+    });
   }
 );

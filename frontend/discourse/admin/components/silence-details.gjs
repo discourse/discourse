@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import TextField from "discourse/components/text-field";
 import { i18n } from "discourse-i18n";
@@ -11,7 +11,7 @@ export default class SilenceDetails extends Component {
     <div class="penalty-reason-controls">
       <label>
         <div class="silence-reason-label">
-          {{htmlSafe (i18n "admin.user.silence_reason_label")}}
+          {{trustHTML (i18n "admin.user.silence_reason_label")}}
         </div>
       </label>
       <TextField

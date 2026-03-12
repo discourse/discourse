@@ -1,6 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import InlineEditCheckbox from "discourse/admin/components/inline-edit-checkbox";
 import ThemeSettingEditor from "discourse/admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "discourse/admin/components/theme-setting-relatives-selector";
@@ -348,7 +348,7 @@ export default <template>
       <div class="mini-title">{{i18n
           "admin.customize.theme.theme_site_settings"
         }}</div>
-      <p><i>{{htmlSafe
+      <p><i>{{trustHTML
             (i18n
               "admin.customize.theme.overriden_site_settings_explanation"
               themeSiteSettingsConfigUrl=(getURL

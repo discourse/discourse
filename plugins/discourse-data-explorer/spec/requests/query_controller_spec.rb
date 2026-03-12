@@ -781,5 +781,20 @@ describe DiscourseDataExplorer::QueryController do
       expect(response.parsed_body["columns"]).to eq(["legacy_value"])
       expect(response.parsed_body["rows"]).to eq([[42]])
     end
+
+    it "serves POST /admin/plugins/explorer/queries/:id/run without .json suffix or Accept header" do
+      query = make_query("SELECT 42 as legacy_value")
+      post "/admin/plugins/explorer/queries/#{query.id}/run",
+           params: {
+             params: {}.to_json,
+           },
+           headers: {
+             "Accept" => "",
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(response.parsed_body["columns"]).to eq(["legacy_value"])
+      expect(response.parsed_body["rows"]).to eq([[42]])
+    end
   end
 end

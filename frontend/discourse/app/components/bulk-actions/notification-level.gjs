@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import { topicLevels } from "discourse/lib/notification-levels";
@@ -40,7 +40,7 @@ export default class NotificationLevel extends Component {
               @selection={{this.notificationLevelId}}
             />
             <strong>{{level.name}}</strong>
-            <div class="description">{{htmlSafe level.description}}</div>
+            <div class="description">{{trustHTML level.description}}</div>
           </label>
         </div>
       {{/each}}

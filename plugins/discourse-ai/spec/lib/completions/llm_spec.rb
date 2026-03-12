@@ -140,6 +140,35 @@ RSpec.describe DiscourseAi::Completions::Llm do
       end
     end
 
+    context "with temperature and top_p" do
+      fab!(:fake_model)
+
+      before do
+        DiscourseAi::Completions::Endpoints::Fake.delays = []
+        DiscourseAi::Completions::Endpoints::Fake.last_call = nil
+      end
+
+      it "drops temperature and top_p when ai_llm_temperature_top_p_enabled is false" do
+        SiteSetting.ai_llm_temperature_top_p_enabled = false
+        fake_llm = described_class.proxy(fake_model)
+        fake_llm.generate("hello", user:, temperature: 0.5, top_p: 0.9)
+
+        last_call = DiscourseAi::Completions::Endpoints::Fake.last_call
+        expect(last_call[:model_params]).not_to have_key(:temperature)
+        expect(last_call[:model_params]).not_to have_key(:top_p)
+      end
+
+      it "passes temperature and top_p when ai_llm_temperature_top_p_enabled is true" do
+        SiteSetting.ai_llm_temperature_top_p_enabled = true
+        fake_llm = described_class.proxy(fake_model)
+        fake_llm.generate("hello", user:, temperature: 0.5, top_p: 0.9)
+
+        last_call = DiscourseAi::Completions::Endpoints::Fake.last_call
+        expect(last_call[:model_params][:temperature]).to eq(0.5)
+        expect(last_call[:model_params][:top_p]).to eq(0.9)
+      end
+    end
+
     context "when tracking failures" do
       it "fast-tracks problem check after threshold and resets on success" do
         WebMock.stub_request(:post, model.url).to_return(

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { eq } from "discourse/truth-helpers";
 
 export default class ThemesGridPlaceholder extends Component {
@@ -35,14 +35,14 @@ export default class ThemesGridPlaceholder extends Component {
     let colors = this.themeColors;
 
     return {
-      primary: htmlSafe(colors.primary),
-      secondary: htmlSafe(colors.secondary),
-      tertiary: htmlSafe(colors.tertiary),
-      quaternary: htmlSafe(colors.quaternary),
-      highlight: htmlSafe(colors.highlight),
-      danger: htmlSafe(colors.danger),
-      success: htmlSafe(colors.success),
-      love: htmlSafe(colors.love),
+      primary: trustHTML(colors.primary),
+      secondary: trustHTML(colors.secondary),
+      tertiary: trustHTML(colors.tertiary),
+      quaternary: trustHTML(colors.quaternary),
+      highlight: trustHTML(colors.highlight),
+      danger: trustHTML(colors.danger),
+      success: trustHTML(colors.success),
+      love: trustHTML(colors.love),
     };
   }
 

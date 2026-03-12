@@ -18,7 +18,7 @@ ug:
     spam_detection:
       logging_subject: "ئەخلەت ئۇچۇر بايقاش"
     ai_bot:
-      personas:
+      agents:
         titles_generator:
           name: "ماۋزۇ ھاسىللىغۇچ"
         translator:
@@ -57,6 +57,7 @@ ug:
         github_file_content: "GitHub ھۆججەت مەزمۇنى"
         random_picker: "ئىختىيارىي تاللىغۇچ"
         categories: "سەھىپە تىزىمىنى كۆرسەت"
+        edit_post: "يازما تەھرىر"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
         time: "ۋاقىت"
@@ -70,6 +71,7 @@ ug:
         researcher: "تەتقىقات"
         researcher_dry_run: "تەتقىقات تەييارلاش"
       tool_help:
+        delete_topic: "تېما ئۆچۈرىدۇ"
         search_settings: "بېكەت تەڭشىكىنى ئىزدەيدۇ"
       tool_description:
         dall_e: "%{prompt}"
@@ -83,6 +85,34 @@ ug:
           one: "%{count} بەلگە تېپىلدى"
           other: "%{count} بەلگە تېپىلدى"
         schema: "%{tables}"
+      close_topic:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+      unlist_topic:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+      delete_topic:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+      edit_tags:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+      edit_category:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+          category_not_found: "سەھىپە تېپىلمىدى."
+      set_topic_timer:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+      set_slow_mode:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+      move_posts:
+        errors:
+          not_found: "تېما تېپىلمىدى."
+      assign:
+        errors:
+          not_found: "تېما تېپىلمىدى."
     summarization:
       chat:
         no_targets: "تاللىغان مەزگىلدىكى ئۇچۇر يوق."

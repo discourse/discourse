@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSolved::UnacceptAnswer do
-  describe described_class::Contract, type: :model do
+  describe ::DiscourseSolved::UnacceptAnswer::Contract, type: :model do
     it { is_expected.to validate_presence_of(:post_id) }
   end
 

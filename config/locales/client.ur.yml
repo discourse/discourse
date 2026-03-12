@@ -2344,6 +2344,7 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
+      required: درکار ہے
       dirty_form: "آپ نے اپنی تبدیلیاں جمع نہیں کروائیں! کیا آپ واقعی چھوڑنا چاہتے ہیں؟"
       errors:
         starts_with: "%{prefix}سے شروع ہونا چاہیے"
@@ -5848,7 +5849,7 @@ ur:
           all: "تمام"
           view_table: "ٹیبل"
           view_graph: "گراف"
-          refresh_report: "رپورٹ رِیفریش کریں"
+          refresh_report: "تازہ کریں"
           daily: روزانہ
           monthly: ماہانہ
           weekly: ہفتہ وار

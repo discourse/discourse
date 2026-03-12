@@ -8,6 +8,7 @@ hu:
   site_settings:
     chat_separate_sidebar_mode: "Külön oldalsávos módok megjelenítése a fórum és a csevegés számára."
     chat_enabled: "Csevegés engedélyezése."
+    chat_pinned_messages: "Rögzített üzenetek engedélyezése a csevegőcsatornákban."
     enable_public_channels: "Nyilvános csatornák engedélyezése kategóriák alapján."
     chat_allowed_groups: "A csoportok felhasználói cseveghetnek. Vegye figyelembe, hogy az adminisztrátorok és moderátorok mindig hozzáférhetnek a csevegéshez."
     chat_channel_retention_days: "A normál csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
@@ -23,6 +24,7 @@ hu:
     chat_archive_destination_topic_status: "Az az állapot, amelyet a céltéma a csatornaarchiválás befejezése után fog kapni. Ez csak akkor érvényes, ha a céltéma egy új téma, nem pedig egy meglévő."
     direct_message_enabled_groups: "A következő csoportokba tartozó felhasználók számára engedélyezi a felhasználók közötti Személyes Csevegések létrehozását. Megjegyzés: a stábtagok mindig létrehozhatnak Személyes Csevegéseket, és a felhasználók válaszolhatnak olyan Személyes Csevegésekre, amelyeket olyan felhasználók kezdeményeztek, akiknek jogosultságuk van azok létrehozására."
     chat_message_flag_allowed_groups: "A következő csoportok felhasználói megjelölhetnek csevegőüzeneteket. Vegye figyelembe, hogy az adminisztrátorok és moderátorok mindig megjelölhetik a csevegési üzeneteket."
+    chat_pinning_messages_allowed_groups: "Ezen csoportok tagjai rögzíthetnek csevegőüzeneteket azokban a csatornákban, amelyekhez hozzáférésük van. Megjegyzés: az adminisztrátorok és moderátorok mindig rögzíthetnek csevegőüzeneteket. Csoportos csevegések vagy közvetlen üzenetváltások (PÜ) esetén bármely tag rögzíthet ott üzeneteket."
     max_mentions_per_chat_message: "A chat üzenetben használható @név értesítések maximális száma felhasználónként."
     chat_max_direct_message_users: "A felhasználók nem adhatnak hozzá ennél több felhasználót új közvetlen üzenet létrehozásakor. Állítsa 0-ra, hogy csak saját magának engedélyezze az üzeneteket. A stábtagok mentesülnek e beállítás alól."
     chat_allow_archiving_channels: "A stábtagoknak lehetőségük van a témához tartozó üzenetek archiválására amikor a csatorna bezárásra kerül."
@@ -31,6 +33,7 @@ hu:
     chat_editing_grace_period_max_diff_high_trust: "A szerkesztési türelmi időszakban megengedett karakterváltoztatások maximális száma. Ha ennél több változik, megjelenik a (szerkesztve) címke a chat üzenet mellett (2-es és nagyobb bizalmi szint)."
     chat_preferred_index: "Előnyben részesített lap a /chat betöltésekor."
     allow_chat_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy a webhelyét névtelenül böngésző felhasználók használhassák a csevegést. Ehhez a beállításhoz engedélyezni kell a `engedélyezd az anonim módot` beállítást."
+    chat_search_enabled: "Engedélyezze ezt a beállítást, hogy a felhasználók kereshessenek a csevegési üzenetekben."
     errors:
       chat_default_channel: "Az alapértelmezett csevegőcsatornának nyilvános csatornának kell lennie."
       direct_message_enabled_groups_invalid: "Ehhez a beállításhoz legalább egy csoportot meg kell adni. Ha nem szeretné, hogy a stábtagokon kívül bárki közvetlen üzeneteket küldjön, válassza ki a stábtag csoportot."
@@ -72,6 +75,7 @@ hu:
         closed: "A csatorna le van zárva, az üzeneteket nem lehet szerkeszteni vagy törölni"
         read_only: "A csatorna csak olvasható, az üzeneteket nem lehet szerkeszteni vagy törölni"
       user_cannot_send_message: "Jelenleg nem küldhet üzeneteket."
+      user_not_in_channel: "Tagjának kell lenned ennek a csatornának."
       rate_limit_exceeded: "Túllépte a 30 másodpercen belül elküldhető csevegőüzenetek korlátját"
       auto_silence_from_flags: "A csevegőüzenet elég magas pontszámmal lett megjelölve, hogy a felhasználó némítva legyen."
       channel_cannot_be_archived: "A csatorna jelenleg nem archiválható, a csatornát vagy le kell zárni, vagy meg kell nyitni az archiváláshoz."
@@ -103,12 +107,22 @@ hu:
       thread_invalid_for_channel: "A szál nem része a megadott csatornának."
       thread_does_not_match_parent: "A szál nem egyezik a szülőüzenettel."
       invalid_direct_message: "Ez a közvetlen üzenet nem hozható létre."
+      pin_limit_reached: "Ez a csatorna elérte a rögzített üzenetek maximális számát (%{limit})."
+      message_already_pinned: "Ez az üzenet már rögzítve van."
+      message_not_pinned: "Ez az üzenet nincs rögzítve."
     reviewables:
       message_already_handled: "Köszönjük, de már megvizsgáltuk ezt az üzenetet, és megállapítottuk, hogy nem kell újra megjelölni."
       actions:
+        message_actions:
+          bundle_title: "Mit szeretnél csinálni az üzenettel?"
         no_action_message:
           title: "Nincs művelet"
+          description: "Hagyd az üzenetet úgy, ahogy van."
+        delete_message:
+          title: "Üzenet törlése"
+          description: "Az üzenet végleges törlése."
         restore_message:
+          title: "Üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy láthassák a felhasználók."
         agree:
           title: "Egyetértek…"
@@ -131,10 +145,14 @@ hu:
           title: "Üzenet törlése"
           description: "Üzenet törlése, hogy a felhasználók ne láthassák."
         delete_and_agree:
+          title: "Megjelölés mellőzése és üzenet törlése"
           description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és az üzenet törlésével."
         disagree_and_restore:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
+        disagree:
+          title: "Üzenet megtartása"
+          description: "Nem értek egyet a megjelöléssel, és az üzenetet változatlanul hagyom."
         ignore:
           title: "Jelzés figyelmen kívül hagyása"
           description: "Eltávolítás a várólistáról intézkedés nélkül."
@@ -244,14 +262,19 @@ hu:
         watched_thread:
           one: "[%{site_name}] Új szálüzenet itt: %{channel}"
           other: "[%{site_name}] Új szálüzenetek itt: %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Új üzenetek a(z) %{channel} és további %{count} csatornában"
+          other: "[%{site_name}] Új üzenetek a(z) %{channel} és további %{count} csatornában"
         chat_dm_1:
           one: "[%{site_name}] Új üzenet tőle: %{name}"
           other: "[%{site_name}] Új üzenetek tőle: %{name}"
         chat_dm_2: "[%{site_name}] Új üzenetek tőlük: %{name_1} és %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Új üzenetek %{name} és további %{count} a közvetlen üzenetcsatornából"
         chat_channel_1:
           one: "[%{site_name}] Új üzenet itt: %{channel}"
           other: "[%{site_name}] Új üzenetek itt: %{channel}"
         chat_channel_2: "[%{site_name}] Új üzenetek itt: %{channel_1} és %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Új üzenetek a(z) %{channel} és további %{count} csatornában"
         chat_channel_and_dm: "[%{site_name}] Új üzenetek itt: %{channel}, és tőle: %{name}"
       unsubscribe: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. A leiratkozáshoz módosítsa a %{email_preferences_link} vagy a %{unsubscribe_link} értéket."
       unsubscribe_no_link: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. Itt tudja módosítani: %{email_preferences_link}."

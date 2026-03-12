@@ -81,7 +81,7 @@ hy:
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
         total: "Ամբողջ"
-      ai_persona:
+      ai_agent:
         back: "Ետ"
         name: "Անուն"
         edit: "Խմբագրել"

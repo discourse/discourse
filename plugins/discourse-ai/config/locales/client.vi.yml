@@ -40,6 +40,7 @@ vi:
         back: "Quay lại"
         disabled: "(vô hiệu hóa)"
         groups: "Nhóm:"
+        no_agent: "Chưa đặt"
         no_groups: "Không có gì"
         edit: "Cài đặt"
         expand_list:
@@ -88,7 +89,7 @@ vi:
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
-      ai_persona:
+      ai_agent:
         back: "Quay lại"
         name: "Tên"
         edit: "Sửa"

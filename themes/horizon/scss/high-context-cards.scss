@@ -186,6 +186,10 @@ $padding-pills-small: var(--space-half) var(--space-2);
     a {
       color: var(--primary);
       word-break: break-word;
+
+      > * {
+        pointer-events: none;
+      }
     }
 
     .topic-status.--pinned,

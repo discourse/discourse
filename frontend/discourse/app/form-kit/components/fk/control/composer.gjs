@@ -1,11 +1,11 @@
-import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DEditor from "discourse/components/d-editor";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import concatClass from "discourse/helpers/concat-class";
 import { escapeExpression } from "discourse/lib/utilities";
 
-export default class FKControlComposer extends Component {
+export default class FKControlComposer extends FKBaseControl {
   static controlType = "composer";
 
   @action
@@ -18,7 +18,7 @@ export default class FKControlComposer extends Component {
       return;
     }
 
-    return htmlSafe(`height: ${escapeExpression(this.args.height)}px`);
+    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
   <template>

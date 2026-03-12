@@ -3,7 +3,7 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -91,6 +91,10 @@ export default class UpsertCategoryGeneral extends Component {
 
     const parentId = this.args.transientData.parent_category_id;
     const parentCategory = Category.findById(parentId);
+    if (!parentCategory?.permissions) {
+      return groups;
+    }
+
     const parentGroupIds = new Set(
       parentCategory.permissions.map((p) => p.group_id)
     );
@@ -100,7 +104,17 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeAccessGroups(groupIds) {
+    const existingPermissions = this.permissions || [];
+
     const newPermissions = groupIds.map((groupId) => {
+      const existingPermission = existingPermissions.find(
+        (p) => p.group_id === groupId
+      );
+
+      if (existingPermission) {
+        return existingPermission;
+      }
+
       return {
         group_id: groupId,
         group_name: this.site.groupsById[groupId]?.name,
@@ -170,7 +184,7 @@ export default class UpsertCategoryGeneral extends Component {
     const key = this.isParentRestricted
       ? "category.visibility.inherited_from_parent"
       : "category.visibility.more_options_hint";
-    return htmlSafe(i18n(key));
+    return trustHTML(i18n(key));
   }
 
   @action
@@ -328,7 +342,7 @@ export default class UpsertCategoryGeneral extends Component {
     >
       {{#if this.showWarning}}
         <@form.Alert @type="warning" @icon="triangle-exclamation">
-          {{htmlSafe
+          {{trustHTML
             (i18n
               "category.uncategorized_general_warning"
               settingLink=this.uncategorizedSiteSettingLink
@@ -419,7 +433,7 @@ export default class UpsertCategoryGeneral extends Component {
                       }}
                       @onChange={{field.set}}
                       class="form-kit__control-icon"
-                      style={{htmlSafe
+                      style={{trustHTML
                         (concat "--icon-color: #" @transientData.color ";")
                       }}
                     />
@@ -452,7 +466,7 @@ export default class UpsertCategoryGeneral extends Component {
               </Content>
 
               <Content @name="square">
-                {{htmlSafe
+                {{trustHTML
                   (categoryBadge
                     (this.buildTransientModel @transientData) styleType="square"
                   )

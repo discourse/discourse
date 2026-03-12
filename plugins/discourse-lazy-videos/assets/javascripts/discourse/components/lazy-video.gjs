@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 import LazyIframe from "./lazy-iframe";
@@ -14,7 +14,7 @@ export default class LazyVideo extends Component {
   get thumbnailStyle() {
     const color = this.args.videoAttributes.dominantColor;
     if (color?.match(/^[0-9A-Fa-f]+$/)) {
-      return htmlSafe(`background-color: #${color};`);
+      return trustHTML(`background-color: #${color};`);
     }
   }
 

@@ -442,7 +442,8 @@ sq:
         flag: Lloji
     visits:
       title: "Vizitat e përdoruesit"
-      xaxis: "Ditë"
+      xaxis:
+        mobile: "Mobile"
       yaxis: "Numri i vizitave"
     signups:
       xaxis: "Ditë"

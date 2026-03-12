@@ -2362,9 +2362,35 @@ RSpec.describe TopicsController do
             end
           end
 
+          it "returns success when updating with empty tags on a topic with no tags" do
+            expect(topic.tags).to be_empty
+
+            put "/t/#{topic.id}/tags.json"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["errors"]).to be_nil
+          end
+
           it "can update tags" do
             expect do
               put "/t/#{topic.id}/tags.json", params: { tags: [{ id: tag.id, name: tag.name }] }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it "can update tags when params are form-encoded as indexed hash" do
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: {
+                      "0" => {
+                        id: tag.id,
+                        name: tag.name,
+                      },
+                    },
+                  }
             end.to change { topic.reload.first_post.revisions.count }.by(1)
 
             expect(response.status).to eq(200)

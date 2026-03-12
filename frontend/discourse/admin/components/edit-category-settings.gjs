@@ -3,7 +3,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
@@ -201,7 +201,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
 
       {{#unless this.showPositionInput}}
         <section class="field position-disabled">
-          {{htmlSafe
+          {{trustHTML
             (i18n
               "category.position_disabled"
               url=(getUrl
@@ -578,7 +578,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
 
       {{#unless this.emailInEnabled}}
         <section class="field email-in-disabled">
-          {{htmlSafe
+          {{trustHTML
             (i18n
               "category.email_in_disabled"
               setting_url=(getUrl

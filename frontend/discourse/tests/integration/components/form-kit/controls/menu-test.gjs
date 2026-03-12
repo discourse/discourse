@@ -48,4 +48,22 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
 
     assert.dom(".form-kit__control-menu-trigger").hasAttribute("disabled");
   });
+
+  test("@selection", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Menu @selection="Current item" as |menu|>
+              <menu.Item @value="item-1">Item 1</menu.Item>
+            </field.Menu>
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__control-menu-trigger .d-button-label")
+      .hasText("Current item");
+  });
 });

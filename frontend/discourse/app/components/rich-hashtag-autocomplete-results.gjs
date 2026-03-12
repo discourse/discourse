@@ -7,7 +7,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { eq } from "discourse/truth-helpers";
 
@@ -73,7 +73,7 @@ export default class RichHashtagAutocompleteResults extends Component {
                 href
                 {{on "click" (fn this.handleResultClick result index)}}
               >
-                {{htmlSafe result.iconHtml}}
+                {{trustHTML result.iconHtml}}
                 <span class="hashtag-autocomplete__text">
                   {{result.text}}
                   {{#if result.secondary_text}}

@@ -60,6 +60,18 @@ describe TagLocalizationsController do
         expect(localization).to have_attributes(locale:, name:, description:, tag_id: tag.id)
       end
 
+      it "cleans the localized name" do
+        post "/tag_localizations/create_or_update.json",
+             params: {
+               tag_id: tag.id,
+               locale:,
+               name: 'mijn-naam" (123)',
+             }
+
+        expect(response.status).to eq(201)
+        expect(TagLocalization.last.name).to eq("mijn-naam-123")
+      end
+
       it "creates localization without description" do
         expect {
           post "/tag_localizations/create_or_update.json",

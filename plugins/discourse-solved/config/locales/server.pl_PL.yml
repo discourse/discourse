@@ -10,9 +10,11 @@ pl_PL:
     support:
       name: "Wsparcie"
       title: "wsparcie"
-      description: "Zadawaj pytania i zezwalaj na oznaczanie odpowiedzi jako rozwiązań."
+      description: "Miejsce, w którym członkowie mogą zadawać pytania i oznaczać odpowiedzi jako rozwiązania."
   discourse_solved:
     category_type:
+      allow_accepted_answers:
+        label: "Pozwól użytkownikom na akceptowanie rozwiązań"
       solved_topics_auto_close_hours:
         label: "Automatycznie zamknij rozwiązane tematy (godziny)"
         description: "Automatycznie zamykaj temat po tylu godzinach od oznaczenia go jako rozwiązany. Ustaw 0, aby wyłączyć."

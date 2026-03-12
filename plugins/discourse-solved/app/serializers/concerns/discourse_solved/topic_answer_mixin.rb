@@ -21,7 +21,7 @@ module DiscourseSolved
     end
 
     def include_can_have_answer?
-      SiteSetting.solved_enabled && SiteSetting.empty_box_on_unsolved
+      SiteSetting.solved_enabled && object.category&.empty_box_on_unsolved?
     end
   end
 end

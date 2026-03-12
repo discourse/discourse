@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -154,7 +154,7 @@ export default class ReviewableIpLookup extends Component {
               <div class="review-insight__label">
                 {{i18n "ip_lookup.title"}}
                 <span class="ip-lookup-powered-by">
-                  ({{htmlSafe (i18n "ip_lookup.powered_by")}})
+                  ({{trustHTML (i18n "ip_lookup.powered_by")}})
                 </span>
               </div>
               <div class="review-insight__description">

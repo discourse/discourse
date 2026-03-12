@@ -111,6 +111,10 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCountSinceLastViewed() {
+    if (!this.threadingEnabled) {
+      return 0;
+    }
+
     return Array.from(this.threadsManager.unreadThreadOverview.values()).filter(
       (lastReplyCreatedAt) =>
         lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
@@ -132,6 +136,10 @@ export default class ChatChannel {
   }
 
   get watchedThreadsUnreadCount() {
+    if (!this.threadingEnabled) {
+      return 0;
+    }
+
     return this.threadsManager.threads.reduce((unreadCount, thread) => {
       return unreadCount + thread.tracking.watchedThreadsUnreadCount;
     }, 0);

@@ -196,6 +196,7 @@
   padding: $vpad $hpad;
   cursor: pointer;
   line-height: normal;
+  white-space: nowrap;
 
   .d-button__suffix-icon {
     margin-left: auto;

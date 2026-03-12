@@ -2,7 +2,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
@@ -16,7 +16,7 @@ export default class NavItem extends Component {
   get contents() {
     const text = this.args.i18nLabel || i18n(this.args.label);
     if (this.args.icon) {
-      return htmlSafe(`${iconHTML(this.args.icon)} ${text}`);
+      return trustHTML(`${iconHTML(this.args.icon)} ${text}`);
     }
     return text;
   }

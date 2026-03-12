@@ -1,5 +1,5 @@
 import { readOnly } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
@@ -19,9 +19,9 @@ export default class DropdownSelectBoxRow extends SelectKitRowComponent {
     {{/if}}
 
     <div class="texts">
-      <span class="name">{{htmlSafe this.label}}</span>
+      <span class="name">{{trustHTML this.label}}</span>
       {{#if this.description}}
-        <span class="desc">{{htmlSafe this.description}}</span>
+        <span class="desc">{{trustHTML this.description}}</span>
       {{/if}}
     </div>
   </template>

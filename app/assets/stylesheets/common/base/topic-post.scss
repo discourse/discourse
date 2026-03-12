@@ -603,22 +603,26 @@ nav.post-controls {
   }
 
   .btn.show-replies {
+    --border-width: 1px;
     font-size: inherit;
-    padding: 10px;
     color: var(--primary-medium);
     display: flex;
     align-items: center;
     border-radius: var(--d-button-border-radius);
 
-    @include viewport.until(sm) {
-      padding: 9px;
+    &[aria-expanded="true"] {
+      background: var(--primary-low);
+      color: var(--primary-high);
+      z-index: 1;
 
-      &[aria-expanded="true"] {
-        background: var(--primary-low);
+      .d-icon {
         color: var(--primary-high);
-        box-shadow: 0 0 0 1px var(--primary-300);
-        z-index: 1;
-        margin-left: 1px;
+      }
+    }
+
+    .discourse-no-touch & {
+      &:hover {
+        color: var(--primary);
 
         .d-icon {
           color: var(--primary-high);
@@ -627,37 +631,10 @@ nav.post-controls {
     }
 
     @include viewport.from(sm) {
-      margin-left: 0;
       white-space: nowrap;
 
       .topic-post & {
         margin-right: var(--space-2);
-      }
-
-      &[aria-expanded="true"] {
-        background: var(--primary-low);
-        color: var(--primary-high);
-        box-shadow: 0 0 0 1px var(--primary-300);
-        z-index: 1;
-
-        .d-icon {
-          color: var(--primary-high);
-        }
-
-        &:hover,
-        &:focus {
-          background: var(--primary-300);
-          color: var(--primary);
-        }
-      }
-    }
-
-    .discourse-no-touch & {
-      &:hover,
-      &:focus-visible {
-        outline: none;
-        color: var(--d-post-control-text-color--hover);
-        background: var(--d-post-control-background--hover);
       }
     }
 

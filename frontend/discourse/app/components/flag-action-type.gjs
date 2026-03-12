@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { and, equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -106,7 +106,9 @@ export default class FlagActionType extends Component {
             />
 
             <div class="flag-action-type-details">
-              <span class="description">{{htmlSafe this.flagDescription}}</span>
+              <span class="description">{{trustHTML
+                  this.flagDescription
+                }}</span>
               {{#if this.showMessageInput}}
                 <Textarea
                   name="message"
@@ -143,7 +145,7 @@ export default class FlagActionType extends Component {
             />
             <div class="flag-action-type-details">
               <strong class="flag-name">{{this.formattedName}}</strong>
-              <div class="description">{{htmlSafe this.flagDescription}}</div>
+              <div class="description">{{trustHTML this.flagDescription}}</div>
               {{#if this.showMessageInput}}
                 <Textarea
                   name="message"

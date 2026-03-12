@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -200,7 +200,7 @@ export default class AiLlmsListEditor extends Component {
                           {{#if llm.llm_credit_allocation.hard_limit_reached}}
                             <div class="alert alert-danger ai-credit-warning">
                               {{icon "circle-info"}}
-                              {{htmlSafe
+                              {{trustHTML
                                 (i18n
                                   "discourse_ai.llms.credit_allocation.hard_limit_warning"
                                   reset_date=(this.formatResetDate
@@ -214,7 +214,7 @@ export default class AiLlmsListEditor extends Component {
                           }}
                             <div class="alert alert-warning ai-credit-warning">
                               {{icon "circle-info"}}
-                              {{htmlSafe
+                              {{trustHTML
                                 (i18n
                                   "discourse_ai.llms.credit_allocation.soft_limit_warning"
                                   percentage=llm.llm_credit_allocation.percentage_remaining

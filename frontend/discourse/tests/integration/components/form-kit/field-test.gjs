@@ -1,5 +1,5 @@
 import { fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   click,
   fillIn,
@@ -128,7 +128,7 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@title with htmlSafe", async function (assert) {
-    const htmlTitle = htmlSafe('Title with <a href="#">link</a>');
+    const htmlTitle = trustHTML('Title with <a href="#">link</a>');
 
     await render(
       <template>

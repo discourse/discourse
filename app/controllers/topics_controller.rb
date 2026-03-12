@@ -495,7 +495,12 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
 
-    tags = params[:tags] || []
+    tags =
+      if params[:tags].is_a?(ActionController::Parameters)
+        params[:tags].values
+      else
+        params[:tags] || []
+      end
 
     if tags.present? && tags.first.is_a?(String)
       Discourse.deprecate(
@@ -505,14 +510,14 @@ class TopicsController < ApplicationController
       )
     end
 
-    success =
-      PostRevisor.new(topic.first_post, topic).revise!(
-        current_user,
-        { tags: },
-        validate_post: false,
-      )
+    revisor = PostRevisor.new(topic.first_post, topic)
+    revised = revisor.revise!(current_user, { tags: }, validate_post: false)
 
-    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+    if revised || topic.errors.blank?
+      render_serialized(topic, BasicTopicSerializer)
+    else
+      render_json_error(topic)
+    end
   end
 
   def feature_stats

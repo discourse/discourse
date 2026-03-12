@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DMultiSelect from "discourse/components/d-multi-select";
 import Form from "discourse/components/form";
@@ -488,7 +488,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @title={{i18n
               "admin.config.welcome_banner.form.header_new_members.label"
             }}
-            @description={{htmlSafe
+            @description={{trustHTML
               (i18n
                 "admin.config.welcome_banner.form.header_new_members.description"
               )
@@ -512,7 +512,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @title={{i18n
               "admin.config.welcome_banner.form.header_logged_in.label"
             }}
-            @description={{htmlSafe
+            @description={{trustHTML
               (i18n
                 "admin.config.welcome_banner.form.header_logged_in.description"
               )
@@ -536,7 +536,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @title={{i18n
               "admin.config.welcome_banner.form.header_anonymous.label"
             }}
-            @description={{htmlSafe
+            @description={{trustHTML
               (i18n
                 "admin.config.welcome_banner.form.header_anonymous.description"
               )

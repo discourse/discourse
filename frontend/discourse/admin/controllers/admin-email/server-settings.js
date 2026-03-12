@@ -3,7 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -51,7 +51,7 @@ export default class AdminEmailIndexController extends Controller {
       .catch((e) => {
         if (e.jqXHR.responseJSON?.errors) {
           this.dialog.alert({
-            message: htmlSafe(
+            message: trustHTML(
               i18n("admin.email.error", {
                 server_error: escapeExpression(e.jqXHR.responseJSON.errors[0]),
               })

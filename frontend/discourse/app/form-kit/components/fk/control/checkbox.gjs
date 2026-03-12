@@ -1,12 +1,12 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import { eq, or } from "discourse/truth-helpers";
 
-export default class FKControlCheckbox extends Component {
+export default class FKControlCheckbox extends FKBaseControl {
   static controlType = "checkbox";
 
   @action
@@ -21,21 +21,23 @@ export default class FKControlCheckbox extends Component {
         checked={{or (eq @field.value true) (eq @field.value "true")}}
         class="form-kit__control-checkbox"
         disabled={{@field.disabled}}
+        id={{@field.id}}
+        name={{@field.name}}
+        aria-invalid={{if @field.error "true"}}
+        aria-describedby={{if @field.error @field.errorId}}
         ...attributes
         {{on "change" this.handleInput}}
       />
       <span class="form-kit__control-checkbox-content">
         <span class="form-kit__control-checkbox-title">
-          <span>{{@field.title}}</span>
+          <span>{{or @title @field.title}}</span>
 
           {{#if @field.required}}
             <FKRequired @field={{@field}} />
           {{/if}}
           <FKTooltip @field={{@field}} />
         </span>
-        {{#if @hasBlock}}
-          <span class="form-kit__control-checkbox-description">{{yield}}</span>
-        {{/if}}
+        <span class="form-kit__control-checkbox-description">{{yield}}</span>
       </span>
     </FKLabel>
   </template>

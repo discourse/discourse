@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
@@ -79,7 +79,7 @@ export default class AdminReportStorageStats extends Component {
 
             {{#if this.backupStats.last_backup_taken_at}}
               <br />
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "admin.dashboard.lastest_backup"
                   date=(formatDate

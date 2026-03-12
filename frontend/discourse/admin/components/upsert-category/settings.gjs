@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import concatClass from "discourse/helpers/concat-class";
@@ -328,7 +328,7 @@ export default class UpsertCategorySettings extends Component {
           />
         {{else}}
           <@form.Alert @type="info">
-            {{htmlSafe
+            {{trustHTML
               (i18n
                 "category.email_in_disabled"
                 setting_url=(getUrl

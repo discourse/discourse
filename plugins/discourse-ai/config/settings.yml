@@ -73,6 +73,10 @@ discourse_ai:
   ai_gemini_api_key:
     default: ""
     hidden: true
+  ai_llm_temperature_top_p_enabled:
+    default: false
+    hidden: true
+    client: true
   ai_strict_token_counting:
     default: false
     hidden: true

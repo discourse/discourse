@@ -8,7 +8,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
@@ -353,9 +353,9 @@ export default class User extends RestModel.extend(Evented) {
       isEmpty(this.profile_background_upload_url) ||
       !this.siteSettings.allow_profile_backgrounds
     ) {
-      return htmlSafe("");
+      return trustHTML("");
     }
-    return htmlSafe(
+    return trustHTML(
       "background-image: url(" +
         getURLWithCDN(this.profile_background_upload_url) +
         ")"

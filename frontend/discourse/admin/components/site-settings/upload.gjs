@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
@@ -173,8 +173,8 @@ export default class SiteSettingUpload extends Component {
 
   get backgroundStyle() {
     return this.isImageFile
-      ? htmlSafe(`background-image: url(${this.fileCdnUrl})`)
-      : htmlSafe("");
+      ? trustHTML(`background-image: url(${this.fileCdnUrl})`)
+      : trustHTML("");
   }
 
   get fileName() {
@@ -214,7 +214,7 @@ export default class SiteSettingUpload extends Component {
     const progress = this.uppyUpload?.processing
       ? 100
       : this.uppyUpload.uploadProgress || 0;
-    return htmlSafe(`width: ${progress}%`);
+    return trustHTML(`width: ${progress}%`);
   }
 
   get restrictionsInfo() {

@@ -6,7 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -138,7 +138,7 @@ export default class AdminFlagItem extends Component {
             <div
               class="d-table__overview-name admin-flag-item__name"
             >{{@flag.name}}</div>
-            <div class="d-table__overview-about">{{htmlSafe
+            <div class="d-table__overview-about">{{trustHTML
                 @flag.description
               }}</div>
           </LinkTo>
@@ -146,7 +146,7 @@ export default class AdminFlagItem extends Component {
           <div
             class="d-table__overview-name admin-flag-item__name"
           >{{@flag.name}}</div>
-          <div class="d-table__overview-about">{{htmlSafe
+          <div class="d-table__overview-about">{{trustHTML
               @flag.description
             }}</div>
         {{/if}}

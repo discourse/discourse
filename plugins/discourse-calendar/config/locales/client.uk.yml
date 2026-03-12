@@ -12,6 +12,12 @@ uk:
         categories:
           discourse_post_event: "Подія Discourse"
           discourse_calendar: "Календар та події"
+      web_hooks:
+        calendar_event:
+          group_name: "Календар подій"
+          calendar_event_created: "Створено подію календаря"
+          calendar_event_updated: "Подію календаря оновлено"
+          calendar_event_destroyed: "Подію календаря знищено"
   js:
     notifications:
       titles:

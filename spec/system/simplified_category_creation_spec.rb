@@ -7,6 +7,7 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
 
   before do
@@ -17,6 +18,7 @@ describe "Simplified Category Creation" do
   describe "General Tab" do
     it "creates a basic category with name and color" do
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
       form.field("color").fill_in("FF5733")
@@ -82,6 +84,7 @@ describe "Simplified Category Creation" do
 
     it "shows error when icon is missing" do
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
 
@@ -104,17 +107,63 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".edit-category-settings")
     end
 
+    it "preserves permission types when adding a new access group on general tab" do
+      group2 = Fabricate(:group)
+
+      category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
+
+      form.field("name").fill_in("Permission Test")
+      form.choose_conditional("group_restricted")
+
+      group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
+      group_chooser.expand
+      group_chooser.select_row_by_value(group.id)
+      group_chooser.collapse
+
+      category_page.toggle_advanced_settings
+      find(".edit-category-security a").click
+      category_permission_row.toggle_group_permission(group.name, "reply")
+
+      find(".edit-category-general a").click
+      group_chooser.expand
+      group_chooser.select_row_by_value(group2.id)
+      group_chooser.collapse
+
+      find(".edit-category-security a").click
+
+      expect(page).to have_no_css(
+        "#{category_permission_row.group_permission_row_selector(group.name)} .reply-granted",
+      )
+    end
+
     it "automatically switches to private when selecting a restricted parent" do
       restricted_parent =
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
       parent_chooser.select_row_by_value(restricted_parent.id)
 
       expect(page).to have_css(".group-chooser")
+    end
+
+    it "shows inherited groups when selecting a restricted parent" do
+      restricted_parent =
+        Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
+
+      category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
+
+      parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
+      parent_chooser.expand
+      parent_chooser.select_row_by_value(restricted_parent.id)
+
+      group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
+      expect(group_chooser).to have_selected_name(group.name)
     end
   end
 
@@ -139,6 +188,7 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".group-chooser")
 
       category_page.visit_new_category
+      category_type_card.find_type_card("discussion").click
       expect(page).to have_no_css(".group-chooser")
     end
 

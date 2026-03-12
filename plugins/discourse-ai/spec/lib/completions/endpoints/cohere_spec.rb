@@ -241,6 +241,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Cohere do
   end
 
   it "is able to perform non streaming completions" do
+    SiteSetting.ai_llm_temperature_top_p_enabled = true
     body = {
       response_id: "0a90275b-273d-4690-abce-8018edcec7d0",
       text: "You're welcome! How can I help you today?",

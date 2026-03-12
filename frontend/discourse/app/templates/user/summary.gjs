@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStat from "discourse/components/user-stat";
@@ -227,7 +227,7 @@ export default <template>
                 <br />
 
                 <a href={{link.post_url}}>
-                  {{htmlSafe link.topic.fancyTitle}}
+                  {{trustHTML link.topic.fancyTitle}}
                 </a>
               </li>
             {{/each}}

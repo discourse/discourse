@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import curryComponent from "ember-curry-component";
@@ -17,14 +17,14 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
 
   test("renders and re-renders content", async function (assert) {
     const state = new (class {
-      @tracked html = htmlSafe("<h1>Initial</h1>");
+      @tracked html = trustHTML("<h1>Initial</h1>");
     })();
 
     await render(<template><DecoratedHtml @html={{state.html}} /></template>);
 
     assert.dom("h1").hasText("Initial");
 
-    state.html = htmlSafe("<h1>Updated</h1>");
+    state.html = trustHTML("<h1>Updated</h1>");
     await settled();
 
     assert.dom("h1").hasText("Updated");
@@ -32,7 +32,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
 
   test("can decorate content, including renderGlimmer", async function (assert) {
     const state = new (class {
-      @tracked html = htmlSafe("<h1>Initial</h1>");
+      @tracked html = trustHTML("<h1>Initial</h1>");
     })();
 
     const decorate = (element, helper) => {
@@ -58,7 +58,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
 
   test("can decorate content with renderGlimmer using a curried component", async function (assert) {
     const state = new (class {
-      @tracked html = htmlSafe("<h1>Initial</h1>");
+      @tracked html = trustHTML("<h1>Initial</h1>");
     })();
 
     const decorate = (element, helper) => {
@@ -88,7 +88,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
 
   test("renderGlimmer is ignored if receives invalid arguments", async function (assert) {
     const state = new (class {
-      @tracked html = htmlSafe("<h1>Initial</h1>");
+      @tracked html = trustHTML("<h1>Initial</h1>");
     })();
 
     const decorateWithStringTarget = (element, helper) => {
@@ -179,7 +179,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
 
     await render(
       <template>
-        <DecoratedHtml @html={{htmlSafe "<div>Content</div>"}} />
+        <DecoratedHtml @html={{trustHTML "<div>Content</div>"}} />
       </template>
     );
 
@@ -202,7 +202,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     await render(
       <template>
         <DecoratedHtml
-          @html={{htmlSafe "<div>Content</div>"}}
+          @html={{trustHTML "<div>Content</div>"}}
           @decorate={{customDecorator}}
         />
       </template>

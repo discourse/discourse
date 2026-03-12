@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
@@ -90,10 +90,10 @@ export default class SearchResultEntry extends Component {
 
           <span class="topic-title">
             {{#if this.post.useTopicTitleHeadline}}
-              {{htmlSafe this.post.topicTitleHeadline}}
+              {{trustHTML this.post.topicTitleHeadline}}
             {{else}}
               <HighlightSearch @highlight={{this.highlightQuery}}>
-                {{htmlSafe this.post.topic.fancyTitle}}
+                {{trustHTML this.post.topic.fancyTitle}}
               </HighlightSearch>
             {{/if}}
           </span>
@@ -139,10 +139,10 @@ export default class SearchResultEntry extends Component {
 
           {{#if this.post.blurb}}
             {{#if this.siteSettings.use_pg_headlines_for_excerpt}}
-              {{htmlSafe this.post.blurb}}
+              {{trustHTML this.post.blurb}}
             {{else}}
               <HighlightSearch @highlight={{this.highlightQuery}}>
-                {{htmlSafe this.post.blurb}}
+                {{trustHTML this.post.blurb}}
               </HighlightSearch>
             {{/if}}
           {{/if}}

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
@@ -8,6 +9,10 @@ import uniqueId from "discourse/helpers/unique-id";
  * Represents a field in a form with validation, registration, and field data management capabilities.
  */
 export default class FKFieldData extends Component {
+  // Set by `FKBaseControl` and its subclasses
+  // eslint-disable-next-line discourse/no-unnecessary-tracked
+  @tracked type;
+
   /**
    * Unique identifier for the field.
    * @type {string}
@@ -95,7 +100,7 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   get titleFormat() {
-    return this.args.titleFormat;
+    return this.args.titleFormat || this.format;
   }
 
   /**
@@ -103,7 +108,7 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   get descriptionFormat() {
-    return this.args.descriptionFormat;
+    return this.args.descriptionFormat || this.format;
   }
 
   /**
@@ -137,6 +142,10 @@ export default class FKFieldData extends Component {
    */
   get helpText() {
     return this.args.helpText;
+  }
+
+  get error() {
+    return (this.args.errors ?? {})[this.name];
   }
 
   /**
@@ -177,6 +186,10 @@ export default class FKFieldData extends Component {
     }
 
     return name;
+  }
+
+  get normalizedName() {
+    return this.name.replace(/\./g, "-");
   }
 
   /**

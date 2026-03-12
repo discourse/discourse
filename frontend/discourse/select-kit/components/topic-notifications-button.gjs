@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
 import getURL from "discourse/lib/get-url";
@@ -129,7 +129,7 @@ export default class TopicNotificationsButton extends Component {
         />
 
         {{#if @expanded}}
-          <span class="text">{{htmlSafe this.reasonText}}</span>
+          <span class="text">{{trustHTML this.reasonText}}</span>
         {{/if}}
       </this.conditionalWrapper>
     </div>

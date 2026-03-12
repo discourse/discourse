@@ -44,7 +44,7 @@ cs:
         back: "Zpět"
         disabled: "(vypnuto)"
         groups: "Skupiny:"
-        no_persona: "Nenastaveno"
+        no_agent: "Nenastaveno"
         no_groups: "Žádná"
         edit: "Nastavení"
         expand_list:
@@ -112,9 +112,9 @@ cs:
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
-      ai_persona:
+      ai_agent:
         back: "Zpět"
-        name: "Název"
+        name: "Jméno"
         edit: "Upravit"
         export: "Export"
         import: "Import"

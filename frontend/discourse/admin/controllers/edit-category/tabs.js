@@ -14,7 +14,25 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-const FIELD_LIST = [
+// Only fields managed through FormKit in the legacy edit-category flow.
+// Other legacy tab components (settings, tags, etc.) write directly to the model.
+const LEGACY_FORMKIT_FIELDS = [
+  "name",
+  "slug",
+  "parent_category_id",
+  "color",
+  "text_color",
+  "style_type",
+  "emoji",
+  "icon",
+  "localizations",
+  "email_in",
+  "email_in_allow_strangers",
+  "mailinglist_mirror",
+];
+
+// All fields managed through FormKit in the simplified creation flow.
+const SIMPLIFIED_FIELD_LIST = [
   "name",
   "slug",
   "parent_category_id",
@@ -50,12 +68,6 @@ const FIELD_LIST = [
   "mailinglist_mirror",
   "allowed_tag_groups",
   "allowed_tags",
-];
-
-// Additional fields managed through FormKit in the simplified creation flow.
-// The legacy edit-category components manage these directly on the model.
-const SIMPLIFIED_FIELD_LIST = [
-  ...FIELD_LIST,
   "required_tag_groups",
   "minimum_required_tags",
   "allow_global_tags",
@@ -77,6 +89,7 @@ export default class EditCategoryTabsController extends Controller {
   @tracked
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
+  @tracked formData;
   @tracked selectedTab = "general";
   @tracked formApi = null;
   @autoTrackedArray panels = [];
@@ -91,12 +104,15 @@ export default class EditCategoryTabsController extends Controller {
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
-  get formData() {
+  @action
+  initFormData() {
     const enableSimplifiedCategoryCreation =
       this.siteSettings.enable_simplified_category_creation;
     const data = getProperties(
       this.model,
-      ...(enableSimplifiedCategoryCreation ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
+      ...(enableSimplifiedCategoryCreation
+        ? SIMPLIFIED_FIELD_LIST
+        : LEGACY_FORMKIT_FIELDS)
     );
 
     if (enableSimplifiedCategoryCreation) {
@@ -111,28 +127,24 @@ export default class EditCategoryTabsController extends Controller {
       data.category_setting = { ...(this.model.category_setting ?? {}) };
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
 
-      if (this.siteSettings.enable_category_type_setup) {
-        data.category_type_site_settings = {};
+      data.category_type_site_settings = {};
 
-        Object.values(this.model.category_types).forEach((categoryType) => {
-          categoryType.configuration_schema.category_custom_fields?.forEach(
-            (field) => {
-              data.custom_fields[field.key] ??= field.default;
-            }
-          );
+      Object.values(this.model.category_types).forEach((categoryType) => {
+        categoryType.configuration_schema.category_custom_fields?.forEach(
+          (field) => {
+            data.custom_fields[field.key] ??= field.default;
+          }
+        );
 
-          categoryType.configuration_schema.site_settings?.forEach(
-            (setting) => {
-              data.category_type_site_settings[setting.key] = this.model.id
-                ? setting.current
-                : setting.default;
-            }
-          );
+        categoryType.configuration_schema.site_settings?.forEach((setting) => {
+          data.category_type_site_settings[setting.key] = this.model.id
+            ? setting.current
+            : setting.default;
         });
-      }
+      });
     }
 
-    return data;
+    this.formData = data;
   }
 
   @computed("saving", "deleting")
@@ -299,6 +311,7 @@ export default class EditCategoryTabsController extends Controller {
       }
 
       this.set("saving", false);
+      this.initFormData();
 
       this.toasts.success({
         duration: "short",
@@ -325,6 +338,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   deleteCategory() {
+    if (this.deleteDisabled) {
+      return;
+    }
+
     this.set("deleting", true);
     this.dialog.deleteConfirm({
       title: i18n("category.delete_confirm"),
@@ -347,6 +364,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   toggleDeleteTooltip() {
+    if (this.deleteDisabled) {
+      return;
+    }
+
     this.toggleProperty("showTooltip");
   }
 

@@ -387,6 +387,7 @@ export default class AiLlmEditorForm extends Component {
                   @title={{i18n
                     (concat "discourse_ai.llms.provider_fields." name)
                   }}
+                  @showTitle={{not (eq params.type "checkbox")}}
                   @format="large"
                   as |field|
                 >
@@ -502,6 +503,7 @@ export default class AiLlmEditorForm extends Component {
           @name="vision_enabled"
           @title={{i18n "discourse_ai.llms.vision_enabled"}}
           @tooltip={{i18n "discourse_ai.llms.hints.vision_enabled"}}
+          @showTitle={{false}}
           @format="large"
           as |field|
         >

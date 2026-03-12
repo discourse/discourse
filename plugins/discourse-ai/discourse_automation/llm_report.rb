@@ -49,8 +49,10 @@ if defined?(DiscourseAutomation)
 
     field :allow_secure_categories, component: :boolean
 
-    field :top_p, component: :text
-    field :temperature, component: :text
+    if SiteSetting.ai_llm_temperature_top_p_enabled
+      field :top_p, component: :text
+      field :temperature, component: :text
+    end
 
     field :suppress_notifications, component: :boolean
     field :debug_mode, component: :boolean

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
@@ -87,7 +87,7 @@ export default class ChatMentionWarnings extends Component {
     }
 
     if (this.currentUser.admin) {
-      return htmlSafe(
+      return trustHTML(
         i18n("chat.mention_warning.too_many_mentions_admin", {
           count: this.siteSettings.max_mentions_per_chat_message,
           siteSettingUrl: getURL(
@@ -96,7 +96,7 @@ export default class ChatMentionWarnings extends Component {
         })
       );
     } else {
-      return htmlSafe(
+      return trustHTML(
         i18n("chat.mention_warning.too_many_mentions", {
           count: this.siteSettings.max_mentions_per_chat_message,
         })
@@ -132,7 +132,7 @@ export default class ChatMentionWarnings extends Component {
       return;
     }
 
-    return htmlSafe(
+    return trustHTML(
       I18n.messageFormat("chat.mention_warning.groups.too_many_members_MF", {
         groupCount: this.overMembersLimitMentionsCount,
         isAdmin: this.currentUser.admin,

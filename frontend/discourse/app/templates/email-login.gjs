@@ -1,5 +1,5 @@
 import { fn } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecondFactorInput from "discourse/components/second-factor-input";
@@ -16,7 +16,7 @@ export default <template>
       <form>
         {{#if @controller.model.error}}
           <div class="error-info">
-            {{htmlSafe @controller.model.error}}
+            {{trustHTML @controller.model.error}}
           </div>
         {{/if}}
 

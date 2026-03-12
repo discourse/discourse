@@ -165,12 +165,14 @@ RSpec.describe Discourse do
       plugin_class.new.tap do |p|
         p.enabled = true
         p.path = "my-plugin-1"
+        p.metadata = Plugin::Metadata.parse("# name: plugin1")
       end
     end
     let(:plugin2) do
       plugin_class.new.tap do |p|
         p.enabled = false
-        p.path = "my-plugin-1"
+        p.path = "my-plugin-2"
+        p.metadata = Plugin::Metadata.parse("# name: plugin2")
       end
     end
 
