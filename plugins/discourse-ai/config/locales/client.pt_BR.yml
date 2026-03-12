@@ -248,7 +248,7 @@ pt_BR:
         no_llm: "Nenhum LLM selecionado"
         no_persona: "Não configurado"
         no_groups: "Nenhum"
-        edit: "Definições"
+        edit: "Configurações"
         expand_list:
           one: "(mais %{count})"
           other: "(mais %{count})"
@@ -258,9 +258,9 @@ pt_BR:
           name: "Bot"
           description: "Um chatbot que responde a perguntas e auxilia os(as) usuários(as) em mensagens pessoais, fóruns e chat."
           setting_groups:
-            settings: "Configurações Básicas"
-            access_control: "Controle de Acesso"
-            ui_settings: "Configurações da IU"
+            settings: "Configurações básicas"
+            access_control: "Controle de acesso"
+            ui_settings: "Configurações da interface do usuário"
             integrations: "Integrações"
         nav:
           configured: "Configurado"
@@ -277,7 +277,7 @@ pt_BR:
           topic_summaries: "Resumos de tópicos"
           gists: "Resumos breves da lista de tópicos"
           setting_groups:
-            settings: "Configurações Básicas"
+            settings: "Configurações básicas"
             gists: "Gists"
             backfill: "Backfill"
         search:
@@ -285,13 +285,13 @@ pt_BR:
           description: "Melhore a experiência de pesquisa ao fornecer respostas geradas por IA para as consultas"
           discoveries: "Descobertas"
           setting_groups:
-            settings: "Configurações Básicas"
+            settings: "Configurações básicas"
         embeddings:
           name: "Incorporações"
           description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
           hyde: "HyDE"
           setting_groups:
-            model_settings: "Configurações de Modelo"
+            model_settings: "Configurações de modelo"
             related_topics: "Tópicos relacionados"
             semantic_search: "Pesquisa semântica"
         discord:
@@ -299,7 +299,7 @@ pt_BR:
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
           search: "Pesquisa no Discord"
           setting_groups:
-            settings: "Configurações Básicas"
+            settings: "Configurações básicas"
             discord_configuration: "Configurações do Discord"
         inference:
           name: "Conceitos inferidos"
@@ -308,7 +308,7 @@ pt_BR:
           match_concepts: "Correspondência de conceitos"
           deduplicate_concepts: "Deduplicação de conceitos"
           setting_groups:
-            settings: "Configurações Básicas"
+            settings: "Configurações básicas"
             topic_criteria: "Critérios do tópico"
             post_criteria: "Critérios da postagem"
             personas: "Personas"
@@ -328,8 +328,8 @@ pt_BR:
           post_illustrator: "Ilustrador de postagens"
           chat_thread_titles: "Títulos de threads de chat"
           setting_groups:
-            access_permissions: "Acessos e Permissões"
-            enabled_features: "Recursos Habilitados"
+            access_permissions: "Acessos e permissões"
+            enabled_features: "Recursos habilitados"
             automation: "Automação"
             personas: "Personas"
         translation:
@@ -345,7 +345,7 @@ pt_BR:
             other: "Tradução agendada para %{count} postagens não traduzidas"
           schedule_topic_error: "Erro ao agendar traduções. Por favor tente novamente."
           setting_groups:
-            settings: "Configurações Básicas"
+            settings: "Configurações básicas"
             personas: "Personas"
             backfill_and_limits: "Backfill e limites"
         spam:
@@ -427,7 +427,7 @@ pt_BR:
           result: "Resultado"
           reason: "Raciocínio"
           llm: "LLM"
-          scan_history: "Histórico de scan"
+          scan_history: "Histórico de varredura"
           sent_message: "Mensagem enviada"
           system_prompt: "Prompt do sistema"
           scan_log: "Registro de verificação"
@@ -506,7 +506,7 @@ pt_BR:
         overwrite: "Sobrescrever"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
-        use_parent_llm: "Use o modelo de linguagem da persona"
+        use_parent_llm: "Usar o modelo de linguagem da persona"
         max_context_posts: "Máximo de postagens de contexto"
         max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
         vision_enabled: Visão ativada
@@ -661,7 +661,7 @@ pt_BR:
         description: "Gerenciar as credenciais de autenticação compartilhadas entre LLMs, incorporações e ferramentas."
         name: "Nome"
         secret: "Valor"
-        select_secret: "Selecione uma credencial..."
+        select_secret: "Selecionar uma credencial..."
         create_new: "Nova credencial"
         add_secret: "Adicionar credencial"
         saved: "Credencial salva"
@@ -676,7 +676,7 @@ pt_BR:
         delete: "Excluir"
         used_by: "Usado por"
         not_used: "Não está em uso"
-        embedding: "Incorporar"
+        embedding: "Incorporação"
         cannot_delete_in_use: "Esta credencial não pode ser excluída porque está em uso por:"
         tool: "Ferramenta"
         modal:
@@ -1064,23 +1064,23 @@ pt_BR:
         topic:
           title: "Resumo do tópico"
           close: "Fechar painel de resumo"
-          regenerate_ai_summaries: "Gerar novamente resumos de IA"
-          regen_modal_description: "Escolha o tipo de resumo de IA a ser gerado novamente para os tópicos selecionados."
-          bulk_regen_description: "Escolha o tipo de resumo de IA a ser gerado novamente para os tópicos selecionados."
+          regenerate_ai_summaries: "Regerar resumos de IA"
+          regen_modal_description: "Escolha o tipo de resumo de IA a ser regerado para os tópicos selecionados."
+          bulk_regen_description: "Escolha o tipo de resumo de IA a ser regerado para os tópicos selecionados."
           regenerate_gists_option: "Resumos breves (gists)"
           regenerate_summaries_option: "Resumos de tópicos"
           regenerate_gists_success:
             one: "Resumo curto regerado com sucesso"
             other: "%{count} resumos curtos regerados com sucesso"
           regenerate_gists_error:
-            one: "Não foi possível gerar resumos curtos novamente"
-            other: "Não foi possível gerar %{count} resumos curtos novamente"
+            one: "Não foi possível regerar resumos curtos"
+            other: "Não foi possível regerar %{count} resumos curtos"
           regenerate_topic_summary_success:
             one: "Resumo do tópico regerado com sucesso"
             other: "%{count} resumos de tópicos regerados com sucesso"
           regenerate_topic_summary_error:
-            one: "Não foi possível gerar o resumo do tópico novamente"
-            other: "Não foi possível gerar %{count} resumos de tópico novamente"
+            one: "Não foi possível regerar o resumo do tópico"
+            other: "Não foi possível regerar %{count} resumos de tópico"
         topic_list_layout:
           button:
             compact: "Compactar"
