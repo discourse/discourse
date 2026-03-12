@@ -4681,9 +4681,6 @@ en:
         category_settings: "Category settings"
         category_custom_fields: "Category settings"
         site_settings: "Site settings"
-        more_settings:
-          one: "%{count} more setting"
-          other: "%{count} more settings"
       choose_type:
         title: "Choose category type"
         requires_plugin: "Requires plugin"

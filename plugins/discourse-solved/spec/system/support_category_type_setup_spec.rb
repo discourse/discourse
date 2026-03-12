@@ -66,39 +66,6 @@ RSpec.describe "Support Category Type Setup", type: :system do
     end
   end
 
-  context "when editing additional site settings on a support category" do
-    fab!(:category)
-
-    before do
-      DiscourseSolved::Categories::Types::Support.configure_category(
-        category,
-        guardian: admin.guardian,
-      )
-      DiscourseSolved::Categories::Types::Support.configure_site_settings(
-        category,
-        guardian: admin.guardian,
-      )
-    end
-
-    it "saves additional site settings after expanding them" do
-      visit("/c/#{category.slug}/edit/support")
-
-      find(".additional-site-settings-toggle").click
-      expect(page).to have_css(".additional-site-settings")
-
-      form.field("category_type_site_settings.disable_solved_education_message").toggle
-      category_page.save_settings
-
-      expect(SiteSetting.disable_solved_education_message).to eq(true)
-
-      visit("/c/#{category.slug}/edit/support")
-      find(".additional-site-settings-toggle").click
-      expect(
-        form.field("category_type_site_settings.disable_solved_education_message").value,
-      ).to eq(true)
-    end
-  end
-
   context "when visiting the Support tab for a non-support category" do
     fab!(:category)
 

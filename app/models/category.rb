@@ -325,11 +325,8 @@ class Category < ActiveRecord::Base
   def category_type_site_setting_names
     category_types
       .values
-      .flat_map do |type_metadata|
-        %i[site_settings additional_site_settings].flat_map do |section|
-          type_metadata.dig(:configuration_schema, section) || []
-        end
-      end
+      .filter_map { |type_metadata| type_metadata.dig(:configuration_schema, :site_settings) }
+      .flatten(1)
       .map { |setting| setting[:key].to_sym }
       .uniq
   end

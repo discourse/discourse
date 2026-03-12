@@ -66,9 +66,6 @@ module DiscourseSolved
                 prioritize_solved_topics_in_search: false,
                 show_who_marked_solved: false,
               },
-              additional_site_settings: {
-                disable_solved_education_message: false,
-              },
               category_custom_fields: {
                 DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => {
                   default: true,

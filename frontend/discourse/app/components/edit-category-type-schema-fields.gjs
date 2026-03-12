@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import EditCategoryAdditionalSiteSettings from "discourse/components/edit-category-additional-site-settings";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
@@ -77,10 +76,6 @@ export default class EditCategoryTypeSchemaFields extends Component {
     return classes.join(" ");
   }
 
-  get additionalSiteSettings() {
-    return this.schema.additional_site_settings ?? [];
-  }
-
   @bind
   shouldDisplayField(entry) {
     if (this.args.category.isCreated) {
@@ -110,11 +105,7 @@ export default class EditCategoryTypeSchemaFields extends Component {
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >
-        <@form.Object
-          @name="category_type_site_settings"
-          class="site-settings-object"
-          as |siteSettings|
-        >
+        <@form.Object @name="category_type_site_settings" as |siteSettings|>
           {{#each this.schema.site_settings as |entry|}}
             <SchemaFormField
               @category={{@category}}
@@ -122,13 +113,6 @@ export default class EditCategoryTypeSchemaFields extends Component {
               @formObject={{siteSettings}}
             />
           {{/each}}
-
-          <EditCategoryAdditionalSiteSettings
-            @settings={{this.additionalSiteSettings}}
-            @category={{@category}}
-            @formObject={{siteSettings}}
-            @SchemaFormField={{SchemaFormField}}
-          />
         </@form.Object>
       </@form.Emphasis>
     </div>
