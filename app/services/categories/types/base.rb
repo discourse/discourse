@@ -212,7 +212,7 @@ module Categories
         def configure_custom_fields(category, guardian:, configuration_values: {})
           configuration_schema[:category_custom_fields]&.each do |field_name, config|
             value = configuration_values.fetch(field_name.to_s, config[:default])
-            category.custom_fields[field_name.to_s] = value
+            category.custom_fields[field_name.to_s] = value.to_s
           end
 
           category.save_custom_fields

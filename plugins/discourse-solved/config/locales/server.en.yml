@@ -14,6 +14,10 @@ en:
       solved_topics_auto_close_hours:
         label: "Auto close solved topics (hours)"
         description: "Automatically close topic after this many hours once marked as solved. Set to 0 to disable."
+      notify_on_staff_accept_solved:
+        label: "Notify topic creator when staff marks a solution"
+      empty_box_on_unsolved:
+        label: "Display an empty checkbox next to unsolved topics in the topic list"
       solved_topics_auto_close_duration:
         label: "Auto close solved topics"
         description: "Automatically close topic after this duration once marked as solved. Set to 0 to disable."
