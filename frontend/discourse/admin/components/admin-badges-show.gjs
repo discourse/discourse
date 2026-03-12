@@ -286,7 +286,7 @@ export default class AdminBadgesShow extends Component {
             @helpText="This is a required field"
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
         {{/if}}
 
@@ -321,9 +321,10 @@ export default class AdminBadgesShow extends Component {
                   @name="icon"
                   @onSet={{this.onSetIcon}}
                   @format="small"
+                  @type="icon"
                   as |field|
                 >
-                  <field.Icon />
+                  <field.Control />
                 </form.Field>
               </Content>
               <Content @name="upload-image">
@@ -332,9 +333,10 @@ export default class AdminBadgesShow extends Component {
                   @showTitle={{false}}
                   @title={{i18n "admin.badges.image"}}
                   @onSet={{this.onSetImage}}
+                  @type="image"
                   as |field|
                 >
-                  <field.Image @type="badge_image" />
+                  <field.Control @type="badge_image" />
                 </form.Field>
               </Content>
             </cc.Contents>
@@ -380,9 +382,10 @@ export default class AdminBadgesShow extends Component {
               @title={{i18n "admin.badges.description"}}
               @name="description"
               @disabled={{this.readOnly}}
+              @type="textarea"
               as |field|
             >
-              <field.Textarea />
+              <field.Control />
             </form.Field>
           {{/if}}
 
@@ -410,9 +413,10 @@ export default class AdminBadgesShow extends Component {
               @name="long_description"
               @title={{i18n "admin.badges.long_description"}}
               @disabled={{this.readOnly}}
+              @type="textarea"
               as |field|
             >
-              <field.Textarea />
+              <field.Control />
             </form.Field>
           {{/if}}
         </form.Section>
@@ -424,9 +428,10 @@ export default class AdminBadgesShow extends Component {
               @title={{i18n "admin.badges.query"}}
               @disabled={{this.readOnly}}
               @format="full"
+              @type="code"
               as |field|
             >
-              <field.Code @lang="sql" />
+              <field.Control @lang="sql" />
             </form.Field>
 
             {{#if (this.hasQuery data.query)}}
@@ -451,9 +456,10 @@ export default class AdminBadgesShow extends Component {
                   @disabled={{this.readOnly}}
                   @showTitle={{false}}
                   @title={{i18n "admin.badges.auto_revoke"}}
+                  @type="checkbox"
                   as |field|
                 >
-                  <field.Checkbox />
+                  <field.Control />
                 </group.Field>
 
                 <group.Field
@@ -461,9 +467,10 @@ export default class AdminBadgesShow extends Component {
                   @disabled={{this.readOnly}}
                   @title={{i18n "admin.badges.target_posts"}}
                   @showTitle={{false}}
+                  @type="checkbox"
                   as |field|
                 >
-                  <field.Checkbox />
+                  <field.Control />
                 </group.Field>
               </form.CheckboxGroup>
 
@@ -472,15 +479,16 @@ export default class AdminBadgesShow extends Component {
                 @disabled={{this.readOnly}}
                 @validation="required"
                 @title={{i18n "admin.badges.trigger"}}
+                @type="select"
                 as |field|
               >
-                <field.Select as |select|>
+                <field.Control as |select|>
                   {{#each this.badgeTriggers as |badgeTrigger|}}
                     <select.Option @value={{badgeTrigger.id}}>
                       {{badgeTrigger.name}}
                     </select.Option>
                   {{/each}}
-                </field.Select>
+                </field.Control>
               </form.Field>
             {{/if}}
           </form.Section>
@@ -491,13 +499,17 @@ export default class AdminBadgesShow extends Component {
             @name="badge_grouping_id"
             @validation="required"
             @title={{i18n "admin.badges.badge_grouping"}}
+            @type="menu"
             as |field|
           >
-            <field.Menu @selection={{this.currentBadgeGrouping data}} as |menu|>
+            <field.Control
+              @selection={{this.currentBadgeGrouping data}}
+              as |menu|
+            >
               {{#each this.badgeGroupings as |grouping|}}
                 <menu.Item @value={{grouping.id}}>{{grouping.name}}</menu.Item>
               {{/each}}
-            </field.Menu>
+            </field.Control>
           </form.Field>
 
           <form.CheckboxGroup
@@ -510,7 +522,7 @@ export default class AdminBadgesShow extends Component {
               @name="allow_title"
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
 
             <group.Field
@@ -520,7 +532,7 @@ export default class AdminBadgesShow extends Component {
               @disabled={{this.readOnly}}
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
           </form.CheckboxGroup>
 
@@ -535,7 +547,7 @@ export default class AdminBadgesShow extends Component {
               @disabled={{this.readOnly}}
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
 
             <group.Field
@@ -545,7 +557,7 @@ export default class AdminBadgesShow extends Component {
               @disabled={{this.readOnly}}
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
 
             <group.Field
@@ -555,11 +567,11 @@ export default class AdminBadgesShow extends Component {
               @disabled={{this.disableBadgeOnPosts data}}
               as |field|
             >
-              <field.Checkbox>
+              <field.Control>
                 {{#if (this.postHeaderDescription data)}}
                   {{i18n "admin.badges.show_in_post_header_disabled"}}
                 {{/if}}
-              </field.Checkbox>
+              </field.Control>
             </group.Field>
           </form.CheckboxGroup>
         </form.Section>

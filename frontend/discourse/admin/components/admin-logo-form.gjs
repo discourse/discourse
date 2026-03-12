@@ -136,17 +136,19 @@ export default class AdminLogoForm extends Component {
           @description={{i18n "admin.config.logo.form.logo.description"}}
           @helpText={{i18n "admin.config.logo.form.logo.help_text"}}
           @onSet={{fn this.handleUpload "logo"}}
+          @type="image"
           as |field|
         >
-          <field.Image @type="branding" />
+          <field.Control @type="branding" />
         </form.Field>
         <form.Field
           @name="logo_dark_required"
           @title={{i18n "admin.config.logo.form.logo_dark.required"}}
           @format="full"
+          @type="toggle"
           as |field|
         >
-          <field.Toggle />
+          <field.Control />
         </form.Field>
         {{#if transientData.logo_dark_required}}
           <form.Section>
@@ -155,9 +157,10 @@ export default class AdminLogoForm extends Component {
               @title={{i18n "admin.config.logo.form.logo_dark.title"}}
               @helpText={{i18n "admin.config.logo.form.logo_dark.help_text"}}
               @onSet={{fn this.handleUpload "logo_dark"}}
+              @type="image"
               as |field|
             >
-              <field.Image @type="branding" />
+              <field.Control @type="branding" />
             </form.Field>
           </form.Section>
         {{/if}}
@@ -167,9 +170,10 @@ export default class AdminLogoForm extends Component {
           @description={{i18n "admin.config.logo.form.large_icon.description"}}
           @helpText={{i18n "admin.config.logo.form.large_icon.help_text"}}
           @onSet={{fn this.handleUpload "large_icon"}}
+          @type="image"
           as |field|
         >
-          <field.Image
+          <field.Control
             @type="branding"
             @placeholderUrl={{this.placeholders.large_icon}}
           />
@@ -179,9 +183,10 @@ export default class AdminLogoForm extends Component {
           @title={{i18n "admin.config.logo.form.favicon.title"}}
           @description={{i18n "admin.config.logo.form.favicon.description"}}
           @onSet={{fn this.handleUpload "favicon"}}
+          @type="image"
           as |field|
         >
-          <field.Image
+          <field.Control
             @type="branding"
             @placeholderUrl={{this.placeholders.favicon}}
           />
@@ -192,17 +197,19 @@ export default class AdminLogoForm extends Component {
           @description={{i18n "admin.config.logo.form.logo_small.description"}}
           @helpText={{i18n "admin.config.logo.form.logo_small.help_text"}}
           @onSet={{fn this.handleUpload "logo_small"}}
+          @type="image"
           as |field|
         >
-          <field.Image @type="branding" />
+          <field.Control @type="branding" />
         </form.Field>
         <form.Field
           @name="logo_small_dark_required"
           @title={{i18n "admin.config.logo.form.logo_small_dark.required"}}
           @format="full"
+          @type="toggle"
           as |field|
         >
-          <field.Toggle />
+          <field.Control />
         </form.Field>
         {{#if transientData.logo_small_dark_required}}
           <form.Section>
@@ -213,9 +220,10 @@ export default class AdminLogoForm extends Component {
                 "admin.config.logo.form.logo_small_dark.help_text"
               }}
               @onSet={{fn this.handleUpload "logo_small_dark"}}
+              @type="image"
               as |field|
             >
-              <field.Image @type="branding" />
+              <field.Control @type="branding" />
             </form.Field>
           </form.Section>
         {{/if}}
@@ -235,9 +243,10 @@ export default class AdminLogoForm extends Component {
               }}
               @helpText={{i18n "admin.config.logo.form.mobile_logo.help_text"}}
               @onSet={{fn this.handleUpload "mobile_logo"}}
+              @type="image"
               as |field|
             >
-              <field.Image
+              <field.Control
                 @type="branding"
                 @placeholderUrl={{this.placeholders.mobile_logo}}
               />
@@ -246,9 +255,10 @@ export default class AdminLogoForm extends Component {
               @name="mobile_logo_dark_required"
               @title={{i18n "admin.config.logo.form.mobile_logo_dark.required"}}
               @format="full"
+              @type="toggle"
               as |field|
             >
-              <field.Toggle />
+              <field.Control />
             </form.Field>
             {{#if transientData.mobile_logo_dark_required}}
               <form.Section>
@@ -261,9 +271,10 @@ export default class AdminLogoForm extends Component {
                     "admin.config.logo.form.mobile_logo_dark.help_text"
                   }}
                   @onSet={{fn this.handleUpload "mobile_logo_dark"}}
+                  @type="image"
                   as |field|
                 >
-                  <field.Image @type="branding" />
+                  <field.Control @type="branding" />
                 </form.Field>
               </form.Section>
             {{/if}}
@@ -277,9 +288,10 @@ export default class AdminLogoForm extends Component {
                 "admin.config.logo.form.manifest_icon.help_text"
               }}
               @onSet={{fn this.handleUpload "manifest_icon"}}
+              @type="image"
               as |field|
             >
-              <field.Image @type="branding" />
+              <field.Control @type="branding" />
             </form.Field>
             <form.Field
               @name="manifest_screenshots"
@@ -290,9 +302,10 @@ export default class AdminLogoForm extends Component {
                 "admin.config.logo.form.manifest_screenshots.description"
               }}
               @format="full"
+              @type="custom"
               as |field|
             >
-              <field.Custom>
+              <field.Control>
                 <SimpleList
                   @onChange={{fn this.updateManifestScreenshots field}}
                   @inputDelimiter="|"
@@ -300,7 +313,7 @@ export default class AdminLogoForm extends Component {
                   @allowAny={{true}}
                   id={{field.id}}
                 />
-              </field.Custom>
+              </field.Control>
             </form.Field>
             <form.Field
               @name="apple_touch_icon"
@@ -312,9 +325,10 @@ export default class AdminLogoForm extends Component {
                 "admin.config.logo.form.apple_touch_icon.help_text"
               }}
               @onSet={{fn this.handleUpload "apple_touch_icon"}}
+              @type="image"
               as |field|
             >
-              <field.Image
+              <field.Control
                 @type="branding"
                 @placeholderUrl={{this.placeholders.apple_touch_icon}}
               />
@@ -336,9 +350,10 @@ export default class AdminLogoForm extends Component {
               }}
               @helpText={{i18n "admin.config.logo.form.digest_logo.help_text"}}
               @onSet={{fn this.handleUpload "digest_logo"}}
+              @type="image"
               as |field|
             >
-              <field.Image
+              <field.Control
                 @type="branding"
                 @placeholderUrl={{this.placeholders.digest_logo}}
               />
@@ -359,9 +374,10 @@ export default class AdminLogoForm extends Component {
                 "admin.config.logo.form.opengraph_image.description"
               }}
               @onSet={{fn this.handleUpload "opengraph_image"}}
+              @type="image"
               as |field|
             >
-              <field.Image
+              <field.Control
                 @type="branding"
                 @placeholderUrl={{this.placeholders.opengraph_image}}
               />

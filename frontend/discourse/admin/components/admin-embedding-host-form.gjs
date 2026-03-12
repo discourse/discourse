@@ -74,37 +74,41 @@ export default class AdminEmbeddingHostForm extends Component {
                 @title={{i18n "admin.embedding.host"}}
                 @validation="required"
                 @format="large"
+                @type="input"
                 as |field|
               >
-                <field.Input placeholder="example.com" />
+                <field.Control placeholder="example.com" />
               </form.Field>
               <form.Field
                 @name="allowed_paths"
                 @title={{i18n "admin.embedding.allowed_paths"}}
                 @format="large"
+                @type="input"
                 as |field|
               >
-                <field.Input placeholder="/blog/.*" />
+                <field.Control placeholder="/blog/.*" />
               </form.Field>
               <form.Field
                 @name="category"
                 @title={{i18n "admin.embedding.category"}}
+                @type="custom"
                 as |field|
               >
-                <field.Custom>
+                <field.Control>
                   <CategoryChooser
                     @value={{field.value}}
                     @onChange={{field.set}}
                     class="admin-embedding-host-form__category"
                   />
-                </field.Custom>
+                </field.Control>
               </form.Field>
               <form.Field
                 @name="tags"
                 @title={{i18n "admin.embedding.tags"}}
+                @type="custom"
                 as |field|
               >
-                <field.Custom>
+                <field.Control>
                   <TagChooser
                     @tags={{field.value}}
                     @everyTag={{true}}
@@ -116,22 +120,23 @@ export default class AdminEmbeddingHostForm extends Component {
                     }}
                     class="admin-embedding-host-form__tags"
                   />
-                </field.Custom>
+                </field.Control>
               </form.Field>
               <form.Field
                 @name="user"
                 @title={{i18n "admin.embedding.post_author"}}
                 @description={{i18n "admin.embedding.post_author_description"}}
+                @type="custom"
                 as |field|
               >
-                <field.Custom>
+                <field.Control>
                   <UserChooser
                     @value={{field.value}}
                     @onChange={{field.set}}
                     @options={{hash maximum=1 excludeCurrentUser=false}}
                     class="admin-embedding-host-form__post_author"
                   />
-                </field.Custom>
+                </field.Control>
               </form.Field>
 
               <form.Submit @label="admin.embedding.host_form.save" />
