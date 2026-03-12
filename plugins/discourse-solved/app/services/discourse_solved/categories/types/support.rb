@@ -63,6 +63,8 @@ module DiscourseSolved
               },
               site_settings: {
                 show_filter_by_solved_status: true,
+                prioritize_solved_topics_in_search: false,
+                show_who_marked_solved: false,
               },
               category_custom_fields: {
                 DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => {
