@@ -1180,6 +1180,11 @@ en:
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool approved"
+        rejected_tool_action:
+          title: "Tool rejected"
       types:
         reviewable_ai_post:
           title: "AI-Flagged post"

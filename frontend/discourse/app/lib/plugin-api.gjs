@@ -51,6 +51,7 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
+import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
@@ -2266,6 +2267,25 @@ class _PluginApi {
    **/
   registerReviewableActionModal(reviewableType, modalClass) {
     registerReviewableActionModal(reviewableType, modalClass);
+  }
+
+  /**
+   * Register custom status names for a reviewable type, used in the
+   * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
+   *
+   * The names are i18n key suffixes looked up as `review.statuses.{name}.title`.
+   *
+   * @param {String} reviewableType - The reviewable class name (e.g. "ReviewableAiToolAction")
+   * @param {String} approvedName - Status name for approved items
+   * @param {String} rejectedName - Status name for rejected items
+   *
+   * @example
+   * ```
+   * api.registerReviewableStatusName("ReviewableAiToolAction", "approved_tool_action", "rejected_tool_action");
+   * ```
+   **/
+  registerReviewableStatusName(reviewableType, approvedName, rejectedName) {
+    registerReviewableStatusName(reviewableType, approvedName, rejectedName);
   }
 
   /**
