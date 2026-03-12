@@ -91,17 +91,16 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.group"}}
             @validation="required"
             @format="large"
-            @type="custom"
             as |field|
           >
-            <field.Control>
+            <field.Custom>
               <GroupChooser
                 @value={{data.group_id}}
                 @content={{this.availableGroups}}
                 @onChange={{fn this.setGroupId field}}
                 @options={{hash maximum=1}}
               />
-            </field.Control>
+            </field.Custom>
           </form.Field>
 
           <form.Field
@@ -109,10 +108,9 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.max_tokens"}}
             @tooltip={{i18n "discourse_ai.llms.quotas.max_tokens_help"}}
             @format="large"
-            @type="input-number"
             as |field|
           >
-            <field.Control min="1" />
+            <field.Input @type="number" min="1" />
           </form.Field>
 
           <form.Field
@@ -120,10 +118,9 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.max_usages"}}
             @tooltip={{i18n "discourse_ai.llms.quotas.max_usages_help"}}
             @format="large"
-            @type="input-number"
             as |field|
           >
-            <field.Control min="1" />
+            <field.Input @type="number" min="1" />
           </form.Field>
 
           <form.Field
@@ -131,15 +128,14 @@ export default class AiLlmQuotaModal extends Component {
             @title={{i18n "discourse_ai.llms.quotas.duration"}}
             @validation="required"
             @format="large"
-            @type="custom"
             as |field|
           >
-            <field.Control>
+            <field.Custom>
               <DurationSelector
                 @value={{data.duration_seconds}}
                 @onChange={{field.set}}
               />
-            </field.Control>
+            </field.Custom>
           </form.Field>
 
           <form.Submit
