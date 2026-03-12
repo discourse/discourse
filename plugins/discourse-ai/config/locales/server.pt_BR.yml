@@ -13,8 +13,8 @@ pt_BR:
   dashboard:
     problem:
       ai_llm_status:
-        one: "O modelo <a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> precisa de atenção. Na última hora, ele deixou de responder %{failed_calls} chamadas de um total de %{total_calls}."
-        other: "O modelo <a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> precisa de atenção. Nas últimas %{count} horas, ele deixou de responder %{failed_calls} chamadas de um total de %{total_calls}."
+        one: "O modelo <a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> precisa de atenção. Na última hora, ele deixou de responder a %{failed_calls} chamada de um total de %{total_calls}."
+        other: "O modelo <a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> precisa de atenção. Nas últimas %{count} horas, ele deixou de responder a %{failed_calls} chamadas de um total de %{total_calls}."
       ai_credit_soft_limit: "%{model_name} tem apenas %{percentage_remaining}% de créditos restantes. Os créditos serão zerados em %{reset_date}. <a href='%{url}'>Visualizar modelos de IA</a>"
       ai_credit_hard_limit: "Você ficou sem créditos de IA para %{model_name}. Os recursos de IA ficarão indisponíveis até %{reset_date}. <a href='%{url}'>Visualizar modelos de IA</a>"
   discourse_automation:
@@ -111,7 +111,7 @@ pt_BR:
     ai_summary_backfill_maximum_topics_per_hour: "Quantidade de tópicos para preencher a cada hora."
     ai_bot_enabled: "Ative o módulo de Bot com IA."
     ai_bot_enabled_llms: "LLMs disponíveis para selecionar em conversas com bots de IA"
-    ai_bot_enable_chat_warning: "Exibir um aviso quando o chat por MP for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"
+    ai_bot_enable_chat_warning: "Exibir um aviso quando o chat por mensagem privada for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Quando o Bot com GPT tiver acesso às MPs, ele responderá aos membros destes grupos."
     ai_bot_debugging_allowed_groups: "Permitir a exibição de um botão de depuração nestes grupos, em postagens em que são exibidas respostas e pedidos de IA não processados"
     ai_bot_public_sharing_allowed_groups: "Permita que estes grupos compartilhem mensagens pessoais de IA com o público por meio de um link exclusivo disponível publicamente. Observação: se for preciso entrar com sua conta no site, também será preciso para o compartilhamento."
@@ -257,7 +257,7 @@ pt_BR:
         image_generation_category:
           name: "Geração de imagens..."
         image_generation_custom:
-          name: "Personalizados(as)"
+          name: "Personalizadas"
         image_generation_openai:
           name: "OpenAI"
         image_generation_gemini:
