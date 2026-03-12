@@ -26,7 +26,7 @@ pt_BR:
             house_ad_name:
               label: "Nome do anúncio interno"
             ad_placement:
-              label: "Posicionamento de anúncios"
+              label: "Colocação de anúncios"
             user_type:
               label: "Tipo de usuário"
       adplugin:
@@ -49,7 +49,7 @@ pt_BR:
           show_to_anons: "Mostrar para usuários(as) anônimos(as)"
           show_to_logged_in_users: "Mostrar para usuários(as) logados(as)"
           category_chooser_description: "Escolha as categorias nas quais este anúncio deve ser exibido ou deixe vazio para exibir em todos os lugares. A configuração do site \"no_ads_for_categories\" tem prioridade em relação a esta configuração."
-          category_chooser_description_with_routes: "Escolha as categorias nas quais este anúncio deve ser exibido. Para mostrar o anúncio em todo lugar, deixe esta opção e as seleções de rota em branco. A configuração do site \"no_ads_for_categories\" tem prioridade em relação a esta configuração."
+          category_chooser_description_with_routes: "Escolha as categorias nas quais este anúncio deve ser exibido. Para mostrar o anúncio em todo lugar, deixe esta opção e as seleções de rota em branco. A configuração do site `no_ads_for_categories` tem prioridade em relação a esta configuração."
           route_chooser_description: "Escolha as páginas/rotas onde este anúncio deve ser exibido. Para mostrar o anúncio em todo lugar, deixe esta opção e a seleção de categoria em branco."
           group_chooser_description: "Escolha os grupos que podem visualizar este anúncio ou deixe vazio para exibir o anúncio a todos(as) os(as) usuários(as) que entraram com a conta."
           preview: "Pré-visualizar"
@@ -58,7 +58,7 @@ pt_BR:
           edit: "Editar"
           tabs:
             ads: "Anúncios"
-            settings: "Definições"
+            settings: "Configurações"
           topic_list_top:
             title: "Principais anúncios da lista de tópicos"
             description: "Anúncios para mostrar no topo das páginas da lista de tópicos."
