@@ -117,7 +117,7 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input", "input-text", "password", "input-date", "input-number"
+        when "input", /input-/, "password"
           component.find("input").fill_in(with: value)
         when "color"
           component.find("input[type='text']").fill_in(with: value)

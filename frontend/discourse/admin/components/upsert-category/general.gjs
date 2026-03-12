@@ -393,9 +393,9 @@ export default class UpsertCategoryGeneral extends Component {
         @title={{i18n "category.style"}}
         @format="max"
         @type="custom"
-        as |StyleControl styleField|
+        as |styleField|
       >
-        <StyleControl>
+        <styleField.Control>
           <@form.ConditionalContent
             @activeName={{or styleField.value @category.styleType "square"}}
             @onChange={{this.onStyleTypeChange}}
@@ -479,7 +479,7 @@ export default class UpsertCategoryGeneral extends Component {
               </Content>
             </cc.Contents>
           </@form.ConditionalContent>
-        </StyleControl>
+        </styleField.Control>
       </@form.Field>
 
       {{#unless @category.isUncategorizedCategory}}
