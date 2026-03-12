@@ -12,6 +12,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 
@@ -402,5 +403,39 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await click(".fk-d-tooltip__trigger");
 
     assert.dom(".fk-d-tooltip__inner-content").hasText("component");
+  });
+
+  test("legacy yield does not rerender input on keystroke", async function (assert) {
+    let data = { foo: "" };
+    const mutateData = (x) => (data = x);
+
+    await withSilencedDeprecationsAsync(
+      "discourse.form-kit.legacy-field-yield",
+      async () => {
+        await render(
+          <template>
+            <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+              <form.Field @name="foo" @title="Foo" as |field|>
+                <field.Input />
+              </form.Field>
+            </Form>
+          </template>
+        );
+
+        const input = document.querySelector(".form-kit__control-input");
+        await fillIn(input, "bar");
+
+        assert.strictEqual(
+          document.querySelector(".form-kit__control-input"),
+          input,
+          "the input element is the same DOM node after typing"
+        );
+        assert.form().field("foo").hasValue("bar");
+
+        await formKit().submit();
+
+        assert.deepEqual(data.foo, "bar");
+      }
+    );
   });
 });
