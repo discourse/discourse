@@ -172,6 +172,7 @@ export default class EditCategoryGeneral extends Component {
         title,
         message: i18n("category.color_validations.cant_be_empty"),
       });
+      return;
     }
 
     if (color.length !== 3 && color.length !== 6) {
@@ -179,6 +180,7 @@ export default class EditCategoryGeneral extends Component {
         title,
         message: i18n("category.color_validations.incorrect_length"),
       });
+      return;
     }
 
     if (!/^[0-9A-Fa-f]+$/.test(color)) {
