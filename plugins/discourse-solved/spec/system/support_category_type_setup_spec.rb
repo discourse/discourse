@@ -93,15 +93,23 @@ RSpec.describe "Support Category Type Setup", type: :system do
       page.find(".d-nav-submenu__tabs .edit-category-support").click
 
       expect(form.field("custom_fields.enable_accepted_answers").value).to be_truthy
-      expect(form.field("custom_fields.solved_topics_auto_close_hours").find("input").value).to eq(
-        "2",
-      )
+      expect(
+        form
+          .field("custom_fields.solved_topics_auto_close_hours")
+          .component
+          .find("input.relative-time-duration")
+          .value,
+      ).to eq("2")
       expect(form.field("custom_fields.notify_on_staff_accept_solved").value).to be_truthy
       expect(form.field("custom_fields.empty_box_on_unsolved").value).to be_truthy
 
       form.field("custom_fields.notify_on_staff_accept_solved").toggle
       form.field("custom_fields.empty_box_on_unsolved").toggle
-      form.field("custom_fields.solved_topics_auto_close_hours").find("input").fill_in(with: "3")
+      form
+        .field("custom_fields.solved_topics_auto_close_hours")
+        .component
+        .find("input.relative-time-duration")
+        .fill_in(with: "3")
       form.field("category_type_site_settings.show_who_marked_solved").toggle
 
       banner.click_save
