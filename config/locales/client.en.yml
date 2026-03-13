@@ -1934,7 +1934,7 @@ en:
         regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"
         revoke: "Revoke Subscription"
         revoke_confirm: "This will revoke your calendar subscription URLs. Any calendar apps using them will stop receiving updates. Continue?"
-        urls_warning: "Subscribe now or copy the URLs below. These URLs will not be displayed again. You can regenerate new URLs at any time."
+        urls_warning: "Save your subscriptions now — these URLs are shown only once. Regenerating will replace them and disconnect any existing integrations."
         bookmarks: "Bookmarked Reminders"
         bookmarks_description: "Your bookmarks with reminder dates"
         copy: "Copy URL"
