@@ -1536,20 +1536,4 @@
     align-items: center;
     gap: 0.5em;
   }
-
-  &__toggle {
-    margin-left: auto;
-  }
-
-  &__field {
-    display: flex;
-    gap: 0.5em;
-    margin-top: 0.5em;
-  }
-
-  &__input {
-    flex: 1;
-    font-size: var(--font-down-1);
-    font-family: var(--font-family-monospace);
-  }
 }

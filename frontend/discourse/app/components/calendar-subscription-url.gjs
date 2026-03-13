@@ -1,14 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class CalendarSubscriptionUrl extends Component {
   @tracked copied = false;
-  @tracked showUrl = false;
 
   get webcalUrl() {
     return this.args.url.replace(/^https?:\/\//, "webcal://");
@@ -23,15 +22,11 @@ export default class CalendarSubscriptionUrl extends Component {
   }
 
   @action
-  async copy() {
+  async copy(e) {
+    e.preventDefault();
     await clipboardCopy(this.args.url);
     this.copied = true;
     setTimeout(() => (this.copied = false), 2000);
-  }
-
-  @action
-  toggleUrl() {
-    this.showUrl = !this.showUrl;
   }
 
   <template>
@@ -66,38 +61,19 @@ export default class CalendarSubscriptionUrl extends Component {
           {{icon "calendar-days"}}
           {{i18n "user.calendar_subscriptions.add_to_apple"}}
         </a>
-        <DButton
-          @action={{this.toggleUrl}}
-          @icon="link"
-          @label="user.calendar_subscriptions.show_url"
-          class="btn-flat btn-small calendar-subscription-url__toggle"
-        />
+        <a
+          href={{@url}}
+          {{on "click" this.copy}}
+          class="btn btn-default btn-small"
+        >
+          {{icon (if this.copied "check" "copy")}}
+          {{if
+            this.copied
+            (i18n "user.calendar_subscriptions.copied")
+            (i18n "user.calendar_subscriptions.copy")
+          }}
+        </a>
       </div>
-
-      {{#if this.showUrl}}
-        <div class="calendar-subscription-url__field">
-          <input
-            type="text"
-            readonly
-            value={{@url}}
-            class="calendar-subscription-url__input"
-          />
-          <DButton
-            @action={{this.copy}}
-            @icon={{if this.copied "check" "copy"}}
-            @translatedLabel={{if
-              this.copied
-              (i18n "user.calendar_subscriptions.copied")
-              (i18n "user.calendar_subscriptions.copy")
-            }}
-            class={{if
-              this.copied
-              "btn-primary calendar-subscription-url__copy btn-small"
-              "btn-default calendar-subscription-url__copy btn-small"
-            }}
-          />
-        </div>
-      {{/if}}
     </div>
   </template>
 }
