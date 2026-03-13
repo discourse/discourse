@@ -340,16 +340,12 @@
   }
 
   &__tool-context-cost-bar {
-    height: 0.5em;
+    height: 0.35em;
     border-radius: 1em;
     background: linear-gradient(
-      to right,
-      var(--success) 0%,
-      var(--success) 33%,
-      var(--highlight) 33%,
-      var(--highlight) 66%,
-      var(--danger) 66%,
-      var(--danger) 100%
+      in oklch to right,
+      var(--success),
+      var(--danger)
     );
     position: relative;
     margin-block: var(--space-4) var(--space-6);
