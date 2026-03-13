@@ -137,7 +137,10 @@ class CategoriesController < ApplicationController
           Categories::TypeRegistry.counts
         end
 
-    render json: { types: Categories::TypeRegistry.list, counts: counts_by_type }
+    render json: {
+             types: Categories::TypeRegistry.list(only_visible: true),
+             counts: counts_by_type,
+           }
   end
 
   def show
