@@ -108,6 +108,11 @@ module Discourse
       FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
       temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
       execute_command("ln", "-s", source, temp_destination)
+
+      # Remove existing symlink first to prevent FileUtils.mv from moving
+      # the temp file inside the symlinked directory instead of replacing it
+      File.delete(destination) if File.symlink?(destination)
+
       FileUtils.mv(temp_destination, destination)
 
       nil
