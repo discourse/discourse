@@ -321,7 +321,6 @@ module DiscourseAi
               agent_name: @agent.class.name,
               reason: tool.parameters[:reason],
               llm_model_id: @model&.id,
-              post_cooked: context.post_id && Post.find_by(id: context.post_id)&.cooked,
             },
           )
 
