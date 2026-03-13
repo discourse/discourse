@@ -1472,9 +1472,11 @@
   }
 }
 
-.calendar-subscriptions {
-  max-width: 750px;
+.user-preferences .form-vertical:has(.calendar-subscriptions) {
+  width: 750px;
+}
 
+.calendar-subscriptions {
   &__description {
     color: var(--primary-medium);
     margin-bottom: 1em;
