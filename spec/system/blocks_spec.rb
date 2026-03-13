@@ -8,6 +8,8 @@ describe "Block conditions", type: :system do
     theme
   end
 
+  after { Theme.clear_cache! }
+
   fab!(:admin)
   fab!(:moderator)
   fab!(:trust_level_2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }

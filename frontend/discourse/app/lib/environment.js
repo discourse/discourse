@@ -2,7 +2,9 @@ import deprecated from "discourse/lib/deprecated";
 
 export const INPUT_DELAY = 250;
 
-let environment = "unknown";
+let environment =
+  document.getElementById("data-discourse-setup")?.dataset.environment ||
+  "unknown";
 
 export function setEnvironment(e) {
   environment = e;
