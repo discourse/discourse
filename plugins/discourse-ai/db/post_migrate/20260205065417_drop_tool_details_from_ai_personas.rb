@@ -2,15 +2,15 @@
 
 class DropToolDetailsFromAiPersonas < ActiveRecord::Migration[8.0]
   def up
-    view_existed = connection.view_exists?(:ai_agents)
-    execute "DROP VIEW IF EXISTS ai_agents" if view_existed
+    view_name = table_exists?(:ai_agents) ? :ai_personas : :ai_agents
+    table_name = table_exists?(:ai_agents) ? :ai_agents : :ai_personas
 
-    Migration::ColumnDropper.execute_drop(:ai_personas, %i[tool_details])
+    view_existed = connection.view_exists?(view_name)
+    execute "DROP VIEW IF EXISTS #{view_name}" if view_existed
 
-    if view_existed
-      columns = connection.columns(:ai_personas).map(&:name).join(", ")
-      execute "CREATE VIEW ai_agents AS SELECT #{columns} FROM ai_personas"
-    end
+    Migration::ColumnDropper.execute_drop(table_name, %i[tool_details])
+
+    execute "CREATE VIEW #{view_name} AS SELECT * FROM #{table_name}" if view_existed
   end
 
   def down
