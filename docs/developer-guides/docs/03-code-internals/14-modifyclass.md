@@ -122,7 +122,7 @@ In theme/plugin development, there are two ways this error is normally introduce
 
   ```js
   // Lookup service in initializer, then use it at runtime (bad!)
-  export default apiInitializer("0.8", (api) => {
+  export default apiInitializer((api) => {
     const composerService = api.container.lookup("service:composer");
     api.composerBeforeSave(async () => {
       composerService.doSomething();
@@ -134,7 +134,7 @@ In theme/plugin development, there are two ways this error is normally introduce
 
   ```js
   // 'Just in time' lookup of service (good!)
-  export default apiInitializer("0.8", (api) => {
+  export default apiInitializer((api) => {
     api.composerBeforeSave(async () => {
       const composerService = api.container.lookup("service:composer");
       composerService.doSomething();
