@@ -3990,6 +3990,9 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
+      auto_delete_immediate:
+        one: "The last post in the topic is already %{count} hour old, so the topic will be deleted immediately."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be deleted immediately."
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"

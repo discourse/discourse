@@ -156,6 +156,16 @@ export default class EditTopicTimerForm extends Component {
     }
   }
 
+  get willDeleteImmediately() {
+    if (this.autoDeleteAfterLastPost && this.args.topicTimer.duration_minutes) {
+      const deleteDate = moment(this.args.topic.last_posted_at).add(
+        this.args.topicTimer.duration_minutes,
+        "minutes"
+      );
+      return deleteDate < moment();
+    }
+  }
+
   get willCloseI18n() {
     if (this.autoCloseAfterLastPost) {
       const diff = Math.round(
@@ -163,6 +173,16 @@ export default class EditTopicTimerForm extends Component {
           (1000 * 60 * 60)
       );
       return i18n("topic.auto_close_immediate", { count: diff });
+    }
+  }
+
+  get willDeleteI18n() {
+    if (this.autoDeleteAfterLastPost) {
+      const diff = Math.round(
+        (new Date() - new Date(this.args.topic.last_posted_at)) /
+          (1000 * 60 * 60)
+      );
+      return i18n("topic.auto_delete_immediate", { count: diff });
     }
   }
 
@@ -175,7 +195,11 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get showTopicTimerInfo() {
-    if (!this.statusType || this.willCloseImmediately) {
+    if (
+      !this.statusType ||
+      this.willCloseImmediately ||
+      this.willDeleteImmediately
+    ) {
       return false;
     }
 
@@ -265,6 +289,13 @@ export default class EditTopicTimerForm extends Component {
         <div class="warning">
           {{icon "triangle-exclamation"}}
           {{this.willCloseI18n}}
+        </div>
+      {{/if}}
+
+      {{#if this.willDeleteImmediately}}
+        <div class="warning">
+          {{icon "triangle-exclamation"}}
+          {{this.willDeleteI18n}}
         </div>
       {{/if}}
 
