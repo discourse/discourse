@@ -183,7 +183,7 @@ class QunitRunner
       if File.directory?(path)
         test_files = Dir.glob(File.join(path, "**", "*-test.{js,gjs}"))
         if test_files.empty?
-          puts "Warning: No test files found in directory: #{path}" if @verbose
+          abort "Error: No test files found in directory: #{path}"
         else
           expanded.concat(test_files)
         end

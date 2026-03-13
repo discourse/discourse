@@ -49,7 +49,17 @@ class LefthookLinter
       end
 
     files
-      .map { |f| normalize_relative_path(f) }
+      .flat_map { |f|
+        path = normalize_relative_path(f)
+        if File.directory?(path)
+          expanded = Dir.glob(File.join(path, "**", "*"))
+                        .select { |g| File.file?(g) && lintable_file?(g) }
+          abort "Error: No lintable files found in directory: #{path}" if expanded.empty?
+          expanded
+        else
+          [path]
+        end
+      }
       .select { |f| File.file?(f) && lintable_file?(f) }
       .uniq
   end
