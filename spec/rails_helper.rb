@@ -489,23 +489,25 @@ RSpec.configure do |config|
 
         if example_file_path
           expanded_example_file_path = Pathname.new(example_file_path).expand_path
-          is_within_rails_root = expanded_example_file_path.to_s.start_with?(Rails.root.to_s)
+          match =
+            example_file_path.to_s.match(
+              %r{^#{Regexp.escape(Rails.root.to_s)}/(plugins|themes|spec)/([^/]+)/},
+            )
 
-          if is_within_rails_root
-            extension_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
+          if match
             should_set_raise_on_deprecation =
-              if extension_match
-                type_dir, extension_name = extension_match.captures
+              begin
+                type_dir, extension_name = match.captures
 
-                if type_dir == "plugins"
+                case type_dir
+                when "spec"
+                  true
+                when "plugins"
                   Discourse.preinstalled_plugins.any? { |p| p.directory_name == extension_name }
-                else
+                when "themes"
                   # Preinstalled themes don't have a .git directory
                   !Rails.root.join(type_dir, extension_name, ".git").exist?
                 end
-              else
-                # Not a plugin or theme spec
-                true
               end
 
             ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if should_set_raise_on_deprecation
