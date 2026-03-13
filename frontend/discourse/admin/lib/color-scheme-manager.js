@@ -2,7 +2,7 @@ import ColorScheme from "discourse/admin/models/color-scheme";
 import { ajax } from "discourse/lib/ajax";
 
 /**
- * apply color scheme by updating stylesheet links
+ * Apply color scheme by updating stylesheet links
  *
  * @param {Object} scheme - color scheme to apply
  * @param {Object} options
@@ -15,7 +15,7 @@ export async function applyColorScheme(scheme, options = {}) {
   const { replace = false, save = false } = options;
 
   try {
-    if (save && scheme && scheme.save) {
+    if (save && scheme?.save) {
       await scheme.save({ forceSave: true });
     }
 
@@ -49,9 +49,9 @@ export async function applyColorScheme(scheme, options = {}) {
             link.href.includes("dark_scheme") ||
             link.classList.contains("dark-scheme")
           ) {
-            darkTag = darkTag || link;
+            darkTag ||= link;
           } else {
-            lightTag = lightTag || link;
+            lightTag ||= link;
           }
         }
       }
@@ -69,17 +69,13 @@ export async function applyColorScheme(scheme, options = {}) {
       return;
     }
 
-    const apiUrl = `/color-scheme-stylesheet/${id}.json`;
-
-    const data = await ajax(apiUrl);
+    const data = await ajax(`/color-scheme-stylesheet/${id}.json`);
 
     if (data?.new_href && lightTag) {
       lightTag.href = data.new_href;
 
-      if (replace && id) {
+      if (replace) {
         lightTag.setAttribute("data-scheme-id", id);
-      } else if (replace && !id) {
-        lightTag.removeAttribute("data-scheme-id");
       }
     }
 
@@ -92,7 +88,7 @@ export async function applyColorScheme(scheme, options = {}) {
 }
 
 /**
- * set color scheme as active for the default theme and apply immediately
+ * Set color scheme as active for the default theme and apply immediately
  *
  * @param {Object} scheme - color scheme to set as default
  * @param {Object} defaultTheme - the default theme object
@@ -129,7 +125,7 @@ export async function setDefaultColorScheme(
     } else {
       const currentSchemeId = defaultTheme[themeField];
 
-      if (currentSchemeId && currentSchemeId > 0) {
+      if (currentSchemeId > 0) {
         const currentScheme = ColorScheme.create({ id: currentSchemeId });
         await currentScheme.updateDefaultOnTheme(schemeField, false);
       }
