@@ -1534,4 +1534,10 @@
     font-size: var(--font-down-1);
     font-family: var(--font-family-monospace);
   }
+
+  &__subscribe {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 0.25em;
+  }
 }

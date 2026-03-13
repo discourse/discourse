@@ -9,9 +9,16 @@ import { i18n } from "discourse-i18n";
 export default class CalendarSubscriptionUrl extends Component {
   @tracked copied = false;
 
+  get webcalUrl() {
+    return this.args.url.replace(/^https?:\/\//, "webcal://");
+  }
+
   get googleCalendarUrl() {
-    const webcalUrl = this.args.url.replace(/^https?:\/\//, "webcal://");
-    return `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcalUrl)}`;
+    return `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(this.webcalUrl)}`;
+  }
+
+  get outlookCalendarUrl() {
+    return `https://outlook.live.com/owa?path=/calendar/action/compose&rru=addsubscription&url=${encodeURIComponent(this.args.url)}&name=${encodeURIComponent(this.args.label)}`;
   }
 
   @action
@@ -50,14 +57,29 @@ export default class CalendarSubscriptionUrl extends Component {
             "btn-default calendar-subscription-url__copy"
           }}
         />
+      </div>
+      <div class="calendar-subscription-url__subscribe">
         <a
           href={{this.googleCalendarUrl}}
           target="_blank"
           rel="noopener noreferrer"
-          class="btn btn-default calendar-subscription-url__google"
+          class="btn btn-default btn-small"
         >
           {{icon "fab-google"}}
           {{i18n "user.calendar_subscriptions.add_to_google"}}
+        </a>
+        <a
+          href={{this.outlookCalendarUrl}}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-default btn-small"
+        >
+          {{icon "up-right-from-square"}}
+          {{i18n "user.calendar_subscriptions.add_to_outlook"}}
+        </a>
+        <a href={{this.webcalUrl}} class="btn btn-default btn-small">
+          {{icon "calendar-days"}}
+          {{i18n "user.calendar_subscriptions.add_to_apple"}}
         </a>
       </div>
     </div>

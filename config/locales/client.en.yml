@@ -1940,6 +1940,8 @@ en:
         copy: "Copy"
         copied: "Copied!"
         add_to_google: "Google Calendar"
+        add_to_outlook: "Outlook"
+        add_to_apple: "Apple Calendar"
         active_subscription: "You have an active calendar subscription."
 
       change_password:
