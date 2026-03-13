@@ -836,11 +836,11 @@ export default class AgentEditor extends Component {
             @name="require_approval"
             @title={{i18n "discourse_ai.ai_agent.require_approval"}}
             @tooltip={{i18n "discourse_ai.ai_agent.require_approval_help"}}
-            @showTitle={{false}}
             @format="large"
+            @type="checkbox"
             as |field|
           >
-            <field.Checkbox />
+            <field.Control />
           </form.Field>
         </form.Section>
 
