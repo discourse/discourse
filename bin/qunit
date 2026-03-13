@@ -122,6 +122,7 @@ class QunitRunner
         opts.separator <<~NOTES
           \nExamples:
             bin/qunit frontend/discourse/tests/unit/models/user-test.js
+            bin/qunit frontend/discourse/tests/unit/  # Run all tests in directory
             bin/qunit --standalone --target plugins  # Run all plugin tests
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
@@ -183,7 +184,7 @@ class QunitRunner
       if File.directory?(path)
         test_files = Dir.glob(File.join(path, "**", "*-test.{js,gjs}"))
         if test_files.empty?
-          puts "Warning: No test files found in directory: #{path}" if @verbose
+          abort "Error: No test files found in directory: #{path}"
         else
           expanded.concat(test_files)
         end
