@@ -40,6 +40,11 @@ class UsersController < ApplicationController
                    reset_recent_searches
                    user_menu_bookmarks
                    user_menu_messages
+                   update_primary_email
+                   destroy_email
+                   badge_title
+                   remove_password
+                   private_message_topic_tracking_state
                    toggle_anon
                  ]
 
