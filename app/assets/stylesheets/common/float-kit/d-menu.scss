@@ -56,8 +56,10 @@
     overflow: auto;
   }
 
-  .btn {
-    border-radius: 0;
+  &:not([data-identifier="usercard"]) {
+    .btn {
+      border-radius: 0;
+    }
   }
 
   .arrow {
