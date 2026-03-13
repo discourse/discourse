@@ -83,9 +83,9 @@ be:
         total: "Усяго"
       ai_agent:
         back: "Назад"
-        name: "Імя"
+        name: "Назва"
         edit: "Рэдагаваць"
-        export: "экспарт"
+        export: "Экспарт"
         description: "Апісанне"
         user: Карыстальнік
         save: "Захаваць"
