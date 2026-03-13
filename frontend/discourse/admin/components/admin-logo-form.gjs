@@ -234,6 +234,7 @@ export default class AdminLogoForm extends Component {
           @collapsable={{true}}
           @collapsed={{true}}
         >
+
           <:content>
             <form.Field
               @name="mobile_logo"
