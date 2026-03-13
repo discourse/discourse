@@ -76,6 +76,10 @@ const SIMPLIFIED_FIELD_LIST = [
   "default_slow_mode_seconds",
   "topic_template",
   "form_template_ids",
+  "uploaded_logo",
+  "uploaded_logo_dark",
+  "uploaded_background",
+  "uploaded_background_dark",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
