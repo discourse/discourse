@@ -1517,9 +1517,6 @@
   background: var(--secondary);
 
   &__header {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5em;
     margin-bottom: 0.5em;
   }
 
@@ -1530,22 +1527,29 @@
   &__description {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+    margin-left: 0.25em;
+  }
+
+  &__subscribe {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  &__toggle {
+    margin-left: auto;
   }
 
   &__field {
     display: flex;
     gap: 0.5em;
+    margin-top: 0.5em;
   }
 
   &__input {
     flex: 1;
     font-size: var(--font-down-1);
     font-family: var(--font-family-monospace);
-  }
-
-  &__subscribe {
-    display: flex;
-    gap: 0.5em;
-    margin-top: 0.5em;
   }
 }
