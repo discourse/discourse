@@ -30,6 +30,7 @@ const LEGACY_FORMKIT_FIELDS = [
   "email_in_allow_strangers",
   "mailinglist_mirror",
   "topic_template",
+  "topic_title_placeholder",
   "form_template_ids",
 ];
 
@@ -75,6 +76,7 @@ const SIMPLIFIED_FIELD_LIST = [
   "allow_global_tags",
   "default_slow_mode_seconds",
   "topic_template",
+  "topic_title_placeholder",
   "form_template_ids",
 ];
 

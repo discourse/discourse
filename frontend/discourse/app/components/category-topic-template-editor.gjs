@@ -16,6 +16,7 @@ export default class CategoryTopicTemplateEditor extends Component {
 
   @tracked _showFormTemplateOverride;
   @tracked _localTopicTemplate;
+  @tracked _localTopicTitlePlaceholder;
 
   get topicTemplate() {
     return this._localTopicTemplate ?? this.args.category?.topic_template;
@@ -23,6 +24,17 @@ export default class CategoryTopicTemplateEditor extends Component {
 
   set topicTemplate(value) {
     this._localTopicTemplate = value;
+  }
+
+  get topicTitlePlaceholder() {
+    return (
+      this._localTopicTitlePlaceholder ??
+      this.args.category?.topic_title_placeholder
+    );
+  }
+
+  set topicTitlePlaceholder(value) {
+    this._localTopicTitlePlaceholder = value;
   }
 
   get showInsertLinkButton() {
@@ -77,6 +89,17 @@ export default class CategoryTopicTemplateEditor extends Component {
   }
 
   @action
+  handleTopicTitlePlaceholderChange(event) {
+    const value = event.target.value;
+    this.topicTitlePlaceholder = value;
+    if (this.args.onChange) {
+      this.args.onChange("topic_title_placeholder", value);
+    } else {
+      this.args.category.set("topic_title_placeholder", value);
+    }
+  }
+
+  @action
   handleTopicTemplateChange(event) {
     const value = event.target.value;
     this.topicTemplate = value;
@@ -93,9 +116,10 @@ export default class CategoryTopicTemplateEditor extends Component {
         {{i18n "category.topic_title_placeholder"}}
       </label>
       <TextField
-        @value={{@category.topic_title_placeholder}}
+        @value={{this.topicTitlePlaceholder}}
         @id="category-topic-title-placeholder"
         @placeholderKey="category.topic_title_placeholder_placeholder"
+        @change={{this.handleTopicTitlePlaceholderChange}}
       />
     </div>
     {{#if this.siteSettings.enable_form_templates}}

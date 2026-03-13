@@ -71,6 +71,25 @@ acceptance(
       );
     });
 
+    test("Changing topic title placeholder saves correctly", async function (assert) {
+      putData = null;
+      await visit("/c/bug/edit/topic-template");
+
+      await fillIn("#category-topic-title-placeholder", "Enter a bug title");
+
+      assert
+        .dom(".admin-changes-banner")
+        .exists("banner is shown after changing topic title placeholder");
+
+      await click(".admin-changes-banner .btn-primary");
+
+      assert.strictEqual(
+        putData.topic_title_placeholder,
+        "Enter a bug title",
+        "it sends the updated topic title placeholder"
+      );
+    });
+
     test("Selecting a form template shows the unsaved changes banner", async function (assert) {
       putData = null;
       await visit("/c/bug/edit/topic-template");
@@ -116,6 +135,7 @@ acceptance("Admin - Legacy edit category topic template", function (needs) {
           slug: "bug",
           can_edit: true,
           topic_template: "Existing template content",
+          topic_title_placeholder: "Existing placeholder",
           category_type_site_settings: {},
           permissions: [],
         },
@@ -156,6 +176,28 @@ acceptance("Admin - Legacy edit category topic template", function (needs) {
       putData.topic_template,
       "Legacy flow template content",
       "it sends the updated topic template in legacy flow"
+    );
+  });
+
+  test("Changing topic title placeholder saves correctly", async function (assert) {
+    putData = null;
+    await visit("/c/bug/edit/topic-template");
+
+    assert
+      .dom("#category-topic-title-placeholder")
+      .hasValue(
+        "Existing placeholder",
+        "it loads the existing topic title placeholder"
+      );
+
+    await fillIn("#category-topic-title-placeholder", "Legacy placeholder");
+
+    await click("#save-category");
+
+    assert.strictEqual(
+      putData.topic_title_placeholder,
+      "Legacy placeholder",
+      "it sends the updated topic title placeholder in legacy flow"
     );
   });
 });
