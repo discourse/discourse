@@ -934,6 +934,7 @@ RSpec.describe CategoriesController do
                 allow_global_tags: "true",
                 required_tag_groups: [{ name: tag_group.name, min_count: 2 }],
                 form_template_ids: [form_template_1.id, form_template_2.id],
+                topic_title_placeholder: "test topic title placeholder",
               }
 
           expect(response.status).to eq(200)
@@ -956,6 +957,7 @@ RSpec.describe CategoriesController do
           expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
           expect(category.category_required_tag_groups.first.min_count).to eq(2)
           expect(category.form_template_ids).to eq([form_template_1.id, form_template_2.id])
+          expect(category.topic_title_placeholder).to eq("test topic title placeholder")
         end
 
         it "logs the changes correctly" do
