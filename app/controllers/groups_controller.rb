@@ -760,21 +760,11 @@ class GroupsController < ApplicationController
 
   private
 
-  # This method replicates the side effects of group.add callbacks
-  # in bulk for API performance reasons.
-  # This method should be updated to match those callbacks whenever they change.
   def add_users_to_group(group, users, notify: false)
     added_user_ids = group.bulk_add(users.map(&:id))
     return if added_user_ids.empty?
 
-    added_id_set = added_user_ids.to_set
-    new_users = users.select { |u| added_id_set.include?(u.id) }
-
-    GroupUser.bulk_set_category_notifications(group, added_user_ids)
-    GroupUser.bulk_set_tag_notifications(group, added_user_ids)
-
-    new_users.each { |user| group.trigger_user_added_event(user, false) }
-    group.bulk_publish_category_updates(new_users)
+    new_users = users.select { |u| added_user_ids.include?(u.id) }
 
     now = Time.now
     GroupHistory.insert_all(

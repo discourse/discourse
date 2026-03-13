@@ -881,6 +881,9 @@ class Group < ActiveRecord::Base
     ).first
   end
 
+  # This method replicates the side effects of group.add callbacks
+  # in bulk for API performance reasons.
+  # This method should be updated to match those callbacks whenever they change.
   def bulk_add(user_ids)
     return [] if user_ids.blank?
 
@@ -951,6 +954,14 @@ class Group < ActiveRecord::Base
         trust_level: self.grant_trust_level,
       )
     end
+
+    GroupUser.bulk_set_category_notifications(self, added_user_ids)
+    GroupUser.bulk_set_tag_notifications(self, added_user_ids)
+
+    added_users = User.where(id: added_user_ids).to_a
+
+    added_users.each { |user| trigger_user_added_event(user, false) }
+    bulk_publish_category_updates(added_users)
 
     added_user_ids
   end
