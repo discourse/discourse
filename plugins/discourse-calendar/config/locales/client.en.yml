@@ -30,7 +30,7 @@ en:
       invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
         all_events: "Discourse Calendar - All Events"
-        all_events_description: "All events you have access to"
+        all_events_description: "All forum events"
         my_events: "Discourse Calendar - My Events"
         my_events_description: "Events you are going to or interested in"
       on_holiday: "On Holiday"
