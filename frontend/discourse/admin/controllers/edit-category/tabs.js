@@ -31,6 +31,7 @@ const LEGACY_FORMKIT_FIELDS = [
   "mailinglist_mirror",
   "topic_template",
   "form_template_ids",
+  "topic_title_placeholder",
 ];
 
 // All fields managed through FormKit in the simplified creation flow.
@@ -76,6 +77,7 @@ const SIMPLIFIED_FIELD_LIST = [
   "default_slow_mode_seconds",
   "topic_template",
   "form_template_ids",
+  "topic_title_placeholder",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";

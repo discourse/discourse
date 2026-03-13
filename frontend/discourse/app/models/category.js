@@ -485,7 +485,6 @@ export default class Category extends RestModel {
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
   @tracked allowed_tags;
-  @tracked topic_title_placeholder;
   @autoTrackedArray available_groups;
   @autoTrackedArray permissions;
   @autoTrackedArray required_tag_groups;
