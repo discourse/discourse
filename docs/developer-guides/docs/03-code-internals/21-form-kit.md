@@ -366,7 +366,13 @@ By default, the title will be shown on top of the control. You can choose not to
 **Example**
 
 ```hbs
-<form.Field @name="foo" @title="Foo" @showTitle={{false}} @type="input" as |field|>
+<form.Field
+  @name="foo"
+  @title="Foo"
+  @showTitle={{false}}
+  @type="input"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -378,7 +384,13 @@ A field can be disabled to prevent any changes to it.
 **Example**
 
 ```hbs
-<form.Field @name="foo" @title="Foo" @disabled={{true}} @type="input" as |field|>
+<form.Field
+  @name="foo"
+  @title="Foo"
+  @disabled={{true}}
+  @type="input"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1555,7 +1567,13 @@ The value must be `"yes"`, `"on"`, `true`, `1`, or `"true"`. Useful for checkbox
 **Example**
 
 ```hbs
-<form.Field @name="terms" @title="Terms" @type="checkbox" @validation="accepted" as |field|>
+<form.Field
+  @name="terms"
+  @title="Terms"
+  @type="checkbox"
+  @validation="accepted"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1567,7 +1585,13 @@ Checks that a numeric value is between a minimum and maximum value.
 **Example**
 
 ```hbs
-<form.Field @name="amount" @title="Amount" @type="input-number" @validation="between:1,10" as |field|>
+<form.Field
+  @name="amount"
+  @title="Amount"
+  @type="input-number"
+  @validation="between:1,10"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1615,7 +1639,13 @@ Checks that a string ends with a given suffix.
 **Example**
 
 ```hbs
-<form.Field @name="domain" @title="Domain" @type="input" @validation="endsWith:.com" as |field|>
+<form.Field
+  @name="domain"
+  @title="Domain"
+  @type="input"
+  @validation="endsWith:.com"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1627,7 +1657,13 @@ Checks if the value is an integer.
 **Example**
 
 ```hbs
-<form.Field @name="age" @title="Age" @type="input-number" @validation="integer" as |field|>
+<form.Field
+  @name="age"
+  @title="Age"
+  @type="input-number"
+  @validation="integer"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1639,7 +1675,13 @@ Checks that the input's value is over a given length, or between two length valu
 **Example**
 
 ```hbs
-<form.Field @name="username" @title="Username" @type="input" @validation="length:5,16" as |field|>
+<form.Field
+  @name="username"
+  @title="Username"
+  @type="input"
+  @validation="length:5,16"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1653,7 +1695,13 @@ Checks if the input is a valid number as evaluated by `isNaN()`.
 **Example**
 
 ```hbs
-<form.Field @name="amount" @title="Amount" @type="input" @validation="number" as |field|>
+<form.Field
+  @name="amount"
+  @title="Amount"
+  @type="input"
+  @validation="number"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1667,7 +1715,13 @@ Checks if the input is empty.
 **Example**
 
 ```hbs
-<form.Field @name="username" @title="Username" @type="input" @validation="required:trim" as |field|>
+<form.Field
+  @name="username"
+  @title="Username"
+  @type="input"
+  @validation="required:trim"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1679,7 +1733,13 @@ Checks that a string starts with a given prefix.
 **Example**
 
 ```hbs
-<form.Field @name="handle" @title="Handle" @type="input" @validation="startsWith:@" as |field|>
+<form.Field
+  @name="handle"
+  @title="Handle"
+  @type="input"
+  @validation="startsWith:@"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1691,7 +1751,13 @@ Checks if the input value appears to be a properly formatted URL including the p
 **Example**
 
 ```hbs
-<form.Field @name="endpoint" @title="Endpoint" @type="input-url" @validation="url" as |field|>
+<form.Field
+  @name="endpoint"
+  @title="Endpoint"
+  @type="input-url"
+  @validation="url"
+  as |field|
+>
   <field.Control />
 </form.Field>
 ```
@@ -1893,7 +1959,13 @@ All FormKit components propagate attributes, allowing you to set classes and dat
 
 ```hbs
 <Form class="my-form" as |form|>
-  <form.Field @name="foo" @title="Foo" @type="input" class="my-field" as |field|>
+  <form.Field
+    @name="foo"
+    @title="Foo"
+    @type="input"
+    class="my-field"
+    as |field|
+  >
     <field.Control class="my-control" />
   </form.Field>
 </Form>
@@ -1905,7 +1977,13 @@ Creating a custom control is straightforward with the properties yielded by `for
 
 ```hbs
 <Form as |form|>
-  <form.Field @name="foo" @title="Foo" @type="custom" class="my-field" as |field|>
+  <form.Field
+    @name="foo"
+    @title="Foo"
+    @type="custom"
+    class="my-field"
+    as |field|
+  >
     <field.Control>
       <MyCustomControl id={{field.id}} @onChange={{field.set}} />
     </field.Control>
@@ -1915,21 +1993,21 @@ Creating a custom control is straightforward with the properties yielded by `for
 
 ### Common Values on `form`
 
-| Name                  | Description                                          |
-| --------------------- | ---------------------------------------------------- |
-| `set`                 | Set any field by name, e.g. `set("bar", 1)`          |
-| `setProperties`       | Set multiple field values at once                    |
-| `addItemToCollection` | Append an item to a collection by path               |
+| Name                  | Description                                 |
+| --------------------- | ------------------------------------------- |
+| `set`                 | Set any field by name, e.g. `set("bar", 1)` |
+| `setProperties`       | Set multiple field values at once           |
+| `addItemToCollection` | Append an item to a collection by path      |
 
 ### Common Values on `field`
 
-| Name      | Description                              |
-| --------- | ---------------------------------------- |
-| `id`      | Input ID                                 |
-| `errorId` | Error container ID                       |
-| `name`    | Full nested field path                   |
-| `value`   | Current field value from draft state     |
-| `set`     | Set the current field value              |
+| Name      | Description                          |
+| --------- | ------------------------------------ |
+| `id`      | Input ID                             |
+| `errorId` | Error container ID                   |
+| `name`    | Full nested field path               |
+| `value`   | Current field value from draft state |
+| `set`     | Set the current field value          |
 
 # Javascript assertions
 
@@ -2068,7 +2146,10 @@ Asserts that the field description matches the expected text.
 **Example**
 
 ```js
-assert.form().field("foo").hasDescription("Helpful copy", "it shows the description");
+assert
+  .form()
+  .field("foo")
+  .hasDescription("Helpful copy", "it shows the description");
 ```
 
 ### hasError()
