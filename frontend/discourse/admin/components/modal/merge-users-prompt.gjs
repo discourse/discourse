@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, get, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -19,14 +19,14 @@ export default class MergeUsersPrompt extends Component {
 
   <template>
     <DModal
-      @title={{htmlSafe
+      @title={{trustHTML
         (i18n "admin.user.merge.prompt.title" username=@model.user.username)
       }}
       @closeModal={{@closeModal}}
     >
       <:body>
         <p>
-          {{htmlSafe
+          {{trustHTML
             (i18n
               "admin.user.merge.prompt.description"
               username=@model.user.username

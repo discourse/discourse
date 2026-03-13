@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 export default class CategoryReadOnlyBanner extends Component {
   @service currentUser;
@@ -17,7 +17,7 @@ export default class CategoryReadOnlyBanner extends Component {
     {{#if this.shouldShow}}
       <div class="row">
         <div class="alert alert-info category-read-only-banner">
-          {{htmlSafe @category.read_only_banner}}
+          {{trustHTML @category.read_only_banner}}
         </div>
       </div>
     {{/if}}

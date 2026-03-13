@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { untrack } from "@glimmer/validator";
-import { htmlSafe, isHTMLSafe } from "@ember/template";
+import { isHTMLSafe, trustHTML } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import helperFn from "discourse/helpers/helper-fn";
 import deprecated from "discourse/lib/deprecated";
@@ -157,7 +157,7 @@ export default class DecoratedHtml extends Component {
   });
 
   get elementToDecorate() {
-    const cooked = this.args.html || htmlSafe("");
+    const cooked = this.args.html || trustHTML("");
     if (!isHTMLSafe(cooked)) {
       throw "@html must be an htmlSafe string";
     }

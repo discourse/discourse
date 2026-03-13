@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -11,13 +12,32 @@ const SchemaFormField = <template>
   {{#if (eq @entry.type "bool")}}
     <@formObject.Field
       @name={{@entry.key}}
+      @type="checkbox"
       @title={{@entry.label}}
       @validation={{if @entry.required "required"}}
       @format="full"
       @showTitle={{false}}
       as |field|
     >
-      <field.Checkbox>{{@entry.description}}</field.Checkbox>
+      <field.Control>{{@entry.description}}</field.Control>
+    </@formObject.Field>
+  {{else if (eq @entry.subtype "duration")}}
+    <@formObject.Field
+      @name={{@entry.key}}
+      @title={{@entry.label}}
+      @description={{@entry.description}}
+      @validation={{if @entry.required "required"}}
+      @titleFormat="full"
+      @descriptionFormat="full"
+      @format="full"
+      @type="custom"
+      as |field|
+    >
+      <RelativeTimePicker
+        @durationHours={{field.value}}
+        @durationOutputUnit="hours"
+        @onChange={{field.set}}
+      />
     </@formObject.Field>
   {{else if (eq @entry.type "integer")}}
     <@formObject.Field
@@ -27,14 +47,16 @@ const SchemaFormField = <template>
       @validation={{if @entry.required "required"}}
       @titleFormat="full"
       @descriptionFormat="full"
-      @format="small"
+      @format="full"
+      @type="input-number"
       as |field|
     >
-      <field.Input @type="number" />
+      <field.Control />
     </@formObject.Field>
   {{else}}
     <@formObject.Field
       @name={{@entry.key}}
+      @type="input"
       @title={{@entry.label}}
       @description={{@entry.description}}
       @validation={{if @entry.required "required"}}
@@ -43,7 +65,7 @@ const SchemaFormField = <template>
       @format="large"
       as |field|
     >
-      <field.Input />
+      <field.Control />
     </@formObject.Field>
   {{/if}}
 </template>;
@@ -57,10 +79,12 @@ export default class EditCategoryTypeSchemaFields extends Component {
   }
 
   get className() {
-    let classes = ["edit-category-type-schema-fields"];
-    classes.push(`--category-type-${this.args.categoryType}`);
+    let classes = [
+      "edit-category-type-schema-fields",
+      `--category-type-${this.args.categoryType}`,
+    ];
     if (this.args.active) {
-      classes.push(" active");
+      classes.push("active");
     }
     return classes.join(" ");
   }
@@ -91,7 +115,6 @@ export default class EditCategoryTypeSchemaFields extends Component {
       </@form.Section>
 
       <@form.Emphasis
-        @type="info"
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >

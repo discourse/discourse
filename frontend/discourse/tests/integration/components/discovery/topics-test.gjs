@@ -41,7 +41,7 @@ module("Integration | Component | DiscoveryTopics", function (hooks) {
 
       await render(<template><DiscoveryTopics @model={{model}} /></template>);
 
-      assert.dom(".empty-state--empty-topic-filter").doesNotExist();
+      assert.dom(".empty-state__container.--empty-topic-filter").doesNotExist();
     });
 
     test("does not show EmptyTopicFilter when topics exist", async function (assert) {
@@ -52,7 +52,7 @@ module("Integration | Component | DiscoveryTopics", function (hooks) {
 
       await render(<template><DiscoveryTopics @model={{model}} /></template>);
 
-      assert.dom(".empty-state--empty-topic-filter").doesNotExist();
+      assert.dom(".empty-state__container.--empty-topic-filter").doesNotExist();
     });
 
     test("does not show EmptyTopicFilter for anonymous users", async function (assert) {
@@ -66,7 +66,7 @@ module("Integration | Component | DiscoveryTopics", function (hooks) {
 
       await render(<template><DiscoveryTopics @model={{model}} /></template>);
 
-      assert.dom(".empty-state--empty-topic-filter").doesNotExist();
+      assert.dom(".empty-state__container.--empty-topic-filter").doesNotExist();
     });
   });
 });

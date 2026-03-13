@@ -52,6 +52,7 @@ export default class AdminReport extends Component {
   @tracked options = null;
   @tracked dateRangeFrom = null;
   @tracked dateRangeTo = null;
+  @tracked userHasCustomDates = false;
 
   showHeader = this.args.showHeader ?? true;
   showFilteringUI = this.args.showFilteringUI ?? false;
@@ -184,7 +185,33 @@ export default class AdminReport extends Component {
 
   @action
   changeGrouping(grouping) {
-    this.refreshReport({ chartGrouping: grouping });
+    const options = { chartGrouping: grouping };
+
+    if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
+      const endDate = moment().endOf("day");
+      let startDate;
+
+      switch (grouping) {
+        case "daily":
+          startDate = moment().subtract(1, "month").startOf("day");
+          break;
+        case "weekly":
+          startDate = moment().subtract(3, "months").startOf("day");
+          break;
+        case "monthly":
+          startDate = moment().subtract(12, "months").startOf("day");
+          break;
+      }
+
+      if (startDate) {
+        this.dateRangeFrom = startDate;
+        this.dateRangeTo = endDate;
+        options.startDate = startDate;
+        options.endDate = endDate;
+      }
+    }
+
+    this.refreshReport(options);
   }
 
   get displayedModes() {
@@ -286,15 +313,19 @@ export default class AdminReport extends Component {
     return options.map((id) => {
       return {
         id,
-        disabled: id === "daily" && dataLength >= DAILY_LIMIT_DAYS,
+        disabled:
+          id === "daily" &&
+          dataLength >= DAILY_LIMIT_DAYS &&
+          this.userHasCustomDates,
         label: `admin.dashboard.reports.${id}`,
-        class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`,
+        class: `chart-grouping ${id} ${chartGrouping === id ? "active" : "inactive"}`,
       };
     });
   }
 
   @action
   onChangeDateRange(range) {
+    this.userHasCustomDates = true;
     this.dateRangeFrom = range.from;
     this.dateRangeTo = range.to;
   }

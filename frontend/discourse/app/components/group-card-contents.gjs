@@ -2,7 +2,7 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import AvatarFlair from "discourse/components/avatar-flair";
@@ -205,7 +205,7 @@ export default class GroupCardContents extends CardContentsBase {
           {{#if this.group.bio_excerpt}}
             <div class="card-row second-row">
               <div class="bio">
-                {{htmlSafe this.group.bio_excerpt}}
+                {{trustHTML this.group.bio_excerpt}}
               </div>
             </div>
           {{/if}}

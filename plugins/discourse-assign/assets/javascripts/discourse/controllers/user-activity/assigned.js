@@ -1,6 +1,6 @@
 import { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -23,7 +23,7 @@ export default class UserActivityAssigned extends UserTopicsList {
 
   @computed
   get emptyStateBody() {
-    return htmlSafe(
+    return trustHTML(
       i18n("user.no_assignments_body", {
         preferencesUrl: getURL("/my/preferences/notifications"),
         icon: iconHTML("user-plus"),

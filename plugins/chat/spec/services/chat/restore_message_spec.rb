@@ -6,7 +6,7 @@ RSpec.describe Chat::RestoreMessage do
   fab!(:message) { Fabricate(:chat_message, user: current_user) }
 
   before do
-    message.trash!
+    message.trash!(current_user)
     message.chat_channel.update!(
       last_message_id: message.chat_channel.latest_not_deleted_message_id,
     )

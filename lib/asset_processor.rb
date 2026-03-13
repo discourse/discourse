@@ -137,6 +137,7 @@ class AssetProcessor
 
     ctx.eval("globalThis.ROLLUP_PLUGIN_COMPILER = #{ENV["ROLLUP_PLUGIN_COMPILER"].to_json}")
     ctx.eval(source, filename: "asset-processor.js")
+    ctx.low_memory_notification # GC to free up memory used during init
 
     ctx
   end

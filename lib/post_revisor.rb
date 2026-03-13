@@ -84,7 +84,8 @@ class PostRevisor
 
   POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type locale]
 
-  attr_reader :category_changed, :post_revision
+  # Extensions can inspect revision options via the `:post_edited` event payload.
+  attr_reader :category_changed, :post_revision, :opts
 
   def initialize(post, topic = post.topic)
     @post = post

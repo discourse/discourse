@@ -342,7 +342,7 @@ Discourse::Application.routes.draw do
       post "/toggle-feature" => "dashboard#toggle_feature"
 
       resources :dashboard, only: [:index] do
-        collection { get "problems" }
+        collection { post "problems" }
       end
 
       resources :api, only: [:index], constraints: AdminConstraint.new do

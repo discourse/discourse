@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { Promise } from "rsvp";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
@@ -419,20 +419,20 @@ export default class BulkTopicActions extends Component {
           {{#if this.failureMessages}}
             <div class="topic-bulk-actions-modal__errors">
               {{#if this.successTopicCount}}
-                <p>{{htmlSafe
+                <p>{{trustHTML
                     (i18n
                       "topics.bulk.completed_count" count=this.successTopicCount
                     )
                   }}</p>
               {{/if}}
               {{#if this.skippedTopicCount}}
-                <p>{{htmlSafe
+                <p>{{trustHTML
                     (i18n
                       "topics.bulk.skipped_count" count=this.skippedTopicCount
                     )
                   }}</p>
               {{/if}}
-              <p>{{htmlSafe
+              <p>{{trustHTML
                   (i18n "topics.bulk.not_completed" count=this.failedTopicCount)
                 }}</p>
               <ul>
@@ -449,15 +449,15 @@ export default class BulkTopicActions extends Component {
             <div class="topic-bulk-actions-modal__selection-info">
 
               {{#if this.showSoleCategoryTip}}
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topics.bulk.selected_sole_category"
                     count=@model.bulkSelectHelper.selected.length
                   )
                 }}
-                {{htmlSafe this.soleCategoryBadgeHTML}}
+                {{trustHTML this.soleCategoryBadgeHTML}}
               {{else}}
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topics.bulk.selected"
                     count=@model.bulkSelectHelper.selected.length
@@ -489,7 +489,7 @@ export default class BulkTopicActions extends Component {
                         @selection={{this.notificationLevelId}}
                       />
                       <strong>{{level.name}}</strong>
-                      <div class="description">{{htmlSafe
+                      <div class="description">{{trustHTML
                           level.description
                         }}</div>
                     </label>

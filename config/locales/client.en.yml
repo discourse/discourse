@@ -3214,6 +3214,7 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
+      edit_reason: "Add your reason for editing"
       enter_fullscreen: "Enter fullscreen composer"
       exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"

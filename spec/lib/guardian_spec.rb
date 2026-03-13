@@ -505,6 +505,14 @@ RSpec.describe Guardian do
         expect(Guardian.new(admin).can_banner_topic?(topic)).to be_truthy
       end
 
+      it "does not allow staff to banner topics in read-restricted categories" do
+        group = Fabricate(:group)
+        private_category = Fabricate(:private_category, group: group)
+        topic = Fabricate(:topic, category: private_category)
+
+        expect(Guardian.new(admin).can_banner_topic?(topic)).to be_falsey
+      end
+
       describe "#can_change_archetype?" do
         fab!(:topic)
 

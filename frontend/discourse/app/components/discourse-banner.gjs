@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -26,7 +26,7 @@ export default class DiscourseBanner extends Component {
     newDiv.querySelectorAll("[id^='heading--']").forEach((el) => {
       el.removeAttribute("id");
     });
-    return htmlSafe(newDiv.innerHTML);
+    return trustHTML(newDiv.innerHTML);
   }
 
   get visible() {
@@ -72,7 +72,7 @@ export default class DiscourseBanner extends Component {
                 >
                   {{icon "pencil"}}
                   {{#if this.site.desktopView}}
-                    {{htmlSafe (i18n "banner.edit")}}
+                    {{trustHTML (i18n "banner.edit")}}
                   {{/if}}
                 </a>
               {{/if}}
@@ -81,6 +81,7 @@ export default class DiscourseBanner extends Component {
                 @action={{this.dismiss}}
                 @icon="xmark"
                 @title="banner.close"
+                @ariaLabel="banner.close"
                 class="btn-transparent close"
               />
             </div>

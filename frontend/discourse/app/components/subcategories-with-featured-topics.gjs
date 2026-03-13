@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import ParentCategoryRow from "discourse/components/parent-category-row";
@@ -21,7 +21,7 @@ export default class SubcategoriesWithFeaturedTopics extends Component {
             <div class="category-list subcategory-list with-topics">
               <div class="parent-category">
                 <CategoryTitleLink @category={{category}} />
-                <span class="stat" title={{category.statTitle}}>{{htmlSafe
+                <span class="stat" title={{category.statTitle}}>{{trustHTML
                     category.stat
                   }}</span>
               </div>
@@ -51,7 +51,7 @@ export default class SubcategoriesWithFeaturedTopics extends Component {
                 <tr>
                   <th class="parent-category">
                     <CategoryTitleLink @category={{category}} />
-                    <span class="stat" title={{category.statTitle}}>{{htmlSafe
+                    <span class="stat" title={{category.statTitle}}>{{trustHTML
                         category.stat
                       }}</span>
                   </th>

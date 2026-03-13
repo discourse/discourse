@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
@@ -31,7 +31,7 @@ export default class UserSummaryTopic extends Component {
           {{/if}}
         </span>
         <br />
-        <a href={{@url}}>{{htmlSafe @topic.fancyTitle}}</a>
+        <a href={{@url}}>{{trustHTML @topic.fancyTitle}}</a>
       </PluginOutlet>
     </li>
   </template>

@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -92,14 +92,14 @@ export default class UppyImageUploader extends Component {
 
   get placeholderStyle() {
     if (isEmpty(this.args.placeholderUrl)) {
-      return htmlSafe("");
+      return trustHTML("");
     }
-    return htmlSafe(`background-image: url(${this.args.placeholderUrl})`);
+    return trustHTML(`background-image: url(${this.args.placeholderUrl})`);
   }
 
   get imageCdnUrl() {
     if (isEmpty(this.args.imageUrl)) {
-      return htmlSafe("");
+      return trustHTML("");
     }
 
     return getURLWithCDN(this.args.imageUrl);
@@ -112,9 +112,9 @@ export default class UppyImageUploader extends Component {
   get backgroundStyle() {
     // Only apply background style for images, not videos
     if (this.isVideoFile) {
-      return htmlSafe("");
+      return trustHTML("");
     }
-    return htmlSafe(`background-image: url(${this.imageCdnUrl})`);
+    return trustHTML(`background-image: url(${this.imageCdnUrl})`);
   }
 
   get imageBaseName() {
@@ -125,7 +125,7 @@ export default class UppyImageUploader extends Component {
 
   get progressBarStyle() {
     let progress = this.uppyUpload.uploadProgress || 0;
-    return htmlSafe(`width: ${progress}%`);
+    return trustHTML(`width: ${progress}%`);
   }
 
   get acceptedFormats() {

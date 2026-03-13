@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import formatDate from "discourse/helpers/format-date";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -78,7 +78,7 @@ export default <template>
     {{#if @controller.last_sync_at}}
       <span class="last_synced">
         {{i18n "patreon.last_synced"}}:
-        {{htmlSafe (formatDate @controller.last_sync_at leaveAgo="true")}}
+        {{trustHTML (formatDate @controller.last_sync_at leaveAgo="true")}}
       </span>
     {{/if}}
   </section>

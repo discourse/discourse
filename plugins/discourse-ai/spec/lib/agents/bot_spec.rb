@@ -31,6 +31,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
   describe "#reply" do
     it "sets top_p and temperature params" do
+      SiteSetting.ai_llm_temperature_top_p_enabled = true
       DiscourseAi::Completions::Endpoints::Fake.delays = []
       DiscourseAi::Completions::Endpoints::Fake.last_call = nil
 

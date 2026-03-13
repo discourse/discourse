@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
@@ -190,7 +190,7 @@ export default class HouseAd extends AdComponent {
   <template>
     <div class={{concatClass "house-creative" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
-        {{htmlSafe this.adHtml}}
+        {{trustHTML this.adHtml}}
       {{/if}}
     </div>
   </template>

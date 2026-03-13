@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -24,18 +24,28 @@ export default class ToolbarPopupMenuOptions extends Component {
       return;
     }
 
-    const checkScrollable = () => {
+    const checkScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = innerContent;
+      const hasOverflow = scrollHeight > clientHeight;
       menuElement.classList.toggle(
-        "--scrollable",
-        innerContent.scrollHeight > innerContent.clientHeight
+        "--scroll-top",
+        hasOverflow && scrollTop > 2
+      );
+      menuElement.classList.toggle(
+        "--scroll-bottom",
+        hasOverflow && scrollHeight - scrollTop - clientHeight > 2
       );
     };
 
-    const observer = new ResizeObserver(checkScrollable);
+    const observer = new ResizeObserver(checkScroll);
     observer.observe(innerContent);
-    checkScrollable();
+    innerContent.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      innerContent.removeEventListener("scroll", checkScroll);
+    };
   });
 
   willDestroy() {
@@ -125,7 +135,7 @@ export default class ToolbarPopupMenuOptions extends Component {
       });
     }
 
-    return htmlSafe(htmlLabel);
+    return trustHTML(htmlLabel);
   }
 
   get convertedContent() {

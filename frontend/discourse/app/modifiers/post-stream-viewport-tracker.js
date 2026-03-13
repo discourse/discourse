@@ -1,5 +1,5 @@
 import { cancel, schedule } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -456,7 +456,7 @@ export default class PostStreamViewportTracker {
       // element height
       return {
         active: true,
-        style: htmlSafe(
+        style: trustHTML(
           `height:${height}px !important;` +
             `margin:${margin} !important;` +
             "box-sizing: border-box !important;"

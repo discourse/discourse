@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { computed } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
 import RadioButton from "discourse/components/radio-button";
@@ -39,17 +39,17 @@ export default class ChatToTopicSelector extends Component {
 
   @computed()
   get newTopicInstruction() {
-    return htmlSafe(this.instructionLabels[NEW_TOPIC_SELECTION]);
+    return trustHTML(this.instructionLabels[NEW_TOPIC_SELECTION]);
   }
 
   @computed()
   get existingTopicInstruction() {
-    return htmlSafe(this.instructionLabels[EXISTING_TOPIC_SELECTION]);
+    return trustHTML(this.instructionLabels[EXISTING_TOPIC_SELECTION]);
   }
 
   @computed()
   get newMessageInstruction() {
-    return htmlSafe(this.instructionLabels[NEW_MESSAGE_SELECTION]);
+    return trustHTML(this.instructionLabels[NEW_MESSAGE_SELECTION]);
   }
 
   <template>

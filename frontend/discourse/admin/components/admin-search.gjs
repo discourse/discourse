@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
@@ -193,7 +193,7 @@ export default class AdminSearch extends Component {
                 >{{result.label}}</span>
               </div>
               {{#if result.description}}
-                <div class="admin-search__result-description">{{htmlSafe
+                <div class="admin-search__result-description">{{trustHTML
                     result.description
                   }}</div>
               {{/if}}

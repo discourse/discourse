@@ -5,10 +5,18 @@ class TagLocalization < ActiveRecord::Base
 
   belongs_to :tag
 
+  before_validation :clean_name
+
   validates :locale, presence: true, length: { maximum: 20 }
   validates :name, presence: true
   validates :tag_id, uniqueness: { scope: :locale }
   validates :description, length: { maximum: 1000 }
+
+  private
+
+  def clean_name
+    self.name = DiscourseTagging.clean_tag(name) if name.present?
+  end
 end
 
 # == Schema Information

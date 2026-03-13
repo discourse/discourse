@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
@@ -314,7 +314,7 @@ export default class ImageNodeView extends Component {
 
     const scale = (this.args.node.attrs.scale ?? 100) / 100;
 
-    return htmlSafe(`width: ${width * scale}px`);
+    return trustHTML(`width: ${width * scale}px`);
   }
 
   get isInGrid() {

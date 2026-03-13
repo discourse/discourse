@@ -5,10 +5,10 @@ import { module, test } from "qunit";
 import {
   computedI18n,
   fmt,
-  htmlSafe,
   propertyEqual,
   propertyNotEqual,
   setting,
+  trustHTML,
   url,
 } from "discourse/lib/computed";
 import { setPrefix } from "discourse/lib/get-url";
@@ -161,11 +161,11 @@ module("Unit | Utility | computed", function (hooks) {
     );
   });
 
-  test("htmlSafe", function (assert) {
+  test("trustHTML", function (assert) {
     const cookies = "<p>cookies and <b>biscuits</b></p>";
     // eslint-disable-next-line ember/no-classic-classes
     const t = EmberObject.extend({
-      desc: htmlSafe("cookies"),
+      desc: trustHTML("cookies"),
     }).create({ cookies });
 
     assert.strictEqual(t.desc.toString(), cookies);

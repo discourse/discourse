@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 
@@ -22,5 +22,5 @@ export default class DiscourseLinkedText extends Component {
     return false;
   }
 
-  <template>{{htmlSafe this.translatedText}}</template>
+  <template>{{trustHTML this.translatedText}}</template>
 }

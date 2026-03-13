@@ -3,6 +3,7 @@
 class Admin::ScreenedIpAddressesController < Admin::StaffController
   before_action :can_see_ip
   before_action :fetch_screened_ip_address, only: %i[update destroy]
+  before_action :ensure_admin_for_allow_admin, only: %i[create update destroy]
 
   def index
     filter = params[:filter]
@@ -52,6 +53,15 @@ class Admin::ScreenedIpAddressesController < Admin::StaffController
 
   def can_see_ip
     raise Discourse::InvalidAccess.new if !guardian.can_see_ip?
+  end
+
+  def ensure_admin_for_allow_admin
+    return if current_user.admin?
+
+    if params[:action_name].to_s == "allow_admin" ||
+         @screened_ip_address&.action_type == ScreenedIpAddress.actions[:allow_admin]
+      raise Discourse::InvalidAccess
+    end
   end
 
   def allowed_params

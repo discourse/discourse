@@ -1,9 +1,9 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 const FormError = <template>
   {{#if @error}}
     <div class="alert alert-error form-errors">
-      {{htmlSafe @error}}
+      {{trustHTML @error}}
     </div>
   {{/if}}
 </template>;

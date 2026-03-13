@@ -28,6 +28,25 @@ RSpec.describe ComposerMessagesController do
         json = response.parsed_body
         expect(json["composer_messages"].first["id"]).to eq("education")
       end
+
+      it "does not include links from hidden posts in duplicate_lookup" do
+        reply =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: Fabricate(:user, refresh_auto_groups: true),
+            raw: "Check out https://example.com/private-doc for details",
+          )
+        TopicLink.extract_from(reply)
+        reply.hide!(PostActionType.types[:spam])
+
+        get "/composer_messages.json", params: { topic_id: topic.id, composer_action: "reply" }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        duplicate_lookup = json["extras"]["duplicate_lookup"]
+        expect(duplicate_lookup).not_to have_key("example.com/private-doc")
+      end
     end
   end
 
