@@ -52,7 +52,7 @@ after_initialize do
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
-    ::TopicsController.prepend(DiscourseSolved::TopicsControllerExtension)
+
     ::Topic.attr_accessor(:accepted_answer_user_id)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)

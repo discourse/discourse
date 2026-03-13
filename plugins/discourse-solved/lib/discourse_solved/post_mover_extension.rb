@@ -10,7 +10,12 @@ module DiscourseSolved
 
       if solved_topic && post_ids.include?(solved_topic.answer_post_id)
         if DiscourseSolved::SolvedTopic.exists?(topic_id: topic.id)
-          solved_topic.destroy!
+          DiscourseSolved::UnacceptAnswer.call(
+            params: {
+              post_id: solved_topic.answer_post_id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
         else
           solved_topic.update!(topic_id: topic.id)
         end
