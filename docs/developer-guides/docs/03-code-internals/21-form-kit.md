@@ -53,7 +53,14 @@ export default class MyForm extends Component {
 
 ### form
 
-The `Form` component yields a `form` object containing components and helpers.
+The `Form` component yields a `form` object containing contextual components and helper functions.
+
+Common members include:
+
+- `Field`, `Object`, `Collection`, `Fieldset`, `Row`, `Section`, `Container`
+- `Submit`, `Reset`, `Button`, `Alert`, `Actions`
+- `CheckboxGroup`, `InputGroup`, `ConditionalContent`
+- `set(name, value)`, `setProperties(object)`, `addItemToCollection(name, value)`
 
 **Example**
 
@@ -67,7 +74,7 @@ The `Form` component yields a `form` object containing components and helpers.
 
 ### transientData
 
-`transientData` represents the state of the data at a given time as it's represented in the form, and not yet propagated to `@data`.
+`transientData` is the form's current draft state. It starts as a clone of `@data`, updates as the user edits fields, and does not mutate the original `@data` object.
 
 > :information_source: This is useful if you want to have conditionals in your form based on other fields.
 
@@ -75,29 +82,31 @@ The `Form` component yields a `form` object containing components and helpers.
 
 ```hbs
 <Form as |form transientData|>
-  <form.Field @name="amount" @type="input-number" as |field|>
+  <form.Field @name="amount" @title="Amount" @type="input-number" as |field|>
     <field.Control />
   </form.Field>
 
   {{#if (gt transientData.amount 200)}}
-    <form.Field @name="confirmed" @type="checkbox" as |field|>
+    <form.Field @name="confirmed" @title="Confirm" @type="checkbox" as |field|>
       <field.Control>I know what I'm doing</field.Control>
     </form.Field>
   {{/if}}
 </Form>
 ```
 
-## Properties
+## Arguments
 
 ### @data
 
-Initial state of the data you give to the form.
+Initial state of the form data.
 
-**The keys matching the `@name`s of the form's fields will be prepopulated.**
+**FormKit expects a plain JavaScript object (POJO).** Internally it clones that object into draft state, tracks patches, and only mutates its own internal copy.
 
-> :information_source: `@data` is treated as an immutable object, following Ember's DDAU pattern. This means when the user enters new data for any of the fields, it will not cause a mutation of `@data`! You can mutate your initial object using `@onSet`.
+Keys matching field `@name`s are prepopulated automatically, including nested object and collection paths.
 
-When working with an object object we recommend to setup your form data object like this:
+> :information_source: `@data` is treated as immutable. Edits do not mutate the original object you pass in. If you need to keep some external state in sync while editing, do that explicitly in `@onSet`.
+
+When deriving a form object from a model, prefer a cached getter:
 
 ```js
 @cached
@@ -114,7 +123,7 @@ get formData() {
 
 ```hbs
 <Form @data={{hash foo="bar"}} as |form|>
-  <form.Field @name="foo" @type="input" as |field|>
+  <form.Field @name="foo" @title="Foo" @type="input" as |field|>
     <!-- This input will have "bar" as its initial value -->
     <field.Control />
   </form.Field>
@@ -123,25 +132,31 @@ get formData() {
 
 ### @onRegisterApi
 
-Callback called when the form is inserted. It allows the developer to interact with the form through JavaScript.
+Callback called when the form instance is created. It allows the developer to interact with the form through JavaScript.
 
 **Parameters**
 
 - `callback` (Object): The object containing callback functions.
-  - `callback.submit` (Function): Function to submit the form.
-  - `callback.reset` (Function): Function to reset the form.
-  - `callback.set` (Function): Function to set a key/value on the form data object.
-  - `callback.setProperties` (Function): Function to set an object on the form data object.
-  - `callback.isDirty` (boolean): Tracked property return the state of the form. It will be true once changes have been done on the form. Resetting the changes will bring it back to false.
+- `callback.get` (Function): Returns the current value for a field name.
+- `callback.submit` (Function): Function to submit the form.
+- `callback.reset` (Function): Function to reset the form.
+- `callback.set` (Function): Function to set a key/value on the form data object.
+- `callback.setProperties` (Function): Function to set an object on the form data object.
+- `callback.addError` (Function): Function to add an error programmatically.
+- `callback.removeError` (Function): Function to remove a single field error.
+- `callback.removeErrors` (Function): Function to clear all errors.
+- `callback.isDirty` (boolean): Tracked property exposing the dirty state of the form. It becomes `true` after changes are made and returns to `false` after reset.
 
 **Example**
 
 ```js
-registerAPI({ submit, reset, set }) {
+registerAPI({ get, submit, reset, set, addError }) {
   // Interact with the form API
+  get("foo");
   submit();
   reset();
   set("foo", 1);
+  addError("foo", { title: "Foo", message: "Something went wrong" });
 }
 ```
 
@@ -155,7 +170,7 @@ Callback called when the form is submitted **and valid**.
 
 **Parameters**
 
-- `data` (Object): The object containing the form data.
+- `data` (Object): The current draft data for the form.
 
 **Example**
 
@@ -167,19 +182,45 @@ handleSubmit({ username, age }) {
 
 ```hbs
 <Form @onSubmit={{this.handleSubmit}} as |form|>
-  <form.Field @name="username" @type="input" as |field|>
+  <form.Field @name="username" @title="Username" @type="input" as |field|>
     <field.Control />
   </form.Field>
-  <form.Field @name="age" @type="input-number" as |field|>
+  <form.Field @name="age" @title="Age" @type="input-number" as |field|>
     <field.Control />
   </form.Field>
   <form.Submit />
 </Form>
 ```
 
+### @onReset
+
+Callback called after FormKit rolls the draft data back to its initial state and clears errors.
+
+**Parameters**
+
+- `data` (Object): The rolled-back draft data.
+
+**Example**
+
+```js
+handleReset(data) {
+  console.log("reset to", data);
+}
+```
+
+```hbs
+<Form @data={{this.formData}} @onReset={{this.handleReset}} as |form|>
+  <form.Field @name="username" @title="Username" @type="input" as |field|>
+    <field.Control />
+  </form.Field>
+
+  <form.Reset />
+</Form>
+```
+
 ### @validate
 
-A custom validation callback added directly to the form.
+A custom validation callback added directly to the form. This runs once per validation pass, after field-level validation.
 
 **Example**
 
@@ -212,16 +253,53 @@ async myValidation(data, { addError }) {
 }
 ```
 
-# Field
+### @validateOn
 
-## @name
+Controls when FormKit should validate.
 
-A field must have a unique name. This name is used to set the value on the data object and is also used for validation.
+- Accepted values: `submit` (default), `change`, `focusout`, and `input`.
 
 **Example**
 
 ```hbs
-<form.Field @name="foo" />
+<Form @validateOn="change" />
+```
+
+### @onDirtyCheck
+
+Callback used during route transitions when the form is dirty. Return a truthy value to show the built-in "dirty form" confirmation dialog, or a falsy value to skip it.
+
+**Parameters**
+
+- `transition` (Transition): The Ember route transition being processed.
+
+**Example**
+
+```js
+@action
+onDirtyCheck(transition) {
+  return transition.to?.name !== "wizard.step";
+}
+```
+
+```hbs
+<Form @onDirtyCheck={{this.onDirtyCheck}} />
+```
+
+# Field
+
+## @name
+
+A field must have a unique name. This name is used to read/write the value on the form data object and is also used for validation.
+
+Names cannot contain `.` or `-`. Dots are reserved for nested paths such as `profile.location.city`.
+
+**Example**
+
+```hbs
+<form.Field @name="foo" @title="Foo" @type="input" as |field|>
+  <field.Control />
+</form.Field>
 ```
 
 ## @title
@@ -231,20 +309,24 @@ A field must have a title. It will be displayed above the control and is also us
 **Example**
 
 ```hbs
-<form.Field @title="Foo" />
+<form.Field @name="foo" @title="Foo" @type="input" as |field|>
+  <field.Control />
+</form.Field>
 ```
 
 ## @type
 
 A field must have a type. This determines which control component is rendered. The available types are:
 
-- **Input types**: `input` (defaults to text), `input-number`, `input-email`, `input-password`, `input-url`, `input-tel`, `input-date`, `input-time`, `input-datetime-local`, `input-color`, `input-month`, `input-week`, `input-range`, `input-search`, `input-hidden`
+- **Input types**: `input` (defaults to text), `input-text`, `input-number`, `input-email`, `input-password`, `input-url`, `input-tel`, `input-date`, `input-time`, `input-datetime-local`, `input-color`, `input-month`, `input-week`, `input-range`, `input-search`, `input-hidden`
 - **Other controls**: `checkbox`, `code`, `calendar`, `color`, `composer`, `custom`, `emoji`, `icon`, `image`, `menu`, `password`, `question`, `radio-group`, `select`, `tag-chooser`, `textarea`, `toggle`
 
 **Example**
 
 ```hbs
-<form.Field @name="foo" @type="input" />
+<form.Field @name="foo" @title="Foo" @type="input" as |field|>
+  <field.Control />
+</form.Field>
 ```
 
 ## @description
@@ -254,7 +336,15 @@ The description is optional and will be shown under the title when set.
 **Example**
 
 ```hbs
-<form.Field @description="Bar" />
+<form.Field
+  @name="foo"
+  @title="Foo"
+  @description="Bar"
+  @type="input"
+  as |field|
+>
+  <field.Control />
+</form.Field>
 ```
 
 ## @helpText
@@ -264,7 +354,9 @@ The help text is optional and will be shown under the field when set.
 **Example**
 
 ```hbs
-<form.Field @helpText="Baz" />
+<form.Field @name="foo" @title="Foo" @helpText="Baz" @type="input" as |field|>
+  <field.Control />
+</form.Field>
 ```
 
 ## @showTitle
@@ -274,7 +366,9 @@ By default, the title will be shown on top of the control. You can choose not to
 **Example**
 
 ```hbs
-<form.Field @showTitle={{false}} />
+<form.Field @name="foo" @title="Foo" @showTitle={{false}} @type="input" as |field|>
+  <field.Control />
+</form.Field>
 ```
 
 ## @disabled
@@ -284,7 +378,9 @@ A field can be disabled to prevent any changes to it.
 **Example**
 
 ```hbs
-<form.Field @disabled={{true}} />
+<form.Field @name="foo" @title="Foo" @disabled={{true}} @type="input" as |field|>
+  <field.Control />
+</form.Field>
 ```
 
 ## @tooltip
@@ -338,7 +434,7 @@ By default, when changing the value of a field, this value will be set on the fo
 
 ```js
 @action
-handleFooChange(value, { set }) {
+handleFooChange(value, { set, name, parentName, index }) {
   set("foo", value + "-bar");
 }
 ```
@@ -346,6 +442,7 @@ handleFooChange(value, { set }) {
 ```hbs
 <form.Field
   @name="foo"
+  @title="Foo"
   @type="input"
   @onSet={{this.handleFooChange}}
   as |field|
@@ -355,6 +452,13 @@ handleFooChange(value, { set }) {
 ```
 
 > :information_source: You can use `@onSet` to also mutate the initial data object if you need more reactivity for a specific case.
+
+The second argument passed to `@onSet` contains:
+
+- `set(name, value)`: update form draft state
+- `name`: the field's full name
+- `parentName`: the parent path for nested fields
+- `index`: the current collection index when inside a collection
 
 **Example**
 
@@ -370,6 +474,7 @@ handleFooChange(value, { set }) {
 <Form @data={{this.model}} as |form|>
   <form.Field
     @name="foo"
+    @title="Foo"
     @type="input"
     @onSet={{this.handleFooChange}}
     as |field|
@@ -384,7 +489,7 @@ handleFooChange(value, { set }) {
 The field yields a single field object. The control component determined by `@type` is available as `field.Control`.
 
 ```hbs
-<form.Field @name="foo" @type="input" as |field|>
+<form.Field @name="foo" @title="Foo" @type="input" as |field|>
   <field.Control />
 </form.Field>
 ```
@@ -392,6 +497,8 @@ The field yields a single field object. The control component determined by `@ty
 ### field.Control
 
 `field.Control` is the control component determined by `@type`. You can pass control-specific attributes directly to it (e.g., `@height`, `@lang`, `placeholder`).
+
+> :information_source: `field.Control` is the supported API. Older yielded names such as `field.Input` are deprecated.
 
 ### field
 
@@ -401,8 +508,9 @@ The yielded `field` object provides access to the field's data and helpers:
 | --------- | --------------------------------------------------- |
 | `Control` | Contextual component for the control set by `@type` |
 | `id`      | ID to be used on the control for accessibility      |
-| `name`    | Name of the field                                   |
-| `value`   | The value of the field                              |
+| `errorId` | ID of the field error container                     |
+| `name`    | Full field name, including nested path prefixes     |
+| `value`   | Current value from draft data                       |
 | `set`     | Function to set the field's value                   |
 
 # Controls
@@ -469,28 +577,6 @@ Renders an `<input type="checkbox">` element.
 </Form>
 ```
 
-## Code
-
-Renders an `<AceEditor />` component.
-
-### @height
-
-Sets the height of the editor.
-
-### @lang
-
-Sets the language of the editor.
-
-**Example**
-
-```hbs
-<Form as |form|>
-  <form.Field @name="query" @title="Query" @type="code" as |field|>
-    <field.Control @lang="sql" @height={{400}} />
-  </form.Field>
-</Form>
-```
-
 ## Calendar
 
 Renders a datepicker and a time input. On mobile the datepicker will be replaced by a date input.
@@ -519,6 +605,54 @@ Displays date picker expanded on desktop. Defaults to true.
 <Form as |form|>
   <form.Field @name="start" @title="Start" @type="calendar" as |field|>
     <field.Control @expandedDatePickerOnDesktop={{false}} />
+  </form.Field>
+</Form>
+```
+
+## Code
+
+Renders an `<AceEditor />` component.
+
+### @height
+
+Sets the height of the editor in pixels.
+
+### @lang
+
+Sets the editor mode.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="query" @title="Query" @type="code" as |field|>
+    <field.Control @lang="sql" @height={{400}} />
+  </form.Field>
+</Form>
+```
+
+## Color
+
+Renders a color input with optional preset swatches.
+
+Common control arguments:
+
+- `@colors`: array of preset colors
+- `@usedColors`: array of already-used colors
+- `@collapseSwatches`: collapse swatches into a menu
+- `@collapseSwatchesLabel`: label for the collapsed swatches button
+- `@allowNamedColors`: allow named colors instead of only hex values
+- `@fallbackValue`: value to restore on blur when left blank
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="color" @title="Color" @type="color" as |field|>
+    <field.Control
+      @colors={{array "0088CC" "FFCC00"}}
+      @usedColors={{array "FFCC00"}}
+    />
   </form.Field>
 </Form>
 ```
@@ -555,6 +689,44 @@ Controls the display the composer preview. Defaults to `false`.
 </Form>
 ```
 
+## Custom
+
+Renders a wrapper for custom content. This is the right choice when you want to provide your own control markup but still use FormKit field metadata and state.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="slug" @title="Slug" @type="custom" as |field|>
+    <field.Control>
+      <MyCustomControl
+        id={{field.id}}
+        @value={{field.value}}
+        @onChange={{field.set}}
+      />
+    </field.Control>
+  </form.Field>
+</Form>
+```
+
+## Emoji
+
+Renders an `<EmojiPicker />` component.
+
+### @context
+
+Passes the picker context through to `<EmojiPicker />`.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="emoji" @title="Emoji" @type="emoji" as |field|>
+    <field.Control @context="chat" />
+  </form.Field>
+</Form>
+```
+
 ## Icon
 
 Renders an `<IconPicker />` component.
@@ -572,6 +744,11 @@ Renders an `<IconPicker />` component.
 ## Image
 
 Renders an `<UppyImageUploader />` component.
+
+Common control arguments:
+
+- `@type`: uploader context passed to `<UppyImageUploader />`
+- `@placeholderUrl`: optional placeholder image
 
 ### Upload Handling
 
@@ -615,7 +792,7 @@ Renders an `<input>` element.
 
 ### @type
 
-The input variant is specified as part of the field's `@type` using the `input-` prefix. For example, `@type="input"`, `@type="input-number"`, etc. `@type="input"` defaults to text.
+The input variant is specified as part of the field's `@type` using the `input-` prefix. For example, `@type="input"`, `@type="input-number"`, or `@type="input-email"`. `@type="input"` defaults to text.
 
 ### Allowed Types
 
@@ -631,14 +808,15 @@ The input variant is specified as part of the field's `@type` using the `input-`
 - `input-range`
 - `input-search`
 - `input-tel`
+- `input-text`
 - `input-time`
 - `input-url`
 - `input-week`
 
 ### Special Cases
 
-- `file` is supported only for images through image
-- checkbox
+- `checkbox` and `radio` have dedicated controls
+- file uploads should use `@type="image"`
 
 **Examples**
 
@@ -684,7 +862,7 @@ Renders text after the input
 
 ## Menu
 
-Renders a <DMenu /> component.
+Renders a `<DMenu />` trigger with yielded menu content.
 
 ### @selection
 
@@ -729,7 +907,9 @@ Renders a div which will have for content the yielded content.
 
 ## Password
 
-Renders an `<input />` of type password. This control also includes a button which will allow to toggle the visibility of the text. When toggle the type of the input will be switched to text.
+Renders a password input with a visibility toggle.
+
+> :information_source: This is different from `@type="input-password"`. The dedicated `password` control adds the show/hide button.
 
 **Example**
 
@@ -821,7 +1001,11 @@ Allows to render a description.
 
 ## Select
 
-Renders a `<select>` element.
+Renders a `<DSelect />` component.
+
+### @includeNone
+
+By default, Select includes a "none" option when the field is blank or when the field is not marked `required`. Override this with `@includeNone`.
 
 **Example**
 
@@ -837,7 +1021,31 @@ Renders a `<select>` element.
 </Form>
 ```
 
-## Text
+## Tag Chooser
+
+Renders a `<TagChooser />` component.
+
+Common control arguments:
+
+- `@allowCreate`
+- `@categoryId`
+- `@showAllTags`
+- `@excludeSynonyms`
+- `@excludeTagsWithSynonyms`
+- `@unlimited`
+- `@placeholder`
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="tags" @title="Tags" @type="tag-chooser" as |field|>
+    <field.Control @categoryId={{1}} @allowCreate={{true}} />
+  </form.Field>
+</Form>
+```
+
+## Textarea
 
 Renders a `<textarea>` element.
 
@@ -880,7 +1088,7 @@ Renders a `<DToggleSwitch />` component.
 
 Form Kit aims to provide good defaults, allowing you to mainly use fields and controls. However, if you need more control, we provide several helpers: Row and Col, Section, Fieldset, Container and Actions.
 
-You can also use utilities like Submit, Reset,Alert and InputGroup.
+You can also use utilities like Submit, Reset, Alert, CheckboxGroup, InputGroup, and ConditionalContent.
 
 ## Actions
 
@@ -946,9 +1154,43 @@ Specifies the type of alert. Allowed types: `success`, `error`, `warning`, or `i
 </form.CheckboxGroup>
 ```
 
+## ConditionalContent
+
+`ConditionalContent` helps you switch between mutually exclusive blocks of content using a small radio control.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.ConditionalContent @activeName="basic" as |conditional|>
+    <conditional.Conditions as |Condition|>
+      <Condition @name="basic">Basic</Condition>
+      <Condition @name="advanced">Advanced</Condition>
+    </conditional.Conditions>
+
+    <conditional.Contents as |Content|>
+      <Content @name="basic">
+        <form.Alert>Basic settings</form.Alert>
+      </Content>
+
+      <Content @name="advanced">
+        <form.Alert @type="warning">Advanced settings</form.Alert>
+      </Content>
+    </conditional.Contents>
+  </form.ConditionalContent>
+</Form>
+```
+
 ## Container
 
 `Container` allows you to render a block similar to a field without tying it to specific data. It is useful for custom controls.
+
+Common arguments:
+
+- `@title`
+- `@subtitle`
+- `@format`
+- `@direction`
 
 **Example**
 
@@ -1010,7 +1252,7 @@ Sets the name of the fieldset. This is necessary if you want to use the fieldset
 
 ## Input Group
 
-Input group allows to group multiple inputs together on one line.
+Input group allows you to group multiple inputs together on one line.
 
 **Example**
 
@@ -1072,6 +1314,10 @@ To customize the `Reset` button further, you can pass additional parameters as n
 
 `Section` provides a simple way to create a section with or without a title.
 
+### @subtitle
+
+Displays secondary text in the section header.
+
 **Example**
 
 ```hbs
@@ -1102,7 +1348,7 @@ To customize the `Submit` button further, you can pass additional parameters as 
 
 # Object
 
-The object component allows to handle an object in your form.
+The object component lets you work with a nested object in your form.
 
 **Example**
 
@@ -1122,6 +1368,8 @@ The object component allows to handle an object in your form.
 ## @name
 
 An object must have a unique name. This name is used as a prefix for the underlying fields.
+
+Like field names, object names should not contain `.` or `-`.
 
 **Example**
 
@@ -1163,13 +1411,15 @@ An object can accept a nested Object or Collection.
 
 # Collection
 
-The collection component allows to handle array of objects in your form.
+The collection component lets you work with arrays in your form.
+
+It yields three values: the collection API, the current index, and the current item.
 
 **Example**
 
 ```hbs
 <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
-  <form.Collection @name="foo" as |collection index|>
+  <form.Collection @name="foo" as |collection index item|>
     <collection.Field @name="bar" @title="Bar" @type="input" as |field|>
       <field.Control placeholder={{concat "item-" index}} />
     </collection.Field>
@@ -1183,6 +1433,8 @@ A collection must have a unique name. This name is used as a prefix for the unde
 
 For example, if collection has the name "foo", the 2nd field of the collection with the name "bar", will actually have "foo.1.bar" as name.
 
+Like field names, collection names should not contain `.` or `-`.
+
 **Example**
 
 ```hbs
@@ -1191,7 +1443,7 @@ For example, if collection has the name "foo", the 2nd field of the collection w
 
 ## @tagName
 
-A collection will by default render as a `<div class="form-kit__collection>`, you can alter this behavior by using a `@tagName`.
+A collection renders as a `<div class="form-kit__collection">` by default. You can alter this behavior with `@tagName`.
 
 **Example**
 
@@ -1303,7 +1555,79 @@ The value must be `"yes"`, `"on"`, `true`, `1`, or `"true"`. Useful for checkbox
 **Example**
 
 ```hbs
-<form.Field @name="terms" @type="checkbox" @validation="accepted" as |field|>
+<form.Field @name="terms" @title="Terms" @type="checkbox" @validation="accepted" as |field|>
+  <field.Control />
+</form.Field>
+```
+
+### Between
+
+Checks that a numeric value is between a minimum and maximum value.
+
+**Example**
+
+```hbs
+<form.Field @name="amount" @title="Amount" @type="input-number" @validation="between:1,10" as |field|>
+  <field.Control />
+</form.Field>
+```
+
+### dateAfterOrEqual
+
+Checks if a calendar value is after or equal to the specified date. Format must be `YYYY-MM-DD`.
+
+**Example**
+
+```hbs
+<form.Field
+  @name="start"
+  @title="Start"
+  @type="calendar"
+  @validation="dateAfterOrEqual:2022-02-01"
+  as |field|
+>
+  <field.Control />
+</form.Field>
+```
+
+### dateBeforeOrEqual
+
+Checks if a calendar value is before or equal to the specified date. Format must be `YYYY-MM-DD`.
+
+**Example**
+
+```hbs
+<form.Field
+  @name="start"
+  @title="Start"
+  @type="calendar"
+  @validation="dateBeforeOrEqual:2022-02-01"
+  as |field|
+>
+  <field.Control />
+</form.Field>
+```
+
+### EndsWith
+
+Checks that a string ends with a given suffix.
+
+**Example**
+
+```hbs
+<form.Field @name="domain" @title="Domain" @type="input" @validation="endsWith:.com" as |field|>
+  <field.Control />
+</form.Field>
+```
+
+### Integer
+
+Checks if the value is an integer.
+
+**Example**
+
+```hbs
+<form.Field @name="age" @title="Age" @type="input-number" @validation="integer" as |field|>
   <field.Control />
 </form.Field>
 ```
@@ -1315,7 +1639,7 @@ Checks that the input's value is over a given length, or between two length valu
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input" @validation="length:5,16" as |field|>
+<form.Field @name="username" @title="Username" @type="input" @validation="length:5,16" as |field|>
   <field.Control />
 </form.Field>
 ```
@@ -1329,7 +1653,7 @@ Checks if the input is a valid number as evaluated by `isNaN()`.
 **Example**
 
 ```hbs
-<form.Field @name="amount" @type="input" @validation="number" as |field|>
+<form.Field @name="amount" @title="Amount" @type="input" @validation="number" as |field|>
   <field.Control />
 </form.Field>
 ```
@@ -1338,10 +1662,24 @@ Checks if the input is a valid number as evaluated by `isNaN()`.
 
 Checks if the input is empty.
 
+`required:trim` trims leading and trailing whitespace before checking the value.
+
 **Example**
 
 ```hbs
-<form.Field @name="username" @type="input" @validation="required" as |field|>
+<form.Field @name="username" @title="Username" @type="input" @validation="required:trim" as |field|>
+  <field.Control />
+</form.Field>
+```
+
+### StartsWith
+
+Checks that a string starts with a given prefix.
+
+**Example**
+
+```hbs
+<form.Field @name="handle" @title="Handle" @type="input" @validation="startsWith:@" as |field|>
   <field.Control />
 </form.Field>
 ```
@@ -1353,53 +1691,7 @@ Checks if the input value appears to be a properly formatted URL including the p
 **Example**
 
 ```hbs
-<form.Field @name="endpoint" @type="input-url" @validation="url" as |field|>
-  <field.Control />
-</form.Field>
-```
-
-### integer
-
-Checks if the input value is an integer.
-
-**Example**
-
-```hbs
-<form.Field @name="age" @type="input-number" @validation="integer" as |field|>
-  <field.Control />
-</form.Field>
-```
-
-### dateAfterOrEqual
-
-Checks if the calendar data is after or equal to the specified date. Format must be YYYY-MM-DD.
-
-**Example**
-
-```hbs
-<form.Field
-  @name="start"
-  @type="calendar"
-  @validation="dateAfterOrEqual:2022-02-01"
-  as |field|
->
-  <field.Control />
-</form.Field>
-```
-
-### dateBeforeOrEqual
-
-Checks if the calendar data is before or equal to the specified date. Format must be YYYY-MM-DD.
-
-**Example**
-
-```hbs
-<form.Field
-  @name="start"
-  @type="calendar"
-  @validation="dateBeforeOrEqual:2022-02-01"
-  as |field|
->
+<form.Field @name="endpoint" @title="Endpoint" @type="input-url" @validation="url" as |field|>
   <field.Control />
 </form.Field>
 ```
@@ -1413,6 +1705,7 @@ Rules can be combined using the pipe operator: `|`.
 ```hbs
 <form.Field
   @name="username"
+  @title="Username"
   @type="input"
   @validation="required|length:5,16"
   as |field|
@@ -1425,53 +1718,85 @@ Rules can be combined using the pipe operator: `|`.
 
 ### Field
 
-Field accepts a `@validate` property which allows you to define a callback function to validate the field. Read more about addError in helpers section.
+Field accepts a `@validate` property which allows you to define a callback function to validate a single field.
 
 **Parameters**
 
 - `name` (string): The name of the form field being validated.
-- `value` (string): The value of the form field being validated.
-- `data` (Object): The data object containing additional information for validation.
-- `handlers` (Object): An object containing handler functions.
-  - `handlers.addError` (Function): A function to add an error if validation fails.
+- `value` (unknown): The current field value.
+- `context` (Object)
+  - `context.data` (Object): Current form draft data.
+  - `context.type` (string): Field control type.
+  - `context.addError` (Function): Adds an error if validation fails.
 
 **Example**
 
 ```js
-validateUsername(name, value, data, { addError }) {
-  if (data.bar / 2 === value) {
-    addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
+@action
+validateUsername(name, value, { data, addError }) {
+  if (value === data.slug) {
+    addError(name, {
+      title: "Username",
+      message: "Username and slug must differ.",
+    });
   }
 }
 ```
 
 ```hbs
-<form.Field @name="username" @validate={{this.validateUsername}} />
+<form.Field
+  @name="username"
+  @title="Username"
+  @type="input"
+  @validate={{this.validateUsername}}
+  as |field|
+>
+  <field.Control />
+</form.Field>
 ```
 
 ### Form
 
-Form accepts a `@validate` property which allows you to define a callback function to validate the form. This will be called for each field of the form.
+Form accepts a `@validate` property which allows you to define a callback function to validate the full form state once per validation pass.
 
 **Parameters**
 
 - `data` (Object): The data object containing additional information for validation.
 - `handlers` (Object): An object containing handler functions.
   - `handlers.addError` (Function): A function to add an error if validation fails.
+  - `handlers.removeError` (Function): A function to clear an existing error.
 
 **Example**
 
 ```js
-validateForm(data, { addError }) {
-  if (data.bar / 2 === data.baz) {
-    addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
+@action
+validateForm(data, { addError, removeError }) {
+  if (data.start && data.end && data.end < data.start) {
+    addError("end", {
+      title: "End",
+      message: "End must be after start.",
+    });
+  } else {
+    removeError("end");
   }
 }
 ```
 
 ```hbs
-<Form @validate={{this.validateForm}} />
+<Form @validate={{this.validateForm}} as |form|>
+  <form.Field @name="start" @title="Start" @type="input-date" as |field|>
+    <field.Control />
+  </form.Field>
+
+  <form.Field @name="end" @title="End" @type="input-date" as |field|>
+    <field.Control />
+  </form.Field>
+
+  <form.Submit />
+</Form>
 ```
+
+> :information_source: Unknown validation rule names raise at runtime. Keep the rule list above in sync with the implementation when extending FormKit.
 
 # Helpers
 
@@ -1557,7 +1882,7 @@ FormKit works seamlessly with `<PluginOutlet />`. You can use plugin outlets ins
 Then, in your connector, you can use the outlet arguments to add custom fields:
 
 ```hbs title="connectors/above-foo-form/bar-input.hbs"
-<@outletArgs.form.Field @name="bar" @type="input" as |field|>
+<@outletArgs.form.Field @name="bar" @title="Bar" @type="input" as |field|>
   <field.Control />
 </@outletArgs.form.Field>
 ```
@@ -1568,7 +1893,7 @@ All FormKit components propagate attributes, allowing you to set classes and dat
 
 ```hbs
 <Form class="my-form" as |form|>
-  <form.Field @name="foo" @type="input" class="my-field" as |field|>
+  <form.Field @name="foo" @title="Foo" @type="input" class="my-field" as |field|>
     <field.Control class="my-control" />
   </form.Field>
 </Form>
@@ -1580,7 +1905,7 @@ Creating a custom control is straightforward with the properties yielded by `for
 
 ```hbs
 <Form as |form|>
-  <form.Field @type="custom" class="my-field" as |field|>
+  <form.Field @name="foo" @title="Foo" @type="custom" class="my-field" as |field|>
     <field.Control>
       <MyCustomControl id={{field.id}} @onChange={{field.set}} />
     </field.Control>
@@ -1588,63 +1913,23 @@ Creating a custom control is straightforward with the properties yielded by `for
 </Form>
 ```
 
-### Available Parameters on `form`
+### Common Values on `form`
 
-| Name  | Description                                                       |
-| ----- | ----------------------------------------------------------------- |
-| `set` | Allows you to set the value of any field by name: `set("bar", 1)` |
+| Name                  | Description                                          |
+| --------------------- | ---------------------------------------------------- |
+| `set`                 | Set any field by name, e.g. `set("bar", 1)`          |
+| `setProperties`       | Set multiple field values at once                    |
+| `addItemToCollection` | Append an item to a collection by path               |
 
-# Custom Validation
+### Common Values on `field`
 
-## Field
-
-The Field component accepts a `@validate` property, allowing you to define a callback function for custom field validation. Read more about addError in the helpers section.
-
-**Parameters**
-
-- `name` (string): The name of the form field being validated.
-- `value` (string): The value of the form field being validated.
-- `data` (Object): The data object containing additional information for validation.
-- `handlers` (Object): An object containing handler functions.
-  - `handlers.addError` (Function): A function to add an error if validation fails.
-
-**Example**
-
-```js
-validateUsername(name, value, data, { addError }) {
-  if (data.bar / 2 === value) {
-    addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
-  }
-}
-```
-
-```hbs
-<form.Field @name="username" @validate={{this.validateUsername}} />
-```
-
-## Form
-
-The Form component accepts a `@validate` property, allowing you to define a callback function for custom form validation.
-
-**Parameters**
-
-- `data` (Object): The data object containing additional information for validation.
-- `handlers` (Object): An object containing handler functions.
-  - `handlers.addError` (Function): A function to add an error if validation fails.
-
-**Example**
-
-```js
-validateForm(data, { addError }) {
-  if (data.bar / 2 === data.baz) {
-    addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
-  }
-}
-```
-
-```hbs
-<Form @validate={{this.validateForm}} />
-```
+| Name      | Description                              |
+| --------- | ---------------------------------------- |
+| `id`      | Input ID                                 |
+| `errorId` | Error container ID                       |
+| `name`    | Full nested field path                   |
+| `value`   | Current field value from draft state     |
+| `set`     | Set the current field value              |
 
 # Javascript assertions
 
@@ -1658,16 +1943,31 @@ The form element assertions are available at `assert.form(...).*`. By default it
 
 ### hasErrors()
 
-Asserts that the form has errors.
+Asserts that the form error summary contains the given field errors.
 
 **Parameters**
 
-- `message` (string): The description of the test.
+- `fields` (Object): A map of field names to error messages, e.g. `{ username: "Required" }`.
+- `message` (string) [optional]: The description of the test.
 
 **Example**
 
 ```js
-assert.form().hasErrors("the form shows errors");
+assert.form().hasErrors({ username: "Required" }, "the form shows errors");
+```
+
+### hasNoErrors()
+
+Asserts that the form error summary is not present.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```js
+assert.form().hasNoErrors("the form is valid");
 ```
 
 ## Field
@@ -1699,6 +1999,20 @@ Asserts that the `value` of the field matches the `expected` text.
 assert.form().field("foo").hasValue("bar", "user has set the value");
 ```
 
+### hasNoValue()
+
+Asserts that the field is blank.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```js
+assert.form().field("foo").hasNoValue("the field starts blank");
+```
+
 ### isDisabled()
 
 Asserts that the `field` is disabled.
@@ -1725,6 +2039,36 @@ Asserts that the `field` is enabled.
 
 ```js
 assert.form().field("foo").isEnabled("the field is enabled");
+```
+
+### hasTitle()
+
+Asserts that the field title matches the expected text.
+
+**Parameters**
+
+- `expected` (anything): The expected value.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```js
+assert.form().field("foo").hasTitle("Foo", "it shows the field title");
+```
+
+### hasDescription()
+
+Asserts that the field description matches the expected text.
+
+**Parameters**
+
+- `expected` (anything): The expected value.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```js
+assert.form().field("foo").hasDescription("Helpful copy", "it shows the description");
 ```
 
 ### hasError()
@@ -1767,7 +2111,7 @@ Asserts that the `field` is present.
 **Example**
 
 ```js
-assert.form().field("foo").exists("it has the food field");
+assert.form().field("foo").exists("it has the foo field");
 ```
 
 ### doesNotExist()
@@ -1781,7 +2125,7 @@ Asserts that the `field` is not present.
 **Example**
 
 ```js
-assert.form().field("foo").doesNotExist("it has no food field");
+assert.form().field("foo").doesNotExist("it has no foo field");
 ```
 
 ### hasCharCounter()
@@ -1862,6 +2206,34 @@ Asserts that the fieldset has yielded the `expected` value.
 assert.form().fieldset("foo").includesText("bar", "it has the correct text");
 ```
 
+### exists()
+
+Asserts that the fieldset is present.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```js
+assert.form().fieldset("foo").exists("the fieldset is rendered");
+```
+
+### doesNotExist()
+
+Asserts that the fieldset is not present.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```js
+assert.form().fieldset("foo").doesNotExist("the fieldset is hidden");
+```
+
 # Javascript helpers
 
 ## Form
@@ -1871,13 +2243,13 @@ The FormKit helper allows you to manipulate a form and its fields through a clea
 **Example**
 
 ```gjs
-import formKit from "discourse/tests/helpers/form-kit";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 
 test("fill in input", async function (assert) {
   await render(
     <template>
       <Form class="my-form" as |form data|>
-        <form.Field @name="foo" @type="input" as |field|>
+        <form.Field @name="foo" @title="Foo" @type="input" as |field|>
           <field.Control />
         </form.Field>
       </Form>
@@ -1908,15 +2280,63 @@ Resets the associated form.
 formKit().reset();
 ```
 
+### field()
+
+Returns a field helper for a named field.
+
+**Parameters**
+
+- `name` (string): The name of the field.
+
+**Example**
+
+```js
+const field = formKit().field("foo");
+```
+
+### hasField()
+
+Checks whether a field with the given name exists in the form.
+
+**Parameters**
+
+- `name` (string): The name of the field.
+
+**Example**
+
+```js
+formKit().hasField("foo");
+```
+
 ## Field
 
 **Parameters**
 
 - `name` (string): The name of the field.
 
+### value()
+
+Returns the current UI value for supported controls.
+
+**Example**
+
+```js
+formKit().field("foo").value();
+```
+
+### options()
+
+Returns the available option values for a `@type="select"` field.
+
+**Example**
+
+```js
+formKit().field("foo").options();
+```
+
 ### fillIn()
 
-Can be used on `@type="input"`, `@type="code"`, `@type="textarea"`, and `@type="composer"` fields.
+Can be used on input-like controls such as `@type="input"`, `@type="input-text"`, `@type="input-number"`, `@type="password"`, `@type="color"`, `@type="code"`, `@type="textarea"`, and `@type="composer"`.
 
 **Parameters**
 
@@ -1962,7 +2382,7 @@ await formKit().field("foo").refuse();
 
 ### select()
 
-Can be used on `@type="select"`, `@type="menu"`, `@type="icon"`, and `@type="radio-group"` fields.
+Can be used on `@type="select"`, `@type="menu"`, `@type="icon"`, `@type="radio-group"`, and `@type="color"` fields.
 
 Will select the given value.
 
@@ -1976,6 +2396,79 @@ Will select the given value.
 await formKit().field("foo").select("bar");
 ```
 
+### setDay()
+
+Can be used on `@type="calendar"` fields.
+
+**Parameters**
+
+- `day` (integer): The day of the month to select.
+
+**Example**
+
+```js
+await formKit().field("start").setDay(15);
+```
+
+### setTime()
+
+Can be used on `@type="calendar"` fields.
+
+**Parameters**
+
+- `time` (string): The time to set, e.g. `"14:30"`.
+
+**Example**
+
+```js
+await formKit().field("start").setTime("14:30");
+```
+
+### isDisabled()
+
+Returns whether the field is disabled.
+
+**Example**
+
+```js
+formKit().field("foo").isDisabled();
+```
+
+### hasPrefix()
+
+Can be used on `@type="color"` fields. Returns whether the color input renders its prefix.
+
+**Example**
+
+```js
+formKit().field("color").hasPrefix();
+```
+
+### swatches()
+
+Can be used on `@type="color"` fields. Returns the rendered swatches as `{ color, isUsed, isDisabled }`.
+
+**Example**
+
+```js
+formKit().field("color").swatches();
+```
+
+### triggerEvent()
+
+Triggers a DOM event on the field's input element.
+
+**Parameters**
+
+- `eventName` (string): The event to trigger.
+- `options` (Object) [optional]: Extra event options.
+
+**Example**
+
+```js
+await formKit().field("foo").triggerEvent("blur");
+```
+
 # System specs page object
 
 ## Form
@@ -1984,7 +2477,7 @@ The FormKit page object component is available to help you write system specs fo
 
 **Parameters**
 
-- `target` (string | Capybara::Node::Element): The selector or node of the form.
+- `target` (string): The selector of the form.
 
 **Example**
 
@@ -1992,13 +2485,9 @@ The FormKit page object component is available to help you write system specs fo
 form = PageObjects::Components::FormKit.new(".my-form")
 ```
 
-```rb
-form = PageObjects::Components::FormKit.new(find(".my-form"))
-```
-
 ### submit
 
-Submits the form
+Submits the form.
 
 **Example**
 
@@ -2008,7 +2497,7 @@ form.submit
 
 ### reset
 
-Reset the form
+Resets the form.
 
 **Example**
 
@@ -2018,7 +2507,7 @@ form.reset
 
 ### has_an_alert?
 
-Returns if the field is enabled or not.
+Checks whether the form renders an alert with the given message.
 
 **Example**
 
@@ -2028,6 +2517,47 @@ form.has_an_alert?("message")
 
 ```rb
 expect(form).to have_an_alert("message")
+```
+
+### has_field_with_name?
+
+Checks whether a field with the given `data-name` exists.
+
+**Example**
+
+```rb
+form.has_field_with_name?("foo")
+```
+
+### has_no_field_with_name?
+
+Checks whether a field with the given `data-name` is absent.
+
+**Example**
+
+```rb
+form.has_no_field_with_name?("foo")
+```
+
+### container
+
+Returns a container helper for the named container.
+
+**Example**
+
+```rb
+container = form.container("advanced-settings")
+container.has_content?("More options")
+```
+
+### choose_conditional
+
+Chooses a `ConditionalContent` branch by radio value.
+
+**Example**
+
+```rb
+form.choose_conditional("advanced")
 ```
 
 ## Field
@@ -2056,6 +2586,16 @@ field.value
 
 ```rb
 expect(field).to have_value("bar")
+```
+
+### has_value?
+
+Checks that the field value matches the expected value.
+
+**Example**
+
+```rb
+field.has_value?("bar")
 ```
 
 ### checked?
@@ -2116,7 +2656,7 @@ expect(field).to be_enabled
 
 ### toggle
 
-Allows toggling a field. Only available for: `@type="checkbox"`.
+Allows toggling a field. Available for `@type="checkbox"`, `@type="password"`, and `@type="toggle"`.
 
 **Example**
 
@@ -2126,7 +2666,7 @@ field.toggle
 
 ### fill_in
 
-Allows filling a field with a given value. Only available for: `@type="input"`, `@type="textarea"`, `@type="code"`, and `@type="composer"`.
+Allows filling a field with a given value. Available for `@type="input"`, `@type="input-*"` variants, `@type="password"`, `@type="color"`, `@type="textarea"`, `@type="code"`, and `@type="composer"`.
 
 **Example**
 
@@ -2136,7 +2676,7 @@ field.fill_in("bar")
 
 ### select
 
-Allows selecting a specified value in a field. Only available for: `@type="select"`, `@type="icon"`, `@type="menu"`, `@type="radio-group"`, and `@type="question"`.
+Allows selecting a specified value in a field. Available for `@type="select"`, `@type="icon"`, `@type="menu"`, `@type="radio-group"`, `@type="question"`, tag choosers, and custom multi-select controls.
 
 **Example**
 
@@ -2172,4 +2712,34 @@ Takes an image path on the filesystem and uploads it for the field. Only availab
 
 ```rb
 field.upload_image(image_file_path)
+```
+
+### has_errors?
+
+Checks that the field renders the given error messages.
+
+**Example**
+
+```rb
+field.has_errors?("Required")
+```
+
+### has_no_errors?
+
+Checks that the field has no errors.
+
+**Example**
+
+```rb
+field.has_no_errors?
+```
+
+### has_selected_names?
+
+Checks the selected names for a `@type="tag-chooser"` field.
+
+**Example**
+
+```rb
+field.has_selected_names?("support", "meta")
 ```
