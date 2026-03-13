@@ -184,6 +184,13 @@ export default class AdminWelcomeBannerForm extends Component {
           localeSelector: localeValue,
         };
       }
+
+      // Update originalFormData so save() correctly detects changes for the new locale
+      this.originalFormData = {
+        ...this.originalFormData,
+        ...textData,
+        localeSelector: localeValue,
+      };
     } catch (error) {
       popupAjaxError(error);
     } finally {
