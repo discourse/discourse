@@ -1247,6 +1247,9 @@ en:
       every_month: "every month"
       every_six_months: "every six months"
 
+  calendar_subscriptions:
+    application_name: "Calendar Subscriptions"
+
   user_api_key:
     title: 'Authorize "%{application_name}"'
     authorize: "Authorize"

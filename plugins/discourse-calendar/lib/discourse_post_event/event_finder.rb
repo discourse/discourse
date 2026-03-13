@@ -62,11 +62,16 @@ module DiscoursePostEvent
       attending_user = User.find_by(username_lower: params[:attending_user].downcase)
       return events.none if !attending_user
 
+      statuses = [DiscoursePostEvent::Invitee.statuses[:going]]
+      if params[:include_interested].present?
+        statuses << DiscoursePostEvent::Invitee.statuses[:interested]
+      end
+
       events =
         events.joins(:invitees).where(
           discourse_post_event_invitees: {
             user_id: attending_user.id,
-            status: DiscoursePostEvent::Invitee.statuses[:going],
+            status: statuses,
           },
         )
 

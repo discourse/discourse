@@ -164,6 +164,7 @@ module DiscoursePostEvent
         :post_id,
         :category_id,
         :include_subcategories,
+        :include_interested,
         :limit,
         :attending_user,
         :before,
