@@ -74,7 +74,7 @@ export default class CalendarSubscriptionUrl extends Component {
           rel="noopener noreferrer"
           class="btn btn-default btn-small"
         >
-          {{icon "up-right-from-square"}}
+          {{icon "fab-microsoft"}}
           {{i18n "user.calendar_subscriptions.add_to_outlook"}}
         </a>
         <a href={{this.webcalUrl}} class="btn btn-default btn-small">
