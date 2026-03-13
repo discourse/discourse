@@ -29,10 +29,6 @@ module PageObjects
         end
       end
 
-      def find(selector)
-        @component.find(selector)
-      end
-
       def value
         case control_type
         when "input", /input-/, "password"
