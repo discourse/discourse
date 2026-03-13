@@ -1939,6 +1939,7 @@ en:
         bookmarks_description: "Your bookmarks with reminder dates"
         copy: "Copy"
         copied: "Copied!"
+        add_to_google: "Google Calendar"
         active_subscription: "You have an active calendar subscription."
 
       change_password:

@@ -2,11 +2,17 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class CalendarSubscriptionUrl extends Component {
   @tracked copied = false;
+
+  get googleCalendarUrl() {
+    const webcalUrl = this.args.url.replace(/^https?:\/\//, "webcal://");
+    return `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcalUrl)}`;
+  }
 
   @action
   async copy() {
@@ -44,6 +50,15 @@ export default class CalendarSubscriptionUrl extends Component {
             "btn-default calendar-subscription-url__copy"
           }}
         />
+        <a
+          href={{this.googleCalendarUrl}}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-default calendar-subscription-url__google"
+        >
+          {{icon "fab-google"}}
+          {{i18n "user.calendar_subscriptions.add_to_google"}}
+        </a>
       </div>
     </div>
   </template>
