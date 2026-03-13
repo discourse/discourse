@@ -30,7 +30,10 @@ class FinalizeAiAgentsSchema < ActiveRecord::Migration[7.2]
   }
 
   def up
-    # 0. Drop the forward-compat view and do the actual table rename
+    # Older versions of RenameAiPersonasToAiAgents would create ai_agents as the view
+    # Newer versions perform the rename immediately and create ai_personas as the view
+    # Either way, we want to end up with ai_agents as the table and no view after this migration
+    execute "DROP VIEW IF EXISTS ai_personas"
     execute "DROP VIEW IF EXISTS ai_agents"
 
     if table_exists?(:ai_personas) && !table_exists?(:ai_agents)
