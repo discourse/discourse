@@ -708,12 +708,6 @@
                 "null"
               ]
             },
-            "topic_title_placeholder": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
             "has_children": {
               "type": "boolean"
             },
@@ -859,7 +853,6 @@
             "permission",
             "notification_level",
             "topic_template",
-            "topic_title_placeholder",
             "has_children",
             "subcategory_count",
             "sort_order",

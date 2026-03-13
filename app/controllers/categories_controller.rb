@@ -622,7 +622,6 @@ class CategoriesController < ApplicationController
           :slug,
           :allow_badges,
           :topic_template,
-          :topic_title_placeholder,
           :description,
           :sort_order,
           :sort_ascending,
