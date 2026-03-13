@@ -568,6 +568,11 @@ en:
         tools: "Enabled tools"
         tokens: "tokens"
         context_cost: "Context Cost"
+        token_usage: "Token Usage"
+        tool_count: "Tool Count"
+        tool_count_value:
+          one: "%{count} tool"
+          other: "%{count} tools"
         tool_tokens_total: "~%{tokens} Tokens"
         tool_severity_medium: "Moderate capacity"
         tool_severity_high: "High capacity"

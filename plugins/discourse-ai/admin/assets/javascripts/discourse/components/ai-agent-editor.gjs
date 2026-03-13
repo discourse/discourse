@@ -12,6 +12,7 @@ import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
+import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
@@ -36,6 +37,7 @@ const TOOL_TOKEN_LOW_THRESHOLD = 2000;
 const TOOL_TOKEN_HIGH_THRESHOLD = 4000;
 const TOOL_TOKEN_BAR_MAX = 6000;
 const TOOL_COUNT_WARNING_THRESHOLD = 5;
+const TOOL_COUNT_BAR_MAX = 7;
 
 export default class AgentEditor extends Component {
   @service router;
@@ -296,10 +298,16 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  toolTokenBarStyle(tools) {
+  toolTokenIndicatorStyle(tools) {
     const total = this.totalToolTokens(tools);
     const percent = Math.min(100, (total / TOOL_TOKEN_BAR_MAX) * 100);
-    return trustHTML(`width: ${percent}%`);
+    return trustHTML(`left: ${percent}%`);
+  }
+
+  @action
+  toolCountIndicatorStyle(tools) {
+    const percent = Math.min(100, (tools.length / TOOL_COUNT_BAR_MAX) * 100);
+    return trustHTML(`left: ${percent}%`);
   }
 
   @action
@@ -317,6 +325,33 @@ export default class AgentEditor extends Component {
       return "medium";
     }
     return "low";
+  }
+
+  @action
+  toolTokenOnlySeverity(tools) {
+    if (!tools) {
+      return "low";
+    }
+    const total = this.totalToolTokens(tools);
+    if (total >= TOOL_TOKEN_HIGH_THRESHOLD) {
+      return "high";
+    } else if (total >= TOOL_TOKEN_LOW_THRESHOLD) {
+      return "medium";
+    }
+    return "low";
+  }
+
+  @action
+  toolCountOnlySeverity(tools) {
+    if (!tools) {
+      return "low";
+    }
+    return tools.length >= TOOL_COUNT_WARNING_THRESHOLD ? "high" : "low";
+  }
+
+  @action
+  showExamples(data) {
+    return data.examples?.length > 0 || !data.system;
   }
 
   @action
@@ -536,31 +571,36 @@ export default class AgentEditor extends Component {
           </form.Field>
         {{/if}}
 
-        <form.Section
-          @title={{i18n "discourse_ai.ai_agent.examples.title"}}
-          @subtitle={{i18n "discourse_ai.ai_agent.examples.examples_help"}}
-        >
-          {{#unless data.system}}
-            <form.Container>
-              <form.Button
-                @action={{fn this.addExamplesPair form data}}
-                @label="discourse_ai.ai_agent.examples.new"
-                class="ai-agent-editor__new_example"
-              />
-            </form.Container>
-          {{/unless}}
+        {{#if (this.showExamples data)}}
+          <form.Section
+            @title={{i18n "discourse_ai.ai_agent.examples.title"}}
+            @subtitle={{i18n "discourse_ai.ai_agent.examples.examples_help"}}
+          >
+            {{#unless data.system}}
+              <form.Container>
+                <form.Button
+                  @action={{fn this.addExamplesPair form data}}
+                  @label="discourse_ai.ai_agent.examples.new"
+                  class="btn-default ai-agent-editor__new_example"
+                />
+              </form.Container>
+            {{/unless}}
 
-          {{#if (gt data.examples.length 0)}}
-            <form.Collection @name="examples" as |exCollection exCollectionIdx|>
-              <AiAgentCollapsableExample
-                @examplesCollection={{exCollection}}
-                @exampleNumber={{exCollectionIdx}}
-                @system={{data.system}}
-                @form={{form}}
-              />
-            </form.Collection>
-          {{/if}}
-        </form.Section>
+            {{#if (gt data.examples.length 0)}}
+              <form.Collection
+                @name="examples"
+                as |exCollection exCollectionIdx|
+              >
+                <AiAgentCollapsableExample
+                  @examplesCollection={{exCollection}}
+                  @exampleNumber={{exCollectionIdx}}
+                  @system={{data.system}}
+                  @form={{form}}
+                />
+              </form.Collection>
+            {{/if}}
+          </form.Section>
+        {{/if}}
 
         <form.Section @title={{i18n "discourse_ai.ai_agent.ai_tools"}}>
           <form.Field
@@ -608,42 +648,72 @@ export default class AgentEditor extends Component {
                 <span class="ai-agent-editor__tool-context-cost-label">
                   {{i18n "discourse_ai.ai_agent.context_cost"}}
                 </span>
-                <span class="ai-agent-editor__tool-context-cost-value">
-                  {{i18n
-                    "discourse_ai.ai_agent.tool_tokens_total"
-                    tokens=(this.totalToolTokens data.tools)
-                  }}
-                </span>
               </div>
               <div class="ai-agent-editor__tool-context-cost-bar">
-                <div
-                  class="ai-agent-editor__tool-context-cost-bar-fill"
-                  style={{this.toolTokenBarStyle data.tools}}
+                <span
+                  class="ai-agent-editor__tool-context-cost-bar-indicator --token"
+                  style={{this.toolTokenIndicatorStyle data.tools}}
                 >
-                  <span
-                    class="ai-agent-editor__tool-context-cost-bar-indicator"
-                  ></span>
-                </div>
+                  {{icon "caret-down"}}
+                </span>
+                <span
+                  class="ai-agent-editor__tool-context-cost-bar-indicator --count"
+                  style={{this.toolCountIndicatorStyle data.tools}}
+                >
+                  {{icon "caret-up"}}
+                </span>
               </div>
+              <span class="ai-agent-editor__tool-context-cost-legend">
+                <span
+                  class="ai-agent-editor__tool-context-cost-legend-item --token"
+                >
+                  {{icon "caret-down"}}
+                  {{i18n "discourse_ai.ai_agent.token_usage"}}:
+                  <span
+                    class="ai-agent-editor__tool-context-cost-value
+                      {{this.toolTokenOnlySeverity data.tools}}"
+                  >
+                    {{i18n
+                      "discourse_ai.ai_agent.tool_tokens_total"
+                      tokens=(this.totalToolTokens data.tools)
+                    }}
+                  </span>
+                </span>
+                <span
+                  class="ai-agent-editor__tool-context-cost-legend-item --count"
+                >
+                  {{icon "caret-up"}}
+                  {{i18n "discourse_ai.ai_agent.tool_count"}}:
+                  <span
+                    class="ai-agent-editor__tool-context-cost-value
+                      {{this.toolCountOnlySeverity data.tools}}"
+                  >
+                    {{i18n
+                      "discourse_ai.ai_agent.tool_count_value"
+                      count=data.tools.length
+                    }}
+                  </span>
+                </span>
+              </span>
               {{#if (eq (this.toolTokenSeverity data.tools) "medium")}}
                 <div class="ai-agent-editor__tool-context-cost-warning">
-                  <strong>{{i18n
-                      "discourse_ai.ai_agent.tool_severity_medium"
-                    }}:</strong>
+                  <span>
+                    {{i18n "discourse_ai.ai_agent.tool_severity_medium"}}:
+                  </span>
                   {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
                 </div>
               {{/if}}
               {{#if (eq (this.toolTokenSeverity data.tools) "high")}}
                 <div class="ai-agent-editor__tool-context-cost-warning">
                   {{#if (this.tooManyTools data.tools)}}
-                    <strong>{{i18n
-                        "discourse_ai.ai_agent.tool_severity_too_many"
-                      }}:</strong>
+                    <span>
+                      {{i18n "discourse_ai.ai_agent.tool_severity_too_many"}}:
+                    </span>
                     {{i18n "discourse_ai.ai_agent.tool_count_warning"}}
                   {{else}}
-                    <strong>{{i18n
-                        "discourse_ai.ai_agent.tool_severity_high"
-                      }}:</strong>
+                    <span>
+                      {{i18n "discourse_ai.ai_agent.tool_severity_high"}}:
+                    </span>
                     {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
                   {{/if}}
                 </div>
@@ -888,7 +958,7 @@ export default class AgentEditor extends Component {
                 <form.Button
                   @action={{fn this.createUser form}}
                   @label="discourse_ai.ai_agent.create_user"
-                  class="ai-agent-editor__create-user"
+                  class="btn-default ai-agent-editor__create-user"
                 />
               {{/if}}
             </form.Container>

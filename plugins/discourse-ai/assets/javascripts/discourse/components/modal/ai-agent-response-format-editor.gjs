@@ -93,6 +93,7 @@ export default class AiAgentResponseFormatEditor extends Component {
           @action={{this.openModal}}
           @label="discourse_ai.ai_agent.response_format.open_modal"
           @disabled={{@data.system}}
+          class="btn-default"
         />
       </div>
     </@form.Container>
