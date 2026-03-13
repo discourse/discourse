@@ -387,6 +387,43 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.dom(".topic-timer-heading").doesNotExist();
   });
 
+  test("auto delete after last post", async function (assert) {
+    updateCurrentUser({ moderator: true });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+    await select(".timer-type", "delete_after_last_post");
+
+    const interval = selectKit(".select-kit.relative-time-intervals");
+    await interval.expand();
+    await interval.selectRowByValue("hours");
+
+    await fillIn(".relative-time-duration", "2");
+
+    assert
+      .dom(".edit-topic-timer-modal .warning")
+      .matchesText(/last post in the topic is already/);
+
+    const topic = topicFixtures["/t/54077.json"];
+    const lastPostIndex = topic.post_stream.posts.length - 1;
+    const time = topic.post_stream.posts[lastPostIndex].updated_at;
+    this.clock.restore();
+    this.clock = fakeTime(time, this.timezone, true);
+    await fillIn(".relative-time-duration", "6");
+
+    assert
+      .dom(".topic-timer-heading")
+      .hasText("This topic will be deleted 6 hours after the last reply.");
+
+    await interval.expand();
+    await interval.selectRowByValue("days");
+
+    assert
+      .dom(".topic-timer-heading")
+      .hasText("This topic will be deleted 6 days after the last reply.");
+  });
+
   test("Close timer removed after manual close", async function (assert) {
     updateCurrentUser({ moderator: true, trust_level: 4 });
 
