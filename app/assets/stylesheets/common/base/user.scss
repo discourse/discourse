@@ -1506,13 +1506,17 @@
 }
 
 .calendar-subscription-url {
-  margin-bottom: 1em;
+  padding: 0.75em 1em;
+  margin-bottom: 0.75em;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
 
   &__header {
     display: flex;
     align-items: baseline;
     gap: 0.5em;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.5em;
   }
 
   &__label {
@@ -1538,6 +1542,6 @@
   &__subscribe {
     display: flex;
     gap: 0.5em;
-    margin-top: 0.25em;
+    margin-top: 0.5em;
   }
 }
