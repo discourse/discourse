@@ -67,6 +67,7 @@ export default class PostMenuFlagButton extends Component {
         @icon="flag"
         @label={{if @showLabel "post.controls.flag_action"}}
         @title={{this.title}}
+        @ariaLabel={{this.title}}
         @disabled={{this.isFlagButtonDisabled}}
       />
     </div>

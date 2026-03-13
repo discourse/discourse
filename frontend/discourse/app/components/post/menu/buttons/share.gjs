@@ -8,6 +8,7 @@ const PostMenuShareButton = <template>
     @icon="d-post-share"
     @label={{if @showLabel "post.controls.share_action"}}
     @title="post.controls.share"
+    @ariaLabel="post.controls.share"
   />
 </template>;
 
