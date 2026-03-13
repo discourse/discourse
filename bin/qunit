@@ -122,6 +122,7 @@ class QunitRunner
         opts.separator <<~NOTES
           \nExamples:
             bin/qunit frontend/discourse/tests/unit/models/user-test.js
+            bin/qunit frontend/discourse/tests/unit/  # Run all tests in directory
             bin/qunit --standalone --target plugins  # Run all plugin tests
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
