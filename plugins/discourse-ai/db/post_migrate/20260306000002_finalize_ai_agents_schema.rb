@@ -33,8 +33,8 @@ class FinalizeAiAgentsSchema < ActiveRecord::Migration[7.2]
     # Older versions of RenameAiPersonasToAiAgents would create ai_agents as the view
     # Newer versions perform the rename immediately and create ai_personas as the view
     # Either way, we want to end up with ai_agents as the table and no view after this migration
-    execute "DROP VIEW IF EXISTS ai_personas"
-    execute "DROP VIEW IF EXISTS ai_agents"
+    execute "DROP VIEW ai_personas" if view_exists?(:ai_personas)
+    execute "DROP VIEW ai_agents" if view_exists?(:ai_agents)
 
     if table_exists?(:ai_personas) && !table_exists?(:ai_agents)
       rename_table :ai_personas, :ai_agents
