@@ -67,6 +67,8 @@ describe "Discourse dev tools", type: :system do
         theme
       end
 
+      after { Theme.clear_cache! }
+
       it "shows block visual overlay with tooltip" do
         visit("/latest")
         toolbar.enable
