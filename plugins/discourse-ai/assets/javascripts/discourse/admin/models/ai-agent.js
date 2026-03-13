@@ -37,6 +37,7 @@ const CREATE_ATTRIBUTES = [
   "max_turn_tokens",
 
   "compression_threshold",
+  "require_approval",
   "response_format",
   "examples",
 ];
@@ -70,6 +71,7 @@ const SYSTEM_ATTRIBUTES = [
   "max_turn_tokens",
 
   "compression_threshold",
+  "require_approval",
 ];
 
 export default class AiAgent extends RestModel {

@@ -561,6 +561,8 @@ en:
         allow_personal_messages_help: "If enabled, users in allowed groups can send personal messages to this agent."
         allow_topic_mentions: "Allow topic mentions"
         allow_topic_mentions_help: "If enabled, users in allowed groups can mention this agent in topics."
+        require_approval: "Require approval for moderation tools"
+        require_approval_help: "When enabled, moderation actions (close, delete, edit, etc.) will be sent to the review queue for moderator approval before execution."
         force_default_llm: "Always use default language model"
         save: "Save"
         saved: "Agent saved"
@@ -951,6 +953,11 @@ en:
       reviewables:
         model_used: "Model used:"
         accuracy: "Accuracy:"
+        ai_tool_action:
+          agent: "Agent"
+          tool: "Tool"
+          parameters: "Parameters"
+          post: "Triggering Post"
 
       embeddings:
         short_title: "Embeddings"
@@ -1178,8 +1185,15 @@ en:
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool approved"
+        rejected_tool_action:
+          title: "Tool rejected"
       types:
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:
           title: "AI-Flagged chat message"
+        reviewable_ai_tool_action:
+          title: "AI Tool Action"

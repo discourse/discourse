@@ -298,6 +298,45 @@ module DiscourseAi
         embedded_thinking
       end
 
+      def tool_requires_approval?(tool)
+        tool.class.requires_approval? && @agent.class.require_approval
+      end
+
+      def enqueue_tool_for_approval(tool, context, &update_blk)
+        tool_action =
+          AiToolAction.create!(
+            tool_name: tool.name,
+            tool_parameters: tool.parameters,
+            ai_agent_id: @agent.id,
+            bot_user_id: @bot_user.id,
+            post_id: context.post_id,
+          )
+
+        reviewable =
+          ReviewableAiToolAction.needs_review!(
+            target: tool_action,
+            created_by: @bot_user,
+            reviewable_by_moderator: true,
+            payload: {
+              agent_name: @agent.class.name,
+              reason: tool.parameters[:reason],
+              llm_model_id: @model&.id,
+            },
+          )
+
+        reviewable.add_score(
+          Discourse.system_user,
+          ReviewableScore.types[:needs_approval],
+          force_review: true,
+        )
+
+        placeholder =
+          build_placeholder(tool.summary, I18n.t("discourse_ai.ai_bot.tool_pending_approval"))
+        update_blk.call(placeholder, nil, :thinking)
+
+        { status: "pending_approval", message: I18n.t("discourse_ai.ai_bot.tool_pending_approval") }
+      end
+
       def process_tool(
         tool:,
         raw_context:,
@@ -359,6 +398,10 @@ module DiscourseAi
       end
 
       def invoke_tool(tool, context, &update_blk)
+        if tool_requires_approval?(tool)
+          return enqueue_tool_for_approval(tool, context, &update_blk)
+        end
+
         show_placeholder = !context.skip_show_thinking && !tool.class.allow_partial_tool_calls?
 
         update_blk.call("", build_placeholder(tool.summary, ""), :thinking) if show_placeholder
