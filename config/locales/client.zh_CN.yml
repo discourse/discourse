@@ -2828,6 +2828,7 @@ zh_CN:
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
       abandon: "关闭编辑器并舍弃草稿"
+      edit_reason: "添加您的编辑理由"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"

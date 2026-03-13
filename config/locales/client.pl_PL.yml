@@ -3284,6 +3284,7 @@ pl_PL:
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
       abandon: "Zamknij kompozytor i odrzuć szkic"
+      edit_reason: "Dodaj powód edycji"
       enter_fullscreen: "Przejdź do pełnoekranowego kompozytora"
       exit_fullscreen: "Wyjdź z trybu pełnoekranowego kompozytora"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
