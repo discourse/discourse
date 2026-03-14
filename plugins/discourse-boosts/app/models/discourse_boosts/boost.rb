@@ -158,3 +158,20 @@ module DiscourseBoosts
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: discourse_boosts
+#
+#  id         :bigint           not null, primary key
+#  cooked     :text             not null
+#  raw        :string(1000)     not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  post_id    :integer          not null
+#  user_id    :integer          not null
+#
+# Indexes
+#
+#  index_discourse_boosts_on_post_id_and_user_id  (post_id,user_id) UNIQUE
+#
