@@ -42,8 +42,30 @@ after_initialize do
       SiteSetting.discourse_boosts_enabled && object.association(:boosts).loaded?
     end,
   ) do
-    object.boosts.map do |boost|
-      DiscourseBoosts::BoostSerializer.new(boost, scope: scope, root: false).as_json
+    boosts = object.boosts
+    boost_ids = boosts.map(&:id)
+
+    reviewables_by_target =
+      if scope.user && boost_ids.present?
+        Reviewable
+          .includes(:reviewable_scores)
+          .where(target_type: "DiscourseBoosts::Boost", target_id: boost_ids)
+          .index_by(&:target_id)
+      else
+        {}
+      end
+
+    available_flags =
+      Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:name_key)
+
+    boosts.map do |boost|
+      DiscourseBoosts::BoostSerializer.new(
+        boost,
+        scope: scope,
+        root: false,
+        reviewables_by_target: reviewables_by_target,
+        available_flags: available_flags,
+      ).as_json
     end
   end
 

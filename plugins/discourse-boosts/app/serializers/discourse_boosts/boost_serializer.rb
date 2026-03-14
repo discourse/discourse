@@ -17,9 +17,14 @@ module DiscourseBoosts
 
     def user_flag_status
       return nil unless scope.user
-      reviewable = Reviewable.find_by(target: object)
+      reviewable =
+        if @options[:reviewables_by_target]
+          @options[:reviewables_by_target][object.id]
+        else
+          Reviewable.find_by(target: object)
+        end
       return nil unless reviewable
-      score = reviewable.reviewable_scores.find_by(user: scope.user)
+      score = reviewable.reviewable_scores.find { |s| s.user_id == scope.user.id }
       score&.status_for_database
     end
 
@@ -28,7 +33,8 @@ module DiscourseBoosts
     end
 
     def available_flags
-      Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:name_key)
+      @options[:available_flags] ||
+        Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:name_key)
     end
 
     def include_available_flags?
