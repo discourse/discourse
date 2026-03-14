@@ -1,0 +1,9 @@
+discourse_boosts:
+  discourse_boosts_enabled:
+    default: false
+    client: true
+  discourse_boosts_max_per_post:
+    default: 50
+    min: 1
+    max: 200
+    client: true
