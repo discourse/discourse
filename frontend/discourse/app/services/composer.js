@@ -858,7 +858,7 @@ export default class ComposerService extends Service {
             );
           } else {
             const wrapTag = attributesString.trim()
-              ? `[wrap ${attributesString}]`
+              ? `[wrap${attributesString}]`
               : "[wrap]";
             toolbarEvent.applySurround(
               `${wrapTag}\n`,
