@@ -1,0 +1,37 @@
+en:
+  site_settings:
+    discourse_boosts_enabled: "Enable the Boosts feature, allowing users to add micro-reactions to posts."
+    discourse_boosts_max_per_post: "Maximum total number of boosts allowed on a single post."
+  discourse_boosts:
+    boost_too_long: "Boost must be %{count} characters or fewer."
+    too_many_emoji: "Boost can contain at most %{count} emoji."
+    boost_blank: "Boost cannot be blank."
+    boost_limit_reached: "You have reached the maximum number of boosts for this post."
+    post_boost_limit_reached: "This post has reached the maximum number of boosts."
+    boost_own_post: "You cannot boost your own post."
+    already_flagged: "You have already flagged this boost."
+    reviewable_boost:
+      title: "Boost by %{username}"
+    reviewables:
+      actions:
+        agree_and_delete:
+          title: "Delete Boost"
+          description: "Delete the boost."
+        agree_and_keep_boost:
+          title: "Keep Boost"
+          description: "Agree with flag and keep the boost."
+        agree_and_suspend:
+          title: "Suspend User"
+          description: "Agree with flag and suspend the user."
+        agree_and_silence:
+          title: "Silence User"
+          description: "Agree with flag and silence the user."
+        disagree:
+          title: "Keep Boost"
+          description: "Disagree with flag and keep the boost."
+        ignore:
+          title: "Ignore Flag"
+          description: "Remove it from the queue without taking action."
+        delete_and_agree:
+          title: "Delete Boost"
+          description: "Delete the boost and ignore the flag."
