@@ -38,7 +38,9 @@ RSpec.describe FlagSerializer do
 
   it "returns applies_to" do
     serialized = described_class.new(flag).as_json
-    expect(serialized[:flag][:applies_to]).to eq(%w[Post Topic Chat::Message DiscourseBoosts::Boost])
+    expect(serialized[:flag][:applies_to]).to eq(
+      %w[Post Topic Chat::Message DiscourseBoosts::Boost],
+    )
   end
 
   describe "#is_used" do
