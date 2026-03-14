@@ -15,7 +15,7 @@ Flag.seed do |s|
   s.notify_type = true
   s.auto_action_type = true
   s.require_message = false
-  s.applies_to = %w[Post Chat::Message]
+  s.applies_to = %w[Post Chat::Message DiscourseBoosts::Boost]
   s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
@@ -24,7 +24,7 @@ Flag.seed do |s|
   s.notify_type = true
   s.auto_action_type = true
   s.require_message = false
-  s.applies_to = %w[Post Topic Chat::Message]
+  s.applies_to = %w[Post Topic Chat::Message DiscourseBoosts::Boost]
   s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
@@ -33,7 +33,7 @@ Flag.seed do |s|
   s.notify_type = true
   s.auto_action_type = true
   s.require_message = false
-  s.applies_to = %w[Post Topic Chat::Message]
+  s.applies_to = %w[Post Topic Chat::Message DiscourseBoosts::Boost]
   s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
@@ -42,7 +42,7 @@ Flag.seed do |s|
   s.notify_type = true
   s.auto_action_type = false
   s.require_message = true
-  s.applies_to = %w[Post Topic Chat::Message]
+  s.applies_to = %w[Post Topic Chat::Message DiscourseBoosts::Boost]
   s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
@@ -51,7 +51,7 @@ Flag.seed do |s|
   s.notify_type = true
   s.auto_action_type = false
   s.require_message = true
-  s.applies_to = %w[Post Topic Chat::Message]
+  s.applies_to = %w[Post Topic Chat::Message DiscourseBoosts::Boost]
   s.skip_reset_flag_callback = true
 end
 Flag.unscoped.seed do |s|
