@@ -17,7 +17,7 @@ function initializeBoosts(api) {
     "post-menu-buttons",
     ({ value: dag, context: { buttonKeys } }) => {
       dag.add("discourse-boosts-action", BoostActionButton, {
-        before: buttonKeys.SHOW_MORE,
+        before: [buttonKeys.FLAG, buttonKeys.SHOW_MORE],
       });
     }
   );
