@@ -92,7 +92,11 @@ export default class BoostsList extends Component {
     this.modal.show(FlagModal, {
       model: {
         flagTarget,
-        flagModel: { ...boost, user_id: boost.user.id },
+        flagModel: {
+          ...boost,
+          user_id: boost.user.id,
+          username: boost.user.username,
+        },
         setHidden: () => {},
       },
     });
