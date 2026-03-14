@@ -67,6 +67,17 @@ module DiscourseBoosts
       end
     end
 
+    def show
+      Boost::Show.call(service_params.deep_merge(params: { boost_id: params[:id] })) do
+        on_success do |boost:|
+          render json: BoostSerializer.new(boost, scope: guardian, root: false)
+        end
+        on_model_not_found(:boost) { raise Discourse::NotFound }
+        on_failed_policy(:can_see_boost) { raise Discourse::InvalidAccess }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
+    end
+
     def index
       Boost::List.call(service_params) do
         on_success do |boosts:|
