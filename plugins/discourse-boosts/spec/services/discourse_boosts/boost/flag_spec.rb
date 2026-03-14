@@ -140,6 +140,110 @@ RSpec.describe DiscourseBoosts::Boost::Flag do
           expect(DiscourseBoosts::ReviewableBoost.last).not_to be_potential_spam
         end
       end
+
+      context "when flagging with a message as notify_moderators" do
+        let(:params) do
+          {
+            boost_id: boost.id,
+            flag_type_id: ReviewableScore.types[:notify_moderators],
+            message: "This boost is problematic",
+          }
+        end
+
+        it "creates a companion PM to moderators" do
+          expect { result }.to change {
+            Topic.where(archetype: Archetype.private_message).count
+          }.by(1)
+
+          pm_topic = Topic.where(archetype: Archetype.private_message).last
+          expect(pm_topic.subtype).to eq(TopicSubtype.notify_moderators)
+          expect(pm_topic.first_post.raw).to include("This boost is problematic")
+        end
+
+        it "stores the companion PM topic_id on the reviewable score" do
+          result
+          score = ReviewableScore.last
+          expect(score.meta_topic_id).to be_present
+        end
+      end
+
+      context "when flagging with a message as illegal" do
+        let(:params) do
+          {
+            boost_id: boost.id,
+            flag_type_id: ReviewableScore.types[:illegal],
+            message: "This violates the law",
+          }
+        end
+
+        it "creates a companion PM to moderators" do
+          expect { result }.to change {
+            Topic.where(archetype: Archetype.private_message).count
+          }.by(1)
+
+          pm_topic = Topic.where(archetype: Archetype.private_message).last
+          expect(pm_topic.first_post.raw).to include("This violates the law")
+        end
+      end
+
+      context "when take_action is true" do
+        fab!(:staff_flagger, :moderator)
+
+        let(:dependencies) { { guardian: staff_flagger.guardian } }
+        let(:params) do
+          { boost_id: boost.id, flag_type_id: ReviewableScore.types[:spam], take_action: true }
+        end
+
+        it "auto-approves the reviewable and deletes the boost" do
+          result
+          reviewable = DiscourseBoosts::ReviewableBoost.last
+          expect(reviewable).to be_approved
+          expect(DiscourseBoosts::Boost.find_by(id: boost.id)).to be_nil
+        end
+
+        it "gives the score a take_action bonus" do
+          result
+          score = ReviewableScore.last
+          expect(score.take_action_bonus).to be > 0
+        end
+      end
+
+      context "when a non-staff user attempts take_action" do
+        let(:params) do
+          { boost_id: boost.id, flag_type_id: ReviewableScore.types[:spam], take_action: true }
+        end
+
+        it { is_expected.to fail_a_policy(:can_flag_boost) }
+      end
+
+      context "when queue_for_review is true" do
+        fab!(:staff_flagger, :moderator)
+
+        let(:dependencies) { { guardian: staff_flagger.guardian } }
+        let(:params) do
+          { boost_id: boost.id, flag_type_id: ReviewableScore.types[:spam], queue_for_review: true }
+        end
+
+        it "sets force_review and reason on the score" do
+          result
+          score = ReviewableScore.last
+          expect(score.reason).to eq("boost_queued_by_staff")
+        end
+
+        it "creates the reviewable with force_review" do
+          result
+          reviewable = DiscourseBoosts::ReviewableBoost.last
+          expect(reviewable).to be_force_review
+        end
+      end
+
+      context "when a non-staff user attempts queue_for_review" do
+        let(:params) do
+          { boost_id: boost.id, flag_type_id: ReviewableScore.types[:spam], queue_for_review: true }
+        end
+
+        it { is_expected.to fail_a_policy(:can_flag_boost) }
+      end
     end
   end
 end
