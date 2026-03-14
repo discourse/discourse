@@ -55,7 +55,8 @@ after_initialize do
     end,
   ) do
     scope.user.present? && !scope.user.silenced? && object.user_id != scope.user&.id &&
-      object.boosts.none? { |b| b.user_id == scope.user.id }
+      object.boosts.none? { |b| b.user_id == scope.user.id } &&
+      object.boosts.size < SiteSetting.discourse_boosts_max_per_post
   end
 
   UserUpdater::OPTION_ATTR.push(:boost_notifications_level)

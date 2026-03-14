@@ -81,6 +81,17 @@ RSpec.describe PostSerializer do
       end
     end
 
+    context "when post has reached the boost limit" do
+      before do
+        SiteSetting.discourse_boosts_max_per_post = 1
+        Fabricate(:boost, post: target_post)
+      end
+
+      it "is false" do
+        expect(serialized[:can_boost]).to eq(false)
+      end
+    end
+
     context "when user is anonymous" do
       let(:guardian) { Guardian.new }
       let(:topic_view) { TopicView.new(topic) }
