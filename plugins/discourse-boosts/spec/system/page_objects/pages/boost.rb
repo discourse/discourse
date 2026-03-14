@@ -33,6 +33,11 @@ module PageObjects
         self
       end
 
+      def click_flag_boost(post)
+        find("#post_#{post.post_number} .discourse-boosts__flag").click
+        self
+      end
+
       def click_delete_boost(post)
         find("#post_#{post.post_number} .discourse-boosts__delete").click
         self
