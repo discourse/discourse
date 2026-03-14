@@ -25,6 +25,7 @@ after_initialize do
     Post.prepend DiscourseBoosts::PostExtension
     UserOption.prepend DiscourseBoosts::UserOptionExtension
     Reviewable.prepend DiscourseBoosts::ReviewableExtension
+    TopicView.prepend DiscourseBoosts::TopicViewExtension
   end
 
   Discourse::Application.routes.append { mount DiscourseBoosts::Engine, at: "/" }
@@ -32,6 +33,9 @@ after_initialize do
   TopicView.on_preload do |topic_view|
     if SiteSetting.discourse_boosts_enabled
       topic_view.instance_variable_set(:@posts, topic_view.posts.includes(boosts: :user))
+
+      topic_view.boosts_available_flags =
+        Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:name_key)
     end
   end
 
@@ -43,20 +47,31 @@ after_initialize do
     end,
   ) do
     boosts = object.boosts
-    boost_ids = boosts.map(&:id)
 
     reviewables_by_target =
-      if scope.user && boost_ids.present?
-        Reviewable
-          .includes(:reviewable_scores)
-          .where(target_type: "DiscourseBoosts::Boost", target_id: boost_ids)
-          .index_by(&:target_id)
+      if scope.user && @topic_view
+        @topic_view.boosts_reviewables_by_target ||=
+          begin
+            all_boost_ids =
+              @topic_view.posts.flat_map do |p|
+                p.association(:boosts).loaded? ? p.boosts.map(&:id) : []
+              end
+            if all_boost_ids.present?
+              Reviewable
+                .includes(:reviewable_scores)
+                .where(target_type: "DiscourseBoosts::Boost", target_id: all_boost_ids)
+                .index_by(&:target_id)
+            else
+              {}
+            end
+          end
       else
         {}
       end
 
     available_flags =
-      Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:name_key)
+      @topic_view&.boosts_available_flags ||
+        Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:name_key)
 
     boosts.map do |boost|
       DiscourseBoosts::BoostSerializer.new(
