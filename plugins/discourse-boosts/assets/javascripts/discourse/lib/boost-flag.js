@@ -36,7 +36,7 @@ export default class BoostFlag {
     });
   }
 
-  async create(flagModal) {
+  async create(flagModal, opts) {
     flagModal.args.closeModal();
 
     try {
@@ -44,6 +44,9 @@ export default class BoostFlag {
         type: "POST",
         data: {
           flag_type_id: flagModal.selected.id,
+          message: opts.message,
+          take_action: opts.takeAction,
+          queue_for_review: opts.queue_for_review,
         },
       });
     } catch (error) {
