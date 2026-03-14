@@ -6,7 +6,9 @@ RSpec.describe DiscourseBoosts::Boost::Flag do
     it { is_expected.to validate_presence_of(:flag_type_id) }
 
     it do
-      is_expected.to validate_inclusion_of(:flag_type_id).in_array(ReviewableScore.types.values)
+      is_expected.to validate_inclusion_of(:flag_type_id).in_array(
+        Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:id),
+      )
     end
   end
 
@@ -44,6 +46,21 @@ RSpec.describe DiscourseBoosts::Boost::Flag do
       before { flagger.update!(silenced_till: 1.year.from_now) }
 
       it { is_expected.to fail_a_policy(:can_flag_boost) }
+    end
+
+    context "when boost author is staff and allow_flagging_staff is disabled" do
+      before do
+        post_author.update!(admin: true)
+        SiteSetting.allow_flagging_staff = false
+      end
+
+      it { is_expected.to fail_a_policy(:can_flag_boost) }
+    end
+
+    context "when flag type does not apply to boosts" do
+      let(:params) { { boost_id: boost.id, flag_type_id: ReviewableScore.types[:needs_approval] } }
+
+      it { is_expected.to fail_a_contract }
     end
 
     context "when user already has a pending flag on the boost" do

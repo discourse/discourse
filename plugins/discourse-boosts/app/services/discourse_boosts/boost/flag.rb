@@ -15,7 +15,9 @@ module DiscourseBoosts
       validates :flag_type_id,
                 presence: true,
                 inclusion: {
-                  in: -> { ::ReviewableScore.types.values },
+                  in: -> do
+                    ::Flag.enabled.where("'DiscourseBoosts::Boost' = ANY(applies_to)").pluck(:id)
+                  end,
                 }
     end
 
@@ -40,6 +42,7 @@ module DiscourseBoosts
     def can_flag_boost(guardian:, boost:, params:)
       guardian.user.present? && !guardian.user.silenced? && boost.user_id != guardian.user.id &&
         guardian.can_see?(boost.post) &&
+        (SiteSetting.allow_flagging_staff || !boost.user&.staff?) &&
         (!params.take_action && !params.queue_for_review || guardian.is_staff?)
     end
 
