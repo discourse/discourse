@@ -1,0 +1,86 @@
+.discourse-boosts {
+  &__tip {
+    max-width: 300px;
+    padding: var(--space-1);
+    font-size: var(--font-down-1);
+  }
+
+  &__tip-username {
+    @include mention;
+  }
+
+  &__input-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+
+  &__input {
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    width: 150px;
+    font-size: var(--font-down-1);
+    padding: var(--space-1);
+    border: none;
+    background: transparent;
+    margin: 0;
+    outline: none;
+    overflow: hidden;
+
+    &:empty::before {
+      content: attr(data-placeholder);
+      color: var(--primary-medium);
+      pointer-events: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    img.emoji {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__emoji-btn,
+  &__submit.btn,
+  &__cancel.btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+
+    .d-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__submit.btn {
+    --d-button-default-bg-color: var(--secondary);
+    --d-button-default-border: 1px solid var(--success);
+    --d-button-default-icon-color: var(--success);
+    --d-button-default-border--hover: 1px solid var(--success-hover);
+    --d-button-default-icon-color--hover: var(--success-hover);
+    --d-button-default-bg-color--hover: var(--secondary);
+  }
+
+  &__cancel.btn {
+    --d-button-default-bg-color: var(--secondary);
+    --d-button-default-border: 1px solid var(--danger);
+    --d-button-default-icon-color: var(--danger);
+    --d-button-default-border--hover: 1px solid var(--danger-hover);
+    --d-button-default-icon-color--hover: var(--danger-hover);
+    --d-button-default-bg-color--hover: var(--secondary);
+  }
+}
+
+.discourse-boosts-content .fk-d-menu__inner-content {
+  border-radius: 50px;
+}
