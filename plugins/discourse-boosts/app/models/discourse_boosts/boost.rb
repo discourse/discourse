@@ -61,7 +61,11 @@ module DiscourseBoosts
       message = {
         id: post.id,
         type: :boost_added,
-        boost: BoostSerializer.new(boost, scope: Guardian.new, root: false).as_json,
+        boost: {
+          id: boost.id,
+          cooked: boost.cooked,
+          user: BasicUserSerializer.new(boost.user, root: false).as_json,
+        },
       }
       post.publish_message!("/topic/#{post.topic_id}", message)
     end
