@@ -10,6 +10,13 @@ en:
     post_boost_limit_reached: "This post has reached the maximum number of boosts."
     boost_own_post: "You cannot boost your own post."
     already_flagged: "You have already flagged this boost."
+    flagging:
+      notify_moderators:
+        pm_title: "A boost requires staff attention"
+        pm_body: "%{link}\n\n%{message}"
+      illegal:
+        pm_title: "A boost may contain illegal content"
+        pm_body: "%{link}\n\n%{message}"
     reviewable_boost:
       title: "Boost by %{username}"
     reviewables:
@@ -35,3 +42,6 @@ en:
         delete_and_agree:
           title: "Delete Boost"
           description: "Delete the boost and ignore the flag."
+  reviewables:
+    reasons:
+      boost_queued_by_staff: "A staff member thinks this boost needs review."
