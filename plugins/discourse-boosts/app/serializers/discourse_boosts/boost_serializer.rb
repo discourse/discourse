@@ -11,7 +11,8 @@ module DiscourseBoosts
     end
 
     def can_flag
-      scope.user.present? && !scope.user.silenced? && object.user_id != scope.user.id
+      scope.user.present? && !scope.user.silenced? && object.user_id != scope.user.id &&
+        scope.can_see?(object.post) && (SiteSetting.allow_flagging_staff || !object.user&.staff?)
     end
 
     def user_flag_status
