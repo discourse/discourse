@@ -33,15 +33,15 @@ function initializeBoosts(api) {
         const currentBoosts = post.boosts || [];
         const userId = data.boost.user?.id;
         const currentUser = topicController.currentUser;
-        data.boost.can_delete =
-          userId === currentUser?.id || currentUser?.staff;
         const existing = currentBoosts.some(
           (b) => b.id === data.boost.id || b.user?.id === userId
         );
         if (existing) {
           post.set(
             "boosts",
-            currentBoosts.map((b) => (b.user?.id === userId ? data.boost : b))
+            currentBoosts.map((b) =>
+              b.user?.id === userId ? { ...b, ...data.boost } : b
+            )
           );
         } else {
           post.set("boosts", [...currentBoosts, data.boost]);
