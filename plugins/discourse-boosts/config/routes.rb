@@ -5,6 +5,7 @@ DiscourseBoosts::Engine.routes.draw do
        :constraints => {
          format: :json,
        }
+  get "/discourse-boosts/boosts/:id" => "boosts#show", :constraints => { format: :json }
   delete "/discourse-boosts/boosts/:id" => "boosts#destroy", :constraints => { format: :json }
   post "/discourse-boosts/boosts/:id/flags" => "boosts#flag", :constraints => { format: :json }
   get "/discourse-boosts/users/:username/boosts" => "boosts#index",

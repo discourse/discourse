@@ -1,0 +1,55 @@
+.discourse-boosts {
+  &__bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+    border: none;
+    background: var(--primary-100);
+    border-radius: 50px;
+    font-size: var(--font-down-2);
+    cursor: default;
+    line-height: 1;
+
+    &.--actionable {
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+    }
+
+    p {
+      margin: 0;
+      display: flex;
+      gap: var(--space-1);
+    }
+
+    img.emoji,
+    img.emoji.only-emoji {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+  }
+
+  &__cooked.btn-transparent {
+    cursor: pointer;
+    padding: 0;
+    color: var(--primary) !important;
+  }
+
+  &__flag,
+  &__delete {
+    cursor: pointer;
+    padding: var(--space-1);
+    margin-left: var(--space-1);
+
+    .d-icon {
+      width: 12px;
+      height: 12px;
+      margin: 0;
+    }
+  }
+}
