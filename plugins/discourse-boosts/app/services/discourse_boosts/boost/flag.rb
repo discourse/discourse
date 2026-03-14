@@ -109,6 +109,7 @@ module DiscourseBoosts
       DiscourseBoosts::ReviewableBoost.needs_review!(
         created_by: guardian.user,
         target: boost,
+        topic: boost.post.topic,
         target_created_by: boost.user,
         reviewable_by_moderator: true,
         potential_spam: params.flag_type_id == ReviewableScore.types[:spam],
