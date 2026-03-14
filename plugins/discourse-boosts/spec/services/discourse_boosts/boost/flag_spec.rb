@@ -128,6 +128,8 @@ RSpec.describe DiscourseBoosts::Boost::Flag do
           created_by: flagger,
           target_created_by: post_author,
           reviewable_by_moderator: true,
+          topic: topic,
+          category_id: topic.category_id,
         )
         expect(reviewable.payload["boost_cooked"]).to eq(boost.cooked)
       end
