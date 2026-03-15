@@ -763,7 +763,8 @@ class GroupsController < ApplicationController
     added_user_ids = group.bulk_add(users.map(&:id))
     return if added_user_ids.empty?
 
-    new_users = users.select { |u| added_user_ids.include?(u.id) }
+    added_id_set = added_user_ids.to_set
+    new_users = users.select { |u| added_id_set.include?(u.id) }
 
     GroupActionLogger.new(current_user, group).bulk_log_add_user_to_group(new_users)
     new_users.each { |user| group.notify_added_to_group(user) } if notify
