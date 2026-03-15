@@ -771,17 +771,16 @@ class GroupsController < ApplicationController
   end
 
   def remove_users_from_group(group, users)
-    in_group_ids =
-      GroupUser.where(group_id: group.id, user_id: users.map(&:id)).pluck(:user_id).to_set
-    actually_in_group, not_in_group = users.partition { |u| in_group_ids.include?(u.id) }
+    removed_user_ids = group.bulk_remove(users.map(&:id))
+    removed_id_set = removed_user_ids.to_set
 
-    if actually_in_group.any?
-      group.bulk_remove(actually_in_group.map(&:id))
+    removed_users, skipped_users = users.partition { |u| removed_id_set.include?(u.id) }
 
-      GroupActionLogger.new(current_user, group).bulk_log_remove_user_from_group(actually_in_group)
+    if removed_users.any?
+      GroupActionLogger.new(current_user, group).bulk_log_remove_user_from_group(removed_users)
     end
 
-    [actually_in_group.map(&:username), not_in_group.map(&:username)]
+    [removed_users.map(&:username), skipped_users.map(&:username)]
   end
 
   def group_params(automatic: false)

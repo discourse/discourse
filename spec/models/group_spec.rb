@@ -1362,8 +1362,6 @@ RSpec.describe Group do
       group.add(user_single)
 
       group.bulk_add([user_bulk.id])
-      GroupUser.bulk_set_category_notifications(group, [user_bulk.id])
-      GroupUser.bulk_set_tag_notifications(group, [user_bulk.id])
 
       user_single.reload
       user_bulk.reload
@@ -1466,13 +1464,14 @@ RSpec.describe Group do
       expect(user.reload.title).to eq("Custom Title")
     end
 
-    it "enqueues bulk_recalculate_trust_level job when group grants trust level" do
+    it "enqueues bulk_grant_trust_level job with recalculate when group grants trust level" do
       group.update!(grant_trust_level: 2)
       group.bulk_add([user.id, admin.id])
 
       group.bulk_remove([user.id, admin.id])
 
-      job = Jobs::BulkRecalculateTrustLevel.jobs.last
+      job =
+        Jobs::BulkGrantTrustLevel.jobs.select { |j| j["args"].first["recalculate"] == true }.last
       expect(job["args"].first["user_ids"]).to contain_exactly(user.id, admin.id)
     end
 

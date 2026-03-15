@@ -967,10 +967,10 @@ class Group < ActiveRecord::Base
   end
 
   def bulk_remove(user_ids)
-    return false if user_ids.blank?
+    return [] if user_ids.blank?
 
     group_users_to_remove = group_users.includes(:user).where(user_id: user_ids).to_a
-    return true if group_users_to_remove.empty?
+    return [] if group_users_to_remove.empty?
 
     removed_user_ids = group_users_to_remove.map(&:user_id)
 
@@ -994,14 +994,25 @@ class Group < ActiveRecord::Base
               )
           SQL
 
-        User
-          .where(id: removed_user_ids, title: self.title)
-          .find_each { |user| user.update_attribute(:title, user.next_best_title) }
+        DB.exec(<<~SQL, user_ids: removed_user_ids, title: self.title)
+            UPDATE users u
+            SET title = (
+              SELECT g.title
+              FROM group_users gu
+              JOIN groups g ON g.id = gu.group_id
+              WHERE gu.user_id = u.id
+                AND g.title IS NOT NULL AND g.title <> ''
+              ORDER BY (g.id = u.primary_group_id) DESC, g.primary_group DESC
+              LIMIT 1
+            )
+            WHERE u.id IN (:user_ids)
+              AND u.title = :title
+          SQL
       end
     end
 
     if self.grant_trust_level.present? && !self.grant_trust_level.zero?
-      Jobs.enqueue(:bulk_recalculate_trust_level, user_ids: removed_user_ids)
+      Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
     end
 
     recalculate_user_count
@@ -1013,7 +1024,7 @@ class Group < ActiveRecord::Base
       enqueue_user_removed_from_group_webhook_events(group_user)
     end
 
-    true
+    removed_user_ids
   end
 
   def recalculate_user_count
