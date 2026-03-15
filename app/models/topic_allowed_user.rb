@@ -5,6 +5,14 @@ class TopicAllowedUser < ActiveRecord::Base
   belongs_to :user
 
   validates :topic_id, uniqueness: { scope: :user_id }
+
+  after_commit :cleanup_inaccessible_notifications, on: :destroy
+
+  private
+
+  def cleanup_inaccessible_notifications
+    Jobs.enqueue(:delete_inaccessible_notifications, topic_id: topic_id)
+  end
 end
 
 # == Schema Information

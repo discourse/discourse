@@ -64,7 +64,14 @@ class BookmarkQuery
   end
 
   def unread_notifications(limit: 20)
-    notifications = fetch_reminder_notifications(limit)
+    notifications =
+      NotificationQuery.new(user: @user, guardian: @guardian).list(
+        limit: [limit, 100].min,
+        filter: :unread,
+        types: [Notification.types[:bookmark_reminder]],
+        prioritized: true,
+      )
+
     bookmark_ids = notifications.filter_map { |n| n.data_hash[:bookmark_id] }
 
     bookmarks = Bookmark.where(user: @user, id: bookmark_ids)
@@ -92,13 +99,6 @@ class BookmarkQuery
   def apply_search_filter(bookmarkable, query)
     ts_query = Search.ts_query(term: @search_term)
     bookmarkable.perform_search_query(query, "%#{@search_term}%", ts_query)
-  end
-
-  def fetch_reminder_notifications(limit)
-    Notification
-      .for_user_menu(@user.id, limit: [limit, 100].min)
-      .unread
-      .where(notification_type: Notification.types[:bookmark_reminder])
   end
 
   def load_deleted_bookmarkables(notifications, bookmarks_by_id)
