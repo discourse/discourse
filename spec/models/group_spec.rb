@@ -1522,16 +1522,27 @@ RSpec.describe Group do
   describe "#bulk_publish_category_updates" do
     fab!(:category)
 
-    it "publishes to each user when categories below limit" do
+    it "publishes category update for a single user" do
       group.update!(categories: [category])
-      group.bulk_add([user.id, admin.id])
-      users = [user, admin]
+      group.bulk_add([user.id])
 
       messages =
-        MessageBus.track_publish("/categories") { group.bulk_publish_category_updates(users) }
+        MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([user]) }
 
-      expect(messages.length).to eq(2)
-      expect(messages.map(&:user_ids).flatten).to contain_exactly(user.id, admin.id)
+      expect(messages.length).to eq(1)
+      expect(messages.first.user_ids).to contain_exactly(user.id)
+    end
+
+    it "requests refresh for multiple users" do
+      group.update!(categories: [category])
+      group.bulk_add([user.id, admin.id])
+
+      messages =
+        MessageBus.track_publish("/refresh_client") do
+          group.bulk_publish_category_updates([user, admin])
+        end
+
+      expect(messages).to be_present
     end
 
     it "does nothing when users are blank" do

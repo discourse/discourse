@@ -1157,12 +1157,10 @@ class Group < ActiveRecord::Base
     return if users.blank?
     return unless categories.exists?
 
-    user_ids = users.map(&:id)
-
-    if categories.count < PUBLISH_CATEGORIES_LIMIT
-      users.each { |user| publish_category_updates(user) }
+    if users.size == 1
+      publish_category_updates(users.first)
     else
-      Discourse.request_refresh!(user_ids: user_ids)
+      Discourse.request_refresh!(user_ids: users.map(&:id))
     end
   end
 
