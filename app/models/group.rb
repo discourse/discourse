@@ -992,6 +992,12 @@ class Group < ActiveRecord::Base
                 WHERE gu.user_id = u.id
                   AND g.title IS NOT NULL AND g.title <> ''
               )
+              AND NOT EXISTS (
+                SELECT 1 FROM user_badges ub
+                JOIN badges b ON b.id = ub.badge_id
+                WHERE ub.user_id = u.id
+                  AND b.allow_title = true
+              )
           SQL
 
         User
