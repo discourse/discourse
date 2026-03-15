@@ -766,20 +766,7 @@ class GroupsController < ApplicationController
 
     new_users = users.select { |u| added_user_ids.include?(u.id) }
 
-    now = Time.now
-    GroupHistory.insert_all(
-      new_users.map do |user|
-        {
-          group_id: group.id,
-          acting_user_id: current_user.id,
-          target_user_id: user.id,
-          action: GroupHistory.actions[:add_user_to_group],
-          created_at: now,
-          updated_at: now,
-        }
-      end,
-    )
-
+    GroupActionLogger.new(current_user, group).bulk_log_add_user_to_group(new_users)
     new_users.each { |user| group.notify_added_to_group(user) } if notify
   end
 
@@ -791,19 +778,7 @@ class GroupsController < ApplicationController
     if actually_in_group.any?
       group.bulk_remove(actually_in_group.map(&:id))
 
-      now = Time.now
-      GroupHistory.insert_all(
-        actually_in_group.map do |user|
-          {
-            group_id: group.id,
-            acting_user_id: current_user.id,
-            target_user_id: user.id,
-            action: GroupHistory.actions[:remove_user_from_group],
-            created_at: now,
-            updated_at: now,
-          }
-        end,
-      )
+      GroupActionLogger.new(current_user, group).bulk_log_remove_user_from_group(actually_in_group)
     end
 
     [actually_in_group.map(&:username), not_in_group.map(&:username)]
