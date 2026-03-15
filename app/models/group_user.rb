@@ -209,6 +209,10 @@ class GroupUser < ActiveRecord::Base
     end
   end
 
+  # Bulk version of set_category_notifications. Uses ON CONFLICT DO UPDATE
+  # with semantically_higher_notification_level_sql instead of the per-user
+  # batch_set approach in set_category_notifications. The net effect is the
+  # same: group defaults are applied without downgrading existing user levels.
   def self.bulk_set_category_notifications(group, user_ids)
     defaults = group.group_category_notification_defaults.to_a
     return if defaults.empty?
@@ -233,6 +237,8 @@ class GroupUser < ActiveRecord::Base
     CategoryUser.auto_track(user_ids: user_ids)
   end
 
+  # Bulk version of set_tag_notifications. See bulk_set_category_notifications
+  # for rationale on the algorithmic difference from the per-user path.
   def self.bulk_set_tag_notifications(group, user_ids)
     defaults = group.group_tag_notification_defaults.to_a
     return if defaults.empty?
