@@ -456,8 +456,7 @@ class GroupsController < ApplicationController
     users = users_from_params
     group_action_logger = GroupActionLogger.new(current_user, group)
 
-    users_to_add = users.reject { |user| group.users.exists?(id: user.id) }
-    add_users_to_group(group, users_to_add) if users_to_add.any?
+    add_users_to_group(group, users)
 
     users.each do |user|
       group.group_users.where(user_id: user.id).update_all(owner: true)

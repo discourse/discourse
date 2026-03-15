@@ -1464,6 +1464,28 @@ RSpec.describe Group do
       expect(user.reload.title).to eq("Custom Title")
     end
 
+    it "falls back to next best group title on removal" do
+      other_group = Fabricate(:group, title: "Other Group")
+      group.update!(title: "Cool Group")
+      group.bulk_add([user.id])
+      other_group.add(user)
+
+      group.bulk_remove([user.id])
+      expect(user.reload.title).to eq("Other Group")
+    end
+
+    it "falls back to badge title when no other group title exists" do
+      badge = Fabricate(:badge, name: "Great Badge", allow_title: true)
+      BadgeGranter.grant(badge, user)
+      user.update!(title: badge.display_name)
+
+      group.update!(title: badge.display_name)
+      group.bulk_add([user.id])
+
+      group.bulk_remove([user.id])
+      expect(user.reload.title).to eq(badge.display_name)
+    end
+
     it "enqueues bulk_grant_trust_level job with recalculate when group grants trust level" do
       group.update!(grant_trust_level: 2)
       group.bulk_add([user.id, admin.id])

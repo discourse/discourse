@@ -994,20 +994,9 @@ class Group < ActiveRecord::Base
               )
           SQL
 
-        DB.exec(<<~SQL, user_ids: removed_user_ids, title: self.title)
-            UPDATE users u
-            SET title = (
-              SELECT g.title
-              FROM group_users gu
-              JOIN groups g ON g.id = gu.group_id
-              WHERE gu.user_id = u.id
-                AND g.title IS NOT NULL AND g.title <> ''
-              ORDER BY (g.id = u.primary_group_id) DESC, g.primary_group DESC
-              LIMIT 1
-            )
-            WHERE u.id IN (:user_ids)
-              AND u.title = :title
-          SQL
+        User
+          .where(id: removed_user_ids, title: self.title)
+          .find_each { |user| user.update_column(:title, user.next_best_title) }
       end
     end
 
