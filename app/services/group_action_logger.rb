@@ -82,7 +82,7 @@ class GroupActionLogger
   def bulk_log(target_users, action)
     return if target_users.blank?
 
-    now = Time.zone.now
+    now = Time.now
     GroupHistory.insert_all(
       target_users.map do |user|
         {
