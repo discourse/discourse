@@ -63,7 +63,8 @@ module DiscoursePostEvent
       return events.none if !attending_user
 
       statuses = [DiscoursePostEvent::Invitee.statuses[:going]]
-      if params[:include_interested].present?
+      if params[:include_interested].present? &&
+           can_include_interested?(guardian, user, attending_user)
         statuses << DiscoursePostEvent::Invitee.statuses[:interested]
       end
 
@@ -76,6 +77,10 @@ module DiscoursePostEvent
         )
 
       guardian.is_admin? ? events : apply_privacy_restrictions(events, user)
+    end
+
+    def self.can_include_interested?(guardian, user, attending_user)
+      guardian.is_admin? || user&.id == attending_user.id
     end
 
     def self.apply_privacy_restrictions(events, user)
