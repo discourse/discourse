@@ -991,6 +991,48 @@ RSpec.describe DiscourseTagging do
           expect(allowed_after_selection.map(&:name)).to contain_exactly("shared2")
         end
       end
+
+      context "with allow_global_tags and one_per_topic on global tag group" do
+        fab!(:global_tag1) { Fabricate(:tag, name: "global1") }
+        fab!(:global_tag2) { Fabricate(:tag, name: "global2") }
+        fab!(:category_tag1) { Fabricate(:tag, name: "cat1") }
+        fab!(:category_tag2) { Fabricate(:tag, name: "cat2") }
+        fab!(:global_tag_group) do
+          Fabricate(:tag_group, tags: [global_tag1, global_tag2], one_per_topic: true)
+        end
+        fab!(:category_tag_group) do
+          Fabricate(:tag_group, tags: [category_tag1, category_tag2], one_per_topic: false)
+        end
+        fab!(:category) do
+          Fabricate(
+            :category,
+            allowed_tag_groups: [category_tag_group.name],
+            allow_global_tags: true,
+          )
+        end
+
+        it "respects one_per_topic from global tag groups when allow_global_tags is true" do
+          allowed =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+            )
+
+          expect(allowed.map(&:name)).to include("global1", "global2", "cat1", "cat2")
+
+          allowed_after_selection =
+            DiscourseTagging.filter_allowed_tags(
+              Guardian.new(user),
+              for_input: true,
+              category: category,
+              selected_tags: ["global1"],
+            )
+
+          expect(allowed_after_selection.map(&:name)).to include("cat1", "cat2")
+          expect(allowed_after_selection.map(&:name)).not_to include("global2")
+        end
+      end
     end
   end
 
