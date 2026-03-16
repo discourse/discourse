@@ -2,8 +2,6 @@
 
 module DiscourseBoosts
   module NotificationConsolidation
-    DISPLAY_USERNAME_FIELD = "display_username"
-
     def self.boosted_by_multiple_users_plan
       Notifications::DeletePreviousNotifications
         .new(
@@ -48,44 +46,6 @@ module DiscourseBoosts
           precondition_blk:
             Proc.new { |data, _notification| data[:previous_notification_id].present? },
         )
-    end
-
-    def self.consolidated_boosts_plan
-      Notifications::ConsolidateNotifications
-        .new(
-          from: Notification.types[:boost],
-          to: Notification.types[:boost],
-          threshold: -> { SiteSetting.notification_consolidation_threshold },
-          consolidation_window: SiteSetting.likes_notification_consolidation_window_mins.minutes,
-          unconsolidated_query_blk:
-            Proc.new do |notifications, data|
-              notifications.where(
-                "data::json ->> 'username2' IS NULL AND data::json ->> 'consolidated' IS NULL",
-              ).where(
-                "data::json ->> '#{DISPLAY_USERNAME_FIELD}' = ?",
-                data[DISPLAY_USERNAME_FIELD.to_sym].to_s,
-              )
-            end,
-          consolidated_query_blk:
-            Proc.new do |notifications, data|
-              notifications.where("(data::json ->> 'consolidated')::bool").where(
-                "data::json ->> '#{DISPLAY_USERNAME_FIELD}' = ?",
-                data[DISPLAY_USERNAME_FIELD.to_sym].to_s,
-              )
-            end,
-        )
-        .set_mutations(
-          set_data_blk:
-            Proc.new do |notification|
-              data = notification.data_hash
-              data.merge(
-                username: data[:display_username],
-                name: data[:display_name],
-                consolidated: true,
-              )
-            end,
-        )
-        .set_precondition(precondition_blk: Proc.new { |data| data[:username2].blank? })
     end
   end
 end
