@@ -94,7 +94,7 @@ export function timeShortcuts(timezone) {
     twoHours() {
       return {
         id: TIME_SHORTCUT_TYPES.TWO_HOURS,
-        icon: "angle-right",
+        icon: "far-clock",
         label: "time_shortcut.in_two_hours",
         time: twoHours(timezone),
         timeFormatKey: "dates.time",
@@ -103,7 +103,7 @@ export function timeShortcuts(timezone) {
     laterToday() {
       return {
         id: TIME_SHORTCUT_TYPES.LATER_TODAY,
-        icon: "angle-right",
+        icon: "far-clock",
         label: "time_shortcut.later_today",
         time: laterToday(timezone),
         timeFormatKey: "dates.time",
@@ -121,7 +121,7 @@ export function timeShortcuts(timezone) {
     twoDays() {
       return {
         id: "two_days",
-        icon: "angle-right",
+        icon: "calendar-days",
         label: "time_shortcut.two_days",
         time: twoDays(timezone),
         timeFormatKey: "dates.time_short_day",
@@ -130,7 +130,7 @@ export function timeShortcuts(timezone) {
     threeDays() {
       return {
         id: "three_days",
-        icon: "angle-right",
+        icon: "calendar-days",
         label: "time_shortcut.three_days",
         time: inNDays(timezone, 3),
         timeFormatKey: "dates.time_short_day",
@@ -139,7 +139,7 @@ export function timeShortcuts(timezone) {
     laterThisWeek() {
       return {
         id: TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
-        icon: "angles-right",
+        icon: "calendar-days",
         label: "time_shortcut.later_this_week",
         time: laterThisWeek(timezone),
         timeFormatKey: "dates.time_short_day",
@@ -179,7 +179,7 @@ export function timeShortcuts(timezone) {
     twoWeeks() {
       return {
         id: "two_weeks",
-        icon: "far-clock",
+        icon: "far-calendar-plus",
         label: "time_shortcut.two_weeks",
         time: twoWeeks(timezone),
         timeFormatKey: "dates.long_no_year",
