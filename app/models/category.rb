@@ -37,6 +37,7 @@ class Category < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
+  has_many :category_posting_review_groups, dependent: :destroy
   has_many :groups, through: :category_groups
   has_many :moderating_groups, through: :category_moderation_groups, source: :group
   has_many :topic_timers, dependent: :destroy
