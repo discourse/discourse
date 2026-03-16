@@ -57,7 +57,7 @@ module UserGuardian
   end
 
   def can_unsilence_user?(user)
-    user && is_staff?
+    user && is_staff? && (!user.staff? || is_admin?)
   end
 
   def can_delete_user?(user)
