@@ -2661,7 +2661,7 @@ nl:
     not_approved: "Je account is nog niet goedgekeurd. Je ontvangt een melding via e-mail zodra je je kunt aanmelden."
     incorrect_username_email_or_password: "Onjuiste gebruikersnaam, e-mailadres of wachtwoord"
     incorrect_password: "Onjuist wachtwoord"
-    incorrect_password_or_passkey: "Onjuist wachtwoord of onjuiste passkey"
+    incorrect_password_or_passkey: "Onjuist wachtwoord of onjuiste toegangssleutel"
     wait_approval: "Bedankt voor het registreren. We laten het je weten wanneer je account is goedgekeurd."
     active: "Je account is geactiveerd en gereed voor gebruik."
     activate_email: "<p>Je bent er bijna! We hebben een activerings-e-mail naar <b>%{email}</b> gestuurd. Volg de instructies in de e-mail om je account te activeren.</p><p>Als deze niet aankomt, controleer dan je spammap.</p>"
@@ -2782,7 +2782,7 @@ nl:
       one: "De gebruiker %{username} heeft %{count} bericht in een openbaar topic of persoonlijk bericht, dus deze kan niet worden verwijderd."
       other: "De gebruiker %{username} heeft %{count} berichten in openbare topics of persoonlijke berichten, dus deze kan niet worden verwijderd."
     cannot_bulk_delete: "Een of meerdere gebruikers kunnen niet worden verwijderd omdat ze beheerder zijn, te veel berichten hebben of een heel oud bericht hebben."
-    cannot_remove_all_auth: "Je moet minimaal één gekoppeld account, een passkey of een wachtwoord hebben ingesteld."
+    cannot_remove_all_auth: "Je moet minimaal één gekoppeld account, een toegangssleutel of een wachtwoord hebben ingesteld."
   unsubscribe_mailer:
     title: "Mailer Uitschrijven"
     subject_template: "Bevestig dat je geen e-mailupdates van %{site_title} meer wilt ontvangen"

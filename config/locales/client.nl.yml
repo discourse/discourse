@@ -1785,22 +1785,22 @@ nl:
           edit_description: "Naam fysieke beveiligingssleutel"
           name_required_error: "Je moet een naam voor je beveiligingssleutel opgeven."
       passkeys:
-        rename_passkey: "Passkey hernoemen"
-        add_passkey: "Passkey toevoegen"
-        confirm_delete_passkey: "Weet je zeker dat je deze passkey wilt verwijderen?"
-        passkey_successfully_created: "Gelukt! Je nieuwe passkey is gemaakt."
-        rename_passkey_instructions: "Kies een passkeynaam die je gemakkelijk kunt herkennen, bijvoorbeeld de naam van je wachtwoordmanager."
+        rename_passkey: "Toegangssleutel hernoemen"
+        add_passkey: "Toegangssleutel toevoegen"
+        confirm_delete_passkey: "Weet je zeker dat je deze toegangssleutel wilt verwijderen?"
+        passkey_successfully_created: "Gelukt! Je nieuwe toegangssleutel is gemaakt."
+        rename_passkey_instructions: "Kies een toegangssleutelnaam die je gemakkelijk kunt herkennen, bijvoorbeeld de naam van je wachtwoordmanager."
         name:
-          default: "Hoofdpasskey"
+          default: "Hoofdtoegangssleutel"
         save: "Opslaan"
-        title: "Passkeys"
-        short_description: "Passkeys zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijv. touch, faceID) of via een apparaatpincode/-wachtwoord."
+        title: "Toegangssleutels"
+        short_description: "Toegangssleutels zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijv. touch, faceID) of via een apparaatpincode/-wachtwoord."
         added_date: "%{date} toegevoegd"
         last_used_date: "Laatst gebruikt %{date}"
         never_used: "Nooit gebruikt"
-        not_allowed_error: "Er is een time-out opgetreden in het passkeyregistratieproces, het proces is geannuleerd of het is niet toegestaan."
-        already_added_error: "Je hebt deze passkey al geregistreerd. Je hoeft deze niet opnieuw te registreren."
-        confirm_button: "of een passkey gebruiken"
+        not_allowed_error: "Er is een time-out opgetreden in het toegangssleutelregistratieproces, het proces is geannuleerd of het is niet toegestaan."
+        already_added_error: "Je hebt deze toegangssleutel al geregistreerd. Je hoeft deze niet opnieuw te registreren."
+        confirm_button: "of een toegangssleutel gebruiken"
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -2136,7 +2136,7 @@ nl:
       confirm_access:
         title: "Toegang bevestigen"
         incorrect_password: "Het ingevoerde wachtwoord is onjuist."
-        incorrect_passkey: "Die passkey is onjuist."
+        incorrect_passkey: "Die toegangssleutel is onjuist."
         logged_in_as: "Je bent aangemeld als: "
         forgot_password: "Wachtwoord vergeten?"
         password_reset_email_sent: "E-mail voor wachtwoordherstel verzonden."
@@ -2576,7 +2576,7 @@ nl:
         title: "Aanmelden met LinkedIn"
         sr_title: "Aanmelden met LinkedIn"
       passkey:
-        name: "Aanmelden met een passkey"
+        name: "Aanmelden met een toegangssleutel"
       second_factor_toggle:
         totp: "Authenticator-app gebruiken"
         backup_code: "Back-upcode gebruiken"
@@ -2604,7 +2604,7 @@ nl:
       google_classic: "Google Classic (verouderd, verplaatst naar Noto Emoji)"
       facebook_messenger: "Facebook Messenger (verouderd, verplaatst naar Standard)"
       openmoji: OpenMoji
-      standard: Standard
+      standard: Standaard
       fluentui: Fluent Emoji
       noto: Noto Emoji
       twemoji: Twemoji

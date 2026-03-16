@@ -604,6 +604,13 @@ tr_TR:
       edit_category:
         errors:
           category_not_found: "Kategori bulunamadı."
+    reviewables:
+      ai_tool_action:
+        title: "Yapay Zeka aracı eylemi"
+        approve:
+          title: "Onayla"
+        reject:
+          title: "Reddet"
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"

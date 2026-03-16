@@ -59,6 +59,12 @@ pt:
       assign:
         errors:
           not_found: "Tópico não encontrado."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprovar"
+        reject:
+          title: "Rejeitar"
     ai_staff_action_logger:
       updated: "atualizado"
       removed: "removido"

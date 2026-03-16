@@ -668,6 +668,9 @@ sk:
       reviewables:
         model_used: "Použitý model:"
         accuracy: "Presnosť:"
+        ai_tool_action:
+          tool: "Nástroj"
+          parameters: "Parametre"
       embeddings:
         short_title: "Vkladania"
         description: "Vložené údaje sú číselné reprezentácie údajov, ktoré zachytávajú význam a vzťahy a umožňujú funkciám Discourse AI, ako sú Súvisiace témy a Vyhľadávanie AI, porozumieť obsahu a prepojiť ho."

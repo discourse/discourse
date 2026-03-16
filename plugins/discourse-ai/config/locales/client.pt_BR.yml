@@ -836,6 +836,9 @@ pt_BR:
       reviewables:
         model_used: "Modelo usado:"
         accuracy: "Precisão:"
+        ai_tool_action:
+          tool: "Ferramenta"
+          parameters: "Parâmetros"
       embeddings:
         short_title: "Incorporações"
         description: "Incorporações são representações numéricas de dados que captam o significado e os relacionamentos, permitindo que os recursos de IA do Discourse, como Tópicos Relacionados e Pesquisa com IA, compreendam e relacionem conteúdo."
@@ -1053,3 +1056,5 @@ pt_BR:
           title: "Postagem sinalizada com IA"
         reviewable_ai_chat_message:
           title: "Mensagem de chat sinalizada com IA"
+        reviewable_ai_tool_action:
+          title: "Ação de ferramenta de IA"

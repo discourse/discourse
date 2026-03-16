@@ -41,3 +41,9 @@ sr:
       assign:
         errors:
           not_found: "Tema nije pronađena."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Odobri"
+        reject:
+          title: "Odbij"

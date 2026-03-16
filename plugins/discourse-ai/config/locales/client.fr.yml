@@ -660,6 +660,9 @@ fr:
       reviewables:
         model_used: "Modèle utilisé :"
         accuracy: "Précision :"
+        ai_tool_action:
+          tool: "Outil"
+          parameters: "Paramètres"
       embeddings:
         short_title: "Intégrations"
         description: "Les intégrations sont des représentations numériques de données qui capturent le sens et les relations, et permettent aux fonctionnalités de Discourse AI telles que les sujets connexes et la recherche IA de comprendre et de connecter le contenu."

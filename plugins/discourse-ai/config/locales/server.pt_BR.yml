@@ -620,6 +620,13 @@ pt_BR:
       assign:
         errors:
           not_found: "Tópico não encontrado."
+    reviewables:
+      ai_tool_action:
+        title: "Ação de ferramenta de IA"
+        approve:
+          title: "Aprovar"
+        reject:
+          title: "Rejeitar"
     summarization:
       configuration_hint:
         one: "Defina a configuração \"%{setting}\" primeiro."

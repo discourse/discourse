@@ -550,6 +550,12 @@ ru:
       assign:
         errors:
           not_found: "Тема не найдена."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Одобрить"
+        reject:
+          title: "Отклонить"
     summarization:
       configuration_hint:
         one: "Сначала настройте параметр `%{setting}`."

@@ -856,6 +856,9 @@ tr_TR:
       reviewables:
         model_used: "Kullanılan model:"
         accuracy: "Doğruluk:"
+        ai_tool_action:
+          tool: "Araç"
+          parameters: "Parametreler"
       embeddings:
         short_title: "Gömmeler"
         description: "Gömmeler, anlam ve ilişkileri yakalayan verilerin sayısal temsilleridir ve İlgili Konular ve YZ Araması gibi Discourse YZ özelliklerinin içeriği anlamasını ve bağlamasını sağlar."
@@ -1073,3 +1076,5 @@ tr_TR:
           title: "YZ Bayraklı gönderi"
         reviewable_ai_chat_message:
           title: "YZ Bayraklı sohbet mesajı"
+        reviewable_ai_tool_action:
+          title: "Yapay Zeka aracı eylemi"

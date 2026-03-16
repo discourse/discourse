@@ -62,6 +62,12 @@ ur:
       assign:
         errors:
           not_found: "موضوع نہیں ملا."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "منظور"
+        reject:
+          title: "مسترد کریں"
     sentiment:
       reports:
         post_emotion:

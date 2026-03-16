@@ -335,6 +335,7 @@ zh_CN:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
+      tool_pending_approval: "此操作需要版主批准，然后才能执行。"
       agents:
         default_llm_required: "启用聊天之前需要默认的 LLM 模型"
         cannot_delete_system_agent: "系统代理无法删除，请禁用它。"
@@ -739,6 +740,17 @@ zh_CN:
           no_reason: "将帖子标记为已解决或取消标记需要给出理由。"
           action_failed: "更新解决状态失败。"
         success: "已解决状态更新成功。"
+    reviewables:
+      ai_tool_action:
+        title: "AI 工具操作"
+        approve:
+          title: "批准"
+        reject:
+          title: "拒绝"
+        target_missing: "工具操作目标已不存在。"
+        tool_not_found: "工具 '%{tool_name}' 已不再可用。"
+        bot_user_missing: "机器人用户已不存在。"
+        execution_error: "工具执行失败： %{error}"
     summarization:
       configuration_hint:
         other: "首先配置这些设置：%{settings}"
