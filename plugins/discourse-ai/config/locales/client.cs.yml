@@ -256,6 +256,9 @@ cs:
           credits: "Popisek od AI"
           save_caption: "Uložit"
         no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
+      reviewables:
+        ai_tool_action:
+          tool: "Nástroj"
       embeddings:
         back: "Zpět"
         save: "Uložit"

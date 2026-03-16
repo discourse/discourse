@@ -259,7 +259,7 @@ zh_CN:
       greater_than: 必须大于 %{count}
       greater_than_or_equal_to: 必须大于或等于 %{count}
       has_already_been_used: "已被使用"
-      in: 必须在 %{count} 以内
+      in: 必须在 %{count} 内
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"

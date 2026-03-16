@@ -537,6 +537,8 @@ zh_CN:
         allow_personal_messages_help: "如果启用，允许群组中的用户可以向此代理发送私人消息。"
         allow_topic_mentions: "允许话题提及"
         allow_topic_mentions_help: "如果启用，允许组内的用户可以在主题中提及此代理。"
+        require_approval: "管理工具需要批准"
+        require_approval_help: "如果启用，审核操作(关闭、删除、编辑等)将被发送到审核队列，等待审核员在执行前批准。"
         force_default_llm: "始终使用默认语言模型"
         save: "保存"
         saved: "代理已保存"
@@ -544,6 +546,10 @@ zh_CN:
         tools: "启用的工具"
         tokens: "代币"
         context_cost: "上下文成本"
+        token_usage: "Token 使用情况"
+        tool_count: "工具计数"
+        tool_count_value:
+          other: "%{count} 个工具"
         tool_tokens_total: "~%{tokens} 代币"
         tool_severity_medium: "中等容量"
         tool_severity_high: "高容量"
@@ -900,6 +906,11 @@ zh_CN:
       reviewables:
         model_used: "使用的模型："
         accuracy: "准确性："
+        ai_tool_action:
+          agent: "代理"
+          tool: "工具"
+          parameters: "参数"
+          post: "触发帖子"
       embeddings:
         short_title: "嵌入向量"
         description: "嵌入向量是捕捉意义和关系的数据的数值表示，使 Discourse AI 功能（如相关主题和 AI 搜索）能够理解和连接内容。"
@@ -1107,8 +1118,15 @@ zh_CN:
       user_preferences:
         empty: "目前没有相关设置"
     review:
+      statuses:
+        approved_tool_action:
+          title: "工具已获批准"
+        rejected_tool_action:
+          title: "工具被拒绝"
       types:
         reviewable_ai_post:
           title: "AI 标记的帖子"
         reviewable_ai_chat_message:
           title: "AI 标记的聊天消息"
+        reviewable_ai_tool_action:
+          title: "AI 工具操作"

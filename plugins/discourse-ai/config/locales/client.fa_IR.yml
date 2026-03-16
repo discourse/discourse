@@ -221,6 +221,8 @@ fa_IR:
       reviewables:
         model_used: "مدل مورد استفاده:"
         accuracy: "دقت:"
+        ai_tool_action:
+          tool: "ابزار"
       embeddings:
         back: "بازگشت"
         save: "ذخیره"

@@ -44,5 +44,11 @@ bs_BA:
       assign:
         errors:
           not_found: "Tema nije pronađena."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Odobri"
+        reject:
+          title: "Odbij"
     ai_staff_action_logger:
       updated: "ažurirano"

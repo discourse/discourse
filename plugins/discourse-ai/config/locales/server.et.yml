@@ -47,6 +47,12 @@ et:
       assign:
         errors:
           not_found: "Teemat ei leitud."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Kinnita"
+        reject:
+          title: "Lükka tagasi"
     sentiment:
       reports:
         post_emotion:

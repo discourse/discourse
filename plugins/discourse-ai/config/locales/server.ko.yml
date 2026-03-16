@@ -48,6 +48,12 @@ ko:
       assign:
         errors:
           not_found: "글을 찾을 수 없음."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "승인"
+        reject:
+          title: "거부"
     sentiment:
       reports:
         post_emotion:

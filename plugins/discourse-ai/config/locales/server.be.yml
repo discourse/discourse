@@ -42,6 +42,12 @@ be:
       assign:
         errors:
           not_found: "Тэма не знойдзена."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Ухваліць"
+        reject:
+          title: "адхіляць"
     sentiment:
       reports:
         post_emotion:

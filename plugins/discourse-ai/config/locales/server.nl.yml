@@ -522,6 +522,12 @@ nl:
       assign:
         errors:
           not_found: "Topic niet gevonden."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Goedkeuren"
+        reject:
+          title: "Weigeren"
     summarization:
       configuration_hint:
         one: "Configureer eerst de instelling '%{setting}'."

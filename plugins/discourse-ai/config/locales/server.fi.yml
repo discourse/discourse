@@ -522,6 +522,12 @@ fi:
       assign:
         errors:
           not_found: "Ketjua ei löytynyt."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Hyväksy"
+        reject:
+          title: "Hylkää"
     summarization:
       configuration_hint:
         one: "Määritä ensin %{setting}-asetus."

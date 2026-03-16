@@ -522,6 +522,12 @@ fr:
       assign:
         errors:
           not_found: "Sujet non trouvé."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Approuver"
+        reject:
+          title: "Rejeter"
     summarization:
       configuration_hint:
         one: "Configurez d'abord le paramètre « %{setting} »."

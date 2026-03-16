@@ -660,6 +660,9 @@ fi:
       reviewables:
         model_used: "Käytetty malli:"
         accuracy: "Tarkkuus:"
+        ai_tool_action:
+          tool: "Työkalu"
+          parameters: "Parametrit"
       embeddings:
         short_title: "Upotukset"
         description: "Upotukset ovat datan numeerisia esityksiä, jotka tallentavat merkityksen ja suhteet. Niiden avulla Discoursen tekoälyominaisuudet, kuten aiheeseen liittyvät ketjut ja tekoälyhaku, voivat ymmärtää ja yhdistää sisältöä."

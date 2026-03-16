@@ -47,6 +47,12 @@ gl:
       assign:
         errors:
           not_found: "Non foi posíbel atopar o tema."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprobar"
+        reject:
+          title: "Rexeitar"
     sentiment:
       reports:
         post_emotion:

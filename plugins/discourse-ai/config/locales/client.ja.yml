@@ -787,6 +787,9 @@ ja:
       reviewables:
         model_used: "使用モデル:"
         accuracy: "精度:"
+        ai_tool_action:
+          tool: "ツール"
+          parameters: "パラメーター"
       embeddings:
         short_title: "埋め込み"
         description: "埋め込みは意味と関係性を捉えた、データの数値表現です。関連トピックや AI 検索などの Discourse AI 機能がコンテンツを理解して関連付けられるようになります。"
@@ -995,3 +998,5 @@ ja:
           title: "AI が通報した投稿"
         reviewable_ai_chat_message:
           title: "AI が通報したチャットメッセージ"
+        reviewable_ai_tool_action:
+          title: "AI ツールアクション"

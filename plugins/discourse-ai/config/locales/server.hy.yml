@@ -47,6 +47,12 @@ hy:
       assign:
         errors:
           not_found: "Թեման չի գտնվել."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Հաստատել"
+        reject:
+          title: "Մերժել"
     sentiment:
       reports:
         post_emotion:

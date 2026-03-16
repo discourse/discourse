@@ -660,6 +660,13 @@ ar:
       assign:
         errors:
           not_found: "الموضوع غير موجود."
+    reviewables:
+      ai_tool_action:
+        title: "إجراء أداة الذكاء الاصطناعي"
+        approve:
+          title: "الموافقة"
+        reject:
+          title: "رفض"
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"

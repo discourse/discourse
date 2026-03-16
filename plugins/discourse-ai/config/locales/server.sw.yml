@@ -45,3 +45,9 @@ sw:
       assign:
         errors:
           not_found: "Mada haijapatikana."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Imethibitishwa"
+        reject:
+          title: "Kataa"

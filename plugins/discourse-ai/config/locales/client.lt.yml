@@ -372,6 +372,9 @@ lt:
           generating: "Generuojama antraštė..."
           credits: "Antraštė teikiama AI"
           save_caption: "Saugoti"
+      reviewables:
+        ai_tool_action:
+          tool: "Įrankis"
       embeddings:
         back: "Atgal"
         save: "Saugoti"
@@ -420,3 +423,7 @@ lt:
         tooltip:
           actions:
             disable: "Išjungti"
+    review:
+      types:
+        reviewable_ai_tool_action:
+          title: "DI įrankio veiksmas"
