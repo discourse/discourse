@@ -481,8 +481,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@rollup/plugin-babel':
-        specifier: davidtaylorhq/rollup-plugins#babel-parallel-built&path:/packages/babel
-        version: https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0#path:/packages/babel(@babel/core@7.29.0)(rollup@4.53.5)
+        specifier: github:davidtaylorhq/rollup-plugins#babel-parallel-built&path:/packages/babel
+        version: https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/2eaf15b4a514c029f2ed0bc6c868b04002f38991#path:/packages/babel(@babel/core@7.29.0)(rollup@4.53.5)
       '@swc/core':
         specifier: ^1.15.7
         version: 1.15.7
@@ -2976,9 +2976,9 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/plugin-babel@https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0#path:/packages/babel':
-    resolution: {path: /packages/babel, tarball: https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0}
-    version: 6.1.0
+  '@rollup/plugin-babel@https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/2eaf15b4a514c029f2ed0bc6c868b04002f38991#path:/packages/babel':
+    resolution: {path: /packages/babel, tarball: https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/2eaf15b4a514c029f2ed0bc6c868b04002f38991}
+    version: 7.0.0
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -12282,11 +12282,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@rollup/plugin-babel@https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/6b2a19ab3d3490c68677e0e9091cc57f7d1734d0#path:/packages/babel(@babel/core@7.29.0)(rollup@4.53.5)':
+  '@rollup/plugin-babel@https://codeload.github.com/davidtaylorhq/rollup-plugins/tar.gz/2eaf15b4a514c029f2ed0bc6c868b04002f38991#path:/packages/babel(@babel/core@7.29.0)(rollup@4.53.5)':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/helper-module-imports': 7.27.1
       '@rollup/pluginutils': 5.3.0(rollup@4.53.5)
+      workerpool: 9.3.4
     optionalDependencies:
       rollup: 4.53.5
     transitivePeerDependencies:
