@@ -89,8 +89,7 @@ export default class CategoryTopicTemplateEditor extends Component {
   }
 
   @action
-  handleTopicTitlePlaceholderChange(event) {
-    const value = event.target.value;
+  handleTopicTitlePlaceholderChange(value) {
     this.topicTitlePlaceholder = value;
     if (this.args.onChange) {
       this.args.onChange("topic_title_placeholder", value);
@@ -119,7 +118,7 @@ export default class CategoryTopicTemplateEditor extends Component {
         @value={{this.topicTitlePlaceholder}}
         @id="category-topic-title-placeholder"
         @placeholderKey="category.topic_title_placeholder_placeholder"
-        @change={{this.handleTopicTitlePlaceholderChange}}
+        @onChange={{this.handleTopicTitlePlaceholderChange}}
       />
     </div>
     {{#if this.siteSettings.enable_form_templates}}
