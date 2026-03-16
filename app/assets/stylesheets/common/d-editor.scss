@@ -113,7 +113,8 @@
   }
 }
 
-.hide-preview .d-editor-preview-wrapper {
+.hide-preview .d-editor-preview-wrapper,
+.--rich-editor-enabled .d-editor-preview-wrapper {
   display: none;
   flex: 0;
 }
