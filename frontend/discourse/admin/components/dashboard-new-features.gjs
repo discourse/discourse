@@ -14,7 +14,7 @@ import { i18n } from "discourse-i18n";
 export default class DashboardNewFeatures extends Component {
   @service currentUser;
 
-  @tracked newFeatures = null;
+  @tracked newFeatures = {};
   @tracked isLoading = true;
   @tracked feedError = false;
 
@@ -48,6 +48,7 @@ export default class DashboardNewFeatures extends Component {
         return acc;
       }, {});
     } catch (err) {
+      this.newFeatures = {};
       this.feedError = true;
       popupAjaxError(err);
     } finally {
