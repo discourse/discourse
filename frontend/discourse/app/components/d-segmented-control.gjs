@@ -17,10 +17,15 @@ export default class DSegmentedControl extends Component {
       return;
     }
 
+    const slider = element.querySelector(".d-segmented-control__slider");
     const label = checked.closest(".d-segmented-control__label");
     const frameId = requestAnimationFrame(() => {
       element.style.setProperty("--slider-x", `${label.offsetLeft}px`);
       element.style.setProperty("--slider-width", `${label.offsetWidth}px`);
+
+      if (!slider.classList.contains("is-animated")) {
+        requestAnimationFrame(() => slider.classList.add("is-animated"));
+      }
     });
 
     return () => cancelAnimationFrame(frameId);

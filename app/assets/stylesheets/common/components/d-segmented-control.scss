@@ -29,12 +29,15 @@
     border-radius: var(--d-border-radius-large);
     box-shadow: 0 1px 6px rgb(0, 0, 0, 0.1);
     pointer-events: none;
-    transition:
-      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
-    @media (prefers-reduced-motion: reduce) {
-      transition-duration: 0ms;
+    &.is-animated {
+      transition:
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition-duration: 0ms;
+      }
     }
   }
 
