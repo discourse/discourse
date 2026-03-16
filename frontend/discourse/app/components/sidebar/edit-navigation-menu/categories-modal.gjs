@@ -122,20 +122,23 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         const requestedPage = this.loadedPage + 1;
         const opts = { page: requestedPage, ...this.searchOpts() };
 
-        const categories = await Category.asyncHierarchicalSearch(
-          requestedFilter,
-          opts
-        );
+        try {
+          const categories = await Category.asyncHierarchicalSearch(
+            requestedFilter,
+            opts
+          );
 
-        if (categories.length === 0) {
-          this.lastPage = true;
-        } else {
-          this.concatFetchedCategories(categories);
+          if (categories.length === 0) {
+            this.lastPage = true;
+          } else {
+            this.concatFetchedCategories(categories);
+          }
+
+          this.loadAnotherPage = false;
+          this.loadedPage = requestedPage;
+        } finally {
+          this.loadingMore = false;
         }
-
-        this.loadAnotherPage = false;
-        this.loadedPage = requestedPage;
-        this.loadingMore = false;
       }
     } else {
       // The shown categories are stale, refresh everything
