@@ -214,6 +214,10 @@ RSpec.describe Jobs::ExportUserArchive do
 
       expect(post1["reply_count"]).to eq(1)
       expect(post2["reply_count"]).to eq(0)
+
+      expect(post1["post_id"]).to eq(normal_post.id)
+      expect(post2["post_id"]).to eq(subsubpost.id)
+      expect(post3["post_id"]).to eq(message_post.id)
     end
 
     it "can export a post from a deleted category" do
