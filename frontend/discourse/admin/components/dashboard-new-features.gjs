@@ -34,8 +34,7 @@ export default class DashboardNewFeatures extends Component {
         "/admin/whats-new.json?force_refresh=" + opts.forceRefresh
       );
 
-      if (!json.new_features || json.new_features.length === 0) {
-        this.newFeatures = {};
+      if (!json.new_features) {
         return;
       }
 
