@@ -70,7 +70,7 @@ export default class CalendarSubscriptionUrl extends Component {
           {{i18n "user.calendar_subscriptions.add_to_outlook"}}
         </a>
         <a href={{this.webcalUrl}} class="btn btn-flat btn-small">
-          {{icon "calendar-days"}}
+          {{icon "fab-apple"}}
           {{i18n "user.calendar_subscriptions.add_to_apple"}}
         </a>
       </div>
