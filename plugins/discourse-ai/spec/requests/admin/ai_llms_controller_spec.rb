@@ -206,6 +206,19 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         )
       end
 
+      it "does not store nested hash values in provider_params" do
+        provider_params = { organization: { nested: "injected_value" } }
+
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm: valid_attrs.merge(provider_params: provider_params),
+             }
+
+        expect(response.status).to eq(201)
+        created_model = LlmModel.last
+        expect(created_model.lookup_custom_param("organization")).not_to be_a(Hash)
+      end
+
       it "ignores parameters not associated with that provider" do
         provider_params = { access_key_id: "random_key" }
 

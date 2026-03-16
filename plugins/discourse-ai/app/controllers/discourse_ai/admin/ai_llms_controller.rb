@@ -248,7 +248,7 @@ module DiscourseAi
 
             sanitize_dependent_params!(received_prov_params, extra_field_names)
 
-            permitted[:provider_params] = received_prov_params.permit!
+            permitted[:provider_params] = received_prov_params.permit(*extra_field_names.keys)
           end
         end
 
