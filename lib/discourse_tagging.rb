@@ -635,11 +635,11 @@ module DiscourseTagging
       query_params = [builder_params[:selected_tag_ids]]
 
       if category_has_tag_groups
-        if category.allow_global_tags
+        one_tag_per_group_sql << if category.allow_global_tags
           # Include both category tag groups AND global tag groups (not restricted to any category)
-          one_tag_per_group_sql << "AND (tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?) OR tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups))"
+          "AND (tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?) OR tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups))"
         else
-          one_tag_per_group_sql << "AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?)"
+          "AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?)"
         end
         query_params << category.id
       end
