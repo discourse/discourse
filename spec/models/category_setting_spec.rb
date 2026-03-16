@@ -38,4 +38,36 @@ RSpec.describe CategorySetting do
 
     expect(category.category_posting_review_groups.count).to eq(0)
   end
+
+  it "only reports approval for the everyone group" do
+    category = Fabricate(:category)
+
+    category.category_posting_review_groups.create!(
+      group: Fabricate(:group),
+      post_type: :topic,
+      permission: :required,
+    )
+    category.category_posting_review_groups.create!(
+      group: Fabricate(:group),
+      post_type: :reply,
+      permission: :required,
+    )
+
+    expect(category.reload.require_topic_approval?).to eq(false)
+    expect(category.require_reply_approval?).to eq(false)
+
+    category.category_posting_review_groups.create!(
+      group: Group[:everyone],
+      post_type: :topic,
+      permission: :required,
+    )
+    category.category_posting_review_groups.create!(
+      group: Group[:everyone],
+      post_type: :reply,
+      permission: :required,
+    )
+
+    expect(category.reload.require_topic_approval?).to eq(true)
+    expect(category.require_reply_approval?).to eq(true)
+  end
 end

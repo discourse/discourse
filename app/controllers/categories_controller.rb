@@ -654,6 +654,13 @@ class CategoriesController < ApplicationController
               require_reply_approval
               require_topic_approval
             ],
+            category_posting_review_groups_attributes: %i[
+              id
+              group_id
+              post_type
+              permission
+              _destroy
+            ],
             custom_fields: {
             },
             permissions: [*p.try(:keys)],

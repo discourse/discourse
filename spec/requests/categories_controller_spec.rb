@@ -1041,6 +1041,73 @@ RSpec.describe CategoriesController do
           expect(category.navigate_to_first_post_after_read).to eq(true)
         end
 
+        it "creates per-group approval rules" do
+          approval_group = Fabricate(:group)
+
+          put "/categories/#{category.id}.json",
+              params: {
+                name: category.name,
+                color: category.color,
+                text_color: category.text_color,
+                category_posting_review_groups_attributes: [
+                  { group_id: approval_group.id, post_type: "topic", permission: "required" },
+                ],
+              }
+
+          expect(response.status).to eq(200)
+          expect(
+            category.reload.category_posting_review_groups.pluck(
+              :group_id,
+              :post_type,
+              :permission,
+            ),
+          ).to eq([[approval_group.id, "topic", "required"]])
+        end
+
+        it "updates per-group approval rules" do
+          review_group =
+            category.category_posting_review_groups.create!(
+              group: Fabricate(:group),
+              post_type: :topic,
+              permission: :required,
+            )
+
+          put "/categories/#{category.id}.json",
+              params: {
+                name: category.name,
+                color: category.color,
+                text_color: category.text_color,
+                category_posting_review_groups_attributes: [
+                  { id: review_group.id, permission: "exempt" },
+                ],
+              }
+
+          expect(response.status).to eq(200)
+          expect(review_group.reload.permission).to eq("exempt")
+        end
+
+        it "removes per-group approval rules" do
+          review_group =
+            category.category_posting_review_groups.create!(
+              group: Fabricate(:group),
+              post_type: :reply,
+              permission: :required,
+            )
+
+          put "/categories/#{category.id}.json",
+              params: {
+                name: category.name,
+                color: category.color,
+                text_color: category.text_color,
+                category_posting_review_groups_attributes: [
+                  { id: review_group.id, _destroy: true },
+                ],
+              }
+
+          expect(response.status).to eq(200)
+          expect(category.reload.category_posting_review_groups).to be_empty
+        end
+
         it "can remove required tag group" do
           SiteSetting.tagging_enabled = true
           category.update!(

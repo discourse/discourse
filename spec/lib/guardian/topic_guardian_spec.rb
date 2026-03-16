@@ -278,6 +278,118 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#post_needs_approval_in_category?" do
+    fab!(:required_group, :group)
+    fab!(:exempt_group, :group)
+    fab!(:category_moderator_group, :group)
+
+    it "returns false for a nil category" do
+      expect(Guardian.new(user).post_needs_approval_in_category?(nil, :topic)).to eq(false)
+    end
+
+    it "returns false for an anonymous user" do
+      category.category_posting_review_groups.create!(
+        group: Group[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+
+      expect(Guardian.new.post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns false for staff" do
+      category.category_posting_review_groups.create!(
+        group: Group[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+
+      expect(Guardian.new(admin).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns false for category group moderators" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category:, group: category_moderator_group)
+      category_moderator_group.add(user)
+      category.category_posting_review_groups.create!(
+        group: Group[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns false when no rules exist" do
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns true when the user is in a required specific group" do
+      required_group.add(user)
+      category.category_posting_review_groups.create!(
+        group: required_group,
+        post_type: :topic,
+        permission: :required,
+      )
+
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(true)
+    end
+
+    it "returns true when everyone is required and the user is not exempt" do
+      category.category_posting_review_groups.create!(
+        group: Group[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(true)
+    end
+
+    it "returns false when the user is in both required and exempt groups" do
+      required_group.add(user)
+      exempt_group.add(user)
+      category.category_posting_review_groups.create!(
+        group: required_group,
+        post_type: :topic,
+        permission: :required,
+      )
+      category.category_posting_review_groups.create!(
+        group: exempt_group,
+        post_type: :topic,
+        permission: :exempt,
+      )
+
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns false when the user is only in an exempt group" do
+      exempt_group.add(user)
+      category.category_posting_review_groups.create!(
+        group: exempt_group,
+        post_type: :topic,
+        permission: :exempt,
+      )
+
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns false when a reply exempt group overrides everyone required" do
+      exempt_group.add(user)
+      category.category_posting_review_groups.create!(
+        group: Group[:everyone],
+        post_type: :reply,
+        permission: :required,
+      )
+      category.category_posting_review_groups.create!(
+        group: exempt_group,
+        post_type: :reply,
+        permission: :exempt,
+      )
+
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :reply)).to eq(false)
+    end
+  end
+
   describe "#can_create_unlisted_topic?" do
     it "returns true for moderators" do
       expect(Guardian.new(moderator).can_create_unlisted_topic?(topic)).to eq(true)

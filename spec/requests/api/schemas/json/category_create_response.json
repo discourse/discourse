@@ -272,6 +272,38 @@
               ]
             }
         },
+        "category_posting_review_groups": {
+          "type": "array",
+          "items":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "group_id": {
+                  "type": "integer"
+                },
+                "group_name": {
+                  "type": "string"
+                },
+                "post_type": {
+                  "type": "string"
+                },
+                "permission": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "group_id",
+                "group_name",
+                "post_type",
+                "permission"
+              ]
+            }
+        },
         "email_in": {
           "type": [
             "string",
@@ -370,6 +402,7 @@
         "allow_unlimited_owner_edits_on_first_post",
         "default_slow_mode_seconds",
         "group_permissions",
+        "category_posting_review_groups",
         "email_in",
         "email_in_allow_strangers",
         "mailinglist_mirror",

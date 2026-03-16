@@ -116,6 +116,63 @@ RSpec.describe CategorySerializer do
     end
   end
 
+  describe "#category_posting_review_groups" do
+    it "does not include the attribute for a regular user" do
+      category.category_posting_review_groups.create!(
+        group: group,
+        post_type: :topic,
+        permission: :required,
+      )
+
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:category_posting_review_groups]).to eq(nil)
+    end
+
+    it "returns an empty array for an admin when there are no rules" do
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_posting_review_groups]).to eq([])
+    end
+
+    it "returns the category posting review groups for an admin" do
+      required_rule =
+        category.category_posting_review_groups.create!(
+          group: group,
+          post_type: :topic,
+          permission: :required,
+        )
+      exempt_group = Fabricate(:group)
+      exempt_rule =
+        category.category_posting_review_groups.create!(
+          group: exempt_group,
+          post_type: :reply,
+          permission: :exempt,
+        )
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_posting_review_groups]).to eq(
+        [
+          {
+            id: required_rule.id,
+            group_id: group.id,
+            group_name: group.name,
+            post_type: "topic",
+            permission: "required",
+          },
+          {
+            id: exempt_rule.id,
+            group_id: exempt_group.id,
+            group_name: exempt_group.name,
+            post_type: "reply",
+            permission: "exempt",
+          },
+        ],
+      )
+    end
+  end
+
   describe "available groups" do
     it "not included for a regular user" do
       json = described_class.new(category, scope: Guardian.new(user), root: false).as_json

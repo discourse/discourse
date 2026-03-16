@@ -19,6 +19,7 @@ class CategorySerializer < SiteCategorySerializer
              :auto_close_hours,
              :auto_close_based_on_last_post,
              :group_permissions,
+             :category_posting_review_groups,
              :position,
              :email_in,
              :email_in_allow_strangers,
@@ -80,6 +81,27 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_group_permissions?
+    scope&.can_edit?(object)
+  end
+
+  def category_posting_review_groups
+    object
+      .category_posting_review_groups
+      .joins(:group)
+      .includes(:group)
+      .order("category_posting_review_groups.id")
+      .map do |category_posting_review_group|
+        {
+          id: category_posting_review_group.id,
+          group_id: category_posting_review_group.group_id,
+          group_name: category_posting_review_group.group.name,
+          post_type: category_posting_review_group.post_type,
+          permission: category_posting_review_group.permission,
+        }
+      end
+  end
+
+  def include_category_posting_review_groups?
     scope&.can_edit?(object)
   end
 

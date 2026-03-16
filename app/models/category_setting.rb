@@ -43,13 +43,16 @@ class CategorySetting < ActiveRecord::Base
             }
 
   def self.approval_required_map(ids, post_type)
+    everyone = Group::AUTO_GROUPS[:everyone]
     approved_ids =
       where(
         id: ids,
         category_id:
-          CategoryPostingReviewGroup.where(post_type: post_type, permission: :required).select(
-            :category_id,
-          ),
+          CategoryPostingReviewGroup.where(
+            post_type: post_type,
+            permission: :required,
+            group_id: everyone,
+          ).select(:category_id),
       ).pluck(:id).to_set
 
     ids.index_with { |id| approved_ids.include?(id) }

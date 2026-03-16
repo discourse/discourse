@@ -506,6 +506,9 @@ RSpec.describe NewPostManager do
     end
 
     context "when new topics require approval" do
+      fab!(:required_approval_group, :group)
+      fab!(:exempt_approval_group, :group)
+
       before do
         SiteSetting.tagging_enabled = true
         category.require_topic_approval = true
@@ -541,6 +544,69 @@ RSpec.describe NewPostManager do
         result = manager.perform
         expect(result.action).to eq(:create_post)
         expect(result).to be_success
+      end
+
+      context "with per-group approval rules" do
+        before do
+          category.category_posting_review_groups.destroy_all
+          category.category_posting_review_groups.create!(
+            group: required_approval_group,
+            post_type: :topic,
+            permission: :required,
+          )
+        end
+
+        it "enqueues new topics for users in a required group" do
+          required_approval_group.add(user)
+
+          manager =
+            NewPostManager.new(
+              user,
+              raw: "this is a new topic",
+              title: "Let's start a new topic!",
+              category: category.id,
+            )
+
+          result = manager.perform
+          expect(result.action).to eq(:enqueued)
+          expect(result.reason).to eq(:category)
+        end
+
+        it "does not enqueue the topic when the poster is also in an exempt group" do
+          required_approval_group.add(user)
+          exempt_approval_group.add(user)
+          category.category_posting_review_groups.create!(
+            group: exempt_approval_group,
+            post_type: :topic,
+            permission: :exempt,
+          )
+
+          manager =
+            NewPostManager.new(
+              user,
+              raw: "this is a new topic",
+              title: "Let's start a new topic!",
+              category: category.id,
+            )
+
+          result = manager.perform
+          expect(result.action).to eq(:create_post)
+          expect(result).to be_success
+        end
+
+        it "does not enqueue the topic when the poster is not in any approval group" do
+          manager =
+            NewPostManager.new(
+              user,
+              raw: "this is a new topic",
+              title: "Let's start a new topic!",
+              category: category.id,
+            )
+
+          result = manager.perform
+          expect(result.action).to eq(:create_post)
+          expect(result).to be_success
+        end
       end
 
       context "when the category has tagging rules" do
@@ -632,6 +698,7 @@ RSpec.describe NewPostManager do
     end
 
     context "when new posts require approval" do
+      fab!(:required_reply_approval_group, :group)
       let!(:topic) { Fabricate(:topic, category: category) }
 
       before do
@@ -663,6 +730,22 @@ RSpec.describe NewPostManager do
         result = manager.perform
         expect(result.action).to eq(:create_post)
         expect(result).to be_success
+      end
+
+      it "enqueues new posts for users in a required reply approval group" do
+        category.category_posting_review_groups.destroy_all
+        category.category_posting_review_groups.create!(
+          group: required_reply_approval_group,
+          post_type: :reply,
+          permission: :required,
+        )
+        required_reply_approval_group.add(user)
+
+        manager = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id)
+
+        result = manager.perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
       end
     end
   end
