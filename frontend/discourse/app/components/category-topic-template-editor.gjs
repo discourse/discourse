@@ -118,7 +118,7 @@ export default class CategoryTopicTemplateEditor extends Component {
         @value={{this.topicTitlePlaceholder}}
         @id="category-topic-title-placeholder"
         @placeholderKey="category.topic_title_placeholder_placeholder"
-        @onChangeImmediate={{this.handleTopicTitlePlaceholderChange}}
+        @onChange={{this.handleTopicTitlePlaceholderChange}}
       />
     </div>
     {{#if this.siteSettings.enable_form_templates}}
