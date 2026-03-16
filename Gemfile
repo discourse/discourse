@@ -97,7 +97,7 @@ gem "rake"
 gem "thor", require: false
 gem "diffy", require: false
 gem "rinku"
-gem "sidekiq"
+gem "sidekiq", ">= 7.3.10" # ensuring it won't get downgraded to accomodate a connection_pool upgrade
 gem "mini_scheduler"
 
 gem "mini_racer"
