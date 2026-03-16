@@ -70,6 +70,15 @@ RSpec.describe UserApiKeysController do
       get "/user-api-key/new", params: args
       expect(response.body).to include(I18n.t("user_api_key.redirect_warning"))
     end
+
+    it "shows redirect URI without trailing colon for custom scheme URLs" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+      SiteSetting.allowed_user_api_auth_redirects = "myapp://callback"
+
+      get "/user-api-key/new", params: args.merge(auth_redirect: "myapp://callback")
+      expect(response.body).to include("<strong>callback</strong>")
+      expect(response.body).not_to include("<strong>callback:</strong>")
+    end
   end
 
   describe "#create" do
