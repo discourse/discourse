@@ -203,5 +203,46 @@ acceptance("Modal service: component-based API", function () {
     assert.dom(".d-modal").doesNotExist("all modals closed");
   });
 
+  test("refocuses trigger element on close", async function (assert) {
+    await visit("/");
+
+    const modalService = getOwner(this).lookup("service:modal");
+
+    await click(".header-sidebar-toggle button");
+    const triggerElement = document.activeElement;
+
+    modalService.show(MyModalClass, { model: { text: "working" } });
+    await settled();
+    assert.dom(".d-modal").exists();
+
+    await click(".d-modal .modal-close");
+    assert.dom(".d-modal").doesNotExist();
+    assert.strictEqual(
+      document.activeElement,
+      triggerElement,
+      "focus returns to trigger element"
+    );
+  });
+
+  test("does not error when trigger element is removed from DOM", async function (assert) {
+    await visit("/");
+
+    const modalService = getOwner(this).lookup("service:modal");
+
+    const button = document.createElement("button");
+    button.className = "temporary-trigger";
+    document.body.appendChild(button);
+    button.focus();
+
+    modalService.show(MyModalClass, { model: { text: "working" } });
+    await settled();
+    assert.dom(".d-modal").exists();
+
+    button.remove();
+
+    await click(".d-modal .modal-close");
+    assert.dom(".d-modal").doesNotExist();
+  });
+
   // (See also, `tests/integration/component/d-modal-test.js`)
 });
