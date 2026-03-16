@@ -507,7 +507,6 @@ en:
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
-        start_with_this: "Start with this"
         back: "Back"
         icebreakers:
           fun_facts:
