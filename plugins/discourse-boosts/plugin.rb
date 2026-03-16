@@ -48,6 +48,13 @@ after_initialize do
   ) do
     boosts = object.boosts
 
+    if scope.user
+      ignored_user_ids = scope.user.ignored_user_ids
+      if ignored_user_ids.present?
+        boosts = boosts.reject { |b| ignored_user_ids.include?(b.user_id) && !b.user&.staff? }
+      end
+    end
+
     reviewables_by_target =
       if scope.user && @topic_view
         @topic_view.boosts_reviewables_by_target ||=

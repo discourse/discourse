@@ -153,6 +153,25 @@ RSpec.describe DiscourseBoosts::Boost::List do
         end
       end
 
+      context "when boost author is ignored by the acting user" do
+        fab!(:ignored_user, :user)
+        fab!(:ignored_boost) { Fabricate(:boost, post: post, user: ignored_user) }
+
+        before { Fabricate(:ignored_user, user: acting_user, ignored_user: ignored_user) }
+
+        it "does not include boosts from ignored users" do
+          expect(result[:boosts]).to contain_exactly(boost)
+        end
+
+        context "when ignored user is a staff member" do
+          before { ignored_user.update!(admin: true) }
+
+          it "still includes boosts from ignored staff" do
+            expect(result[:boosts]).to contain_exactly(boost, ignored_boost)
+          end
+        end
+      end
+
       context "when acting user views their own boosts" do
         let(:params) { { username: acting_user.username } }
 
