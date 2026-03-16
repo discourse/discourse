@@ -113,7 +113,4 @@ after_initialize do
   register_notification_consolidation_plan(
     DiscourseBoosts::NotificationConsolidation.boosted_by_multiple_users_plan,
   )
-  register_notification_consolidation_plan(
-    DiscourseBoosts::NotificationConsolidation.consolidated_boosts_plan,
-  )
 end
