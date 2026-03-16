@@ -67,7 +67,6 @@ export default class DSegmentedControl extends Component {
           <span class="d-segmented-control__text">{{item.label}}</span>
         </label>
       {{/each}}
-
     </fieldset>
   </template>
 }
