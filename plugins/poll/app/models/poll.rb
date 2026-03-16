@@ -25,7 +25,7 @@ class Poll < ActiveRecord::Base
 
   after_initialize { @has_voted = {} }
 
-  def reload
+  def reload(options = nil)
     @has_voted = {}
     super
   end

@@ -636,7 +636,7 @@ class User < ActiveRecord::Base
     User.email_hash(email)
   end
 
-  def reload
+  def reload(options = nil)
     @unread_notifications = nil
     @all_unread_notifications_count = nil
     @unread_total_notifications = nil
