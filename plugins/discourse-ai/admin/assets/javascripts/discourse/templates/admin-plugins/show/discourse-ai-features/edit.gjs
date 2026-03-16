@@ -72,7 +72,6 @@ export default <template>
               </form.Actions>
             </Form>
           </:content>
-          {{! </AdminConfigAreaCardSection> }}
         </AdminConfigAreaCard>
 
       {{/if}}
