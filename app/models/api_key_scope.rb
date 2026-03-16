@@ -339,6 +339,8 @@ class ApiKeyScope < ActiveRecord::Base
   end
 
   def permits?(env)
+    return false if mapping.nil?
+
     RouteMatcher.new(**mapping.except(:urls), allowed_param_values: allowed_parameters).match?(
       env: env,
     )

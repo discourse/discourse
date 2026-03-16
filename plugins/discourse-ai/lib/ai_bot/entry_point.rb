@@ -236,7 +236,7 @@ module DiscourseAi
         plugin.register_editable_topic_custom_field(:ai_agent_id)
 
         plugin.add_api_key_scope(
-          :discourse_ai,
+          :ai,
           { stream_completion: { actions: %w[discourse_ai/admin/ai_agents#stream_reply] } },
         )
 

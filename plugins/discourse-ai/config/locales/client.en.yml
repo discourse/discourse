@@ -4,7 +4,7 @@ en:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Allows AI search"
               stream_completion: "Allows streaming AI agent completions"
               update_agents: "Allows updating AI agents"
