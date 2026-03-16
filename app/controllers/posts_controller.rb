@@ -262,9 +262,13 @@ class PostsController < ApplicationController
 
     if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
       if guardian.can_update_bumped_at?
-        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
-          params[:bypass_bump].presence || params.dig(:post, :bypass_bump),
-        )
+        bypass_bump_value =
+          if params.key?(:bypass_bump)
+            params[:bypass_bump]
+          else
+            params.dig(:post, :bypass_bump)
+          end
+        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(bypass_bump_value)
       end
     end
 
