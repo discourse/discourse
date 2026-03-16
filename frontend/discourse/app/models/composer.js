@@ -450,6 +450,11 @@ export default class Composer extends RestModel {
       : "composer.title_placeholder";
   }
 
+  @computed("category.topic_title_placeholder")
+  get categoryTitlePlaceholder() {
+    return this.category?.topic_title_placeholder || null;
+  }
+
   @computed("action", "post", "topic", "topic.title")
   get replyOptions() {
     const options = {
