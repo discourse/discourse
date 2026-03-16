@@ -1351,6 +1351,7 @@ RSpec.describe Group do
       group.update!(
         title: "Parity Member",
         primary_group: true,
+        grant_trust_level: 2,
         default_notification_level: NotificationLevels.all[:watching],
       )
       group.watching_category_ids = [category.id]
@@ -1361,6 +1362,7 @@ RSpec.describe Group do
     it "produces equivalent user state to group.add" do
       group.add(user_single)
 
+      Jobs.run_immediately!
       group.bulk_add([user_bulk.id])
 
       user_single.reload
@@ -1369,6 +1371,7 @@ RSpec.describe Group do
       expect(user_bulk.title).to eq(user_single.title)
       expect(user_bulk.primary_group_id).to eq(user_single.primary_group_id)
       expect(user_bulk.flair_group_id).to eq(user_single.flair_group_id)
+      expect(user_bulk.trust_level).to eq(user_single.trust_level)
 
       gu_single = GroupUser.find_by(group: group, user: user_single)
       gu_bulk = GroupUser.find_by(group: group, user: user_bulk)
@@ -1387,16 +1390,28 @@ RSpec.describe Group do
   describe "remove and bulk_remove produce equivalent user state" do
     fab!(:user_single, :user)
     fab!(:user_bulk, :user)
+    fab!(:category)
+    fab!(:tag)
 
     before do
-      group.update!(title: "Parity Member", primary_group: true)
-      group.bulk_add([user_single.id, user_bulk.id])
-      GroupUser.bulk_set_category_notifications(group, [user_single.id, user_bulk.id])
-      GroupUser.bulk_set_tag_notifications(group, [user_single.id, user_bulk.id])
+      group.update!(
+        title: "Parity Member",
+        primary_group: true,
+        grant_trust_level: 2,
+        default_notification_level: NotificationLevels.all[:watching],
+      )
+      group.watching_category_ids = [category.id]
+      group.watching_tags = [tag.name]
+      group.save!
+
+      group.add(user_single)
+      group.bulk_add([user_bulk.id])
     end
 
     it "produces equivalent user state to group.remove" do
       group.remove(user_single)
+
+      Jobs.run_immediately!
       group.bulk_remove([user_bulk.id])
 
       user_single.reload
@@ -1408,6 +1423,7 @@ RSpec.describe Group do
       expect(user_bulk.title).to eq(user_single.title)
       expect(user_bulk.primary_group_id).to eq(user_single.primary_group_id)
       expect(user_bulk.flair_group_id).to eq(user_single.flair_group_id)
+      expect(user_bulk.trust_level).to eq(user_single.trust_level)
     end
   end
 
