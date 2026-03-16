@@ -38,29 +38,7 @@ export default class CalendarSubscriptionUrl extends Component {
         >{{@description}}</span>
       </div>
 
-      <div class="calendar-subscription-url__subscribe">
-        <a
-          href={{this.googleCalendarUrl}}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-default btn-small"
-        >
-          {{icon "fab-google"}}
-          {{i18n "user.calendar_subscriptions.add_to_google"}}
-        </a>
-        <a
-          href={{this.outlookCalendarUrl}}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-default btn-small"
-        >
-          {{icon "fab-microsoft"}}
-          {{i18n "user.calendar_subscriptions.add_to_outlook"}}
-        </a>
-        <a href={{this.webcalUrl}} class="btn btn-default btn-small">
-          {{icon "calendar-days"}}
-          {{i18n "user.calendar_subscriptions.add_to_apple"}}
-        </a>
+      <div class="calendar-subscription-url__actions">
         <a
           href={{@url}}
           {{on "click" this.copy}}
@@ -72,6 +50,28 @@ export default class CalendarSubscriptionUrl extends Component {
             (i18n "user.calendar_subscriptions.copied")
             (i18n "user.calendar_subscriptions.copy")
           }}
+        </a>
+        <a
+          href={{this.googleCalendarUrl}}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-flat btn-small"
+        >
+          {{icon "fab-google"}}
+          {{i18n "user.calendar_subscriptions.add_to_google"}}
+        </a>
+        <a
+          href={{this.outlookCalendarUrl}}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-flat btn-small"
+        >
+          {{icon "fab-microsoft"}}
+          {{i18n "user.calendar_subscriptions.add_to_outlook"}}
+        </a>
+        <a href={{this.webcalUrl}} class="btn btn-flat btn-small">
+          {{icon "calendar-days"}}
+          {{i18n "user.calendar_subscriptions.add_to_apple"}}
         </a>
       </div>
     </div>
