@@ -2573,7 +2573,7 @@ zh_CN:
       google_classic: "Google Classic（已弃用，改为 Noto Emoji）"
       facebook_messenger: "Facebook Messenger（已弃用，改为 Standard）"
       openmoji: OpenMoji
-      standard: Standard
+      standard: 标准
       fluentui: Fluent Emoji
       noto: Noto Emoji
       twemoji: Twemoji
