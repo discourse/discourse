@@ -10,7 +10,6 @@ Project-specific instructions for AI agents. MUST be loaded at conversation star
 Discourse is large with long history. Understand context before changes.
 
 ### All Files
-- Always lint changed files
 - Make display strings translatable (use placeholders, not split strings)
 - Create subagent to review changes against this file after completing tasks
 
@@ -77,8 +76,6 @@ bin/lint path/to/file path/to/another/file
 bin/lint --fix path/to/file path/to/another/file
 bin/lint --fix --recent # Lint all recently changed files
 ```
-
-ALWAYS lint any changes you make
 
 ## Site Settings
 - Configured in `config/site_settings.yml` or `config/settings.yml` for plugins
