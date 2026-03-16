@@ -136,6 +136,19 @@ RSpec.describe Users::OmniauthCallbacksController do
           I18n.t("login.omniauth_error.generic_with_provider", provider: "Google"),
         )
       end
+
+      it "HTML-escapes the provider display name in the error message" do
+        display_name = "<Custom & Provider>"
+        authenticator = Auth::GoogleOAuth2Authenticator.new
+        authenticator.stubs(:display_name).returns(display_name)
+        Discourse.stubs(:enabled_authenticators).returns([authenticator])
+
+        get "/auth/failure", params: { provider: "google_oauth2" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(display_name)
+        expect(response.body).to include(CGI.escapeHTML(display_name))
+      end
     end
 
     describe "request" do
