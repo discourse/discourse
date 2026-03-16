@@ -44,7 +44,7 @@ module DiscourseReactions
         )
     end
 
-    def reload
+    def reload(options = nil)
       @post_action_like = nil
       super
     end
