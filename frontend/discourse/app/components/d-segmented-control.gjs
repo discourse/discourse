@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
 import uniqueId from "discourse/helpers/unique-id";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -53,11 +54,10 @@ export default class DSegmentedControl extends Component {
         {{#let (uniqueId) as |id|}}
           <label
             for={{id}}
-            class="d-segmented-control__label
-              {{if
-                (eq @value item.value)
-                'd-segmented-control__label --selected'
-              }}"
+            class={{concatClass
+              "d-segmented-control__label"
+              (if (eq @value item.value) "--selected")
+            }}
           >
             <input
               type="radio"
