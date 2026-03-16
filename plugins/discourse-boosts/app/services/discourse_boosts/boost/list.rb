@@ -46,6 +46,17 @@ module DiscourseBoosts
           .merge(Topic.listable_topics.visible.secured(guardian))
           .includes(:user, post: %i[topic user])
 
+      if guardian.user
+        ignored_user_ids = guardian.user.ignored_user_ids
+        if ignored_user_ids.present?
+          boosts =
+            boosts.where(
+              "discourse_boosts.user_id NOT IN (?) OR EXISTS (SELECT 1 FROM users WHERE users.id = discourse_boosts.user_id AND (users.admin OR users.moderator))",
+              ignored_user_ids,
+            )
+        end
+      end
+
       boosts =
         boosts.where("discourse_boosts.id < ?", params.before_boost_id) if params.before_boost_id
 

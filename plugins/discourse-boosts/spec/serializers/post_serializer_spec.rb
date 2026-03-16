@@ -38,6 +38,27 @@ RSpec.describe PostSerializer do
       end
     end
 
+    context "when boost author is ignored by the viewing user" do
+      fab!(:ignored_user, :user)
+      fab!(:ignored_boost) { Fabricate(:boost, post: target_post, user: ignored_user) }
+
+      before { Fabricate(:ignored_user, user: user, ignored_user: ignored_user) }
+
+      it "excludes boosts from ignored users" do
+        boosts = serialized[:boosts]
+        expect(boosts.map { |b| b[:user][:id] }).not_to include(ignored_user.id)
+      end
+
+      context "when ignored user is a staff member" do
+        before { ignored_user.update!(admin: true) }
+
+        it "still includes boosts from ignored staff" do
+          boosts = serialized[:boosts]
+          expect(boosts.map { |b| b[:user][:id] }).to include(ignored_user.id)
+        end
+      end
+    end
+
     context "when boosts association is not loaded" do
       let(:serialized) do
         post = Post.find(target_post.id)
