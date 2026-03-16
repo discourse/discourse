@@ -3,21 +3,24 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class DSegmentedControl extends Component {
-  positionSlider = modifierFn((element, positional) => {
-    void positional[0];
-    const selected = element.querySelector(".--selected");
-    if (!selected) {
+  positionSlider = modifierFn((element, [value]) => {
+    if (!value) {
       return;
     }
 
+    const checked = element.querySelector("input:checked");
+    if (!checked) {
+      return;
+    }
+
+    const label = checked.closest(".d-segmented-control__label");
     const frameId = requestAnimationFrame(() => {
-      element.style.setProperty("--slider-x", `${selected.offsetLeft}px`);
-      element.style.setProperty("--slider-width", `${selected.offsetWidth}px`);
+      element.style.setProperty("--slider-x", `${label.offsetLeft}px`);
+      element.style.setProperty("--slider-width", `${label.offsetWidth}px`);
     });
 
     return () => cancelAnimationFrame(frameId);
@@ -50,12 +53,7 @@ export default class DSegmentedControl extends Component {
       <span class="d-segmented-control__slider"></span>
 
       {{#each @items as |item|}}
-        <label
-          class={{concatClass
-            "d-segmented-control__label"
-            (if (eq @value item.value) "--selected")
-          }}
-        >
+        <label class="d-segmented-control__label">
           <input
             type="radio"
             name={{@name}}

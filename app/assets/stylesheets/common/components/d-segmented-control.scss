@@ -68,8 +68,13 @@
       color: var(--primary);
     }
 
-    &.--selected,
-    &.--selected:hover {
+    &:has(:focus-visible) {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+
+    &:has(:checked),
+    &:has(:checked):hover {
       background: transparent;
       color: var(--primary);
     }
