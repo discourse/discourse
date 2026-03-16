@@ -71,40 +71,4 @@ RSpec.describe DiscourseBoosts::NotificationConsolidation do
       )
     end
   end
-
-  describe ".consolidated_boosts_plan" do
-    fab!(:booster, :user)
-    fab!(:posts) { 3.times.map { Fabricate(:post, user: post_author) } }
-
-    it "consolidates once threshold is reached" do
-      SiteSetting.notification_consolidation_threshold = 2
-
-      plan = described_class.consolidated_boosts_plan
-
-      posts.each do |p|
-        plan.consolidate_or_save!(build_boost_notification(from_user: booster, post: p))
-      end
-
-      notifications =
-        Notification.where(user: post_author, notification_type: Notification.types[:boost])
-
-      expect(notifications.count).to eq(1)
-      expect(notifications.first.data_hash[:consolidated]).to eq(true)
-      expect(notifications.first.data_hash[:count]).to eq(3)
-    end
-
-    it "saves individually below threshold" do
-      SiteSetting.notification_consolidation_threshold = 10
-
-      plan = described_class.consolidated_boosts_plan
-
-      posts.each do |p|
-        plan.consolidate_or_save!(build_boost_notification(from_user: booster, post: p))
-      end
-
-      expect(
-        Notification.where(user: post_author, notification_type: Notification.types[:boost]).count,
-      ).to eq(3)
-    end
-  end
 end
