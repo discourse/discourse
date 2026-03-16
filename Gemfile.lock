@@ -127,6 +127,7 @@ GEM
     css_parser (2.0.0)
       addressable
     csv (3.3.5)
+    dante (0.2.0)
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -671,6 +672,11 @@ GEM
     stackprof (0.2.28)
     stringio (3.2.0)
     stripe (11.1.0)
+    stripe-ruby-mock (5.0.0)
+      dante (>= 0.2.0)
+      drb (>= 2.0.4, < 3)
+      multi_json (~> 1.0)
+      stripe (> 5, < 14)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
     test-prof (1.5.2)
@@ -905,6 +911,7 @@ DEPENDENCIES
   sshkey
   stackprof
   stripe
+  stripe-ruby-mock (~> 5.0.0)
   syntax_tree
   test-prof
   thor
@@ -969,6 +976,7 @@ CHECKSUMS
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   css_parser (2.0.0) sha256=af5c759a127b125b635006a6c6c2e05b96a1ebdeec21b3c415fd5f09ec714a0a
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
+  dante (0.2.0) sha256=939776f04b4d253ffbbcf53341631aa2ee6e6cf314dedade2e60ac43b40a6fe6
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
@@ -1230,6 +1238,7 @@ CHECKSUMS
   stackprof (0.2.28) sha256=4ec2ace02f386012b40ca20ef80c030ad711831f59511da12e83b34efb0f9a04
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   stripe (11.1.0) sha256=a76e82cc7e4d2433803ca5fbe9453d019df376236f0b9fbcb7f36e6dd327f98d
+  stripe-ruby-mock (5.0.0) sha256=20566a0ad10ff026c7678c1aaf467c6f55d2f97316424846154e189f6c422316
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
   test-prof (1.5.2) sha256=185839fb7d3745b3770ec48e3e5718eff9e28c327a50a1e18a3a9ef1060f8576
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73

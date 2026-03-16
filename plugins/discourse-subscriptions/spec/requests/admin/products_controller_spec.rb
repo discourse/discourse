@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
-  before { SiteSetting.discourse_subscriptions_enabled = true }
+RSpec.describe DiscourseSubscriptions::Admin::ProductsController, :setup_stripe_mock do
+  before { setup_discourse_subscriptions }
 
   it "is a subclass of AdminController" do
     expect(DiscourseSubscriptions::Admin::ProductsController < ::Admin::AdminController).to eq(true)
@@ -40,88 +40,90 @@ RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
   end
 
   context "when authenticated" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { sign_in(admin) }
 
     describe "index" do
       it "gets the empty products" do
         SiteSetting.discourse_subscriptions_public_key = "public-key"
-        SiteSetting.discourse_subscriptions_secret_key = "secret-key"
         get "/s/admin/products.json"
         expect(response.parsed_body).to be_empty
+      end
+
+      it "lists products from Stripe" do
+        SiteSetting.discourse_subscriptions_public_key = "public-key"
+        stripe_product = ::Stripe::Product.create(name: "Test Product", type: "service")
+        Fabricate(:product, external_id: stripe_product.id)
+
+        get "/s/admin/products.json"
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body.length).to eq(1)
+        expect(body[0]["id"]).to eq(stripe_product.id)
+        expect(body[0]["name"]).to eq("Test Product")
       end
     end
 
     describe "create" do
-      it "is of product type service" do
-        ::Stripe::Product.expects(:create).with(has_entry(:type, "service"))
-        post "/s/admin/products.json", params: {}
-      end
-
-      it "has a name" do
-        ::Stripe::Product.expects(:create).with(has_entry(:name, "Jesse Pinkman"))
-        post "/s/admin/products.json", params: { name: "Jesse Pinkman" }
-      end
-
-      it "has an active attribute" do
-        ::Stripe::Product.expects(:create).with(has_entry(active: "false"))
-        post "/s/admin/products.json", params: { active: "false" }
-      end
-
-      it "has a statement descriptor" do
-        ::Stripe::Product.expects(:create).with(
-          has_entry(statement_descriptor: "Blessed are the cheesemakers"),
-        )
+      it "creates a product with all attributes" do
         post "/s/admin/products.json",
              params: {
-               statement_descriptor: "Blessed are the cheesemakers",
+               name: "Test Product",
+               active: "true",
+               statement_descriptor: "TESTPRODUCT",
+               metadata: {
+                 description: "A test product description",
+                 repurchaseable: "false",
+               },
              }
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["name"]).to eq("Test Product")
+        expect(body["active"]).to be_truthy
+        expect(body["statement_descriptor"]).to eq("TESTPRODUCT")
+        expect(body.dig("metadata", "description")).to eq("A test product description")
+        expect(body.dig("metadata", "repurchaseable")).to eq("false")
       end
 
       it "has no statement descriptor if empty" do
         ::Stripe::Product.expects(:create).with(has_key(:statement_descriptor)).never
         post "/s/admin/products.json", params: { statement_descriptor: "" }
       end
-
-      it "has metadata" do
-        ::Stripe::Product.expects(:create).with(
-          has_entry(
-            metadata: {
-              description: "Oi, I think he just said bless be all the bignoses!",
-              repurchaseable: "false",
-            },
-          ),
-        )
-
-        post "/s/admin/products.json",
-             params: {
-               metadata: {
-                 description: "Oi, I think he just said bless be all the bignoses!",
-                 repurchaseable: "false",
-               },
-             }
-      end
     end
 
     describe "show" do
       it "retrieves the product" do
-        ::Stripe::Product.expects(:retrieve).with("prod_walterwhite")
-        get "/s/admin/products/prod_walterwhite.json"
+        stripe_product = ::Stripe::Product.create(name: "Show Product", type: "service")
+        Fabricate(:product, external_id: stripe_product.id)
+
+        get "/s/admin/products/#{stripe_product.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["name"]).to eq("Show Product")
       end
     end
 
     describe "update" do
       it "updates the product" do
-        ::Stripe::Product.expects(:update)
-        patch "/s/admin/products/prod_walterwhite.json", params: {}
+        stripe_product = ::Stripe::Product.create(name: "Before Update", type: "service")
+        Fabricate(:product, external_id: stripe_product.id)
+
+        patch "/s/admin/products/#{stripe_product.id}.json", params: { name: "After Update" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["name"]).to eq("After Update")
       end
     end
 
     describe "delete" do
       it "deletes the product" do
-        ::Stripe::Product.expects(:delete).with("prod_walterwhite")
-        delete "/s/admin/products/prod_walterwhite.json"
+        stripe_product = ::Stripe::Product.create(name: "Delete Me", type: "service")
+        Fabricate(:product, external_id: stripe_product.id)
+
+        delete "/s/admin/products/#{stripe_product.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["deleted"]).to eq(true)
       end
     end
   end

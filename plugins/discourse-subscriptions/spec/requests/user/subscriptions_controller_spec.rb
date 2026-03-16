@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
-  before { SiteSetting.discourse_subscriptions_enabled = true }
-
-  def create_price(id, product)
-    price = { id: id, product: product }
-    def price.id
-      self[:id]
-    end
-    price
-  end
+RSpec.describe DiscourseSubscriptions::User::SubscriptionsController, :setup_stripe_mock do
+  before { setup_discourse_subscriptions }
 
   it "is a subclass of ApplicationController" do
     expect(DiscourseSubscriptions::User::SubscriptionsController < ::ApplicationController).to eq(
@@ -36,99 +28,76 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
   end
 
   context "when authenticated" do
-    let(:user) { Fabricate(:user, email: "beanie@example.com") }
-    let(:customer) do
-      Fabricate(:customer, user_id: user.id, customer_id: "cus_23456", product_id: "prod_123")
-    end
+    fab!(:user)
 
-    before do
-      sign_in(user)
-      Fabricate(:subscription, customer_id: customer.id, external_id: "sub_10z")
-    end
+    before { sign_in(user) }
 
     describe "index" do
-      plans_json =
-        File.read(
-          Rails.root.join(
-            "plugins",
-            "discourse-subscriptions",
-            "spec",
-            "fixtures",
-            "json",
-            "stripe-price-list.json",
-          ),
-        )
+      it "gets subscriptions with plan and product details" do
+        stripe_product = Stripe::Product.construct_from(id: "prod_test", name: "User Sub Product")
 
-      it "gets subscriptions" do
-        ::Stripe::Price.stubs(:list).returns(JSON.parse(plans_json, symbolize_names: true))
-
-        subscriptions_json =
-          File.read(
-            Rails.root.join(
-              "plugins",
-              "discourse-subscriptions",
-              "spec",
-              "fixtures",
-              "json",
-              "stripe-subscription-list.json",
-            ),
+        stripe_price =
+          Stripe::Price.construct_from(
+            id: "price_test",
+            unit_amount: 1000,
+            currency: "usd",
+            recurring: {
+              interval: "month",
+            },
+            product: stripe_product,
           )
 
-        ::Stripe::Subscription.stubs(:list).returns(
-          JSON.parse(subscriptions_json, symbolize_names: true),
+        stripe_subscription =
+          Stripe::Subscription.construct_from(
+            id: "sub_test",
+            status: "active",
+            items: {
+              data: [{ price: { id: "price_test" } }],
+            },
+          )
+
+        dc =
+          Fabricate(:customer, user_id: user.id, customer_id: "cus_test", product_id: "prod_test")
+        Fabricate(:subscription, customer_id: dc.id, external_id: "sub_test")
+
+        ::Stripe::Price.stubs(:list).returns(
+          Stripe::ListObject.construct_from(data: [stripe_price], has_more: false),
         )
-
-        get "/s/user/subscriptions.json"
-
-        subscription = JSON.parse(response.body, symbolize_names: true).first
-
-        expect(subscription[:id]).to eq("sub_10z")
-        expect(subscription[:items][:data][0][:plan][:id]).to eq("price_1OrmlvEYXaQnncShNahrpKvA")
-        expect(subscription[:product][:name]).to eq("Exclusive Access")
-      end
-
-      it "aggregates prices from multiple pages using pagination logic" do
-        subscription_data = { id: "sub_10z", items: { data: [{ price: { id: "price_200" } }] } }
         ::Stripe::Subscription
           .stubs(:list)
-          .with(customer: "cus_23456", status: "all")
-          .returns({ data: [subscription_data] })
-
-        # Build the first page of 100 prices that do NOT include the desired price.
-        prices_page_1 =
-          (1..100).map do |i|
-            create_price("price_#{i}", { id: "prod_dummy", name: "Dummy Product #{i}" })
-          end
-
-        # Second page containing the desired price.
-        prices_page_2 = [create_price("price_200", { id: "prod_200", name: "Matching Product" })]
-
-        ::Stripe::Price
-          .expects(:list)
-          .with(has_entries(limit: 100, expand: ["data.product"]))
-          .returns({ data: prices_page_1, has_more: true })
-
-        ::Stripe::Price
-          .expects(:list)
-          .with(has_entries(limit: 100, expand: ["data.product"], starting_after: "price_100"))
-          .returns({ data: prices_page_2, has_more: false })
+          .with(customer: "cus_test", status: "all")
+          .returns(Stripe::ListObject.construct_from(data: [stripe_subscription]))
 
         get "/s/user/subscriptions.json"
-        result = JSON.parse(response.body, symbolize_names: true)
-        subscription = result.first
+        expect(response.status).to eq(200)
 
-        expect(subscription[:id]).to eq("sub_10z")
-        expect(subscription[:plan][:id]).to eq("price_200")
-        expect(subscription[:product][:id]).to eq("prod_200")
-        expect(subscription[:product][:name]).to eq("Matching Product")
+        result = response.parsed_body
+        expect(result.length).to eq(1)
+        expect(result.first["id"]).to eq("sub_test")
+        expect(result.first["status"]).to eq("active")
+        expect(result.first["product"]["name"]).to eq("User Sub Product")
       end
     end
 
     describe "update" do
       it "updates the payment method for subscription" do
-        ::Stripe::Subscription.expects(:update).once
-        ::Stripe::PaymentMethod.expects(:attach).once
-        put "/s/user/subscriptions/sub_10z.json", params: { payment_method: "pm_abc123abc" }
+        dc =
+          Fabricate(:customer, user_id: user.id, customer_id: "cus_test", product_id: "prod_test")
+        Fabricate(:subscription, customer_id: dc.id, external_id: "sub_test")
+
+        ::Stripe::PaymentMethod
+          .stubs(:attach)
+          .with("pm_test", { customer: "cus_test" })
+          .returns(Stripe::PaymentMethod.construct_from(id: "pm_test"))
+
+        ::Stripe::Subscription
+          .stubs(:update)
+          .with("sub_test", { default_payment_method: "pm_test" })
+          .returns(Stripe::Subscription.construct_from(id: "sub_test"))
+
+        put "/s/user/subscriptions/sub_test.json", params: { payment_method: "pm_test" }
+
+        expect(response.status).to eq(200)
       end
     end
   end

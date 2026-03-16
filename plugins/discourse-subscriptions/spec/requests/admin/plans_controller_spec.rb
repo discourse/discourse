@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseSubscriptions::Admin::PlansController do
-  before { SiteSetting.discourse_subscriptions_enabled = true }
+RSpec.describe DiscourseSubscriptions::Admin::PlansController, :setup_stripe_mock do
+  before { setup_discourse_subscriptions }
 
   it "is a subclass of AdminController" do
     expect(DiscourseSubscriptions::Admin::PlansController < ::Admin::AdminController).to eq(true)
@@ -12,11 +12,7 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
       it "does not get the plans" do
         ::Stripe::Price.expects(:list).never
         get "/s/admin/plans.json"
-      end
-
-      it "not ok" do
-        get "/s/admin/plans.json"
-        expect(response.status).to eq 404
+        expect(response.status).to eq(404)
       end
     end
 
@@ -24,11 +20,7 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
       it "does not create a plan" do
         ::Stripe::Price.expects(:create).never
         post "/s/admin/plans.json", params: { name: "Rick Astley", amount: 1, interval: "week" }
-      end
-
-      it "is not ok" do
-        post "/s/admin/plans.json", params: { name: "Rick Astley", amount: 1, interval: "week" }
-        expect(response.status).to eq 404
+        expect(response.status).to eq(404)
       end
     end
 
@@ -36,11 +28,7 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
       it "does not show the plan" do
         ::Stripe::Price.expects(:retrieve).never
         get "/s/admin/plans/plan_12345.json"
-      end
-
-      it "is not ok" do
-        get "/s/admin/plans/plan_12345.json"
-        expect(response.status).to eq 404
+        expect(response.status).to eq(404)
       end
     end
 
@@ -53,115 +41,156 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
   end
 
   context "when authenticated" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { sign_in(admin) }
 
     describe "index" do
       it "lists the plans" do
-        ::Stripe::Price.expects(:list).with(nil)
+        product = ::Stripe::Product.create(name: "Index Product", type: "service")
+        price1 = ::Stripe::Price.create(product: product.id, unit_amount: 500, currency: "usd")
+        price2 =
+          ::Stripe::Price.create(
+            product: product.id,
+            unit_amount: 1500,
+            currency: "usd",
+            recurring: {
+              interval: "month",
+            },
+          )
+
         get "/s/admin/plans.json"
+        expect(response.status).to eq(200)
+
+        plans = response.parsed_body
+        expect(plans.length).to be >= 2
+
+        plan1 = plans.find { |p| p["id"] == price1.id }
+        expect(plan1["unit_amount"]).to eq(500)
+        expect(plan1["product"]).to eq(product.id)
+
+        plan2 = plans.find { |p| p["id"] == price2.id }
+        expect(plan2["unit_amount"]).to eq(1500)
+        expect(plan2["recurring"]["interval"]).to eq("month")
       end
 
       it "lists the plans for the product" do
-        ::Stripe::Price.expects(:list).with({ product: "prod_id123" })
-        get "/s/admin/plans.json", params: { product_id: "prod_id123" }
+        product = ::Stripe::Product.create(name: "Filtered Product", type: "service")
+        price1 = ::Stripe::Price.create(product: product.id, unit_amount: 700, currency: "usd")
+        price2 =
+          ::Stripe::Price.create(
+            product: product.id,
+            unit_amount: 900,
+            currency: "usd",
+            recurring: {
+              interval: "year",
+            },
+          )
+
+        get "/s/admin/plans.json", params: { product_id: product.id }
+        expect(response.status).to eq(200)
+
+        plans = response.parsed_body
+        ids = plans.map { |p| p["id"] }
+        expect(ids).to include(price1.id, price2.id)
       end
     end
 
     describe "show" do
-      it "shows a plan" do
-        ::Stripe::Price.expects(:retrieve).with("plan_12345").returns(currency: "aud")
-        get "/s/admin/plans/plan_12345.json"
-        expect(response.status).to eq 200
-      end
+      it "shows a plan and upcases the currency" do
+        product = ::Stripe::Product.create(name: "Show Product", type: "service")
+        price =
+          ::Stripe::Price.create(
+            product: product.id,
+            unit_amount: 1220,
+            currency: "aud",
+            recurring: {
+              interval: "year",
+            },
+          )
 
-      it "upcases the currency" do
-        ::Stripe::Price
-          .expects(:retrieve)
-          .with("plan_12345")
-          .returns(currency: "aud", recurring: { interval: "year" })
-        get "/s/admin/plans/plan_12345.json"
+        get "/s/admin/plans/#{price.id}.json"
+        expect(response.status).to eq(200)
 
         plan = response.parsed_body
-        expect(plan["currency"]).to eq "AUD"
-        expect(plan["interval"]).to eq "year"
+        expect(plan["currency"]).to eq("AUD")
+        expect(plan["interval"]).to eq("year")
       end
     end
 
     describe "create" do
-      it "creates a plan with a nickname" do
-        ::Stripe::Price.expects(:create).with(has_entry(:nickname, "Veg"))
-        post "/s/admin/plans.json", params: { nickname: "Veg", metadata: { group_name: "" } }
-      end
+      it "creates a recurring plan with all attributes" do
+        product = ::Stripe::Product.create(name: "Recurring Product", type: "service")
 
-      it "creates a plan with a currency" do
-        ::Stripe::Price.expects(:create).with(has_entry(:currency, "AUD"))
-        post "/s/admin/plans.json", params: { currency: "AUD", metadata: { group_name: "" } }
-      end
-
-      it "creates a plan with an interval" do
-        ::Stripe::Price.expects(:create).with(has_entry(recurring: { interval: "week" }))
         post "/s/admin/plans.json",
              params: {
+               nickname: "Monthly Plan",
+               currency: "usd",
                type: "recurring",
-               interval: "week",
+               interval: "month",
+               amount: "1500",
+               product: product.id,
+               active: "true",
                metadata: {
                  group_name: "",
                },
              }
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["nickname"]).to eq("Monthly Plan")
+        expect(body["unit_amount"]).to eq("1500")
+        expect(body["currency"]).to eq("usd")
+        expect(body["recurring"]["interval"]).to eq("month")
+        expect(body["product"]).to eq(product.id)
       end
 
-      it "creates a plan as a one-time purchase" do
-        ::Stripe::Price.expects(:create).with(Not(has_key(:recurring)))
-        post "/s/admin/plans.json", params: { metadata: { group_name: "" } }
-      end
+      it "creates a one-time plan" do
+        product = ::Stripe::Product.create(name: "One Time Product", type: "service")
 
-      it "creates a plan with an amount" do
-        ::Stripe::Price.expects(:create).with(has_entry(:unit_amount, "102"))
-        post "/s/admin/plans.json", params: { amount: "102", metadata: { group_name: "" } }
-      end
-
-      it "creates a plan with a product" do
-        ::Stripe::Price.expects(:create).with(has_entry(product: "prod_walterwhite"))
         post "/s/admin/plans.json",
              params: {
-               product: "prod_walterwhite",
+               nickname: "One Time",
+               currency: "usd",
+               amount: "2000",
+               product: product.id,
                metadata: {
                  group_name: "",
                },
              }
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["nickname"]).to eq("One Time")
+        expect(body["product"]).to eq(product.id)
       end
-
-      it "creates a plan with an active status" do
-        ::Stripe::Price.expects(:create).with(has_entry(:active, "false"))
-        post "/s/admin/plans.json", params: { active: "false", metadata: { group_name: "" } }
-      end
-
-      # TODO: Need to fix the metadata tests
-      # I think mocha has issues with the metadata fields here.
-
-      #it 'has metadata' do
-      #  ::Stripe::Price.expects(:create).with(has_entry(:group_name, "discourse-user-group-name"))
-      #  post "/s/admin/plans.json", params: { amount: "100", metadata: { group_name: 'discourse-user-group-name' } }
-      #end
-
-      #it "creates a plan with a trial period" do
-      #  ::Stripe::Price.expects(:create).with(has_entry(trial_period_days: '14'))
-      #  post "/s/admin/plans.json", params: { trial_period_days: '14' }
-      #end
     end
 
     describe "update" do
       it "updates a plan" do
-        ::Stripe::Price.expects(:update)
-        patch "/s/admin/plans/plan_12345.json",
+        product = ::Stripe::Product.create(name: "Update Product", type: "service")
+        price =
+          ::Stripe::Price.create(
+            product: product.id,
+            unit_amount: 1000,
+            currency: "usd",
+            nickname: "Original Nickname",
+          )
+
+        patch "/s/admin/plans/#{price.id}.json",
               params: {
-                trial_period_days: "14",
+                nickname: "Updated Nickname",
                 metadata: {
-                  group_name: "discourse-user-group-name",
+                  group_name: "some-group",
                 },
+                trial_period_days: "14",
               }
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["nickname"]).to eq("Updated Nickname")
+        expect(body["metadata"]["group_name"]).to eq("some-group")
+        expect(body["metadata"]["trial_period_days"]).to eq("14")
       end
     end
   end

@@ -122,6 +122,7 @@ gem "goldiloader"
 group :test do
   gem "capybara", require: false
   gem "webmock", require: false
+  gem "stripe-ruby-mock", "~> 5.0.0", require: false
   gem "simplecov", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
