@@ -2462,7 +2462,7 @@ RSpec.describe TopicsFilter do
             .new(guardian: user.guardian)
             .filter_from_query_string("bookmarked-after:invalid-date")
             .pluck(:id),
-        ).to be_an(Array)
+        ).to include(topic_1.id, topic_2.id, topic_3.id)
       end
     end
 
