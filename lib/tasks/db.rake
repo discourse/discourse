@@ -129,8 +129,7 @@ task "multisite:migrate" => %w[
 
     puts "Multisite migrator is running using #{concurrency} processes"
 
-    databases = []
-    RailsMultisite::ConnectionManagement.each_connection { |db| databases << db }
+    databases = RailsMultisite::ConnectionManagement.all_dbs
 
     puts "Running migrations and seeds for #{databases.join(", ")} database(s)"
 
