@@ -2190,6 +2190,14 @@ class _PluginApi {
    * @deprecated Use `addSaveableUserOption` instead
    */
   addSaveableUserOptionField(fieldName, options = {}) {
+    deprecated(
+      "`addSaveableUserOptionField` has been renamed to `addSaveableUserOption`",
+      {
+        id: "discourse.add-saveable-user-option-field",
+        since: "2026.3",
+      }
+    );
+
     this.addSaveableUserOption(fieldName, options);
   }
 
