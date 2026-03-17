@@ -1935,7 +1935,7 @@ en:
         revoke: "Revoke Subscription"
         revoke_confirm: "This will revoke your calendar subscription URLs. Any calendar apps using them will stop receiving updates. Continue?"
         urls_warning: "Save your subscriptions now — these URLs are shown only once. Regenerating will replace them and disconnect any existing integrations."
-        bookmarks: "Bookmarked Reminders"
+        bookmarks: "Bookmark Reminders"
         bookmarks_description: "Your bookmarks with reminder dates"
         copy: "Copy URL"
         copied: "Copied!"
