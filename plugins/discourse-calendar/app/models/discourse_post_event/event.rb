@@ -139,7 +139,7 @@ module DiscoursePostEvent
     def on_going_event_invitees
       return [] if self.starts_at.nil? # Can't determine ongoing status without start time
       if !self.ends_at && self.starts_at < Time.now &&
-           (!self.all_day || self.starts_at.end_of_day > Time.now)
+           (!self.all_day || self.starts_at.end_of_day <= Time.now)
         return []
       end
 

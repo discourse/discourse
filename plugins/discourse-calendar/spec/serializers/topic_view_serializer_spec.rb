@@ -126,8 +126,8 @@ RSpec.describe TopicViewSerializer do
     end
 
     describe "#event_all_day" do
-      it "returns false" do
-        expect(parsed_json["event_all_day"]).to eq(false)
+      it "is not included" do
+        expect(parsed_json).not_to have_key("event_all_day")
       end
     end
   end

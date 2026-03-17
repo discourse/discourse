@@ -183,7 +183,7 @@ export default class DiscoursePostEventDates extends Component {
         }
       }
 
-      this.htmlDates = htmlSafe(dates);
+      this.htmlDates = trustHTML(dates);
       return;
     }
 

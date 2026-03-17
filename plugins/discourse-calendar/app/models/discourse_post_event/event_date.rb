@@ -20,7 +20,7 @@ module DiscoursePostEvent
       SQL
     end
 
-    after_commit :upsert_topic_custom_field, on: %i[create]
+    after_commit :upsert_topic_custom_field, on: %i[create update]
     def upsert_topic_custom_field
       if self.event.post && self.event.post.is_first_post?
         TopicCustomField.upsert(

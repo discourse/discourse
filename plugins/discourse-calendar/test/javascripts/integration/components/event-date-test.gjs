@@ -94,8 +94,8 @@ module("Integration | Component | EventDate", function (hooks) {
     this.clock = fakeTime("2026-03-11T12:00:00Z", "America/Chicago", true);
 
     const topic = {
-      event_starts_at: "2026-03-12T00:00:00.000Z",
-      event_ends_at: "2026-03-14T00:00:00.000Z",
+      event_starts_at: "2026-03-12",
+      event_ends_at: "2026-03-14",
       event_all_day: true,
     };
 
