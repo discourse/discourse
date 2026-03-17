@@ -112,10 +112,13 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
         3.times do
           original_message = Fabricate(:chat_message, chat_channel: channel)
-          Fabricate(:chat_thread, channel: channel, original_message: original_message)
+          thread = Fabricate(:chat_thread, channel: channel, original_message: original_message)
           mentioned = Fabricate(:user)
           mentioned.set_status!("status", "wave")
           Fabricate(:user_chat_mention, chat_message: original_message, user: mentioned)
+          reply =
+            Fabricate(:chat_message, chat_channel: channel, thread: thread, message: "thread reply")
+          thread.update!(last_message: reply)
         end
 
         get "/chat/api/channels/#{channel.id}/messages"

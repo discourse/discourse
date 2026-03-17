@@ -117,8 +117,7 @@ module Chat
         },
         thread: {
           original_message: [{ user: user_includes }, { user_mentions: { user: user_includes } }],
-          last_message: {
-          },
+          last_message: [:uploads, { user: user_includes }],
         },
       )
     end
