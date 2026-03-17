@@ -2831,6 +2831,15 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
+    it "shows a blank-slug topic without redirecting" do
+      topic.update_columns(title: "", slug: nil)
+      topic.reload
+
+      get "/t/#{topic.id}"
+
+      expect(response.status).to eq(200)
+    end
+
     it "return 404 for an invalid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
       expect(response.status).to eq(404)

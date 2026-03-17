@@ -73,7 +73,7 @@ class TopicEmbed < ActiveRecord::Base
           end
 
         create_args = {
-          title: title,
+          title: title.presence || url,
           raw: absolutize_urls(url, contents),
           skip_validations: true,
           cook_method: cook_method,

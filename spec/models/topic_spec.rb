@@ -342,6 +342,17 @@ RSpec.describe Topic do
     end
   end
 
+  describe "url" do
+    fab!(:topic)
+
+    it "omits blank slugs" do
+      topic.update_columns(title: "", slug: nil)
+      topic.reload
+
+      expect(topic.url).to eq("#{Discourse.base_url}/t/#{topic.id}")
+    end
+  end
+
   describe "updating a title to be shorter" do
     let!(:topic) { Fabricate(:topic) }
 
