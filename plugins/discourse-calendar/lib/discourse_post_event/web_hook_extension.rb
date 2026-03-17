@@ -27,7 +27,7 @@ module DiscoursePostEvent
         parsed_starts_at =
           (
             if calendar_event.all_day
-              calendar_event.starts_at.strftime("%Y-%m-%d")
+              calendar_event.starts_at&.utc&.strftime("%Y-%m-%d")
             else
               calendar_event.starts_at
             end
@@ -35,7 +35,7 @@ module DiscoursePostEvent
         parsed_ends_at =
           (
             if calendar_event.all_day
-              calendar_event.ends_at&.strftime("%Y-%m-%d")
+              calendar_event.ends_at&.utc&.strftime("%Y-%m-%d")
             else
               calendar_event.ends_at
             end

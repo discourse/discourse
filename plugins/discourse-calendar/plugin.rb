@@ -324,13 +324,13 @@ after_initialize do
     :event_all_day,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title &&
-        object.topic.custom_fields.keys.include?(DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY)
+        SiteSetting.display_post_event_date_on_topic_title && object.topic.event_all_day
     end,
   ) { object.topic.event_all_day }
 
   add_to_class(:topic, :event_all_day) do
-    @event_all_day ||=
+    return @event_all_day if defined?(@event_all_day)
+    @event_all_day =
       begin
         value = custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY].to_s
         ActiveModel::Type::Boolean.new.cast(value)

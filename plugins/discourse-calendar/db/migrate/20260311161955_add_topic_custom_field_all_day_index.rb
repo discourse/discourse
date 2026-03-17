@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddTopicCustomFieldAllDayIndex < ActiveRecord::Migration[7.2]
+class AddTopicCustomFieldAllDayIndex < ActiveRecord::Migration[8.0]
   def change
     add_index :topic_custom_fields,
               %i[name topic_id],

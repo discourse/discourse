@@ -10,9 +10,11 @@ module("Integration | Component | EventDate", function (hooks) {
   hooks.beforeEach(function () {
     this.siteSettings.discourse_post_event_enabled = true;
     this.siteSettings.use_local_event_date = true;
+    this.originalGuess = moment.tz.guess;
   });
 
   hooks.afterEach(function () {
+    moment.tz.guess = this.originalGuess;
     this.clock?.restore();
   });
 
