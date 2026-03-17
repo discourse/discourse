@@ -109,7 +109,11 @@
       background: rgb(0, 0, 0, 0);
       border-radius: var(--d-border-radius);
 
-      &:not(.notifications-tracking-btn, .--with-description) {
+      &:not(
+        .notifications-tracking-btn,
+        .--with-description,
+        .pinned-options-btn
+      ) {
         height: var(--d-sidebar-row-height);
         padding-block: 0;
       }
