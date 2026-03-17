@@ -16,7 +16,6 @@ let emberDeprecationSilencer;
  * @param {Object} [options] Deprecation options
  * @param {String} [options.id] A unique identifier for this deprecation. This should be namespaced by dots (e.g. discourse.my_deprecation)
  * @param {String} [options.since] The Discourse version this deprecation was introduced in
- * @param {String} [options.dropFrom] The Discourse version this deprecation will be dropped in. Typically one major version after `since`
  * @param {String} [options.url] A URL which provides more detail about the deprecation
  * @param {boolean} [options.raiseError] Raise an error when this deprecation is triggered. Defaults to `false`
  */
@@ -148,7 +147,7 @@ function ensureEmberDeprecationSilencer() {
  * @returns {String} The formatted message
  */
 function buildDeprecationMessage(msg, options, raiseError) {
-  const { id, since, dropFrom, url } = options;
+  const { id, since, url } = options;
   const parts = [
     raiseError ? "FATAL DEPRECATION:" : "DEPRECATION NOTICE:",
     msg,
@@ -156,9 +155,6 @@ function buildDeprecationMessage(msg, options, raiseError) {
 
   if (since) {
     parts.push(`[deprecated since Discourse ${since}]`);
-  }
-  if (dropFrom) {
-    parts.push(`[removal in Discourse ${dropFrom}]`);
   }
   if (id) {
     parts.push(`[deprecation id: ${id}]`);

@@ -39,7 +39,6 @@ export default class Header extends Service {
       {
         id: "discourse.header-service-topic",
         since: "3.3.0.beta4-dev",
-        dropFrom: "3.4.0",
       }
     );
 

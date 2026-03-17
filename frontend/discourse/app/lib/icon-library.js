@@ -185,7 +185,6 @@ registerIconRenderer({
     if (params.translatedtitle) {
       deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
         since: "2.9.0.beta6",
-        dropFrom: "2.10.0.beta1",
         id: "discourse.icon-renderer-translatedtitle",
       });
       params.translatedTitle = params.translatedtitle;

@@ -53,7 +53,6 @@ export default class ModalService extends Service {
         {
           id: "discourse.modal-controllers",
           since: "3.1",
-          dropFrom: "3.2",
           url: "https://meta.discourse.org/t/268057",
           raiseError: true,
         }

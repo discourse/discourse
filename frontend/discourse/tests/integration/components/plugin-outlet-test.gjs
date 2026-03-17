@@ -545,7 +545,6 @@ module("Integration | Component | plugin-outlet", function (hooks) {
                     message="The 'shouldDisplay' is deprecated on this test"
                     id="discourse.plugin-connector.deprecated-arg.test"
                     since="3.3.0.beta4-dev"
-                    dropFrom="3.4.0"
                   )
                 }}
               />
@@ -581,12 +580,6 @@ module("Integration | Component | plugin-outlet", function (hooks) {
           sinon.match(/deprecated since Discourse 3.3.0.beta4-dev/)
         ),
         "logs deprecation since information"
-      );
-      assert.true(
-        this.consoleWarnStub.calledWith(
-          sinon.match(/removal in Discourse 3.4.0/)
-        ),
-        "logs dropFrom information"
       );
     });
 

@@ -19,7 +19,6 @@ export async function cook(text, options) {
 export function cookAsync(text, options) {
   deprecated("cookAsync() is deprecated, call cook() instead", {
     since: "3.2.0.beta2",
-    dropFrom: "3.2.0.beta5",
     id: "discourse.text.cook-async",
   });
 

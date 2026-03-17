@@ -917,7 +917,6 @@ class _PluginApi {
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
         since: "3.2",
-        dropFrom: "3.3",
       }
     );
 
