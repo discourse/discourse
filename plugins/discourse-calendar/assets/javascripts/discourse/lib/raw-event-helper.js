@@ -94,6 +94,10 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
       .join(",");
   }
 
+  if (event.imageUpload?.url) {
+    params.image = event.imageUpload.url;
+  }
+
   siteSettings.discourse_post_event_allowed_custom_fields
     .split("|")
     .filter(Boolean)
