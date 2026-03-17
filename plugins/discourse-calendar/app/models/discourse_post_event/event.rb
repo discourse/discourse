@@ -26,14 +26,7 @@ module DiscoursePostEvent
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
       if saved_change_to_image_upload_id?
-        if image_upload_id.present?
-          UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
-        else
-          UploadReference.where(
-            target: self,
-            upload_id: image_upload_id_before_last_save,
-          ).delete_all
-        end
+        UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
       end
     end
 
