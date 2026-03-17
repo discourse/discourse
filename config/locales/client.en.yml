@@ -1924,6 +1924,24 @@ en:
         apps: "Apps"
         navigation_menu: "Navigation menu"
         upcoming_changes: "Upcoming changes"
+        calendar_subscriptions: "Calendar"
+
+      calendar_subscriptions:
+        description: "Generate subscription URLs to sync with your favourite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs. "
+        generate: "Generate Subscription URLs"
+        regenerate: "Regenerate URLs"
+        regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"
+        revoke: "Revoke Subscription"
+        revoke_confirm: "This will revoke your calendar subscription URLs. Any calendar apps using them will stop receiving updates. Continue?"
+        urls_warning: "The subscription URLs are ready! Click the buttons below to link them to your calendar app. Note: these URLs are shown only once."
+        bookmarks: "Bookmark Reminders"
+        bookmarks_description: "Your bookmarks with reminder dates"
+        copy: "Copy URL"
+        copied: "Copied!"
+        add_to_google: "Google Calendar"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple Calendar"
+        active_subscription: "You have an active calendar subscription."
 
       change_password:
         success: "(email sent)"

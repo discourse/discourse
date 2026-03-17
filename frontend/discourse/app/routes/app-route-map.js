@@ -174,6 +174,7 @@ export default function () {
       this.route("interface");
       this.route("apps");
       this.route("navigation-menu");
+      this.route("calendar-subscriptions");
 
       this.route("email");
       this.route("second-factor");

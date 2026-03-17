@@ -1471,3 +1471,69 @@
     width: 100%;
   }
 }
+
+.user-preferences .form-vertical:has(.calendar-subscriptions) {
+  width: 750px;
+}
+
+.calendar-subscriptions {
+  &__description {
+    color: var(--primary-medium);
+    margin-bottom: 1em;
+  }
+
+  &__warning {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 1em;
+  }
+
+  &__urls {
+    margin-top: 1em;
+  }
+
+  &__active-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--success);
+    font-weight: bold;
+    margin-bottom: 1em;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 1em;
+  }
+}
+
+.calendar-subscription-url {
+  padding: 0.75em 1em;
+  margin-bottom: 0.75em;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+
+  &__header {
+    margin-bottom: 0.5em;
+  }
+
+  &__label {
+    font-weight: bold;
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-left: 0.25em;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+  }
+}
