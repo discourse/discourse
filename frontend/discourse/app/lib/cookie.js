@@ -79,7 +79,6 @@ export function removeCookie(key, options) {
 if (window && window.$) {
   const depOpts = {
     since: "2.6.0",
-    dropFrom: "2.7.0",
     id: "discourse.jquery-cookie",
   };
   window.$.cookie = function () {

@@ -98,13 +98,12 @@ export default class ArgsTable extends Component {
    * Extracts deprecation info from a deprecated argument for display.
    *
    * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
-   * @returns {{message: string, since: string|undefined, dropFrom: string|undefined}}
+   * @returns {{message: string, since: string|undefined}}
    */
   #getDeprecationInfo(deprecatedArg) {
     return {
       message: deprecatedArg.message,
       since: deprecatedArg.options?.since,
-      dropFrom: deprecatedArg.options?.dropFrom,
     };
   }
 
@@ -163,9 +162,7 @@ export default class ArgsTable extends Component {
               {{#if entry.deprecationInfo.since}}
                 <span class="outlet-args-table__deprecation-version">
                   (since
-                  {{entry.deprecationInfo.since}}{{#if
-                    entry.deprecationInfo.dropFrom
-                  }}, removal in {{entry.deprecationInfo.dropFrom}}{{/if}})
+                  {{entry.deprecationInfo.since}})
                 </span>
               {{/if}}
             </div>
