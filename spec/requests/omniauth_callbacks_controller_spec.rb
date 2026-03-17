@@ -455,6 +455,33 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(data["requires_invite"]).to eq(nil)
         end
+
+        it "requires invite when origin is a non-invite route containing an invite key" do
+          invite = Fabricate(:invite)
+          Rails.application.env_config["omniauth.origin"] = "/t/#{invite.invite_key}"
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+          data = JSON.parse(response.cookies["authentication_data"])
+          expect(data["requires_invite"]).to eq(true)
+        end
+
+        it "requires invite when the invite is not redeemable" do
+          invite = Fabricate(:invite, expires_at: 1.day.ago)
+          origin =
+            Rails.application.routes.url_helpers.invite_url(
+              invite.invite_key,
+              host: Discourse.base_url,
+            )
+          Rails.application.env_config["omniauth.origin"] = origin
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+          data = JSON.parse(response.cookies["authentication_data"])
+          expect(data["requires_invite"]).to eq(true)
+        end
       end
     end
 
