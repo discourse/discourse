@@ -318,7 +318,15 @@ module PostGuardian
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_post_topic?(post)
-    return false unless is_my_own?(post) || Topic.visible_post_types(@user).include?(post.post_type)
+    post_type_visible = is_my_own?(post) || Topic.visible_post_types(@user).include?(post.post_type)
+    post_type_visible =
+      DiscoursePluginRegistry.apply_modifier(
+        :post_type_visible_for_user,
+        post_type_visible,
+        post,
+        @user,
+      )
+    return false unless post_type_visible
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
     if (!post.trashed? || can_see_deleted_post?(post)) &&
          (!post.hidden? || can_see_hidden_post?(post))

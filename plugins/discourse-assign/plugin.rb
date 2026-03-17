@@ -16,6 +16,22 @@ register_asset "stylesheets/mobile/assigns.scss", :mobile
 
 module ::DiscourseAssign
   PLUGIN_NAME = "discourse-assign"
+
+  ASSIGN_ACTION_CODES = %w[
+    assigned
+    reassigned
+    assigned_group
+    reassigned_group
+    assigned_to_post
+    assigned_group_to_post
+    unassigned
+    unassigned_group
+    unassigned_from_post
+    unassigned_group_from_post
+    note_change
+    status_change
+    details_change
+  ]
 end
 
 require_relative "lib/discourse_assign/engine"
@@ -949,6 +965,30 @@ after_initialize do
     end
 
     scope.where(id: assignment_query.select(:topic_id))
+  end
+
+  register_modifier(:topic_view_post_type_filter) do |posts, user, topic|
+    if !SiteSetting.assigns_public && user&.can_assign?
+      posts.or(
+        topic.posts.where(
+          post_type: Post.types[:whisper],
+          action_code: DiscourseAssign::ASSIGN_ACTION_CODES,
+        ),
+      )
+    else
+      posts
+    end
+  end
+
+  register_modifier(:post_type_visible_for_user) do |visible, post, user|
+    next visible if visible
+
+    if !SiteSetting.assigns_public && post.post_type == Post.types[:whisper] &&
+         DiscourseAssign::ASSIGN_ACTION_CODES.include?(post.action_code) && user&.can_assign?
+      next true
+    end
+
+    visible
   end
 
   register_modifier(:topics_filter_options) do |results, guardian|
