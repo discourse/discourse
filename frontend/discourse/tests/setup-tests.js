@@ -370,10 +370,6 @@ export default function setupTests(config) {
 
   handleLegacyParameters();
 
-  if (target === "theme-qunit") {
-    window.location.href = window.location.origin + "/theme-qunit";
-  }
-
   const hasPluginJs = !!document.querySelector(
     "link[rel=modulepreload][data-plugin-name], script[data-plugin-name]"
   );
