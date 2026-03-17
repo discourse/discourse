@@ -576,7 +576,6 @@ end
 # Table name: discourse_post_event_events
 #
 #  id                 :bigint           not null, primary key
-#  all_day            :boolean          default(FALSE), not null
 #  chat_enabled       :boolean          default(FALSE), not null
 #  closed             :boolean          default(FALSE), not null
 #  custom_fields      :jsonb            not null
