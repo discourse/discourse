@@ -21,12 +21,12 @@
 
   // must be rgba for gradient
   --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
-  --d-sidebar-header-color: var(--primary-medium);
-  --d-sidebar-header-icon-color: var(--primary-medium);
+  --d-sidebar-header-color: var(--sys-color-text-subtle);
+  --d-sidebar-header-icon-color: var(--sys-color-text-subtle);
   --d-sidebar-header-font-weight: bold;
-  --d-sidebar-section-border-color: var(--content-border-color);
-  --d-sidebar-border-color: var(--content-border-color);
-  --d-sidebar-link-color: var(--sys-color-text-default);
+  --d-sidebar-section-border-color: var(--sys-color-border-subtle);
+  --d-sidebar-border-color: var(--sys-color-border-subtle);
+  --d-sidebar-link-color: var(--sys-color-text-subtle);
   --d-sidebar-link-icon-color: var(--sys-color-text-subtle);
   --d-sidebar-link-badge-color: var(
     --sys-color-text-subtle
@@ -54,9 +54,9 @@
   ); // example: hovering a button within a highlighted section
 
   --d-sidebar-active-background: var(--d-selected);
-  --d-sidebar-active-color: var(--d-sidebar-link-color);
-  --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
-  --d-sidebar-active-prefix-background: var(--primary-200);
+  --d-sidebar-active-color: var(--sys-color-text-default);
+  --d-sidebar-active-icon-color: var(--sys-color-text-subtle);
+  --d-sidebar-active-prefix-background: var(--primary-subtlest);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
   --d-sidebar-active-font-weight: bold; // example: active section link
 
