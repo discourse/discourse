@@ -21,16 +21,14 @@
 
   // must be rgba for gradient
   --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
-  --d-sidebar-header-color: var(--sys-color-text-subtle);
-  --d-sidebar-header-icon-color: var(--sys-color-text-subtle);
+  --d-sidebar-header-color: var(--d-text-subtle);
+  --d-sidebar-header-icon-color: var(--d-text-subtle);
   --d-sidebar-header-font-weight: bold;
-  --d-sidebar-section-border-color: var(--sys-color-border-subtle);
-  --d-sidebar-border-color: var(--sys-color-border-subtle);
-  --d-sidebar-link-color: var(--sys-color-text-subtle);
-  --d-sidebar-link-icon-color: var(--sys-color-text-subtle);
-  --d-sidebar-link-badge-color: var(
-    --sys-color-text-subtle
-  ); // example: new count
+  --d-sidebar-section-border-color: var(--d-border);
+  --d-sidebar-border-color: var(--d-border);
+  --d-sidebar-link-color: var(--d-text-subtle);
+  --d-sidebar-link-icon-color: var(--d-text-subtle);
+  --d-sidebar-link-badge-color: var(--d-text-subtle); // example: new count
 
   // example: chat participant count
   --d-sidebar-prefix-background: var(--primary-low);
@@ -54,8 +52,8 @@
   ); // example: hovering a button within a highlighted section
 
   --d-sidebar-active-background: var(--d-selected);
-  --d-sidebar-active-color: var(--sys-color-text-default);
-  --d-sidebar-active-icon-color: var(--sys-color-text-subtle);
+  --d-sidebar-active-color: var(--d-text);
+  --d-sidebar-active-icon-color: var(--d-text-subtle);
   --d-sidebar-active-prefix-background: var(--primary-subtlest);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
   --d-sidebar-active-font-weight: bold; // example: active section link
@@ -356,7 +354,7 @@
 
   .delete-link {
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-text-subtle);
     }
 
     .discourse-no-touch & {
@@ -380,7 +378,7 @@
 .sidebar-filter {
   margin-top: 1em;
   margin-bottom: 1em;
-  border: 1px solid var(--primary-400);
+  border: var(---d-border-width) solid var(--d-border);
   border-radius: var(--d-input-border-radius);
   background: var(--secondary);
   width: calc(
@@ -444,7 +442,7 @@
   &__input-container {
     display: flex;
     align-items: center;
-    border: 1px solid var(--primary-400);
+    border: var(---d-border-width) solid var(--d-border-bold);
     background: var(--d-input-bg-color);
     box-sizing: border-box;
     margin-top: 0.5em;
@@ -466,10 +464,6 @@
     &:hover {
       background: var(--d-input-bg-color) !important;
     }
-
-    .d-icon:hover {
-      color: var(--primary-high);
-    }
   }
 
   &__input[type="text"] {
@@ -486,11 +480,10 @@
   }
 
   &__shortcut-hint {
-    background-color: rgb(var(--tertiary-rgb), 0.1);
     min-width: 26px;
     padding: 0.25em 0.5em;
     font-size: var(--font-down-3);
-    color: var(--primary-medium);
+    color: var(--d-sidebar-link-color);
   }
 }
 

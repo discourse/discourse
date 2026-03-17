@@ -1,7 +1,8 @@
 :root {
-  --sys-color-text-default: var(--primary);
-  --sys-color-text-subtle: var(--primary-700);
-  --sys-color-text-subtlest: var(--primary-300);
-  --sys-color-border-default: var(--primary-400);
-  --sys-color-border-subtle: var(--primary-200);
+  --d-text: var(--primary);
+  --d-text-subtle: var(--primary-700);
+  --d-text-subtlest: var(--primary-300);
+  --d-border-bold: var(--primary-400);
+  --d-border: var(--primary-200);
+  --d-border-width: 1px;
 }
