@@ -1,4 +1,4 @@
-export default {
+const topFixtures = {
   "/top.json": {
     users: [
       {
@@ -2487,3 +2487,5 @@ export default {
     },
   },
 };
+
+export default topFixtures;

@@ -159,7 +159,7 @@ staff_logins.type = "staff_logins";
 staff_logins.modes = ["table"];
 staff_logins.report_key = `reports:staff_logins:start:end:[:prev_period]:50:${SCHEMA_VERSION}`;
 
-export default {
+const reportsBulkFixtures = {
   "/admin/reports/bulk": {
     reports: [
       signups,
@@ -172,3 +172,5 @@ export default {
     ],
   },
 };
+
+export default reportsBulkFixtures;
