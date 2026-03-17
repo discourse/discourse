@@ -198,6 +198,25 @@ describe "Simplified Category Creation" do
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       expect(group_chooser).to have_selected_name(group.name)
     end
+    it "opens the composer to edit the category description and updates it after save" do
+      category_page.visit_general(category)
+
+      composer = PageObjects::Components::Composer.new
+
+      find(".edit-category-description").click
+      expect(composer).to be_opened
+
+      composer.fill_content("Updated category description")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(page).to have_css(".edit-category-description-container .readonly-field")
+      expect(page).to have_content("Updated category description")
+      expect(page).to have_css(
+        ".fk-d-default-toast",
+        text: I18n.t("js.category.description_updated"),
+      )
+    end
   end
 
   describe "Security Tab" do
