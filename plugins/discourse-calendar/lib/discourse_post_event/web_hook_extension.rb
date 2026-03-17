@@ -35,7 +35,7 @@ module DiscoursePostEvent
         parsed_ends_at =
           (
             if calendar_event.all_day
-              calendar_event.ends_at.strftime("%Y-%m-%d")
+              calendar_event.ends_at&.strftime("%Y-%m-%d")
             else
               calendar_event.ends_at
             end
