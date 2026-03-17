@@ -54,7 +54,7 @@
 
     .form-kit__conditional-display-content {
       // prevent content shift when changing style options
-      min-height: 2.8em;
+      min-height: 2.6em;
 
       &:has(.badge-category__wrapper) {
         justify-content: center;
@@ -216,6 +216,23 @@
     .controls {
       flex-direction: row-reverse;
       margin-right: auto;
+    }
+  }
+
+  .edit-category-description-container {
+    .readonly-field {
+      width: 100%;
+      margin-bottom: var(--space-2);
+      font-size: var(--font-down-1);
+      color: var(--primary-high);
+
+      > :first-child {
+        margin-top: 0;
+      }
+
+      > :last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }
