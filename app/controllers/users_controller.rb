@@ -1936,10 +1936,9 @@ class UsersController < ApplicationController
       format.ics do
         bookmark_query = Bookmark.with_reminders.where(user_id: user.id)
 
-        if params[:after].present?
-          after_date = params[:after] == "now" ? Time.current : params[:after].to_datetime
-          bookmark_query = bookmark_query.where("reminder_at >= ?", after_date)
-        end
+        after_param = params[:after].presence || 3.months.ago.iso8601
+        after_date = after_param == "now" ? Time.current : after_param.to_datetime
+        bookmark_query = bookmark_query.where("reminder_at >= ?", after_date)
 
         @bookmark_reminders =
           bookmark_query

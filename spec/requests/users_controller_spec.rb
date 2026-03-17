@@ -7368,6 +7368,21 @@ RSpec.describe UsersController do
       ICS
     end
 
+    it "excludes bookmark reminders older than 3 months from .ics feed" do
+      bookmark1.update_columns(name: nil, reminder_at: 4.months.ago)
+      bookmark2.update!(name: "Recent reminder", reminder_at: 1.day.from_now)
+      bookmark3.update_columns(name: nil, reminder_at: 2.months.ago)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+      expect(response.status).to eq(200)
+
+      body = response.body
+      expect(body).not_to include("bookmark_reminder_##{bookmark1.id}")
+      expect(body).to include("bookmark_reminder_##{bookmark2.id}")
+      expect(body).to include("bookmark_reminder_##{bookmark3.id}")
+    end
+
     it "does not show another user's bookmarks" do
       sign_in(Fabricate(:user))
       get "/u/#{bookmark3.user.username}/bookmarks.json"
