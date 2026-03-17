@@ -365,6 +365,21 @@ RSpec.describe WebHook do
       expect(payload["id"]).to eq(post.topic.id)
     end
 
+    it "should not enqueue post hooks when the topic is permanently destroyed" do
+      Fabricate(:web_hook)
+
+      Jobs::EmitWebHookEvent.jobs.clear
+
+      post.topic.destroy!
+      post.reload
+
+      WebHook.enqueue_post_hooks(:post_recovered, post)
+
+      expect(
+        Jobs::EmitWebHookEvent.jobs.count { |j| j["args"].first["event_name"] == "post_recovered" },
+      ).to eq(0)
+    end
+
     it "should serialize the right topic posts counts when a post is deleted" do
       Fabricate(:web_hook)
 
