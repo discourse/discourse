@@ -2196,7 +2196,6 @@ class _PluginApi {
       {
         id: "discourse.add-saveable-user-option-field",
         since: "2026.3",
-        dropFrom: "2026.06",
       }
     );
 
