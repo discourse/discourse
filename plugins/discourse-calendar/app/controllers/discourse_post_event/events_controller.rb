@@ -16,6 +16,7 @@ module DiscoursePostEvent
       @events =
         DiscoursePostEvent::EventFinder.search(current_user, search_params).includes(
           :event_dates,
+          :image_upload,
           post: {
             topic: %i[tags category],
           },
