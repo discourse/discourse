@@ -15,7 +15,7 @@ import icon from "discourse/helpers/d-icon";
 import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
-import { shortDateNoYear } from "discourse/lib/formatter";
+import { smartShortDate } from "discourse/lib/formatter";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiSummarySkeleton from "../../components/ai-summary-skeleton";
@@ -170,8 +170,8 @@ export default class AiSummaryModal extends Component {
     this.smoothStreamer.updateResult(topicSummary, "raw");
 
     if (update.done) {
-      this.summarizedOn = shortDateNoYear(
-        moment(topicSummary.updated_at, "YYYY-MM-DD HH:mm:ss Z")
+      this.summarizedOn = smartShortDate(
+        moment(topicSummary.updated_at, "YYYY-MM-DD HH:mm:ss Z").toDate()
       );
       this.summarizedBy = topicSummary.algorithm;
       this.newPostsSinceSummary = topicSummary.new_posts_since_summary;
