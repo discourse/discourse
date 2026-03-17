@@ -6,8 +6,15 @@ module DiscoursePostEvent
     skip_before_action :check_xhr, only: [:index], if: :ics_request?
 
     def index
+      search_params = filtered_events_params.to_h
+
+      if ics_request?
+        search_params["after"] ||= 3.months.ago.iso8601
+        search_params["order"] ||= "asc"
+      end
+
       @events =
-        DiscoursePostEvent::EventFinder.search(current_user, filtered_events_params).includes(
+        DiscoursePostEvent::EventFinder.search(current_user, search_params).includes(
           :event_dates,
           post: {
             topic: %i[tags category],

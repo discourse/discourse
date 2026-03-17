@@ -119,6 +119,27 @@ module DiscoursePostEvent
         expect(body).to include("END:VEVENT")
       end
 
+      it "excludes events older than 3 months from ics feed by default" do
+        recent_event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Future Event")
+        old_event = Fabricate(:event, original_starts_at: 4.months.ago, name: "Old Event")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+        expect(body).to include("SUMMARY:Future Event")
+        expect(body).not_to include("SUMMARY:Old Event")
+      end
+
+      it "skips events with nil starts_at in ics feed" do
+        event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Valid Event")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("SUMMARY:Valid Event")
+      end
+
       context "when include_interested is requested for an attending user" do
         fab!(:target_user, :user)
         fab!(:going_event) do

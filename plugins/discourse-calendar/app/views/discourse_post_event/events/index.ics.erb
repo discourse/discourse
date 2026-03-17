@@ -2,6 +2,7 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Discourse//<%= Discourse.current_hostname %>//<%= Discourse.full_version %>//EN
 <%- @events.each do |event| -%>
+<%- next if event.starts_at.nil? -%>
 BEGIN:VEVENT
 UID:calendar_event_#<%= event.id %>@<%= Discourse.current_hostname %>
 DTSTAMP:<%= Time.now.utc.strftime("%Y%m%dT%H%M%SZ") %>
