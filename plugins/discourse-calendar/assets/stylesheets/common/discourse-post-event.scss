@@ -33,6 +33,9 @@ $show-interested: inherit;
   .event-image {
     grid-row: 1/4;
     grid-column: 2/2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: start;
     padding: 0.75em;
 
     img {
@@ -50,7 +53,7 @@ $show-interested: inherit;
     box-sizing: border-box;
 
     &:has(.event-image) {
-      grid-template-columns: 1fr minmax(220px, 1fr);
+      grid-template-columns: 1fr minmax(min-content, 280px);
 
       .event-actions {
         grid-column: span 2;
