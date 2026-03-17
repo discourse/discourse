@@ -195,7 +195,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
 
   @action
   scopesDataKeys(scopesData) {
-    return Object.keys(scopesData);
+    return Object.keys(scopesData).sort();
   }
 
   <template>
