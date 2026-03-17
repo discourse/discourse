@@ -71,7 +71,7 @@ jobs:
         build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
-        plugin_compiler: ["legacy"]
+        plugin_compiler: ["rollup"]
         exclude:
           - build_type: backend
             target: themes
@@ -91,7 +91,7 @@ jobs:
             browser: Chrome
           - build_type: frontend
             target: plugins
-            plugin_compiler: "rollup"
+            plugin_compiler: "legacy"
           # - build_type: frontend
           #   target: core
           #   browser: Firefox Evergreen

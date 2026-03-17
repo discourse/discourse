@@ -17,7 +17,7 @@ export default function (babel) {
         }
 
         if (
-          globalThis.ROLLUP_PLUGIN_COMPILER === "1" &&
+          globalThis.ROLLUP_PLUGIN_COMPILER !== "0" &&
           moduleName.startsWith("discourse/plugins/")
         ) {
           const parts = moduleName.split("/");
