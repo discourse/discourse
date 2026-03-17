@@ -52,32 +52,32 @@ When you call `replace()`, core preserves the existing `header` or `item` if you
 
 Header cell components currently receive these arguments:
 
-| Argument | Description |
-| --- | --- |
-| `@sortable` | Whether the column should behave as a sortable header |
-| `@activeOrder` | The currently active sort order |
-| `@changeSort` | Callback used to change sorting |
-| `@ascending` | Whether the active sort is ascending |
-| `@category` | The current category, when available |
-| `@name` | The translation key or label used by the header |
-| `@bulkSelectEnabled` | Whether bulk select mode is active |
-| `@showBulkToggle` | Whether the bulk-select toggle button should be shown |
-| `@canBulkSelect` | Whether bulk select is available |
-| `@canDoBulkActions` | Whether bulk actions are currently available |
-| `@bulkSelectHelper` | The bulk-select helper object |
+| Argument             | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| `@sortable`          | Whether the column should behave as a sortable header |
+| `@activeOrder`       | The currently active sort order                       |
+| `@changeSort`        | Callback used to change sorting                       |
+| `@ascending`         | Whether the active sort is ascending                  |
+| `@category`          | The current category, when available                  |
+| `@name`              | The translation key or label used by the header       |
+| `@bulkSelectEnabled` | Whether bulk select mode is active                    |
+| `@showBulkToggle`    | Whether the bulk-select toggle button should be shown |
+| `@canBulkSelect`     | Whether bulk select is available                      |
+| `@canDoBulkActions`  | Whether bulk actions are currently available          |
+| `@bulkSelectHelper`  | The bulk-select helper object                         |
 
 Item cell components currently receive these arguments:
 
-| Argument | Description |
-| --- | --- |
-| `@topic` | The current topic |
-| `@bulkSelectEnabled` | Whether bulk select mode is active |
-| `@onBulkSelectToggle` | Callback used by the bulk-select checkbox |
-| `@isSelected` | Whether the topic is currently selected |
-| `@showTopicPostBadges` | Whether unread/new badges should be shown |
-| `@hideCategory` | Whether category markup should be hidden |
-| `@tagsForUser` | The current tag visibility context |
-| `@expandPinned` | Whether the pinned excerpt should be shown |
+| Argument               | Description                                |
+| ---------------------- | ------------------------------------------ |
+| `@topic`               | The current topic                          |
+| `@bulkSelectEnabled`   | Whether bulk select mode is active         |
+| `@onBulkSelectToggle`  | Callback used by the bulk-select checkbox  |
+| `@isSelected`          | Whether the topic is currently selected    |
+| `@showTopicPostBadges` | Whether unread/new badges should be shown  |
+| `@hideCategory`        | Whether category markup should be hidden   |
+| `@tagsForUser`         | The current tag visibility context         |
+| `@expandPinned`        | Whether the pinned excerpt should be shown |
 
 Current source for this API lives in `frontend/discourse/app/components/topic-list/list.gjs`, `frontend/discourse/app/components/topic-list/header.gjs`, and `frontend/discourse/app/components/topic-list/item.gjs`.
 
@@ -127,16 +127,16 @@ Prefer [Plugin Outlets](13-plugin-outlet-connectors.md) when you want to inject 
 
 Some of the most useful topic-list outlets are:
 
-| Outlet | Purpose | Outlet args |
-| --- | --- | --- |
-| `before-topic-list-body` / `after-topic-list-body` | Add markup before or after the table body | `topics`, `selected`, `bulkSelectEnabled`, `lastVisitedTopic`, `discoveryList`, `hideCategory` |
-| `after-topic-list-item` | Insert an extra `<tr>` after each row | `topic`, `index` |
-| `topic-list-item` | Wrap or replace the entire row | `topic`, `bulkSelectEnabled`, `onBulkSelectToggle`, `isSelected`, `hideCategory`, `tagsForUser`, `showTopicPostBadges`, `navigateToTopic` |
-| `topic-list-topic-cell-link-top-line` | Extend the desktop title/status line | `topic`, `tagsForUser` |
-| `topic-list-topic-cell-link-bottom-line` | Extend the desktop category/tag/meta line | `topic`, `tagsForUser` |
-| `topic-list-item-mobile-avatar` / `topic-list-item-mobile-bumped-at` | Mobile-only customizations | `topic` |
-| `topic-list-before-reply-count` / `topic-list-before-view-count` / `topic-list-before-relative-date` | Add content near the count/date cells | `topic` |
-| `topic-list-heading-bottom` | Add content inside sortable header cells | `name`, `bulkSelectEnabled` |
+| Outlet                                                                                               | Purpose                                   | Outlet args                                                                                                                               |
+| ---------------------------------------------------------------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `before-topic-list-body` / `after-topic-list-body`                                                   | Add markup before or after the table body | `topics`, `selected`, `bulkSelectEnabled`, `lastVisitedTopic`, `discoveryList`, `hideCategory`                                            |
+| `after-topic-list-item`                                                                              | Insert an extra `<tr>` after each row     | `topic`, `index`                                                                                                                          |
+| `topic-list-item`                                                                                    | Wrap or replace the entire row            | `topic`, `bulkSelectEnabled`, `onBulkSelectToggle`, `isSelected`, `hideCategory`, `tagsForUser`, `showTopicPostBadges`, `navigateToTopic` |
+| `topic-list-topic-cell-link-top-line`                                                                | Extend the desktop title/status line      | `topic`, `tagsForUser`                                                                                                                    |
+| `topic-list-topic-cell-link-bottom-line`                                                             | Extend the desktop category/tag/meta line | `topic`, `tagsForUser`                                                                                                                    |
+| `topic-list-item-mobile-avatar` / `topic-list-item-mobile-bumped-at`                                 | Mobile-only customizations                | `topic`                                                                                                                                   |
+| `topic-list-before-reply-count` / `topic-list-before-view-count` / `topic-list-before-relative-date` | Add content near the count/date cells     | `topic`                                                                                                                                   |
+| `topic-list-heading-bottom`                                                                          | Add content inside sortable header cells  | `name`, `bulkSelectEnabled`                                                                                                               |
 
 There are more outlets throughout `frontend/discourse/app/components/topic-list/`, especially in `item/topic-cell.gjs`, `item/replies-cell.gjs`, `item/views-cell.gjs`, and `item/activity-cell.gjs`.
 
