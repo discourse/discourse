@@ -64,7 +64,13 @@ module DiscourseAi
       def resolve_guardian(username)
         user = resolve_user(username)
         return nil, nil if user.nil?
-        guardian = user.staged? ? system_guardian : Guardian.new(user)
+        guardian =
+          if user.staged?
+            @context.guardian || system_guardian
+          else
+            Guardian.new(user)
+          end
+
         [user, guardian]
       end
 
