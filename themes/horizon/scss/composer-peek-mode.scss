@@ -58,11 +58,11 @@
         .sidebar-wrapper .sidebar-container {
           height: unset;
         }
-      }
 
-      &:not(.keyboard-visible) {
-        #reply-control:not(.fullscreen).hide-preview {
-          height: unset;
+        &:not(.keyboard-visible) {
+          #reply-control:not(.fullscreen).hide-preview {
+            height: unset;
+          }
         }
       }
     }
