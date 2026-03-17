@@ -27,6 +27,7 @@ const LEGACY_FORMKIT_FIELDS = [
   "icon",
   "localizations",
   "email_in",
+  "email_in_enabled",
   "email_in_allow_strangers",
   "mailinglist_mirror",
   "topic_template",
