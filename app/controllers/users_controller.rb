@@ -30,6 +30,7 @@ class UsersController < ApplicationController
                    register_passkey
                    rename_passkey
                    delete_passkey
+                   update_security_key
                    feature_topic
                    clear_featured_topic
                    bookmarks
@@ -83,8 +84,8 @@ class UsersController < ApplicationController
                   create_second_factor_security_key
                   register_passkey
                   delete_passkey
+                  update_security_key
                 ]
-
   before_action :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
