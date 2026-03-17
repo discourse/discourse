@@ -441,7 +441,7 @@ export default class EventNodeView extends Component {
       ends_at: this.eventData.end
         ? moment(this.eventData.end).tz(timezone)
         : null,
-      imageUpload: this.eventData.imageUpload,
+      imageUpload: this.eventData.image ? { url: this.eventData.image } : null,
     };
   }
 

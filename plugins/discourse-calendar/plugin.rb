@@ -229,7 +229,7 @@ after_initialize do
 
   TopicView.on_preload do |topic_view|
     if SiteSetting.discourse_post_event_enabled
-      topic_view.instance_variable_set(:@posts, topic_view.posts.includes(:event))
+      topic_view.instance_variable_set(:@posts, topic_view.posts.includes(event: :image_upload))
     end
   end
 
