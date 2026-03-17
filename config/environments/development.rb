@@ -81,7 +81,7 @@ Discourse::Application.configure do
   end
 
   if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" &&
-       (defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn) || defined?(Pitchfork))
+       (defined?(Rails::Server) || defined?(Unicorn) || defined?(Pitchfork))
     require "stylesheet/watcher"
     STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch
