@@ -1,3 +1,8 @@
+default: &default
+  template: "<%= ENV['DISCOURSE_DB_TEMPLATE'] || 'template0' %>"
+  collation: "<%= ENV['DISCOURSE_DB_COLLATION'] || 'C' %>"
+  ctype: "<%= ENV['DISCOURSE_DB_CTYPE'] || 'C' %>"
+
 <%
   db_variables =
     ENV
@@ -6,6 +11,7 @@
 %>
 
 development:
+  <<: *default
   prepared_statements: false
   adapter: postgresql
   database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
@@ -37,6 +43,7 @@ development:
 %>
 
 test:
+  <<: *default
   prepared_statements: false
   adapter: postgresql
   database: <%= test_db %>
