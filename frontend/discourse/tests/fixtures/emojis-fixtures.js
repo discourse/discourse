@@ -1,6 +1,6 @@
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
-export default {
+const emojisFixtures = {
   "/emojis.json": {
      favorites: [
       {
@@ -50,6 +50,8 @@ export default {
         group: "objects",
         search_aliases: [],
       },
-    ]
-  }
-}
+    ],
+  },
+};
+
+export default emojisFixtures;
