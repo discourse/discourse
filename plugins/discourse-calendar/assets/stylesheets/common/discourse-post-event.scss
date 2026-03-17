@@ -31,14 +31,14 @@ $show-interested: inherit;
   }
 
   .event-image {
-      grid-row: 1/4;
-      grid-column: 2/2;
-      padding: 0.75em;
+    grid-row: 1/4;
+    grid-column: 2/2;
+    padding: 0.75em;
 
-      img {
-          max-height: 240px;
-          border-radius: var(--d-border-radius);
-      }
+    img {
+      max-height: 240px;
+      border-radius: var(--d-border-radius);
+    }
   }
 
   .discourse-post-event-widget {
@@ -50,11 +50,11 @@ $show-interested: inherit;
     box-sizing: border-box;
 
     &:has(.event-image) {
-        grid-template-columns: 1fr minmax(220px, 1fr);
+      grid-template-columns: 1fr minmax(220px, 1fr);
 
-        .event-actions {
-          grid-column: span 2;
-        }
+      .event-actions {
+        grid-column: span 2;
+      }
     }
 
     .cooked & {
