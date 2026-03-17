@@ -199,7 +199,8 @@ describe "Simplified Category Creation" do
       expect(group_chooser).to have_selected_name(group.name)
     end
     it "opens the composer to edit the category description and updates it after save" do
-      category_page.visit_general(category)
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
 
       composer = PageObjects::Components::Composer.new
 
