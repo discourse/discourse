@@ -215,13 +215,13 @@ export default class DiscoursePostEvent extends Component {
                   @expiredAndRecurring={{this.expiredAndRecurring}}
                 />
                 <Location @location={{event.location}} />
+                <Url @url={{event.url}} />
+                <ChatChannel @event={{event}} />
+                <Invitees @event={{event}} />
                 <Image
                   @imageUpload={{event.imageUpload}}
                   @alt={{this.eventName}}
                 />
-                <Url @url={{event.url}} />
-                <ChatChannel @event={{event}} />
-                <Invitees @event={{event}} />
 
                 {{#if this.withDescription}}
                   <Description @description={{event.description}} />
