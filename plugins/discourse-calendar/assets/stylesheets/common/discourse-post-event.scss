@@ -10,6 +10,7 @@ $show-interested: inherit;
   justify-content: center;
 
   .event__section {
+    grid-column: 1/1;
     padding: 0.5em 0.75rem;
 
     &:first-child {
@@ -29,13 +30,32 @@ $show-interested: inherit;
     }
   }
 
+  .event-image {
+      grid-row: 1/4;
+      grid-column: 2/2;
+      padding: 0.75em;
+
+      img {
+          max-height: 240px;
+          border-radius: var(--d-border-radius);
+      }
+  }
+
   .discourse-post-event-widget {
-    display: flex;
+    display: grid;
     background: var(--secondary);
     flex-direction: column;
     flex: 1 0 auto;
     max-width: 100%;
     box-sizing: border-box;
+
+    &:has(.event-image) {
+        grid-template-columns: 1fr minmax(220px, 1fr);
+
+        .event-actions {
+          grid-column: span 2;
+        }
+    }
 
     .cooked & {
       box-shadow: 0 0 0 3px var(--primary-100);
@@ -154,6 +174,7 @@ $show-interested: inherit;
     .status-and-creators {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       color: var(--primary-medium);
       font-size: var(--font-down-1);
       font-weight: 400;
@@ -181,6 +202,7 @@ $show-interested: inherit;
       .creators {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
 
         .event-creator {
           @include ellipsis;
