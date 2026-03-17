@@ -216,13 +216,17 @@ jobs:
 
       - name: Create and migrate database
         run: |
+          bin/rake db:drop >/dev/null 2>&1 || true
           bin/rake db:create
+          sudo -u postgres psql -c '\pset footer off' -c '\l'
           script/silence_successful_output bin/rake db:migrate
 
       - name: Create and migrate parallel databases
         if: env.USES_PARALLEL_DATABASES == 'true' && steps.app-cache.outputs.cache-hit != 'true'
         run: |
+          bin/rake parallel:drop >/dev/null 2>&1 || true
           bin/rake parallel:create
+          sudo -u postgres psql -c '\pset footer off' -c '\l'
           script/silence_successful_output bin/rake parallel:migrate
 
       - name: Dump database for cache
