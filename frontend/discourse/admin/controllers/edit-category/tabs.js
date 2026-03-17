@@ -139,7 +139,7 @@ export default class EditCategoryTabsController extends Controller {
 
       data.category_type_site_settings = {};
 
-      Object.values(this.model.category_types ?? {}).forEach((categoryType) => {
+      Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
         categoryType.configuration_schema.category_custom_fields?.forEach(
           (field) => {
             data.custom_fields[field.key] ??= field.default;
@@ -183,7 +183,7 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    const types = Object.values(this.model.category_types ?? {});
+    const types = Object.values(this.model.categoryTypes ?? {});
     if (types.length > 0) {
       return i18n("category.create_with_type", {
         typeName: types[0].name.toLowerCase(),

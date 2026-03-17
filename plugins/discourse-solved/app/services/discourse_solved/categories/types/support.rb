@@ -77,6 +77,7 @@ module DiscourseSolved
                   label: I18n.t("discourse_solved.category_type.allow_accepted_answers.label"),
                   required: true,
                   show_on_create: false,
+                  show_on_edit: false,
                 },
                 :solved_topics_auto_close_hours => {
                   default: 48,

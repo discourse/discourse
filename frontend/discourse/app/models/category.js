@@ -332,6 +332,7 @@ export default class Category extends RestModel {
   static _includePermissions(category, store, site) {
     const model = site.updateCategory(category);
     model.setupGroupsAndPermissions();
+    model.setupCategoryTypes();
     return model;
   }
 
@@ -485,6 +486,7 @@ export default class Category extends RestModel {
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
   @tracked allowed_tags;
+  @tracked categoryTypes;
   @autoTrackedArray available_groups;
   @autoTrackedArray permissions;
   @autoTrackedArray required_tag_groups;
@@ -492,6 +494,10 @@ export default class Category extends RestModel {
   init() {
     super.init(...arguments);
     this.setupGroupsAndPermissions();
+  }
+
+  setupCategoryTypes() {
+    this.categoryTypes = new TrackedObject(this.category_types);
   }
 
   setupGroupsAndPermissions() {
@@ -849,8 +855,8 @@ export default class Category extends RestModel {
       category_type_site_settings: this.category_type_site_settings,
     };
 
-    if (!id && this.category_types) {
-      props.category_type = Object.keys(this.category_types)[0];
+    if (!id && this.categoryTypes) {
+      props.category_type = Object.keys(this.categoryTypes)[0];
     }
 
     return props;
@@ -907,11 +913,15 @@ export default class Category extends RestModel {
   }
 
   isType(type) {
-    return Object.keys(this.category_types ?? {}).includes(type);
+    return Object.keys(this.categoryTypes ?? {}).includes(type);
   }
 
   getType(type) {
-    return this.category_types?.[type];
+    return this.categoryTypes?.[type];
+  }
+
+  removeType(type) {
+    delete this.categoryTypes[type];
   }
 
   @computed("topics")

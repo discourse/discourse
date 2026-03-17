@@ -38,7 +38,7 @@ export default class NewCategoryTabs extends DiscourseRoute {
         name: result.typeName,
         configuration_schema: result.typeSchema,
       };
-      model.set("category_types", initialTypes);
+      model.set("categoryTypes", initialTypes);
 
       // Only want to prefill the general settings (name etc) if it's the
       // first category of this type.
