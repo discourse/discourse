@@ -1,9 +1,8 @@
 .form-kit__section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 100%;
-  padding-bottom: 1.5rem;
 
   &.form-kit__actions {
     align-items: center;
@@ -29,7 +28,7 @@
 }
 
 .form-kit__section.emphasis {
-  border: 2px solid var(--tertiary);
+  border: 2px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
   padding: 1em;
   box-sizing: border-box;

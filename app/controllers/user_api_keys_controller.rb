@@ -51,7 +51,7 @@ class UserApiKeysController < ApplicationController
             nil
           else
             uri = URI.parse(@auth_redirect)
-            if [80, 443].include?(uri.port)
+            if uri.port.nil? || [80, 443].include?(uri.port)
               uri.host
             else
               uri.host + ":" + uri.port.to_s

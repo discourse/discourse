@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -40,7 +40,7 @@ export default class Tooltips extends Component {
   }
 
   set content(value) {
-    this._content = htmlSafe(value);
+    this._content = trustHTML(value);
   }
 
   @action

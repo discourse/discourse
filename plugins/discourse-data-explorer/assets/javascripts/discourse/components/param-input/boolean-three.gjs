@@ -1,7 +1,7 @@
 import { i18n } from "discourse-i18n";
 
 const BooleanThree = <template>
-  <@field.Select name={{@info.identifier}} as |select|>
+  <@Control name={{@info.identifier}} as |select|>
     <select.Option @value="Y">
       {{i18n "explorer.types.bool.true"}}
     </select.Option>
@@ -11,7 +11,7 @@ const BooleanThree = <template>
     <select.Option @value="#null">
       {{i18n "explorer.types.bool.null_"}}
     </select.Option>
-  </@field.Select>
+  </@Control>
 </template>;
 
 export default BooleanThree;

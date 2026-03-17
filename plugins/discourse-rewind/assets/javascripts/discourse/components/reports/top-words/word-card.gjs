@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
 import discourseLater from "discourse/lib/later";
@@ -51,7 +51,7 @@ export default class WordCard extends Component {
   }
 
   get cardStyle() {
-    return htmlSafe(`${this.randomStyle}; ${this.mysteryData.color};`);
+    return trustHTML(`${this.randomStyle}; ${this.mysteryData.color};`);
   }
 
   @action

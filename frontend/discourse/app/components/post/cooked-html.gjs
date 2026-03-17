@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import DecoratedHtml, {
   applyHtmlDecorators,
@@ -192,7 +192,7 @@ export default class PostCookedHtml extends Component {
         isIgnored=this.isIgnored
         ignoredUsers=this.ignoredUsers
       }}
-      @html={{htmlSafe this.cooked}}
+      @html={{trustHTML this.cooked}}
       @model={{@post}}
     />
   </template>

@@ -64,7 +64,7 @@ DiscourseAi::Engine.routes.draw do
     get "/t/:topic_id" => "summary#show", :constraints => { topic_id: /\d+/ }
     put "/regen_gist" => "summary#regen_gist"
     put "/regen_summary" => "summary#regen_summary"
-    get "/channels/:channel_id" => "chat_summary#show"
+    post "/channels/:channel_id" => "chat_summary#show"
   end
 
   scope module: :sentiment, path: "/sentiment", defaults: { format: :json } do

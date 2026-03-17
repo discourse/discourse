@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -178,18 +178,18 @@ export default <template>
                         <div>
                           <span
                             title={{i18n "user.invited.days_visited"}}
-                          >{{htmlSafe invite.user.days_visited}}</span>
+                          >{{trustHTML invite.user.days_visited}}</span>
                           /
                           <span
                             title={{i18n "user.invited.account_age_days"}}
-                          >{{htmlSafe invite.user.days_since_created}}</span>
+                          >{{trustHTML invite.user.days_since_created}}</span>
                         </div>
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.invited.invited_via"}}
                         </div>
-                        {{htmlSafe invite.invite_source}}
+                        {{trustHTML invite.invite_source}}
                       </td>
                     {{/if}}
                   </tr>

@@ -320,7 +320,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
         scope =
           ApiKeyScope.create!(
-            resource: "discourse_ai",
+            resource: "ai",
             action: "update_agents",
             api_key_id: api_key.id,
             allowed_parameters: {
@@ -762,6 +762,59 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       existing_agent.reload
       expect(existing_agent.description).to eq("An imported agent")
       expect(existing_agent.system_prompt).to eq("You are an imported assistant")
+    end
+
+    it "overwrites existing custom tools with force=true when importing a new agent" do
+      existing_tool =
+        Fabricate(
+          :ai_tool,
+          name: "Old Community Scanner",
+          tool_name: "scan_public_discourse_community",
+          description: "Old description",
+          parameters: [],
+          summary: "Old summary",
+          script: "function invoke() { return 'old'; }",
+        )
+
+      import_data_with_tools = valid_import_data.deep_dup.merge(force: true)
+      import_data_with_tools[:agent][:tools] = [
+        ["custom-scan_public_discourse_community", { max_results: 20 }, false],
+      ]
+      import_data_with_tools[:custom_tools] = [
+        {
+          identifier: "scan_public_discourse_community",
+          name: "Community Scanner",
+          description: "Scans the public Discourse community",
+          tool_name: "scan_public_discourse_community",
+          parameters: [{ name: "max_results", type: "integer", required: false }],
+          summary: "Returns matching public community topics",
+          script: "function invoke(params) { return params.max_results || 10; }",
+        },
+      ]
+
+      initial_tool_count = AiTool.count
+
+      expect {
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: import_data_with_tools,
+             as: :json
+      }.to change(AiAgent, :count).by(1)
+
+      expect(response).to have_http_status(:created)
+      expect(AiTool.count).to eq(initial_tool_count)
+
+      agent = AiAgent.find_by(name: "ImportedAgent")
+      expect(agent).to be_present
+
+      existing_tool.reload
+      expect(existing_tool.name).to eq("Community Scanner")
+      expect(existing_tool.description).to eq("Scans the public Discourse community")
+      expect(existing_tool.summary).to eq("Returns matching public community topics")
+      expect(existing_tool.script).to eq(
+        "function invoke(params) { return params.max_results || 10; }",
+      )
+
+      expect(agent.tools).to eq([["custom-#{existing_tool.id}", { "max_results" => 20 }, false]])
     end
 
     it "handles invalid import data gracefully" do

@@ -108,6 +108,11 @@ module Discourse
       FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
       temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
       execute_command("ln", "-s", source, temp_destination)
+
+      # Remove existing symlink first to prevent FileUtils.mv from moving
+      # the temp file inside the symlinked directory instead of replacing it
+      File.delete(destination) if File.symlink?(destination)
+
       FileUtils.mv(temp_destination, destination)
 
       nil
@@ -994,7 +999,9 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
-    if !GlobalSetting.mini_racer_single_threaded
+    if GlobalSetting.mini_racer_single_threaded
+      ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
+    else
       # V8 does not support forking, make sure all contexts are disposed
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
     end

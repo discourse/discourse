@@ -12,11 +12,11 @@ The Discourse AI plugin ships a Ruby CLI under `plugins/discourse-ai/evals` that
 
 - **Eval case**: A YAML definition under `evals/cases/<group>/<id>.yml` that pairs inputs (`args`) with an expected outcome. Evals can check exact strings, regexes, or expected tool calls.
 - **Feature**: The Discourse AI behavior under test, identified as `module:feature_name` (for example, `summarization:topic_summaries`). `--list-features` shows the valid keys.
-- **Persona**: The system prompt wrapped around the LLM call. Runs default to the built-in prompt unless you pass `--persona-keys` to load alternate prompts from `evals/personas/*.yml`. Add multiple keys to compare prompts in one run.
+- **Agent prompt**: The system prompt wrapped around the LLM call. Runs default to the built-in prompt unless you pass `--agent-keys` to load alternate prompts from `evals/agents/*.yml`. Add multiple keys to compare prompts in one run.
 - **Judge**: A rubric embedded in some evals that requires a second LLM to grade outputs. Think of it as an automated reviewer: it reads the model output and scores it against the criteria. If an eval defines `judge`, you must supply or accept the default judge model (`--judge`, default `gpt-4o`). Without a judge, outputs are matched directly against the expected value.
-- **Comparison modes**: `--compare personas` (one model, many personas) or `--compare llms` (one persona, many models). The judge picks a winner and reports ratings; non-comparison runs just report pass/fail.
+- **Comparison modes**: `--compare agents` (one model, many agent prompts) or `--compare llms` (one agent prompt, many models). The judge picks a winner and reports ratings; non-comparison runs just report pass/fail.
 - **Datasets**: Instead of YAML cases, pass `--dataset path.csv --feature module:feature` to build cases from CSV rows (`content` and `expected_output` columns required).
-- **Logs**: Every run writes plain text and structured traces to `plugins/discourse-ai/evals/log/` with timestamps and persona keys. Use them to inspect failures, skipped models, and judge decisions.
+- **Logs**: Every run writes plain text and structured traces to `plugins/discourse-ai/evals/log/` with timestamps and agent keys. Use them to inspect failures, skipped models, and judge decisions.
 
 ## Prerequisites
 
@@ -32,7 +32,7 @@ The Discourse AI plugin ships a Ruby CLI under `plugins/discourse-ai/evals` that
 - `bundle exec ruby ./run --list` lists all eval ids from `evals/cases/*/*.yml`.
 - `bundle exec ruby ./run --list-features` prints feature keys grouped by module (format: `module:feature`).
 - `bundle exec ruby ./run --list-models` shows LLM configs that can be hydrated from `eval-llms.yml`/`.local.yml`.
-- `bundle exec ruby ./run --list-personas` lists persona keys defined under `evals/personas/*.yml` plus the built-in `default`.
+- `bundle exec ruby ./run --list-agents` lists agent keys defined under `evals/agents/*.yml` plus the built-in `default`.
 
 ## Run evals
 
@@ -52,10 +52,10 @@ The Discourse AI plugin ships a Ruby CLI under `plugins/discourse-ai/evals` that
 
 - Some evals define a `judge` block. When any selected eval requires judging, the runner defaults to `--judge gpt-4o` unless you pass `--judge name`. Invalid or missing judge configs cause the CLI to exit before running.
 
-## Personas and comparison modes
+## Agent prompts and comparison modes
 
-- Supply custom prompts with `--persona-keys key1,key2`. Keys resolve to YAML files in `evals/personas`; each needs `key` (optional, defaults to the filename), `system_prompt`, and an optional `description`.
-- Minimal persona example (`evals/personas/topic_summary_eval.yml`):
+- Supply custom prompts with `--agent-keys key1,key2`. Keys resolve to YAML files in `evals/agents`; each needs `key` (optional, defaults to the filename), `system_prompt`, and an optional `description`.
+- Minimal agent prompt example (`evals/agents/topic_summary_eval.yml`):
 
   ```yml
   key: topic_summary_eval
@@ -64,9 +64,9 @@ The Discourse AI plugin ships a Ruby CLI under `plugins/discourse-ai/evals` that
     Summarize the topic in 2–4 sentences. Keep the original language and avoid new facts.
   ```
 
-- `--compare personas` runs one model against multiple personas. The built-in `default` persona is automatically prepended so you can compare YAML prompts against stock behavior, and at least two personas are required.
-- `--compare llms` runs one persona (default unless overridden) across multiple models and asks the judge to score them side by side.
-- Non-comparison runs accept a single persona; pass one `--persona-keys` value or rely on the default prompt.
+- `--compare agents` runs one model against multiple agents. The built-in `default` agent is automatically prepended so you can compare YAML prompts against stock behavior, and at least two agents are required.
+- `--compare llms` runs one agent prompt (default unless overridden) across multiple models and asks the judge to score them side by side.
+- Non-comparison runs accept a single agent prompt; pass one `--agent-keys` value or rely on the default prompt.
 
 ## Dataset-driven runs
 
@@ -112,7 +112,7 @@ The Discourse AI plugin ships a Ruby CLI under `plugins/discourse-ai/evals` that
 - Comparison winner snippet:
 
   ```
-  Comparing personas for topic-summary
+  Comparing agents for topic-summary
   Winner: topic_summary_eval
   Reason: Captured key details and stayed concise.
     - default: 7/10 — missed concrete use case

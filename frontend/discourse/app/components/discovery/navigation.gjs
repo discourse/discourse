@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import CategoryLogo from "discourse/components/category-logo";
 import DNavigation from "discourse/components/d-navigation";
@@ -108,7 +108,7 @@ export default class DiscoveryNavigation extends Component {
             <div class="category-heading__content">
               {{categoryBadge @category class="category-heading__badge"}}
               <p class="category-heading__description">
-                {{htmlSafe @category.description}}
+                {{trustHTML @category.description}}
               </p>
             </div>
           {{/if}}

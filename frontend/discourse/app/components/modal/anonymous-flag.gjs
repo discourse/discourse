@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DModal from "discourse/components/d-modal";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -32,8 +32,8 @@ export default class AnonymousFlagModal extends Component {
       class="anonymous-flag-modal"
     >
       <:body>
-        <p>{{htmlSafe (i18n "flagging.review_process_description")}}</p>
-        <p>{{htmlSafe this.description}}</p>
+        <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>
+        <p>{{trustHTML this.description}}</p>
       </:body>
     </DModal>
   </template>

@@ -350,6 +350,7 @@ en:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
+      tool_pending_approval: "This action requires moderator approval before it can be executed."
       agents:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
@@ -777,6 +778,18 @@ en:
           no_reason: "A reason is required to mark or unmark a post as solved."
           action_failed: "Failed to update the solved status."
         success: "Solved status updated successfully."
+
+    reviewables:
+      ai_tool_action:
+        title: "AI Tool Action"
+        approve:
+          title: "Approve"
+        reject:
+          title: "Reject"
+        target_missing: "The tool action target no longer exists."
+        tool_not_found: "Tool '%{tool_name}' is no longer available."
+        bot_user_missing: "The bot user no longer exists."
+        execution_error: "Tool execution failed: %{error}"
 
     summarization:
       configuration_hint:

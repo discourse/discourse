@@ -157,7 +157,9 @@
 
   &.dropdown-menu__item .sidebar-section-link,
   .dropdown-menu__item .sidebar-section-link {
-    border-radius: 0;
+    height: var(--d-sidebar-row-height);
+    padding-inline: var(--d-sidebar-row-horizontal-padding);
+    border-radius: var(--d-border-radius);
   }
 
   .--link-button {

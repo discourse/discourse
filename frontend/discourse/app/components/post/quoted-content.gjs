@@ -170,6 +170,7 @@ export default class PostQuotedContent extends Component {
     {{! template-lint-disable no-unnecessary-concat }}
     <this.OptionalWrapperComponent
       ...attributes
+      role="none"
       class={{concatClass
         "quote"
         (if @quotedPostNotFound "quote-post-not-found")

@@ -342,7 +342,7 @@ Discourse::Application.routes.draw do
       post "/toggle-feature" => "dashboard#toggle_feature"
 
       resources :dashboard, only: [:index] do
-        collection { get "problems" }
+        collection { post "problems" }
       end
 
       resources :api, only: [:index], constraints: AdminConstraint.new do
@@ -824,6 +824,10 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/preferences/apps" => "users#preferences",
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      get "#{root_path}/:username/preferences/calendar-subscriptions" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -1859,6 +1863,10 @@ Discourse::Application.routes.draw do
 
     get "/user-api-key-client" => "user_api_key_clients#show"
     post "/user-api-key-client" => "user_api_key_clients#create"
+
+    get "/calendar-subscriptions" => "calendar_subscriptions#show"
+    post "/calendar-subscriptions" => "calendar_subscriptions#create"
+    delete "/calendar-subscriptions" => "calendar_subscriptions#destroy"
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"

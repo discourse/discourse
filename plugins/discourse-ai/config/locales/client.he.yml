@@ -743,6 +743,9 @@ he:
       reviewables:
         model_used: "דגם בשימוש:"
         accuracy: "דיוק:"
+        ai_tool_action:
+          tool: "כלי"
+          parameters: "משתנים"
       embeddings:
         short_title: "הטמעות"
         description: "הטמעות הן ייצוגים מספריים של נתונים שלוכדים משמעות וקשר, הפעלת יכולות הבינה המלאכותית של Discourse מאפשרת יכולות כגון נושאים קשורים וחיפוש בינה מלאכותית כדי להבין ולחבר תוכן."

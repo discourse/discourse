@@ -9,12 +9,18 @@
     width: 100%;
   }
 
-  &-textarea,
   &-composer,
   &-code,
   &-image {
     .form-kit__container-content {
       width: var(--form-kit-large-input) !important;
+    }
+  }
+
+  &-textarea {
+    .form-kit__container-content {
+      min-width: var(--form-kit-large-input);
+      width: fit-content !important;
     }
   }
 

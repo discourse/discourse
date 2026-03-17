@@ -640,6 +640,13 @@ uk:
       assign:
         errors:
           not_found: "Тему не знайдено."
+    reviewables:
+      ai_tool_action:
+        title: "Дія інструменту ШІ"
+        approve:
+          title: "Схвалити"
+        reject:
+          title: "Відхилити"
     summarization:
       configuration_hint:
         one: "Спочатку налаштуйте параметр `%{setting}`."

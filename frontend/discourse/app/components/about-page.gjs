@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
 import AboutPageUsers from "discourse/components/about-page-users";
@@ -274,7 +274,7 @@ export default class AboutPage extends Component {
 
         {{#if @model.extended_site_description}}
           <h3>{{i18n "about.simple_title"}}</h3>
-          <div>{{htmlSafe @model.extended_site_description}}</div>
+          <div>{{trustHTML @model.extended_site_description}}</div>
         {{/if}}
 
         {{#if @model.admins.length}}
@@ -308,7 +308,7 @@ export default class AboutPage extends Component {
       <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
-          <p class="about__contact-info">{{htmlSafe this.contactInfo}}</p>
+          <p class="about__contact-info">{{trustHTML this.contactInfo}}</p>
         {{/if}}
         <p>{{i18n "about.report_inappropriate_content"}}</p>
         <h3>{{i18n "about.site_activity"}}</h3>

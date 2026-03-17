@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
@@ -68,7 +68,7 @@ export default class DFloatBody extends Component {
         ? `${this.options.maxWidth}px`
         : this.options.maxWidth;
 
-    return htmlSafe(`max-width: ${maxWidth}`);
+    return trustHTML(`max-width: ${maxWidth}`);
   }
 
   <template>

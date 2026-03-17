@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { decode } from "html-entities";
 import highlightHTML from "discourse/lib/highlight-html";
 
@@ -8,7 +8,7 @@ export default function (text, reviewable) {
   }
 
   if (!reviewable || !reviewable.reviewable_scores) {
-    return htmlSafe(text);
+    return trustHTML(text);
   }
 
   const words = reviewable.reviewable_scores
@@ -18,7 +18,7 @@ export default function (text, reviewable) {
     .flat();
 
   if (!words.length) {
-    return htmlSafe(text);
+    return trustHTML(text);
   }
 
   const elem = document.createElement("span");
@@ -31,5 +31,5 @@ export default function (text, reviewable) {
     });
   });
 
-  return htmlSafe(decode(elem.innerHTML));
+  return trustHTML(decode(elem.innerHTML));
 }

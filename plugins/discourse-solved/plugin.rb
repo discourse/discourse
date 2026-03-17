@@ -19,6 +19,8 @@ register_asset "stylesheets/mobile/solutions.scss", :mobile
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
+  NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD = "notify_on_staff_accept_solved"
+  EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD = "empty_box_on_unsolved"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
 
   def self.accept_answer!(post, acting_user, topic: nil)
@@ -48,8 +50,9 @@ after_initialize do
     ::Topic.prepend(DiscourseSolved::TopicExtension)
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
+    ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
-    ::TopicsController.prepend(DiscourseSolved::TopicsControllerExtension)
+
     ::Topic.attr_accessor(:accepted_answer_user_id)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)
@@ -66,6 +69,8 @@ after_initialize do
   register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
   Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
   Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+  Site.preloaded_category_custom_fields << DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
+  Site.preloaded_category_custom_fields << DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
 
   add_api_key_scope(
     :solved,

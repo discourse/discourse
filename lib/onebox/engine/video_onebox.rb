@@ -12,17 +12,13 @@ module Onebox
       end
 
       def to_html
-        # Fix Dropbox image links
-        if @url[%r{^https://www.dropbox.com/s/}]
-          @url.sub!("https://www.dropbox.com", "https://dl.dropboxusercontent.com")
-        end
-
-        escaped_url = ::Onebox::Helpers.normalize_url_for_output(@url)
+        url = ::Onebox::Helpers.normalize_dropbox_url(@url)
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
         <<-HTML
           <div class="onebox video-onebox">
             <video width='100%' height='100%' controls #{@options[:disable_media_download_controls] ? 'controlslist="nodownload"' : ""}>
               <source src='#{escaped_url}'>
-              <a href='#{escaped_url}'>#{@url}</a>
+              <a href='#{escaped_url}'>#{url}</a>
             </video>
           </div>
         HTML

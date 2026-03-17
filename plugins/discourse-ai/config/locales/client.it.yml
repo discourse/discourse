@@ -660,6 +660,9 @@ it:
       reviewables:
         model_used: "Modello utilizzato:"
         accuracy: "Precisione:"
+        ai_tool_action:
+          tool: "Strumento"
+          parameters: "Parametri"
       embeddings:
         short_title: "Integrazioni"
         description: "Le integrazioni sono rappresentazione numeriche in grado di cogliere il significato e le relazioni, rendendo possibile alle funzionalità IA di Discourse come Argomenti correlati e Ricerca IA di comprendere e collegare i contenuti."

@@ -4,7 +4,7 @@ import { fn, hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
@@ -452,7 +452,7 @@ export default class InvitePanel extends Component {
     <div ...attributes>
       {{#if this.inviteModel.error}}
         <div class="alert alert-error">
-          {{htmlSafe this.errorMessage}}
+          {{trustHTML this.errorMessage}}
         </div>
       {{/if}}
 

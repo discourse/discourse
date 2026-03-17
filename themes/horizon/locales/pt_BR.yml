@@ -6,7 +6,7 @@
 
 pt_BR:
   solved: "Resolvido"
-  unsolved: "Não solucionados"
+  unsolved: "Não resolvido"
   posted: "postou"
   by_username: "por @%{username}"
   replied: "respondeu"

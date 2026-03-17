@@ -17,3 +17,9 @@ sl:
       tool_summary:
         search: "Išči"
         time: "Čas"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Odobri"
+        reject:
+          title: "Zavrni"

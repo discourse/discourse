@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -122,7 +122,7 @@ export default class TopicProgress extends Component {
       aria-label={{i18n "topic.progress.title"}}
       class={{if this.hideProgress "hidden"}}
       id="topic-progress"
-      style={{htmlSafe this.progressStyle}}
+      style={{trustHTML this.progressStyle}}
     >
       <div class="nums">
         <span>{{this.progressPosition}}</span>

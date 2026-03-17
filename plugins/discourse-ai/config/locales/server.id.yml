@@ -98,6 +98,12 @@ id:
       assign:
         errors:
           not_found: "Tidak ada topik."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Terima"
+        reject:
+          title: "Tolak"
     summarization:
       chat:
         no_targets: "Tidak ada pesan selama periode yang dipilih."

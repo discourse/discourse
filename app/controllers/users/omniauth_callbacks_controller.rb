@@ -122,7 +122,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       error = provider.present? ? "generic_with_provider" : "generic_without_provider"
     end
 
-    flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:).html_safe
+    flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:)
 
     render "failure"
   end
@@ -158,8 +158,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     if SiteSetting.invite_only?
       path = Discourse.route_for(@origin)
       return true unless path
-      return true if path[:controller] != "invites" && path[:action] != "show"
-      !Invite.exists?(invite_key: path[:id])
+      return true if path[:controller] != "invites" || path[:action] != "show"
+      !Invite.find_by(invite_key: path[:id])&.redeemable?
     end
   end
 

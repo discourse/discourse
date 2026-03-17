@@ -11,7 +11,8 @@ export default class SolvedSettingsUpsert extends Component {
     // in Categories::Types::Support.
     return (
       context.siteSettings.enable_simplified_category_creation &&
-      !args.category?.isType("support")
+      (!args.category?.isType("support") ||
+        !context.siteSettings.enable_support_category_type_setup)
     );
   }
 
@@ -24,9 +25,32 @@ export default class SolvedSettingsUpsert extends Component {
     return value?.toString() === "true";
   }
 
+  get notifyOnStaffAcceptSolved() {
+    const value =
+      this.args.outletArgs.transientData?.custom_fields
+        ?.notify_on_staff_accept_solved;
+    return value?.toString() !== "false";
+  }
+
+  get emptyBoxOnUnsolved() {
+    const value =
+      this.args.outletArgs.transientData?.custom_fields?.empty_box_on_unsolved;
+    return value?.toString() !== "false";
+  }
+
   @action
   async onToggleAcceptedAnswers(_, { set, name }) {
     await set(name, this.enableAcceptedAnswers ? "false" : "true");
+  }
+
+  @action
+  async onToggleNotifyOnStaffAcceptSolved(_, { set, name }) {
+    await set(name, this.notifyOnStaffAcceptSolved ? "false" : "true");
+  }
+
+  @action
+  async onToggleEmptyBoxOnUnsolved(_, { set, name }) {
+    await set(name, this.emptyBoxOnUnsolved ? "false" : "true");
   }
 
   <template>
@@ -38,18 +62,40 @@ export default class SolvedSettingsUpsert extends Component {
               @name="enable_accepted_answers"
               @title={{i18n "solved.allow_accepted_answers"}}
               @onSet={{this.onToggleAcceptedAnswers}}
+              @type="checkbox"
               as |field|
             >
-              <field.Checkbox checked={{this.enableAcceptedAnswers}} />
+              <field.Control checked={{this.enableAcceptedAnswers}} />
             </customFields.Field>
           {{/unless}}
 
           <customFields.Field
             @name="solved_topics_auto_close_hours"
             @title={{i18n "solved.solved_topics_auto_close_hours"}}
+            @type="input-number"
             as |field|
           >
-            <field.Input @type="number" min="0" />
+            <field.Control min="0" />
+          </customFields.Field>
+
+          <customFields.Field
+            @name="notify_on_staff_accept_solved"
+            @title={{i18n "solved.notify_on_staff_accept_solved"}}
+            @onSet={{this.onToggleNotifyOnStaffAcceptSolved}}
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control checked={{this.notifyOnStaffAcceptSolved}} />
+          </customFields.Field>
+
+          <customFields.Field
+            @name="empty_box_on_unsolved"
+            @title={{i18n "solved.empty_box_on_unsolved"}}
+            @onSet={{this.onToggleEmptyBoxOnUnsolved}}
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control checked={{this.emptyBoxOnUnsolved}} />
           </customFields.Field>
         </form.Object>
       </form.Section>

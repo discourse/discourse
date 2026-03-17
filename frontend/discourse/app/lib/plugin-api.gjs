@@ -51,6 +51,7 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
+import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
@@ -916,7 +917,6 @@ class _PluginApi {
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
         since: "3.2",
-        dropFrom: "3.3",
       }
     );
 
@@ -2190,6 +2190,14 @@ class _PluginApi {
    * @deprecated Use `addSaveableUserOption` instead
    */
   addSaveableUserOptionField(fieldName, options = {}) {
+    deprecated(
+      "`addSaveableUserOptionField` has been renamed to `addSaveableUserOption`",
+      {
+        id: "discourse.add-saveable-user-option-field",
+        since: "2026.3",
+      }
+    );
+
     this.addSaveableUserOption(fieldName, options);
   }
 
@@ -2266,6 +2274,25 @@ class _PluginApi {
    **/
   registerReviewableActionModal(reviewableType, modalClass) {
     registerReviewableActionModal(reviewableType, modalClass);
+  }
+
+  /**
+   * Register custom status names for a reviewable type, used in the
+   * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
+   *
+   * The names are i18n key suffixes looked up as `review.statuses.{name}.title`.
+   *
+   * @param {String} reviewableType - The reviewable class name (e.g. "ReviewableAiToolAction")
+   * @param {String} approvedName - Status name for approved items
+   * @param {String} rejectedName - Status name for rejected items
+   *
+   * @example
+   * ```
+   * api.registerReviewableStatusName("ReviewableAiToolAction", "approved_tool_action", "rejected_tool_action");
+   * ```
+   **/
+  registerReviewableStatusName(reviewableType, approvedName, rejectedName) {
+    registerReviewableStatusName(reviewableType, approvedName, rejectedName);
   }
 
   /**

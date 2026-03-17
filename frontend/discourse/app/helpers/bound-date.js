@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import deprecated from "discourse/lib/deprecated";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
@@ -8,7 +8,7 @@ export default function boundDate(dt) {
     id: "discourse.bound-date",
   });
 
-  return htmlSafe(
+  return trustHTML(
     autoUpdatingRelativeAge(new Date(dt), {
       format: "medium",
       title: true,

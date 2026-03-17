@@ -12,31 +12,86 @@ module DiscourseDataExplorer
     skip_before_action :ensure_admin,
                        only: %i[group_reports_index group_reports_show group_reports_run public_run]
 
+    INDEX_LIMIT = 50
+
+    SORTABLE_COLUMNS = %w[name username last_run_at].freeze
+
     def index
-      queries =
-        DiscourseDataExplorer::Query
-          .where(hidden: false)
-          .order(:last_run_at, :name)
-          .includes(:groups)
-          .to_a
+      limit = INDEX_LIMIT
+      offset = params[:offset].to_i
+      filter = params[:filter]
 
-      DiscourseDataExplorer::Queries.default.each do |params|
-        attributes = params.last
-        persisted = queries.find { |q| q.id == attributes["id"] }
+      order_column = SORTABLE_COLUMNS.include?(params[:order]) ? params[:order] : "last_run_at"
+      order_direction = params[:ascending] == "true" ? :asc : :desc
 
-        # Once a default query has been run, it is also saved in the local db
-        # so we can skip creating a "fake" query for the UI here, and this also
-        # avoids double-ups of the default query in the UI.
-        next if persisted.present?
+      base_scope = DiscourseDataExplorer::Query.where(hidden: false).includes(:groups)
 
-        query =
-          DiscourseDataExplorer::Query.new(attributes.slice("id", "sql", "name", "description"))
-        query.user_id = Discourse::SYSTEM_USER_ID.to_s
-
-        queries << query
+      if order_column == "username"
+        base_scope =
+          base_scope.joins("LEFT JOIN users ON users.id = data_explorer_queries.user_id").order(
+            Arel.sql("users.username #{order_direction}"),
+          )
+      else
+        base_scope = base_scope.order(order_column => order_direction)
       end
 
-      render_serialized(queries, QuerySerializer, root: "queries")
+      if filter.present?
+        sanitized_filter = "%#{Query.sanitize_sql_like(filter)}%"
+        base_scope =
+          base_scope.where(
+            "data_explorer_queries.name ILIKE :filter OR data_explorer_queries.description ILIKE :filter",
+            filter: sanitized_filter,
+          )
+      end
+
+      persisted_count = base_scope.count
+
+      # Default queries are only persisted once run. Build in-memory records
+      # for any that haven't been run yet so they still appear in the list.
+      persisted_default_ids =
+        DiscourseDataExplorer::Query.where(hidden: false).where("id < 0").pluck(:id).to_set
+      unpersisted_defaults =
+        DiscourseDataExplorer::Queries.default.filter_map do |_, attributes|
+          next if persisted_default_ids.include?(attributes["id"])
+          if filter.present?
+            name_match = attributes["name"]&.downcase&.include?(filter.downcase)
+            desc_match = attributes["description"]&.downcase&.include?(filter.downcase)
+            next unless name_match || desc_match
+          end
+          query =
+            DiscourseDataExplorer::Query.new(attributes.slice("id", "sql", "name", "description"))
+          query.user_id = Discourse::SYSTEM_USER_ID.to_s
+          query
+        end
+
+      total_rows = persisted_count + unpersisted_defaults.size
+
+      # On the first page, fit defaults within the limit so the page size
+      # stays consistent. On subsequent pages, only DB results are returned.
+      if offset == 0
+        db_limit = [limit - unpersisted_defaults.size, 0].max
+        paginated = base_scope.limit(db_limit).to_a
+        queries = paginated + unpersisted_defaults
+        next_offset = paginated.size
+      else
+        paginated = base_scope.offset(offset).limit(limit).to_a
+        queries = paginated
+        next_offset = offset + limit
+      end
+
+      json = serialize_data(queries, QuerySerializer, root: "queries")
+      json["total_rows_queries"] = total_rows
+
+      if next_offset < persisted_count
+        load_more_params = { offset: next_offset }
+        load_more_params[:filter] = filter if filter.present?
+        load_more_params[:order] = order_column if order_column != "last_run_at"
+        load_more_params[:ascending] = "true" if order_direction == :asc
+        base_path = request.path.delete_suffix(".json")
+        json["load_more_queries"] = "#{base_path}.json?#{load_more_params.to_query}"
+      end
+
+      render_json_dump(json)
     end
 
     def show

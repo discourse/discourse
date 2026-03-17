@@ -40,6 +40,10 @@ module Categories
                 "type" => "string",
                 "minLength" => 1,
               },
+              "subtype" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
               "label" => {
                 "type" => "string",
                 "minLength" => 1,
@@ -73,6 +77,16 @@ module Categories
         #
         # This MUST be overridden by category types.
         def category_matches?(category)
+          raise NotImplementedError
+        end
+
+        # Returns a relation for categories that match this type (for counting, listing, etc.).
+        # Override in subclasses that match a subset of categories (e.g. by custom_fields).
+        #
+        # Basically the same as category_matches but for a list instead.
+        #
+        # See Categories::TypeRegistry.counts for an example of how this is used.
+        def find_matches
           raise NotImplementedError
         end
 
@@ -181,6 +195,15 @@ module Categories
           true
         end
 
+        # One level above available? to allow for more granular control over visibility.
+        # For example, a category type may not be visible at all if a plugin isn't installed
+        # or if a certain site setting is not enabled, whereas available? is more
+        # for gating access on other conditions, and will still show the category type
+        # in the UI.
+        def visible?
+          true
+        end
+
         # Also used as an extension point to add additional keys/values to
         # the metadata hash returned by +metadata+, mostly for Discourse hosting.
         def additional_metadata
@@ -198,7 +221,7 @@ module Categories
         def configure_custom_fields(category, guardian:, configuration_values: {})
           configuration_schema[:category_custom_fields]&.each do |field_name, config|
             value = configuration_values.fetch(field_name.to_s, config[:default])
-            category.custom_fields[field_name.to_s] = value
+            category.custom_fields[field_name.to_s] = value.to_s
           end
 
           category.save_custom_fields
@@ -296,6 +319,7 @@ module Categories
               default: config[:default],
               type: config[:type].to_s,
               label: config[:label],
+              subtype: config[:subtype]&.to_s,
               description: config[:description],
               required: config[:required],
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
@@ -308,6 +332,7 @@ module Categories
               key: field_name.to_s,
               default: config[:default],
               type: config[:type].to_s,
+              subtype: config[:subtype]&.to_s,
               label: config[:label],
               description: config[:description],
               required: config[:required],

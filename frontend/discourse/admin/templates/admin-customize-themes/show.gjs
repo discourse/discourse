@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
@@ -218,7 +218,7 @@ export default <template>
 
           {{#if @controller.model.remote_theme.is_git}}
             <div class="alert alert-info remote-theme-edits">
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "admin.customize.theme.remote_theme_edits"
                   repoURL=@controller.remoteThemeLink

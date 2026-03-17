@@ -1,4 +1,11 @@
 en:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Trigger an automation via the API"
   js:
     admin:
       logs:

@@ -564,6 +564,8 @@ pl_PL:
         allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać osobiste wiadomości do tego agenta."
         allow_topic_mentions: "Zezwalaj na wzmianki o temacie"
         allow_topic_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wspominać o tym agencie w tematach."
+        require_approval: "Wymagaj zatwierdzenia narzędzi moderacyjnych"
+        require_approval_help: "Po włączeniu tej opcji akcje moderacji (zamknięcie, usunięcie, edycja itp.) zostaną wysłane do kolejki recenzji w celu zatwierdzenia przez moderatora przed wykonaniem."
         force_default_llm: "Zawsze używaj domyślnego modelu języka"
         save: "Zapisz"
         saved: "Agent zapisany"
@@ -571,6 +573,13 @@ pl_PL:
         tools: "Włączone narzędzia"
         tokens: "tokeny"
         context_cost: "Koszt kontekstu"
+        token_usage: "Wykorzystanie tokenów"
+        tool_count: "Liczba narzędzi"
+        tool_count_value:
+          one: "%{count} narzędzie"
+          few: "%{count} narzędzia"
+          many: "%{count} narzędzi"
+          other: "%{count} narzędzi"
         tool_tokens_total: "~%{tokens} Tokeny"
         tool_severity_medium: "Umiarkowana pojemność"
         tool_severity_high: "Duża pojemność"
@@ -936,6 +945,11 @@ pl_PL:
       reviewables:
         model_used: "Zastosowany model:"
         accuracy: "Dokładność:"
+        ai_tool_action:
+          agent: "Agent"
+          tool: "Narzędzie"
+          parameters: "Parametry"
+          post: "Wyzwalający wpis"
       embeddings:
         short_title: "Osadzenia"
         description: "Osadzenia to numeryczne reprezentacje danych, które odzwierciedlają znaczenie i relacje, dzięki czemu funkcje Discourse AI, takie jak Powiązane tematy i Wyszukiwanie AI, mogą rozumieć i łączyć treści."
@@ -1161,8 +1175,15 @@ pl_PL:
       user_preferences:
         empty: "W tej chwili nie ma dostępnych żadnych odpowiednich ustawień"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Narzędzie zatwierdzone"
+        rejected_tool_action:
+          title: "Narzędzie odrzucone"
       types:
         reviewable_ai_post:
           title: "Wpis oflagowany przez AI"
         reviewable_ai_chat_message:
           title: "Wiadomość na czacie oflagowana przez AI"
+        reviewable_ai_tool_action:
+          title: "Działanie narzędzia AI"

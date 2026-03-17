@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import loadChartJS, {
   loadChartJSDatalabels,
@@ -66,7 +66,7 @@ export default class PollBreakdownChart extends Component {
 
   @computed("optionColors", "index")
   get colorStyle() {
-    return htmlSafe(`background: ${this.optionColors[this.index]};`);
+    return trustHTML(`background: ${this.optionColors[this.index]};`);
   }
 
   @computed("data", "displayMode")

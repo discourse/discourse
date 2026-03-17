@@ -16,6 +16,7 @@ export default class EditCategoryTabs extends DiscourseRoute {
       showTooltip: false,
     });
 
+    controller.initFormData();
     controller.setSelectedTab(selectedTab);
   }
 }

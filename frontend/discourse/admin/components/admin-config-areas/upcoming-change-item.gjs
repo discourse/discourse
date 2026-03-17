@@ -8,7 +8,7 @@ import { LinkTo } from "@ember/routing";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
@@ -314,7 +314,7 @@ export default class UpcomingChangeItem extends Component {
 
               {{#if @change.upcoming_change.learn_more_url}}
                 <span class="upcoming-change__learn-more">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "feedback_with_link"
                       url=@change.upcoming_change.learn_more_url

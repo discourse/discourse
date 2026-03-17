@@ -14,7 +14,6 @@ export default class NumberField extends TextField {
       {
         id: "discourse.number-field",
         since: "3.2.0.beta5",
-        dropFrom: "3.3.0",
       }
     );
   }

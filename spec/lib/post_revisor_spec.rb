@@ -1000,6 +1000,19 @@ describe PostRevisor do
           expect(events).to include(event_name: :before_edit_post, params: [post, params])
         end
       end
+
+      context "when editing the post_edited event signature for extensibility" do
+        it "exposes revise opts via the PostRevisor payload" do
+          params = { raw: "body (edited)" }
+          opts = { suggested_edit: true }
+
+          events = DiscourseEvent.track_events { post_revisor.revise!(user, params, opts) }
+          event = events.find { |e| e[:event_name] == :post_edited }
+
+          expect(event[:params].third).to be_kind_of(PostRevisor)
+          expect(event[:params].third.opts).to include(suggested_edit: true)
+        end
+      end
     end
 
     describe "topic excerpt" do

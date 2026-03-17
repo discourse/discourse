@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import deprecated from "discourse/lib/deprecated";
 import { renderIcon } from "discourse/lib/icon-library";
 
@@ -10,5 +10,5 @@ export default function faIcon(icon, params) {
   deprecated("Use `{{d-icon}}` instead of `{{fa-icon}}", {
     id: "discourse.fa-icon",
   });
-  return htmlSafe(iconHTML(icon, params));
+  return trustHTML(iconHTML(icon, params));
 }

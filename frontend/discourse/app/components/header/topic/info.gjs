@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
@@ -118,7 +118,7 @@ export default class Info extends Component {
                 href={{@topicInfo.url}}
                 data-topic-id={{@topicInfo.id}}
               >
-                <span>{{htmlSafe @topicInfo.fancyTitle}}</span>
+                <span>{{trustHTML @topicInfo.fancyTitle}}</span>
               </a>
 
               <span class="header-topic-title-suffix">
@@ -169,7 +169,7 @@ export default class Info extends Component {
             {{/if}}
 
             <div class="topic-header-extra">
-              {{htmlSafe this.tags}}
+              {{trustHTML this.tags}}
               {{#if this.showPM}}
                 <div class="topic-header-participants">
                   {{#each this.participants as |participant|}}

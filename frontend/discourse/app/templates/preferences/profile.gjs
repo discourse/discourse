@@ -1,7 +1,7 @@
 import { Input } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -171,7 +171,7 @@ export default <template>
               }}
             >
               {{replaceEmoji
-                (htmlSafe @controller.model.featured_topic.fancy_title)
+                (trustHTML @controller.model.featured_topic.fancy_title)
               }}
             </LinkTo>
           </label>

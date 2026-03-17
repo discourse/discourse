@@ -3,7 +3,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -245,7 +245,7 @@ export default class IpLookup extends Component {
                 {{/if}}
               </ConditionalLoadingSpinner>
             </dl>
-            <div class="powered-by">{{htmlSafe
+            <div class="powered-by">{{trustHTML
                 (i18n "ip_lookup.powered_by")
               }}</div>
           </div>

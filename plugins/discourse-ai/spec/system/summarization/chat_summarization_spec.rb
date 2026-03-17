@@ -30,7 +30,7 @@ RSpec.describe "Summarize a channel since your last visit", type: :system do
       find(".chat-composer-dropdown__trigger-btn").click
       find(".chat-composer-dropdown__action-btn.channel-summary").click
 
-      expect(page.has_css?(".chat-modal-channel-summary")).to eq(true)
+      expect(page).to have_css(".chat-modal-channel-summary")
 
       find(".summarization-since").click
       find(".select-kit-row[data-value=\"3\"]").click

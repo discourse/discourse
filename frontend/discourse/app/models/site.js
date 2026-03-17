@@ -4,7 +4,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
 import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -211,7 +211,7 @@ export default class Site extends RestModel {
     if (!isEmpty(siteFields)) {
       return siteFields.map((f) => {
         let value = fields ? fields[f.id.toString()] : null;
-        value = value || htmlSafe("&mdash;");
+        value = value || trustHTML("&mdash;");
         return { name: f.name, value };
       });
     }

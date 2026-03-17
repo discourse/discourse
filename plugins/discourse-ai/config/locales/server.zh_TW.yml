@@ -47,6 +47,12 @@ zh_TW:
       assign:
         errors:
           not_found: "未找到話題."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "批准"
+        reject:
+          title: "拒絕"
     sentiment:
       reports:
         post_emotion:

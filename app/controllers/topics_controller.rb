@@ -167,7 +167,8 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+    if slugs_do_not_match ||
+         (!request.format.json? && params[:slug].nil? && @topic_view.topic.slug.present?)
       redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
       return
     end
@@ -495,7 +496,12 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
 
-    tags = params[:tags] || []
+    tags =
+      if params[:tags].is_a?(ActionController::Parameters)
+        params[:tags].values
+      else
+        params[:tags] || []
+      end
 
     if tags.present? && tags.first.is_a?(String)
       Discourse.deprecate(
@@ -1124,6 +1130,8 @@ class TopicsController < ApplicationController
       result = { topic_ids: changed_topic_ids }
       result[:errors] = operator.errors if operator.errors.present?
       render_json_dump result
+    rescue Discourse::InvalidParameters => ex
+      render_json_error(ex, status: 400)
     end
   end
 

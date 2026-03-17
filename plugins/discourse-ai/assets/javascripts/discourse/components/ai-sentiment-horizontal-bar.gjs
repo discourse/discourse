@@ -1,5 +1,5 @@
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -8,7 +8,7 @@ const AiSentimentHorizontalBar = <template>
   {{#if (gt @score 0)}}
     <DTooltip
       class={{concat "sentiment-horizontal-bar__" @type}}
-      style={{htmlSafe (concat "width: " @width "%")}}
+      style={{trustHTML (concat "width: " @width "%")}}
     >
       <:trigger>
         <span class="sentiment-horizontal-bar__count">

@@ -2574,7 +2574,7 @@ zh_CN:
       google_classic: "Google Classic（已弃用，改为 Noto Emoji）"
       facebook_messenger: "Facebook Messenger（已弃用，改为 Standard）"
       openmoji: OpenMoji
-      standard: Standard
+      standard: 标准
       fluentui: Fluent Emoji
       noto: Noto Emoji
       twemoji: Twemoji
@@ -2828,6 +2828,7 @@ zh_CN:
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
       abandon: "关闭编辑器并舍弃草稿"
+      edit_reason: "添加您的编辑理由"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
@@ -3515,6 +3516,8 @@ zh_CN:
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
         other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
+      auto_delete_immediate:
+        other: "该话题中的最后一篇帖子已经存在 %{count} 小时，因此该话题将被立即删除。"
       timeline:
         back: "返回"
         back_description: "返回上一个未读帖子"
@@ -5304,7 +5307,7 @@ zh_CN:
         account:
           title: "帐户"
         reports:
-          title: "举报"
+          title: "报告"
         community:
           title: "社区"
         appearance:
@@ -5639,7 +5642,7 @@ zh_CN:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传内容"
         reports:
-          title: "举报"
+          title: "报告"
           header_description: "报告是帮助您了解站点上所发生事情的强大工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
           sub_pages:
             settings:

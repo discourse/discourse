@@ -41,6 +41,10 @@ module DiscourseAi
           "unlist_topic"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           topic = Topic.find_by(id: parameters[:topic_id])
           if !topic

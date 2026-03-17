@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
@@ -118,7 +118,7 @@ export function categoryLinkHTML(category, options) {
       categoryOptions.emoji = options.emoji;
     }
   }
-  return htmlSafe(categoryBadgeHTML(category, categoryOptions));
+  return trustHTML(categoryBadgeHTML(category, categoryOptions));
 }
 
 export default categoryLinkHTML;

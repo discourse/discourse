@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import draggable from "discourse/modifiers/draggable";
@@ -24,7 +24,7 @@ export default class Toolbar extends Component {
 
   get style() {
     const clampedTop = Math.max(this.top, 0);
-    return htmlSafe(`top: min(100dvh - ${this.ownSize}px, ${clampedTop}px);`);
+    return trustHTML(`top: min(100dvh - ${this.ownSize}px, ${clampedTop}px);`);
   }
 
   @action

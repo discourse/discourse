@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { number as numberFormatter } from "discourse/lib/formatter";
 import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
@@ -37,5 +37,5 @@ export default function number(orig, params = {}) {
 
   result += ">" + n + "</span>";
 
-  return htmlSafe(result);
+  return trustHTML(result);
 }

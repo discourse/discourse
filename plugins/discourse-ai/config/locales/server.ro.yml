@@ -72,6 +72,12 @@ ro:
       assign:
         errors:
           not_found: "Subiectul nu a fost găsit."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprobare"
+        reject:
+          title: "Respingere"
     llm:
       configuration:
         disable_modules_first: "Mai întâi trebuie să dezactivezi aceste module: %{settings}"

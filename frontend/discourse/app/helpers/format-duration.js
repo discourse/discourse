@@ -1,6 +1,6 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { durationTiny } from "discourse/lib/formatter";
 
 export default function formatDuration(seconds) {
-  return htmlSafe(durationTiny(seconds));
+  return trustHTML(durationTiny(seconds));
 }

@@ -133,7 +133,7 @@ module PostGuardian
   end
 
   def can_delete_all_posts?(user)
-    is_staff? && user && !user.admin? &&
+    is_staff? && user && !user.admin? && (!user.moderator? || is_admin?) &&
       (
         is_admin? ||
           (

@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classify } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
@@ -39,7 +39,7 @@ export default class PollBreakdownModal extends Component {
   @computed("model.poll.title", "model.post.topic.title")
   get title() {
     return this.model?.poll?.title
-      ? htmlSafe(this.model?.poll?.title)
+      ? trustHTML(this.model?.poll?.title)
       : this.model?.post?.topic?.title;
   }
 

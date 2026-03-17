@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 /** @type {import("discourse/helpers/element.gjs").default} */
@@ -102,7 +102,7 @@ export default class DButton extends Component {
 
   get computedLabel() {
     if (this.args.label) {
-      return htmlSafe(i18n(this.args.label));
+      return trustHTML(i18n(this.args.label));
     }
     return this.args.translatedLabel;
   }

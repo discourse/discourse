@@ -2218,7 +2218,7 @@ pt_BR:
               other {# dias}
             }.
           edit_link_options: "Editar opções de link ou enviar por e-mail"
-          edit_link_options_only: "Edite as opções do link"
+          edit_link_options_only: "Editar as opções do link"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
           description: "Descrição"
@@ -2976,22 +2976,22 @@ pt_BR:
       list_title: "Listas"
       list_item: "Item da lista"
       toggle_direction: "Alternar direção"
-      apply_wrap_title: "Aplicar embrulho"
+      apply_wrap_title: "Aplicar wrap"
       wrap_modal:
-        title: "Editar embrulho"
-        name_label: "Embrulhar nome"
+        title: "Editar wrap"
+        name_label: "Aplicar wrap no nome"
         attributes_label: "Atributos"
         add_attribute: "Adicionar atributo"
         remove_attribute: "Remover atributo"
         apply: "Aplicar"
-        unwrap: "Desembrulhar"
+        unwrap: "Remover wrap"
         no_attributes: "Nenhum atributo foi adicionado ainda."
-      wrap_text: "Embrulhar conteúdo"
+      wrap_text: "Aplicar wrap no conteúdo"
       help: "Ajuda de edição de redução"
       collapse: "Minimizar o painel do compositor"
       open: "Abrir o painel do compositor"
       abandon: "Fechar compositor e ignorar rascunho"
-      enter_fullscreen: "Entrar no compositor em tela cheia"
+      enter_fullscreen: "Abrir o compositor em tela cheia"
       exit_fullscreen: "Sair do compositor em tela cheia"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair da tela cheia"
       show_toolbar: "Exibir barra de ferramentas do compositor"
@@ -3057,7 +3057,7 @@ pt_BR:
         add_to_grid: "Adicionar à grade"
         move_outside_grid: "Mover para fora da grade"
       image: "imagem"
-      grid_label: "Isso será exibido como uma grade."
+      grid_label: "Isto será exibido como uma grade."
       grid_mode_grid: "Grade"
       grid_mode_carousel: "Carrossel"
       grid_mode_title: "Definir o estilo da galeria de imagens para %{mode}"
@@ -3071,7 +3071,7 @@ pt_BR:
         remove: "Remover link"
         visit: "Abrir link em uma aba externa"
         link_copied: "Link copiado!"
-      unsupported_token: "O editor de rich text não oferece suporte a todos os recursos usados nesta postagem; mudando para o editor de Markdown."
+      unsupported_token: "O editor avançado não oferece suporte a todos os recursos usados nesta postagem; mudando para o editor de Markdown."
     notifications:
       tooltip:
         regular:
@@ -3640,8 +3640,8 @@ pt_BR:
       created_at: "Criação: %{date}"
       bumped_at: "Mais recentes: %{date}"
       browse_latest_topics: "Navegue pelos tópicos mais recentes"
-      browse_new_replies: "Navegar pelas novas respostas"
-      browse_new_topics: "Navegar por novos tópicos"
+      browse_new_replies: "Ver novas respostas"
+      browse_new_topics: "Ver novos tópicos"
       suggest_create_topic: Tudo pronto para <a href>começar uma nova conversa?</a>
       jump_reply: "Ir para o local da postagem original"
       jump_reply_aria: "Ir para a postagem de @%{username} em sua localização original"
@@ -4038,8 +4038,8 @@ pt_BR:
       load_more_posts_below: "Carregar mais publicações abaixo"
       sr_collapse_replies: "Recolher respostas incorporadas"
       sr_load_more_replies: "Carregar mais respostas incorporadas"
-      loading_more_posts_above: "Carregando mais posts acima..."
-      loading_more_posts_below: "Carregando mais posts abaixo..."
+      loading_more_posts_above: "Carregando mais postagens acima..."
+      loading_more_posts_below: "Carregando mais postagens abaixo..."
       loading_complete: "Carregamento concluído"
       sr_date: "Data da postagem"
       sr_expand_replies:
@@ -4364,7 +4364,7 @@ pt_BR:
       errors:
         self_lockout: "Você está prestes a alterar as permissões de categoria de uma forma que removerá o seu próprio acesso. Tem certeza de que deseja continuar?"
       validations:
-        emoji_required: "Selecionar um emoji."
+        emoji_required: "Selecione um emoji."
         icon_required: "Selecione um ícone."
       name: "Nome da categoria"
       untitled: "Categoria sem título"
@@ -4381,7 +4381,7 @@ pt_BR:
       background_color: "Cor"
       foreground_color: "Cor do texto"
       color_validations:
-        cant_be_empty: "não pode estar vazio(a)"
+        cant_be_empty: "não pode estar vazio"
         incorrect_length: "deve corresponder ao formato #RRGGBB ou #RGB"
         non_hexdecimal: "deve conter apenas caracteres hexadecimais (0-9, AF)"
       styles:
@@ -4413,8 +4413,8 @@ pt_BR:
         create: "Criar"
         no_groups_selected: "Nenhum grupo recebeu acesso, esta categoria será visível apenas para a equipe."
         everyone_full_access: 'Esta categoria é pública, todos(as) podem ver, responder e criar postagens. Para restringir permissões, remova uma ou mais permissões concedidas para o grupo "%{everyone_group}".'
-        everyone_reply_access: 'Esta categoria é pública, todos podem ver e responder aos tópicos. Para restringir as permissões, remova o grupo "%{everyone_group}".'
-        everyone_see_access: 'Esta categoria é pública, todos podem ver as postagens. Para restringir as permissões, remova o grupo "%{everyone_group}".'
+        everyone_reply_access: 'Esta categoria é pública, todos podem ver e responder aos tópicos. Para restringir permissões, remova o grupo "%{everyone_group}".'
+        everyone_see_access: 'Esta categoria é pública, todos podem ver as postagens. Para restringir permissões, remova o grupo "%{everyone_group}".'
         specific_groups_have_access: "Esta categoria é privada; apenas os grupos selecionados podem ver, responder e criar publicações."
         all_parent_groups_used: "Todos os grupos da categoria pai foram adicionados. Para adicionar mais grupos, primeiro adicione-os à categoria pai."
         toggle_reply: "Alternar permissão de resposta"
@@ -4458,7 +4458,7 @@ pt_BR:
       subcategory_permissions_warning: "Uma subcategoria de uma categoria privada não pode ser pública."
       visibility:
         title: "Visibilidade"
-        public: "Público"
+        public: "Pública"
         all_members: "Todos os membros"
         group_restricted: "Privado"
         who_can_see: "Quem pode ver esta categoria?"
@@ -4778,7 +4778,7 @@ pt_BR:
       readonly: "Ver"
     preloader_text: "Carregando"
     lightbox:
-      download: "Download"
+      download: "Baixar"
       open: "Imagem original"
       image_info: "Informações sobre a imagem"
       quote: "Citar imagem"
@@ -5020,12 +5020,12 @@ pt_BR:
         back: "Voltar"
         name: "Nome"
         slug: "Slug"
-        name_placeholder: "Nome da etiqueta"
+        name_placeholder: "Nome da tag"
         slug_placeholder: "Slug da tag (opcional, gerado automaticamente a partir do nome)"
         saved: "Configurações de tag salvas"
         no_synonyms: "Não há sinônimos definidos para esta tag."
         add_synonym_placeholder: "Procurar por tags para adicionar como sinônimos..."
-        synonyms_subtitle: "Quando as seguintes etiquetas forem usadas, serão substituídas por %{name}"
+        synonyms_subtitle: "Quando as seguintes tags forem usadas, serão substituídas por %{name}"
         save: "Salvar tag"
         delete: "Excluir tag"
         synonyms_hint: "Quando as tags acima forem usadas, elas serão substituídas por %{baseTagName}."
@@ -5545,7 +5545,7 @@ pt_BR:
         categories: "Todas as categorias"
     content_localization:
       toggle_localized:
-        translated: "Esta página foi traduzida por máquina. Clique para ver o original."
+        translated: "Esta página foi traduzida por máquina. Clique para ver o texto original."
         not_translated: "Página não traduzida. Clique para traduzir."
         translations_enabled: "Traduções ativadas"
         translations_disabled: "Traduções desativadas"
@@ -5598,7 +5598,7 @@ pt_BR:
         name: "Nome"
         plugin: "Plugin"
         metadata: "Metadados"
-        enabled: "Ativados(as)"
+        enabled: "Ativado"
         enabled_for: "Ativado para..."
         show_image: "Mostrar imagem"
         edit_groups: "Editar grupos de adesão"
@@ -5610,7 +5610,7 @@ pt_BR:
         opt_in_groups: "Grupos de adesão voluntária"
         show_related_settings: "Mostrar configurações relacionadas..."
         opt_in_groups_instructions: "Os grupos de adesão voluntária podem ser usados para permitir que um determinado grupo de usuários teste uma alteração antes que ela seja liberada para todos. Observe que esses grupos se tornarão irrelevantes assim que a alteração atingir o status Estável."
-        enabled_for_throttle: "Você alterou para quem essa alteração está ativada muito rapidamente. Aguarde alguns segundos antes de tentar novamente."
+        enabled_for_throttle: "Você alterou a pessoa para quem essa alteração está ativada muito rapidamente. Aguarde alguns segundos antes de tentar novamente."
         change_enabled_for_success: "Você ativou essa alteração para %{enabledFor}"
         change_disabled: "Você optou por não participar desta alteração."
         permanent_notice: "Essa alteração agora é permanente e será removida em breve. Você não poderá mais optar por não participar."
@@ -5641,12 +5641,12 @@ pt_BR:
         filter:
           search_placeholder: "Filtrar por nome, descrição ou plugin..."
           no_results: "Nenhuma alteração prevista corresponde ao seu filtro."
-          all: "Todos(as)"
+          all: "Todos"
           enabled_all: "Todos os estados ativados"
-          enabled: "Ativados(as)"
+          enabled: "Ativados"
           enabled_for_staff: "Ativado para %{staffGroupName}"
           enabled_for_specific_groups: "Ativado para grupos específicos"
-          disabled: "Desativados(as)"
+          disabled: "Desativados"
           impact_type_all: "Todos os tipos de impacto"
           impact_type_feature: "Recurso"
           impact_type_other: "Outras"
@@ -5695,13 +5695,13 @@ pt_BR:
           keywords: "local|idioma|fuso_horário|unicode|ltr"
         upcoming_changes:
           title: "Alterações previstas"
-          header_description: "Uma lista de alterações previstas para o Discourse que podem afetar seu site e recursos experimentais nos quais você pode optar por participar. Você pode filtrar por impacto, tipo e status.\n\nGrupos de participação opcional podem ser usados para permitir que um determinado grupo de usuários teste uma alteração antes que ela seja lançada para todos, embora esses grupos se tornem irrelevantes assim que uma alteração se tornar permanente."
+          header_description: "Uma lista de alterações previstas para o Discourse que podem afetar seu site e recursos experimentais nos quais você pode optar por participar. Você pode filtrar por impacto, tipo e status.\n\nGrupos de participação opcional podem ser usados para permitir que um determinado grupo de usuários teste uma alteração antes que ela seja disponibilizada para todos, embora esses grupos se tornem irrelevantes assim que uma alteração se tornar permanente."
         login:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
           sub_pages:
             common_settings:
-              title: "Definições"
+              title: "Configurações"
             authenticators:
               title: "Logins sociais"
             discourseconnect:
@@ -5832,7 +5832,7 @@ pt_BR:
               label: "Local"
               description: "Escolha onde o banner deve aparecer na página."
               options:
-                above_topic_content: "Conteúdo acima do tópico"
+                above_topic_content: "Acima do conteúdo do tópico"
                 below_site_header: "Abaixo do cabeçalho do site"
             text_section:
               title: "Texto personalizável"
@@ -5844,7 +5844,7 @@ pt_BR:
             header_logged_in:
               label: "Cabeçalho para membros logados"
               description: "Variáveis disponíveis: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
-              placeholder: "Boas-vindas novamente, %{preferred_display_name}!"
+              placeholder: "Seja bem-vindo(a) de volta, %{preferred_display_name}!"
             header_anonymous:
               label: "Cabeçalho para visitantes anônimos"
               description: "Variável disponível: <code>&percnt;{site_name}</code>"
@@ -5858,7 +5858,7 @@ pt_BR:
               description: "Texto secundário exibido abaixo do cabeçalho para visitantes anônimos."
               placeholder: "Junte-se à nossa comunidade para participar das discussões."
             search_placeholder:
-              label: "Pesquisar espaço reservado"
+              label: "Espaço reservado para pesquisa"
               description: "Espaço reservado para a caixa de pesquisa no banner de boas-vindas."
               placeholder: "Tópicos de pesquisa..."
         navigation:
@@ -5922,7 +5922,7 @@ pt_BR:
           header_description: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
           sub_pages:
             settings:
-              title: "Definições"
+              title: "Configurações"
         badges:
           title: "Emblemas"
           header_description: "Os(as) usuários(as) recebem emblemas como recompensa por suas atividades, contribuições e realizações. Isso é uma forma de reconhecer, validar e incentivar comportamentos positivos e o envolvimento na comunidade"
@@ -6182,7 +6182,7 @@ pt_BR:
             disabled: 'O relatório de pesquisa de conteúdo em alta está desativado. Ative as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'
           average_chart_label: Mostrando médias, não totais
           sort_button: "Classificar por %{column}"
-          sort_button_current: "Ordenado por %{column}, %{direction}"
+          sort_button_current: "Classificado por %{column}, %{direction}"
           sort_ascending: "ordem crescente"
           sort_descending: "ordem decrescente"
           filters:
@@ -6493,7 +6493,7 @@ pt_BR:
           user_destroyed: "Usuário(a) excluído(a)"
           user_suspended: "Usuário(a) suspenso(a)"
           user_unsuspended: "Usuário(a) liberado(a)"
-          user_anonymized: "O usuário foi anonimizado."
+          user_anonymized: "O(a) usuário(a) foi anonimizado(a)."
         reviewable_event:
           group_name: "Eventos revisáveis"
           reviewable_created: "Item revisável pronto"
@@ -7552,7 +7552,7 @@ pt_BR:
             upcoming_change_toggled: "alteração prevista alternada"
             upcoming_change_available: "alteração prevista disponível"
             change_site_setting_groups: "alterar grupos de configuração do site"
-            discourse_id_regenerate_credentials: "regerar credenciais de ID do Discourse"
+            discourse_id_regenerate_credentials: "regerar credenciais do Discourse ID"
         screened_emails:
           title: "E-mails filtrados"
           description: "Quando alguém tentar criar uma conta nova, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -7923,7 +7923,7 @@ pt_BR:
         post_edits_count: "Postar edições"
         upcoming_changes:
           title: "Alterações previstas do usuário"
-          description: "Para modificar grupos ou ativar ou desativar alterações futuras, visite a <a href='%{basePath}/admin/config/upcoming-changes'>página de configuração de alterações futuras</a>."
+          description: "Para modificar grupos ou ativar ou desativar alterações previstas, visite a <a href='%{basePath}/admin/config/upcoming-changes'>página de configuração de alterações previstas</a>."
           filter_placeholder: "Filtrar alterações previstas por nome ou descrição."
           filter_no_results: "Nenhuma alteração prevista encontrada."
         exports:
@@ -8217,7 +8217,7 @@ pt_BR:
           upload:
             label: "Enviar"
             title: "Enviar imagens"
-        download_file: "Download"
+        download_file: "Baixar"
         upload_restrictions:
           extensions: "Aceito: %{extensions}"
           max_size: "Máximo: %{size}"
@@ -8338,7 +8338,7 @@ pt_BR:
         sections:
           design: Design
           query: Consulta
-          settings: Definições
+          settings: Configurações
         usage_heading: Uso
         allow_title: Permitir que o emblema seja usado como título
         multiple_grant: Pode ser concedido várias vezes

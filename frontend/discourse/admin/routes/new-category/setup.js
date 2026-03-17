@@ -14,8 +14,21 @@ export default class NewCategorySetup extends DiscourseRoute {
   }
 
   async model() {
-    const result = await ajax("/categories/types");
-    return result.types;
+    return await ajax("/categories/types");
+  }
+
+  afterModel(model) {
+    if (model.types.length === 1) {
+      const type = model.types[0];
+      this.categoryTypeChooser.choose(
+        type.id,
+        type.name,
+        type.configuration_schema,
+        type.title,
+        model.counts[type.id]
+      );
+      this.router.transitionTo("newCategory.tabs", "general");
+    }
   }
 
   titleToken() {

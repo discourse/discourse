@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import { Promise as RsvpPromise } from "rsvp";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -127,7 +127,7 @@ export default class AsyncContent extends Component {
 class AsyncContentInlineError extends Component {
   get errorMessage() {
     const errorInfo = extractErrorInfo(this.args.error);
-    return errorInfo.html ? htmlSafe(errorInfo.message) : errorInfo.message;
+    return errorInfo.html ? trustHTML(errorInfo.message) : errorInfo.message;
   }
 
   <template>

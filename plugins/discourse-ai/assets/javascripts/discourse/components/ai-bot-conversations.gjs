@@ -9,7 +9,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -60,7 +60,7 @@ export default class AiBotConversations extends Component {
 
     const instance = this.tooltip.register(element, {
       identifier: "ai-credit-limit-tooltip",
-      content: htmlSafe(
+      content: trustHTML(
         this.aiCredits.getCreditLimitMessage(this.creditStatus)
       ),
       placement: "top",

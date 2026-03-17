@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import PostLanguageSelector from "discourse/components/post-language-selector";
 import escape from "discourse/lib/escape";
@@ -102,11 +102,11 @@ export default class ComposerActionTitle extends Component {
       `;
     }
 
-    return htmlSafe(editTitle);
+    return trustHTML(editTitle);
   }
 
   _formatReplyToTopic(link) {
-    return htmlSafe(
+    return trustHTML(
       `<a class="topic-link" href="${link.href}" data-topic-id="${this.get(
         "model.topic.id"
       )}">${link.anchor}</a>`
@@ -117,7 +117,7 @@ export default class ComposerActionTitle extends Component {
     const htmlLink = `<a class="user-link" href="${link.href}">${escape(
       link.anchor
     )}</a>`;
-    return htmlSafe(`${avatar}${htmlLink}`);
+    return trustHTML(`${avatar}${htmlLink}`);
   }
 
   <template>

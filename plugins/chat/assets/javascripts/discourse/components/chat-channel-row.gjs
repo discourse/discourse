@@ -6,7 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -41,7 +41,7 @@ export default class ChatChannelRow extends Component {
 
   onReset = modifierFn((element) => {
     const handler = () => {
-      this.rowStyle = htmlSafe("margin-right: 0px;");
+      this.rowStyle = trustHTML("margin-right: 0px;");
       this.showRemoveButton = false;
       this.shouldReset = false;
     };
@@ -50,7 +50,7 @@ export default class ChatChannelRow extends Component {
 
     return () => {
       element.removeEventListener("transitionend", handler);
-      this.rowStyle = htmlSafe("margin-right: 0px;");
+      this.rowStyle = trustHTML("margin-right: 0px;");
       this.showRemoveButton = false;
       this.shouldReset = false;
     };
@@ -107,16 +107,16 @@ export default class ChatChannelRow extends Component {
         this.diff = threshold + (this.diff - threshold) * 0.1;
       }
 
-      this.rowStyle = htmlSafe(`margin-right: ${this.diff}px;`);
+      this.rowStyle = trustHTML(`margin-right: ${this.diff}px;`);
     } else {
-      this.rowStyle = htmlSafe("margin-right: 0px;");
+      this.rowStyle = trustHTML("margin-right: 0px;");
     }
   }
 
   @bind
   onSwipeEnd() {
     if (this.isAtThreshold) {
-      this.rowStyle = htmlSafe("margin-right: 0px;");
+      this.rowStyle = trustHTML("margin-right: 0px;");
       this.shouldRemoveChannel = true;
     } else {
       this.shouldReset = true;
@@ -201,7 +201,7 @@ export default class ChatChannelRow extends Component {
           <ChatChannelMetadata @channel={{@channel}} />
           {{#if this.shouldRenderLastMessage}}
             <div class="chat-channel__last-message">
-              {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
+              {{replaceEmoji (trustHTML @channel.lastMessage.excerpt)}}
             </div>
           {{/if}}
         </div>

@@ -125,7 +125,8 @@
   flex-direction: column;
   width: calc(100% - 1em);
   border: 1px solid var(--content-border-color);
-  padding: 0.5em;
+  padding: var(--space-4);
+  border-radius: var(--d-border-radius);
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;

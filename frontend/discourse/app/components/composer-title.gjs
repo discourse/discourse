@@ -227,6 +227,14 @@ export default class ComposerTitle extends Component {
     );
   }
 
+  @computed("composer.categoryTitlePlaceholder", "composer.titlePlaceholder")
+  get titleAriaLabel() {
+    return (
+      this.composer.categoryTitlePlaceholder ||
+      i18n(this.composer.titlePlaceholder)
+    );
+  }
+
   bodyIsDefault() {
     const reply = this.get("composer.reply") || "";
     return (
@@ -241,7 +249,8 @@ export default class ComposerTitle extends Component {
       @id="reply-title"
       @maxLength={{this.titleMaxLength}}
       @placeholderKey={{this.composer.titlePlaceholder}}
-      @aria-label={{i18n this.composer.titlePlaceholder}}
+      @placeholder={{this.composer.categoryTitlePlaceholder}}
+      @aria-label={{this.titleAriaLabel}}
       @disabled={{this.disabled}}
       @autocomplete="off"
     />

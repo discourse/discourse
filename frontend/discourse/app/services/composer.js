@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-observers, ember/no-side-effects */
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -296,15 +296,10 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
-    const storedVal = this.keyValueStore.get("toolbar-enabled");
-    if (this._toolbarEnabled === undefined && storedVal === undefined) {
-      // iPhone 6 is 375, anything narrower and toolbar should
-      // be default disabled.
-      // That said we should remember the state
-      this._toolbarEnabled =
-        window.innerWidth > 370 && !this.capabilities.isAndroid;
-    }
-    return this._toolbarEnabled || storedVal === "true";
+    return (
+      this._toolbarEnabled ??
+      this.keyValueStore.get("toolbar-enabled") !== "false"
+    );
   }
 
   set showToolbar(val) {
@@ -858,7 +853,7 @@ export default class ComposerService extends Service {
             );
           } else {
             const wrapTag = attributesString.trim()
-              ? `[wrap ${attributesString}]`
+              ? `[wrap${attributesString}]`
               : "[wrap]";
             toolbarEvent.applySurround(
               `${wrapTag}\n`,

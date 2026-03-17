@@ -6,7 +6,7 @@
     "lint:fix": "prettier --write '**/*.{md,json,mjs,yml}'"
   },
   "devDependencies": {
-    "prettier": "^3.4.2",
-    "prettier-plugin-ember-template-tag": "^2.0.4"
+    "@discourse/lint-configs": "^2.43.0",
+    "prettier": "3.8.1"
   }
 }

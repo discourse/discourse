@@ -66,7 +66,7 @@ export default class BaseCustomSidebarPanel {
    * @param {string} filter filter applied
    *
    * @returns {string | SafeString} Description displayed when the applied filter has no results.
-   * Use `htmlSafe` from `from "@ember/template` to use HTML strings.
+   * Use `trustHTML` from `@ember/template` to use HTML strings.
    */
   // eslint-disable-next-line no-unused-vars
   filterNoResultsDescription(filter) {

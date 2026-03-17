@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdComponent from "./ad-component";
 
 export default class CarbonadsAd extends AdComponent {
@@ -14,7 +14,7 @@ export default class CarbonadsAd extends AdComponent {
 
   @computed("serve_id", "placement")
   get url() {
-    return htmlSafe(
+    return trustHTML(
       `//cdn.carbonads.com/carbon.js?serve=${this.serve_id}&placement=${this.placement}`
     );
   }

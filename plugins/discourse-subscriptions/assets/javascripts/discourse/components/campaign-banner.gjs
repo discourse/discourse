@@ -6,7 +6,7 @@ import { equal } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -230,7 +230,7 @@ export default class CampaignBanner extends Component {
       {{#if this.shouldShow}}
         <div
           class="campaign-banner"
-          style={{htmlSafe
+          style={{trustHTML
             (concat "box-shadow: 5px 5px #" this.dropShadowColor)
           }}
         >
@@ -238,7 +238,7 @@ export default class CampaignBanner extends Component {
 
           <div
             class="campaign-banner-info"
-            style={{htmlSafe this.bannerInfoStyle}}
+            style={{trustHTML this.bannerInfoStyle}}
           >
             {{#if this.isGoalMet}}
               <h2 class="campaign-banner-info-header">
@@ -292,7 +292,7 @@ export default class CampaignBanner extends Component {
 
               {{#if this.subscriberGoal}}
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=this.subscribers
@@ -303,7 +303,7 @@ export default class CampaignBanner extends Component {
                 </p>
               {{else}}
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=(formatCurrency this.currency this.amountRaised)
@@ -351,7 +351,7 @@ export default class CampaignBanner extends Component {
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=this.subscribers
@@ -368,7 +368,7 @@ export default class CampaignBanner extends Component {
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=(formatCurrency this.currency this.amountRaised)

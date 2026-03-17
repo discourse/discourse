@@ -59,11 +59,15 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
 
-      it "shows all available queries in alphabetical order" do
+      it "shows all available queries sorted by name when requested" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "B")
         make_query("SELECT 1 as value", name: "A")
-        get "/admin/plugins/discourse-data-explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json",
+            params: {
+              order: "name",
+              ascending: "true",
+            }
         expect(response.status).to eq(200)
         expect(response_json["queries"].length).to eq(
           DiscourseDataExplorer::Queries.default.count + 2,
@@ -776,6 +780,21 @@ describe DiscourseDataExplorer::QueryController do
     it "serves POST /admin/plugins/explorer/queries/:id/run.json" do
       query = make_query("SELECT 42 as legacy_value")
       post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { params: {}.to_json }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(response.parsed_body["columns"]).to eq(["legacy_value"])
+      expect(response.parsed_body["rows"]).to eq([[42]])
+    end
+
+    it "serves POST /admin/plugins/explorer/queries/:id/run without .json suffix or Accept header" do
+      query = make_query("SELECT 42 as legacy_value")
+      post "/admin/plugins/explorer/queries/#{query.id}/run",
+           params: {
+             params: {}.to_json,
+           },
+           headers: {
+             "Accept" => "",
+           }
       expect(response.status).to eq(200)
       expect(response.parsed_body["success"]).to eq(true)
       expect(response.parsed_body["columns"]).to eq(["legacy_value"])

@@ -19,7 +19,6 @@ class DeprecatedOutletArgument {
     this.options = {
       id: options.id || "discourse.plugin-connector.deprecated-arg",
       since: options.since,
-      dropFrom: options.dropFrom,
       url: options.url,
       raiseError: options.raiseError,
     };

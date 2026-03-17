@@ -62,15 +62,25 @@ module DiscoursePostEvent
       attending_user = User.find_by(username_lower: params[:attending_user].downcase)
       return events.none if !attending_user
 
+      statuses = [DiscoursePostEvent::Invitee.statuses[:going]]
+      if params[:include_interested].present? &&
+           can_include_interested?(guardian, user, attending_user)
+        statuses << DiscoursePostEvent::Invitee.statuses[:interested]
+      end
+
       events =
         events.joins(:invitees).where(
           discourse_post_event_invitees: {
             user_id: attending_user.id,
-            status: DiscoursePostEvent::Invitee.statuses[:going],
+            status: statuses,
           },
         )
 
       guardian.is_admin? ? events : apply_privacy_restrictions(events, user)
+    end
+
+    def self.can_include_interested?(guardian, user, attending_user)
+      guardian.is_admin? || user&.id == attending_user.id
     end
 
     def self.apply_privacy_restrictions(events, user)
@@ -91,8 +101,8 @@ module DiscoursePostEvent
     def self.filter_by_dates(events, params)
       return events if params[:before].blank? && params[:after].blank?
 
-      before_date = params[:before]&.to_datetime
-      after_date = params[:after]&.to_datetime
+      before_date = params[:before] == "now" ? Time.current : params[:before]&.to_datetime
+      after_date = params[:after] == "now" ? Time.current : params[:after]&.to_datetime
 
       recurring_scope = build_recurring_date_scope(after_date, before_date)
       non_recurring_scope = build_non_recurring_date_scope(after_date, before_date)

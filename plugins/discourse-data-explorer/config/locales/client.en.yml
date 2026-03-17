@@ -107,7 +107,7 @@ en:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
     discourse_automation:
       scriptables:

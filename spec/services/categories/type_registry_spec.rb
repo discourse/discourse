@@ -42,6 +42,31 @@ RSpec.describe Categories::TypeRegistry do
 
       expect(discussion).to include(icon: "memo", available: true)
     end
+
+    it "returns only visible types when only_visible is true" do
+      Categories::Types::Discussion.stubs(:visible?).returns(false)
+      expect(described_class.list(only_visible: true)).to be_empty
+    end
+  end
+
+  describe ".counts" do
+    it "returns a hash of type_id => count in a single query" do
+      counts = nil
+      queries = track_sql_queries { counts = described_class.counts }
+
+      expect(counts).to be_a(Hash)
+      expect(counts.keys).to include(:discussion)
+      expect(counts.values).to all(be_a(Integer))
+      expect(queries.size).to eq(1)
+    end
+
+    it "returns empty hash when no types are registered" do
+      original_types = described_class.all.dup
+      described_class.reset!
+      expect(described_class.counts).to eq({})
+    ensure
+      original_types&.each_value { |klass| described_class.register(klass) }
+    end
   end
 
   describe ".register" do
@@ -56,6 +81,14 @@ RSpec.describe Categories::TypeRegistry do
 
       expect(described_class.get(:test_registry_type)).to eq(test_type)
       expect(described_class.valid?(:test_registry_type)).to be true
+    end
+
+    it "raises when type_id contains invalid characters" do
+      invalid_type = Class.new(Categories::Types::Base).tap { |t| t.type_id(:"invalid-type!") }
+      expect { described_class.register(invalid_type) }.to raise_error(
+        ArgumentError,
+        /must only contain lowercase letters/,
+      )
     end
 
     it "raises when a type_id is already registered by another owner" do

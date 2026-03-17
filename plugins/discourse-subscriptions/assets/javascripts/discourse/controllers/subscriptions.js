@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
 export default class SubscriptionsController extends Controller {
@@ -28,12 +28,12 @@ export default class SubscriptionsController extends Controller {
       }
 
       if (this.currentUser) {
-        return htmlSafe(`<stripe-pricing-table
+        return trustHTML(`<stripe-pricing-table
                 pricing-table-id="${pricingTableId}"
                 publishable-key="${publishableKey}"
                 customer-email="${this.email}"></stripe-pricing-table>`);
       } else {
-        return htmlSafe(`<stripe-pricing-table
+        return trustHTML(`<stripe-pricing-table
                 pricing-table-id="${pricingTableId}"
                 publishable-key="${publishableKey}"
                 ></stripe-pricing-table>`);

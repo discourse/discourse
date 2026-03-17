@@ -1344,9 +1344,5 @@ export default class PostStream extends RestModel {
       suggested_topics: result.suggested_topics,
       suggested_group_name: result.suggested_group_name,
     });
-
-    if (this.topic.isPrivateMessage) {
-      this.pmTopicTrackingState.startTracking();
-    }
   }
 }

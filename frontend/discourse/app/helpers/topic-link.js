@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 export default function topicLink(topic, args = {}) {
   const title = topic.get("fancyTitle");
@@ -13,7 +13,7 @@ export default function topicLink(topic, args = {}) {
     args.class.split(" ").forEach((c) => classes.push(c));
   }
 
-  return htmlSafe(
+  return trustHTML(
     `<a href='${url}'
         class='${classes.join(" ")}'
         data-topic-id='${topic.id}'>${title}</a>`

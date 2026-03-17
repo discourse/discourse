@@ -19,7 +19,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("adds --scrollable class when content overflows", async function (assert) {
+    test("adds scroll classes when content overflows", async function (assert) {
       const content = generateOptions(30);
 
       await render(
@@ -37,10 +37,12 @@ module(
 
       await click(".fk-d-menu__trigger");
 
-      assert.dom(".fk-d-menu[class*='toolbar-menu']").hasClass("--scrollable");
+      const menu = document.querySelector(".fk-d-menu[class*='toolbar-menu']");
+      assert.false(menu.classList.contains("--scroll-top"));
+      assert.true(menu.classList.contains("--scroll-bottom"));
     });
 
-    test("does not add --scrollable class when content fits", async function (assert) {
+    test("does not add scroll classes when content fits", async function (assert) {
       const content = generateOptions(2);
 
       await render(
@@ -58,9 +60,9 @@ module(
 
       await click(".fk-d-menu__trigger");
 
-      assert
-        .dom(".fk-d-menu[class*='toolbar-menu']")
-        .doesNotHaveClass("--scrollable");
+      const menu = document.querySelector(".fk-d-menu[class*='toolbar-menu']");
+      assert.false(menu.classList.contains("--scroll-top"));
+      assert.false(menu.classList.contains("--scroll-bottom"));
     });
   }
 );

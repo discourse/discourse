@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { and } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component";
@@ -147,31 +147,31 @@ export default class AmazonProductLinks extends AdComponent {
 
   @computed("amazon_width", "amazon_height")
   get adWrapperStyle() {
-    return htmlSafe(
+    return trustHTML(
       `width: ${this.amazon_width}px; height: ${this.amazon_height}px;`
     );
   }
 
   @computed("mobile_amazon_width", "mobile_amazon_height")
   get adWrapperStyleMobile() {
-    return htmlSafe(
+    return trustHTML(
       `width: ${this.mobile_amazon_width}px; height: ${this.mobile_amazon_height}px;`
     );
   }
 
   @computed("mobile_amazon_width")
   get adTitleStyleMobile() {
-    return htmlSafe(`width: ${this.mobile_amazon_width}px;`);
+    return trustHTML(`width: ${this.mobile_amazon_width}px;`);
   }
 
   @computed("user_input")
   get userInput() {
-    return htmlSafe(`${this.user_input}`);
+    return trustHTML(`${this.user_input}`);
   }
 
   @computed("user_input_mobile")
   get userInputMobile() {
-    return htmlSafe(`${this.user_input_mobile}`);
+    return trustHTML(`${this.user_input_mobile}`);
   }
 
   @computed

@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 export default function categoryVariables(category) {
   let vars = "";
@@ -19,5 +19,5 @@ export default function categoryVariables(category) {
     vars += `--parent-category-badge-text-color: #${category.parentCategory.textColor};`;
   }
 
-  return htmlSafe(vars);
+  return trustHTML(vars);
 }

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { USER_FIELD_FLAGS } from "discourse/admin/lib/constants";
 import UserField from "discourse/admin/models/user-field";
 import DButton from "discourse/components/d-button";
@@ -75,7 +75,7 @@ export default class AdminUserFieldItem extends Component {
           <div class="d-table__overview-name admin-user_field-item__name">
             {{@userField.name}}
           </div>
-          <div class="d-table__overview-about">{{htmlSafe
+          <div class="d-table__overview-about">{{trustHTML
               @userField.description
             }}</div>
         </LinkTo>

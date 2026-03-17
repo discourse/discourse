@@ -3284,6 +3284,7 @@ pl_PL:
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
       abandon: "Zamknij kompozytor i odrzuć szkic"
+      edit_reason: "Dodaj powód edycji"
       enter_fullscreen: "Przejdź do pełnoekranowego kompozytora"
       exit_fullscreen: "Wyjdź z trybu pełnoekranowego kompozytora"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
@@ -4124,6 +4125,11 @@ pl_PL:
         few: "Ostatni wpis w tym temacie został zamieszczony %{count} godziny temu, więc zostanie on natychmiastowo zamknięty."
         many: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
         other: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
+      auto_delete_immediate:
+        one: "Ostatni wpis tematu jest już od %{count} godziny, więc temat zostanie natychmiast usunięty."
+        few: "Ostatni wpis tematu jest już od %{count} godzin, więc temat zostanie natychmiast usunięty."
+        many: "Ostatni wpis tematu jest już od %{count} godzin, więc temat zostanie natychmiast usunięty."
+        other: "Ostatni wpis tematu jest już od %{count} godzin, więc temat zostanie natychmiast usunięty."
       timeline:
         back: "Wstecz"
         back_description: "Wróć do ostatniego nieprzeczytanego wpisu"

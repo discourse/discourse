@@ -185,7 +185,7 @@ describe "Thread list in side panel | full page", type: :system do
       end
 
       it "shows the thread in the list when another user restores the original message" do
-        trash_message!(thread_1.original_message)
+        trash_message!(thread_1.original_message, user: other_user)
         chat_page.visit_threads_list(channel)
 
         expect(thread_list_page).to have_no_thread(thread_1)

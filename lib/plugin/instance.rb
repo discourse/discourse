@@ -1052,6 +1052,24 @@ class Plugin::Instance
     )
   end
 
+  # Register an additional calendar subscription feed that appears in the user's
+  # calendar subscription preferences. Each feed needs a name (unique key),
+  # user API key scope name, and a lambda that builds the URL given (base_url, user, key).
+  #
+  # Example:
+  #   register_calendar_subscription_feed(
+  #     name: "all_events",
+  #     scope: "discourse-calendar:events_calendar",
+  #     description_key: "discourse_calendar.preferences.all_events_description",
+  #     url: ->(base_url, user, key) { "#{base_url}/events.ics?user_api_key=#{key}" }
+  #   )
+  def register_calendar_subscription_feed(name:, scope:, description_key:, url:)
+    DiscoursePluginRegistry.register_calendar_subscription_feed(
+      { name: name, scope: scope, description_key: description_key, url: url },
+      self,
+    )
+  end
+
   # Register a new demon process to be forked by the Unicorn master.
   # The demon_class should inherit from Demon::Base.
   # With great power comes great responsibility - this method should

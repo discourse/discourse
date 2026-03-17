@@ -232,6 +232,9 @@ export default class EditTopicTimer extends Component {
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
     }
+    if (statusType === DELETE_AFTER_LAST_POST_STATUS_TYPE) {
+      statusType = DELETE_STATUS_TYPE;
+    }
     await this._setTimer(null, null, statusType);
     // timer has been removed and we are removing `execute_at`
     // which will hide the remove timer button from the modal

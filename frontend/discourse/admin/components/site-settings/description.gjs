@@ -1,5 +1,5 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 <template>
-  <div class="desc">{{htmlSafe @description}}</div>
+  <div class="desc">{{trustHTML @description}}</div>
 </template>

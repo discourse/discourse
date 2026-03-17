@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import NavItem from "discourse/components/nav-item";
 import ReviewIndex from "discourse/components/reviewable/index";
@@ -42,7 +42,7 @@ import { i18n } from "discourse-i18n";
           {{/if}}
         {{/each}}
       </ul>
-      <span class="text">{{htmlSafe
+      <span class="text">{{trustHTML
           (i18n
             "review.unknown.instruction"
             url="https://meta.discourse.org/t/350179"

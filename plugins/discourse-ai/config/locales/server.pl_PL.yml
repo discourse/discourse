@@ -341,6 +341,7 @@ pl_PL:
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
+      tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
       agents:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
@@ -769,6 +770,17 @@ pl_PL:
           no_reason: "Aby oznaczyć lub odznaczyć wpis jako rozwiązany, należy podać powód."
           action_failed: "Nie udało się zaktualizować statusu rozwiązania."
         success: "Status rozwiązany zaktualizowano pomyślnie."
+    reviewables:
+      ai_tool_action:
+        title: "Działanie narzędzia AI"
+        approve:
+          title: "Zatwierdź"
+        reject:
+          title: "Odrzuć"
+        target_missing: "Cel działania narzędzia już nie istnieje."
+        tool_not_found: "Narzędzie „%{tool_name}” nie jest już dostępne."
+        bot_user_missing: "Użytkownik bota już nie istnieje."
+        execution_error: "Nie udało się wykonać narzędzia: %{error}"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."
