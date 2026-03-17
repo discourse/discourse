@@ -182,7 +182,11 @@ export default {
             return next();
           }
 
-          if (event.target.closest("a, button, input")) {
+          if (
+            (event.target.closest("a, button, input") &&
+              !event.target.closest(".topic-excerpt")) ||
+            event.target.closest(".topic-excerpt-more")
+          ) {
             return next();
           }
 
