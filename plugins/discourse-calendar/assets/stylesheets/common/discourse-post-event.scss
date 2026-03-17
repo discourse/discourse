@@ -53,7 +53,7 @@ $show-interested: inherit;
     box-sizing: border-box;
 
     &:has(.event-image) {
-      grid-template-columns: 1fr minmax(min-content, 280px);
+      grid-template-columns: 1fr fit-content(280px);
 
       .event-actions {
         grid-column: span 2;
