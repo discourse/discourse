@@ -4337,6 +4337,19 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
+      it "returns a proper error for an invalid operation type" do
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: topic_ids,
+              operation: {
+                type: "not_a_real_operation",
+              },
+            }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to be_present
+      end
+
       it "can dismiss sub-categories posts as read" do
         sub = Fabricate(:category, parent_category_id: category.id)
 

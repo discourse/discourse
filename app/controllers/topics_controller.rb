@@ -1129,6 +1129,8 @@ class TopicsController < ApplicationController
       result = { topic_ids: changed_topic_ids }
       result[:errors] = operator.errors if operator.errors.present?
       render_json_dump result
+    rescue Discourse::InvalidParameters => ex
+      render_json_error(ex, status: 400)
     end
   end
 
