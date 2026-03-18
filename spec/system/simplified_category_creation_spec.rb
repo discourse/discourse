@@ -246,7 +246,7 @@ describe "Simplified Category Creation" do
       expect(composer).to be_closed
       expect(page).to have_css(".edit-category-description-container .readonly-field")
       expect(page).to have_content("Updated category description")
-      expect(toasts).to have_default(I18n.t("js.category.description_updated"))
+      expect(toasts).to have_success(I18n.t("js.category.description_updated"))
     end
   end
 
