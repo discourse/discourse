@@ -1078,6 +1078,8 @@ bs_BA:
         tags: "Oznake"
         interface: "Sučelje"
         apps: "Aplikacije"
+      calendar_subscriptions:
+        copied: "Kopirano!"
       change_password:
         success: "(email poslat)"
         in_progress: "(šaljem email)"

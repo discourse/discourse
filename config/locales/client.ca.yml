@@ -1102,6 +1102,8 @@ ca:
         tags: "Etiquetes"
         interface: "Interfície"
         apps: "Aplicacions"
+      calendar_subscriptions:
+        copied: "Copiat!"
       change_password:
         success: "(correu electrònic enviat)"
         in_progress: "(enviant correu electrònic)"

@@ -1633,6 +1633,10 @@ ja:
         apps: "アプリ連携"
         navigation_menu: "ナビゲーションメニュー"
         upcoming_changes: "次回の変更"
+        calendar_subscriptions: "カレンダー"
+      calendar_subscriptions:
+        copied: "コピーしました！"
+        add_to_google: "Google カレンダー"
       change_password:
         success: "(メール送信済み)"
         in_progress: "(メール送信中)"

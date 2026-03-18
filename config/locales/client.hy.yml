@@ -1442,6 +1442,8 @@ hy:
         tags: "Պիտակներ"
         interface: "Ինտերֆեյս"
         apps: "Հավելվածներ"
+      calendar_subscriptions:
+        copied: "Պատճենված է!"
       change_password:
         success: "(էլ. նամակն ուղարկված է)"
         in_progress: "(էլ. նամակն ուղարկվում է)"

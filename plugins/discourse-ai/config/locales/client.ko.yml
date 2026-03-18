@@ -41,7 +41,6 @@ ko:
       llm_selector:
         none: "없음"
       features:
-        back: "뒤로"
         disabled: "(비활성)"
         groups: "그룹:"
         no_groups: "없음"
@@ -101,7 +100,6 @@ ko:
           last_day: "지난 24시간"
           custom: "사용자 지정..."
       ai_agent:
-        back: "뒤로"
         name: "그룹명"
         edit: "편집"
         export: "내보내기"
@@ -123,7 +121,6 @@ ko:
           title: "업로드된 파일"
           uploading: "업로드 중..."
       tools:
-        back: "뒤로"
         export: "내보내기"
         import: "가져오기"
         name: "그룹명"
@@ -139,7 +136,6 @@ ko:
         short_title: "자격 증명"
         name: "그룹명"
         secret: "값"
-        back: "뒤로"
         save: "저장"
         edit: "편집"
         delete: "삭제"
@@ -149,7 +145,6 @@ ko:
         provider: "공급자"
         save: "저장"
         edit: "편집"
-        back: "뒤로"
         delete: 삭제
         quotas:
           group: "그룹"
@@ -191,7 +186,6 @@ ko:
         image_caption:
           save_caption: "저장"
       embeddings:
-        back: "뒤로"
         save: "저장"
         delete: "삭제"
         edit: "편집"

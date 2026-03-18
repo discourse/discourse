@@ -1632,6 +1632,10 @@ vi:
         apps: "Ứng dụng"
         navigation_menu: "Menu điều hướng"
         upcoming_changes: "Các thay đổi sắp tới"
+        calendar_subscriptions: "Lịch"
+      calendar_subscriptions:
+        copied: "Đã sao chép!"
+        add_to_google: "Google Lịch"
       change_password:
         success: "(email đã gửi)"
         in_progress: "(đang gửi email)"

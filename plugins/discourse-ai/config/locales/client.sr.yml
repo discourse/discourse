@@ -37,7 +37,6 @@ sr:
       llm_selector:
         none: "Ništa"
       features:
-        back: "Nazad"
         disabled: "(isključeno)"
         groups: "Grupe:"
         no_groups: "Ništa"
@@ -84,7 +83,6 @@ sr:
         periods:
           last_day: "Последња 24 сата"
       ai_agent:
-        back: "Nazad"
         name: "Ime foruma"
         edit: "Izmeni"
         export: "Izvoz"
@@ -102,7 +100,6 @@ sr:
         uploads:
           uploading: "Uploading..."
       tools:
-        back: "Nazad"
         export: "Izvoz"
         name: "Ime foruma"
         description: "Opis"
@@ -116,7 +113,6 @@ sr:
         short_title: "Kredencijali"
         name: "Ime foruma"
         secret: "Vriednost"
-        back: "Nazad"
         save: "Sačuvaj"
         edit: "Izmeni"
         delete: "Obriši"
@@ -125,7 +121,6 @@ sr:
         display_name: "Ime foruma"
         save: "Sačuvaj"
         edit: "Izmeni"
-        back: "Nazad"
         delete: Obriši
         quotas:
           group: "Grupa"
@@ -155,7 +150,6 @@ sr:
         image_caption:
           save_caption: "Sačuvaj"
       embeddings:
-        back: "Nazad"
         save: "Sačuvaj"
         delete: "Obriši"
         edit: "Izmeni"

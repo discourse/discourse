@@ -76,7 +76,7 @@ ja:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "データエクスプローラーのクエリを実行します。クエリ ID を指定して、API キーを一連のクエリに制限します。"
     discourse_automation:
       scriptables:

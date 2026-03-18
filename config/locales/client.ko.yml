@@ -1281,6 +1281,9 @@ ko:
         tags: "태그"
         interface: "인터페이스"
         apps: "앱"
+      calendar_subscriptions:
+        copied: "복사되었습니다!"
+        add_to_google: "구글 캘린더"
       change_password:
         success: "(이메일 전송됨)"
         in_progress: "(이메일 전송 중)"

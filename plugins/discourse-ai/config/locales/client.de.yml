@@ -10,8 +10,10 @@ de:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Ermöglicht KI-Suche"
+              stream_completion: "Ermöglicht das Streamen von KI-Agent-Vervollständigungen"
+              update_agents: "Ermöglicht die Aktualisierung von KI-Agenten"
               manage_artifacts: "Ermöglicht die Verwaltung von KI-Artefakten (auflisten, anzeigen, erstellen, aktualisieren, löschen)"
       site_settings:
         categories:
@@ -211,7 +213,6 @@ de:
         saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
-        back: "Zurück"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
         groups: "Gruppen:"
@@ -284,7 +285,7 @@ de:
             topic_criteria: "Kriterien für Themen"
             post_criteria: "Kriterien für Beiträge"
         ai_helper:
-          name: "Helfer"
+          name: "KI-Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
           proofread: Text korrekturlesen
           title_suggestions: "Titel vorschlagen"
@@ -465,7 +466,6 @@ de:
           replies:
             one: "Nur auf die erste Antwort anwenden"
             other: "Auf die ersten %{count} Antworten anwenden"
-        back: "Zurück"
         name: "Name"
         edit: "Bearbeiten"
         export: "Exportieren"
@@ -560,7 +560,6 @@ de:
           uploading: "Wird hochgeladen …"
           remove: "Upload entfernen"
       tools:
-        back: "Zurück"
         short_title: "Tools"
         export: "Exportieren"
         import: "Importieren"
@@ -617,7 +616,6 @@ de:
         no_secrets: "Noch keine Anmeldedaten"
         new_title: "Neue Anmeldedaten"
         edit_title: "Anmeldedaten bearbeiten"
-        back: "Zurück"
         save: "Speichern"
         edit: "Bearbeiten"
         delete: "Löschen"
@@ -651,7 +649,6 @@ de:
         save: "Speichern"
         edit: "Bearbeiten"
         saved: "LLM-Modell gespeichert"
-        back: "Zurück"
         confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
         delete: Löschen
         quotas:
@@ -846,7 +843,6 @@ de:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
         new: "Neue Einbettung"
-        back: "Zurück"
         save: "Speichern"
         saved: "Einbettungskonfiguration gespeichert"
         delete: "Löschen"
@@ -910,6 +906,7 @@ de:
         collapse_view_label: "Vollbild verlassen (ESC- oder Zurück-Taste)"
         click_to_run_label: "Artefakt ausführen"
       ai_bot:
+        title: "KI-Bot"
         llm: "Modell"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"

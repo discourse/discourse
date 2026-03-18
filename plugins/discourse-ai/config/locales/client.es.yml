@@ -10,7 +10,7 @@ es:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permite la búsqueda de IA"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ es:
         none: "Ninguna"
       features:
         short_title: "Características"
-        back: "Atrás"
         disabled: "(desactivado)"
         groups: "Grupos:"
         llm:
@@ -212,7 +211,6 @@ es:
           match_concepts: "Coincidencia de conceptos"
           deduplicate_concepts: "Duplicación de conceptos"
         ai_helper:
-          name: "Ayudante"
           description: "Ayuda a los usuarios a interactuar con la comunidad, como crear temas, escribir publicaciones y leer contenido"
           proofread: Corregir el texto
           title_suggestions: "Sugerir títulos"
@@ -352,7 +350,6 @@ es:
           replies:
             one: "Aplicar solo a la primera respuesta"
             other: "Aplicar a las primeras %{count} respuestas"
-        back: "Atrás"
         name: "Nombre"
         edit: "Editar"
         export: "Exportar"
@@ -445,7 +442,6 @@ es:
           uploading: "Subiendo..."
           remove: "Eliminar subida"
       tools:
-        back: "Atrás"
         short_title: "Herramientas"
         export: "Exportar"
         import: "Importar"
@@ -487,7 +483,6 @@ es:
         short_title: "Credenciales"
         name: "Nombre"
         secret: "Valor"
-        back: "Atrás"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
@@ -513,7 +508,6 @@ es:
         save: "Guardar"
         edit: "Editar"
         saved: "Modelo LLM guardado"
-        back: "Atrás"
         confirm_delete: '¿Seguro que quieres eliminar este modelo?'
         delete: Eliminar
         quotas:
@@ -671,7 +665,6 @@ es:
         short_title: "Incrustaciones"
         description: "Las incrustaciones son representaciones numéricas de datos que capturan el significado y las relaciones, lo que permite que las características de IA de Discourse, como Temas relacionados y Búsqueda de IA, comprendan y relacionen el contenido."
         new: "Nueva incrustación"
-        back: "Atrás"
         save: "Guardar"
         saved: "Configuración de incrustación guardada"
         delete: "Eliminar"
@@ -731,6 +724,7 @@ es:
         collapse_view_label: "Salir de la pantalla completa (ESC o botón Atrás)"
         click_to_run_label: "Ejecutar Artefacto"
       ai_bot:
+        title: "Bot de IA"
         llm: "Modelo"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"

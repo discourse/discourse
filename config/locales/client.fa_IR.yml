@@ -1528,6 +1528,10 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
+        calendar_subscriptions: "تقویم"
+      calendar_subscriptions:
+        copied: "کپی شد!"
+        add_to_google: "تقویم گوگل"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"

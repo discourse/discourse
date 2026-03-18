@@ -1329,6 +1329,10 @@ sv:
         tags: "Taggar"
         interface: "Gränssnitt"
         apps: "Appar"
+        calendar_subscriptions: "Kalender"
+      calendar_subscriptions:
+        copied: "Kopierad!"
+        add_to_google: "Google -kalender"
       change_password:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"

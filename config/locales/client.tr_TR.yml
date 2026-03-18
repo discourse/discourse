@@ -465,7 +465,6 @@ tr_TR:
         predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."
         predefined_topics_description: "Sohbet başlatıcılar koleksiyonundan seçim yapın ve tartışmaları başlatın"
         use_predefined: "Şablonlara göz atın"
-        start_with_this: "Bununla başlayın"
         back: "Geri"
         icebreakers:
           fun_facts:
@@ -1812,6 +1811,10 @@ tr_TR:
         apps: "Uygulamalar"
         navigation_menu: "Navigasyon menüsü"
         upcoming_changes: "Yaklaşan değişiklikler"
+        calendar_subscriptions: "Takvim"
+      calendar_subscriptions:
+        copied: "Kopyalandı!"
+        add_to_google: "Google Takvim"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"

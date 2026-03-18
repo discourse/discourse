@@ -879,6 +879,8 @@ th:
         users: "ผู้ใช้"
         tags: "แท็ก"
         apps: "แอป"
+      calendar_subscriptions:
+        copied: "คัดลอกแล้ว!"
       change_password:
         success: "(อีเมลถูกส่งแล้ว)"
         in_progress: "(กำลังส่งอีเมล)"

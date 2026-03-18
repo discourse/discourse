@@ -1911,6 +1911,10 @@ he:
         apps: "יישומים"
         navigation_menu: "תפריט ניווט"
         upcoming_changes: "שינויים צפויים"
+        calendar_subscriptions: "לוח שנה"
+      calendar_subscriptions:
+        copied: "הועתק!"
+        add_to_google: "לוח שנה של Google"
       change_password:
         success: "(דוא״ל נשלח)"
         in_progress: "(דוא״ל בשליחה)"

@@ -1509,6 +1509,8 @@ ro:
         interface: "Interfață"
         apps: "Aplicații"
         navigation_menu: "Meniu de navigare"
+      calendar_subscriptions:
+        copied: "Copiat!"
       change_password:
         success: "(e-mail trimis)"
         in_progress: "(se trimite e-mail)"

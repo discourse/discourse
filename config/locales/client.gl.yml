@@ -1112,6 +1112,8 @@ gl:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Apps"
+      calendar_subscriptions:
+        copied: "Copiado!"
       change_password:
         success: "(correo enviado)"
         in_progress: "(enviando o correo)"

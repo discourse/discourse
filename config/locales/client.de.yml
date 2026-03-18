@@ -465,7 +465,6 @@ de:
         predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
         predefined_topics_description: "Wähle aus einer Sammlung von Gesprächsanregungen, um Diskussionen in Gang zu bringen"
         use_predefined: "Vorlagen ansehen"
-        start_with_this: "Fange hiermit an"
         back: "Zurück"
         icebreakers:
           fun_facts:
@@ -1812,6 +1811,10 @@ de:
         apps: "Apps"
         navigation_menu: "Navigationsmenü"
         upcoming_changes: "Bevorstehende Änderungen"
+        calendar_subscriptions: "Kalender"
+      calendar_subscriptions:
+        copied: "Kopiert!"
+        add_to_google: "Google Kalender"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -6756,7 +6759,7 @@ de:
             back: "Zurück zu Komponenten"
             install: "Installieren"
             name: "Name"
-            used_on: "Verwendet bei"
+            used_on: "Verwendet von"
             enabled: "Aktiviert?"
             by_author: "Von %{name}"
             learn_more: "Mehr erfahren"

@@ -433,7 +433,6 @@ zh_CN:
         predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自行制作。"
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
-        start_with_this: "从这里开始"
         back: "返回"
         icebreakers:
           fun_facts:
@@ -1708,6 +1707,10 @@ zh_CN:
         apps: "应用"
         navigation_menu: "导航菜单"
         upcoming_changes: "即将推出的更改"
+        calendar_subscriptions: "日历"
+      calendar_subscriptions:
+        copied: "已复制！"
+        add_to_google: "Google 日历"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"

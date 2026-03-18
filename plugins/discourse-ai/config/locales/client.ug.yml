@@ -10,7 +10,7 @@ ug:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
       site_settings:
         categories:
@@ -49,7 +49,6 @@ ug:
       llm_selector:
         none: "يوق"
       features:
-        back: "كەينى"
         disabled: "(چەكلەندى)"
         groups: "گۇرۇپپا:"
         no_agent: "تەڭشەلمىدى"
@@ -105,7 +104,6 @@ ug:
         periods:
           custom: "ئىختىيارى..."
       ai_agent:
-        back: "كەينى"
         name: "ئىسمى"
         edit: "تەھرىر"
         export: "چىقار"
@@ -126,7 +124,6 @@ ug:
           title: "يۈكلەنمە"
           uploading: "يۈكلەۋاتىدۇ..."
       tools:
-        back: "كەينى"
         export: "چىقار"
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
@@ -145,7 +142,6 @@ ug:
         short_title: "ئىسپاتنامە"
         name: "ئىسمى"
         secret: "قىممەت"
-        back: "كەينى"
         save: "ساقلا"
         edit: "تەھرىر"
         delete: "ئۆچۈر"
@@ -154,7 +150,6 @@ ug:
         display_name: "ئىسمى"
         save: "ساقلا"
         edit: "تەھرىر"
-        back: "كەينى"
         delete: ئۆچۈر
         quotas:
           group: "گۇرۇپپا"
@@ -195,7 +190,6 @@ ug:
         image_caption:
           save_caption: "ساقلا"
       embeddings:
-        back: "كەينى"
         save: "ساقلا"
         delete: "ئۆچۈر"
         edit: "تەھرىر"

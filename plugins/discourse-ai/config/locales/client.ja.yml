@@ -10,7 +10,7 @@ ja:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "AI 検索を許可します"
       site_settings:
         categories:
@@ -206,7 +206,6 @@ ja:
         none: "なし"
       features:
         short_title: "機能"
-        back: "戻る"
         settings_save_error: "一部の設定を保存できませんでした。"
         disabled: "(無効)"
         groups: "グループ:"
@@ -277,7 +276,6 @@ ja:
             topic_criteria: "トピック基準"
             post_criteria: "投稿基準"
         ai_helper:
-          name: "ヘルパー"
           description: "トピックの作成、投稿の作成、コンテンツの閲覧など、ユーザーのコミュニティー操作を支援します"
           proofread: テキストの校正
           title_suggestions: "タイトルの提案"
@@ -451,7 +449,6 @@ ja:
           all: "すべての返信に適用"
           replies:
             other: "最初の %{count} 件の返信に適用"
-        back: "戻る"
         name: "名前"
         edit: "編集"
         export: "エクスポート"
@@ -545,7 +542,6 @@ ja:
           uploading: "アップロード中..."
           remove: "アップロードを削除"
       tools:
-        back: "戻る"
         short_title: "ツール"
         export: "エクスポート"
         import: "インポート"
@@ -587,7 +583,6 @@ ja:
         short_title: "資格情報"
         name: "名前"
         secret: "値"
-        back: "戻る"
         save: "保存"
         edit: "編集"
         delete: "削除"
@@ -616,7 +611,6 @@ ja:
         save: "保存"
         edit: "編集"
         saved: "LLM モデルが保存されました"
-        back: "戻る"
         confirm_delete: このモデルを削除してもよろしいですか？
         delete: 削除
         quotas:
@@ -794,7 +788,6 @@ ja:
         short_title: "埋め込み"
         description: "埋め込みは意味と関係性を捉えた、データの数値表現です。関連トピックや AI 検索などの Discourse AI 機能がコンテンツを理解して関連付けられるようになります。"
         new: "新しい埋め込み"
-        back: "戻る"
         save: "保存"
         saved: "埋め込み構成が保存されました"
         delete: "削除"
@@ -855,6 +848,7 @@ ja:
         collapse_view_label: "全画面表示を終了 (ESC または「戻る」ボタン)"
         click_to_run_label: "アーティファクトを実行"
       ai_bot:
+        title: "AI ボット"
         llm: "モデル"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"

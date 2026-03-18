@@ -1734,6 +1734,9 @@ ur:
         apps: "اَیپس"
         navigation_menu: "نیویگیشن مینو"
         upcoming_changes: "آنے والی تبدیلیاں"
+      calendar_subscriptions:
+        copied: "کاپی کر لیا!"
+        add_to_google: "گوگل کیلنڈر"
       change_password:
         success: "(ای میل بھیج دی گئی)"
         in_progress: "(ای میل بھیجی جا رہی ہے)"

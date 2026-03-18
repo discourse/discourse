@@ -465,7 +465,6 @@ hu:
         predefined_topics_subtitle: "Adj témát az új tagoknak a beszélgetéshez: válassz egy sablont, szerkeszd meg, és alakítsd a sajátodra!"
         predefined_topics_description: "Válogass a beszélgetésindító ötletek közül, és indítsd be a társalgást!"
         use_predefined: "Sablonok böngészése"
-        start_with_this: "Kezd ezzel"
         back: "Vissza"
         icebreakers:
           fun_facts:
@@ -1813,6 +1812,10 @@ hu:
         apps: "Alkalmazások"
         navigation_menu: "Navigációs menü"
         upcoming_changes: "Közelgő változások"
+        calendar_subscriptions: "Naptár"
+      calendar_subscriptions:
+        copied: "Másolva!"
+        add_to_google: "Google Naptár"
       change_password:
         success: "(az e-mail elküldve)"
         in_progress: "(az e-mail küldése folyamatban)"
