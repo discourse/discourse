@@ -2,10 +2,10 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuItem from "discourse/components/user-menu/menu-item";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import NotificationsFilter from "discourse/select-kit/components/notifications-filter";
 import { i18n } from "discourse-i18n";
-import concatClass from "../../helpers/concat-class";
 
 export default <template>
   {{#if @controller.model.error}}

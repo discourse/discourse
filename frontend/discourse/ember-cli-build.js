@@ -19,6 +19,8 @@ const {
 } = require("./lib/webpack-customize-chunk-url-plugin");
 const { BroccoliMergeFiles } = require("broccoli-merge-files");
 const { mkdirSync } = require("fs");
+const { NormalModuleReplacementPlugin } = require("webpack");
+const uiKitRedirects = require("./lib/ui-kit-redirects");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -266,6 +268,15 @@ module.exports = function (defaults) {
               return JSON.stringify(output, null, 2);
             },
           }),
+          new NormalModuleReplacementPlugin(
+            /^discourse\/(components|helpers|modifiers)\//,
+            (resource) => {
+              const redirect = uiKitRedirects[resource.request];
+              if (redirect) {
+                resource.request = redirect;
+              }
+            }
+          ),
           new CustomizeChunkUrlPlugin(),
           new RetryChunkLoadPlugin({
             retryDelay: 200,

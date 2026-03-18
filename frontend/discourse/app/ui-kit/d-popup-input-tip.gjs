@@ -1,0 +1,66 @@
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+import Component from "@ember/component";
+import { computed } from "@ember/object";
+import { not, or, reads } from "@ember/object/computed";
+import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
+
+@tagName("a")
+@classNameBindings(":popup-tip", "good", "bad", "lastShownAt::hide")
+@attributeBindings("role", "ariaLabel", "tabindex")
+export default class DPopupInputTip extends Component {
+  @service composer;
+
+  tipReason = null;
+  tabindex = "0";
+
+  @or("shownAt", "validation.lastShownAt") lastShownAt;
+  @reads("validation.failed") bad;
+  @not("bad") good;
+
+  @computed("bad")
+  get role() {
+    if (this.bad) {
+      return "alert";
+    }
+  }
+
+  @computed("validation.reason")
+  get ariaLabel() {
+    return this.validation?.reason?.replace(/(<([^>]+)>)/gi, "");
+  }
+
+  dismiss() {
+    this.set("shownAt", null);
+    this.composer.clearLastValidatedAt();
+    this.element.previousElementSibling?.focus();
+  }
+
+  click() {
+    this.dismiss();
+  }
+
+  keyDown(event) {
+    if (event.key === "Enter") {
+      this.dismiss();
+    }
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+    let reason = this.get("validation.reason");
+    if (reason) {
+      this.set("tipReason", trustHTML(`${reason}`));
+    } else {
+      this.set("tipReason", null);
+    }
+  }
+
+  <template>{{this.tipReason}} {{icon "circle-xmark"}}</template>
+}
