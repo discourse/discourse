@@ -428,7 +428,7 @@ class TopicsFilter
   end
 
   def filter_by_topic_range(column_name:, min: nil, max: nil, scope: nil)
-    return @scope = @scope.none if min.nil? && max.nil?
+    return @scope if min.nil? && max.nil?
 
     value = min || max
     operator = min ? ">=" : "<="
@@ -445,30 +445,29 @@ class TopicsFilter
 
   def filter_by_bookmarked(before: nil, after: nil)
     return @scope = @scope.none if !@guardian.authenticated?
-    return @scope = @scope.none if before.nil? && after.nil?
+    return @scope if before.nil? && after.nil?
 
     user_id = @guardian.user.id.to_i
-
     value = before || after
-    operator = before ? "<=" : ">="
+    date_comparison = before ? :lteq : :gteq
+    bookmarks_table = Bookmark.arel_table
 
-    @scope = @scope.where(<<~SQL, user_id: user_id, bookmark_date: value)
-        topics.id IN (
-          SELECT bookmarks.bookmarkable_id
-          FROM bookmarks
-          WHERE bookmarks.user_id = :user_id
-            AND bookmarks.bookmarkable_type = 'Topic'
-            AND bookmarks.created_at #{operator} :bookmark_date
-          UNION
-          SELECT posts.topic_id
-          FROM bookmarks
-          INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id
-          WHERE bookmarks.user_id = :user_id
-            AND bookmarks.bookmarkable_type = 'Post'
-            AND bookmarks.created_at #{operator} :bookmark_date
-            AND posts.deleted_at IS NULL
+    topic_bookmarks =
+      Bookmark
+        .where(user_id: user_id, bookmarkable_type: "Topic")
+        .where(bookmarks_table[:created_at].public_send(date_comparison, value))
+        .select(:bookmarkable_id)
+
+    post_bookmarks =
+      Bookmark
+        .joins(
+          "INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND posts.deleted_at IS NULL",
         )
-      SQL
+        .where(user_id: user_id, bookmarkable_type: "Post")
+        .where(bookmarks_table[:created_at].public_send(date_comparison, value))
+        .select("posts.topic_id")
+
+    @scope = @scope.where(id: topic_bookmarks).or(@scope.where(id: post_bookmarks))
   end
 
   def filter_by_latest_post(before: nil, after: nil)
