@@ -441,7 +441,6 @@ el:
         predefined_topics_subtitle: "Δώστε στα νέα μέλη κάτι για να συζητήσουν, επιλέξτε ένα πρότυπο για επεξεργασία και δημιουργήστε το δικό σας."
         predefined_topics_description: "Διαλέξτε από μια συλλογή από αφορμές για συζήτηση για να ξεκινήσουν οι συζητήσεις"
         use_predefined: "Περιήγηση προτύπων"
-        start_with_this: "Ξεκινήστε με αυτό"
         back: "Πίσω"
         icebreakers:
           fun_facts:
@@ -1758,6 +1757,10 @@ el:
         apps: "Εφαρμογές"
         navigation_menu: "Μενού πλοήγησης"
         upcoming_changes: "Επερχόμενες αλλαγές"
+        calendar_subscriptions: "Ημερολόγιο"
+      calendar_subscriptions:
+        copied: "Αντιγράφηκε!"
+        add_to_google: "Ημερολόγιο Google"
       change_password:
         success: "(το email στάλθηκε)"
         in_progress: "(αποστολή email)"

@@ -465,7 +465,6 @@ pt_BR:
         predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."
         predefined_topics_description: "Escolha dentre uma seleção de temas para iniciar conversas e dar início a um diálogo."
         use_predefined: "Navegar pelos modelos"
-        start_with_this: "Comece com isso"
         back: "Voltar"
         icebreakers:
           fun_facts:
@@ -1812,6 +1811,10 @@ pt_BR:
         apps: "Aplicativos"
         navigation_menu: "Menu de navegação"
         upcoming_changes: "Alterações previstas"
+        calendar_subscriptions: "Calendário"
+      calendar_subscriptions:
+        copied: "Copiou!"
+        add_to_google: "Google Calendar"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"

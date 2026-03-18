@@ -1498,6 +1498,9 @@ zh_TW:
         tags: "標籤"
         interface: "界面"
         apps: "應用"
+      calendar_subscriptions:
+        copied: "已複製!"
+        add_to_google: "Google 行事曆"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"

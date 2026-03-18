@@ -1157,6 +1157,8 @@ id:
         tags: "Label"
         interface: "Antarmuka"
         apps: "Aplikasi"
+      calendar_subscriptions:
+        copied: "Disalin!"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"

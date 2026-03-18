@@ -10,7 +10,7 @@ it:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Consente la ricerca IA"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ it:
         none: "Nessuna"
       features:
         short_title: "Funzionalità"
-        back: "Indietro"
         disabled: "(disabilitati)"
         groups: "Gruppi:"
         llm:
@@ -212,7 +211,6 @@ it:
           match_concepts: "Corrispondenza dei concetti"
           deduplicate_concepts: "Deduplicazione dei concetti"
         ai_helper:
-          name: "Assistente"
           description: "Assiste gli utenti nelle interazioni con la community, come la creazione di argomenti, la scrittura di messaggi e la lettura di contenuti"
           proofread: Testo corretto
           title_suggestions: "Suggerisci titoli"
@@ -348,7 +346,6 @@ it:
           replies:
             one: "Applica solo alla prima risposta"
             other: "Applica alle prime %{count} risposte"
-        back: "Indietro"
         name: "Nome"
         edit: "Modifica"
         export: "Esporta"
@@ -441,7 +438,6 @@ it:
           uploading: "Caricamento..."
           remove: "Rimuovi caricamento"
       tools:
-        back: "Indietro"
         short_title: "Strumenti"
         export: "Esporta"
         import: "Importa"
@@ -483,7 +479,6 @@ it:
         short_title: "Credenziali"
         name: "Nome"
         secret: "Valore"
-        back: "Indietro"
         save: "Salva"
         edit: "Modifica"
         delete: "Elimina"
@@ -509,7 +504,6 @@ it:
         save: "Salva"
         edit: "Modifica"
         saved: "Modello LLM salvato"
-        back: "Indietro"
         confirm_delete: Vuoi davvero eliminare questo modello?
         delete: Elimina
         quotas:
@@ -667,7 +661,6 @@ it:
         short_title: "Integrazioni"
         description: "Le integrazioni sono rappresentazione numeriche in grado di cogliere il significato e le relazioni, rendendo possibile alle funzionalità IA di Discourse come Argomenti correlati e Ricerca IA di comprendere e collegare i contenuti."
         new: "Nuova integrazione"
-        back: "Indietro"
         save: "Salva"
         saved: "Configurazione di integrazione salvata"
         delete: "Elimina"
@@ -727,6 +720,7 @@ it:
         collapse_view_label: "Esci dalla modalità a schermo intero (tasto ESC o Indietro)"
         click_to_run_label: "Esegui artefatto"
       ai_bot:
+        title: "Bot IA"
         llm: "Modello"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"

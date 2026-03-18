@@ -78,7 +78,7 @@ es:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Ejecuta consultas del Explorador de Datos. Restringe la clave API a un conjunto de consultas especificando los ID de las mismas."
     discourse_automation:
       scriptables:

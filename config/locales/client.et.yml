@@ -973,6 +973,8 @@ et:
         tags: "Sildid"
         interface: "Kasutajaliides"
         apps: "Äpid"
+      calendar_subscriptions:
+        copied: "Kopeeritud!"
       change_password:
         success: "(meil saadetud)"
         in_progress: "(saadan meili)"

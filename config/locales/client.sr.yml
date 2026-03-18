@@ -1327,6 +1327,8 @@ sr:
         tracking: "Praćeno"
         categories: "Kategorije"
         users: "Korisnici"
+      calendar_subscriptions:
+        copied: "Kopirano!"
       change_password:
         success: "(email je poslat)"
         in_progress: "(email se šalje)"

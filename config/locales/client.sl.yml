@@ -1254,6 +1254,8 @@ sl:
         tags: "Oznake"
         interface: "Uporabniški vmesnik"
         apps: "Aplikacije"
+      calendar_subscriptions:
+        copied: "Kopirano!"
       change_password:
         success: "(e-sporočilo poslano)"
         in_progress: "(pošiljanje e-sporočila)"

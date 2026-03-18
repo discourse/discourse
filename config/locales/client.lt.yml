@@ -1519,6 +1519,9 @@ lt:
         interface: "Sąsaja"
         apps: "Programėlės"
         upcoming_changes: "Būsimi pakeitimai"
+      calendar_subscriptions:
+        copied: "Nukopijuota!"
+        add_to_google: "„Google“ kalendorius"
       change_password:
         success: "(el. laiškas išsiųstas)"
         in_progress: "(siunčiamas el. laiškas)"

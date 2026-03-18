@@ -10,7 +10,7 @@ he:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "מאפשר חיפוש בינה מלאכותית"
       site_settings:
         categories:
@@ -197,7 +197,6 @@ he:
         none: "ללא"
       features:
         short_title: "יכולות"
-        back: "חזרה"
         disabled: "(כבוי)"
         groups: "קבוצות:"
         llm:
@@ -252,7 +251,7 @@ he:
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
         ai_helper:
-          name: "מסייע"
+          name: "מסייע בינה מלאכותית"
           proofread: הגהת הטקסט
           title_suggestions: "הצעת כותרות"
           explain: "הסבר"
@@ -419,7 +418,6 @@ he:
             two: "החלה על שתי התגובות הראשונות בלבד"
             many: "החלה על שתי התגובות הראשונות בלבד"
             other: "החלה על שתי התגובות הראשונות בלבד"
-        back: "חזרה"
         name: "שם"
         edit: "עריכה"
         export: "ייצוא"
@@ -513,7 +511,6 @@ he:
           uploading: "בהליכי העלאה…"
           remove: "הסרת העלאה"
       tools:
-        back: "חזרה"
         short_title: "כלים"
         export: "ייצוא"
         import: "ייבוא"
@@ -555,7 +552,6 @@ he:
         short_title: "פרטי גישה"
         name: "שם"
         secret: "ערך"
-        back: "חזרה"
         save: "שמירה"
         edit: "עריכה"
         delete: "מחיקה"
@@ -582,7 +578,6 @@ he:
         save: "שמירה"
         edit: "עריכה"
         saved: "מודל ה־LLM נשמר"
-        back: "חזרה"
         confirm_delete: למחוק את המודל הזה?
         delete: מחיקה
         quotas:
@@ -750,7 +745,6 @@ he:
         short_title: "הטמעות"
         description: "הטמעות הן ייצוגים מספריים של נתונים שלוכדים משמעות וקשר, הפעלת יכולות הבינה המלאכותית של Discourse מאפשרת יכולות כגון נושאים קשורים וחיפוש בינה מלאכותית כדי להבין ולחבר תוכן."
         new: "הטמעה חדשה"
-        back: "חזרה"
         save: "שמירה"
         saved: "הגדרות ההטמעה נשמרו"
         delete: "מחיקה"
@@ -803,6 +797,7 @@ he:
         collapse_view_label: "יציאה ממסך מלא (כפתורי ESC או Back)"
         click_to_run_label: "הרצת תוצר"
       ai_bot:
+        title: "בוט בינה מלאכותית"
         llm: "מודל"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"

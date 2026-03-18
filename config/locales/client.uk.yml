@@ -529,7 +529,6 @@ uk:
         predefined_topics_subtitle: "Дайте новим учасникам тему для обговорення, виберіть шаблон для редагування та створіть свій власний."
         predefined_topics_description: "Виберіть з колекції тем для початку розмови, щоб розпочати обговорення"
         use_predefined: "Переглянути шаблони"
-        start_with_this: "Почніть з цього"
         back: "Назад"
         icebreakers:
           fun_facts:
@@ -2020,6 +2019,10 @@ uk:
         apps: "Застосунки"
         navigation_menu: "Меню навігації"
         upcoming_changes: "Майбутні зміни"
+        calendar_subscriptions: "Календар"
+      calendar_subscriptions:
+        copied: "Скопійовано!"
+        add_to_google: "Календар Google"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"

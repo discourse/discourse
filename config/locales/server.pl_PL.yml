@@ -1298,6 +1298,8 @@ pl_PL:
       weekly: "co tydzień"
       every_month: "każdego miesiąca"
       every_six_months: "co 6 miesięcy"
+  calendar_subscriptions:
+    application_name: "Subskrypcje kalendarza"
   user_api_key:
     title: 'Autoryzuj "%{application_name}"'
     authorize: "Autoryzuj"

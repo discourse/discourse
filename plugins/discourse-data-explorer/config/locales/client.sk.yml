@@ -81,7 +81,7 @@ sk:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Spustite dotazy Data Explorer. Obmedzte kľúč API na súbor dotazov zadaním ID dotazov."
     discourse_automation:
       scriptables:

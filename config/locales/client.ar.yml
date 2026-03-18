@@ -593,7 +593,6 @@ ar:
         predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
         predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
         use_predefined: "تصفح القوالب"
-        start_with_this: "ابدأ بهذا"
         back: "رجوع"
         icebreakers:
           fun_facts:
@@ -2214,6 +2213,10 @@ ar:
         apps: "التطبيقات"
         navigation_menu: "قائمة التنقل"
         upcoming_changes: "التغييرات القادمة"
+        calendar_subscriptions: "التقويم"
+      calendar_subscriptions:
+        copied: "تم النسخ!"
+        add_to_google: "تقويم Google"
       change_password:
         success: "(تم إرسال رسالة البريد الإلكتروني)"
         in_progress: "(جارٍ إرسال رسالة البريد الإلكتروني)"

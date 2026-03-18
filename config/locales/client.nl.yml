@@ -1698,6 +1698,10 @@ nl:
         interface: "Interface"
         apps: "Apps"
         navigation_menu: "Navigatiemenu"
+        calendar_subscriptions: "Kalender"
+      calendar_subscriptions:
+        copied: "Gekopieerd!"
+        add_to_google: "Google-agenda"
       change_password:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail verzenden)"
@@ -6309,7 +6313,7 @@ nl:
             back: "Terug naar onderdelen"
             install: "Installeren"
             name: "Naam"
-            used_on: "Gebruikt op"
+            used_on: "Gebruikt in"
             enabled: "Ingeschakeld?"
             by_author: "Van %{name}"
             learn_more: "Meer informatie"
@@ -7270,7 +7274,7 @@ nl:
         edit_category:
           select_template: "Selecteer formuliersjablonen"
         errors:
-          multiple_tags_not_allowed: 'Je kunt geen verdere tags selecteren uit de "%{tag_name}". Gebruik een formuliersjabloon om problemen te voorkomen.'
+          multiple_tags_not_allowed: 'Je kunt geen verdere tags selecteren uit de "%{tag_name}". Gebruik het formuliersjabloon om problemen te voorkomen.'
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."

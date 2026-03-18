@@ -529,7 +529,6 @@ pl_PL:
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
         predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
         use_predefined: "Przeglądaj szablony"
-        start_with_this: "Zacznij od tego"
         back: "Wstecz"
         icebreakers:
           fun_facts:
@@ -2015,6 +2014,23 @@ pl_PL:
         apps: "Aplikacje"
         navigation_menu: "Menu nawigacyjne"
         upcoming_changes: "Nadchodzące zmiany"
+        calendar_subscriptions: "Kalendarz"
+      calendar_subscriptions:
+        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić. "
+        generate: "Generuj adresy URL subskrypcji"
+        regenerate: "Wygeneruj ponownie adresy URL"
+        regenerate_confirm: "Spowoduje to unieważnienie istniejących adresów URL subskrypcji kalendarza. Wszystkie aplikacje kalendarza korzystające ze starych adresów URL przestaną otrzymywać aktualizacje. Kontynuować?"
+        revoke: "Cofnij subskrypcję"
+        revoke_confirm: "Spowoduje to anulowanie adresów URL subskrypcji kalendarza. Wszystkie aplikacje kalendarza, które z nich korzystają, przestaną otrzymywać aktualizacje. Kontynuować?"
+        urls_warning: "Adresy URL subskrypcji są gotowe! Kliknij poniższe przyciski, aby połączyć je z aplikacją kalendarza. Uwaga: te adresy URL są wyświetlane tylko raz."
+        bookmarks: "Przypomnienia zakładkowe"
+        bookmarks_description: "Twoje zakładki z datami przypomnień"
+        copy: "Kopiuj adres URL"
+        copied: "Skopiowane!"
+        add_to_google: "Kalendarz Google"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Kalendarz Apple"
+        active_subscription: "Masz aktywną subskrypcję kalendarza."
       change_password:
         success: "(e-mail wysłany)"
         in_progress: "(e-mail wysyłany)"
@@ -4805,6 +4821,8 @@ pl_PL:
       advanced: "Zaawansowane"
       show_advanced: "Ustawienia zaawansowane"
       topic_template: "Szablon"
+      topic_title_placeholder: "Symbol zastępczy tytułu tematu kategorii"
+      topic_title_placeholder_placeholder: "[opcjonalnie] niestandardowy symbol zastępczy tytułu tematu dla tej kategorii"
       tags: "Tagi"
       localizations: "Języki"
       localization:

@@ -1429,6 +1429,8 @@ nb_NO:
         tags: "Stikkord"
         interface: "Grensesnitt"
         apps: "Programmer"
+      calendar_subscriptions:
+        copied: "Kopiert!"
       change_password:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"

@@ -1752,6 +1752,9 @@ hr:
         interface: "Sučelje"
         apps: "Aplikacije"
         navigation_menu: "Navigacijski izbornik"
+      calendar_subscriptions:
+        copied: "Kopirano!"
+        add_to_google: "Google kalendar"
       change_password:
         success: "(email je poslan)"
         in_progress: "(email se šalje)"

@@ -1488,6 +1488,9 @@ da:
         tags: "Tags"
         interface: "Grænseflade"
         apps: "Apps"
+      calendar_subscriptions:
+        copied: "Kopieret!"
+        add_to_google: "Google Kalender"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
