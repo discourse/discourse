@@ -59,6 +59,8 @@ en:
       category_type_support:
         title: "Support"
         not_support_type: "Heads up! You've disabled the ability to mark posts as solutions in this category. To turn that back on, you'll find the relevant settings in the Settings tab."
+        remove_support_type: "Remove Support type"
+        confirm_remove_support_type: "Are you sure you want to remove the ability to mark posts as solutions in this category? You can re-enable it in the Settings tab later."
 
     topic_statuses:
       solved:

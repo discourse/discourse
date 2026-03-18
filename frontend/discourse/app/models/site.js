@@ -302,6 +302,7 @@ export default class Site extends RestModel {
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
+      existingCategory.setupCategoryTypes();
       return existingCategory;
     } else {
       newCategory = this.store.createRecord("category", newCategory);

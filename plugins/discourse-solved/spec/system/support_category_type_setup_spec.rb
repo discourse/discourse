@@ -7,6 +7,7 @@ RSpec.describe "Support Category Type Setup", type: :system do
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
@@ -90,9 +91,7 @@ RSpec.describe "Support Category Type Setup", type: :system do
 
     it "can edit the settings of the support category in a tab" do
       visit("/c/#{category.slug}/edit/support")
-      page.find(".d-nav-submenu__tabs .edit-category-support").click
 
-      expect(form.field("custom_fields.enable_accepted_answers").value).to be_truthy
       expect(
         form
           .field("custom_fields.solved_topics_auto_close_hours")
@@ -120,6 +119,19 @@ RSpec.describe "Support Category Type Setup", type: :system do
       expect(category.custom_fields["empty_box_on_unsolved"]).to eq("false")
       expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("72")
       expect(SiteSetting.show_who_marked_solved).to eq(true)
+    end
+
+    it "can remove the support type from the category" do
+      visit("/c/#{category.slug}/edit/support")
+      page.find(".support-category--danger-zone .support-category__remove-type").click
+      expect(dialog).to have_content(
+        I18n.t("js.solved.category_type_support.confirm_remove_support_type"),
+      )
+      dialog.click_yes
+      expect(toast).to have_success(I18n.t("js.saved"))
+      expect(page).to have_css(".edit-category-general.active")
+      expect(page).to have_current_path("/c/#{category.slug}/edit/general")
+      expect(category.reload.custom_fields["enable_accepted_answers"]).to eq("false")
     end
   end
 

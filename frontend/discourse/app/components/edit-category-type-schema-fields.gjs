@@ -114,6 +114,8 @@ export default class EditCategoryTypeSchemaFields extends Component {
         </@form.Object>
       </@form.Section>
 
+      {{yield to="beforeSiteSettings"}}
+
       <@form.Emphasis
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}

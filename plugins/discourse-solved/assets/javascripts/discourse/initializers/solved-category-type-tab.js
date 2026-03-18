@@ -13,9 +13,12 @@ export default {
         name: i18n("solved.category_type_support.title"),
         primary: true,
         component: UpsertCategorySupport,
-        condition: ({ category }) =>
-          category.isType("support") &&
-          siteSettings.enable_support_category_type_setup,
+        condition: ({ category }) => {
+          return (
+            category.isType("support") &&
+            siteSettings.enable_support_category_type_setup
+          );
+        },
       });
     });
   },
