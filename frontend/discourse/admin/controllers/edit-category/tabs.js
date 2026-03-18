@@ -205,6 +205,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   setSelectedTab(tab) {
+    if (this.selectedTab === tab) {
+      return;
+    }
+
     this.selectedTab = tab;
     this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
   }

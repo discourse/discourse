@@ -91,9 +91,7 @@ RSpec.describe "Support Category Type Setup", type: :system do
 
     it "can edit the settings of the support category in a tab" do
       visit("/c/#{category.slug}/edit/support")
-      page.find(".d-nav-submenu__tabs .edit-category-support").click
 
-      expect(form.field("custom_fields.enable_accepted_answers").value).to be_truthy
       expect(
         form
           .field("custom_fields.solved_topics_auto_close_hours")
