@@ -18,9 +18,9 @@ import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
-import { getTopicStatusBadge } from "discourse/lib/topic-status-badge";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { getTopicStatusBadge } from "../../lib/topic-status-badge";
 
 export default class HighContextTopicCard extends Component {
   @service capabilities;
