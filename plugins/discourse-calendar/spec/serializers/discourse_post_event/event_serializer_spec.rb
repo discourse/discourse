@@ -54,8 +54,9 @@ describe DiscoursePostEvent::EventSerializer do
       expect(json[:event][:category_id]).to eq(category.id)
     end
 
-    it "excludes image_upload when not set" do
+    it "includes image_upload key as nil when not set" do
       json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
+      expect(json[:event]).to have_key(:image_upload)
       expect(json[:event][:image_upload]).to be_nil
     end
 

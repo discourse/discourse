@@ -97,7 +97,7 @@ module DiscoursePostEvent
     end
 
     def show
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_see!(event.post)
 
       serializer = EventSerializer.new(event, scope: guardian)
@@ -105,7 +105,7 @@ module DiscoursePostEvent
     end
 
     def destroy
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_act_on_discourse_post_event!(event)
       event.publish_update!
       payload = WebHook.build_calendar_event_payload(event)
