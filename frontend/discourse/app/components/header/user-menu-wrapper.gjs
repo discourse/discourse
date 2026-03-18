@@ -5,7 +5,7 @@ import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import closeOnClickOutside from "../../modifiers/close-on-click-outside";
+import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import UserMenu from "../user-menu/menu";
 
 export default class UserMenuWrapper extends Component {

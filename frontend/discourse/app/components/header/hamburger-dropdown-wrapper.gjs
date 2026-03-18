@@ -9,7 +9,7 @@ import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import closeOnClickOutside from "../../modifiers/close-on-click-outside";
+import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
 
 const CLOSE_ON_CLICK_SELECTORS =
