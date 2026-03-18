@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | mobile", type: :system, mobile: true do
+RSpec.describe "List channels | mobile", mobile: true do
   fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }

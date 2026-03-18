@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Send message", type: :system do
+RSpec.describe "Send message" do
   fab!(:user_1, :admin)
   fab!(:user_2, :admin)
 

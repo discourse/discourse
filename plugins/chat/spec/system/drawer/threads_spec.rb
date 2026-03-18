@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Drawer - threads", type: :system do
+RSpec.describe "Drawer - threads" do
   fab!(:current_user, :user)
   fab!(:other_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }

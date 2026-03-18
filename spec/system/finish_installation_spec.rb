@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Finish Installation", type: :system do
+RSpec.describe "Finish Installation" do
   include OmniauthHelpers
 
   let(:finish_installation_page) { PageObjects::Pages::FinishInstallation.new }

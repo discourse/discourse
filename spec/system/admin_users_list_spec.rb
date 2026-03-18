@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Users Page", type: :system do
+describe "Admin Users Page" do
   fab!(:current_user, :admin)
   fab!(:another_admin, :admin)
   fab!(:user_1, :user)

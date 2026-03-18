@@ -1,6 +1,6 @@
 #frozen_string_literal: true
 
-describe "Admin API Keys Page", type: :system do
+describe "Admin API Keys Page" do
   fab!(:current_user, :admin)
 
   let(:api_keys_page) { PageObjects::Pages::AdminApiKeys.new }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin AI agent configuration", type: :system do
+RSpec.describe "Admin AI agent configuration" do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }

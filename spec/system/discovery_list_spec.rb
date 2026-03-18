@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discovery list", type: :system do
+describe "Discovery list" do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:reply) { Fabricate(:post, topic: topics.first) }
 

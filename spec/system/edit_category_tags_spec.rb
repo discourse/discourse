@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Tags", type: :system do
+describe "Edit Category Tags" do
   fab!(:admin)
   fab!(:category)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }

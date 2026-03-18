@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Viewing a category", type: :system do
+RSpec.describe "Viewing a category" do
   fab!(:category)
   fab!(:user)
   let(:category_page) { PageObjects::Pages::Category.new }

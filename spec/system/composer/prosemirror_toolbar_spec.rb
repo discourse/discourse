@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Toolbar", type: :system do
+describe "Composer - ProseMirror - Toolbar" do
   include_context "with prosemirror editor"
 
   describe "toolbar state updates" do

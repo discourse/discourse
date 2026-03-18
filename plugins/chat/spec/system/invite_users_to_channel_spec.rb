@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Invite users to channel", type: :system do
+RSpec.describe "Invite users to channel" do
   fab!(:user_1, :user)
   fab!(:channel_1, :category_channel)
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseRewind | rewind sharing", type: :system do
+describe "DiscourseRewind | rewind sharing" do
   fab!(:current_user) do
     Fabricate(
       :user,

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User Card", type: :system do
+describe "User Card" do
   fab!(:current_user, :admin)
   fab!(:topic) { Fabricate(:post).topic }
   fab!(:user)

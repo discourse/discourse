@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Summarize a topic ", type: :system do
+RSpec.describe "Summarize a topic " do
   fab!(:current_user, :user)
   fab!(:group)
   fab!(:topic)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread list in side panel | full page", type: :system do
+describe "Thread list in side panel | full page" do
   fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user, :user)

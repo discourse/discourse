@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseAutomation | smoke test", type: :system do
+describe "DiscourseAutomation | smoke test" do
   fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "test") }
   fab!(:badge) { Fabricate(:badge, name: "badge") }

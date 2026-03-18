@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Rss Polling - admin", type: :system do
+RSpec.describe "Rss Polling - admin" do
   fab!(:current_user, :admin)
   fab!(:category_1, :category)
   fab!(:tag_1, :tag)

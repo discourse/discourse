@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Visit channel", type: :system do
+RSpec.describe "Visit channel" do
   fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
