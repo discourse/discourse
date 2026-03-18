@@ -58,21 +58,21 @@ function replacesFixturesByUrl(newFixtures) {
   Object.assign(fixturesByUrl, newFixtures);
 }
 
-const instance = new Pretender();
+const pretender = new Pretender();
 
-const oldRegister = instance.register;
-instance.register = (...args) => {
+const oldRegister = pretender.register;
+pretender.register = (...args) => {
   args[1] = getURL(args[1]);
-  return oldRegister.call(instance, ...args);
+  return oldRegister.call(pretender, ...args);
 };
 
-export default instance;
+export default pretender;
 
 export function pretenderHelpers() {
   return { parsePostData, response, success };
 }
 
-export function applyDefaultHandlers(pretender) {
+export function applyDefaultHandlers() {
   // Autoload any `*-pretender` files
   Object.keys(requirejs.entries).forEach((e) => {
     let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
@@ -1415,9 +1415,9 @@ export function applyDefaultHandlers(pretender) {
 }
 
 export function resetPretender() {
-  instance.handlers = [];
-  instance.handledRequests = [];
-  instance.unhandledRequests = [];
-  instance.passthroughRequests = [];
-  instance.hosts.registries = {};
+  pretender.handlers = [];
+  pretender.handledRequests = [];
+  pretender.unhandledRequests = [];
+  pretender.passthroughRequests = [];
+  pretender.hosts.registries = {};
 }
