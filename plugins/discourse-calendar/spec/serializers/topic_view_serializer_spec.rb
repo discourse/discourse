@@ -97,4 +97,38 @@ RSpec.describe TopicViewSerializer do
       end
     end
   end
+
+  context "with all-day event" do
+    before do
+      SiteSetting.display_post_event_date_on_topic_title = true
+      DiscoursePostEvent::Event.create!(
+        id: first_post.id,
+        original_starts_at: Time.utc(2020, 4, 25),
+        original_ends_at: Time.utc(2020, 4, 27),
+        all_day: true,
+      )
+    end
+
+    describe "#event_all_day" do
+      it "returns true" do
+        expect(parsed_json["event_all_day"]).to eq(true)
+      end
+    end
+  end
+
+  context "without all-day event" do
+    before do
+      DiscoursePostEvent::Event.create!(
+        id: first_post.id,
+        original_starts_at: 1.hour.from_now,
+        original_ends_at: 2.hours.from_now,
+      )
+    end
+
+    describe "#event_all_day" do
+      it "is not included" do
+        expect(parsed_json).not_to have_key("event_all_day")
+      end
+    end
+  end
 end

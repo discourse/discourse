@@ -52,6 +52,11 @@ module DiscoursePostEvent
           topic_id: self.post.topic_id,
           name: TOPIC_POST_EVENT_ENDS_AT,
         ).delete_all
+
+        TopicCustomField.where(
+          topic_id: self.post.topic_id,
+          name: TOPIC_POST_EVENT_ALL_DAY,
+        ).delete_all
       end
     end
 
@@ -133,7 +138,10 @@ module DiscoursePostEvent
 
     def on_going_event_invitees
       return [] if self.starts_at.nil? # Can't determine ongoing status without start time
-      return [] if !self.ends_at && self.starts_at < Time.now
+      if !self.ends_at && self.starts_at < Time.now &&
+           (!self.all_day || self.starts_at.end_of_day <= Time.now)
+        return []
+      end
 
       if self.ends_at
         extended_ends_at =
@@ -329,6 +337,19 @@ module DiscoursePostEvent
         parsed_recurrence_until =
           event_params[:"recurrence-until"] ? tz.parse(event_params[:"recurrence-until"]) : nil
 
+        parsed_all_day = event_params[:"all-day"] == "true"
+        if parsed_all_day
+          parsed_starts_at = Time.utc(*event_params[:start].split("-").map(&:to_i))
+          parsed_ends_at =
+            (
+              if event_params[:end]
+                Time.utc(*event_params[:end].split("-").map(&:to_i)).end_of_day
+              else
+                nil
+              end
+            )
+        end
+
         params = {
           name: event_params[:name],
           original_starts_at: parsed_starts_at,
@@ -347,6 +368,7 @@ module DiscoursePostEvent
           closed: event_params[:closed] || false,
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
           max_attendees: event_params[:"max-attendees"]&.to_i,
+          all_day: parsed_all_day,
         }
 
         params[:custom_fields] = {}
@@ -421,7 +443,8 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date
       return nil unless next_starts_at
 
-      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      event_duration =
+        original_ends_at ? original_ends_at - original_starts_at : (all_day ? 86_400 : 3600)
       next_ends_at = next_starts_at + event_duration
       [next_starts_at, next_ends_at]
     end
@@ -435,7 +458,8 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date_from(from_time)
       return nil unless next_starts_at
 
-      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      event_duration =
+        original_ends_at ? original_ends_at - original_starts_at : (all_day ? 86_400 : 3600)
       next_ends_at = next_starts_at + event_duration
       { starts_at: next_starts_at, ends_at: next_ends_at }
     end
@@ -556,4 +580,5 @@ end
 #  recurrence_until   :datetime
 #  show_local_time    :boolean          default(FALSE), not null
 #  max_attendees      :integer
+#  all_day            :boolean          default(FALSE), not null
 #

@@ -199,6 +199,25 @@ module DiscoursePostEvent
       end
     end
 
+    context "with an all-day event" do
+      it "returns date-only strings for starts_at and ends_at" do
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 3, 12),
+          original_ends_at: Time.utc(2026, 3, 14),
+          all_day: true,
+        )
+
+        get "/discourse-post-event/events.json"
+
+        expect(response.status).to eq(200)
+        event = response.parsed_body["events"].first
+        expect(event["starts_at"]).to eq("2026-03-12")
+        expect(event["ends_at"]).to eq("2026-03-14")
+        expect(event["all_day"]).to eq(true)
+      end
+    end
+
     context "with an existing post" do
       let(:user) { Fabricate(:user, admin: true) }
       let(:topic) { Fabricate(:topic, user: user, category: Fabricate(:category)) }
