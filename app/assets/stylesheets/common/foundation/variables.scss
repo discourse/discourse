@@ -215,11 +215,7 @@ $z-layers: (
   @return not is-light-color-scheme();
 }
 
-// tokens
 $_tokens: (
-  // ---
-  // COLOR
-  // ---
   "color.text.default": dark-light-choose(
       var(--neutral-1100),
       var(--dark-neutral-1000)
@@ -235,14 +231,7 @@ $_tokens: (
   "color.border.bold": var(--primary-500),
   "color.border.input": var(--primary-300),
   "color.border.default": var(--primary-200),
-  // ---
-  // SIZE
-  // ---
   "size.border.default": 1px,
-
-  // ---
-  // COLOR - ACCENTS
-  // ---
   "color.background.accent.subtlest": var(--lime-100),
   "color.background.accent.subtler": var(--lime-200),
   "color.background.accent.subtle": var(--lime-400),
@@ -250,7 +239,7 @@ $_tokens: (
   "color.text.accent": var(--lime-800),
   "color.text.accent.bolder": var(--lime-900),
   "color.text.inverse": var(--neutral-10),
-  "color.border.accent": var(--lime-600)
+  "color.border.accent": var(--lime-600),
 );
 
 @function token($path) {
