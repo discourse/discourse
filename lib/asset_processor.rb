@@ -168,6 +168,7 @@ class AssetProcessor
     mutex.synchronize do
       result = v8.call(*args, **kwargs)
       result = v8.call(fetch_result_call) if fetch_result_call
+      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
       result
     end
   rescue MiniRacer::RuntimeError => e

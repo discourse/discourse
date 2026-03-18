@@ -118,6 +118,85 @@ module DiscoursePostEvent
         expect(body).to include("BEGIN:VEVENT")
         expect(body).to include("END:VEVENT")
       end
+
+      it "excludes events older than 3 months from ics feed by default" do
+        recent_event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Future Event")
+        old_event = Fabricate(:event, original_starts_at: 4.months.ago, name: "Old Event")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+        expect(body).to include("SUMMARY:Future Event")
+        expect(body).not_to include("SUMMARY:Old Event")
+      end
+
+      it "skips events with nil starts_at in ics feed" do
+        event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Valid Event")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("SUMMARY:Valid Event")
+      end
+
+      context "when include_interested is requested for an attending user" do
+        fab!(:target_user, :user)
+        fab!(:going_event) do
+          Fabricate(:event, original_starts_at: 1.day.from_now, name: "Going Event")
+        end
+        fab!(:interested_event) do
+          Fabricate(:event, original_starts_at: 2.days.from_now, name: "Interested Event")
+        end
+
+        let(:events_params) { { attending_user: target_user.username, include_interested: true } }
+
+        before do
+          going_event.create_invitees(
+            [{ user_id: target_user.id, status: Invitee.statuses[:going] }],
+          )
+          interested_event.create_invitees(
+            [{ user_id: target_user.id, status: Invitee.statuses[:interested] }],
+          )
+        end
+
+        it "does not expose interested events to anonymous requests" do
+          get "/discourse-post-event/events.json", params: events_params
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["events"].pluck("id")).to contain_exactly(going_event.id)
+        end
+
+        it "includes interested events for the same authenticated user" do
+          sign_in(target_user)
+
+          get "/discourse-post-event/events.json", params: events_params
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["events"].pluck("id")).to contain_exactly(
+            going_event.id,
+            interested_event.id,
+          )
+        end
+
+        it "includes interested events for the owner's user api key feed" do
+          user_api_key =
+            Fabricate(
+              :user_api_key,
+              user: target_user,
+              scopes: [
+                Fabricate.build(:user_api_key_scope, name: "discourse-calendar:events_calendar"),
+              ],
+            )
+
+          get "/discourse-post-event/events.ics",
+              params: events_params.merge(user_api_key: user_api_key.key)
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include("SUMMARY:Going Event")
+          expect(response.body).to include("SUMMARY:Interested Event")
+        end
+      end
     end
 
     context "with an existing post" do

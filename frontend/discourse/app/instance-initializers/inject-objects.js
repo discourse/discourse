@@ -18,7 +18,6 @@ export default {
           `use injected siteSettings instead of Discourse.SiteSettings`,
           {
             since: "2.8",
-            dropFrom: "3.2",
             id: "discourse.global.site-settings",
           }
         );
@@ -31,7 +30,6 @@ export default {
           `import discourse/models/user instead of using Discourse.User`,
           {
             since: "2.8",
-            dropFrom: "3.2",
             id: "discourse.global.user",
           }
         );
@@ -44,7 +42,6 @@ export default {
           `import discourse/models/site instead of using Discourse.Site`,
           {
             since: "2.8",
-            dropFrom: "3.2",
             id: "discourse.global.site",
           }
         );

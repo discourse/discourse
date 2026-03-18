@@ -158,8 +158,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     if SiteSetting.invite_only?
       path = Discourse.route_for(@origin)
       return true unless path
-      return true if path[:controller] != "invites" && path[:action] != "show"
-      !Invite.exists?(invite_key: path[:id])
+      return true if path[:controller] != "invites" || path[:action] != "show"
+      !Invite.find_by(invite_key: path[:id])&.redeemable?
     end
   end
 

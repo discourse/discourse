@@ -41,6 +41,32 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
       end
 
+      context "with user status enabled" do
+        before { SiteSetting.enable_user_status = true }
+
+        it "preloads user_options to avoid N+1 queries for original message mentions" do
+          thread.original_message.user.set_status!("status", "grinning")
+
+          3.times do
+            mentioned_user = Fabricate(:user)
+            mentioned_user.set_status!("status", "wave")
+            Fabricate(
+              :user_chat_mention,
+              chat_message: thread.original_message,
+              user: mentioned_user,
+            )
+          end
+
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+
+          queries =
+            track_sql_queries { get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}" }
+          user_option_queries = queries.select { |query| query.include?('"user_options"') }
+
+          expect(user_option_queries.size).to eq(2)
+        end
+      end
+
       context "when the thread original message is deleted" do
         before { thread.original_message.trash! }
 

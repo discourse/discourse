@@ -163,7 +163,6 @@ function userOption(userOptionKey) {
         {
           id: "discourse.user.userOptions",
           since: "2.9.0.beta12",
-          dropFrom: "3.0.0.beta1",
         }
       );
 
@@ -176,7 +175,6 @@ function userOption(userOptionKey) {
         {
           id: "discourse.user.userOptions",
           since: "2.9.0.beta12",
-          dropFrom: "3.0.0.beta1",
         }
       );
 
@@ -1270,7 +1268,6 @@ export default class User extends RestModel.extend(Evented) {
       {
         id: "discourse.user.resolved-timezone",
         since: "2.9.0.beta12",
-        dropFrom: "3.0.0.beta1",
       }
     );
 

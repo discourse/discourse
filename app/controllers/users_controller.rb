@@ -30,6 +30,7 @@ class UsersController < ApplicationController
                    register_passkey
                    rename_passkey
                    delete_passkey
+                   update_security_key
                    feature_topic
                    clear_featured_topic
                    bookmarks
@@ -83,8 +84,8 @@ class UsersController < ApplicationController
                   create_second_factor_security_key
                   register_passkey
                   delete_passkey
+                  update_security_key
                 ]
-
   before_action :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -1935,10 +1936,9 @@ class UsersController < ApplicationController
       format.ics do
         bookmark_query = Bookmark.with_reminders.where(user_id: user.id)
 
-        if params[:after].present?
-          after_date = params[:after] == "now" ? Time.current : params[:after].to_datetime
-          bookmark_query = bookmark_query.where("reminder_at >= ?", after_date)
-        end
+        after_param = params[:after].presence || 3.months.ago.iso8601
+        after_date = after_param == "now" ? Time.current : after_param.to_datetime
+        bookmark_query = bookmark_query.where("reminder_at >= ?", after_date)
 
         @bookmark_reminders =
           bookmark_query

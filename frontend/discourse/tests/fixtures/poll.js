@@ -1,4 +1,4 @@
-export default {
+const pollFixtures = {
   "/t/13.json": {
     post_stream: {
       posts: [
@@ -939,3 +939,5 @@ export default {
     },
   },
 };
+
+export default pollFixtures;

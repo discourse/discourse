@@ -2831,6 +2831,15 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
+    it "shows a blank-slug topic without redirecting" do
+      topic.update_columns(title: "", slug: nil)
+      topic.reload
+
+      get "/t/#{topic.id}"
+
+      expect(response.status).to eq(200)
+    end
+
     it "return 404 for an invalid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
       expect(response.status).to eq(404)
@@ -4335,6 +4344,19 @@ RSpec.describe TopicsController do
       it "requires a type field for the operation param" do
         put "/topics/bulk.json", params: { topic_ids: topic_ids, operation: {} }
         expect(response.status).to eq(400)
+      end
+
+      it "returns a proper error for an invalid operation type" do
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: topic_ids,
+              operation: {
+                type: "not_a_real_operation",
+              },
+            }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to be_present
       end
 
       it "can dismiss sub-categories posts as read" do

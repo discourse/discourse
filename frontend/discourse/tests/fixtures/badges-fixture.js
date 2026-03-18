@@ -1,4 +1,4 @@
-export default {
+const badgesFixtures = {
   "/badges.json": {
     badge_types: [
       {
@@ -1732,3 +1732,5 @@ export default {
     ],
   },
 };
+
+export default badgesFixtures;

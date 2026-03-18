@@ -6627,6 +6627,52 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#update_security_key" do
+    fab!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user1) }
+
+    it "fails if user is not logged in" do
+      put "/u/security_key.json", params: { id: security_key.id, disable: "true" }
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if user does not have a confirmed session" do
+      sign_in(user1)
+      put "/u/security_key.json", params: { id: security_key.id, disable: "true" }
+      expect(response.status).to eq(403)
+    end
+
+    context "with a confirmed session" do
+      before do
+        stub_server_session_confirmed
+        sign_in(user1)
+      end
+
+      it "returns 400 for an invalid security key id" do
+        put "/u/security_key.json", params: { id: 0, disable: "true" }
+        expect(response.status).to eq(400)
+      end
+
+      it "does not allow modifying another user's security key" do
+        sign_in(admin)
+        put "/u/security_key.json", params: { id: security_key.id, name: "hacked" }
+        expect(response.status).to eq(400)
+        expect(security_key.reload.name).not_to eq("hacked")
+      end
+
+      it "disables the security key" do
+        put "/u/security_key.json", params: { id: security_key.id, disable: "true" }
+        expect(response.status).to eq(200)
+        expect(security_key.reload.enabled).to eq(false)
+      end
+
+      it "renames the security key" do
+        put "/u/security_key.json", params: { id: security_key.id, name: "new name" }
+        expect(response.status).to eq(200)
+        expect(security_key.reload.name).to eq("new name")
+      end
+    end
+  end
+
   describe "#register_passkey" do
     before do
       SiteSetting.enable_passkeys = true
@@ -7320,6 +7366,21 @@ RSpec.describe UsersController do
         END:VEVENT
         END:VCALENDAR
       ICS
+    end
+
+    it "excludes bookmark reminders older than 3 months from .ics feed" do
+      bookmark1.update_columns(name: nil, reminder_at: 4.months.ago)
+      bookmark2.update!(name: "Recent reminder", reminder_at: 1.day.from_now)
+      bookmark3.update_columns(name: nil, reminder_at: 2.months.ago)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+      expect(response.status).to eq(200)
+
+      body = response.body
+      expect(body).not_to include("bookmark_reminder_##{bookmark1.id}")
+      expect(body).to include("bookmark_reminder_##{bookmark2.id}")
+      expect(body).to include("bookmark_reminder_##{bookmark3.id}")
     end
 
     it "does not show another user's bookmarks" do

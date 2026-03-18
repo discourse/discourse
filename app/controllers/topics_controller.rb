@@ -167,7 +167,8 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+    if slugs_do_not_match ||
+         (!request.format.json? && params[:slug].nil? && @topic_view.topic.slug.present?)
       redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
       return
     end
@@ -1129,6 +1130,8 @@ class TopicsController < ApplicationController
       result = { topic_ids: changed_topic_ids }
       result[:errors] = operator.errors if operator.errors.present?
       render_json_dump result
+    rescue Discourse::InvalidParameters => ex
+      render_json_error(ex, status: 400)
     end
   end
 

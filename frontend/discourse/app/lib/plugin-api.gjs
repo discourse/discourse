@@ -917,7 +917,6 @@ class _PluginApi {
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
         since: "3.2",
-        dropFrom: "3.3",
       }
     );
 
@@ -2191,6 +2190,14 @@ class _PluginApi {
    * @deprecated Use `addSaveableUserOption` instead
    */
   addSaveableUserOptionField(fieldName, options = {}) {
+    deprecated(
+      "`addSaveableUserOptionField` has been renamed to `addSaveableUserOption`",
+      {
+        id: "discourse.add-saveable-user-option-field",
+        since: "2026.3",
+      }
+    );
+
     this.addSaveableUserOption(fieldName, options);
   }
 

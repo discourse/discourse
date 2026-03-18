@@ -678,6 +678,21 @@ RSpec.describe PostsController do
           expect(response.status).to eq(200)
         end
 
+        it "respects top-level bypass_bump=false over nested bypass_bump=true" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: false,
+                  post: {
+                    raw: "updated content",
+                    bypass_bump: true,
+                  },
+                },
+                as: :json
+          }.to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
         it "bumps the topic when bypass_bump is not provided" do
           expect {
             put "/posts/#{wiki_post.id}.json", params: { post: { raw: "updated content" } }

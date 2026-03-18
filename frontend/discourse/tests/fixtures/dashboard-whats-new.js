@@ -1,4 +1,4 @@
-export default {
+const dashboardWhatsNewFixtures = {
   "/admin/whats-new.json": {
     new_features: [
       {
@@ -32,3 +32,5 @@ export default {
       "https://meta.discourse.org/c/announcements/67?tags=release-notes\u0026before=0",
   },
 };
+
+export default dashboardWhatsNewFixtures;
