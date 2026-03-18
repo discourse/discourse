@@ -2421,6 +2421,37 @@ RSpec.describe TopicsFilter do
         ).to contain_exactly(topic_1.id)
       end
 
+      it "does not return deleted topics even if they are bookmarked" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+        topic_1.destroy
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "does not return topics if their posts are deleted even if they are bookmarked" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        post = Fabricate(:post, topic: topic_1)
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+        post.destroy
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
       it "does not include other users' bookmarks" do
         freeze_time Time.zone.local(2024, 1, 15)
 
