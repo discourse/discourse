@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DecoratedHtml from "discourse/components/decorated-html";
@@ -63,9 +64,11 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   checkDescriptionOverflow(element) {
-    if (!this.descriptionExpanded) {
-      this.descriptionOverflows = element.scrollHeight > element.clientHeight;
-    }
+    schedule("afterRender", () => {
+      if (!this.descriptionExpanded) {
+        this.descriptionOverflows = element.scrollHeight > element.clientHeight;
+      }
+    });
   }
 
   @action
