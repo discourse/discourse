@@ -220,7 +220,14 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
           s3_bucket.expects(:object).with("#{upload_path}/#{path}").returns(s3_object).at_least_once
           s3_object.expects(:presigned_url).with(
             :get,
-            { expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds },
+            {
+              expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
+              response_content_disposition:
+                ActionDispatch::Http::ContentDisposition.format(
+                  disposition: "inline",
+                  filename: upload.original_filename,
+                ),
+            },
           )
 
           upload.url = store.store_upload(uploaded_file, upload)
