@@ -6266,7 +6266,7 @@ fr:
             back: "Retour aux composants"
             install: "Installer"
             name: "Nom"
-            used_on: "Utilisé le"
+            used_on: "Utilisé sur"
             enabled: "Activé ?"
             by_author: "Par %{name}"
             learn_more: "En savoir plus"

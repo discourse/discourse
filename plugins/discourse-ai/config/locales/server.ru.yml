@@ -233,6 +233,8 @@ ru:
           name: "Обменный курс"
         stock_quote:
           name: "Котировка акций (AlphaVantage)"
+        image_generation_category:
+          name: "Генерация изображений..."
         image_generation_custom:
           name: "Другое"
         image_generation_openai:
@@ -244,6 +246,11 @@ ru:
     ai_helper:
       errors:
         completion_request_failed: "При попытке дать рекомендации произошла ошибка. Попробуйте еще раз."
+        no_illustrator_persona: "Пользовательский профиль Illustrator для публикации не настроен. Пожалуйста, проверьте настройки вашего сайта."
+        no_image_generation_tool: "Для создания изображений для данного персонажа в Illustrator необходимо использовать инструмент генерации изображений. Пожалуйста, настройте инструмент генерации изображений для этого персонажа в панели администратора."
+        no_image_generated: "Не удалось сгенерировать изображение. Пожалуйста, попробуйте еще раз или проверьте настройки вашего инструмента."
+        llm_model_not_configured: "Для генерации изображений не настроена языковая модель. Пожалуйста, настройте языковую модель по умолчанию в настройках вашего сайта."
+        unknown_error: "При создании эскизов произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз."
       prompts:
         translate: Перевести на %{language}
         generate_titles: Предложить названия для темы
@@ -431,12 +438,14 @@ ru:
             name: "Базовый поисковый запрос"
             description: "Базовый запрос, используемый при поиске. Пример: '#urgent' добавит '#urgent' к поисковому запросу и будет включать только темы со срочной категорией или тегом."
       tool_summary:
+        read_artifact: "Прочитать веб-артефакт"
         update_artifact: "Обновить веб-артефакт"
         create_artifact: "Создать веб-артефакт"
         web_browser: "Просмотр веб-страниц"
         github_search_files: "Поиск файлов на GitHub"
         github_search_code: "Поиск кода на GitHub"
         github_file_content: "Контент файла на GitHub"
+        github_diff: "GitHub diff"
         random_picker: "Случайный выбор"
         categories: "Вывод списка категорий"
         flag_post: "Пометить публикацию"
@@ -465,8 +474,10 @@ ru:
         github_search_code: "Поиск кода в репозитории GitHub"
         github_search_files: "Поиск файлов в репозитории GitHub"
         github_file_content: "Извлечение контента файлов из репозитория на GitHub"
+        github_diff: "Получить запрос на слияние (pull request) или разницу в коммитах (commit diff) на GitHub."
         random_picker: "Выбирает случайное число или случайный элемент списка"
         categories: "Вывод всех общедоступных категорий на форуме"
+        flag_post: "Пометить текущую публикацию для проверки сотрудниками"
         search: "Поиск по всем общедоступным темам на форуме"
         tags: "Вывод всех тегов на форуме"
         time: "Определить время в разных часовых поясах"
@@ -493,6 +504,7 @@ ru:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Получен контент файла %{file_paths} из репозитория %{repo_name}@%{branch}"
         random_picker: "Выбор из %{options}, выбрано: %{result}"
+        flag_post: "Отметка сообщения %{post_id} (flag_post: %{flag_post})"
         read: "Чтение: <a href='%{url}'>%{title}</a>"
         time: "Время по часовому поясу %{timezone} — %{time}"
         summarize: "Получена сводка: <a href='%{url}'>%{title}</a>"
@@ -545,6 +557,10 @@ ru:
       discoveries:
         continue_conversation:
           raw: "Во время поиска «%{query}» вы предоставили мне следующие сведения:\n\n%{context}\n\nДавайте продолжим разговор."
+      flag_post:
+        already_flagged: "Сообщение уже помечено для проверки."
+        flagged: "Сообщение помечено для проверки."
+        reason: "ИИ-бот пометил этот пост как неприемлемый.\n\nПричина: %{reason}"
     summarization:
       configuration_hint:
         one: "Сначала настройте параметр `%{setting}`."
@@ -577,6 +593,7 @@ ru:
         invalid_seeded_model: "Эту модель нельзя использовать с этой функцией"
         invalid_persona_response_format: "Для выбранной персоны требуется формат ответа, содержащий логическое поле «spam»"
         must_select_model: "Сначала вам нужно выбрать LLM"
+        invalid_llm_id: "Выбранная модель LLM недействительна."
       endpoints:
         not_configured: "%{display_name} (не настроено)"
         configuration_hint:
@@ -595,6 +612,8 @@ ru:
     embeddings:
       delete_failed: "Эта модель сейчас используется. Сначала обновите параметр `ai embeddings selected model`."
       cannot_edit_builtin: "Встроенную модель редактировать нельзя."
+      secret_required: "Необходимо выбрать учетные данные."
+      secret_not_found: "Выбранные учетные данные не существуют."
       configuration:
         disable_embeddings: "Сначала вам необходимо отключить настройку 'ai embeddings enabled'."
         choose_model: "Сначала задайте 'ai embeddings selected model'."
@@ -609,6 +628,10 @@ ru:
     translation:
       errors:
         disabled: "Функция перевода с помощью ИИ настроена не полностью."
+        all_posts_translated: "Все сообщения в этой теме уже переведены."
+    llm_credit_allocation:
+      limit_exceeded_user: "В этом сообществе исчерпан лимит кредитов ИИ на сегодня. Пожалуйста, попробуйте снова через %{reset_time} или обратитесь к администратору сайта за дополнительной информацией."
+      limit_exceeded_admin: "Вы достигли лимита кредитов ИИ. Пожалуйста, попробуйте снова через %{reset_time}."
     errors:
       quota_exceeded: "Вы превысили квоту для этой модели. Повторите попытку через %{relative_time}."
       quota_required: "Необходимо указать максимальное количество токенов или использований для этой модели"

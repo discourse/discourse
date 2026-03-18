@@ -6740,7 +6740,7 @@ de:
             back: "Zurück zu Komponenten"
             install: "Installieren"
             name: "Name"
-            used_on: "Verwendet bei"
+            used_on: "Verwendet von"
             enabled: "Aktiviert?"
             by_author: "Von %{name}"
             learn_more: "Mehr erfahren"

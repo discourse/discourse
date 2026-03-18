@@ -280,7 +280,7 @@ de:
       greater_than: muss größer als %{count} sein
       greater_than_or_equal_to: muss größer oder gleich %{count} sein
       has_already_been_used: "wird bereits verwendet"
-      in: muss in %{count} sein
+      in: muss innerhalb von %{count} sein
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
       is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
