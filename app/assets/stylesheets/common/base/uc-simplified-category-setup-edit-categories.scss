@@ -220,9 +220,27 @@
   }
 
   .edit-category-description-container {
+    .description-content {
+      &.--collapsed {
+        max-height: calc(4 * 1.5em);
+        overflow: hidden;
+        position: relative;
+
+        &.--overflowing::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 1.5em;
+          background: linear-gradient(transparent, var(--secondary, white));
+          pointer-events: none;
+        }
+      }
+    }
+
     .readonly-field {
       width: 100%;
-      margin-bottom: var(--space-2);
       font-size: var(--font-down-1);
       color: var(--primary-high);
 
@@ -232,6 +250,22 @@
 
       > :last-child {
         margin-bottom: 0;
+      }
+    }
+
+    .description-actions {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+
+      .toggle-description {
+        color: var(--primary-medium);
+
+        &:hover {
+          color: var(--primary-high);
+        }
       }
     }
   }

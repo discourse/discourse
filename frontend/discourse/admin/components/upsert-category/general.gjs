@@ -4,6 +4,7 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -14,7 +15,7 @@ import categoryBadge from "discourse/helpers/category-badge";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
-import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
@@ -33,11 +34,12 @@ export default class UpsertCategoryGeneral extends Component {
   @service siteSettings;
   @service toasts;
   @service composer;
-  @service dialog;
   @service store;
 
   @tracked loadingDescription = false;
   @tracked descriptionHtml = null;
+  @tracked descriptionExpanded = false;
+  @tracked descriptionOverflows = false;
 
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
@@ -57,6 +59,18 @@ export default class UpsertCategoryGeneral extends Component {
   @action
   unregisterDescriptionListener() {
     this.appEvents.off("composer:edited-post", this, this._refreshDescription);
+  }
+
+  @action
+  checkDescriptionOverflow(element) {
+    if (!this.descriptionExpanded) {
+      this.descriptionOverflows = element.scrollHeight > element.clientHeight;
+    }
+  }
+
+  @action
+  toggleDescriptionExpanded() {
+    this.descriptionExpanded = !this.descriptionExpanded;
   }
 
   async _refreshDescription() {
@@ -121,7 +135,7 @@ export default class UpsertCategoryGeneral extends Component {
         skipJumpOnSave: true,
       });
     } catch (e) {
-      this.dialog.alert(extractError(e));
+      popupAjaxError(e);
     } finally {
       this.loadingDescription = false;
     }
@@ -583,20 +597,51 @@ export default class UpsertCategoryGeneral extends Component {
             @title={{i18n "category.description"}}
             class="edit-category-description-container"
           >
-            <DecoratedHtml
-              @html={{this.categoryDescription}}
-              @className="readonly-field"
-            />
-
-            {{#if @category.topic_url}}
-              <@form.Button
-                @action={{this.editCategoryDescription}}
-                @icon="pencil"
-                @label="edit"
-                @isLoading={{this.loadingDescription}}
-                class="btn-default btn-small edit-category-description"
+            <div
+              class={{concatClass
+                "description-content"
+                (unless this.descriptionExpanded "--collapsed")
+                (if this.descriptionOverflows "--overflowing")
+              }}
+              {{didInsert this.checkDescriptionOverflow}}
+              {{didUpdate
+                this.checkDescriptionOverflow
+                this.categoryDescription
+              }}
+            >
+              <DecoratedHtml
+                @html={{this.categoryDescription}}
+                @className="readonly-field"
               />
-            {{/if}}
+            </div>
+
+            <div class="description-actions">
+              {{#if @category.topic_url}}
+                <@form.Button
+                  @action={{this.editCategoryDescription}}
+                  @icon="pencil"
+                  @label="edit"
+                  @isLoading={{this.loadingDescription}}
+                  class="btn-default btn-small edit-category-description"
+                />
+              {{/if}}
+              {{#if this.descriptionOverflows}}
+                <@form.Button
+                  @action={{this.toggleDescriptionExpanded}}
+                  @label={{if
+                    this.descriptionExpanded
+                    "category.description_collapse"
+                    "category.description_expand"
+                  }}
+                  @icon={{if
+                    this.descriptionExpanded
+                    "chevron-up"
+                    "chevron-down"
+                  }}
+                  class="btn-flat btn-small toggle-description"
+                />
+              {{/if}}
+            </div>
           </@form.Container>
         </div>
       {{/if}}
