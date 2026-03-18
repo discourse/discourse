@@ -238,7 +238,19 @@ $_tokens: (
   // ---
   // SIZE
   // ---
-  "size.border.default": 1px
+  "size.border.default": 1px,
+
+  // ---
+  // COLOR - ACCENTS
+  // ---
+  "color.background.accent.subtlest": var(--lime-100),
+  "color.background.accent.subtler": var(--lime-200),
+  "color.background.accent.subtle": var(--lime-400),
+  "color.background.accent.bolder": var(--lime-700),
+  "color.text.accent": var(--lime-800),
+  "color.text.accent.bolder": var(--lime-900),
+  "color.text.inverse": var(--neutral-10),
+  "color.border.accent": var(--lime-600)
 );
 
 @function token($path) {
