@@ -72,6 +72,10 @@ module Migrations::Database
       @db.query_single_splat(sql, *parameters)
     end
 
+    def query_splat(sql, *parameters, &block)
+      @db.query_splat(sql, *parameters, &block)
+    end
+
     def count(sql, *parameters)
       query_value(sql, *parameters)
     end
