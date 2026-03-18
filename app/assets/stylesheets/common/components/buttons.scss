@@ -217,6 +217,7 @@
   @include hover {
     background-color: transparent;
     color: var(--tertiary-hover);
+    border: 0;
 
     .d-icon {
       color: var(--tertiary-hover);
