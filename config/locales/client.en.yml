@@ -5995,8 +5995,7 @@ en:
         group_traffic: "Traffic"
         group_members: "Members"
         group_content: "Content & Health"
-        group_moderation: "Moderation"
-        group_security: "Security"
+        group_moderation_and_security: "Moderation & Security"
         group_other: "Other"
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
