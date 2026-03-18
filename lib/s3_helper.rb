@@ -110,7 +110,18 @@ class S3Helper
   end
 
   def delete_objects(keys)
-    s3_bucket.delete_objects({ delete: { objects: keys.map { |k| { key: k } }, quiet: true } })
+    return if keys.empty?
+
+    response =
+      s3_bucket.delete_objects({ delete: { objects: keys.map { |k| { key: k } }, quiet: false } })
+
+    if response.errors.any?
+      error_messages =
+        response.errors.map { |error| "#{error.key}: #{error.code} - #{error.message}" }.join(", ")
+      raise "Failed to delete #{response.errors.size} S3 objects: #{error_messages}"
+    end
+
+    response
   end
 
   def copy(source, destination, options: {})
