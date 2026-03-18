@@ -779,33 +779,28 @@ describe DiscoursePostEvent::Event do
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
     fab!(:upload)
 
-    it "resolves image URL to image_upload_id and creates UploadReference" do
-      post.update!(raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.url}\"]\n[/event]")
-      post.rebake!
+    context "with image" do
+      before do
+        post.update!(raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.url}\"]\n[/event]")
+        post.rebake!
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
+      end
 
-      DiscoursePostEvent::Event.update_from_raw(post)
-      post.reload
+      it "resolves image URL to image_upload_id and creates UploadReference" do
+        expect(post.event.image_upload_id).to eq(upload.id)
+        expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(true)
+      end
 
-      expect(post.event.image_upload_id).to eq(upload.id)
-      expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(true)
-    end
+      it "clears image_upload_id when image is removed" do
+        post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+        post.rebake!
+        DiscoursePostEvent::Event.update_from_raw(post)
+        post.reload
 
-    it "clears image_upload_id when image is removed" do
-      post.update!(raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.url}\"]\n[/event]")
-      post.rebake!
-      DiscoursePostEvent::Event.update_from_raw(post)
-      post.reload
-
-      expect(post.event.image_upload_id).to eq(upload.id)
-      expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(true)
-
-      post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
-      post.rebake!
-      DiscoursePostEvent::Event.update_from_raw(post)
-      post.reload
-
-      expect(post.event.image_upload_id).to be_nil
-      expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(false)
+        expect(post.event.image_upload_id).to be_nil
+        expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(false)
+      end
     end
   end
 end
