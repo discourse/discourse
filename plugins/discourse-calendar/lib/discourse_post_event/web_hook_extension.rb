@@ -65,7 +65,7 @@ module DiscoursePostEvent
                 if calendar_event.image_upload.present?
                   {
                     id: calendar_event.image_upload.id,
-                    url: calendar_event.image_upload.url,
+                    url: UrlHelper.absolute(calendar_event.image_upload.url),
                     width: calendar_event.image_upload.width,
                     height: calendar_event.image_upload.height,
                   }
