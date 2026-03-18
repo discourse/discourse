@@ -301,213 +301,70 @@ RSpec.describe DiscourseAi::Agents::Agent do
       context
     end
 
-    context "when a agent has no uploads" do
-      it "doesn't include RAG guidance" do
-        guidance_fragment =
-          "The following texts will give you additional guidance to elaborate a response."
-
-        expect(ai_agent.craft_prompt(with_cc).messages.first[:content]).not_to include(
-          guidance_fragment,
-        )
-      end
+    def prompt_tool_names(prompt)
+      prompt.tools.map(&:name)
     end
 
-    context "when RAG is running with a question consolidator" do
-      let(:consolidated_question) { "what is the time in france?" }
-
-      fab!(:llm_model, :fake_model)
-
-      fab!(:custom_ai_agent) do
-        Fabricate(
-          :ai_agent,
-          name: "custom",
-          rag_conversation_chunks: 3,
-          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-          question_consolidator_llm_id: llm_model.id,
+    context "when a agent has no uploads" do
+      it "doesn't expose the uploaded document search tool" do
+        expect(prompt_tool_names(ai_agent.craft_prompt(with_cc))).not_to include(
+          "search_uploaded_documents",
         )
-      end
-
-      before do
-        context_embedding = vector_def.dimensions.times.map { rand(-1.0...1.0) }
-        EmbeddingsGenerationStubs.hugging_face_service(consolidated_question, context_embedding)
-
-        UploadReference.ensure_exist!(target: custom_ai_agent, upload_ids: [upload.id])
-      end
-
-      it "will run the question consolidator" do
-        custom_agent = DiscourseAi::Agents::Agent.find_by(id: custom_ai_agent.id, user: user).new
-
-        # this means that we will consolidate
-        context.messages = [
-          { content: "Tell me the time", type: :user },
-          { content: "the time is 1", type: :model },
-          { content: "in france?", type: :user },
-        ]
-
-        DiscourseAi::Completions::Endpoints::Fake.with_fake_content(consolidated_question) do
-          custom_agent.craft_prompt(context).messages.first[:content]
-        end
-
-        message =
-          DiscourseAi::Completions::Endpoints::Fake.last_call[:dialect].prompt.messages.last[
-            :content
-          ]
-        expect(message).to include("Tell me the time")
-        expect(message).to include("the time is 1")
-        expect(message).to include("in france?")
-      end
-
-      context "when there are messages with uploads" do
-        let(:image100x100) { plugin_file_from_fixtures("100x100.jpg") }
-        let(:image_upload) do
-          UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
-        end
-
-        it "the question consolidator works" do
-          custom_agent = DiscourseAi::Agents::Agent.find_by(id: custom_ai_agent.id, user: user).new
-
-          context.messages = [
-            { content: "Tell me the time", type: :user },
-            { content: "the time is 1", type: :model },
-            { content: ["in france?", { upload_id: image_upload.id }], type: :user },
-          ]
-
-          DiscourseAi::Completions::Endpoints::Fake.with_fake_content(consolidated_question) do
-            custom_agent.craft_prompt(context).messages.first[:content]
-          end
-
-          message =
-            DiscourseAi::Completions::Endpoints::Fake.last_call[:dialect].prompt.messages.last[
-              :content
-            ]
-          expect(message).to include("Tell me the time")
-          expect(message).to include("the time is 1")
-          expect(message).to include("in france?")
-        end
       end
     end
 
     context "when a agent has RAG uploads" do
-      let(:embedding_value) { 0.04381 }
-      let(:prompt_cc_embeddings) { [embedding_value] * vector_def.dimensions }
-
-      def stub_fragments(fragment_count, agent: ai_agent)
-        schema = DiscourseAi::Embeddings::Schema.for(RagDocumentFragment)
-
-        fragment_count.times do |i|
-          fragment =
-            Fabricate(
-              :rag_document_fragment,
-              fragment: "fragment-n#{i}",
-              target_id: agent.id,
-              target_type: "AiAgent",
-              upload: upload,
-            )
-
-          # Similarity is determined left-to-right.
-          embeddings = [embedding_value + "0.000#{i}".to_f] * vector_def.dimensions
-
-          schema.store(fragment, embeddings, "test")
-        end
-      end
-
       before do
         stored_ai_agent = AiAgent.find(ai_agent.id)
         UploadReference.ensure_exist!(target: stored_ai_agent, upload_ids: [upload.id])
+      end
 
-        EmbeddingsGenerationStubs.hugging_face_service(
-          with_cc.messages.dig(0, :content),
-          prompt_cc_embeddings,
+      it "exposes uploaded documents as a tool instead of injecting snippets into the prompt" do
+        prompt = ai_agent.craft_prompt(with_cc)
+
+        expect(prompt_tool_names(prompt)).to include("search_uploaded_documents")
+        expect(prompt.messages.first[:content]).to include("search_uploaded_documents")
+        expect(prompt.messages.first[:content]).not_to include(
+          "The following texts will give you additional guidance",
         )
       end
 
-      context "when agent allows for less fragments" do
-        it "will only pick 3 fragments" do
-          custom_ai_agent =
-            Fabricate(
-              :ai_agent,
-              name: "custom",
-              rag_conversation_chunks: 3,
-              allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-            )
-
-          stub_fragments(3, agent: custom_ai_agent)
-
-          UploadReference.ensure_exist!(target: custom_ai_agent, upload_ids: [upload.id])
-
-          custom_agent = DiscourseAi::Agents::Agent.find_by(id: custom_ai_agent.id, user: user).new
-
-          expect(custom_agent.class.rag_conversation_chunks).to eq(3)
-
-          crafted_system_prompt = custom_agent.craft_prompt(with_cc).messages.first[:content]
-
-          expect(crafted_system_prompt).to include("fragment-n0")
-          expect(crafted_system_prompt).to include("fragment-n1")
-          expect(crafted_system_prompt).to include("fragment-n2")
-          expect(crafted_system_prompt).not_to include("fragment-n3")
-        end
-      end
-
-      context "when the reranker is available" do
-        before do
-          SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://test.reranker.com"
-          stub_fragments(15)
-        end
-
-        it "uses the re-ranker to reorder the fragments and pick the top 10 candidates" do
-          skip "This test is flaky needs to be investigated ordering does not come back as expected"
-          # The re-ranker reverses the similarity search, but return less results
-          # to act as a limit for test-purposes.
-          expected_reranked = (4..14).to_a.reverse.map { |idx| { index: idx } }
-
-          WebMock.stub_request(:post, "https://test.reranker.com/rerank").to_return(
-            status: 200,
-            body: JSON.dump(expected_reranked),
+      it "finds the uploaded document search tool" do
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "search_uploaded_documents",
+            id: "call_uploaded_docs",
+            parameters: {
+              query: "time",
+            },
           )
 
-          crafted_system_prompt = ai_agent.craft_prompt(with_cc).messages.first[:content]
+        tool = ai_agent.find_tool(tool_call, bot_user: nil, llm: nil, context: with_cc)
 
-          expect(crafted_system_prompt).to include("fragment-n14")
-          expect(crafted_system_prompt).to include("fragment-n13")
-          expect(crafted_system_prompt).to include("fragment-n12")
-          expect(crafted_system_prompt).not_to include("fragment-n4") # Fragment #11 not included
-        end
+        expect(tool).to be_a(DiscourseAi::Agents::Tools::SearchUploadedDocuments)
+        expect(tool.agent).to eq(ai_agent)
+      end
+    end
+
+    context "when the agent has examples" do
+      fab!(:examples_agent) do
+        Fabricate(
+          :ai_agent,
+          examples: [["User message", "assistant response"]],
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        )
       end
 
-      context "when the reranker is not available" do
-        before { stub_fragments(10) }
+      it "includes them before the context messages" do
+        custom_agent = DiscourseAi::Agents::Agent.find_by(id: examples_agent.id, user: user).new
 
-        it "picks the first 10 candidates from the similarity search" do
-          crafted_system_prompt = ai_agent.craft_prompt(with_cc).messages.first[:content]
+        post_system_prompt_msgs = custom_agent.craft_prompt(with_cc).messages.last(3)
 
-          expect(crafted_system_prompt).to include("fragment-n0")
-          expect(crafted_system_prompt).to include("fragment-n1")
-          expect(crafted_system_prompt).to include("fragment-n2")
-
-          expect(crafted_system_prompt).not_to include("fragment-n10") # Fragment #10 not included
-        end
-      end
-
-      context "when the agent has examples" do
-        fab!(:examples_agent) do
-          Fabricate(
-            :ai_agent,
-            examples: [["User message", "assistant response"]],
-            allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-          )
-        end
-
-        it "includes them before the context messages" do
-          custom_agent = DiscourseAi::Agents::Agent.find_by(id: examples_agent.id, user: user).new
-
-          post_system_prompt_msgs = custom_agent.craft_prompt(with_cc).messages.last(3)
-
-          expect(post_system_prompt_msgs).to contain_exactly(
-            { content: "User message", type: :user },
-            { content: "assistant response", type: :model },
-            { content: "Tell me the time", type: :user },
-          )
-        end
+        expect(post_system_prompt_msgs).to contain_exactly(
+          { content: "User message", type: :user },
+          { content: "assistant response", type: :model },
+          { content: "Tell me the time", type: :user },
+        )
       end
     end
   end

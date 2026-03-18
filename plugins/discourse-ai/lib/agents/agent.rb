@@ -229,9 +229,21 @@ module DiscourseAi
           .all_available_tools
           .filter { |tool| tools.include?(tool) }
           .concat(tools.filter(&:custom?))
+          .tap do |available_tools|
+            next if !rag_tool_available?
+            if available_tools.any? { |tool|
+                 tool.signature[:name] == Tools::SearchUploadedDocuments.name
+               }
+              next
+            end
+
+            available_tools << Tools::SearchUploadedDocuments
+          end
+          .uniq
       end
 
       def craft_prompt(context, llm: nil)
+        available_tools = self.available_tools
         system_insts = replace_placeholders(system_prompt, context)
 
         prompt_insts = <<~TEXT.strip
@@ -239,27 +251,10 @@ module DiscourseAi
           #{available_tools.map(&:custom_system_message).compact_blank.join("\n")}
           TEXT
 
-        question_consolidator_llm = llm
-        if self.class.question_consolidator_llm_id.present?
-          question_consolidator_llm ||=
-            DiscourseAi::Completions::Llm.proxy(
-              LlmModel.find_by(id: self.class.question_consolidator_llm_id),
-            )
-        end
-
         if context.custom_instructions.present?
           prompt_insts << "\n"
           prompt_insts << context.custom_instructions
         end
-
-        fragments_guidance =
-          rag_fragments_prompt(
-            context.messages,
-            llm: question_consolidator_llm,
-            user: context.user,
-          )&.strip
-
-        prompt_insts << fragments_guidance if fragments_guidance.present?
 
         post_system_examples = []
 
@@ -369,8 +364,16 @@ module DiscourseAi
             llm: llm,
             context: context,
             provider_data: tool_call.provider_data,
+            agent: self,
           )
         end
+      end
+
+      def rag_tool_available?
+        return false if !DiscourseAi::Embeddings.enabled?
+        return false if id.blank?
+
+        UploadReference.where(target_id: id, target_type: "AiAgent").exists?
       end
 
       def strip_quotes(value)
