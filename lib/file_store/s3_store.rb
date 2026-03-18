@@ -448,7 +448,7 @@ module FileStore
         disposition =
           (force_download || !FileHelper.is_inline_safe?(filename)) ? "attachment" : "inline"
         opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-          disposition: disposition,
+          disposition:,
           filename: filename,
         )
       end
