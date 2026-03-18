@@ -21,15 +21,16 @@
 
   // must be rgba for gradient
   --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
-  --d-sidebar-header-color: var(--d-text-subtle);
-  --d-sidebar-header-icon-color: var(--d-text-subtle);
+  --d-sidebar-header-color: #{token("color.text.subtle")};
+  --d-sidebar-header-icon-color: #{token("color.text.subtle")};
   --d-sidebar-header-font-weight: bold;
-  --d-sidebar-section-border-color: var(--d-border);
-  --d-sidebar-border-color: var(--d-border);
-  --d-sidebar-link-color: var(--d-text-subtle);
-  --d-sidebar-link-icon-color: var(--d-text-subtle);
-  --d-sidebar-link-badge-color: var(--d-text-subtle); // example: new count
+  --d-sidebar-section-border-color: #{token("color.border.default")};
+  --d-sidebar-border-color: #{token("color.border.default")};
+  --d-sidebar-link-color: #{token("color.text.subtle")};
+  --d-sidebar-link-icon-color: #{token("color.text.subtle")};
+  --d-sidebar-link-badge-color: #{token("color.text.subtle")};
 
+  // example: new count
   // example: chat participant count
   --d-sidebar-prefix-background: var(--primary-low);
   --d-sidebar-prefix-color: var(--d-sidebar-link-color);
@@ -43,17 +44,15 @@
   --d-sidebar-highlight-prefix-background: var(--primary-300);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
   --d-sidebar-highlight-suffix-color: var(--tertiary-med-or-tertiary);
-  --d-sidebar-highlight-hover-background: var(
-    --primary-medium
-  ); // example: hovering a button within a highlighted section
+  --d-sidebar-highlight-hover-background: var(--primary-medium);
 
-  --d-sidebar-highlight-hover-icon: var(
-    --primary-very-low
-  ); // example: hovering a button within a highlighted section
+  // example: hovering a button within a highlighted section
+  --d-sidebar-highlight-hover-icon: var(--primary-very-low);
 
+  // example: hovering a button within a highlighted section
   --d-sidebar-active-background: var(--d-selected);
-  --d-sidebar-active-color: var(--d-text);
-  --d-sidebar-active-icon-color: var(--d-text-subtle);
+  --d-sidebar-active-color: #{token("color.text.default")};
+  --d-sidebar-active-icon-color: #{token("color.text.subtle")};
   --d-sidebar-active-prefix-background: var(--d-text-subtlest);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
   --d-sidebar-active-font-weight: bold; // example: active section link
