@@ -375,13 +375,15 @@ module DiscourseAi
       end
 
       def rag_search(query, filenames: nil, limit: 10)
-        RagDocumentFragment.search(
-          target_id: tool.id,
-          target_type: "AiTool",
-          query: query,
-          filenames: filenames,
-          limit: limit,
-        )
+        RagDocumentFragment
+          .search(
+            target_id: tool.id,
+            target_type: "AiTool",
+            query: query,
+            filenames: filenames,
+            limit: limit,
+          )
+          .map { |fragment| { fragment: fragment[:fragment], metadata: fragment[:metadata] } }
       end
 
       def rag_get_file(filename)
