@@ -1,4 +1,4 @@
-export default {
+const searchFixtures = {
   "/search.json": {
     posts: [
       {
@@ -844,3 +844,5 @@ export default {
     },
   },
 };
+
+export default searchFixtures;

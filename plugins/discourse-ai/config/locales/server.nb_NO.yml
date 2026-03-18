@@ -46,6 +46,12 @@ nb_NO:
       assign:
         errors:
           not_found: "Fant ikke emnet."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Godkjenn"
+        reject:
+          title: "Avvis"
     ai_staff_action_logger:
       updated: "oppdatert"
       removed: "fjernet"

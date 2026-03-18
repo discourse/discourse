@@ -972,7 +972,7 @@ de:
         approved_by: "Genehmigt von %{username} · %{relativeDate}"
         rejected_by: "Abgelehnt von %{username} · %{relativeDate}"
         ignored_by: "Ignoriert von %{username} · %{relativeDate}"
-        view_conversation: "PM anzeigen"
+        view_conversation: "PN anzeigen"
         note_added: "Moderator-Notiz"
         note_added_by: "Moderator-Notiz von %{username} · %{relativeDate}"
         no_events: "Keine Zeitleistenereignisse zum Anzeigen"

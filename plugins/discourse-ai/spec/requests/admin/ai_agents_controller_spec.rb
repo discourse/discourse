@@ -320,7 +320,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
         scope =
           ApiKeyScope.create!(
-            resource: "discourse_ai",
+            resource: "ai",
             action: "update_agents",
             api_key_id: api_key.id,
             allowed_parameters: {

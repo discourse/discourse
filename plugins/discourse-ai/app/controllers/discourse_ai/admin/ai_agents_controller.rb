@@ -438,6 +438,7 @@ module DiscourseAi
             :execution_mode,
             :max_turn_tokens,
             :compression_threshold,
+            :require_approval,
             allowed_group_ids: [],
             rag_uploads: [:id],
           )
@@ -560,6 +561,8 @@ module DiscourseAi
           max_turn_tokens: {
           },
           compression_threshold: {
+          },
+          require_approval: {
           },
           # JSON fields
           json_fields: %i[tools response_format examples allowed_group_ids],

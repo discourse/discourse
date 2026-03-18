@@ -43,10 +43,6 @@ export default class TopicFromParams extends DiscourseRoute {
   afterModel(model) {
     const topic = this.modelFor("topic");
 
-    if (topic.isPrivateMessage && topic.suggested_topics) {
-      this.pmTopicTrackingState.startTracking();
-    }
-
     const isLoadingFirstPost =
       topic.postStream.firstPostPresent &&
       !(model.nearPost && model.nearPost > 1);

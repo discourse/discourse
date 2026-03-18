@@ -586,6 +586,13 @@ ja:
       assign:
         errors:
           not_found: "トピックが見つかりませんでした."
+    reviewables:
+      ai_tool_action:
+        title: "AI ツールアクション"
+        approve:
+          title: "承認"
+        reject:
+          title: "却下"
     summarization:
       configuration_hint:
         other: "先に次の設定を構成します: %{settings}"

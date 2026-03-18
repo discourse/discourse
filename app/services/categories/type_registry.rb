@@ -31,8 +31,8 @@ module Categories
         types
       end
 
-      def list
-        types.values.map(&:metadata)
+      def list(only_visible: false)
+        types.values.select { |type| only_visible ? type.visible? : true }.map(&:metadata)
       end
 
       def valid?(id)

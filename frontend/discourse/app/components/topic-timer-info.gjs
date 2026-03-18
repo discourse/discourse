@@ -159,6 +159,9 @@ export default class TopicTimerInfo extends Component {
     if (this.basedOnLastPost && statusType === "close") {
       statusType = "close_after_last_post";
     }
+    if (this.basedOnLastPost && statusType === "delete") {
+      statusType = "delete_after_last_post";
+    }
 
     return `topic.status_update_notice.auto_${statusType}`;
   }

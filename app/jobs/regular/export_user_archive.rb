@@ -36,6 +36,7 @@ module Jobs
           like_count
           reply_count
           url
+          post_id
           created_at
         ],
         user_archive_profile: %w[location website bio views],
@@ -205,7 +206,7 @@ module Jobs
       Post
         .includes(topic: :category)
         .where(user_id: @archive_for_user.id)
-        .select(:topic_id, :post_number, :raw, :cooked, :like_count, :reply_count, :created_at)
+        .select(:id, :topic_id, :post_number, :raw, :cooked, :like_count, :reply_count, :created_at)
         .order(:created_at)
         .with_deleted
         .each { |user_archive| yield get_user_archive_fields(user_archive) }
@@ -599,6 +600,7 @@ module Jobs
         "categories" => categories,
         "is_pm" => is_pm,
         "url" => url,
+        "post_id" => user_archive["id"],
       }
 
       user_archive.merge!(topic_hash)

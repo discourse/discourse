@@ -15,7 +15,6 @@ export function categoryHashtagTriggerRule(textarea, opts) {
     "categoryHashtagTriggerRule is being replaced by hashtagTriggerRule and the new hashtag-autocomplete plugin APIs",
     {
       since: "2.9.0.beta10",
-      dropFrom: "3.0.0.beta1",
       id: "discourse.category-hashtags.categoryHashtagTriggerRule",
     }
   );

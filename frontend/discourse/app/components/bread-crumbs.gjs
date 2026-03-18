@@ -160,7 +160,6 @@ export default class BreadCrumbs extends Component {
             message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-left', use 'tag.name' instead"
             id="discourse.plugin-connector.deprecated-arg.bread-crumbs-left"
             since="2025.12.0-latest"
-            dropFrom="2026.2.0-latest"
             silence="discourse.header-service-topic"
           )
         }}
@@ -235,7 +234,6 @@ export default class BreadCrumbs extends Component {
             message="The argument 'tagId' is deprecated on the outlet 'bread-crumbs-right', use 'tag.name' instead"
             id="discourse.plugin-connector.deprecated-arg.bread-crumbs-right"
             since="2025.12.0-latest"
-            dropFrom="2026.2.0-latest"
             silence="discourse.header-service-topic"
           )
         }}

@@ -34,6 +34,7 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :execution_mode,
              :max_turn_tokens,
              :compression_threshold,
+             :require_approval,
              :response_format,
              :examples,
              :features

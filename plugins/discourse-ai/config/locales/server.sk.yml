@@ -538,6 +538,12 @@ sk:
       assign:
         errors:
           not_found: "Téma sa nenašla."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Schváliť"
+        reject:
+          title: "Zamietnuť"
     summarization:
       configuration_hint:
         one: "Najprv nakonfigurujte nastavenie `%{setting}`."

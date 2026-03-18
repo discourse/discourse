@@ -162,6 +162,7 @@ div.edit-category {
       .angle-icon {
         color: var(--primary-medium);
         width: 0.85em;
+        margin-left: var(--space-2);
       }
     }
   }
@@ -229,7 +230,8 @@ div.edit-category {
   }
 
   .edit-category-tab-settings,
-  .edit-category-tab-tags {
+  .edit-category-tab-tags,
+  .edit-category-tab-topic-template {
     > section {
       margin-bottom: 1.5em;
     }

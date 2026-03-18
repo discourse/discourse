@@ -319,7 +319,7 @@ label {
   align-items: flex-start;
   color: var(--primary-high);
 
-  &:not(.checkbox-label) {
+  &:not(.checkbox-label, .d-segmented-control__label) {
     font-weight: bold;
   }
 
@@ -1166,10 +1166,14 @@ body.has-sidebar-page {
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
     gap: 0 var(--d-main-content-gap);
-    padding-left: 0;
 
     @include viewport.until(lg) {
       --d-main-content-gap: var(--space-4);
+    }
+
+    @media screen and (width < 87rem) {
+      // ideal width just slightly larger than our xl viewport variable
+      padding-inline: 0;
     }
   }
 }

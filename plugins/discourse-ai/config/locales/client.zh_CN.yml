@@ -12,6 +12,8 @@ zh_CN:
           descriptions:
             discourse_ai:
               search: "允许 AI 搜索"
+              stream_completion: "允许 AI 代理以流式方式返回生成结果"
+              update_agents: "允许更新 AI agent"
               manage_artifacts: "允许管理 AI 工件（列示、查看、创建、更新、删除）"
       site_settings:
         categories:
@@ -34,6 +36,9 @@ zh_CN:
             create_ai_llm_model: "创建 LLM 模型"
             update_ai_llm_model: "更新 LLM 模型"
             delete_ai_llm_model: "删除 LLM 模型"
+            create_ai_agent: "创建 AI agent"
+            update_ai_agent: "更新 AI agent"
+            delete_ai_agent: "删除 AI agent"
             create_ai_tool: "创建 AI 工具"
             update_ai_tool: "更新 AI 工具"
             delete_ai_tool: "删除 AI 工具"
@@ -109,6 +114,9 @@ zh_CN:
             top_p:
               label: "Top P"
               description: "用于 LLM 的 Top P。增大该值可以提高生成内容的随机性（留空则使用模型默认值）"
+            agent_id:
+              label: "Agent"
+              description: "用于生成报告的 AI agent"
         ai_tool_action:
           fields:
             tool:
@@ -119,12 +127,20 @@ zh_CN:
               description: "使用 llm.generate() 的工具的语言模型（可选）"
         llm_agent_triage:
           fields:
+            agent:
+              label: "Agent"
+              description: "用于初步分类的 AI agent（必须设置默认 LLM 和用户）"
             whisper:
               label: "以密语回复"
+              description: "agent 的回答是否应为密语"
             silent_mode:
               label: "静默模式"
+              description: "在静默模式下，agent 将接收内容但不会在论坛上发布任何内容，这在使用工具进行分类时非常有用"
         llm_triage:
           fields:
+            triage_agent:
+              label: "Agent"
+              description: "用于分类的 agent，请确保它回复一个您可用于触发操作的字词"
             max_post_tokens:
               label: "帖子最大词元数"
               description: "使用 LLM 分类扫描的最大词元数"
@@ -170,6 +186,9 @@ zh_CN:
             whisper:
               label: "以密语回复"
               description: "AI 的回答是否应为密语"
+            reply_agent:
+              label: "回复 Agent"
+              description: "用于回复的 AI agent（必须具有默认的 LLM）将优先于预设回复"
             max_output_tokens:
               label: "最大输出词元数"
               description: "指定后，设置模型可以生成的词元数上限。遵守 LLM 的输出词元数上限"
@@ -178,6 +197,9 @@ zh_CN:
             manual: "使用特定标签列表（配置如下）"
             discover: "让 AI 发现并使用任何站点标签"
           fields:
+            tagger_agent:
+              label: "AI Agent"
+              description: "用于分析和标记话题的 AI agent"
             tag_mode:
               label: "标签选择模式"
               description: "选择 AI 如何选择标签"
@@ -206,14 +228,18 @@ zh_CN:
       title: "AI"
       default_llm:
         title: "默认 LLM 模型"
+        description: "所有 AI agent 使用的默认 LLM 模型。如果功能配置或角色中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
       llm_selector:
         none: "无"
         saved: "默认 LLM 模型更新成功"
       features:
         short_title: "功能"
+        description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的 agent 和 LLM，并按群组控制访问权限。"
         back: "返回"
         settings_save_error: "某些设置无法保存。"
         disabled: "（已禁用）"
+        agent:
+          other: "Agent:"
         groups: "群组："
         llm:
           other: "LLM："
@@ -238,6 +264,7 @@ zh_CN:
           unconfigured: "未配置"
         filters:
           all: "所有"
+          text: "搜索功能、agent、LLM 或群组…"
           no_results: "找不到符合您的筛选条件的功能。"
           reset: "重置"
         no_automations: "尚无自动化"
@@ -281,6 +308,7 @@ zh_CN:
             settings: "基本设置"
             topic_criteria: "话题条件"
             post_criteria: "帖子条件"
+            agents: "Agents"
         ai_helper:
           name: "助手"
           description: "协助用户进行社区互动，例如创建话题、撰写帖子和阅读内容"
@@ -300,6 +328,7 @@ zh_CN:
             access_permissions: "访问与权限"
             enabled_features: "启用的功能"
             automation: "自动化"
+            agents: "Agents"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -313,6 +342,7 @@ zh_CN:
           schedule_topic_error: "无法安排翻译。请重试。"
           setting_groups:
             settings: "基本设置"
+            agents: "Agents"
             backfill_and_limits: "回填与限制"
         spam:
           name: "垃圾信息"
@@ -366,6 +396,7 @@ zh_CN:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"
         select_llm: "选择 LLM"
+        select_agent: "选择 agent"
         custom_instructions: "自定义指令"
         custom_instructions_help: "特定于您的站点的自定义指令，帮助指导 AI 识别垃圾信息，例如“更积极地扫描非英语帖子”。"
         last_seven_days: "过去 7 天"
@@ -462,12 +493,22 @@ zh_CN:
         edit: "编辑"
         export: "导出"
         import: "导入"
+        import_error_conflict: "导入 %{name}时检测到冲突，您是否要更新现有代理？"
         overwrite: "覆盖"
         description: "描述"
         no_llm_selected: "未选择语言模型"
+        use_parent_llm: "使用代理的语言模型"
         max_context_posts: "最大上下文帖子数"
         max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
         execution_mode: "执行模式"
+        execution_mode_help: "控制代理如何管理工具执行和对话上下文。默认设置使用固定的回合/工具限制。Agentic 使用令牌预算和自动上下文压缩，以实现更长时间、更强大的工具使用会话。"
+        execution_mode_options:
+          default: "默认值（固定限制）"
+          agentic: "Agentic (Token 预算)"
+        max_turn_tokens: "最大回合 Tokens"
+        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总令牌数（输入 + 输出）。设置后，将固定的完成/工具限制替换为令牌预算，从而实现更智能的机器人行为。留空则使用默认限制。"
+        compression_threshold: "压缩阈值"
+        compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 启用视觉
         vision_enabled_help: 如果启用，AI 将尝试理解用户在话题中发布的图片，这取决于使用的模型是否支持视觉。Anthropic、Google 和 OpenAI 的最新模型支持该功能。
         vision_max_pixels: 支持的图片大小
@@ -478,32 +519,61 @@ zh_CN:
         show_thinking: 显示思考过程
         show_thinking_help: 将向终端用户显示语言模型的内部思考过程和工具调用。
         mentionable: 允许提及
+        mentionable_help: 如果启用，允许群组中的用户可以在帖子中提及此用户，AI 将以该代理的身份进行回复。
         user: 用户
         create_user: 创建用户
+        create_user_help: 您可以选择为此角色附加一个用户。如果这样做，AI 将使用此用户来回复请求。
         default_llm: 默认语言模型
+        default_llm_help: 用于此角色的默认语言模型。如果您希望在公开帖子中提及该角色，则为必选项。
         question_consolidator_llm: 问题整合器的语言模型
         question_consolidator_llm_help: 用于问题整合器的语言模型，您可以选择功能较弱的模型来节省成本。
         system_prompt: 系统提示
         forced_tool_strategy: 强制工具策略
         allow_chat_direct_messages: "允许聊天直接消息"
+        allow_chat_direct_messages_help: "如果启用，允许群组中的用户可以向此代理发送直接消息。"
         allow_chat_channel_mentions: "允许聊天频道提及"
+        allow_chat_channel_mentions_help: "如果启用此功能，允许群组中的用户可以在聊天频道中提及此代理。"
         allow_personal_messages: "允许个人消息"
+        allow_personal_messages_help: "如果启用，允许群组中的用户可以向此代理发送私人消息。"
         allow_topic_mentions: "允许话题提及"
+        allow_topic_mentions_help: "如果启用，允许组内的用户可以在主题中提及此代理。"
+        require_approval: "管理工具需要批准"
+        require_approval_help: "如果启用，审核操作(关闭、删除、编辑等)将被发送到审核队列，等待审核员在执行前批准。"
         force_default_llm: "始终使用默认语言模型"
         save: "保存"
+        saved: "代理已保存"
         enabled: "已启用？"
         tools: "启用的工具"
+        tokens: "代币"
+        context_cost: "上下文成本"
+        token_usage: "Token 使用情况"
+        tool_count: "工具计数"
+        tool_count_value:
+          other: "%{count} 个工具"
+        tool_tokens_total: "~%{tokens} 代币"
+        tool_severity_medium: "中等容量"
+        tool_severity_high: "高容量"
+        tool_severity_too_many: "工具太多了"
+        tool_tokens_warning: "过多的工具会占用宝贵的对话内存，从而降低人工智能的性能。请考虑移除非必要的工具。"
+        tool_count_warning: "每个工具的定义都会在每次请求时发送给模型。工具过多会增加令牌的使用量，并可能使模型感到困惑，从而导致工具选择质量下降。因此，请仅保留代理实际需要的工具。"
         forced_tools: "强制工具"
         allowed_groups: "允许的群组"
+        confirm_delete: "您确定要删除此代理吗？"
+        new: "新建代理"
+        no_agents: "您尚未创建任何代理。"
+        title: "代理"
+        short_title: "代理"
         delete: "删除"
         temperature: "温度"
         temperature_help: "用于 LLM 的温度。增大该值可以提升创造力（留空将使用模型默认值，通常为 0.0 到 2.0 之间的值）"
         top_p: "Top P"
         top_p_help: "用于 LLM 的 Top P，增大该值可以提升随机性（留空将使用模型默认值，通常为 0.0 到 1.0 之间的值）"
         priority: "优先"
+        priority_help: "优先级较高的客服人员会显示在客服人员列表的顶部。如果有多位客服人员优先级相同，则会按字母顺序排列。"
         tool_options: "工具选项"
         rag_conversation_chunks: "搜索对话分块"
         rag_conversation_chunks_help: "用于 RAG 模型搜索使用的分块数。增加分块数会增加 AI 可以使用的上下文数量。"
+        agent_description: "代理是一项强大的功能，可让您自定义 Discourse 论坛中 AI 引擎的行为。它们充当“系统消息”，指导 AI 的响应和交互，从而帮助创建更加个性化和引人入胜的用户体验。"
         response_format:
           title: "JSON 回答格式"
           no_format: "未指定 JSON 格式"
@@ -523,8 +593,11 @@ zh_CN:
           enabled: "AI 机器人？"
         ai_bot:
           title: "AI 机器人选项"
+          save_first: "保存代理后，将解锁更多人工智能机器人选项。"
         filters:
+          text: "查找代理"
           reset: "重置"
+          no_results: "没有找到符合您筛选条件的代理。"
           all_features: "任何功能"
         features_list:
           other: "功能："
@@ -563,6 +636,7 @@ zh_CN:
         name_help: "名称将显示在 Discourse UI 中，是您用来在各种设置中查找该工具的简短标识符，它应当独一无二（必填项）"
         new: "新工具"
         tool_name: "工具名称"
+        tool_name_help: "工具名称会呈现给大型语言模型。它本身并不唯一，但每个代理的工具名称都是唯一的。（代理会在保存时进行验证）"
         description: "描述"
         description_help: "向语言模型介绍工具用途的清晰描述"
         subheader_description: "工具可以通过用户定义的 JavaScript 函数扩展 AI 机器人的功能。"
@@ -572,6 +646,7 @@ zh_CN:
         parameters: "参数"
         save: "保存"
         parameter_type: "参数类型"
+        parameter_item_type: "项目类型"
         add_parameter: "添加参数"
         remove_parameter: "移除"
         parameter_required: "必选"
@@ -675,6 +750,7 @@ zh_CN:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{agent})"
           ai_helper_image_caption: "图片标题"
+          ai_agent: "代理（%{agent}）"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"
           ai_spam: "垃圾信息"
@@ -830,6 +906,11 @@ zh_CN:
       reviewables:
         model_used: "使用的模型："
         accuracy: "准确性："
+        ai_tool_action:
+          agent: "代理"
+          tool: "工具"
+          parameters: "参数"
+          post: "触发帖子"
       embeddings:
         short_title: "嵌入向量"
         description: "嵌入向量是捕捉意义和关系的数据的数值表示，使 Discourse AI 功能（如相关主题和 AI 搜索）能够理解和连接内容。"
@@ -898,6 +979,7 @@ zh_CN:
         collapse_view_label: "退出全屏（按 ESC 或“返回”按钮）"
         click_to_run_label: "运行工件"
       ai_bot:
+        agent: "代理"
         llm: "模型"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
@@ -1036,8 +1118,15 @@ zh_CN:
       user_preferences:
         empty: "目前没有相关设置"
     review:
+      statuses:
+        approved_tool_action:
+          title: "工具已获批准"
+        rejected_tool_action:
+          title: "工具被拒绝"
       types:
         reviewable_ai_post:
           title: "AI 标记的帖子"
         reviewable_ai_chat_message:
           title: "AI 标记的聊天消息"
+        reviewable_ai_tool_action:
+          title: "AI 工具操作"

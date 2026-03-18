@@ -13,8 +13,8 @@ As themes grow more powerful, there's more to remember about how they work. We h
 [:scroll: Developer's guide](https://meta.discourse.org/t/developer-s-guide-to-discourse-themes/93648)
 [:paintbrush: Theme Creator](http://theme-creator.discourse.org)
 [:desktop_computer: Theme CLI](https://meta.discourse.org/t/discourse-theme-cli-console-app-to-help-you-build-themes/82950)
-[:notebook_with_decorative_cover: Theme Directory](/c/theme)
-[:jigsaw: Component Directory](/c/theme-component)
+[:notebook_with_decorative_cover: Theme Directory](/c/customization/theme/61/none)
+[:jigsaw: Component Directory](/c/customization/theme-component/120)
 [:wrench: Theme Modifiers](https://meta.discourse.org/t/theme-modifiers-a-brief-introduction/150605)
 [:wrench: Themeable site settings](https://meta.discourse.org/t/-/374376)
 
@@ -67,7 +67,7 @@ javascripts/
 
 ### SCSS
 
-[:link: Available CSS Variables](https://github.com/discourse/discourse/blob/master/app/assets/stylesheets/color_definitions.scss)
+[:link: Available CSS Variables](https://github.com/discourse/discourse/blob/main/app/assets/stylesheets/color_definitions.scss)
 
 ### Javascript <small>[read more](https://meta.discourse.org/t/using-the-pluginapi-in-site-customizations/41281)</small>
 
@@ -80,7 +80,7 @@ export default apiInitializer((api) => {
 });
 ```
 
-[:link: JS Plugin API](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/plugin-api.gjs)
+[:link: JS Plugin API](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/plugin-api.gjs)
 
 [:link: Multi-file Javascript](https://meta.discourse.org/t/splitting-up-theme-javascript-into-multiple-files/119369)
 

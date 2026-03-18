@@ -24,18 +24,28 @@ export default class ToolbarPopupMenuOptions extends Component {
       return;
     }
 
-    const checkScrollable = () => {
+    const checkScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = innerContent;
+      const hasOverflow = scrollHeight > clientHeight;
       menuElement.classList.toggle(
-        "--scrollable",
-        innerContent.scrollHeight > innerContent.clientHeight
+        "--scroll-top",
+        hasOverflow && scrollTop > 2
+      );
+      menuElement.classList.toggle(
+        "--scroll-bottom",
+        hasOverflow && scrollHeight - scrollTop - clientHeight > 2
       );
     };
 
-    const observer = new ResizeObserver(checkScrollable);
+    const observer = new ResizeObserver(checkScroll);
     observer.observe(innerContent);
-    checkScrollable();
+    innerContent.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      innerContent.removeEventListener("scroll", checkScroll);
+    };
   });
 
   willDestroy() {

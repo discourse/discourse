@@ -40,35 +40,41 @@ RSpec.describe UserApiKeysController do
       expect(response.headers["Auth-Api-Version"]).to eq("4")
     end
 
-    it "includes padding parameter in the form only when provided" do
-      sign_in(Fabricate(:user, refresh_auto_groups: true))
+    describe "as a normal user" do
+      fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-      get "/user-api-key/new", params: args
-      expect(response.body).not_to include('name="padding"')
+      before { sign_in(user) }
 
-      get "/user-api-key/new", params: args.merge(padding: "oaep")
-      expect(response.body).to include('name="padding"', 'value="oaep"')
-    end
+      it "includes padding parameter in the form only when provided" do
+        get "/user-api-key/new", params: args
+        expect(response.body).not_to include('name="padding"')
 
-    it "rejects invalid padding parameter" do
-      sign_in(Fabricate(:user, refresh_auto_groups: true))
+        get "/user-api-key/new", params: args.merge(padding: "oaep")
+        expect(response.body).to include('name="padding"', 'value="oaep"')
+      end
 
-      get "/user-api-key/new", params: args.merge(padding: "invalid")
-      expect(response.status).to eq(400)
-    end
+      it "rejects invalid padding parameter" do
+        get "/user-api-key/new", params: args.merge(padding: "invalid")
+        expect(response.status).to eq(400)
+      end
 
-    it "does not show redirect warning when auth_redirect is discourse://auth_redirect" do
-      sign_in(Fabricate(:user, refresh_auto_groups: true))
+      it "does not show redirect warning when auth_redirect is discourse://auth_redirect" do
+        get "/user-api-key/new", params: args.merge(auth_redirect: "discourse://auth_redirect")
+        expect(response.body).not_to include(I18n.t("user_api_key.redirect_warning"))
+      end
 
-      get "/user-api-key/new", params: args.merge(auth_redirect: "discourse://auth_redirect")
-      expect(response.body).not_to include(I18n.t("user_api_key.redirect_warning"))
-    end
+      it "shows redirect warning when auth_redirect is not discourse://auth_redirect" do
+        get "/user-api-key/new", params: args
+        expect(response.body).to include(I18n.t("user_api_key.redirect_warning"))
+      end
 
-    it "shows redirect warning when auth_redirect is not discourse://auth_redirect" do
-      sign_in(Fabricate(:user, refresh_auto_groups: true))
+      it "shows redirect URI without trailing colon for custom scheme URLs" do
+        SiteSetting.allowed_user_api_auth_redirects = "myapp://callback"
 
-      get "/user-api-key/new", params: args
-      expect(response.body).to include(I18n.t("user_api_key.redirect_warning"))
+        get "/user-api-key/new", params: args.merge(auth_redirect: "myapp://callback")
+        expect(response.body).to include("<strong>callback</strong>")
+        expect(response.body).not_to include("<strong>callback:</strong>")
+      end
     end
   end
 

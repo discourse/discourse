@@ -18,6 +18,13 @@ zh_CN:
       solved_topics_auto_close_hours:
         label: "自动关闭已解决的主题（小时）"
         description: "帖子标记为已解决后，经过指定时间后自动关闭。设置为 0 可禁用此功能。"
+      notify_on_staff_accept_solved:
+        label: "当管理人员标记解决方案时通知话题创建者"
+      empty_box_on_unsolved:
+        label: "在未解决的话题列表旁边显示一个空复选框"
+      solved_topics_auto_close_duration:
+        label: "自动关闭已解决话题"
+        description: "帖子标记为已解决后，将在指定时间后自动关闭。设置为 0 可禁用此功能。"
   site_settings:
     solved_enabled: "启用“已解决”插件，允许用户为话题选择解决方案"
     allow_solved_on_all_topics: "允许用户选择所有话题的解决方案（未选中时，可以按类别或标签启用解决方案）"

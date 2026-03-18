@@ -839,6 +839,9 @@ de:
       reviewables:
         model_used: "Verwendetes Modell:"
         accuracy: "Genauigkeit:"
+        ai_tool_action:
+          tool: "Tool"
+          parameters: "Parameter"
       embeddings:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
@@ -1056,3 +1059,5 @@ de:
           title: "KI-gemeldeter Beitrag"
         reviewable_ai_chat_message:
           title: "KI-gemeldete Chat-Nachricht"
+        reviewable_ai_tool_action:
+          title: "KI-Tool Aktion"

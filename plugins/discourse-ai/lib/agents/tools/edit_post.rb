@@ -41,6 +41,10 @@ module DiscourseAi
           "edit_post"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           post = Post.find_by(id: parameters[:post_id])
           return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.not_found")) if !post

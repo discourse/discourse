@@ -68,7 +68,7 @@ after_initialize do
   register_bookmarkable(DiscourseDataExplorer::QueryGroupBookmarkable)
 
   add_api_key_scope(
-    :discourse_data_explorer,
+    :data_explorer,
     {
       run_queries: {
         actions: %w[discourse_data_explorer/query#run discourse_data_explorer/query#public_run],

@@ -52,6 +52,12 @@ hu:
       assign:
         errors:
           not_found: "A téma nem található."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Jóváhagyás"
+        reject:
+          title: "Elutasítás"
     sentiment:
       reports:
         post_emotion:

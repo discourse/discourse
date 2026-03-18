@@ -42,6 +42,11 @@ RSpec.describe Categories::TypeRegistry do
 
       expect(discussion).to include(icon: "memo", available: true)
     end
+
+    it "returns only visible types when only_visible is true" do
+      Categories::Types::Discussion.stubs(:visible?).returns(false)
+      expect(described_class.list(only_visible: true)).to be_empty
+    end
   end
 
   describe ".counts" do

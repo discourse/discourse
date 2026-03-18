@@ -7,6 +7,12 @@ RSpec.describe User do
 
   it_behaves_like "it has custom fields"
 
+  describe "#reload" do
+    it "accepts options like ActiveRecord's reload" do
+      expect { user.reload(lock: true) }.not_to raise_error
+    end
+  end
+
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
   end

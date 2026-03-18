@@ -4,7 +4,6 @@
 require "optparse"
 require "open3"
 require "shellwords"
-require "yaml"
 require "pathname"
 
 class LefthookLinter
@@ -49,7 +48,17 @@ class LefthookLinter
       end
 
     files
-      .map { |f| normalize_relative_path(f) }
+      .flat_map do |f|
+        path = normalize_relative_path(f)
+        if File.directory?(path)
+          expanded =
+            Dir.glob(File.join(path, "**", "*")).select { |g| File.file?(g) && lintable_file?(g) }
+          abort "Error: No lintable files found in directory: #{path}" if expanded.empty?
+          expanded
+        else
+          [path]
+        end
+      end
       .select { |f| File.file?(f) && lintable_file?(f) }
       .uniq
   end
@@ -153,25 +162,12 @@ class LefthookLinter
     end
   end
 
-  GLOB_FLAGS = File::FNM_PATHNAME | File::FNM_EXTGLOB | File::FNM_CASEFOLD | File::FNM_DOTMATCH
-  LEFTHOOK_CONFIG_PATH = File.expand_path("../lefthook.yml", __dir__)
   PROJECT_ROOT = File.expand_path("..", __dir__)
 
   def run_lefthook_command(hook, files)
-    commands = lefthook_config.dig(hook, "commands")
-
-    if !files.empty? && commands
+    if !files.empty?
       normalized = files.map { |f| normalize_relative_path(f) }
-      any = false
-
-      commands.each do |name, config|
-        filtered = filter_files_for_command(normalized, config)
-        next if filtered.empty?
-
-        any = true
-        exec_lefthook(hook, name, filtered)
-      end
-      puts "No matching linters for provided files." if !any && @verbose
+      exec_lefthook(hook, nil, normalized)
     else
       exec_lefthook(hook, nil, files)
     end
@@ -185,22 +181,6 @@ class LefthookLinter
 
     puts "Running: #{cmd.shelljoin}" if @verbose
     exit 1 unless system({ "LEFTHOOK" => "1" }, *cmd)
-  end
-
-  def lefthook_config
-    @lefthook_config ||= YAML.load_file(LEFTHOOK_CONFIG_PATH)
-  end
-
-  def filter_files_for_command(files, config)
-    globs = Array(config["glob"]).compact
-    excludes = Array(config["exclude"]).compact
-
-    files.select do |file|
-      matches_includes =
-        globs.empty? || globs.any? { |pattern| File.fnmatch?(pattern, file, GLOB_FLAGS) }
-      matches_excludes = excludes.any? { |pattern| File.fnmatch?(pattern, file, GLOB_FLAGS) }
-      matches_includes && !matches_excludes
-    end
   end
 
   def normalize_relative_path(file)
@@ -222,7 +202,7 @@ def parse_options
 
   OptionParser
     .new do |parser|
-      parser.banner = "Usage: bin/lint [options] [files...]"
+      parser.banner = "Usage: bin/lint [options] [files|directories...]"
 
       parser.on("-h", "--help", "Show this help message") do
         puts parser
@@ -235,6 +215,7 @@ def parse_options
         puts "  bin/lint --wip                  # Lint staged + unstaged + files changed since main"
         puts "  bin/lint --fix app.rb file2.js  # Fix specific file/s"
         puts "  bin/lint app/models/*.rb        # Lint multiple files"
+        puts "  bin/lint frontend/discourse/app/ # Lint all lintable files in directory"
         puts
         puts "Note: This script now uses lefthook to run linters."
         puts "Check lefthook.yml for linting configuration."

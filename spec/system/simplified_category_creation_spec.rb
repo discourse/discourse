@@ -15,10 +15,47 @@ describe "Simplified Category Creation" do
     sign_in(admin)
   end
 
+  describe "Selecting category type when setting up a new category" do
+    it "automatically skips category type selection when only one type (discussion) is available" do
+      visit("/new-category/setup")
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_current_path("/new-category/general")
+    end
+
+    context "when multiple types are available" do
+      class MockCategoryType < ::Categories::Types::Base
+        type_id :mock_type
+
+        class << self
+          def category_matches?(category)
+            true
+          end
+
+          def find_matches
+            Category.none
+          end
+        end
+      end
+
+      before { Categories::TypeRegistry.register(MockCategoryType) }
+      after { Categories::TypeRegistry.reset! }
+
+      it "shows the category type selection cards" do
+        visit("/new-category/setup")
+
+        expect(category_type_card).to have_type_card("mock_type")
+        expect(category_type_card).to have_type_card("discussion")
+
+        category_type_card.find_type_card("discussion").click
+        expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+        expect(page).to have_current_path("/new-category/general")
+      end
+    end
+  end
+
   describe "General Tab" do
     it "creates a basic category with name and color" do
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
       form.field("color").fill_in("FF5733")
@@ -84,7 +121,6 @@ describe "Simplified Category Creation" do
 
     it "shows error when icon is missing" do
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
 
@@ -111,7 +147,6 @@ describe "Simplified Category Creation" do
       group2 = Fabricate(:group)
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Permission Test")
       form.choose_conditional("group_restricted")
@@ -142,7 +177,6 @@ describe "Simplified Category Creation" do
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
@@ -156,7 +190,6 @@ describe "Simplified Category Creation" do
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
@@ -188,7 +221,6 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".group-chooser")
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
       expect(page).to have_no_css(".group-chooser")
     end
 

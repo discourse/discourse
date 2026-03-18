@@ -2,16 +2,19 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { compare } from "@ember/utils";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 
 export default class PluginsExplorerController extends Controller {
   @service dialog;
   @service appEvents;
   @service router;
+  @service store;
   @service toasts;
 
   @tracked sortByProperty = "last_run_at";
@@ -20,19 +23,14 @@ export default class PluginsExplorerController extends Controller {
   @tracked createFormData = { name: "" };
   @tracked showCreate;
   @tracked loading = false;
+  @tracked searchLoading = false;
 
   queryParams = ["id"];
   explain = false;
   acceptedImportFileTypes = ["application/json"];
   order = null;
   form = null;
-
-  get sortedQueries() {
-    const sortedQueries = this.model.content.toSorted((a, b) =>
-      compare(a?.[this.sortByProperty], b?.[this.sortByProperty])
-    );
-    return this.sortDescending ? sortedQueries.reverse() : sortedQueries;
-  }
+  _currentFilter = "";
 
   get parsedParams() {
     return this.params ? JSON.parse(this.params) : null;
@@ -146,6 +144,20 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  onTextFilterChange(event) {
+    this._currentFilter = event.target?.value || "";
+    this.searchLoading = true;
+    discourseDebounce(this, this._fetchQueries, INPUT_DELAY);
+  }
+
+  @action
+  onResetFilters() {
+    this._currentFilter = "";
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
   updateSortProperty(property) {
     if (this.sortByProperty === property) {
       this.sortDescending = !this.sortDescending;
@@ -153,6 +165,69 @@ export default class PluginsExplorerController extends Controller {
       this.sortByProperty = property;
       this.sortDescending = true;
     }
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  async loadMore() {
+    const loadedMore = await this.model?.loadMore();
+    if (loadedMore) {
+      this._setGroupNames(this.model.content);
+    }
+  }
+
+  get _fetchParams() {
+    const params = {};
+    if (this._currentFilter) {
+      params.filter = this._currentFilter;
+    }
+    if (this.sortByProperty !== "last_run_at") {
+      params.order = this.sortByProperty;
+    }
+    if (!this.sortDescending) {
+      params.ascending = "true";
+    }
+    return params;
+  }
+
+  async _fetchQueries() {
+    try {
+      const result = await ajax(
+        "/admin/plugins/discourse-data-explorer/queries.json",
+        { data: this._fetchParams }
+      );
+
+      const queries = result.queries.map((q) =>
+        this.store.createRecord("query", q)
+      );
+
+      this.model.content.splice(0, this.model.content.length, ...queries);
+      this.model.totalRows = result.total_rows_queries || queries.length;
+      this.model.loadMoreUrl = result.load_more_queries || null;
+
+      this._setGroupNames(queries);
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.searchLoading = false;
+    }
+  }
+
+  _setGroupNames(queries) {
+    if (!this.groups) {
+      return;
+    }
+    const groupNames = {};
+    this.groups.forEach((g) => {
+      groupNames[g.id] = g.name;
+    });
+    queries.forEach((query) => {
+      query.set(
+        "group_names",
+        (query.group_ids || []).map((id) => groupNames[id])
+      );
+    });
   }
 
   @action

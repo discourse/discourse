@@ -660,6 +660,9 @@ nl:
       reviewables:
         model_used: "Gebruikt model:"
         accuracy: "Nauwkeurigheid:"
+        ai_tool_action:
+          tool: "Tool"
+          parameters: "Parameters"
       embeddings:
         short_title: "Insluitingen"
         description: "Insluitingen zijn numerieke representaties van gegevens die betekenis en relaties vastleggen, waardoor AI-functies van Discourse zoals Gerelateerde onderwerpen en AI-zoeken content kunnen begrijpen en verbinden."

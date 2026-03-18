@@ -97,7 +97,7 @@ gem "rake"
 gem "thor", require: false
 gem "diffy", require: false
 gem "rinku"
-gem "sidekiq"
+gem "sidekiq", ">= 7.3.10" # ensuring it won't get downgraded to accomodate a connection_pool upgrade
 gem "mini_scheduler"
 
 gem "mini_racer"
@@ -127,6 +127,7 @@ group :test do
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
   gem "capybara-playwright-driver"
+  gem "puma", require: false
 end
 
 group :test, :development do
@@ -193,7 +194,6 @@ gem "htmlentities", require: false
 gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
-gem "puma", require: false
 gem "pitchfork", require: false
 
 gem "rbtrace", require: false, platform: :mri

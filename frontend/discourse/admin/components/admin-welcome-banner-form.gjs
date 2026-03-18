@@ -184,6 +184,13 @@ export default class AdminWelcomeBannerForm extends Component {
           localeSelector: localeValue,
         };
       }
+
+      // Update originalFormData so save() correctly detects changes for the new locale
+      this.originalFormData = {
+        ...this.originalFormData,
+        ...textData,
+        localeSelector: localeValue,
+      };
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -368,9 +375,10 @@ export default class AdminWelcomeBannerForm extends Component {
             "admin.config.welcome_banner.form.enabled_themes.description"
           }}
           @format="large"
+          @type="custom"
           as |field|
         >
-          <field.Custom>
+          <field.Control>
             <DMultiSelect
               @loadFn={{this.loadThemes}}
               @selection={{field.value}}
@@ -386,7 +394,7 @@ export default class AdminWelcomeBannerForm extends Component {
                 {{theme.name}}
               </:result>
             </DMultiSelect>
-          </field.Custom>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -398,9 +406,10 @@ export default class AdminWelcomeBannerForm extends Component {
             "admin.config.welcome_banner.form.background_image.description"
           }}
           @onSet={{fn this.handleUpload "welcomeBannerImage"}}
+          @type="image"
           as |field|
         >
-          <field.Image @type="site_setting" />
+          <field.Control @type="site_setting" />
         </form.Field>
 
         <form.Field
@@ -410,9 +419,10 @@ export default class AdminWelcomeBannerForm extends Component {
             "admin.config.welcome_banner.form.text_color.description"
           }}
           @format="large"
+          @type="color"
           as |field|
         >
-          <field.Color @allowNamedColors={{true}} />
+          <field.Control @allowNamedColors={{true}} />
         </form.Field>
 
         <form.Field
@@ -423,9 +433,10 @@ export default class AdminWelcomeBannerForm extends Component {
           @description={{i18n
             "admin.config.welcome_banner.form.page_visibility.description"
           }}
+          @type="select"
           as |field|
         >
-          <field.Select @includeNone={{false}} as |select|>
+          <field.Control @includeNone={{false}} as |select|>
             <select.Option @value="top_menu_pages">{{i18n
                 "admin.config.welcome_banner.form.page_visibility.options.top_menu_pages"
               }}</select.Option>
@@ -438,7 +449,7 @@ export default class AdminWelcomeBannerForm extends Component {
             <select.Option @value="all_pages">{{i18n
                 "admin.config.welcome_banner.form.page_visibility.options.all_pages"
               }}</select.Option>
-          </field.Select>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -447,16 +458,17 @@ export default class AdminWelcomeBannerForm extends Component {
           @description={{i18n
             "admin.config.welcome_banner.form.location.description"
           }}
+          @type="select"
           as |field|
         >
-          <field.Select @includeNone={{false}} as |select|>
+          <field.Control @includeNone={{false}} as |select|>
             <select.Option @value="above_topic_content">{{i18n
                 "admin.config.welcome_banner.form.location.options.above_topic_content"
               }}</select.Option>
             <select.Option @value="below_site_header">{{i18n
                 "admin.config.welcome_banner.form.location.options.below_site_header"
               }}</select.Option>
-          </field.Select>
+          </field.Control>
         </form.Field>
 
         <form.Section
@@ -469,9 +481,10 @@ export default class AdminWelcomeBannerForm extends Component {
             }}
             @format="large"
             @validation="required"
+            @type="custom"
             as |field|
           >
-            <field.Custom>
+            <field.Control>
               <ComboBox
                 @valueProperty="value"
                 @content={{this.availableLocales}}
@@ -480,7 +493,7 @@ export default class AdminWelcomeBannerForm extends Component {
                 @options={{hash filterable=true}}
                 class="translation-selector"
               />
-            </field.Custom>
+            </field.Control>
           </form.Field>
 
           <form.Field
@@ -496,9 +509,10 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
+            @type="input"
             as |field|
           >
-            <field.Input
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_new_members.placeholder"
                 site_name="%{site_name}"
@@ -520,9 +534,10 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
+            @type="input"
             as |field|
           >
-            <field.Input
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_logged_in.placeholder"
                 site_name="%{site_name}"
@@ -544,9 +559,10 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
+            @type="input"
             as |field|
           >
-            <field.Input
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_anonymous.placeholder"
                 site_name="%{site_name}"
@@ -564,9 +580,10 @@ export default class AdminWelcomeBannerForm extends Component {
             }}
             @format="large"
             @disabled={{this.isLoadingLocale}}
+            @type="textarea"
             as |field|
           >
-            <field.Textarea />
+            <field.Control />
           </form.Field>
 
           <form.Field
@@ -579,9 +596,10 @@ export default class AdminWelcomeBannerForm extends Component {
             }}
             @format="large"
             @disabled={{this.isLoadingLocale}}
+            @type="textarea"
             as |field|
           >
-            <field.Textarea />
+            <field.Control />
           </form.Field>
 
           <form.Field
@@ -595,9 +613,10 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             @validation="required"
             @disabled={{this.isLoadingLocale}}
+            @type="input"
             as |field|
           >
-            <field.Input
+            <field.Control
               placeholder={{i18n
                 "admin.config.welcome_banner.form.search_placeholder.placeholder"
               }}

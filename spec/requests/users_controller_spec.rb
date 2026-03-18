@@ -194,9 +194,10 @@ RSpec.describe UsersController do
   end
 
   describe "#remove_password" do
-    it "responds forbidden when not logged in" do
+    it "requires login" do
       put "/u/#{user.username}/remove-password.json"
       expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
     context "when logged in with no associated account, no passkeys" do
@@ -3426,6 +3427,12 @@ RSpec.describe UsersController do
     fab!(:badge)
     let(:user_badge) { BadgeGranter.grant(badge, user1) }
 
+    it "requires login" do
+      put "/u/#{user1.username}/preferences/badge_title.json", params: { user_badge_id: 1 }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
     it "sets the user's title to the badge name if it is titleable" do
       sign_in(user1)
 
@@ -4330,41 +4337,55 @@ RSpec.describe UsersController do
     let(:user_email) { user1.primary_email }
     fab!(:other_email) { Fabricate(:secondary_email, user: user1) }
 
-    before do
-      SiteSetting.email_editable = true
-
-      sign_in(user1)
+    it "requires login" do
+      put "/u/#{user1.username}/preferences/primary-email.json",
+          params: {
+            email: other_email.email,
+          }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
-    it "changes user's primary email" do
-      put "/u/#{user1.username}/preferences/primary-email.json", params: { email: user_email.email }
-      expect(response.status).to eq(200)
-      expect(user_email.reload.primary).to eq(true)
-      expect(other_email.reload.primary).to eq(false)
+    context "when logged in" do
+      before do
+        SiteSetting.email_editable = true
 
-      event =
-        DiscourseEvent
-          .track_events do
-            expect {
-              put "/u/#{user1.username}/preferences/primary-email.json",
-                  params: {
-                    email: other_email.email,
-                  }
-            }.to change {
-              UserHistory.where(
-                action: UserHistory.actions[:update_email],
-                acting_user_id: user1.id,
-              ).count
-            }.by(1)
-          end
-          .last
+        sign_in(user1)
+      end
 
-      expect(response.status).to eq(200)
-      expect(user_email.reload.primary).to eq(false)
-      expect(other_email.reload.primary).to eq(true)
+      it "changes user's primary email" do
+        put "/u/#{user1.username}/preferences/primary-email.json",
+            params: {
+              email: user_email.email,
+            }
+        expect(response.status).to eq(200)
+        expect(user_email.reload.primary).to eq(true)
+        expect(other_email.reload.primary).to eq(false)
 
-      expect(event[:event_name]).to eq(:user_updated)
-      expect(event[:params].first).to eq(user1)
+        event =
+          DiscourseEvent
+            .track_events do
+              expect {
+                put "/u/#{user1.username}/preferences/primary-email.json",
+                    params: {
+                      email: other_email.email,
+                    }
+              }.to change {
+                UserHistory.where(
+                  action: UserHistory.actions[:update_email],
+                  acting_user_id: user1.id,
+                ).count
+              }.by(1)
+            end
+            .last
+
+        expect(response.status).to eq(200)
+        expect(user_email.reload.primary).to eq(false)
+        expect(other_email.reload.primary).to eq(true)
+
+        expect(event[:event_name]).to eq(:user_updated)
+        expect(event[:params].first).to eq(user1)
+      end
     end
   end
 
@@ -4372,85 +4393,93 @@ RSpec.describe UsersController do
     fab!(:user_email) { user1.primary_email }
     fab!(:other_email) { Fabricate(:secondary_email, user: user1) }
 
-    before do
-      SiteSetting.email_editable = true
-
-      sign_in(user1)
+    it "requires login" do
+      delete "/u/#{user1.username}/preferences/email.json", params: { email: other_email.email }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
-    it "can destroy secondary emails" do
-      delete "/u/#{user1.username}/preferences/email.json", params: { email: user_email.email }
-      expect(response.status).to eq(428)
-      expect(user1.reload.user_emails.pluck(:email)).to contain_exactly(
-        user_email.email,
-        other_email.email,
-      )
+    context "when logged in" do
+      before do
+        SiteSetting.email_editable = true
 
-      event =
-        DiscourseEvent
-          .track_events do
-            expect {
-              delete "/u/#{user1.username}/preferences/email.json",
-                     params: {
-                       email: other_email.email,
-                     }
-            }.to change {
-              UserHistory.where(
-                action: UserHistory.actions[:destroy_email],
-                acting_user_id: user1.id,
-              ).count
-            }.by(1)
-          end
-          .last
+        sign_in(user1)
+      end
 
-      expect(response.status).to eq(200)
-      expect(user1.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
+      it "can destroy secondary emails" do
+        delete "/u/#{user1.username}/preferences/email.json", params: { email: user_email.email }
+        expect(response.status).to eq(428)
+        expect(user1.reload.user_emails.pluck(:email)).to contain_exactly(
+          user_email.email,
+          other_email.email,
+        )
 
-      expect(event[:event_name]).to eq(:user_updated)
-      expect(event[:params].first).to eq(user1)
-    end
+        event =
+          DiscourseEvent
+            .track_events do
+              expect {
+                delete "/u/#{user1.username}/preferences/email.json",
+                       params: {
+                         email: other_email.email,
+                       }
+              }.to change {
+                UserHistory.where(
+                  action: UserHistory.actions[:destroy_email],
+                  acting_user_id: user1.id,
+                ).count
+              }.by(1)
+            end
+            .last
 
-    it "can destroy unconfirmed emails" do
-      request_1 =
+        expect(response.status).to eq(200)
+        expect(user1.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
+
+        expect(event[:event_name]).to eq(:user_updated)
+        expect(event[:params].first).to eq(user1)
+      end
+
+      it "can destroy unconfirmed emails" do
+        request_1 =
+          EmailChangeRequest.create!(
+            user: user1,
+            new_email: user_email.email,
+            change_state: EmailChangeRequest.states[:authorizing_new],
+          )
+
         EmailChangeRequest.create!(
           user: user1,
-          new_email: user_email.email,
+          new_email: other_email.email,
           change_state: EmailChangeRequest.states[:authorizing_new],
         )
 
-      EmailChangeRequest.create!(
-        user: user1,
-        new_email: other_email.email,
-        change_state: EmailChangeRequest.states[:authorizing_new],
-      )
+        EmailChangeRequest.create!(
+          user: user1,
+          new_email: other_email.email,
+          change_state: EmailChangeRequest.states[:authorizing_new],
+        )
 
-      EmailChangeRequest.create!(
-        user: user1,
-        new_email: other_email.email,
-        change_state: EmailChangeRequest.states[:authorizing_new],
-      )
+        delete "/u/#{user1.username}/preferences/email.json", params: { email: other_email.email }
 
-      delete "/u/#{user1.username}/preferences/email.json", params: { email: other_email.email }
+        expect(user1.user_emails.pluck(:email)).to contain_exactly(
+          user_email.email,
+          other_email.email,
+        )
+        expect(user1.email_change_requests).to contain_exactly(request_1)
+      end
 
-      expect(user1.user_emails.pluck(:email)).to contain_exactly(
-        user_email.email,
-        other_email.email,
-      )
-      expect(user1.email_change_requests).to contain_exactly(request_1)
-    end
+      it "destroys associated email tokens and email change requests" do
+        new_email = "new.n.cool@example.com"
+        updater = EmailUpdater.new(guardian: user1.guardian, user: user1)
+        updater.change_to(new_email)
 
-    it "destroys associated email tokens and email change requests" do
-      new_email = "new.n.cool@example.com"
-      updater = EmailUpdater.new(guardian: user1.guardian, user: user1)
-      updater.change_to(new_email)
+        email_token = updater.change_req.new_email_token
+        expect(email_token).to be_present
 
-      email_token = updater.change_req.new_email_token
-      expect(email_token).to be_present
+        delete "/u/#{user1.username}/preferences/email.json", params: { email: new_email }
 
-      delete "/u/#{user1.username}/preferences/email.json", params: { email: new_email }
-
-      expect(EmailToken.find_by(id: email_token.id)).to eq(nil)
-      expect(EmailChangeRequest.find_by(id: updater.change_req.id)).to eq(nil)
+        expect(EmailToken.find_by(id: email_token.id)).to eq(nil)
+        expect(EmailChangeRequest.find_by(id: updater.change_req.id)).to eq(nil)
+      end
     end
   end
 
@@ -6598,6 +6627,52 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#update_security_key" do
+    fab!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user1) }
+
+    it "fails if user is not logged in" do
+      put "/u/security_key.json", params: { id: security_key.id, disable: "true" }
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if user does not have a confirmed session" do
+      sign_in(user1)
+      put "/u/security_key.json", params: { id: security_key.id, disable: "true" }
+      expect(response.status).to eq(403)
+    end
+
+    context "with a confirmed session" do
+      before do
+        stub_server_session_confirmed
+        sign_in(user1)
+      end
+
+      it "returns 400 for an invalid security key id" do
+        put "/u/security_key.json", params: { id: 0, disable: "true" }
+        expect(response.status).to eq(400)
+      end
+
+      it "does not allow modifying another user's security key" do
+        sign_in(admin)
+        put "/u/security_key.json", params: { id: security_key.id, name: "hacked" }
+        expect(response.status).to eq(400)
+        expect(security_key.reload.name).not_to eq("hacked")
+      end
+
+      it "disables the security key" do
+        put "/u/security_key.json", params: { id: security_key.id, disable: "true" }
+        expect(response.status).to eq(200)
+        expect(security_key.reload.enabled).to eq(false)
+      end
+
+      it "renames the security key" do
+        put "/u/security_key.json", params: { id: security_key.id, name: "new name" }
+        expect(response.status).to eq(200)
+        expect(security_key.reload.name).to eq("new name")
+      end
+    end
+  end
+
   describe "#register_passkey" do
     before do
       SiteSetting.enable_passkeys = true
@@ -7293,6 +7368,21 @@ RSpec.describe UsersController do
       ICS
     end
 
+    it "excludes bookmark reminders older than 3 months from .ics feed" do
+      bookmark1.update_columns(name: nil, reminder_at: 4.months.ago)
+      bookmark2.update!(name: "Recent reminder", reminder_at: 1.day.from_now)
+      bookmark3.update_columns(name: nil, reminder_at: 2.months.ago)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+      expect(response.status).to eq(200)
+
+      body = response.body
+      expect(body).not_to include("bookmark_reminder_##{bookmark1.id}")
+      expect(body).to include("bookmark_reminder_##{bookmark2.id}")
+      expect(body).to include("bookmark_reminder_##{bookmark3.id}")
+    end
+
     it "does not show another user's bookmarks" do
       sign_in(Fabricate(:user))
       get "/u/#{bookmark3.user.username}/bookmarks.json"
@@ -7438,26 +7528,34 @@ RSpec.describe UsersController do
       ).topic
     end
 
-    before { sign_in(user_2) }
-
-    it "does not allow an unauthorized user to access the state of another user" do
+    it "requires login" do
       get "/u/#{user1.username}/private-message-topic-tracking-state.json"
-
       expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
-    it "returns the right response" do
-      get "/u/#{user_2.username}/private-message-topic-tracking-state.json"
+    context "when logged in" do
+      before { sign_in(user_2) }
 
-      expect(response.status).to eq(200)
+      it "does not allow an unauthorized user to access the state of another user" do
+        get "/u/#{user1.username}/private-message-topic-tracking-state.json"
 
-      topic_state = response.parsed_body.first
+        expect(response.status).to eq(403)
+      end
 
-      expect(topic_state["topic_id"]).to eq(private_message.id)
-      expect(topic_state["highest_post_number"]).to eq(1)
-      expect(topic_state["last_read_post_number"]).to eq(nil)
-      expect(topic_state["notification_level"]).to eq(NotificationLevels.all[:watching])
-      expect(topic_state["group_ids"]).to eq([])
+      it "returns the right response" do
+        get "/u/#{user_2.username}/private-message-topic-tracking-state.json"
+
+        expect(response.status).to eq(200)
+
+        topic_state = response.parsed_body.first
+
+        expect(topic_state["topic_id"]).to eq(private_message.id)
+        expect(topic_state["highest_post_number"]).to eq(1)
+        expect(topic_state["last_read_post_number"]).to eq(nil)
+        expect(topic_state["notification_level"]).to eq(NotificationLevels.all[:watching])
+        expect(topic_state["group_ids"]).to eq([])
+      end
     end
   end
 

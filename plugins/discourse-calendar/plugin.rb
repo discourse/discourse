@@ -143,6 +143,35 @@ after_initialize do
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
 
+  add_api_parameter_route(
+    methods: :get,
+    actions: "discourse_post_event/events#index",
+    formats: :ics,
+  )
+
+  add_user_api_key_scope :events_calendar,
+                         methods: :get,
+                         actions: "discourse_post_event/events#index",
+                         formats: :ics
+
+  register_calendar_subscription_feed(
+    name: "all_events",
+    scope: "discourse-calendar:events_calendar",
+    description_key: "discourse_calendar.preferences.all_events_description",
+    url: ->(base_url, _user, key) do
+      "#{base_url}/discourse-post-event/events.ics?user_api_key=#{key}"
+    end,
+  )
+
+  register_calendar_subscription_feed(
+    name: "my_events",
+    scope: "discourse-calendar:events_calendar",
+    description_key: "discourse_calendar.preferences.my_events_description",
+    url: ->(base_url, user, key) do
+      "#{base_url}/discourse-post-event/events.ics?attending_user=#{user.username_lower}&include_interested=true&user_api_key=#{key}"
+    end,
+  )
+
   reloadable_patch do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)

@@ -429,6 +429,9 @@ ro:
       has_subcategories: "Nu putem șterge această categorie pentru că are subcategorii."
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
+  category_types:
+    discussion:
+      title: "discuție"
   trust_levels:
     admin: "Admin"
     staff: "Membrii echipei"

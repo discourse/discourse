@@ -12,7 +12,7 @@ pt_BR:
     topic_voting:
       notification_label:
         vote_released: "Voto devolvido"
-      title: "Votação do tópico"
+      title: "Votação de tópicos"
       reached_limit: "Você está sem votos, remova um voto existente!"
       list_votes: "Mostrar seus votos"
       votes_nav_help: "tópicos com a maioria dos votos"

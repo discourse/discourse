@@ -572,6 +572,12 @@ he:
       assign:
         errors:
           not_found: "הנושא לא נמצא."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "אישור"
+        reject:
+          title: "לדחות"
     summarization:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."

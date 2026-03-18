@@ -620,6 +620,13 @@ de:
       assign:
         errors:
           not_found: "Thema nicht gefunden."
+    reviewables:
+      ai_tool_action:
+        title: "KI-Tool Aktion"
+        approve:
+          title: "Genehmigen"
+        reject:
+          title: "Ablehnen"
     summarization:
       configuration_hint:
         one: "Konfiguriere zunächst die Einstellung `%{setting}`."

@@ -7,6 +7,10 @@ module DiscourseSolved
         type_id :support
 
         class << self
+          def visible?
+            SiteSetting.enable_support_category_type_setup
+          end
+
           def enable_plugin
             SiteSetting.solved_enabled = true
           end
@@ -63,6 +67,8 @@ module DiscourseSolved
               },
               site_settings: {
                 show_filter_by_solved_status: true,
+                prioritize_solved_topics_in_search: false,
+                show_who_marked_solved: false,
               },
               category_custom_fields: {
                 DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => {
@@ -71,6 +77,7 @@ module DiscourseSolved
                   label: I18n.t("discourse_solved.category_type.allow_accepted_answers.label"),
                   required: true,
                   show_on_create: false,
+                  show_on_edit: false,
                 },
                 :solved_topics_auto_close_hours => {
                   default: 48,

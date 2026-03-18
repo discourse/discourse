@@ -1,4 +1,4 @@
-export default {
+const draftsFixtures = {
   "/drafts.json": {
     drafts: [
       {
@@ -72,3 +72,5 @@ export default {
     draft_sequence: 42,
   },
 };
+
+export default draftsFixtures;

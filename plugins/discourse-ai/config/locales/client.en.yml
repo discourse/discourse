@@ -4,7 +4,7 @@ en:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Allows AI search"
               stream_completion: "Allows streaming AI agent completions"
               update_agents: "Allows updating AI agents"
@@ -237,7 +237,7 @@ en:
       features:
         short_title: "Features"
         description: "These are the AI features available to visitors on your site. These can be configured to use specific agents and LLMs, and can be access controlled by groups."
-        back: "Back"
+        back: "Back to AI features"
         settings_save_error: "Some settings could not be saved."
         disabled: "(disabled)"
         agent:
@@ -318,7 +318,8 @@ en:
             agents: "Agents"
 
         ai_helper:
-          name: "Helper"
+          edit: "Edit AI helper settings"
+          name: "AI Helper"
           description: "Assists users in community interaction, such as creating topics, writing posts, and reading content"
           proofread: Proofread text
           title_suggestions: "Suggest titles"
@@ -512,7 +513,7 @@ en:
           replies:
             one: "Apply to first reply only"
             other: "Apply to first %{count} replies"
-        back: "Back"
+        back: "Back to agents"
         name: "Name"
         edit: "Edit"
         export: "Export"
@@ -561,6 +562,8 @@ en:
         allow_personal_messages_help: "If enabled, users in allowed groups can send personal messages to this agent."
         allow_topic_mentions: "Allow topic mentions"
         allow_topic_mentions_help: "If enabled, users in allowed groups can mention this agent in topics."
+        require_approval: "Require approval for moderation tools"
+        require_approval_help: "When enabled, moderation actions (close, delete, edit, etc.) will be sent to the review queue for moderator approval before execution."
         force_default_llm: "Always use default language model"
         save: "Save"
         saved: "Agent saved"
@@ -568,6 +571,11 @@ en:
         tools: "Enabled tools"
         tokens: "tokens"
         context_cost: "Context Cost"
+        token_usage: "Token Usage"
+        tool_count: "Tool Count"
+        tool_count_value:
+          one: "%{count} tool"
+          other: "%{count} tools"
         tool_tokens_total: "~%{tokens} Tokens"
         tool_severity_medium: "Moderate capacity"
         tool_severity_high: "High capacity"
@@ -651,7 +659,7 @@ en:
           remove: "Remove upload"
 
       tools:
-        back: "Back"
+        back: "Back to tools"
         short_title: "Tools"
         export: "Export"
         import: "Import"
@@ -711,7 +719,7 @@ en:
         no_secrets: "No credentials yet"
         new_title: "New credential"
         edit_title: "Edit credential"
-        back: "Back"
+        back: "Back to credentials"
         save: "Save"
         edit: "Edit"
         delete: "Delete"
@@ -747,7 +755,7 @@ en:
         save: "Save"
         edit: "Edit"
         saved: "LLM model saved"
-        back: "Back"
+        back: "Back to LLMs"
         confirm_delete: Are you sure you want to delete this model?
         delete: Delete
         quotas:
@@ -946,12 +954,17 @@ en:
       reviewables:
         model_used: "Model used:"
         accuracy: "Accuracy:"
+        ai_tool_action:
+          agent: "Agent"
+          tool: "Tool"
+          parameters: "Parameters"
+          post: "Triggering Post"
 
       embeddings:
         short_title: "Embeddings"
         description: "Embeddings are numerical representations of data that capture meaning and relationships, enabling Discourse AI features like Related Topics and AI Search to understand and connect content."
         new: "New embedding"
-        back: "Back"
+        back: "Back to embeddings"
         save: "Save"
         saved: "Embedding configuration saved"
         delete: "Delete"
@@ -1019,6 +1032,7 @@ en:
         click_to_run_label: "Run Artifact"
 
       ai_bot:
+        title: "AI bot"
         agent: "Agent"
         llm: "Model"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
@@ -1173,8 +1187,15 @@ en:
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool approved"
+        rejected_tool_action:
+          title: "Tool rejected"
       types:
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:
           title: "AI-Flagged chat message"
+        reviewable_ai_tool_action:
+          title: "AI Tool Action"

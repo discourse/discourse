@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "tasks/version_bump" do
+RSpec.describe "tasks/release" do
   let(:tmpdir) { Dir.mktmpdir }
   let(:origin_path) { "#{tmpdir}/origin-repo" }
   let(:local_path) { "#{tmpdir}/local-repo" }
@@ -52,6 +52,7 @@ RSpec.describe "tasks/version_bump" do
       File.write("versions.json", JSON.pretty_generate(versions))
 
       git "init"
+      git "config", "commit.gpgsign", "false"
       git "checkout", "-b", "main"
       git "add", "."
       git "commit", "-m", "Initial commit"
@@ -231,11 +232,17 @@ RSpec.describe "tasks/version_bump" do
     context "when development cycle changes" do
       let!(:previous_hash) { Dir.chdir(local_path) { commit_version(previous_version) } }
       let!(:latest_hash) { Dir.chdir(local_path) { commit_version(current_version) } }
-
-      def branch_tip(branch)
+      let(:release_branch) { "release/#{previous_version.split(".").first(2).join(".")}" }
+      let(:parent_of_tip) do
         Dir.chdir(origin_path) do
-          git "checkout", branch
-          git("rev-parse", "HEAD").strip
+          git "checkout", release_branch
+          git("rev-parse", "HEAD^1").strip
+        end
+      end
+      let(:version_on_branch) do
+        Dir.chdir(origin_path) do
+          git "checkout", release_branch
+          File.read("lib/version.rb")[/STRING = "(.*)"/, 1]
         end
       end
 
@@ -243,10 +250,14 @@ RSpec.describe "tasks/version_bump" do
         let(:previous_version) { "2025.1.0-latest" }
         let(:current_version) { "2025.2.0-latest" }
 
-        it "creates a release branch at the previous commit" do
+        it "creates a release branch based on the previous commit" do
           Dir.chdir(local_path) { run_task }
+          expect(parent_of_tip).to eq(previous_hash)
+        end
 
-          expect(branch_tip("release/2025.1")).to eq(previous_hash)
+        it "strips the -latest suffix" do
+          Dir.chdir(local_path) { run_task }
+          expect(version_on_branch).to eq("2025.1.0")
         end
       end
 
@@ -254,10 +265,9 @@ RSpec.describe "tasks/version_bump" do
         let(:previous_version) { "2025.11.0-latest.2" }
         let(:current_version) { "2025.12.0-latest" }
 
-        it "creates a release branch at the previous commit" do
+        it "creates a release branch based on the previous commit" do
           Dir.chdir(local_path) { run_task }
-
-          expect(branch_tip("release/2025.11")).to eq(previous_hash)
+          expect(parent_of_tip).to eq(previous_hash)
         end
       end
     end
@@ -453,33 +463,35 @@ RSpec.describe "tasks/version_bump" do
   describe "release:stage_security_fixes" do
     subject(:run_task) do
       Dir.chdir(local_path) do
-        capture_stdout { invoke_rake_task("release:stage_security_fixes", "main") }
+        capture_stdout { invoke_rake_task("release:stage_security_fixes", base_branch) }
       end
     end
 
+    let(:base_branch) { "main" }
     let(:origin_main_commits) do
-      Dir.chdir(origin_path) { git("log", "--pretty=%s", "main").lines.map(&:strip) }
+      Dir.chdir(origin_path) { git("log", "--pretty=%s", base_branch).lines.map(&:strip) }
     end
+    let(:security_fixes) { "origin/security-fix-one,origin/security-fix-two" }
 
     def origin_file(path)
-      Dir.chdir(origin_path) { git("show", "main:#{path}") }
+      Dir.chdir(origin_path) { git("show", "#{base_branch}:#{path}") }
     end
 
     before do
-      ENV["SECURITY_FIX_REFS"] = "origin/security-fix-one,origin/security-fix-two"
+      ENV["SECURITY_FIX_REFS"] = security_fixes
       Dir.chdir(origin_path) do
         git "checkout", "-b", "security-fix-one"
         File.write("firstfile.txt", "contents")
         git "add", "firstfile.txt"
-        git "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit one"
+        git "commit", "-m", "security fix one, commit one"
         File.write("secondfile.txt", "contents")
         git "add", "secondfile.txt"
-        git "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit two"
+        git "commit", "-m", "security fix one, commit two"
         git "checkout", "main"
         git "checkout", "-b", "security-fix-two"
         File.write("somefile.txt", "contents")
         git "add", "somefile.txt"
-        git "-c", "commit.gpgsign=false", "commit", "-m", "security fix two"
+        git "commit", "-m", "security fix two"
       end
     end
 
@@ -530,6 +542,45 @@ RSpec.describe "tasks/version_bump" do
 
       it "does not modify the version" do
         expect(origin_file("lib/version.rb")).to include('STRING = "2025.12.0-latest"')
+      end
+    end
+
+    context "when targeting a release branch" do
+      let(:base_branch) { "release/2025.6" }
+      let(:security_fixes) { "origin/security-fix-for-release-branch" }
+
+      before do
+        Dir.chdir(origin_path) do
+          git "checkout", "-b", base_branch
+          File.write("lib/version.rb", fake_version_rb("2025.6.0"))
+          git "add", "lib/version.rb"
+          git "commit", "-m", "Initial release branch commit"
+          git "config", "receive.denyCurrentBranch", "ignore"
+          git "checkout", "main"
+
+          git "checkout", "-b", "security-fix-for-release-branch"
+          File.write("releasefile.txt", "contents")
+          git "add", "releasefile.txt"
+          git "commit", "-m", "security fix for release branch"
+        end
+
+        Dir.chdir(local_path) { git "fetch", "origin" }
+      end
+
+      it "bumps the patch version" do
+        run_task
+        expect(origin_file("lib/version.rb")).to include('STRING = "2025.6.1"')
+      end
+
+      it "cherry-picks security fixes and adds version bump commit" do
+        run_task
+        expect(origin_main_commits.first(3)).to eq(
+          [
+            "DEV: Bump release branch to v2025.6.1",
+            "security fix for release branch",
+            "Initial release branch commit",
+          ],
+        )
       end
     end
   end

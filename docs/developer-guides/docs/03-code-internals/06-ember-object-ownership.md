@@ -29,7 +29,7 @@ To access e.g. services there a couple of methods at your disposal.
 - In API initializers you have the access to `api.container`
 
   ```js
-  apiInitializer("1.0", (api) => {
+  apiInitializer((api) => {
     const router = api.container.lookup("service:router");
   ```
 

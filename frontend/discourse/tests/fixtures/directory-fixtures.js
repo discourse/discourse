@@ -1,4 +1,4 @@
-export default {
+const directoryFixtures = {
   directory_items: {
     directory_items: [
       {
@@ -618,3 +618,5 @@ export default {
     },
   },
 };
+
+export default directoryFixtures;

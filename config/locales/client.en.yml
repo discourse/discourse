@@ -507,7 +507,6 @@ en:
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
-        start_with_this: "Start with this"
         back: "Back"
         icebreakers:
           fun_facts:
@@ -1925,6 +1924,24 @@ en:
         apps: "Apps"
         navigation_menu: "Navigation menu"
         upcoming_changes: "Upcoming changes"
+        calendar_subscriptions: "Calendar"
+
+      calendar_subscriptions:
+        description: "Generate subscription URLs to sync with your favourite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs. "
+        generate: "Generate Subscription URLs"
+        regenerate: "Regenerate URLs"
+        regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"
+        revoke: "Revoke Subscription"
+        revoke_confirm: "This will revoke your calendar subscription URLs. Any calendar apps using them will stop receiving updates. Continue?"
+        urls_warning: "The subscription URLs are ready! Click the buttons below to link them to your calendar app. Note: these URLs are shown only once."
+        bookmarks: "Bookmark Reminders"
+        bookmarks_description: "Your bookmarks with reminder dates"
+        copy: "Copy URL"
+        copied: "Copied!"
+        add_to_google: "Google Calendar"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple Calendar"
+        active_subscription: "You have an active calendar subscription."
 
       change_password:
         success: "(email sent)"
@@ -3214,6 +3231,7 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
+      edit_reason: "Add your reason for editing"
       enter_fullscreen: "Enter fullscreen composer"
       exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
@@ -3989,6 +4007,9 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
+      auto_delete_immediate:
+        one: "The last post in the topic is already %{count} hour old, so the topic will be deleted immediately."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be deleted immediately."
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
@@ -4646,6 +4667,8 @@ en:
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
+      topic_title_placeholder: "Category topic title placeholder"
+      topic_title_placeholder_placeholder: "[optional] custom topic title placeholder for this category"
       tags: "Tags"
       localizations: "Localizations"
       localization:

@@ -18,6 +18,13 @@ pl_PL:
       solved_topics_auto_close_hours:
         label: "Automatycznie zamknij rozwiązane tematy (godziny)"
         description: "Automatycznie zamykaj temat po tylu godzinach od oznaczenia go jako rozwiązany. Ustaw 0, aby wyłączyć."
+      notify_on_staff_accept_solved:
+        label: "Powiadom twórcę tematu, gdy personel oznaczy rozwiązanie"
+      empty_box_on_unsolved:
+        label: "Wyświetl puste pole wyboru obok nierozwiązanych tematów na liście tematów"
+      solved_topics_auto_close_duration:
+        label: "Automatycznie zamknij rozwiązane tematy"
+        description: "Automatycznie zamknij temat po upływie tego czasu, gdy zostanie oznaczony jako rozwiązany. Ustaw na 0, aby wyłączyć."
   site_settings:
     solved_enabled: "Aktywuj wtyczkę solved, zezwól użytkownikom wybierać rozwiązania w tematach"
     allow_solved_on_all_topics: "Zezwalaj użytkownikom na wybieranie rozwiązań dotyczących wszystkich tematów (jeśli to pole nie jest zaznaczone, rozwiązania można włączać dla poszczególnych kategorii lub tagów)"

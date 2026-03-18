@@ -107,6 +107,7 @@ after_initialize do
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
+  register_reviewable_type ReviewableAiToolAction
 
   on(:reviewable_transitioned_to) do |new_status, reviewable|
     ModelAccuracy.adjust_model_accuracy(new_status, reviewable)
@@ -133,13 +134,10 @@ after_initialize do
     end
   end
 
-  add_api_key_scope(
-    :discourse_ai,
-    { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } },
-  )
+  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
 
   add_api_key_scope(
-    :discourse_ai,
+    :ai,
     {
       manage_artifacts: {
         actions: %w[

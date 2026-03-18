@@ -522,6 +522,12 @@ it:
       assign:
         errors:
           not_found: "Argomento non trovato."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Approva"
+        reject:
+          title: "Rifiuta"
     summarization:
       configuration_hint:
         one: "Configura prima l'impostazione \"%{setting}\"."

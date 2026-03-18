@@ -19,6 +19,12 @@ te:
       tool_summary:
         search: "శోధించండి"
         time: "కాలం"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "ఆమోదించండి"
+        reject:
+          title: "తిరస్కరించు"
     sentiment:
       reports:
         post_emotion:

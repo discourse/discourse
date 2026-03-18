@@ -664,6 +664,9 @@ es:
       reviewables:
         model_used: "Modelo utilizado:"
         accuracy: "Precisión:"
+        ai_tool_action:
+          tool: "Herramienta"
+          parameters: "Parámetros"
       embeddings:
         short_title: "Incrustaciones"
         description: "Las incrustaciones son representaciones numéricas de datos que capturan el significado y las relaciones, lo que permite que las características de IA de Discourse, como Temas relacionados y Búsqueda de IA, comprendan y relacionen el contenido."

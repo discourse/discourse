@@ -1,4 +1,4 @@
-export default {
+const categoryFixtures = {
   "/c/1/show.json": {
     category: {
       id: 1,
@@ -152,3 +152,5 @@ export default {
     },
   },
 };
+
+export default categoryFixtures;

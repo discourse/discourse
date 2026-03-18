@@ -27,8 +27,12 @@ const LEGACY_FORMKIT_FIELDS = [
   "icon",
   "localizations",
   "email_in",
+  "email_in_enabled",
   "email_in_allow_strangers",
   "mailinglist_mirror",
+  "topic_template",
+  "topic_title_placeholder",
+  "form_template_ids",
 ];
 
 // All fields managed through FormKit in the simplified creation flow.
@@ -72,6 +76,13 @@ const SIMPLIFIED_FIELD_LIST = [
   "minimum_required_tags",
   "allow_global_tags",
   "default_slow_mode_seconds",
+  "topic_template",
+  "topic_title_placeholder",
+  "form_template_ids",
+  "uploaded_logo",
+  "uploaded_logo_dark",
+  "uploaded_background",
+  "uploaded_background_dark",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -129,7 +140,7 @@ export default class EditCategoryTabsController extends Controller {
 
       data.category_type_site_settings = {};
 
-      Object.values(this.model.category_types).forEach((categoryType) => {
+      Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
         categoryType.configuration_schema.category_custom_fields?.forEach(
           (field) => {
             data.custom_fields[field.key] ??= field.default;
@@ -173,7 +184,7 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    const types = Object.values(this.model.category_types ?? {});
+    const types = Object.values(this.model.categoryTypes ?? {});
     if (types.length > 0) {
       return i18n("category.create_with_type", {
         typeName: types[0].name.toLowerCase(),
@@ -194,6 +205,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   setSelectedTab(tab) {
+    if (this.selectedTab === tab) {
+      return;
+    }
+
     this.selectedTab = tab;
     this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
   }

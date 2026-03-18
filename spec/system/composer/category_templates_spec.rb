@@ -633,4 +633,26 @@ describe "Composer Form Templates", type: :system do
       expect(mini_tag_chooser).to have_no_selection
     end
   end
+
+  context "when a category has a topic title placeholder" do
+    fab!(:category_with_title_placeholder) do
+      Fabricate(:category, topic_title_placeholder: "Describe your issue briefly")
+    end
+
+    it "shows custom topic title placeholder in the composer" do
+      category_page.visit(category_with_title_placeholder)
+      category_page.new_topic_button.click
+
+      expect(page).to have_field("reply-title", placeholder: "Describe your issue briefly")
+    end
+
+    it "falls back to default placeholder if category topic title placeholder is nil" do
+      SiteSetting.topic_featured_link_enabled = false
+      category_with_title_placeholder.update!(topic_title_placeholder: nil)
+      category_page.visit(category_with_title_placeholder)
+      category_page.new_topic_button.click
+
+      expect(find("#reply-title")[:placeholder]).to eq(I18n.t("js.composer.title_placeholder"))
+    end
+  end
 end

@@ -106,6 +106,29 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
         expect(user_option_queries.size).to eq(2)
       end
+
+      it "preloads thread original message mentions to avoid N+1 queries" do
+        channel.update!(threading_enabled: true)
+
+        3.times do
+          original_message = Fabricate(:chat_message, chat_channel: channel)
+          thread = Fabricate(:chat_thread, channel: channel, original_message: original_message)
+          mentioned = Fabricate(:user)
+          mentioned.set_status!("status", "wave")
+          Fabricate(:user_chat_mention, chat_message: original_message, user: mentioned)
+          reply =
+            Fabricate(:chat_message, chat_channel: channel, thread: thread, message: "thread reply")
+          thread.update!(last_message: reply)
+        end
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        queries = track_sql_queries { get "/chat/api/channels/#{channel.id}/messages" }
+        mention_queries =
+          queries.select { |q| q.include?('"chat_mentions"') && q.include?("chat_message_id") }
+
+        expect(mention_queries.size).to eq(1)
+      end
     end
   end
 

@@ -56,10 +56,6 @@
     overflow: auto;
   }
 
-  .btn {
-    border-radius: 0;
-  }
-
   .arrow {
     position: absolute;
     color: var(--secondary);
@@ -96,17 +92,31 @@
 // should probably be renamed fk-d-menu__list
 .dropdown-menu {
   min-width: 200px;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--d-sidebar-vertical-gap);
+  padding: var(--space-1);
   margin: 0;
   list-style: none;
 
   &__item {
     .btn {
-      padding: 0.5em 1rem;
+      display: inline-flex;
+      gap: var(--d-sidebar-section-link-prefix-margin-right);
+      padding-inline: var(--d-sidebar-row-horizontal-padding);
       width: 100%;
       justify-content: flex-start;
       background: rgb(0, 0, 0, 0);
-      border-radius: 0;
+      border-radius: var(--d-border-radius);
+
+      &:not(
+        .notifications-tracking-btn,
+        .--with-description,
+        .pinned-options-btn
+      ) {
+        height: var(--d-sidebar-row-height);
+        padding-block: 0;
+      }
 
       &.-selected {
         background: var(--d-hover);
@@ -118,6 +128,11 @@
         .d-icon {
           color: inherit;
         }
+      }
+
+      .svg-icon {
+        width: var(--d-sidebar-section-link-prefix-width);
+        margin-right: 0;
       }
 
       &:hover,

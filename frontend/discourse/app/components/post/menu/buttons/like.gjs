@@ -85,6 +85,7 @@ export default class PostMenuLikeButton extends Component {
           @icon={{this.likeButtonIcon}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}
+          @ariaLabel={{this.title}}
         />
       </div>
     {{else}}

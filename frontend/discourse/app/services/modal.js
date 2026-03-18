@@ -53,13 +53,14 @@ export default class ModalService extends Service {
         {
           id: "discourse.modal-controllers",
           since: "3.1",
-          dropFrom: "3.2",
           url: "https://meta.discourse.org/t/268057",
           raiseError: true,
         }
       );
       return;
     }
+
+    const trigger = document.activeElement;
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
@@ -72,7 +73,7 @@ export default class ModalService extends Service {
 
     this.opts = opts ??= {};
     this.activeModal = { component: modal, opts, resolveShowPromise };
-    this.triggerElement = document.activeElement;
+    this.triggerElement = trigger;
 
     const unsupportedOpts = Object.keys(opts).filter((key) =>
       LEGACY_OPTS.has(key)
@@ -92,9 +93,9 @@ export default class ModalService extends Service {
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};
-    if (this.triggerElement) {
+    if (this.triggerElement?.isConnected) {
       this.triggerElement.focus();
-      this.triggerElement = null;
     }
+    this.triggerElement = null;
   }
 }

@@ -137,5 +137,28 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       expect(response.headers["Content-Security-Policy"]).to include("unsafe-inline")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
     end
+
+    it "forces a same-origin opener policy for artifact pages" do
+      SiteSetting.cross_origin_opener_policy_header = "unsafe-none"
+
+      sign_in(user)
+      get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+    end
+
+    it "validates event.source against the child iframe in the KV postMessage handler" do
+      sign_in(user)
+      get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+      expect(response.status).to eq(200)
+
+      doc = Nokogiri.HTML5(response.body)
+      parent_scripts = doc.css("body > script").map(&:text)
+      kv_handler_script = parent_scripts.find { |s| s.include?("discourse-artifact-kv") }
+
+      expect(kv_handler_script).to be_present
+      expect(kv_handler_script).to match(/event\.source\s*!==?\s*\w+\.contentWindow/)
+    end
   end
 end

@@ -1,4 +1,4 @@
-export default {
+const watchedWordsFixtures = {
   "/admin/customize/watched_words.json": {
     actions: ["block", "censor", "require_approval", "flag", "replace", "tag"],
     words: [
@@ -39,3 +39,5 @@ export default {
     },
   },
 };
+
+export default watchedWordsFixtures;
