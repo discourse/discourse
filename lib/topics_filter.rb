@@ -428,10 +428,11 @@ class TopicsFilter
   end
 
   def filter_by_topic_range(column_name:, min: nil, max: nil, scope: nil)
-    { min => ">=", max => "<=" }.each do |value, operator|
-      next if !value
-      @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
-    end
+    return @scope = @scope.none if min.nil? && max.nil?
+
+    value = min || max
+    operator = min ? ">=" : "<="
+    @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
   end
 
   def filter_by_activity(before: nil, after: nil)
@@ -444,13 +445,14 @@ class TopicsFilter
 
   def filter_by_bookmarked(before: nil, after: nil)
     return @scope = @scope.none if !@guardian.authenticated?
+    return @scope = @scope.none if before.nil? && after.nil?
 
     user_id = @guardian.user.id.to_i
 
-    { after => ">=", before => "<=" }.each do |value, operator|
-      next if !value
+    value = before || after
+    operator = before ? "<=" : ">="
 
-      @scope = @scope.where(<<~SQL, user_id: user_id, bookmark_date: value)
+    @scope = @scope.where(<<~SQL, user_id: user_id, bookmark_date: value)
         topics.id IN (
           SELECT bookmarks.bookmarkable_id
           FROM bookmarks
@@ -467,7 +469,6 @@ class TopicsFilter
             AND posts.deleted_at IS NULL
         )
       SQL
-    end
   end
 
   def filter_by_latest_post(before: nil, after: nil)
