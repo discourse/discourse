@@ -55,18 +55,29 @@ class Report
   }
 
   LEGACY_REPORTS = %w[
+    associated_accounts_by_provider
     bookmarks
+    consolidated_api_requests
+    flags
+    flags_status
     likes
     moderator_warning_private_messages
+    mobile_visits
     notify_moderators_private_messages
     notify_user_private_messages
     post_edits
     profile_views
+    reactions
+    suspicious_logins
     system_private_messages
+    top_referrers
     top_users_by_likes_received_from_inferior_trust_level
     top_users_by_likes_received_from_a_variety_of_people
+    trust_level_growth
+    user_flagging_ratio
     user_to_user_private_messages
-    mobile_visits
+    web_crawlers
+    web_hook_events_daily_aggregate
   ]
 
   include Reports::AssociatedAccountsByProvider

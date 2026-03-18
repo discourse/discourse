@@ -107,9 +107,9 @@ RSpec.describe Reports::ListQuery do
           [
             I18n.t("reports.staff_logins.title"),
             I18n.t("reports.page_view_anon_browser_reqs.title"),
-            I18n.t("reports.associated_accounts_by_provider.title"),
-            I18n.t("reports.consolidated_api_requests.title"),
             I18n.t("reports.dau_by_mau.title"),
+            I18n.t("reports.daily_engaged_users.title"),
+            I18n.t("reports.emails.title"),
           ],
         )
       end
