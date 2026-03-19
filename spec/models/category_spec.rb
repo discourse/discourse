@@ -89,7 +89,12 @@ RSpec.describe Category do
     end
 
     it "destroys category_posting_review_groups when category is destroyed" do
-      category = Fabricate(:category, category_setting_attributes: { require_topic_approval: true })
+      category = Fabricate(:category)
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: Group[:everyone],
+        post_type: :topic,
+      )
 
       expect { category.destroy! }.to change { category.category_posting_review_groups.count }.by(
         -1,
