@@ -63,6 +63,26 @@ RSpec.describe GroupActionLogger do
     end
   end
 
+  describe "#bulk_log_add_user_to_group" do
+    fab!(:user2, :user)
+
+    it "creates a record for each user" do
+      expect { logger.bulk_log_add_user_to_group([user, user2]) }.to change {
+        GroupHistory.where(action: GroupHistory.actions[:add_user_to_group]).count
+      }.by(2)
+
+      records =
+        GroupHistory.where(action: GroupHistory.actions[:add_user_to_group], group: group).last(2)
+
+      expect(records.map(&:acting_user)).to all(eq(group_owner))
+      expect(records.map(&:target_user)).to contain_exactly(user, user2)
+    end
+
+    it "does nothing when target_users is empty" do
+      expect { logger.bulk_log_add_user_to_group([]) }.not_to change { GroupHistory.count }
+    end
+  end
+
   describe "#log_remove_user_from_group" do
     context "as group owner" do
       it "should create the right record" do
@@ -90,6 +110,29 @@ RSpec.describe GroupActionLogger do
         expect(group_history.acting_user).to eq(user)
         expect(group_history.target_user).to eq(user)
       end
+    end
+  end
+
+  describe "#bulk_log_remove_user_from_group" do
+    fab!(:user2, :user)
+
+    it "creates a record for each user" do
+      expect { logger.bulk_log_remove_user_from_group([user, user2]) }.to change {
+        GroupHistory.where(action: GroupHistory.actions[:remove_user_from_group]).count
+      }.by(2)
+
+      records =
+        GroupHistory.where(
+          action: GroupHistory.actions[:remove_user_from_group],
+          group: group,
+        ).last(2)
+
+      expect(records.map(&:acting_user)).to all(eq(group_owner))
+      expect(records.map(&:target_user)).to contain_exactly(user, user2)
+    end
+
+    it "does nothing when target_users is empty" do
+      expect { logger.bulk_log_remove_user_from_group([]) }.not_to change { GroupHistory.count }
     end
   end
 
