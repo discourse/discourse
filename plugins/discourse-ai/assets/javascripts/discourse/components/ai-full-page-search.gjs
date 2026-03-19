@@ -201,18 +201,15 @@ export default class AiFullPageSearch extends Component {
 
   @action
   toggleAiResults() {
+    this.appEvents.trigger(AI_RESULTS_TOGGLED, {
+      enabled: !this.showingAiResults,
+      autoEnabled: this.hasZeroRegularResults,
+    });
+
     if (this.showingAiResults) {
-      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
-        enabled: false,
-        autoEnabled: false,
-      });
       this.args.addSearchResults([], "topic_id");
       this.autoEnabledForZeroResults = false;
     } else {
-      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
-        enabled: true,
-        autoEnabled: this.hasZeroRegularResults,
-      });
       this.args.addSearchResults(this.AiResults, "topic_id");
     }
     this.showingAiResults = !this.showingAiResults;
