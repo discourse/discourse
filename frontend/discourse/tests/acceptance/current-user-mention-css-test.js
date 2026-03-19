@@ -11,7 +11,7 @@ acceptance("Current User Mention CSS", function (needs) {
     assert
       .dom(cssTag)
       .hasText(
-        `.mention[href="/u/eviltrout"] { background: var(--tertiary-400); }`
+        `.mention[href="/u/eviltrout" i] { background: var(--tertiary-400); }`
       );
   });
 });
