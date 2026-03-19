@@ -272,8 +272,8 @@ importers:
         specifier: 11.11.1
         version: 11.11.1
       '@json-editor/json-editor':
-        specifier: 2.16.0
-        version: 2.16.0
+        specifier: 2.15.2
+        version: 2.15.2
       '@jsquash/jpeg':
         specifier: ^1.6.0
         version: 1.6.0
@@ -2611,8 +2611,8 @@ packages:
     resolution: {integrity: sha512-yYxMVH7Dqw6nO0d5NIV8OQWnitU8k6vXH8NtgqAfIa/IUqRMxRv/NUJJ08VEKbAakwxlgBl5PJdrU0dMPStsnw==}
     engines: {node: '>=v12.0.0'}
 
-  '@json-editor/json-editor@2.16.0':
-    resolution: {integrity: sha512-qzCDDImLAkqCpOp3G156ikEHTJKQviVyxie+3QXE1MTxRuT+BZ3yTYsXfUpvgRyaLBcYDJIind59Hj3oz+5TqA==}
+  '@json-editor/json-editor@2.15.2':
+    resolution: {integrity: sha512-vUQ7Oy+7VfNIzu6irtPz5qfHbMNTlQWUbHJ7eunxFza+SBwUXfq2Uh5QYD2d6hLDhF22sYh8DPpLWFixQrt1+Q==}
     engines: {node: '>= 0.8.0'}
 
   '@jsonjoy.com/base64@1.1.2':
@@ -11597,7 +11597,7 @@ snapshots:
     dependencies:
       lodash: 4.17.23
 
-  '@json-editor/json-editor@2.16.0':
+  '@json-editor/json-editor@2.15.2':
     dependencies:
       core-js: 3.48.0
 
