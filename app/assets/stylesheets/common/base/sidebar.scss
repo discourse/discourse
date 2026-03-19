@@ -34,28 +34,34 @@
 
   // example: new count
   // example: chat participant count
-  --d-sidebar-prefix-background: var(--primary-low);
+  --d-sidebar-prefix-background: #{token("color.background.accent.subtle")};
   --d-sidebar-prefix-color: var(--d-sidebar-link-color);
 
   // example: unread dot
-  --d-sidebar-suffix-color: var(--tertiary-med-or-tertiary);
+  --d-sidebar-suffix-color: #{token("color.background.accent.subtle")};
 
   // highlight applies to both hover and focus states
   --d-sidebar-highlight-background: #{token("color.background.accent.subtle")};
   --d-sidebar-highlight-color: #{token("color.text.accent.bolder")};
-  --d-sidebar-highlight-prefix-background: var(--primary-300);
-  --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
-  --d-sidebar-highlight-suffix-color: var(--tertiary-med-or-tertiary);
-  --d-sidebar-highlight-hover-background: var(--primary-medium);
+  --d-sidebar-highlight-prefix-background: #{token(
+      "color.background.accent.bolder"
+    )};
+  --d-sidebar-highlight-prefix-color: #{token("color.text.inverse")};
+  --d-sidebar-highlight-suffix-color: #{token("color.text.inverse")};
+  --d-sidebar-highlight-hover-background: #{token(
+      "color.background.accent.bolder"
+    )};
 
   // example: hovering a button within a highlighted section
-  --d-sidebar-highlight-hover-icon: var(--primary-very-low);
+  --d-sidebar-highlight-hover-icon: #{token("color.text.inverse")};
 
   // example: hovering a button within a highlighted section
   --d-sidebar-active-background: #{token("color.background.accent.subtle")};
   --d-sidebar-active-color: #{token("color.text.accent.bolder")};
-  --d-sidebar-active-icon-color: #{token("color.text.subtle")};
-  --d-sidebar-active-prefix-background: var(--d-text-subtlest);
+  --d-sidebar-active-icon-color: #{token("color.text.inverse")};
+  --d-sidebar-active-prefix-background: #{token(
+      "color.background.accent.subtle"
+    )};
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
   --d-sidebar-active-font-weight: bold; // example: active section link
 
