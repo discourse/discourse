@@ -2066,6 +2066,8 @@ RSpec.describe User do
     end
 
     it "get attributes from the group" do
+      Jobs.run_immediately!
+
       user =
         Fabricate.build(
           :user,

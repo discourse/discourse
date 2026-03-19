@@ -1364,10 +1364,9 @@ RSpec.describe PostCreator do
     fab!(:target_user1) { coding_horror }
     fab!(:target_user2, :moderator)
     let!(:group) do
-      g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
+      g = Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
       g.add(target_user2)
-      g.save
       g
     end
     fab!(:unrelated, :user)

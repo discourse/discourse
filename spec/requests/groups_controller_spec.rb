@@ -732,7 +732,7 @@ RSpec.describe GroupsController do
       freeze_time 1.day.from_now
 
       4.times { group.add(Fabricate(:user)) }
-      usernames = group.users.map { |m| m.username }.sort
+      usernames = group.reload.users.map { |m| m.username }.sort
 
       get "/groups/#{group.name}/members.json", params: { limit: 3, asc: true }
 

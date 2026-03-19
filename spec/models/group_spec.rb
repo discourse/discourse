@@ -934,10 +934,9 @@ RSpec.describe Group do
     end
 
     it "correctly restricts group visibility" do
-      group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
+      group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
       logged_on_user = Fabricate(:user)
       member = Fabricate(:user)
-      group.save!
       group.add(member)
 
       owner = Fabricate(:user)
@@ -1002,10 +1001,9 @@ RSpec.describe Group do
     end
 
     it "correctly restricts group members visibility" do
-      group = Fabricate.build(:group, members_visibility_level: Group.visibility_levels[:owners])
+      group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
       logged_on_user = Fabricate(:user)
       member = Fabricate(:user)
-      group.save!
       group.add(member)
 
       owner = Fabricate(:user)
