@@ -384,11 +384,7 @@ class GroupsController < ApplicationController
       users.concat(found_users)
       if found_users.any?
         matched_emails =
-          UserEmail
-            .where(user_id: found_users.map(&:id))
-            .where("lower(email) IN (?)", email_list)
-            .pluck(:email)
-            .map(&:downcase)
+          UserEmail.where(user_id: found_users.map(&:id)).where(email: email_list).pluck(:email)
         emails = email_list - matched_emails
       else
         emails = email_list
