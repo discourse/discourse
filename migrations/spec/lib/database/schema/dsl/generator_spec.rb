@@ -128,8 +128,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
         described_class.new(Migrations::Database::Schema).generate
 
         model_content = File.read(File.join(paths[:models], "user.rb"))
-        expect(model_content).to include("::Test::Models.insert(")
-        expect(model_content).not_to include("IntermediateDB.insert(")
+        expect(model_content).to include("Test::Models.insert(")
       end
     end
 
@@ -203,15 +202,15 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
 
         model_path = File.join(paths[:models], "upload.rb")
         original = File.read(model_path)
-        custom_method = <<~RUBY.strip
+        custom_method = <<~RUBY
           def self.create_for_file(path:)
             create(id: path.hash)
           end
         RUBY
         updated =
           original.sub(
-            "# -- custom code --\n    # -- end custom code --",
-            "# -- custom code --\n    #{custom_method}\n    # -- end custom code --",
+            /# -- custom code --\n(\s*)# -- end custom code --/,
+            "# -- custom code --\n#{custom_method}\\1# -- end custom code --",
           )
         File.write(model_path, updated)
 

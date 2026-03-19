@@ -4,40 +4,44 @@
 # update the configuration files in "migrations/config/schema/" and then run
 # `migrations/bin/cli schema generate` to regenerate this file.
 
-module Migrations::Database::IntermediateDB
-  module BadgeGrouping
-    SQL = <<~SQL
-      INSERT INTO badge_groupings (
-        original_id,
-        created_at,
-        description,
-        name,
-        position
-      )
-      VALUES (
-        ?, ?, ?, ?, ?
-      )
-    SQL
-    private_constant :SQL
+module Migrations
+  module Database
+    module IntermediateDB
+      module BadgeGrouping
+        SQL = <<~SQL
+          INSERT INTO badge_groupings (
+            original_id,
+            created_at,
+            description,
+            name,
+            position
+          )
+          VALUES (
+            ?, ?, ?, ?, ?
+          )
+        SQL
+        private_constant :SQL
 
-    # Creates a new `badge_groupings` record in the IntermediateDB.
-    #
-    # @param original_id   [Integer, String]
-    # @param created_at    [Time, nil]
-    # @param description   [String, nil]
-    # @param name          [String]
-    # @param position      [Integer]
-    #
-    # @return [void]
-    def self.create(original_id:, created_at: nil, description: nil, name:, position:)
-      ::Migrations::Database::IntermediateDB.insert(
-        SQL,
-        original_id,
-        ::Migrations::Database.format_datetime(created_at),
-        description,
-        name,
-        position,
-      )
+        # Creates a new `badge_groupings` record in the IntermediateDB.
+        #
+        # @param original_id   [Integer, String]
+        # @param created_at    [Time, nil]
+        # @param description   [String, nil]
+        # @param name          [String]
+        # @param position      [Integer]
+        #
+        # @return [void]
+        def self.create(original_id:, created_at: nil, description: nil, name:, position:)
+          Migrations::Database::IntermediateDB.insert(
+            SQL,
+            original_id,
+            Migrations::Database.format_datetime(created_at),
+            description,
+            name,
+            position,
+          )
+        end
+      end
     end
   end
 end
