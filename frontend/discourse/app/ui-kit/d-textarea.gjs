@@ -63,6 +63,7 @@ const DTextarea = Component.extend({
     "spellcheck",
     "tabindex",
     "title",
+    "aria-label",
   ],
   rows: null,
   cols: null,

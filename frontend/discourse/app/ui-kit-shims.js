@@ -54,6 +54,9 @@ loaderShim("discourse/components/d-select", () =>
 loaderShim("discourse/components/d-stat-tiles", () =>
   importSync("discourse/ui-kit/d-stat-tiles")
 );
+loaderShim("discourse/components/d-textarea", () =>
+  importSync("discourse/ui-kit/d-textarea")
+);
 loaderShim("discourse/components/d-toggle-switch", () =>
   importSync("discourse/ui-kit/d-toggle-switch")
 );

@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import TextArea from "discourse/components/textarea";
+import TextArea from "discourse/components/d-textarea";
 import icon from "discourse/helpers/d-icon";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";

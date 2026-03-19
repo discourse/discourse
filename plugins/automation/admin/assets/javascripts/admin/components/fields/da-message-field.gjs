@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import TextArea from "discourse/components/textarea";
+import TextArea from "discourse/components/d-textarea";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
