@@ -5,6 +5,54 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    chat_integration_enabled: 'Engedélyezze a discourse-chat-integration bővítményt'
+    chat_integration_discourse_username: 'Azon felhasználó neve, akinek a nevében eljár a tartalom lekérésekor.'
+    chat_integration_delay_seconds: 'A bejegyzés létrehozása után a chat-értesítések küldése előtti várakozási idő másodpercben'
+    chat_integration_slack_username: "A Slackbe küldendő bot felhasználóneve"
+    chat_integration_slack_enabled: 'A Slack chat-integrációs szolgáltató engedélyezése'
+    chat_integration_slack_access_token: 'OAuth hozzáférési token a Slackkel való hitelesítéshez'
+    chat_integration_slack_incoming_webhook_token: 'A bejövő kérések hitelesítéséhez használt ellenőrző token'
+    chat_integration_slack_excerpt_length: 'Slack bejegyzésrészlet hossza'
+    chat_integration_slack_icon_url: 'Ikon, amellyel közzéteheted a Slackben (alapértelmezés szerint a fórum logója)'
+    chat_integration_slack_outbound_webhook_url: "A Slack „Bejövő webhook” rendszerének OAuth API helyett történő használatához. Nem ajánlott."
+    chat_integration_slack_transcript_quote: A Slack-átirat [quote] tagek közé kerüljön?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Meg kell adnia egy kimenő webhook URL-t vagy egy hozzáférési tokent"
+    chat_integration_telegram_enabled: "A Telegram chat-integrációs szolgáltató engedélyezése"
+    chat_integration_telegram_access_token: "A botod hozzáférési tokenje a Telegram botatyjától"
+    chat_integration_telegram_excerpt_length: "Telegram bejegyzésrészlet hossza"
+    chat_integration_telegram_enable_slash_commands: "Lehetővé teszi a telegram-előfizetések kezelését \"slash parancsok\" használatával"
+    chat_integration_discord_enabled: "Engedélyezd a Discord chat-integrációs szolgáltatót"
+    chat_integration_discord_message_content: "Az üzenet, amelyet az összefoglaló felett kell feltüntetni Discord-értesítés küldésekor"
+    chat_integration_discord_excerpt_length: "Discord bejegyzésrészlet hossza"
+    chat_integration_guilded_enabled: "Engedélyezze a Guilded chat-integrációs szolgáltatót"
+    chat_integration_guilded_excerpt_length: "Guilded bejegyzésrészlet hossza"
+    chat_integration_mattermost_enabled: "A Mattermost chat-integrációs szolgáltató engedélyezése"
+    chat_integration_mattermost_webhook_url: 'A Mattermost webhook URL-címe'
+    chat_integration_mattermost_incoming_webhook_token: 'A bejövő kérések hitelesítéséhez használt ellenőrző token'
+    chat_integration_mattermost_icon_url: "Ikon a Mattermostnak küldött bejegyzésekhez (alapértelmezés szerint a fórum logója)"
+    chat_integration_mattermost_excerpt_length: "Mattermost bejegyzésrészlet hossza"
+    chat_integration_matrix_enabled: "A Matrix chat integrációs szolgáltató engedélyezése"
+    chat_integration_matrix_homeserver: "Otthoni szerver a csatlakozáshoz. Ügyeljen rá, hogy a protokollt is tartalmazza."
+    chat_integration_matrix_access_token: "Hozzáférési token a bot Matrix fiókjához"
+    chat_integration_matrix_excerpt_length: "Mátrix bejegyzésrészlet hossza"
+    chat_integration_matrix_use_notice: "Értesítés használata egyszerű üzenet helyett"
+    chat_integration_zulip_enabled: "Zulip chatintegrációs szolgáltató engedélyezése"
+    chat_integration_zulip_server: "A Zulip szerver alap URL címe. Ügyeljen rá, hogy tartalmazza a http(s):// protokollt."
+    chat_integration_zulip_bot_email_address: "A Zulip botodhoz társított e-mail cím"
+    chat_integration_zulip_bot_api_key: "A Zulip bot API kulcsa"
+    chat_integration_zulip_excerpt_length: "Zulip bejegyzésrészlet hossza"
+    chat_integration_rocketchat_enabled: "Rocket Chat chatintegrációs szolgáltató engedélyezése"
+    chat_integration_rocketchat_webhook_url: "A Rocket Chat integrációs webhook URL címe"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat bejegyzésrészlet hossza"
+    chat_integration_gitter_enabled: "Gitter chatintegrációs szolgáltató engedélyezése"
+    chat_integration_flowdock_enabled: "Flowdock chat integrációs szolgáltató engedélyezése"
+    chat_integration_flowdock_excerpt_length: "Flowdock bejegyzésrészlet hossza"
+    chat_integration_groupme_enabled: "Groupme chat integrációs szolgáltató engedélyezése"
+    chat_integration_groupme_excerpt_length: "Groupme bejegyzésrészlet hossza"
+    chat_integration_groupme_bot_ids: "*kötelező* Botazonosítók, ',' karakterrel elválasztva, ha több van"
+    chat_integration_groupme_instance_names: " *kötelező* A GroupMe chat neve, ',' karakterrel elválasztva, ha több van (ugyanabban a sorrendben, mint a Bot ID-k)"
   chat_integration:
     all_categories: "(összes kategória)"
     topic_tag_changed:
