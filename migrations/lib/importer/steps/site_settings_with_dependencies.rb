@@ -5,7 +5,7 @@ module Migrations::Importer::Steps
     title "Importing site settings with dependencies"
 
     # TODO Add :emojis as dependency
-    depends_on :categories, :groups, :tags, :uploads, :users
+    depends_on :categories, :groups, :tags, :topics, :uploads, :users
 
     private
 
@@ -32,6 +32,8 @@ module Migrations::Importer::Steps
         value
       when Enums::SiteSettingDatatype::TAG_LIST
         value # TODO Map tag names
+      when Enums::SiteSettingDatatype::TOPIC
+        map_ids(setting_name, value, MappingType::TOPICS, "topic")
       when Enums::SiteSettingDatatype::UPLOAD
         map_ids(setting_name, value, MappingType::UPLOADS, "upload").to_i
       when Enums::SiteSettingDatatype::UPLOADED_IMAGE_LIST

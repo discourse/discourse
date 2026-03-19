@@ -49,6 +49,7 @@ module Migrations
     loader.inflector.inflect(
       {
         "cli" => "CLI",
+        "dsl" => "DSL",
         "id" => "ID",
         "discourse_db" => "DiscourseDB",
         "intermediate_db" => "IntermediateDB",

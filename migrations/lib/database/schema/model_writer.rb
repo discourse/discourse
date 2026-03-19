@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "rake"
-require "syntax_tree/rake_tasks"
-
 module Migrations::Database::Schema
   class ModelWriter
     def initialize(model_namespace, enum_namespace, header)
@@ -15,8 +12,8 @@ module Migrations::Database::Schema
       "#{table.name.singularize}.rb"
     end
 
-    def output_table(table, output_stream)
-      module_name = ::Migrations::Database::Schema.to_singular_classname(table.name)
+    def output_table(table, output_stream, custom_code: nil)
+      module_name = ::Migrations::Database::Schema::Helpers.to_singular_classname(table.name)
       columns = table.sorted_columns
 
       output_stream.puts "# frozen_string_literal: true"
@@ -35,11 +32,19 @@ module Migrations::Database::Schema
       output_stream.puts "    SQL"
       output_stream.puts "    private_constant :SQL"
       output_stream.puts
+
+      if table.model_mode == :extended
+        output_stream.puts "    # -- custom code --"
+        output_stream.puts custom_code if custom_code.present?
+        output_stream.puts "    # -- end custom code --"
+        output_stream.puts
+      end
+
       output_stream.puts method_documentation(table.name, columns)
       output_stream.puts "    def self.create("
       output_stream.puts method_parameters(columns)
       output_stream.puts "    )"
-      output_stream.puts "      ::Migrations::Database::IntermediateDB.insert("
+      output_stream.puts "      ::#{@model_namespace}.insert("
       output_stream.puts "        SQL,"
       output_stream.puts insertion_arguments(columns)
       output_stream.puts "      )"
@@ -80,47 +85,44 @@ module Migrations::Database::Schema
     end
 
     def method_documentation(table_name, columns)
-      max_column_name_length = columns.map { |c| c.name.length }.max
+      max_name_length = columns.map { |c| c.name.length }.max
+      see_references = []
 
-      documentation = +"    # Creates a new `#{table_name}` record in the IntermediateDB.\n"
-      documentation << "    #\n"
+      param_lines = columns.map { |c| param_line_for(c, max_name_length, see_references) }
 
-      param_documentation =
-        columns.map do |c|
-          param_name = c.name.ljust(max_column_name_length)
-          datatypes = datatypes_for_documentation(c)
-          "    # @param #{param_name}   [#{datatypes}]"
-        end
+      lines = [
+        "    # Creates a new `#{table_name}` record in the #{Helpers.db_label(@model_namespace)}.",
+        "    #",
+        *param_lines,
+        "    #",
+        "    # @return [void]",
+      ]
 
-      max_line_length = param_documentation.map(&:length).max
-      see_documenation = []
-
-      columns.each_with_index do |column, index|
-        if (enum = column.enum)
-          enum_module_name = ::Migrations::Database::Schema.to_singular_classname(enum.name)
-          enum_value_names = enum.values.sort_by { |_k, v| v }.map(&:first)
-          first_const_name = ::Migrations::Database::Schema.to_const_name(enum_value_names.first)
-
-          enum_documentation =
-            "    #   Any constant from #{enum_module_name} (e.g. #{enum_module_name}::#{first_const_name})"
-
-          line = param_documentation[index].ljust(max_line_length)
-          param_documentation[index] = "#{line}\n#{enum_documentation}"
-
-          see_documenation << "#{@enum_namespace}::#{enum_module_name}"
-        end
+      if see_references.any?
+        lines << "    #"
+        lines.concat(see_references.map { |ref| "    # @see #{ref}" })
       end
 
-      documentation << param_documentation.join("\n")
-      documentation << "\n    #\n"
-      documentation << "    # @return [void]"
+      lines.join("\n")
+    end
 
-      if see_documenation.any?
-        documentation << "\n    #\n"
-        documentation << see_documenation.map { |see| "    # @see #{see}" }.join("\n")
+    def param_line_for(column, max_name_length, see_references)
+      param_name = column.name.ljust(max_name_length)
+      datatypes = datatypes_for_documentation(column)
+      line = +"    # @param #{param_name}   [#{datatypes}]"
+
+      if (enum = column.enum)
+        module_name = ::Migrations::Database::Schema::Helpers.to_singular_classname(enum.name)
+        first_const =
+          ::Migrations::Database::Schema::Helpers.to_const_name(
+            enum.values.min_by { |_k, v| v }.first,
+          )
+
+        line << "\n    #   Any constant from #{module_name} (e.g. #{module_name}::#{first_const})"
+        see_references << "#{@enum_namespace}::#{module_name}"
       end
 
-      documentation
+      line
     end
 
     def datatypes_for_documentation(column)
@@ -191,7 +193,7 @@ module Migrations::Database::Schema
     end
 
     def escape_identifier(identifier)
-      ::Migrations::Database::Schema.escape_identifier(identifier)
+      ::Migrations::Database::Schema::Helpers.escape_identifier(identifier)
     end
   end
 end
