@@ -533,4 +533,144 @@ RSpec.describe "tasks/version_bump" do
       end
     end
   end
+
+  describe "release:update_security_advisories" do
+    subject(:run_task) do
+      Dir.chdir(local_path) do
+        capture_stdout { invoke_rake_task("release:update_security_advisories") }
+      end
+    end
+
+    let(:draft_advisories) do
+      [
+        { "ghsa_id" => "GHSA-1234-5678-9abc", "state" => "draft", "summary" => "Security issue 1" },
+        { "ghsa_id" => "GHSA-abcd-efgh-ijkl", "state" => "draft", "summary" => "Security issue 2" },
+      ]
+    end
+
+    let(:gh_api_response) { JSON.generate([draft_advisories]) }
+    let(:updated_advisories) { [] }
+
+    before do
+      allow(ReleaseUtils).to receive(:gh) do |*args, **kwargs|
+        if args[0..3] ==
+             %w[api repos/discourse/discourse/security-advisories?state=draft --paginate --slurp]
+          gh_api_response
+        elsif args[0] == "api" && args[1].match?(%r{security-advisories/GHSA-}) &&
+              args[2] == "--method"
+          updated_advisories << JSON.parse(kwargs[:input])
+          "{}"
+        else
+          true
+        end
+      end
+
+      Dir.chdir(origin_path) do
+        git "checkout", "-b", "release/2025.5"
+        File.write("lib/version.rb", fake_version_rb("2025.5.2"))
+        git "add", "lib/version.rb"
+        git "commit", "-m", "version 2025.5.2"
+
+        git "checkout", "-b", "release/2025.6"
+        File.write("lib/version.rb", fake_version_rb("2025.6.0"))
+        git "add", "lib/version.rb"
+        git "commit", "-m", "version 2025.6.0"
+
+        git "checkout", "main"
+      end
+
+      update_versions_json(
+        {
+          "2025.5" => {
+            "released" => true,
+            "supported" => true,
+          },
+          "2025.6" => {
+            "released" => true,
+            "supported" => true,
+          },
+          "2025.12" => {
+            "released" => false,
+            "supported" => true,
+          },
+        },
+      )
+    end
+
+    context "when choosing intermediate release for latest" do
+      before do
+        prompt = instance_double(TTY::Prompt)
+        allow(TTY::Prompt).to receive(:new).and_return(prompt)
+        allow(prompt).to receive(:select).and_return(:intermediate)
+      end
+
+      it "updates advisories with correct patched versions" do
+        run_task
+
+        expect(updated_advisories.size).to eq(2)
+
+        vulnerabilities = updated_advisories.first["vulnerabilities"]
+        expect(vulnerabilities.size).to eq(3)
+
+        expect(vulnerabilities[0]).to include(
+          "vulnerable_version_range" => ">= 0",
+          "patched_versions" => "2025.5.3",
+        )
+        expect(vulnerabilities[1]).to include(
+          "vulnerable_version_range" => ">= 2025.6.0-latest",
+          "patched_versions" => "2025.6.1",
+        )
+        expect(vulnerabilities[2]).to include(
+          "vulnerable_version_range" => ">= 2025.12.0-latest",
+          "patched_versions" => "2025.12.0-latest.1",
+        )
+      end
+    end
+
+    context "when choosing monthly release for latest" do
+      before do
+        prompt = instance_double(TTY::Prompt)
+        allow(TTY::Prompt).to receive(:new).and_return(prompt)
+        allow(prompt).to receive(:select).and_return(:monthly)
+      end
+
+      it "uses the current patch version for latest" do
+        run_task
+
+        vulnerabilities = updated_advisories.first["vulnerabilities"]
+        expect(vulnerabilities[2]).to include(
+          "vulnerable_version_range" => ">= 2025.12.0-latest",
+          "patched_versions" => "2025.12.0",
+        )
+      end
+    end
+
+    context "when there are no draft advisories" do
+      let(:gh_api_response) { JSON.generate([[]]) }
+
+      it "outputs a message and does nothing" do
+        output = run_task
+        expect(output).to include("No draft advisories to update")
+        expect(updated_advisories).to be_empty
+      end
+    end
+
+    context "when advisories have DRAFT summary prefix" do
+      let(:draft_advisories) do
+        [
+          {
+            "ghsa_id" => "GHSA-1234-5678-9abc",
+            "state" => "draft",
+            "summary" => "DRAFT - placeholder",
+          },
+        ]
+      end
+
+      it "skips advisories with DRAFT summary prefix" do
+        output = run_task
+        expect(output).to include("No draft advisories to update")
+        expect(updated_advisories).to be_empty
+      end
+    end
+  end
 end
