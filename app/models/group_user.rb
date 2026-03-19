@@ -217,9 +217,7 @@ class GroupUser < ActiveRecord::Base
       DB.exec(
         <<~SQL,
           INSERT INTO category_users (user_id, category_id, notification_level)
-          SELECT id, :category_id, :notification_level
-          FROM users
-          WHERE id IN (:user_ids)
+          SELECT unnest(ARRAY[:user_ids]::int[]), :category_id, :notification_level
           ON CONFLICT (user_id, category_id) DO UPDATE
             SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "category_users.notification_level")}
         SQL
@@ -241,9 +239,7 @@ class GroupUser < ActiveRecord::Base
       DB.exec(
         <<~SQL,
           INSERT INTO tag_users (user_id, tag_id, notification_level, created_at, updated_at)
-          SELECT id, :tag_id, :notification_level, NOW(), NOW()
-          FROM users
-          WHERE id IN (:user_ids)
+          SELECT unnest(ARRAY[:user_ids]::int[]), :tag_id, :notification_level, NOW(), NOW()
           ON CONFLICT (user_id, tag_id) DO UPDATE
             SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "tag_users.notification_level")},
                 updated_at = NOW()
