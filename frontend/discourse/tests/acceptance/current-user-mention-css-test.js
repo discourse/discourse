@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Current User Mention CSS", function (needs) {
-  needs.user({ username: "EvilTrout" });
+  needs.user({ username: "eviltrout" });
 
   test("css uses case-insensitive matching for current user mentions", async function (assert) {
     await visit("/");
@@ -11,7 +11,7 @@ acceptance("Current User Mention CSS", function (needs) {
     assert
       .dom(cssTag)
       .hasText(
-        `.mention[href="/u/EvilTrout" i] { background: var(--tertiary-400); }`
+        `.mention[href="/u/eviltrout" i] { background: var(--tertiary-400); }`
       );
   });
 });
