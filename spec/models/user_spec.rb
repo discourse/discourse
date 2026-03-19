@@ -635,6 +635,18 @@ RSpec.describe User do
       posts.each { |p| expect(Topic.find_by(id: p.topic_id)).to be_nil if p.is_first_post? }
     end
 
+    it "deletes reviewables that have notes" do
+      reviewable = Fabricate(:reviewable_queued_post, created_by: user)
+      Fabricate(:reviewable_note, reviewable: reviewable)
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(Post.where(id: post_ids)).to be_empty
+      expect(Reviewable.where(created_by: user).count).to eq(0)
+      expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
+    end
+
     it "does not allow non moderators to delete all posts" do
       invalid_guardian = Guardian.new(Fabricate(:user))
 
