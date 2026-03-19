@@ -153,7 +153,7 @@ importers:
         version: 4.1.0
       core-js:
         specifier: ^3.48.0
-        version: 3.48.0
+        version: 3.49.0
       decorator-transforms:
         specifier: ^2.3.1
         version: 2.3.1(@babel/core@7.29.0)
@@ -4559,9 +4559,6 @@ packages:
   core-js@2.6.12:
     resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
     deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
-
-  core-js@3.48.0:
-    resolution: {integrity: sha512-zpEHTy1fjTMZCKLHUZoVeylt9XrzaIN2rbPXEt0k+q7JE5CkCZdo6bNq55bn24a69CH7ErAVLKijxJja4fw+UQ==}
 
   core-js@3.49.0:
     resolution: {integrity: sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==}
@@ -13819,8 +13816,6 @@ snapshots:
       browserslist: 4.28.1
 
   core-js@2.6.12: {}
-
-  core-js@3.48.0: {}
 
   core-js@3.49.0: {}
 
