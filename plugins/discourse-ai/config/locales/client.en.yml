@@ -508,6 +508,10 @@ en:
 
       ai_agent:
         ai_tools: "Tools"
+        mcp_servers: "MCP servers"
+        mcp_server_tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
         tool_strategies:
           all: "Apply to all replies"
           replies:
@@ -575,6 +579,10 @@ en:
           one: "%{count} tool"
           other: "%{count} tools"
         tool_tokens_total: "~%{tokens} Tokens"
+        mcp_server_cost_name: "%{name} (MCP server)"
+        mcp_server_cost_value:
+          one: "~%{tokens} tokens, %{count} tool"
+          other: "~%{tokens} tokens, %{count} tools"
         tool_severity_medium: "Moderate capacity"
         tool_severity_high: "High capacity"
         tool_severity_too_many: "Too many tools"
@@ -659,6 +667,7 @@ en:
       tools:
         back: "Back to tools"
         short_title: "Tools"
+        script_tools: "Script tools"
         export: "Export"
         import: "Import"
         import_error_conflict: "Tool already exists, would you like to update it?"
@@ -726,8 +735,79 @@ en:
         embedding: "Embedding"
         cannot_delete_in_use: "This credential cannot be deleted because it is in use by:"
         tool: "Tool"
+        mcp_server: "MCP server"
+        mcp_server_oauth_client_secret: "MCP server OAuth client secret"
         modal:
           title: "Create new credential"
+
+      mcp_servers:
+        short_title: "MCP servers"
+        new: "New MCP server"
+        name: "Name"
+        description: "Description"
+        url: "URL"
+        auth_type: "Authentication"
+        auth_types:
+          none: "No authentication"
+          header_secret: "Header credential"
+          oauth: "OAuth"
+        secret: "Credential"
+        auth_header: "Auth header"
+        auth_scheme: "Auth scheme"
+        oauth_client_registration: "OAuth client registration"
+        oauth_client_registration_types:
+          client_metadata_document: "Client metadata document"
+          manual: "Manual client credentials"
+        oauth_client_id: "OAuth client ID"
+        oauth_client_secret: "OAuth client secret"
+        oauth_scopes: "OAuth scopes"
+        oauth_connection: "OAuth connection"
+        oauth_status: "OAuth status"
+        oauth_statuses:
+          disconnected: "Disconnected"
+          connected: "Connected"
+          refresh_failed: "Refresh failed"
+          error: "Needs attention"
+        oauth_connect: "Connect"
+        oauth_reconnect: "Reconnect"
+        oauth_disconnect: "Disconnect"
+        oauth_connect_help: "Use Connect to save the server and authorize it."
+        oauth_client_metadata_url: "Client metadata URL"
+        oauth_granted_scopes: "Granted scopes"
+        oauth_access_token_expires_at: "Access token expires at"
+        oauth_authorization_endpoint: "Authorization endpoint"
+        oauth_token_endpoint: "Token endpoint"
+        oauth_revocation_endpoint: "Revocation endpoint"
+        oauth_issuer: "Issuer"
+        oauth_last_error: "Last OAuth error"
+        timeout_seconds: "Request timeout (seconds)"
+        timeout_seconds_tooltip: "How long Discourse waits for the MCP server before the request fails. Keep 30 unless the server is consistently slow."
+        enabled: "Enabled"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        test: "Test connection"
+        saved: "MCP server saved"
+        confirm_delete: "Are you sure you want to delete this MCP server?"
+        back: "Back to tools"
+        health: "Health"
+        healthy: "Healthy"
+        unhealthy: "Needs attention"
+        tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        tools_modal:
+          title: "%{name} tools"
+          summary:
+            one: "This server currently exposes %{count} tool."
+            other: "This server currently exposes %{count} tools."
+          parameters: "Parameters"
+          required: "Required"
+          no_parameters: "This tool does not require any parameters."
+        test_result: "Connection result"
+        test_summary:
+          one: "Discovered %{count} tool using protocol %{version}."
+          other: "Discovered %{count} tools using protocol %{version}."
 
       llms:
         short_title: "LLMs"
