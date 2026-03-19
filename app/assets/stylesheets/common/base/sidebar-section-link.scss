@@ -24,6 +24,7 @@
 
     .prefix-text {
       background: var(--d-sidebar-highlight-prefix-background);
+      color: var(--d-sidebar-highlight-prefix-color);
     }
 
     .sidebar-section-link-suffix.icon.unread svg {
@@ -47,6 +48,7 @@
 
       .prefix-text {
         background: var(--d-sidebar-highlight-prefix-background);
+        color: var(--d-sidebar-highlight-prefix-color);
       }
 
       .sidebar-section-link-suffix.icon.unread svg {
@@ -270,12 +272,18 @@
       .discourse-no-touch & {
         &:hover {
           color: var(--d-sidebar-highlight-color);
+          background: var(--d-sidebar-highlight-hover-background);
+
+          svg {
+            color: var(--d-sidebar-active-icon-color);
+          }
         }
       }
 
       svg {
         font-size: var(--font-down-1);
         margin: 0;
+        color: var(--d-sidebar-highlight-color);
       }
     }
   }
