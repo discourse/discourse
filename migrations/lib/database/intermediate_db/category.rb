@@ -49,6 +49,7 @@ module Migrations::Database::IntermediateDB
         topic_featured_link_allowed,
         topic_id,
         topic_template,
+        topic_title_placeholder,
         uploaded_background_dark_id,
         uploaded_background_id,
         uploaded_logo_dark_id,
@@ -57,7 +58,7 @@ module Migrations::Database::IntermediateDB
       )
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
@@ -105,6 +106,7 @@ module Migrations::Database::IntermediateDB
     # @param topic_featured_link_allowed                 [Boolean, nil]
     # @param topic_id                                    [Integer, String, nil]
     # @param topic_template                              [String, nil]
+    # @param topic_title_placeholder                     [String, nil]
     # @param uploaded_background_dark_id                 [String, nil]
     # @param uploaded_background_id                      [String, nil]
     # @param uploaded_logo_dark_id                       [String, nil]
@@ -154,6 +156,7 @@ module Migrations::Database::IntermediateDB
       topic_featured_link_allowed: nil,
       topic_id: nil,
       topic_template: nil,
+      topic_title_placeholder: nil,
       uploaded_background_dark_id: nil,
       uploaded_background_id: nil,
       uploaded_logo_dark_id: nil,
@@ -203,6 +206,7 @@ module Migrations::Database::IntermediateDB
         ::Migrations::Database.format_boolean(topic_featured_link_allowed),
         topic_id,
         topic_template,
+        topic_title_placeholder,
         uploaded_background_dark_id,
         uploaded_background_id,
         uploaded_logo_dark_id,
