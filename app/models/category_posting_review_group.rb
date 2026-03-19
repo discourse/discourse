@@ -6,21 +6,9 @@ class CategoryPostingReviewGroup < ActiveRecord::Base
 
   validates :category, presence: true
   validates :group, presence: true
-  validate :only_everyone_group_with_required_permission
 
   enum :post_type, { topic: 0, reply: 1 }
   enum :permission, { exempt: 0, required: 1 }
-
-  private
-
-  def only_everyone_group_with_required_permission
-    if group_id != Group::AUTO_GROUPS[:everyone]
-      errors.add(
-        :base,
-        "Group-based approval permissions for specific groups are not supported yet",
-      )
-    end
-  end
 end
 
 # == Schema Information

@@ -372,4 +372,102 @@ RSpec.describe TopicGuardian do
       end
     end
   end
+
+  describe "#post_needs_approval_in_category?" do
+    fab!(:exempt_group, :group)
+
+    it "returns false for category group moderator" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category:, group:)
+      group.add(user)
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group_id: Group::AUTO_GROUPS[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns false when no rules exist" do
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns true when user is in the everyone required group" do
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group_id: Group::AUTO_GROUPS[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(true)
+    end
+
+    it "returns true when user is in a required specific group" do
+      group.add(user)
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: group,
+        post_type: :topic,
+        permission: :required,
+      )
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(true)
+    end
+
+    it "returns false when user is in a required group AND an exempt group (exempt wins)" do
+      group.add(user)
+      exempt_group.add(user)
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: group,
+        post_type: :topic,
+        permission: :required,
+      )
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: exempt_group,
+        post_type: :topic,
+        permission: :exempt,
+      )
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns false when user is in an exempt group but not in any required group" do
+      group.add(user)
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: group,
+        post_type: :topic,
+        permission: :exempt,
+      )
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+
+    it "returns true when everyone is required and user is not in any exempt group" do
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group_id: Group::AUTO_GROUPS[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(true)
+    end
+
+    it "returns false when everyone is required but user's specific group is exempt" do
+      group.add(user)
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group_id: Group::AUTO_GROUPS[:everyone],
+        post_type: :topic,
+        permission: :required,
+      )
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: group,
+        post_type: :topic,
+        permission: :exempt,
+      )
+      expect(Guardian.new(user).post_needs_approval_in_category?(category, :topic)).to eq(false)
+    end
+  end
 end

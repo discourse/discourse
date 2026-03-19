@@ -14,6 +14,25 @@ module TopicGuardian
     is_category_group_moderator?(topic.category)
   end
 
+  def post_needs_approval_in_category?(category, post_type)
+    return false if is_category_group_moderator?(category)
+
+    rules =
+      CategoryPostingReviewGroup.where(category: category, post_type: post_type).pluck(
+        :group_id,
+        :permission,
+      )
+    return false if rules.empty?
+
+    exempt_group_ids =
+      rules.filter_map { |group_id, permission| group_id if permission == "exempt" }
+    return false if exempt_group_ids.present? && @user.in_any_groups?(exempt_group_ids)
+
+    required_group_ids =
+      rules.filter_map { |group_id, permission| group_id if permission == "required" }
+    required_group_ids.present? && @user.in_any_groups?(required_group_ids)
+  end
+
   def can_moderate_topic?(topic)
     return false if anonymous? || topic.nil?
     return true if is_staff?

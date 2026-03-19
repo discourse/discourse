@@ -47,9 +47,11 @@ class CategorySetting < ActiveRecord::Base
       where(
         id: ids,
         category_id:
-          CategoryPostingReviewGroup.where(post_type: post_type, permission: :required).select(
-            :category_id,
-          ),
+          CategoryPostingReviewGroup.where(
+            post_type: post_type,
+            permission: :required,
+            group_id: Group::AUTO_GROUPS[:everyone],
+          ).select(:category_id),
       ).pluck(:id).to_set
 
     ids.index_with { |id| approved_ids.include?(id) }

@@ -667,6 +667,68 @@ RSpec.describe NewPostManager do
     end
   end
 
+  context "with per-group approval rules" do
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:category)
+    fab!(:approval_group, :group)
+
+    before do
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: approval_group,
+        post_type: :topic,
+        permission: :required,
+      )
+    end
+
+    it "enqueues the post when user is in a required group" do
+      approval_group.add(user)
+      manager =
+        NewPostManager.new(
+          user,
+          raw: "this is a new topic",
+          title: "Let's start a new topic!",
+          category: category.id,
+        )
+      result = manager.perform
+      expect(result.action).to eq(:enqueued)
+      expect(result.reason).to eq(:category)
+    end
+
+    it "does not enqueue the post when user is not in any approval group" do
+      manager =
+        NewPostManager.new(
+          user,
+          raw: "this is a new topic",
+          title: "Let's start a new topic!",
+          category: category.id,
+        )
+      result = manager.perform
+      expect(result.action).to eq(:create_post)
+    end
+
+    it "does not enqueue the post when user is in an exempt group" do
+      exempt_group = Fabricate(:group)
+      CategoryPostingReviewGroup.create!(
+        category: category,
+        group: exempt_group,
+        post_type: :topic,
+        permission: :exempt,
+      )
+      approval_group.add(user)
+      exempt_group.add(user)
+      manager =
+        NewPostManager.new(
+          user,
+          raw: "this is a new topic",
+          title: "Let's start a new topic!",
+          category: category.id,
+        )
+      result = manager.perform
+      expect(result.action).to eq(:create_post)
+    end
+  end
+
   describe "via email" do
     let(:manager) do
       NewPostManager.new(
