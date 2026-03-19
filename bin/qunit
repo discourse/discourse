@@ -480,7 +480,12 @@ class QunitRunner
       return
     end
 
-    system("script/assemble_ember_build.rb", chdir: rails_root, exception: true)
+    system(
+      { "LOAD_PLUGINS" => should_load_plugins? ? "1" : "0" },
+      "script/assemble_ember_build.rb",
+      chdir: rails_root,
+      exception: true,
+    )
   end
 
   def build_theme_test_pages(query)
