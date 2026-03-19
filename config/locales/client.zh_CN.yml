@@ -5302,8 +5302,7 @@ zh_CN:
         group_traffic: "流量"
         group_members: "成员"
         group_content: "内容与健康"
-        group_moderation: "审核"
-        group_security: "安全性"
+        group_moderation_and_security: "审核与安全"
         group_other: "其他"
         legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系支持团队。"
       config_sections:

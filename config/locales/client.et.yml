@@ -2739,8 +2739,6 @@ et:
       reports:
         group_traffic: "Liiklus"
         group_members: "Liikmed"
-        group_moderation: "Modereerimine"
-        group_security: "Turve"
         group_other: "Muu"
       config_sections:
         account:

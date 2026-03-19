@@ -3814,8 +3814,6 @@ hy:
         sidebar_title: "Հաշվետվություններ"
         group_traffic: "Այցելությունները"
         group_members: "Անդամներ"
-        group_moderation: "Մոդերացիա"
-        group_security: "Անվտանգություն"
         group_other: "Այլ"
       config_sections:
         account:

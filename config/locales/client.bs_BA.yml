@@ -3164,8 +3164,6 @@ bs_BA:
         sidebar_title: "Izvještaji"
         group_traffic: "Promet"
         group_members: "Članovi"
-        group_moderation: "Moderacija"
-        group_security: "Security"
         group_other: "Other"
       config_sections:
         account:

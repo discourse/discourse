@@ -4862,8 +4862,6 @@ fa_IR:
         back: "بازگشت به همه گزارش‌ها"
         group_traffic: "ترافیک"
         group_members: "اعضاء"
-        group_moderation: "نظارت"
-        group_security: "امنیت"
         group_other: "دیگر"
       config_sections:
         account:

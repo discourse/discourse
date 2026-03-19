@@ -4655,8 +4655,6 @@ zh_TW:
         back: "返回到所有報告"
         group_traffic: "流量"
         group_members: "成員"
-        group_moderation: "管理"
-        group_security: "安全性"
         group_other: "其他"
       config_sections:
         account:

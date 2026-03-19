@@ -6009,8 +6009,6 @@ cs:
         back: "Zpět na všechny sestavy"
         group_traffic: "Provoz"
         group_members: "Členové"
-        group_moderation: "Moderování"
-        group_security: "Zabezpečení"
         group_other: "Ostatní"
       config_sections:
         account:

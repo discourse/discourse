@@ -30,6 +30,9 @@ tr_TR:
       ai_tool_action:
         title: Yapay Zeka aracı eylemi
         description: Otomasyon tetiklendiğinde bir AI aracını çalıştırın
+      llm_agent_triage:
+        title: AI Ajan kullanarak gönderileri önceliklendirme
+        description: "Belirli bir yapay zeka ajanı kullanarak gönderilere yanıt verin"
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
@@ -93,6 +96,8 @@ tr_TR:
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
     ai_helper_enabled_features: "YZ yardımcıda etkinleştirilecek özellikleri seçin."
     post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcı özelliklerine erişmesine izin verilen kullanıcı grupları"
+    ai_helper_post_illustrator_agent: "AI yardımcısının \"gönderiyi görselleştir\" özelliği için kullanılacak araç. Not: Bu özelliğin çalışması için ayrıca bir görsel oluşturma aracı oluşturmanız gerekir (Yönetici > Eklentiler > Discourse AI > Araçlar)."
+    ai_helper_chat_thread_title_agent: "Sohbet başlıklarını oluşturmak için kullanılacak işleyici."
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
     ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
     ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
@@ -106,6 +111,7 @@ tr_TR:
     ai_embeddings_semantic_related_age_time_scale: "Yaş cezası hesaplaması için gün cinsinden zaman ölçeği. Bu kadar gün boyunca etkin olmayan konular, ceza=1,0 ile ~%50 ceza alır. Yıllık ölçek için 365, üç aylık ölçek için 90 kullanın."
     ai_embeddings_per_post_enabled: Her gönderi için yerleştirmeler oluşturun
     ai_summarization_enabled: "Özetleme özelliğini etkinleştirin"
+    ai_summarization_agent: "Özetleme özelliği için kullanılacak aracı"
     ai_pm_summarization_allowed_groups: "Kişisel mesajlarda özet oluşturma ve görüntüleme yetkisi olan gruplar."
     ai_summary_gists_enabled: "Konulardaki son yanıtların kısa özetlerini otomatik olarak oluşturun"
     ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
@@ -119,12 +125,14 @@ tr_TR:
     ai_bot_add_to_community_section: "Kenar çubuğundaki topluluk bölümünde, AI Bot ile özel mesajlaşmaya başlamak için bir bağlantı gösterin."
     ai_bot_github_access_token: "GitHub AI araçlarıyla kullanım için GitHub erişim token'ı (arama desteği için gereklidir)"
     ai_discover_enabled: "Keşif arama özelliğini etkinleştir"
+    ai_discover_agent: "Keşif arama özelliği için kullanılacak aracı"
     ai_google_custom_search_api_key: "Google Özel Arama API'sı için API anahtarı bkz.: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google Özel Arama API'sı için CX"
     ai_discord_search_enabled: "Discord arama özelliğini etkinleştirir"
     ai_discord_app_id: "Discord aramasını bağlamak istediğiniz Discord uygulamasının kimliği"
     ai_discord_app_public_key: "Discord aramasını bağlamak istediğiniz Discord uygulamasının herkese açık anahtarı"
     ai_discord_search_mode: "Discord araması için kullanılacak arama modunu seçin"
+    ai_discord_search_agent: "Discord aramalarında kullanılacak aracı."
     ai_discord_allowed_guilds: "Botun arama yapmasına izin verilen Discord loncaları (sunucular)"
     ai_translation_enabled: "AI çeviri özelliğini etkinleştirin"
     ai_translation_backfill_limit_to_public_content: "Etkinleştirildiğinde, yalnızca herkese açık kategorilerdeki içerikler çevrilir. Devre dışı bırakıldığında, grup kişisel mesajları ve özel kategorilerdeki içerikler de çeviri için gönderilir."
@@ -290,6 +298,8 @@ tr_TR:
     ai_helper:
       errors:
         completion_request_failed: "Öneriler sunulmaya çalışılırken bir şeyler ters gitti. Lütfen tekrar deneyin."
+        no_illustrator_agent: "Post Illustrator ajanı yapılandırılmamış. Lütfen site ayarlarınızı kontrol edin."
+        no_image_generation_tool: "Post Illustrator ajanı için bir görüntü oluşturma aracı eklenmiş olmalıdır. Lütfen yönetici panelinden bu ajan için bir görüntü oluşturma aracı yapılandırın."
         no_image_generated: "Görüntü oluşturulamadı. Lütfen tekrar deneyin veya araç yapılandırmanızı kontrol edin."
         llm_model_not_configured: "Görüntü oluşturma için herhangi bir dil modeli yapılandırılmamıştır. Lütfen site ayarlarınızda varsayılan bir dil modeli yapılandırın."
         unknown_error: "Küçük resimler oluşturulurken beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
@@ -327,8 +337,11 @@ tr_TR:
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"
+      tool_pending_approval: "Bu işlemin gerçekleştirilebilmesi için moderatör onayı gereklidir."
       agents:
         default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
+        cannot_delete_system_agent: "Sistem aracıları silinemez; bunun yerine lütfen devre dışı bırakın"
+        cannot_edit_system_agent: "Sistem öğelerinin yalnızca adı değiştirilebilir; araçları veya sistem komut satırını düzenleyemezsiniz; bunun yerine bunları devre dışı bırakıp bir kopyasını oluşturabilirsiniz"
         cannot_have_duplicate_tools: "Eş kopya araçlara sahip olunamaz"
         github_helper:
           name: "GitHub Yardımcısı"
@@ -368,8 +381,10 @@ tr_TR:
           description: "Etkileşimli web artifact'leri oluşturma konusunda uzmanlaşmış YZ Bot"
         summarizer:
           name: "Özetleyici"
+          description: "AI özetlerini oluşturmak için kullanılan varsayılan aracı"
         short_summarizer:
           name: "Özetleyici (kısa form)"
+          description: "Konu listelerindeki öğeler için yapay zeka ile oluşturulan kısa özetleri desteklemek üzere kullanılan varsayılan aracı"
         concept_finder:
           name: "Konsept Bulucu"
           description: "İçerikteki kavram ve temaları belirleme konusunda uzmanlaşmış YZ Botu"
@@ -381,23 +396,31 @@ tr_TR:
           description: "Kavramların tekilleştirilmesini önleme konusunda uzmanlaşmış YZ Botu"
         custom_prompt:
           name: "Özel istem"
+          description: "Yardımcı'nın özel komut istemi özelliğini destekleyen varsayılan aracı"
         smart_dates:
           name: "Akıllı tarihler"
+          description: "Yardımcı'nın akıllı tarih özelliğini destekleyen varsayılan aracı"
         markdown_table_generator:
           name: "Markdown tablo oluşturucu"
+          description: "Yardımcı'nın Markdown tablosu oluşturma özelliğini destekleyen varsayılan işleyici"
         post_illustrator:
           name: "Gönderi illüstratörü"
           description: "Mevcut görüntü oluşturma araçlarını kullanarak gönderileri açıklamak için görüntüler oluşturur."
         proofreader:
           name: "Düzeltmen"
+          description: "Yardımcı'nın metin düzeltme özelliğini destekleyen varsayılan aracı"
         titles_generator:
           name: "Başlık oluşturucu"
+          description: "Yardımcının konu başlığı önerme özelliğini destekleyen varsayılan aracı"
         tutor:
           name: "Öğretmen"
+          description: "Yardımcının açıklama özelliğini çalıştıran varsayılan aracı"
         translator:
           name: "Çevirmen"
+          description: "Yardımcının çevirici özelliğini çalıştıran varsayılan aracı"
         image_captioner:
           name: "Görüntü yazıları"
+          description: "Yardımcının resim açıklaması özelliğini destekleyen varsayılan aracı"
         locale_detector:
           name: "Yerel ayar dedektörü"
           description: "Belirli bir metnin (yazılar, başlıklar vb.) yerel ayarlarını algılayarak çeviri özelliğini güçlendirir."
@@ -412,14 +435,19 @@ tr_TR:
           description: "Kategori adları veya etiketler gibi kısa metinler için kullanılan genel bir metin çevirmeni olarak çeviri özelliğini destekler"
         spam_detector:
           name: "Spam dedektörü"
+          description: "Spam algılama özelliğimizi destekleyen varsayılan ajanı"
         content_creator:
           name: "İçerik oluşturucu"
+          description: "HyDE aramasını destekleyen varsayılan aracı"
         report_runner:
           name: "Rapor çalıştırıcı"
+          description: "Rapor otomasyon komut dosyasında kullanılan varsayılan aracı"
         discover:
           name: "Keşfet"
+          description: "Keşif özelliğinde (ücretsiz arama) kullanılan varsayılan aracı"
         chat_thread_titler:
           name: "Sohbet Konu Başlığı"
+          description: "Otomatik sohbet başlığı oluşturma işlevini sağlayan varsayılan aracı"
       topic_not_found: "Özet mevcut değil, konu bulunamadı!"
       summarizing: "Konu özetleniyor"
       searching: "Aranıyor: \"%{query}\""
@@ -427,6 +455,7 @@ tr_TR:
         researcher:
           researcher_llm:
             name: "LLM"
+            description: "Araştırma için kullanılacak dil modeli (varsayılan olarak mevcut ajanın LLM'si)"
           max_tokens_per_batch:
             name: "Seri başına maksimum token sayısı"
             description: "Araştırmada her seri için kullanılacak maksimum token sayısı"
@@ -498,6 +527,8 @@ tr_TR:
         set_slow_mode: "Yavaş modu ayarla"
         move_posts: "Gönderileri taşı"
         grant_badge: "Rozet ver"
+        assign: "Konu Ata"
+        mark_as_solved: "Çözüldü olarak işaretle"
         search: "Ara"
         tags: "Etiketleri listele"
         time: "Saat"
@@ -527,7 +558,19 @@ tr_TR:
         random_picker: "Rastgele bir sayı veya listenin rastgele bir ögesini seçin"
         categories: "Forumdaki herkese açık tüm kategorileri listeleyin"
         flag_post: "Mevcut gönderiyi personel incelemesi için işaretle"
+        close_topic: "Bir konuyu kapat veya aç"
+        unlist_topic: "Bir konuyu listeye ekle veya listeden çıkar"
+        lock_post: "Bir gönderiyi kilitle veya kilidini aç"
         delete_topic: "Bir konu silin"
+        edit_post: "Bir gönderinin içeriğini düzenle"
+        edit_tags: "Bir konudaki etiketleri düzenle"
+        edit_category: "Bir konuyu başka bir kategoriye taşı"
+        set_topic_timer: "Bir konuyu kapatmak, açmak, silmek veya öne çıkarmak için zamanlayıcı ayarla"
+        set_slow_mode: "Bir konuda yavaş modu etkinleştirme veya devre dışı bırakma"
+        move_posts: "Gönderileri yeni veya mevcut bir konuya taşı"
+        grant_badge: "Bir kullanıcıya rozet ver"
+        assign: "Bir kullanıcıya veya gruba konu atama veya atamayı kaldırma"
+        mark_as_solved: "Bir gönderiyi kabul edilen çözüm olarak işaretle veya işaretini kaldır"
         search: "Forumdaki tüm herkese açık konuları arayın"
         tags: "Forumdaki tüm etiketleri listeleyin"
         time: "Çeşitli saat dilimlerinde zamanı bulun"
@@ -604,6 +647,45 @@ tr_TR:
       edit_category:
         errors:
           category_not_found: "Kategori bulunamadı."
+      set_slow_mode:
+        errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu başlıkta yavaş modu etkinleştiremezsiniz."
+          no_reason: "Yavaş modu etkinleştirmek için bir neden belirtilmelidir."
+        success: "Yavaş mod başarıyla güncellendi."
+      move_posts:
+        errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu başlıktaki mesajları taşıyamazsınız."
+          no_reason: "Gönderileri taşımak için bir neden belirtilmesi gerekir."
+          no_posts: "Gönderi kimliği belirtilmemiştir."
+          no_destination: "Ya destination_topic_id ya da new_title belirtilmelidir."
+          move_failed: "Gönderiler taşınamadı."
+        success: "Gönderiler başarıyla taşındı."
+      grant_badge:
+        errors:
+          user_not_found: "Kullanıcı bulunamadı."
+          badge_not_found: "Rozet bulunamadı."
+          not_allowed: "Rozet verme yetkiniz yok."
+          no_reason: "Rozet vermek için bir neden belirtilmesi gerekir."
+          badge_disabled: "Rozet etkinleştirilmemiştir."
+          grant_failed: "Rozet verilemedi."
+        success: "Rozet başarıyla verildi."
+      assign:
+        errors:
+          plugin_not_installed: "\"discourse-assign\" eklentisi yüklü değil."
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu konuyu başkasına devredemezsiniz."
+          no_reason: "Bir konuyu atamak veya atamayı kaldırmak için bir neden belirtilmesi gerekir."
+          assignee_not_found: "Kullanıcı veya grup bulunamadı."
+          assign_failed: "Konu atanamadı."
+        success: "Konu ataması başarıyla güncellendi."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "\"Discourse-solved\" eklentisi yüklü değil."
+          no_reason: "Bir gönderiyi \"çözüldü\" olarak işaretlemek veya bu işaretlemeyi kaldırmak için bir neden belirtmeniz gerekir."
+          action_failed: "Çözüldü durumu güncellenemedi."
+        success: "\"Çözüldü\" durumu başarıyla güncellendi."
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"
@@ -611,6 +693,10 @@ tr_TR:
           title: "Onayla"
         reject:
           title: "Reddet"
+        target_missing: "Araç eyleminin hedefi artık mevcut değil."
+        tool_not_found: "'%{tool_name}' aracı artık kullanılamıyor."
+        bot_user_missing: "Bu bot kullanıcısı artık mevcut değil."
+        execution_error: "Araç çalıştırılamadı: %{error}"
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"
@@ -639,6 +725,7 @@ tr_TR:
         set_llm_first: "Önce %{setting} ayarlanmalı"
         model_unreachable: "Bu modelden yanıt alamadık. Önce ayarlarınızı kontrol edin."
         invalid_seeded_model: "Bu modeli bu özellikle kullanamazsınız"
+        invalid_agent_response_format: "Seçilen ajanın, \"spam\" adlı bir boolean alanı içeren bir yanıt biçimi olması gerekir"
         must_select_model: "Öncelikle bir LLM seçmelisiniz"
         invalid_llm_id: "Seçilen LLM modeli geçerli değil"
       endpoints:
@@ -684,8 +771,12 @@ tr_TR:
       quota_exceeded: "Bu model için kotayı aştınız. Lütfen %{relative_time} içinde tekrar deneyin."
       quota_required: "Bu model için maksimum token veya kullanımları belirtmelisiniz"
       no_query_specified: Sorgu parametresi gerekli, lütfen belirtin.
+      no_user_for_agent: Belirtilen ajanın ilişkili bir kullanıcısı yok.
+      agent_not_found: "Belirtilen aracı mevcut değil. agent_name veya agent_id parametrelerini kontrol edin (eski sürüm: agent_name veya agent_id)."
       no_user_specified: Kullanıcı adı veya user_unique_id parametresi gerekli, lütfen belirtin.
       user_not_found: Belirtilen kullanıcı mevcut değil. Kullanıcı adı parametresini kontrol edin.
+      agent_disabled: "Belirtilen aracı devre dışı bırakılmıştır. agent_name veya agent_id parametrelerini kontrol edin (eski sürüm: agent_name veya agent_id)."
+      no_default_llm: Ajanın bir default_llm tanımı olması gerekir.
       user_not_allowed: Kullanıcının konuya katılmasına izin verilmiyor.
       invalid_stream_resume_token: resume_token geçersiz veya süresi dolmuş.
       no_tool_results_specified: Bir akışı yeniden başlatırken tool_results parametresi gereklidir.
@@ -708,6 +799,7 @@ tr_TR:
       stream_reply_state_too_large: "Stream kalıcı olmak için çok büyük (maks. %{max} bayt)."
       stream_reply_unexpected_error: Yanıtın aktarılması sırasında beklenmedik bir hata oluştu.
       prompt_message_length: '%{idx} mesajı 1000 karakter limitinin üzerinde.'
+      agent_already_exists: '%{name} adlı ajan zaten mevcut.'
       custom_tool_exists:
         one: "%{names} adlı bir özel araç zaten mevcut."
         other: "%{names} adlı özel araçlar zaten mevcut."

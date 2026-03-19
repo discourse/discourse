@@ -3799,8 +3799,6 @@ ko:
         sidebar_title: "보고서"
         group_traffic: "트래픽"
         group_members: "회원"
-        group_moderation: "관리"
-        group_security: "보안"
         group_other: "기타"
       config_sections:
         account:

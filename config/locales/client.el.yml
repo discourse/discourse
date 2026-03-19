@@ -5386,8 +5386,6 @@ el:
         group_traffic: "Κίνηση"
         group_members: "Μέλη"
         group_content: "Περιεχόμενο & Υγεία"
-        group_moderation: "Συντονισμός"
-        group_security: "Ασφάλεια"
         group_other: "Άλλα"
       config_sections:
         account:

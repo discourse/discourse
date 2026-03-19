@@ -5926,8 +5926,6 @@ he:
         back: "חזרה לכל הדוחות"
         group_traffic: "תנועה"
         group_members: "חברים"
-        group_moderation: "פיקוח"
-        group_security: "אבטחה"
         group_other: "אחר"
       config_sections:
         account:

@@ -3441,7 +3441,6 @@ bg:
       reports:
         group_traffic: "Трафик"
         group_members: "Членове"
-        group_security: "Сигурност"
         group_other: "Други"
       config_sections:
         account:

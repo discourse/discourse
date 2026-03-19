@@ -69,6 +69,8 @@ pl_PL:
       category_type_support:
         title: "Wsparcie"
         not_support_type: "Uwaga! Wyłączono możliwość oznaczania wpisów jako rozwiązań w tej kategorii. Aby ją ponownie włączyć, znajdziesz odpowiednie ustawienia na karcie Ustawienia."
+        remove_support_type: "Usuń typ wsparcia"
+        confirm_remove_support_type: "Czy na pewno chcesz usunąć możliwość oznaczania wpisów jako rozwiązań w tej kategorii? Możesz ją później ponownie włączyć na karcie Ustawienia."
     topic_statuses:
       solved:
         help: "Ten temat ma rozwiązanie"

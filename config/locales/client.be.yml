@@ -1991,8 +1991,6 @@ be:
         sidebar_title: "Справаздачы"
         group_traffic: "Трафік"
         group_members: "Члены"
-        group_moderation: "Мадэрацыя"
-        group_security: "Бяспека"
         group_other: "Іншае"
       config_sections:
         account:

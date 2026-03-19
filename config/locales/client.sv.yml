@@ -4380,8 +4380,6 @@ sv:
         sidebar_title: "Rapporter"
         group_traffic: "Trafik"
         group_members: "Medlemmar"
-        group_moderation: "Moderering"
-        group_security: "Säkerhet"
         group_other: "Övrigt"
       config_sections:
         account:
