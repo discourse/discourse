@@ -2566,7 +2566,6 @@ th:
       reports:
         group_traffic: "การจราจร"
         group_members: "สมาชิก"
-        group_security: "ความปลอดภัย"
         group_other: "อื่นๆ"
       config_sections:
         account:

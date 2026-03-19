@@ -6156,8 +6156,6 @@ uk:
         group_traffic: "Трафік"
         group_members: "Учасники"
         group_content: "Контент і здоров'я"
-        group_moderation: "Модерація"
-        group_security: "Безпека"
         group_other: "Інше"
         legacy_warning: "Це застарілий звіт. Незабаром його буде вилучено. Якщо вам потрібна допомога в пошуку заміни, зверніться до служби підтримки."
       config_sections:

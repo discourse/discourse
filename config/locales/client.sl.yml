@@ -3739,8 +3739,6 @@ sl:
         sidebar_title: "Poročila"
         group_traffic: "Promet"
         group_members: "Člani"
-        group_moderation: "Moderiranje"
-        group_security: "Varnost"
         group_other: "Drugo"
       config_sections:
         account:

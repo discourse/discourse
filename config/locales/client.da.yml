@@ -4348,8 +4348,6 @@ da:
         back: "Tilbage til alle rapporter"
         group_traffic: "Trafik"
         group_members: "Brugere"
-        group_moderation: "Moderation"
-        group_security: "Sikkerhed"
         group_other: "Andre"
       config_sections:
         account:

@@ -5196,8 +5196,6 @@ fi:
         back: "Takaisin kaikkiin raportteihin"
         group_traffic: "Liikenne"
         group_members: "Jäsenet"
-        group_moderation: "Valvonta"
-        group_security: "Tietoturva"
         group_other: "Muut"
       config_sections:
         account:

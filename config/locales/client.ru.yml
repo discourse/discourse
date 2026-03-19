@@ -5959,8 +5959,6 @@ ru:
         back: "Назад ко всем отчетам"
         group_traffic: "Трафик"
         group_members: "Участники"
-        group_moderation: "Модерация"
-        group_security: "Безопасность"
         group_other: "Разное"
       config_sections:
         account:

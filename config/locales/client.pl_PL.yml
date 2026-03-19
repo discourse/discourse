@@ -6170,8 +6170,7 @@ pl_PL:
         group_traffic: "Ruch"
         group_members: "Członkowie"
         group_content: "Treść i zdrowie"
-        group_moderation: "Moderacja"
-        group_security: "Bezpieczeństwo"
+        group_moderation_and_security: "Moderacja i bezpieczeństwo"
         group_other: "Inne"
         legacy_warning: "To jest starszy raport. Wkrótce zostanie wycofany. Jeśli potrzebujesz pomocy w znalezieniu zamiennika, skontaktuj się z pomocą techniczną."
       config_sections:

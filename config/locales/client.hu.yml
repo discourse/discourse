@@ -5600,8 +5600,6 @@ hu:
         group_traffic: "Forgalom"
         group_members: "Tagok"
         group_content: "Tartalom és egészség"
-        group_moderation: "Moderálás"
-        group_security: "Biztonság"
         group_other: "Egyéb"
         legacy_warning: "Ez egy korábbi jelentés. Hamarosan megszűnik. Ha segítségre van szüksége a helyettesítő megtalálásához, vegye fel a kapcsolatot az ügyfélszolgálattal."
       config_sections:

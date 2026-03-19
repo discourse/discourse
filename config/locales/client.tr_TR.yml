@@ -1813,8 +1813,21 @@ tr_TR:
         upcoming_changes: "Yaklaşan değişiklikler"
         calendar_subscriptions: "Takvim"
       calendar_subscriptions:
+        description: "Favori takvim uygulamanızla (Google Takvim, Apple Takvim, Outlook vb.) senkronize etmek için abonelik URL'leri oluşturun. Bu URL'ler, hesabınızdaki takvim etkinliklerine (hatırlatıcılar, takvim etkinlikleri vb.) yönlendiren özel bağlantılardır. Oluşturulan abonelik URL'lerini istediğiniz zaman iptal edebilir veya yenileyebilirsiniz. "
+        generate: "Abonelik URL'leri Oluştur"
+        regenerate: "URL'leri Yeniden Oluştur"
+        regenerate_confirm: "Bu işlem, mevcut takvim abonelik URL'lerinizi geçersiz kılacaktır. Eski URL'leri kullanan tüm takvim uygulamaları güncellemeleri almayı durduracaktır. Devam etmek istiyor musunuz?"
+        revoke: "Aboneliği İptal Et"
+        revoke_confirm: "Bu işlem, takvim abonelik URL'lerinizi iptal edecektir. Bu URL'leri kullanan tüm takvim uygulamaları güncellemeleri almayı durduracaktır. Devam etmek istiyor musunuz?"
+        urls_warning: "Abonelik URL'leri hazır! Takvim uygulamanıza eklemek için aşağıdaki düğmelere tıklayın. Not: Bu URL'ler yalnızca bir kez görüntülenir."
+        bookmarks: "Yer imi hatırlatıcıları"
+        bookmarks_description: "Hatırlatma tarihli yer imleriniz"
+        copy: "URL'yi kopyala"
         copied: "Kopyalandı!"
         add_to_google: "Google Takvim"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple Takvimi"
+        active_subscription: "Etkin bir takvim aboneliğiniz var."
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
@@ -2994,6 +3007,7 @@ tr_TR:
       collapse: "Besteci panelini küçült"
       open: "Besteci panelini aç"
       abandon: "Besteciyi kapat ve taslağı sil"
+      edit_reason: "Düzenleme nedeninizi girin"
       enter_fullscreen: "Tam ekran besteci moduna gir"
       exit_fullscreen: "Tam ekran besteci modundan çık"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
@@ -3732,6 +3746,9 @@ tr_TR:
       auto_close_immediate:
         one: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
         other: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
+      auto_delete_immediate:
+        one: "Konudaki son mesajın üzerinden %{count} saat geçti, bu nedenle konu hemen silinecek."
+        other: "Konudaki son mesajın üzerinden %{count} saat geçti, bu nedenle konu hemen silinecek."
       timeline:
         back: "Geri"
         back_description: "Son okunmamış gönderinize geri dönün"
@@ -4335,6 +4352,8 @@ tr_TR:
       advanced: "Gelişmiş"
       show_advanced: "Gelişmiş ayarlar"
       topic_template: "Şablon"
+      topic_title_placeholder: "Kategori konusu başlığı yer tutucusu"
+      topic_title_placeholder_placeholder: "[isteğe bağlı] bu kategori için özel konu başlığı yer tutucusu"
       tags: "Etiketler"
       localizations: "Yerelleştirmeler"
       localization:
@@ -5594,8 +5613,7 @@ tr_TR:
         group_traffic: "Trafik"
         group_members: "Üyeler"
         group_content: "İçerik ve Sağlık"
-        group_moderation: "Moderasyon"
-        group_security: "Güvenlik"
+        group_moderation_and_security: "Moderasyon ve Güvenlik"
         group_other: "Diğer"
         legacy_warning: "Bu eski bir rapordur. Yakında kullanımdan kaldırılacaktır. Yenisini bulmak için yardıma ihtiyacınız varsa destek ekibiyle iletişime geçin."
       config_sections:

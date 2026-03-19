@@ -5179,8 +5179,6 @@ vi:
         back: "Quay lại tất cả báo cáo"
         group_traffic: "Băng thông"
         group_members: "Thành viên kênh"
-        group_moderation: "Người kiểm duyệt"
-        group_security: "Bảo mật"
         group_other: "Khác"
       config_sections:
         account:

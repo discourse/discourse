@@ -5261,8 +5261,6 @@ nl:
         back: "Terug naar alle rapporten"
         group_traffic: "Verkeer"
         group_members: "Leden"
-        group_moderation: "Moderatie"
-        group_security: "Beveiliging"
         group_other: "Overig"
       config_sections:
         account:

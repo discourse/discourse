@@ -117,3 +117,5 @@ tr_TR:
         char_counter:
           title: "Karakter Sayacı"
           placeholder: "Metninizi buraya girin..."
+        segmented_control:
+          title: "Bölümlü Kontrol (Düğme geçiş grubu)"

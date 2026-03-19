@@ -5405,8 +5405,6 @@ es:
         group_engagement: "Interacción"
         group_traffic: "Tráfico"
         group_members: "Miembros"
-        group_moderation: "Moderación"
-        group_security: "Seguridad"
         group_other: "Otros"
       config_sections:
         account:
