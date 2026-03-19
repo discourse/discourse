@@ -13,7 +13,6 @@ import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 @classNames("select-kit-header")
 @classNameBindings("isFocused")
 @attributeBindings(
-  "role",
   "tabindex",
   "selectedValue:data-value",
   "selectedNames:data-name",
@@ -23,7 +22,6 @@ import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 @selectKitPropUtils
 export default class SelectKitHeader extends Component {
   selectKit = null;
-  role = "listbox";
   tabindex = 0;
 
   @computed("value")
