@@ -595,7 +595,10 @@ RSpec.describe UploadsController do
           get upload.short_path
 
           expect(response).to redirect_to(
-            Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)),
+            Discourse.store.signed_url_for_path(
+              Discourse.store.get_path_for_upload(upload),
+              filename: upload.original_filename,
+            ),
           )
           expect(response.header["Location"]).not_to include(
             "response-content-disposition=attachment",
