@@ -28,6 +28,9 @@ module Migrations::Database::IntermediateDB
         dark_scheme_id,
         default_calendar,
         digest_after_minutes,
+        discourse_rewind_dismissed_at,
+        discourse_rewind_enabled,
+        discourse_rewind_share_publicly,
         dismissed_channel_retention_reminder,
         dismissed_dm_retention_reminder,
         dynamic_favicon,
@@ -77,7 +80,7 @@ module Migrations::Database::IntermediateDB
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
@@ -104,6 +107,9 @@ module Migrations::Database::IntermediateDB
     # @param dark_scheme_id                         [Integer, String, nil]
     # @param default_calendar                       [Integer, nil]
     # @param digest_after_minutes                   [Integer, nil]
+    # @param discourse_rewind_dismissed_at          [Time, nil]
+    # @param discourse_rewind_enabled               [Boolean, nil]
+    # @param discourse_rewind_share_publicly        [Boolean, nil]
     # @param dismissed_channel_retention_reminder   [Boolean, nil]
     # @param dismissed_dm_retention_reminder        [Boolean, nil]
     # @param dynamic_favicon                        [Boolean, nil]
@@ -172,6 +178,9 @@ module Migrations::Database::IntermediateDB
       dark_scheme_id: nil,
       default_calendar: nil,
       digest_after_minutes: nil,
+      discourse_rewind_dismissed_at: nil,
+      discourse_rewind_enabled: nil,
+      discourse_rewind_share_publicly: nil,
       dismissed_channel_retention_reminder: nil,
       dismissed_dm_retention_reminder: nil,
       dynamic_favicon: nil,
@@ -240,6 +249,9 @@ module Migrations::Database::IntermediateDB
         dark_scheme_id,
         default_calendar,
         digest_after_minutes,
+        ::Migrations::Database.format_datetime(discourse_rewind_dismissed_at),
+        ::Migrations::Database.format_boolean(discourse_rewind_enabled),
+        ::Migrations::Database.format_boolean(discourse_rewind_share_publicly),
         ::Migrations::Database.format_boolean(dismissed_channel_retention_reminder),
         ::Migrations::Database.format_boolean(dismissed_dm_retention_reminder),
         ::Migrations::Database.format_boolean(dynamic_favicon),
