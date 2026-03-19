@@ -55,6 +55,7 @@ module DiscourseAi
           top_p: ai_agent.top_p,
           response_format: ai_agent.response_format,
           tools: transform_tools_for_export(ai_agent.tools, serialized_custom_tools),
+          mcp_servers: ai_agent.ai_mcp_servers.order(:name).pluck(:name),
         },
         custom_tools: serialized_custom_tools,
       }

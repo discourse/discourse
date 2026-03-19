@@ -16,11 +16,11 @@ export default class DiscourseAiToolsNewRoute extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
     const toolsModel = this.modelFor("adminPlugins.show.discourse-ai-tools");
-    controller.set("allTools", toolsModel);
-    controller.set("presets", toolsModel.resultSetMeta.presets);
-    controller.set("llms", toolsModel.resultSetMeta.llms);
-    controller.set("secrets", toolsModel.resultSetMeta.ai_secrets);
-    controller.set("settings", toolsModel.resultSetMeta.settings);
+    controller.set("allTools", toolsModel.tools);
+    controller.set("presets", toolsModel.tools.resultSetMeta.presets);
+    controller.set("llms", toolsModel.tools.resultSetMeta.llms);
+    controller.set("secrets", toolsModel.tools.resultSetMeta.ai_secrets);
+    controller.set("settings", toolsModel.tools.resultSetMeta.settings);
     controller.set("selectedPreset", this.preset);
   }
 }

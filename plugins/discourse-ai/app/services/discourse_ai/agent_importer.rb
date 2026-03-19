@@ -44,13 +44,15 @@ module DiscourseAi
           response_format: agent_data["response_format"],
           tools: transform_tools_for_import(agent_data["tools"], tool_name_to_id),
         }
+        mcp_server_ids = resolve_mcp_server_ids(agent_data["mcp_servers"])
 
         if existing_agent && overwrite
           existing_agent.update!(**attrs)
+          existing_agent.ai_mcp_server_ids = mcp_server_ids
           existing_agent
         else
           attrs[:name] = agent_data["name"]
-          AiAgent.create!(**attrs)
+          AiAgent.create!(**attrs).tap { |agent| agent.ai_mcp_server_ids = mcp_server_ids }
         end
       end
     end
@@ -84,6 +86,12 @@ module DiscourseAi
         conflicts[:custom_tools] = existing_tools if existing_tools.any?
       end
 
+      if @data["agent"]["mcp_servers"].present?
+        missing_mcp_servers =
+          Array(@data["agent"]["mcp_servers"]).reject { |name| AiMcpServer.exists?(name: name) }
+        conflicts[:mcp_servers] = missing_mcp_servers if missing_mcp_servers.any?
+      end
+
       if conflicts.any?
         message = build_conflict_message(conflicts)
         raise ImportError.new(message, conflicts)
@@ -106,6 +114,10 @@ module DiscourseAi
             count: conflicts[:custom_tools].size,
           )
         messages << error
+      end
+
+      if conflicts[:mcp_servers] && conflicts[:mcp_servers].any?
+        messages << I18n.t("discourse_ai.errors.mcp_server_missing", names: conflicts[:mcp_servers].join(", "))
       end
 
       messages.join("\n")
@@ -153,6 +165,23 @@ module DiscourseAi
           tool_config
         end
       end
+    end
+
+    def resolve_mcp_server_ids(server_names)
+      return [] if server_names.blank?
+
+      names = Array(server_names).map(&:to_s)
+      found = AiMcpServer.where(name: names).pluck(:name, :id).to_h
+      missing = names.reject { |name| found.key?(name) }
+
+      if missing.any?
+        raise ImportError.new(
+                I18n.t("discourse_ai.errors.mcp_server_missing", names: missing.join(", ")),
+                mcp_servers: missing,
+              )
+      end
+
+      names.filter_map { |name| found[name] }
     end
   end
 end

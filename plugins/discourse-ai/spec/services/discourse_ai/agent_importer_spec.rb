@@ -175,6 +175,35 @@ RSpec.describe DiscourseAi::AgentImporter do
       end
     end
 
+    context "when importing mcp server assignments" do
+      fab!(:ai_mcp_server) { Fabricate(:ai_mcp_server, name: "Jira") }
+      fab!(:ai_agent) { Fabricate(:ai_agent, tools: []) }
+
+      let!(:export_json) do
+        ai_agent.ai_mcp_servers << ai_mcp_server
+        DiscourseAi::AgentExporter.new(agent: ai_agent).export
+      end
+
+      it "rebinds the imported agent to local mcp servers by name" do
+        ai_agent.destroy
+
+        importer = described_class.new(json: export_json)
+        agent = importer.import!
+
+        expect(agent.ai_mcp_servers.pluck(:name)).to eq(["Jira"])
+      end
+
+      it "raises when the referenced mcp server is missing" do
+        ai_mcp_server.destroy
+
+        importer = described_class.new(json: export_json)
+
+        expect { importer.import! }.to raise_error(
+          DiscourseAi::AgentImporter::ImportError,
+        ) { |error| expect(error.conflicts[:mcp_servers]).to eq(["Jira"]) }
+      end
+    end
+
     context "with legacy persona format" do
       let(:legacy_hash) do
         {

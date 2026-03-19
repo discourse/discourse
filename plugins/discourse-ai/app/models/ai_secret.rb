@@ -9,10 +9,15 @@ class AiSecret < ActiveRecord::Base
   has_many :llm_models, dependent: :nullify
   has_many :embedding_definitions, dependent: :nullify
   has_many :ai_tool_secret_bindings, dependent: :destroy
+  has_many :ai_mcp_servers, dependent: :nullify
+  has_many :oauth_client_secret_mcp_servers,
+           class_name: "AiMcpServer",
+           foreign_key: :oauth_client_secret_ai_secret_id,
+           dependent: :nullify
 
   def in_use?
     llm_models.exists? || embedding_definitions.exists? || used_by_provider_params? ||
-      ai_tool_secret_bindings.exists?
+      ai_tool_secret_bindings.exists? || ai_mcp_servers.exists? || oauth_client_secret_mcp_servers.exists?
   end
 
   def used_by
@@ -35,6 +40,12 @@ class AiSecret < ActiveRecord::Base
           id: binding.ai_tool.id,
         }
       end
+    ai_mcp_servers.each do |server|
+      usage << { type: "mcp_server", name: server.name, id: server.id }
+    end
+    oauth_client_secret_mcp_servers.each do |server|
+      usage << { type: "mcp_server_oauth_client_secret", name: server.name, id: server.id }
+    end
     usage
   end
 

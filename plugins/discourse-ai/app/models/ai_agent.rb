@@ -46,6 +46,8 @@ class AiAgent < ActiveRecord::Base
   validate :tools_can_not_be_duplicated
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
+  has_many :ai_agent_mcp_servers, dependent: :destroy
+  has_many :ai_mcp_servers, through: :ai_agent_mcp_servers
 
   belongs_to :created_by, class_name: "User"
   belongs_to :user
@@ -77,7 +79,7 @@ class AiAgent < ActiveRecord::Base
   end
 
   def self.all_agent_records(enabled_only: true)
-    agent_cache[:records] ||= AiAgent.ordered.includes(:user).all.limit(MAX_AGENTS_PER_SITE).to_a
+    agent_cache[:records] ||= AiAgent.ordered.includes(:user, :ai_mcp_servers).all.limit(MAX_AGENTS_PER_SITE).to_a
 
     if enabled_only
       agent_cache[:records].select(&:enabled)
@@ -264,6 +266,16 @@ class AiAgent < ActiveRecord::Base
         force_tool_use << klass if should_force_tool_use
         klass
       end
+
+    reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
+    enabled_mcp_servers = ai_mcp_servers.where(enabled: true).to_a
+    tools.concat(
+      DiscourseAi::Mcp::ToolRegistry.tool_classes_for_servers(
+        enabled_mcp_servers,
+        reserved_names: reserved_names,
+      ),
+    )
+    instance_attributes[:mcp_server_ids] = enabled_mcp_servers.map(&:id)
 
     agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[self.id]
     if agent_class

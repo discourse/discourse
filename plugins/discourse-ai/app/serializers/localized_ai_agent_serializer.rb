@@ -35,6 +35,8 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :max_turn_tokens,
              :compression_threshold,
              :require_approval,
+             :mcp_server_ids,
+             :mcp_servers,
              :response_format,
              :examples,
              :features
@@ -63,5 +65,25 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
     object.features.map do |feature|
       { id: feature.module_id, module_name: feature.module_name, name: feature.name }
     end
+  end
+
+  def mcp_server_ids
+    object.ai_mcp_server_ids
+  end
+
+  def mcp_servers
+    object
+      .ai_mcp_servers
+      .order(:name)
+      .map do |server|
+        {
+          id: server.id,
+          name: server.name,
+          tool_count: server.tool_count,
+          token_count: server.token_count,
+          last_health_status: server.last_health_status,
+          last_checked_at: server.last_checked_at,
+        }
+      end
   end
 end

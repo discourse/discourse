@@ -11,7 +11,7 @@ module DiscourseAi
         ai_agents =
           AiAgent
             .ordered
-            .includes(:user, :uploads)
+            .includes(:user, :uploads, :ai_mcp_servers)
             .map { |agent| LocalizedAiAgentSerializer.new(agent, root: false) }
 
         tools =
@@ -36,6 +36,20 @@ module DiscourseAi
           end
 
         llms = DiscourseAi::Configuration::LlmEnumerator.values_for_serialization
+        mcp_servers =
+          AiMcpServer
+            .where(enabled: true)
+            .order(:name)
+            .map do |server|
+              {
+                id: server.id,
+                name: server.name,
+                tool_count: server.tool_count,
+                token_count: server.token_count,
+                last_health_status: server.last_health_status,
+                last_checked_at: server.last_checked_at,
+              }
+            end
 
         sorted_tools = tools.sort_by { |t| t.try(:name) || t[:name] || "" }
 
@@ -44,6 +58,7 @@ module DiscourseAi
                  meta: {
                    tools: sorted_tools,
                    llms: llms,
+                   mcp_servers: mcp_servers,
                    settings: {
                      rag_images_enabled: SiteSetting.ai_rag_images_enabled,
                    },
@@ -59,8 +74,12 @@ module DiscourseAi
       end
 
       def create
-        ai_agent = AiAgent.new(ai_agent_params.except(:rag_uploads))
+        params = ai_agent_params
+        mcp_server_ids = params.delete(:ai_mcp_server_ids)
+        ai_agent = AiAgent.new(params.except(:rag_uploads))
+
         if ai_agent.save
+          ai_agent.ai_mcp_server_ids = mcp_server_ids if mcp_server_ids
           RagDocumentFragment.link_target_and_uploads(ai_agent, attached_upload_ids)
           log_ai_agent_creation(ai_agent)
 
@@ -76,9 +95,12 @@ module DiscourseAi
       end
 
       def update
+        params = ai_agent_params
+        mcp_server_ids = params.delete(:ai_mcp_server_ids)
         initial_attributes = @ai_agent.attributes.dup
 
-        if @ai_agent.update(ai_agent_params.except(:rag_uploads))
+        if @ai_agent.update(params.except(:rag_uploads))
+          @ai_agent.ai_mcp_server_ids = mcp_server_ids if mcp_server_ids
           RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids)
           log_ai_agent_update(@ai_agent, initial_attributes)
 
@@ -440,8 +462,16 @@ module DiscourseAi
             :compression_threshold,
             :require_approval,
             allowed_group_ids: [],
+            mcp_server_ids: [],
             rag_uploads: [:id],
           )
+
+        if payload[:mcp_server_ids].is_a?(Array)
+          permitted[:ai_mcp_server_ids] = payload[:mcp_server_ids].filter_map(&:presence).map(
+            &:to_i
+          )
+          permitted.delete(:mcp_server_ids)
+        end
 
         if tools = payload[:tools]
           permitted[:tools] = permit_tools(tools)
@@ -565,7 +595,7 @@ module DiscourseAi
           require_approval: {
           },
           # JSON fields
-          json_fields: %i[tools response_format examples allowed_group_ids],
+          json_fields: %i[tools response_format examples allowed_group_ids ai_mcp_server_ids],
         }
       end
 
