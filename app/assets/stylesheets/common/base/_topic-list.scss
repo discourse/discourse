@@ -135,6 +135,10 @@
 }
 
 .bulk-select-topics-dropdown {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+
   .select-kit.single-select.dropdown-select-box .select-kit-row {
     .texts .name {
       font-weight: normal;
@@ -147,6 +151,11 @@
       top: 0.15em;
     }
   }
+}
+
+.bulk-select-topics-actions {
+  display: flex;
+  gap: var(--space-2);
 }
 
 .topic-list {
@@ -524,6 +533,7 @@
     .topic-list-data.bulk-select {
       padding: 0;
       width: 30px;
+      text-align: center;
 
       label {
         margin: 0;
@@ -652,11 +662,10 @@
 
   .bulk-select-topics {
     display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: end;
     margin-left: -5px;
-
-    .btn {
-      margin-right: var(--space-2);
-    }
   }
 }
 
