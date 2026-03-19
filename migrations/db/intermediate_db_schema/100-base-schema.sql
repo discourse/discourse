@@ -78,6 +78,7 @@ CREATE TABLE categories
     topic_featured_link_allowed               BOOLEAN,
     topic_id                                  NUMERIC,
     topic_template                            TEXT,
+    topic_title_placeholder                   TEXT,
     uploaded_background_dark_id               TEXT,
     uploaded_background_id                    TEXT,
     uploaded_logo_dark_id                     TEXT,
