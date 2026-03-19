@@ -994,13 +994,13 @@ class Group < ActiveRecord::Base
           .where(id: removed_user_ids, title: self.title)
           .find_each { |user| user.update_column(:title, user.next_best_title) }
       end
+
+      recalculate_user_count
     end
 
     if self.grant_trust_level.present? && !self.grant_trust_level.zero?
       Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
     end
-
-    recalculate_user_count
 
     bulk_publish_category_updates(group_users_to_remove.map(&:user))
 
