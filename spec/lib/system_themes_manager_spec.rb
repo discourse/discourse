@@ -40,4 +40,18 @@ RSpec.describe SystemThemesManager do
     expect(Theme.horizon_theme.color_scheme).to eq(nil)
     expect(Theme.horizon_theme.dark_color_scheme).to eq(nil)
   end
+
+  it "does not raise when re-syncing themes with existing settings migrations" do
+    Theme.delete_all
+    SystemThemesManager.sync!
+
+    themes_with_migrations =
+      Theme::CORE_THEMES.select { |_, id| ThemeSettingsMigration.exists?(theme_id: id) }
+
+    skip "no core themes have settings migrations" if themes_with_migrations.empty?
+
+    themes_with_migrations.each_key do |theme_name|
+      expect { SystemThemesManager.sync_theme!(theme_name) }.not_to raise_error
+    end
+  end
 end
