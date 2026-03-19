@@ -9,6 +9,7 @@ describe "Simplified Category Creation" do
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.enable_simplified_category_creation = true
@@ -197,6 +198,55 @@ describe "Simplified Category Creation" do
 
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       expect(group_chooser).to have_selected_name(group.name)
+    end
+
+    it "collapses long descriptions with a show more toggle" do
+      category_with_definition = Fabricate(:category_with_definition)
+      long_description = (["This is a long paragraph of text."] * 20).join(" ")
+      post = category_with_definition.topic.first_post
+      post.update!(cooked: "<p>#{long_description}</p>")
+      category_with_definition.update!(description: "<p>#{long_description}</p>")
+
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+      expect(page).to have_css(".toggle-description")
+
+      find(".toggle-description").click
+
+      expect(page).to have_no_css(".description-content.--collapsed")
+      expect(page).to have_css(".description-content.--overflowing")
+
+      find(".toggle-description").click
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+    end
+
+    it "does not show expand toggle for short descriptions" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content")
+      expect(page).to have_no_css(".toggle-description")
+      expect(page).to have_no_css(".description-content.--overflowing")
+    end
+
+    it "opens the composer to edit the category description and updates it after save" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      composer = PageObjects::Components::Composer.new
+
+      find(".edit-category-description").click
+      expect(composer).to be_opened
+
+      composer.fill_content("Updated category description")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(page).to have_css(".edit-category-description-container .readonly-field")
+      expect(page).to have_content("Updated category description")
+      expect(toasts).to have_success(I18n.t("js.category.description_updated"))
     end
   end
 

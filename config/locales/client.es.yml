@@ -1724,6 +1724,10 @@ es:
         apps: "Aplicaciones"
         navigation_menu: "Menú de navegación"
         upcoming_changes: "Próximos cambios"
+        calendar_subscriptions: "Calendario"
+      calendar_subscriptions:
+        copied: "¡Copiado!"
+        add_to_google: "Calendario de Google"
       change_password:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"

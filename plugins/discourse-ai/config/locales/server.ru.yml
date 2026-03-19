@@ -227,6 +227,8 @@ ru:
           name: "Обменный курс"
         stock_quote:
           name: "Котировка акций (AlphaVantage)"
+        image_generation_category:
+          name: "Генерация изображений..."
         image_generation_custom:
           name: "Другое"
         image_generation_openai:
@@ -238,6 +240,9 @@ ru:
     ai_helper:
       errors:
         completion_request_failed: "При попытке дать рекомендации произошла ошибка. Попробуйте еще раз."
+        no_image_generated: "Не удалось сгенерировать изображение. Пожалуйста, попробуйте еще раз или проверьте настройки вашего инструмента."
+        llm_model_not_configured: "Для генерации изображений не настроена языковая модель. Пожалуйста, настройте языковую модель по умолчанию в настройках вашего сайта."
+        unknown_error: "При создании эскизов произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз."
       prompts:
         translate: Перевести на %{language}
         generate_titles: Предложить названия для темы
@@ -407,12 +412,14 @@ ru:
             name: "Базовый поисковый запрос"
             description: "Базовый запрос, используемый при поиске. Пример: '#urgent' добавит '#urgent' к поисковому запросу и будет включать только темы со срочной категорией или тегом."
       tool_summary:
+        read_artifact: "Прочитать веб-артефакт"
         update_artifact: "Обновить веб-артефакт"
         create_artifact: "Создать веб-артефакт"
         web_browser: "Просмотр веб-страниц"
         github_search_files: "Поиск файлов на GitHub"
         github_search_code: "Поиск кода на GitHub"
         github_file_content: "Контент файла на GitHub"
+        github_diff: "GitHub diff"
         random_picker: "Случайный выбор"
         categories: "Вывод списка категорий"
         flag_post: "Пометить публикацию"
@@ -441,9 +448,17 @@ ru:
         github_search_code: "Поиск кода в репозитории GitHub"
         github_search_files: "Поиск файлов в репозитории GitHub"
         github_file_content: "Извлечение контента файлов из репозитория на GitHub"
+        github_diff: "Получить запрос на слияние (pull request) или разницу в коммитах (commit diff) на GitHub."
         random_picker: "Выбирает случайное число или случайный элемент списка"
         categories: "Вывод всех общедоступных категорий на форуме"
+        flag_post: "Пометить текущую публикацию для проверки сотрудниками"
         delete_topic: "Удаление темы"
+        edit_category: "Переместить тему в другую категорию"
+        set_slow_mode: "Включить или отключить медленный режим для темы"
+        move_posts: "Переместить сообщения в новую или существующую тему"
+        grant_badge: "Назначение награды пользователю"
+        assign: "Назначить или отменить назначение темы пользователю или группе."
+        mark_as_solved: "Отметьте или снимите отметку с сообщения как с принятого решения."
         search: "Поиск по всем общедоступным темам на форуме"
         tags: "Вывод всех тегов на форуме"
         time: "Определить время в разных часовых поясах"
@@ -470,6 +485,20 @@ ru:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Получен контент файла %{file_paths} из репозитория %{repo_name}@%{branch}"
         random_picker: "Выбор из %{options}, выбрано: %{result}"
+        flag_post: "Отметка сообщения %{post_id} (flag_post: %{flag_post})"
+        close_topic: "Закрытие темы %{topic_id} (закрыто: %{closed})"
+        unlist_topic: "Снятие темы с публикации %{topic_id} (не указано: %{unlisted})"
+        lock_post: "Блокировка поста %{post_id} (заблокировано: %{locked})"
+        delete_topic: "Удаление темы %{topic_id} (удалено: %{deleted})"
+        edit_post: "Редактирование поста %{post_id}"
+        edit_tags: "Редактирование тегов по теме %{topic_id}: %{tags}"
+        edit_category: "Переместить тему %{topic_id} в категорию %{category_id}"
+        set_topic_timer: "Установка таймера %{timer_type} для темы %{topic_id} (%{duration_hours}ч)"
+        set_slow_mode: "Установка медленного режима для темы %{topic_id} (%{slow_mode_seconds}с)"
+        move_posts: "Перемещение сообщений %{post_ids} из темы %{topic_id}"
+        grant_badge: "Присвоение значка '%{badge_name}' пользователю %{username}"
+        assign: "Назначение темы %{topic_id} (назначено: %{assigned})"
+        mark_as_solved: "Отмечаю сообщение %{post_id} как решенное (решено: %{solved})"
         read: "Чтение: <a href='%{url}'>%{title}</a>"
         time: "Время по часовому поясу %{timezone} — %{time}"
         summarize: "Получена сводка: <a href='%{url}'>%{title}</a>"
@@ -522,40 +551,109 @@ ru:
       discoveries:
         continue_conversation:
           raw: "Во время поиска «%{query}» вы предоставили мне следующие сведения:\n\n%{context}\n\nДавайте продолжим разговор."
+      flag_post:
+        already_flagged: "Сообщение уже помечено для проверки."
+        flagged: "Сообщение помечено для проверки."
+        reason: "ИИ-бот пометил этот пост как неприемлемый.\n\nПричина: %{reason}"
       close_topic:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Закрывать или открывать эту тему запрещено."
+          no_reason: "Для закрытия или открытия темы необходимо указать причину."
+        success: "Тема успешно обновлена."
       unlist_topic:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешается исключать эту тему из списка или добавлять ее в список."
+          no_reason: "Для того чтобы убрать или добавить тему в список, необходимо указать причину."
+        success: "Тема успешно обновлена."
+      lock_post:
+        errors:
+          not_found: "Пост не найден."
+          not_allowed: "Вы не можете заблокировать или разблокировать этот пост."
+          no_reason: "Для блокировки или разблокировки публикации необходимо указать причину."
+        success: "Пост успешно обновлен."
       delete_topic:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешается удалять или восстанавливать эту тему."
+          no_reason: "Для удаления или восстановления темы необходимо указать причину."
+        success: "Тема успешно обновлена."
+      edit_post:
+        errors:
+          not_found: "Пост не найден."
+          not_allowed: "Вам не разрешено редактировать этот пост."
+          no_reason: "Необходимо указать причину редактирования."
+        success: "Пост успешно отредактирован."
       edit_tags:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено редактировать теги в этой теме."
+          no_reason: "Для редактирования тегов необходима причина."
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
+        success: "Теги успешно обновлены."
       edit_category:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено перемещать эту тему."
           category_not_found: "Категория не найдена."
+          no_reason: "Для переноса темы необходима причина."
+          revision_failed: "Не удалось перенести тему."
+        success: "Тема успешно перенесена."
       set_topic_timer:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено устанавливать таймер для этой темы."
+          no_reason: "Для установки таймера для темы необходимо указать причину."
+          invalid_timer_type: "Недопустимый тип таймера. Должен быть одним из следующих: закрыт, открыт, удален, тихо закрыт, bump."
+        success: "Таймер темы успешно обновлен."
       set_slow_mode:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено устанавливать медленный режим в этой теме."
+          no_reason: "Для установки медленного режима требуется причина."
+        success: "Медленный режим успешно обновлен."
       move_posts:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено перемещать сообщения в этой теме."
+          no_reason: "Для перемещения поста необходима причина."
+          no_destination: "Необходимо указать либо destination_topic_id, либо new_title."
+          move_failed: "Не удалось переместить посты."
+        success: "Посты успешно перемещены."
+      grant_badge:
+        errors:
+          user_not_found: "Пользователь не найден."
+          badge_not_found: "Значок не найден."
+          not_allowed: "Вам не разрешается выдавать значки."
+          no_reason: "Для выдачи значка необходимо указать причину."
+          badge_disabled: "Значок не активирован."
+          grant_failed: "Не удалось выдать значок."
+        success: "Значок успешно получен."
       assign:
         errors:
+          plugin_not_installed: "Плагин discourse-assign не установлен."
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено назначать эту тему."
+          assignee_not_found: "Пользователь или группа не найдены."
+          assign_failed: "Не удалось назначить тему."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "Плагин discourse-solved не установлен."
+          no_reason: "Чтобы пометить или снять отметку с сообщения как решенную, требуется указать причину."
+          action_failed: "Не удалось обновить статус \"решено\"."
+        success: "Статус \"Решено\" успешно обновлен."
     reviewables:
       ai_tool_action:
+        title: "Действие инструмента ИИ"
         approve:
           title: "Одобрить"
         reject:
           title: "Отклонить"
+        target_missing: "Цель инструмента действия больше не существует."
+        tool_not_found: "Инструмент '%{tool_name}' больше недоступен."
+        bot_user_missing: "Пользователь бота больше не существует."
+        execution_error: "Выполнение инструмента завершилось с ошибкой: %{error}"
     summarization:
       configuration_hint:
         one: "Сначала настройте параметр `%{setting}`."
@@ -586,7 +684,9 @@ ru:
         set_llm_first: "Сначала задайте %{setting}"
         model_unreachable: "Мы не смогли получить ответ от этой модели. Проверьте настройки."
         invalid_seeded_model: "Эту модель нельзя использовать с этой функцией"
+        invalid_agent_response_format: "Выбранный агент должен иметь формат ответа с логическим полем, содержащим имя «спам»."
         must_select_model: "Сначала вам нужно выбрать LLM"
+        invalid_llm_id: "Выбранная модель LLM недействительна."
       endpoints:
         not_configured: "%{display_name} (не настроено)"
         configuration_hint:
@@ -605,6 +705,8 @@ ru:
     embeddings:
       delete_failed: "Эта модель сейчас используется. Сначала обновите параметр `ai embeddings selected model`."
       cannot_edit_builtin: "Встроенную модель редактировать нельзя."
+      secret_required: "Необходимо выбрать учетные данные."
+      secret_not_found: "Выбранные учетные данные не существуют."
       configuration:
         disable_embeddings: "Сначала вам необходимо отключить настройку 'ai embeddings enabled'."
         choose_model: "Сначала задайте 'ai embeddings selected model'."
@@ -619,14 +721,23 @@ ru:
     translation:
       errors:
         disabled: "Функция перевода с помощью ИИ настроена не полностью."
+        all_posts_translated: "Все сообщения в этой теме уже переведены."
+    llm_credit_allocation:
+      limit_exceeded_user: "В этом сообществе исчерпан лимит кредитов ИИ на сегодня. Пожалуйста, попробуйте снова через %{reset_time} или обратитесь к администратору сайта за дополнительной информацией."
+      limit_exceeded_admin: "Вы достигли лимита кредитов ИИ. Пожалуйста, попробуйте снова через %{reset_time}."
     errors:
       quota_exceeded: "Вы превысили квоту для этой модели. Повторите попытку через %{relative_time}."
       quota_required: "Необходимо указать максимальное количество токенов или использований для этой модели"
       no_query_specified: Параметр запроса обязателен, укажите его.
+      no_user_for_agent: Указанный агент не имеет связанного с ним пользователя.
+      agent_not_found: "Указанный агент не существует. Проверьте параметры agent_name или agent_id (устаревшие: agent_name или agent_id)."
       no_user_specified: Параметры user_unique_id или username обязательны, укажите нужное.
       user_not_found: Указанный пользователь не существует. Проверьте параметр username.
+      agent_disabled: "Указанный агент отключен. Проверьте параметры agent_name или agent_id (устаревшие: agent_name или agent_id)."
+      no_default_llm: У агента должен быть определен параметр default_llm.
       user_not_allowed: Пользователю не разрешено участвовать в теме.
       prompt_message_length: Сообщение %{idx} превышает ограничение в 1000 символов.
+      agent_already_exists: Агент с именем %{name} уже существует.
       custom_tool_exists:
         one: "Пользовательский инструмент с названием %{names} уже существует."
         few: "Пользовательские инструменты с названиями %{names} уже существует."

@@ -63,7 +63,6 @@ fa_IR:
       llm_selector:
         none: "هیچ‌کدام"
       features:
-        back: "بازگشت"
         disabled: "(غیرفعال)"
         groups: "گروه‌ها:"
         no_agent: "تنظیم نشده"
@@ -120,7 +119,6 @@ fa_IR:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."
       ai_agent:
-        back: "بازگشت"
         name: "نام"
         edit: "ویرایش"
         export: "خروجی گرفتن"
@@ -141,7 +139,6 @@ fa_IR:
           title: "بارگذاری‌ها"
           uploading: "در حال بار گذاری..."
       tools:
-        back: "بازگشت"
         export: "خروجی گرفتن"
         import: "ورود داده‌ها"
         name: "نام"
@@ -160,7 +157,6 @@ fa_IR:
         short_title: "اطلاعات ورود"
         name: "نام"
         secret: "مقدار"
-        back: "بازگشت"
         save: "ذخیره"
         edit: "ویرایش"
         delete: "حذف"
@@ -171,7 +167,6 @@ fa_IR:
         provider: "ارائه‌دهنده"
         save: "ذخیره"
         edit: "ویرایش"
-        back: "بازگشت"
         delete: حذف
         quotas:
           group: "گروه"
@@ -224,7 +219,6 @@ fa_IR:
         ai_tool_action:
           tool: "ابزار"
       embeddings:
-        back: "بازگشت"
         save: "ذخیره"
         delete: "حذف"
         edit: "ویرایش"

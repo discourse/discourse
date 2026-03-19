@@ -10,7 +10,7 @@ pl_PL:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Umożliwia wyszukiwanie AI"
               stream_completion: "Umożliwia strumieniowe uzupełnianie agentów AI"
               update_agents: "Umożliwia aktualizację agentów AI"
@@ -235,7 +235,7 @@ pl_PL:
       features:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych agentów i LLM, a dostęp do nich może być kontrolowany przez grupy."
-        back: "Wstecz"
+        back: "Powrót do funkcji AI"
         settings_save_error: "Niektórych ustawień nie udało się zapisać."
         disabled: "(wyłączone)"
         agent:
@@ -319,7 +319,8 @@ pl_PL:
             post_criteria: "Kryteria wpisów"
             agents: "Agenty"
         ai_helper:
-          name: "Pomocnik"
+          edit: "Edytuj ustawienia pomocnika AI"
+          name: "Pomocnik AI"
           description: "Pomaga użytkownikom w interakcji ze społecznością, np. w tworzeniu tematów, pisaniu postów i czytaniu treści"
           proofread: Popraw tekst
           title_suggestions: "Zaproponuj tytuły"
@@ -515,7 +516,7 @@ pl_PL:
             few: "Zastosuj tylko do %{count} odpowiedzi"
             many: "Zastosuj tylko do %{count} odpowiedzi"
             other: "Zastosuj tylko do %{count} odpowiedzi"
-        back: "Wstecz"
+        back: "Powrót do agentów"
         name: "Nazwa"
         edit: "Edytuj"
         export: "Eksport"
@@ -658,7 +659,7 @@ pl_PL:
           uploading: "Przesyłanie..."
           remove: "Usuń przesyłanie"
       tools:
-        back: "Wstecz"
+        back: "Powrót do narzędzi"
         short_title: "Narzędzia"
         export: "Eksport"
         import: "Import"
@@ -717,7 +718,7 @@ pl_PL:
         no_secrets: "Brak jeszcze poświadczeń"
         new_title: "Nowe poświadczenie"
         edit_title: "Edytuj poświadczenie"
-        back: "Poprzednia"
+        back: "Powrót do poświadczeń"
         save: "Zapisz"
         edit: "Edytuj"
         delete: "Usuń"
@@ -751,7 +752,7 @@ pl_PL:
         save: "Zapisz"
         edit: "Edytuj"
         saved: "Model LLM zapisany"
-        back: "Wstecz"
+        back: "Powrót do LLM-ów"
         confirm_delete: Czy na pewno chcesz usunąć ten model?
         delete: Usuń
         quotas:
@@ -954,7 +955,7 @@ pl_PL:
         short_title: "Osadzenia"
         description: "Osadzenia to numeryczne reprezentacje danych, które odzwierciedlają znaczenie i relacje, dzięki czemu funkcje Discourse AI, takie jak Powiązane tematy i Wyszukiwanie AI, mogą rozumieć i łączyć treści."
         new: "Nowe osadzanie"
-        back: "Wstecz"
+        back: "Powrót do osadzeń"
         save: "Zapisz"
         saved: "Zapisano konfigurację osadzania"
         delete: "Usuń"
@@ -1018,6 +1019,7 @@ pl_PL:
         collapse_view_label: "Wyjdź z trybu pełnoekranowego (przycisk ESC lub Wstecz)"
         click_to_run_label: "Uruchom Artifact"
       ai_bot:
+        title: "Bot AI"
         agent: "Agent"
         llm: "Model"
         pm_warning: "Wiadomości wysyłane przez chatboty AI są regularnie monitorowane przez moderatorów."

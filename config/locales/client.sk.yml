@@ -1747,6 +1747,10 @@ sk:
         interface: "Rozhranie"
         apps: "Aplikácie"
         navigation_menu: "Navigačné menu"
+        calendar_subscriptions: "Kalendár"
+      calendar_subscriptions:
+        copied: "Skopírované!"
+        add_to_google: "Kalendár Google"
       change_password:
         success: "(email odoslaný)"
         in_progress: "(email sa odosiela)"

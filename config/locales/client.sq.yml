@@ -1468,6 +1468,8 @@ sq:
         tags: "Etiketat"
         interface: "Ndërfaqja"
         apps: "Aplikimet"
+      calendar_subscriptions:
+        copied: "Kopjuar!"
       change_password:
         success: "(emaili u dërgua)"
         in_progress: "(duke dërguar emailin)"

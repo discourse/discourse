@@ -1305,6 +1305,9 @@ te:
         tags: "ట్యాగులు"
         interface: "ప్రదర్శన"
         apps: "యాప్‌లు"
+      calendar_subscriptions:
+        copied: "కాపీ చేయబడింది!"
+        add_to_google: "గూగుల్ క్యాలెండర్"
       change_password:
         success: "(ఈమెయిల్ పంపిన)"
         in_progress: "(ఈమెయిల్ పంపుతోన్నాం)"

@@ -6,6 +6,7 @@ on:
       - main
       - stable
       - release/*
+      - precompile-asset-improvements
     tags:
       - beta
       - v*
@@ -20,7 +21,7 @@ jobs:
     runs-on: 'cdck-linux-8-core'
     container: discourse/discourse_test:release
     timeout-minutes: 30
-  
+
     steps:
       - name: Install gh cli
         run: |
@@ -45,6 +46,18 @@ jobs:
         run: |
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
+
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs $(($(nproc) - 1))
+          bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile

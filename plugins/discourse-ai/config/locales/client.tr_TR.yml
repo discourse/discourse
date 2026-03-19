@@ -10,7 +10,7 @@ tr_TR:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "YZ aramasına izin verir"
               manage_artifacts: "AI artefaktlarını yönetmeye izin verir (liste, görüntüleme, oluşturma, güncelleme, silme)"
       site_settings:
@@ -211,7 +211,6 @@ tr_TR:
         saved: "Varsayılan LLM modeli başarıyla güncellendi"
       features:
         short_title: "Özellikler"
-        back: "Geri"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
         disabled: "(devre Dışı)"
         groups: "Gruplar:"
@@ -284,7 +283,6 @@ tr_TR:
             topic_criteria: "Konu Kriterleri"
             post_criteria: "Gönderi Kriterleri"
         ai_helper:
-          name: "Yardımcı"
           description: "Kullanıcıların konu oluşturma, gönderi yazma ve içerik okuma gibi topluluk etkileşiminde bulunmasına yardımcı olur"
           proofread: Yazım hataları düzeltilmiş metin
           title_suggestions: "Başlık öner"
@@ -465,7 +463,6 @@ tr_TR:
           replies:
             one: "Yalnızca ilk yanıta uygula"
             other: "İlk %{count} yanıta uygula"
-        back: "Geri"
         name: "Ad"
         edit: "Düzenle"
         export: "Dışa Aktar"
@@ -575,7 +572,6 @@ tr_TR:
           uploading: "Yükleniyor..."
           remove: "Yüklemeyi kaldır"
       tools:
-        back: "Geri"
         short_title: "Araçlar"
         export: "Dışa Aktar"
         import: "İçe Aktar"
@@ -633,7 +629,6 @@ tr_TR:
         no_secrets: "Henüz kimlik bilgisi yok"
         new_title: "Yeni kimlik bilgisi"
         edit_title: "Kimlik bilgilerini düzenle"
-        back: "Geri"
         save: "Kaydet"
         edit: "Düzenle"
         delete: "Sil"
@@ -667,7 +662,6 @@ tr_TR:
         save: "Kaydet"
         edit: "Düzenle"
         saved: "LLM modeli kaydedildi"
-        back: "Geri"
         confirm_delete: Bu modeli silmek istediğinizden emin misiniz?
         delete: Sil
         quotas:
@@ -863,7 +857,6 @@ tr_TR:
         short_title: "Gömmeler"
         description: "Gömmeler, anlam ve ilişkileri yakalayan verilerin sayısal temsilleridir ve İlgili Konular ve YZ Araması gibi Discourse YZ özelliklerinin içeriği anlamasını ve bağlamasını sağlar."
         new: "Yeni gömme"
-        back: "Geri"
         save: "Kaydet"
         saved: "Gömme yapılandırması kaydedildi"
         delete: "Sil"
@@ -927,6 +920,7 @@ tr_TR:
         collapse_view_label: "Tam Ekrandan Çık (ESC veya Geri tuşu)"
         click_to_run_label: "Artifact'i çalıştır"
       ai_bot:
+        title: "YZ botu"
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Wyzwalanie automatyzacji za pomocą API"
   js:
     admin:
       logs:

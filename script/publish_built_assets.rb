@@ -6,9 +6,6 @@ require "fileutils"
 require_relative "../lib/version"
 require "open3"
 
-tmp_dir = "#{__dir__}/../tmp/prebuilt_asset_bundles"
-FileUtils.mkdir_p(tmp_dir)
-
 core_commit_hash = `git rev-parse HEAD`.strip
 version_string = "v#{Discourse::VERSION::STRING}-#{core_commit_hash.slice(0, 8)}"
 release_repo = "discourse/discourse-assets"
@@ -24,19 +21,63 @@ if status.success?
   exit 0
 end
 
-common_env = { "DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS" => "0", "LOAD_PLUGINS" => "0" }
+COMMON_ENV = {
+  "DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS" => "0",
+  "LOAD_PLUGINS" => "1",
+  "ROLLUP_PLUGIN_COMPILER" => "1",
+  "SKIP_DB_AND_REDIS" => "1",
+}
 
-Dir.chdir("#{__dir__}/../frontend/discourse")
-FileUtils.rm_rf("dist")
+Dir.chdir("#{__dir__}/..")
 
-system({ **common_env, "EMBER_ENV" => "production" }, "#{__dir__}/assemble_ember_build.rb")
-FileUtils.rm_rf("dist/assets/plugins")
-system("tar", "-czf", "#{tmp_dir}/production.tar.gz", "dist", exception: true)
+TMP_DIR = "./tmp/prebuilt_asset_bundles"
+FileUtils.rm_rf(TMP_DIR)
+FileUtils.mkdir_p(TMP_DIR)
 
-FileUtils.rm_rf("dist")
-system({ **common_env, "EMBER_ENV" => "development" }, "#{__dir__}/assemble_ember_build.rb")
-FileUtils.rm_rf("dist/assets/plugins")
-system("tar", "-czf", "#{tmp_dir}/development.tar.gz", "dist", exception: true)
+def bundle(name:, env:, compress:)
+  FileUtils.rm_rf("frontend/discourse/dist")
+  FileUtils.rm_rf("app/assets/generated")
+
+  system(
+    { **COMMON_ENV, **env },
+    "#{__dir__}/assemble_ember_build.rb",
+    "--compress",
+    exception: true,
+  )
+
+  out_dir = "#{TMP_DIR}/#{name}"
+  FileUtils.mkdir_p(out_dir)
+  FileUtils.mv("frontend/discourse/dist", "#{out_dir}/core")
+  FileUtils.mv("app/assets/generated", "#{out_dir}/plugins")
+
+  system(
+    "tar",
+    "-czf",
+    "#{TMP_DIR}/#{name}.tar.gz",
+    "-C",
+    out_dir,
+    "core",
+    "plugins",
+    exception: true,
+  )
+end
+
+bundle(
+  name: "production",
+  env: {
+    "EMBER_ENV" => "production",
+    "RAILS_ENV" => "production",
+  },
+  compress: true,
+)
+bundle(
+  name: "development",
+  env: {
+    "EMBER_ENV" => "development",
+    "RAILS_ENV" => "development",
+  },
+  compress: false,
+)
 
 puts "Creating release #{version_string} in #{release_repo}..."
 system(
@@ -46,8 +87,8 @@ system(
   "release",
   "create",
   version_string,
-  "#{tmp_dir}/production.tar.gz",
-  "#{tmp_dir}/development.tar.gz",
+  "#{TMP_DIR}/production.tar.gz",
+  "#{TMP_DIR}/development.tar.gz",
   "--title",
   version_string,
   "--notes",
@@ -55,4 +96,4 @@ system(
   exception: true,
 )
 
-FileUtils.rm_rf(tmp_dir)
+FileUtils.rm_rf(TMP_DIR)

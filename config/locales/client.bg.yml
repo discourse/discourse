@@ -1274,6 +1274,8 @@ bg:
         tags: "Етикети"
         interface: "Интерфейс"
         apps: "Апликации"
+      calendar_subscriptions:
+        copied: "Копирано!"
       change_password:
         success: "(имейлът е изпратен)"
         in_progress: "(изпраща се имейл)"

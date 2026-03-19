@@ -10,7 +10,7 @@ pt_BR:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permite pesquisa com IA"
               manage_artifacts: "Permite gerenciar artefatos de IA (listar, visualizar, criar, atualizar, excluir)"
       site_settings:
@@ -211,7 +211,6 @@ pt_BR:
         saved: "Modelo LLM padrão atualizado com sucesso"
       features:
         short_title: "Recursos"
-        back: "Voltar"
         settings_save_error: "Algumas configurações não puderam ser salvas."
         disabled: "(desativada)"
         groups: "Grupos:"
@@ -284,7 +283,6 @@ pt_BR:
             topic_criteria: "Critérios do tópico"
             post_criteria: "Critérios da postagem"
         ai_helper:
-          name: "Ajudante"
           description: "Auxilia os(as) usuários(as) na interação com a comunidade, em atividades tais como criação de tópicos, escrita de postagens e leitura de conteúdo"
           proofread: Revisar texto
           title_suggestions: "Sugerir títulos"
@@ -465,7 +463,6 @@ pt_BR:
           replies:
             one: "Aplicar apenas à primeira resposta"
             other: "Aplicar às primeiras %{count} respostas"
-        back: "Voltar"
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
@@ -560,7 +557,6 @@ pt_BR:
           uploading: "Enviando..."
           remove: "Remover envio"
       tools:
-        back: "Voltar"
         short_title: "Ferramentas"
         export: "Exportar"
         import: "Importar"
@@ -617,7 +613,6 @@ pt_BR:
         no_secrets: "Ainda não há credenciais"
         new_title: "Nova credencial"
         edit_title: "Editar credencial"
-        back: "Voltar"
         save: "Salvar"
         edit: "Editar"
         delete: "Excluir"
@@ -651,7 +646,6 @@ pt_BR:
         save: "Salvar"
         edit: "Editar"
         saved: "Modelo de LLM salvo"
-        back: "Voltar"
         confirm_delete: Tem certeza de que deseja excluir este modelo?
         delete: Excluir
         quotas:
@@ -843,7 +837,6 @@ pt_BR:
         short_title: "Incorporações"
         description: "Incorporações são representações numéricas de dados que captam o significado e os relacionamentos, permitindo que os recursos de IA do Discourse, como Tópicos Relacionados e Pesquisa com IA, compreendam e relacionem conteúdo."
         new: "Nova incorporação"
-        back: "Voltar"
         save: "Salvar"
         saved: "Configuração de incorporação salva"
         delete: "Excluir"
@@ -907,6 +900,7 @@ pt_BR:
         collapse_view_label: "Sair de tela cheia (ESC ou botão de voltar)"
         click_to_run_label: "Rodar artefato"
       ai_bot:
+        title: "Bot de IA"
         llm: "Modelo"
         pm_warning: "Todas as mensagens do chatbot de IA são monitoradas regularmente por moderadores(as)."
         cancel_streaming: "Parar resposta"

@@ -1665,6 +1665,10 @@ fr:
         interface: "Interface"
         apps: "Applications"
         navigation_menu: "Menu de navigation"
+        calendar_subscriptions: "Calendrier"
+      calendar_subscriptions:
+        copied: "Copié !"
+        add_to_google: "Calendrier Google"
       change_password:
         success: "(e-mail envoyé)"
         in_progress: "(e-mail en cours d'envoi)"
@@ -6270,7 +6274,7 @@ fr:
             back: "Retour aux composants"
             install: "Installer"
             name: "Nom"
-            used_on: "Utilisé le"
+            used_on: "Utilisé sur"
             enabled: "Activé ?"
             by_author: "Par %{name}"
             learn_more: "En savoir plus"

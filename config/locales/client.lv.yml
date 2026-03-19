@@ -1076,6 +1076,8 @@ lv:
         tags: "Tagi"
         interface: "Saskarne"
         apps: "Lietotnes"
+      calendar_subscriptions:
+        copied: "Nokopēts!"
       change_password:
         success: "(e-pasts nosūtīts)"
         in_progress: "(sūta e-pastu)"

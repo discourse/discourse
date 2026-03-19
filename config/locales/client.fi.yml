@@ -1654,6 +1654,10 @@ fi:
         interface: "Käyttöliittymä"
         apps: "Sovellukset"
         navigation_menu: "Navigointivalikko"
+        calendar_subscriptions: "Kalenteri"
+      calendar_subscriptions:
+        copied: "Kopioitiin!"
+        add_to_google: "Google-kalenteri"
       change_password:
         success: "(sähköposti lähetetty)"
         in_progress: "(sähköpostia lähetetään)"

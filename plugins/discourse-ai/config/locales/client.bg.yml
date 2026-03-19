@@ -37,7 +37,6 @@ bg:
       llm_selector:
         none: "Без"
       features:
-        back: "Назад"
         disabled: "(деактивирани)"
         groups: "Групи:"
         no_agent: "Не е зададено"
@@ -86,7 +85,6 @@ bg:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."
       ai_agent:
-        back: "Назад"
         name: "Име"
         edit: "Редактирай"
         export: "Експорт "
@@ -106,7 +104,6 @@ bg:
         uploads:
           uploading: "Качва се..."
       tools:
-        back: "Назад"
         export: "Експорт "
         import: "Импорт"
         name: "Име"
@@ -122,7 +119,6 @@ bg:
         short_title: "Данни за удостоверяване"
         name: "Име"
         secret: "Стойност"
-        back: "Назад"
         save: "Запази"
         edit: "Редактирай"
         delete: "Изтрий"
@@ -131,7 +127,6 @@ bg:
         display_name: "Име"
         save: "Запази"
         edit: "Редактирай"
-        back: "Назад"
         delete: Изтрий
         quotas:
           group: "Група"
@@ -165,7 +160,6 @@ bg:
         image_caption:
           save_caption: "Запази"
       embeddings:
-        back: "Назад"
         save: "Запази"
         delete: "Изтрий"
         edit: "Редактирай"

@@ -88,7 +88,7 @@ zh_CN:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "运行数据资源管理器查询。通过指定查询 ID 将 API 密钥限制为一组查询。"
     discourse_automation:
       scriptables:

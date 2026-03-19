@@ -87,7 +87,6 @@ id:
       llm_selector:
         none: "Tidak ada"
       features:
-        back: "Kembali"
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
@@ -130,7 +129,6 @@ id:
         periods:
           last_day: "24 jam terakhir"
       ai_agent:
-        back: "Kembali"
         name: "Nama"
         edit: "Ubah"
         export: "Ekspor"
@@ -152,7 +150,6 @@ id:
         uploads:
           uploading: "Mengunggah..."
       tools:
-        back: "Kembali"
         export: "Ekspor"
         name: "Nama"
         description: "Deskripsi"
@@ -164,7 +161,6 @@ id:
       secrets:
         short_title: "Kredensial"
         name: "Nama"
-        back: "Kembali"
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
@@ -172,7 +168,6 @@ id:
         display_name: "Nama"
         save: "Simpan"
         edit: "Ubah"
-        back: "Kembali"
         delete: Hapus
         quotas:
           duration: "Durasi"
@@ -223,7 +218,6 @@ id:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"
       embeddings:
-        back: "Kembali"
         save: "Simpan"
         delete: "Hapus"
         edit: "Ubah"

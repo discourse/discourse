@@ -1935,6 +1935,10 @@ cs:
         apps: "Aplikace"
         navigation_menu: "Navigační nabídka"
         upcoming_changes: "Nadcházející změny"
+        calendar_subscriptions: "Kalendář"
+      calendar_subscriptions:
+        copied: "Zkopírováno!"
+        add_to_google: "Kalendář Google"
       change_password:
         success: "(email odeslán)"
         in_progress: "(odesílám)"

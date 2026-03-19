@@ -34,6 +34,11 @@ pl_PL:
               label: ID tematu
     discourse_calendar:
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
+      preferences:
+        all_events: "Kalendarz Discourse – wszystkie wydarzenia"
+        all_events_description: "Wszystkie wydarzenia na forum"
+        my_events: "Kalendarz Discourse – moje wydarzenia"
+        my_events_description: "Wydarzenia, na które się wybierasz lub które Cię interesują"
       on_holiday: "Na świętach"
       disable_holiday: "Wyłącz"
       enable_holiday: "Włącz"

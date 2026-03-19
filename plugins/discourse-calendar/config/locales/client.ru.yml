@@ -12,6 +12,12 @@ ru:
         categories:
           discourse_post_event: "Мероприятие Discourse"
           discourse_calendar: "Календарь и события"
+      web_hooks:
+        calendar_event:
+          group_name: "Событие календаря"
+          calendar_event_created: "Событие в календаре создано."
+          calendar_event_updated: "Событие в календаре обновлено."
+          calendar_event_destroyed: "Событие в календаре уничтожено"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ ru:
               label: ID темы
     discourse_calendar:
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
+      preferences:
+        all_events: "Discourse Календарь - Все события"
+        all_events_description: "Все события форума"
+        my_events: "Discourse Календарь — Мои события"
+        my_events_description: "Мероприятия, которые вы собираетесь посетить или которыми вы интересуетесь."
       on_holiday: "Выходные"
       disable_holiday: "Отключить"
       enable_holiday: "Включить"
@@ -353,6 +364,7 @@ ru:
       bulk_invite: "Массовое приглашение"
       close_event: "Закрыть мероприятие"
       open_event: "Открыть мероприятие"
+      destroy_event: "Уничтожить событие"
       invitees_modal:
         title_invited: "Участие в мероприятии"
         title_participated: "Список участвовавших пользователей"
@@ -437,6 +449,12 @@ ru:
             private:
               title: "Закрытое"
               description: "К закрытому мероприятию могут присоединиться только приглашенные пользователи."
+      composer:
+        name_placeholder: "Событие"
+        end_date_placeholder: "Установить дату окончания"
+        location_placeholder: "Добавить местоположение или URL"
+        max_attendees_placeholder: "Установить максимальное количество участников"
+        description_placeholder: "Добавить описание события"
       builder_modal:
         custom_fields:
           label: "Настраиваемые поля"
@@ -506,6 +524,7 @@ ru:
           label: "Приглашённые группы"
         status:
           label: "Статус"
+        delete_confirmation_message: "Удалить это событие?"
       invite_user_or_group:
         title: "Уведомить пользователей или группы"
         invite: "Отправить"

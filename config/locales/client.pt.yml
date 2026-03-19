@@ -1667,6 +1667,9 @@ pt:
         interface: "Interface"
         apps: "Aplicações"
         navigation_menu: "Menu de Navegação"
+      calendar_subscriptions:
+        copied: "Copiado!"
+        add_to_google: "Calendário Google"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"

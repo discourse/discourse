@@ -2,16 +2,20 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/NoChdir
 
+require "bundler/setup"
 require "fileutils"
 require "tempfile"
 require "open3"
 require "json"
 require "time"
+require "parallel"
+require "etc"
 
 require_relative "../lib/version"
 
 DOWNLOAD_PRE_BUILT_ASSETS = ENV["DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS"] != "0"
 DOWNLOAD_TEMP_FILE = "#{__dir__}/../tmp/assets.tar.gz"
+DOWNLOAD_EXTRACT_DIR = "#{__dir__}/../tmp/extracted_assets"
 
 PRE_BUILD_ROOT = "https://get.discourse.org/discourse-assets"
 
@@ -111,27 +115,25 @@ def download_prebuild_assets!
     return false
   end
 
-  FileUtils.rm_rf("#{EMBER_APP_DIR}/dist")
-  FileUtils.mkdir_p("#{EMBER_APP_DIR}/dist")
+  FileUtils.mkdir_p(DOWNLOAD_EXTRACT_DIR)
   begin
-    system(
-      "tar",
-      "--strip-components=1",
-      "-xzf",
-      DOWNLOAD_TEMP_FILE,
-      "-C",
-      "#{EMBER_APP_DIR}/dist",
-      exception: true,
-    )
+    system("tar", "-xzf", DOWNLOAD_TEMP_FILE, "-C", DOWNLOAD_EXTRACT_DIR, exception: true)
   rescue RuntimeError => e
     log "Failed to extract prebuilt assets: #{e.message}"
     return false
   end
 
+  FileUtils.rm_rf("#{EMBER_APP_DIR}/dist")
+  FileUtils.mv("#{DOWNLOAD_EXTRACT_DIR}/core", "#{EMBER_APP_DIR}/dist")
+
+  FileUtils.rm_rf("app/assets/generated")
+  FileUtils.mv("#{DOWNLOAD_EXTRACT_DIR}/plugins", "./app/assets/generated")
+
   puts "Prebuilt assets downloaded and extracted successfully."
   true
 ensure
   FileUtils.rm_f(DOWNLOAD_TEMP_FILE) if File.exist?(DOWNLOAD_TEMP_FILE)
+  FileUtils.rm_rf(DOWNLOAD_EXTRACT_DIR) if File.exist?(DOWNLOAD_EXTRACT_DIR)
 end
 
 build_cmd = %w[pnpm ember build]
@@ -186,5 +188,20 @@ else
     log "Running full core build..."
     system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
     File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
+  end
+end
+
+if ARGV.include?("--compress")
+  files = [*Dir.glob("#{EMBER_APP_DIR}/dist/**/*.js"), *Dir.glob("app/assets/generated/**/*.js")]
+  Parallel.map(files, in_threads: 4) do |file|
+    next if File.exist?("#{file}.gz") && File.exist?("#{file}.br")
+
+    start = Time.now
+
+    system("brotli", "-f", "--quality=11", "-o", "#{file}.br", file, exception: true)
+    IO.popen(["gzip", "-f", "-9", "-c", file], "rb") { |io| File.write("#{file}.gz", io.read) }
+    raise "gzip failed for #{file}" unless $?.success?
+
+    puts "Compressed #{file} in #{(Time.now - start).round(2)}s"
   end
 end

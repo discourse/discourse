@@ -46,4 +46,28 @@ RSpec.describe TopicListItemSerializer do
       expect(parsed_json["event_ends_at"]).to eq("2020-04-24T16:10:00.000Z")
     end
   end
+
+  describe "#event_all_day" do
+    it "returns true when the event is all-day" do
+      SiteSetting.display_post_event_date_on_topic_title = true
+
+      all_day_topic = Fabricate(:topic)
+      all_day_post = Fabricate(:post, topic: all_day_topic)
+      DiscoursePostEvent::Event.create!(
+        id: all_day_post.id,
+        original_starts_at: Time.utc(2020, 4, 25),
+        original_ends_at: Time.utc(2020, 4, 27),
+        all_day: true,
+      )
+
+      all_day_serializer = described_class.new(all_day_topic, scope: Guardian.new, root: false)
+      all_day_json = JSON.parse(all_day_serializer.to_json)
+
+      expect(all_day_json["event_all_day"]).to eq(true)
+    end
+
+    it "is not included when the event is not all-day" do
+      expect(parsed_json).not_to have_key("event_all_day")
+    end
+  end
 end
