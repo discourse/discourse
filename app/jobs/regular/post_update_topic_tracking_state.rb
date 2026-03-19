@@ -10,8 +10,9 @@ module Jobs
 
       if topic.private_message?
         PrivateMessageTopicTrackingState.publish_unread(post) if post.post_number > 1
-
-        TopicGroup.new_message_update(topic.last_poster, topic.id, post.post_number)
+        if post.post_type != Post.types[:small_action]
+          TopicGroup.new_message_update(topic.last_poster, topic.id, post.post_number)
+        end
       else
         TopicTrackingState.publish_unmuted(post.topic)
         if post.post_number > 1
