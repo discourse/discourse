@@ -26,7 +26,7 @@ module Migrations
         #
         # @return [void]
         def self.create(topic_id:, group_id:)
-          IntermediateDB.insert(SQL, topic_id, group_id)
+          Migrations::Database::IntermediateDB.insert(SQL, topic_id, group_id)
         end
       end
     end

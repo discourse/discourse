@@ -38,13 +38,13 @@ module Migrations
           suspended_by_id: nil,
           suspended_till: nil
         )
-          IntermediateDB.insert(
+          Migrations::Database::IntermediateDB.insert(
             SQL,
             user_id,
-            Database.format_datetime(suspended_at),
+            Migrations::Database.format_datetime(suspended_at),
             reason,
             suspended_by_id,
-            Database.format_datetime(suspended_till),
+            Migrations::Database.format_datetime(suspended_till),
           )
         end
       end

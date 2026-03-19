@@ -59,8 +59,7 @@ module Migrations
             user_id
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -165,47 +164,47 @@ module Migrations
           uploaded_logo_id: nil,
           user_id:
         )
-          IntermediateDB.insert(
+          Migrations::Database::IntermediateDB.insert(
             SQL,
             original_id,
             about_topic_title,
-            Database.format_boolean(all_topics_wiki),
-            Database.format_boolean(allow_badges),
-            Database.format_boolean(allow_global_tags),
-            Database.format_boolean(allow_unlimited_owner_edits_on_first_post),
-            Database.format_boolean(auto_close_based_on_last_post),
+            Migrations::Database.format_boolean(all_topics_wiki),
+            Migrations::Database.format_boolean(allow_badges),
+            Migrations::Database.format_boolean(allow_global_tags),
+            Migrations::Database.format_boolean(allow_unlimited_owner_edits_on_first_post),
+            Migrations::Database.format_boolean(auto_close_based_on_last_post),
             auto_close_hours,
             color,
-            Database.format_datetime(created_at),
+            Migrations::Database.format_datetime(created_at),
             default_list_filter,
             default_slow_mode_seconds,
             default_top_period,
             default_view,
             description,
             email_in,
-            Database.format_boolean(email_in_allow_strangers),
+            Migrations::Database.format_boolean(email_in_allow_strangers),
             emoji,
             existing_id,
             icon,
             locale,
-            Database.format_boolean(mailinglist_mirror),
+            Migrations::Database.format_boolean(mailinglist_mirror),
             minimum_required_tags,
             name,
-            Database.format_boolean(navigate_to_first_post_after_read),
+            Migrations::Database.format_boolean(navigate_to_first_post_after_read),
             num_featured_topics,
             parent_category_id,
             position,
             read_only_banner,
-            Database.format_boolean(read_restricted),
+            Migrations::Database.format_boolean(read_restricted),
             search_priority,
-            Database.format_boolean(show_subcategory_list),
+            Migrations::Database.format_boolean(show_subcategory_list),
             slug,
-            Database.format_boolean(sort_ascending),
+            Migrations::Database.format_boolean(sort_ascending),
             sort_order,
             style_type,
             subcategory_list_style,
             text_color,
-            Database.format_boolean(topic_featured_link_allowed),
+            Migrations::Database.format_boolean(topic_featured_link_allowed),
             topic_id,
             topic_template,
             topic_title_placeholder,

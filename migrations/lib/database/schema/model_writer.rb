@@ -9,7 +9,6 @@ module Migrations
           @enum_namespace = enum_namespace
           @header = header.gsub(/^/, "# ")
           @namespace_parts = model_namespace.split("::")
-          @innermost = @namespace_parts.last
           @base_indent = "  " * (@namespace_parts.size - 1)
         end
 
@@ -50,7 +49,7 @@ module Migrations
           emit "    def self.create("
           emit method_parameters(columns)
           emit "    )"
-          emit "      #{@innermost}.insert("
+          emit "      #{@model_namespace}.insert("
           emit "        SQL,"
           emit insertion_arguments(columns)
           emit "      )"
@@ -164,17 +163,17 @@ module Migrations
               argument =
                 case c.datatype
                 when :datetime
-                  "Database.format_datetime(#{c.name})"
+                  "Migrations::Database.format_datetime(#{c.name})"
                 when :date
-                  "Database.format_date(#{c.name})"
+                  "Migrations::Database.format_date(#{c.name})"
                 when :boolean
-                  "Database.format_boolean(#{c.name})"
+                  "Migrations::Database.format_boolean(#{c.name})"
                 when :inet
-                  "Database.format_ip_address(#{c.name})"
+                  "Migrations::Database.format_ip_address(#{c.name})"
                 when :blob
-                  "Database.to_blob(#{c.name})"
+                  "Migrations::Database.to_blob(#{c.name})"
                 when :json
-                  "Database.to_json(#{c.name})"
+                  "Migrations::Database.to_json(#{c.name})"
                 when :float, :integer, :numeric, :text
                   c.name
                 else

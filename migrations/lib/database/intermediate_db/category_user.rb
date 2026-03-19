@@ -30,11 +30,11 @@ module Migrations
         #
         # @return [void]
         def self.create(category_id:, user_id:, last_seen_at: nil, notification_level:)
-          IntermediateDB.insert(
+          Migrations::Database::IntermediateDB.insert(
             SQL,
             category_id,
             user_id,
-            Database.format_datetime(last_seen_at),
+            Migrations::Database.format_datetime(last_seen_at),
             notification_level,
           )
         end

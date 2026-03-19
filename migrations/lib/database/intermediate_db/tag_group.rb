@@ -38,12 +38,12 @@ module Migrations
           one_per_topic: nil,
           parent_tag_id: nil
         )
-          IntermediateDB.insert(
+          Migrations::Database::IntermediateDB.insert(
             SQL,
             original_id,
-            Database.format_datetime(created_at),
+            Migrations::Database.format_datetime(created_at),
             name,
-            Database.format_boolean(one_per_topic),
+            Migrations::Database.format_boolean(one_per_topic),
             parent_tag_id,
           )
         end

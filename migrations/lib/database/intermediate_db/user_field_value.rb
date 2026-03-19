@@ -32,13 +32,13 @@ module Migrations
         #
         # @return [void]
         def self.create(user_id:, field_id:, value:, created_at: nil, is_multiselect_field: nil)
-          IntermediateDB.insert(
+          Migrations::Database::IntermediateDB.insert(
             SQL,
             user_id,
             field_id,
             value,
-            Database.format_datetime(created_at),
-            Database.format_boolean(is_multiselect_field),
+            Migrations::Database.format_datetime(created_at),
+            Migrations::Database.format_boolean(is_multiselect_field),
           )
         end
       end

@@ -24,7 +24,7 @@ module Migrations
         #
         # @return [void]
         def self.create(normalization:)
-          IntermediateDB.insert(SQL, normalization)
+          Migrations::Database::IntermediateDB.insert(SQL, normalization)
         end
       end
     end

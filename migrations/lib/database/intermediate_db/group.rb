@@ -98,14 +98,14 @@ module Migrations
           title: nil,
           visibility_level: nil
         )
-          IntermediateDB.insert(
+          Migrations::Database::IntermediateDB.insert(
             SQL,
             original_id,
-            Database.format_boolean(allow_membership_requests),
-            Database.format_boolean(allow_unknown_sender_topic_replies),
+            Migrations::Database.format_boolean(allow_membership_requests),
+            Migrations::Database.format_boolean(allow_unknown_sender_topic_replies),
             automatic_membership_email_domains,
             bio_raw,
-            Database.format_datetime(created_at),
+            Migrations::Database.format_datetime(created_at),
             default_notification_level,
             existing_id,
             flair_bg_color,
@@ -119,10 +119,10 @@ module Migrations
             mentionable_level,
             messageable_level,
             name,
-            Database.format_boolean(primary_group),
-            Database.format_boolean(public_admission),
-            Database.format_boolean(public_exit),
-            Database.format_boolean(publish_read_state),
+            Migrations::Database.format_boolean(primary_group),
+            Migrations::Database.format_boolean(public_admission),
+            Migrations::Database.format_boolean(public_exit),
+            Migrations::Database.format_boolean(publish_read_state),
             title,
             visibility_level,
           )
