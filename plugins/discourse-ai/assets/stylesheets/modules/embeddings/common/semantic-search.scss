@@ -56,6 +56,11 @@
   }
 }
 
+body.ai-semantic-search-loading .no-results-container {
+  // avoid temporary flash of 0 results
+  display: none;
+}
+
 .search-results {
   .fps-result {
     .ai-result__icon {
@@ -106,6 +111,24 @@
   .search-advanced-filters {
     grid-column: 1 / -1;
   }
+}
+
+.ai-search-results-notice,
+.ai-quick-search-notice {
+  display: flex;
+  gap: var(--space-2);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.ai-search-results-notice {
+  padding: var(--space-2) 0;
+  margin-bottom: var(--space-2);
+}
+
+.ai-quick-search-notice {
+  padding: var(--space-2) var(--space-4);
+  margin-top: var(--space-1);
 }
 
 // Hides other buttons and only shows loader

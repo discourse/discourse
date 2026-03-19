@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -77,6 +78,7 @@ export default class AiFullPageSearch extends Component {
       this.args.addSearchResults(this.AiResults, "topic_id");
       this.appEvents.trigger(AI_RESULTS_TOGGLED, {
         enabled: true,
+        autoEnabled: true,
       });
     }
     // AI results not ready yet, auto-enable when ready
@@ -201,7 +203,9 @@ export default class AiFullPageSearch extends Component {
   toggleAiResults() {
     this.appEvents.trigger(AI_RESULTS_TOGGLED, {
       enabled: !this.showingAiResults,
+      autoEnabled: this.hasZeroRegularResults,
     });
+
     if (this.showingAiResults) {
       this.args.addSearchResults([], "topic_id");
       this.autoEnabledForZeroResults = false;
@@ -249,6 +253,7 @@ export default class AiFullPageSearch extends Component {
           this.args.addSearchResults(this.AiResults, "topic_id");
           this.appEvents.trigger(AI_RESULTS_TOGGLED, {
             enabled: true,
+            autoEnabled: true,
           });
         }
       })
@@ -275,6 +280,7 @@ export default class AiFullPageSearch extends Component {
   }
 
   <template>
+    {{bodyClass (if this.searching "ai-semantic-search-loading")}}
     <div
       {{didUpdate this.sortChanged @sortOrder}}
       class="semantic-search__container search-results"
