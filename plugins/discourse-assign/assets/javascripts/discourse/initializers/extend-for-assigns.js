@@ -704,6 +704,8 @@ export default {
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
+        description: "topics.bulk.assign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
         action({ setComponent }) {
           setComponent(BulkActionsAssignUser);
         },
@@ -715,6 +717,8 @@ export default {
         label: "topics.bulk.unassign",
         icon: "user-xmark",
         class: "btn-default unassign-topics",
+        description: "topics.bulk.unassign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },
