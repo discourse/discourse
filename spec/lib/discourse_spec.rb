@@ -199,14 +199,12 @@ RSpec.describe Discourse do
       expect(Discourse.find_plugins(include_disabled: true)).to include(plugin1, plugin2)
     end
 
-    it "can find plugin assets" do
+    it "can find plugin css assets" do
       plugin2.enabled = true
 
       expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
-      expect(Discourse.find_plugin_js_assets({}).length).to eq(2)
       plugin1.register_asset_filter { |type, request, opts| false }
       expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
-      expect(Discourse.find_plugin_js_assets({}).length).to eq(1)
     end
   end
 

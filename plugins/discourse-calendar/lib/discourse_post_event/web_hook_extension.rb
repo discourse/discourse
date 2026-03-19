@@ -24,6 +24,23 @@ module DiscoursePostEvent
         post = calendar_event.post
         topic = post&.topic
 
+        parsed_starts_at =
+          (
+            if calendar_event.all_day
+              calendar_event.starts_at&.utc&.strftime("%Y-%m-%d")
+            else
+              calendar_event.starts_at
+            end
+          )
+        parsed_ends_at =
+          (
+            if calendar_event.all_day
+              calendar_event.ends_at&.utc&.strftime("%Y-%m-%d")
+            else
+              calendar_event.ends_at
+            end
+          )
+
         {
           event: {
             id: calendar_event.id,
@@ -32,8 +49,9 @@ module DiscoursePostEvent
             location: calendar_event.location,
             url: calendar_event.url,
             status: DiscoursePostEvent::Event.statuses[calendar_event.status]&.to_s,
-            starts_at: calendar_event.starts_at,
-            ends_at: calendar_event.ends_at,
+            starts_at: parsed_starts_at,
+            ends_at: parsed_ends_at,
+            all_day: calendar_event.all_day,
             recurrence: calendar_event.recurrence,
             recurrence_until: calendar_event.recurrence_until,
             timezone: calendar_event.timezone,

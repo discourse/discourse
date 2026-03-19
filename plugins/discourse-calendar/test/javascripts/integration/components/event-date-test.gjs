@@ -10,9 +10,11 @@ module("Integration | Component | EventDate", function (hooks) {
   hooks.beforeEach(function () {
     this.siteSettings.discourse_post_event_enabled = true;
     this.siteSettings.use_local_event_date = true;
+    this.originalGuess = moment.tz.guess;
   });
 
   hooks.afterEach(function () {
+    moment.tz.guess = this.originalGuess;
     this.clock?.restore();
   });
 
@@ -83,6 +85,28 @@ module("Integration | Component | EventDate", function (hooks) {
         "title",
         /February 2, 2026.*5:00 PM/,
         "displays date in browser timezone (Harare) when no event timezone"
+      );
+  });
+
+  test("all-day event does not shift date across timezones", async function (assert) {
+    // Use a western timezone where UTC midnight would shift to the previous day
+    moment.tz.guess = () => "America/Chicago";
+    this.clock = fakeTime("2026-03-11T12:00:00Z", "America/Chicago", true);
+
+    const topic = {
+      event_starts_at: "2026-03-12",
+      event_ends_at: "2026-03-14",
+      event_all_day: true,
+    };
+
+    await render(<template><EventDate @topic={{topic}} /></template>);
+
+    assert
+      .dom(".event-date")
+      .hasAttribute(
+        "title",
+        /March 12, 2026/,
+        "displays March 12 (correct date) not March 11 (timezone-shifted)"
       );
   });
 });

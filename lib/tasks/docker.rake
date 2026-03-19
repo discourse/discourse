@@ -233,7 +233,7 @@ task "docker:test" do
         )
 
       unless ENV["JS_ONLY"]
-        @good &&= run_or_fail("bin/ember-cli --build") if ENV["RUN_SYSTEM_TESTS"]
+        @good &&= run_or_fail("script/assemble_ember_build.rb") if ENV["RUN_SYSTEM_TESTS"]
 
         if ENV["WARMUP_TMP_FOLDER"]
           run_or_fail("bundle exec rspec ./spec/requests/groups_controller_spec.rb")

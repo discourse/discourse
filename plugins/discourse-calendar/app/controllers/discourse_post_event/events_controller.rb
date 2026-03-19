@@ -182,6 +182,7 @@ module DiscoursePostEvent
 
     def format_time(event, time)
       return nil unless time
+      return time.utc.strftime("%Y-%m-%d") if event.all_day
 
       if event.show_local_time
         time.in_time_zone(event.timezone).strftime("%Y-%m-%dT%H:%M:%S")

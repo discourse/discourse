@@ -19,6 +19,7 @@ module DiscoursePostEvent
       :closed,
       :"chat-enabled",
       :"max-attendees",
+      :"all-day",
     ]
 
     def self.extract_events(post)
