@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Support Category Type Setup", type: :system do
+RSpec.describe "Support Category Type Setup" do
   fab!(:admin)
 
   let(:category_page) { PageObjects::Pages::Category.new }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post event", type: :system do
+describe "Post event" do
   fab!(:admin)
   fab!(:user, :admin)
   fab!(:group)

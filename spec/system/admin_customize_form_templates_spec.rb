@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Form Templates", type: :system do
+describe "Admin Customize Form Templates" do
   let(:form_template_page) { PageObjects::Pages::FormTemplate.new }
   let(:ace_editor) { PageObjects::Components::AceEditor.new }
 

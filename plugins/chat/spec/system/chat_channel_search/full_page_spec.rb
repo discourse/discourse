@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat channel search - full page", type: :system do
+RSpec.describe "Chat channel search - full page" do
   before do
     SearchIndexer.enable
     SiteSetting.chat_search_enabled = true

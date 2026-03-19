@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Content security policy", type: :system do
+describe "Content security policy" do
   let(:plugin_class) do
     Class.new(Plugin::Instance) do
       attr_accessor :enabled

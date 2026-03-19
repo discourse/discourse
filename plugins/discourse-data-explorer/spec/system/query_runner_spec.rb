@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Data explorer query runner", type: :system do
+RSpec.describe "Data explorer query runner" do
   fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "group") }
   fab!(:group_user) { Fabricate(:group_user, user: admin, group: group) }

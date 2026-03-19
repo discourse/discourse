@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category General", type: :system do
+describe "Edit Category General" do
   fab!(:admin)
   fab!(:category)
   let(:category_page) { PageObjects::Pages::Category.new }

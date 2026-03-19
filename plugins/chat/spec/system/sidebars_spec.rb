@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Navigation", type: :system do
+RSpec.describe "Navigation" do
   fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }

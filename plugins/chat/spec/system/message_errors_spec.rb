@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message errors", type: :system do
+RSpec.describe "Message errors" do
   context "when message is too long" do
     let(:chat_page) { PageObjects::Pages::Chat.new }
     let(:dialog_page) { PageObjects::Components::Dialog.new }

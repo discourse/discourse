@@ -27,11 +27,11 @@ class SiteTextSerializer < ApplicationSerializer
   end
 
   def old_default
-    override.original_translation if override.present?
+    override.presence&.original_translation
   end
 
   def new_default
-    override.current_default if override.present?
+    override.presence&.current_default
   end
 
   def interpolation_keys

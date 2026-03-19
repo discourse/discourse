@@ -215,7 +215,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
 
         reply_to_post_id = post_id_from_imported_post_id(p["c_parent"])
         reply_to_post = reply_to_post_id.present? ? Post.find(reply_to_post_id) : nil
-        reply_to_post_number = reply_to_post.present? ? reply_to_post.post_number : nil
+        reply_to_post_number = reply_to_post.presence&.post_number
 
         user_id = user_id_from_imported_user_id(p["c_author"]) || Discourse::SYSTEM_USER_ID
 

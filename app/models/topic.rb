@@ -1415,7 +1415,7 @@ class Topic < ActiveRecord::Base
 
     # only one banner at the same time
     previous_banner = Topic.where(archetype: Archetype.banner).first
-    previous_banner.remove_banner!(user) if previous_banner.present?
+    previous_banner.presence&.remove_banner!(user)
 
     UserProfile.where.not(dismissed_banner_key: nil).update_all(dismissed_banner_key: nil)
 

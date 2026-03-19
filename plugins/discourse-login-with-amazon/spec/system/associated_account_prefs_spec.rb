@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Amazon Associated Account Preferences", type: :system do
+RSpec.describe "Amazon Associated Account Preferences" do
   fab!(:user)
 
   let!(:user_account_preferences_page) { PageObjects::Pages::UserPreferencesAccount.new }

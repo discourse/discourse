@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User activity posts", type: :system do
+describe "User activity posts" do
   before_all { UserActionManager.enable }
   fab!(:user)
 

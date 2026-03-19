@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin AI features configuration", type: :system do
+RSpec.describe "Admin AI features configuration" do
   fab!(:admin)
   fab!(:llm_model)
   fab!(:summarization_agent, :ai_agent)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Member upcoming changes", type: :system do
+RSpec.describe "Member upcoming changes" do
   fab!(:current_user, :user)
   fab!(:admin)
   let(:upcoming_changes_page) { PageObjects::Pages::AdminUpcomingChanges.new }

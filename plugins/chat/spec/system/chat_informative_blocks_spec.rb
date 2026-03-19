@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Informative blocks in chat messages", type: :system do
+RSpec.describe "Informative blocks in chat messages" do
   fab!(:user)
   fab!(:channel_1, :chat_channel)
 

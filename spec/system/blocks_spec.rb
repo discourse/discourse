@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Block conditions", type: :system do
+describe "Block conditions" do
   fab!(:theme) do
     theme_dir = "#{Rails.root}/spec/fixtures/themes/dev-tools-test-theme"
     theme = RemoteTheme.import_theme_from_directory(theme_dir)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative "../dummy_provider"
 
-RSpec.describe "Create channel", type: :system do
+RSpec.describe "Create channel" do
   fab!(:admin)
 
   include_context "with dummy provider"
