@@ -25,19 +25,19 @@ html.ios-device.has-full-page-chat body {
 }
 
 html.ios-device.has-full-page-chat body #main-outlet {
-  .c-routes.--channel-info,
-  .c-routes.--channel-info .c-channel-info {
+  .c-routes.--channel-info {
     @include chat-height;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    overflow: hidden;
+  }
+
+  .c-routes.--channel-info .c-channel-info {
     overflow: hidden;
   }
 
   .c-routes.--channel-info-settings,
   .c-routes.--channel-info-members {
-    flex: 1;
-    min-height: 0;
     overflow-y: auto;
   }
 }
