@@ -3727,9 +3727,6 @@ en:
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected:
-          one: "You have selected <b>%{count}</b> topic."
-          other: "You have selected <b>%{count}</b> topics."
         selected_sole_category:
           one: "You have selected <b>%{count}</b> topic from category:"
           other: "You have selected <b>%{count}</b> topics from category:"

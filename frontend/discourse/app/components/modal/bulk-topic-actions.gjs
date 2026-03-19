@@ -457,8 +457,8 @@ export default class BulkTopicActions extends Component {
                 }}</p>
             {{/if}}
 
-            <div class="topic-bulk-actions-modal__selection-info">
-              {{#if this.showSoleCategoryTip}}
+            {{#if this.showSoleCategoryTip}}
+              <div class="topic-bulk-actions-modal__selection-info">
                 {{trustHTML
                   (i18n
                     "topics.bulk.selected_sole_category"
@@ -466,15 +466,8 @@ export default class BulkTopicActions extends Component {
                   )
                 }}
                 {{trustHTML this.soleCategoryBadgeHTML}}
-              {{else}}
-                {{trustHTML
-                  (i18n
-                    "topics.bulk.selected"
-                    count=@model.bulkSelectHelper.selected.length
-                  )
-                }}
-              {{/if}}
-            </div>
+              </div>
+            {{/if}}
 
             {{#if this.isCategoryAction}}
               <p>
