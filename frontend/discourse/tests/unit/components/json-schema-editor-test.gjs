@@ -43,4 +43,34 @@ module("Unit | Component | <JsonSchemaEditor />", function (hooks) {
 
     assert.deepEqual(JSON.parse(result), [{ color: "red", icon: "" }]);
   });
+
+  test("allows HTML content", async function (assert) {
+    let result;
+    const model = {
+      value: "[]",
+      settingName: "My setting name",
+      jsonSchema: TEST_SCHEMA,
+      updateValue: (val) => (result = val),
+    };
+
+    const closeModal = () => {};
+
+    await render(
+      <template>
+        <JsonSchemaEditor
+          @inline={{true}}
+          @model={{model}}
+          @closeModal={{closeModal}}
+        />
+      </template>
+    );
+
+    await click(".json-editor-btn-add");
+    await fillIn("[name='root[0][color]']", "red <a>link</a>");
+    await click(".d-modal__footer .btn-primary");
+
+    assert.deepEqual(JSON.parse(result), [
+      { color: "red <a>link</a>", icon: "" },
+    ]);
+  });
 });

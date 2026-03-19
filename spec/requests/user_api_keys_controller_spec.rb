@@ -43,7 +43,10 @@ RSpec.describe UserApiKeysController do
     describe "as a normal user" do
       fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-      before { sign_in(user) }
+      before do
+        sign_in(user)
+        SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      end
 
       it "includes padding parameter in the form only when provided" do
         get "/user-api-key/new", params: args
@@ -59,6 +62,8 @@ RSpec.describe UserApiKeysController do
       end
 
       it "does not show redirect warning when auth_redirect is discourse://auth_redirect" do
+        SiteSetting.allowed_user_api_auth_redirects = "discourse://auth_redirect"
+
         get "/user-api-key/new", params: args.merge(auth_redirect: "discourse://auth_redirect")
         expect(response.body).not_to include(I18n.t("user_api_key.redirect_warning"))
       end
@@ -74,6 +79,21 @@ RSpec.describe UserApiKeysController do
         get "/user-api-key/new", params: args.merge(auth_redirect: "myapp://callback")
         expect(response.body).to include("<strong>callback</strong>")
         expect(response.body).not_to include("<strong>callback:</strong>")
+      end
+
+      it "rejects auth_redirect to a disallowed domain" do
+        get "/user-api-key/new", params: args.merge(auth_redirect: "https://evil.com/steal")
+        expect(response.body).to include(I18n.t("user_api_key.generic_error"))
+        expect(response.body).not_to include("evil.com")
+      end
+
+      it "allows auth_redirect when it matches allowed_user_api_auth_redirects" do
+        SiteSetting.allowed_user_api_auth_redirects = "https://good.com/callback"
+
+        get "/user-api-key/new", params: args.merge(auth_redirect: "https://good.com/callback")
+        expect(response.status).to eq(200)
+        expect(response.body).to include("good.com")
+        expect(response.body).not_to include(I18n.t("user_api_key.generic_error"))
       end
     end
   end

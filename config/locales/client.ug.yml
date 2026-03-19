@@ -5424,8 +5424,6 @@ ug:
         back: "ھەممە دوكلاتقا قايت"
         group_traffic: "ئېقىم"
         group_members: "ئەزا"
-        group_moderation: "رىياسەتچىلىك"
-        group_security: "بىخەتەرلىك"
         group_other: "باشقا"
       config_sections:
         account:

@@ -5222,8 +5222,6 @@ fr:
         back: "Retour à tous les rapports"
         group_traffic: "Trafic"
         group_members: "Membres"
-        group_moderation: "Modération"
-        group_security: "Sécurité"
         group_other: "Autre"
       config_sections:
         account:

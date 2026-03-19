@@ -2413,7 +2413,6 @@ sw:
         title: "Orodha ya ripoti zilizopo"
         group_traffic: "Utembeleaji"
         group_members: "Wanachama"
-        group_security: "Ulinzi"
         group_other: "Nyingine"
       config_sections:
         account:

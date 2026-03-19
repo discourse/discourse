@@ -475,6 +475,9 @@ pl_PL:
         timezone:
           label: Strefa czasowa
           remove_timezone: Brak strefy czasowej (UTC)
+        all_day:
+          label: "Wydarzenie całodniowe"
+          description: "Wydarzenie całodniowe nie będzie miało konkretnych godzin, tylko datę. Wydarzenie będzie trwało od początku do końca dnia."
         reminders:
           label: "Przypomnienia"
           types:

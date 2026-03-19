@@ -4541,8 +4541,6 @@ pt:
         back: "Voltar para todos os relatórios"
         group_traffic: "Tráfego"
         group_members: "Membros"
-        group_moderation: "Moderação"
-        group_security: "Segurança"
         group_other: "Outro"
       config_sections:
         account:

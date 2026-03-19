@@ -3421,8 +3421,6 @@ gl:
         sidebar_title: "Informes"
         group_traffic: "Tráfico"
         group_members: "Membros"
-        group_moderation: "Moderación"
-        group_security: "Seguranza"
         group_other: "Outro"
       config_sections:
         account:

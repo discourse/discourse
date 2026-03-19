@@ -4348,8 +4348,6 @@ nb_NO:
         sidebar_title: "Rapporter"
         group_traffic: "Trafikk"
         group_members: "Medlemmer"
-        group_moderation: "Moderering"
-        group_security: "Sikkerhet"
         group_other: "Annet"
       config_sections:
         account:

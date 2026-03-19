@@ -5603,8 +5603,6 @@ sk:
         back: "Späť na všetky správy"
         group_traffic: "Vyťaženie"
         group_members: "Členovia"
-        group_moderation: "Moderovanie"
-        group_security: "Bezpečnosť"
         group_other: "Ostatné"
       config_sections:
         account:

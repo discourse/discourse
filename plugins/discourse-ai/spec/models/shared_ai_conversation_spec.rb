@@ -117,4 +117,25 @@ RSpec.describe SharedAiConversation, type: :model do
       expect(onebox).to include("AI Conversation with Claude-2")
     end
   end
+
+  describe "#onebox" do
+    it "escapes title and username" do
+      malicious_username = %(user"><img src=x onerror=alert(1)>)
+      malicious_title = %(title</a><script>alert("x")</script>)
+      user.update_columns(username: malicious_username, username_lower: malicious_username.downcase)
+      topic.update_column(:title, malicious_title)
+
+      Fabricate(:post, topic: topic, user: user, post_number: 3, raw: "safe post")
+
+      conversation = described_class.share_conversation(user, topic)
+
+      onebox = conversation.onebox
+
+      expect(onebox).to include("user&quot;&gt;&lt;img src=x onerror=alert(1)&gt;")
+      expect(onebox).to include("title&lt;/a&gt;&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;")
+
+      expect(onebox).not_to include("<img src=x onerror=alert(1)>")
+      expect(onebox).not_to include(%(<script>alert("x")</script>))
+    end
+  end
 end

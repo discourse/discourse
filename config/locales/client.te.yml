@@ -4355,8 +4355,6 @@ te:
         sidebar_title: "నివేదికలు"
         group_traffic: "ట్రాఫిక్"
         group_members: "సభ్యులు"
-        group_moderation: "మోడరేషన్"
-        group_security: "సెక్యూరిటీ"
         group_other: "ఇతర"
       config_sections:
         account:

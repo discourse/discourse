@@ -1813,8 +1813,11 @@ de:
         upcoming_changes: "Bevorstehende Änderungen"
         calendar_subscriptions: "Kalender"
       calendar_subscriptions:
+        copy: "URL kopieren"
         copied: "Kopiert!"
         add_to_google: "Google Kalender"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple-Kalender"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -5590,8 +5593,6 @@ de:
         group_traffic: "Traffic"
         group_members: "Mitglieder"
         group_content: "Inhalte & Community-Status"
-        group_moderation: "Moderation"
-        group_security: "Sicherheit"
         group_other: "Sonstiges"
         legacy_warning: "Dies ist ein älterer Bericht. Er wird demnächst nicht mehr verfügbar sein. Wenn du Hilfe bei der Suche nach einem Ersatz benötigst, wenden dich bitte an den Support."
       config_sections:

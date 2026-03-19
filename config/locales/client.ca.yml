@@ -3074,8 +3074,6 @@ ca:
         sidebar_title: "Reports"
         group_traffic: "Tràfic"
         group_members: "Membres"
-        group_moderation: "Moderació"
-        group_security: "Seguretat"
         group_other: "Altres"
       config_sections:
         account:

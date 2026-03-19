@@ -3966,7 +3966,6 @@ sq:
       reports:
         group_traffic: "Trafik"
         group_members: "Anëtarë"
-        group_security: "Siguria"
         group_other: "Të tjerë"
       config_sections:
         account:

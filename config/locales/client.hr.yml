@@ -5467,8 +5467,6 @@ hr:
         back: "Povratak na sva izvješća"
         group_traffic: "Promet"
         group_members: "Članovi"
-        group_moderation: "Moderiranje"
-        group_security: "Sigurnost"
         group_other: "Ostalo"
       config_sections:
         account:

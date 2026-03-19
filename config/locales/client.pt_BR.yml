@@ -5576,8 +5576,6 @@ pt_BR:
         group_traffic: "Tráfego"
         group_members: "Membros"
         group_content: "Conteúdo e saúde"
-        group_moderation: "Moderação"
-        group_security: "Segurança"
         group_other: "Outras"
         legacy_warning: "Este é um relatório legado. Ele será desativado em breve. Se precisar de ajuda para encontrar o substituto, entre em contato com o suporte."
       config_sections:

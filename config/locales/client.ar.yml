@@ -6671,8 +6671,6 @@ ar:
         group_traffic: "الزيارات"
         group_members: "الأعضاء"
         group_content: "المحتوى والصحة"
-        group_moderation: "الإشراف"
-        group_security: "الأمان"
         group_other: "أخرى"
         legacy_warning: "هذا تقرير قديم، وسيتم إيقافه قريبًا. يرجى الاتصال بالدعم الفني إذا كنت بحاجة إلى مساعدة في إيجاد بديل."
       config_sections:

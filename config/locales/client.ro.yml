@@ -3901,8 +3901,6 @@ ro:
         sidebar_title: "Rapoarte"
         group_traffic: "Trafic"
         group_members: "Membri"
-        group_moderation: "Moderare"
-        group_security: "Securitate"
         group_other: "Altele"
       config_sections:
         account:

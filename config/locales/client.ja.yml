@@ -5171,8 +5171,6 @@ ja:
         back: "すべてのレポートに戻る"
         group_traffic: "トラフィック"
         group_members: "メンバー"
-        group_moderation: "モデレーション"
-        group_security: "セキュリティ"
         group_other: "その他"
       config_sections:
         account:

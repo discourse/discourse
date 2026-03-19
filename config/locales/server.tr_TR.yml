@@ -1146,6 +1146,8 @@ tr_TR:
       weekly: "haftalık"
       every_month: "her ay"
       every_six_months: "altı ayda bir"
+  calendar_subscriptions:
+    application_name: "Takvim Abonelikleri"
   user_api_key:
     title: '"%{application_name}" için yetkilendirme'
     authorize: "Yetkilendir"

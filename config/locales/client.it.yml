@@ -5193,8 +5193,6 @@ it:
         back: "Torna a tutti i report"
         group_traffic: "Traffico"
         group_members: "Membri"
-        group_moderation: "Moderazione"
-        group_security: "Sicurezza"
         group_other: "Altri"
       config_sections:
         account:

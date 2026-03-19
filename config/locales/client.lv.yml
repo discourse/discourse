@@ -2858,7 +2858,6 @@ lv:
       reports:
         group_traffic: "Datu plūsma"
         group_members: "Dalībnieki"
-        group_security: "Drošība"
         group_other: "Citi"
       config_sections:
         account:

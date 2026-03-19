@@ -4144,8 +4144,6 @@ lt:
         sidebar_title: "Pranešimai"
         group_traffic: "Srautas"
         group_members: "Nariai"
-        group_moderation: "Moderavimas"
-        group_security: "Apsauga"
         group_other: "Kiti"
       config_sections:
         account:
