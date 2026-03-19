@@ -160,10 +160,10 @@ RSpec.describe UpcomingChanges::List do
           end
         end
 
-        context "when filtering by status" do
-          let(:options) { { filter_status: :beta } }
+        context "when filtering by statuses" do
+          let(:options) { { filter_statuses: [:beta] } }
 
-          it "only includes upcoming changes with the given status" do
+          it "only includes upcoming changes with the given statuses" do
             results = result.upcoming_changes
             expect(
               results.find { |change| change[:setting] == :enable_upload_debug_mode },

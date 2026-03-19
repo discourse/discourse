@@ -15,9 +15,9 @@ export default class AdminConfigUpcomingChangesRoute extends DiscourseRoute {
   }
 
   model() {
-    return ajax("/admin/config/upcoming-changes").then(
-      (result) => result.upcoming_changes
-    );
+    return ajax(
+      "/admin/config/upcoming-changes?filter_statuses=experimental,alpha,beta,stable"
+    ).then((result) => result.upcoming_changes);
   }
 
   activate() {

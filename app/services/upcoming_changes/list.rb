@@ -3,7 +3,7 @@
 class UpcomingChanges::List
   include Service::Base
 
-  options { attribute :filter_status, :symbol, default: nil }
+  options { attribute :filter_statuses, :array, default: [] }
 
   policy :current_user_is_admin
   model :upcoming_changes, optional: true
@@ -25,8 +25,11 @@ class UpcomingChanges::List
         include_locale_setting: false,
       )
       .select do |setting|
-        if options.filter_status.present?
-          UpcomingChanges.change_status(setting[:setting]) == options.filter_status.to_sym
+        if options.filter_statuses.any?
+          options
+            .filter_statuses
+            .map(&:to_sym)
+            .include?(UpcomingChanges.change_status(setting[:setting]))
         else
           true
         end
