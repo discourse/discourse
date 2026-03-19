@@ -876,6 +876,7 @@ class Group < ActiveRecord::Base
     added_user_ids = nil
 
     Group.transaction do
+      now = Time.zone.now
       sql = <<~SQL
       INSERT INTO group_users
         (group_id, user_id, notification_level, created_at, updated_at)
@@ -883,8 +884,8 @@ class Group < ActiveRecord::Base
         :group_id,
         u.id,
         :notification_level,
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
+        :now,
+        :now
       FROM users AS u
       WHERE u.id IN (:user_ids)
       AND NOT EXISTS (
@@ -901,6 +902,7 @@ class Group < ActiveRecord::Base
           group_id: self.id,
           user_ids: user_ids,
           notification_level: self.default_notification_level || 3,
+          now: now,
         )
 
       if added_user_ids.present?
@@ -941,13 +943,15 @@ class Group < ActiveRecord::Base
       )
     end
 
-    GroupUser.bulk_set_category_notifications(self, added_user_ids)
-    GroupUser.bulk_set_tag_notifications(self, added_user_ids)
+    if added_user_ids.present?
+      GroupUser.bulk_set_category_notifications(self, added_user_ids)
+      GroupUser.bulk_set_tag_notifications(self, added_user_ids)
 
-    added_users = User.where(id: added_user_ids).to_a
+      added_users = User.where(id: added_user_ids).to_a
 
-    added_users.each { |user| trigger_user_added_event(user, automatic) }
-    bulk_publish_category_updates(added_users)
+      added_users.each { |user| trigger_user_added_event(user, automatic) }
+      bulk_publish_category_updates(added_users)
+    end
 
     added_user_ids
   end
