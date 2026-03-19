@@ -29,6 +29,7 @@ module.exports = {
   "discourse/components/d-page-subheader": "discourse/ui-kit/d-page-subheader",
   "discourse/components/d-select": "discourse/ui-kit/d-select",
   "discourse/components/d-stat-tiles": "discourse/ui-kit/d-stat-tiles",
+  "discourse/components/d-textarea": "discourse/ui-kit/d-textarea",
   "discourse/components/d-toggle-switch": "discourse/ui-kit/d-toggle-switch",
 
   // Components - renamed (old unprefixed -> new d-prefixed)
