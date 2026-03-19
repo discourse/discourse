@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 # This file is auto-generated from the IntermediateDB schema. To make changes,
-# update the "config/intermediate_db.yml" configuration file and then run
-# `bin/cli schema generate` to regenerate this file.
+# update the configuration files in "migrations/config/schema/" and then run
+# `migrations/bin/cli schema generate` to regenerate this file.
 
 module Migrations::Database::IntermediateDB
   module MutedUser
     SQL = <<~SQL
       INSERT INTO muted_users (
-        created_at,
+        user_id,
         muted_user_id,
-        user_id
+        created_at
       )
       VALUES (
         ?, ?, ?
@@ -20,17 +20,17 @@ module Migrations::Database::IntermediateDB
 
     # Creates a new `muted_users` record in the IntermediateDB.
     #
-    # @param created_at      [Time, nil]
-    # @param muted_user_id   [Integer, String]
     # @param user_id         [Integer, String]
+    # @param muted_user_id   [Integer, String]
+    # @param created_at      [Time, nil]
     #
     # @return [void]
-    def self.create(created_at: nil, muted_user_id:, user_id:)
+    def self.create(user_id:, muted_user_id:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
-        ::Migrations::Database.format_datetime(created_at),
-        muted_user_id,
         user_id,
+        muted_user_id,
+        ::Migrations::Database.format_datetime(created_at),
       )
     end
   end

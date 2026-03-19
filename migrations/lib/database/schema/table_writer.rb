@@ -88,7 +88,7 @@ module Migrations::Database::Schema
     end
 
     def escape_identifier(identifier)
-      ::Migrations::Database::Schema.escape_identifier(identifier)
+      ::Migrations::Database::Schema::Helpers.escape_identifier(identifier)
     end
 
     def output_indexes(table)
@@ -103,7 +103,7 @@ module Migrations::Database::Schema
         @output.print "CREATE "
         @output.print "UNIQUE " if index.unique
         @output.print "INDEX #{index_name} ON #{table_name} (#{column_names.join(", ")})"
-        @output.print " #{index.condition}" if index.condition.present?
+        @output.print " WHERE #{index.condition}" if index.condition.present?
         @output.puts ";"
       end
     end
