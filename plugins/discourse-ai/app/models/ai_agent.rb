@@ -2,7 +2,9 @@
 
 class AiAgent < ActiveRecord::Base
   # TODO remove tool_details from ignored_columns 01-02-2027
-  self.ignored_columns = %i[tool_details]
+  # question_consolidator_llm_id is intentionally ignored after the RAG tool
+  # migration; the column can be dropped in a later schema cleanup.
+  self.ignored_columns = %i[tool_details question_consolidator_llm_id]
 
   # Between the regular migration (which creates ai_agents as a VIEW over
   # ai_personas) and the post-migration (which does the actual rename_table),
@@ -51,7 +53,6 @@ class AiAgent < ActiveRecord::Base
   belongs_to :user
 
   belongs_to :default_llm, class_name: "LlmModel"
-  belongs_to :question_consolidator_llm, class_name: "LlmModel"
   belongs_to :rag_llm_model, class_name: "LlmModel"
 
   has_many :upload_references, as: :target, dependent: :destroy
@@ -208,7 +209,6 @@ class AiAgent < ActiveRecord::Base
       vision_enabled
       vision_max_pixels
       rag_conversation_chunks
-      question_consolidator_llm_id
       allow_chat_channel_mentions
       allow_chat_direct_messages
       allow_topic_mentions

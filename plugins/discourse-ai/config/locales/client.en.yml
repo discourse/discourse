@@ -550,8 +550,6 @@ en:
         create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
         default_llm: Default language model
         default_llm_help: The default language model to use for this agent. Required if you wish to mention the agent on public posts.
-        question_consolidator_llm: Language Model for Question Consolidator
-        question_consolidator_llm_help: The language model to use for the question consolidator, you may choose a less powerful model to save costs.
         system_prompt: System prompt
         forced_tool_strategy: Forced tool strategy
         allow_chat_direct_messages: "Allow chat direct messages"
