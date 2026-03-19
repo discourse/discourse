@@ -221,6 +221,7 @@ task "docker:test" do
       @redis_pid = setup_redis
       @pg_pid = setup_postgres(skip_init: ENV["SKIP_DB_CREATE"].present?)
 
+      load_plugins = !ENV["SKIP_PLUGINS"]
       @good &&=
         setup_test_env(
           setup_multisite: !ENV["JS_ONLY"],
@@ -229,11 +230,14 @@ task "docker:test" do
           install_all_official: !!ENV["INSTALL_OFFICIAL_PLUGINS"],
           update_all_plugins: !!ENV["UPDATE_ALL_PLUGINS"],
           plugins_to_remove: ENV["SKIP_INSTALL_PLUGINS"] || "",
-          load_plugins: !ENV["SKIP_PLUGINS"],
+          load_plugins:,
         )
 
       unless ENV["JS_ONLY"]
-        @good &&= run_or_fail("script/assemble_ember_build.rb") if ENV["RUN_SYSTEM_TESTS"]
+        @good &&=
+          run_or_fail("LOAD_PLUGINS=#{load_plugins ? 1 : 0} script/assemble_ember_build.rb") if ENV[
+          "RUN_SYSTEM_TESTS"
+        ]
 
         if ENV["WARMUP_TMP_FOLDER"]
           run_or_fail("bundle exec rspec ./spec/requests/groups_controller_spec.rb")
