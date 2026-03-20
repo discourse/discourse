@@ -358,7 +358,6 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.header-widget-overrides" },
   { handler: "notify-admin", matchId: "discourse.jquery-cookie" },
   { handler: "notify-admin", matchId: "discourse.markdown-it.whitelist" },
-  { handler: "notify-admin", matchId: "discourse.modal-controllers" },
   {
     handler: "notify-admin",
     matchId: "discourse.nav-item.built-list-site-settings",
