@@ -1,5 +1,13 @@
 @use "lib/viewport";
 
+:root {
+  --d-header-icon-color: var(--header_primary-low-mid);
+  --d-header-icon-color--hover: var(--header_primary);
+  --d-header-icon-color--active: var(--header_primary-medium);
+  --d-header-icon-background--hover: var(--d-hover);
+  --d-header-icon-background--active: var(--secondary);
+}
+
 .d-header-wrap {
   position: sticky;
   top: 0;
@@ -179,7 +187,11 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus-visible {
-      background-color: var(--d-hover);
+      background-color: var(--d-header-icon-background--hover);
+
+      .d-icon {
+        color: var(--d-header-icon-color--hover);
+      }
     }
   }
 
@@ -187,11 +199,11 @@
     .active .icon,
     .header-color-scheme-toggle .-expanded {
       position: relative;
-      background-color: var(--secondary);
+      background-color: var(--d-header-icon-background--active);
       cursor: default;
 
       > .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-header-icon-color--active);
       }
     }
   }
@@ -201,7 +213,7 @@
     font-size: var(--font-up-4);
     line-height: var(--line-height-large);
     display: inline-block;
-    color: var(--header_primary-low-mid);
+    color: var(--d-header-icon-color);
   }
 
   .notifications {
@@ -268,19 +280,21 @@
       .d-icon {
         font-size: var(--font-down-2);
         width: 1em;
-        color: var(--header_primary-high);
+        color: var(--d-header-icon-color);
       }
 
       .discourse-no-touch & {
         &:hover {
+          color: var(--d-header-icon-color--hover);
           border: 1px solid var(--header_primary-medium);
+          background: var(--d-header-icon-background--hover);
 
           .language-switcher__locale {
             color: var(--header_primary);
           }
 
           .d-icon {
-            color: var(--header_primary-high);
+            color: var(--d-header-icon-color--hover);
           }
         }
       }

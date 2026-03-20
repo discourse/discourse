@@ -799,8 +799,9 @@ aside.quote {
     gap: var(--space-2);
     color: var(--primary-high-or-secondary-low);
     padding: 0.8em 0.8em 0 0.8em;
+    background: var(--d-post-aside-background);
+    border-left: var(--d-post-aside-border-left);
 
-    @include post-aside;
     @include unselectable;
 
     &[data-can-toggle-quote] {
