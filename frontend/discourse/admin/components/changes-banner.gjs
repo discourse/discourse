@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
+import bodyClass from "discourse/helpers/body-class";
 
 export default class ChangesBanner extends Component {
   @tracked isSaving = false;
@@ -37,6 +38,7 @@ export default class ChangesBanner extends Component {
   }
 
   <template>
+    {{bodyClass "has-admin-changes-banner"}}
     <div class="admin-changes-banner" {{this.resizerModifier}}>
       <span class="admin-changes-banner__main-label">{{trustHTML
           @bannerLabel

@@ -85,6 +85,11 @@
   align-self: start;
   overflow-y: auto;
 
+  @include viewport.until(md) {
+    // height gets in the way in slide-out mode
+    height: auto;
+  }
+
   // back-compat for themes
   --1dvh: 1dvh;
 

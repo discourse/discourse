@@ -14,6 +14,11 @@
   padding: 1em;
 }
 
+body.has-admin-changes-banner #main-outlet {
+  // makes space so banner doesn't overlap content
+  padding-bottom: 6em;
+}
+
 .admin-changes-banner {
   box-sizing: border-box;
   display: flex;
