@@ -39,7 +39,7 @@ export default class AiMcpServerEditorForm extends Component {
         model.auth_type || (model.ai_secret_id ? "header_secret" : "none"),
       ai_secret_id: model.ai_secret_id || null,
       auth_header: model.auth_header || "Authorization",
-      auth_scheme: model.auth_scheme || "Bearer",
+      auth_scheme: model.auth_scheme ?? "Bearer",
       oauth_client_registration:
         model.oauth_client_registration || "client_metadata_document",
       oauth_client_id: model.oauth_client_id || "",
@@ -98,7 +98,8 @@ export default class AiMcpServerEditorForm extends Component {
   }
 
   get canDisconnectOAuth() {
-    return this.args.model.oauth_status !== "disconnected";
+    const status = this.args.model.oauth_status;
+    return status === "connected" || status === "refresh_failed";
   }
 
   get canTestOAuthConnection() {
@@ -380,17 +381,6 @@ export default class AiMcpServerEditorForm extends Component {
               />
             </field.Control>
           </form.Field>
-        {{else}}
-          <div class="ai-mcp-server-editor__oauth-state">
-            <div class="ai-mcp-server-editor__oauth-row">
-              <span class="ai-mcp-server-editor__oauth-label">
-                {{i18n "discourse_ai.mcp_servers.oauth_client_metadata_url"}}
-              </span>
-              <code class="ai-mcp-server-editor__oauth-value">
-                {{@model.oauth_client_metadata_url}}
-              </code>
-            </div>
-          </div>
         {{/if}}
 
         <form.Field
@@ -403,12 +393,10 @@ export default class AiMcpServerEditorForm extends Component {
           <field.Control />
         </form.Field>
 
-        <div class="ai-mcp-server-editor__oauth-state">
-          <h3>{{i18n "discourse_ai.mcp_servers.oauth_connection"}}</h3>
+        {{#unless @model.isNew}}
+          <div class="ai-mcp-server-editor__oauth-state">
+            <h3>{{i18n "discourse_ai.mcp_servers.oauth_connection"}}</h3>
 
-          {{#if @model.isNew}}
-            <p>{{i18n "discourse_ai.mcp_servers.oauth_connect_help"}}</p>
-          {{else}}
             <div class="ai-mcp-server-editor__oauth-row">
               <span class="ai-mcp-server-editor__oauth-label">
                 {{i18n "discourse_ai.mcp_servers.oauth_status"}}
@@ -424,6 +412,17 @@ export default class AiMcpServerEditorForm extends Component {
                 {{i18n this.oauthStatusLabelKey}}
               </span>
             </div>
+
+            {{#if @model.oauth_client_metadata_url}}
+              <div class="ai-mcp-server-editor__oauth-row">
+                <span class="ai-mcp-server-editor__oauth-label">
+                  {{i18n "discourse_ai.mcp_servers.oauth_client_metadata_url"}}
+                </span>
+                <code class="ai-mcp-server-editor__oauth-value">
+                  {{@model.oauth_client_metadata_url}}
+                </code>
+              </div>
+            {{/if}}
 
             {{#if @model.oauth_granted_scopes}}
               <div class="ai-mcp-server-editor__oauth-row">
@@ -505,8 +504,8 @@ export default class AiMcpServerEditorForm extends Component {
                 </span>
               </div>
             {{/if}}
-          {{/if}}
-        </div>
+          </div>
+        {{/unless}}
       {{/if}}
 
       <form.Field
@@ -555,38 +554,38 @@ export default class AiMcpServerEditorForm extends Component {
       <form.Actions>
         <form.Submit />
 
-        {{#if (eq data.auth_type "oauth")}}
+        {{#unless @model.isNew}}
+          {{#if (eq data.auth_type "oauth")}}
+            <form.Button
+              @action={{fn this.startOAuth data}}
+              @label={{this.oauthConnectLabelKey}}
+              @isLoading={{this.isConnecting}}
+              @disabled={{this.isDisconnecting}}
+              class="btn-default"
+            />
+
+            {{#if this.canDisconnectOAuth}}
+              <form.Button
+                @action={{this.disconnectOAuth}}
+                @label="discourse_ai.mcp_servers.oauth_disconnect"
+                @isLoading={{this.isDisconnecting}}
+                @disabled={{this.isConnecting}}
+                class="btn-default"
+              />
+            {{/if}}
+          {{/if}}
+
           <form.Button
-            @action={{fn this.startOAuth data}}
-            @label={{this.oauthConnectLabelKey}}
-            @isLoading={{this.isConnecting}}
-            @disabled={{this.isDisconnecting}}
+            @action={{fn this.testConnection data}}
+            @label="discourse_ai.mcp_servers.test"
+            @isLoading={{this.isTesting}}
+            @disabled={{and
+              (eq data.auth_type "oauth")
+              (not this.canTestOAuthConnection)
+            }}
             class="btn-default"
           />
 
-          {{#if this.canDisconnectOAuth}}
-            <form.Button
-              @action={{this.disconnectOAuth}}
-              @label="discourse_ai.mcp_servers.oauth_disconnect"
-              @isLoading={{this.isDisconnecting}}
-              @disabled={{this.isConnecting}}
-              class="btn-default"
-            />
-          {{/if}}
-        {{/if}}
-
-        <form.Button
-          @action={{fn this.testConnection data}}
-          @label="discourse_ai.mcp_servers.test"
-          @isLoading={{this.isTesting}}
-          @disabled={{and
-            (eq data.auth_type "oauth")
-            (not this.canTestOAuthConnection)
-          }}
-          class="btn-default"
-        />
-
-        {{#unless @model.isNew}}
           <form.Button
             @action={{this.delete}}
             @label="discourse_ai.mcp_servers.delete"

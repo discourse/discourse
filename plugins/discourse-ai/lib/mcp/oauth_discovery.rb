@@ -72,7 +72,7 @@ module DiscourseAi
           uri = AiMcpServer.parse_public_uri(raw_url)
           if uri.nil?
             raise DiscourseAi::Mcp::Client::Error,
-                  I18n.t("discourse_ai.mcp_servers.invalid_public_https_url")
+                  I18n.t("discourse_ai.mcp_servers.invalid_url_not_https")
           end
 
           path = uri.path.to_s
@@ -91,7 +91,7 @@ module DiscourseAi
           uri = AiMcpServer.parse_public_uri(url)
           if uri.nil?
             raise DiscourseAi::Mcp::Client::Error,
-                  I18n.t("discourse_ai.mcp_servers.invalid_public_https_url")
+                  I18n.t("discourse_ai.mcp_servers.invalid_url_not_https")
           end
 
           AiMcpServer.validate_hostname_public!(uri.hostname)

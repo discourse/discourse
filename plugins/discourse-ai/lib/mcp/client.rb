@@ -253,12 +253,12 @@ module DiscourseAi
 
       def validate_uri!
         uri = AiMcpServer.parse_public_uri(server.url)
-        raise Error, I18n.t("discourse_ai.mcp_servers.invalid_public_https_url") if uri.nil?
+        raise Error, I18n.t("discourse_ai.mcp_servers.invalid_url_not_https") if uri.nil?
 
         AiMcpServer.validate_hostname_public!(uri.hostname)
         uri
       rescue FinalDestination::SSRFError, SocketError, URI::InvalidURIError
-        raise Error, I18n.t("discourse_ai.mcp_servers.invalid_public_https_url")
+        raise Error, I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable")
       end
 
       def ensure_response_body_limit!(size)

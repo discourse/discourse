@@ -115,7 +115,7 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
 
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.parsed_body["errors"].join(" ")).to include(
-        I18n.t("discourse_ai.mcp_servers.invalid_public_https_url"),
+        I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable"),
       )
     end
   end

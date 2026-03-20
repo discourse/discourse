@@ -96,6 +96,8 @@ module DiscourseAi
       end
 
       def parameters_json_schema
+        return @json_schema if @json_schema
+
         properties = {}
         required = []
 
@@ -112,13 +114,21 @@ module DiscourseAi
         result
       end
 
-      attr_reader :name, :description, :parameters
+      attr_reader :name, :description, :parameters, :json_schema
 
       def self.from_hash(hash)
-        allowed_keys = %i[name description parameters]
+        allowed_keys = %i[name description parameters json_schema]
         extra_keys = hash.keys - allowed_keys
         if !extra_keys.empty?
           raise ArgumentError, "Unexpected keys in tool definition: #{extra_keys}"
+        end
+
+        if hash[:json_schema]
+          return new(
+                   name: hash[:name],
+                   description: hash[:description],
+                   json_schema: hash[:json_schema],
+                 )
         end
 
         params = hash[:parameters] || []
@@ -134,11 +144,19 @@ module DiscourseAi
         new(name: hash[:name], description: hash[:description], parameters: parameter_objects)
       end
 
-      def initialize(name:, description:, parameters: [])
+      def initialize(name:, description:, parameters: [], json_schema: nil)
         raise ArgumentError, "name must be a string" if !name.is_a?(String) || name.empty?
 
         if !description.is_a?(String) || description.empty?
           raise ArgumentError, "description must be a string"
+        end
+
+        if json_schema
+          @name = name
+          @description = description
+          @parameters = []
+          @json_schema = json_schema
+          return
         end
 
         raise ArgumentError, "parameters must be an array" if !parameters.is_a?(Array)
@@ -156,10 +174,15 @@ module DiscourseAi
       end
 
       def to_h
+        if @json_schema
+          return { name: @name, description: @description, json_schema: @json_schema }
+        end
         { name: @name, description: @description, parameters: @parameters.map(&:to_h) }
       end
 
       def coerce_parameters(params)
+        return params if @json_schema
+
         result = {}
 
         return result if !params.is_a?(Hash)
