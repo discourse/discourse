@@ -97,6 +97,35 @@ module UpcomingChanges
     ).order(created_at: :desc)
   end
 
+  # For each setting, the latest `created_at` per target status when a `status_changed`
+  # event's `new_value` matched that status (JSON in `event_data`).
+  #
+  # Returns `{ setting_name_sym => { status_sym => Time } }` — only statuses that
+  # occurred at least once are present under each setting.
+  def self.status_changed_timeline(setting_names, target_statuses)
+    setting_names = Array.wrap(setting_names).map(&:to_s).uniq
+    target_status_strings = Array.wrap(target_statuses).map(&:to_s).uniq
+
+    return {} if setting_names.empty? || target_status_strings.empty?
+
+    rows =
+      UpcomingChangeEvent
+        .where(event_type: :status_changed, upcoming_change_name: setting_names)
+        .where("event_data->>'new_value' IN (?)", target_status_strings)
+        .pluck(:upcoming_change_name, Arel.sql("(event_data->>'new_value')"), :created_at)
+
+    rows.each_with_object({}) do |(setting_name, new_value_str, created_at), acc|
+      next if new_value_str.blank?
+      next if target_status_strings.exclude?(new_value_str)
+
+      setting_sym = setting_name.to_sym
+      status_sym = new_value_str.to_sym
+      inner = (acc[setting_sym] ||= {})
+      prev = inner[status_sym]
+      inner[status_sym] = created_at if prev.nil? || created_at > prev
+    end
+  end
+
   # We dynamically determine if an upcoming change is enabled
   # or disabled based on the current status of the change as well
   # as whether the admin has manually toggled the change.

@@ -299,6 +299,74 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".status_changed_timeline" do
+    it "returns nested hashes with the latest created_at per setting and status" do
+      freeze_time
+      older = 5.days.ago
+      newer = 1.day.ago
+
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_a",
+        event_data: {
+          "previous_value" => "beta",
+          "new_value" => "permanent",
+        },
+        created_at: older,
+      )
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_a",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+        },
+        created_at: newer,
+      )
+
+      result = described_class.status_changed_timeline(%w[timeline_setting_a], :permanent)
+
+      expect(result).to eq(timeline_setting_a: { permanent: newer })
+    end
+
+    it "keeps separate latest times for each requested status" do
+      freeze_time
+      at_stable = 2.days.ago
+      at_permanent = 1.day.ago
+
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_b",
+        event_data: {
+          "previous_value" => "beta",
+          "new_value" => "stable",
+        },
+        created_at: at_stable,
+      )
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_b",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+        },
+        created_at: at_permanent,
+      )
+
+      result = described_class.status_changed_timeline("timeline_setting_b", %i[stable permanent])
+
+      expect(result).to eq(timeline_setting_b: { stable: at_stable, permanent: at_permanent })
+    end
+
+    it "returns {} when setting names are blank" do
+      expect(described_class.status_changed_timeline([], :permanent)).to eq({})
+    end
+
+    it "returns {} when target statuses are blank" do
+      expect(described_class.status_changed_timeline("timeline_setting_a", [])).to eq({})
+    end
+  end
+
   describe ".history_for" do
     fab!(:admin)
 

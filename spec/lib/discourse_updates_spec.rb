@@ -314,6 +314,186 @@ RSpec.describe DiscourseUpdates do
     end
   end
 
+  describe ".merge_new_features_with_upcoming_changes" do
+    def mock_merge_uc_metadata(uc_status)
+      mock_upcoming_change_metadata(
+        {
+          floating_dismiss_topics_on_mobile: {
+            impact: "feature,all_members",
+            status: :beta,
+            impact_type: "feature",
+            impact_role: "all_members",
+            learn_more_url: "https://meta.discourse.org/t/-/387322",
+          },
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: uc_status,
+            impact_type: "other",
+            impact_role: "developers",
+            learn_more_url: "https://meta.discourse.org/t/-/1234",
+          },
+        },
+      )
+    end
+
+    def feature_for_uc_setting(features)
+      features.find { |f| f[:upcoming_change_setting_name].to_s == "enable_upload_debug_mode" }
+    end
+
+    before do
+      UpcomingChanges.stubs(:image_data).returns(
+        {
+          url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+          width: 244,
+          height: 66,
+          file_path: file_from_fixtures("logo.png", "images").path,
+        },
+      )
+    end
+
+    after { clear_mocked_upcoming_change_metadata }
+
+    context "when there are no permanent upcoming changes" do
+      before { mock_merge_uc_metadata(:beta) }
+
+      it "returns the same new_features array without modification" do
+        features = [
+          {
+            title: "Feed item",
+            description: "From meta",
+            created_at: 1.hour.ago.to_s,
+            upcoming_change_setting_name: "other_setting",
+          },
+        ]
+
+        result = described_class.merge_new_features_with_upcoming_changes(features)
+        expect(result).to eq(features)
+      end
+    end
+
+    context "when the feed already includes a feature for a permanent UC" do
+      let(:feed_feature) do
+        {
+          title: "Official feed title",
+          description: "Marketing copy from the new features feed",
+          link: "https://meta.discourse.org/t/feed-release-note",
+          screenshot_url: "https://meta.discourse.org/feed-screenshot.png",
+          created_at: 1.week.ago.to_s,
+          updated_at: 1.week.ago.to_s,
+          released_at: 1.week.ago.to_s,
+          upcoming_change_setting_name: "enable_upload_debug_mode",
+        }
+      end
+
+      before { mock_merge_uc_metadata(:permanent) }
+
+      it "keeps the feed row and does not inject a duplicate from the UC" do
+        new_features = [feed_feature.deep_dup]
+        result = described_class.merge_new_features_with_upcoming_changes(new_features)
+
+        expect(result.length).to eq(1)
+        row = feature_for_uc_setting(result)
+        expect(row[:title]).to eq("Official feed title")
+        expect(row[:description]).to eq("Marketing copy from the new features feed")
+        expect(row[:link]).to eq("https://meta.discourse.org/t/feed-release-note")
+        expect(row[:screenshot_url]).to eq("https://meta.discourse.org/feed-screenshot.png")
+        expect(row[:upcoming_change_setting_name]).to eq("enable_upload_debug_mode")
+      end
+    end
+
+    context "when a permanent UC is not in the feed" do
+      before { mock_merge_uc_metadata(:permanent) }
+
+      it "injects a feature using UC name, description, learn URL, and screenshot" do
+        result = described_class.merge_new_features_with_upcoming_changes([])
+
+        expect(result.length).to eq(1)
+        feature = feature_for_uc_setting(result)
+        expect(feature[:title]).to eq(SiteSetting.humanized_names(:enable_upload_debug_mode))
+        expect(feature[:description]).to eq(SiteSetting.description(:enable_upload_debug_mode))
+        expect(feature[:link]).to eq("https://meta.discourse.org/t/-/1234")
+        expect(feature[:screenshot_url]).to eq(
+          UpcomingChanges.image_data(:enable_upload_debug_mode)[:url],
+        )
+        expect(feature[:upcoming_change_setting_name]).to eq(:enable_upload_debug_mode)
+      end
+
+      it "uses the status_changed event time when the UC became permanent" do
+        freeze_time
+        event_time = 3.days.ago
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: "enable_upload_debug_mode",
+          event_data: {
+            "previous_value" => "stable",
+            "new_value" => "permanent",
+          },
+          created_at: event_time,
+        )
+
+        result = described_class.merge_new_features_with_upcoming_changes([])
+        feature = feature_for_uc_setting(result)
+
+        expect(feature[:created_at]).to eq(event_time.to_s)
+        expect(feature[:updated_at]).to eq(event_time.to_s)
+        expect(feature[:released_at]).to eq(event_time.to_s)
+      end
+
+      it "uses the latest status_changed-to-permanent event when several exist" do
+        freeze_time
+        older = 5.days.ago
+        newer = 1.day.ago
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: "enable_upload_debug_mode",
+          event_data: {
+            "previous_value" => "beta",
+            "new_value" => "permanent",
+          },
+          created_at: older,
+        )
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: "enable_upload_debug_mode",
+          event_data: {
+            "previous_value" => "stable",
+            "new_value" => "permanent",
+          },
+          created_at: newer,
+        )
+
+        result = described_class.merge_new_features_with_upcoming_changes([])
+
+        expect(feature_for_uc_setting(result)[:created_at]).to eq(newer.to_s)
+      end
+
+      it "falls back to the current time when no matching event exists" do
+        freeze_time do
+          result = described_class.merge_new_features_with_upcoming_changes([])
+
+          expect(feature_for_uc_setting(result)[:created_at]).to eq(Time.zone.now.to_s)
+        end
+      end
+
+      it "ignores status_changed events that did not transition to permanent" do
+        freeze_time do
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: "enable_upload_debug_mode",
+            event_data: {
+              "previous_value" => "experimental",
+              "new_value" => "stable",
+            },
+          )
+
+          result = described_class.merge_new_features_with_upcoming_changes([])
+
+          expect(feature_for_uc_setting(result)[:created_at]).to eq(Time.zone.now.to_s)
+        end
+      end
+    end
+  end
+
   describe "#get_last_viewed_feature_date" do
     fab!(:user)
 
