@@ -1,9 +1,9 @@
 import { LinkTo } from "@ember/routing";
 import AdminSiteSettingsChangesBanner from "discourse/admin/components/admin-site-settings-changes-banner";
 import AdminSiteSettingsFilterControls from "discourse/admin/components/admin-site-settings-filter-controls";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import concatClass from "discourse/helpers/concat-class";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -32,7 +32,7 @@ export default <template>
     <ul class="nav nav-stacked">
       {{#each @controller.visibleSiteSettings as |category|}}
         <li
-          class={{concatClass
+          class={{dConcatClass
             "admin-site-settings-category-nav__item"
             category.nameKey
           }}

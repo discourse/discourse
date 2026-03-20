@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { translateModKey } from "discourse/lib/utilities";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerToggleSwitch extends Component {
@@ -47,7 +47,7 @@ export default class ComposerToggleSwitch extends Component {
   <template>
     {{! template-lint-disable no-redundant-role }}
     <button
-      class={{concatClass
+      class={{dConcatClass
         "composer-toggle-switch"
         (if @state "--rte" "--markdown")
       }}
@@ -66,19 +66,19 @@ export default class ComposerToggleSwitch extends Component {
     >
       <span class="composer-toggle-switch__slider">
         <span
-          class={{concatClass
+          class={{dConcatClass
             "composer-toggle-switch__left-icon"
             (unless @state "--active")
           }}
           aria-hidden="true"
-        >{{icon "fab-markdown"}}</span>
+        >{{dIcon "fab-markdown"}}</span>
         <span
-          class={{concatClass
+          class={{dConcatClass
             "composer-toggle-switch__right-icon"
             (if @state "--active")
           }}
           aria-hidden="true"
-        >{{icon "a"}}</span>
+        >{{dIcon "a"}}</span>
       </span>
     </button>
   </template>

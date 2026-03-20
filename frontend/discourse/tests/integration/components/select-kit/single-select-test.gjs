@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { find, render, tab } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DButton from "discourse/components/d-button";
 import SingleSelect from "discourse/select-kit/components/single-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import DButton from "discourse/ui-kit/d-button";
 import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_CONTENT = [

@@ -13,11 +13,8 @@ import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
-import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
-import { applyHtmlDecorators } from "discourse/components/decorated-html";
 import Wrapper from "discourse/components/form-template-field/wrapper";
-import PickFilesButton from "discourse/components/pick-files-button";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -47,6 +44,9 @@ import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import { gt } from "discourse/truth-helpers";
+import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
+import DEditor from "discourse/ui-kit/d-editor";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
@@ -1174,7 +1174,7 @@ export default class ComposerEditor extends Component {
     {{/if}}
 
     {{#if this.composer.allowUpload}}
-      <PickFilesButton
+      <DPickFilesButton
         @fileInputId={{this.fileUploadElementId}}
         @allowMultiple={{true}}
         name="file-uploader"

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CsvUploader extends Component {
@@ -47,7 +47,7 @@ export default class CsvUploader extends Component {
   <template>
     <span>
       <label class="btn" disabled={{this.uploadButtonDisabled}}>
-        {{icon "upload"}}&nbsp;{{this.uploadButtonText}}
+        {{dIcon "upload"}}&nbsp;{{this.uploadButtonText}}
         <input
           {{didInsert this.uppyUpload.setup}}
           class="hidden-upload-field"

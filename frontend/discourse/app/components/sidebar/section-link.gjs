@@ -8,11 +8,11 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SectionLinkPrefix from "./section-link-prefix";
 
 /**
@@ -213,7 +213,7 @@ export default class SectionLink extends Component {
             />
 
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "sidebar-section-link-content-text"
                 @contentCSSClass
               }}
@@ -234,14 +234,14 @@ export default class SectionLink extends Component {
 
             {{#if @suffixValue}}
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "sidebar-section-link-suffix"
                   @suffixType
                   @suffixCSSClass
                 }}
               >
                 {{#if (eq @suffixType "icon")}}
-                  {{icon @suffixValue}}
+                  {{dIcon @suffixValue}}
                 {{/if}}
               </span>
             {{/if}}
@@ -256,7 +256,7 @@ export default class SectionLink extends Component {
                   class="sidebar-section-hover-button btn-flat"
                 >
                   {{#if (eq @hoverType "icon")}}
-                    {{icon @hoverValue class="hover-icon"}}
+                    {{dIcon @hoverValue class="hover-icon"}}
                   {{/if}}
                 </button>
               </span>
@@ -281,7 +281,7 @@ export default class SectionLink extends Component {
             />
 
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "sidebar-section-link-content-text"
                 @contentCSSClass
               }}
@@ -302,14 +302,14 @@ export default class SectionLink extends Component {
 
             {{#if @suffixValue}}
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "sidebar-section-link-suffix"
                   @suffixType
                   @suffixCSSClass
                 }}
               >
                 {{#if (eq @suffixType "icon")}}
-                  {{icon @suffixValue}}
+                  {{dIcon @suffixValue}}
                 {{/if}}
               </span>
             {{/if}}
@@ -323,7 +323,7 @@ export default class SectionLink extends Component {
                   class="sidebar-section-hover-button btn-flat"
                 >
                   {{#if (eq @hoverType "icon")}}
-                    {{icon @hoverValue class="hover-icon"}}
+                    {{dIcon @hoverValue class="hover-icon"}}
                   {{/if}}
                 </button>
               </span>

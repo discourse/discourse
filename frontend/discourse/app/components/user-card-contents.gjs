@@ -14,18 +14,10 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
-import DButton from "discourse/components/d-button";
-import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserBadge from "discourse/components/user-badge";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
@@ -36,6 +28,14 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
+import DHtmlWithLinks from "discourse/ui-kit/d-html-with-links";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 @classNames("user-card")
@@ -392,7 +392,7 @@ export default class UserCardContents extends CardContentsBase {
             >
               <div class="user-card-avatar" aria-hidden="true">
                 {{#if this.contentHidden}}
-                  <span class="card-huge-avatar">{{boundAvatar
+                  <span class="card-huge-avatar">{{dBoundAvatar
                       this.user
                       "huge"
                     }}</span>
@@ -402,18 +402,18 @@ export default class UserCardContents extends CardContentsBase {
                     class="card-huge-avatar"
                     tabindex="-1"
                   >
-                    {{boundAvatar this.user "huge"}}
+                    {{dBoundAvatar this.user "huge"}}
                     {{#if this.isOwnCard}}
                       <span class="own-avatar-pencil">
                         <span class="own-avatar-pencil--icon">
-                          {{icon "pencil"}}
+                          {{dIcon "pencil"}}
                         </span>
                       </span>
                     {{/if}}
                   </a>
                 {{/if}}
 
-                <UserAvatarFlair @user={{this.user}} />
+                <DUserAvatarFlair @user={{this.user}} />
 
                 <div>
                   <PluginOutlet
@@ -492,7 +492,7 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="user-status__description">
                       {{this.user.status.description}}
                     </span>
-                    {{formatDate this.user.status.ends_at format="tiny"}}
+                    {{dFormatDate this.user.status.ends_at format="tiny"}}
                   </div>
                 {{/if}}
                 <div>
@@ -585,7 +585,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.suspend_reason}}
                 <div class="suspended">
                   <div class="suspension-date">
-                    {{icon "ban"}}
+                    {{dIcon "ban"}}
                     {{#if this.user.suspendedForever}}
                       {{i18n "user.suspended_permanently"}}
                     {{else}}
@@ -608,7 +608,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.silence_reason}}
                 <div class="silenced">
                   <div class="silence-date">
-                    {{icon "microphone-slash"}}
+                    {{dIcon "microphone-slash"}}
                     {{#if this.user.silencedForever}}
                       {{i18n "user.silenced_permanently"}}
                     {{else}}
@@ -630,9 +630,9 @@ export default class UserCardContents extends CardContentsBase {
               {{/if}}
               {{#unless this.isRestricted}}
                 <div class="bio">
-                  <HtmlWithLinks>
+                  <DHtmlWithLinks>
                     {{trustHTML this.user.bio_excerpt}}
-                  </HtmlWithLinks>
+                  </DHtmlWithLinks>
                 </div>
               {{/unless}}
             </div>
@@ -648,7 +648,7 @@ export default class UserCardContents extends CardContentsBase {
                     this.user.featured_topic.slug
                     this.user.featured_topic.id
                   }}
-                >{{replaceEmoji
+                >{{dReplaceEmoji
                     (trustHTML this.user.featured_topic.fancy_title)
                   }}</LinkTo>
               </div>
@@ -660,7 +660,7 @@ export default class UserCardContents extends CardContentsBase {
               <div class="location-and-website">
                 {{#if this.user.website_name}}
                   <span class="website-name">
-                    {{icon "globe"}}
+                    {{dIcon "globe"}}
                     {{#if this.linkWebsite}}
                       {{! template-lint-disable link-rel-noopener }}
                       <a
@@ -681,13 +681,13 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.user.location}}
                   <span class="location">
-                    {{icon "location-dot"}}
+                    {{dIcon "location-dot"}}
                     <span>{{this.user.location}}</span>
                   </span>
                 {{/if}}
                 {{#if this.showUserLocalTime}}
                   <span class="local-time" title={{i18n "local_time"}}>
-                    {{icon "far-clock"}}
+                    {{dIcon "far-clock"}}
                     <span>{{this.formattedUserLocalTime}}</span>
                   </span>
                 {{/if}}
@@ -708,21 +708,21 @@ export default class UserCardContents extends CardContentsBase {
                 {{#if this.user.last_posted_at}}
                   <div class="metadata__last-posted">
                     <span class="desc">{{i18n "last_post"}}</span>
-                    {{formatDate
+                    {{dFormatDate
                       this.user.last_posted_at
                       leaveAgo="true"
                     }}</div>
                 {{/if}}
                 <div class="metadata__user-created">
                   <span class="desc">{{i18n "joined"}}</span>
-                  {{formatDate this.user.created_at leaveAgo="true"}}</div>
+                  {{dFormatDate this.user.created_at leaveAgo="true"}}</div>
                 {{#if this.user.time_read}}
                   <div
                     class="metadata__time-read"
                     title={{this.timeReadTooltip}}
                   >
                     <span class="desc">{{i18n "time_read"}}</span>
-                    {{formatDuration this.user.time_read}}
+                    {{dFormatDuration this.user.time_read}}
                     {{#if this.showRecentTimeRead}}
                       <span>
                         ({{i18n
@@ -735,7 +735,7 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.showCheckEmail}}
                   <div class="metadata__email">
-                    {{icon "envelope" title="user.email.title"}}
+                    {{dIcon "envelope" title="user.email.title"}}
                     {{#if this.user.email}}
                       {{this.user.email}}
                     {{else}}

@@ -1,13 +1,13 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -20,7 +20,7 @@ export default <template>
           "adminConfig.customize.themes"
         }}
       >
-        {{icon "angle-left"}}
+        {{dIcon "angle-left"}}
         {{i18n
           (if
             @controller.model.component
@@ -42,7 +42,7 @@ export default <template>
     <div class="title admin-customize-themes-show__title">
       {{#if @controller.editingName}}
         <div class="container-edit-title">
-          <TextField @value={{@controller.model.name}} @autofocus="true" />
+          <DTextField @value={{@controller.model.name}} @autofocus="true" />
           <DButton
             @action={{@controller.finishedEditingName}}
             @icon="check"
@@ -64,7 +64,7 @@ export default <template>
         >
           <span>{{@controller.model.name}}</span>
           {{#unless @controller.model.system}}
-            {{icon "pencil" class="inline-icon"}}
+            {{dIcon "pencil" class="inline-icon"}}
           {{/unless}}
         </DButton>
       {{/if}}
@@ -84,7 +84,7 @@ export default <template>
         {{#if @controller.sourceIsHttp}}
           <a class="remote-url" href={{@controller.remoteThemeLink}}>{{i18n
               "admin.customize.theme.source_url"
-            }}{{icon "link"}}</a>
+            }}{{dIcon "link"}}</a>
         {{else}}
           <div class="remote-url">
             <code>{{@controller.model.remote_theme.remote_url}}</code>
@@ -96,7 +96,7 @@ export default <template>
 
         {{#if @controller.showRemoteError}}
           <div class="error-message">
-            {{icon "triangle-exclamation"}}
+            {{dIcon "triangle-exclamation"}}
             {{i18n "admin.customize.theme.repo_unreachable"}}
           </div>
           <div class="raw-error">
@@ -119,7 +119,7 @@ export default <template>
 
         <span class="status-message">
           {{i18n "admin.customize.theme.last_attempt"}}
-          {{formatDate
+          {{dFormatDate
             @controller.model.remote_theme.updated_at
             leaveAgo="true"
           }}
@@ -148,11 +148,11 @@ export default <template>
         <div class="alert alert-error">
           {{#if @controller.model.disabled_by}}
             {{i18n "admin.customize.theme.disabled_by"}}
-            <UserLink @user={{@controller.model.disabled_by}}>
-              {{avatar @controller.model.disabled_by imageSize="tiny"}}
+            <DUserLink @user={{@controller.model.disabled_by}}>
+              {{dAvatar @controller.model.disabled_by imageSize="tiny"}}
               {{@controller.model.disabled_by.username}}
-            </UserLink>
-            {{formatDate @controller.model.disabled_at leaveAgo="true"}}
+            </DUserLink>
+            {{dFormatDate @controller.model.disabled_at leaveAgo="true"}}
           {{else}}
             {{i18n "admin.customize.theme.disabled"}}
           {{/if}}
@@ -171,7 +171,7 @@ export default <template>
             {{#if @controller.sourceIsHttp}}
               <a class="remote-url" href={{@controller.remoteThemeLink}}>{{i18n
                   "admin.customize.theme.source_url"
-                }}{{icon "link"}}</a>
+                }}{{dIcon "link"}}</a>
             {{else}}
               <div class="remote-url">
                 <code>{{@controller.model.remote_theme.remote_url}}</code>
@@ -186,14 +186,14 @@ export default <template>
             <a
               class="url about-url"
               href={{@controller.model.remote_theme.about_url}}
-            >{{i18n "admin.customize.theme.about_theme"}}{{icon "link"}}</a>
+            >{{i18n "admin.customize.theme.about_theme"}}{{dIcon "link"}}</a>
           {{/if}}
 
           {{#if @controller.model.remote_theme.license_url}}
             <a
               class="url license-url"
               href={{@controller.model.remote_theme.license_url}}
-            >{{i18n "admin.customize.theme.license"}}{{icon "link"}}</a>
+            >{{i18n "admin.customize.theme.license"}}{{dIcon "link"}}</a>
           {{/if}}
 
           {{#if @controller.model.description}}
@@ -228,7 +228,7 @@ export default <template>
 
             {{#if @controller.showRemoteError}}
               <div class="error-message">
-                {{icon "triangle-exclamation"}}
+                {{dIcon "triangle-exclamation"}}
                 {{i18n "admin.customize.theme.repo_unreachable"}}
               </div>
               <div class="raw-error">

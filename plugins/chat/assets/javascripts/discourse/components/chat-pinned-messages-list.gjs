@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 
@@ -134,7 +134,7 @@ export default class ChatPinnedMessagesList extends Component {
               <:top>
                 <div class="chat-pinned-message__pinned-by">
                   {{#if (this.isUnseen pin)}}
-                    {{icon
+                    {{dIcon
                       "thumbtack"
                       class="chat-pinned-message__pinned-by-icon"
                     }}

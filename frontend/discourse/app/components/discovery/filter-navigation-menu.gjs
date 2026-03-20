@@ -8,31 +8,31 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const FilterNavigationMenuList = <template>
   {{#if @data.suggestions.length}}
-    <DropdownMenu as |dropdown|>
+    <DDropdownMenu as |dropdown|>
       {{#each @data.suggestions as |item index|}}
         <dropdown.item
-          class={{concatClass
+          class={{dConcatClass
             "filter-navigation__tip-item"
             (if (eq index @data.selectedIndex) "--selected")
           }}
           {{on "click" (fn @data.selectItem item)}}
         >
           {{#if item.category}}
-            {{categoryBadge item.category allowUncategorized=true}}
+            {{dCategoryBadge item.category allowUncategorized=true}}
           {{else}}
             <span class="filter-navigation__tip-name">
               {{item.name}}
@@ -45,7 +45,7 @@ const FilterNavigationMenuList = <template>
           {{/if}}
         </dropdown.item>
       {{/each}}
-    </DropdownMenu>
+    </DDropdownMenu>
   {{/if}}
 </template>;
 
@@ -339,7 +339,7 @@ export default class FilterNavigationMenu extends Component {
 
   <template>
     <div class="topic-query-filter__input">
-      {{icon "filter" class="topic-query-filter__icon btn-flat"}}
+      {{dIcon "filter" class="topic-query-filter__icon btn-flat"}}
 
       <input
         class="topic-query-filter__filter-term"

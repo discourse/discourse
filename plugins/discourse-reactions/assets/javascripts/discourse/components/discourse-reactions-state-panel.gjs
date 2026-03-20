@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import concatClass from "discourse/helpers/concat-class";
 import { and, eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import DiscourseReactionsStatePanelReaction from "./discourse-reactions-state-panel-reaction";
 
 export default class DiscourseReactionsStatePanel extends Component {
@@ -80,7 +80,7 @@ export default class DiscourseReactionsStatePanel extends Component {
 
   <template>
     <div
-      class={{concatClass "discourse-reactions-state-panel" this.classes}}
+      class={{dConcatClass "discourse-reactions-state-panel" this.classes}}
       {{on "pointerout" this.pointerOut}}
       {{on "pointerover" this.pointerOver}}
     >

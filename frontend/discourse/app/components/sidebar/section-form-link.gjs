@@ -5,12 +5,12 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseLater from "discourse/lib/later";
 import IconPicker from "discourse/select-kit/components/icon-picker";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
@@ -88,7 +88,7 @@ export default class SectionFormLink extends Component {
       role="row"
       data-row-id={{@link.objectId}}
       draggable="true"
-      class={{concatClass
+      class={{dConcatClass
         "sidebar-section-form-link"
         "row-wrapper"
         this.dragCssClass
@@ -96,7 +96,7 @@ export default class SectionFormLink extends Component {
     >
       {{#if this.site.desktopView}}
         <div class="draggable" data-link-name={{@link.name}}>
-          {{icon "grip-lines"}}
+          {{dIcon "grip-lines"}}
         </div>
       {{/if}}
 

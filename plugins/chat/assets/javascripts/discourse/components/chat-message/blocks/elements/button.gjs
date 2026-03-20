@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class Button extends Component {
   @tracked interacting = false;
@@ -22,10 +22,10 @@ export default class Button extends Component {
   <template>
     <DButton
       @isLoading={{this.interacting}}
-      @translatedLabel={{replaceEmoji @definition.text.text}}
+      @translatedLabel={{dReplaceEmoji @definition.text.text}}
       @action={{this.createInteraction}}
       id={{@definition.action_id}}
-      class={{concatClass
+      class={{dConcatClass
         "block__button"
         (if @definition.style (concat "btn-" @definition.style))
       }}

@@ -1,5 +1,5 @@
-import DModal from "discourse/components/d-modal";
 import InvitePanel from "discourse/components/invite-panel";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const AddPmParticipants = <template>

@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import AdComponent from "./ad-component";
 
 const adIndex = {
@@ -188,7 +188,7 @@ export default class HouseAd extends AdComponent {
   }
 
   <template>
-    <div class={{concatClass "house-creative" this.adUnitClass}} ...attributes>
+    <div class={{dConcatClass "house-creative" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
         {{trustHTML this.adHtml}}
       {{/if}}

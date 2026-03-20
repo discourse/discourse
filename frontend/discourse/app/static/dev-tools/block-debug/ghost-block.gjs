@@ -3,8 +3,8 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 /** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 /** @type {import("../shared/args-table.gjs").default} */
 import ArgsTable from "../shared/args-table";
@@ -150,7 +150,7 @@ export default class GhostBlock extends Component {
       >
         <:trigger>
           <span class="block-debug-ghost__badge">
-            {{icon "cube"}}
+            {{dIcon "cube"}}
             <span class="block-debug-ghost__name">
               {{this.displayName}}
             </span>
@@ -163,7 +163,7 @@ export default class GhostBlock extends Component {
           <div class="block-debug-tooltip --ghost">
             <div class="block-debug-tooltip__header --failed">
               <div class="block-debug-tooltip__row">
-                {{icon "cube"}}
+                {{dIcon "cube"}}
                 <span class="block-debug-tooltip__title">
                   {{this.displayName}}
                 </span>

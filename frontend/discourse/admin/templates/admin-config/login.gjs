@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default class extends Component {
@@ -22,24 +22,24 @@ export default class extends Component {
         />
       </:breadcrumbs>
       <:tabs>
-        <NavItem
+        <DNavItem
           @route="adminConfig.login.settings"
           @label="admin.config.login.sub_pages.common_settings.title"
         />
-        <NavItem
+        <DNavItem
           @route="adminConfig.login.discourse-id"
           @label="admin.config.login.sub_pages.discourse_id.title"
         />
-        <NavItem
+        <DNavItem
           @route="adminConfig.login.authenticators"
           @label="admin.config.login.sub_pages.authenticators.title"
         />
-        <NavItem
+        <DNavItem
           @route="adminConfig.login.discourseconnect"
           @label="admin.config.login.sub_pages.discourseconnect.title"
         />
         {{#each this.site.admin_config_login_routes as |login_route|}}
-          <NavItem
+          <DNavItem
             @route="adminConfig.login.plugin-tab"
             @routeParam={{login_route}}
             @label={{concat "admin.config.login.sub_pages." login_route}}

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelIcon extends Component {
@@ -27,19 +27,19 @@ export default class ChatChannelIcon extends Component {
 
   get categoryChannelIcon() {
     const { emoji } = this.args.channel;
-    return emoji ? replaceEmoji(`:${emoji}:`) : icon("d-chat");
+    return emoji ? dReplaceEmoji(`:${emoji}:`) : dIcon("d-chat");
   }
 
   get directChannelIcon() {
     const { emoji, membershipsCount } = this.args.channel;
-    return emoji ? replaceEmoji(`:${emoji}:`) : membershipsCount;
+    return emoji ? dReplaceEmoji(`:${emoji}:`) : membershipsCount;
   }
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
       {{#if this.groupDirectMessage}}
         <div
-          class={{concatClass
+          class={{dConcatClass
             "chat-channel-icon"
             (unless @channel.emoji "--users-count" "--emoji")
           }}
@@ -55,7 +55,7 @@ export default class ChatChannelIcon extends Component {
       <div class="chat-channel-icon --icon" style={{this.channelColorStyle}}>
         {{this.categoryChannelIcon}}
         {{#if @channel.chatable.read_restricted}}
-          {{icon "lock" class="chat-channel-icon__restricted-category-icon"}}
+          {{dIcon "lock" class="chat-channel-icon__restricted-category-icon"}}
         {{/if}}
       </div>
     {{else if this.isThreadsList}}
@@ -66,7 +66,7 @@ export default class ChatChannelIcon extends Component {
           @showPresence={{false}}
         />
         <div class="avatar-flair --threads">
-          {{icon "discourse-threads"}}
+          {{dIcon "discourse-threads"}}
         </div>
       </div>
     {{/if}}

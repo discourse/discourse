@@ -7,10 +7,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { eq } from "discourse/truth-helpers";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dScrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").HashtagAutocompleteResult} HashtagAutocompleteResult
@@ -56,7 +56,7 @@ export default class HashtagAutocompleteResults extends Component {
   @action
   getResultLabel(result) {
     if (result.model) {
-      return categoryLink(result.model, {
+      return dCategoryLink(result.model, {
         allowUncategorized: true,
         link: false,
       });
@@ -73,14 +73,14 @@ export default class HashtagAutocompleteResults extends Component {
     >
       <ul>
         {{#each @results as |result index|}}
-          <li {{scrollIntoView (this.shouldScroll index)}}>
+          <li {{dScrollIntoView (this.shouldScroll index)}}>
             <a
               href
               class={{if (eq index @selectedIndex) "selected"}}
               {{on "click" (fn this.handleResultClick result index)}}
             >
               {{#unless result.model}}
-                {{icon "tag"}}
+                {{dIcon "tag"}}
               {{/unless}}
               <span class="text-content">{{this.getResultLabel result}}</span>
             </a>

@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
-import DEditor from "discourse/components/d-editor";
-import icon from "discourse/helpers/d-icon";
+import DEditor from "discourse/ui-kit/d-editor";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldComposer extends Component {
   @tracked composerValue = this.args.value || "";
@@ -23,7 +23,7 @@ export default class FormTemplateFieldComposer extends Component {
         <label class="form-template-field__label">
           {{@attributes.label}}
           {{#if @validations.required}}
-            {{icon "asterisk" class="form-template-field__required-indicator"}}
+            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
           {{/if}}
         </label>
       {{/if}}

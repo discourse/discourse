@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const SHOW_ORIGINAL_COOKIE = "content-localization-show-original";
@@ -116,10 +116,10 @@ export default class LanguageSwitcher extends Component {
         <span class="language-switcher__locale">
           {{this.currentLanguageCode}}
         </span>
-        {{icon "angle-down"}}
+        {{dIcon "angle-down"}}
       </:trigger>
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.content as |option|}}
             <dropdown.item
               class="locale-options {{if option.isActive '--selected'}}"
@@ -131,7 +131,7 @@ export default class LanguageSwitcher extends Component {
               />
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

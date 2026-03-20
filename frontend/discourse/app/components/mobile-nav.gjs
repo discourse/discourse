@@ -8,7 +8,7 @@ import { trustHTML } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import $ from "jquery";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("ul")
 @classNames("mobile-nav")
@@ -86,7 +86,7 @@ export default class MobileNav extends Component {
         <li>
           <a href {{on "click" this.toggleExpanded}} class="expander">
             <span class="selection">{{trustHTML this.selectedHtml}}</span>
-            {{icon "angle-down"}}
+            {{dIcon "angle-down"}}
           </a>
         </li>
       {{/if}}

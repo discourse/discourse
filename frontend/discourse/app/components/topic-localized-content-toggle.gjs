@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const SHOW_ORIGINAL_COOKIE = "content-localization-show-original";
@@ -66,7 +66,7 @@ export default class TopicLocalizedContentToggle extends Component {
     <DButton
       @icon="language"
       @title={{this.title}}
-      class={{concatClass
+      class={{dConcatClass
         "btn btn-default btn-toggle-localized-content no-text"
         (unless this.showingOriginal "--active")
       }}

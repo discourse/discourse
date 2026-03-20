@@ -9,7 +9,6 @@ import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
 import CreateTopicButton from "discourse/components/create-topic-button";
-import DButton from "discourse/components/d-button";
 import NavigationBar from "discourse/components/navigation-bar";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagInfoButton from "discourse/components/tag-info-button";
@@ -23,6 +22,7 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
 import { and, gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 
 @tagName("")
 export default class DNavigation extends Component {

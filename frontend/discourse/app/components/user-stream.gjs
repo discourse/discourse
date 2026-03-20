@@ -7,9 +7,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
 import PostList from "discourse/components/post-list";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
@@ -17,6 +14,9 @@ import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserStreamComponent extends Component {
@@ -196,7 +196,7 @@ export default class UserStreamComponent extends Component {
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @bulkSelectHelper={{this.showBulkSelectHelper}}
       @bulkActions={{this.bulkActions}}
-      class={{concatClass "user-stream" this.filterClassName}}
+      class={{dConcatClass "user-stream" this.filterClassName}}
       {{on "click" this.handleClick}}
       {{didUpdate this.updateBulkSelectPosts @stream.content}}
     >
@@ -224,7 +224,7 @@ export default class UserStreamComponent extends Component {
 
         {{#each post.children as |child|}}
           <div class="user-stream-item-actions">
-            {{icon child.icon class="icon"}}
+            {{dIcon child.icon class="icon"}}
             {{#each child.items as |grandChild|}}
               <a
                 href={{grandChild.userUrl}}
@@ -232,7 +232,7 @@ export default class UserStreamComponent extends Component {
                 class="avatar-link"
               >
                 <div class="avatar-wrapper">
-                  {{avatar
+                  {{dAvatar
                     grandChild
                     imageSize="tiny"
                     extraClasses="actor"

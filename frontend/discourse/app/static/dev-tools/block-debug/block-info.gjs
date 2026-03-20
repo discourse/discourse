@@ -3,7 +3,7 @@ import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
 /** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 /** @type {import("../shared/args-table.gjs").default} */
 import ArgsTable from "../shared/args-table";
 /** @type {import("./conditions-tree.gjs").default} */
@@ -115,7 +115,7 @@ export default class BlockInfo extends Component {
       >
         <:trigger>
           <span class="block-debug-badge">
-            {{icon "cube"}}
+            {{dIcon "cube"}}
             <span class="block-debug-badge__name">{{this.displayName}}</span>
           </span>
         </:trigger>
@@ -123,7 +123,7 @@ export default class BlockInfo extends Component {
           <div class="block-debug-tooltip">
             <div class="block-debug-tooltip__header">
               <div class="block-debug-tooltip__row">
-                {{icon "cube"}}
+                {{dIcon "cube"}}
                 <span class="block-debug-tooltip__title">
                   {{this.displayName}}
                 </span>

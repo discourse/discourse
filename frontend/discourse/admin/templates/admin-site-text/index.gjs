@@ -1,16 +1,16 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import SiteTextSummary from "discourse/admin/components/site-text-summary";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="search-area">
-    <TextField
+    <DTextField
       @value={{@controller.q}}
       @placeholderKey="admin.site_text.search"
       @autofocus="true"
@@ -89,7 +89,7 @@ export default <template>
     <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
   {{/if}}
 
-  <LoadMore
+  <DLoadMore
     @action={{@controller.loadMore}}
     @enabled={{@controller.canLoadMore}}
     @isLoading={{@controller.searching}}
@@ -107,6 +107,6 @@ export default <template>
         {{i18n "admin.site_text.no_results"}}
       {{/unless}}
     {{/each}}
-    <ConditionalLoadingSpinner @condition={{@controller.searching}} />
-  </LoadMore>
+    <DConditionalLoadingSpinner @condition={{@controller.searching}} />
+  </DLoadMore>
 </template>

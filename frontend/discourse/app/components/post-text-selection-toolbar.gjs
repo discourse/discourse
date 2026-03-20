@@ -3,13 +3,13 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
 import { clipboardCopy, postUrl } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class PostTextSelectionToolbar extends Component {
@@ -88,7 +88,7 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   <template>
-    <div class={{concatClass "quote-button" "visible"}}>
+    <div class={{dConcatClass "quote-button" "visible"}}>
       <div class="buttons">
         <PluginOutlet
           @name="post-text-buttons"

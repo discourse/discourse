@@ -10,12 +10,8 @@ import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import DSelect from "discourse/components/d-select";
 import GroupSelector from "discourse/components/group-selector";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -24,6 +20,10 @@ import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DSelect from "discourse/ui-kit/d-select";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
@@ -283,7 +283,7 @@ export default class UpcomingChangeItem extends Component {
       <td class="d-table__cell --overview">
         {{#if @change.plugin}}
           <span class="upcoming-change__plugin">
-            {{icon "plug"}}
+            {{dIcon "plug"}}
             {{@change.plugin}}
           </span>
         {{/if}}
@@ -308,7 +308,7 @@ export default class UpcomingChangeItem extends Component {
                   data-target-width={{@change.upcoming_change.image.width}}
                   data-target-height={{@change.upcoming_change.image.height}}
                   data-large-src={{@change.upcoming_change.image.url}}
-                >{{icon "far-image"}}
+                >{{dIcon "far-image"}}
                   {{i18n "admin.upcoming_changes.preview"}}</a>
               {{/if}}
 
@@ -328,14 +328,14 @@ export default class UpcomingChangeItem extends Component {
 
         {{#if (eq @change.upcoming_change.status "permanent")}}
           <div class="upcoming-change__status-notice">
-            {{icon "triangle-exclamation"}}
+            {{dIcon "triangle-exclamation"}}
             {{i18n "admin.upcoming_changes.permanent_notice"}}
           </div>
         {{/if}}
 
         {{#if (eq @change.upcoming_change.status "stable")}}
           <div class="upcoming-change__status-notice">
-            {{icon "triangle-exclamation"}}
+            {{dIcon "triangle-exclamation"}}
             {{i18n "admin.upcoming_changes.permanent_soon_notice"}}
           </div>
         {{/if}}
@@ -348,12 +348,12 @@ export default class UpcomingChangeItem extends Component {
                 @change.upcoming_change.status
               )
             }}
-            class={{concatClass
+            class={{dConcatClass
               "upcoming-change__badge"
               (concat "--status-" @change.upcoming_change.status)
             }}
           >
-            {{icon
+            {{dIcon
               (if
                 (eq @change.upcoming_change.status "permanent")
                 "lock"
@@ -375,12 +375,12 @@ export default class UpcomingChangeItem extends Component {
                 @change.upcoming_change.impact_role
               )
             }}
-            class={{concatClass
+            class={{dConcatClass
               "upcoming-change__badge"
               (concat "--impact-role-" @change.upcoming_change.impact_role)
             }}
           >
-            {{icon (this.impactRoleIcon @change.upcoming_change.impact_role)}}
+            {{dIcon (this.impactRoleIcon @change.upcoming_change.impact_role)}}
             {{i18n
               (concat
                 "admin.upcoming_changes.impact_roles."

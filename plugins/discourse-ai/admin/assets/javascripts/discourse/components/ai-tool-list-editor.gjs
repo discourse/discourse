@@ -6,16 +6,16 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiTool from "../admin/models/ai-tool";
 
@@ -205,7 +205,7 @@ export default class AiToolListEditor extends Component {
             @onClose={{this.resetMenuState}}
           >
             <:content>
-              <DropdownMenu as |dropdown|>
+              <DDropdownMenu as |dropdown|>
                 {{#if this.expandedCategory}}
                   <dropdown.item>
                     <DButton
@@ -268,7 +268,7 @@ export default class AiToolListEditor extends Component {
                     </dropdown.item>
                   {{/each}}
                 {{/if}}
-              </DropdownMenu>
+              </DDropdownMenu>
 
             </:content>
           </DMenu>
@@ -309,9 +309,9 @@ export default class AiToolListEditor extends Component {
                               }}"
                           >
                             {{#if cred.bound}}
-                              {{icon "check"}}
+                              {{dIcon "check"}}
                             {{else}}
-                              {{icon "triangle-exclamation"}}
+                              {{dIcon "triangle-exclamation"}}
                             {{/if}}
                             {{cred.alias}}
                             {{#unless cred.bound}}
@@ -346,7 +346,7 @@ export default class AiToolListEditor extends Component {
             @onClose={{this.resetMenuState}}
           >
             <:content>
-              <DropdownMenu as |dropdown|>
+              <DDropdownMenu as |dropdown|>
                 {{#if this.expandedCategory}}
                   <dropdown.item>
                     <DButton
@@ -409,7 +409,7 @@ export default class AiToolListEditor extends Component {
                     </dropdown.item>
                   {{/each}}
                 {{/if}}
-              </DropdownMenu>
+              </DDropdownMenu>
 
             </:content>
           </DMenu>

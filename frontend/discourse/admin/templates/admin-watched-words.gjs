@@ -1,10 +1,10 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageHeader from "discourse/components/d-page-header";
-import TextField from "discourse/components/text-field";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -32,7 +32,7 @@ export default <template>
             @icon="bars"
             class="menu-toggle"
           />
-          <TextField
+          <DTextField
             @value={{@controller.filter}}
             @placeholderKey="admin.watched_words.search"
             class="no-blur"

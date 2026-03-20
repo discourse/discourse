@@ -6,11 +6,11 @@ import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { propertyEqual } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -63,7 +63,7 @@ export default class EditCategoryTab extends Component {
 
   <template>
     <li
-      class={{concatClass (if this.active "active") this.tabClassName}}
+      class={{dConcatClass (if this.active "active") this.tabClassName}}
       ...attributes
     >
       <a href {{on "click" this.select}} class={{if this.active "active"}}>

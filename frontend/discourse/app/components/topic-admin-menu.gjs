@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;
@@ -92,10 +92,10 @@ export default class TopicAdminMenu extends Component {
         @triggerClass="btn-default btn-icon toggle-admin-menu {{@buttonClasses}}"
       >
         <:trigger>
-          {{icon "wrench"}}
+          {{dIcon "wrench"}}
         </:trigger>
         <:content>
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             {{#if
               (or
                 this.currentUser.canManageTopic
@@ -285,13 +285,13 @@ export default class TopicAdminMenu extends Component {
                     @label={{button.label}}
                     @translatedLabel={{button.translatedLabel}}
                     @icon={{button.icon}}
-                    class={{concatClass "btn-transparent" button.className}}
+                    class={{dConcatClass "btn-transparent" button.className}}
                     @action={{fn this.onExtraButtonAction button.action}}
                   />
                 </dropdown.item>
               {{/each}}
             {{/if}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     {{/if}}

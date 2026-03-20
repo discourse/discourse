@@ -5,8 +5,6 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -14,6 +12,8 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import cookie from "discourse/lib/cookie";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import UserColorPaletteMenuItem from "./user-color-palette-menu-item";
 
 const HORIZON_PALETTES = [
@@ -183,7 +183,7 @@ export default class UserColorPaletteSelector extends Component {
         @identifier="user-color-palette-selector"
         @placementStrategy="fixed"
         @onRegisterApi={{this.onRegisterMenu}}
-        class={{concatClass
+        class={{dConcatClass
           "btn-flat user-color-palette-selector sidebar-footer-actions-button"
           (if this.cssLoaded "user-color-palette-css-loaded")
         }}
@@ -191,7 +191,7 @@ export default class UserColorPaletteSelector extends Component {
         @inline={{true}}
       >
         <:trigger>
-          {{icon "paintbrush"}}
+          {{dIcon "paintbrush"}}
         </:trigger>
         <:content>
           <div class="user-color-palette-menu">

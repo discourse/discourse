@@ -1,7 +1,7 @@
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 
 const TopicFooter = <template>
   <div id="revision-controls">
@@ -22,9 +22,9 @@ const TopicFooter = <template>
       />
     </div>
     <div id="revision-numbers" class={{unless @displayRevisions "invisible"}}>
-      <ConditionalLoadingSpinner @condition={{@loading}} @size="small">
+      <DConditionalLoadingSpinner @condition={{@loading}} @size="small">
         {{trustHTML @revisionsText}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
     <div class="revision-controls--forward">
       <DButton

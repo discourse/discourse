@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class PostLanguageSelector extends Component {
@@ -50,7 +50,7 @@ export default class PostLanguageSelector extends Component {
       @triggerClass="btn-transparent"
     >
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.content as |locale|}}
             <dropdown.item
               class="locale-options"
@@ -70,7 +70,7 @@ export default class PostLanguageSelector extends Component {
               @action={{fn this.selectPostLanguage null}}
             />
           </dropdown.item>
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

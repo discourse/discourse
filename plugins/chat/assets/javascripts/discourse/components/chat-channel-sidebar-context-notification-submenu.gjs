@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ChatChannelSidebarContextNotificationSubmenu extends Component {
   @service chatApi;
@@ -58,13 +58,13 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
   }
 
   <template>
-    <DropdownMenu as |dropdown|>
+    <DDropdownMenu as |dropdown|>
       <dropdown.item>
         <DButton
           @action={{this.changePushNotifications "never"}}
           @label="chat.notification_levels.never"
           @title="chat.notification_levels.never"
-          class={{concatClass
+          class={{dConcatClass
             "chat-channel-sidebar-link-menu__notification-level-never"
             (if (this.isItemSelected "never") "-selected")
           }}
@@ -76,7 +76,7 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
           @action={{this.changePushNotifications "mention"}}
           @label="chat.notification_levels.mention"
           @title="chat.notification_levels.mention"
-          class={{concatClass
+          class={{dConcatClass
             "chat-channel-sidebar-link-menu__notification-level-mention"
             (if (this.isItemSelected "mention") "-selected")
           }}
@@ -88,7 +88,7 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
           @action={{this.changePushNotifications "always"}}
           @label="chat.notification_levels.always"
           @title="chat.notification_levels.always"
-          class={{concatClass
+          class={{dConcatClass
             "chat-channel-sidebar-link-menu__notification-level-always"
             (if (this.isItemSelected "always") "-selected")
           }}
@@ -115,12 +115,12 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
             "chat.settings.unmute"
             "chat.settings.mute"
           }}
-          class={{concatClass
+          class={{dConcatClass
             "chat-channel-sidebar-link-menu__mute-channel"
             (if (this.isItemSelected "muted") "-selected")
           }}
         />
       </dropdown.item>
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }

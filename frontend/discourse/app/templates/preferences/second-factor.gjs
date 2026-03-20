@@ -1,13 +1,13 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
 import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
 import bodyClass from "discourse/helpers/body-class";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -17,7 +17,7 @@ export default <template>
     <section
       class="user-content user-preferences solo-preference second-factor"
     >
-      <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+      <DConditionalLoadingSpinner @condition={{@controller.loading}}>
         <form class="form-vertical">
           {{#if @controller.showEnforcedNotice}}
             <div class="alert alert-error">
@@ -181,7 +181,7 @@ export default <template>
             {{/unless}}
           {{/if}}
         </form>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </section>
   </PluginOutlet>
 </template>

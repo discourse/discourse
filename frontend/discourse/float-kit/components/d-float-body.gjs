@@ -6,10 +6,10 @@ import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
-import concatClass from "discourse/helpers/concat-class";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import TrapTab from "discourse/modifiers/trap-tab";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
+import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 export default class DFloatBody extends Component {
   closeOnScroll = modifierFn(() => {
@@ -77,7 +77,7 @@ export default class DFloatBody extends Component {
       @portalOutletElement={{@instance.portalOutletElement}}
     >
       <div
-        class={{concatClass
+        class={{dConcatClass
           @mainClass
           (if this.options.animated "-animated")
           (if @instance.expanded "-expanded")
@@ -89,11 +89,11 @@ export default class DFloatBody extends Component {
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapPointerDown}}
-        {{(if @trapTab (modifier TrapTab autofocus=this.options.autofocus))}}
+        {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
         {{(if
           (and @instance.expanded this.supportsCloseOnClickOutside)
           (modifier
-            closeOnClickOutside
+            dCloseOnClickOutside
             (fn @instance.close (hash focusTrigger=false))
             (hash target=this.content)
           )

@@ -3,11 +3,11 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
 import applyLightbox from "discourse/lib/lightbox";
 import { escapeExpression, optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
@@ -183,7 +183,7 @@ export default class ChatMessageCollapser extends Component {
   <template>
     <div class="chat-message-collapser">
       {{#if this.hasUploads}}
-        <DecoratedHtml
+        <DDecoratedHtml
           @html={{trustHTML @cooked}}
           @decorate={{@decorate}}
           @className="chat-cooked"
@@ -215,7 +215,7 @@ export default class ChatMessageCollapser extends Component {
                   />
                 </div>
               {{else}}
-                <DecoratedHtml
+                <DDecoratedHtml
                   @html={{trustHTML cooked.body}}
                   @decorate={{@decorate}}
                   @className="chat-cooked"
@@ -223,7 +223,7 @@ export default class ChatMessageCollapser extends Component {
               {{/if}}
             </Collapser>
           {{else}}
-            <DecoratedHtml
+            <DDecoratedHtml
               @html={{trustHTML cooked.body}}
               @decorate={{@decorate}}
               @className="chat-cooked"

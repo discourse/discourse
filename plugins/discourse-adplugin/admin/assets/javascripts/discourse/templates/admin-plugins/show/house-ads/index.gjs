@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import { eq } from "discourse/truth-helpers";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import HouseAdsList from "../../../../../admin/components/house-ads-list";
 import HouseAdsSettingsPanel from "../../../../../admin/components/house-ads-settings-panel";
@@ -25,7 +25,7 @@ const HouseAdsIndex = <template>
     </DPageSubheader>
 
     {{#if @controller.houseAds.length}}
-      <HorizontalOverflowNav>
+      <DHorizontalOverflowNav>
         <li>
           <a
             href="#"
@@ -40,7 +40,7 @@ const HouseAdsIndex = <template>
             {{on "click" (fn @controller.onTabChange "settings")}}
           >{{i18n "admin.adplugin.house_ads.tabs.settings"}}</a>
         </li>
-      </HorizontalOverflowNav>
+      </DHorizontalOverflowNav>
 
       {{#if (eq @controller.currentTab "ads")}}
         <HouseAdsList @houseAds={{@controller.houseAds}} />

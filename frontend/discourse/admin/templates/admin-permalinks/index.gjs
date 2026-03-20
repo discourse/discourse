@@ -1,20 +1,20 @@
 import { fn } from "@ember/helper";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import TextField from "discourse/components/text-field";
 import DMenu from "discourse/float-kit/components/d-menu";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{#if @controller.hasPermalinks}}
     <div class="d-admin-filter">
       <div class="admin-filter__input-container permalink-search">
-        <TextField
+        <DTextField
           @value={{@controller.filter}}
           @placeholderKey="admin.permalink.form.filter"
           @autocorrect="off"
@@ -25,7 +25,7 @@ export default <template>
     </div>
   {{/if}}
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     <div class="permalink-results">
       {{#if @controller.model.length}}
         <table class="d-table permalinks">
@@ -42,7 +42,10 @@ export default <template>
           <tbody class="d-table__body">
             {{#each @controller.model as |pl|}}
               <tr
-                class={{concatClass "d-table__row admin-permalink-item" pl.key}}
+                class={{dConcatClass
+                  "d-table__row admin-permalink-item"
+                  pl.key
+                }}
               >
                 <td class="d-table__cell --overview">
                   <DButton
@@ -66,14 +69,14 @@ export default <template>
                       #{{pl.post_number}}</a>
                   {{/if}}
                   {{#if pl.category_id}}
-                    {{categoryLink pl.category}}
+                    {{dCategoryLink pl.category}}
                   {{/if}}
                   {{#if pl.tag_id}}
                     <a href={{pl.tag_url}}>{{pl.tag_name}}</a>
                   {{/if}}
                   {{#if pl.external_url}}
                     {{#if pl.linkIsExternal}}
-                      {{icon "up-right-from-square"}}
+                      {{dIcon "up-right-from-square"}}
                     {{/if}}
                     <a href={{pl.external_url}}>{{pl.external_url}}</a>
                   {{/if}}
@@ -97,7 +100,7 @@ export default <template>
                       @onRegisterApi={{@controller.onRegisterApi}}
                     >
                       <:content>
-                        <DropdownMenu as |dropdown|>
+                        <DDropdownMenu as |dropdown|>
                           <dropdown.item>
                             <DButton
                               @action={{fn @controller.destroyRecord pl}}
@@ -106,7 +109,7 @@ export default <template>
                               @label="admin.config_areas.permalinks.delete"
                             />
                           </dropdown.item>
-                        </DropdownMenu>
+                        </DDropdownMenu>
                       </:content>
                     </DMenu>
                   </div>
@@ -130,5 +133,5 @@ export default <template>
         {{/if}}
       {{/if}}
     </div>
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

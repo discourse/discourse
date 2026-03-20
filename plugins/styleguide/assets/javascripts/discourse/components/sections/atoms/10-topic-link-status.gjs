@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import TopicStatus from "discourse/components/topic-status";
-import topicLink from "discourse/helpers/topic-link";
+import dTopicLink from "discourse/ui-kit/helpers/d-topic-link";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class TopicStatuses extends Component {
@@ -91,7 +91,7 @@ import TopicStatus from "discourse/components/topic-status";
       @title="topic-link (no status)"
       @code={{this.noStatusCode}}
     >
-      {{topicLink @dummy.topic}}
+      {{dTopicLink @dummy.topic}}
     </StyleguideExample>
 
     <StyleguideExample
@@ -99,7 +99,7 @@ import TopicStatus from "discourse/components/topic-status";
       @code={{this.invisibleCode}}
     >
       <TopicStatus @topic={{@dummy.invisibleTopic}} />
-      {{topicLink @dummy.invisibleTopic}}
+      {{dTopicLink @dummy.invisibleTopic}}
     </StyleguideExample>
 
     <StyleguideExample
@@ -107,7 +107,7 @@ import TopicStatus from "discourse/components/topic-status";
       @code={{this.closedCode}}
     >
       <TopicStatus @topic={{@dummy.closedTopic}} />
-      {{topicLink @dummy.closedTopic}}
+      {{dTopicLink @dummy.closedTopic}}
     </StyleguideExample>
 
     <StyleguideExample
@@ -115,7 +115,7 @@ import TopicStatus from "discourse/components/topic-status";
       @code={{this.pinnedCode}}
     >
       <TopicStatus @topic={{@dummy.pinnedTopic}} />
-      {{topicLink @dummy.pinnedTopic}}
+      {{dTopicLink @dummy.pinnedTopic}}
     </StyleguideExample>
 
     <StyleguideExample
@@ -123,7 +123,7 @@ import TopicStatus from "discourse/components/topic-status";
       @code={{this.unpinnedCode}}
     >
       <TopicStatus @topic={{@dummy.unpinnedTopic}} />
-      {{topicLink @dummy.unpinnedTopic}}
+      {{dTopicLink @dummy.unpinnedTopic}}
     </StyleguideExample>
 
     <StyleguideExample
@@ -131,7 +131,7 @@ import TopicStatus from "discourse/components/topic-status";
       @code={{this.archivedCode}}
     >
       <TopicStatus @topic={{@dummy.archivedTopic}} />
-      {{topicLink @dummy.archivedTopic}}
+      {{dTopicLink @dummy.archivedTopic}}
     </StyleguideExample>
 
     <StyleguideExample
@@ -139,7 +139,7 @@ import TopicStatus from "discourse/components/topic-status";
       @code={{this.warningCode}}
     >
       <TopicStatus @topic={{@dummy.warningTopic}} />
-      {{topicLink @dummy.warningTopic}}
+      {{dTopicLink @dummy.warningTopic}}
     </StyleguideExample>
   </template>
 }

@@ -7,14 +7,14 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import SectionHeader from "./section-header";
 
@@ -165,7 +165,7 @@ export default class SidebarSection extends Component {
       <div
         {{didInsert this.setExpandedState}}
         data-section-name={{@sectionName}}
-        class={{concatClass
+        class={{dConcatClass
           "sidebar-section"
           "sidebar-section-wrapper"
           (if
@@ -187,7 +187,7 @@ export default class SidebarSection extends Component {
             >
               {{#if @collapsable}}
                 <span class="sidebar-section-header-caret">
-                  {{icon this.headerCaretIcon}}
+                  {{dIcon this.headerCaretIcon}}
                 </span>
               {{/if}}
 
@@ -203,7 +203,7 @@ export default class SidebarSection extends Component {
                   <span
                     class="sidebar-section-header-global-indicator__content"
                   >
-                    {{icon "shield-halved"}}
+                    {{dIcon "shield-halved"}}
                     {{i18n "sidebar.sections.global_section"}}
                   </span>
                 </DTooltip>
@@ -218,7 +218,7 @@ export default class SidebarSection extends Component {
                   title={{headerAction.title}}
                   class="sidebar-section-header-button btn-icon btn-flat"
                 >
-                  {{icon @headerActionsIcon}}
+                  {{dIcon @headerActionsIcon}}
                 </button>
               {{/each}}
             {{/if}}

@@ -4,15 +4,15 @@ import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
-import UserAvatar from "discourse/components/user-avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { autoUpdatingRelativeAge, relativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostA11yHeading from "./a11y-heading";
 
@@ -165,7 +165,7 @@ export default class PostSmallAction extends Component {
           id={{@elementId}}
           class={{unless
             @cloaked
-            (concatClass
+            (dConcatClass
               "small-action"
               "onscreen-post"
               (if @post.deleted "deleted")
@@ -178,11 +178,11 @@ export default class PostSmallAction extends Component {
           data-user-id={{@post.user_id}}
         >
           <div class="topic-avatar">
-            {{icon this.icon}}
+            {{dIcon this.icon}}
           </div>
           <div class="small-action-desc">
             <div class="small-action-contents">
-              <UserAvatar
+              <DUserAvatar
                 @ariaHidden={{false}}
                 @size="small"
                 @user={{@post.user}}

@@ -1,4 +1,4 @@
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostAvatar from "./avatar";
 import PostCookedHtml from "./cooked-html";
@@ -22,9 +22,9 @@ const PostEmbedded = <template>
               title={{i18n "topic.jump_reply"}}
             >
               {{#if @above}}
-                {{icon "arrow-up"}}
+                {{dIcon "arrow-up"}}
               {{else}}
-                {{icon "arrow-down"}}
+                {{dIcon "arrow-down"}}
               {{/if}}
               {{i18n "topic.jump_reply_button"}}
             </a>

@@ -1,4 +1,4 @@
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import Logo from "./logo";
 
 const HomeLogoContents = <template>
@@ -11,7 +11,7 @@ const HomeLogoContents = <template>
         @darkUrl={{@logoSmallUrlDark}}
       />
     {{else}}
-      {{icon "house"}}
+      {{dIcon "house"}}
     {{/if}}
   {{else if @showMobileLogo}}
     <Logo

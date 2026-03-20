@@ -14,8 +14,6 @@ import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import curryComponent from "ember-curry-component";
-/** @type {import("discourse/components/async-content.gjs")} */
-import AsyncContent from "discourse/components/async-content";
 /** @type {import("discourse/lib/blocks/-internals/components/block-layout-wrapper.gjs")} */
 import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
 /** @type {import("discourse/lib/blocks/-internals/components/block-outlet-inline-error.gjs")} */
@@ -43,6 +41,8 @@ import { validateLayout } from "discourse/lib/blocks/-internals/validation/layou
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
+/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 
 /**
  * A block entry in a layout configuration.
@@ -575,7 +575,7 @@ export default class BlockOutlet extends Component {
       )
       as |OutletInfo|
     }}
-      <AsyncContent @asyncData={{this.children}}>
+      <DAsyncContent @asyncData={{this.children}}>
         <:loading>
           {{! Resolving async blocks should not display a loading UI }}
         </:loading>
@@ -625,7 +625,7 @@ export default class BlockOutlet extends Component {
             <OutletInfo />
           {{/if}}
         </:empty>
-      </AsyncContent>
+      </DAsyncContent>
     {{/let}}
 
     {{! yield to :after block with hasLayout boolean for conditional rendering

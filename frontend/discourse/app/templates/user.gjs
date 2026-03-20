@@ -1,20 +1,20 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserNav from "discourse/components/user-nav";
 import UserProfileAvatar from "discourse/components/user-profile-avatar";
-import UserStatusMessage from "discourse/components/user-status-message";
-import icon from "discourse/helpers/d-icon";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import userStatus from "discourse/helpers/user-status";
 import UserNotificationsDropdown from "discourse/select-kit/components/user-notifications-dropdown";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DHtmlWithLinks from "discourse/ui-kit/d-html-with-links";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import CollapsedInfo from "./user/collapsed-info";
 
@@ -195,7 +195,7 @@ export default <template>
                     currentUser=@controller.currentUser
                   }}
                   {{#if @controller.model.status}}
-                    <UserStatusMessage @status={{@controller.model.status}} />
+                    <DUserStatusMessage @status={{@controller.model.status}} />
                   {{/if}}
                 </div>
                 <div
@@ -226,14 +226,14 @@ export default <template>
               {{#if @controller.showFeaturedTopic}}
                 <div class="featured-topic user-profile__featured-topic">
                   <span title={{i18n "user.featured_topic"}}>
-                    {{icon "book"~}}
+                    {{dIcon "book"~}}
                   </span><LinkTo
                     @route="topic"
                     @models={{array
                       @controller.model.featured_topic.slug
                       @controller.model.featured_topic.id
                     }}
-                  >{{replaceEmoji
+                  >{{dReplaceEmoji
                       (trustHTML @controller.model.featured_topic.fancy_title)
                     }}</LinkTo>
                 </div>
@@ -244,12 +244,12 @@ export default <template>
               >
                 {{#if @controller.model.location}}<div
                     class="user-profile-location"
-                  >{{icon "location-dot"~}}
+                  >{{dIcon "location-dot"~}}
                     {{@controller.model.location}}</div>{{/if}}
                 {{#if @controller.model.website_name}}
                   <div class="user-profile-website">
                     {{! template-lint-disable link-rel-noopener }}
-                    {{icon "globe"~}}
+                    {{dIcon "globe"~}}
                     {{#if @controller.linkWebsite~}}
                       <a
                         href={{@controller.model.website}}
@@ -294,7 +294,7 @@ export default <template>
                 {{#if @controller.model.suspended}}
                   <div class="suspended">
                     <div class="suspension-date">
-                      {{icon "ban"}}
+                      {{dIcon "ban"}}
                       <b>
                         {{#if @controller.model.suspendedForever}}
                           {{i18n "user.suspended_permanently"}}
@@ -317,7 +317,7 @@ export default <template>
                 {{#if @controller.model.silenced}}
                   <div class="silenced">
                     <div class="silence-date">
-                      {{icon "microphone-slash"}}
+                      {{dIcon "microphone-slash"}}
                       <b>
                         {{#if @controller.model.silencedForever}}
                           {{i18n "user.silenced_permanently"}}
@@ -338,9 +338,9 @@ export default <template>
                   </div>
                 {{/if}}
                 {{#if @controller.isNotRestrictedOrIsStaff}}
-                  <HtmlWithLinks>
+                  <DHtmlWithLinks>
                     {{trustHTML @controller.model.bio_cooked}}
-                  </HtmlWithLinks>
+                  </DHtmlWithLinks>
                 {{/if}}
               </div>
 
@@ -431,7 +431,7 @@ export default <template>
                   <li><a
                       href={{@controller.model.adminPath}}
                       class="btn btn-default user-admin"
-                    >{{icon "wrench"}}<span class="d-button-label">{{i18n
+                    >{{dIcon "wrench"}}<span class="d-button-label">{{i18n
                           "admin.user.show_admin_profile"
                         }}</span></a></li>
                 {{/if}}

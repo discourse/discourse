@@ -10,13 +10,13 @@ import AccessibleDiscoveryHeading from "discourse/components/discovery/accessibl
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DiscoveryNavigation extends Component {
   @service categoryTypeChooser;
@@ -73,7 +73,7 @@ export default class DiscoveryNavigation extends Component {
   }
 
   get headingClasses() {
-    return concatClass(
+    return dConcatClass(
       "category-heading",
       this.args.category?.uploaded_logo?.url ? "--has-logo" : null
     );
@@ -106,7 +106,7 @@ export default class DiscoveryNavigation extends Component {
           />
           {{#if @category.description}}
             <div class="category-heading__content">
-              {{categoryBadge @category class="category-heading__badge"}}
+              {{dCategoryBadge @category class="category-heading__badge"}}
               <p class="category-heading__description">
                 {{trustHTML @category.description}}
               </p>
@@ -126,7 +126,7 @@ export default class DiscoveryNavigation extends Component {
     {{bodyClass this.bodyClass}}
 
     <section
-      class={{concatClass
+      class={{dConcatClass
         "navigation-container"
         (if @category "category-navigation")
       }}

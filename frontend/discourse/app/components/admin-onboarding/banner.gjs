@@ -9,11 +9,11 @@ import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
-import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const STEPS = [

@@ -1,18 +1,18 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import NavItem from "discourse/components/nav-item";
 import ReviewIndex from "discourse/components/reviewable/index";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 <template>
   <ul class="nav nav-pills reviewable-title">
-    <NavItem @route="review.index" @label="review.view_all" />
-    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+    <DNavItem @route="review.index" @label="review.view_all" />
+    <DNavItem @route="review.topics" @label="review.grouped_by_topic" />
     {{#if @controller.currentUser.admin}}
-      <NavItem
+      <DNavItem
         @route="review.settings"
         @label="review.settings.title"
         @icon="wrench"
@@ -50,7 +50,7 @@ import { i18n } from "discourse-i18n";
         }}</span>
       <div class="unknown-reviewables__options">
         <LinkTo @route="adminPlugins.index" class="btn">
-          {{icon "puzzle-piece"}}
+          {{dIcon "puzzle-piece"}}
           <span>{{i18n "review.unknown.enable_plugins"}}</span>
         </LinkTo>
         <DButton

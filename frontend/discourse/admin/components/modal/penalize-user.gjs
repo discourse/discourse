@@ -9,11 +9,11 @@ import { isEmpty } from "@ember/utils";
 import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-post-action";
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class PenalizeUser extends Component {
@@ -164,7 +164,7 @@ export default class PenalizeUser extends Component {
         {{#if this.canPenalize}}
           <div class="penalty-duration-controls">
             {{#if (eq @model.penaltyType "suspend")}}
-              <FutureDateInput
+              <DFutureDateInput
                 @label="admin.user.suspend_duration"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}
@@ -172,7 +172,7 @@ export default class PenalizeUser extends Component {
                 class="suspend-until"
               />
             {{else if (eq @model.penaltyType "silence")}}
-              <FutureDateInput
+              <DFutureDateInput
                 @label="admin.user.silence_duration"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import AvatarFlair from "discourse/components/avatar-flair";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class DiscoursePostEventInvitee extends Component {
@@ -30,19 +30,19 @@ export default class DiscoursePostEventInvitee extends Component {
 
   <template>
     <li
-      class={{concatClass
+      class={{dConcatClass
         "event-invitee"
         (if @invitee.status (concat "status-" @invitee.status))
         (if (eq this.currentUser.id @invitee.user.id) "is-current-user")
       }}
     >
       <a class="topic-invitee-avatar" data-user-card={{@invitee.user.username}}>
-        {{avatar
+        {{dAvatar
           @invitee.user
           imageSize=(if this.site.mobileView "tiny" "large")
         }}
         {{#if this.statusIcon}}
-          <AvatarFlair
+          <DAvatarFlair
             @flairName={{this.flairName}}
             @flairUrl={{this.statusIcon}}
           />

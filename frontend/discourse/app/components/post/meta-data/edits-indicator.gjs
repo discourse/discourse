@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { longDate } from "discourse/lib/formatter";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataEditsIndicator extends Component {
@@ -52,7 +52,7 @@ export default class PostMetaDataEditsIndicator extends Component {
   <template>
     <div class="post-info edits">
       <DButton
-        class={{concatClass
+        class={{dConcatClass
           "btn-flat"
           (historyHeat this.siteSettings this.updatedAt)
           (if @post.wiki "wiki")

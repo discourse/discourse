@@ -9,16 +9,16 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import WebhookEvent from "discourse/admin/components/webhook-event";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CountI18n from "discourse/components/count-i18n";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCountI18n from "discourse/ui-kit/d-count-i18n";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class WebhookEvents extends Component {
@@ -236,7 +236,7 @@ export default class WebhookEvents extends Component {
       </div>
 
       {{#if this.events.content}}
-        <LoadMore @action={{this.loadMore}}>
+        <DLoadMore @action={{this.loadMore}}>
           <div class="web-hook-events content-list">
             <div class="heading-container">
               <div class="col heading first status">
@@ -263,7 +263,7 @@ export default class WebhookEvents extends Component {
                 {{on "click" this.showInserted}}
                 class="alert alert-info clickable"
               >
-                <CountI18n
+                <DCountI18n
                   @key="admin.web_hooks.events.incoming"
                   @count={{this.incomingCount}}
                 />
@@ -277,8 +277,8 @@ export default class WebhookEvents extends Component {
             </ul>
           </div>
 
-          <ConditionalLoadingSpinner @condition={{this.events.loadingMore}} />
-        </LoadMore>
+          <DConditionalLoadingSpinner @condition={{this.events.loadingMore}} />
+        </DLoadMore>
       {{else}}
         <p>{{i18n "admin.web_hooks.events.none"}}</p>
       {{/if}}

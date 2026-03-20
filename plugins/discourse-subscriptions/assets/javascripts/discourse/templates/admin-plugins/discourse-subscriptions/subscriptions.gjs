@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import loadingSpinner from "discourse/helpers/loading-spinner";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import formatUnixDate from "../../../helpers/format-unix-date";
 
@@ -15,7 +15,7 @@ export default <template>
       </a>
     </p>
   {{else}}
-    <LoadMore
+    <DLoadMore
       @selector=".discourse-patrons-table tr"
       @action={{@controller.loadMore}}
     >
@@ -81,7 +81,7 @@ export default <template>
               </td>
               <td class="td-right">
                 {{#if subscription.loading}}
-                  {{loadingSpinner size="small"}}
+                  {{dLoadingSpinner size="small"}}
                 {{else}}
                   <DButton
                     @disabled={{subscription.canceled}}
@@ -95,8 +95,8 @@ export default <template>
           {{/each}}
         </tbody>
       </table>
-    </LoadMore>
+    </DLoadMore>
 
-    <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+    <DConditionalLoadingSpinner @condition={{@controller.loading}} />
   {{/if}}
 </template>

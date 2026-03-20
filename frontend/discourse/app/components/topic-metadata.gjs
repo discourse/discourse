@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
 
 <template>
   {{#if @showCategoryChooser}}

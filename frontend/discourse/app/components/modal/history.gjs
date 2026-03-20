@@ -3,17 +3,17 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DModal from "discourse/components/d-modal";
 import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import dasherize from "discourse/helpers/dasherize";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import { i18n } from "discourse-i18n";
 
 function customTagArray(val) {
@@ -366,13 +366,13 @@ export default class History extends Component {
     <DModal
       @title={{i18n this.modalTitleKey}}
       @closeModal={{@closeModal}}
-      class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
+      class="history-modal -max {{concat '--mode-' (dDasherize this.viewMode)}}"
     >
       <:body>
         {{#if this.error}}
           <div class="alert alert-error">{{this.error}}</div>
         {{/if}}
-        <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+        <DConditionalLoadingSpinner @condition={{this.initialLoad}}>
           {{#if this.postRevision}}
             <Revision
               @model={{this.postRevision}}
@@ -399,7 +399,7 @@ export default class History extends Component {
               @viewMode={{this.viewMode}}
             />
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:body>
       <:footer>
         {{#if @model.editPost}}

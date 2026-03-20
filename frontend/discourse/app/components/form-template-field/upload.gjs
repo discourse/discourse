@@ -5,8 +5,6 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
-import PickFilesButton from "discourse/components/pick-files-button";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import {
   autoTrackedArray,
@@ -14,6 +12,8 @@ import {
 } from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldUpload extends Component {
   @service appEvents;
@@ -135,7 +135,7 @@ export default class FormTemplateFieldUpload extends Component {
         <label class="form-template-field__label">
           {{@attributes.label}}
           {{#if @validations.required}}
-            {{icon "asterisk" class="form-template-field__required-indicator"}}
+            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
           {{/if}}
         </label>
       {{/if}}
@@ -148,7 +148,7 @@ export default class FormTemplateFieldUpload extends Component {
 
       <input type="hidden" name={{@id}} value={{this.uploadValue}} />
 
-      <PickFilesButton
+      <DPickFilesButton
         @registerFileInput={{this.uppyUpload.setup}}
         @fileInputClass="form-template-field__upload"
         @fileInputId={{this.fileUploadElementId}}
@@ -166,7 +166,7 @@ export default class FormTemplateFieldUpload extends Component {
         <ul class="form-template-field__uploaded-files">
           {{#each this.uploadedFiles as |file|}}
             <li>
-              {{icon "file"}}
+              {{dIcon "file"}}
               <a
                 href={{file.url}}
                 target="_blank"

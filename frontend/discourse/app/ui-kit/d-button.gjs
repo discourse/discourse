@@ -1,0 +1,283 @@
+// @ts-check
+import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { empty, equal, notEmpty } from "@ember/object/computed";
+import { next } from "@ember/runloop";
+import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
+import { or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef DButtonSignature
+ *
+ * @property {object} Args
+ *
+ * // Text
+ * @property {string} Args.title
+ * @property {string} Args.translatedTitle
+ * @property {string} Args.label
+ * @property {string} Args.translatedLabel
+ *
+ * // Actions / events
+ * @property {function|object} Args.action
+ * @property {any} Args.actionParam
+ * @property {boolean} Args.forwardEvent
+ * @property {function} Args.onKeyDown
+ *
+ * // Navigation
+ * @property {string} Args.href
+ * @property {string} Args.route
+ * @property {object|object[]} Args.routeModels
+ *
+ * // State
+ * @property {boolean} Args.isLoading
+ * @property {boolean} Args.disabled
+ * @property {boolean} Args.preventFocus
+ *
+ * // Display mode
+ * @property {"link"} [Args.display]
+ *
+ * // Display / icon
+ * @property {string} Args.icon
+ * @property {boolean} Args.ellipsis
+ * @property {string} Args.suffixIcon
+ *
+ * // Accessibility
+ * @property {string} Args.ariaLabel
+ * @property {string} Args.translatedAriaLabel
+ * @property {boolean} Args.ariaExpanded
+ * @property {boolean} Args.ariaPressed
+ * @property {string} Args.ariaControls
+ * @property {boolean} Args.ariaHidden
+ *
+ * // HTML attributes
+ * @property {string} Args.type
+ * @property {string} Args.id
+ * @property {string} Args.form
+ * @property {string} Args.tabindex
+ * @property {string} Args.class
+ *
+ * // Optional yield
+ * @property {object} Blocks
+ * @property {[]} Blocks.default Contents of the button
+ */
+
+/** @extends {Component<DButtonSignature>} */
+export default class DButton extends Component {
+  @service router;
+  @service capabilities;
+
+  @notEmpty("args.icon") btnIcon;
+
+  @equal("args.display", "link") btnLink;
+
+  @empty("computedLabel") noText;
+
+  get forceDisabled() {
+    return !!this.args.isLoading;
+  }
+
+  get isDisabled() {
+    return this.forceDisabled || this.args.disabled;
+  }
+
+  get btnType() {
+    if (this.args.icon) {
+      return this.computedLabel ? "btn-icon-text" : "btn-icon";
+    }
+  }
+
+  get computedTitle() {
+    if (this.args.title) {
+      return i18n(this.args.title);
+    }
+    return this.args.translatedTitle;
+  }
+
+  get computedLabel() {
+    if (this.args.label) {
+      return trustHTML(i18n(this.args.label));
+    }
+    return this.args.translatedLabel;
+  }
+
+  get computedAriaLabel() {
+    if (this.args.ariaLabel) {
+      return i18n(this.args.ariaLabel);
+    }
+    if (this.args.translatedAriaLabel) {
+      return this.args.translatedAriaLabel;
+    }
+  }
+
+  get computedAriaExpanded() {
+    if (this.args.ariaExpanded === true) {
+      return "true";
+    }
+    if (this.args.ariaExpanded === false) {
+      return "false";
+    }
+  }
+
+  get computedAriaPressed() {
+    if (this.args.ariaPressed === true) {
+      return "true";
+    }
+    if (this.args.ariaPressed === false) {
+      return "false";
+    }
+  }
+
+  @action
+  keyDown(e) {
+    if (this.args.onKeyDown) {
+      e.stopPropagation();
+      this.args.onKeyDown(e);
+    } else if (e.key === "Enter") {
+      this._triggerAction(e);
+    }
+  }
+
+  @action
+  click(event) {
+    return this._triggerAction(event);
+  }
+
+  @action
+  mouseDown(event) {
+    if (this.args.preventFocus) {
+      event.preventDefault();
+    }
+  }
+
+  _triggerAction(event) {
+    const { action: actionVal, route, routeModels } = this.args;
+    const isIOS = this.capabilities?.isIOS;
+
+    if (actionVal || route) {
+      if (actionVal) {
+        const { actionParam, forwardEvent } = this.args;
+
+        if (typeof actionVal === "object" && actionVal.value) {
+          if (isIOS) {
+            // Don't optimise INP in iOS
+            // it results in focus events not being triggered
+            forwardEvent
+              ? actionVal.value(actionParam, event)
+              : actionVal.value(actionParam);
+          } else {
+            // Using `next()` to optimise INP
+            next(() =>
+              forwardEvent
+                ? actionVal.value(actionParam, event)
+                : actionVal.value(actionParam)
+            );
+          }
+        } else if (typeof actionVal === "function") {
+          if (isIOS) {
+            // Don't optimise INP in iOS
+            // it results in focus events not being triggered
+            forwardEvent
+              ? actionVal(actionParam, event)
+              : actionVal(actionParam);
+          } else {
+            // Using `next()` to optimise INP
+            next(() =>
+              forwardEvent
+                ? actionVal(actionParam, event)
+                : actionVal(actionParam)
+            );
+          }
+        }
+      } else if (route) {
+        if (routeModels) {
+          const routeModelsArray = Array.isArray(routeModels)
+            ? routeModels
+            : [routeModels];
+          this.router.transitionTo(route, ...routeModelsArray);
+        } else {
+          this.router.transitionTo(route);
+        }
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      return false;
+    }
+  }
+
+  get wrapperElement() {
+    return dElement(this.args.href ? "a" : "button");
+  }
+
+  <template>
+    {{! template-lint-disable no-pointer-down-event-binding }}
+    <this.wrapperElement
+      href={{@href}}
+      type={{unless @href (or @type "button")}}
+      {{! For legacy compatibility. Prefer passing class as attributes. }}
+      class={{dConcatClass
+        @class
+        (if @isLoading "is-loading")
+        (if this.btnLink "btn-link" "btn")
+        (if this.noText "no-text")
+        this.btnType
+      }}
+      {{! For legacy compatibility. Prefer passing these as html attributes. }}
+      id={{@id}}
+      form={{@form}}
+      aria-controls={{@ariaControls}}
+      aria-expanded={{this.computedAriaExpanded}}
+      aria-pressed={{this.computedAriaPressed}}
+      tabindex={{@tabindex}}
+      disabled={{this.isDisabled}}
+      title={{this.computedTitle}}
+      aria-label={{this.computedAriaLabel}}
+      ...attributes
+      {{on "keydown" this.keyDown}}
+      {{on "click" this.click}}
+      {{on "mousedown" this.mouseDown}}
+    >
+      {{#if @isLoading}}
+        {{~dIcon "spinner" class="loading-icon"~}}
+      {{else if @icon}}
+        {{#if @ariaHidden}}
+          <span aria-hidden="true">
+            {{~dIcon @icon~}}
+          </span>
+        {{else}}
+          {{~dIcon @icon~}}
+        {{/if}}
+      {{/if}}
+
+      {{~#if this.computedLabel~}}
+        <span class="d-button-label">
+          {{~this.computedLabel~}}
+          {{~#if @ellipsis~}}
+            &hellip;
+          {{~/if~}}
+        </span>
+      {{~else if (or @icon @isLoading)~}}
+        <span aria-hidden="true">
+          &#8203;
+          {{! Zero-width space character, so icon-only button height = regular button height }}
+        </span>
+      {{~/if~}}
+
+      {{yield}}
+
+      {{#if @suffixIcon}}
+        <span class="d-button__suffix-icon">
+          {{~dIcon @suffixIcon~}}
+        </span>
+      {{/if}}
+    </this.wrapperElement>
+  </template>
+}

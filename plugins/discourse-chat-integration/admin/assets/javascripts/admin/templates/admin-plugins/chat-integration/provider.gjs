@@ -1,13 +1,13 @@
 import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChannelDetails from "../../../components/channel-details";
 
 export default <template>
   {{#if @controller.anyErrors}}
     <div class="error">
-      {{icon "triangle-exclamation"}}
+      {{dIcon "triangle-exclamation"}}
       <span class="error-message">
         {{i18n "chat_integration.channels_with_errors"}}
       </span>

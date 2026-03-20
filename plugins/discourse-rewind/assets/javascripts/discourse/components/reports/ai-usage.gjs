@@ -3,7 +3,7 @@ import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import number from "discourse/helpers/number";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class AiUsage extends Component {
@@ -123,7 +123,7 @@ export default class AiUsage extends Component {
                   {{i18n "discourse_rewind.reports.ai_usage.total_requests"}}
                 </div>
                 <div class="matrix-stat__value">
-                  {{number this.totalRequests}}
+                  {{dNumber this.totalRequests}}
                 </div>
               </div>
 
@@ -131,7 +131,7 @@ export default class AiUsage extends Component {
                 <div class="matrix-stat__label">
                   {{i18n "discourse_rewind.reports.ai_usage.total_tokens"}}
                 </div>
-                <div class="matrix-stat__value">{{number
+                <div class="matrix-stat__value">{{dNumber
                     this.totalTokens
                   }}</div>
               </div>

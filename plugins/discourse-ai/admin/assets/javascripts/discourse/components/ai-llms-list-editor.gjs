@@ -5,10 +5,10 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import icon from "discourse/helpers/d-icon";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 import AiCreditBar from "./ai-credit-bar";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
@@ -199,7 +199,7 @@ export default class AiLlmsListEditor extends Component {
                           />
                           {{#if llm.llm_credit_allocation.hard_limit_reached}}
                             <div class="alert alert-danger ai-credit-warning">
-                              {{icon "circle-info"}}
+                              {{dIcon "circle-info"}}
                               {{trustHTML
                                 (i18n
                                   "discourse_ai.llms.credit_allocation.hard_limit_warning"
@@ -213,7 +213,7 @@ export default class AiLlmsListEditor extends Component {
                             llm.llm_credit_allocation.soft_limit_reached
                           }}
                             <div class="alert alert-warning ai-credit-warning">
-                              {{icon "circle-info"}}
+                              {{dIcon "circle-info"}}
                               {{trustHTML
                                 (i18n
                                   "discourse_ai.llms.credit_allocation.soft_limit_warning"

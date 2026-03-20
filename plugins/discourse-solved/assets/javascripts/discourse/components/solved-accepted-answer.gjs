@@ -4,12 +4,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import PostCookedHtml from "discourse/components/post/cooked-html";
-import UserLink from "discourse/components/user-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedAcceptedAnswer extends Component {
@@ -99,7 +99,7 @@ export default class SolvedAcceptedAnswer extends Component {
     {{! template-lint-disable no-unnecessary-concat }}
     {{#if this.acceptedAnswer}}
       <aside
-        class={{concatClass
+        class={{dConcatClass
           "quote accepted-answer"
           (if this.hasExcerpt "accepted-answer--has-excerpt")
           (unless this.content "title-only")
@@ -117,34 +117,34 @@ export default class SolvedAcceptedAnswer extends Component {
           <div class="accepted-answer--solver-accepter">
             <div class="accepted-answer--solver">
               {{#if this.showSolvedBy}}
-                {{icon "square-check" class="accepted"}}
-                <InterpolatedTranslation
+                {{dIcon "square-check" class="accepted"}}
+                <DInterpolatedTranslation
                   @key="solved.accepted_answer_solver_info"
                   as |Placeholder|
                 >
                   <Placeholder @name="user">
-                    <UserLink
+                    <DUserLink
                       @username={{this.solverUsername}}
-                    >{{this.solverDisplayName}}</UserLink>
+                    >{{this.solverDisplayName}}</DUserLink>
                   </Placeholder>
                   <Placeholder @name="post">
                     <a href={{this.postPath}}>{{this.postNumber}}</a>
                   </Placeholder>
-                </InterpolatedTranslation>
+                </DInterpolatedTranslation>
               {{/if}}
             </div>
             <div class="accepted-answer--accepter">
               {{#if this.showMarkedBy}}
-                <InterpolatedTranslation
+                <DInterpolatedTranslation
                   @key="solved.marked_solved_by"
                   as |Placeholder|
                 >
                   <Placeholder @name="user">
-                    <UserLink
+                    <DUserLink
                       @username={{this.accepterUsername}}
-                    >{{this.accepterDisplayName}}</UserLink>
+                    >{{this.accepterDisplayName}}</DUserLink>
                   </Placeholder>
-                </InterpolatedTranslation>
+                </DInterpolatedTranslation>
               {{/if}}
             </div>
           </div>

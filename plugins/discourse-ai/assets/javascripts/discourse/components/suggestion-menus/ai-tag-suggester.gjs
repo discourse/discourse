@@ -4,12 +4,12 @@ import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import discourseTag from "discourse/helpers/discourse-tag";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import { i18n } from "discourse-i18n";
 import {
   MIN_CHARACTER_COUNT,
@@ -175,7 +175,7 @@ export default class AiTagSuggester extends Component {
       >
         <:content>
           {{#if this.showDropdown}}
-            <DropdownMenu as |dropdown|>
+            <DDropdownMenu as |dropdown|>
               {{#each this.suggestions as |suggestion index|}}
                 <dropdown.item>
                   <DButton
@@ -187,7 +187,7 @@ export default class AiTagSuggester extends Component {
                     @disabled={{suggestion.disabled}}
                     @action={{fn this.applySuggestion suggestion}}
                   >
-                    {{discourseTag
+                    {{dDiscourseTag
                       suggestion.name
                       count=suggestion.count
                       noHref=true
@@ -195,7 +195,7 @@ export default class AiTagSuggester extends Component {
                   </DButton>
                 </dropdown.item>
               {{/each}}
-            </DropdownMenu>
+            </DDropdownMenu>
           {{/if}}
         </:content>
       </DMenu>

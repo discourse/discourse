@@ -1,16 +1,16 @@
 import { trustHTML } from "@ember/template";
-import EmptyState from "discourse/components/empty-state";
-import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/lib/get-url";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MessagesListEmptyState = <template>
-  <EmptyState
+  <DEmptyState
     @title={{i18n "user.no_messages_title"}}
     @body={{trustHTML
       (i18n
         "user.no_messages_body"
-        icon=(icon "envelope")
+        icon=(dIcon "envelope")
         aboutUrl=(getUrl "/about")
       )
     }}

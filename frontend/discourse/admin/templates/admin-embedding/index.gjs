@@ -2,9 +2,9 @@ import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import EmbeddableHost from "discourse/admin/components/embeddable-host";
-import HighlightedCode from "discourse/components/highlighted-code";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,7 +18,7 @@ export default <template>
       >
         <:content>
           {{trustHTML (i18n "admin.embedding.sample")}}
-          <HighlightedCode @code={{@controller.embeddingCode}} @lang="html" />
+          <DHighlightedCode @code={{@controller.embeddingCode}} @lang="html" />
         </:content>
       </AdminConfigAreaCard>
     {{/if}}

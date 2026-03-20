@@ -2,9 +2,9 @@ import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -44,7 +44,7 @@ export default <template>
           <tbody class="d-table__body">
             {{#each filteredTemplates as |template|}}
               <tr
-                class={{concatClass
+                class={{dConcatClass
                   "d-table__row"
                   "email-templates-list__row"
                   (if template.can_revert "overridden")

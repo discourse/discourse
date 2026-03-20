@@ -4,9 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import emoji from "discourse/helpers/emoji";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryTypeCards extends Component {
@@ -29,7 +29,7 @@ export default class CategoryTypeCards extends Component {
     <div class="category-type-cards">
       {{#each @types as |type|}}
         <div
-          class={{concatClass
+          class={{dConcatClass
             "category-type-cards__card"
             (unless type.available "--unavailable")
             (concat "--category-type-" type.id)
@@ -42,7 +42,7 @@ export default class CategoryTypeCards extends Component {
             {{on "click" (fn this.selectType type)}}
           >
             <span class="category-type-cards__card-icon">
-              {{emoji type.icon alt="" skipTitle=true}}
+              {{dEmoji type.icon alt="" skipTitle=true}}
             </span>
             <span class="category-type-cards__card-name">
               {{type.name}}

@@ -10,10 +10,10 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
-import icon from "discourse/helpers/d-icon";
 import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { gt, lte } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";
@@ -169,8 +169,8 @@ export default class AdminThemeEditor extends Component {
                     title={{this.field.title}}
                     class={{if target.edited "edited" "blank"}}
                   >
-                    {{#if target.error}}{{icon "triangle-exclamation"}}{{/if}}
-                    {{#if target.icon}}{{icon target.icon}}{{/if}}
+                    {{#if target.error}}{{dIcon "triangle-exclamation"}}{{/if}}
+                    {{#if target.icon}}{{dIcon target.icon}}{{/if}}
                     {{i18n (concat "admin.customize.theme." target.name)}}
                   </LinkTo>
                 </li>
@@ -207,8 +207,8 @@ export default class AdminThemeEditor extends Component {
                   title={{field.title}}
                   class={{if field.edited "edited" "blank"}}
                 >
-                  {{#if field.error}}{{icon "triangle-exclamation"}}{{/if}}
-                  {{#if field.icon}}{{icon field.icon}}{{/if}}
+                  {{#if field.error}}{{dIcon "triangle-exclamation"}}{{/if}}
+                  {{#if field.icon}}{{dIcon field.icon}}{{/if}}
                   {{field.translatedName}}
                 </LinkTo>
               </li>
@@ -227,7 +227,7 @@ export default class AdminThemeEditor extends Component {
                 </label>
               {{/if}}
               <a href {{on "click" this.toggleMaximize}} class="no-text">
-                {{icon this.maximizeIcon}}
+                {{dIcon this.maximizeIcon}}
               </a>
             </li>
           </ul>

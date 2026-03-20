@@ -6,14 +6,14 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import BufferedProxy from "ember-buffered-proxy/proxy";
-import DButton from "discourse/components/d-button";
-import RadioButton from "discourse/components/radio-button";
-import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import PermissionType from "discourse/models/permission-type";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -132,7 +132,7 @@ export default class TagGroupsForm extends Component {
     <section class="group-name">
       <label>{{i18n "tagging.groups.name_placeholder"}}</label>
       <div>
-        <TextField @value={{this.buffered.name}} /></div>
+        <DTextField @value={{this.buffered.name}} /></div>
     </section>
 
     <section class="group-tags-list">
@@ -181,7 +181,7 @@ export default class TagGroupsForm extends Component {
 
     <section class="group-visibility">
       <div class="group-visibility-option">
-        <RadioButton
+        <DRadioButton
           @name="tag-permissions-choice"
           @value="public"
           @id="public-permission"
@@ -194,7 +194,7 @@ export default class TagGroupsForm extends Component {
         </label>
       </div>
       <div class="group-visibility-option">
-        <RadioButton
+        <DRadioButton
           @name="tag-permissions-choice"
           @value="visible"
           @id="visible-permission"
@@ -219,7 +219,7 @@ export default class TagGroupsForm extends Component {
         </div>
       </div>
       <div class="group-visibility-option">
-        <RadioButton
+        <DRadioButton
           @name="tag-permissions-choice"
           @value="private"
           @id="private-permission"

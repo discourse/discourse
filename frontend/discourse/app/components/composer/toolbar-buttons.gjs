@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu-options";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ComposerToolbarButtons extends Component {
   @action
@@ -51,7 +51,7 @@ export default class ComposerToolbarButtons extends Component {
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
               @icon={{button.icon}}
-              @class={{concatClass
+              @class={{dConcatClass
                 button.className
                 (if (this.isButtonActive button) "--active")
               }}
@@ -69,7 +69,7 @@ export default class ComposerToolbarButtons extends Component {
               @onKeyDown={{this.rovingButtonBar}}
               aria-keyshortcuts={{button.ariaKeyshortcuts}}
               tabindex={{this.tabIndex button}}
-              class={{concatClass
+              class={{dConcatClass
                 "toolbar__button"
                 button.className
                 (if (this.isButtonActive button) "--active")

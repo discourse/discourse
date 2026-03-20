@@ -1,10 +1,10 @@
 import { computed } from "@ember/object";
 import { and, reads } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SingleSelectHeaderComponent from "discourse/select-kit/components/select-kit/single-select-header";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("combo-box-header")
 export default class ComboBoxHeader extends SingleSelectHeaderComponent {
@@ -20,7 +20,7 @@ export default class ComboBoxHeader extends SingleSelectHeaderComponent {
 
   <template>
     <div class="select-kit-header-wrapper">
-      {{#each this.icons as |iconName|}} {{icon iconName}} {{/each}}
+      {{#each this.icons as |iconName|}} {{dIcon iconName}} {{/each}}
 
       {{#let
         (resolveComponent this this.selectKit.options.selectedNameComponent)
@@ -43,7 +43,7 @@ export default class ComboBoxHeader extends SingleSelectHeaderComponent {
       {{/if}}
 
       {{#if this.caretIcon}}
-        {{icon this.caretIcon class="angle-icon"}}
+        {{dIcon this.caretIcon class="angle-icon"}}
       {{/if}}
     </div>
   </template>

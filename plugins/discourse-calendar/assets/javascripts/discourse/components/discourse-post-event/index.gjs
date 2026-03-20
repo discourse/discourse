@@ -2,15 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
 import Dates from "./dates";
@@ -29,7 +29,7 @@ const StatusSeparator = <template>
 const InfoSection = <template>
   <section class="event__section" ...attributes>
     {{#if @icon}}
-      {{icon @icon}}
+      {{dIcon @icon}}
     {{/if}}
 
     {{yield}}
@@ -121,7 +121,7 @@ export default class DiscoursePostEvent extends Component {
   }
 
   <template>
-    <AsyncContent @asyncData={{this.loadEvent}}>
+    <DAsyncContent @asyncData={{this.loadEvent}}>
       <:content as |event|>
         <div class="discourse-post-event">
           <div class="discourse-post-event-widget">
@@ -149,9 +149,9 @@ export default class DiscoursePostEvent extends Component {
                       <a
                         href={{event.post.url}}
                         rel="noopener noreferrer"
-                      >{{replaceEmoji this.eventName}}</a>
+                      >{{dReplaceEmoji this.eventName}}</a>
                     {{else}}
-                      {{replaceEmoji this.eventName}}
+                      {{dReplaceEmoji this.eventName}}
                     {{/if}}
                   </span>
                   <div class="status-and-creators">
@@ -232,6 +232,6 @@ export default class DiscoursePostEvent extends Component {
           <div class="spinner"></div>
         </div>
       </:loading>
-    </AsyncContent>
+    </DAsyncContent>
   </template>
 }

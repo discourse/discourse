@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import concatClass from "discourse/helpers/concat-class";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class AdminPostMenu extends Component {
   @service currentUser;
@@ -50,7 +50,7 @@ export default class AdminPostMenu extends Component {
   }
 
   <template>
-    <DropdownMenu as |dropdown|>
+    <DDropdownMenu as |dropdown|>
       {{#if this.currentUser.staff}}
         <dropdown.item>
           <DButton
@@ -71,7 +71,7 @@ export default class AdminPostMenu extends Component {
               "post.controls.convert_to_moderator"
             }}
             @icon="shield-halved"
-            class={{concatClass
+            class={{dConcatClass
               "btn btn-transparent toggle-post-type"
               (if @data.post.isModeratorAction "btn-success")
             }}
@@ -90,7 +90,7 @@ export default class AdminPostMenu extends Component {
               "post.controls.add_post_notice"
             }}
             @title="post.controls.unhide"
-            class={{concatClass
+            class={{dConcatClass
               "btn btn-transparent"
               (if @data.post.notice "change-notice" "add-notice")
               (if @data.post.notice "btn-success")
@@ -141,7 +141,7 @@ export default class AdminPostMenu extends Component {
               @label="post.controls.unlock_post"
               @icon="unlock"
               @title="post.controls.unlock_post_description"
-              class={{concatClass
+              class={{dConcatClass
                 "btn btn-transparent unlock-post"
                 (if @data.post.locked "btn-success")
               }}
@@ -178,7 +178,7 @@ export default class AdminPostMenu extends Component {
             <DButton
               @label="post.controls.unwiki"
               @icon="far-pen-to-square"
-              class={{concatClass
+              class={{dConcatClass
                 "btn btn-transparent wiki wikied"
                 (if @data.post.wiki "btn-success")
               }}
@@ -225,11 +225,11 @@ export default class AdminPostMenu extends Component {
             @label={{button.label}}
             @translatedLabel={{button.translatedLabel}}
             @icon={{button.icon}}
-            class={{concatClass "btn btn-transparent" button.className}}
+            class={{dConcatClass "btn btn-transparent" button.className}}
             @action={{fn this.extraAction button}}
           />
         </dropdown.item>
       {{/each}}
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }

@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
 import SimpleList from "discourse/admin/components/simple-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class AdminLogoForm extends Component {
@@ -123,7 +123,7 @@ export default class AdminLogoForm extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
+    <DConditionalLoadingSpinner @condition={{this.loading}}>
       <Form
         @onSubmit={{this.save}}
         @data={{this.formData}}
@@ -387,6 +387,6 @@ export default class AdminLogoForm extends Component {
         </AdminConfigAreaCardSection>
         <form.Submit />
       </Form>
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
   </template>
 }

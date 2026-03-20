@@ -1,24 +1,24 @@
 import { concat, fn } from "@ember/helper";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import AdminReport from "discourse/admin/components/admin-report";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 <template>
   <div
-    class={{concatClass "admin-report" @report.reportClasses}}
+    class={{dConcatClass "admin-report" @report.reportClasses}}
     {{didUpdate @report.fetchOrRender @filters.startDate @filters.endDate}}
   >
     {{#unless @report.isHidden}}
-      <ConditionalLoadingSection @isLoading={{@report.isLoading}}>
+      <DConditionalLoadingSection @isLoading={{@report.isLoading}}>
         {{#if @report.showHeader}}
           {{#if
             (and
@@ -26,7 +26,7 @@ import { i18n } from "discourse-i18n";
             )
           }}
             <div class="alert alert-info">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
               <span>{{i18n "admin.reports.legacy_warning"}}</span>
             </div>
           {{/if}}
@@ -44,7 +44,7 @@ import { i18n } from "discourse-i18n";
                     @interactive={{@report.model.description_link.length}}
                   >
                     <:trigger>
-                      {{icon "circle-question"}}
+                      {{dIcon "circle-question"}}
                     </:trigger>
                     <:content>
                       {{#if @report.model.description_link}}
@@ -69,17 +69,17 @@ import { i18n } from "discourse-i18n";
               <div class="trend {{@report.model.trend}}">
                 <span class="value" title={{@report.model.trendTitle}}>
                   {{#if @report.model.average}}
-                    {{number @report.model.currentAverage}}{{#if
+                    {{dNumber @report.model.currentAverage}}{{#if
                       @report.model.percent
                     }}%{{/if}}
                   {{else}}
-                    {{number @report.model.currentTotal noTitle="true"}}{{#if
+                    {{dNumber @report.model.currentTotal noTitle="true"}}{{#if
                       @report.model.percent
                     }}%{{/if}}
                   {{/if}}
 
                   {{#if @report.model.trendIcon}}
-                    {{icon @report.model.trendIcon class="icon"}}
+                    {{dIcon @report.model.trendIcon class="icon"}}
                   {{/if}}
                 </span>
               </div>
@@ -113,7 +113,7 @@ import { i18n } from "discourse-i18n";
 
               {{#if @report.showDatesOptions}}
                 <div class="chart__dates">
-                  <DateTimeInputRange
+                  <DDateTimeInputRange
                     @from={{@report.startDate}}
                     @to={{@report.endDate}}
                     @onChange={{@report.onChangeDateRange}}
@@ -126,7 +126,7 @@ import { i18n } from "discourse-i18n";
               <div class="chart__additional-filters">
                 {{#each @report.model.available_filters as |filter|}}
                   <div
-                    class={{concatClass
+                    class={{dConcatClass
                       "chart__filter"
                       (concat "--" filter.id)
                     }}
@@ -154,21 +154,21 @@ import { i18n } from "discourse-i18n";
             {{#if @report.showError}}
               {{#if @report.showTimeoutError}}
                 <div class="alert alert-error report-alert timeout">
-                  {{icon "triangle-exclamation"}}
+                  {{dIcon "triangle-exclamation"}}
                   <span>{{i18n "admin.dashboard.timeout_error"}}</span>
                 </div>
               {{/if}}
 
               {{#if @report.showExceptionError}}
                 <div class="alert alert-error report-alert exception">
-                  {{icon "triangle-exclamation"}}
+                  {{dIcon "triangle-exclamation"}}
                   <span>{{i18n "admin.dashboard.exception_error"}}</span>
                 </div>
               {{/if}}
 
               {{#if @report.showNotFoundError}}
                 <div class="alert alert-error report-alert not-found">
-                  {{icon "triangle-exclamation"}}
+                  {{dIcon "triangle-exclamation"}}
                   <span>{{i18n "admin.dashboard.not_found_error"}}</span>
                 </div>
               {{/if}}
@@ -191,12 +191,12 @@ import { i18n } from "discourse-i18n";
               {{else}}
                 {{#if @report.rateLimitationString}}
                   <div class="alert alert-error report-alert rate-limited">
-                    {{icon "temperature-three-quarters"}}
+                    {{dIcon "temperature-three-quarters"}}
                     <span>{{@report.rateLimitationString}}</span>
                   </div>
                 {{else}}
                   <div class="alert alert-info report-alert no-data">
-                    {{icon "chart-pie"}}
+                    {{dIcon "chart-pie"}}
                     {{#if @report.model.reportUrl}}
                       <a href={{@report.model.reportUrl}} class="report-url">
                         <span>
@@ -254,7 +254,7 @@ import { i18n } from "discourse-i18n";
             </div>
           {{/if}}
         </div>
-      </ConditionalLoadingSection>
+      </DConditionalLoadingSection>
     {{/unless}}
   </div>
 </template>

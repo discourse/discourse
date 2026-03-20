@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -21,7 +21,7 @@ export default class Billing extends Component {
 
   <template>
     <li
-      class={{concatClass
+      class={{dConcatClass
         "user-main-nav-outlet"
         "billing"
         (unless this.viewingSelf "hidden")
@@ -29,7 +29,7 @@ export default class Billing extends Component {
       ...attributes
     >
       <LinkTo @route="user.billing">
-        {{icon "far-credit-card"}}
+        {{dIcon "far-credit-card"}}
         <span>{{i18n "discourse_subscriptions.navigation.billing"}}</span>
       </LinkTo>
     </li>

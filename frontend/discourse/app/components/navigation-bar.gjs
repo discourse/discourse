@@ -3,14 +3,14 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import NavigationItem from "discourse/components/navigation-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class NavigationBarComponent extends Component {
   @service site;
@@ -61,11 +61,11 @@ export default class NavigationBarComponent extends Component {
               <span
                 class="list-control-toggle-link__text"
               >{{this.selectedNavItem.displayName}}</span>
-              {{icon this.navigationBarIcon}}
+              {{dIcon this.navigationBarIcon}}
             </:trigger>
 
             <:content>
-              <DropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
+              <DDropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
                 {{#each @navItems as |navItem|}}
                   <NavigationItem
                     @content={{navItem}}
@@ -86,7 +86,7 @@ export default class NavigationBarComponent extends Component {
                     }}
                   />
                 </dropdown.item>
-              </DropdownMenu>
+              </DDropdownMenu>
             </:content>
           </DMenu>
         </li>

@@ -3,11 +3,11 @@ import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
-import DButton from "discourse/components/d-button";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
-import SaveControls from "discourse/components/save-controls";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
+import DButton from "discourse/ui-kit/d-button";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -37,7 +37,7 @@ export default <template>
       </div>
     {{/if}}
 
-    <ExpandingTextArea
+    <DExpandingTextArea
       {{didInsert @controller.registerTextarea}}
       {{on "input" (withEventValue (fn (mut @controller.buffered.value)))}}
       {{on "focusin" @controller.trackTextarea}}
@@ -52,7 +52,7 @@ export default <template>
       @onInsertKey={{@controller.insertInterpolationKey}}
     />
 
-    <SaveControls
+    <DSaveControls
       @model={{@controller.siteText}}
       @action={{@controller.saveChanges}}
       @saved={{@controller.saved}}
@@ -65,14 +65,14 @@ export default <template>
           class="revert-site-text"
         />
       {{/if}}
-    </SaveControls>
+    </DSaveControls>
 
     <LinkTo
       @route="adminSiteText.index"
       @query={{hash locale=@controller.locale}}
       class="go-back"
     >
-      {{icon "arrow-left"}}
+      {{dIcon "arrow-left"}}
       {{i18n "admin.site_text.go_back"}}
     </LinkTo>
   </div>

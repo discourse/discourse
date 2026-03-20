@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import InputTip from "discourse/components/input-tip";
 import loadScript from "discourse/lib/load-script";
+import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 
 const HCAPTCHA_SCRIPT_URL = "https://hcaptcha.com/1/api.js?render=explicit";
@@ -82,7 +82,7 @@ export default class HCaptcha extends Component {
     {{/if}}
 
     {{#if this.hCaptchaService.submitFailed}}
-      <InputTip @validation={{this.hCaptchaService.inputValidation}} />
+      <DInputTip @validation={{this.hCaptchaService.inputValidation}} />
     {{/if}}
   </template>
 }

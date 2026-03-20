@@ -1,16 +1,16 @@
 import { hash } from "@ember/helper";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SubTitle from "./sub-title";
 
 const ChatNavbarTitle = <template>
   <div
     title={{@title}}
-    class={{concatClass "c-navbar__title" (if @showFullTitle "full-title")}}
+    class={{dConcatClass "c-navbar__title" (if @showFullTitle "full-title")}}
     ...attributes
   >
     <span class="c-navbar__title-text">
-      {{if @icon (icon @icon)}}
+      {{if @icon (dIcon @icon)}}
       {{@title}}
     </span>
 

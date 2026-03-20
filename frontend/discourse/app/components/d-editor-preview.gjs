@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 
 export default class DEditorPreview extends Component {
   @action
@@ -46,7 +46,7 @@ export default class DEditorPreview extends Component {
       {{on "click" this.handlePreviewClick}}
       ...attributes
     >
-      <DecoratedHtml
+      <DDecoratedHtml
         @className="d-editor-preview"
         @html={{trustHTML @preview}}
         @decorate={{@onPreviewUpdated}}

@@ -1,14 +1,14 @@
 import { on } from "@ember/modifier";
 import BasicTopicList from "discourse/components/basic-topic-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CountI18n from "discourse/components/count-i18n";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import { or } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCountI18n from "discourse/ui-kit/d-count-i18n";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
 export default <template>
   {{#if @controller.model.canLoadMore}}
@@ -16,12 +16,12 @@ export default <template>
   {{/if}}
 
   {{#if @controller.noContent}}
-    <EmptyState
+    <DEmptyState
       @title={{@controller.model.emptyState.title}}
       @body={{@controller.model.emptyState.body}}
     />
   {{else}}
-    <LoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
+    <DLoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
       <TopicDismissButtons
         @position="top"
         @selectedTopics={{@controller.bulkSelectHelper.selected}}
@@ -44,7 +44,7 @@ export default <template>
             class="alert alert-info clickable
               {{if @controller.model.loadingBefore 'loading'}}"
           >
-            <CountI18n
+            <DCountI18n
               @key="topic_count_latest"
               @count={{or
                 @controller.model.loadingBefore
@@ -52,7 +52,7 @@ export default <template>
               }}
             />
             {{#if @model.loadingBefore}}
-              {{loadingSpinner size="small"}}
+              {{dLoadingSpinner size="small"}}
             {{/if}}
           </a>
         </div>
@@ -85,7 +85,9 @@ export default <template>
         }}
       />
 
-      <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
-    </LoadMore>
+      <DConditionalLoadingSpinner
+        @condition={{@controller.model.loadingMore}}
+      />
+    </DLoadMore>
   {{/if}}
 </template>

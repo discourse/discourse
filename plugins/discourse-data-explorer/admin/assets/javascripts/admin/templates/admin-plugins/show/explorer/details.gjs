@@ -4,13 +4,13 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import AceEditor from "discourse/components/ace-editor";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DTextarea from "discourse/components/d-textarea";
-import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
-import draggable from "discourse/modifiers/draggable";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -41,7 +41,7 @@ export default class QueriesDetails extends Component {
               class="previous"
             />
             <div class="name-text-field">
-              <TextField
+              <DTextField
                 @value={{@controller.model.name}}
                 @onChange={{@controller.setDirty}}
               />
@@ -122,13 +122,13 @@ export default class QueriesDetails extends Component {
 
             <div
               class="grippie"
-              {{draggable
+              {{dDraggable
                 didStartDrag=@controller.didStartDrag
                 didEndDrag=@controller.didEndDrag
                 dragMove=@controller.dragMove
               }}
             >
-              {{icon "discourse-expand"}}
+              {{dIcon "discourse-expand"}}
             </div>
 
             <div class="clear"></div>
@@ -263,7 +263,7 @@ export default class QueriesDetails extends Component {
       </form>
       <hr />
 
-      <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+      <DConditionalLoadingSpinner @condition={{@controller.loading}} />
 
       <QueryResultsWrapper
         @results={{@controller.results}}

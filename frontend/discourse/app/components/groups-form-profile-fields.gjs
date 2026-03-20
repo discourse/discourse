@@ -5,15 +5,15 @@ import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import DEditor from "discourse/components/d-editor";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
-import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import Group from "discourse/models/group";
+import DEditor from "discourse/ui-kit/d-editor";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -131,14 +131,14 @@ export default class GroupsFormProfileFields extends Component {
                 "groups.name"
               }}</label>
 
-            <TextField
+            <DTextField
               @name="name"
               @value={{this.nameInput}}
               @placeholderKey="admin.groups.name_placeholder"
               class="input-xxlarge group-form-name"
             />
 
-            <InputTip @validation={{this.nameValidation}} />
+            <DInputTip @validation={{this.nameValidation}} />
           </div>
         {{/if}}
 
@@ -147,7 +147,7 @@ export default class GroupsFormProfileFields extends Component {
               "groups.manage.full_name"
             }}</label>
 
-          <TextField
+          <DTextField
             @name="full_name"
             @value={{this.model.full_name}}
             class="input-xxlarge group-form-full-name"

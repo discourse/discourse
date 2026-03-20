@@ -3,11 +3,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
@@ -193,7 +193,7 @@ export default class DiscourseReactionsCounter extends Component {
       aria-label={{this.counterAriaLabel}}
       {{on "mousedown" this.mouseDown}}
       {{on "mouseup" this.mouseUp}}
-      {{closeOnClickOutside this.clickOutside}}
+      {{dCloseOnClickOutside this.clickOutside}}
       {{on "touchstart" this.touchStart}}
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}

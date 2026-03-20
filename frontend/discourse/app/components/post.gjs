@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostA11yHeading from "discourse/components/post/a11y-heading";
@@ -22,7 +21,6 @@ import PostMetaData from "discourse/components/post/meta-data";
 import PostMetaDataReplyToTab from "discourse/components/post/meta-data/reply-to-tab";
 import PostNotice from "discourse/components/post/notice";
 import TopicMap from "discourse/components/topic-map";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
 import { relativeAge } from "discourse/lib/formatter";
@@ -36,6 +34,8 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {
@@ -410,7 +410,7 @@ export default class Post extends Component {
       ...attributes
       class={{unless
         @cloaked
-        (concatClass
+        (dConcatClass
           "topic-post"
           "clearfix"
           (unless this.site.mobileView "post--sticky-avatar sticky-avatar")
@@ -425,7 +425,7 @@ export default class Post extends Component {
           (if @post.deleted "post--deleted deleted")
           (if
             @post.primary_group_name
-            (concatClass
+            (dConcatClass
               (concat "post--group-" @post.primary_group_name)
               (concat "group-" @post.primary_group_name)
             )
@@ -466,7 +466,7 @@ export default class Post extends Component {
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
               id={{@elementId}}
-              class={{concatClass
+              class={{dConcatClass
                 "boxed"
                 "onscreen-post"
                 (if
@@ -545,7 +545,7 @@ export default class Post extends Component {
                       />
                     </PluginOutlet>
                     <div
-                      class={{concatClass
+                      class={{dConcatClass
                         "post__regular regular"
                         "post__contents contents"
                         (if

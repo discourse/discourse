@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class InterfaceColorSelector extends Component {
@@ -53,7 +53,7 @@ export default class InterfaceColorSelector extends Component {
       data-current-mode={{this.interfaceColor.colorMode}}
     >
       <:content as |dMenu|>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
               class="interface-color-selector__light-option"
@@ -84,7 +84,7 @@ export default class InterfaceColorSelector extends Component {
               @action={{fn this.switchToAuto dMenu}}
             />
           </dropdown.item>
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

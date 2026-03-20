@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import $ from "jquery";
-import icon from "discourse/helpers/d-icon";
 import cookie from "discourse/lib/cookie";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 let numTopicsOpened = 0;
@@ -51,7 +51,7 @@ export default class Patreon extends Component {
     {{#if this.showDonationPrompt}}
       <div class="patreon-donation-prompt">
         <span {{on "click" this.close}} role="button" class="close">
-          {{icon "xmark"}}
+          {{dIcon "xmark"}}
         </span>
 
         {{trustHTML

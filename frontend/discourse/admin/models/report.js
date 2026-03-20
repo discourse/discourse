@@ -1,7 +1,6 @@
 import EmberObject, { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
-import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
 import { durationTiny, number } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
@@ -13,6 +12,7 @@ import {
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
+import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import I18n, { i18n } from "discourse-i18n";
 
 // Change this line each time report format change

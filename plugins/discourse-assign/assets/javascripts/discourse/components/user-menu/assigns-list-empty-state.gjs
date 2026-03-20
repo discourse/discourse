@@ -1,6 +1,6 @@
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/lib/get-url";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const AssignsListEmptyState = <template>
@@ -13,7 +13,7 @@ const AssignsListEmptyState = <template>
         {{trustHTML
           (i18n
             "user.no_assignments_body"
-            icon=(icon "user-plus")
+            icon=(dIcon "user-plus")
             preferencesUrl=(getUrl "/my/preferences/notifications")
           )
         }}

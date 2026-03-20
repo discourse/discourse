@@ -6,18 +6,18 @@ import ThemeSettingEditor from "discourse/admin/components/theme-setting-editor"
 import ThemeSettingRelativesSelector from "discourse/admin/components/theme-setting-relatives-selector";
 import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
 import ThemeTranslation from "discourse/admin/components/theme-translation";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserLink from "discourse/components/user-link";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -62,7 +62,7 @@ export default <template>
               {{else}}
                 {{#unless @controller.showRemoteError}}
                   {{i18n "admin.customize.theme.up_to_date"}}
-                  {{formatDate
+                  {{dFormatDate
                     @controller.model.remote_theme.updated_at
                     leaveAgo="true"
                   }}
@@ -72,7 +72,7 @@ export default <template>
           </span>
         {{else}}
           <span class="status-message">
-            {{icon "circle-info"}}
+            {{dIcon "circle-info"}}
             {{i18n "admin.customize.theme.imported_from_archive"}}
           </span>
         {{/if}}
@@ -82,9 +82,9 @@ export default <template>
           "admin.customize.theme.creator"
         }}</span>
       <span>
-        <UserLink @user={{@controller.model.user}}>
+        <DUserLink @user={{@controller.model.user}}>
           {{formatUsername @controller.model.user.username}}
-        </UserLink>
+        </DUserLink>
       </span>
     {{/if}}
   </div>
@@ -405,7 +405,7 @@ export default <template>
           class="translation-selector"
         />
       </div>
-      <ConditionalLoadingSpinner
+      <DConditionalLoadingSpinner
         @condition={{@controller.model.loadingTranslations}}
       >
         <section
@@ -420,7 +420,7 @@ export default <template>
             />
           {{/each}}
         </section>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   {{/if}}
 
@@ -435,14 +435,14 @@ export default <template>
       rel="noopener noreferrer"
       target="_blank"
       class="btn btn-default"
-    >{{icon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
+    >{{dIcon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
     {{#unless @controller.model.system}}
       <a
         class="btn btn-default export"
         rel="noopener noreferrer"
         target="_blank"
         href={{@controller.downloadUrl}}
-      >{{icon "download"}} {{i18n "admin.export_json.button_text"}}</a>
+      >{{dIcon "download"}} {{i18n "admin.export_json.button_text"}}</a>
     {{/unless}}
 
     {{#if @controller.showConvert}}

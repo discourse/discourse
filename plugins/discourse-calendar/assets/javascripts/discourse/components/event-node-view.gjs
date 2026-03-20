@@ -3,10 +3,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostEventBuilder from "discourse/plugins/discourse-calendar/discourse/components/modal/post-event-builder";
 import guessDateFormat from "discourse/plugins/discourse-calendar/discourse/lib/guess-best-date-format";
@@ -512,7 +512,7 @@ export default class EventNodeView extends Component {
       </div>
 
       <div class="composer-event__info">
-        <ExpandingTextArea
+        <DExpandingTextArea
           rows="1"
           value={{this.eventName}}
           class="composer-event__name-input"
@@ -537,7 +537,7 @@ export default class EventNodeView extends Component {
     </header>
 
     <section class="composer-event__dates">
-      {{icon "clock"}}
+      {{dIcon "clock"}}
       <div
         class="composer-event__date-range{{if
             this.hasAnyDate
@@ -566,7 +566,7 @@ export default class EventNodeView extends Component {
             {{on "focus" this.focusDateInput}}
           />
           <span
-            class={{concatClass
+            class={{dConcatClass
               "composer-event__date-display"
               (unless this.hasEndDate "--empty")
             }}
@@ -578,7 +578,7 @@ export default class EventNodeView extends Component {
     </section>
 
     <section class="composer-event__location">
-      {{icon this.locationIcon}}
+      {{dIcon this.locationIcon}}
       <div class="composer-event__location-content">
         <input
           type="text"
@@ -598,14 +598,14 @@ export default class EventNodeView extends Component {
             rel="noopener noreferrer"
             title="Visit {{this.eventData.location}}"
           >
-            {{icon "up-right-from-square"}}
+            {{dIcon "up-right-from-square"}}
           </a>
         {{/if}}
       </div>
     </section>
 
     <section class="composer-event__attendees">
-      {{icon "users"}}
+      {{dIcon "users"}}
       <input
         type="number"
         inputmode="numeric"
@@ -628,7 +628,7 @@ export default class EventNodeView extends Component {
     </section>
 
     <section class="composer-event__description">
-      <ExpandingTextArea
+      <DExpandingTextArea
         class="composer-event__description-textarea"
         placeholder={{i18n
           "discourse_post_event.composer.description_placeholder"

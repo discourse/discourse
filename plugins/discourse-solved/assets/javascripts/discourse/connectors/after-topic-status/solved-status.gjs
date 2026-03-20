@@ -1,5 +1,5 @@
-import icon from "discourse/helpers/d-icon";
 import { and, eq, or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const SolvedStatus = <template>
@@ -9,7 +9,7 @@ const SolvedStatus = <template>
     <span
       title={{i18n "topic_statuses.solved.help"}}
       class="topic-status --solved"
-    >{{icon "far-square-check"}}</span>
+    >{{dIcon "far-square-check"}}</span>
   {{~else if
     (and
       @outletArgs.topic.can_have_answer (eq @outletArgs.context "topic-list")
@@ -18,7 +18,7 @@ const SolvedStatus = <template>
     <span
       title={{i18n "solved.has_no_accepted_answer"}}
       class="topic-status --unsolved"
-    >{{icon "far-square"}}</span>
+    >{{dIcon "far-square"}}</span>
   {{~/if~}}
 </template>;
 

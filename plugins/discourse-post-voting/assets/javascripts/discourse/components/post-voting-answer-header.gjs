@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export const ORDER_BY_ACTIVITY_FILTER = "activity";
@@ -64,7 +64,7 @@ export default class PostVotingAnswerHeader extends Component {
           {{i18n "post_voting.topic.activity"}}
         </span>
         <DButton
-          class={{concatClass
+          class={{dConcatClass
             "post-voting-answers-headers-sort-votes"
             (unless this.sortedByActivity "active")
           }}
@@ -73,7 +73,7 @@ export default class PostVotingAnswerHeader extends Component {
           @action={{this.orderByVotes}}
         />
         <DButton
-          class={{concatClass
+          class={{dConcatClass
             "post-voting-answers-headers-sort-activity"
             (if this.sortedByActivity "active")
           }}

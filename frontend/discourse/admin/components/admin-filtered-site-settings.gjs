@@ -6,9 +6,9 @@ import { isEmpty } from "@ember/utils";
 import AdminSiteSettingsFilterControls from "discourse/admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "discourse/admin/components/site-setting";
 import SiteSettingFilter from "discourse/admin/lib/site-setting-filter";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseDebounce from "discourse/lib/debounce";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class AdminFilteredSiteSettings extends Component {
@@ -61,7 +61,7 @@ export default class AdminFilteredSiteSettings extends Component {
         @initialFilter={{@initialFilter}}
       />
 
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
         <section class="admin-filtered-site-settings form-horizontal settings">
           {{#each this.visibleSettings as |setting|}}
             <SiteSetting @setting={{setting}} />
@@ -71,7 +71,7 @@ export default class AdminFilteredSiteSettings extends Component {
             {{i18n "admin.site_settings.no_results"}}
           {{/if}}
         </section>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </PluginOutlet>
   </template>
 }

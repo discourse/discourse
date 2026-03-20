@@ -5,14 +5,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import EmailLog from "discourse/admin/models/email-log";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
-import LoadMore from "discourse/components/load-more";
-import TextField from "discourse/components/text-field";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class EmailLogsList extends Component {
@@ -151,7 +151,7 @@ export default class EmailLogsList extends Component {
   }
 
   <template>
-    <LoadMore
+    <DLoadMore
       @action={{this.loadMore}}
       @enabled={{this.canLoadMore}}
       @rootMargin="0px 0px 250px 0px"
@@ -174,7 +174,7 @@ export default class EmailLogsList extends Component {
               </td>
               {{#each @filters as |filter|}}
                 <td>
-                  <TextField
+                  <DTextField
                     @value={{get this.filterValues filter.property}}
                     @placeholderKey={{filter.placeholder}}
                     {{on "input" (fn this.updateFilter filter.name)}}
@@ -203,8 +203,8 @@ export default class EmailLogsList extends Component {
           </tbody>
         </table>
       </HorizontalScrollSyncWrapper>
-    </LoadMore>
+    </DLoadMore>
 
-    <ConditionalLoadingSpinner @condition={{this.loading}} />
+    <DConditionalLoadingSpinner @condition={{this.loading}} />
   </template>
 }

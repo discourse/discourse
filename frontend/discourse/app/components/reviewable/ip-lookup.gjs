@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;
@@ -146,7 +146,7 @@ export default class ReviewableIpLookup extends Component {
   <template>
     {{#if this.showIpLookup}}
       {{#if this.loading}}
-        <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
       {{else if this.location}}
         <div class="reviewable-ip-lookup">
           <div class="review-insight__item">
@@ -211,7 +211,7 @@ const OtherAccountsModal = <template>
   >
     <:body>
       {{#if @model.otherAccountsLoading}}
-        <ConditionalLoadingSpinner
+        <DConditionalLoadingSpinner
           @size="small"
           @condition={{@model.otherAccountsLoading}}
         />

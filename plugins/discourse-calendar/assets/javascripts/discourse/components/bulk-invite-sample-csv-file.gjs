@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 @tagName("")
 export default class BulkInviteSampleCsvFile extends Component {

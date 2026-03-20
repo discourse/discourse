@@ -3,10 +3,10 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
-import formatDate from "discourse/helpers/format-date";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { gt } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ThreadUnreadIndicator from "discourse/plugins/chat/discourse/components/thread-unread-indicator";
 import ChatThreadParticipants from "../../chat-thread-participants";
@@ -22,7 +22,7 @@ export default class ChatThreadListItem extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "chat-thread-list-item"
         (if (gt @thread.tracking.unreadCount 0) "-is-unread")
         (if (gt @thread.tracking.watchedThreadsUnreadCount 0) "-is-urgent")
@@ -40,9 +40,9 @@ export default class ChatThreadListItem extends Component {
           <div class="chat-thread-list-item__header">
             <div class="chat-thread-list-item__title">
               {{#if @thread.title}}
-                {{replaceEmoji @thread.title}}
+                {{dReplaceEmoji @thread.title}}
               {{else}}
-                {{replaceEmoji @thread.originalMessage.excerpt}}
+                {{dReplaceEmoji @thread.originalMessage.excerpt}}
               {{/if}}
             </div>
             <div class="chat-thread-list-item__unread-indicator">
@@ -66,7 +66,7 @@ export default class ChatThreadListItem extends Component {
 
             <div class="chat-thread-list-item__last-reply-timestamp">
               {{#if @thread.preview.lastReplyCreatedAt}}
-                {{formatDate
+                {{dFormatDate
                   @thread.preview.lastReplyCreatedAt
                   leaveAgo="true"
                 }}

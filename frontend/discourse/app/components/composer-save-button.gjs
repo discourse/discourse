@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { translateModKey } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerSaveButton extends Component {
@@ -21,7 +21,7 @@ export default class ComposerSaveButton extends Component {
       @icon={{@icon}}
       @translatedTitle={{this.translatedTitle}}
       @forwardEvent={{@forwardEvent}}
-      class={{concatClass "btn-primary create" (if @disableSubmit "disabled")}}
+      class={{dConcatClass "btn-primary create" (if @disableSubmit "disabled")}}
       aria-keyshortcuts={{translateModKey "Meta+Enter" "+"}}
       ...attributes
     />

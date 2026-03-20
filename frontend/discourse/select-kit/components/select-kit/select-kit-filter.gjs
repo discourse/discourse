@@ -9,8 +9,8 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @classNames("select-kit-filter")
@@ -164,7 +164,7 @@ export default class SelectKitFilter extends Component {
       />
 
       {{#if this.selectKit.options.filterIcon}}
-        {{icon this.selectKit.options.filterIcon class="filter-icon"}}
+        {{dIcon this.selectKit.options.filterIcon class="filter-icon"}}
       {{/if}}
     {{/unless}}
   </template>

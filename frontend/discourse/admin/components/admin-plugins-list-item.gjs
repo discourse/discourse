@@ -5,11 +5,11 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PluginCommitHash from "./plugin-commit-hash";
 
@@ -132,7 +132,7 @@ export default class AdminPluginsListItem extends Component {
               target="_blank"
               class="admin-plugins-list__about-link"
             >
-              {{icon "up-right-from-square"}}
+              {{dIcon "up-right-from-square"}}
               {{i18n "admin.plugins.learn_more"}}
             </a>
           {{/if}}

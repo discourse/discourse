@@ -7,11 +7,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -21,6 +18,9 @@ import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 class Section {
@@ -658,7 +658,7 @@ export default class SidebarSectionForm extends Component {
                   class="always-public-tooltip"
                 >
                   <:trigger>
-                    {{icon "square-check"}}
+                    {{dIcon "square-check"}}
                     <span>{{i18n "sidebar.sections.custom.public"}}</span>
                   </:trigger>
                 </DTooltip>

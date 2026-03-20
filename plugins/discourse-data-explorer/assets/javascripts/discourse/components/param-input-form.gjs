@@ -3,9 +3,9 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import Category from "discourse/models/category";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 import BooleanThree from "./param-input/boolean-three";
 import CategoryIdInput from "./param-input/category-id-input";
@@ -479,7 +479,7 @@ export default class ParamInputForm extends Component {
                   @field={{field}}
                   @info={{info}}
                 />
-                <ConditionalLoadingSpinner
+                <DConditionalLoadingSpinner
                   @condition={{info.loading}}
                   @size="small"
                 />

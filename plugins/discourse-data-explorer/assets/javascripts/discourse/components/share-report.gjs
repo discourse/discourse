@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ShareReport extends Component {
@@ -70,7 +70,7 @@ export default class ShareReport extends Component {
   <template>
     <div class="share-report">
       <a href="#" {{on "click" this.open}} class="share-report-button">
-        {{icon "link"}}
+        {{dIcon "link"}}
         {{@group}}
       </a>
 

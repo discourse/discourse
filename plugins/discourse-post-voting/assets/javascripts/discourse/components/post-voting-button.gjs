@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class PostVotingButton extends Component {
   get buttonClasses() {
@@ -44,7 +44,7 @@ export default class PostVotingButton extends Component {
       {{on "click" this.onClick}}
       @disabled={{this.disabled}}
       @icon={{this.iconName}}
-      class={{concatClass "btn-flat post-voting-button" this.buttonClasses}}
+      class={{dConcatClass "btn-flat post-voting-button" this.buttonClasses}}
     />
   </template>
 }

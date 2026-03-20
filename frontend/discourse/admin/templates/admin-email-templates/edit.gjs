@@ -4,12 +4,12 @@ import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SaveControls from "discourse/components/save-controls";
-import icon from "discourse/helpers/d-icon";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -17,7 +17,7 @@ export default <template>
     <div class="email-template">
       <div class="back-to-email-templates">
         <LinkTo @route="adminEmailTemplates">
-          {{icon "angle-left"}}
+          {{dIcon "angle-left"}}
           {{i18n "admin.customize.email_templates.back"}}
         </LinkTo>
       </div>
@@ -66,7 +66,7 @@ export default <template>
         @onInsertKey={{@controller.insertInterpolationKey}}
       />
 
-      <SaveControls
+      <DSaveControls
         @model={{@controller.emailTemplate}}
         @action={{@controller.saveChanges}}
         @saved={{@controller.saved}}
@@ -78,7 +78,7 @@ export default <template>
             @label="admin.customize.email_templates.revert"
           />
         {{/if}}
-      </SaveControls>
+      </DSaveControls>
     </div>
   </PluginOutlet>
 </template>

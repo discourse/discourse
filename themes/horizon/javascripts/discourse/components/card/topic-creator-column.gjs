@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import avatar from "discourse/helpers/avatar";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 export default class TopicCreatorColumn extends Component {
   get topicCreator() {
@@ -11,7 +11,7 @@ export default class TopicCreatorColumn extends Component {
 
   <template>
     <div class={{this.topicCreator.class}}>
-      {{avatar this.topicCreator.user}}
+      {{dAvatar this.topicCreator.user}}
     </div>
   </template>
 }

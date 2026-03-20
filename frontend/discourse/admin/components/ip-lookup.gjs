@@ -6,14 +6,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import DMenu from "discourse/float-kit/components/d-menu";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;
@@ -210,7 +210,7 @@ export default class IpLookup extends Component {
                   <dd>{{this.location.organization}}</dd>
                 {{/if}}
               {{else}}
-                {{loadingSpinner size="small"}}
+                {{dLoadingSpinner size="small"}}
               {{/if}}
 
               <dt class="other-accounts">
@@ -234,7 +234,7 @@ export default class IpLookup extends Component {
                 {{/if}}
               </dt>
 
-              <ConditionalLoadingSpinner
+              <DConditionalLoadingSpinner
                 @size="small"
                 @condition={{this.otherAccountsLoading}}
               >
@@ -243,7 +243,7 @@ export default class IpLookup extends Component {
                     <IpLookupAccountsTable @accounts={{this.otherAccounts}} />
                   </dd>
                 {{/if}}
-              </ConditionalLoadingSpinner>
+              </DConditionalLoadingSpinner>
             </dl>
             <div class="powered-by">{{trustHTML
                 (i18n "ip_lookup.powered_by")

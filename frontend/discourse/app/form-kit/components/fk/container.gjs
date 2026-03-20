@@ -1,10 +1,10 @@
 import { concat } from "@ember/helper";
 import FormText from "discourse/form-kit/components/fk/text";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const FKContainer = <template>
   <div
-    class={{concatClass
+    class={{dConcatClass
       "form-kit__container"
       @class
       (if @direction (concat "--" @direction))
@@ -22,7 +22,7 @@ const FKContainer = <template>
     {{/if}}
 
     <div
-      class={{concatClass
+      class={{dConcatClass
         "form-kit__container-content"
         (if @format (concat "--" @format))
       }}
