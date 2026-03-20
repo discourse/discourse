@@ -4298,7 +4298,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "permanent"
+      status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
   enable_simplified_category_creation:

@@ -218,6 +218,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json?force_refresh=true"
         expect(response.status).to eq(200)
         json = response.parsed_body
+        puts json["new_features"].inspect if json["new_features"].length > 1
         expect(json["new_features"].length).to eq(1)
         expect(json["new_features"][0]["id"]).to eq("3")
       end
