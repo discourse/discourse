@@ -379,7 +379,7 @@ class AiAgent < ActiveRecord::Base
          allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
            force_default_llm
        ) && !default_llm_id
-      errors.add(:default_llm, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
+      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
     end
   end
 
