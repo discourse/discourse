@@ -166,7 +166,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
-        expect(json["new_features"]).to eq(nil)
+        expect(json["new_features"]).to eq([])
       end
 
       it "fails gracefully for invalid JSON" do
@@ -174,7 +174,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
-        expect(json["new_features"]).to eq(nil)
+        expect(json["new_features"]).to eq([])
       end
 
       it "includes new features when available" do

@@ -140,7 +140,7 @@ module DiscourseUpdates
         rescue StandardError
           nil
         end
-      return nil if entries.nil?
+      return [] if entries.blank?
 
       entries.select! do |item|
         begin
@@ -154,7 +154,7 @@ module DiscourseUpdates
 
           valid_version && valid_plugin_name
         rescue StandardError
-          nil
+          []
         end
       end
 
