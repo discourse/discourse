@@ -3310,10 +3310,7 @@ el:
         confirm: "Επιβεβαίωση"
         select_all: "Επιλογή Όλων"
         clear_all: "Καθαρισμός Όλων"
-        unlist_topics: "Απόκρυψη Θεμάτων"
-        relist_topics: "Εμφάνιση Θεμάτων"
         defer: "Σήμανση ως αδιάβαστα"
-        delete: "Διαγραφή Θεμάτων"
         delete_topics_count:
           one: "Διαγραφή Θέματος"
           other: "Διαγραφή Θεμάτων"
@@ -3352,36 +3349,27 @@ el:
           other: "Παράβλεψε Νέα (%{count})"
         toggle: "εναλλαγή μαζικής επιλογής θεμάτων"
         actions: "Μαζικές Ενέργειες"
-        change_category: "Ορισμός κατηγορίας…"
-        close_topics: "Κλείσιμο Θεμάτων"
-        archive_topics: "Αρχειοθέτηση Θεμάτων"
         move_messages_to_inbox: "Μετακίνηση στα Εισερχόμενα"
         archive_messages: "Μετακίνηση στο Αρχείο"
-        notification_level: "Ειδοποιήσεις…"
         change_notification_level: "Αλλαγή επιπέδου ειδοποίησης"
         choose_new_category: "Επιλέξτε τη νέα κατηγορία για τα θέματα:"
-        selected:
-          one: "Έχεις διαλέξει <b>%{count}</b> θέμα."
-          other: "Έχετε επιλέξει <b>%{count}</b> θέματα."
         selected_sole_category:
           one: "Έχεις επιλέξει <b>%{count}</b> θέμα από την κατηγορία:"
           other: "Έχεις επιλέξει <b>%{count}</b> θέματα από την κατηγορία:"
         selected_count:
           one: "%{count} επιλεγμένα"
           other: "%{count} επιλεγμένα"
-        change_tags: "Αντικατάσταση Ετικετών "
-        append_tags: "Προσάρτηση Ετικετών "
+        append_tags: "Προσθήκη ετικετών"
         choose_new_tags: "Επιλέξτε νέες ετικέτες για αυτά τα θέματα:"
-        choose_append_tags: "Επιλογή νέων ετικετών για την προσάρτηση τους σε αυτά τα θέματα:"
+        choose_append_tags: "Προσθήκη ετικετών"
         changed_tags: "Οι ετικέτες αυτών των θεμάτων έχουν αλλάξει."
-        remove_tags: "Αφαίρεση Όλων των Ετικετών"
         confirm_remove_tags:
           one: "Όλες οι ετικέτες θα αφαιρεθούν από αυτό το θέμα. Είσαι σίγουρος;"
           other: "Όλες οι ετικέτες θα αφαιρεθούν από %{count} θέματα. Είσαι σίγουρος;"
         progress:
           one: "Πρόοδος: <strong>%{count}</strong> θέμα"
           other: "Πρόοδος: <strong>%{count}</strong> θέματα"
-        notify: "Ειδοποιήστε τους χρήστες για αυτήν την αλλαγή."
+        notify: "Ειδοποιήστε τους χρήστες για αυτήν την αλλαγή"
         performing: "Εκτελούνται μαζικές λειτουργίες, παρακαλώ περιμένετε…"
         completed: "Οι μαζικές λειτουργίες ολοκληρώθηκαν με επιτυχία!"
         completed_count:
@@ -3419,7 +3407,6 @@ el:
         name: "Παράβλεψη"
       close_topics:
         name: "Κλείσιμο"
-        note: "Σημείωση"
         optional: (προεραιτικό)
       archive_topics:
         name: "Αρχείο"
@@ -3429,21 +3416,16 @@ el:
         name: "Μετακίνηση στα Εισερχόμενα"
       remove_tags:
         name: "Αφαίρεση ετικετών"
-      append_tags:
-        name: "Προσάρτηση Ετικετών "
       replace_tags:
         name: "Αντικατάσταση Ετικετών "
       delete_topics:
         name: "Σβήσιμο"
       update_category:
         name: "Ενημέρωση Κατηγορίας"
-        description: "Επιλέξτε τη νέα κατηγορία για τα επιλεγμένα θέματα"
       defer:
         name: "Σήμανση ως αδιάβαστα"
-        description: "Σημάνετε τα θέματα ως αδιάβαστα"
       update_notifications:
         name: "Ενημέρωση Ειδοποιήσεων"
-        description: "Αλλαγή επιπέδου ειδοποιήσεων σε Επιτηρείται, Παρακολουθείται, Φυσιολογικό ή Σε σίγαση"
     topic:
       filter_to:
         one: "%{count} ανάρτηση σε θέμα"
@@ -4281,6 +4263,8 @@ el:
       list: "Λίστα κατηγοριών"
       no_description: "Παρακαλώ πρόσθεσε μια περιγραφή στην κατηγορία"
       change_in_category_topic: "Επεξεργασία περιγραφής"
+      description_expand: "Δείτε περισσότερα"
+      description_collapse: "Δείξε λιγότερα"
       already_used: "Αυτό το χρώμα έχει χρησιμοποιηθεί σε άλλη κατηγορία"
       color_palette: "Παλέτα χρωμάτων"
       security: "Ασφάλεια"

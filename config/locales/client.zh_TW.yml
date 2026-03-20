@@ -2881,11 +2881,8 @@ zh_TW:
         confirm: "確認"
         select_all: "選擇全部"
         clear_all: "清除全部"
-        unlist_topics: "未在列表中的話題"
-        relist_topics: "討論話題"
         reset_bump_dates: "重設上浮日期"
         defer: "標記未讀"
-        delete: "刪除話題"
         delete_topics_count:
           other: "刪除話題"
         dismiss: "忽略"
@@ -2912,26 +2909,18 @@ zh_TW:
           other: "忽略（%{count} 個）"
         toggle: "批次切換選擇話題"
         actions: "批次操作"
-        change_category: "設定分類"
-        close_topics: "關閉話題"
-        archive_topics: "已封存的話題"
         move_messages_to_inbox: "移動到收件匣"
         archive_messages: "移至封存"
-        notification_level: "通知…"
         change_notification_level: "變更通知層級"
         choose_new_category: "為話題選擇新類別："
-        selected:
-          other: "你已選擇了 <b>%{count}</b> 個話題。"
         selected_sole_category:
           other: "您已從以下類別中選擇 <b>%{count}</b> 個話題。"
         selected_count:
           other: "已選擇 %{count} 個"
-        change_tags: "取代標記"
-        append_tags: "向後追加標記"
+        append_tags: "新增標記"
         choose_new_tags: "為話題選擇新標籤"
-        choose_append_tags: "為話題選擇新標籤"
+        choose_append_tags: "新增標記"
         changed_tags: "話題的標籤已修改"
-        remove_tags: "移除所有標記"
         confirm_remove_tags:
           other: "所有標記將從 <b>%{count}</b> 個話題中移除。確定嗎？"
         progress:
@@ -2957,7 +2946,6 @@ zh_TW:
         name: "忽略"
       close_topics:
         name: "關閉"
-        note: " 分類已經沒有其它話題了。"
         optional: (選擇性)
       archive_topics:
         name: "封存"
@@ -2971,24 +2959,18 @@ zh_TW:
         name: "重新公開"
       remove_tags:
         name: "移除標記"
-      append_tags:
-        name: "向後追加標記"
       replace_tags:
         name: "取代標記"
       delete_topics:
         name: "刪除"
       update_category:
         name: "更新分類"
-        description: "為選取的主題選擇新類別"
       reset_bump_dates:
         name: "重設上浮日期"
-        description: "將主題更新日期重設為上次建立貼文的日期，這會影響主題清單中的排序"
       defer:
         name: "標註為未讀"
-        description: "將主題標記為未讀"
       update_notifications:
         name: "更新通知"
-        description: "將通知層級變更為「關注」、「追蹤」、「正常」或「靜音」"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -3711,6 +3693,8 @@ zh_TW:
       delete_error: "刪除此分類時發生錯誤。"
       no_description: "請為此分類新增描述。"
       change_in_category_topic: "編輯描述"
+      description_expand: "顯示更多"
+      description_collapse: "顯示更少"
       already_used: "此顏色已經用於其它分類"
       security: "安全性"
       security_add_group: "新增群組"

@@ -2542,9 +2542,6 @@ hy:
         confirm: "Հաստատել"
         select_all: "Ընտրել Բոլորը"
         clear_all: "Ջնջել Բոլորը"
-        unlist_topics: "Թեմաները Ցուցակից Հանել"
-        relist_topics: "Վերացանկավորել Թեմաները"
-        delete: "Ջնջել Թեմաները"
         delete_topics_count:
           one: "Ջնջել Թեման"
           other: "Ջնջել Թեմաները"
@@ -2556,20 +2553,12 @@ hy:
         dismiss_new: "Չեղարկել Նորերը"
         toggle: "փոխանջատել թեմաների զանգվածային ընտրությունը"
         actions: "Զանգվածային Գործողությունները"
-        close_topics: "Փակել Թեմաները"
-        archive_topics: "Արխիվացնել Թեմաները"
         move_messages_to_inbox: "Տեղափոխել Մուտքային"
         choose_new_category: "Ընտրել նոր կատեգորիա թեմաների համար՝"
-        selected:
-          one: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
-          other: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
         selected_count:
           one: "%{count} ընտրված"
           other: "%{count} ընտրված"
-        change_tags: "Փոխարինել Պիտակները"
-        append_tags: "Ավելացնել Պիտակներ"
         choose_new_tags: "Ընտրել նոր պիտակներ այս թեմաների համար՝"
-        choose_append_tags: "Ընտրել նոր պիտակներ այս թեմաներին ավելացնելու համար՝"
         changed_tags: "Այդ թեմաների պիտակները փոփոխվել են:"
         error_topic_count:
           one: "%{count} թեմա"
@@ -2596,8 +2585,6 @@ hy:
         name: "Տեղափոխել Մուտքային"
       unlist_topics:
         name: "Ցուցակից հանել"
-      append_tags:
-        name: "Ավելացնել Պիտակներ"
       replace_tags:
         name: "Փոխարինել Պիտակները"
       delete_topics:
@@ -3168,6 +3155,8 @@ hy:
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
       no_description: "Խնդրում ենք այս կատեգորիայի համար ավելացնել նկարագրություն:"
+      description_expand: "Ցույց տալ ավելին"
+      description_collapse: "Ցույց տալ ավելի քիչ"
       already_used: "Այս գույնը օգտագործվել է մեկ այլ կատեգորիայի կողմից"
       security: "Անվտանգություն"
       permissions:

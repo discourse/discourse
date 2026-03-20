@@ -1298,6 +1298,8 @@ uk:
       weekly: "щотижня"
       every_month: "щомісяця"
       every_six_months: "кожні півроку"
+  calendar_subscriptions:
+    application_name: "Підписки на календар"
   user_api_key:
     title: 'Авторизувати "%{application_name}"'
     authorize: "Авторизувати"

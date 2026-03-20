@@ -10,6 +10,7 @@ de:
     support:
       name: "Support"
       title: "Support"
+      description: "Hier können Mitglieder Fragen stellen und Antworten als Lösungen markieren"
   discourse_solved:
     category_type:
       allow_accepted_answers:
@@ -17,6 +18,13 @@ de:
       solved_topics_auto_close_hours:
         label: "Gelöste Themen automatisch schließen nach (Stunden)"
         description: "Thema nach so vielen Stunden automatisch schließen, wenn es als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."
+      notify_on_staff_accept_solved:
+        label: "Benachrichtige den Themenersteller, wenn ein Team-Mitglied eine Lösung auswählt"
+      empty_box_on_unsolved:
+        label: "Zeige eine leere Box neben ungelösten Themen in der Themenliste"
+      solved_topics_auto_close_duration:
+        label: "Gelöste Themen automatisch schließen"
+        description: "Thema nach dieser Zeit automatisch schließen, wenn es als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."
   site_settings:
     solved_enabled: "Aktiviere das solved-Plug-in; erlaubt Benutzern, Lösungen für Themen auszuwählen"
     allow_solved_on_all_topics: "Benutzern erlauben, Lösungen für alle Themen auszuwählen (wenn diese Option nicht aktiviert ist, können Lösungen nach Kategorie oder Schlagwort aktiviert werden)"

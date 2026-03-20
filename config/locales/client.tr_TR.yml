@@ -3429,7 +3429,7 @@ tr_TR:
         confirm: "Onayla"
         select_all: "Tümünü Seç"
         clear_all: "Tümünü Temizle"
-        unlist_topics: "Konuları listeden kaldır"
+        unlist_topics: "Konuları gizle"
         relist_topics: "Konuları yeniden listele"
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
@@ -3472,36 +3472,57 @@ tr_TR:
           other: "Yenileri (%{count}) kapat"
         toggle: "konuların toplu seçimini aç/kapat"
         actions: "Toplu Eylemler"
-        change_category: "Kategori belirle…"
-        close_topics: "Konuları Kapat"
-        archive_topics: "Konuları Arşivle"
+        change_category: "Kategoriyi güncelle"
+        close_topics: "Konuları kapat"
+        archive_topics: "Konuları arşivle"
         move_messages_to_inbox: "Gelen kutusuna taşı"
         archive_messages: "Arşive taşı"
-        notification_level: "Bildirimler…"
+        notification_level: "Bildirimleri güncelle"
         change_notification_level: "Bildirim Seviyesini Değiştir"
         choose_new_category: "Konular için yeni kategoriyi seç:"
-        selected:
-          one: "<b>%{count}</b> konu seçtiniz."
-          other: "<b>%{count}</b> konu seçtiniz."
         selected_sole_category:
           one: "Kategoriden <b>%{count}</b> konu seçtiniz:"
           other: "Kategoriden <b>%{count}</b> konu seçtiniz:"
         selected_count:
           one: "%{count} tane seçildi"
           other: "%{count} tane seçildi"
-        change_tags: "Etiketleri Değiştir"
-        append_tags: "Etiketleri Sonuna Ekle"
+        change_tags: "Etiketleri değiştir"
+        append_tags: "Etiket ekle"
         choose_new_tags: "Bu konular için yeni etiketler seçin:"
-        choose_append_tags: "Bu konular için sona eklenecek yeni etiketleri seçin:"
+        choose_append_tags: "Etiket ekle"
         changed_tags: "Bu konuların etiketleri değiştirildi."
-        remove_tags: "Tüm Etiketleri Kaldır"
+        remove_tags: "Etiketleri kaldır"
         confirm_remove_tags:
           one: "Bu konudan tüm etiketler kaldırılacak. Emin misiniz?"
           other: "%{count} konudan tüm etiketler kaldırılacak. Emin misiniz?"
+        confirm_update_topics:
+          one: "%{count} konuyu güncelle"
+          other: "%{count} konuyu güncelle"
+        confirm_close_topics:
+          one: "%{count} konuyu kapat"
+          other: "%{count} konuyu kapat"
+        confirm_archive_topics:
+          one: "%{count} konuyu arşivle"
+          other: "%{count} konuyu arşivle"
+        confirm_unlist_topics:
+          one: "%{count} konuyu listeden kaldır"
+          other: "%{count} konuyu listeden kaldır"
+        confirm_relist_topics:
+          one: "%{count} konuyu yeniden listele"
+          other: "%{count} konuyu yeniden listele"
+        confirm_archive_messages:
+          one: "%{count} mesajı arşivle"
+          other: "%{count} mesajı arşivle"
+        confirm_move_to_inbox:
+          one: "%{count} mesajı gelen kutusuna taşı"
+          other: "%{count} mesajı gelen kutusuna taşı"
+        confirm_delete_topics:
+          one: "%{count} konuyu sil"
+          other: "%{count} konuyu sil"
         progress:
           one: "İlerleme: <strong>%{count}</strong> konu"
           other: "İlerleme: <strong>%{count}</strong> konu"
-        notify: "Kullanıcılara bu değişikliği bildir."
+        notify: "Kullanıcılara bu değişikliği bildir"
         performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
         completed: "Toplu işlemler başarıyla tamamlandı!"
         completed_count:
@@ -3539,38 +3560,44 @@ tr_TR:
         name: "Kapat"
       close_topics:
         name: "Kapat"
-        note: "Not"
+        description: "Kapatılan konular yeni yanıtların eklenmesini engeller. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Daha fazla bilgi edinin</a>"
+        note: "Bu konulara bir not ekleyin"
         optional: (isteğe bağlı)
       archive_topics:
         name: "Arşiv"
+        description: "Arşivlenen konular, arama sonuçlarında ve en son konular listesinde görünmez. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Daha fazla bilgi edinin</a>"
       archive_messages:
         name: "Arşive taşı"
       move_messages_to_inbox:
         name: "Gelen Kutusuna taşı"
       unlist_topics:
         name: "Listeden kaldır"
+        description: "Listelenmemiş konular konu listesinde görünmez, ancak doğrudan bağlantı yoluyla erişilebilir. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Daha fazla bilgi edinin</a>"
       relist_topics:
         name: "Yeniden listele"
       remove_tags:
         name: "Etiketleri kaldır"
+        description: "Seçili konulardaki tüm etiketleri kaldır."
       append_tags:
-        name: "Etiketleri sona ekle"
+        name: "Etiket ekle"
+        description: "Seçilen konulara aşağıdaki etiketleri ekleyin:"
       replace_tags:
         name: "Etiketleri Değiştir"
+        description: "Seçilen konulardaki mevcut tüm etiketleri aşağıdakilerle değiştirin:"
       delete_topics:
         name: "Sil"
+        description: "Seçilen konuları kalıcı olarak sil. Bu işlem geri alınamaz."
       update_category:
         name: "Kategoriyi Güncelle"
-        description: "Seçilen konular için yeni kategoriyi seçin"
+        description: "Seçili tüm konuları aşağıdaki kategoriye taşı:"
       reset_bump_dates:
         name: "Üste Sıçratma Tarihlerini sıfırla"
-        description: "Konunun öne çıkma tarihini son oluşturulan gönderi tarihine sıfırlayın; bu, konu listesindeki sıralamayı etkiler"
+        description: "Gönderilerin öne çıkarılma tarihlerini en son oluşturulma tarihine göre güncellemek ister misiniz? Bu, konu listesindeki sıralamalarını etkileyebilir."
       defer:
         name: "Okunmamış olarak işaretle"
-        description: "Konuları okunmamış olarak işaretle"
       update_notifications:
         name: "Bildirimleri güncelle"
-        description: "Bildirim seviyesini İzleniyor, Takip Ediliyor, Normal veya Ses Kapatıldı olarak değiştirin"
+        description: "Seçilen konular için kişisel bildirim düzeyinizi şu şekilde güncelleyin:"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -4441,6 +4468,9 @@ tr_TR:
       list: "Kategorileri listele"
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
+      description_updated: "Açıklama güncellendi"
+      description_expand: "Daha fazla göster"
+      description_collapse: "Daha az göster"
       already_used: "Bu renk başka bir kategori tarafından kullanılmış."
       color_palette: "Renk paleti"
       security: "Güvenlik"

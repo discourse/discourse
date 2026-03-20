@@ -138,10 +138,6 @@ ru:
           unassigned: "Без назначенного ответственного"
         assigned:
           label: "Назначено:"
-    topics:
-      bulk:
-        unassign: "Снять ответственного"
-        assign: "Назначить ответственного"
     discourse_automation:
       scriptables:
         random_assign:

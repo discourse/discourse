@@ -2815,11 +2815,8 @@ nb_NO:
         confirm: "Bekreft"
         select_all: "Velg alle"
         clear_all: "Fjern alle"
-        unlist_topics: "Fjern emner fra lister"
-        relist_topics: "Før opp igjen emner i lister"
         reset_bump_dates: "Tilbakestill støtdatoer"
         defer: "Merk ulest"
-        delete: "Slett emner"
         delete_topics_count:
           one: "Slett emne"
           other: "Slett emner"
@@ -2852,29 +2849,18 @@ nb_NO:
           other: "Avvis nye (%{count})"
         toggle: "slå på/av massevelging av emner"
         actions: "Massehandlinger"
-        change_category: "Sett kategori…"
-        close_topics: "Lukk emner"
-        archive_topics: "Arkiver emner"
         move_messages_to_inbox: "Flytt til innboks"
         archive_messages: "Flytt til arkiv"
-        notification_level: "Varsler…"
         change_notification_level: "Endre varslingsnivå"
         choose_new_category: "Velg den nye kategorien for emnene:"
-        selected:
-          one: "Du har valgt <b>%{count}</b> emne."
-          other: "Du har valgt <b>%{count}</b> emner."
         selected_sole_category:
           one: "Du har valgt <b>%{count}</b> emne fra kategorien:"
           other: "Du har valgt <b>%{count}</b> emner fra kategorien:"
         selected_count:
           one: "%{count} valgt"
           other: "%{count} valgt"
-        change_tags: "Erstatt stikkord"
-        append_tags: "Legg til stikkord"
         choose_new_tags: "Velg nye stikkord for følgende emner:"
-        choose_append_tags: "Velg nye stikkord å legge til følgende emner:"
         changed_tags: "Stikkordene for de valgte emnene ble endret."
-        remove_tags: "Fjern alle stikkord"
         confirm_remove_tags:
           one: "Alle stikkord vil bli fjernet fra dette emnet. Er du sikker?"
           other: "Alle stikkord vil bli fjernet fra %{count} emner. Er du sikker?"
@@ -2903,7 +2889,6 @@ nb_NO:
         name: "Avslå"
       close_topics:
         name: "Lukk"
-        note: "Merk"
         optional: (valgfritt)
       archive_topics:
         name: "Arkiver"
@@ -2917,24 +2902,18 @@ nb_NO:
         name: "Liste på nytt"
       remove_tags:
         name: "Fjern stikkord"
-      append_tags:
-        name: "Legg til stikkord"
       replace_tags:
         name: "Erstatt stikkord"
       delete_topics:
         name: "Slett"
       update_category:
         name: "Oppdater kategori"
-        description: "Velg en ny kategori for de valgte emnene"
       reset_bump_dates:
         name: "Tilbakestill støtdatoer"
-        description: "Tilbakestill støtdatoen til siste opprettet innleggsdatoen, noe som påvirker rekkefølgen i emnelisten"
       defer:
         name: "Merk ulest"
-        description: "Merk emner som ulest"
       update_notifications:
         name: "Oppdater varsler"
-        description: "Endre varslingsnivå til følging, overvåking, normal, eller ignorert"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -3666,6 +3645,8 @@ nb_NO:
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
       no_description: "Legg til en beskrivelse for denne kategorien."
+      description_expand: "Vis mer"
+      description_collapse: "Vis mindre"
       already_used: "Denne fargen er i bruk av en annen kategori"
       security: "Sikkerhet"
       security_add_group: "Legg til gruppe"

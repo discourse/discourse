@@ -34,6 +34,11 @@ uk:
               label: ID теми
     discourse_calendar:
       invite_user_notification: "%{username} запросили Вас на: %{description}"
+      preferences:
+        all_events: "Discourse Календар - Усі події"
+        all_events_description: "Усі події форуму"
+        my_events: "Discourse Календар - Мої події"
+        my_events_description: "Події, на які ви збираєтеся або які вас цікавлять"
       on_holiday: "У відпустці"
       disable_holiday: "Вимкнути"
       enable_holiday: "Увімкнути"
@@ -470,6 +475,9 @@ uk:
         timezone:
           label: Часовий пояс
           remove_timezone: Без часового поясу (UTC)
+        all_day:
+          label: "Подія на цілий день"
+          description: "Подія на цілий день не матиме конкретного часу, лише дату. Подія триватиме від початку до кінця дня."
         reminders:
           label: "Нагадування"
           types:

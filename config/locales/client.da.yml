@@ -2746,11 +2746,8 @@ da:
         confirm: "Bekræft"
         select_all: "Vælg alle"
         clear_all: "Ryd alle"
-        unlist_topics: "Fjern emner fra liste"
-        relist_topics: "Genindlæs emner"
         reset_bump_dates: "Nulstil bump datoer"
         defer: "Markér som ulæst"
-        delete: "Slet emner"
         delete_topics_count:
           one: "Slet emne"
           other: "Slet emner"
@@ -2762,29 +2759,20 @@ da:
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
-        change_category: "Indstil kategori…"
-        close_topics: "Luk indlæg"
-        archive_topics: "Arkiver Emner"
         move_messages_to_inbox: "Flyt til indbakke"
         archive_messages: "Flyt til arkiv"
-        notification_level: "Notifikationer…"
         change_notification_level: "Skift Notifikationsniveau"
         choose_new_category: "Vælg den nye kategori for emnerne:"
-        selected:
-          one: "Du har valgt <b>%{count}</b> indlæg."
-          other: "Du har valgt <b>%{count}</b> indlæg."
         selected_sole_category:
           one: "Du har valgt <b>%{count}</b> emne fra kategorien:"
           other: "Du har valgt <b>%{count}</b> emner fra kategorien:"
         selected_count:
           one: "%{count} valgt"
           other: "%{count} valgt"
-        change_tags: "Erstat tags"
-        append_tags: "Tilføj tags"
+        append_tags: "Tilføj mærker"
         choose_new_tags: "Vælg nye tags for dette emne"
-        choose_append_tags: "Vælg nye tags til at tilføje emnet:"
+        choose_append_tags: "Tilføj mærker"
         changed_tags: "Tags for dette emne blev ændret"
-        remove_tags: "Fjern alle tags"
         confirm_remove_tags:
           one: "Alle mærker fjernes fra dette emne. Er du sikker?"
           other: "Alle tags fjernes fra %{count} emner. Er du sikker?"
@@ -2810,7 +2798,6 @@ da:
         name: "Ignorer Alle"
       close_topics:
         name: "Luk"
-        note: "Note"
         optional: (valgfri)
       archive_topics:
         name: "Arkiv"
@@ -2820,8 +2807,6 @@ da:
         name: "Flyt til indbakke"
       remove_tags:
         name: "Fjern tags"
-      append_tags:
-        name: "Tilføj tags"
       replace_tags:
         name: "Erstat tags"
       delete_topics:
@@ -3509,6 +3494,8 @@ da:
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "Rediger beskrivelse"
+      description_expand: "Vis mere"
+      description_collapse: "Vis mindre"
       already_used: "Denne farve er blevet brugt af en anden kategori"
       security: "Sikkerhed"
       security_add_group: "Tilføj en gruppe"

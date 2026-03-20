@@ -3204,11 +3204,8 @@ fr:
         confirm: "Confirmer"
         select_all: "Tout sélectionner"
         clear_all: "Tout désélectionner"
-        unlist_topics: "Rendre les sujets invisibles"
-        relist_topics: "Lister les sujets"
         reset_bump_dates: "Réinitialiser la date d'actualisation"
         defer: "Marquer comme non lu"
-        delete: "Supprimer les sujets"
         delete_topics_count:
           one: "Supprimer le sujet"
           other: "Supprimer les sujets"
@@ -3241,29 +3238,20 @@ fr:
           other: "Marquer les nouveaux sujets comme lus (%{count})"
         toggle: "activer/désactiver la sélection multiple de sujets"
         actions: "Actions sur la sélection"
-        change_category: "Définir la catégorie…"
-        close_topics: "Fermer les sujets"
-        archive_topics: "Archiver les sujets"
         move_messages_to_inbox: "Déplacer dans la boîte de réception"
         archive_messages: "Déplacer vers les archives"
-        notification_level: "Notifications…"
         change_notification_level: "Modifier le niveau de notification"
         choose_new_category: "Choisissez la nouvelle catégorie pour ces sujets :"
-        selected:
-          one: "Vous avez sélectionné <b>%{count}</b> sujet."
-          other: "Vous avez sélectionné <b>%{count}</b> sujets."
         selected_sole_category:
           one: "Vous avez sélectionné <b>%{count}</b> sujet de la catégorie :"
           other: "Vous avez sélectionné <b>%{count}</b> sujets de la catégorie :"
         selected_count:
           one: "Sélection : %{count}"
           other: "Sélection : %{count}"
-        change_tags: "Remplacer des étiquettes"
         append_tags: "Ajouter des étiquettes"
         choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
-        choose_append_tags: "Choisissez de nouvelles étiquettes à ajouter à ces sujets :"
+        choose_append_tags: "Ajouter des étiquettes"
         changed_tags: "Les étiquettes de ces sujets ont été modifiées."
-        remove_tags: "Supprimer toutes les étiquettes"
         confirm_remove_tags:
           one: "Toutes les étiquettes seront supprimées de ce sujet. Voulez-vous continuer ?"
           other: "Toutes les étiquettes seront supprimées des <b>%{count}</b> sujets. Voulez-vous continuer ?"
@@ -3297,7 +3285,6 @@ fr:
         name: "Rejeter"
       close_topics:
         name: "Fermer"
-        note: "Note"
         optional: (facultatif)
       archive_topics:
         name: "Archive"
@@ -3311,24 +3298,18 @@ fr:
         name: "Remettre dans la liste"
       remove_tags:
         name: "Supprimer des étiquettes"
-      append_tags:
-        name: "Ajouter des étiquettes"
       replace_tags:
         name: "Remplacer des étiquettes"
       delete_topics:
         name: "Supprimer"
       update_category:
         name: "Mettre à jour la catégorie"
-        description: "Choisissez la nouvelle catégorie pour les sujets sélectionnés"
       reset_bump_dates:
         name: "Réinitialiser la date d'actualisation"
-        description: "Réinitialisez la date d'actualisation du sujet à la date de la dernière publication créée, ce qui affecte l'ordre dans la liste des sujets"
       defer:
         name: "Marquer comme non lu"
-        description: "Marquer les sujets comme non lus"
       update_notifications:
         name: "Mettre à jour les notifications"
-        description: "Réglez le niveau de notification en mode Surveillance, Suivi, Normal ou Désactivé"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -4140,6 +4121,8 @@ fr:
       list: "Répertorier les catégories"
       no_description: "Veuillez ajouter une description pour cette catégorie."
       change_in_category_topic: "Modifier la description"
+      description_expand: "Afficher plus"
+      description_collapse: "Afficher moins"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
       color_palette: "Palette de couleurs"
       security: "Sécurité"

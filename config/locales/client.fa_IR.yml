@@ -2979,11 +2979,8 @@ fa_IR:
         confirm: "تایید"
         select_all: "انتخاب همه"
         clear_all: "پاکسازی همه"
-        unlist_topics: "از فهرست خارج کردن مباحث"
-        relist_topics: "ایجاد فهرست مجدد از موضوعات"
         reset_bump_dates: "بازنشانی تاریخ بالا آوردن"
         defer: "علامت گذاری به عنوان خوانده نشده"
-        delete: "حذف موضوعات"
         delete_topics_count:
           one: "پاک کردن موضوع"
           other: "حذف موضوعات"
@@ -3016,29 +3013,18 @@ fa_IR:
           other: "رد کردن (%{count}) موضوع جدید"
         toggle: "تغییر وضعیت انتخاب گروهی موضوعات"
         actions: "عملیات گروهی"
-        change_category: "تنظیم دسته‌بندی…"
-        close_topics: "بستن موضوعات"
-        archive_topics: "بایگانی موضوعات"
         move_messages_to_inbox: "انتقال به صندوق دریافت"
         archive_messages: "انتقال به بایگانی"
-        notification_level: "اعلان‌ها…"
         change_notification_level: "تغییر سطح آگاه‌سازی"
         choose_new_category: "یک دسته‌بندی جدید برای موضوع انتخاب نمایید"
-        selected:
-          one: "شما <b>%{count}</b> موضوع را انتخاب کرده اید."
-          other: "شما <b>%{count}</b> موضوع را انتخاب کرده اید."
         selected_sole_category:
           one: "شما <b>%{count}</b> موضوع را از دسته انتخاب کرده اید:"
           other: "شما <b>%{count}</b> موضوع را از دسته انتخاب کرده اید:"
         selected_count:
           one: "%{count} تا انتخاب شده است"
           other: "%{count} تا انتخاب شده است"
-        change_tags: "جایگزینی برچسب‌ها"
-        append_tags: "افزودن برچسب‌ها"
         choose_new_tags: "انتخاب برچسب‌های جدید برای این موضوعات:"
-        choose_append_tags: "انتخاب برچسب‌های جدید برای افزودن به این موضوعات:"
         changed_tags: "انتخاب برچسب برای موضوعاتی که عوض شدند"
-        remove_tags: "حذف همه‌ی برچسب‌ها"
         confirm_remove_tags:
           one: "همه برچسب ها از این موضوع حذف خواهند شد. آیا مطمئن هستید؟"
           other: "همه برچسب ها از <b>%{count}</b> موضوع حذف خواهند شد. آیا مطمئن هستید؟"
@@ -3067,7 +3053,6 @@ fa_IR:
         name: "رد کردن"
       close_topics:
         name: "بستن"
-        note: "یادداشت"
         optional: (اختیاری)
       archive_topics:
         name: "بایگانی"
@@ -3081,24 +3066,18 @@ fa_IR:
         name: "فهرست مجدد"
       remove_tags:
         name: "حذف برچسب‌ها"
-      append_tags:
-        name: "افزودن برچسب‌ها"
       replace_tags:
         name: "جایگزینی برچسب‌ها"
       delete_topics:
         name: "حذف"
       update_category:
         name: "به روز رسانی دسته"
-        description: "دسته بندی جدید را برای موضوعات انتخاب شده انتخاب کنید"
       reset_bump_dates:
         name: "بازنشانی تاریخ‌های بالا آوردن"
-        description: "تاریخ بالا آوردن موضوع را به تاریخ آخرین پست ایجاد شده در آن موضوع بازنشانی کنید، که روی ترتیب در لیست موضوع تأثیر می‌گذارد"
       defer:
         name: "علامت گذاری به عنوان خوانده نشده"
-        description: "علامت گذاری موضوعات به عنوان خوانده نشده"
       update_notifications:
         name: "به روز رسانی اعلان‌ها"
-        description: "سطح اعلان را به دنبال کردن، پیگیری کردن، عادی یا بی‌صدا تغییر دهید"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -3873,6 +3852,8 @@ fa_IR:
       list: "فهرست دسته‌بندی‌ها"
       no_description: "لطفا برای این دسته بندی توضیحاتی اضافه نمایید."
       change_in_category_topic: "ویرایش توضیحات"
+      description_expand: "نمایش بیشتر"
+      description_collapse: "نمایش کمتر"
       already_used: "این رنگ توسط یک دسته بندی دیگر گزیده شده است"
       security: "امنیت"
       security_add_group: "افزودن گروه"

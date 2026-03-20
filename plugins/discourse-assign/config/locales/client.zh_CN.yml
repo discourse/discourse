@@ -138,10 +138,6 @@ zh_CN:
           unassigned: "已被取消指定"
         assigned:
           label: "已指定给"
-    topics:
-      bulk:
-        unassign: "取消指定话题"
-        assign: "指定话题"
     discourse_automation:
       scriptables:
         random_assign:

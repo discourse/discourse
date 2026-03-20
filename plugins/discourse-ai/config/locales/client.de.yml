@@ -36,6 +36,7 @@ de:
             create_ai_llm_model: "LLM-Modell erstellen"
             update_ai_llm_model: "LLM-Modell aktualisieren"
             delete_ai_llm_model: "LLM-Modell löschen"
+            delete_ai_agent: "KI-Agent löschen"
             create_ai_tool: "KI-Tool erstellen"
             update_ai_tool: "KI-Tool aktualisieren"
             delete_ai_tool: "KI-Tool löschen"
@@ -111,6 +112,8 @@ de:
             top_p:
               label: "Top P"
               description: "Top P für die LLM, erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
+            agent_id:
+              label: "Agent"
         ai_tool_action:
           fields:
             tool:
@@ -121,12 +124,16 @@ de:
               description: "Sprachmodell für Werkzeuge, die llm.generate() verwenden (optional)"
         llm_agent_triage:
           fields:
+            agent:
+              label: "Agent"
             whisper:
               label: "Als Flüstern antworten"
             silent_mode:
               label: "Stiller Modus"
         llm_triage:
           fields:
+            triage_agent:
+              label: "Agent"
             max_post_tokens:
               label: "Max. Beitrags-Token"
               description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
@@ -180,6 +187,8 @@ de:
             manual: "Spezifische Schlagwort-Liste verwenden (unten konfiguriert)"
             discover: "Lassen die KI beliebige Schlagwörter auf der Website entdecken und verwenden"
           fields:
+            tagger_agent:
+              label: "KI-Agent"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -215,6 +224,9 @@ de:
         short_title: "Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
+        agent:
+          one: "Agent:"
+          other: "Agenten:"
         groups: "Gruppen:"
         llm:
           one: "LLM:"
@@ -284,6 +296,7 @@ de:
             settings: "Grundlegende Einstellungen"
             topic_criteria: "Kriterien für Themen"
             post_criteria: "Kriterien für Beiträge"
+            agents: "Agenten"
         ai_helper:
           name: "KI-Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
@@ -303,6 +316,7 @@ de:
             access_permissions: "Zugriff & Berechtigungen"
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
+            agents: "Agenten"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -317,6 +331,7 @@ de:
           schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
           setting_groups:
             settings: "Grundlegende Einstellungen"
+            agents: "Agenten"
             backfill_and_limits: "Rückwirkende Übersetzung & Grenzwerte"
         spam:
           name: "Spam"
@@ -476,7 +491,7 @@ de:
         max_context_posts: "Max. Kontext-Beiträge"
         max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
         vision_enabled: Sehen aktiviert
-        vision_enabled_help: Wenn diese Funktion aktiviert ist, versucht die KI, die Bilder zu verstehen, die Nutzer im Thema posten (abhängig davon, ob das verwendete Modell Sehen unterstützt). Unterstützt von den neuesten Modellen von Anthropic, Google und OpenAI.
+        vision_enabled_help: Wenn diese Funktion aktiviert ist, versucht die KI, die Bilder zu verstehen, die Benutzer im Thema posten (abhängig davon, ob das verwendete Modell Sehen unterstützt). Unterstützt von den neuesten Modellen von Anthropic, Google und OpenAI.
         vision_max_pixels: Unterstützte Bildgröße
         vision_max_pixel_sizes:
           low: Niedrige Qualität – am günstigsten (256 x 256)
@@ -485,7 +500,7 @@ de:
         show_thinking: Denken anzeigen
         show_thinking_help: Zeigt den Endbenutzern die internen Denkprozesse und Werkzeugaufrufe des Sprachmodells.
         mentionable: Erwähnungen zulassen
-        user: Nutzer
+        user: Benutzer
         create_user: Benutzer erstellen
         default_llm: Standard-Sprachmodell
         question_consolidator_llm: Sprachmodell für Fragenkonsolidierer
@@ -502,6 +517,9 @@ de:
         tools: "Aktivierte Tools"
         forced_tools: "Erzwungene Tools"
         allowed_groups: "Zulässige Gruppen"
+        new: "Neuer Agent"
+        title: "Agenten"
+        short_title: "Agenten"
         delete: "Löschen"
         temperature: "Temperatur"
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
@@ -837,6 +855,7 @@ de:
         model_used: "Verwendetes Modell:"
         accuracy: "Genauigkeit:"
         ai_tool_action:
+          agent: "Agent"
           tool: "Tool"
           parameters: "Parameter"
       embeddings:
@@ -907,6 +926,7 @@ de:
         click_to_run_label: "Artefakt ausführen"
       ai_bot:
         title: "KI-Bot"
+        agent: "Agent"
         llm: "Modell"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"

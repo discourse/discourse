@@ -2405,10 +2405,7 @@ ko:
         confirm: "확인"
         select_all: "모두 선택"
         clear_all: "모두 지우기"
-        unlist_topics: "목록에서 글 숨기기"
-        relist_topics: "목록에서 글 다시 표시"
         reset_bump_dates: "끌어올림 날짜 초기화"
-        delete: "글 삭제"
         delete_topics_count:
           other: "글 삭제"
         dismiss: "무시"
@@ -2425,19 +2422,13 @@ ko:
           other: "새글 읽음으로 표시 (%{count})"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 작업"
-        close_topics: "글 닫기"
-        archive_topics: "글 보관"
         move_messages_to_inbox: "받은 편지함으로 이동"
         change_notification_level: "알림 수준 변경"
         choose_new_category: "글에 대한 새 카테고리 선택:"
-        selected:
-          other: "<b>%{count}</b>개의 글을 선택했습니다."
-        change_tags: "태그 대체"
         append_tags: "태그 추가"
         choose_new_tags: "다음 글에 대한 새 태그 선택:"
-        choose_append_tags: "다음 글에 추가할 새 태그 선택:"
+        choose_append_tags: "태그 추가"
         changed_tags: "해당 글의 태그가 변경되었습니다."
-        remove_tags: "모든 태그 제거"
         confirm_remove_tags:
           other: "<b>%{count}</b>개의 글에서 태그가 모두 제거됩니다. 계속할까요?"
         progress:
@@ -2469,14 +2460,10 @@ ko:
         name: "받은 편지함으로 이동"
       remove_tags:
         name: "태그 제거"
-      append_tags:
-        name: "태그 추가"
       replace_tags:
         name: "태그 바꾸기"
       delete_topics:
         name: "삭제하기"
-      update_category:
-        description: "선택한 글에 맞는 새 카테고리를 선택하세요."
       update_notifications:
         name: "업데이트 알림"
     topic:
@@ -3098,6 +3085,8 @@ ko:
       delete_error: "카테고리를 삭제하는 중에 오류가 발생했습니다."
       no_description: "이 카테고리에 대한 설명을 추가하세요."
       change_in_category_topic: "설명 수정"
+      description_expand: "더 보기"
+      description_collapse: "간략히 보기"
       already_used: "이 색은 다른 카테고리에서 사용 중입니다"
       security: "보안"
       security_add_group: "그룹 추가"

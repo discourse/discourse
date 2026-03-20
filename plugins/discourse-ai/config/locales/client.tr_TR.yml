@@ -986,6 +986,11 @@ tr_TR:
           no_results: "Bu arama için AI sonucu bulunamadı"
         semantic_search_unavailable_tooltip: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
         ai_generated_result: "YZ kullanılarak bulunan arama sonucu"
+        ai_results_notice:
+          no_results: "Tam olarak eşleşen sonuç bulunamadı, ancak işte bazı ilgili sonuçlar."
+          few_results:
+            one: "%{count} eşleşme bulundu - ilgili sonuçlar gösteriliyor."
+            other: "%{count} eşleşme bulundu - ilgili sonuçlar gösteriliyor."
         quick_search:
           suffix: "YZ ile tüm konu ve gönderilerde"
       ai_artifact:

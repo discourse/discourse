@@ -598,6 +598,19 @@ tr_TR:
         github_file_content: "%{file_paths} içeriği %{repo_name}@%{branch} kaynağından alındı"
         random_picker: "%{options} adresinden seçiliyor, seçilen: %{result}"
         flag_post: "İşaretleme gönderisi %{post_id} (işaretleme gönderisi: %{flag_post})"
+        close_topic: "%{topic_id} başlığı kapatılıyor (kapatıldı: %{closed})"
+        unlist_topic: "%{topic_id} başlığı gizleniyor (gizlenenler: %{unlisted})"
+        lock_post: "%{post_id} başlığı kilitleniyor (kilitli: %{locked})"
+        delete_topic: "%{topic_id} başlığı siliniyor (silindi: %{deleted})"
+        edit_post: "%{post_id} numaralı gönderiyi düzenleme"
+        edit_tags: "%{topic_id} başlığındaki etiketleri düzenleme: %{tags}"
+        edit_category: "%{topic_id} başlığını %{category_id} kategorisine taşıma"
+        set_topic_timer: "%{topic_id} başlığında %{timer_type} zamanlayıcısını ayarlama (%{duration_hours} saat)"
+        set_slow_mode: "%{topic_id} başlığında yavaş mod ayarlama (%{slow_mode_seconds} saniye)"
+        move_posts: "%{post_ids} numaralı gönderileri %{topic_id} başlığından taşıma"
+        grant_badge: "%{username} kullanıcsına '%{badge_name}' rozeti veriliyor"
+        assign: "%{topic_id} başlığı atanıyor (atanan: %{assigned})"
+        mark_as_solved: "%{post_id} numaralı gönderiyi çözüldü olarak işaretleniyor (çözüldü: %{solved})"
         read: "Okunuyor: <a href='%{url}'>%{title}</a>"
         time: "%{timezone} saat diliminde saat %{time}"
         summarize: "<a href='%{url}'>%{title}</a> özetlendi"
@@ -644,9 +657,60 @@ tr_TR:
         already_flagged: "Gönderi inceleme için işaretlendi."
         flagged: "İnceleme için işaretlenmiş gönderi."
         reason: "AI bot bu gönderiyi işaretledi\n\nSebep: %{reason}"
+      close_topic:
+        errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu konuyu kapatamaz veya açamazsınız."
+          no_reason: "Bir konuyu kapatmak veya açmak için bir neden belirtilmesi gerekir."
+        success: "Konu başarıyla güncellendi."
+      unlist_topic:
+        errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu konuyu gizleyemez veya görünür hale getiremezsiniz."
+          no_reason: "Bir konuyu listeden çıkarmak veya listeye eklemek için bir neden belirtilmesi gerekir."
+        success: "Konu başarıyla güncellendi."
+      lock_post:
+        errors:
+          not_found: "Gönderi bulunamadı."
+          not_allowed: "Bu gönderiyi kilitleyemez veya kilidini açamazsınız."
+          no_reason: "Bir gönderiyi kilitlemek veya kilidini açmak için bir neden belirtilmesi gerekir."
+        success: "Gönderi başarıyla güncellendi."
+      delete_topic:
+        errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu konuyu silemez veya geri getiremezsiniz."
+          no_reason: "Bir konuyu silmek veya geri yüklemek için bir neden belirtmeniz gerekmektedir."
+        success: "Konu başarıyla güncellendi."
+      edit_post:
+        errors:
+          not_found: "Gönderi bulunamadı."
+          not_allowed: "Bu gönderiyi düzenleyemezsiniz."
+          nothing_to_edit: "\"raw\" ya da \"title\" öğelerinden biri mutlaka belirtilmelidir."
+          no_reason: "Düzenleme nedeni girilmesi zorunludur."
+          revision_failed: "Gönderi revize edilemedi."
+        success: "Gönderi başarıyla düzenlendi."
+      edit_tags:
+        errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu konudaki etiketleri düzenleyemezsiniz."
+          no_reason: "Etiketleri düzenlemek için bir neden belirtmeniz gerekmektedir."
+          tagging_disabled: "Bu sitede etiketleme özelliği etkin değildir."
+        success: "Etiketler başarıyla güncellendi."
       edit_category:
         errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu konuyu taşıyamazsınız."
           category_not_found: "Kategori bulunamadı."
+          no_reason: "Bir konuyu taşımak için bir neden belirtilmesi gerekir."
+          revision_failed: "Konu taşınamadı."
+        success: "Konu başarıyla taşındı."
+      set_topic_timer:
+        errors:
+          not_found: "Konu bulunamadı."
+          not_allowed: "Bu konu için zamanlayıcı ayarlayamazsınız."
+          no_reason: "Konu zamanlayıcısını ayarlamak için bir neden belirtilmesi gerekir."
+          invalid_timer_type: "Geçersiz zamanlayıcı türü. Aşağıdakilerden biri olmalıdır: close, open, delete, silent_close, bump."
+        success: "Konu zamanlayıcısı başarıyla güncellendi."
       set_slow_mode:
         errors:
           not_found: "Konu bulunamadı."

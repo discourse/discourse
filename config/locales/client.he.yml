@@ -3620,11 +3620,8 @@ he:
         confirm: "אישור"
         select_all: "בחירה בהכול"
         clear_all: "לפנות הכול"
-        unlist_topics: "הסרת נושאים"
-        relist_topics: "רשימה מחדש של נושאים"
         reset_bump_dates: "איפוס תאריכי ההקפצות"
         defer: "סימון כלא נקרא"
-        delete: "מחיקת נושאים"
         delete_topics_count:
           one: "מחק נושא"
           two: "מחיקת נושאים"
@@ -3679,19 +3676,10 @@ he:
           other: "להתעלם מחדשים (%{count})"
         toggle: "החלף קבוצה מסומנת של נושאים"
         actions: "מקבץ פעולות"
-        change_category: "הגדרת קטגוריה…"
-        close_topics: "סגירת נושאים"
-        archive_topics: "העברת נושאים לארכיון"
         move_messages_to_inbox: "העברה לדואר נכנס"
         archive_messages: "העברה לארכיון"
-        notification_level: "התראות…"
         change_notification_level: "שינוי רמת ההתראות"
         choose_new_category: "נא לבחור קטגוריה לנושאים:"
-        selected:
-          one: "בחרת ב<b>נושא</b>."
-          two: "בחרת ב<b>שני</b> נושאים."
-          many: "בחרת ב־<b>%{count}</b> נושאים."
-          other: "בחרת ב־<b>%{count}</b> נושאים."
         selected_sole_category:
           one: "בחרת נושא <b>%{count}</b> מהקטגוריה:"
           two: "בחרת <b>%{count}</b> נושאים מהקטגוריה:"
@@ -3702,12 +3690,10 @@ he:
           two: "%{count} נבחרו"
           many: "%{count} נבחרו"
           other: "%{count} נבחרו"
-        change_tags: "החלפת תגיות"
         append_tags: "הוספת תגיות"
         choose_new_tags: "בחירה בתגיות חדשות לנושאים אלו:"
-        choose_append_tags: "בחירה בתגיות חדשות שיתווספו לנושאים אלו:"
+        choose_append_tags: "הוספת תגיות"
         changed_tags: "התגיות של נושאים אלו השתנו."
-        remove_tags: "הסרת כל התגיות"
         confirm_remove_tags:
           one: "כל התגיות יוסרו מהנושא הזה. להמשיך?"
           two: "כל התגיות יוסרו מ־<b>%{count}</b> הנושאים האלה. להמשיך?"
@@ -3718,7 +3704,7 @@ he:
           two: "התקדמות: <strong>%{count}</strong> נושאים"
           many: "התקדמות: <strong>%{count}</strong> נושאים"
           other: "התקדמות: <strong>%{count}</strong> נושאים"
-        notify: "להודיע למשתמשים על השינוי הזה."
+        notify: "להודיע למשתמשים על השינוי הזה"
         performing: "מתבצעות פעולות במרוכז, נא להמתין…"
         completed: "הפעולות במרוכזת הושלמו בהצלחה!"
         error_topic_count:
@@ -3748,7 +3734,6 @@ he:
         name: "התעלמות"
       close_topics:
         name: "סגירה"
-        note: "הערה"
         optional: (רשות)
       archive_topics:
         name: "ארכב"
@@ -3762,24 +3747,18 @@ he:
         name: "החזרה"
       remove_tags:
         name: "הסרת תגיות"
-      append_tags:
-        name: "הוספת תגיות"
       replace_tags:
         name: "החלפת תגיות"
       delete_topics:
         name: "מחיקה"
       update_category:
         name: "עדכון קטגוריה"
-        description: "נא לבחור קטגוריה חדשה לנושאים הנבחרים"
       reset_bump_dates:
         name: "איפוס תאריכי הקפצה"
-        description: "איפוס תאריכי הקפצת הנושאים לתאריך של הפוסט האחרון שנוצר, מה שמשפיע על הסדר ברשימת הנושאים"
       defer:
         name: "סימון כלא נקרא"
-        description: "סימון נושאים כנקראו"
       update_notifications:
         name: "עדכון התראות"
-        description: "שינוי רמת ההתראה לצפייה, מעקב, רגיל או מושתק"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -4710,6 +4689,8 @@ he:
       list: "הצגת קטגוריות"
       no_description: "אנא הוסיפו תיאור לקטגוריה זו."
       change_in_category_topic: "עריכת תיאור"
+      description_expand: "להציג יותר"
+      description_collapse: "להציג פחות"
       already_used: "הצבע הזה בשימוש על ידי קטגוריה אחרת"
       color_palette: "ערכת צבעים"
       security: "אבטחה"

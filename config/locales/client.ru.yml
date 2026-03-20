@@ -3680,11 +3680,8 @@ ru:
         confirm: "Подтвердить"
         select_all: "Выбрать всё"
         clear_all: "Отменить выбор"
-        unlist_topics: "Скрыть темы"
-        relist_topics: "Показать темы"
         reset_bump_dates: "Сбросить даты поднятия"
         defer: "Отметить как непрочитанное"
-        delete: "Удалить темы"
         delete_topics_count:
           one: "Удалить тему"
           few: "Удалить темы"
@@ -3729,19 +3726,10 @@ ru:
           other: "Отложить новые (%{count})"
         toggle: "выбор нескольких тем"
         actions: "Массовые действия"
-        change_category: "Задать категорию…"
-        close_topics: "Закрыть темы"
-        archive_topics: "Архивировать темы"
         move_messages_to_inbox: "Переместить во входящие"
         archive_messages: "Переместить в архив"
-        notification_level: "Уведомления…"
         change_notification_level: "Изменить уровень уведомлений"
         choose_new_category: "Выберите новую категорию для этих тем:"
-        selected:
-          one: "Вы выбрали <b>%{count}</b> тему."
-          few: "Вы выбрали <b>%{count}</b> темы."
-          many: "Вы выбрали <b>%{count}</b> тем."
-          other: "Вы выбрали <b>%{count}</b> темы."
         selected_sole_category:
           one: "Вы выбрали <b>%{count}</b> тему из этой категории:"
           few: "Вы выбрали <b>%{count}</b> темы из этой категории:"
@@ -3752,12 +3740,10 @@ ru:
           few: "Выбрано %{count}"
           many: "Выбрано %{count}"
           other: "Выбрано %{count}"
-        change_tags: "Заменить теги"
         append_tags: "Добавить теги"
         choose_new_tags: "Выберите новые теги для этих тем:"
-        choose_append_tags: "Выберите теги для добавления к этим темам:"
+        choose_append_tags: "Добавить теги"
         changed_tags: "Теги этих тем изменены."
-        remove_tags: "Удалить все теги"
         confirm_remove_tags:
           one: "Все теги будут удалены из этой темы. Продолжить?"
           few: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
@@ -3768,7 +3754,7 @@ ru:
           few: "Выполнено: <strong>%{count}</strong> темы"
           many: "Выполнено: <strong>%{count}</strong> тем"
           other: "Выполнено: <strong>%{count}</strong> темы"
-        notify: "Уведомить пользователей об этом изменении."
+        notify: "Уведомить пользователей об этом изменении"
         performing: "Выполняются массовые действия, подождите…"
         completed: "Массовые действия завершены!"
         error_topic_count:
@@ -3798,7 +3784,6 @@ ru:
         name: "Закрыть"
       close_topics:
         name: "Завершить"
-        note: "Примечание"
         optional: (необязательно)
       archive_topics:
         name: "Архивировать"
@@ -3812,24 +3797,18 @@ ru:
         name: "Показать повторно"
       remove_tags:
         name: "Удалить теги"
-      append_tags:
-        name: "Добавить теги"
       replace_tags:
         name: "Заменить теги"
       delete_topics:
         name: "Удалить"
       update_category:
         name: "Обновить категорию"
-        description: "Выбор новой категории для выбранных тем"
       reset_bump_dates:
         name: "Сбросить даты поднятия"
-        description: "Сбрасывает дату поднятия темы на дату последней созданной публикации, что влияет на упорядочивание в списке тем"
       defer:
         name: "Отметить как непрочитанное"
-        description: "Помечает темы как непрочитанные"
       update_notifications:
         name: "Обновить уведомления"
-        description: "Изменяет уровень уведомлений на «В наблюдаемых», «В отслеживаемых», «Уведомлять» или «Не уведомлять»"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4756,6 +4735,8 @@ ru:
       list: "Вывод списка категорий"
       no_description: "Добавьте описание для этой категории."
       change_in_category_topic: "Изменить описание"
+      description_expand: "Развернуть"
+      description_collapse: "Свернуть"
       already_used: "Цвет уже используется другой категорией"
       color_palette: "Цветовая палитра"
       security: "Безопасность"

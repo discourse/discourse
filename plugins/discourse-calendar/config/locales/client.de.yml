@@ -12,6 +12,9 @@ de:
         categories:
           discourse_post_event: "Discourse Ereignis"
           discourse_calendar: "Kalender und Ereignisse"
+      web_hooks:
+        calendar_event:
+          group_name: "Kalenderereignis"
   js:
     notifications:
       titles:
