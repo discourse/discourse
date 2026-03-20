@@ -17,7 +17,7 @@ module Service
 
       def run_step
         context.with_isolation(persist_keys: [item_name, :index, *persist.keys]) do
-          persist.each { |key, initializer| context[key] = resolve_initializer(initializer) }
+          persist.each { |key, initializer| context[key] = instance.instance_exec(&initializer) }
 
           Array
             .wrap(context[name])
@@ -36,27 +36,20 @@ module Service
         when nil
           {}
         when Array
-          persist.each_with_object({}) do |item, hash|
-            case item
+          persist.each_with_object({}) { |item, hash| hash.merge!(normalize_persist(item)) }
+        when Symbol
+          { persist => proc {} }
+        when Hash
+          persist.transform_values do |v|
+            case v
             when Symbol
-              hash[item] = nil
-            when Hash
-              hash.merge!(item)
+              proc { send(v) }
+            when Proc
+              proc { instance_exec(&v) }
+            when nil
+              proc {}
             end
           end
-        when Hash
-          persist
-        end
-      end
-
-      def resolve_initializer(initializer)
-        case initializer
-        when Proc
-          initializer.call
-        when Symbol
-          instance.send(initializer)
-        when nil
-          nil
         end
       end
     end
