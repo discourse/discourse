@@ -49,7 +49,7 @@ class CodeBlockWithLangSelectorNodeView {
     select.addEventListener("change", (e) => this.changeListener(e));
     select.classList.add("code-language-select");
 
-    const languages = hljs.listLanguages();
+    const languages = hljs.listLanguages().sort((a, b) => a.localeCompare(b));
 
     const empty = document.createElement("option");
     empty.textContent = languages.includes(this.node.attrs.params)
