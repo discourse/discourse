@@ -51,7 +51,7 @@ module Plugin
       end
 
       parallel_count = [Etc.nprocessors, 4].min
-      AssetProcessor.timeout = 30_000
+      AssetProcessor.timeout = 60_000
 
       Parallel.each(Discourse.plugins, in_processes: parallel_count) do |plugin|
         compile_js_bundle(plugin)
