@@ -80,7 +80,12 @@ class AiAgent < ActiveRecord::Base
   end
 
   def self.all_agent_records(enabled_only: true)
-    agent_cache[:records] ||= AiAgent.ordered.includes(:user, :ai_mcp_servers).all.limit(MAX_AGENTS_PER_SITE).to_a
+    agent_cache[:records] ||= AiAgent
+      .ordered
+      .includes(:user, ai_agent_mcp_servers: :ai_mcp_server)
+      .all
+      .limit(MAX_AGENTS_PER_SITE)
+      .to_a
 
     if enabled_only
       agent_cache[:records].select(&:enabled)
@@ -268,11 +273,23 @@ class AiAgent < ActiveRecord::Base
       end
 
     reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
-    enabled_mcp_servers = ai_mcp_servers.where(enabled: true).to_a
+    enabled_mcp_server_assignments =
+      ai_agent_mcp_servers
+        .includes(:ai_mcp_server)
+        .select { |assignment| assignment.ai_mcp_server&.enabled? }
+    enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
+    selected_tool_names_by_server =
+      enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
+        next if assignment.all_tools_enabled?
+
+        hash[assignment.ai_mcp_server_id] = assignment.selected_tool_names
+      end
+
     tools.concat(
       DiscourseAi::Mcp::ToolRegistry.tool_classes_for_servers(
         enabled_mcp_servers,
         reserved_names: reserved_names,
+        selected_tool_names_by_server: selected_tool_names_by_server,
       ),
     )
     instance_attributes[:mcp_server_ids] = enabled_mcp_servers.map(&:id)

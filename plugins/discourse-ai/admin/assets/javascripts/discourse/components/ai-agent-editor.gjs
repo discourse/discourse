@@ -10,6 +10,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
+import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
@@ -24,6 +25,7 @@ import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, gt, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import AiAgentMcpToolSelectorModal from "../components/modal/ai-agent-mcp-tool-selector-modal";
 import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
 import { toPlainObject } from "../lib/utilities";
 import AiAgentCollapsableExample from "./ai-agent-example";
@@ -43,6 +45,7 @@ export default class AgentEditor extends Component {
   @service router;
   @service site;
   @service dialog;
+  @service modal;
   @service toasts;
   @service siteSettings;
 
@@ -278,6 +281,31 @@ export default class AgentEditor extends Component {
     return this.allTools.filter((tool) => tools.includes(tool.id));
   }
 
+  mcpServerById(serverId) {
+    return this.allMcpServers.find((item) => item.id === serverId);
+  }
+
+  selectedMcpToolNames(serverId, mcpServerToolNames = {}) {
+    // Draft form state may use numeric keys, while persisted JSON keys are strings.
+    return mcpServerToolNames[serverId] || mcpServerToolNames[`${serverId}`];
+  }
+
+  selectedMcpTools(serverId, mcpServerToolNames = {}) {
+    const server = this.mcpServerById(serverId);
+    const tools = server?.tools || [];
+    const selectedToolNames = this.selectedMcpToolNames(
+      serverId,
+      mcpServerToolNames
+    );
+
+    if (!selectedToolNames?.length) {
+      return tools;
+    }
+
+    const selectedToolSet = new Set(selectedToolNames);
+    return tools.filter((tool) => selectedToolSet.has(tool.name));
+  }
+
   @action
   selectedToolsWithTokens(tools) {
     return tools.map((toolId) => {
@@ -291,69 +319,79 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  selectedMcpServers(serverIds) {
+  selectedMcpServers(serverIds, mcpServerToolNames = {}) {
     return (serverIds || []).map((serverId) => {
-      const server = this.allMcpServers.find((item) => item.id === serverId);
+      const server = this.mcpServerById(serverId);
+      const tools = server?.tools || [];
+      const selectedTools = this.selectedMcpTools(serverId, mcpServerToolNames);
 
       return {
         id: serverId,
         name: server?.name || serverId,
         toolCount: server?.tool_count || 0,
         tokenCount: server?.token_count || 0,
+        selectedToolCount: selectedTools.length,
+        selectedTokenCount: selectedTools.reduce(
+          (sum, tool) => sum + (tool.token_count || 0),
+          0
+        ),
+        allToolsEnabled: !this.selectedMcpToolNames(
+          serverId,
+          mcpServerToolNames
+        )?.length,
+        tools,
         lastHealthStatus: server?.last_health_status,
       };
     });
   }
 
   @action
-  totalToolTokens(tools = []) {
-    return tools.reduce((sum, toolId) => {
-      const tool = this.allTools.find((t) => t.id === toolId);
-      return sum + (tool?.token_count || 0);
+  totalToolTokens(selectedTools = []) {
+    return selectedTools.reduce((sum, tool) => {
+      return sum + (tool?.tokenCount || 0);
     }, 0);
   }
 
   @action
-  totalMcpToolTokens(serverIds = []) {
-    return serverIds.reduce((sum, serverId) => {
-      const server = this.allMcpServers.find((item) => item.id === serverId);
-      return sum + (server?.token_count || 0);
-    }, 0);
+  totalMcpToolTokens(selectedMcpServers = []) {
+    return selectedMcpServers.reduce(
+      (sum, server) => sum + server.selectedTokenCount,
+      0
+    );
   }
 
   @action
-  totalSelectedToolTokens(tools = [], serverIds = []) {
-    return this.totalToolTokens(tools) + this.totalMcpToolTokens(serverIds);
+  totalSelectedToolTokens(selectedTools = [], selectedMcpServers = []) {
+    return (
+      this.totalToolTokens(selectedTools) +
+      this.totalMcpToolTokens(selectedMcpServers)
+    );
   }
 
   @action
-  totalSelectedToolCount(tools = [], serverIds = []) {
-    const mcpToolCount = serverIds.reduce((sum, serverId) => {
-      const server = this.allMcpServers.find((item) => item.id === serverId);
-      return sum + (server?.tool_count || 0);
-    }, 0);
+  totalSelectedToolCount(selectedTools = [], selectedMcpServers = []) {
+    const mcpToolCount = selectedMcpServers.reduce(
+      (sum, server) => sum + server.selectedToolCount,
+      0
+    );
 
-    return tools.length + mcpToolCount;
+    return selectedTools.length + mcpToolCount;
   }
 
   @action
-  toolTokenIndicatorStyle(tools, serverIds) {
-    const total = this.totalSelectedToolTokens(tools, serverIds);
+  toolTokenIndicatorStyle(total) {
     const percent = Math.min(100, (total / TOOL_TOKEN_BAR_MAX) * 100);
     return trustHTML(`left: ${percent}%`);
   }
 
   @action
-  toolCountIndicatorStyle(tools, serverIds) {
-    const count = this.totalSelectedToolCount(tools, serverIds);
+  toolCountIndicatorStyle(count) {
     const percent = Math.min(100, (count / TOOL_COUNT_BAR_MAX) * 100);
     return trustHTML(`left: ${percent}%`);
   }
 
   @action
-  toolTokenSeverity(tools, serverIds) {
-    const total = this.totalSelectedToolTokens(tools, serverIds);
-    const count = this.totalSelectedToolCount(tools, serverIds);
+  toolTokenSeverity(total, count) {
     if (
       total >= TOOL_TOKEN_HIGH_THRESHOLD ||
       count >= TOOL_COUNT_WARNING_THRESHOLD
@@ -366,8 +404,7 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  toolTokenOnlySeverity(tools, serverIds) {
-    const total = this.totalSelectedToolTokens(tools, serverIds);
+  toolTokenOnlySeverity(total) {
     if (total >= TOOL_TOKEN_HIGH_THRESHOLD) {
       return "high";
     } else if (total >= TOOL_TOKEN_LOW_THRESHOLD) {
@@ -377,11 +414,8 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  toolCountOnlySeverity(tools, serverIds) {
-    return this.totalSelectedToolCount(tools, serverIds) >=
-      TOOL_COUNT_WARNING_THRESHOLD
-      ? "high"
-      : "low";
+  toolCountOnlySeverity(count) {
+    return count >= TOOL_COUNT_WARNING_THRESHOLD ? "high" : "low";
   }
 
   @action
@@ -390,25 +424,77 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  tooManyTools(tools, serverIds) {
-    return (
-      this.totalSelectedToolCount(tools, serverIds) >=
-      TOOL_COUNT_WARNING_THRESHOLD
-    );
+  tooManyTools(count) {
+    return count >= TOOL_COUNT_WARNING_THRESHOLD;
   }
 
   @action
-  highTokenUsage(tools, serverIds) {
-    return (
-      this.totalSelectedToolTokens(tools, serverIds) >=
-      TOOL_TOKEN_HIGH_THRESHOLD
-    );
+  highTokenUsage(total) {
+    return total >= TOOL_TOKEN_HIGH_THRESHOLD;
   }
 
   @action
   addExamplesPair(form, data) {
     const newExamples = [...data.examples, ["", ""]];
     form.set("examples", newExamples);
+  }
+
+  @action
+  updateMcpServerIds(form, currentData, updatedServerIds) {
+    const normalizedToolNames = {};
+
+    Object.entries(currentData.mcp_server_tool_names || {}).forEach(
+      ([serverId, toolNames]) => {
+        const normalizedServerId = Number(serverId);
+        if (updatedServerIds.includes(normalizedServerId)) {
+          normalizedToolNames[normalizedServerId] = toolNames;
+        }
+      }
+    );
+
+    form.setProperties({
+      mcp_server_ids: updatedServerIds,
+      mcp_server_tool_names: normalizedToolNames,
+    });
+  }
+
+  @action
+  openMcpToolSelector(form, currentData, server) {
+    this.modal.show(AiAgentMcpToolSelectorModal, {
+      model: {
+        serverName: server.name,
+        tools: server.tools || [],
+        selectedToolNames: this.selectedMcpToolNames(
+          server.id,
+          currentData.mcp_server_tool_names || {}
+        ),
+        onSave: (selectedToolNames) => {
+          const updatedToolNames = {
+            ...(currentData.mcp_server_tool_names || {}),
+          };
+          let updatedServerIds = [...(currentData.mcp_server_ids || [])];
+
+          if (selectedToolNames?.length) {
+            updatedToolNames[server.id] = selectedToolNames;
+          } else {
+            delete updatedToolNames[server.id];
+          }
+
+          if (selectedToolNames?.length === 0) {
+            updatedServerIds = updatedServerIds.filter(
+              (id) => id !== server.id
+            );
+          } else if (!updatedServerIds.includes(server.id)) {
+            updatedServerIds = [...updatedServerIds, server.id];
+          }
+
+          form.setProperties({
+            mcp_server_ids: updatedServerIds,
+            mcp_server_tool_names: updatedToolNames,
+          });
+        },
+      },
+    });
   }
 
   mapToolOptions(currentOptions, toolNames) {
@@ -673,199 +759,219 @@ export default class AgentEditor extends Component {
                 <AiToolSelector
                   @value={{field.value}}
                   @disabled={{data.system}}
-                  @onChange={{field.set}}
+                  @onChange={{fn this.updateMcpServerIds form data}}
                   @content={{this.allMcpServers}}
                 />
               </field.Control>
             </form.Field>
+
+            <p class="ai-agent-editor__mcp-server-help">
+              {{i18n "discourse_ai.ai_agent.mcp_server_tools_help"}}
+            </p>
           {{/if}}
 
-          {{#if data.mcp_server_ids.length}}
-            <div class="ai-agent-editor__mcp-server-summary">
-              {{#each
-                (this.selectedMcpServers data.mcp_server_ids)
-                as |server|
-              }}
-                <div class="ai-agent-editor__mcp-server-item">
-                  <span>{{server.name}}</span>
-                  <span>
-                    {{i18n
-                      "discourse_ai.ai_agent.mcp_server_tool_count"
-                      count=server.toolCount
-                    }}
-                  </span>
-                  <span
-                    class="ai-agent-editor__mcp-server-health
-                      {{if
-                        (eq server.lastHealthStatus 'healthy')
-                        '--healthy'
-                        '--unhealthy'
-                      }}"
-                  >
-                    {{if
-                      (eq server.lastHealthStatus "healthy")
-                      (i18n "discourse_ai.mcp_servers.healthy")
-                      (i18n "discourse_ai.mcp_servers.unhealthy")
-                    }}
-                  </span>
-                </div>
-              {{/each}}
-            </div>
-          {{/if}}
-
-          {{#if
-            (gt (this.totalSelectedToolCount data.tools data.mcp_server_ids) 0)
+          {{#let
+            (this.selectedMcpServers
+              data.mcp_server_ids data.mcp_server_tool_names
+            )
+            (this.selectedToolsWithTokens data.tools)
+            as |selectedMcpServers selectedTools|
           }}
-            <div
-              class="ai-agent-editor__tool-context-cost
-                {{if
-                  (eq
-                    (this.toolTokenSeverity data.tools data.mcp_server_ids)
-                    'high'
-                  )
-                  '--high'
-                  (if
-                    (eq
-                      (this.toolTokenSeverity data.tools data.mcp_server_ids)
-                      'medium'
-                    )
-                    '--medium'
-                    '--low'
-                  )
-                }}"
-            >
-              <ul class="ai-agent-editor__tool-token-list">
-                {{#each (this.selectedToolsWithTokens data.tools) as |tool|}}
-                  <li class="ai-agent-editor__tool-token-item">
-                    <span>{{tool.name}}</span>
-                    <span class="ai-agent-editor__tool-token-count">
-                      {{tool.tokenCount}}
-                      {{i18n "discourse_ai.ai_agent.tokens"}}
-                    </span>
-                  </li>
-                {{/each}}
-                {{#each
-                  (this.selectedMcpServers data.mcp_server_ids)
-                  as |server|
-                }}
-                  <li class="ai-agent-editor__tool-token-item">
-                    <span>
-                      {{i18n
-                        "discourse_ai.ai_agent.mcp_server_cost_name"
-                        name=server.name
+            {{#if data.mcp_server_ids.length}}
+              <div class="ai-agent-editor__mcp-server-summary">
+                {{#each selectedMcpServers as |server|}}
+                  <div class="ai-agent-editor__mcp-server-item">
+                    <div class="ai-agent-editor__mcp-server-item-main">
+                      <span class="ai-agent-editor__mcp-server-name">
+                        {{server.name}}
+                      </span>
+                      <div class="ai-agent-editor__mcp-server-meta">
+                        <span>
+                          {{#if server.allToolsEnabled}}
+                            {{i18n
+                              "discourse_ai.ai_agent.mcp_server_enabled_tool_count"
+                              count=server.selectedToolCount
+                            }}
+                          {{else}}
+                            {{i18n
+                              "discourse_ai.ai_agent.mcp_server_enabled_tools"
+                              count=server.selectedToolCount
+                              total=server.toolCount
+                            }}
+                          {{/if}}
+                        </span>
+                        <span>
+                          {{i18n
+                            "discourse_ai.ai_agent.mcp_server_tokens_only"
+                            tokens=server.selectedTokenCount
+                          }}
+                        </span>
+                        <span
+                          class="ai-agent-editor__mcp-server-health
+                            {{if
+                              (eq server.lastHealthStatus 'healthy')
+                              '--healthy'
+                              '--unhealthy'
+                            }}"
+                        >
+                          {{if
+                            (eq server.lastHealthStatus "healthy")
+                            (i18n "discourse_ai.mcp_servers.healthy")
+                            (i18n "discourse_ai.mcp_servers.unhealthy")
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                    <DButton
+                      @action={{fn this.openMcpToolSelector form data server}}
+                      @label={{if
+                        server.allToolsEnabled
+                        "discourse_ai.ai_agent.mcp_server_choose_tools"
+                        "discourse_ai.ai_agent.mcp_server_edit_tools"
                       }}
-                    </span>
-                    <span class="ai-agent-editor__tool-token-count">
-                      {{i18n
-                        "discourse_ai.ai_agent.mcp_server_cost_value"
-                        tokens=server.tokenCount
-                        count=server.toolCount
-                      }}
-                    </span>
-                  </li>
+                      class="btn-default btn-small ai-agent-editor__mcp-server-action"
+                    />
+                  </div>
                 {{/each}}
-              </ul>
-              <div class="ai-agent-editor__tool-context-cost-header">
-                <span class="ai-agent-editor__tool-context-cost-label">
-                  {{i18n "discourse_ai.ai_agent.context_cost"}}
-                </span>
               </div>
-              <div class="ai-agent-editor__tool-context-cost-bar">
-                <span
-                  class="ai-agent-editor__tool-context-cost-bar-indicator --token"
-                  style={{this.toolTokenIndicatorStyle
-                    data.tools
-                    data.mcp_server_ids
-                  }}
-                >
-                  {{icon "caret-down"}}
-                </span>
-                <span
-                  class="ai-agent-editor__tool-context-cost-bar-indicator --count"
-                  style={{this.toolCountIndicatorStyle
-                    data.tools
-                    data.mcp_server_ids
-                  }}
-                >
-                  {{icon "caret-up"}}
-                </span>
-              </div>
-              <span class="ai-agent-editor__tool-context-cost-legend">
-                <span
-                  class="ai-agent-editor__tool-context-cost-legend-item --token"
-                >
-                  {{icon "caret-down"}}
-                  {{i18n "discourse_ai.ai_agent.token_usage"}}:
-                  <span
-                    class="ai-agent-editor__tool-context-cost-value
-                      {{this.toolTokenOnlySeverity
-                        data.tools
-                        data.mcp_server_ids
+            {{/if}}
+
+            {{#let
+              (this.totalSelectedToolTokens selectedTools selectedMcpServers)
+              (this.totalSelectedToolCount selectedTools selectedMcpServers)
+              as |totalSelectedToolTokens totalSelectedToolCount|
+            }}
+              {{#let
+                (this.toolTokenSeverity
+                  totalSelectedToolTokens totalSelectedToolCount
+                )
+                (this.toolTokenOnlySeverity totalSelectedToolTokens)
+                (this.toolCountOnlySeverity totalSelectedToolCount)
+                (this.tooManyTools totalSelectedToolCount)
+                as |toolTokenSeverity toolTokenOnlySeverity toolCountOnlySeverity tooManyTools|
+              }}
+                {{#if (gt totalSelectedToolCount 0)}}
+                  <div
+                    class="ai-agent-editor__tool-context-cost
+                      {{if
+                        (eq toolTokenSeverity 'high')
+                        '--high'
+                        (if (eq toolTokenSeverity 'medium') '--medium' '--low')
                       }}"
                   >
-                    {{i18n
-                      "discourse_ai.ai_agent.tool_tokens_total"
-                      tokens=(this.totalSelectedToolTokens
-                        data.tools data.mcp_server_ids
-                      )
-                    }}
-                  </span>
-                </span>
-                <span
-                  class="ai-agent-editor__tool-context-cost-legend-item --count"
-                >
-                  {{icon "caret-up"}}
-                  {{i18n "discourse_ai.ai_agent.tool_count"}}:
-                  <span
-                    class="ai-agent-editor__tool-context-cost-value
-                      {{this.toolCountOnlySeverity
-                        data.tools
-                        data.mcp_server_ids
-                      }}"
-                  >
-                    {{i18n
-                      "discourse_ai.ai_agent.tool_count_value"
-                      count=(this.totalSelectedToolCount
-                        data.tools data.mcp_server_ids
-                      )
-                    }}
-                  </span>
-                </span>
-              </span>
-              {{#if
-                (eq
-                  (this.toolTokenSeverity data.tools data.mcp_server_ids)
-                  "medium"
-                )
-              }}
-                <div class="ai-agent-editor__tool-context-cost-warning">
-                  <span>
-                    {{i18n "discourse_ai.ai_agent.tool_severity_medium"}}:
-                  </span>
-                  {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
-                </div>
-              {{/if}}
-              {{#if
-                (eq
-                  (this.toolTokenSeverity data.tools data.mcp_server_ids) "high"
-                )
-              }}
-                <div class="ai-agent-editor__tool-context-cost-warning">
-                  {{#if (this.tooManyTools data.tools data.mcp_server_ids)}}
-                    <span>
-                      {{i18n "discourse_ai.ai_agent.tool_severity_too_many"}}:
+                    <ul class="ai-agent-editor__tool-token-list">
+                      {{#each selectedTools as |tool|}}
+                        <li class="ai-agent-editor__tool-token-item">
+                          <span>{{tool.name}}</span>
+                          <span class="ai-agent-editor__tool-token-count">
+                            {{tool.tokenCount}}
+                            {{i18n "discourse_ai.ai_agent.tokens"}}
+                          </span>
+                        </li>
+                      {{/each}}
+                      {{#each selectedMcpServers as |server|}}
+                        <li class="ai-agent-editor__tool-token-item">
+                          <span>
+                            {{i18n
+                              "discourse_ai.ai_agent.mcp_server_cost_name"
+                              name=server.name
+                            }}
+                          </span>
+                          <span class="ai-agent-editor__tool-token-count">
+                            {{i18n
+                              "discourse_ai.ai_agent.mcp_server_cost_value"
+                              tokens=server.selectedTokenCount
+                              count=server.selectedToolCount
+                            }}
+                          </span>
+                        </li>
+                      {{/each}}
+                    </ul>
+                    <div class="ai-agent-editor__tool-context-cost-header">
+                      <span class="ai-agent-editor__tool-context-cost-label">
+                        {{i18n "discourse_ai.ai_agent.context_cost"}}
+                      </span>
+                    </div>
+                    <div class="ai-agent-editor__tool-context-cost-bar">
+                      <span
+                        class="ai-agent-editor__tool-context-cost-bar-indicator --token"
+                        style={{this.toolTokenIndicatorStyle
+                          totalSelectedToolTokens
+                        }}
+                      >
+                        {{icon "caret-down"}}
+                      </span>
+                      <span
+                        class="ai-agent-editor__tool-context-cost-bar-indicator --count"
+                        style={{this.toolCountIndicatorStyle
+                          totalSelectedToolCount
+                        }}
+                      >
+                        {{icon "caret-up"}}
+                      </span>
+                    </div>
+                    <span class="ai-agent-editor__tool-context-cost-legend">
+                      <span
+                        class="ai-agent-editor__tool-context-cost-legend-item --token"
+                      >
+                        {{icon "caret-down"}}
+                        {{i18n "discourse_ai.ai_agent.token_usage"}}:
+                        <span
+                          class="ai-agent-editor__tool-context-cost-value
+                            {{toolTokenOnlySeverity}}"
+                        >
+                          {{i18n
+                            "discourse_ai.ai_agent.tool_tokens_total"
+                            tokens=totalSelectedToolTokens
+                          }}
+                        </span>
+                      </span>
+                      <span
+                        class="ai-agent-editor__tool-context-cost-legend-item --count"
+                      >
+                        {{icon "caret-up"}}
+                        {{i18n "discourse_ai.ai_agent.tool_count"}}:
+                        <span
+                          class="ai-agent-editor__tool-context-cost-value
+                            {{toolCountOnlySeverity}}"
+                        >
+                          {{i18n
+                            "discourse_ai.ai_agent.tool_count_value"
+                            count=totalSelectedToolCount
+                          }}
+                        </span>
+                      </span>
                     </span>
-                    {{i18n "discourse_ai.ai_agent.tool_count_warning"}}
-                  {{else}}
-                    <span>
-                      {{i18n "discourse_ai.ai_agent.tool_severity_high"}}:
-                    </span>
-                    {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
-                  {{/if}}
-                </div>
-              {{/if}}
-            </div>
-          {{/if}}
+                    {{#if (eq toolTokenSeverity "medium")}}
+                      <div class="ai-agent-editor__tool-context-cost-warning">
+                        <span>
+                          {{i18n "discourse_ai.ai_agent.tool_severity_medium"}}:
+                        </span>
+                        {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
+                      </div>
+                    {{/if}}
+                    {{#if (eq toolTokenSeverity "high")}}
+                      <div class="ai-agent-editor__tool-context-cost-warning">
+                        {{#if tooManyTools}}
+                          <span>
+                            {{i18n
+                              "discourse_ai.ai_agent.tool_severity_too_many"
+                            }}:
+                          </span>
+                          {{i18n "discourse_ai.ai_agent.tool_count_warning"}}
+                        {{else}}
+                          <span>
+                            {{i18n "discourse_ai.ai_agent.tool_severity_high"}}:
+                          </span>
+                          {{i18n "discourse_ai.ai_agent.tool_tokens_warning"}}
+                        {{/if}}
+                      </div>
+                    {{/if}}
+                  </div>
+                {{/if}}
+              {{/let}}
+            {{/let}}
+          {{/let}}
 
           {{#if (gt data.tools.length 0)}}
             <form.Field

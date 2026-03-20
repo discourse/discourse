@@ -509,9 +509,19 @@ en:
       ai_agent:
         ai_tools: "Tools"
         mcp_servers: "MCP servers"
+        mcp_server_tools_help: "Selected MCP servers expose all of their tools by default. Narrow them per agent to reduce token usage and keep tool choice focused."
         mcp_server_tool_count:
           one: "%{count} tool"
           other: "%{count} tools"
+        mcp_server_enabled_tool_count:
+          one: "%{count} tool enabled"
+          other: "%{count} tools enabled"
+        mcp_server_all_tools_enabled: "All tools enabled"
+        mcp_server_enabled_tools:
+          one: "%{count} of %{total} tool enabled"
+          other: "%{count} of %{total} tools enabled"
+        mcp_server_choose_tools: "Choose tools"
+        mcp_server_edit_tools: "Edit tools"
         tool_strategies:
           all: "Apply to all replies"
           replies:
@@ -583,6 +593,17 @@ en:
         mcp_server_cost_value:
           one: "~%{tokens} tokens, %{count} tool"
           other: "~%{tokens} tokens, %{count} tools"
+        mcp_server_tokens_only: "~%{tokens} tokens"
+        mcp_tools_modal:
+          title: "%{name} tools"
+          summary: "By default this agent can use every tool from this server. Select a smaller set to limit access and reduce prompt cost."
+          filter_placeholder: "Filter tools"
+          select_all: "Select all"
+          clear_all: "Clear all"
+          selection_summary:
+            one: "%{count} of %{total} tool selected"
+            other: "%{count} of %{total} tools selected"
+          empty: "No tools match this filter."
         tool_severity_medium: "Moderate capacity"
         tool_severity_high: "High capacity"
         tool_severity_too_many: "Too many tools"

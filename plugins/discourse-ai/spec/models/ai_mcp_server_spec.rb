@@ -110,4 +110,23 @@ RSpec.describe AiMcpServer do
     expect(server.oauth_token_store.access_token).to be_blank
     expect(server.oauth_token_store.refresh_token).to be_blank
   end
+
+  it "memoizes serialized tools for count calculations" do
+    server = Fabricate(:ai_mcp_server)
+
+    server
+      .expects(:tool_definitions)
+      .once
+      .returns(
+        [{ "name" => "search_issues", "description" => "Search issues", "inputSchema" => {} }],
+      )
+    DiscourseAi::Agents::Tools::Mcp
+      .expects(:class_instance)
+      .once
+      .returns(stub(signature: { description: "Search issues", parameters: [] }))
+
+    expect(server.tools_for_serialization.map { |tool| tool[:name] }).to eq(["search_issues"])
+    expect(server.tool_count).to eq(1)
+    expect(server.token_count).to be > 0
+  end
 end

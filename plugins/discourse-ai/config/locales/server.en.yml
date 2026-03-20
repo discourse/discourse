@@ -934,3 +934,4 @@ en:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
       mcp_server_missing: "The following MCP servers are not configured on this site: %{names}."
+      mcp_server_tools_not_found: "No matching tools from MCP server %{name} are available on this site."

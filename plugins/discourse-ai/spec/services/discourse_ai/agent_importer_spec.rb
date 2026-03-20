@@ -193,6 +193,56 @@ RSpec.describe DiscourseAi::AgentImporter do
         expect(agent.ai_mcp_servers.pluck(:name)).to eq(["Jira"])
       end
 
+      it "restores selected MCP tool names" do
+        ai_agent
+          .ai_agent_mcp_servers
+          .find_by!(ai_mcp_server_id: ai_mcp_server.id)
+          .update!(selected_tool_names: ["search_issues"])
+        DiscourseAi::Mcp::ToolRegistry
+          .stubs(:tool_definitions_for)
+          .with(ai_mcp_server)
+          .returns(
+            [
+              { "name" => "search_issues", "description" => "Search", "inputSchema" => {} },
+              { "name" => "create_issue", "description" => "Create", "inputSchema" => {} },
+            ],
+          )
+
+        refreshed_export_json = DiscourseAi::AgentExporter.new(agent: ai_agent).export
+        ai_agent.destroy
+
+        importer = described_class.new(json: refreshed_export_json)
+        agent = importer.import!
+
+        expect(agent.ai_agent_mcp_servers.first.selected_tool_names).to eq(["search_issues"])
+      end
+
+      it "raises when imported selected MCP tools do not exist locally" do
+        ai_agent
+          .ai_agent_mcp_servers
+          .find_by!(ai_mcp_server_id: ai_mcp_server.id)
+          .update!(selected_tool_names: ["search_issues"])
+
+        refreshed_export_json = DiscourseAi::AgentExporter.new(agent: ai_agent).export
+        ai_agent.destroy
+
+        DiscourseAi::Mcp::ToolRegistry
+          .stubs(:tool_definitions_for)
+          .with(ai_mcp_server)
+          .returns([{ "name" => "create_issue", "description" => "Create", "inputSchema" => {} }])
+
+        importer = described_class.new(json: refreshed_export_json)
+
+        expect { importer.import! }.to raise_error(
+          DiscourseAi::AgentImporter::ImportError,
+        ) do |error|
+          expect(error.message).to eq(
+            I18n.t("discourse_ai.errors.mcp_server_tools_not_found", name: "Jira"),
+          )
+          expect(error.conflicts[:mcp_servers]).to eq(["Jira"])
+        end
+      end
+
       it "raises when the referenced mcp server is missing" do
         ai_mcp_server.destroy
 
