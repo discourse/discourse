@@ -84,7 +84,11 @@ module Plugin
           full_path = File.join(js_base, file)
           if File.file?(full_path)
             normalized_file_path = file.sub(/\.js\.es6$/, ".js")
-            tree[normalized_file_path] = File.read(full_path)
+            content = File.read(full_path)
+            content = AssetProcessor.append_es6_deprecation(content, file) if file.end_with?(
+              ".js.es6",
+            )
+            tree[normalized_file_path] = content
             if name == "test" && file.match(%r{/(acceptance|integration|unit)/})
               if file.match?(/-test\.g?js$/)
                 entrypoints_config[name][:modules] << normalized_file_path

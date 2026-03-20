@@ -243,4 +243,25 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content).to include("createTemplateFactory")
     end
   end
+
+  describe ".js.es6 extension deprecation" do
+    it "appends a deprecation warning for .js.es6 files" do
+      compiler.append_tree(
+        { "discourse/components/my-component.js.es6" => "export default class MyComponent {}" },
+      )
+
+      expect(compiler.content).to include("discourse.es6-extension")
+      expect(compiler.content).to include(
+        "The file 'discourse/components/my-component.js.es6' uses the deprecated `.js.es6` extension. Use `.js` instead.",
+      )
+    end
+
+    it "does not add deprecation for regular .js files" do
+      compiler.append_tree(
+        { "discourse/components/my-component.js" => "export default class MyComponent {}" },
+      )
+
+      expect(compiler.content).not_to include("discourse.es6-extension")
+    end
+  end
 end
