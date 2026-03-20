@@ -4,7 +4,7 @@ module Service
   module Base
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context
-      delegate :slice, :dig, to: :store
+      delegate :slice, :dig, :merge!, to: :store
 
       def self.build(context = {})
         self === context ? context : new(context)

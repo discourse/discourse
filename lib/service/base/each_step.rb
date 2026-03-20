@@ -5,25 +5,24 @@ module Service
     class EachStep < Step
       include StepsHelpers
 
-      attr_reader :steps, :item_name, :persist
+      attr_reader :steps, :item_name, :initializers
 
       def initialize(name, as: nil, persist: nil, &block)
         super(name)
         @item_name = as || name.to_s.singularize.to_sym
-        @persist = normalize_persist(persist)
+        @initializers = build_initializers(persist)
         @steps = []
         instance_exec(&block)
       end
 
       def run_step
-        context.with_isolation(persist_keys: [item_name, :index, *persist.keys]) do
-          persist.each { |key, initializer| context[key] = instance.instance_exec(&initializer) }
+        context.with_isolation(persist_keys: [item_name, :index, *initializers.keys]) do
+          context.merge!(initializers.transform_values { instance.instance_exec(&it) })
 
           Array
             .wrap(context[name])
             .each_with_index do |item, index|
-              context[item_name] = item
-              context[:index] = index
+              context.merge!(item_name => item, :index => index)
               steps.each { |step| step.call(instance, context) }
             end
         end
@@ -31,25 +30,27 @@ module Service
 
       private
 
-      def normalize_persist(persist)
-        case persist
+      def build_initializers(value)
+        case value
         when nil
           {}
         when Array
-          persist.each_with_object({}) { |item, hash| hash.merge!(normalize_persist(item)) }
+          value.each_with_object({}) { |item, hash| hash.merge!(build_initializers(item)) }
         when Symbol
-          { persist => proc {} }
+          { value => proc {} }
         when Hash
-          persist.transform_values do |v|
-            case v
-            when Symbol
-              proc { send(v) }
-            when Proc
-              proc { instance_exec(&v) }
-            when nil
-              proc {}
-            end
-          end
+          value.transform_values(&method(:make_lambda))
+        end
+      end
+
+      def make_lambda(filter)
+        case filter
+        when Symbol
+          proc { send(filter) }
+        when Proc
+          proc { instance_exec(&filter) }
+        else
+          proc {}
         end
       end
     end
