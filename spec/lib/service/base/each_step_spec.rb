@@ -421,11 +421,14 @@ RSpec.describe Service::Base::EachStep do
       end
       let(:dependencies) { { input_users: %i[alice bob charlie] } }
 
-      it "discards variables set inside the loop" do
+      it "discards variables set inside the loop (except item and index)" do
         expect(result[:profile_after_loop]).to be_nil
-        expect(result[:user_after_loop]).to be_nil
-        expect(result[:index_after_loop]).to be_nil
         expect(result[:last_processed_after_loop]).to be_nil
+      end
+
+      it "keeps the last item and index after the loop" do
+        expect(result[:user_after_loop]).to eq(:charlie)
+        expect(result[:index_after_loop]).to eq(2)
       end
 
       it "succeeds" do

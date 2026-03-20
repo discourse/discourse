@@ -16,18 +16,17 @@ module Service
       end
 
       def run_step
-        snapshot = context.to_h.deep_dup
-        initialize_persisted_keys
+        context.with_isolation(persist_keys: [item_name, :index, *persist.keys]) do
+          persist.each { |key, initializer| context[key] = resolve_initializer(initializer) }
 
-        Array
-          .wrap(context[name])
-          .each_with_index do |item, index|
-            context[item_name] = item
-            context[:index] = index
-            steps.each { |step| step.call(instance, context) }
-          end
-
-        restore_context(snapshot)
+          Array
+            .wrap(context[name])
+            .each_with_index do |item, index|
+              context[item_name] = item
+              context[:index] = index
+              steps.each { |step| step.call(instance, context) }
+            end
+        end
       end
 
       private
@@ -50,10 +49,6 @@ module Service
         end
       end
 
-      def initialize_persisted_keys
-        persist.each { |key, initializer| context[key] = resolve_initializer(initializer) }
-      end
-
       def resolve_initializer(initializer)
         case initializer
         when Proc
@@ -63,19 +58,6 @@ module Service
         when nil
           nil
         end
-      end
-
-      def restore_context(snapshot)
-        persisted_values = persist.keys.to_h { |key| [key, context[key]] }
-
-        # Remove keys added during iteration
-        (context.to_h.keys - snapshot.keys).each { |key| context[key] = nil }
-
-        # Restore original values
-        snapshot.each { |key, value| context[key] = value }
-
-        # Re-apply persisted values
-        persisted_values.each { |key, value| context[key] = value }
       end
     end
   end
