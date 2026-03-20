@@ -34,13 +34,15 @@ module DiscoursePostEvent
                     event: event,
                     after: after_time,
                     before: before_time,
-                    limit: 200,
+                    limit: 52,
                   )
                 expanded[:occurrences].map { |occ| { event: event, **occ } }
               else
                 [{ event: event, starts_at: event.starts_at, ends_at: event.ends_at }]
               end
             end
+
+          @ics_events = @ics_events.sort_by { |e| e[:starts_at] || Time.current }.first(500)
 
           filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}.ics"
           response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
