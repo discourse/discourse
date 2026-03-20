@@ -206,6 +206,25 @@ RSpec.describe Discourse do
       plugin1.register_asset_filter { |type, request, opts| false }
       expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
     end
+
+    it "compiles missing rollup plugin js assets on demand in development" do
+      original_rollup_plugin_compiler = ENV["ROLLUP_PLUGIN_COMPILER"]
+      ENV["ROLLUP_PLUGIN_COMPILER"] = "1"
+
+      plugin1.stubs(:directory_name).returns("plugin1")
+      Rails.env.stubs(:development?).returns(true)
+
+      manifest = { "main" => { "fileName" => "plugin1_main-abc123.digested.js", "imports" => [] } }
+
+      Plugin::JsManager.stubs(:read_manifest).with("plugin1").returns({}, manifest, manifest)
+      Plugin::JsManager.any_instance.expects(:compile_js_bundle).with(plugin1).once
+
+      assets = Discourse.find_plugin_js_assets({})
+
+      expect(assets.pluck(:name)).to eq(["js/plugins/plugin1_main-abc123.digested"])
+    ensure
+      ENV["ROLLUP_PLUGIN_COMPILER"] = original_rollup_plugin_compiler
+    end
   end
 
   describe "authenticators" do

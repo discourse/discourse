@@ -31,8 +31,15 @@ module Plugin
       end
     end
 
-    def self.digested_logical_path_for(plugin_directory_name, entrypoint_name)
+    def self.digested_logical_path_for(plugin_directory_name, entrypoint_name, plugin: nil)
       manifest_entry = read_manifest(plugin_directory_name)[entrypoint_name]
+
+      return "js/plugins/#{manifest_entry["fileName"].delete_suffix(".js")}" if manifest_entry
+      return if !plugin || !Rails.env.development?
+
+      new.compile_js_bundle(plugin)
+      manifest_entry = read_manifest(plugin_directory_name)[entrypoint_name]
+
       "js/plugins/#{manifest_entry["fileName"].delete_suffix(".js")}" if manifest_entry
     end
 
