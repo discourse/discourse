@@ -885,18 +885,6 @@
 
       .discourse-tags {
         display: inline;
-
-        &__tag-separator {
-          position: absolute;
-          display: inline-block;
-          vertical-align: middle;
-          margin-left: -0.5em;
-          margin-top: 0.25em;
-        }
-
-        .discourse-tag {
-          margin: 0 0.5em 0 0;
-        }
       }
 
       .badge-wrapper {
