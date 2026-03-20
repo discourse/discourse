@@ -2808,6 +2808,9 @@ security:
     refresh: true
     hidden: true
     area: "group_permissions"
+  cache_control_bfcache_compatibility:
+    default: false
+    hidden: true
 
 onebox:
   post_onebox_maxlength:
