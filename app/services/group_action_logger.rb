@@ -44,6 +44,14 @@ class GroupActionLogger
     )
   end
 
+  def bulk_log_add_user_to_group(target_users)
+    bulk_log(target_users, :add_user_to_group)
+  end
+
+  def bulk_log_remove_user_from_group(target_users)
+    bulk_log(target_users, :remove_user_from_group)
+  end
+
   def log_change_group_settings
     @group
       .previous_changes
@@ -70,6 +78,24 @@ class GroupActionLogger
   end
 
   private
+
+  def bulk_log(target_users, action)
+    return if target_users.blank?
+
+    now = Time.now
+    GroupHistory.insert_all(
+      target_users.map do |user|
+        {
+          group_id: @group.id,
+          acting_user_id: @acting_user.id,
+          target_user_id: user.id,
+          action: GroupHistory.actions[action],
+          created_at: now,
+          updated_at: now,
+        }
+      end,
+    )
+  end
 
   def excluded_attributes
     %i[bio_cooked updated_at created_at user_count]

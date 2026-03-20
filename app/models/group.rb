@@ -881,16 +881,22 @@ class Group < ActiveRecord::Base
     ).first
   end
 
+  # This method replicates the side effects of group.add callbacks
+  # in bulk for API performance reasons.
+  # This method should be updated to match those callbacks whenever they change.
   def bulk_add(user_ids)
-    return if user_ids.blank?
+    return [] if user_ids.blank?
+
+    added_user_ids = nil
 
     Group.transaction do
       sql = <<~SQL
       INSERT INTO group_users
-        (group_id, user_id, created_at, updated_at)
+        (group_id, user_id, notification_level, created_at, updated_at)
       SELECT
-        #{self.id},
+        :group_id,
         u.id,
+        :notification_level,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
       FROM users AS u
@@ -900,41 +906,120 @@ class Group < ActiveRecord::Base
         WHERE gu.user_id = u.id AND
         gu.group_id = :group_id
       )
+      RETURNING user_id
       SQL
 
-      DB.exec(sql, group_id: self.id, user_ids: user_ids)
+      added_user_ids =
+        DB.query_single(
+          sql,
+          group_id: self.id,
+          user_ids: user_ids,
+          notification_level: self.default_notification_level || 3,
+        )
 
-      user_attributes = {}
+      if added_user_ids.present?
+        if self.primary_group?
+          User
+            .where(id: added_user_ids)
+            .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
+            .update_all(flair_group_id: self.id)
 
-      user_attributes[:primary_group_id] = self.id if self.primary_group?
+          DB.exec(<<~SQL, user_ids: added_user_ids, new_title: self.title)
+              UPDATE users u
+              SET title = :new_title
+              WHERE u.id IN (:user_ids)
+                AND u.primary_group_id IS NOT NULL
+                AND EXISTS (
+                  SELECT 1 FROM groups g
+                  WHERE g.id = u.primary_group_id
+                    AND g.title = u.title
+                )
+            SQL
 
-      user_attributes[:title] = self.title if self.title.present?
+          User.where(id: added_user_ids).update_all(primary_group_id: self.id)
+        end
 
-      User.where(id: user_ids).update_all(user_attributes) if user_attributes.present?
+        if self.title.present?
+          User.where(id: added_user_ids).where(title: [nil, ""]).update_all(title: self.title)
+        end
+      end
 
-      # update group user count
       recalculate_user_count
     end
 
-    if self.grant_trust_level.present?
-      Jobs.enqueue(:bulk_grant_trust_level, user_ids: user_ids, trust_level: self.grant_trust_level)
+    if added_user_ids.present? && self.grant_trust_level.present? && !self.grant_trust_level.zero?
+      Jobs.enqueue(
+        :bulk_grant_trust_level,
+        user_ids: added_user_ids,
+        trust_level: self.grant_trust_level,
+      )
     end
 
-    self
+    GroupUser.bulk_set_category_notifications(self, added_user_ids)
+    GroupUser.bulk_set_tag_notifications(self, added_user_ids)
+
+    added_users = User.where(id: added_user_ids).to_a
+
+    added_users.each { |user| trigger_user_added_event(user, false) }
+    bulk_publish_category_updates(added_users)
+
+    added_user_ids
   end
 
   def bulk_remove(user_ids)
+    return [] if user_ids.blank?
+
+    group_users_to_remove = group_users.includes(:user).where(user_id: user_ids).to_a
+    return [] if group_users_to_remove.empty?
+
+    removed_user_ids = group_users_to_remove.map(&:user_id)
+
     Group.transaction do
-      group_users_to_be_destroyed = group_users.includes(:user).where(user_id: user_ids).destroy_all
-      group_users_to_be_destroyed.each do |group_user|
-        trigger_user_removed_event(group_user.user)
-        enqueue_user_removed_from_group_webhook_events(group_user)
+      group_users.where(user_id: removed_user_ids).delete_all
+
+      User.where(primary_group_id: self.id, id: removed_user_ids).update_all(primary_group_id: nil)
+      User.where(flair_group_id: self.id, id: removed_user_ids).update_all(flair_group_id: nil)
+
+      if self.title.present?
+        DB.exec(<<~SQL, user_ids: removed_user_ids, title: self.title)
+            UPDATE users u
+            SET title = NULL
+            WHERE u.id IN (:user_ids)
+              AND u.title = :title
+              AND NOT EXISTS (
+                SELECT 1 FROM group_users gu
+                JOIN groups g ON g.id = gu.group_id
+                WHERE gu.user_id = u.id
+                  AND g.title IS NOT NULL AND g.title <> ''
+              )
+              AND NOT EXISTS (
+                SELECT 1 FROM user_badges ub
+                JOIN badges b ON b.id = ub.badge_id
+                WHERE ub.user_id = u.id
+                  AND b.allow_title = true
+              )
+          SQL
+
+        User
+          .where(id: removed_user_ids, title: self.title)
+          .find_each { |user| user.update_column(:title, user.next_best_title) }
       end
+    end
+
+    if self.grant_trust_level.present? && !self.grant_trust_level.zero?
+      Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
     end
 
     recalculate_user_count
 
-    true
+    bulk_publish_category_updates(group_users_to_remove.map(&:user))
+
+    group_users_to_remove.each do |group_user|
+      trigger_user_removed_event(group_user.user)
+      enqueue_user_removed_from_group_webhook_events(group_user)
+    end
+
+    removed_user_ids
   end
 
   def recalculate_user_count
@@ -1072,6 +1157,17 @@ class Group < ActiveRecord::Base
 
   def full_url
     "#{Discourse.base_url}/g/#{UrlHelper.encode_component(self.name)}"
+  end
+
+  def bulk_publish_category_updates(users)
+    return if users.blank?
+    return unless categories.exists?
+
+    if users.size == 1
+      publish_category_updates(users.first)
+    else
+      Discourse.request_refresh!(user_ids: users.map(&:id))
+    end
   end
 
   protected

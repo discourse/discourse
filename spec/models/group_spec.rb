@@ -1280,6 +1280,151 @@ RSpec.describe Group do
         group.reload
       }.to change { group.user_count }.from(0).to(2)
     end
+
+    it "skips users already in the group" do
+      group.bulk_add([user.id])
+      added = group.bulk_add([user.id, admin.id])
+
+      expect(added).to contain_exactly(admin.id)
+      expect(group.group_users.count).to eq(2)
+    end
+
+    it "returns empty array for blank input" do
+      expect(group.bulk_add([])).to eq([])
+      expect(group.bulk_add(nil)).to eq([])
+    end
+
+    it "sets title for users without one" do
+      group.update!(title: "Cool Group")
+      group.bulk_add([user.id])
+
+      expect(user.reload.title).to eq("Cool Group")
+    end
+
+    it "does not overwrite existing user title" do
+      user.update!(title: "Existing Title")
+      group.update!(title: "Cool Group")
+      group.bulk_add([user.id])
+
+      expect(user.reload.title).to eq("Existing Title")
+    end
+
+    it "sets primary_group_id when group is primary" do
+      group.update!(primary_group: true)
+      group.bulk_add([user.id, admin.id])
+
+      expect(user.reload.primary_group_id).to eq(group.id)
+      expect(admin.reload.primary_group_id).to eq(group.id)
+    end
+
+    it "sets flair_group_id when group is primary" do
+      group.update!(primary_group: true)
+      group.bulk_add([user.id])
+
+      expect(user.reload.flair_group_id).to eq(group.id)
+    end
+
+    it "enqueues bulk_grant_trust_level job when group grants trust level" do
+      group.update!(grant_trust_level: 2)
+      group.bulk_add([user.id, admin.id])
+
+      job = Jobs::BulkGrantTrustLevel.jobs.last
+      expect(job["args"].first["trust_level"]).to eq(2)
+      expect(job["args"].first["user_ids"]).to contain_exactly(user.id, admin.id)
+    end
+
+    it "does not enqueue trust level job when grant_trust_level is nil" do
+      group.update!(grant_trust_level: nil)
+      group.bulk_add([user.id])
+
+      expect(Jobs::BulkGrantTrustLevel.jobs).to be_empty
+    end
+  end
+
+  describe "add and bulk_add produce equivalent user state" do
+    fab!(:user_single, :user)
+    fab!(:user_bulk, :user)
+    fab!(:category)
+    fab!(:tag)
+
+    before do
+      group.update!(
+        title: "Parity Member",
+        primary_group: true,
+        grant_trust_level: 2,
+        default_notification_level: NotificationLevels.all[:watching],
+      )
+      group.watching_category_ids = [category.id]
+      group.watching_tags = [tag.name]
+      group.save!
+    end
+
+    it "produces equivalent user state to group.add" do
+      group.add(user_single)
+
+      Jobs.run_immediately!
+      group.bulk_add([user_bulk.id])
+
+      user_single.reload
+      user_bulk.reload
+
+      expect(user_bulk.title).to eq(user_single.title)
+      expect(user_bulk.primary_group_id).to eq(user_single.primary_group_id)
+      expect(user_bulk.flair_group_id).to eq(user_single.flair_group_id)
+      expect(user_bulk.trust_level).to eq(user_single.trust_level)
+
+      gu_single = GroupUser.find_by(group: group, user: user_single)
+      gu_bulk = GroupUser.find_by(group: group, user: user_bulk)
+      expect(gu_bulk.notification_level).to eq(gu_single.notification_level)
+
+      cu_single = CategoryUser.find_by(user: user_single, category: category)
+      cu_bulk = CategoryUser.find_by(user: user_bulk, category: category)
+      expect(cu_bulk&.notification_level).to eq(cu_single&.notification_level)
+
+      tu_single = TagUser.find_by(user: user_single, tag: tag)
+      tu_bulk = TagUser.find_by(user: user_bulk, tag: tag)
+      expect(tu_bulk&.notification_level).to eq(tu_single&.notification_level)
+    end
+  end
+
+  describe "remove and bulk_remove produce equivalent user state" do
+    fab!(:user_single, :user)
+    fab!(:user_bulk, :user)
+    fab!(:category)
+    fab!(:tag)
+
+    before do
+      group.update!(
+        title: "Parity Member",
+        primary_group: true,
+        grant_trust_level: 2,
+        default_notification_level: NotificationLevels.all[:watching],
+      )
+      group.watching_category_ids = [category.id]
+      group.watching_tags = [tag.name]
+      group.save!
+
+      group.add(user_single)
+      group.bulk_add([user_bulk.id])
+    end
+
+    it "produces equivalent user state to group.remove" do
+      group.remove(user_single)
+
+      Jobs.run_immediately!
+      group.bulk_remove([user_bulk.id])
+
+      user_single.reload
+      user_bulk.reload
+
+      expect(group.group_users.where(user_id: user_bulk.id).exists?).to eq(
+        group.group_users.where(user_id: user_single.id).exists?,
+      )
+      expect(user_bulk.title).to eq(user_single.title)
+      expect(user_bulk.primary_group_id).to eq(user_single.primary_group_id)
+      expect(user_bulk.flair_group_id).to eq(user_single.flair_group_id)
+      expect(user_bulk.trust_level).to eq(user_single.trust_level)
+    end
   end
 
   describe "#bulk_remove" do
@@ -1297,6 +1442,97 @@ RSpec.describe Group do
 
       group.bulk_remove([user.id, admin.id])
       expect(group.reload.user_count).to eq(0)
+    end
+
+    it "clears primary_group_id for removed users" do
+      group.update!(primary_group: true)
+      group.bulk_add([user.id])
+      expect(user.reload.primary_group_id).to eq(group.id)
+
+      group.bulk_remove([user.id])
+      expect(user.reload.primary_group_id).to be_nil
+    end
+
+    it "clears flair_group_id for removed users" do
+      group.update!(primary_group: true)
+      group.bulk_add([user.id])
+      expect(user.reload.flair_group_id).to eq(group.id)
+
+      group.bulk_remove([user.id])
+      expect(user.reload.flair_group_id).to be_nil
+    end
+
+    it "clears title for removed users when title matches group" do
+      group.update!(title: "Cool Group")
+      group.bulk_add([user.id])
+      expect(user.reload.title).to eq("Cool Group")
+
+      group.bulk_remove([user.id])
+      expect(user.reload.title).to be_nil
+    end
+
+    it "does not clear title when user has a different title" do
+      group.update!(title: "Cool Group")
+      group.bulk_add([user.id])
+      user.update!(title: "Custom Title")
+
+      group.bulk_remove([user.id])
+      expect(user.reload.title).to eq("Custom Title")
+    end
+
+    it "falls back to next best group title on removal" do
+      other_group = Fabricate(:group, title: "Other Group")
+      group.update!(title: "Cool Group")
+      group.bulk_add([user.id])
+      other_group.add(user)
+
+      group.bulk_remove([user.id])
+      expect(user.reload.title).to eq("Other Group")
+    end
+
+    it "falls back to badge title when no other group title exists" do
+      badge = Fabricate(:badge, name: "Great Badge", allow_title: true)
+      BadgeGranter.grant(badge, user)
+      user.update!(title: badge.display_name)
+
+      group.update!(title: badge.display_name)
+      group.bulk_add([user.id])
+
+      group.bulk_remove([user.id])
+      expect(user.reload.title).to eq(badge.display_name)
+    end
+
+    it "enqueues bulk_grant_trust_level job with recalculate when group grants trust level" do
+      group.update!(grant_trust_level: 2)
+      group.bulk_add([user.id, admin.id])
+
+      group.bulk_remove([user.id, admin.id])
+
+      job =
+        Jobs::BulkGrantTrustLevel.jobs.select { |j| j["args"].first["recalculate"] == true }.last
+      expect(job["args"].first["user_ids"]).to contain_exactly(user.id, admin.id)
+    end
+
+    it "triggers user_removed_from_group events" do
+      group.bulk_add([user.id, admin.id])
+
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          group.bulk_remove([user.id, admin.id])
+        end
+
+      expect(events.length).to eq(2)
+    end
+
+    it "publishes category updates for removed users" do
+      category = Fabricate(:category)
+      category.set_permissions(group => :full)
+      category.save!
+      group.update!(categories: [category])
+      group.bulk_add([user.id])
+
+      messages = MessageBus.track_publish("/categories") { group.bulk_remove([user.id]) }
+      expect(messages).to be_present
     end
 
     describe "with webhook" do
@@ -1317,6 +1553,48 @@ RSpec.describe Group do
             expect([user.id, admin.id]).to include(payload["user_id"])
           end
       end
+    end
+  end
+
+  describe "#bulk_publish_category_updates" do
+    fab!(:category)
+
+    it "publishes category update for a single user" do
+      group.update!(categories: [category])
+      group.bulk_add([user.id])
+
+      messages =
+        MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([user]) }
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.user_ids).to contain_exactly(user.id)
+    end
+
+    it "requests refresh for multiple users" do
+      group.update!(categories: [category])
+      group.bulk_add([user.id, admin.id])
+
+      messages =
+        MessageBus.track_publish("/refresh_client") do
+          group.bulk_publish_category_updates([user, admin])
+        end
+
+      expect(messages).to be_present
+    end
+
+    it "does nothing when users are blank" do
+      group.update!(categories: [category])
+
+      messages = MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([]) }
+
+      expect(messages).to be_empty
+    end
+
+    it "does nothing when group has no categories" do
+      messages =
+        MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([user]) }
+
+      expect(messages).to be_empty
     end
   end
 

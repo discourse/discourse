@@ -1605,6 +1605,17 @@ RSpec.describe GroupsController do
         expect(group_history.target_user).to eq(user2)
       end
 
+      it "triggers user_added_to_group event for single user add" do
+        events =
+          DiscourseEvent.track_events(:user_added_to_group) do
+            put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+          end
+
+        expect(events.length).to eq(1)
+        expect(events.first[:params][0]).to eq(user2)
+        expect(events.first[:params][1]).to eq(group)
+      end
+
       it "cannot add members to automatic groups" do
         group.update!(automatic: true)
 
@@ -1962,6 +1973,16 @@ RSpec.describe GroupsController do
           expect(topic.nil?).to eq(false)
           expect(topic.topic_users.map(&:user_id)).to include(-1, user.id)
         end
+
+        it "does not create duplicate group membership when user is already a member" do
+          group.add(user2)
+
+          expect {
+            put "/groups/#{group.id}/owners.json", params: { usernames: user2.username }
+          }.not_to change { group.group_users.where(user_id: user2.id).count }
+
+          expect(response.status).to eq(200)
+        end
       end
 
       context "when logged in as a moderator" do
@@ -2104,6 +2125,17 @@ RSpec.describe GroupsController do
       it "raises an error if user to be removed is not found" do
         delete "/groups/#{group.id}/members.json", params: { user_id: -10 }
         expect(response.status).to eq(400)
+      end
+
+      it "logs group history for single user removal" do
+        delete "/groups/#{group.id}/members.json", params: { user_id: user.id }
+
+        expect(response.status).to eq(200)
+
+        group_history = GroupHistory.last
+        expect(group_history.action).to eq(GroupHistory.actions[:remove_user_from_group])
+        expect(group_history.acting_user).to eq(admin)
+        expect(group_history.target_user).to eq(user)
       end
 
       it "returns skipped_usernames response body when removing a valid user but is not a member of that group" do
@@ -2293,6 +2325,20 @@ RSpec.describe GroupsController do
         }
         expect(response.status).to eq(204)
       end
+
+      it "creates a group history entry when user successfully leaves a group" do
+        sign_in(user)
+
+        expect do delete "/groups/#{group_with_public_exit.id}/leave.json" end.to change {
+          GroupHistory.where(
+            action: GroupHistory.actions[:remove_user_from_group],
+            acting_user_id: user.id,
+            group_id: group_with_public_exit.id,
+          ).count
+        }.by(1)
+
+        expect(response.status).to eq(204)
+      end
     end
   end
 
@@ -2403,6 +2449,41 @@ RSpec.describe GroupsController do
       }.to_not change { Topic.count }
 
       expect(topic.posts.count).to eq(2)
+    end
+
+    context "when accepting a request" do
+      before do
+        GroupRequest.create!(group: group, user: other_user)
+        PostCreator.new(
+          other_user,
+          title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
+          raw: "Please let me in!",
+          archetype: Archetype.private_message,
+          target_usernames: user.username,
+          skip_validations: true,
+        ).create!
+      end
+
+      it "adds the user to the group" do
+        put "/groups/#{group.id}/handle_membership_request.json",
+            params: {
+              user_id: other_user.id,
+              accept: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(group.users.exists?(id: other_user.id)).to eq(true)
+      end
+
+      it "deletes the group request" do
+        expect {
+          put "/groups/#{group.id}/handle_membership_request.json",
+              params: {
+                user_id: other_user.id,
+                accept: true,
+              }
+        }.to change { GroupRequest.where(group: group, user: other_user).count }.by(-1)
+      end
     end
   end
 

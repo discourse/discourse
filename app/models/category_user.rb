@@ -109,9 +109,9 @@ class CategoryUser < ActiveRecord::Base
       builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
     end
 
-    if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
-    end
+    user_ids = opts[:user_ids] || opts[:user_id]
+
+    builder.where("tu.user_id IN (:user_ids)", user_ids:) if user_ids.present?
 
     builder.exec(
       tracking: notification_levels[:tracking],
@@ -166,9 +166,11 @@ class CategoryUser < ActiveRecord::Base
       builder.where2("tu1.topic_id = :topic_id", topic_id: topic_id)
     end
 
-    if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
-      builder.where2("tu1.user_id = :user_id", user_id: user_id)
+    user_ids = opts[:user_ids] || opts[:user_id]
+
+    if user_ids.present?
+      builder.where("tu.user_id IN (:user_ids)", user_ids:)
+      builder.where2("tu1.user_id IN (:user_ids)", user_ids:)
     end
 
     builder.exec(
