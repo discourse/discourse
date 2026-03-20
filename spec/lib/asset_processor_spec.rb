@@ -223,7 +223,10 @@ RSpec.describe AssetProcessor do
           },
         },
       )
-    expect(result["main.js"]["code"]).to include("createTemplateFactory")
+    code = result["main.js"]["code"]
+    expect(code).to include("createTemplateFactory")
+    expect(code).to include("deprecated(")
+    expect(code).to include('id: "discourse.hbs-extension"')
   end
 
   it "handles colocation" do
