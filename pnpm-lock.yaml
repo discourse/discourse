@@ -77,8 +77,8 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       lefthook:
-        specifier: ^2.1.3
-        version: 2.1.3
+        specifier: ^2.1.4
+        version: 2.1.4
       licensee:
         specifier: ^11.1.1
         version: 11.1.1(patch_hash=566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9)
@@ -782,259 +782,259 @@ importers:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/chat:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/checklist:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-adplugin:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-affiliate:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-ai:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-apple-auth:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-assign:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-cakeday:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-calendar:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-chat-integration:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-data-explorer:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-details:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-gamification:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-github:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-graphviz:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-hcaptcha:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-lazy-videos:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-local-dates:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-login-with-amazon:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-lti:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-math:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-microsoft-auth:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-narrative-bot:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-oauth2-basic:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-openid-connect:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-patreon:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-policy:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-post-voting:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-presence:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-reactions:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-rss-polling:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-solved:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-subscriptions:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-templates:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-topic-voting:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-user-notes:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/discourse-zendesk-plugin:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/footnote:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/poll:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/spoiler-alert:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   plugins/styleguide:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
   themes/horizon:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.3.0-887c5be4'
+        version: '@discourse/types@2026.3.0-d02b2966'
 
 packages:
 
@@ -1773,8 +1773,8 @@ packages:
   '@discourse/moment-timezone-names-translations@1.0.0':
     resolution: {integrity: sha512-4xr1QWQ0nzmFa2ZXQgWZA+dtE/BU2ePA+qkJWPFzNpq4ZnQi8MmMMAS2285t3rc2ySMBQqYaAArmcSUiufUgRA==}
 
-  '@discourse/types@2026.3.0-887c5be4':
-    resolution: {integrity: sha512-NNp2fX68OWBVXr/7DuzK9a30coMSTNfor7VF/yANPjccmayehI9xAA85Md5SYmXyD5QNtO7WgYQG0yTkZpzBhQ==}
+  '@discourse/types@2026.3.0-d02b2966':
+    resolution: {integrity: sha512-TzgaVI0serxgv3/ebc1or0MRJIDRMYhTd+B9gA7HTsAZmMGCRPrrxYeqD5TAkZurL5Tj1o6fP5Jk6mbyFm5Qwg==}
     engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
 
   '@ember-compat/tracked-built-ins@0.9.1':
@@ -6656,58 +6656,58 @@ packages:
     resolution: {integrity: sha512-M6T051+5QCGLBQb8id3hdvIW8+zeFV2FyBGFS9IEK5H9Wt4MueD4bW1eWikpHgZp+5xR3l5c8pZUkQsIA0BFZg==}
     engines: {node: '>=8'}
 
-  lefthook-darwin-arm64@2.1.3:
-    resolution: {integrity: sha512-VMSQK5ZUh66mKrEpHt5U81BxOg5xAXLoLZIK6e++4uc28tj8zGBqV9+tZqSRElXXzlnHbfdDVCMaKlTuqUy0Rg==}
+  lefthook-darwin-arm64@2.1.4:
+    resolution: {integrity: sha512-BUAAE9+rUrjr39a+wH/1zHmGrDdwUQ2Yq/z6BQbM/yUb9qtXBRcQ5eOXxApqWW177VhGBpX31aqIlfAZ5Q7wzw==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@2.1.3:
-    resolution: {integrity: sha512-4QhepF4cf+fa7sDow29IEuCfm/6LuV+oVyQGpnr5it1DEZIEEoa6vdH/x4tutYhAg/HH7I2jHq6FGz96HRiJEQ==}
+  lefthook-darwin-x64@2.1.4:
+    resolution: {integrity: sha512-K1ncIMEe84fe+ss1hQNO7rIvqiKy2TJvTFpkypvqFodT7mJXZn7GLKYTIXdIuyPAYthRa9DwFnx5uMoHwD2F1Q==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@2.1.3:
-    resolution: {integrity: sha512-kysx/9pjifOgcTZOj1bR0i74FAbMv3BDfrpZDKniBOo4Dp0hXhyOtUmRn4nWKL0bN+cqc4ZePAq4Qdm4fxWafA==}
+  lefthook-freebsd-arm64@2.1.4:
+    resolution: {integrity: sha512-PVUhjOhVN71YaYsVdQyNbFZ4a2jFB2Tg5hKrrn9kaWpx64aLz/XivLjwr8sEuTaP1GRlEWBpW6Bhrcsyo39qFw==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@2.1.3:
-    resolution: {integrity: sha512-TLuPHQNg6iihShchrh5DrHvoCZO8FajZBMAEwLIKWlm6bkCcXbYNxy4dBaVK8lzHtS/Kv1bnH0D3BcK65iZFVQ==}
+  lefthook-freebsd-x64@2.1.4:
+    resolution: {integrity: sha512-ZWV9o/LeyWNEBoVO+BhLqxH3rGTba05nkm5NvMjEFSj7LbUNUDbQmupZwtHl1OMGJO66eZP0CalzRfUH6GhBxQ==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@2.1.3:
-    resolution: {integrity: sha512-e5x4pq1aZAXc0C642V4HaUoKtcHVmGW1HBIDNfWUhtsThBKjhZBXPspecaAHIRA/8VtsXS3RnJ4VhQpgfrCbww==}
+  lefthook-linux-arm64@2.1.4:
+    resolution: {integrity: sha512-iWN0pGnTjrIvNIcSI1vQBJXUbybTqJ5CLMniPA0olabMXQfPDrdMKVQe+mgdwHK+E3/Y0H0ZNL3lnOj6Sk6szA==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@2.1.3:
-    resolution: {integrity: sha512-yeVAiV5hoE6Qq8dQDB4XC14x4N9mhn+FetxzqDu5LVci0/sOPqyPq2b0YUtNwJ1ZUKawTz4I/oqnUsHkQrGH0w==}
+  lefthook-linux-x64@2.1.4:
+    resolution: {integrity: sha512-96bTBE/JdYgqWYAJDh+/e/0MaxJ25XTOAk7iy/fKoZ1ugf6S0W9bEFbnCFNooXOcxNVTan5xWKfcjJmPIKtsJA==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@2.1.3:
-    resolution: {integrity: sha512-8QVvRxIosV6NL2XrbifOPGVhMFE43h02BUNEHYhZhyad7BredfAakg9dA9J/NO0I3eMdvCYU50ubFyDGIqUJog==}
+  lefthook-openbsd-arm64@2.1.4:
+    resolution: {integrity: sha512-oYUoK6AIJNEr9lUSpIMj6g7sWzotvtc3ryw7yoOyQM6uqmEduw73URV/qGoUcm4nqqmR93ZalZwR2r3Gd61zvw==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@2.1.3:
-    resolution: {integrity: sha512-YTS9qeW9PzzKg9Rk55mQprLIl1OdAIIjeOH8DF+MPWoAPkRqeUyq8Q2Bdlf3+Swy+kJOjoiU1pKvpjjc8upv9Q==}
+  lefthook-openbsd-x64@2.1.4:
+    resolution: {integrity: sha512-i/Dv9Jcm68y9cggr1PhyUhOabBGP9+hzQPoiyOhKks7y9qrJl79A8XfG6LHekSuYc2VpiSu5wdnnrE1cj2nfTg==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@2.1.3:
-    resolution: {integrity: sha512-Nlp80pWyF67GmxgM5NQmL7JTTccbJAvCNtS5QwHmKq3pJ9Xi0UegP9pGME520n06Rhp+gX7H4boXhm2D5hAghg==}
+  lefthook-windows-arm64@2.1.4:
+    resolution: {integrity: sha512-hSww7z+QX4YMnw2lK7DMrs3+w7NtxksuMKOkCKGyxUAC/0m1LAICo0ZbtdDtZ7agxRQQQ/SEbzFRhU5ysNcbjA==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@2.1.3:
-    resolution: {integrity: sha512-KByBhvqgUNhjO/03Mr0y66D9B1ZnII7AB0x17cumwHMOYoDaPJh/AlgmEduqUpatqli3lnFzWD0DUkAY6pq/SA==}
+  lefthook-windows-x64@2.1.4:
+    resolution: {integrity: sha512-eE68LwnogxwcPgGsbVGPGxmghyMGmU9SdGwcc+uhGnUxPz1jL89oECMWJNc36zjVK24umNeDAzB5KA3lw1MuWw==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@2.1.3:
-    resolution: {integrity: sha512-2W8PP/EGCvyS/x+Xza0Lgvn/EM3FKnr6m6xkfzpl6RKHl8TwPvs9iYZFQL99CnWTTvO+1mtQvIxGE/bD05038Q==}
+  lefthook@2.1.4:
+    resolution: {integrity: sha512-JNfJ5gAn0KADvJ1I6/xMcx70+/6TL6U9gqGkKvPw5RNMfatC7jIg0Evl97HN846xmfz959BV70l8r3QsBJk30w==}
     hasBin: true
 
   levn@0.4.1:
@@ -10609,7 +10609,7 @@ snapshots:
 
   '@discourse/moment-timezone-names-translations@1.0.0': {}
 
-  '@discourse/types@2026.3.0-887c5be4': {}
+  '@discourse/types@2026.3.0-d02b2966': {}
 
   '@ember-compat/tracked-built-ins@0.9.1(patch_hash=febdd1f1d24565f6f3be7747fd89cbc86a4476e2836e383610c6bc430436a842)':
     dependencies:
@@ -16703,48 +16703,48 @@ snapshots:
     dependencies:
       invert-kv: 3.0.1
 
-  lefthook-darwin-arm64@2.1.3:
+  lefthook-darwin-arm64@2.1.4:
     optional: true
 
-  lefthook-darwin-x64@2.1.3:
+  lefthook-darwin-x64@2.1.4:
     optional: true
 
-  lefthook-freebsd-arm64@2.1.3:
+  lefthook-freebsd-arm64@2.1.4:
     optional: true
 
-  lefthook-freebsd-x64@2.1.3:
+  lefthook-freebsd-x64@2.1.4:
     optional: true
 
-  lefthook-linux-arm64@2.1.3:
+  lefthook-linux-arm64@2.1.4:
     optional: true
 
-  lefthook-linux-x64@2.1.3:
+  lefthook-linux-x64@2.1.4:
     optional: true
 
-  lefthook-openbsd-arm64@2.1.3:
+  lefthook-openbsd-arm64@2.1.4:
     optional: true
 
-  lefthook-openbsd-x64@2.1.3:
+  lefthook-openbsd-x64@2.1.4:
     optional: true
 
-  lefthook-windows-arm64@2.1.3:
+  lefthook-windows-arm64@2.1.4:
     optional: true
 
-  lefthook-windows-x64@2.1.3:
+  lefthook-windows-x64@2.1.4:
     optional: true
 
-  lefthook@2.1.3:
+  lefthook@2.1.4:
     optionalDependencies:
-      lefthook-darwin-arm64: 2.1.3
-      lefthook-darwin-x64: 2.1.3
-      lefthook-freebsd-arm64: 2.1.3
-      lefthook-freebsd-x64: 2.1.3
-      lefthook-linux-arm64: 2.1.3
-      lefthook-linux-x64: 2.1.3
-      lefthook-openbsd-arm64: 2.1.3
-      lefthook-openbsd-x64: 2.1.3
-      lefthook-windows-arm64: 2.1.3
-      lefthook-windows-x64: 2.1.3
+      lefthook-darwin-arm64: 2.1.4
+      lefthook-darwin-x64: 2.1.4
+      lefthook-freebsd-arm64: 2.1.4
+      lefthook-freebsd-x64: 2.1.4
+      lefthook-linux-arm64: 2.1.4
+      lefthook-linux-x64: 2.1.4
+      lefthook-openbsd-arm64: 2.1.4
+      lefthook-openbsd-x64: 2.1.4
+      lefthook-windows-arm64: 2.1.4
+      lefthook-windows-x64: 2.1.4
 
   levn@0.4.1:
     dependencies:
