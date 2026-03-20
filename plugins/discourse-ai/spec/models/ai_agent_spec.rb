@@ -178,7 +178,7 @@ RSpec.describe AiAgent do
       )
 
     expect(agent.valid?).to eq(false)
-    expect(agent.errors[:default_llm].first).to eq(
+    expect(agent.errors[:base]).to include(
       I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
     )
 
@@ -193,7 +193,7 @@ RSpec.describe AiAgent do
       )
 
     expect(agent.valid?).to eq(false)
-    expect(agent.errors[:default_llm].first).to eq(
+    expect(agent.errors[:base]).to include(
       I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
     )
 
@@ -208,7 +208,7 @@ RSpec.describe AiAgent do
       )
 
     expect(agent.valid?).to eq(false)
-    expect(agent.errors[:default_llm].first).to eq(
+    expect(agent.errors[:base]).to include(
       I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
     )
   end
