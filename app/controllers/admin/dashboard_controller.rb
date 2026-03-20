@@ -43,9 +43,11 @@ class Admin::DashboardController < Admin::StaffController
       ).performed!
     end
 
-    new_features = DiscourseUpdates.new_features(force_refresh:).map { |item| item.symbolize_keys }
+    new_features = DiscourseUpdates.new_features(force_refresh:)
     new_features_with_permanent_uc =
-      DiscourseUpdates.merge_new_features_with_upcoming_changes(new_features)
+      DiscourseUpdates.merge_new_features_with_upcoming_changes(
+        new_features&.map { |item| item.symbolize_keys } || [],
+      )
 
     if current_user.admin? && most_recent = new_features_with_permanent_uc&.first
       DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent[:created_at])

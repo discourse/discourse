@@ -125,7 +125,9 @@ describe "Admin What's New Page", type: :system do
       ],
     )
     whats_new_page.visit
-    expect(whats_new_page).to have_emoji
-    expect(whats_new_page).to have_no_screenshot
+    whats_new_page.within_new_feature_item("New feature") do
+      expect(whats_new_page).to have_emoji
+      expect(whats_new_page).to have_no_screenshot
+    end
   end
 end
