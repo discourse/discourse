@@ -12,10 +12,14 @@
 
       .dismiss-read {
         box-shadow: var(--shadow-dropdown);
+      }
 
-        .d-icon {
-          display: none;
-        }
+      .topic-dismiss-buttons__button .d-icon {
+        display: none;
+      }
+
+      .topic-dismiss-buttons__menu .d-icon {
+        display: inline-flex;
       }
 
       .footer-nav-visible & {

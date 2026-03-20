@@ -22,7 +22,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
-import { and, gt } from "discourse/truth-helpers";
+import { and, eq, gt } from "discourse/truth-helpers";
 
 @tagName("")
 export default class DNavigation extends Component {
@@ -241,6 +241,11 @@ export default class DNavigation extends Component {
         @selectedTopics={{@bulkSelectHelper.selected}}
         @model={{@model}}
         @showResetNew={{@showResetNew}}
+        @showNewDismissCombo={{and
+          @showResetNew
+          (eq this.filterType "new")
+          this.currentUser.new_new_view_enabled
+        }}
         @showDismissRead={{@showDismissRead}}
         @resetNew={{@resetNew}}
         @dismissRead={{@dismissRead}}

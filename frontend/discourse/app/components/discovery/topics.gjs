@@ -309,6 +309,7 @@ export default class DiscoveryTopics extends Component {
             @selectedTopics={{@bulkSelectHelper.selected}}
             @model={{@model}}
             @showResetNew={{@showResetNew}}
+            @showNewDismissCombo={{this.showTopicsAndRepliesToggle}}
             @showDismissRead={{@showDismissRead}}
             @resetNew={{@resetNew}}
             @dismissRead={{@dismissRead}}
