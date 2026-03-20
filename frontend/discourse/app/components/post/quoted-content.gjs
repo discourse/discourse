@@ -5,17 +5,17 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import element from "discourse/helpers/element";
 import elementClass from "discourse/helpers/element-class";
 import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse/lib/helpers";
 import highlightHTML from "discourse/lib/highlight-html";
 import { postUrl } from "discourse/lib/utilities";
 import { eq } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import PostCookedHtml from "./cooked-html";
 
 export default class PostQuotedContent extends Component {
@@ -126,7 +126,7 @@ export default class PostQuotedContent extends Component {
   }
 
   get OptionalWrapperComponent() {
-    return this.args.wrapperElement ? element("") : element("aside");
+    return this.args.wrapperElement ? dElement("") : dElement("aside");
   }
 
   @action
@@ -171,7 +171,7 @@ export default class PostQuotedContent extends Component {
     <this.OptionalWrapperComponent
       ...attributes
       role="none"
-      class={{concatClass
+      class={{dConcatClass
         "quote"
         (if @quotedPostNotFound "quote-post-not-found")
         (if this.isQuotedPostIgnored "ignored-user")
@@ -230,7 +230,7 @@ export default class PostQuotedContent extends Component {
               >
                 {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                     extra whitespace that will interfere with the text captured when quoting a quoted content }}
-                {{~icon this.toggleIcon~}}
+                {{~dIcon this.toggleIcon~}}
               </DButton>
             {{~/if~}}
             {{~#if this.shouldDisplayNavigateToPostButton~}}
@@ -242,7 +242,7 @@ export default class PostQuotedContent extends Component {
               >
                 {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                     extra whitespace that will interfere with the text captured when quoting a quoted content }}
-                {{~icon this.navigateToPostIcon~}}
+                {{~dIcon this.navigateToPostIcon~}}
               </DButton>
             {{~/if~}}
           </div>
@@ -251,7 +251,7 @@ export default class PostQuotedContent extends Component {
       <blockquote id={{@id}}>
         {{~#unless this.isQuotedPostIgnored~}}
           {{~#if this.expanded~}}
-            <AsyncContent
+            <DAsyncContent
               @asyncData={{this.loadQuotedPost}}
               @context={{hash
                 topicNumber=@quotedTopicId
@@ -275,11 +275,11 @@ export default class PostQuotedContent extends Component {
               <:error as |error AsyncContentInlineErrorMessage|>
                 {{~#if (eq error.jqXHR.status 403)~}}
                   <div class="quote-error expanded-quote icon-only">
-                    {{~icon "lock"~}}
+                    {{~dIcon "lock"~}}
                   </div>
                 {{~else if (eq error.jqXHR.status 404)~}}
                   <div class="quote-error expanded-quote icon-only">
-                    {{~icon "trash-can"~}}
+                    {{~dIcon "trash-can"~}}
                   </div>
                 {{~else~}}
                   <div class="quote-error expanded-quote">
@@ -287,7 +287,7 @@ export default class PostQuotedContent extends Component {
                   </div>
                 {{~/if~}}
               </:error>
-            </AsyncContent>
+            </DAsyncContent>
           {{~else~}}
             <PostCookedHtml
               @className="post__contents-cooked-quote"

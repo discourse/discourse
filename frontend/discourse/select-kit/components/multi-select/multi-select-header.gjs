@@ -6,11 +6,11 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import FormatSelectedContent from "discourse/select-kit/components/multi-select/format-selected-content";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
 import { or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("summary")
 @classNames("multi-select-header")
@@ -28,7 +28,7 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
   <template>
     <div class="select-kit-header-wrapper">
       {{#each this.icons as |iconName|}}
-        {{icon iconName}}
+        {{dIcon iconName}}
       {{/each}}
 
       {{#if this.selectKit.options.useHeaderFilter}}
@@ -66,7 +66,7 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
           @selectKit={{this.selectKit}}
         />
         {{#if this.caretIcon}}
-          {{icon this.caretIcon class="angle-icon"}}
+          {{dIcon this.caretIcon class="angle-icon"}}
         {{/if}}
       {{/if}}
     </div>

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import { not } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class PostMetaDataPosterNameIcon extends Component {
   get emojis() {
@@ -18,7 +18,7 @@ export default class PostMetaDataPosterNameIcon extends Component {
   }
 
   <template>
-    <span class={{concatClass "poster-icon" @className}} title={{@title}}>
+    <span class={{dConcatClass "poster-icon" @className}} title={{@title}}>
       {{#if @url}}
         <a href={{@url}}>
           <Content
@@ -42,10 +42,10 @@ export default class PostMetaDataPosterNameIcon extends Component {
 
 const Content = <template>
   {{#if @icon}}
-    {{icon @icon}}
+    {{dIcon @icon}}
   {{else if @emojis}}
     {{#each @emojis as |emojiName|}}
-      {{emoji emojiName skipEmojiTitle=(not @emojiTitle)}}
+      {{dEmoji emojiName skipEmojiTitle=(not @emojiTitle)}}
     {{/each}}
   {{/if}}
   {{@text}}

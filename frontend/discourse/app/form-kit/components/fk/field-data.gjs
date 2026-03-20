@@ -6,7 +6,7 @@ import curryComponent from "ember-curry-component";
 import { resolveFieldControl } from "discourse/form-kit/lib/field-control";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
-import uniqueId from "discourse/helpers/unique-id";
+import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
 /**
  * Represents a field in a form with validation, registration, and field data management capabilities.
@@ -16,13 +16,13 @@ export default class FKFieldData extends Component {
    * Unique identifier for the field.
    * @type {string}
    */
-  id = uniqueId();
+  id = dUniqueId();
 
   /**
    * Unique identifier for the field's error element.
    * @type {string}
    */
-  errorId = uniqueId();
+  errorId = dUniqueId();
 
   // Set by legacy controls in their constructor (during render),
   // read by the applyControlType modifier (post-render)

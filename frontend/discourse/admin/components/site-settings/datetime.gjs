@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class Datetime extends Component {
   @action

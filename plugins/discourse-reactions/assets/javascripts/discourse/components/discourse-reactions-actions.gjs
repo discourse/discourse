@@ -20,8 +20,8 @@ import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and, eq, not } from "discourse/truth-helpers";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsCounter from "./discourse-reactions-counter";
@@ -774,7 +774,7 @@ export default class DiscourseReactionsActions extends Component {
       {{on "touchstart" this.touchStart}}
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
-      {{closeOnClickOutside this.clickOutside}}
+      {{dCloseOnClickOutside this.clickOutside}}
       {{didInsert this.registerContainerElement}}
     >
       {{#let

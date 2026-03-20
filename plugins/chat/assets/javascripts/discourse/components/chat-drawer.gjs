@@ -8,13 +8,13 @@ import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
 @tagName("")
@@ -243,7 +243,7 @@ export default class ChatDrawer extends Component {
       <div
         data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
         data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
-        class={{concatClass
+        class={{dConcatClass
           "chat-drawer"
           (if
             this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed"

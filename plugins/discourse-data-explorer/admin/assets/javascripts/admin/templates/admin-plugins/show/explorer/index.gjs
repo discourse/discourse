@@ -2,15 +2,15 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import Form from "discourse/components/form";
-import LoadMore from "discourse/components/load-more";
-import PickFilesButton from "discourse/components/pick-files-button";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import icon from "discourse/helpers/d-icon";
 import { not } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
 
@@ -27,7 +27,7 @@ export default <template>
             @label="explorer.create"
           />
           <actions.Wrapped>
-            <PickFilesButton
+            <DPickFilesButton
               @label="explorer.import.label"
               @icon="upload"
               @acceptedFormatsOverride={{@controller.acceptedImportFileTypes}}
@@ -80,7 +80,7 @@ export default <template>
 
           {{#if @controller.othersDirty}}
             <div class="warning">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
               {{i18n "explorer.others_dirty"}}
             </div>
           {{/if}}
@@ -88,9 +88,9 @@ export default <template>
 
         <:content as |filteredQueries|>
           {{#if @controller.model.content.length}}
-            <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+            <DConditionalLoadingSpinner @condition={{@controller.loading}} />
 
-            <LoadMore @action={{@controller.loadMore}}>
+            <DLoadMore @action={{@controller.loadMore}}>
               <div class="container discourse-data-explorer-query-list">
                 <table class="d-table recent-queries">
                   <thead class="d-table__header heading-container">
@@ -103,7 +103,7 @@ export default <template>
                           (fn @controller.updateSortProperty "name")
                         }}
                       >
-                        <TableHeaderToggle
+                        <DTableHeaderToggle
                           @field="name"
                           @labelKey="explorer.query_name"
                           @order={{@controller.order}}
@@ -121,7 +121,7 @@ export default <template>
                           (fn @controller.updateSortProperty "username")
                         }}
                       >
-                        <TableHeaderToggle
+                        <DTableHeaderToggle
                           @field="username"
                           @labelKey="explorer.query_user"
                           @order={{@controller.order}}
@@ -144,7 +144,7 @@ export default <template>
                           (fn @controller.updateSortProperty "last_run_at")
                         }}
                       >
-                        <TableHeaderToggle
+                        <DTableHeaderToggle
                           @field="last_run_at"
                           @labelKey="explorer.query_time"
                           @order={{@controller.order}}
@@ -209,14 +209,14 @@ export default <template>
                           </div>
                           {{#if query.last_run_at}}
                             <span>
-                              {{ageWithTooltip
+                              {{dAgeWithTooltip
                                 query.last_run_at
                                 format="medium"
                               }}
                             </span>
                           {{else if query.created_at}}
                             <span>
-                              {{ageWithTooltip
+                              {{dAgeWithTooltip
                                 query.created_at
                                 format="medium"
                               }}
@@ -248,9 +248,9 @@ export default <template>
                   </tbody>
                 </table>
               </div>
-            </LoadMore>
+            </DLoadMore>
 
-            <ConditionalLoadingSpinner
+            <DConditionalLoadingSpinner
               @condition={{@controller.model.loadingMore}}
             />
 

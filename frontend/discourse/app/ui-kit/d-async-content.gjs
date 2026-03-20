@@ -4,13 +4,13 @@ import { hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import { Promise as RsvpPromise } from "rsvp";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import FlashMessage from "discourse/components/flash-message";
 import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
 
 const ERROR_MODES = ["flash", "popup"];
 const DEFAULT_ERROR_MODE = "flash";
@@ -97,7 +97,7 @@ export default class DAsyncContent extends Component {
       {{#if (has-block "loading")}}
         {{yield to="loading"}}
       {{else}}
-        <ConditionalLoadingSpinner @condition={{this.data.isPending}} />
+        <DConditionalLoadingSpinner @condition={{this.data.isPending}} />
       {{/if}}
     {{else if this.data.isResolved}}
       {{#if this.data.value}}
@@ -130,6 +130,6 @@ class AsyncContentInlineError extends Component {
   }
 
   <template>
-    <FlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
+    <DFlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
   </template>
 }

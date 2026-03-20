@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const Dropdown = <template>
   <div class="control-group form-template-field" data-field-type="dropdown">
@@ -9,7 +9,7 @@ const Dropdown = <template>
       <label class="form-template-field__label">
         {{@attributes.label}}
         {{#if @validations.required}}
-          {{icon "asterisk" class="form-template-field__required-indicator"}}
+          {{dIcon "asterisk" class="form-template-field__required-indicator"}}
         {{/if}}
       </label>
     {{/if}}

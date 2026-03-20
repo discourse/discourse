@@ -4,9 +4,9 @@ import { action, computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 const CUSTOM_REASON_KEY = "custom";
@@ -71,7 +71,7 @@ export default class AdminPenaltyReason extends Component {
         />
 
         {{#if this.isCustomReason}}
-          <TextField
+          <DTextField
             @value={{this.customReason}}
             @onChange={{this.setCustomReason}}
             class="suspend-reason"
@@ -89,7 +89,7 @@ export default class AdminPenaltyReason extends Component {
         />
 
         {{#if this.isCustomReason}}
-          <TextField
+          <DTextField
             @value={{this.customReason}}
             @onChange={{this.setCustomReason}}
             @placeholderKey="admin.user.silence_reason_placeholder"

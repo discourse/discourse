@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import ComboBoxSelectBoxHeaderComponent from "discourse/select-kit/components/combo-box/combo-box-header";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("tag-drop-header")
 export default class TagDropHeader extends ComboBoxSelectBoxHeaderComponent {
@@ -19,7 +19,7 @@ export default class TagDropHeader extends ComboBoxSelectBoxHeaderComponent {
         />
       {{/let}}
 
-      {{icon this.caretIcon class="angle-icon"}}
+      {{dIcon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

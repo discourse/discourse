@@ -1,8 +1,8 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -19,7 +19,7 @@ export default <template>
     />
   </div>
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     {{#if @controller.model.length}}
 
       <table class="search-logs-list grid">
@@ -60,5 +60,5 @@ export default <template>
     {{else}}
       {{i18n "search.no_results"}}
     {{/if}}
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

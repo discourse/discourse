@@ -2,21 +2,21 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import BulkGroupMemberDropdown from "discourse/components/bulk-group-member-dropdown";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import GroupMemberDropdown from "discourse/components/group-member-dropdown";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ResponsiveTable from "discourse/components/responsive-table";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
-import TextField from "discourse/components/text-field";
-import UserInfo from "discourse/components/user-info";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DResponsiveTable from "discourse/ui-kit/d-responsive-table";
+import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DUserInfo from "discourse/ui-kit/d-user-info";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -36,7 +36,7 @@ export default <template>
       {{/if}}
 
       {{#if @controller.model.can_see_members}}
-        <TextField
+        <DTextField
           @value={{@controller.filterInput}}
           @placeholderKey={{@controller.filterPlaceholder}}
           @autocomplete="off"
@@ -96,14 +96,14 @@ export default <template>
     </div>
 
     {{#if @controller.hasMembers}}
-      <LoadMore @action={{@controller.loadMore}}>
-        <ResponsiveTable
+      <DLoadMore @action={{@controller.loadMore}}>
+        <DResponsiveTable
           @className="group-members
           {{if @controller.isBulk 'sticky-header' ''}}
             {{if @controller.canManageGroup 'group-members--can-manage' ''}}"
         >
           <:header>
-            <TableHeaderToggle
+            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
               @asc={{@controller.asc}}
@@ -129,7 +129,7 @@ export default <template>
               }}
             />
 
-            <TableHeaderToggle
+            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
               @asc={{@controller.asc}}
@@ -138,7 +138,7 @@ export default <template>
               @automatic={{true}}
               class="directory-table__column-header--added"
             />
-            <TableHeaderToggle
+            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
               @asc={{@controller.asc}}
@@ -147,7 +147,7 @@ export default <template>
               @automatic={{true}}
               class="directory-table__column-header--last-posted"
             />
-            <TableHeaderToggle
+            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
               @asc={{@controller.asc}}
@@ -180,7 +180,7 @@ export default <template>
                       />
                     {{/if}}
                   {{/if}}
-                  <UserInfo
+                  <DUserInfo
                     @user={{m}}
                     @skipName={{@controller.skipName}}
                     @showStatus={{true}}
@@ -199,7 +199,7 @@ export default <template>
                     {{/if}}
                     <span class="directory-table__value">
                       {{#if m.owner}}
-                        {{icon "shield-halved"}}
+                        {{dIcon "shield-halved"}}
                         {{i18n "groups.members.owner"}}<br />
                       {{/if}}
                       {{#if m.primary}}
@@ -220,7 +220,7 @@ export default <template>
                     <span>{{i18n "groups.member_added"}}</span>
                   </span>
                   <span class="directory-table__value">
-                    {{ageWithTooltip m.added_at format="medium"}}
+                    {{dAgeWithTooltip m.added_at format="medium"}}
                   </span>
                 </div>
                 <div
@@ -236,7 +236,7 @@ export default <template>
                     </span>
                   {{/if}}
                   <span class="directory-table__value">
-                    {{ageWithTooltip m.last_posted_at format="medium"}}
+                    {{dAgeWithTooltip m.last_posted_at format="medium"}}
                   </span>
                 </div>
                 <div
@@ -252,7 +252,7 @@ export default <template>
                     </span>
                   {{/if}}
                   <span class="directory-table__value">
-                    {{ageWithTooltip m.last_seen_at format="medium"}}
+                    {{dAgeWithTooltip m.last_seen_at format="medium"}}
                   </span>
                 </div>
                 {{#if @controller.canManageGroup}}
@@ -271,10 +271,10 @@ export default <template>
               </div>
             {{/each}}
           </:body>
-        </ResponsiveTable>
-      </LoadMore>
+        </DResponsiveTable>
+      </DLoadMore>
 
-      <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+      <DConditionalLoadingSpinner @condition={{@controller.loading}} />
     {{else}}
       <br />
       <div>{{i18n @controller.emptyMessageKey}}</div>

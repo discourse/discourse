@@ -7,17 +7,17 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { Promise } from "rsvp";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import RadioButton from "discourse/components/radio-button";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { topicLevels } from "discourse/lib/notification-levels";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
-import autoFocus from "discourse/modifiers/auto-focus";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DModal from "discourse/ui-kit/d-modal";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 const _customActions = {};
@@ -417,7 +417,7 @@ export default class BulkTopicActions extends Component {
       class="topic-bulk-actions-modal -large"
     >
       <:body>
-        <ConditionalLoadingSection
+        <DConditionalLoadingSection
           @isLoading={{this.loading}}
           @title={{i18n "topics.bulk.performing"}}
         >
@@ -485,7 +485,7 @@ export default class BulkTopicActions extends Component {
                     <label
                       class="radio notification-level-radio checkbox-label"
                     >
-                      <RadioButton
+                      <DRadioButton
                         @value={{level.id}}
                         @name="notification_level"
                         @selection={{this.notificationLevelId}}
@@ -527,12 +527,12 @@ export default class BulkTopicActions extends Component {
                 <textarea
                   id="bulk-close-note"
                   {{on "input" this.updateCloseNote}}
-                  {{autoFocus}}
+                  {{dAutoFocus}}
                 >{{this.closeNote}}</textarea>
               </div>
             {{/if}}
           {{/if}}
-        </ConditionalLoadingSection>
+        </DConditionalLoadingSection>
       </:body>
 
       <:footer>

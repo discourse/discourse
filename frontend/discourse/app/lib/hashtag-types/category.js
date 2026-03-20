@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { iconHTML } from "discourse/lib/icon-library";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import HashtagTypeBase from "./base";
 
 export default class CategoryHashtagType extends HashtagTypeBase {
@@ -67,7 +67,7 @@ export default class CategoryHashtagType extends HashtagTypeBase {
       style = iconHTML(hashtag.icon);
     }
     if (hashtag.style_type === "emoji" && hashtag.emoji) {
-      style = replaceEmoji(`:${hashtag.emoji}:`);
+      style = dReplaceEmoji(`:${hashtag.emoji}:`);
     }
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;

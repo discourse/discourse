@@ -6,9 +6,6 @@ import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import AddTopicStatusClasses from "discourse/components/add-topic-status-classes";
 import AnonymousTopicFooterButtons from "discourse/components/anonymous-topic-footer-buttons";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import DiscourseTopic from "discourse/components/discourse-topic";
 import MoreTopics from "discourse/components/more-topics";
@@ -36,14 +33,17 @@ import TopicTimeline from "discourse/components/topic-timeline";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
 import TopicTitle from "discourse/components/topic-title";
 import TopicTitleEditor from "discourse/components/topic-title-editor";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { and, eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCookText from "discourse/ui-kit/d-cook-text";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import booleanString from "../helpers/boolean-string";
 
@@ -138,7 +138,7 @@ export default <template>
                     class="remove-featured-link"
                     title={{i18n "composer.remove_featured_link"}}
                   >
-                    {{icon "circle-xmark"}}
+                    {{dIcon "circle-xmark"}}
                     {{@controller.featuredLinkDomain}}
                   </a>
                 {{/if}}
@@ -177,7 +177,7 @@ export default <template>
                   {{trustHTML @controller.model.fancyTitle~}}
                   {{~#if @controller.model.details.can_edit~}}
                     <span class="edit-topic__wrapper">
-                      {{icon "pencil" class="edit-topic"}}
+                      {{dIcon "pencil" class="edit-topic"}}
                     </span>
                   {{~/if}}
                 </a>
@@ -440,7 +440,7 @@ export default <template>
             </div>
             <div id="topic-bottom"></div>
 
-            <ConditionalLoadingSpinner
+            <DConditionalLoadingSpinner
               @condition={{@controller.model.postStream.loadingFilter}}
             >
               {{#if @controller.loadedAllPosts}}
@@ -457,7 +457,7 @@ export default <template>
                             {{i18n "review.awaiting_approval"}}
                           </span>
                           <span class="created-at">
-                            {{ageWithTooltip pending.created_at}}
+                            {{dAgeWithTooltip pending.created_at}}
                           </span>
                         </div>
                         <div class="post-contents-wrapper">
@@ -469,7 +469,7 @@ export default <template>
                               @user={{@controller.currentUser}}
                             />
                             <div class="post-body">
-                              <CookText @rawText={{pending.raw}} />
+                              <DCookText @rawText={{pending.raw}} />
                             </div>
                           </div>
                         </div>
@@ -559,7 +559,7 @@ export default <template>
                 {{/if}}
 
               {{/if}}
-            </ConditionalLoadingSpinner>
+            </DConditionalLoadingSpinner>
 
             <PluginOutlet
               @name="topic-area-bottom"
@@ -629,7 +629,7 @@ export default <template>
       {{/if}}
     {{else}}
       <div class="container">
-        <ConditionalLoadingSpinner @condition={{@controller.noErrorYet}}>
+        <DConditionalLoadingSpinner @condition={{@controller.noErrorYet}}>
           {{#if @controller.model.errorHtml}}
             <div class="not-found">{{trustHTML
                 @controller.model.errorHtml
@@ -655,9 +655,9 @@ export default <template>
                 />
               {{/if}}
             </div>
-            <ConditionalLoadingSpinner @condition={{@controller.retrying}} />
+            <DConditionalLoadingSpinner @condition={{@controller.retrying}} />
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </div>
     {{/if}}
 

@@ -1,10 +1,10 @@
-import UserStatusMessage from "discourse/components/user-status-message";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 
 const CookedUserStatusMessage = <template>
   {{#in-element @data.wrapper}}
-    <UserStatusMessage @status={{@data.status}} />
+    <DUserStatusMessage @status={{@data.status}} />
   {{/in-element}}
 </template>;
 

@@ -1,18 +1,18 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import NavItem from "discourse/components/nav-item";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import TopicStatus from "discourse/components/topic-status";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <ul class="nav nav-pills reviewable-title">
-    <NavItem @route="review.index" @label="review.view_all" />
-    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+    <DNavItem @route="review.index" @label="review.view_all" />
+    <DNavItem @route="review.topics" @label="review.grouped_by_topic" />
     {{#if @controller.currentUser.admin}}
-      <NavItem
+      <DNavItem
         @route="review.settings"
         @label="review.settings.title"
         @icon="wrench"
@@ -38,7 +38,7 @@ export default <template>
                   href={{rt.relative_url}}
                   rel="noopener noreferrer"
                   target="_blank"
-                >{{replaceEmoji rt.title}}</a>
+                >{{dReplaceEmoji rt.title}}</a>
               </div>
             </td>
             <td class="reviewable-count">
@@ -58,7 +58,7 @@ export default <template>
                 @query={{hash topic_id=rt.id}}
                 class="btn btn-primary btn-small"
               >
-                {{icon "list"}}
+                {{dIcon "list"}}
                 <span>{{i18n "review.topics.details"}}</span>
               </LinkTo>
             </td>

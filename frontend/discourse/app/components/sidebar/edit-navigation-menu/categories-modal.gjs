@@ -6,19 +6,19 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DecoratedHtml from "discourse/components/decorated-html";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { serializedAction, splitWhere } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { gt, has } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
@@ -268,9 +268,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       @closeModal={{@closeModal}}
       class="sidebar__edit-navigation-menu__categories-modal"
     >
-      <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+      <DConditionalLoadingSpinner @condition={{this.initialLoad}}>
         <form
-          class={{concatClass
+          class={{dConcatClass
             "sidebar-categories-form"
             (if this.filtered "--filtered")
           }}
@@ -296,15 +296,15 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                   >
                     <div class="sidebar-categories-form__category-wrapper">
                       <div class="sidebar-categories-form__category-badge">
-                        {{categoryBadge category}}
+                        {{dCategoryBadge category}}
                       </div>
 
                       {{#unless category.parentCategory}}
                         <div
                           class="sidebar-categories-form__category-description"
                         >
-                          <DecoratedHtml
-                            @html={{dirSpan
+                          <DDecoratedHtml
+                            @html={{dDirSpan
                               category.description_excerpt
                               htmlSafe="true"
                             }}
@@ -333,9 +333,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
             </div>
           {{/each}}
         </form>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
 
-      <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+      <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
     </EditNavigationMenuModal>
   </template>
 }

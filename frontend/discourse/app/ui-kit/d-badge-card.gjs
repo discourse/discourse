@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
-import iconOrImage from "discourse/helpers/icon-or-image";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
 import { eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class DBadgeCard extends Component {
@@ -77,7 +77,7 @@ export default class DBadgeCard extends Component {
           class="badge-icon {{@badge.badgeTypeClassName}}"
           aria-hidden="true"
         >
-          {{iconOrImage @badge}}
+          {{dIconOrImage @badge}}
         </span>
         <div class="badge-info">
           <div class="badge-info-item">
@@ -103,7 +103,7 @@ export default class DBadgeCard extends Component {
                   (i18n
                     "badges.awarded"
                     count=this.displayCount
-                    number=(number this.displayCount)
+                    number=(dNumber this.displayCount)
                   )
                 }}
               </div>
@@ -118,7 +118,7 @@ export default class DBadgeCard extends Component {
           class="check-display status-checked"
           aria-label={{i18n "notifications.titles.granted_badge"}}
         >
-          {{icon "check"}}
+          {{dIcon "check"}}
         </div>
       {{/if}}
 

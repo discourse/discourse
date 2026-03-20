@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import TimeInput from "discourse/components/time-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import DTimeInput from "discourse/ui-kit/d-time-input";
 
 function setTime(time) {
   this.setProperties(time);
@@ -20,7 +20,7 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
 
     await render(
       <template>
-        <TimeInput @hours={{this.hours}} @minutes={{this.minutes}} />
+        <DTimeInput @hours={{this.hours}} @minutes={{this.minutes}} />
       </template>
     );
 
@@ -32,7 +32,7 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
 
     await render(
       <template>
-        <TimeInput @hours={{this.hours}} @minutes={{this.minutes}} />
+        <DTimeInput @hours={{this.hours}} @minutes={{this.minutes}} />
       </template>
     );
 
@@ -47,7 +47,7 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
 
     await render(
       <template>
-        <TimeInput
+        <DTimeInput
           @hours={{this.hours}}
           @minutes={{this.minutes}}
           @onChange={{this.onChange}}

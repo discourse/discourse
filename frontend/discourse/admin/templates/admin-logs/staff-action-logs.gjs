@@ -3,14 +3,14 @@ import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import StaffActions from "discourse/admin/components/staff-actions";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
-import LoadMore from "discourse/components/load-more";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -84,7 +84,7 @@ export default <template>
       {{/if}}
 
       <div class="date-filter-container">
-        <DateTimeInputRange
+        <DDateTimeInputRange
           @from={{@controller.startDate}}
           @to={{@controller.endDate}}
           @onChange={{@controller.onChangeDateRange}}
@@ -107,7 +107,7 @@ export default <template>
   <div class="clearfix"></div>
 
   <StaffActions>
-    <LoadMore @action={{@controller.loadMore}}>
+    <DLoadMore @action={{@controller.loadMore}}>
       {{#if @controller.model.content}}
         <table class="table staff-logs grid">
           <thead>
@@ -125,7 +125,7 @@ export default <template>
                   <div class="staff-user">
                     {{#if item.acting_user}}
                       <LinkTo @route="adminUser" @model={{item.acting_user}}>
-                        {{avatar item.acting_user imageSize="tiny"}}
+                        {{dAvatar item.acting_user imageSize="tiny"}}
                         {{item.acting_user.username}}
                       </LinkTo>
                     {{else}}
@@ -133,7 +133,7 @@ export default <template>
                         class="deleted-user"
                         title={{i18n "admin.user.deleted"}}
                       >
-                        {{icon "trash-can"}}
+                        {{dIcon "trash-can"}}
                       </span>
                     {{/if}}
                   </div>
@@ -150,7 +150,7 @@ export default <template>
                       <LinkTo
                         @route="adminUser"
                         @model={{item.target_user}}
-                      >{{avatar item.target_user imageSize="tiny"}}</LinkTo>
+                      >{{dAvatar item.target_user imageSize="tiny"}}</LinkTo>
                       <a
                         href
                         {{on
@@ -171,7 +171,7 @@ export default <template>
                     {{/if}}
                   </div>
                 </td>
-                <td class="col value created-at">{{ageWithTooltip
+                <td class="col value created-at">{{dAgeWithTooltip
                     item.created_at
                   }}</td>
                 <td class="col value details">
@@ -184,14 +184,14 @@ export default <template>
                           "click"
                           (fn @controller.showCustomDetailsModal item)
                         }}
-                      >{{icon "circle-info"}}
+                      >{{dIcon "circle-info"}}
                         {{i18n "admin.logs.staff_actions.show"}}</a>
                     {{/if}}
                     {{#if item.useModalForDetails}}
                       <a
                         href
                         {{on "click" (fn @controller.showDetailsModal item)}}
-                      >{{icon "circle-info"}}
+                      >{{dIcon "circle-info"}}
                         {{i18n "admin.logs.staff_actions.show"}}</a>
                     {{/if}}
                   </div>
@@ -208,12 +208,12 @@ export default <template>
           </tbody>
         </table>
       {{else if @controller.model.loadingMore}}
-        <ConditionalLoadingSpinner
+        <DConditionalLoadingSpinner
           @condition={{@controller.model.loadingMore}}
         />
       {{else}}
         {{i18n "search.no_results"}}
       {{/if}}
-    </LoadMore>
+    </DLoadMore>
   </StaffActions>
 </template>

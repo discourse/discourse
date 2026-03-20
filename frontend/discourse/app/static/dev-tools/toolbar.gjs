@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import draggable from "discourse/modifiers/draggable";
-import onResize from "discourse/modifiers/on-resize";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import I18n, { i18n } from "discourse-i18n";
 import BlockDebugButton from "./block-debug/button";
 import MobileViewButton from "./mobile-view/button";
@@ -60,24 +60,24 @@ export default class Toolbar extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "dev-tools-toolbar"
         (if this.activeDragOffset "--dragging")
       }}
       style={{this.style}}
-      {{onResize this.onResize}}
+      {{dOnResize this.onResize}}
     >
       <button
         type="button"
         title={{i18n "dev_tools.drag_to_move"}}
         class="gripper"
-        {{draggable
+        {{dDraggable
           didStartDrag=this.didStartDrag
           didEndDrag=this.didEndDrag
           dragMove=this.dragMove
         }}
       >
-        {{icon "grip-lines"}}
+        {{dIcon "grip-lines"}}
       </button>
       <PluginOutletDebugButton />
       <BlockDebugButton />
@@ -92,7 +92,7 @@ export default class Toolbar extends Component {
         class="disable-dev-tools"
         {{on "click" this.disableDevTools}}
       >
-        {{icon "xmark"}}
+        {{dIcon "xmark"}}
       </button>
     </div>
   </template>

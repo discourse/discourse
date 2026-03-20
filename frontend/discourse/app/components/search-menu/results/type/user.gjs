@@ -1,9 +1,9 @@
-import avatar from "discourse/helpers/avatar";
 import formatUsername from "discourse/helpers/format-username";
 import { and } from "discourse/truth-helpers";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 const User = <template>
-  {{avatar
+  {{dAvatar
     @result
     imageSize="small"
     template=@result.avatar_template

@@ -1,5 +1,5 @@
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DResponsiveTable = <template>
   <HorizontalScrollSyncWrapper class="directory-table-container" ...attributes>
@@ -7,7 +7,7 @@ const DResponsiveTable = <template>
       role="table"
       aria-label={{@ariaLabel}}
       style={{@style}}
-      class={{concatClass "directory-table" @className}}
+      class={{dConcatClass "directory-table" @className}}
     >
       <div class="directory-table__header">
         {{yield to="header"}}

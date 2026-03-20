@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DSelect from "discourse/components/d-select";
-import FilterInput from "discourse/components/filter-input";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiFeaturesList from "./ai-features-list";
@@ -194,7 +194,7 @@ export default class AiFeatures extends Component {
           {{/each}}
         </DSelect>
 
-        <FilterInput
+        <DFilterInput
           placeholder={{i18n "discourse_ai.features.filters.text"}}
           @filterAction={{this.onFilterChange}}
           @value={{this.filterValue}}

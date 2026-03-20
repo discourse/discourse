@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
 
@@ -40,7 +40,7 @@ export default class ChatNavbarBackButton extends Component {
           {{#if (has-block)}}
             {{yield}}
           {{else}}
-            {{icon this.icon}}
+            {{dIcon this.icon}}
           {{/if}}
           {{#if this.site.mobileView}}
             <ChatHeaderIconUnreadIndicator
@@ -59,7 +59,7 @@ export default class ChatNavbarBackButton extends Component {
           {{#if (has-block)}}
             {{yield}}
           {{else}}
-            {{icon this.icon}}
+            {{dIcon this.icon}}
           {{/if}}
           {{#if this.site.mobileView}}
             <ChatHeaderIconUnreadIndicator

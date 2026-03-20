@@ -6,11 +6,7 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import DateInput from "discourse/components/date-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -20,6 +16,10 @@ import MultiSelect from "discourse/select-kit/components/multi-select";
 import SearchAdvancedCategoryChooser from "discourse/select-kit/components/search-advanced-category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DDateInput from "discourse/ui-kit/d-date-input";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -809,7 +809,7 @@ export default class SearchAdvancedOptions extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "advanced-filters"
         (if this.isExpanded "--is-expanded")
       }}
@@ -825,7 +825,7 @@ export default class SearchAdvancedOptions extends Component {
           <span class="badge-notification">{{this.submittedFilterCount}}</span>
         {{/if}}
         {{i18n "search.advanced.title"}}
-        {{icon (if this.isExpanded "chevron-up" "chevron-down")}}
+        {{dIcon (if this.isExpanded "chevron-up" "chevron-down")}}
       </DButton>
       <PluginOutlet
         @name="full-page-search-advanced-header"
@@ -968,7 +968,7 @@ export default class SearchAdvancedOptions extends Component {
                   @value={{this.searchedTerms.time.when}}
                   @onChange={{this.onChangeWhenTime}}
                 />
-                <DateInput
+                <DDateInput
                   @date={{this.searchedTerms.time.days}}
                   @onChange={{this.onChangeWhenDate}}
                   @inputId="search-post-date"
@@ -994,7 +994,7 @@ export default class SearchAdvancedOptions extends Component {
                     (withEventValue this.onChangeSearchTermMinPostCount)
                   }}
                 />
-                {{icon "left-right"}}
+                {{dIcon "left-right"}}
                 <Input
                   @type="number"
                   @value={{readonly this.searchedTerms.max_posts}}
@@ -1027,7 +1027,7 @@ export default class SearchAdvancedOptions extends Component {
                     (withEventValue this.onChangeSearchTermMinViews)
                   }}
                 />
-                {{icon "left-right"}}
+                {{dIcon "left-right"}}
                 <Input
                   @type="number"
                   @value={{readonly this.searchedTerms.max_views}}

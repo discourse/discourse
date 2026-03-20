@@ -4,10 +4,10 @@ import { fn } from "@ember/helper";
 import { action, set } from "@ember/object";
 import { isBlank, isPresent } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { cook } from "discourse/lib/text";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import PolicyBuilderForm from "../policy-builder-form";
 

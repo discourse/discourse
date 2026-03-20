@@ -3,15 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DComboButton from "discourse/components/d-combo-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DComboButton from "discourse/ui-kit/d-combo-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 const DRAFTS_LIMIT = 4;
@@ -123,7 +123,7 @@ export default class TopicDraftsDropdown extends Component {
           aria-label={{i18n "drafts.dropdown.title"}}
           class={{@btnTypeClass}}
         >
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             {{#each this.drafts as |draft|}}
               <dropdown.item class="topic-drafts-item">
                 <DButton
@@ -154,7 +154,7 @@ export default class TopicDraftsDropdown extends Component {
                 </DButton>
               </dropdown.item>
             {{/if}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </combo.Menu>
       {{/if}}
     </DComboButton>

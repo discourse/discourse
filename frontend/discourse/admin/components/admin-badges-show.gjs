@@ -9,13 +9,13 @@ import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import BadgePreviewModal from "discourse/admin/components/modal/badge-preview";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
-import iconOrImage from "discourse/helpers/icon-or-image";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { sanitize } from "discourse/lib/text";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import { i18n } from "discourse-i18n";
 
 const FORM_FIELDS = [
@@ -251,7 +251,7 @@ export default class AdminBadgesShow extends Component {
       >
 
         <h2 class="current-badge-header">
-          {{iconOrImage data}}
+          {{dIconOrImage data}}
           <span class="badge-display-name">{{data.name}}</span>
         </h2>
 
@@ -277,7 +277,7 @@ export default class AdminBadgesShow extends Component {
               @route="adminSiteText"
               @query={{hash q=(concat this.textCustomizationPrefix "name")}}
             >
-              {{icon "pencil"}}
+              {{dIcon "pencil"}}
             </LinkTo>
           </form.Container>
         {{else}}
@@ -366,7 +366,7 @@ export default class AdminBadgesShow extends Component {
                   q=(concat this.textCustomizationPrefix "description")
                 }}
               >
-                {{icon "pencil"}}
+                {{dIcon "pencil"}}
               </LinkTo>
             </form.Container>
           {{else}}
@@ -396,7 +396,7 @@ export default class AdminBadgesShow extends Component {
                   q=(concat this.textCustomizationPrefix "long_description")
                 }}
               >
-                {{icon "pencil"}}
+                {{dIcon "pencil"}}
               </LinkTo>
             </form.Container>
           {{else}}

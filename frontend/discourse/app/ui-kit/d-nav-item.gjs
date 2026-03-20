@@ -4,9 +4,9 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
-import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class DNavItem extends Component {
@@ -86,7 +86,7 @@ export default class DNavItem extends Component {
   }
 
   <template>
-    <li class={{concatClass (if this.active "active") @class}} ...attributes>
+    <li class={{dConcatClass (if this.active "active") @class}} ...attributes>
       {{#if this.refreshHref}}
         <a href={{this.refreshHref}}>{{this.contents}}</a>
       {{else if @routeParam}}

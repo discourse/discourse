@@ -4,14 +4,14 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
 import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
 import { extractError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import Topic from "discourse/models/topic";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const SLOW_MODE_OPTIONS = [
@@ -230,7 +230,7 @@ export default class EditSlowMode extends Component {
         {{/if}}
 
         <div class="control-group">
-          <FutureDateInput
+          <DFutureDateInput
             class="enabled-until"
             @label="topic.slow_mode_update.enabled_until"
             @labelClasses="slow-mode-label"

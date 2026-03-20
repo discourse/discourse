@@ -6,11 +6,11 @@ import { empty, equal, notEmpty } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-/** @type {import("discourse/helpers/element.gjs").default} */
-import element from "discourse/helpers/element";
 import { or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -214,7 +214,7 @@ export default class DButton extends Component {
   }
 
   get wrapperElement() {
-    return element(this.args.href ? "a" : "button");
+    return dElement(this.args.href ? "a" : "button");
   }
 
   <template>
@@ -223,7 +223,7 @@ export default class DButton extends Component {
       href={{@href}}
       type={{unless @href (or @type "button")}}
       {{! For legacy compatibility. Prefer passing class as attributes. }}
-      class={{concatClass
+      class={{dConcatClass
         @class
         (if @isLoading "is-loading")
         (if this.btnLink "btn-link" "btn")
@@ -246,14 +246,14 @@ export default class DButton extends Component {
       {{on "mousedown" this.mouseDown}}
     >
       {{#if @isLoading}}
-        {{~icon "spinner" class="loading-icon"~}}
+        {{~dIcon "spinner" class="loading-icon"~}}
       {{else if @icon}}
         {{#if @ariaHidden}}
           <span aria-hidden="true">
-            {{~icon @icon~}}
+            {{~dIcon @icon~}}
           </span>
         {{else}}
-          {{~icon @icon~}}
+          {{~dIcon @icon~}}
         {{/if}}
       {{/if}}
 
@@ -275,7 +275,7 @@ export default class DButton extends Component {
 
       {{#if @suffixIcon}}
         <span class="d-button__suffix-icon">
-          {{~icon @suffixIcon~}}
+          {{~dIcon @suffixIcon~}}
         </span>
       {{/if}}
     </this.wrapperElement>

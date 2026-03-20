@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
-import AsyncContent from "discourse/components/async-content";
-import SmallUserList, {
-  smallUserAttrs,
-} from "discourse/components/small-user-list";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { eq } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DSmallUserList, {
+  smallUserAttrs,
+} from "discourse/ui-kit/d-small-user-list";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
 import { whoVoted } from "../lib/post-voting-utilities";
 
@@ -48,7 +48,7 @@ export default class PostVotingWhoVotedList extends Component {
   <template>
     <div
       class="post-voting-post-list"
-      {{closeOnClickOutside
+      {{dCloseOnClickOutside
         @onClickOutside
         (hash
           targetSelector=".post-voting-post-list"
@@ -56,7 +56,7 @@ export default class PostVotingWhoVotedList extends Component {
         )
       }}
     >
-      <AsyncContent @asyncData={{this.loadWhoVoted}}>
+      <DAsyncContent @asyncData={{this.loadWhoVoted}}>
         <:loading>
           {{i18n "loading"}}
         </:loading>
@@ -84,7 +84,7 @@ export default class PostVotingWhoVotedList extends Component {
             {{/let}}
           {{/if}}
         </:content>
-      </AsyncContent>
+      </DAsyncContent>
     </div>
   </template>
 }
@@ -93,10 +93,10 @@ const PostVotingSmallUserList = <template>
   {{#if @list}}
     <div class="post-voting-post-list-voters-wrapper">
       <span class="post-voting-post-list-icon">
-        {{icon (if (eq @direction "up") "angle-up" "angle-down")}}
+        {{dIcon (if (eq @direction "up") "angle-up" "angle-down")}}
       </span>
       <span class="post-voting-post-list-count">{{@list.length}}</span>
-      <SmallUserList class="post-voting-post-list-voters" @users={{@list}} />
+      <DSmallUserList class="post-voting-post-list-voters" @users={{@list}} />
     </div>
   {{/if}}
 </template>;

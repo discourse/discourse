@@ -5,10 +5,6 @@ import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import UserBadge from "discourse/components/user-badge";
-import UserLink from "discourse/components/user-link";
-import UserStatusMessage from "discourse/components/user-status-message";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
@@ -17,6 +13,10 @@ import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { formatUsername } from "discourse/lib/utilities";
 import { and, or } from "discourse/truth-helpers";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataPosterName extends Component {
@@ -147,7 +147,7 @@ export default class PostMetaDataPosterName extends Component {
             <PostMetaDataPosterNameIcons @post={{@post}} />
           {{/if}}
           <span
-            class={{concatClass
+            class={{dConcatClass
               "first"
               (if this.nameFirst "full-name" "username")
               (if this.user.staff "staff")
@@ -172,24 +172,24 @@ export default class PostMetaDataPosterName extends Component {
                 user=this.user
               }}
             >
-              <UserLink @user={{this.user}}>
+              <DUserLink @user={{this.user}}>
                 {{this.name}}
                 {{#if this.showGlyph}}
                   {{#if (or this.user.moderator @post.group_moderator)}}
-                    {{icon
+                    {{dIcon
                       "shield-halved"
                       translatedTitle=(i18n "user.moderator_tooltip")
                     }}
                   {{/if}}
                 {{/if}}
-              </UserLink>
+              </DUserLink>
             </PluginOutlet>
           </span>
 
           {{#if this.showNameAndGroup}}
             {{#if this.shouldDisplaySecondName}}
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "second"
                   (if this.nameFirst "username" "full-name")
                 }}
@@ -204,19 +204,19 @@ export default class PostMetaDataPosterName extends Component {
                     user=this.user
                   }}
                 >
-                  <UserLink @user={{this.user}}>
+                  <DUserLink @user={{this.user}}>
                     {{#if this.nameFirst}}
                       {{formatUsername this.user.username}}
                     {{else}}
                       {{this.user.name}}
                     {{/if}}
-                  </UserLink>
+                  </DUserLink>
                 </PluginOutlet>
               </span>
             {{/if}}
 
             {{#if this.userTitle}}
-              <span class={{concatClass "user-title" this.titleClassNames}}>
+              <span class={{dConcatClass "user-title" this.titleClassNames}}>
                 {{#if (and this.user.primary_group_name @post.title_is_group)}}
                   <GroupLink
                     @name={{this.user.primary_group_name}}
@@ -232,7 +232,7 @@ export default class PostMetaDataPosterName extends Component {
 
             {{#if this.shouldShowUserStatus}}
               <span class="user-status-message-wrap">
-                <UserStatusMessage @status={{this.user.status}} />
+                <DUserStatusMessage @status={{this.user.status}} />
               </span>
             {{/if}}
 

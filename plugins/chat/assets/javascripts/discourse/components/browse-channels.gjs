@@ -6,11 +6,11 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import EmptyState from "discourse/components/empty-state";
-import FilterInput from "discourse/components/filter-input";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
 import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -89,7 +89,7 @@ export default class BrowseChannels extends Component {
           </ul>
         </nav>
 
-        <FilterInput
+        <DFilterInput
           {{didInsert this.focusFilterInput}}
           @filterAction={{this.setFilter}}
           @icons={{hash right="magnifying-glass"}}
@@ -109,7 +109,7 @@ export default class BrowseChannels extends Component {
             </list.Item>
 
             <list.EmptyState>
-              <EmptyState
+              <DEmptyState
                 @title={{i18n "chat.empty_state.title"}}
                 @body={{i18n "chat.empty_state.direct_message"}}
                 @ctaLabel={{i18n "chat.empty_state.direct_message_cta"}}

@@ -1,10 +1,10 @@
 import { render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import LoadMore, {
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DLoadMore, {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
-} from "discourse/components/load-more";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+} from "discourse/ui-kit/d-load-more";
 
 module("Integration | ui-kit | DLoadMore", function (hooks) {
   setupRenderingTest(hooks);
@@ -52,13 +52,13 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
 
     await render(
       <template>
-        <LoadMore @action={{performLoadMore}} @root="#ember-testing">
+        <DLoadMore @action={{performLoadMore}} @root="#ember-testing">
           <table class="numbers">
             <tbody>
               <tr />
             </tbody>
           </table>
-        </LoadMore>
+        </DLoadMore>
       </template>
     );
 
@@ -79,7 +79,7 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
 
     await render(
       <template>
-        <LoadMore
+        <DLoadMore
           @action={{performLoadMore}}
           @root="#ember-testing"
           @enabled={{false}}
@@ -89,7 +89,7 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
               <tr />
             </tbody>
           </table>
-        </LoadMore>
+        </DLoadMore>
       </template>
     );
 
@@ -106,7 +106,7 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
 
     await render(
       <template>
-        <LoadMore
+        <DLoadMore
           @action={{loadMore}}
           @root="#ember-testing"
           @isLoading={{true}}
@@ -116,7 +116,7 @@ module("Integration | ui-kit | DLoadMore", function (hooks) {
               <tr />
             </tbody>
           </table>
-        </LoadMore>
+        </DLoadMore>
       </template>
     );
 

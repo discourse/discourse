@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import avatar from "discourse/helpers/bound-avatar-template";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
 
 export function smallUserAttrs(user) {
@@ -74,7 +74,7 @@ export default class DSmallUserList extends Component {
                   aria-hidden="false"
                   role="listitem"
                 >
-                  {{avatar user.template "tiny"}}
+                  {{dBoundAvatarTemplate user.template "tiny"}}
                 </a>
               {{/if}}
             {{/each}}

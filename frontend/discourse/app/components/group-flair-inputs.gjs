@@ -5,9 +5,6 @@ import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
-import AvatarFlair from "discourse/components/avatar-flair";
-import RadioButton from "discourse/components/radio-button";
-import TextField from "discourse/components/text-field";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -15,6 +12,9 @@ import getURL from "discourse/lib/get-url";
 import { convertIconClass } from "discourse/lib/icon-library";
 import IconPicker from "discourse/select-kit/components/icon-picker";
 import { or } from "discourse/truth-helpers";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -114,7 +114,7 @@ export default class GroupFlairInputs extends Component {
 
         <div class="radios">
           <label class="radio-label" for="avatar-flair-icon">
-            <RadioButton
+            <DRadioButton
               @name="avatar-flair-icon"
               @id="avatar-flair-icon"
               @value="icon"
@@ -124,7 +124,7 @@ export default class GroupFlairInputs extends Component {
           </label>
 
           <label class="radio-label" for="avatar-flair-image">
-            <RadioButton
+            <DRadioButton
               @name="avatar-flair-image"
               @id="avatar-flair-image"
               @value="image"
@@ -161,7 +161,7 @@ export default class GroupFlairInputs extends Component {
             "groups.flair_bg_color"
           }}</label>
 
-        <TextField
+        <DTextField
           @name="flair_bg_color"
           @value={{this.model.flair_bg_color}}
           @placeholderKey="groups.flair_bg_color_placeholder"
@@ -175,7 +175,7 @@ export default class GroupFlairInputs extends Component {
               "groups.flair_color"
             }}</label>
 
-          <TextField
+          <DTextField
             @name="flair_color"
             @value={{this.model.flair_color}}
             @placeholderKey="groups.flair_color_placeholder"
@@ -205,7 +205,7 @@ export default class GroupFlairInputs extends Component {
               this.model.flairBackgroundHexColor
             )
           }}
-            <AvatarFlair
+            <DAvatarFlair
               @flairName={{this.model.name}}
               @flairUrl={{if
                 this.flairPreviewIcon

@@ -1,32 +1,32 @@
 import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
-import TextField from "discourse/components/text-field";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
-import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{bodyClass "user-invites-page"}}
 
   {{#if @controller.canInviteToForum}}
-    <LoadMore
+    <DLoadMore
       @id="user-content"
       @action={{@controller.loadMore}}
-      class={{concatClass
+      class={{dConcatClass
         "user-content"
         (if @controller.hasLoadedInitialInvites "--loaded")
       }}
@@ -35,7 +35,7 @@ export default <template>
         {{#if @controller.showSearch}}
           <div class="user-invite-search">
             <form>
-              <TextField
+              <DTextField
                 @value={{@controller.searchTerm}}
                 @placeholderKey="user.invited.search"
               /></form>
@@ -131,7 +131,7 @@ export default <template>
                 {{#each @controller.model.invites as |invite|}}
                   <tr class="d-table__row">
                     <td class="d-table__cell --overview">
-                      <LinkTo @route="user" @model={{invite.user}}>{{avatar
+                      <LinkTo @route="user" @model={{invite.user}}>{{dAvatar
                           invite.user
                           imageSize="tiny"
                         }}</LinkTo>
@@ -144,32 +144,32 @@ export default <template>
                       <div class="d-table__mobile-label">
                         {{i18n "user.invited.redeemed_at"}}
                       </div>
-                      {{formatDate invite.redeemed_at}}
+                      {{dFormatDate invite.redeemed_at}}
                     </td>
                     {{#if @controller.model.can_see_invite_details}}
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.last_seen"}}
                         </div>
-                        {{formatDate invite.user.last_seen_at}}
+                        {{dFormatDate invite.user.last_seen_at}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.invited.topics_entered"}}
                         </div>
-                        {{number invite.user.topics_entered}}
+                        {{dNumber invite.user.topics_entered}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.invited.posts_read_count"}}
                         </div>
-                        {{number invite.user.posts_read_count}}
+                        {{dNumber invite.user.posts_read_count}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.invited.time_read"}}
                         </div>
-                        {{formatDuration invite.user.time_read}}
+                        {{dFormatDuration invite.user.time_read}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
@@ -218,10 +218,10 @@ export default <template>
                     <td class="d-table__cell --overview invite-type">
                       <div class="invite-shortkey">
                         {{#if invite.email}}
-                          {{icon "envelope"}}
+                          {{dIcon "envelope"}}
                           {{invite.email}}
                         {{else}}
-                          {{icon "link"}}
+                          {{dIcon "link"}}
                           {{#if invite.invite_key}}
                             {{i18n
                               "user.invited.invited_via_link"
@@ -248,7 +248,7 @@ export default <template>
                               <a
                                 href="/g/{{g.name}}"
                                 class="invite-extra-item-link"
-                              >{{icon "users"}}
+                              >{{dIcon "users"}}
                                 {{g.name}}
                               </a>
                             </span>
@@ -261,7 +261,7 @@ export default <template>
                               href={{invite.topic.url}}
                               class="invite-extra-item-link"
                             >
-                              {{icon "file-lines"}}
+                              {{dIcon "file-lines"}}
                               {{invite.topic.title}}
                             </a>
                           </span>
@@ -273,7 +273,7 @@ export default <template>
                       <div class="d-table__mobile-label">
                         {{i18n "user.invited.sent"}}
                       </div>
-                      {{formatDate invite.updated_at}}
+                      {{dFormatDate invite.updated_at}}
                     </td>
 
                     <td class="d-table__cell --detail invite-expires-at">
@@ -306,7 +306,7 @@ export default <template>
                             class="btn-small"
                           >
                             <:content>
-                              <DropdownMenu as |dropdown|>
+                              <DDropdownMenu as |dropdown|>
                                 <dropdown.item>
                                   <DButton
                                     @action={{fn
@@ -322,7 +322,7 @@ export default <template>
                                     }}
                                   />
                                 </dropdown.item>
-                              </DropdownMenu>
+                              </DDropdownMenu>
                             </:content>
                           </DMenu>
                         </div>
@@ -334,11 +334,11 @@ export default <template>
             </table>
           {{/if}}
 
-          <ConditionalLoadingSpinner
+          <DConditionalLoadingSpinner
             @condition={{@controller.invitesLoading}}
           />
         {{else}}
-          <EmptyState
+          <DEmptyState
             @identifier="empty-channels-list"
             @svgContent={{SvgEnvelopeZero}}
             @title={{i18n "user.invited.none.title"}}
@@ -357,10 +357,10 @@ export default <template>
                 {{i18n "user.invited.none.tip.suffix"}}
               {{/if}}
             </:tip>
-          </EmptyState>
+          </DEmptyState>
         {{/if}}
       </section>
-    </LoadMore>
+    </DLoadMore>
   {{else}}
     <div class="alert alert-error invite-error">
       {{@controller.model.error}}

@@ -1,6 +1,6 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -17,23 +17,23 @@ export default <template>
       />
     </:breadcrumbs>
     <:tabs>
-      <NavItem
+      <DNavItem
         @route="adminEmailLogs.sent"
         @label="admin.config.email_logs.sub_pages.sent.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminEmailLogs.skipped"
         @label="admin.config.email_logs.sub_pages.skipped.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminEmailLogs.bounced"
         @label="admin.config.email_logs.sub_pages.bounced.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminEmailLogs.received"
         @label="admin.config.email_logs.sub_pages.received.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminEmailLogs.rejected"
         @label="admin.config.email_logs.sub_pages.rejected.title"
       />

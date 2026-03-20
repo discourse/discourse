@@ -17,16 +17,12 @@ import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import ToolbarScrollContainer from "discourse/components/composer/toolbar-scroll-container";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PopupInputTip from "discourse/components/popup-input-tip";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
-import concatClass from "discourse/helpers/concat-class";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
@@ -44,12 +40,16 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
+import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import {
   EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
   SKIP,
-} from "discourse/modifiers/d-autocomplete";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import { not } from "discourse/truth-helpers";
+} from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
@@ -772,7 +772,7 @@ export default class DEditor extends Component {
 
   <template>
     <div
-      class={{concatClass "d-editor-container" this.editorContainerModeClass}}
+      class={{dConcatClass "d-editor-container" this.editorContainerModeClass}}
     >
       <div class="d-editor-textarea-column">
         {{yield}}
@@ -818,7 +818,7 @@ export default class DEditor extends Component {
             </ToolbarScrollContainer>
           {{/if}}
 
-          <ConditionalLoadingSpinner @condition={{this.loading}} />
+          <DConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent
             @class="d-editor-input"
             @onSetup={{this.setupEditor}}
@@ -836,7 +836,7 @@ export default class DEditor extends Component {
             @replaceToolbar={{this.replaceToolbar}}
             @toggleRichEditor={{this.toggleRichEditor}}
           />
-          <PopupInputTip @validation={{this.validation}} />
+          <DPopupInputTip @validation={{this.validation}} />
           <PluginOutlet
             @name="after-d-editor"
             @connectorTagName="div"

@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import EmptyState from "discourse/components/empty-state";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
 
 module("Integration | ui-kit | DEmptyState", function (hooks) {
   setupRenderingTest(hooks);
@@ -9,7 +9,7 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
   test("it renders", async function (assert) {
     await render(
       <template>
-        <EmptyState @title="user.no_bookmarks_title" @body="body" />
+        <DEmptyState @title="user.no_bookmarks_title" @body="body" />
       </template>
     );
 

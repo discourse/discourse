@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DBreadcrumbsItem extends Component {
   @service breadcrumbs;
@@ -34,7 +34,7 @@ export default class DBreadcrumbsItem extends Component {
           </a>
         {{/if}}
         <span class="separator">
-          {{~icon "angle-right"~}}
+          {{~dIcon "angle-right"~}}
         </span>
       </li>
     </template>;

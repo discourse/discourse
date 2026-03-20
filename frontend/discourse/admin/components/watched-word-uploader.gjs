@@ -5,8 +5,8 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -33,7 +33,7 @@ export default class WatchedWordUploader extends Component {
   <template>
     <div class="watched-words-uploader" ...attributes>
       <label class="btn btn-default {{if this.addDisabled 'disabled'}}">
-        {{icon "upload"}}
+        {{dIcon "upload"}}
         {{i18n "admin.watched_words.form.upload"}}
         <input
           {{didInsert this.uppyUpload.setup}}

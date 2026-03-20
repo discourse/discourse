@@ -5,14 +5,14 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
 import withEventValue from "discourse/helpers/with-event-value";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
 export default class RequestGroupMembershipForm extends Component {
@@ -56,7 +56,7 @@ export default class RequestGroupMembershipForm extends Component {
             {{i18n "groups.membership_request.reason"}}
           </label>
 
-          <ExpandingTextArea
+          <DExpandingTextArea
             {{on "input" (withEventValue (fn (mut this.reason)))}}
             value={{this.reason}}
             maxlength="5000"
@@ -73,7 +73,7 @@ export default class RequestGroupMembershipForm extends Component {
         />
 
         <DModalCancel @close={{@closeModal}} />
-        <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
       </:footer>
     </DModal>
   </template>

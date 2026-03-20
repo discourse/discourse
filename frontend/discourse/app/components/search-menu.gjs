@@ -7,16 +7,13 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
 import MenuPanel from "discourse/components/menu-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AdvancedButton from "discourse/components/search-menu/advanced-button";
 import ClearButton from "discourse/components/search-menu/clear-button";
 import Results from "discourse/components/search-menu/results";
 import SearchTerm from "discourse/components/search-menu/search-term";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseDebounce from "discourse/lib/debounce";
@@ -29,7 +26,10 @@ import {
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
-import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -412,7 +412,7 @@ export default class SearchMenu extends Component {
     >
       <div class="search-input-wrapper">
         <div
-          class={{concatClass
+          class={{dConcatClass
             "search-input"
             (concat "search-input--" @location)
           }}
@@ -457,7 +457,7 @@ export default class SearchMenu extends Component {
 
           {{#if this.loading}}
             <div class="searching">
-              {{loadingSpinner}}
+              {{dLoadingSpinner}}
             </div>
           {{else}}
             <div class="searching">

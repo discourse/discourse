@@ -4,9 +4,9 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class AiArtifactComponent extends Component {
   @service siteSettings;

@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 /** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-/** @type {import("discourse/helpers/element.gjs").default} */
-import element from "discourse/helpers/element";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import devToolsState from "../state";
 
@@ -88,16 +88,16 @@ export default class BlockDebugButton extends Component {
   <template>
     <DMenu
       @identifier="block-debug-menu"
-      @triggerClass={{concatClass
+      @triggerClass={{dConcatClass
         "toggle-blocks"
         (if this.isActive "--active")
       }}
-      @triggerComponent={{element "button"}}
+      @triggerComponent={{dElement "button"}}
       @modalForMobile={{false}}
       @title={{i18n "dev_tools.toggle_block_debug"}}
     >
       <:trigger>
-        {{icon "cubes"}}
+        {{dIcon "cubes"}}
       </:trigger>
       <:content>
         <div class="block-debug-menu">

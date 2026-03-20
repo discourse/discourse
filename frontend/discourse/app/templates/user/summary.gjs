@@ -1,8 +1,6 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserStat from "discourse/components/user-stat";
 import UserSummaryCategorySearch from "discourse/components/user-summary-category-search";
 import UserSummarySection from "discourse/components/user-summary-section";
 import UserSummaryTopic from "discourse/components/user-summary-topic";
@@ -10,9 +8,11 @@ import UserSummaryTopicsList from "discourse/components/user-summary-topics-list
 import UserSummaryUser from "discourse/components/user-summary-user";
 import UserSummaryUsersList from "discourse/components/user-summary-users-list";
 import bodyClass from "discourse/helpers/body-class";
-import categoryLink from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
 import shortenUrl from "discourse/helpers/shorten-url";
+import DBadgeCard from "discourse/ui-kit/d-badge-card";
+import DUserStat from "discourse/ui-kit/d-user-stat";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -28,13 +28,13 @@ export default <template>
         <h3 class="stats-title">{{i18n "user.summary.stats"}}</h3>
         <ul>
           <li class="stats-days-visited">
-            <UserStat
+            <DUserStat
               @value={{@controller.model.days_visited}}
               @label="user.summary.days_visited"
             />
           </li>
           <li class="stats-time-read">
-            <UserStat
+            <DUserStat
               @value={{@controller.timeRead}}
               @label="user.summary.time_read"
               @rawTitle={{i18n
@@ -46,7 +46,7 @@ export default <template>
           </li>
           {{#if @controller.showRecentTimeRead}}
             <li class="stats-recent-read">
-              <UserStat
+              <DUserStat
                 @value={{@controller.recentTimeRead}}
                 @label="user.summary.recent_time_read"
                 @rawTitle={{i18n
@@ -58,13 +58,13 @@ export default <template>
             </li>
           {{/if}}
           <li class="stats-topics-entered">
-            <UserStat
+            <DUserStat
               @value={{@controller.model.topics_entered}}
               @label="user.summary.topics_entered"
             />
           </li>
           <li class="stats-posts-read">
-            <UserStat
+            <DUserStat
               @value={{@controller.model.posts_read_count}}
               @label="user.summary.posts_read"
             />
@@ -72,7 +72,7 @@ export default <template>
           {{#if @controller.model.can_see_user_actions}}
             <li class="stats-likes-given linked-stat">
               <LinkTo @route="userActivity.likesGiven">
-                <UserStat
+                <DUserStat
                   @value={{@controller.model.likes_given}}
                   @icon="heart"
                   @label="user.summary.likes_given"
@@ -81,7 +81,7 @@ export default <template>
             </li>
           {{else}}
             <li class="stats-likes-given">
-              <UserStat
+              <DUserStat
                 @value={{@controller.model.likes_given}}
                 @icon="heart"
                 @label="user.summary.likes_given"
@@ -89,7 +89,7 @@ export default <template>
             </li>
           {{/if}}
           <li class="stats-likes-received">
-            <UserStat
+            <DUserStat
               @value={{@controller.model.likes_received}}
               @icon="heart"
               @label="user.summary.likes_received"
@@ -99,7 +99,7 @@ export default <template>
             {{#if @controller.model.can_see_user_actions}}
               <li class="stats-bookmark-count linked-stat">
                 <LinkTo @route="userActivity.bookmarks">
-                  <UserStat
+                  <DUserStat
                     @value={{@controller.model.bookmark_count}}
                     @label="user.summary.bookmark_count"
                   />
@@ -107,7 +107,7 @@ export default <template>
               </li>
             {{else}}
               <li class="stats-bookmark-count">
-                <UserStat
+                <DUserStat
                   @value={{@controller.model.bookmark_count}}
                   @label="user.summary.bookmark_count"
                 />
@@ -117,7 +117,7 @@ export default <template>
           {{#if @controller.model.can_see_user_actions}}
             <li class="stats-topic-count linked-stat">
               <LinkTo @route="userActivity.topics">
-                <UserStat
+                <DUserStat
                   @value={{@controller.model.topic_count}}
                   @label="user.summary.topic_count"
                 />
@@ -125,7 +125,7 @@ export default <template>
             </li>
           {{else}}
             <li class="stats-topic-count">
-              <UserStat
+              <DUserStat
                 @value={{@controller.model.topic_count}}
                 @label="user.summary.topic_count"
               />
@@ -134,7 +134,7 @@ export default <template>
           {{#if @controller.model.can_see_user_actions}}
             <li class="stats-post-count linked-stat">
               <LinkTo @route="userActivity.replies">
-                <UserStat
+                <DUserStat
                   @value={{@controller.model.post_count}}
                   @label="user.summary.post_count"
                 />
@@ -142,7 +142,7 @@ export default <template>
             </li>
           {{else}}
             <li class="stats-post-count">
-              <UserStat
+              <DUserStat
                 @value={{@controller.model.post_count}}
                 @label="user.summary.post_count"
               />
@@ -302,7 +302,7 @@ export default <template>
                     }}
                   >
                     <td class="category-link">
-                      {{categoryLink
+                      {{dCategoryLink
                         category
                         allowUncategorized="true"
                         hideParent=false
@@ -340,7 +340,7 @@ export default <template>
         {{#if @controller.model.badges}}
           <div class="badge-group-list">
             {{#each @controller.model.badges as |badge|}}
-              <BadgeCard
+              <DBadgeCard
                 @badge={{badge}}
                 @count={{badge.count}}
                 @username={{@controller.user.username_lower}}

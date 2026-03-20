@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 class UserApiKeyRow extends Component {
@@ -25,11 +25,11 @@ class UserApiKeyRow extends Component {
         <div class="user-api-key__dates">
           <div class="user-api-key__date-approved">
             <span>{{i18n "user.api_approved"}}</span>
-            {{ageWithTooltip @apiKey.created_at format="medium"}}
+            {{dAgeWithTooltip @apiKey.created_at format="medium"}}
           </div>
           <div class="user-api-key__date-last-used">
             <span>{{i18n "user.api_last_used_at"}}</span>
-            {{ageWithTooltip @apiKey.last_used_at format="medium"}}
+            {{dAgeWithTooltip @apiKey.last_used_at format="medium"}}
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@ class UserApiKeyRow extends Component {
       {{#if @apiKey.scopes.length}}
         <div class="user-api-key__scopes-toggle">
           <a href {{on "click" this.toggleScopes}}>
-            {{icon "caret-down"}}
+            {{dIcon "caret-down"}}
             <span>{{i18n
                 "user.api_show_permissions"
                 count=@apiKey.scopes.length

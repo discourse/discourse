@@ -1,1 +1,1 @@
-export { categoryLinkHTML as default } from "discourse/helpers/category-link";
+export { categoryLinkHTML as default } from "discourse/ui-kit/helpers/d-category-link";

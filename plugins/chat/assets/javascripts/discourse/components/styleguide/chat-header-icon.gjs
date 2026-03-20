@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { optionalRequire } from "discourse/lib/utilities";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,

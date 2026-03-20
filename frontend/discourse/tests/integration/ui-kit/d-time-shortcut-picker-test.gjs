@@ -1,8 +1,8 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import { i18n } from "discourse-i18n";
 
 module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
@@ -27,7 +27,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     this.clock = fakeTime(tuesday, this.currentUser.user_option.timezone, true);
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     const expected = [
@@ -55,7 +55,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     this.clock = fakeTime(monday, this.currentUser.user_option.timezone, true);
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert.dom("#tap_tile_later_this_week").exists("has later this week");
@@ -70,7 +70,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     );
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert
@@ -86,7 +86,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     );
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert
@@ -102,7 +102,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     );
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert.dom("#tap_tile_later_today").exists("has later today");
@@ -116,7 +116,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     );
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert
@@ -132,7 +132,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     );
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     await click("#tap_tile_custom");
@@ -145,7 +145,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     this.clock = fakeTime(sunday, this.currentUser.user_option.timezone, true);
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert
@@ -162,7 +162,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     this.clock = fakeTime(monday, this.currentUser.user_option.timezone, true);
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert
@@ -182,7 +182,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
     );
 
     await render(
-      <template><TimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
     );
 
     assert

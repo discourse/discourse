@@ -1,8 +1,8 @@
 import { Input, Textarea } from "@ember/component";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import formatCurrency from "../../../../helpers/format-currency";
 import formatUnixDate from "../../../../helpers/format-unix-date";
@@ -139,7 +139,7 @@ export default <template>
                   @models={{array @controller.model.product.id plan.id}}
                   class="btn no-text btn-icon"
                 >
-                  {{icon "far-pen-to-square"}}
+                  {{dIcon "far-pen-to-square"}}
                 </LinkTo>
               </td>
             </tr>

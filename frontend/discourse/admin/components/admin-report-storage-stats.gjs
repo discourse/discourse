@@ -4,10 +4,10 @@ import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import { setting } from "discourse/lib/computed";
 import getUrl from "discourse/lib/get-url";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -53,7 +53,7 @@ export default class AdminReportStorageStats extends Component {
       {{#if this.showBackupStats}}
         <div class="backups">
           <h3 class="storage-stats-title">
-            <a href={{getUrl "/admin/backups"}}>{{icon "box-archive"}}
+            <a href={{getUrl "/admin/backups"}}>{{dIcon "box-archive"}}
               {{i18n "admin.dashboard.backups"}}</a>
           </h3>
           <p>
@@ -82,7 +82,7 @@ export default class AdminReportStorageStats extends Component {
               {{trustHTML
                 (i18n
                   "admin.dashboard.lastest_backup"
-                  date=(formatDate
+                  date=(dFormatDate
                     this.backupStats.last_backup_taken_at leaveAgo="true"
                   )
                 )
@@ -93,7 +93,7 @@ export default class AdminReportStorageStats extends Component {
       {{/if}}
 
       <div class="uploads">
-        <h3 class="storage-stats-title">{{icon "upload"}}
+        <h3 class="storage-stats-title">{{dIcon "upload"}}
           {{i18n "admin.dashboard.uploads"}}</h3>
         <p>
           {{#if this.uploadStats.free_bytes}}

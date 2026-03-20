@@ -6,14 +6,14 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import { MENU } from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
-import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DMenu extends Component {
   @service site;
@@ -121,7 +121,7 @@ export default class DMenu extends Component {
   <template>
     <this.triggerComponent
       {{this.registerTrigger}}
-      class={{concatClass
+      class={{dConcatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
         (concat this.options.identifier "-trigger")
@@ -147,7 +147,7 @@ export default class DMenu extends Component {
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
           @autofocus={{this.options.autofocus}}
-          class={{concatClass
+          class={{dConcatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
             @contentClass
@@ -175,7 +175,7 @@ export default class DMenu extends Component {
         <DFloatBody
           @instance={{this.menuInstance}}
           @trapTab={{this.options.trapTab}}
-          @mainClass={{concatClass
+          @mainClass={{dConcatClass
             "fk-d-menu"
             (concat this.options.identifier "-content")
             @class

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import AvatarFlair from "discourse/components/avatar-flair";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 
 export default class DUserAvatarFlair extends Component {
   @service site;
@@ -35,7 +35,7 @@ export default class DUserAvatarFlair extends Component {
 
   <template>
     {{#if this.flair}}
-      <AvatarFlair
+      <DAvatarFlair
         @flairName={{this.flair.flairName}}
         @flairUrl={{this.flair.flairUrl}}
         @flairBgColor={{this.flair.flairBgColor}}

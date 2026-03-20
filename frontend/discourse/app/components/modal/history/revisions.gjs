@@ -8,11 +8,11 @@ import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import Avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function tagClasses(tagChanges, state, className) {
@@ -72,7 +72,7 @@ export default class Revisions extends Component {
         <div class="row revision__locale">
           <div class="revision-content --previous">
             <div class={{if @model.locale_changes.previous "diff-del"}}>
-              {{icon "globe"}}
+              {{dIcon "globe"}}
               {{this.previousLocale}}
             </div>
           </div>
@@ -83,7 +83,7 @@ export default class Revisions extends Component {
 
           <div class="revision-content --current">
             <div class={{if @model.locale_changes.current "diff-ins"}}>
-              {{icon "globe"}}
+              {{dIcon "globe"}}
               {{this.currentLocale}}
             </div>
           </div>
@@ -97,16 +97,22 @@ export default class Revisions extends Component {
       {{#if @mobileView}}
         {{#if @userChanges}}
           <div class="row">
-            {{Avatar @model.user_changes.previous.avatar_template "small"}}
+            {{dBoundAvatarTemplate
+              @model.user_changes.previous.avatar_template
+              "small"
+            }}
             {{@model.user_changes.previous.username}}
             &rarr;
-            {{Avatar @model.user_changes.current.avatar_template "small"}}
+            {{dBoundAvatarTemplate
+              @model.user_changes.current.avatar_template
+              "small"
+            }}
             {{@model.user_changes.current.username}}
           </div>
         {{/if}}
         {{#if @model.wiki_changes}}
           <div class="row">
-            {{icon
+            {{dIcon
               "far-pen-to-square"
               class=(if @model.wiki_changes.current "diff-ins" "diff-del")
             }}
@@ -114,7 +120,7 @@ export default class Revisions extends Component {
         {{/if}}
         {{#if @model.archetype_changes}}
           <div class="row">
-            {{icon
+            {{dIcon
               (if
                 (eq @model.archetype_changes.current "private_message")
                 "envelope"
@@ -128,13 +134,13 @@ export default class Revisions extends Component {
             {{#if @previousCategory}}
               {{trustHTML @previousCategory}}
             {{else}}
-              {{icon "far-eye-slash" class="diff-del"}}
+              {{dIcon "far-eye-slash" class="diff-del"}}
             {{/if}}
             &rarr;
             {{#if @currentCategory}}
               {{trustHTML @currentCategory}}
             {{else}}
-              {{icon "far-eye-slash" class="diff-ins"}}
+              {{dIcon "far-eye-slash" class="diff-ins"}}
             {{/if}}
           </div>
         {{/if}}
@@ -142,7 +148,7 @@ export default class Revisions extends Component {
       {{#if @model.tags_changes}}
         <div class="row -tag-revisions">
           <span class="tag-revision__wrapper --previous">
-            {{discourseTags
+            {{dDiscourseTags
               this.fakePreviousTagsTopic
               tagClasses=this.previousTagClassesMap
             }}
@@ -153,7 +159,7 @@ export default class Revisions extends Component {
           {{/if}}
 
           <span class="tag-revision__wrapper --current">
-            {{discourseTags
+            {{dDiscourseTags
               this.fakeCurrentTagsTopic
               tagClasses=this.currentTagClassesMap
             }}

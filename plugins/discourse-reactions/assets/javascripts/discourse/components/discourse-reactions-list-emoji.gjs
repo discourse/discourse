@@ -11,8 +11,8 @@ import {
   offset,
   shift,
 } from "@floating-ui/dom";
-import emoji from "discourse/helpers/emoji";
 import { bind } from "discourse/lib/decorators";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 const DISPLAY_MAX_USERS = 19;
@@ -96,7 +96,7 @@ export default class DiscourseReactionsListEmoji extends Component {
       {{on "pointerover" this.pointerOver}}
     >
       {{#if @reaction.count}}
-        {{emoji
+        {{dEmoji
           @reaction.id
           skipTitle=true
           class=(if

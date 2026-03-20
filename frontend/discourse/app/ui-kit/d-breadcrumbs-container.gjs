@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DBreadcrumbsContainer extends Component {
   @service breadcrumbs;
@@ -23,12 +23,12 @@ export default class DBreadcrumbsContainer extends Component {
       {{#each this.breadcrumbs.items as |item index|}}
         {{#let item.templateForContainer as |Template|}}
           <Template
-            @linkClass={{concatClass
+            @linkClass={{dConcatClass
               "d-breadcrumbs__link"
               @additionalLinkClasses
             }}
             aria-current={{if (eq index this.lastItemIndex) "page"}}
-            class={{concatClass "d-breadcrumbs__item" @additionalItemClasses}}
+            class={{dConcatClass "d-breadcrumbs__item" @additionalItemClasses}}
           />
         {{/let}}
       {{/each}}

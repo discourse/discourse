@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class StartPostingOption extends Component {
@@ -27,7 +27,7 @@ export default class StartPostingOption extends Component {
   }
 
   <template>
-    <div class={{concatClass "option" this.name}}>
+    <div class={{dConcatClass "option" this.name}}>
       <h3>{{i18n this.title}}</h3>
       <p>
         {{i18n this.body}}

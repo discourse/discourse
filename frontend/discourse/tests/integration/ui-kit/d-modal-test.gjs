@@ -3,11 +3,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import noop from "discourse/helpers/noop";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 
 module("Integration | ui-kit | DModal", function (hooks) {
   setupRenderingTest(hooks);

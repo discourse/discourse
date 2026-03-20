@@ -4,15 +4,15 @@ import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import UserStatusMessage from "discourse/components/user-status-message";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
 import { and } from "discourse/truth-helpers";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class DUserInfo extends Component {
@@ -45,7 +45,7 @@ export default class DUserInfo extends Component {
   <template>
     <div
       data-username={{this.dataUsername}}
-      class={{concatClass "user-info" this.size}}
+      class={{dConcatClass "user-info" this.size}}
       ...attributes
     >
       {{#if this.includeAvatar}}
@@ -55,14 +55,14 @@ export default class DUserInfo extends Component {
               href={{this.userPath}}
               data-user-card={{@user.username}}
               aria-hidden="true"
-            >{{avatar @user imageSize="large"}}</a>
-            <UserAvatarFlair @user={{@user}} />
+            >{{dAvatar @user imageSize="large"}}</a>
+            <DUserAvatarFlair @user={{@user}} />
           </div>
         </div>
       {{/if}}
       <div class="user-detail">
         <div
-          class={{concatClass
+          class={{dConcatClass
             "name-line"
             (if @showStatus "--show-status")
             (if this.nameFirst "--name-first")
@@ -82,7 +82,7 @@ export default class DUserInfo extends Component {
               <span class="username">{{formatUsername @user.username}}</span>
             {{/if}}
             {{#if (and @showStatus @user.status)}}
-              <UserStatusMessage
+              <DUserStatusMessage
                 @status={{@user.status}}
                 @showDescription={{@showStatusDescription}}
               />

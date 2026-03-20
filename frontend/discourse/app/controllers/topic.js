@@ -17,7 +17,6 @@ import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-pub
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import JumpToPost from "discourse/components/modal/jump-to-post";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -48,6 +47,7 @@ import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
+import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 let customPostMessageCallbacks = {};

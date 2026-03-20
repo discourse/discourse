@@ -9,7 +9,7 @@ import {
   classNameBindings,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("a")
 @classNameBindings(":popup-tip", "good", "bad", "lastShownAt::hide")
@@ -62,5 +62,5 @@ export default class DPopupInputTip extends Component {
     }
   }
 
-  <template>{{this.tipReason}} {{icon "circle-xmark"}}</template>
+  <template>{{this.tipReason}} {{dIcon "circle-xmark"}}</template>
 }

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import curryComponent from "ember-curry-component";
-import DButton from "discourse/components/d-button";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
 
 // eslint-disable-next-line ember/no-empty-glimmer-component-classes
 class Button extends Component {

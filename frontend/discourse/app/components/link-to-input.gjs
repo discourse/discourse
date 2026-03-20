@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
 import $ from "jquery";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class LinkToInput extends Component {
@@ -27,7 +27,7 @@ export default class LinkToInput extends Component {
           {{i18n this.key}}
         {{/if}}
         {{#if this.icon}}
-          {{icon this.icon}}
+          {{dIcon this.icon}}
         {{/if}}
       </a>
     {{/if}}

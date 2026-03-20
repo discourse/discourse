@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { showUserNotes, updatePostUserNotesCount } from "../lib/user-notes";
 
 export default class PostMetadataUserNotes extends Component {
@@ -26,9 +26,9 @@ export default class PostMetadataUserNotes extends Component {
     {{! template-lint-disable no-invalid-interactive }}
     <span class="user-notes-icon" {{on "click" this.showNotes}}>
       {{#if this.siteSettings.enable_emoji}}
-        {{emoji "memo"}}
+        {{dEmoji "memo"}}
       {{else}}
-        {{icon "pen-to-square"}}
+        {{dIcon "pen-to-square"}}
       {{/if}}
     </span>
   </template>

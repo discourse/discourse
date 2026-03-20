@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import { resetFlair } from "discourse/lib/avatar-flair";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
 
 function setupSiteGroups(that) {
   that.site.groups = [
@@ -58,7 +58,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-bars").exists("has the svg icon");
@@ -77,7 +77,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-bars").exists("has the svg icon");
@@ -96,7 +96,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-dice-two").exists("has the svg icon");
@@ -115,7 +115,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
@@ -129,7 +129,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-dice-two").exists("has the svg icon");
@@ -149,7 +149,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     // Groups not serialized for anon on login_required
     this.site.groups = undefined;
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
@@ -168,7 +168,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-xmark").exists("has the svg icon");
@@ -186,7 +186,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
       flair_group_id: 11,
     });
 
-    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
+    await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });

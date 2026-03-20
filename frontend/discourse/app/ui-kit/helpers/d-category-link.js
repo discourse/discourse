@@ -1,13 +1,13 @@
 import { get } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
@@ -194,7 +194,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (opts.styleType === "emoji" && opts.emoji) {
-    html += replaceEmoji(`:${opts.emoji}:`);
+    html += dReplaceEmoji(`:${opts.emoji}:`);
   }
 
   // not ideal as we have to call it manually and we pass a fake category object

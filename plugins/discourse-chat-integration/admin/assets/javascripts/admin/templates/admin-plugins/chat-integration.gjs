@@ -1,7 +1,7 @@
 import { concat } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import NavItem from "discourse/components/nav-item";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import DNavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -10,7 +10,7 @@ export default <template>
       <div class="admin-controls-chat-providers">
         <ul class="nav nav-pills">
           {{#each @controller.model.content as |provider|}}
-            <NavItem
+            <DNavItem
               @route="adminPlugins.chat-integration.provider"
               @routeParam={{provider.name}}
               @label={{concat

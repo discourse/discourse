@@ -3,15 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
 import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
 import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const UP = "up";
@@ -121,7 +121,7 @@ export default class EditUserDirectoryColumns extends Component {
     >
       <:body>
         {{#if this.loading}}
-          {{loadingSpinner size="large"}}
+          {{dLoadingSpinner size="large"}}
         {{else}}
           <div class="edit-directory-columns-container">
             {{#each this.columns as |column|}}

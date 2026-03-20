@@ -6,9 +6,9 @@ import { click, render, waitFor } from "@ember/test-helpers";
 import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
-import AsyncContent from "discourse/components/async-content";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 
 module("Integration | ui-kit | DAsyncContent", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,11 +19,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content as |data|>
               <div class="content">{{data}}</div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -36,11 +36,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content as |data|>
               <div class="content">{{data}}</div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -53,11 +53,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content as |data|>
               <div class="content">{{data}}</div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -69,11 +69,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content as |data|>
               <div class="content">{{data}}</div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -85,11 +85,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content as |data|>
               <div class="content">{{data}}</div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -106,11 +106,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}} @context="correct">
+          <DAsyncContent @asyncData={{promise}} @context="correct">
             <:content as |data|>
               <div class="content">{{data}}</div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -133,11 +133,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
           <template>
             <button {{on "click" this.changeContext}}>Change Context</button>
-            <AsyncContent @asyncData={{this.load}} @context={{this.context}}>
+            <DAsyncContent @asyncData={{this.load}} @context={{this.context}}>
               <:content as |data|>
                 <div class="content">{{data}}</div>
               </:content>
-            </AsyncContent>
+            </DAsyncContent>
           </template>
         }
       );
@@ -158,11 +158,11 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       const renderPromise = render(
         <template>
           <div data-async-content-test>
-            <AsyncContent @asyncData={{promise}}>
+            <DAsyncContent @asyncData={{promise}}>
               <:content>
                 <div class="content"></div>
               </:content>
-            </AsyncContent>
+            </DAsyncContent>
           </div>
         </template>
       );
@@ -185,7 +185,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       const renderPromise = render(
         <template>
           <div data-async-content-test>
-            <AsyncContent @asyncData={{promise}}>
+            <DAsyncContent @asyncData={{promise}}>
               <:loading>
                 <div class="loading-provided"></div>
               </:loading>
@@ -193,7 +193,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
               <:content>
                 <div class="content"></div>
               </:content>
-            </AsyncContent>
+            </DAsyncContent>
           </div>
         </template>
       );
@@ -216,13 +216,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content as |data|>
               <div class="content">
                 {{data}}
               </div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -235,13 +235,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content as |data|>
               <div class="content">
                 {{data}}
               </div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -255,13 +255,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:empty>
               <div class="empty">
                 Empty
               </div>
             </:empty>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -273,13 +273,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:empty>
               <div class="empty">
                 Empty
               </div>
             </:empty>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -291,13 +291,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:content>
               <div class="content">
                 Empty
               </div>
             </:content>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -309,13 +309,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:empty>
               <div class="empty">
                 Empty
               </div>
             </:empty>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -328,7 +328,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       const promise = Promise.reject("error");
 
       await render(
-        <template><AsyncContent @asyncData={{promise}} /></template>
+        <template><DAsyncContent @asyncData={{promise}} /></template>
       );
 
       assert.dom(".alert-error").exists();
@@ -340,7 +340,7 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}} @errorMode="popup" />
+          <DAsyncContent @asyncData={{promise}} @errorMode="popup" />
           <DialogHolder />
         </template>
       );
@@ -354,13 +354,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:error as |error|>
               <div class="error">
                 {{error}}
               </div>
             </:error>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -373,13 +373,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:error as |error AsyncContentInlineErrorMessage|>
               <div class="error">
                 <AsyncContentInlineErrorMessage />
               </div>
             </:error>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -394,13 +394,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:error as |error|>
               <div class="error">
                 {{error}}
               </div>
             </:error>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 
@@ -412,13 +412,13 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       await render(
         <template>
-          <AsyncContent @asyncData={{promise}}>
+          <DAsyncContent @asyncData={{promise}}>
             <:error as |error|>
               <div class="error">
                 {{error}}
               </div>
             </:error>
-          </AsyncContent>
+          </DAsyncContent>
         </template>
       );
 

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import AssignUserForm from "../assign-user-form";
 
 export default class AssignUser extends Component {

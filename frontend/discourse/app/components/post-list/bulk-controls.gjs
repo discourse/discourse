@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -67,7 +67,7 @@ export default class PostListBulkControls extends Component {
               class="bulk-actions-dropdown"
             >
               <:content>
-                <DropdownMenu as |dropdown|>
+                <DDropdownMenu as |dropdown|>
                   {{#each @bulkActions as |bulkAction|}}
                     <dropdown.item>
                       <DButton
@@ -79,7 +79,7 @@ export default class PostListBulkControls extends Component {
                       />
                     </dropdown.item>
                   {{/each}}
-                </DropdownMenu>
+                </DDropdownMenu>
               </:content>
             </DMenu>
           {{/if}}

@@ -3,13 +3,13 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelRow from "./chat-channel-row";
@@ -88,7 +88,7 @@ export default class ChannelsListDirect extends Component {
             }}
             data-toggleable="direct-message-channels"
           >
-            {{icon "angle-up"}}
+            {{dIcon "angle-up"}}
           </span>
         {{/if}}
 
@@ -107,7 +107,7 @@ export default class ChannelsListDirect extends Component {
 
     <div
       id="direct-message-channels"
-      class={{concatClass
+      class={{dConcatClass
         "channels-list-container"
         "direct-message-channels"
         (if this.inSidebar "collapsible-sidebar-section")
@@ -115,7 +115,7 @@ export default class ChannelsListDirect extends Component {
       }}
     >
       {{#if this.directMessageChannelsEmpty}}
-        <EmptyState
+        <DEmptyState
           @identifier="empty-channels-list"
           @svgContent={{ChatZero}}
           @title={{i18n "chat.no_direct_message_channels"}}

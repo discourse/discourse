@@ -4,10 +4,7 @@ import { array, concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
 import Form from "discourse/components/form";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synonyms-confirmation";
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
 import { ajax } from "discourse/lib/ajax";
@@ -15,6 +12,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import { eq } from "discourse/truth-helpers";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default class TagSettings extends Component {
@@ -263,7 +263,7 @@ export default class TagSettings extends Component {
 
       {{#if this.showLocalizationsTab}}
         <div class="d-nav-submenu">
-          <HorizontalOverflowNav class="d-nav-submenu__tabs">
+          <DHorizontalOverflowNav class="d-nav-submenu__tabs">
             <li>
               <LinkTo
                 @route="tag.edit.tab"
@@ -288,7 +288,7 @@ export default class TagSettings extends Component {
                 {{i18n "tagging.settings.localizations"}}
               </LinkTo>
             </li>
-          </HorizontalOverflowNav>
+          </DHorizontalOverflowNav>
         </div>
       {{/if}}
 

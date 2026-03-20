@@ -4,14 +4,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import categoryBadge from "discourse/helpers/category-badge";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
@@ -352,7 +352,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
             <section.row>
               <:default>
                 <div class="c-channel-settings__name">
-                  {{replaceEmoji @channel.title}}
+                  {{dReplaceEmoji @channel.title}}
                 </div>
 
                 {{#if @channel.isCategoryChannel}}
@@ -477,7 +477,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
           <form.section @title={{this.channelInfoSectionTitle}} as |section|>
             {{#if @channel.isCategoryChannel}}
               <section.row @label={{this.categoryLabel}}>
-                {{categoryBadge
+                {{dCategoryBadge
                   @channel.chatable
                   link=true
                   allowUncategorized=true
@@ -624,7 +624,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
           <form.section class="--leave-channel" as |section|>
             {{#if @channel.chatable.group}}
               <div class="c-channel-settings__leave-info">
-                {{icon "triangle-exclamation"}}
+                {{dIcon "triangle-exclamation"}}
                 {{i18n "chat.channel_settings.leave_groupchat_info"}}
               </div>
             {{/if}}

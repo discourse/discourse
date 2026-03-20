@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import DOTP from "discourse/components/d-otp";
 import withEventValue from "discourse/helpers/with-event-value";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import autoFocus from "discourse/modifiers/auto-focus";
+import DOtp from "discourse/ui-kit/d-otp";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 
 export default class DSecondFactorInput extends Component {
   get isTotp() {
@@ -12,7 +12,7 @@ export default class DSecondFactorInput extends Component {
 
   <template>
     {{#if this.isTotp}}
-      <DOTP
+      <DOtp
         @onFill={{@onFill}}
         @onChange={{@onChange}}
         class="second-factor-token-input"
@@ -29,7 +29,7 @@ export default class DSecondFactorInput extends Component {
         class="second-factor-token-input"
         ...attributes
         {{on "input" (withEventValue @onChange)}}
-        {{autoFocus}}
+        {{dAutoFocus}}
       />
     {{/if}}
   </template>

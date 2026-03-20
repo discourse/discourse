@@ -1,6 +1,6 @@
-import DatePicker from "discourse/components/date-picker";
+import DDatePicker from "discourse/ui-kit/d-date-picker";
 
-export default class DatePickerPast extends DatePicker {
+export default class DatePickerPast extends DDatePicker {
   _opts() {
     return {
       defaultDate:

@@ -1,6 +1,6 @@
 import { concat } from "@ember/helper";
-import emoji from "discourse/helpers/emoji";
 import escape from "discourse/lib/escape";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 const title = (description, endsAt, timezone) => {
@@ -19,7 +19,7 @@ const title = (description, endsAt, timezone) => {
 
 const UserStatusBubble = <template>
   <div class="user-status-background">
-    {{emoji
+    {{dEmoji
       @status.emoji
       title=(title @status.description @status.ends_at @timezone)
       alt=(concat ":" @status.emoji ":")

@@ -4,17 +4,17 @@ import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
 import FastEdit from "discourse/components/fast-edit";
 import FastEditModal from "discourse/components/modal/fast-edit";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DCookText from "discourse/ui-kit/d-cook-text";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AiHelperLoading from "../components/ai-helper-loading";
 import AiHelperOptionsList from "../components/ai-helper-options-list";
@@ -368,14 +368,14 @@ export default class AiPostHelperMenu extends Component {
           >
             {{#if this.suggestion}}
               <div
-                class={{concatClass
+                class={{dConcatClass
                   (if this.smoothStreamer.isStreaming "streaming")
                   "streamable-content"
                   "ai-post-helper__suggestion__text"
                 }}
                 dir="auto"
               >
-                <CookText
+                <DCookText
                   @rawText={{this.smoothStreamer.renderedText}}
                   class="cooked"
                 />

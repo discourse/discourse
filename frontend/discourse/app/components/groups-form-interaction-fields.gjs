@@ -5,12 +5,12 @@ import { computed } from "@ember/object";
 import { or } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import NotificationsButton from "discourse/select-kit/components/notifications-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -210,7 +210,7 @@ export default class GroupsFormInteractionFields extends Component {
             {{i18n "admin.groups.manage.interaction.incoming_email"}}
           </label>
 
-          <TextField
+          <DTextField
             @name="incoming_email"
             @value={{this.model.incoming_email}}
             @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"

@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function constructKey(prefix, level, suffix, key) {
@@ -48,14 +48,14 @@ class NotificationsTrackingTrigger extends Component {
 
   <template>
     <button
-      class={{concatClass
+      class={{dConcatClass
         "btn btn-default"
         (if this.showFullTitle "btn-icon-text" "no-text")
       }}
       title={{this.tooltip}}
       ...attributes
     >
-      {{icon @selectedLevel.icon}}
+      {{dIcon @selectedLevel.icon}}
 
       {{#if this.showFullTitle}}
         <span class="d-button-label">
@@ -64,7 +64,7 @@ class NotificationsTrackingTrigger extends Component {
       {{/if}}
 
       {{#if this.showCaret}}
-        {{icon "angle-down" class="notifications-tracking-btn__caret"}}
+        {{dIcon "angle-down" class="notifications-tracking-btn__caret"}}
       {{/if}}
     </button>
   </template>
@@ -114,7 +114,7 @@ export default class NotificationsTracking extends Component {
     <DMenu
       @identifier="notifications-tracking"
       @modalForMobile={{true}}
-      @triggerClass={{concatClass
+      @triggerClass={{dConcatClass
         "btn-default"
         "btn-icon"
         "notifications-tracking-trigger-btn"
@@ -137,11 +137,11 @@ export default class NotificationsTracking extends Component {
       ...attributes
     >
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.levels as |level|}}
             <dropdown.item>
               <DButton
-                class={{concatClass
+                class={{dConcatClass
                   "notifications-tracking-btn"
                   (this.isSelectedClass level)
                 }}
@@ -158,7 +158,7 @@ export default class NotificationsTracking extends Component {
                       topic=@topic
                     }}
                   >
-                    {{icon level.icon}}
+                    {{dIcon level.icon}}
                   </PluginOutlet>
                 </div>
                 <div class="notifications-tracking-btn__texts">
@@ -172,7 +172,7 @@ export default class NotificationsTracking extends Component {
               </DButton>
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

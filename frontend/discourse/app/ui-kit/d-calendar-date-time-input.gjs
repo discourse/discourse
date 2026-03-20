@@ -7,7 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { waitForPromise } from "@ember/test-waiters";
 import { isEmpty } from "@ember/utils";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DCalendarDateTimeInput extends Component {
@@ -123,7 +123,7 @@ export default class DCalendarDateTimeInput extends Component {
       <div class="date-picker" id="picker-container-{{@datePickerId}}"></div>
 
       <div class="time-pickers">
-        {{icon "far-clock"}}
+        {{dIcon "far-clock"}}
         <Input
           maxlength={{5}}
           placeholder="hh:mm"

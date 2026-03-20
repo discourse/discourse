@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DiscourseBanner extends Component {
@@ -70,7 +70,7 @@ export default class DiscourseBanner extends Component {
                   href={{this.banner.url}}
                   class="btn btn-transparent edit-banner"
                 >
-                  {{icon "pencil"}}
+                  {{dIcon "pencil"}}
                   {{#if this.site.desktopView}}
                     {{trustHTML (i18n "banner.edit")}}
                   {{/if}}
@@ -86,7 +86,7 @@ export default class DiscourseBanner extends Component {
               />
             </div>
 
-            <DecoratedHtml @html={{this.content}} @id="banner-content" />
+            <DDecoratedHtml @html={{this.content}} @id="banner-content" />
           </div>
         </div>
       </div>

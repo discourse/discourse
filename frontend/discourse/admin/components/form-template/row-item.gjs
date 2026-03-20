@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import CustomizeFormTemplateView from "discourse/components/modal/customize-form-template-view";
-import categoryLink from "discourse/helpers/category-link";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class FormTemplateRowItem extends Component {
@@ -51,7 +51,7 @@ export default class FormTemplateRowItem extends Component {
       <td class="col first">{{@template.name}}</td>
       <td class="col categories">
         {{#each this.activeCategories as |category|}}
-          {{categoryLink category}}
+          {{dCategoryLink category}}
         {{/each}}
       </td>
       <td class="col action">

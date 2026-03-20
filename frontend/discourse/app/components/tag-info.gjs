@@ -8,13 +8,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
-import basePath from "discourse/helpers/base-path";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import discourseTag from "discourse/helpers/discourse-tag";
 import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -22,6 +16,12 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class TagInfo extends Component {
@@ -278,7 +278,7 @@ export default class TagInfo extends Component {
         <div class="tag-name">
           {{#if this.editing}}
             <div class="edit-tag-wrapper">
-              <TextField
+              <DTextField
                 @id="edit-name"
                 @value={{readonly this.tagInfo.name}}
                 @maxlength={{this.siteSettings.max_tag_length}}
@@ -317,7 +317,7 @@ export default class TagInfo extends Component {
             </div>
           {{else}}
             <div class="tag-name-wrapper">
-              {{discourseTag this.tagInfo.name tagName="div"}}
+              {{dDiscourseTag this.tagInfo.name tagName="div"}}
               {{#if this.canEditTags}}
                 {{#if this.useSettingsPage}}
                   <LinkTo
@@ -329,14 +329,14 @@ export default class TagInfo extends Component {
                     }}
                     title={{i18n "tagging.edit_tag"}}
                     class="edit-tag"
-                  >{{icon "gear"}}</LinkTo>
+                  >{{dIcon "gear"}}</LinkTo>
                 {{else}}
                   <a
                     {{on "click" this.edit}}
                     href
                     title={{i18n "tagging.edit_tag"}}
                     class="edit-tag"
-                  >{{icon "pencil"}}</a>
+                  >{{dIcon "pencil"}}</a>
                 {{/if}}
               {{/if}}
             </div>
@@ -357,7 +357,7 @@ export default class TagInfo extends Component {
             {{this.categoriesInfo}}
             <br />
             {{#each this.tagInfo.categories as |category|}}
-              {{categoryLink category}}
+              {{dCategoryLink category}}
             {{/each}}
           {{/if}}
 
@@ -367,7 +367,7 @@ export default class TagInfo extends Component {
             {{else}}
               {{trustHTML (i18n "tagging.default_info")}}
               {{#if this.canAdminTag}}
-                {{trustHTML (i18n "tagging.staff_info" basePath=(basePath))}}
+                {{trustHTML (i18n "tagging.staff_info" basePath=(dBasePath))}}
               {{/if}}
             {{/if}}
           {{/if}}
@@ -386,14 +386,14 @@ export default class TagInfo extends Component {
             <div class="tag-list">
               {{#each this.synonyms as |tag|}}
                 <div class="tag-box">
-                  {{discourseTag tag.name pmOnly=tag.pmOnly tagName="div"}}
+                  {{dDiscourseTag tag.name pmOnly=tag.pmOnly tagName="div"}}
                   {{#if this.editSynonymsMode}}
                     <a
                       {{on "click" (fn this.unlinkSynonym tag)}}
                       href
                       class="unlink-synonym"
                     >
-                      {{icon "link-slash" title="tagging.remove_synonym"}}
+                      {{dIcon "link-slash" title="tagging.remove_synonym"}}
                     </a>
                     {{#if this.canAdminTag}}
                       <a
@@ -401,7 +401,7 @@ export default class TagInfo extends Component {
                         href
                         class="delete-synonym"
                       >
-                        {{icon "trash-can" title="tagging.delete_tag"}}
+                        {{dIcon "trash-can" title="tagging.delete_tag"}}
                       </a>
                     {{/if}}
                   {{/if}}
@@ -453,7 +453,7 @@ export default class TagInfo extends Component {
                 @models={{array this.tagInfo.slug this.tagInfo.id "general"}}
                 class="btn btn-default"
               >
-                {{icon "gear"}}
+                {{dIcon "gear"}}
                 {{i18n "tagging.settings"}}
               </LinkTo>
             {{else}}

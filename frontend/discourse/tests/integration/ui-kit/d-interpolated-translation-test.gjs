@@ -7,9 +7,9 @@ import {
   setupOnerror,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
-import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import I18n, { I18nMissingInterpolationArgument } from "discourse-i18n";
 
 module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
@@ -48,11 +48,11 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
   test("renders translation with component placeholder", async function (assert) {
     await render(
       <template>
-        <InterpolatedTranslation @key="hello" as |Placeholder|>
+        <DInterpolatedTranslation @key="hello" as |Placeholder|>
           <Placeholder @name="username">
-            <UserLink @username="pento">pento</UserLink>
+            <DUserLink @username="pento">pento</DUserLink>
           </Placeholder>
-        </InterpolatedTranslation>
+        </DInterpolatedTranslation>
       </template>
     );
 
@@ -66,11 +66,11 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
   test("renders translation with repeated component placeholder", async function (assert) {
     await render(
       <template>
-        <InterpolatedTranslation @key="repeated_placeholders" as |Placeholder|>
+        <DInterpolatedTranslation @key="repeated_placeholders" as |Placeholder|>
           <Placeholder @name="username">
-            <UserLink @username="pento">pento</UserLink>
+            <DUserLink @username="pento">pento</DUserLink>
           </Placeholder>
-        </InterpolatedTranslation>
+        </DInterpolatedTranslation>
       </template>
     );
 
@@ -91,7 +91,7 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
     });
 
     await render(
-      <template><InterpolatedTranslation @key="simple_text" /></template>
+      <template><DInterpolatedTranslation @key="simple_text" /></template>
     );
 
     assert.strictEqual(errors, 1);
@@ -112,7 +112,7 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
 
     await render(
       <template>
-        <InterpolatedTranslation
+        <DInterpolatedTranslation
           @key="with_options"
           @options={{hash name="John" site="Discourse"}}
         />
@@ -126,15 +126,15 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
   test("renders translation with both string options and component placeholders", async function (assert) {
     await render(
       <template>
-        <InterpolatedTranslation
+        <DInterpolatedTranslation
           @key="mixed_placeholders"
           @options={{hash count=5}}
           as |Placeholder|
         >
           <Placeholder @name="username">
-            <UserLink @username="alice">alice</UserLink>
+            <DUserLink @username="alice">alice</DUserLink>
           </Placeholder>
-        </InterpolatedTranslation>
+        </DInterpolatedTranslation>
       </template>
     );
 
@@ -145,18 +145,18 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
   test("renders translation with multiple component placeholders", async function (assert) {
     await render(
       <template>
-        <InterpolatedTranslation
+        <DInterpolatedTranslation
           @key="multiple_placeholders"
           @options={{hash time="2:30 PM"}}
           as |Placeholder|
         >
           <Placeholder @name="user">
-            <UserLink @username="bob">bob</UserLink>
+            <DUserLink @username="bob">bob</DUserLink>
           </Placeholder>
           <Placeholder @name="topic">
             <strong>Important Topic</strong>
           </Placeholder>
-        </InterpolatedTranslation>
+        </DInterpolatedTranslation>
       </template>
     );
 
@@ -178,7 +178,7 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
     });
 
     await render(
-      <template><InterpolatedTranslation @key="nonexistent_key" /></template>
+      <template><DInterpolatedTranslation @key="nonexistent_key" /></template>
     );
 
     // When a translation key is missing, i18n returns the key itself
@@ -201,7 +201,9 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
     });
 
     // Translation has %{username} placeholder but no placeholder component is provided
-    await render(<template><InterpolatedTranslation @key="hello" /></template>);
+    await render(
+      <template><DInterpolatedTranslation @key="hello" /></template>
+    );
 
     assert.strictEqual(errors, 1);
     resetOnerror();
@@ -224,8 +226,8 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
 
     await render(
       <template>
-        <InterpolatedTranslation @key="hello" as |Placeholder|>
-          <Placeholder @name="username" /></InterpolatedTranslation>
+        <DInterpolatedTranslation @key="hello" as |Placeholder|>
+          <Placeholder @name="username" /></DInterpolatedTranslation>
       </template>
     );
 
@@ -241,15 +243,15 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
 
     await render(
       <template>
-        <InterpolatedTranslation
+        <DInterpolatedTranslation
           @key={{state.key}}
           @options={{state.options}}
           as |Placeholder|
         >
           <Placeholder @name="username">
-            <UserLink @username="pento">pento</UserLink>
+            <DUserLink @username="pento">pento</DUserLink>
           </Placeholder>
-        </InterpolatedTranslation>
+        </DInterpolatedTranslation>
       </template>
     );
 

@@ -1,9 +1,9 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import UserStatusMessage from "discourse/components/user-status-message";
 import DTooltips from "discourse/float-kit/components/d-tooltips";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 
 module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
   setupRenderingTest(hooks);
@@ -21,7 +21,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
 
   test("it renders user status emoji", async function (assert) {
     await render(
-      <template><UserStatusMessage @status={{this.status}} /></template>
+      <template><DUserStatusMessage @status={{this.status}} /></template>
     );
     assert.dom("img.emoji[alt='tooth']").exists("the status emoji is shown");
   });
@@ -29,7 +29,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
   test("it renders status description if enabled", async function (assert) {
     await render(
       <template>
-        <UserStatusMessage @status={{this.status}} @showDescription={{true}} />
+        <DUserStatusMessage @status={{this.status}} @showDescription={{true}} />
       </template>
     );
 
@@ -48,7 +48,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
 
     await render(
       <template>
-        <UserStatusMessage @status={{this.status}} /><DTooltips />
+        <DUserStatusMessage @status={{this.status}} /><DTooltips />
       </template>
     );
     await triggerEvent(".user-status-message", "pointermove");
@@ -68,7 +68,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
 
     await render(
       <template>
-        <UserStatusMessage @status={{this.status}} /><DTooltips />
+        <DUserStatusMessage @status={{this.status}} /><DTooltips />
       </template>
     );
     await triggerEvent(".user-status-message", "pointermove");
@@ -88,7 +88,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
 
     await render(
       <template>
-        <UserStatusMessage @status={{this.status}} /><DTooltips />
+        <DUserStatusMessage @status={{this.status}} /><DTooltips />
       </template>
     );
     await triggerEvent(".user-status-message", "pointermove");
@@ -103,7 +103,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
   test("it shows tooltip by default", async function (assert) {
     await render(
       <template>
-        <UserStatusMessage @status={{this.status}} /><DTooltips />
+        <DUserStatusMessage @status={{this.status}} /><DTooltips />
       </template>
     );
     await triggerEvent(".user-status-message", "pointermove");
@@ -118,7 +118,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
     this.status.ends_at = "2100-02-02T12:30:00.000Z";
 
     await render(
-      <template><UserStatusMessage @status={{this.status}} /></template>
+      <template><DUserStatusMessage @status={{this.status}} /></template>
     );
 
     assert
@@ -130,7 +130,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
     const status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
-      <template><UserStatusMessage @status={{status}} class="foo" /></template>
+      <template><DUserStatusMessage @status={{status}} class="foo" /></template>
     );
 
     assert

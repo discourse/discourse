@@ -5,8 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import {
   isValidHex,
   normalizeHex,
@@ -14,6 +12,8 @@ import {
 } from "discourse/lib/color-transformations";
 import getUrl from "discourse/lib/get-url";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function isColorUsed(usedColors, color) {
@@ -184,7 +184,7 @@ export default class FKControlColor extends FKBaseControl {
           ...attributes
         />
         <span
-          class={{concatClass
+          class={{dConcatClass
             "form-kit__control-color-picker-wrapper"
             this.pickerIconClass
           }}
@@ -196,7 +196,7 @@ export default class FKControlColor extends FKBaseControl {
             disabled={{@field.disabled}}
             {{on "input" this.handlePickerInput}}
           />
-          {{icon "eye-dropper"}}
+          {{dIcon "eye-dropper"}}
         </span>
         {{#if (and @colors @collapseSwatches)}}
           <DMenu
@@ -245,7 +245,7 @@ export default class FKControlColor extends FKBaseControl {
                     <button
                       type="button"
                       style={{colorStyle color}}
-                      class={{concatClass
+                      class={{dConcatClass
                         "form-kit__control-color-swatch"
                         "is-used"
                       }}
@@ -270,7 +270,7 @@ export default class FKControlColor extends FKBaseControl {
               <button
                 type="button"
                 style={{colorStyle color}}
-                class={{concatClass
+                class={{dConcatClass
                   "form-kit__control-color-swatch"
                   (if (isColorUsed @usedColors color) "is-used")
                   (colorLuminanceClass color)
@@ -285,7 +285,7 @@ export default class FKControlColor extends FKBaseControl {
                 {{on "click" (fn this.selectColor color)}}
               >
                 {{#if (isColorUsed @usedColors color)}}
-                  {{icon "check"}}
+                  {{dIcon "check"}}
                 {{/if}}
               </button>
             {{/each}}

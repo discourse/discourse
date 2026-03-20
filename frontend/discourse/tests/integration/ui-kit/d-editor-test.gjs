@@ -11,7 +11,6 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DEditor from "discourse/components/d-editor";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -25,6 +24,7 @@ import {
   getTextareaSelection,
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
+import DEditor from "discourse/ui-kit/d-editor";
 import { i18n } from "discourse-i18n";
 
 module("Integration | ui-kit | DEditor", function (hooks) {

@@ -1,12 +1,12 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import AvatarFlair from "discourse/components/avatar-flair";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 
 function renderComponent(flairArgs) {
   return render(
     <template>
-      <AvatarFlair
+      <DAvatarFlair
         @flairBgColor={{flairArgs.flair_bg_color}}
         @flairColor={{flairArgs.flair_color}}
         @flairName={{flairArgs.flair_name}}

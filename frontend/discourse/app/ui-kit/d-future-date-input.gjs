@@ -6,7 +6,6 @@ import { action, computed } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import DatePickerFuture from "discourse/components/date-picker-future";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import {
   extendedDefaultTimeShortcuts,
@@ -18,6 +17,7 @@ import {
 import FutureDateInputSelector, {
   FORMAT,
 } from "discourse/select-kit/components/future-date-input-selector";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -138,7 +138,7 @@ export default class DFutureDateInput extends Component {
       {{#unless this.noRelativeOptions}}
         <div class="control-group">
           <label class={{this.labelClasses}}>
-            {{#if this.displayLabelIcon}}{{icon
+            {{#if this.displayLabelIcon}}{{dIcon
                 this.displayLabelIcon
               }}{{/if}}{{this.displayLabel}}
           </label>
@@ -155,7 +155,7 @@ export default class DFutureDateInput extends Component {
 
       {{#if this.displayDateAndTimePicker}}
         <div class="control-group future-date-input-date-picker">
-          {{icon "calendar-days"}}
+          {{dIcon "calendar-days"}}
           <DatePickerFuture
             @value={{this._date}}
             @defaultDate={{this._date}}
@@ -164,7 +164,7 @@ export default class DFutureDateInput extends Component {
         </div>
 
         <div class="control-group future-date-input-time-picker">
-          {{icon "far-clock"}}
+          {{dIcon "far-clock"}}
           <Input
             placeholder="--:--"
             @type="time"

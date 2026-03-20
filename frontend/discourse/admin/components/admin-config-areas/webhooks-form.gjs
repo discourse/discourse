@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import WebhookEventChooser from "discourse/admin/components/webhook-event-chooser";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -14,6 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import { eq } from "discourse/truth-helpers";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasWebhookForm extends Component {
@@ -114,7 +114,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
       <div class="admin-config-area__primary-content">
         <div class="admin-config-area-card">
           <div class="web-hook-container">
-            <ConditionalLoadingSection @isLoading={{this.loadingExtras}}>
+            <DConditionalLoadingSection @isLoading={{this.loadingExtras}}>
               <p>{{i18n "admin.web_hooks.detailed_instruction"}}</p>
               <Form
                 @onSubmit={{this.save}}
@@ -299,7 +299,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
                   />
                 </form.Actions>
               </Form>
-            </ConditionalLoadingSection>
+            </DConditionalLoadingSection>
           </div>
         </div>
       </div>

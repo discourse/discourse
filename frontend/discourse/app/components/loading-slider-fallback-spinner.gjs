@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import loadingSpinner from "discourse/helpers/loading-spinner";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
 export default class LoadingSliderFallbackSpinner extends Component {
   @service loadingSlider;
@@ -16,7 +16,7 @@ export default class LoadingSliderFallbackSpinner extends Component {
 
   <template>
     {{#if this.shouldDisplay}}
-      <div class="route-loading-spinner">{{loadingSpinner}}</div>
+      <div class="route-loading-spinner">{{dLoadingSpinner}}</div>
       {{bodyClass "has-route-loading-spinner"}}
       {{hideApplicationFooter}}
     {{/if}}

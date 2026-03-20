@@ -3,8 +3,8 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import SelectKitFilterComponent from "discourse/select-kit/components/select-kit/select-kit-filter";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("multi-select-filter")
 export default class MultiSelectFilter extends SelectKitFilterComponent {
@@ -60,7 +60,7 @@ export default class MultiSelectFilter extends SelectKitFilterComponent {
       />
 
       {{#if this.selectKit.options.filterIcon}}
-        {{icon this.selectKit.options.filterIcon class="filter-icon"}}
+        {{dIcon this.selectKit.options.filterIcon class="filter-icon"}}
       {{/if}}
     {{/unless}}
   </template>

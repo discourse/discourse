@@ -4,15 +4,15 @@ import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { and, not } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import Post from "./post";
 import PostGap from "./post/gap";
 import PostLoadMoreAccessible from "./post/load-more-accessible";
@@ -288,7 +288,7 @@ export default class PostStream extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
+    <DConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
     <div
       class="post-stream"
       {{this.viewportTracker.setup
@@ -351,7 +351,7 @@ export default class PostStream extends Component {
             }}
               <PostComponent
                 id={{postId}}
-                class={{concatClass
+                class={{dConcatClass
                   (if cloakingData.active "post-stream--cloaked")
                   (if keyboardSelected "selected")
                 }}
@@ -455,6 +455,6 @@ export default class PostStream extends Component {
         />
       {{/if}}
     </div>
-    <ConditionalLoadingSpinner @condition={{@postStream.loadingBelow}} />
+    <DConditionalLoadingSpinner @condition={{@postStream.loadingBelow}} />
   </template>
 }

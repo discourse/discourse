@@ -1,7 +1,7 @@
 import { focus, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import tabToSibling from "discourse/modifiers/tab-to-sibling";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dTabToSibling from "discourse/ui-kit/modifiers/d-tab-to-sibling";
 
 module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
   setupRenderingTest(hooks);
@@ -10,7 +10,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     await render(
       <template>
         <div class="container">
-          <div class="first-item" {{tabToSibling}} tabindex="0">First</div>
+          <div class="first-item" {{dTabToSibling}} tabindex="0">First</div>
           <div class="second-item" tabindex="0">Second</div>
           <div class="third-item" tabindex="0">Third</div>
         </div>
@@ -35,7 +35,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
       <template>
         <div class="container">
           <div class="first-item" tabindex="0">First</div>
-          <div class="second-item" {{tabToSibling}} tabindex="0">Second</div>
+          <div class="second-item" {{dTabToSibling}} tabindex="0">Second</div>
           <div class="third-item" tabindex="0">Third</div>
         </div>
       </template>
@@ -58,7 +58,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     await render(
       <template>
         <div class="container">
-          <div class="first-item" {{tabToSibling}} tabindex="0">First</div>
+          <div class="first-item" {{dTabToSibling}} tabindex="0">First</div>
           <div class="non-focusable">Non-focusable</div>
           <div class="disabled-item" tabindex="-1">Disabled</div>
           <div class="third-item" tabindex="0">Third</div>
@@ -78,7 +78,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     await render(
       <template>
         <div class="container">
-          <button class="first-button" {{tabToSibling}}>First Button</button>
+          <button class="first-button" {{dTabToSibling}}>First Button</button>
           <input class="input-field" type="text" />
           <a href="#" class="link-element">Link</a>
         </div>
@@ -97,7 +97,7 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     await render(
       <template>
         <div class="container">
-          <div class="first-item" {{tabToSibling}} tabindex="0">First</div>
+          <div class="first-item" {{dTabToSibling}} tabindex="0">First</div>
           <div class="second-item" tabindex="0">Second</div>
         </div>
       </template>

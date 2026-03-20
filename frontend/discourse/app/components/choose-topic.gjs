@@ -5,12 +5,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty, isPresent } from "@ember/utils";
-import AsyncContent from "discourse/components/async-content";
 import TopicStatus from "discourse/components/topic-status";
-import boundCategoryLink from "discourse/helpers/bound-category-link";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { searchForTerm } from "discourse/lib/search";
 import { eq, or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 // args:
@@ -126,7 +126,7 @@ export default class ChooseTopic extends Component {
       />
 
       <div class="choose-topic__search-results">
-        <AsyncContent
+        <DAsyncContent
           @asyncData={{this.loadTopics}}
           @context={{this.topicTitle}}
           @debounce={{true}}
@@ -158,10 +158,10 @@ export default class ChooseTopic extends Component {
                     />
                     <TopicStatus @topic={{t}} @disableActions={{true}} />
                     <span class="topic-title">
-                      {{replaceEmoji t.title}}
+                      {{dReplaceEmoji t.title}}
                     </span>
                     <span class="topic-categories">
-                      {{boundCategoryLink
+                      {{dBoundCategoryLink
                         t.category
                         ancestors=t.category.predecessors
                         hideParent=true
@@ -173,7 +173,7 @@ export default class ChooseTopic extends Component {
               {{/each}}
             </div>
           </:content>
-        </AsyncContent>
+        </DAsyncContent>
       </div>
     </div>
   </template>

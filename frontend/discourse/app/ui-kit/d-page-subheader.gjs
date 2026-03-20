@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DMenu from "discourse/float-kit/components/d-menu";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import {
   DangerActionListItem,
   DangerButton,
@@ -10,9 +12,7 @@ import {
   PrimaryButton,
   WrappedActionListItem,
   WrappedButton,
-} from "discourse/components/d-page-action-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import DMenu from "discourse/float-kit/components/d-menu";
+} from "discourse/ui-kit/d-page-action-button";
 import { i18n } from "discourse-i18n";
 
 export default class DPageSubheader extends Component {
@@ -42,7 +42,7 @@ export default class DPageSubheader extends Component {
                 class="btn-small btn-default"
               >
                 <:content>
-                  <DropdownMenu class="d-page-subheader__mobile-actions">
+                  <DDropdownMenu class="d-page-subheader__mobile-actions">
                     {{yield
                       (hash
                         Primary=DefaultActionListItem
@@ -52,7 +52,7 @@ export default class DPageSubheader extends Component {
                       )
                       to="actions"
                     }}
-                  </DropdownMenu>
+                  </DDropdownMenu>
                 </:content>
               </DMenu>
             {{else}}

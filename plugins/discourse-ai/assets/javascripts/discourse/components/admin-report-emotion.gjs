@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 
 @tagName("")
 export default class AdminReportEmotion extends Component {
@@ -47,14 +47,14 @@ export default class AdminReportEmotion extends Component {
     >
       <div class="cell title">
         {{#if this.model.icon}}
-          {{icon this.model.icon}}
+          {{dIcon this.model.icon}}
         {{/if}}
         {{this.model.title}}
       </div>
 
       <div class="cell value today-count">
         <a href={{this.todayLink}}>
-          {{number this.model.todayCount}}
+          {{dNumber this.model.todayCount}}
         </a>
       </div>
 
@@ -63,9 +63,9 @@ export default class AdminReportEmotion extends Component {
         title={{this.model.yesterdayCountTitle}}
       >
         <a href={{this.yesterdayLink}}>
-          {{number this.model.yesterdayCount}}
+          {{dNumber this.model.yesterdayCount}}
         </a>
-        {{icon this.model.yesterdayTrendIcon}}
+        {{dIcon this.model.yesterdayTrendIcon}}
       </div>
 
       <div
@@ -73,9 +73,9 @@ export default class AdminReportEmotion extends Component {
         title={{this.model.sevenDaysCountTitle}}
       >
         <a href={{this.lastSevenDaysLink}}>
-          {{number this.model.lastSevenDaysCount}}
+          {{dNumber this.model.lastSevenDaysCount}}
         </a>
-        {{icon this.model.sevenDaysTrendIcon}}
+        {{dIcon this.model.sevenDaysTrendIcon}}
       </div>
 
       <div
@@ -84,10 +84,10 @@ export default class AdminReportEmotion extends Component {
       >
 
         <a href={{this.lastThirtyDaysLink}}>
-          {{number this.model.lastThirtyDaysCount}}
+          {{dNumber this.model.lastThirtyDaysCount}}
         </a>
         {{#if this.model.canDisplayTrendIcon}}
-          {{icon this.model.thirtyDaysTrendIcon}}
+          {{dIcon this.model.thirtyDaysTrendIcon}}
         {{/if}}
       </div>
     </div>

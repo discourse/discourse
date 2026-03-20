@@ -4,10 +4,10 @@ import { registerDestructor } from "@ember/destroyable";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import onResize from "discourse/modifiers/on-resize";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 
 export default class DHorizontalOverflowNav extends Component {
   @tracked hasScroll;
@@ -147,17 +147,17 @@ export default class DHorizontalOverflowNav extends Component {
           {{on "mouseup" this.stopScroll}}
           {{on "mouseleave" this.stopScroll}}
           data-direction="left"
-          class={{concatClass
+          class={{dConcatClass
             "horizontal-overflow-nav__scroll-left"
             (if this.hideLeftScroll "disabled")
           }}
         >
-          {{icon "chevron-left"}}
+          {{dIcon "chevron-left"}}
         </a>
       {{/if}}
 
       <ul
-        {{onResize this.onResize}}
+        {{dOnResize this.onResize}}
         {{on "scroll" this.onScroll}}
         {{didInsert this.setup}}
         {{on "mousedown" this.scrollDrag}}
@@ -173,12 +173,12 @@ export default class DHorizontalOverflowNav extends Component {
           {{on "mousedown" this.horizontalScroll}}
           {{on "mouseup" this.stopScroll}}
           {{on "mouseleave" this.stopScroll}}
-          class={{concatClass
+          class={{dConcatClass
             "horizontal-overflow-nav__scroll-right"
             (if this.hideRightScroll "disabled")
           }}
         >
-          {{icon "chevron-right"}}
+          {{dIcon "chevron-right"}}
         </a>
       {{/if}}
     </nav>

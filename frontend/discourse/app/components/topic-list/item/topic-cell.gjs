@@ -9,11 +9,11 @@ import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 
 export default class TopicCell extends Component {
   get participantGroups() {
@@ -99,7 +99,7 @@ export default class TopicCell extends Component {
           />
           {{#unless @hideCategory}}
             {{#unless @topic.isPinnedUncategorized}}
-              {{categoryLink @topic.category}}
+              {{dCategoryLink @topic.category}}
             {{/unless}}
           {{/unless}}
           <PluginOutlet
@@ -107,7 +107,7 @@ export default class TopicCell extends Component {
             @outletArgs={{lazyHash topic=@topic}}
           />
 
-          {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          {{dDiscourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
           {{#if this.participantGroups}}
             <ParticipantGroups @groups={{this.participantGroups}} />

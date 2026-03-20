@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostMenuRepliesButton extends Component {
@@ -63,7 +63,7 @@ export default class PostMenuRepliesButton extends Component {
              To get the desired effect will use the {{yield}} in the DButton component to our advantage
              introducing manually the icon after the label
             --}}
-      {{~icon (if @state.repliesShown "chevron-up" "chevron-down")~}}
+      {{~dIcon (if @state.repliesShown "chevron-up" "chevron-down")~}}
     </DButton>
   </template>
 }

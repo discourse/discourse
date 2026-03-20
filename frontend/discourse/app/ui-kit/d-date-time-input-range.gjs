@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DateTimeInput from "discourse/components/date-time-input";
+import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -51,7 +51,7 @@ export default class DDateTimeInputRange extends Component {
 
   <template>
     <div class="d-date-time-input-range" ...attributes>
-      <DateTimeInput
+      <DDateTimeInput
         @date={{this.from}}
         @onChange={{fn this.onChangeRanges (hash prop="from")}}
         @showTime={{this.showFromTime}}
@@ -60,7 +60,7 @@ export default class DDateTimeInputRange extends Component {
         class="from"
       />
 
-      <DateTimeInput
+      <DDateTimeInput
         @date={{this.to}}
         @relativeDate={{this.from}}
         @onChange={{fn this.onChangeRanges (hash prop="to")}}

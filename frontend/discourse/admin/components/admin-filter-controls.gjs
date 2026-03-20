@@ -5,12 +5,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DSelect from "discourse/components/d-select";
-import FilterInput from "discourse/components/filter-input";
-import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DSelect from "discourse/ui-kit/d-select";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
  * admin filter controls component that support both client-side and server-side filtering
@@ -244,14 +244,14 @@ export default class AdminFilterControls extends Component {
 
     {{#if this.showFilters}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "admin-filter-controls"
           (if this.hasMultipleDropdowns "--multiple-dropdowns")
         }}
         {{didInsert this.setupComponent}}
       >
         <div class="admin-filter-controls__inputs">
-          <FilterInput
+          <DFilterInput
             placeholder={{@inputPlaceholder}}
             @filterAction={{this.onTextFilterChange}}
             @value={{this.textFilter}}

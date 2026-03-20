@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import UserAvatar from "discourse/components/user-avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import { gt } from "discourse/truth-helpers";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MAX_USERS_COUNT = 26;
@@ -54,7 +54,7 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     <div
-      class={{concatClass
+      class={{dConcatClass
         "discourse-reactions-state-panel-reaction"
         (if @isDisplayed "is-displayed")
       }}
@@ -65,7 +65,7 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
       {{#if @users}}
         <div class="reaction-wrapper" aria-hidden="true">
           <div class="emoji-wrapper">
-            {{emoji @reaction.id}}
+            {{dEmoji @reaction.id}}
           </div>
           <div class="count">
             {{@reaction.count}}
@@ -76,7 +76,7 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
           <div class="list list-columns-{{this.columnsCount}}">
             {{#each this.firstLineUsers key="username" as |user|}}
               <span>
-                <UserAvatar
+                <DUserAvatar
                   class="trigger-user-card"
                   @size="tiny"
                   @user={{user}}
@@ -94,14 +94,14 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
                   (i18n "discourse_reactions.state_panel.show_users")
                 }}
               >
-                {{icon (if @isDisplayed "chevron-up" "chevron-down")}}
+                {{dIcon (if @isDisplayed "chevron-up" "chevron-down")}}
               </button>
             {{/if}}
 
             {{#if @isDisplayed}}
               {{#each this.otherUsers key="username" as |user|}}
                 <span>
-                  <UserAvatar
+                  <DUserAvatar
                     class="trigger-user-card"
                     @size="tiny"
                     @user={{user}}

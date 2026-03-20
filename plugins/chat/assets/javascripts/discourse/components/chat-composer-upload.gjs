@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatComposerUpload extends Component {
@@ -20,7 +20,7 @@ export default class ChatComposerUpload extends Component {
   <template>
     {{#if @upload}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "chat-composer-upload"
           (if (isImage this.fileName) "chat-composer-upload--image")
           (unless @isDone "chat-composer-upload--in-progress")
@@ -31,14 +31,14 @@ export default class ChatComposerUpload extends Component {
             {{#if @isDone}}
               <img class="preview-img" src={{this.previewImageSrc}} />
             {{else}}
-              {{icon "far-image"}}
+              {{dIcon "far-image"}}
             {{/if}}
           {{else if (isVideo this.fileName)}}
-            {{icon "file-video"}}
+            {{dIcon "file-video"}}
           {{else if (isAudio this.fileName)}}
-            {{icon "file-audio"}}
+            {{dIcon "file-audio"}}
           {{else}}
-            {{icon "file-lines"}}
+            {{dIcon "file-lines"}}
           {{/if}}
         </div>
 

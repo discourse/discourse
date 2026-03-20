@@ -1,8 +1,8 @@
 import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const Layout = <template>
   <DiscourseBanner />
@@ -44,7 +44,7 @@ const Layout = <template>
     }}
   />
 
-  <div class={{concatClass "container list-container" @listClass}}>
+  <div class={{dConcatClass "container list-container" @listClass}}>
     <div class="row full-width">
       <div id="header-list-area">
         {{yield to="header"}}

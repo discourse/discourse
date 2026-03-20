@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { selectedRange } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import AiPostHelperMenu from "../../components/ai-post-helper-menu";
 import { showPostAIHelper } from "../../lib/show-ai-helper";
 

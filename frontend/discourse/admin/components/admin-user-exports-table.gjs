@@ -4,11 +4,11 @@ import { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import UserExport from "discourse/admin/models/user-export";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const EXPORT_PROGRESS_CHANNEL = "/user-export-progress";
@@ -105,7 +105,7 @@ export default class extends Component {
           {{/if}}
         </div>
         <div class="controls">
-          <ConditionalLoadingSpinner @condition={{this.userExportReloading}}>
+          <DConditionalLoadingSpinner @condition={{this.userExportReloading}}>
 
             <DButton
               @action={{this.triggerUserExport}}
@@ -113,7 +113,7 @@ export default class extends Component {
               @label="admin.user.exports.download.button"
               class="btn-default"
             />
-          </ConditionalLoadingSpinner>
+          </DConditionalLoadingSpinner>
         </div>
       </div>
     </section>

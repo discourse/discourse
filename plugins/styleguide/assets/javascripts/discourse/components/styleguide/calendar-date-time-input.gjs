@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
-import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
-import DatePicker from "discourse/components/date-picker";
+import DCalendarDateTimeInput from "discourse/ui-kit/d-calendar-date-time-input";
+import DDatePicker from "discourse/ui-kit/d-date-picker";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
@@ -47,7 +47,7 @@ import CalendarDateTimeInput from "discourse/components/calendar-date-time-input
       @code={{this.calendarDateTimeInputCode}}
     >
       <StyleguideComponent>
-        <CalendarDateTimeInput
+        <DCalendarDateTimeInput
           @datePickerId="styleguide"
           @date={{this.date}}
           @time={{this.time}}
@@ -61,11 +61,11 @@ import CalendarDateTimeInput from "discourse/components/calendar-date-time-input
 
       <Controls>
         <Row @name="Min date">
-          <DatePicker @defaultDate="YYYY-MM-DD" @value={{this.minDate}} />
+          <DDatePicker @defaultDate="YYYY-MM-DD" @value={{this.minDate}} />
         </Row>
 
         <Row @name="Date">
-          <DatePicker @defaultDate="YYYY-MM-DD" @value={{this.date}} />
+          <DDatePicker @defaultDate="YYYY-MM-DD" @value={{this.date}} />
         </Row>
 
         <Row @name="Time">

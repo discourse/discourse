@@ -3,9 +3,9 @@ import { get } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserStatusMessage from "discourse/components/user-status-message";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
 export default class ChatChannelName extends Component {
@@ -68,10 +68,10 @@ export default class ChatChannelName extends Component {
   <template>
     <div class="chat-channel-name">
       <div class="chat-channel-name__label">
-        {{replaceEmoji this.channelTitle}}
+        {{dReplaceEmoji this.channelTitle}}
 
         {{#if this.showUserStatus}}
-          <UserStatusMessage
+          <DUserStatusMessage
             @status={{get this.users "0.status"}}
             @showDescription={{if this.site.mobileView "true"}}
             class="chat-channel__user-status-message"

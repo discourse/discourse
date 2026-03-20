@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import autoFocus from "discourse/modifiers/auto-focus";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 
 export default class DExpandingTextArea extends Component {
   setTextarea = modifier((element) => {
@@ -66,7 +66,7 @@ export default class DExpandingTextArea extends Component {
   <template>
     <textarea
       {{this.setTextarea}}
-      {{(if @autoFocus autoFocus)}}
+      {{(if @autoFocus dAutoFocus)}}
       {{! deprecated args: }}
       autocorrect={{@autocorrect}}
       class={{@class}}

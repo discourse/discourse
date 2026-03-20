@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import categoryLink from "discourse/helpers/category-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 import getTagName from "../lib/get-tag-name";
 
@@ -48,7 +48,7 @@ export default class RuleRow extends Component {
       <td>
         {{#if this.isCategory}}
           {{#if @rule.category}}
-            {{categoryLink
+            {{dCategoryLink
               @rule.category
               allowUncategorized="true"
               link="false"

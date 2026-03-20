@@ -3,7 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
+import DMenu from "discourse/float-kit/components/d-menu";
+import { bind } from "discourse/lib/decorators";
+import { or } from "discourse/truth-helpers";
+import DBreadcrumbsContainer from "discourse/ui-kit/d-breadcrumbs-container";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import {
   DangerActionListItem,
   DangerButton,
@@ -12,12 +17,7 @@ import {
   PrimaryButton,
   WrappedActionListItem,
   WrappedButton,
-} from "discourse/components/d-page-action-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import DMenu from "discourse/float-kit/components/d-menu";
-import { bind } from "discourse/lib/decorators";
-import { or } from "discourse/truth-helpers";
+} from "discourse/ui-kit/d-page-action-button";
 import { i18n } from "discourse-i18n";
 
 const HEADLESS_ACTIONS = ["new", "edit"];
@@ -100,7 +100,7 @@ export default class DPageHeader extends Component {
                     class="btn-small"
                   >
                     <:content>
-                      <DropdownMenu class="d-page-header__mobile-actions">
+                      <DDropdownMenu class="d-page-header__mobile-actions">
                         {{#let
                           (hash
                             Primary=DefaultActionListItem
@@ -116,7 +116,7 @@ export default class DPageHeader extends Component {
                             <@headerActionComponent @actions={{actions}} />
                           {{/if}}
                         {{/let}}
-                      </DropdownMenu>
+                      </DDropdownMenu>
                     </:content>
                   </DMenu>
                 {{else}}
@@ -160,9 +160,9 @@ export default class DPageHeader extends Component {
 
         {{#unless @hideTabs}}
           <div class="d-nav-submenu">
-            <HorizontalOverflowNav class="d-nav-submenu__tabs">
+            <DHorizontalOverflowNav class="d-nav-submenu__tabs">
               {{yield to="tabs"}}
-            </HorizontalOverflowNav>
+            </DHorizontalOverflowNav>
           </div>
         {{/unless}}
       </div>

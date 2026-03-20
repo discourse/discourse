@@ -8,13 +8,13 @@ import { observes } from "@ember-decorators/object";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PopupInputTip from "discourse/components/popup-input-tip";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @classNames("title-input")
@@ -244,7 +244,7 @@ export default class ComposerTitle extends Component {
   }
 
   <template>
-    <TextField
+    <DTextField
       @value={{this.composer.title}}
       @id="reply-title"
       @maxLength={{this.titleMaxLength}}
@@ -261,6 +261,6 @@ export default class ComposerTitle extends Component {
       @outletArgs={{lazyHash composer=this.composer}}
     />
 
-    <PopupInputTip @validation={{this.validation}} />
+    <DPopupInputTip @validation={{this.validation}} />
   </template>
 }

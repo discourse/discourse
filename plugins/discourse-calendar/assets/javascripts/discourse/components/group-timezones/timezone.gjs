@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import UserAvatar from "discourse/components/user-avatar";
-import concatClass from "discourse/helpers/concat-class";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class GroupTimezone extends Component {
   get formattedTime() {
@@ -9,7 +9,7 @@ export default class GroupTimezone extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "group-timezone"
         (if @groupedTimezone.closeToWorkingHours "close-to-working-hours")
         (if @groupedTimezone.inWorkingHours "in-working-hours")
@@ -26,12 +26,12 @@ export default class GroupTimezone extends Component {
       <ul class="group-timezones-members">
         {{#each @groupedTimezone.members key="username" as |member|}}
           <li
-            class={{concatClass
+            class={{dConcatClass
               "group-timezones-member"
               (if member.on_holiday "on-holiday" "not-on-holiday")
             }}
           >
-            <UserAvatar
+            <DUserAvatar
               @user={{member}}
               @size="small"
               class="group-timezones-member-avatar"

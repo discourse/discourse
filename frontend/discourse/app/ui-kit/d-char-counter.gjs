@@ -1,10 +1,13 @@
-import concatClass from "discourse/helpers/concat-class";
 import { gt } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const DCharCounter = <template>
   <div
-    class={{concatClass "char-counter" (if (gt @value.length @max) "exceeded")}}
+    class={{dConcatClass
+      "char-counter"
+      (if (gt @value.length @max) "exceeded")
+    }}
     ...attributes
   >
     {{yield}}

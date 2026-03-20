@@ -9,14 +9,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
-import DModal, {
-  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
-} from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
-import basePath from "discourse/helpers/base-path";
-import icon from "discourse/helpers/d-icon";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
@@ -28,6 +20,14 @@ import {
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DModal, {
+  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+} from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
+import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BOOKMARK_BINDINGS = {
@@ -408,7 +408,7 @@ export default class BookmarkModal extends Component {
 
         {{#if this.showExistingReminderAt}}
           <div class="alert alert-info existing-reminder-at-alert">
-            {{icon "far-clock"}}
+            {{dIcon "far-clock"}}
             <span>{{i18n
                 "bookmarks.reminders.existing_reminder"
                 at_date_time=this.existingReminderAtFormatted
@@ -422,7 +422,7 @@ export default class BookmarkModal extends Component {
           </label>
 
           {{#if this.userHasTimezoneSet}}
-            <TimeShortcutPicker
+            <DTimeShortcutPicker
               @timeShortcuts={{this.timeOptions}}
               @prefilledDatetime={{this.prefilledDatetime}}
               @onTimeSelected={{this.onTimeSelected}}
@@ -432,7 +432,7 @@ export default class BookmarkModal extends Component {
             />
           {{else}}
             <div class="alert alert-info">{{trustHTML
-                (i18n "bookmarks.no_timezone" basePath=(basePath))
+                (i18n "bookmarks.no_timezone" basePath=(dBasePath))
               }}</div>
           {{/if}}
         </div>

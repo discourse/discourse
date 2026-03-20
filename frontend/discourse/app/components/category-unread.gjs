@@ -1,14 +1,14 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import element from "discourse/helpers/element";
 import { or } from "discourse/truth-helpers";
+import dElement from "discourse/ui-kit/helpers/d-element";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class CategoryUnread extends Component {
   <template>
-    {{#let (element (or @tagName "span")) as |TagName|}}
+    {{#let (dElement (or @tagName "span")) as |TagName|}}
       <TagName class="category__badges" ...attributes>
         {{#if this.unreadTopicsCount}}
           <a

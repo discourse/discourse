@@ -1,12 +1,12 @@
 import { computed } from "@ember/object";
 import { classNameBindings } from "@ember-decorators/component";
-import TextField from "discourse/components/text-field";
 import deprecated from "discourse/lib/deprecated";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings("invalid")
-export default class DNumberField extends TextField {
+export default class DNumberField extends DTextField {
   init() {
     super.init(...arguments);
     deprecated(

@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import LikedUsersList from "../liked-users-list";
 
 export default class PostMenuLikeButton extends Component {
@@ -61,7 +61,7 @@ export default class PostMenuLikeButton extends Component {
   <template>
     {{#if @post.showLike}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "double-button"
           (if @post.liked "has-liked" "")
           "post-action-menu__double-button"
@@ -71,7 +71,7 @@ export default class PostMenuLikeButton extends Component {
           <LikedUsersList ...attributes @post={{@post}} />
         {{/if}}
         <DButton
-          class={{concatClass
+          class={{dConcatClass
             "post-action-menu__like"
             "toggle-like"
             "btn-icon"

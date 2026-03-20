@@ -1,12 +1,12 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import ScreenedIpAddressForm from "discourse/admin/components/screened-ip-address-form";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import TextField from "discourse/components/text-field";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,7 +18,7 @@ export default <template>
 
   <div class="screened-ip-controls">
     <div class="filter-screened-ip-address inline-form">
-      <TextField
+      <DTextField
         @value={{@controller.filter}}
         @placeholderKey="admin.logs.screened_ips.form.filter"
         @autocorrect="off"
@@ -37,7 +37,7 @@ export default <template>
     <ScreenedIpAddressForm @action={{@controller.recordAdded}} />
   </div>
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     {{#if @controller.model.length}}
       <table class="admin-logs-table screened-ip-addresses grid">
         <thead class="heading-container">
@@ -61,7 +61,7 @@ export default <template>
             <tr class="admin-list-item">
               <td class="col first ip_address">
                 {{#if item.editing}}
-                  <TextField
+                  <DTextField
                     @value={{item.ip_address}}
                     @autofocus="autofocus"
                   />
@@ -81,9 +81,9 @@ export default <template>
               </td>
               <td class="col action">
                 {{#if item.isBlocked}}
-                  {{icon "ban"}}
+                  {{dIcon "ban"}}
                 {{else}}
-                  {{icon "check"}}
+                  {{dIcon "check"}}
                 {{/if}}
                 {{item.actionName}}
               </td>
@@ -93,12 +93,12 @@ export default <template>
               </td>
               <td class="col created_at">
                 <div class="label">{{i18n "admin.logs.created_at"}}</div>
-                {{ageWithTooltip item.created_at}}
+                {{dAgeWithTooltip item.created_at}}
               </td>
               <td class="col last_match_at">
                 {{#if item.last_match_at}}
                   <div class="label">{{i18n "admin.logs.last_match_at"}}</div>
-                  {{ageWithTooltip item.last_match_at}}
+                  {{dAgeWithTooltip item.last_match_at}}
                 {{/if}}
               </td>
               <td class="col actions">
@@ -148,5 +148,5 @@ export default <template>
     {{else}}
       {{i18n "search.no_results"}}
     {{/if}}
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import {
@@ -12,6 +11,7 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { eq, or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import HeaderActivityCell from "./header/activity-cell";
 import HeaderBulkSelectCell from "./header/bulk-select-cell";
@@ -190,7 +190,7 @@ export default class TopicList extends Component {
   <template>
     {{! template-lint-disable table-groups }}
     <table
-      class={{concatClass
+      class={{dConcatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header bulk-select-enabled")
         this.additionalClasses
@@ -200,7 +200,7 @@ export default class TopicList extends Component {
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
       <thead
-        class={{concatClass
+        class={{dConcatClass
           "topic-list-header"
           (if this.moreTopicsTabs.tabs.length "--has-tabs")
         }}

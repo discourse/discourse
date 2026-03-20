@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import HighlightedCode from "discourse/components/highlighted-code";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 
 export default class StyleguideExample extends Component {
   @tracked value = null;
@@ -32,7 +32,7 @@ export default class StyleguideExample extends Component {
 
       {{#if this.showCode}}
         <div class="styleguide-code">
-          <HighlightedCode @code={{@code}} @lang="javascript" />
+          <DHighlightedCode @code={{@code}} @lang="javascript" />
         </div>
       {{/if}}
 

@@ -4,14 +4,14 @@ import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DButtonTooltip from "discourse/float-kit/components/d-button-tooltip";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ColorPaletteListItem extends Component {
@@ -114,7 +114,7 @@ export default class ColorPaletteListItem extends Component {
                 @route="adminCustomizeThemes.show"
                 @models={{array "themes" @scheme.theme_id}}
               >
-                {{icon "link"}}
+                {{dIcon "link"}}
                 {{@scheme.theme_name}}
               </LinkTo>
             {{/if}}
@@ -128,7 +128,7 @@ export default class ColorPaletteListItem extends Component {
                 }}
                 class="theme-card__badge --default"
               >
-                {{icon "sun"}}
+                {{dIcon "sun"}}
                 {{i18n "admin.customize.colors.default_light_badge.text"}}
               </span>
             {{/if}}
@@ -138,7 +138,7 @@ export default class ColorPaletteListItem extends Component {
                 title={{i18n "admin.customize.colors.default_dark_badge.title"}}
                 class="theme-card__badge --default"
               >
-                {{icon "moon"}}
+                {{dIcon "moon"}}
                 {{i18n "admin.customize.colors.default_dark_badge.text"}}
               </span>
             {{/if}}
@@ -148,7 +148,7 @@ export default class ColorPaletteListItem extends Component {
                 title={{i18n "admin.customize.theme.user_selectable"}}
                 class="theme-card__badge --selectable"
               >
-                {{icon "user-check"}}
+                {{dIcon "user-check"}}
                 {{i18n "admin.customize.theme.user_selectable_badge_label"}}
               </span>
             {{/if}}
@@ -185,7 +185,7 @@ export default class ColorPaletteListItem extends Component {
               @isLoading={{this.isLoading}}
             >
               <:content>
-                <DropdownMenu as |dropdown|>
+                <DDropdownMenu as |dropdown|>
                   {{#unless this.isBuiltInDefault}}
                     <dropdown.item>
                       <DButton
@@ -252,7 +252,7 @@ export default class ColorPaletteListItem extends Component {
                       />
                     </dropdown.item>
                   {{/if}}
-                </DropdownMenu>
+                </DDropdownMenu>
               </:content>
             </DMenu>
           {{/if}}

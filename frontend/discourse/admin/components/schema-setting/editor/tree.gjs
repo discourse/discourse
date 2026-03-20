@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import TreeNode from "discourse/admin/components/schema-setting/editor/tree-node";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 <template>
   <ul class="schema-setting-editor__tree">
@@ -14,7 +14,7 @@ import { eq } from "discourse/truth-helpers";
         {{on "click" @clickBack}}
       >
         <div class="schema-setting-editor__tree-node-text">
-          {{icon "arrow-left"}}
+          {{dIcon "arrow-left"}}
           {{@backButtonText}}
         </div>
       </li>

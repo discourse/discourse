@@ -4,13 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
@@ -239,7 +239,7 @@ export default class ThemeCard extends Component {
               <span
                 title={{i18n "admin.customize.theme.updates_available_tooltip"}}
                 class="theme-card__badge"
-              >{{icon "arrows-rotate"}}
+              >{{dIcon "arrows-rotate"}}
                 {{i18n "admin.customize.theme.update_available"}}</span>
             {{/if}}
 
@@ -247,7 +247,7 @@ export default class ThemeCard extends Component {
               <span
                 class="theme-card__badge --default"
                 title={{i18n "admin.customize.theme.default_theme"}}
-              >{{icon "paintbrush"}}
+              >{{dIcon "paintbrush"}}
                 {{i18n "admin.customize.theme.default"}}</span>
             {{/if}}
 
@@ -255,7 +255,7 @@ export default class ThemeCard extends Component {
               <span
                 title={{i18n "admin.customize.theme.user_selectable"}}
                 class="theme-card__badge --selectable"
-              >{{icon "user-check"}}
+              >{{dIcon "user-check"}}
                 {{i18n
                   "admin.customize.theme.user_selectable_badge_label"
                 }}</span>
@@ -280,7 +280,7 @@ export default class ThemeCard extends Component {
                 @icon="ellipsis"
               >
                 <:content>
-                  <DropdownMenu as |dropdown|>
+                  <DDropdownMenu as |dropdown|>
                     {{! TODO: Jordan solutions for broken, disabled states }}
                     <dropdown.item>
                       <DButton
@@ -337,7 +337,7 @@ export default class ThemeCard extends Component {
                         rel="noopener noreferrer"
                         target="_blank"
                         class="btn btn-transparent theme-card__button preview"
-                      >{{icon "eye"}}
+                      >{{dIcon "eye"}}
                         {{i18n "admin.customize.theme.preview"}}</a>
                     </dropdown.item>
                     <dropdown.item>
@@ -349,7 +349,7 @@ export default class ThemeCard extends Component {
                         class="theme-card__button btn-transparent --danger delete"
                       />
                     </dropdown.item>
-                  </DropdownMenu>
+                  </DDropdownMenu>
                 </:content>
               </DMenu>
             </div>

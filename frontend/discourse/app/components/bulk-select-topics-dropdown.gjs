@@ -2,17 +2,17 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
 import DismissNew from "discourse/components/modal/dismiss-new";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import Topic from "discourse/models/topic";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const _customButtons = [];
@@ -393,22 +393,22 @@ export default class BulkSelectTopicsDropdown extends Component {
         <span class="d-button-label">
           {{i18n "select_kit.components.bulk_select_topics_dropdown.title"}}
         </span>
-        {{icon "angle-down"}}
+        {{dIcon "angle-down"}}
       </:trigger>
 
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.buttons as |button|}}
             <dropdown.item>
               <DButton
                 @translatedLabel={{button.name}}
                 @icon={{button.icon}}
-                class={{concatClass "btn-transparent" button.id button.class}}
+                class={{dConcatClass "btn-transparent" button.id button.class}}
                 @action={{fn this.onSelect button.id}}
               />
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

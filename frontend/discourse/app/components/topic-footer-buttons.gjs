@@ -7,15 +7,11 @@ import { getOwner } from "@ember/owner";
 import { compare } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import BookmarkMenu from "discourse/components/bookmark-menu";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import PinnedButton from "discourse/components/pinned-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
@@ -24,6 +20,10 @@ import TopicBookmarkManager from "discourse/lib/topic-bookmark-manager";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
 import { eq, gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function bind(fn, context) {
@@ -159,7 +159,7 @@ export default class TopicFooterButtons extends Component {
                   @translatedAriaLabel={{actionable.ariaLabel}}
                   @disabled={{actionable.disabled}}
                   id={{concat "topic-footer-button-" actionable.id}}
-                  class={{concatClass
+                  class={{dConcatClass
                     "btn-default"
                     "topic-footer-button"
                     actionable.classNames
@@ -177,7 +177,7 @@ export default class TopicFooterButtons extends Component {
                   none=actionable.noneItem
                   disabled=actionable.disabled
                 }}
-                class={{concatClass
+                class={{dConcatClass
                   "topic-footer-dropdown"
                   actionable.classNames
                 }}
@@ -195,7 +195,7 @@ export default class TopicFooterButtons extends Component {
                 @translatedAriaLabel={{this.loneDropdownButton.ariaLabel}}
                 @disabled={{this.loneDropdownButton.disabled}}
                 id={{concat "topic-footer-button-" this.loneDropdownButton.id}}
-                class={{concatClass
+                class={{dConcatClass
                   "btn-default"
                   "topic-footer-button"
                   this.loneDropdownButton.classNames
@@ -208,10 +208,10 @@ export default class TopicFooterButtons extends Component {
                 class="topic-footer-button btn-default"
               >
                 <:trigger>
-                  {{icon "ellipsis-vertical"}}
+                  {{dIcon "ellipsis-vertical"}}
                 </:trigger>
                 <:content>
-                  <DropdownMenu as |dropdown|>
+                  <DDropdownMenu as |dropdown|>
                     {{#each this.dropdownButtons key="id" as |button|}}
                       <dropdown.item>
                         <DButton
@@ -222,7 +222,7 @@ export default class TopicFooterButtons extends Component {
                           @translatedAriaLabel={{button.ariaLabel}}
                           @disabled={{button.disabled}}
                           id={{concat "topic-footer-button-" button.id}}
-                          class={{concatClass
+                          class={{dConcatClass
                             "btn-default"
                             "topic-footer-button"
                             button.classNames
@@ -230,7 +230,7 @@ export default class TopicFooterButtons extends Component {
                         />
                       </dropdown.item>
                     {{/each}}
-                  </DropdownMenu>
+                  </DDropdownMenu>
                 </:content>
               </DMenu>
             {{/if}}

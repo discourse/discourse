@@ -6,10 +6,6 @@ import { and, equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import DatePickerFuture from "discourse/components/date-picker-future";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
-import TapTile from "discourse/components/tap-tile";
-import TapTileGrid from "discourse/components/tap-tile-grid";
-import icon from "discourse/helpers/d-icon";
 import {
   defaultTimeShortcuts,
   formatTime,
@@ -18,6 +14,10 @@ import {
   TIME_SHORTCUT_TYPES,
 } from "discourse/lib/time-shortcut";
 import { laterToday, now, parseCustomDatetime } from "discourse/lib/time-utils";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import DTapTile from "discourse/ui-kit/d-tap-tile";
+import DTapTileGrid from "discourse/ui-kit/d-tap-tile-grid";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BINDINGS = {
@@ -286,10 +286,10 @@ export default class DTimeShortcutPicker extends Component {
   }
 
   <template>
-    <TapTileGrid @activeTile={{this.selectedShortcut}} as |grid|>
+    <DTapTileGrid @activeTile={{this.selectedShortcut}} as |grid|>
       {{#each this.options key="id" as |option|}}
         {{#unless option.hidden}}
-          <TapTile
+          <DTapTile
             @tileId={{option.id}}
             @activeTile={{grid.activeTile}}
             @onChange={{this.selectShortcut}}
@@ -297,14 +297,14 @@ export default class DTimeShortcutPicker extends Component {
 
             <div class="tap-tile-title">{{i18n option.label}}</div>
             <div class="tap-tile-date">{{option.timeFormatted}}</div>
-          </TapTile>
+          </DTapTile>
         {{/unless}}
 
         {{#if option.isCustomTimeShortcut}}
           {{#if this.customDatetimeSelected}}
             <div class="control-group custom-date-time-wrap custom-input-wrap">
               <div class="tap-tile-date-input">
-                {{icon "calendar-days"}}
+                {{dIcon "calendar-days"}}
                 <DatePickerFuture
                   @value={{this.customDate}}
                   @defaultDate={{this.defaultCustomDate}}
@@ -313,7 +313,7 @@ export default class DTimeShortcutPicker extends Component {
                 />
               </div>
               <div class="tap-tile-time-input">
-                {{icon "far-clock"}}
+                {{dIcon "far-clock"}}
                 <Input
                   placeholder="--:--"
                   id="custom-time"
@@ -329,7 +329,7 @@ export default class DTimeShortcutPicker extends Component {
               <label class="control-label" for="bookmark-relative-time-picker">
                 {{i18n "relative_time_picker.relative"}}
               </label>
-              <RelativeTimePicker
+              <DRelativeTimePicker
                 @durationMinutes={{this.selectedDurationMins}}
                 @onChange={{this.relativeTimeChanged}}
                 id="bookmark-relative-time-picker"
@@ -338,6 +338,6 @@ export default class DTimeShortcutPicker extends Component {
           {{/if}}
         {{/if}}
       {{/each}}
-    </TapTileGrid>
+    </DTapTileGrid>
   </template>
 }

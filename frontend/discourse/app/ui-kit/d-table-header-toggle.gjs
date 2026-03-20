@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DTableHeaderToggle extends Component {
@@ -116,11 +116,11 @@ export default class DTableHeaderToggle extends Component {
         {{yield}}
         <span class="text">
           {{#if this.iconName}}
-            {{icon this.iconName}}
+            {{dIcon this.iconName}}
           {{/if}}
           {{this.label}}
           {{#if this.chevronIcon}}
-            {{icon this.chevronIcon}}
+            {{dIcon this.chevronIcon}}
           {{/if}}
         </span>
       </div>

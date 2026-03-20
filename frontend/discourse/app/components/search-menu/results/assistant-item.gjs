@@ -5,11 +5,11 @@ import { service } from "@ember/service";
 import Category from "discourse/components/search-menu/results/type/category";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { debounce } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { and, or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const _itemSelectCallbacks = [];
@@ -138,14 +138,14 @@ export default class AssistantItem extends Component {
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
     <li
-      class={{concatClass @typeClass "search-menu-assistant-item"}}
+      class={{dConcatClass @typeClass "search-menu-assistant-item"}}
       {{on "keydown" this.onKeydown}}
       {{on "click" this.onClick}}
       data-usage={{@usage}}
     >
-      <a class={{concatClass @typeClass "search-link"}} href={{this.href}}>
+      <a class={{dConcatClass @typeClass "search-link"}} href={{this.href}}>
         <span class="search-icon-wrapper" aria-label={{i18n "search.title"}}>
-          {{icon (or @icon "magnifying-glass")}}
+          {{dIcon (or @icon "magnifying-glass")}}
         </span>
         <span class="search-item-wrapper">
           {{#if this.prefix}}
@@ -162,7 +162,7 @@ export default class AssistantItem extends Component {
             <Category @result={{@category}} />
             {{#if (and @tag @isIntersection)}}
               <span class="search-item-tag">
-                {{icon "tag"}}{{@tag}}
+                {{dIcon "tag"}}{{@tag}}
               </span>
             {{/if}}
           {{else if @tag}}

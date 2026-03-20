@@ -4,14 +4,14 @@ import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
-import PopupInputTip from "discourse/components/popup-input-tip";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal";
+import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class FeatureTopic extends Component {
@@ -198,7 +198,7 @@ export default class FeatureTopic extends Component {
             <div class="desc">
               {{#if @model.topic.pinned_globally}}
                 <p>
-                  <ConditionalLoadingSpinner
+                  <DConditionalLoadingSpinner
                     @size="small"
                     @condition={{this.loading}}
                   >
@@ -214,17 +214,17 @@ export default class FeatureTopic extends Component {
                         (i18n "topic.feature_topic.not_pinned_globally")
                       }}
                     {{/if}}
-                  </ConditionalLoadingSpinner>
+                  </DConditionalLoadingSpinner>
                 </p>
                 <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
               {{else}}
                 <p>
-                  <ConditionalLoadingSpinner
+                  <DConditionalLoadingSpinner
                     @size="small"
                     @condition={{this.loading}}
                   >
                     {{trustHTML this.alreadyPinnedMessage}}
-                  </ConditionalLoadingSpinner>
+                  </DConditionalLoadingSpinner>
                 </p>
                 <p>{{i18n "topic.feature_topic.pin_note"}}</p>
               {{/if}}
@@ -241,12 +241,12 @@ export default class FeatureTopic extends Component {
           <div class="feature-section">
             <div class="desc">
               <p>
-                <ConditionalLoadingSpinner
+                <DConditionalLoadingSpinner
                   @size="small"
                   @condition={{this.loading}}
                 >
                   {{trustHTML this.alreadyPinnedMessage}}
-                </ConditionalLoadingSpinner>
+                </DConditionalLoadingSpinner>
               </p>
               <p>
                 {{i18n "topic.feature_topic.pin_note"}}
@@ -256,7 +256,7 @@ export default class FeatureTopic extends Component {
                   {{trustHTML this.pinMessage}}
                 </p>
                 <p class="with-validation">
-                  <FutureDateInput
+                  <DFutureDateInput
                     class="pin-until"
                     @clearable={{true}}
                     @input={{@model.topic.pinnedInCategoryUntil}}
@@ -264,7 +264,7 @@ export default class FeatureTopic extends Component {
                       (mut @model.topic.pinnedInCategoryUntil)
                     }}
                   />
-                  <PopupInputTip
+                  <DPopupInputTip
                     @validation={{this.pinInCategoryValidation}}
                     @shownAt={{this.pinInCategoryTipShownAt}}
                   />
@@ -273,8 +273,8 @@ export default class FeatureTopic extends Component {
                 <p class="with-validation">
                   {{trustHTML this.pinMessage}}
                   <span>
-                    {{icon "far-clock"}}
-                    <FutureDateInput
+                    {{dIcon "far-clock"}}
+                    <DFutureDateInput
                       class="pin-until"
                       @clearable={{true}}
                       @input={{@model.topic.pinnedInCategoryUntil}}
@@ -282,7 +282,7 @@ export default class FeatureTopic extends Component {
                         (mut @model.topic.pinnedInCategoryUntil)
                       }}
                     />
-                    <PopupInputTip
+                    <DPopupInputTip
                       @validation={{this.pinInCategoryValidation}}
                       @shownAt={{this.pinInCategoryTipShownAt}}
                     />
@@ -304,7 +304,7 @@ export default class FeatureTopic extends Component {
             <div class="feature-section">
               <div class="desc">
                 <p>
-                  <ConditionalLoadingSpinner
+                  <DConditionalLoadingSpinner
                     @size="small"
                     @condition={{this.loading}}
                   >
@@ -320,7 +320,7 @@ export default class FeatureTopic extends Component {
                         (i18n "topic.feature_topic.not_pinned_globally")
                       }}
                     {{/if}}
-                  </ConditionalLoadingSpinner>
+                  </DConditionalLoadingSpinner>
                 </p>
                 <p>
                   {{i18n "topic.feature_topic.global_pin_note"}}
@@ -330,7 +330,7 @@ export default class FeatureTopic extends Component {
                     {{i18n "topic.feature_topic.pin_globally"}}
                   </p>
                   <p class="with-validation">
-                    <FutureDateInput
+                    <DFutureDateInput
                       class="pin-until"
                       @clearable={{true}}
                       @input={{@model.topic.pinnedGloballyUntil}}
@@ -338,7 +338,7 @@ export default class FeatureTopic extends Component {
                         (mut @model.topic.pinnedGloballyUntil)
                       }}
                     />
-                    <PopupInputTip
+                    <DPopupInputTip
                       @validation={{this.pinGloballyValidation}}
                       @shownAt={{this.pinGloballyTipShownAt}}
                     />
@@ -347,8 +347,8 @@ export default class FeatureTopic extends Component {
                   <p class="with-validation">
                     {{i18n "topic.feature_topic.pin_globally"}}
                     <span>
-                      {{icon "far-clock"}}
-                      <FutureDateInput
+                      {{dIcon "far-clock"}}
+                      <DFutureDateInput
                         class="pin-until"
                         @clearable={{true}}
                         @input={{@model.topic.pinnedGloballyUntil}}
@@ -356,7 +356,7 @@ export default class FeatureTopic extends Component {
                           (mut @model.topic.pinnedGloballyUntil)
                         }}
                       />
-                      <PopupInputTip
+                      <DPopupInputTip
                         @validation={{this.pinGloballyValidation}}
                         @shownAt={{this.pinGloballyTipShownAt}}
                       />
@@ -380,7 +380,7 @@ export default class FeatureTopic extends Component {
           <div class="feature-section">
             <div class="desc">
               <p>
-                <ConditionalLoadingSpinner
+                <DConditionalLoadingSpinner
                   @size="small"
                   @condition={{this.loading}}
                 >
@@ -389,7 +389,7 @@ export default class FeatureTopic extends Component {
                   {{else}}
                     {{trustHTML (i18n "topic.feature_topic.no_banner_exists")}}
                   {{/if}}
-                </ConditionalLoadingSpinner>
+                </DConditionalLoadingSpinner>
               </p>
               <p>
                 {{i18n "topic.feature_topic.banner_note"}}

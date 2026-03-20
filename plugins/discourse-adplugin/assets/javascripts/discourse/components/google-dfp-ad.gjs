@@ -4,9 +4,9 @@ import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
-import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component";
 
@@ -437,7 +437,7 @@ export default class GoogleDfpAd extends AdComponent {
   }
 
   <template>
-    <div class={{concatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
+    <div class={{dConcatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
         {{#if this.site.mobileView}}
           <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2

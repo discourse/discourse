@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import autoFocus from "discourse/modifiers/auto-focus";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 
@@ -19,7 +19,7 @@ export default class TopicTitleEditor extends Component {
     <div class="edit-title__wrapper">
       {{#if @isEditingLocalization}}
         <span class="editing-localization-indicator">
-          {{icon "language"}}
+          {{dIcon "language"}}
           {{i18n
             "topic.localizations.editing_translation"
             language=this.translationLocaleName
@@ -31,20 +31,20 @@ export default class TopicTitleEditor extends Component {
         @outletArgs={{lazyHash model=@model buffered=@buffered}}
       >
         {{#if @isEditingLocalization}}
-          <TextField
+          <DTextField
             @id="edit-title"
             @value={{@translationTitle}}
             @maxlength={{this.siteSettings.max_topic_title_length}}
             @autofocus={{true}}
-            {{autoFocus}}
+            {{dAutoFocus}}
           />
         {{else}}
-          <TextField
+          <DTextField
             @id="edit-title"
             @value={{@bufferedTitle}}
             @maxlength={{this.siteSettings.max_topic_title_length}}
             @autofocus={{true}}
-            {{autoFocus}}
+            {{dAutoFocus}}
           />
         {{/if}}
       </PluginOutlet>

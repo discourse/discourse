@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const UNPINNED = "unpinned";
@@ -46,13 +46,13 @@ class PinnedOptionsTrigger extends Component {
 
   <template>
     <button
-      class={{concatClass
+      class={{dConcatClass
         "btn btn-default"
         (if this.showFullTitle "btn-icon-text" "no-text")
       }}
       ...attributes
     >
-      {{icon this.iconName}}
+      {{dIcon this.iconName}}
 
       {{#if this.showFullTitle}}
         <span class="d-button-label">
@@ -61,7 +61,7 @@ class PinnedOptionsTrigger extends Component {
       {{/if}}
 
       {{#if this.showCaret}}
-        {{icon "angle-down" class="pinned-options-btn__caret"}}
+        {{dIcon "angle-down" class="pinned-options-btn__caret"}}
       {{/if}}
     </button>
   </template>
@@ -114,7 +114,7 @@ export default class PinnedOptions extends Component {
     <DMenu
       @identifier="pinned-options"
       @modalForMobile={{true}}
-      @triggerClass={{concatClass
+      @triggerClass={{dConcatClass
         "btn-default"
         "pinned-options-trigger-btn"
         @triggerClass
@@ -132,11 +132,11 @@ export default class PinnedOptions extends Component {
       ...attributes
     >
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.options as |option|}}
             <dropdown.item>
               <DButton
-                class={{concatClass
+                class={{dConcatClass
                   "pinned-options-btn"
                   (this.isSelectedClass option.id)
                 }}
@@ -144,7 +144,7 @@ export default class PinnedOptions extends Component {
                 data-pinned-state={{option.id}}
               >
                 <div class="pinned-options-btn__icons">
-                  {{icon option.icon}}
+                  {{dIcon option.icon}}
                 </div>
                 <div class="pinned-options-btn__texts">
                   <span class="pinned-options-btn__label">
@@ -159,7 +159,7 @@ export default class PinnedOptions extends Component {
               </DButton>
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

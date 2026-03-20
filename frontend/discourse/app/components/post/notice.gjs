@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { dasherize } from "@ember/string";
-import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import PostNoticeCustom from "./notice/custom";
 import PostNoticeNewUser from "./notice/new-user";
 import PostNoticeReturningUser from "./notice/returning-user";
@@ -37,7 +37,7 @@ export default class PostNotice extends Component {
   }
 
   <template>
-    <div class={{concatClass "post-notice" (dasherize this.type)}}>
+    <div class={{dConcatClass "post-notice" (dasherize this.type)}}>
       <this.Component @notice={{@post.notice}} @post={{@post}} />
     </div>
   </template>

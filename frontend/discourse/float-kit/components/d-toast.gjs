@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import autoCloseToast from "discourse/float-kit/modifiers/auto-close-toast";
-import concatClass from "discourse/helpers/concat-class";
 import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
-import swipe from "discourse/modifiers/swipe";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 
 const VELOCITY_THRESHOLD = -1.2;
 
@@ -80,14 +80,14 @@ export default class DToast extends Component {
     <output
       role={{if @toast.options.autoClose "status" "log"}}
       key={{@toast.id}}
-      class={{concatClass "fk-d-toast" @toast.options.class}}
+      class={{dConcatClass "fk-d-toast" @toast.options.class}}
       {{autoCloseToast
         close=@toast.close
         duration=this.duration
         progressBar=this.progressBar
         enabled=@toast.options.autoClose
       }}
-      {{swipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
+      {{dSwipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
       data-test-duration={{this.duration}}
     >
       <@toast.options.component

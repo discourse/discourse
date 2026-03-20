@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import number from "discourse/helpers/number";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -30,7 +30,7 @@ export default class Assignments extends Component {
                 {{i18n "discourse_rewind.reports.assignments.completed"}}
               </div>
               <div class="sticky-note__value">
-                {{number @report.data.completed}}
+                {{dNumber @report.data.completed}}
               </div>
             </div>
           </div>
@@ -40,7 +40,7 @@ export default class Assignments extends Component {
               <div class="sticky-note__title">
                 {{i18n "discourse_rewind.reports.assignments.pending"}}
               </div>
-              <div class="sticky-note__value">{{number
+              <div class="sticky-note__value">{{dNumber
                   @report.data.pending
                 }}</div>
             </div>
@@ -52,7 +52,7 @@ export default class Assignments extends Component {
                 {{this.totalAssignedText}}
               </div>
               <div class="sticky-note__value">
-                {{number @report.data.total_assigned}}
+                {{dNumber @report.data.total_assigned}}
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default class Assignments extends Component {
                 {{i18n "discourse_rewind.reports.assignments.assigned_by_user"}}
               </div>
               <div class="sticky-note__value">
-                {{number @report.data.assigned_by_user}}
+                {{dNumber @report.data.assigned_by_user}}
               </div>
             </div>
           </div>

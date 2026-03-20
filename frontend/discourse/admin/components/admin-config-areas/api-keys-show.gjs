@@ -9,11 +9,11 @@ import { service } from "@ember/service";
 import AdminFormRow from "discourse/admin/components/admin-form-row";
 import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import BackButton from "discourse/components/back-button";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasApiKeysShow extends Component {
@@ -129,7 +129,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
       <AdminFormRow @label="admin.api.user">
         {{#if @apiKey.user}}
           <LinkTo @route="adminUser" @model={{@apiKey.user}}>
-            {{avatar @apiKey.user imageSize="small"}}
+            {{dAvatar @apiKey.user imageSize="small"}}
             {{@apiKey.user.username}}
           </LinkTo>
         {{else}}
@@ -138,16 +138,16 @@ export default class AdminConfigAreasApiKeysShow extends Component {
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.created">
-        {{formatDate @apiKey.created_at leaveAgo="true"}}
+        {{dFormatDate @apiKey.created_at leaveAgo="true"}}
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.updated">
-        {{formatDate @apiKey.updated_at leaveAgo="true"}}
+        {{dFormatDate @apiKey.updated_at leaveAgo="true"}}
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.last_used">
         {{#if @apiKey.last_used_at}}
-          {{formatDate @apiKey.last_used_at leaveAgo="true"}}
+          {{dFormatDate @apiKey.last_used_at leaveAgo="true"}}
         {{else}}
           {{i18n "admin.api.never_used"}}
         {{/if}}
@@ -155,7 +155,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
 
       <AdminFormRow @label="admin.api.revoked">
         {{#if @apiKey.revoked_at}}
-          {{formatDate @apiKey.revoked_at leaveAgo="true"}}
+          {{dFormatDate @apiKey.revoked_at leaveAgo="true"}}
         {{else}}
           <span>{{i18n "no_value"}}</span>
         {{/if}}

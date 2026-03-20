@@ -1,7 +1,7 @@
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DButton from "discourse/components/d-button";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
 import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | ui-kit | DButton", function (hooks) {

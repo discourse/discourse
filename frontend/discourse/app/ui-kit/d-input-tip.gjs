@@ -1,4 +1,4 @@
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const DInputTip = <template>
   <div
@@ -7,7 +7,7 @@ const DInputTip = <template>
     ...attributes
   >
     {{#if @validation.reason}}
-      {{icon (if @validation.failed "xmark" "check")}}
+      {{dIcon (if @validation.failed "xmark" "check")}}
       {{@validation.reason}}
     {{/if}}
   </div>

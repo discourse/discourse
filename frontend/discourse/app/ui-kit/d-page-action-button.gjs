@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export const DPageActionButton = <template>
   <DButton

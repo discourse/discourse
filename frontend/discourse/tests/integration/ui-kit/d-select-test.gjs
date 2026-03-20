@@ -1,7 +1,7 @@
 import { render, select } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DSelect, { NO_VALUE_OPTION } from "discourse/components/d-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DSelect, { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 
 module("Integration | ui-kit | DSelect", function (hooks) {

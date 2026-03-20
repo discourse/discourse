@@ -1,6 +1,6 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -26,22 +26,22 @@ export default <template>
         />
       </:actions>
       <:tabs>
-        <NavItem
+        <DNavItem
           @route="adminEmbedding.settings"
           @label="admin.embedding.nav.settings"
           class="admin-embedding-tabs__settings"
         />
-        <NavItem
+        <DNavItem
           @route="adminEmbedding.index"
           @label="admin.embedding.nav.hosts"
           class="admin-embedding-tabs__hosts"
         />
-        <NavItem
+        <DNavItem
           @route="adminEmbedding.postsAndTopics"
           @label="admin.embedding.nav.posts_and_topics"
           class="admin-embedding-tabs__posts-and-topics"
         />
-        <NavItem
+        <DNavItem
           @route="adminEmbedding.crawlers"
           @label="admin.embedding.nav.crawlers"
           class="admin-embedding-tabs__crawlers"

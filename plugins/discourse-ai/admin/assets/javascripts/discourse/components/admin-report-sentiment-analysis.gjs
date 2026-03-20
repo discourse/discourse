@@ -8,14 +8,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PostList from "discourse/components/post-list";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import bodyClass from "discourse/helpers/body-class";
-import categoryBadge from "discourse/helpers/category-badge";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -24,6 +19,11 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import AiSentimentHorizontalBar from "./ai-sentiment-horizontal-bar";
 import DoughnutChart from "./doughnut-chart";
@@ -144,7 +144,7 @@ export default class AdminReportSentimentAnalysis extends Component {
       list = [];
     } else {
       list = this.posts.filter((post) => {
-        post.topic_title = replaceEmoji(post.topic_title);
+        post.topic_title = dReplaceEmoji(post.topic_title);
         post.category = Category.findById(post.category_id);
 
         if (this.activeFilter === "all") {
@@ -352,7 +352,7 @@ export default class AdminReportSentimentAnalysis extends Component {
               >
                 <td class="sentiment-analysis-table__title">
                   {{#if data.category}}
-                    {{categoryBadge data.category}}
+                    {{dCategoryBadge data.category}}
                   {{else}}
                     {{data.title}}
                   {{/if}}
@@ -403,7 +403,7 @@ export default class AdminReportSentimentAnalysis extends Component {
                 >
                   <td class="sentiment-analysis-table__title">
                     {{#if data.category}}
-                      {{categoryBadge data.category}}
+                      {{dCategoryBadge data.category}}
                     {{else}}
                       {{data.title}}
                     {{/if}}
@@ -468,7 +468,7 @@ export default class AdminReportSentimentAnalysis extends Component {
 
       </div>
       <div class="admin-report-sentiment-analysis-details">
-        <HorizontalOverflowNav
+        <DHorizontalOverflowNav
           {{this.setActiveFilter}}
           class="admin-report-sentiment-analysis-details__filters"
         >
@@ -482,7 +482,7 @@ export default class AdminReportSentimentAnalysis extends Component {
               />
             </li>
           {{/each}}
-        </HorizontalOverflowNav>
+        </DHorizontalOverflowNav>
 
         <PostList
           @posts={{this.filteredPosts}}
@@ -499,7 +499,7 @@ export default class AdminReportSentimentAnalysis extends Component {
                 class="admin-report-sentiment-analysis-details__post-score"
                 data-sentiment-score={{sentiment.id}}
               >
-                {{icon sentiment.icon}}
+                {{dIcon sentiment.icon}}
                 {{sentiment.text}}
               </span>
             {{/let}}

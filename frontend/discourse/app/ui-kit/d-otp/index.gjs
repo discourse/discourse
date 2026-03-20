@@ -6,8 +6,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 /** @type {import("./slot.gjs").default} */
 import Slot from "./slot";
@@ -166,7 +166,7 @@ export default class DOTP extends Component {
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
           aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
-          {{(if this.autoFocus (modifier autoFocus))}}
+          {{(if this.autoFocus (modifier dAutoFocus))}}
           ...attributes
         />
       </div>

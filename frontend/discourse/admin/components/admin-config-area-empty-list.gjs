@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreaEmptyList extends Component {
@@ -20,7 +20,7 @@ export default class AdminConfigAreaEmptyList extends Component {
       {{#if @ctaLabel}}
         <DButton
           @label={{@ctaLabel}}
-          class={{concatClass
+          class={{dConcatClass
             "btn-default btn-small admin-config-area-empty-list__cta-button"
             @ctaClass
           }}

@@ -1,5 +1,5 @@
-import DEditor from "discourse/components/d-editor";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import DEditor from "discourse/ui-kit/d-editor";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";

@@ -8,12 +8,8 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
@@ -26,6 +22,10 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import IconPicker from "discourse/select-kit/components/icon-picker";
 import { eq, or } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryGeneral extends Component {
@@ -440,7 +440,7 @@ export default class UpsertCategoryGeneral extends Component {
 
   <template>
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-general"
         (if (eq @selectedTab "general") "active")
@@ -578,7 +578,7 @@ export default class UpsertCategoryGeneral extends Component {
 
               <Content @name="square">
                 {{trustHTML
-                  (categoryBadge
+                  (dCategoryBadge
                     (this.buildTransientModel @transientData) styleType="square"
                   )
                 }}
@@ -598,7 +598,7 @@ export default class UpsertCategoryGeneral extends Component {
             class="edit-category-description-container"
           >
             <div
-              class={{concatClass
+              class={{dConcatClass
                 "description-content"
                 (unless this.descriptionExpanded "--collapsed")
                 (if this.descriptionOverflows "--overflowing")
@@ -609,7 +609,7 @@ export default class UpsertCategoryGeneral extends Component {
                 this.categoryDescription
               }}
             >
-              <DecoratedHtml
+              <DDecoratedHtml
                 @html={{this.categoryDescription}}
                 @className="readonly-field"
               />
@@ -692,19 +692,19 @@ export default class UpsertCategoryGeneral extends Component {
               >
                 <:trigger>
                   <Condition @name="public" @disabled={{true}}>
-                    {{icon "ban"}}
+                    {{dIcon "ban"}}
                     {{i18n this.publicVisibilityLabel}}
                   </Condition>
                 </:trigger>
               </DTooltip>
             {{else}}
               <Condition @name="public">
-                {{icon "check"}}
+                {{dIcon "check"}}
                 {{i18n this.publicVisibilityLabel}}
               </Condition>
             {{/if}}
             <Condition @name="group_restricted">
-              {{icon "check"}}
+              {{dIcon "check"}}
               {{i18n "category.visibility.group_restricted"}}
             </Condition>
           </cc.Conditions>

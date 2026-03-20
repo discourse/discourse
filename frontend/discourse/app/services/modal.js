@@ -1,10 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
-import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
+import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/ui-kit/d-modal";
 
 const LEGACY_OPTS = new Set([
   "admin",

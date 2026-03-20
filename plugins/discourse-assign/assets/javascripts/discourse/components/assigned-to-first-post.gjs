@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   assignedToGroupPath,
@@ -68,7 +68,7 @@ export default class AssignedToFirstPost extends Component {
   <template>
     {{#if this.isAssigned}}
       <p class="assigned-to">
-        {{icon this.icon}}
+        {{dIcon this.icon}}
         {{#if this.assignedToUser}}
           <span class="assignee">
             <span class="assigned-to--user">

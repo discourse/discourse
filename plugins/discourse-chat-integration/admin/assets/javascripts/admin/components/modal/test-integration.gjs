@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import ChooseTopic from "discourse/components/choose-topic";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class TestIntegration extends Component {
@@ -72,7 +72,7 @@ export default class TestIntegration extends Component {
       </:body>
 
       <:footer>
-        <ConditionalLoadingSpinner @condition={{this.loading}}>
+        <DConditionalLoadingSpinner @condition={{this.loading}}>
           <DButton
             @action={{this.send}}
             @label="chat_integration.test_modal.send"
@@ -86,7 +86,7 @@ export default class TestIntegration extends Component {
             @label="chat_integration.test_modal.close"
             class="btn-default btn-large"
           />
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:footer>
     </DModal>
   </template>

@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
 
 const DEFAULT_DATE_TIME_STRING = "2019-01-29 14:45";
 const DEFAULT_DATE_TIME = moment(DEFAULT_DATE_TIME_STRING);
@@ -16,7 +16,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
 
     await render(
       <template>
-        <DateTimeInputRange
+        <DDateTimeInputRange
           @from={{this.state.from}}
           @to={{this.state.to}}
           @onChange={{fn (mut this.state)}}
@@ -55,7 +55,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
 
     await render(
       <template>
-        <DateTimeInputRange
+        <DDateTimeInputRange
           @from={{this.state.from}}
           @to={{this.state.to}}
           @relativeDate={{this.state.from}}
@@ -83,7 +83,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
 
     await render(
       <template>
-        <DateTimeInputRange
+        <DDateTimeInputRange
           @from={{this.state.from}}
           @to={{this.state.to}}
           @onChange={{fn (mut this.state)}}

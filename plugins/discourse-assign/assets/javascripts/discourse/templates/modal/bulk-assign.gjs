@@ -1,4 +1,4 @@
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import AssignUserForm from "../../components/assign-user-form";
 
 export default <template>

@@ -1,5 +1,5 @@
 import { isPresent } from "@ember/utils";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 
 export default function dCategoryBadge(cat, options = {}) {
   return categoryLinkHTML(cat, {

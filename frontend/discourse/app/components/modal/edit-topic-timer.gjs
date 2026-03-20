@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export const CLOSE_STATUS_TYPE = "close";

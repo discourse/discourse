@@ -1,8 +1,8 @@
 import { trustHTML } from "@ember/template";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 module("Integration | ui-kit | Helper | dReplaceEmoji", function (hooks) {
   setupRenderingTest(hooks);
@@ -10,7 +10,7 @@ module("Integration | ui-kit | Helper | dReplaceEmoji", function (hooks) {
   test("it replaces the emoji", async function (assert) {
     await render(
       <template>
-        <span>{{replaceEmoji "some text :heart:"}}</span>
+        <span>{{dReplaceEmoji "some text :heart:"}}</span>
       </template>
     );
 
@@ -21,7 +21,7 @@ module("Integration | ui-kit | Helper | dReplaceEmoji", function (hooks) {
   test("it escapes the text", async function (assert) {
     await render(
       <template>
-        <span>{{replaceEmoji "<style>body: {background: red;}</style>"}}</span>
+        <span>{{dReplaceEmoji "<style>body: {background: red;}</style>"}}</span>
       </template>
     );
 
@@ -31,7 +31,7 @@ module("Integration | ui-kit | Helper | dReplaceEmoji", function (hooks) {
   test("it renders html-safe text", async function (assert) {
     await render(
       <template>
-        <span>{{replaceEmoji (trustHTML "safe text")}}</span>
+        <span>{{dReplaceEmoji (trustHTML "safe text")}}</span>
       </template>
     );
 

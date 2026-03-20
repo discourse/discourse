@@ -4,10 +4,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
-import DecoratedHtml, {
-  applyHtmlDecorators,
-  NON_STREAM_HTML_DECORATOR,
-} from "discourse/components/decorated-html";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -18,6 +14,10 @@ import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quo
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
 import decorateStatefulHtmlElements from "discourse/lib/post-cooked-html-decorators/stateful-html-elements";
+import DDecoratedHtml, {
+  applyHtmlDecorators,
+  NON_STREAM_HTML_DECORATOR,
+} from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
@@ -184,7 +184,7 @@ export default class PostCookedHtml extends Component {
   }
 
   <template>
-    <DecoratedHtml
+    <DDecoratedHtml
       @className={{this.className}}
       @decorate={{this.decorate}}
       @decorateArgs={{lazyHash

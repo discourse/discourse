@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import GroupDropdown from "discourse/select-kit/components/group-dropdown";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class GroupNavigation extends Component {
@@ -18,7 +18,7 @@ export default class GroupNavigation extends Component {
         @value={{@group.name}}
       />
     {{/if}}
-    <HorizontalOverflowNav class="group-nav">
+    <DHorizontalOverflowNav class="group-nav">
       {{#if this.site.mobileView}}
         <li>
           <LinkTo @route="groups.index">
@@ -35,7 +35,7 @@ export default class GroupNavigation extends Component {
             class={{tab.name}}
           >
             {{#if tab.icon}}
-              {{icon tab.icon}}
+              {{dIcon tab.icon}}
             {{/if}}
             {{tab.message}}
             {{#if tab.count}}
@@ -51,6 +51,6 @@ export default class GroupNavigation extends Component {
         @outletArgs={{lazyHash group=@group}}
         @connectorTagName="li"
       />
-    </HorizontalOverflowNav>
+    </DHorizontalOverflowNav>
   </template>
 }
