@@ -203,7 +203,7 @@ RSpec.describe Admin::DashboardController do
         json = response.parsed_body
         expect(json["new_features"].length).to eq(2)
 
-        DiscourseUpdates.stubs(:new_features_payload).returns(
+        DiscourseUpdates.stubs(:new_features_response_json).returns(
           [
             {
               "id" => "3",
@@ -218,6 +218,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json?force_refresh=true"
         expect(response.status).to eq(200)
         json = response.parsed_body
+        puts json["new_features"].inspect if json["new_features"].length > 1
         expect(json["new_features"].length).to eq(1)
         expect(json["new_features"][0]["id"]).to eq("3")
       end

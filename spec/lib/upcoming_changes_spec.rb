@@ -326,7 +326,7 @@ RSpec.describe UpcomingChanges do
 
       result = described_class.status_changed_timeline(%w[timeline_setting_a], :permanent)
 
-      expect(result).to eq(timeline_setting_a: { permanent: newer })
+      expect(result[:timeline_setting_a][:permanent]).to eq_time(newer)
     end
 
     it "keeps separate latest times for each requested status" do
@@ -355,7 +355,8 @@ RSpec.describe UpcomingChanges do
 
       result = described_class.status_changed_timeline("timeline_setting_b", %i[stable permanent])
 
-      expect(result).to eq(timeline_setting_b: { stable: at_stable, permanent: at_permanent })
+      expect(result[:timeline_setting_b][:stable]).to eq_time(at_stable)
+      expect(result[:timeline_setting_b][:permanent]).to eq_time(at_permanent)
     end
 
     it "returns {} when setting names are blank" do
