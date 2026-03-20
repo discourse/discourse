@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 103
+  BASE_COMPILER_VERSION = 104
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
@@ -22,6 +22,20 @@ class AssetProcessor
 
   def self.booted?
     !!@ctx
+  end
+
+  def self.append_es6_deprecation(content, file_path)
+    <<~JS
+      #{content}
+      import deprecated_gjYVqPLMxe from "discourse/lib/deprecated";
+      deprecated_gjYVqPLMxe(
+        "The file '#{file_path}' uses the deprecated `.js.es6` extension. Use `.js` instead.",
+        {
+          id: "discourse.es6-extension",
+          url: "https://meta.discourse.org/t/398894",
+        }
+      );
+    JS
   end
 
   def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
