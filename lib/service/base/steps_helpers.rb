@@ -50,8 +50,8 @@ module Service
         steps << OnlyIfStep.new(name, &block)
       end
 
-      def each(collection_name, as: nil, &block)
-        steps << EachStep.new(collection_name, as:, &block)
+      def each(collection_name, as: nil, persist: nil, &block)
+        steps << EachStep.new(collection_name, as:, persist:, &block)
       end
     end
   end

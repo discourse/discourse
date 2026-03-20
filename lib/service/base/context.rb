@@ -23,7 +23,7 @@ module Service
       end
 
       def to_h
-        store.dup
+        store.deep_dup
       end
 
       # @return [Boolean] returns +true+ if the context is set as successful (default)
