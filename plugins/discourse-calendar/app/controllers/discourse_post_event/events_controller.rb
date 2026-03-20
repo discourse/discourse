@@ -23,6 +23,25 @@ module DiscoursePostEvent
 
       respond_to do |format|
         format.ics do
+          after_time = filtered_events_params[:after]&.to_datetime || Time.current
+          before_time = filtered_events_params[:before]&.to_datetime || 1.year.from_now
+
+          @ics_events =
+            @events.flat_map do |event|
+              if event.recurring?
+                expanded =
+                  DiscoursePostEvent::Action::ExpandOccurrences.call(
+                    event: event,
+                    after: after_time,
+                    before: before_time,
+                    limit: 200,
+                  )
+                expanded[:occurrences].map { |occ| { event: event, **occ } }
+              else
+                [{ event: event, starts_at: event.starts_at, ends_at: event.ends_at }]
+              end
+            end
+
           filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}.ics"
           response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
         end
