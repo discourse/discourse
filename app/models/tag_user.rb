@@ -171,9 +171,8 @@ class TagUser < ActiveRecord::Base
       builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
     end
 
-    if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
-    end
+    user_ids = opts[:user_ids] || opts[:user_id]
+    builder.where("tu.user_id IN (:user_ids)", user_ids:) if user_ids.present?
 
     builder.exec(
       watching: notification_levels[:watching],
@@ -206,9 +205,8 @@ class TagUser < ActiveRecord::Base
       builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
     end
 
-    if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
-    end
+    user_ids = opts[:user_ids] || opts[:user_id]
+    builder.where("tu.user_id IN (:user_ids)", user_ids:) if user_ids.present?
 
     builder.exec(
       tracking: notification_levels[:tracking],
