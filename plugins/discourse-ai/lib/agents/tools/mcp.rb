@@ -36,7 +36,7 @@ module DiscourseAi
             {
               name: function_name_value,
               description: schema_value["description"].presence || tool_name_value.humanize,
-              parameters: convert_json_schema(schema_value["inputSchema"]),
+              json_schema: resolve_schema(schema_value["inputSchema"]),
             }
           end
 
@@ -51,38 +51,86 @@ module DiscourseAi
 
           private
 
-          def convert_json_schema(schema)
-            return [] if !schema.is_a?(Hash)
+          def resolve_schema(schema)
+            return { type: "object", properties: {} } if !schema.is_a?(Hash)
 
-            required = Array(schema["required"])
-            properties = schema["properties"].is_a?(Hash) ? schema["properties"] : {}
-
-            properties.map do |name, definition|
-              type = normalize_type(definition["type"])
-              parameter = {
-                name: name,
-                type: type,
-                description: definition["description"].presence || name.humanize,
-                required: required.include?(name),
-              }
-
-              parameter[:enum] = definition["enum"] if definition["enum"].present?
-
-              if type == "array"
-                item_type = normalize_type(definition.dig("items", "type"))
-                parameter[:item_type] = item_type if item_type.present?
-              end
-
-              parameter
-            end
+            resolved = resolve_node(schema, schema)
+            resolved.deep_symbolize_keys
           end
 
-          def normalize_type(type)
-            value = Array(type).reject { |item| item == "null" }.first
-            return "string" if value.blank?
-            return value if value.in?(%w[string integer number boolean array])
+          def resolve_node(node, root)
+            return node if !node.is_a?(Hash)
 
-            "string"
+            node = resolve_ref(node, root) if node["$ref"]
+            node = resolve_all_of(node, root) if node["allOf"]
+            node = resolve_any_of(node) if node["anyOf"] || node["oneOf"]
+
+            result = {}
+            node.each do |key, value|
+              next if key == "$defs" || key == "definitions"
+
+              case value
+              when Hash
+                if key == "properties"
+                  result[key] = value.transform_values { |v| resolve_node(v, root) }
+                elsif key == "items"
+                  result[key] = resolve_node(value, root)
+                else
+                  result[key] = value
+                end
+              else
+                result[key] = value
+              end
+            end
+
+            result
+          end
+
+          def resolve_ref(node, root)
+            ref_path = node["$ref"]
+            return node if !ref_path.is_a?(String) || !ref_path.start_with?("#/")
+
+            segments = ref_path.delete_prefix("#/").split("/")
+            target = root.dig(*segments)
+            return node if !target.is_a?(Hash)
+
+            node.except("$ref").merge(target)
+          end
+
+          def resolve_all_of(node, root)
+            variants = node["allOf"]
+            return node if !variants.is_a?(Array)
+
+            merged = node.except("allOf")
+            variants.each do |variant|
+              resolved = resolve_node(variant, root)
+              next if !resolved.is_a?(Hash)
+
+              if resolved["properties"] && merged["properties"]
+                merged["properties"] = merged["properties"].merge(resolved["properties"])
+              elsif resolved["properties"]
+                merged["properties"] = resolved["properties"]
+              end
+
+              if resolved["required"]
+                merged["required"] = Array(merged["required"]) | Array(resolved["required"])
+              end
+
+              resolved.each do |k, v|
+                merged[k] = v if !merged.key?(k)
+              end
+            end
+
+            merged
+          end
+
+          def resolve_any_of(node)
+            variants = node["anyOf"] || node["oneOf"]
+            return node if !variants.is_a?(Array)
+
+            non_null =
+              variants.find { |v| v.is_a?(Hash) && v["type"] != "null" } || variants.first
+            non_null.is_a?(Hash) ? node.except("anyOf", "oneOf").merge(non_null) : node
           end
         end
 

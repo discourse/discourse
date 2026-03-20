@@ -188,7 +188,7 @@ RSpec.describe DiscourseAi::Mcp::Client do
 
     expect { described_class.new(insecure_server).initialize_session }.to raise_error(
       described_class::Error,
-      I18n.t("discourse_ai.mcp_servers.invalid_public_https_url"),
+      I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable"),
     )
   end
 end

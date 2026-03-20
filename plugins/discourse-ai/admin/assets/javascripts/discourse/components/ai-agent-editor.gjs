@@ -308,7 +308,7 @@ export default class AgentEditor extends Component {
 
   @action
   selectedToolsWithTokens(tools) {
-    return tools.map((toolId) => {
+    return (tools || []).map((toolId) => {
       const tool = this.allTools.find((t) => t.id === toolId);
       return {
         id: toolId,

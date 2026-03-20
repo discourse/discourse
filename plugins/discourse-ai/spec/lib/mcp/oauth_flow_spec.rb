@@ -12,7 +12,7 @@ RSpec.describe DiscourseAi::Mcp::OAuthFlow do
 
       expect { described_class.start!(server: ai_mcp_server, user: user) }.to raise_error(
         DiscourseAi::Mcp::Client::Error,
-        I18n.t("discourse_ai.mcp_servers.errors.oauth_https_required", url: "http://mcp.home.arpa"),
+        I18n.t("discourse_ai.mcp_servers.errors.oauth_https_required"),
       )
     end
   end

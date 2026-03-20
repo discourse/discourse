@@ -252,23 +252,20 @@ module DiscourseAi
           uri = AiMcpServer.parse_public_uri(url)
           if uri.nil?
             raise DiscourseAi::Mcp::Client::Error,
-                  I18n.t("discourse_ai.mcp_servers.invalid_public_https_url")
+                  I18n.t("discourse_ai.mcp_servers.invalid_url_not_https")
           end
 
           AiMcpServer.validate_hostname_public!(uri.hostname)
         rescue FinalDestination::SSRFError, SocketError, URI::InvalidURIError
           raise DiscourseAi::Mcp::Client::Error,
-                I18n.t("discourse_ai.mcp_servers.invalid_public_https_url")
+                I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable")
         end
 
         def validate_local_oauth_urls!(server)
           callback_uri = URI.parse(server.oauth_callback_url)
           if callback_uri.scheme != "https"
             raise DiscourseAi::Mcp::Client::Error,
-                  I18n.t(
-                    "discourse_ai.mcp_servers.errors.oauth_https_required",
-                    url: Discourse.base_url,
-                  )
+                  I18n.t("discourse_ai.mcp_servers.errors.oauth_https_required")
           end
 
           return if server.oauth_client_registration == "manual"

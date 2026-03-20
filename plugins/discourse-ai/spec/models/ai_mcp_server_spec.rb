@@ -17,7 +17,7 @@ RSpec.describe AiMcpServer do
 
     expect(server).not_to be_valid
     expect(server.errors[:url]).to include(
-      I18n.t("discourse_ai.mcp_servers.invalid_public_https_url"),
+      I18n.t("discourse_ai.mcp_servers.invalid_url_not_https"),
     )
   end
 
@@ -26,7 +26,7 @@ RSpec.describe AiMcpServer do
 
     expect(server).not_to be_valid
     expect(server.errors[:url]).to include(
-      I18n.t("discourse_ai.mcp_servers.invalid_public_https_url"),
+      I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable"),
     )
   end
 
@@ -35,7 +35,7 @@ RSpec.describe AiMcpServer do
 
     expect(server).not_to be_valid
     expect(server.errors[:url]).to include(
-      I18n.t("discourse_ai.mcp_servers.invalid_public_https_url"),
+      I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable"),
     )
   end
 

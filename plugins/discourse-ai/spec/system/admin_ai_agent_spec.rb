@@ -227,4 +227,24 @@ RSpec.describe "Admin AI agent configuration", type: :system do
     expect(mcp_tool_selector_modal).to have_tool_unselected("create_issue")
     expect(mcp_tool_selector_modal).to have_selection_summary(1, 2)
   end
+
+  it "renders the new agent form when MCP servers exist" do
+    Fabricate(:ai_mcp_server, name: "GitHub", enabled: true)
+    DiscourseAi::Mcp::ToolRegistry.stubs(:tool_definitions_for).returns(
+      [
+        {
+          "name" => "search_issues",
+          "description" => "Search",
+          "inputSchema" => {
+            "type" => "object",
+          },
+        },
+      ],
+    )
+
+    visit "/admin/plugins/discourse-ai/ai-agents/new"
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-agents/new")
+    expect(page).to have_field("name")
+  end
 end

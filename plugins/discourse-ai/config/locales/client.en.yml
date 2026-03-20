@@ -703,7 +703,7 @@ en:
         tool_name_help: "Tool Name is presented to the large language model. It is not distinct, but it is distinct per agent. (agent validates on save)"
         description: "Description"
         description_help: "A clear description of the tool's purpose for the language model"
-        subheader_description: "Tools extend the capabilities of AI bots with user-defined JavaScript functions."
+        subheader_description: "Tools and MCP servers extend the capabilities of AI agents."
         summary: "Summary"
         summary_help: "Summary of tools purpose to be displayed to end users"
         script: "Script"

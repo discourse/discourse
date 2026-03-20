@@ -308,7 +308,8 @@ en:
 
     mcp_servers:
       secret_not_found: "The selected credential does not exist."
-      invalid_public_https_url: "URL must be a public HTTPS endpoint."
+      invalid_url_not_https: "must be a valid HTTPS URL"
+      invalid_url_not_reachable: "must resolve to a publicly accessible address"
       oauth_client_id_required: "OAuth client ID is required for manual client registration."
       errors:
         invalid_response: "The MCP server returned an invalid response."
@@ -323,7 +324,7 @@ en:
         oauth_save_before_connect: "Save the MCP server before testing the OAuth connection."
         oauth_state_invalid: "The OAuth authorization state is invalid or has expired. Start the connection again."
         oauth_token_exchange_failed: "The OAuth token exchange failed with status %{status}."
-        oauth_https_required: "OAuth requires Discourse to use HTTPS. Current site URL: %{url}"
+        oauth_https_required: "OAuth requires your site to be served over HTTPS."
         oauth_client_metadata_public_https_required: "Client metadata document registration requires a public HTTPS site URL. Current client metadata URL: %{url}"
 
     ai_helper:

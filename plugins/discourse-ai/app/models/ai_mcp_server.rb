@@ -98,7 +98,7 @@ class AiMcpServer < ActiveRecord::Base
             definition["title"].presence || definition.dig("annotations", "title").presence ||
               tool_name.humanize,
           description: definition["description"].presence || signature[:description],
-          parameters: signature[:parameters],
+          parameters: signature[:json_schema] || signature[:parameters],
           token_count: DiscourseAi::Tokenizer::OpenAiCl100kTokenizer.size(signature.to_json),
         }
       end
@@ -324,13 +324,13 @@ class AiMcpServer < ActiveRecord::Base
     uri = self.class.parse_public_uri(url)
 
     if uri.nil?
-      errors.add(:url, I18n.t("discourse_ai.mcp_servers.invalid_public_https_url"))
+      errors.add(:url, I18n.t("discourse_ai.mcp_servers.invalid_url_not_https"))
       return
     end
 
     self.class.validate_hostname_public!(uri.hostname)
   rescue FinalDestination::SSRFError, SocketError, URI::InvalidURIError
-    errors.add(:url, I18n.t("discourse_ai.mcp_servers.invalid_public_https_url"))
+    errors.add(:url, I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable"))
   end
 
   def flush_tool_cache

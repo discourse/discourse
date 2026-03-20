@@ -38,6 +38,39 @@ module("Integration | Component | ai-mcp-server-editor-form", function (hooks) {
     };
   });
 
+  test("preserves empty auth_scheme instead of defaulting to Bearer", async function (assert) {
+    this.model.isNew = false;
+    this.model.id = 42;
+    this.model.name = "Data Commons";
+    this.model.description = "Google Data Commons";
+    this.model.url = "https://api.datacommons.org/mcp";
+    this.model.auth_type = "header_secret";
+    this.model.ai_secret_id = 1;
+    this.model.auth_header = "X-API-Key";
+    this.model.auth_scheme = "";
+
+    await render(
+      <template>
+        <AiMcpServerEditorForm
+          @model={{this.model}}
+          @mcpServers={{this.mcpServers}}
+          @secrets={{this.secrets}}
+        />
+      </template>
+    );
+
+    assert.form().field("auth_scheme").hasValue("");
+
+    await formKit().submit();
+    await settled();
+
+    assert.strictEqual(
+      this.savedPayload.auth_scheme,
+      "",
+      "submits empty auth_scheme, not Bearer"
+    );
+  });
+
   test("switching auth mode keeps the entered URL and reveals credential fields", async function (assert) {
     await render(
       <template>
