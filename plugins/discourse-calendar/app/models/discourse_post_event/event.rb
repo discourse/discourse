@@ -15,6 +15,8 @@ module DiscoursePostEvent
     belongs_to :chat_channel, class_name: "Chat::Channel"
     has_many :invitees, foreign_key: :post_id, dependent: :delete_all
     belongs_to :post, foreign_key: :id
+    belongs_to :image_upload, class_name: "Upload", optional: true
+    has_many :upload_references, as: :target, dependent: :destroy
 
     scope :visible, -> { where(deleted_at: nil) }
     scope :open, -> { where(closed: false) }
@@ -22,6 +24,11 @@ module DiscoursePostEvent
     before_save :chat_channel_sync
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
+    after_save do
+      if saved_change_to_image_upload_id?
+        UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
+      end
+    end
 
     validate :raw_invitees_are_groups
     validates :original_starts_at, presence: true
@@ -369,6 +376,8 @@ module DiscoursePostEvent
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
           max_attendees: event_params[:"max-attendees"]&.to_i,
           all_day: parsed_all_day,
+          image_upload_id:
+            event_params[:image].present? ? Upload.get_from_url(event_params[:image])&.id : nil,
         }
 
         params[:custom_fields] = {}
@@ -560,25 +569,30 @@ end
 # Table name: discourse_post_event_events
 #
 #  id                 :bigint           not null, primary key
-#  status             :integer          default(0), not null
-#  original_starts_at :datetime         not null
-#  original_ends_at   :datetime
+#  chat_enabled       :boolean          default(FALSE), not null
+#  closed             :boolean          default(FALSE), not null
+#  custom_fields      :jsonb            not null
 #  deleted_at         :datetime
-#  raw_invitees       :string           is an Array
-#  name               :string
-#  url                :string(1000)
 #  description        :string(1000)
 #  location           :string(1000)
-#  custom_fields      :jsonb            not null
-#  reminders          :string
-#  recurrence         :string
-#  timezone           :string
-#  minimal            :boolean
-#  closed             :boolean          default(FALSE), not null
-#  chat_enabled       :boolean          default(FALSE), not null
-#  chat_channel_id    :bigint
-#  recurrence_until   :datetime
-#  show_local_time    :boolean          default(FALSE), not null
 #  max_attendees      :integer
+#  minimal            :boolean
+#  name               :string
+#  original_ends_at   :datetime
+#  original_starts_at :datetime         not null
+#  raw_invitees       :string           is an Array
+#  recurrence         :string
+#  recurrence_until   :datetime
+#  reminders          :string
+#  show_local_time    :boolean          default(FALSE), not null
 #  all_day            :boolean          default(FALSE), not null
+#  status             :integer          default(0), not null
+#  timezone           :string
+#  url                :string(1000)
+#  chat_channel_id    :bigint
+#  image_upload_id    :bigint
+#
+# Indexes
+#
+#  index_discourse_post_event_events_on_image_upload_id  (image_upload_id)
 #

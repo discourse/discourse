@@ -21,6 +21,7 @@ export const EVENT_ATTRIBUTES = {
   recurrenceUntil: { default: null },
   chatEnabled: { default: null },
   allDay: { default: null },
+  image: { default: null },
 };
 
 /** @type {RichEditorExtension} */

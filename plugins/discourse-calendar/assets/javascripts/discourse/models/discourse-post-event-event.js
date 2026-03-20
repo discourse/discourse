@@ -53,6 +53,7 @@ export default class DiscoursePostEventEvent {
   @tracked recurrence;
   @tracked customFields;
   @tracked channel;
+  @tracked imageUpload;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
@@ -98,6 +99,7 @@ export default class DiscoursePostEventEvent {
     if (args.channel && ChatChannel) {
       this.channel = ChatChannel.create(args.channel);
     }
+    this.imageUpload = args.image_upload;
   }
 
   get watchingInvitee() {
@@ -152,6 +154,10 @@ export default class DiscoursePostEventEvent {
     return this.status === "private";
   }
 
+  get imageUrl() {
+    return this.imageUpload?.url;
+  }
+
   updateFromEvent(event) {
     this.name = event.name;
     this.startsAt = event.startsAt;
@@ -181,6 +187,7 @@ export default class DiscoursePostEventEvent {
     this.stats = event.stats;
     this.sampleInvitees = event.sampleInvitees || [];
     this.reminders = event.reminders;
+    this.imageUpload = event.imageUpload;
   }
 
   @bind

@@ -54,6 +54,26 @@ describe DiscoursePostEvent::EventSerializer do
       expect(json[:event][:category_id]).to eq(category.id)
     end
 
+    it "includes image_upload key as nil when not set" do
+      json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
+      expect(json[:event]).to have_key(:image_upload)
+      expect(json[:event][:image_upload]).to be_nil
+    end
+
+    context "when event has an image" do
+      fab!(:upload)
+      fab!(:event_with_image) do
+        Fabricate(:event, post: Fabricate(:post, topic: topic), image_upload: upload)
+      end
+
+      it "includes image_upload in serialized output" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(event_with_image, scope: Guardian.new).as_json
+        expect(json[:event][:image_upload][:id]).to eq(upload.id)
+        expect(json[:event][:image_upload][:url]).to include(upload.url)
+      end
+    end
+
     context "when event has duration" do
       fab!(:post_with_duration) { Fabricate(:post, topic: topic) }
       fab!(:event_with_duration) do
