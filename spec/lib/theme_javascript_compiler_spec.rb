@@ -252,7 +252,7 @@ RSpec.describe ThemeJavascriptCompiler do
 
       expect(compiler.content).to include("discourse.es6-extension")
       expect(compiler.content).to include(
-        "The file 'discourse/components/my-component.js.es6' uses the deprecated .js.es6 extension. Rename it to .js.",
+        "The file 'discourse/components/my-component.js.es6' uses the deprecated `.js.es6` extension. Use `.js` instead.",
       )
     end
 
