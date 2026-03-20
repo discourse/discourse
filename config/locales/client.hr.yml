@@ -3361,11 +3361,8 @@ hr:
         confirm: "Potvrdi"
         select_all: "Odaberi sve"
         clear_all: "Očistiti sve"
-        unlist_topics: "Poništite popis tema"
-        relist_topics: "Poništite popis tema"
         reset_bump_dates: "Resetiraj datum obnove"
         defer: "Označi kao nepročitano"
-        delete: "Obriši teme"
         delete_topics_count:
           one: "Obriši temu"
           few: "Obriši teme"
@@ -3404,18 +3401,10 @@ hr:
           other: "Odbaci novo (%{count})"
         toggle: "uključi/isključi skupni odabir tema"
         actions: "Grupne aktivnosti"
-        change_category: "Postavi kategoriju…"
-        close_topics: "Zatvori teme"
-        archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Premjesti u Inbox"
         archive_messages: "Premjestiti u arhivu"
-        notification_level: "Obavijesti…"
         change_notification_level: "Promijenite razinu obavijesti"
         choose_new_category: "Odaberite novu kategoriju za teme:"
-        selected:
-          one: "Odabrali ste <b>%{count}</b> temu."
-          few: "Odabrali ste <b>%{count}</b> tema."
-          other: "Odabrali ste <b>%{count}</b> tema."
         selected_sole_category:
           one: "Odabrali ste <b>%{count}</b> temu iz kategorije:"
           few: "Odabrali ste <b>%{count}</b> teme iz kategorije:"
@@ -3424,12 +3413,10 @@ hr:
           one: "%{count} odabrano"
           few: "%{count} odabrano"
           other: "%{count} odabrano"
-        change_tags: "Zamijeni oznake"
-        append_tags: "Dodajte oznake"
+        append_tags: "Dodaj oznake"
         choose_new_tags: "Odaberite nove oznake za ove teme:"
-        choose_append_tags: "Odaberite nove oznake za dodavanje ovim temama:"
+        choose_append_tags: "Dodaj oznake"
         changed_tags: "Oznake tih tema su promijenjene."
-        remove_tags: "Ukloni sve oznake"
         confirm_remove_tags:
           one: "Sve oznake bit će uklonjene iz ove teme. Jesi li siguran?"
           few: "Sve oznake <b>%{count}</b> bit će uklonjene iz ove teme. Jeste li sigurni?"
@@ -3466,7 +3453,6 @@ hr:
         name: "Skloni"
       close_topics:
         name: "Zatvori"
-        note: "Bilješka"
         optional: (opcionalno)
       archive_topics:
         name: "Arhiva"
@@ -3480,24 +3466,18 @@ hr:
         name: "Ponovno objavite"
       remove_tags:
         name: "Ukloni oznake"
-      append_tags:
-        name: "Dodajte oznake"
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:
         name: "Pobriši"
       update_category:
         name: "Ažuriraj kategoriju"
-        description: "Odaberi novu kategoriju za odabrane teme"
       reset_bump_dates:
         name: "Poništite datume isticanja"
-        description: "Vratite datum isticanja teme na datum zadnje kreirane objave, što utječe na redoslijed na popisu tema"
       defer:
         name: "Označi kao nepročitano"
-        description: "Označi teme kao nepročitane"
       update_notifications:
         name: "Ažurirajte obavijesti"
-        description: "Promijenite razinu obavijesti na Gledanje, Praćenje, Uobičajeno ili Utišano"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -4341,6 +4321,8 @@ hr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      description_expand: "Prikaži više"
+      description_collapse: "Prikaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
       security: "Sigurnost"
       security_add_group: "Dodajte grupu"

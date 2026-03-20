@@ -3186,11 +3186,8 @@ it:
         confirm: "Conferma"
         select_all: "Seleziona Tutto"
         clear_all: "Deseleziona Tutto"
-        unlist_topics: "Rendi argomenti invisibili"
-        relist_topics: "Ripubblica Argomenti"
         reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Contrassegna come non letto"
-        delete: "Elimina argomenti"
         delete_topics_count:
           one: "Cancella Argomento"
           other: "Elimina argomenti"
@@ -3223,29 +3220,20 @@ it:
           other: "Ignora i nuovi (%{count})"
         toggle: "interruttore di selezione multipla degli argomenti"
         actions: "Azioni Multiple"
-        change_category: "Imposta categoria..."
-        close_topics: "Chiudi argomenti"
-        archive_topics: "Archivia argomenti"
         move_messages_to_inbox: "Sposta nella posta in arrivo"
         archive_messages: "Sposta in archivio"
-        notification_level: "Notifiche…"
         change_notification_level: "Modifica livello di notifica"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
-        selected:
-          one: "Hai selezionato <b>%{count}</b> argomento."
-          other: "Hai selezionato <b>%{count}</b> argomenti."
         selected_sole_category:
           one: "Hai selezionato <b>%{count}</b> argomento dalla categoria:"
           other: "Hai selezionato <b>%{count}</b> argomenti dalla categoria:"
         selected_count:
           one: "%{count} selezionato"
           other: "%{count} selezionati"
-        change_tags: "Sostituisci Etichette"
-        append_tags: "Aggiungi Etichette"
+        append_tags: "Aggiungi etichette"
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
-        choose_append_tags: "Scegli nuove etichette da aggiungere a questi argomenti:"
+        choose_append_tags: "Aggiungi etichette"
         changed_tags: "Le etichette per quegli argomenti sono state cambiate."
-        remove_tags: "Rimuovi tutte le etichette"
         confirm_remove_tags:
           one: "Tutti i tag verranno rimossi da questo argomento. Sei sicuro?"
           other: "Tutti i tag verranno rimossi da <b>%{count}</b> argomenti. Sei sicuro?"
@@ -3279,7 +3267,6 @@ it:
         name: "Ignora"
       close_topics:
         name: "Chiudi"
-        note: "Nota"
         optional: (opzionale)
       archive_topics:
         name: "Archivia"
@@ -3293,24 +3280,18 @@ it:
         name: "Ripubblica"
       remove_tags:
         name: "Rimuovi etichette"
-      append_tags:
-        name: "Aggiungi etichette"
       replace_tags:
         name: "Sostituisci etichette"
       delete_topics:
         name: "Elimina"
       update_category:
         name: "Aggiorna categoria"
-        description: "Scegli la nuova categoria per gli argomenti selezionati"
       reset_bump_dates:
         name: "Reimposta date di riproposizione"
-        description: "Reimposta la data di riproposizione dell'argomento alla data dell'ultimo messaggio creato. Questo modificherà l'ordine dell'elenco argomenti"
       defer:
         name: "Contrassegna come non letto"
-        description: "Contrassegna argomenti come non letti"
       update_notifications:
         name: "Aggiorna notifiche"
-        description: "Modifica livello di notifica a osservazione, seguito, normale o silenziato"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -4111,6 +4092,8 @@ it:
       list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
+      description_expand: "Mostra altro"
+      description_collapse: "Mostra meno"
       already_used: "Questo colore è già stato usato in un'altra categoria."
       color_palette: "Schema di colori"
       security: "Sicurezza"

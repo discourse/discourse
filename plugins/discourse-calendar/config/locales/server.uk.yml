@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 uk:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Читати стрічку подій календаря"
   reports:
     currently_away:
       title: Користувачі зараз відсутні

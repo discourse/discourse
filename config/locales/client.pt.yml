@@ -3131,9 +3131,6 @@ pt:
       bulk:
         select_all: "Selecionar Tudo"
         clear_all: "Remover Tudo"
-        unlist_topics: "Remover Tópicos da Lista"
-        relist_topics: "Voltar a Listar Tópicos"
-        delete: "Eliminar Tópicos"
         delete_topics_count:
           one: "Eliminar Tópico"
           other: "Eliminar Tópicos"
@@ -3157,22 +3154,11 @@ pt:
           other: "Descartar Novos (%{count})"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
-        change_category: "Definir Categoria..."
-        close_topics: "Fechar Tópicos"
-        archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para a Caixa de Entrada"
-        notification_level: "Notificações…"
         change_notification_level: "Alterar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
-        selected:
-          one: "Selecionou <b>%{count}</b> tópico."
-          other: "Selecionou <b>%{count}</b> tópicos."
-        change_tags: "Substituir Etiquetas"
-        append_tags: "Anexar Etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
-        choose_append_tags: "Escolha novas etiquetas para acrescentar a estes tópicos:"
         changed_tags: "As etiquetas para esses tópicos foram mudadas."
-        remove_tags: "Remover Todas as Etiquetas"
         confirm_remove_tags:
           one: "Todas as etiquetas serão removidas deste tópico. Tem a certeza?"
           other: "Todas as etiquetas serão removidas de <b>%{count}</b> tópicos. Tem a certeza?"
@@ -3202,15 +3188,12 @@ pt:
         name: "Arquivo"
       move_messages_to_inbox:
         name: "Mover para a Caixa de Entrada"
-      append_tags:
-        name: "Anexar Etiquetas"
       replace_tags:
         name: "Substituir Etiquetas"
       delete_topics:
         name: "Eliminar"
       defer:
         name: "Marcar como Não Lido"
-        description: "Marcar tópicos como não lido"
       update_notifications:
         name: "Notificações de Atualização"
     topic:
@@ -3902,6 +3885,8 @@ pt:
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
       no_description: "Por favor adicione uma descrição para esta categoria."
+      description_expand: "Mostrar mais"
+      description_collapse: "Mostrar menos"
       already_used: "Esta cor já foi usada para outra categoria"
       security: "Segurança"
       security_add_group: "Adicionar um grupo"

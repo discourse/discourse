@@ -98,10 +98,6 @@ ur:
           unassigned: "غیرتفویض شدہ ہیں"
         assigned:
           label: "کو تفویض"
-    topics:
-      bulk:
-        unassign: "موضوعات کو غیر تفویض کریں"
-        assign: "موضوعات تفویض کریں"
     discourse_automation:
       scriptables:
         random_assign:

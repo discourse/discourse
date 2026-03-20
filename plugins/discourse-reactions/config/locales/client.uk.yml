@@ -15,12 +15,25 @@ uk:
       reactions_title: "Реакції"
       state_panel:
         more_users: "і більше %{count}..."
+        show_users: "Показати більше користувачів"
+        hide_users: "Показати менше користувачів"
+        reaction_group:
+          one: "%{reaction}: %{count} користувач"
+          few: "%{reaction}: %{count} користувачі"
+          many: "%{reaction}: %{count} користувачів"
+          other: "%{reaction}: %{count} користувачів"
       reaction:
         forbidden: "Ця реакція виникла надто давно. Її вже не можна змінити або усунути."
       picker:
         react_with: "Відреагувати на цей пост: %{reaction}"
         cant_remove_reaction: "Ви більше не можете видалити вашу реакцію"
         remove_reaction: "Видалити цю реакцію %{reaction}"
+      counter:
+        aria_label:
+          one: "%{count} реакція"
+          few: "%{count} реакції"
+          many: "%{count} реакцій"
+          other: "%{count} реакцій"
       main_reaction:
         add: "Мені подобається цей допис"
         remove: "Видалити цей лайк"

@@ -1972,6 +1972,8 @@ id:
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
+      description_expand: "Tampilkan lebih banyak"
+      description_collapse: "Tampilkan lebih sedikit"
       permissions:
         reply: "Balas"
         create: "Buat"

@@ -1434,7 +1434,6 @@ be:
       new_messages_marker: "апошняе наведванне"
       bulk:
         select_all: "Выбраць усе"
-        delete: "Выдаліць тэмы"
         delete_topics_count:
           one: "Выдаліць тэму"
           few: "Выдаліць тэмы"
@@ -1444,8 +1443,6 @@ be:
         dismiss_new: "Адхіліць новыя"
         toggle: "Пераключыць групавы выбар тэм"
         actions: "Групавыя дзеянні"
-        close_topics: "Закрыць тэмы"
-        archive_topics: "Архіваваць тэмы"
         move_messages_to_inbox: "Перамясціць ва Уваходныя"
         error_topic_count:
           one: "%{count} тэма"
@@ -1664,6 +1661,8 @@ be:
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўнены, што хочаце выдаліць гэту катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
+      description_expand: "Паказаць больш"
+      description_collapse: "Паказаць менш"
       already_used: "Гэты колер ужо выкарыстоўваецца іншай катэгорыяй"
       security: "Бяспека"
       permissions:

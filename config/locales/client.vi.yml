@@ -3157,11 +3157,8 @@ vi:
         confirm: "Xác nhận"
         select_all: "Chọn hết"
         clear_all: "Xóa hết"
-        unlist_topics: "Không công khai chủ đề"
-        relist_topics: "Mở lại công khai chủ đề"
         reset_bump_dates: "Đặt lại ngày đẩy"
         defer: "Đánh dấu là chưa đọc"
-        delete: "Xóa chủ đề"
         delete_topics_count:
           other: "Xóa chủ đề"
         delete_posts_count:
@@ -3192,31 +3189,21 @@ vi:
           other: "Loại bỏ Mới (%{count})"
         toggle: "Bật/tắt chọn nhiều chủ đề cùng lúc"
         actions: "Thao tác hàng loạt"
-        change_category: "Chọn chuyên mục…"
-        close_topics: "Đóng các chủ đề"
-        archive_topics: "Chủ đề Lưu trữ"
         move_messages_to_inbox: "Chuyển sang hộp thư"
         archive_messages: "Di chuyển đến Lưu trữ"
-        notification_level: "Thông báo…"
         change_notification_level: "Thay đổi mức thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
-        selected:
-          other: "Bạn đã chọn <b>%{count}</b> chủ đề"
         selected_sole_category:
           other: "Bạn đã chọn <b>%{count}</b> chủ đề từ chuyên mục:"
         selected_count:
           other: "%{count} được chọn"
-        change_tags: "Thay thế thẻ"
-        append_tags: "Thêm thẻ"
         choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
-        choose_append_tags: "Chọn các thẻ mới để thêm vào cho các chủ đề này:"
         changed_tags: "Các thẻ của các chủ đề đó đã được thay đổi."
-        remove_tags: "Xóa tất cả các thẻ"
         confirm_remove_tags:
           other: "Tất cả các thẻ sẽ bị xóa khỏi <b>%{count}</b> chủ đề. Bạn có chắc không?"
         progress:
           other: "Tiến độ: <strong>%{count}</strong> chủ đề"
-        notify: "Thông báo cho người dùng về thay đổi này."
+        notify: "Thông báo cho người dùng về thay đổi này"
         performing: "Đang thực hiện các thao tác hàng loạt, vui lòng chờ…"
         completed: "Các thao tác xử lý hàng loạt đã hoàn tất!"
         error_topic_count:
@@ -3244,7 +3231,6 @@ vi:
         name: "Bỏ qua"
       close_topics:
         name: "Đóng"
-        note: "Ghi chú"
         optional: (tùy chọn)
       archive_topics:
         name: "Lưu Trữ"
@@ -3258,24 +3244,18 @@ vi:
         name: "Công khai lại"
       remove_tags:
         name: "Xóa thẻ"
-      append_tags:
-        name: "Thêm thẻ"
       replace_tags:
         name: "Thay thế thẻ"
       delete_topics:
         name: "Xóa"
       update_category:
         name: "Cập nhật chuyên mục"
-        description: "Chọn chuyên mục mới cho các chủ đề đã chọn này"
       reset_bump_dates:
         name: "Đặt lại ngày đẩy"
-        description: "Đặt lại ngày đẩy chủ đề thành ngày tạo tút cuối cùng, điều này ảnh hưởng đến thứ tự hiển thị trong danh sách chủ đề"
       defer:
         name: "Đánh dấu là Chưa đọc"
-        description: "Đánh dấu chủ đề là chưa đọc"
       update_notifications:
         name: "Cập nhật thông báo"
-        description: "Thay đổi mức độ thông báo thành Giám sát, Theo dõi, Bình thường hoặc Phớt lờ."
     topic:
       filter_to:
         other: "%{count} tút trong chủ đề"
@@ -4081,6 +4061,8 @@ vi:
       list: "Danh sách chuyên mục"
       no_description: "Hãy thêm mô tả cho chuyên mục này"
       change_in_category_topic: "Sửa mô tả"
+      description_expand: "Hiện thêm"
+      description_collapse: "Thu gọn"
       already_used: "Màu này đã được dùng bởi chuyên mục khác"
       color_palette: "Bảng màu"
       security: "Bảo mật"

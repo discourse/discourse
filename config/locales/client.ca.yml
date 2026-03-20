@@ -1950,9 +1950,6 @@ ca:
         confirm: "Confirma"
         select_all: "Selecciona-ho tot"
         clear_all: "Neteja-ho tot"
-        unlist_topics: "Fes temes invisibles"
-        relist_topics: "Torna a llistar els temes"
-        delete: "Suprimeix temes"
         delete_topics_count:
           one: "Suprimeix tema"
           other: "Suprimeix temes"
@@ -1964,17 +1961,9 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "commuta la selecció massiva de temes"
         actions: "Accions massives"
-        close_topics: "Tanca temes"
-        archive_topics: "Arxiva temes"
         move_messages_to_inbox: "Mou a la safata d'entrada"
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
-        selected:
-          one: "He seleccionat <b>%{count}</b> tema."
-          other: "Heu seleccionat <b>%{count}</b> temes."
-        change_tags: "Reemplaça etiquetes"
-        append_tags: "Annexa etiquetes"
         choose_new_tags: "Trieu noves etiquetes per a aquests temes:"
-        choose_append_tags: "Trieu noves etiquetes a afegir per a aquests temes:"
         changed_tags: "Les etiquetes d'aquests temes han estat canviades."
         error_topic_count:
           one: "%{count} tema"
@@ -1997,8 +1986,6 @@ ca:
         name: "Arxiva"
       move_messages_to_inbox:
         name: "Mou a la safata d'entrada"
-      append_tags:
-        name: "Annexa etiquetes"
       replace_tags:
         name: "Reemplaça etiquetes"
       delete_topics:

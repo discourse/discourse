@@ -965,6 +965,10 @@ zh_CN:
           no_results: "此搜索未找到 AI 结果"
         semantic_search_unavailable_tooltip: "搜索结果必须按相关性排序才能显示 AI 结果"
         ai_generated_result: "使用 AI 找到的搜索结果"
+        ai_results_notice:
+          no_results: "没有完全匹配的结果，但有一些相关结果。"
+          few_results:
+            other: "找到 %{count} 个匹配项 - 显示相关结果。"
         quick_search:
           suffix: "在所有话题和帖子中使用 AI 搜索"
       ai_artifact:

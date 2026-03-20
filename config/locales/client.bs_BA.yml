@@ -1953,9 +1953,6 @@ bs_BA:
       bulk:
         select_all: "Označi sve"
         clear_all: "Očisti sve"
-        unlist_topics: "Skini teme sa liste"
-        relist_topics: "Listaj teme"
-        delete: "Obriši teme"
         delete_topics_count:
           one: "Obriši temu"
           few: "Obriši teme"
@@ -1968,18 +1965,9 @@ bs_BA:
         dismiss_new: "Odpusti Nove"
         toggle: "preklopi masovno označavanje tema"
         actions: "Masovno odrađene akcije"
-        close_topics: "Zatvori teme"
-        archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Idi u inbox"
         choose_new_category: "Izaberi novu kategoriju za temu:"
-        selected:
-          one: "Označili ste <b>%{count}</b> temu."
-          few: "Označili ste <b>%{count}</b> teme."
-          other: "Označili ste <b>%{count}</b> teme."
-        change_tags: "Zamijeni oznake"
-        append_tags: "Pripoji oznake"
         choose_new_tags: "Odaberi nove tagove za ove teme:"
-        choose_append_tags: "Odaberi nove oznake kako bi pripojili ovim temama:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
         error_topic_count:
           one: "%{count} tema"
@@ -2003,8 +1991,6 @@ bs_BA:
         name: "Arhiva"
       move_messages_to_inbox:
         name: "Premjesti u Sanduče"
-      append_tags:
-        name: "Pripoji oznake"
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:

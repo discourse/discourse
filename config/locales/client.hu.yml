@@ -3416,11 +3416,8 @@ hu:
         confirm: "Megerősítés"
         select_all: "Összes kiválasztása"
         clear_all: "Összes törlése"
-        unlist_topics: "Témák listázásnak megszüntetése"
-        relist_topics: "Újralistázott témák"
         reset_bump_dates: "Előrehozási dátumok alaphelyzetbe állítása"
         defer: "Megjelölés olvasatlanként"
-        delete: "Témák törlése"
         delete_topics_count:
           one: "Téma törlése"
           other: "Témák törlése"
@@ -3459,36 +3456,27 @@ hu:
           other: "Újak elvetése (%{count})"
         toggle: "témák csoportos kiválasztása be/ki"
         actions: "Csoportos műveletek"
-        change_category: "Kategória beállítása…"
-        close_topics: "Témák lezárása"
-        archive_topics: "Témák archiválása"
         move_messages_to_inbox: "Áthelyezés a bejövő üzenetek közé"
         archive_messages: "Áthelyezés az archívumba"
-        notification_level: "Értesítések…"
         change_notification_level: "Értesítési szint módosítása"
         choose_new_category: "Válassza ki az új kategóriát a témákhoz:"
-        selected:
-          one: "Kiválasztott <b>%{count}</b> témát."
-          other: "Kiválasztott <b>%{count}</b> témát."
         selected_sole_category:
           one: "<b>%{count}</b> témát választott ki a következő kategóriából:"
           other: "<b>%{count}</b> témát választott ki a következő kategóriából:"
         selected_count:
           one: "%{count} kiválasztva"
           other: "%{count} kiválasztva"
-        change_tags: "Címkék cseréje"
-        append_tags: "Címkék hozzáfűzése"
+        append_tags: "Címkék hozzáadása"
         choose_new_tags: "Válasszon új címkéket ezekhez a témákhoz:"
-        choose_append_tags: "Válasszon új hozzáfűzendő címkéket ezekhez a témákhoz:"
+        choose_append_tags: "Címkék hozzáadása"
         changed_tags: "Azon témák címkéi megváltoztak."
-        remove_tags: "Összes címke eltávolítása"
         confirm_remove_tags:
           one: "Az összes címke eltávolításra kerül erről a témáról. Biztos benne?"
           other: "Az összes címke eltávolításra kerül <b>%{count}</b> témáról. Biztos benne?"
         progress:
           one: "Folyamat: <strong>%{count}</strong> téma"
           other: "Folyamat: <strong>%{count}</strong> téma"
-        notify: "Értesítse a felhasználókat erről a változásról."
+        notify: "Értesítse a felhasználókat erről a változásról"
         performing: "Tömeges művelet végrehajtása, kis türelmet…"
         completed: "A tömeges műveletek sikeresen befejeződtek!"
         completed_count:
@@ -3526,7 +3514,6 @@ hu:
         name: "Elvetés"
       close_topics:
         name: "Lezárás"
-        note: "Megjegyzés"
         optional: (nem kötelező)
       archive_topics:
         name: "Archiválás"
@@ -3540,24 +3527,18 @@ hu:
         name: "Felvétel a listára"
       remove_tags:
         name: "Címkék eltávolítása"
-      append_tags:
-        name: "Címkék hozzáfűzése"
       replace_tags:
         name: "Címkék cseréje"
       delete_topics:
         name: "Törlés"
       update_category:
         name: "Kategória frissítése"
-        description: "Válassza ki az új kategóriát a kiválasztott témákhoz"
       reset_bump_dates:
         name: "Előrehozási dátum alaphelyzetbe állítása"
-        description: "A téma előrehozási dátumának visszaállítása az utolsó bejegyzés dátumára, ami befolyásolja a témalista sorrendjét"
       defer:
         name: "Megjelölés olvasatlanként"
-        description: "Témák megjelölése olvasatlanként"
       update_notifications:
         name: "Értesítések frissítése"
-        description: "Az értesítési szint módosítása Figyelés, Nyomon követés, Normál vagy Néma szintre."
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
@@ -4422,6 +4403,8 @@ hu:
       list: "Kategóriák felsorolása"
       no_description: "Adjon leírást ehhez a kategóriához."
       change_in_category_topic: "Leírás szerkesztése"
+      description_expand: "Több megjelenítése"
+      description_collapse: "Kevesebb megjelenítése"
       already_used: "Ezt a színt már egy másik kategória is használja."
       color_palette: "Színpaletta"
       security: "Biztonság"
