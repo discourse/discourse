@@ -1060,23 +1060,29 @@ export default class PostStream extends RestModel {
   }
 
   updateFromJson(postStreamData) {
-    this.posts.length = 0;
-    this.gaps = null;
+    applyBehaviorTransformer(
+      "post-stream-update-from-json",
+      () => {
+        this.posts.length = 0;
+        this.gaps = null;
 
-    if (postStreamData) {
-      // Load posts if present
-      postStreamData.posts.forEach((p) =>
-        this.appendPost(this.store.createRecord("post", p))
-      );
-      delete postStreamData.posts;
+        if (postStreamData) {
+          // Load posts if present
+          postStreamData.posts.forEach((p) =>
+            this.appendPost(this.store.createRecord("post", p))
+          );
+          delete postStreamData.posts;
 
-      // Update our attributes
-      postStreamData.gaps = {
-        before: new TrackedObject(postStreamData.gaps?.before || {}),
-        after: new TrackedObject(postStreamData.gaps?.after || {}),
-      };
-      this.setProperties(postStreamData);
-    }
+          // Update our attributes
+          postStreamData.gaps = {
+            before: new TrackedObject(postStreamData.gaps?.before || {}),
+            after: new TrackedObject(postStreamData.gaps?.after || {}),
+          };
+          this.setProperties(postStreamData);
+        }
+      },
+      { postStream: this }
+    );
   }
 
   /**
