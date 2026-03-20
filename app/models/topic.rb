@@ -861,14 +861,18 @@ class Topic < ActiveRecord::Base
   def self.next_post_number(topic_id, opts = {})
     highest =
       DB
-        .query_single(
-          "SELECT coalesce(max(post_number),0) AS max FROM posts WHERE topic_id = ?",
-          topic_id,
-        )
+        .query_single("SELECT coalesce(max(post_number),0) FROM posts WHERE topic_id = ?", topic_id)
         .first
         .to_i
 
-    if opts[:whisper]
+    # PM small_action posts only bump highest_staff_post_number, not
+    # highest_post_number, matching the exclusion in reset_highest.
+    staff_only = opts[:post_type] == Post.types[:whisper]
+    staff_only ||=
+      opts[:post_type] == Post.types[:small_action] &&
+        Topic.where(id: topic_id, archetype: Archetype.private_message).exists?
+
+    if staff_only
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
         SET highest_staff_post_number = ? + 1
@@ -881,7 +885,7 @@ class Topic < ActiveRecord::Base
       reply_sql = opts[:reply] ? ", reply_count = reply_count + 1" : ""
       posts_sql = opts[:post] ? ", posts_count = posts_count + 1" : ""
 
-      result = DB.query_single(<<~SQL, highest: highest, topic_id: topic_id)
+      result = DB.query_single(<<~SQL, highest:, topic_id:)
         UPDATE topics
         SET highest_staff_post_number = :highest + 1,
             highest_post_number = :highest + 1
