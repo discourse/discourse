@@ -25,10 +25,11 @@ class AssetProcessor
   end
 
   def self.append_es6_deprecation(content, file_path)
+    pseudo_random_identifier = "deprecated_gjYVqPLMxe" # Just needs to be unique enough to avoid collisions with real code
     <<~JS
       #{content}
-      import deprecated_gjYVqPLMxe from "discourse/lib/deprecated";
-      deprecated_gjYVqPLMxe(
+      import #{pseudo_random_identifier} from "discourse/lib/deprecated";
+      #{pseudo_random_identifier}(
         "The file '#{file_path}' uses the deprecated `.js.es6` extension. Use `.js` instead.",
         {
           id: "discourse.es6-extension",
