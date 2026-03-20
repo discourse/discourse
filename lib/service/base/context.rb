@@ -26,6 +26,14 @@ module Service
         store.deep_dup
       end
 
+      def with_isolation(persist_keys: [])
+        @isolated_store = to_h
+        yield
+      ensure
+        @store.merge!(@isolated_store.slice(*persist_keys))
+        @isolated_store = nil
+      end
+
       # @return [Boolean] returns +true+ if the context is set as successful (default)
       def success?
         !failure?
@@ -65,7 +73,9 @@ module Service
 
       private
 
-      attr_reader :store
+      def store
+        @isolated_store || @store
+      end
 
       def method_missing(method_name, *args, &block)
         return super if args.present?
