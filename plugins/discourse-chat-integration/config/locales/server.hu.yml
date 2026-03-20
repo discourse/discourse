@@ -33,7 +33,7 @@ hu:
     chat_integration_mattermost_incoming_webhook_token: 'A bejövő kérések hitelesítéséhez használt ellenőrző token'
     chat_integration_mattermost_icon_url: "Ikon a Mattermostnak küldött bejegyzésekhez (alapértelmezés szerint a fórum logója)"
     chat_integration_mattermost_excerpt_length: "Mattermost bejegyzésrészlet hossza"
-    chat_integration_matrix_enabled: "A Matrix chat integrációs szolgáltató engedélyezése"
+    chat_integration_matrix_enabled: "A Matrix chatintegrációs szolgáltató engedélyezése"
     chat_integration_matrix_homeserver: "Otthoni szerver a csatlakozáshoz. Ügyeljen rá, hogy a protokollt is tartalmazza."
     chat_integration_matrix_access_token: "Hozzáférési token a bot Matrix fiókjához"
     chat_integration_matrix_excerpt_length: "Mátrix bejegyzésrészlet hossza"
@@ -47,22 +47,191 @@ hu:
     chat_integration_rocketchat_webhook_url: "A Rocket Chat integrációs webhook URL címe"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat bejegyzésrészlet hossza"
     chat_integration_gitter_enabled: "Gitter chatintegrációs szolgáltató engedélyezése"
-    chat_integration_flowdock_enabled: "Flowdock chat integrációs szolgáltató engedélyezése"
+    chat_integration_flowdock_enabled: "Flowdock chatintegrációs szolgáltató engedélyezése"
     chat_integration_flowdock_excerpt_length: "Flowdock bejegyzésrészlet hossza"
-    chat_integration_groupme_enabled: "Groupme chat integrációs szolgáltató engedélyezése"
+    chat_integration_groupme_enabled: "Groupme chatintegrációs szolgáltató engedélyezése"
     chat_integration_groupme_excerpt_length: "Groupme bejegyzésrészlet hossza"
     chat_integration_groupme_bot_ids: "*kötelező* Botazonosítók, ',' karakterrel elválasztva, ha több van"
     chat_integration_groupme_instance_names: " *kötelező* A GroupMe chat neve, ',' karakterrel elválasztva, ha több van (ugyanabban a sorrendben, mint a Bot ID-k)"
+    chat_integration_teams_enabled: "A Microsoft Teams chatintegrációs szolgáltatójának engedélyezése"
+    chat_integration_teams_excerpt_length: "Microsoft Teams bejegyzésrészlet hossza"
+    chat_integration_powerautomate_enabled: "A Microsoft Power Automate integrációs szolgáltatójának engedélyezése"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate bejegyzésrészlet hossza"
+    chat_integration_webex_enabled: "A Webex Teams chatintegrációs szolgáltatójának engedélyezése"
+    chat_integration_webex_excerpt_length: "Webex Team bejegyzésrészlet hossza"
+    chat_integration_google_enabled: "Engedélyezze a „Google Chat” chatintegrációs szolgáltatót"
+    chat_integration_google_excerpt_length: "Google Chat bejegyzésrészlet hossza"
+  dashboard:
+    problem:
+      channel_errors: "Néhány chatintegrációs csatorna hibás lehet. További információkért látogassa meg a <a href='%{base_path}/admin/plugins/chat-integration'>chatintegrációs részt</a>."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Slack üzenet küldése
+      send_chat_integration_message:
+        title: Chatintegrációs üzenet küldése
   chat_integration:
     all_categories: "(összes kategória)"
+    deleted_category: "(törölt kategória)"
+    deleted_group: "(törölt csoport)"
+    group_mention_template: "@%{name} említései"
+    group_message_template: "üzenetek neki: @%{name}"
     topic_tag_changed:
       added_and_removed: "Hozzáadva %{added} és eltávolítva %{removed}"
       added: "Hozzáadva %{added}"
       removed: "Eltávolítva %{removed}"
     provider:
       slack:
+        status:
+          header: |
+            *Szabályok ehhez a csatornához*
+            (ha egy bejegyzéshez több szabály is illeszkedik, akkor a legfelső szabály hajtódik végre)
+          no_rules: "Nincsenek szabályok beállítva ehhez a csatornához. Utasításokért futtassa a `/discourse help` parancsot."
+          rule_string: "*%{index}) * *%{filter}* bejegyzések itt: *%{category}*"
+          rule_string_tags_suffix: " címkékkel: *%{tags}*"
+        parse_error: "Bocsánat, ezt nem értettem. Indítsd el a `/discourse help` parancsot az utasításokért."
+        create:
+          created: "Szabály sikeresen létrehozva"
+          updated: "Szabály sikeresen frissítve"
+          error: "Sajnáljuk, hiba történt a szabály létrehozásakor."
+        delete:
+          success: "Szabály sikeresen törölve"
+          error: "Sajnáljuk, hiba történt a szabály törlése közben. A szabályok listájához futtassa a /discourse status parancsot."
+        not_found:
+          tag: "A *%{name}* címke nem található."
+          category: "A *%{name}* kategória nem található. Elérhető kategóriák: *%{list}*"
+        help: |
+          *Új szabály:* `/discourse [téma|figyelés|követés|némítás] [kategória] [címke:név]`
+          (meg kell adni egy szabálytípust és legalább egy kategóriát vagy címkét)
+          - *téma* – értesítse ezt a csatornát új témákról, lehetőség szerint a témákra adott válaszokról
+          - *figyelés* – értesítse ezt a csatornát új témákról és új válaszokról
+          - *követés* – értesítse ezt a csatornát új témákról
+          - *némítás* – blokkolja az értesítéseket erre a csatornára
+
+          *Szabály eltávolítása:* `/discourse remove [szabályszám]`
+          (`[szabályszám]` megtalálható a `/discourse status` futtatásával)
+
+          *Szabályok listázása:* `/discourse status`
+
+          *[Kísérleti] Bejegyzés szövege:* `/discourse post [n]`
+          Hozz létre egy vázlat témát a discourse-ban, amely tartalmazza az utolsó `n` hozzászólást ebben a csatornában
+
+          *Súgó:* `/discourse help`
+        transcript:
+          modal_title: "Átirat létrehozása"
+          modal_description: "A beszélgetés összes üzenete egyetlen fórumbejegyzésbe lesz összegyűjtve. Lehetőséged lesz a szöveg átiratának szerkesztésére a közzététel előtt."
+          transcript_ready: "Átirat kész"
+          continue_on_discourse: "Folytatás a fórumon"
+          error: "Valami hiba történt az átirat létrehozásakor, elnézést!"
+          post_to_discourse: "Kattintson ide, ha szeretne egy Discourse bejegyzést vázlatként írni átirattal együtt"
+          api_required: "Sajnáljuk, ez az integráció nincs beállítva az átiratok közzétételének támogatására."
+          view_on_slack: "Megtekintés a(z) %{name} helyen a Slacken"
+          first_message_pretext: "%{n} üzenettel ezelőtttől kezdve:"
+          last_message_pretext: "és a %{n} üzenettel ezelőtti befejezés:"
+          posted_in: "beküldve ide: %{name}"
+          change_first_message: "Első üzenet módosítása..."
+          change_last_message: "Utolsó üzenet módosítása..."
+          loading: "Átirat betöltése..."
+          error_users: "Hiba: nem sikerült lekérni a felhasználókat a Slackből"
+          error_history: "Hiba: nem sikerült lekérni a csatorna előzményeit a Slackből"
+          error_ts: "Hiba: nem sikerült lekérni a kért üzenetet a Slackből"
         messaging:
           topic_tag_changed:
             added_and_removed: "Hozzáadva %{added} és eltávolítva %{removed}"
             added: "Hozzáadva %{added}"
             removed: "Eltávolítva %{removed}"
+      telegram:
+        unknown_chat: "Ez a chat nincs beállítva a %{site_title} csatornán. Kérj meg egy adminisztrátort, hogy adjon hozzá egy csatornát a következővel: 'Chat ID' %{chat_id}."
+        known_chat: "Ez a chat a %{site_title} oldalon van beállítva. Konfiguráld az adminisztrációs panelen. (Chat ID: %{chat_id})"
+        message: |-
+          <b>%{user}</b> közzétéve: <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Szabályok erre a csatornára</b>
+            (ha egy bejegyzéshez több szabály is illeszkedik, a legfelső szabály hajtódik végre)
+          no_rules: "Nincsenek szabályok beállítva ehhez a csatornához. Utasításokért futtasd a <code>/help</code> parancsot."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> bejegyzések itt: <b>%{category}</b>"
+          rule_string_tags_suffix: " címkékkel: <b>%{tags}</b>"
+        parse_error: "Bocsánat, ezt nem értettem. Indítsd el a <code>/help</code> parancsot az utasításokért."
+        create:
+          created: "Szabály sikeresen létrehozva"
+          updated: "Szabály sikeresen frissítve"
+          error: "Sajnáljuk, hiba történt a szabály létrehozásakor."
+        delete:
+          success: "Szabály sikeresen törölve"
+          error: "Sajnáljuk, hiba történt a szabály törlése közben. A szabályok listájához futtassa a <code>/status</code> parancsot."
+        not_found:
+          tag: "A <b>%{name}</b> címke nem található."
+          category: "A <b>%{name}</b> kategória nem található. Elérhető kategóriák: <b>%{list}</b>"
+        help: |
+          <b>Új szabály:</b> <code>/[nézés|követés|némítás] [kategória] [címke:név]</code>
+          (meg kell adni egy szabálytípust és legalább egy kategóriát vagy címkét)
+          - <b>figyelés</b> – értesítés a csatornának az új témákról és új válaszokról
+          - <b>követés</b> – értesítés a csatornának az új témákról
+          - <b>némítás</b> – értesítések blokkolása erre a csatornára
+
+          <b>Szabály eltávolítása:</b> <code>/remove [szabály száma]</code>
+          (<code>[szabály száma]</code> a <code>/status</code>paranccsal található meg )
+
+          <b>Szabályok listázása:</b> <code>/status</code>
+
+          <b>Segítség:</b> <code>/segítség</code>
+      hipchat:
+        message: '<b>%{user}</b> közzétéve: <a href="%{post_url}">%{title}</a>'
+      mattermost:
+        status:
+          header: |
+            *Szabályok ehhez a csatornához*
+            (ha egy bejegyzéshez több szabály is illeszkedik, akkor a legfelső szabály hajtódik végre)
+          no_rules: "Nincsenek szabályok beállítva ehhez a csatornához. Utasításokért futtassa a `/discourse help` parancsot."
+          rule_string: "*%{index}) * *%{filter}* bejegyzések itt: *%{category}*"
+          rule_string_tags_suffix: " címkékkel: *%{tags}*"
+        parse_error: "Bocsánat, ezt nem értettem. Indítsd el a `/discourse help` parancsot az utasításokért."
+        create:
+          created: "Szabály sikeresen létrehozva"
+          updated: "Szabály sikeresen frissítve"
+          error: "Sajnáljuk, hiba történt a szabály létrehozásakor."
+        delete:
+          success: "Szabály sikeresen törölve"
+          error: "Sajnáljuk, hiba történt a szabály törlése közben. A szabályok listájához futtassa a /discourse status parancsot."
+        not_found:
+          tag: "A *%{name}* címke nem található."
+          category: "A *%{name}* kategória nem található. Elérhető kategóriák: *%{list}*"
+        help: |
+          *Új szabály:* `/discourse [figyelés|követés|némítás] [kategória] [címke:név]`
+          (meg kell adni egy szabálytípust és legalább egy kategóriát vagy címkét)
+          - *figyelés* – csatorna értesítése új témákról és új válaszokról
+          - *követés* – csatorna értesítése új témákról
+          - *némítás* – értesítések blokkolása erre a csatornára
+
+          *Szabály eltávolítása:* `/discourse remove [szabályszám]`
+          (a `[szabályszám]` megtalálható a `/discourse status` futtatásával)
+
+          *Szabályok listázása:* `/discourse status`
+
+          *Súgó:* `/discourse help`
+      matrix:
+        text_message: "%{user} közzétéve: %{title} - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> közzétéve: <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** közzététel** [%{title}] (%{post_url}) **
+          ~~~quote
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "közzétéve"
+      google:
+        new_post: "Új bejegyzés a(z) %{site_title} oldalon"
+        new_topic: "Új téma a(z) %{site_title} oldalon"
+        author: "@%{username} által"
+        link: "Megtekintés itt: %{site_title}"
+      groupme:
+        errors:
+          instance_names_issue: "a példánynevek helytelenül formázottak vagy nincsenek megadva"
