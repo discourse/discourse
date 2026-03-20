@@ -34,6 +34,7 @@ const CREATE_ATTRIBUTES = [
   "allow_chat_channel_mentions",
   "allow_chat_direct_messages",
   "mcp_server_ids",
+  "mcp_server_tool_names",
   "execution_mode",
   "max_turn_tokens",
 
@@ -69,6 +70,7 @@ const SYSTEM_ATTRIBUTES = [
   "allow_chat_channel_mentions",
   "allow_chat_direct_messages",
   "mcp_server_ids",
+  "mcp_server_tool_names",
   "execution_mode",
   "max_turn_tokens",
 
@@ -165,6 +167,7 @@ export default class AiAgent extends RestModel {
     const attrs = this.getProperties(CREATE_ATTRIBUTES);
     this.populateTools(attrs);
     attrs.mcp_server_ids = attrs.mcp_server_ids || [];
+    attrs.mcp_server_tool_names = attrs.mcp_server_tool_names || {};
     attrs.forced_tool_count = this.forced_tool_count || -1;
     attrs.response_format = attrs.response_format || [];
     attrs.examples = attrs.examples || [];

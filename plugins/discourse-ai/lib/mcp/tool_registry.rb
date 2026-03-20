@@ -60,12 +60,22 @@ module DiscourseAi
           []
         end
 
-        def tool_classes_for_servers(servers, reserved_names: [])
+        def tool_classes_for_servers(servers, reserved_names: [], selected_tool_names_by_server: {})
           servers = Array(servers).select { |server| !server.oauth? || server.oauth_connected? }
 
           definitions_by_server =
             servers.each_with_object({}) do |server, hash|
-              hash[server] = tool_definitions_for(server)
+              definitions = tool_definitions_for(server)
+              selected_tool_names =
+                normalize_selected_tool_names(selected_tool_names_by_server, server)
+
+              hash[server] = if selected_tool_names.blank?
+                definitions
+              else
+                definitions.select do |definition|
+                  selected_tool_names.include?(definition["name"].to_s)
+                end
+              end
             end
 
           original_names =
@@ -101,6 +111,10 @@ module DiscourseAi
         end
 
         private
+
+        def normalize_selected_tool_names(selected_tool_names_by_server, server)
+          selected_tool_names_by_server[server.id] || selected_tool_names_by_server[server.id.to_s]
+        end
 
         def write_cache(server_id, definitions)
           now = Time.zone.now

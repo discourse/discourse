@@ -47,5 +47,27 @@ RSpec.describe DiscourseAi::Mcp::ToolRegistry do
 
       expect(classes).to eq([])
     end
+
+    it "filters tool classes by selected tool names" do
+      described_class
+        .stubs(:tool_definitions_for)
+        .with(first_server)
+        .returns(
+          [
+            { "name" => "search", "description" => "Search Jira", "inputSchema" => {} },
+            { "name" => "create", "description" => "Create Jira", "inputSchema" => {} },
+          ],
+        )
+
+      classes =
+        described_class.tool_classes_for_servers(
+          [first_server],
+          selected_tool_names_by_server: {
+            first_server.id => ["create"],
+          },
+        )
+
+      expect(classes.map { |klass| klass.signature[:name] }).to eq(["create"])
+    end
   end
 end

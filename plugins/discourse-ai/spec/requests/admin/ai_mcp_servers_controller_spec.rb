@@ -40,9 +40,9 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
       expect(response.parsed_body["ai_mcp_servers"].length).to eq(1)
       expect(response.parsed_body["meta"]["ai_secrets"].length).to eq(1)
       expect(response.parsed_body["ai_mcp_servers"].first["tool_count"]).to eq(1)
-      expect(response.parsed_body["ai_mcp_servers"].first["tools"]).to eq(
+      expect(response.parsed_body["ai_mcp_servers"].first["tools"]).to match(
         [
-          {
+          a_hash_including(
             "name" => "search_issues",
             "title" => "Search issues",
             "description" => "Search issues",
@@ -54,7 +54,8 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
                 "required" => true,
               },
             ],
-          },
+            "token_count" => an_instance_of(Integer),
+          ),
         ],
       )
     end

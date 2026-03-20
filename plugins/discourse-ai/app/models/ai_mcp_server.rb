@@ -81,26 +81,43 @@ class AiMcpServer < ActiveRecord::Base
     DiscourseAi::Mcp::ToolRegistry.tool_definitions_for(self)
   end
 
-  def tool_count
-    tool_definitions.length
+  def tools_for_serialization
+    return @tools_for_serialization if instance_variable_defined?(:@tools_for_serialization)
+
+    @tools_for_serialization =
+      tool_definitions.filter_map do |definition|
+        tool_name = definition["name"].to_s
+        next if tool_name.blank?
+
+        signature =
+          DiscourseAi::Agents::Tools::Mcp.class_instance(id, tool_name, definition).signature
+
+        {
+          name: tool_name,
+          title:
+            definition["title"].presence || definition.dig("annotations", "title").presence ||
+              tool_name.humanize,
+          description: definition["description"].presence || signature[:description],
+          parameters: signature[:parameters],
+          token_count: DiscourseAi::Tokenizer::OpenAiCl100kTokenizer.size(signature.to_json),
+        }
+      end
   rescue StandardError
-    0
+    @tools_for_serialization = []
+  end
+
+  def tool_count
+    tools_for_serialization.length
   end
 
   def token_count
-    tool_definitions.sum do |definition|
-      tool_name = definition["name"].to_s
-      next 0 if tool_name.blank?
-
-      signature =
-        DiscourseAi::Agents::Tools::Mcp.class_instance(id, tool_name, definition).signature
-      DiscourseAi::Tokenizer::OpenAiCl100kTokenizer.size(signature.to_json)
-    end
-  rescue StandardError
-    0
+    tools_for_serialization.sum { |tool| tool[:token_count].to_i }
   end
 
   def refresh_tools!(raise_on_error: true)
+    if instance_variable_defined?(:@tools_for_serialization)
+      remove_instance_variable(:@tools_for_serialization)
+    end
     DiscourseAi::Mcp::ToolRegistry.refresh!(self, raise_on_error: raise_on_error)
   end
 
@@ -317,6 +334,9 @@ class AiMcpServer < ActiveRecord::Base
   end
 
   def flush_tool_cache
+    if instance_variable_defined?(:@tools_for_serialization)
+      remove_instance_variable(:@tools_for_serialization)
+    end
     DiscourseAi::Mcp::ToolRegistry.invalidate!(self.id)
     AiAgent.agent_cache.flush!
   end

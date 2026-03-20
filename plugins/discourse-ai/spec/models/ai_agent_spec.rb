@@ -183,11 +183,7 @@ RSpec.describe AiAgent do
         DiscourseAi::Agents::Tools::Mcp.class_instance(
           ai_mcp_server.id,
           "search_issues",
-          {
-            "name" => "search_issues",
-            "description" => "Search issues",
-            "inputSchema" => {},
-          },
+          { "name" => "search_issues", "description" => "Search issues", "inputSchema" => {} },
         ),
       ],
     )
@@ -195,6 +191,36 @@ RSpec.describe AiAgent do
     klass = agent.class_instance
 
     expect(klass.new.tools.map { |tool| tool.signature[:name] }).to include("search_issues")
+  end
+
+  it "passes selected MCP tool names to the registry" do
+    ai_mcp_server = Fabricate(:ai_mcp_server, name: "Jira")
+    agent =
+      AiAgent.create!(
+        name: "mcp_agent",
+        description: "test",
+        system_prompt: "test",
+        tools: [],
+        allowed_group_ids: [],
+      )
+    agent.ai_mcp_servers << ai_mcp_server
+    agent
+      .ai_agent_mcp_servers
+      .find_by!(ai_mcp_server_id: ai_mcp_server.id)
+      .update!(selected_tool_names: ["search_issues"])
+
+    DiscourseAi::Mcp::ToolRegistry
+      .expects(:tool_classes_for_servers)
+      .with(
+        [ai_mcp_server],
+        reserved_names: [],
+        selected_tool_names_by_server: {
+          ai_mcp_server.id => ["search_issues"],
+        },
+      )
+      .returns([])
+
+    agent.class_instance
   end
 
   it "does not allow setting allowing chat without a default_llm" do

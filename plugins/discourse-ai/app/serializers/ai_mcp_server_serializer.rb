@@ -46,30 +46,11 @@ class AiMcpServerSerializer < ApplicationSerializer
   end
 
   def tool_names
-    object.tool_definitions.map { |definition| definition["name"] }
-  rescue StandardError
-    []
+    object.tools_for_serialization.map { |tool| tool[:name] }
   end
 
   def tools
-    object.tool_definitions.filter_map do |definition|
-      tool_name = definition["name"].to_s
-      next if tool_name.blank?
-
-      signature =
-        DiscourseAi::Agents::Tools::Mcp.class_instance(object.id, tool_name, definition).signature
-
-      {
-        name: tool_name,
-        title:
-          definition["title"].presence || definition.dig("annotations", "title").presence ||
-            tool_name.humanize,
-        description: definition["description"].presence || signature[:description],
-        parameters: signature[:parameters],
-      }
-    end
-  rescue StandardError
-    []
+    object.tools_for_serialization
   end
 
   def token_count
