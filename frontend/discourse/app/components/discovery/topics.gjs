@@ -25,6 +25,8 @@ export default class DiscoveryTopics extends Component {
   @service documentTitle;
   @service currentUser;
   @service topicTrackingState;
+  @service site;
+  @service siteSettings;
 
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;
@@ -90,6 +92,10 @@ export default class DiscoveryTopics extends Component {
     return this.new && this.currentUser?.new_new_view_enabled;
   }
 
+  get showDismissNewStopTracking() {
+    return this.args.model.params?.subset !== "topics";
+  }
+
   get newRepliesCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
@@ -142,6 +148,15 @@ export default class DiscoveryTopics extends Component {
 
   get expandAllPinned() {
     return this.args.tag || this.args.category;
+  }
+
+  get showBottomDismissButtons() {
+    return (
+      this.allLoaded &&
+      (!this.site.mobileView ||
+        (this.site.mobileView &&
+          !this.siteSettings.floating_dismiss_topics_on_mobile))
+    );
   }
 
   @action
@@ -304,15 +319,19 @@ export default class DiscoveryTopics extends Component {
             model=@model
           }}
         >
-          <TopicDismissButtons
-            @position="bottom"
-            @selectedTopics={{@bulkSelectHelper.selected}}
-            @model={{@model}}
-            @showResetNew={{@showResetNew}}
-            @showDismissRead={{@showDismissRead}}
-            @resetNew={{@resetNew}}
-            @dismissRead={{@dismissRead}}
-          />
+          {{#if this.showBottomDismissButtons}}
+            <TopicDismissButtons
+              @position="bottom"
+              @selectedTopics={{@bulkSelectHelper.selected}}
+              @model={{@model}}
+              @showResetNew={{@showResetNew}}
+              @showNewDismissCombo={{this.showTopicsAndRepliesToggle}}
+              @showDismissRead={{@showDismissRead}}
+              @showDismissNewStopTracking={{this.showDismissNewStopTracking}}
+              @resetNew={{@resetNew}}
+              @dismissRead={{@dismissRead}}
+            />
+          {{/if}}
 
           {{#if this.showEmptyFilterEducationInFooter}}
             <EmptyTopicFilter

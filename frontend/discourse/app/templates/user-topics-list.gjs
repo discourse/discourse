@@ -28,6 +28,7 @@ export default <template>
         @model={{@controller.model}}
         @showResetNew={{@controller.showResetNew}}
         @showDismissRead={{@controller.showDismissRead}}
+        @showDismissNewStopTracking={{@controller.showDismissNewStopTracking}}
         @resetNew={{@controller.resetNew}}
         @dismissRead={{if
           @controller.showDismissRead
@@ -72,19 +73,21 @@ export default <template>
         @listContext={{@controller.listContext}}
       />
 
-      <TopicDismissButtons
-        @position="bottom"
-        @selectedTopics={{@controller.bulkSelectHelper.selected}}
-        @model={{@controller.model}}
-        @showResetNew={{@controller.showResetNew}}
-        @showDismissRead={{@controller.showDismissRead}}
-        @resetNew={{@controller.resetNew}}
-        @dismissRead={{if
-          @controller.showDismissRead
-          (routeAction "dismissReadTopics")
-        }}
-      />
-
+      {{#if @controller.showBottomDismissButtons}}
+        <TopicDismissButtons
+          @position="bottom"
+          @selectedTopics={{@controller.bulkSelectHelper.selected}}
+          @model={{@controller.model}}
+          @showResetNew={{@controller.showResetNew}}
+          @showDismissRead={{@controller.showDismissRead}}
+          @showDismissNewStopTracking={{@controller.showDismissNewStopTracking}}
+          @resetNew={{@controller.resetNew}}
+          @dismissRead={{if
+            @controller.showDismissRead
+            (routeAction "dismissReadTopics")
+          }}
+        />
+      {{/if}}
       <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
     </LoadMore>
   {{/if}}

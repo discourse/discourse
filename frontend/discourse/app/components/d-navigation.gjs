@@ -163,6 +163,20 @@ export default class DNavigation extends Component {
     });
   }
 
+  @computed("showResetNew", "filterType", "currentUser.new_new_view_enabled")
+  get showNewDismissCombo() {
+    return (
+      this.showResetNew &&
+      this.filterType === "new" &&
+      this.currentUser.new_new_view_enabled
+    );
+  }
+
+  @computed("model.params.subset")
+  get showDismissNewStopTracking() {
+    return this.model.params?.subset !== "topics";
+  }
+
   @computed("filterType")
   get notCategoriesRoute() {
     return this.filterType !== "categories";
@@ -265,7 +279,9 @@ export default class DNavigation extends Component {
         @selectedTopics={{@bulkSelectHelper.selected}}
         @model={{@model}}
         @showResetNew={{@showResetNew}}
+        @showNewDismissCombo={{this.showNewDismissCombo}}
         @showDismissRead={{@showDismissRead}}
+        @showDismissNewStopTracking={{this.showDismissNewStopTracking}}
         @resetNew={{@resetNew}}
         @dismissRead={{@dismissRead}}
       />

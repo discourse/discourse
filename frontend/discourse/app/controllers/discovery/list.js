@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DismissNew from "discourse/components/modal/dismiss-new";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -52,7 +51,6 @@ export default class DiscoveryListController extends Controller {
   @service currentUser;
   @service router;
   @service topicTrackingState;
-  @service modal;
 
   @tracked model;
 
@@ -163,21 +161,36 @@ export default class DiscoveryListController extends Controller {
     this.router.refresh();
   }
 
+  get dismissNewSubset() {
+    return this.model.list?.listParams?.subset ?? this.subset;
+  }
+
+  buildResetNewOptions(overrides = {}) {
+    const options = {
+      dismissPosts: true,
+      dismissTopics: true,
+      untrack: false,
+    };
+
+    if (this.dismissNewSubset === "topics") {
+      options.dismissPosts = false;
+    } else if (this.dismissNewSubset === "replies") {
+      options.dismissTopics = false;
+    }
+
+    return { ...options, ...overrides };
+  }
+
   @action
-  resetNew() {
+  resetNew(overrides = {}) {
     if (!this.currentUser.new_new_view_enabled) {
       return this.callResetNew();
     }
 
-    this.modal.show(DismissNew, {
-      model: {
-        selectedTopics: this.bulkSelectHelper.selected,
-        subset: this.model.list?.listParams?.subset,
-        dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
-          this.callResetNew(dismissPosts, dismissTopics, untrack);
-        },
-      },
-    });
+    const { dismissPosts, dismissTopics, untrack } =
+      this.buildResetNewOptions(overrides);
+
+    return this.callResetNew(dismissPosts, dismissTopics, untrack);
   }
 
   @action
