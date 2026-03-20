@@ -138,6 +138,7 @@
   li {
     display: inline-flex;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   &:has(.box) {
