@@ -37,6 +37,12 @@ module PageObjects
         self
       end
 
+      def dismiss_new_and_stop_tracking
+        click_button("dismiss-new-menu-top")
+        find(".dismiss-new-stop-tracking").click
+        self
+      end
+
       def click_latest
         find(".nav-item_latest").click
         self

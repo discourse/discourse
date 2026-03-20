@@ -6,7 +6,6 @@ RSpec.describe "Dismissing New", type: :system do
   let(:discovery) { PageObjects::Pages::Discovery.new }
   let(:topic_list_controls) { PageObjects::Components::TopicListControls.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
-  let(:dismiss_new_modal) { PageObjects::Modals::DismissNew.new }
   let(:topic_view) { PageObjects::Components::TopicView.new }
 
   describe "when a user has an unread post" do
@@ -113,9 +112,7 @@ RSpec.describe "Dismissing New", type: :system do
 
       switch_to_window(tab_1)
       topic_list_controls.dismiss_new
-      dismiss_new_modal.click_dismiss
 
-      expect(dismiss_new_modal).to be_closed
       expect(topic_list_controls).to have_new(count: 0)
 
       switch_to_window(tab_2)
@@ -127,7 +124,7 @@ RSpec.describe "Dismissing New", type: :system do
       expect(topic_list_controls).to have_new(count: 0)
     end
 
-    it "displays confirmation modal with preselected options" do
+    it "dismisses all topics and replies from the all subset" do
       sign_in(user)
 
       visit("/new")
@@ -137,16 +134,10 @@ RSpec.describe "Dismissing New", type: :system do
 
       topic_list_controls.dismiss_new
 
-      expect(dismiss_new_modal).to have_dismiss_topics_checked
-      expect(dismiss_new_modal).to have_dismiss_posts_checked
-      expect(dismiss_new_modal).to have_untrack_unchecked
-
-      dismiss_new_modal.click_dismiss
-
       expect(topic_list).to have_no_topics
     end
 
-    it "displays confirmation modal with replies preselected" do
+    it "dismisses only replies from the replies subset" do
       sign_in(user)
 
       visit("/new?subset=replies")
@@ -155,16 +146,13 @@ RSpec.describe "Dismissing New", type: :system do
 
       topic_list_controls.dismiss_new
 
-      expect(dismiss_new_modal).to have_dismiss_topics_unchecked
-      expect(dismiss_new_modal).to have_dismiss_posts_checked
-      expect(dismiss_new_modal).to have_untrack_unchecked
-
-      dismiss_new_modal.click_dismiss
-
       expect(topic_list).to have_no_topics
+
+      visit("/new?subset=topics")
+      expect(topic_list).to have_topic(new_topic)
     end
 
-    it "displays confirmation modal with topics preselected" do
+    it "dismisses only topics from the topics subset" do
       sign_in(user)
 
       visit("/new?subset=topics")
@@ -173,11 +161,18 @@ RSpec.describe "Dismissing New", type: :system do
 
       topic_list_controls.dismiss_new
 
-      expect(dismiss_new_modal).to have_dismiss_topics_checked
-      expect(dismiss_new_modal).to have_dismiss_posts_unchecked
-      expect(dismiss_new_modal).to have_untrack_unchecked
+      expect(topic_list).to have_no_topics
 
-      dismiss_new_modal.click_dismiss
+      visit("/new?subset=replies")
+      expect(topic_list).to have_topic(post1.topic)
+    end
+
+    it "can dismiss and stop tracking from the dropdown action" do
+      sign_in(user)
+
+      visit("/new")
+
+      topic_list_controls.dismiss_new_and_stop_tracking
 
       expect(topic_list).to have_no_topics
     end
@@ -196,7 +191,6 @@ RSpec.describe "Dismissing New", type: :system do
         expect(topic_list).to have_topic(tagged_first_post.topic)
 
         topic_list_controls.dismiss_new
-        dismiss_new_modal.click_dismiss
 
         expect(topic_list).to have_no_topics
 
@@ -218,7 +212,6 @@ RSpec.describe "Dismissing New", type: :system do
         discovery.nav_item("new").click
 
         topic_list_controls.dismiss_new
-        dismiss_new_modal.click_dismiss
 
         expect(topic_list).to have_no_topics
       end
