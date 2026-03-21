@@ -97,6 +97,46 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "crawler schema modifiers" do
+    let(:crawler_env) { { "HTTP_USER_AGENT" => "Googlebot" } }
+
+    before { SiteSetting.allow_solved_on_all_topics = true }
+
+    def parsed_crawler_body
+      Nokogiri::HTML5.fragment(response.body)
+    end
+
+    it "uses QAPage with Question wrapper instead of DiscussionForumPosting" do
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      expect(doc.css('[itemtype*="QAPage"]').size).to eq(1)
+      expect(doc.css('[itemtype*="DiscussionForumPosting"]').size).to eq(0)
+      expect(doc.css('[itemprop="mainEntity"][itemtype*="Question"]').size).to eq(1)
+    end
+
+    it "marks the solution post as acceptedAnswer and other replies as suggestedAnswer" do
+      p3 = Fabricate(:post, topic: topic, user: Fabricate(:user))
+      Fabricate(:solved_topic, topic: topic, answer_post: p2)
+
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      expect(doc.at_css("#post_#{p2.post_number}")["itemprop"]).to eq("acceptedAnswer")
+      expect(doc.at_css("#post_#{p3.post_number}")["itemprop"]).to eq("suggestedAnswer")
+    end
+
+    it "does not modify schema for topics without solved enabled" do
+      SiteSetting.allow_solved_on_all_topics = false
+
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      expect(doc.css('[itemtype*="DiscussionForumPosting"]').size).to eq(1)
+      expect(doc.css('[itemtype*="QAPage"]').size).to eq(0)
+    end
+  end
+
   context "with solved enabled for topics with specific tags" do
     let(:tag) { Fabricate(:tag) }
 

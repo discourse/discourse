@@ -77,6 +77,25 @@ after_initialize do
     { answer: { actions: %w[discourse_solved/answer#accept discourse_solved/answer#unaccept] } },
   )
 
+  register_modifier(:topic_crawler_container_schema) do |schema, topic|
+    next schema unless Guardian.new.allow_accepted_answers?(topic)
+    { itemscope: true, itemtype: "https://schema.org/QAPage" }
+  end
+
+  register_modifier(:topic_crawler_posts_wrapper_schema) do |schema, topic|
+    next schema unless Guardian.new.allow_accepted_answers?(topic)
+    { itemprop: "mainEntity", itemscope: true, itemtype: "https://schema.org/Question" }
+  end
+
+  register_modifier(:topic_crawler_post_schema) do |schema, post, topic|
+    next schema unless Guardian.new.allow_accepted_answers?(topic)
+    if topic.solved&.answer_post_id == post.id
+      { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
+    else
+      { itemprop: "suggestedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
+    end
+  end
+
   register_html_builder("server:before-head-close-crawler") do |controller|
     topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
     result =
