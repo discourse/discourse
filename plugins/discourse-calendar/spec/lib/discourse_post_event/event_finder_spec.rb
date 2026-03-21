@@ -257,6 +257,52 @@ describe DiscoursePostEvent::EventFinder do
         expect(results).not_to include(ongoing_event)
         expect(results).to include(future_event)
       end
+
+      it "includes multi-month spanning events when viewing later months" do
+        freeze_time DateTime.parse("2025-06-15 12:00")
+
+        spanning_event =
+          Fabricate(
+            :event,
+            original_starts_at: Time.parse("2025-03-01 09:00"),
+            original_ends_at: Time.parse("2025-12-01 17:00"),
+          )
+
+        results =
+          finder.search(
+            current_user,
+            {
+              after: Time.parse("2025-06-01 00:00").to_s,
+              before: Time.parse("2025-07-01 00:00").to_s,
+              include_ongoing: "true",
+            },
+          )
+
+        expect(results).to include(spanning_event)
+      end
+
+      it "does not include multi-month spanning events that have already ended" do
+        freeze_time DateTime.parse("2025-06-15 12:00")
+
+        ended_spanning_event =
+          Fabricate(
+            :event,
+            original_starts_at: Time.parse("2025-01-01 09:00"),
+            original_ends_at: Time.parse("2025-05-01 17:00"),
+          )
+
+        results =
+          finder.search(
+            current_user,
+            {
+              after: Time.parse("2025-06-01 00:00").to_s,
+              before: Time.parse("2025-07-01 00:00").to_s,
+              include_ongoing: "true",
+            },
+          )
+
+        expect(results).not_to include(ended_spanning_event)
+      end
     end
 
     describe "expired events" do
