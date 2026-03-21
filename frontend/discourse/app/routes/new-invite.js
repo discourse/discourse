@@ -1,6 +1,6 @@
+import { trackedArray } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { defaultHomepage } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -36,7 +36,7 @@ export default class extends DiscourseRoute {
     next(() => {
       if (this.currentUser.can_invite_to_forum) {
         this.modal.show(CreateInvite, {
-          model: { invites: new TrackedArray() },
+          model: { invites: trackedArray() },
         });
       } else {
         this.dialog.alert(i18n("user.invited.cannot_invite_to_forum"));

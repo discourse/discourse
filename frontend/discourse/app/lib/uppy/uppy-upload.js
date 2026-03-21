@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import AwsS3 from "@uppy/aws-s3";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
@@ -98,7 +98,7 @@ export default class UppyUpload {
   @tracked filesAwaitingUpload = false;
   @tracked cancellable = false;
 
-  inProgressUploads = new TrackedArray();
+  inProgressUploads = trackedArray();
 
   uppyWrapper;
 

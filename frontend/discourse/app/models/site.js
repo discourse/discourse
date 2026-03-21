@@ -2,10 +2,10 @@ import { cached } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
@@ -200,7 +200,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    return new TrackedArray(postActionTypes.filter((type) => type.is_flag));
+    return trackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
   collectUserFields(fields) {
