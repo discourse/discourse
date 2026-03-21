@@ -106,13 +106,12 @@ RSpec.describe TopicsController do
       Nokogiri::HTML5.fragment(response.body)
     end
 
-    it "uses QAPage with Question wrapper instead of DiscussionForumPosting" do
+    it "uses Question schema instead of DiscussionForumPosting" do
       get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
       doc = parsed_crawler_body
 
-      expect(doc.css('[itemtype*="QAPage"]').size).to eq(1)
+      expect(doc.css('[itemtype*="Question"]').size).to eq(1)
       expect(doc.css('[itemtype*="DiscussionForumPosting"]').size).to eq(0)
-      expect(doc.css('[itemprop="mainEntity"][itemtype*="Question"]').size).to eq(1)
     end
 
     it "marks the solution post as acceptedAnswer and other replies as suggestedAnswer" do

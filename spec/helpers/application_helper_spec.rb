@@ -1280,14 +1280,6 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  describe "#crawler_posts_wrapper_schema" do
-    fab!(:topic)
-
-    it "returns nil by default" do
-      expect(helper.crawler_posts_wrapper_schema(topic)).to be_nil
-    end
-  end
-
   describe "#crawler_post_schema" do
     fab!(:topic)
     fab!(:first_post) { Fabricate(:post, topic: topic) }

@@ -61,9 +61,6 @@
         <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
       <% end %>
 
-      <% if (posts_wrapper = crawler_posts_wrapper_schema(@topic_view.topic)) %>
-        <div <%= posts_wrapper %>>
-      <% end %>
       <% @topic_view.crawler_posts.each do |post| %>
         <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
           <div id='post_<%= post.post_number %>' <%= crawler_post_schema(post, @topic_view.topic) %> class='topic-body crawler-post'>
@@ -124,9 +121,6 @@
             <%= build_plugin_html "server:topic-show-crawler-post-end", post: post %>
           </div>
         <% end %>
-      <% end %>
-      <% if posts_wrapper %>
-        </div>
       <% end %>
     </div>
 

@@ -713,12 +713,6 @@ module ApplicationHelper
     tag.attributes(**attrs)
   end
 
-  def crawler_posts_wrapper_schema(topic)
-    attrs = DiscoursePluginRegistry.apply_modifier(:topic_crawler_posts_wrapper_schema, {}, topic)
-    return if attrs.blank?
-    tag.attributes(**attrs)
-  end
-
   def crawler_post_schema(post, topic)
     return "" if post.is_first_post?
     default = { itemprop: "comment", itemscope: true, itemtype: "http://schema.org/Comment" }

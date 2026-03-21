@@ -79,12 +79,7 @@ after_initialize do
 
   register_modifier(:topic_crawler_container_schema) do |schema, topic|
     next schema unless Guardian.new.allow_accepted_answers?(topic)
-    { itemscope: true, itemtype: "https://schema.org/QAPage" }
-  end
-
-  register_modifier(:topic_crawler_posts_wrapper_schema) do |schema, topic|
-    next schema unless Guardian.new.allow_accepted_answers?(topic)
-    { itemprop: "mainEntity", itemscope: true, itemtype: "https://schema.org/Question" }
+    { itemscope: true, itemtype: "https://schema.org/Question" }
   end
 
   register_modifier(:topic_crawler_post_schema) do |schema, post, topic|
