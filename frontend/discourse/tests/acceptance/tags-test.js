@@ -192,6 +192,12 @@ acceptance("Tags listed by group", function (needs) {
     );
   });
 
+  test("tag group headings have anchor ids", async function (assert) {
+    await visit("/tags");
+    assert.dom("h3#ford-cars").exists();
+    assert.dom("h3#ford-cars a.anchor").hasAttribute("href", "#ford-cars");
+  });
+
   test("list the tags in groups", async function (assert) {
     await visit("/tags");
 

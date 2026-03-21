@@ -32,14 +32,18 @@ export default class TagList extends Component {
   }
 
   @computed("tagGroupName")
-  get tagGroupNameClass() {
+  get tagGroupNameSlug() {
     if (this.tagGroupName) {
-      const groupName = this.tagGroupName
+      return this.tagGroupName
         .replace(/\s+/g, "-")
         .replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, "")
         .toLowerCase();
-      return groupName && `tag-group-${groupName}`;
     }
+  }
+
+  @computed("tagGroupNameSlug")
+  get tagGroupNameClass() {
+    return this.tagGroupNameSlug && `tag-group-${this.tagGroupNameSlug}`;
   }
 
   <template>
@@ -59,7 +63,11 @@ export default class TagList extends Component {
         <CategoryTitleLink @category={{this.category}} />
       {{/if}}
       {{#if this.tagGroupName}}
-        <h3>{{this.tagGroupName}}</h3>
+        <h3 id={{this.tagGroupNameSlug}}><a
+            href="#{{this.tagGroupNameSlug}}"
+            class="anchor"
+            aria-label={{i18n "post.heading_anchor"}}
+          ></a>{{this.tagGroupName}}</h3>
       {{/if}}
       {{#each this.sortedTags as |tag|}}
         <div class="tag-box">
