@@ -12,6 +12,7 @@ class DiscourseSolved::BuildSchemaMarkup
   policy :accepted_answers_allowed
   model :accepted_answer, optional: true
   policy :schema_markup_enabled
+  model :suggested_answers, optional: true
   model :html
 
   private
@@ -39,12 +40,24 @@ class DiscourseSolved::BuildSchemaMarkup
     end
   end
 
-  def fetch_html(topic:, accepted_answer:)
+  def fetch_suggested_answers(topic:, accepted_answer:)
+    excluded_ids = [topic.first_post.id]
+    excluded_ids << accepted_answer.id if accepted_answer.present?
+    topic
+      .posts
+      .where.not(id: excluded_ids)
+      .where(post_type: Post.types[:regular])
+      .order(:post_number)
+      .to_a
+  end
+
+  def fetch_html(topic:, accepted_answer:, suggested_answers:)
     question_json =
       DiscourseSolved::QuestionSchemaSerializer.new(
         topic,
         root: false,
         accepted_answer: accepted_answer,
+        suggested_answers: suggested_answers,
       ).serializable_hash
 
     json =

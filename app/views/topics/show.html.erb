@@ -34,7 +34,7 @@
   <%= server_plugin_outlet "topic_header" %>
 
   <%- if include_crawler_content? %>
-    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+    <div <%= crawler_topic_container_schema(@topic_view.topic) %>>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
       <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
       <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
@@ -63,7 +63,7 @@
 
       <% @topic_view.crawler_posts.each do |post| %>
         <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
-          <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
+          <div id='post_<%= post.post_number %>' <%= crawler_post_schema(post, @topic_view.topic) %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>
               <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
                 <a itemprop="url" rel='nofollow' href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
