@@ -233,6 +233,32 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
 
+    describe "with include_ongoing" do
+      fab!(:past_event) do
+        Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 1.hour.ago)
+      end
+      fab!(:ongoing_event) do
+        Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 2.hours.from_now)
+      end
+      fab!(:future_event) do
+        Fabricate(:event, original_starts_at: 2.hours.from_now, original_ends_at: 3.hours.from_now)
+      end
+
+      it "includes events that started in the past but have not ended yet" do
+        results = finder.search(current_user, { after: "now", include_ongoing: "true" })
+        expect(results).not_to include(past_event)
+        expect(results).to include(ongoing_event)
+        expect(results).to include(future_event)
+      end
+
+      it "does not include ongoing events without the flag" do
+        results = finder.search(current_user, { after: "now" })
+        expect(results).not_to include(past_event)
+        expect(results).not_to include(ongoing_event)
+        expect(results).to include(future_event)
+      end
+    end
+
     describe "expired events" do
       let!(:expired_event) do
         Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 1.hour.ago)

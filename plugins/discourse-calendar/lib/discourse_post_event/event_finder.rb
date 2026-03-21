@@ -28,13 +28,13 @@ module DiscoursePostEvent
         .merge(topics.or(pms))
         .joins(latest_event_date_join)
         .select(
-          "discourse_post_event_events.*, latest_event_dates.starts_at, latest_event_dates.finished_at",
+          "discourse_post_event_events.*, latest_event_dates.starts_at, latest_event_dates.ends_at, latest_event_dates.finished_at",
         )
         .where(
           "(discourse_post_event_events.recurrence IS NOT NULL) OR (latest_event_dates.starts_at IS NOT NULL) OR (discourse_post_event_events.original_starts_at IS NOT NULL)",
         )
         .group(
-          "discourse_post_event_events.id, latest_event_dates.starts_at, latest_event_dates.finished_at",
+          "discourse_post_event_events.id, latest_event_dates.starts_at, latest_event_dates.ends_at, latest_event_dates.finished_at",
         )
     end
 
@@ -44,6 +44,7 @@ module DiscoursePostEvent
           SELECT DISTINCT ON (event_id)
             event_id,
             starts_at,
+            ends_at,
             finished_at
           FROM discourse_calendar_post_event_dates
           ORDER BY event_id, #{DiscoursePostEvent::EventDate.current_ordering_sql}
@@ -103,9 +104,11 @@ module DiscoursePostEvent
 
       before_date = params[:before] == "now" ? Time.current : params[:before]&.to_datetime
       after_date = params[:after] == "now" ? Time.current : params[:after]&.to_datetime
+      include_ongoing = params[:include_ongoing].present?
 
       recurring_scope = build_recurring_date_scope(after_date, before_date)
-      non_recurring_scope = build_non_recurring_date_scope(after_date, before_date)
+      non_recurring_scope =
+        build_non_recurring_date_scope(after_date, before_date, include_ongoing:)
 
       # Apply the combined scope using OR logic
       events.merge(recurring_scope.or(non_recurring_scope))
@@ -134,9 +137,20 @@ module DiscoursePostEvent
       scope
     end
 
-    def self.build_non_recurring_date_scope(after_date, before_date)
+    def self.build_non_recurring_date_scope(after_date, before_date, include_ongoing: false)
       scope = DiscoursePostEvent::Event.where(recurrence: nil)
-      scope = scope.where("latest_event_dates.starts_at >= ?", after_date) if after_date
+      if after_date
+        if include_ongoing
+          scope =
+            scope.where(
+              "latest_event_dates.starts_at >= ? OR (latest_event_dates.ends_at IS NOT NULL AND latest_event_dates.ends_at >= ?)",
+              after_date,
+              after_date,
+            )
+        else
+          scope = scope.where("latest_event_dates.starts_at >= ?", after_date)
+        end
+      end
       scope = scope.where("latest_event_dates.starts_at < ?", before_date) if before_date
       scope
     end
