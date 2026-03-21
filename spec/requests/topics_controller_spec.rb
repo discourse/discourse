@@ -3526,6 +3526,78 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "with external permalink on a soft-deleted topic" do
+      fab!(:topic) { Fabricate(:post, user: post_author1).topic }
+
+      before do
+        topic.trash!(Discourse.system_user)
+        Permalink.create!(
+          url: "t/#{topic.slug}/#{topic.id}",
+          external_url: "https://www.example.com",
+        )
+      end
+
+      it "returns Discourse-Xhr-Redirect header for XHR requests" do
+        get "/t/#{topic.slug}/#{topic.id}.json",
+            headers: {
+              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Discourse-Xhr-Redirect"]).to eq("true")
+        expect(response.body).to eq("https://www.example.com")
+      end
+
+      it "returns Discourse-Xhr-Redirect header for XHR requests when detailed_404 is enabled" do
+        SiteSetting.detailed_404 = true
+
+        get "/t/#{topic.slug}/#{topic.id}.json",
+            headers: {
+              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Discourse-Xhr-Redirect"]).to eq("true")
+        expect(response.body).to eq("https://www.example.com")
+      end
+
+      it "returns 301 redirect for non-XHR requests" do
+        get "/t/#{topic.slug}/#{topic.id}"
+
+        expect(response.status).to eq(301)
+        expect(response.headers["Location"]).to eq("https://www.example.com")
+      end
+    end
+
+    describe "with external permalink on a nonexistent topic" do
+      let!(:nonexistent_topic_id) { Topic.maximum(:id) + 1 }
+
+      before do
+        Permalink.create!(
+          url: "t/old-topic/#{nonexistent_topic_id}",
+          external_url: "https://www.example.com",
+        )
+      end
+
+      it "returns Discourse-Xhr-Redirect header for XHR requests" do
+        get "/t/old-topic/#{nonexistent_topic_id}.json",
+            headers: {
+              "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Discourse-Xhr-Redirect"]).to eq("true")
+        expect(response.body).to eq("https://www.example.com")
+      end
+
+      it "returns 301 redirect for non-XHR requests" do
+        get "/t/old-topic/#{nonexistent_topic_id}"
+
+        expect(response.status).to eq(301)
+        expect(response.headers["Location"]).to eq("https://www.example.com")
+      end
+    end
+
     describe "#show filters" do
       fab!(:post) { Fabricate(:post, user: post_author1) }
       fab!(:topic) { post.topic }
