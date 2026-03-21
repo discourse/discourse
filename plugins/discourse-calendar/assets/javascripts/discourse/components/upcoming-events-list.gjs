@@ -104,8 +104,8 @@ export default class UpcomingEventsList extends Component {
     const data = {
       limit: this.count,
       before: moment().add(this.upcomingDays, "days").toISOString(),
-      // this enables showing ongoing multi-day events that started in the past but haven't ended yet
-      after: moment().subtract(30, "days").toISOString(),
+      after: moment().toISOString(),
+      include_ongoing: true,
     };
 
     if (this.includeSubcategories) {
