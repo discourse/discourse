@@ -449,6 +449,15 @@ class Plugin::Instance
       klass.public_send(:define_method, attr) do |*args, **kwargs|
         public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
+
+      # When adding methods to Guardian, also define a safe default on
+      # Guardian::AnonymousUser so plugins don't need to handle that case
+      # separately. The stub returns nil (falsy) which is the safe default
+      # for permission checks. Plugins can still override with an explicit
+      # add_to_class(Guardian::AnonymousUser, ...) call.
+      if klass == Guardian && !Guardian::AnonymousUser.method_defined?(attr)
+        Guardian::AnonymousUser.define_method(attr) { |*| nil }
+      end
     end
   end
 

@@ -106,6 +106,37 @@ describe "Assign | Assigning topics" do
           class_attribute: ".private-assign",
         )
       end
+
+      it "assign post is visible to assign-allowed users not in whispers_allowed_groups" do
+        assign_group = Fabricate(:group)
+        assign_user = Fabricate(:user, groups: [assign_group])
+        SiteSetting.assign_allowed_on_groups = "#{assign_group.id}|#{Group::AUTO_GROUPS[:staff]}"
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+
+        Assigner.new(topic, admin1).assign(admin2)
+
+        sign_in(assign_user)
+        visit "/t/#{topic.id}"
+
+        expect(topic_page).to have_assigned(
+          user: admin2,
+          at_post: 2,
+          class_attribute: ".private-assign",
+        )
+      end
+
+      it "assign post is not visible to users outside assign_allowed_on_groups" do
+        regular_user = Fabricate(:user)
+        SiteSetting.assign_allowed_on_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+
+        Assigner.new(topic, admin1).assign(admin2)
+
+        sign_in(regular_user)
+        visit "/t/#{topic.id}"
+
+        expect(page).to have_no_css("#post_2")
+      end
     end
 
     context "when unassign_on_close is set to true" do
