@@ -63,7 +63,7 @@ class MigrateTagAddedFilterToAllProviders < ActiveRecord::Migration[7.1]
           "mattermost" => "identifier",
           "matrix" => "name",
           "teams" => "name",
-          "zulip" => "stream",
+          "zulip" => "channel",
           "powerautomate" => "name",
           "rocketchat" => "identifier",
           "gitter" => "name",
