@@ -11,12 +11,11 @@ import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import toMarkdown from "discourse/lib/to-markdown";
 import {
   getElement,
+  selectedHTML,
   selectedNode,
   selectedRange,
-  selectedText,
   setCaretPosition,
 } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
@@ -240,7 +239,7 @@ export default class PostTextSelection extends Component {
       return; // we changed the range here, so we want to go through the selection change handler again
     }
 
-    if (!selectedText()?.length) {
+    if (!window.getSelection().toString().trim().length) {
       return;
     }
 
@@ -361,18 +360,17 @@ export default class PostTextSelection extends Component {
   }
 
   computeQuoteState(cooked) {
-    const _selectedText = selectedText();
+    const plainText = window.getSelection().toString();
+    const html = selectedHTML();
     const _selectedElement = getElement(selectedNode());
     const postId = cooked.closest(".boxed, .reply")?.dataset?.postId;
 
-    // computing markdown takes a lot of time on long posts
-    // this code attempts to compute it only when we can't fast track
-    let opts = {
-      full:
-        selectedRange().startOffset > 0
-          ? false
-          : _selectedText === toMarkdown(cooked.innerHTML),
-    };
+    const range = selectedRange();
+    const startNode = range.startContainer;
+    const canBeFull =
+      range.startOffset === 0 &&
+      (startNode === cooked || startNode.parentNode === cooked);
+    let opts = { full: false };
 
     for (
       let element = _selectedElement;
@@ -388,7 +386,13 @@ export default class PostTextSelection extends Component {
     }
 
     const quoteState = this.args.quoteState;
-    quoteState.selected(postId, _selectedText, opts);
+    quoteState.selected(
+      postId,
+      plainText,
+      opts,
+      html,
+      canBeFull ? cooked.innerHTML : null
+    );
     return quoteState;
   }
 
