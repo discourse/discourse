@@ -13,6 +13,7 @@ en:
 
     solved:
       title: "Solved"
+      notify_on_solved: "Notify when a topic that I am Tracking or Watching is solved. Only applies to topics in categories that allow solutions."
       allow_accepted_answers: "Allow topic owner and staff to mark a reply as the solution"
       solved_topics_auto_close_hours: "Auto close topic (n) hours after the last reply once the topic has been marked as solved."
       notify_on_staff_accept_solved: "Notify topic creator when staff marks a solution"

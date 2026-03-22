@@ -121,6 +121,21 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
       end
 
+      context "when the post author has opted out of solved notifications" do
+        fab!(:acting_user, :admin)
+
+        before { post.user.user_option.update!(notify_on_solved: false) }
+
+        it "does not notify the post author" do
+          expect { result }.not_to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: post.user,
+            ).count
+          }
+        end
+      end
+
       context "when the acting user is the post author" do
         let(:guardian) { post.user.guardian }
 
@@ -154,6 +169,21 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
 
         context "when the acting user is the topic owner" do
+          it "does not notify the topic owner" do
+            expect { result }.not_to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: topic.user,
+              ).count
+            }
+          end
+        end
+
+        context "when the topic owner has opted out of solved notifications" do
+          fab!(:acting_user, :admin)
+
+          before { topic.user.user_option.update!(notify_on_solved: false) }
+
           it "does not notify the topic owner" do
             expect { result }.not_to change {
               Notification.where(
