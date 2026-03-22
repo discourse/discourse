@@ -21,7 +21,25 @@ html.ios-device.composer-open body {
 
 html.ios-device.has-full-page-chat body {
   position: fixed;
-  overflow: scroll;
+  overflow: hidden;
+}
+
+html.ios-device.has-full-page-chat body #main-outlet {
+  .c-routes.--channel-info {
+    @include chat-height;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .c-routes.--channel-info .c-channel-info {
+    overflow: hidden;
+  }
+
+  .c-routes.--channel-info-settings,
+  .c-routes.--channel-info-members {
+    overflow-y: auto;
+  }
 }
 
 .uppy-is-drag-over .chat-composer .drop-a-file {
