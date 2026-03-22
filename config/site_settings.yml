@@ -1029,11 +1029,6 @@ users:
     client: true
     default: true
     area: "users"
-  prioritize_full_name_in_ux:
-    client: true
-    default: false
-    hidden: true
-    area: "users"
   email_token_valid_hours:
     default: 48
     min: 1

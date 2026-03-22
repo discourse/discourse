@@ -60,7 +60,7 @@ export default class AssignedToFirstPost extends Component {
   prioritizedAssigneeName(assignee) {
     // if this code is ever replaced to use `prioritize_username_in_ux`, remove this function and use the helper
     // userPrioritizedName instead
-    return this.siteSettings.prioritize_full_name_in_ux || !assignee.username
+    return !this.siteSettings.prioritize_username_in_ux || !assignee.username
       ? assignee.name || assignee.username
       : assignee.username;
   }
