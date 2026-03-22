@@ -500,6 +500,7 @@ RSpec.describe NewPostManager do
   context "when posting in the category requires approval" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:review_group, :group)
+    fab!(:posting_review_group, :group)
     fab!(:category)
     fab!(:category_moderation_group) do
       Fabricate(:category_moderation_group, category:, group: review_group)
@@ -629,6 +630,82 @@ RSpec.describe NewPostManager do
           end
         end
       end
+
+      it "creates the post when the user is in the exempt group and category's posting review mode is everyone_except" do
+        posting_review_group.add(user)
+        category.category_setting.update_posting_review_mode!(
+          :topic,
+          :everyone_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues when the user is not in the exempt group and category's posting review mode is everyone_except" do
+        category.category_setting.update_posting_review_mode!(
+          :topic,
+          :everyone_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "enqueues when the user is in the listed group and category's posting review mode is no_one_except" do
+        posting_review_group.add(user)
+        category.category_setting.update_posting_review_mode!(
+          :topic,
+          :no_one_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "creates the post when the user is not in the listed group and category's posting review mode is no_one_except" do
+        category.category_setting.update_posting_review_mode!(
+          :topic,
+          :no_one_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:create_post)
+      end
     end
 
     context "when new posts require approval" do
@@ -663,6 +740,58 @@ RSpec.describe NewPostManager do
         result = manager.perform
         expect(result.action).to eq(:create_post)
         expect(result).to be_success
+      end
+
+      it "creates the post when the user is in the exempt group and category's posting review mode is everyone_except" do
+        posting_review_group.add(user)
+        category.category_setting.update_posting_review_mode!(
+          :reply,
+          :everyone_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues when the user is not in the exempt group and category's posting review mode is everyone_except" do
+        category.category_setting.update_posting_review_mode!(
+          :reply,
+          :everyone_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "enqueues when the user is in the listed group and category's posting review mode is no_one_except" do
+        posting_review_group.add(user)
+        category.category_setting.update_posting_review_mode!(
+          :reply,
+          :no_one_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "creates the post when the user is not in the listed group and category's posting review mode is no_one_except" do
+        category.category_setting.update_posting_review_mode!(
+          :reply,
+          :no_one_except,
+          group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:create_post)
       end
     end
   end
