@@ -71,6 +71,23 @@ RSpec.describe UpcomingChanges do
       expect(result[:width]).to eq(244)
       expect(result[:height]).to eq(66)
     end
+
+    context "when include_file_path is true" do
+      it "returns the image URL, width, height, and file path" do
+        result = described_class.image_data(setting_name, include_file_path: true)
+
+        expect(result[:file_path]).to eq(
+          File.join(
+            Rails.root,
+            "spec",
+            "fixtures",
+            "images",
+            "upcoming_changes",
+            "#{setting_name}.png",
+          ),
+        )
+      end
+    end
   end
 
   describe ".change_metadata" do
@@ -279,6 +296,75 @@ RSpec.describe UpcomingChanges do
 
     it "accepts string status names" do
       expect(described_class.previous_status("stable")).to eq(:beta)
+    end
+  end
+
+  describe ".status_changed_timeline" do
+    it "returns nested hashes with the latest created_at per setting and status" do
+      freeze_time
+      older = 5.days.ago
+      newer = 1.day.ago
+
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_a",
+        event_data: {
+          "previous_value" => "beta",
+          "new_value" => "permanent",
+        },
+        created_at: older,
+      )
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_a",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+        },
+        created_at: newer,
+      )
+
+      result = described_class.status_changed_timeline(%w[timeline_setting_a], :permanent)
+
+      expect(result[:timeline_setting_a][:permanent]).to eq_time(newer)
+    end
+
+    it "keeps separate latest times for each requested status" do
+      freeze_time
+      at_stable = 2.days.ago
+      at_permanent = 1.day.ago
+
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_b",
+        event_data: {
+          "previous_value" => "beta",
+          "new_value" => "stable",
+        },
+        created_at: at_stable,
+      )
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "timeline_setting_b",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+        },
+        created_at: at_permanent,
+      )
+
+      result = described_class.status_changed_timeline("timeline_setting_b", %i[stable permanent])
+
+      expect(result[:timeline_setting_b][:stable]).to eq_time(at_stable)
+      expect(result[:timeline_setting_b][:permanent]).to eq_time(at_permanent)
+    end
+
+    it "returns {} when setting names are blank" do
+      expect(described_class.status_changed_timeline([], :permanent)).to eq({})
+    end
+
+    it "returns {} when target statuses are blank" do
+      expect(described_class.status_changed_timeline("timeline_setting_a", [])).to eq({})
     end
   end
 

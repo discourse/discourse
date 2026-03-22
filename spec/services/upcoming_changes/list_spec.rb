@@ -2,11 +2,12 @@
 
 RSpec.describe UpcomingChanges::List do
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies) }
+    subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:admin)
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
+    let(:options) { {} }
     let(:params) { {} }
 
     before do
@@ -17,6 +18,12 @@ RSpec.describe UpcomingChanges::List do
             status: :experimental,
             impact_type: "other",
             impact_role: "developers",
+          },
+          allow_user_locale: {
+            impact: "feature,all_members",
+            status: :beta,
+            impact_type: "feature",
+            impact_role: "all_members",
           },
         },
       )
@@ -150,6 +157,18 @@ RSpec.describe UpcomingChanges::List do
             expect(setting[:upcoming_change][:enabled_for]).to eq(
               Group.find(Group::AUTO_GROUPS[:staff]).name,
             )
+          end
+        end
+
+        context "when filtering by statuses" do
+          let(:options) { { filter_statuses: [:beta] } }
+
+          it "only includes upcoming changes with the given statuses" do
+            results = result.upcoming_changes
+            expect(
+              results.find { |change| change[:setting] == :enable_upload_debug_mode },
+            ).not_to be_present
+            expect(results.find { |change| change[:setting] == :allow_user_locale }).to be_present
           end
         end
       end

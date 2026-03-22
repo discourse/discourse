@@ -131,17 +131,6 @@ module DiscourseUpdates
       last_installed_version || Discourse::VERSION::STRING
     end
 
-    def new_features_payload
-      response =
-        Excon.new(new_features_endpoint).request(expects: [200], method: :Get, read_timeout: 5)
-      response.body
-    end
-
-    def update_new_features(payload = nil)
-      payload ||= new_features_payload
-      Discourse.redis.set(new_features_key, payload)
-    end
-
     def new_features(force_refresh: false)
       update_new_features if force_refresh
 
@@ -151,7 +140,7 @@ module DiscourseUpdates
         rescue StandardError
           nil
         end
-      return nil if entries.nil?
+      return [] if entries.blank?
 
       entries.select! do |item|
         begin
@@ -165,11 +154,74 @@ module DiscourseUpdates
 
           valid_version && valid_plugin_name
         rescue StandardError
-          nil
+          []
         end
       end
 
       entries.sort_by { |item| Time.zone.parse(item["created_at"]).to_i }.reverse
+    end
+
+    def update_new_features(response_json = nil)
+      response_json ||= new_features_response_json
+      Discourse.redis.set(new_features_key, response_json)
+    end
+
+    def new_features_response_json
+      response =
+        Excon.new(new_features_endpoint).request(expects: [200], method: :Get, read_timeout: 5)
+      response.body
+    end
+
+    def merge_new_features_with_upcoming_changes(new_features)
+      permanent_upcoming_changes =
+        UpcomingChanges::List.call(
+          guardian: Discourse.system_user.guardian,
+          options: {
+            filter_statuses: [:permanent],
+          },
+        )&.upcoming_changes
+      return new_features if permanent_upcoming_changes.blank?
+
+      # Any permanent upcoming changes that have not been overridden/attached
+      # in the new features feed have to be injected into the array.
+      upcoming_changes_to_inject =
+        permanent_upcoming_changes.reject do |permanent_uc|
+          new_features.any? do |feature|
+            feature[:upcoming_change_setting_name] == permanent_uc[:setting].to_s
+          end
+        end
+
+      # We track whenever an upcoming change moves from one status to another,
+      # the most logical datetime to use for created/released at in the UI is
+      # the datetime that the upcoming change became permanent on this site.
+      permanent_status_change_by_upcoming_change_setting =
+        UpcomingChanges.status_changed_timeline(
+          upcoming_changes_to_inject.map { |uc| uc[:setting].to_s },
+          [:permanent],
+        )
+
+      upcoming_changes_to_inject.each do |permanent_uc|
+        became_permanent_at =
+          (
+            permanent_status_change_by_upcoming_change_setting.dig(
+              permanent_uc[:setting].to_sym,
+              :permanent,
+            ) || Time.zone.now
+          ).to_s
+
+        new_features << {
+          title: permanent_uc[:humanized_name],
+          description: permanent_uc[:description],
+          link: permanent_uc[:upcoming_change][:learn_more_url],
+          created_at: became_permanent_at,
+          updated_at: became_permanent_at,
+          released_at: became_permanent_at,
+          screenshot_url: UpcomingChanges.image_data(permanent_uc[:setting])[:url],
+          upcoming_change_setting_name: permanent_uc[:setting],
+        }
+      end
+
+      new_features.sort_by { |item| Time.zone.parse(item[:created_at]).to_i }.reverse
     end
 
     def has_unseen_features?(user_id)

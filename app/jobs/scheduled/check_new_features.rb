@@ -21,7 +21,7 @@ module Jobs
       # multisite cluster.
       # in multisite, the `execute` method (of the same instance) is called for
       # every site in the cluster.
-      @new_features_json ||= DiscourseUpdates.new_features_payload
+      @new_features_json ||= DiscourseUpdates.new_features_response_json
       DiscourseUpdates.update_new_features(@new_features_json)
 
       new_most_recent = DiscourseUpdates.new_features&.first
