@@ -35,6 +35,9 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :max_turn_tokens,
              :compression_threshold,
              :require_approval,
+             :mcp_server_ids,
+             :mcp_server_tool_names,
+             :mcp_servers,
              :response_format,
              :examples,
              :features
@@ -63,5 +66,47 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
     object.features.map do |feature|
       { id: feature.module_id, module_name: feature.module_name, name: feature.name }
     end
+  end
+
+  def mcp_server_ids
+    enabled_mcp_server_assignments.filter_map(&:ai_mcp_server_id)
+  end
+
+  def mcp_server_tool_names
+    enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
+      next if assignment.all_tools_enabled?
+
+      hash[assignment.ai_mcp_server_id.to_s] = assignment.selected_tool_names
+    end
+  end
+
+  def mcp_servers
+    sorted_enabled_mcp_server_assignments.map do |assignment|
+      server = assignment.ai_mcp_server
+      {
+        id: server.id,
+        name: server.name,
+        tool_count: server.tool_count,
+        token_count: server.token_count,
+        selected_tool_names: assignment.selected_tool_names,
+        selected_tool_count: assignment.tool_count,
+        selected_token_count: assignment.token_count,
+        all_tools_enabled: assignment.all_tools_enabled?,
+        last_health_status: server.last_health_status,
+        last_checked_at: server.last_checked_at,
+      }
+    end
+  end
+
+  private
+
+  def enabled_mcp_server_assignments
+    @enabled_mcp_server_assignments ||=
+      object.ai_agent_mcp_servers.select { |assignment| assignment.ai_mcp_server&.enabled? }
+  end
+
+  def sorted_enabled_mcp_server_assignments
+    @sorted_enabled_mcp_server_assignments ||=
+      enabled_mcp_server_assignments.sort_by { |assignment| assignment.ai_mcp_server.name.downcase }
   end
 end

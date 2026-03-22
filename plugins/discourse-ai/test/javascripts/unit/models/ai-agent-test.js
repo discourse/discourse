@@ -4,6 +4,7 @@ import AiAgent from "discourse/plugins/discourse-ai/discourse/admin/models/ai-ag
 module("Discourse AI | Unit | Model | ai-agent", function () {
   test("toPOJO", function (assert) {
     const properties = {
+      mcp_server_tool_names: { 9: ["search_issues"] },
       tools: [
         ["ToolName", { option1: "value1", option2: "value2" }, false],
         "ToolName2",
@@ -16,6 +17,9 @@ module("Discourse AI | Unit | Model | ai-agent", function () {
     assert.deepEqual(aiAgentPOJO.tools, ["ToolName", "ToolName2", "ToolName3"]);
     assert.strictEqual(aiAgentPOJO.toolOptions["ToolName"].option1, "value1");
     assert.strictEqual(aiAgentPOJO.toolOptions["ToolName"].option2, "value2");
+    assert.deepEqual(aiAgentPOJO.mcp_server_tool_names, {
+      9: ["search_issues"],
+    });
   });
 
   test("fromPOJO", function (assert) {
@@ -50,6 +54,8 @@ module("Discourse AI | Unit | Model | ai-agent", function () {
       allow_topic_mentions: true,
       allow_chat_channel_mentions: true,
       allow_chat_direct_messages: true,
+      mcp_server_ids: [3],
+      mcp_server_tool_names: { 3: ["search_issues"] },
     };
     const updatedValue = "updated";
 
@@ -65,5 +71,8 @@ module("Discourse AI | Unit | Model | ai-agent", function () {
     assert.deepEqual(updatedAgent.tools, [
       ["ToolName", { option1: updatedValue }, true],
     ]);
+    assert.deepEqual(updatedAgent.mcp_server_tool_names, {
+      3: ["search_issues"],
+    });
   });
 });

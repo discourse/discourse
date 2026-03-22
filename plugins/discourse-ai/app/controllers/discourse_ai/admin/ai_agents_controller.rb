@@ -11,7 +11,7 @@ module DiscourseAi
         ai_agents =
           AiAgent
             .ordered
-            .includes(:user, :uploads)
+            .includes(:user, :uploads, ai_agent_mcp_servers: :ai_mcp_server)
             .map { |agent| LocalizedAiAgentSerializer.new(agent, root: false) }
 
         tools =
@@ -36,6 +36,11 @@ module DiscourseAi
           end
 
         llms = DiscourseAi::Configuration::LlmEnumerator.values_for_serialization
+        mcp_servers =
+          AiMcpServer
+            .where(enabled: true)
+            .order(:name)
+            .map { |server| serialize_mcp_server(server) }
 
         sorted_tools = tools.sort_by { |t| t.try(:name) || t[:name] || "" }
 
@@ -44,6 +49,7 @@ module DiscourseAi
                  meta: {
                    tools: sorted_tools,
                    llms: llms,
+                   mcp_servers: mcp_servers,
                    settings: {
                      rag_images_enabled: SiteSetting.ai_rag_images_enabled,
                    },
@@ -59,8 +65,16 @@ module DiscourseAi
       end
 
       def create
-        ai_agent = AiAgent.new(ai_agent_params.except(:rag_uploads))
+        params = ai_agent_params
+        mcp_server_ids = params.delete(:ai_mcp_server_ids)
+        mcp_server_tool_names = params.delete(:mcp_server_tool_names) || {}
+        ai_agent = AiAgent.new(params.except(:rag_uploads))
+
         if ai_agent.save
+          if mcp_server_ids
+            ai_agent.ai_mcp_server_ids = mcp_server_ids
+            sync_mcp_server_tool_names(ai_agent, mcp_server_tool_names)
+          end
           RagDocumentFragment.link_target_and_uploads(ai_agent, attached_upload_ids)
           log_ai_agent_creation(ai_agent)
 
@@ -76,9 +90,16 @@ module DiscourseAi
       end
 
       def update
+        params = ai_agent_params
+        mcp_server_ids = params.delete(:ai_mcp_server_ids)
+        mcp_server_tool_names = params.delete(:mcp_server_tool_names) || {}
         initial_attributes = @ai_agent.attributes.dup
 
-        if @ai_agent.update(ai_agent_params.except(:rag_uploads))
+        if @ai_agent.update(params.except(:rag_uploads))
+          if mcp_server_ids
+            @ai_agent.ai_mcp_server_ids = mcp_server_ids
+            sync_mcp_server_tool_names(@ai_agent, mcp_server_tool_names)
+          end
           RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids)
           log_ai_agent_update(@ai_agent, initial_attributes)
 
@@ -440,8 +461,21 @@ module DiscourseAi
             :compression_threshold,
             :require_approval,
             allowed_group_ids: [],
+            mcp_server_ids: [],
             rag_uploads: [:id],
           )
+
+        if payload[:mcp_server_ids].is_a?(Array)
+          permitted[:ai_mcp_server_ids] = payload[:mcp_server_ids].filter_map(&:presence).map(
+            &:to_i
+          )
+          permitted.delete(:mcp_server_ids)
+        end
+
+        permitted[:mcp_server_tool_names] = normalize_mcp_server_tool_names(
+          payload[:mcp_server_tool_names],
+          permitted[:ai_mcp_server_ids],
+        )
 
         if tools = payload[:tools]
           permitted[:tools] = permit_tools(tools)
@@ -502,6 +536,49 @@ module DiscourseAi
         return [] if !examples.is_a?(Array)
 
         examples.map { |example_arr| example_arr.take(2).map(&:to_s) }
+      end
+
+      def normalize_mcp_server_tool_names(raw_tool_names, allowed_server_ids)
+        return {} if !raw_tool_names.respond_to?(:to_unsafe_h) && !raw_tool_names.is_a?(Hash)
+
+        allowed_ids = Array(allowed_server_ids).map(&:to_i).to_set
+        raw_hash =
+          if raw_tool_names.respond_to?(:to_unsafe_h)
+            raw_tool_names.to_unsafe_h
+          else
+            raw_tool_names
+          end
+
+        raw_hash.each_with_object({}) do |(server_id, tool_names), hash|
+          normalized_server_id = server_id.to_i
+          next if !allowed_ids.include?(normalized_server_id)
+          next if !tool_names.is_a?(Array)
+
+          normalized_tool_names = tool_names.filter_map { |name| name.to_s.presence }.uniq
+          next if normalized_tool_names.blank?
+
+          hash[normalized_server_id.to_s] = normalized_tool_names
+        end
+      end
+
+      def sync_mcp_server_tool_names(ai_agent, mcp_server_tool_names)
+        ai_agent.ai_agent_mcp_servers.each do |assignment|
+          assignment.update!(
+            selected_tool_names: mcp_server_tool_names[assignment.ai_mcp_server_id.to_s],
+          )
+        end
+      end
+
+      def serialize_mcp_server(server)
+        {
+          id: server.id,
+          name: server.name,
+          tool_count: server.tool_count,
+          token_count: server.token_count,
+          last_health_status: server.last_health_status,
+          last_checked_at: server.last_checked_at,
+          tools: server.tools_for_serialization,
+        }
       end
 
       def ai_agent_logger_fields
@@ -565,7 +642,7 @@ module DiscourseAi
           require_approval: {
           },
           # JSON fields
-          json_fields: %i[tools response_format examples allowed_group_ids],
+          json_fields: %i[tools response_format examples allowed_group_ids ai_mcp_server_ids],
         }
       end
 

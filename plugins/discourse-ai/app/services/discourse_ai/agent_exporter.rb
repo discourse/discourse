@@ -55,6 +55,7 @@ module DiscourseAi
           top_p: ai_agent.top_p,
           response_format: ai_agent.response_format,
           tools: transform_tools_for_export(ai_agent.tools, serialized_custom_tools),
+          mcp_servers: serialize_mcp_servers(ai_agent),
         },
         custom_tools: serialized_custom_tools,
       }
@@ -76,6 +77,20 @@ module DiscourseAi
 
         ["custom-#{tool.tool_name}", tool_config[1], tool_config[2]]
       end
+    end
+
+    def serialize_mcp_servers(ai_agent)
+      ai_agent
+        .ai_agent_mcp_servers
+        .includes(:ai_mcp_server)
+        .sort_by { |assignment| assignment.ai_mcp_server.name.downcase }
+        .map do |assignment|
+          server_data = { name: assignment.ai_mcp_server.name }
+          if !assignment.all_tools_enabled?
+            server_data[:selected_tool_names] = assignment.selected_tool_names
+          end
+          server_data
+        end
     end
   end
 end
