@@ -40,6 +40,8 @@ RSpec.describe TopicsFilter do
         in:
         in:pinned
         in:bookmarked
+        bookmarked-before:
+        bookmarked-after:
         in:watching
         in:tracking
         in:muted
@@ -2329,6 +2331,170 @@ RSpec.describe TopicsFilter do
                        "latest-post",
                        :last_posted_at,
                        "last posted date"
+    end
+
+    describe "when filtering by bookmark date of topics" do
+      fab!(:topic_1, :topic)
+      fab!(:topic_2, :topic)
+      fab!(:topic_3, :topic)
+
+      it "returns no topics for anonymous users" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "returns topics bookmarked on or after the given date" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark1.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+        bookmark2.update_column(:created_at, Time.zone.local(2022, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "returns topics bookmarked on or before the given date" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark1.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+        bookmark2.update_column(:created_at, Time.zone.local(2022, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-before:2023-01-01")
+            .pluck(:id),
+        ).to contain_exactly(topic_2.id)
+      end
+
+      it "supports integer days-ago format" do
+        freeze_time do
+          bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+          bookmark1.update_column(:created_at, Time.zone.now)
+
+          bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+          bookmark2.update_column(:created_at, 3.days.ago)
+
+          expect(
+            TopicsFilter
+              .new(guardian: user.guardian)
+              .filter_from_query_string("bookmarked-after:1")
+              .pluck(:id),
+          ).to contain_exactly(topic_1.id)
+
+          expect(
+            TopicsFilter
+              .new(guardian: user.guardian)
+              .filter_from_query_string("bookmarked-before:1")
+              .where(id: [topic_1.id, topic_2.id])
+              .pluck(:id),
+          ).to contain_exactly(topic_2.id)
+        end
+      end
+
+      it "includes post bookmarks" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        post = Fabricate(:post, topic: topic_1)
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "does not return deleted topics even if they are bookmarked" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+        topic_1.destroy
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "does not return topics if their posts are deleted even if they are bookmarked" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        post = Fabricate(:post, topic: topic_1)
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+        post.destroy
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "does not include other users' bookmarks" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        other_user = Fabricate(:user)
+        bookmark = Fabricate(:bookmark, user: other_user, bookmarkable: topic_1)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "supports combined before and after for date range" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark1.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+        bookmark2.update_column(:created_at, Time.zone.local(2022, 6, 1))
+
+        bookmark3 = Fabricate(:bookmark, user: user, bookmarkable: topic_3)
+        bookmark3.update_column(:created_at, Time.zone.local(2024, 1, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01 bookmarked-before:2023-12-31")
+            .pluck(:id),
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "ignores invalid date values" do
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:invalid-date")
+            .pluck(:id),
+        ).to include(topic_1.id, topic_2.id, topic_3.id)
+      end
     end
 
     describe "ordering topics filter" do
