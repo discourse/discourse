@@ -1,0 +1,10 @@
+.workflows-autocomplete-variable {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  &__id {
+    opacity: 0.6;
+    font-size: var(--font-down-1);
+  }
+}

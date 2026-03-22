@@ -1,0 +1,16 @@
+.workflows-code-output-fields {
+  &__row {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+
+  &__key {
+    flex: 1;
+  }
+
+  &__type {
+    width: 8em;
+  }
+}

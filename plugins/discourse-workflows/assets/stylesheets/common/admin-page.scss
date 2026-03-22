@@ -1,0 +1,44 @@
+.admin-plugin-config-page .d-page-header + .admin-plugin-config-page__content {
+  margin-top: 1em;
+}
+
+.workflows-editable-title {
+  margin-bottom: 0.5em;
+
+  &__text,
+  &__input {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    font-size: var(--font-up-3);
+    font-weight: 700;
+    color: inherit;
+    line-height: inherit;
+    box-sizing: content-box;
+  }
+
+  &__text {
+    cursor: text;
+  }
+
+  &__input {
+    // stylelint-disable declaration-no-important
+    outline: none !important;
+    border: none !important;
+    background: var(--primary-very-low) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: var(--font-up-3) !important;
+    font-weight: 700 !important;
+    line-height: inherit !important;
+    box-sizing: content-box !important;
+    width: calc(var(--title-length) * 1ch) !important;
+    // stylelint-enable declaration-no-important
+  }
+}
+
+.workflows-page .horizontal-overflow-nav:has(.workflows-show-nav) {
+  margin-bottom: 1em;
+}

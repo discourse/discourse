@@ -1,0 +1,135 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  class DataTableStorage
+    SQL_TYPES = {
+      "string" => "TEXT",
+      "number" => "DOUBLE PRECISION",
+      "boolean" => "BOOLEAN",
+      "date" => "TIMESTAMP",
+    }.freeze
+
+    class << self
+      def table_name(data_table_id)
+        "discourse_workflows_data_table_#{data_table_id}_rows"
+      end
+
+      def create_table!(data_table)
+        return if connection.data_source_exists?(table_name(data_table.id))
+
+        definitions = [
+          "#{quoted_column("id")} BIGSERIAL PRIMARY KEY",
+          "#{quoted_column("created_at")} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "#{quoted_column("updated_at")} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          *column_definitions(data_table.columns),
+        ]
+
+        DB.exec(<<~SQL)
+            CREATE TABLE #{quoted_table(data_table.id)} (
+              #{definitions.join(",\n  ")}
+            )
+          SQL
+      end
+
+      def sync_columns!(data_table, previous_columns:)
+        create_table!(data_table)
+
+        previous_map = index_columns(previous_columns)
+        current_map = index_columns(data_table.columns)
+
+        removed_columns = previous_map.keys - current_map.keys
+        added_columns = current_map.keys - previous_map.keys
+        changed_columns =
+          current_map.keys.filter do |name|
+            previous_map[name] && column_type(previous_map[name]) != column_type(current_map[name])
+          end
+
+        removed_columns.each { |name| drop_column!(data_table.id, name) }
+        changed_columns.each do |name|
+          drop_column!(data_table.id, name)
+          add_column!(data_table.id, current_map[name])
+        end
+        added_columns.each { |name| add_column!(data_table.id, current_map[name]) }
+      end
+
+      def drop_table!(data_table_id)
+        return unless connection.data_source_exists?(table_name(data_table_id))
+
+        DB.exec("DROP TABLE #{quoted_table(data_table_id)}")
+      end
+
+      def total_size_bytes
+        pattern = table_name("%")
+        DB.query_single(<<~SQL, pattern: pattern).first.to_i
+            SELECT COALESCE(SUM(pg_relation_size(c.oid)), 0)
+            FROM pg_class c
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE n.nspname = current_schema()
+              AND c.relname LIKE :pattern
+              AND c.relkind = 'r'
+          SQL
+      end
+
+      def validate_size!
+        max = SiteSetting.discourse_workflows_data_table_max_total_size_bytes
+        return if max <= 0
+
+        current = total_size_bytes
+        if current >= max
+          raise DataTableValidationError,
+                "Data table storage limit exceeded (#{(current / 1.megabyte.to_f).round(1)}MB / #{(max / 1.megabyte.to_f).round(1)}MB)"
+        end
+      end
+
+      def quoted_table(data_table_id)
+        connection.quote_table_name(table_name(data_table_id))
+      end
+
+      def quoted_column(name)
+        connection.quote_column_name(name)
+      end
+
+      private
+
+      def connection
+        ActiveRecord::Base.connection
+      end
+
+      def column_definitions(columns)
+        columns.map do |column|
+          "#{quoted_column(column_name(column))} #{sql_type(column_type(column))}"
+        end
+      end
+
+      def sql_type(type)
+        SQL_TYPES.fetch(type) do
+          raise DataTableValidationError, "Unsupported column type '#{type}'"
+        end
+      end
+
+      def index_columns(columns)
+        Array(columns).index_by { |column| column_name(column) }
+      end
+
+      def add_column!(data_table_id, column)
+        DB.exec(
+          "ALTER TABLE #{quoted_table(data_table_id)} ADD COLUMN #{quoted_column(column_name(column))} #{sql_type(column_type(column))}",
+        )
+      end
+
+      def drop_column!(data_table_id, column_name)
+        DB.exec(
+          "ALTER TABLE #{quoted_table(data_table_id)} DROP COLUMN #{quoted_column(column_name)}",
+        )
+      end
+
+      def column_name(column)
+        DiscourseWorkflows::DataTable.column_name(column)
+      end
+
+      def column_type(column)
+        DiscourseWorkflows::DataTable.column_type(column)
+      end
+    end
+  end
+end

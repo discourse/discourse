@@ -1,0 +1,77 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseWorkflows::NodeType::List do
+  describe ".call" do
+    subject(:result) { described_class.call }
+
+    before do
+      SiteSetting.discourse_workflows_enabled = true
+      DiscourseWorkflows::Registry.reset!
+      DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::TopicClosed)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::AppendTags)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::Code)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::CreatePost)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::CreateTopic)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::DataTable)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::SetFields)
+      DiscourseWorkflows::Registry.register_condition(DiscourseWorkflows::Conditions::IfCondition)
+      DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Webhook)
+    end
+
+    after { DiscourseWorkflows::Registry.reset! }
+
+    context "when everything's ok" do
+      it { is_expected.to run_successfully }
+
+      it "returns all registered node types" do
+        identifiers = result[:node_types].map { |nt| nt[:identifier] }
+        expect(identifiers).to include(
+          "trigger:topic_closed",
+          "action:append_tags",
+          "action:create_post",
+          "action:create_topic",
+          "condition:if",
+        )
+      end
+
+      it "includes expected schema fields for each node type" do
+        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+        expect(node_type).to include(:id, :identifier, :category, :configuration_schema)
+        expect(node_type[:category]).to eq("action")
+        expect(node_type[:configuration_schema].keys).to contain_exactly(
+          :topic_id,
+          :raw,
+          :reply_to_post_number,
+          :user_id,
+        )
+      end
+
+      it "returns UI hints for schema-driven configurators" do
+        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+
+        expect(node_type.dig(:configuration_schema, :raw, :ui)).to eq(control: :textarea, rows: 8)
+      end
+
+      it "includes specialized property-engine controls in node schemas" do
+        code = result[:node_types].find { |nt| nt[:identifier] == "action:code" }
+        data_table = result[:node_types].find { |nt| nt[:identifier] == "action:data_table" }
+        condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
+        webhook = result[:node_types].find { |nt| nt[:identifier] == "trigger:webhook" }
+
+        expect(code.dig(:configuration_schema, :code, :ui, :control)).to eq(:code)
+        expect(data_table.dig(:configuration_schema, :fields, :ui, :control)).to eq(
+          :data_table_fields,
+        )
+        expect(condition.dig(:configuration_schema, :conditions, :ui, :control)).to eq(
+          :condition_builder,
+        )
+        expect(webhook.dig(:configuration_schema, :url_preview, :ui, :control)).to eq(:url_preview)
+      end
+
+      it "includes branching for condition nodes" do
+        condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
+        expect(condition[:branching]).to eq(true)
+      end
+    end
+  end
+end
