@@ -2,7 +2,9 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -55,8 +57,18 @@ export default class PostLinks extends Component {
                 data-clicks={{if (gt link.clicks 0) link.clicks}}
                 href={{link.url}}
               >
+                <PluginOutlet
+                  @name="before-internal-link"
+                  @outletArgs={{lazyHash post=@post link=link}}
+                />
+
                 {{icon "link"}}
                 <span> {{replaceEmoji link.title}}</span>
+
+                <PluginOutlet
+                  @name="after-internal-link"
+                  @outletArgs={{lazyHash post=@post link=link}}
+                />
               </a>
             </li>
           {{/each}}
