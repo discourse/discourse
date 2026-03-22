@@ -2015,6 +2015,7 @@ en:
     discourse_connect_url: "URL of DiscourseConnect endpoint (must include http:// or https://, and must not include a trailing slash)"
     discourse_connect_secret: "Secret string used to cryptographically authenticate DiscourseConnect information, be sure it is 10 characters or longer"
     discourse_connect_provider_secrets: "A list of domain-secret pairs that are using DiscourseConnect. Make sure DiscourseConnect secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
+    discourse_connect_provider_provides_email: "Include user email in DiscourseConnect Provider response"
     discourse_connect_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     discourse_connect_overrides_groups: "Synchronize all manual group membership with groups specified in the groups attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     auth_overrides_email: "Overrides local email with external site email on every login, and prevent local changes. Applies to all authentication providers. (WARNING: discrepancies can occur due to normalization of local emails)"
