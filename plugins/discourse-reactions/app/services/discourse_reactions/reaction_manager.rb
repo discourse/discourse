@@ -96,7 +96,8 @@ module DiscourseReactions
     end
 
     def reaction_user
-      DiscourseReactions::ReactionUser.find_by(user_id: @user.id, post_id: @post.id)
+      @reaction_user_cached ||=
+        DiscourseReactions::ReactionUser.find_by(user_id: @user.id, post_id: @post.id)
     end
 
     def old_reaction_value(reaction_user)
@@ -132,6 +133,7 @@ module DiscourseReactions
 
     def remove_reaction
       @reaction_user.destroy
+      @reaction_user_cached = nil
       remove_shadow_like
       delete_reaction_with_no_users
     end
