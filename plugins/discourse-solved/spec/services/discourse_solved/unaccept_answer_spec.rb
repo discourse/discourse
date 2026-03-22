@@ -124,6 +124,25 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
         expect { result }.to change { DiscourseSolved::SolvedTopic.count }.by(-1)
       end
 
+      it "removes topic solved notifications for tracking/watching users" do
+        watching_user = Fabricate(:user)
+        Notification.create!(
+          notification_type: Notification.types[:custom],
+          user_id: watching_user.id,
+          topic_id: post.topic_id,
+          post_number: post.post_number,
+          data: { message: "solved.topic_solved_notification" }.to_json,
+        )
+
+        expect { result }.to change {
+          Notification.where(
+            notification_type: Notification.types[:custom],
+            user: watching_user,
+            topic: post.topic,
+          ).count
+        }.by(-1)
+      end
+
       context "when an unaccepted_solution webhook is active" do
         fab!(:web_hook) { Fabricate(:web_hook, active: true) }
         fab!(:unaccepted_solution_event_type) do

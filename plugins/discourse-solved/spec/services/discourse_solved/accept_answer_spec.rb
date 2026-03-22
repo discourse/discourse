@@ -181,6 +181,115 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
       end
 
+      context "when users are tracking or watching the topic" do
+        fab!(:watching_user, :user)
+        fab!(:tracking_user, :user)
+        fab!(:muted_user, :user)
+        fab!(:acting_user, :admin)
+
+        before do
+          TopicUser.change(
+            watching_user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+          )
+          TopicUser.change(
+            tracking_user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
+          TopicUser.change(
+            muted_user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:muted],
+          )
+        end
+
+        it "notifies watching users" do
+          expect { result }.to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: watching_user,
+            ).count
+          }.by(1)
+        end
+
+        it "notifies tracking users" do
+          expect { result }.to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: tracking_user,
+            ).count
+          }.by(1)
+        end
+
+        it "does not notify muted users" do
+          expect { result }.not_to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: muted_user,
+            ).count
+          }
+        end
+
+        it "does not notify the user who marked the solution" do
+          TopicUser.change(
+            acting_user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+          )
+
+          expect { result }.not_to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: acting_user,
+            ).count
+          }
+        end
+
+        it "uses the topic_solved_notification message" do
+          result
+          notification =
+            Notification.find_by(
+              notification_type: Notification.types[:custom],
+              user: watching_user,
+            )
+          data = JSON.parse(notification.data)
+          expect(data["message"]).to eq("solved.topic_solved_notification")
+          expect(data["title"]).to eq("solved.notification.topic_solved_title")
+        end
+
+        it "does not double-notify the post author who is already notified" do
+          TopicUser.change(
+            post.user_id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+          )
+
+          result
+          notifications =
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: post.user,
+              topic: topic,
+            )
+          expect(notifications.count).to eq(1)
+          expect(JSON.parse(notifications.first.data)["message"]).to eq(
+            "solved.accepted_notification",
+          )
+        end
+
+        it "links to the solution post" do
+          result
+          notification =
+            Notification.find_by(
+              notification_type: Notification.types[:custom],
+              user: watching_user,
+            )
+          expect(notification.post_number).to eq(post.post_number)
+        end
+      end
+
       context "when an accepted_solution webhook is active" do
         fab!(:web_hook) { Fabricate(:web_hook, active: true) }
         fab!(:accepted_solution_event_type) { WebHookEventType.find_by(name: "accepted_solution") }
