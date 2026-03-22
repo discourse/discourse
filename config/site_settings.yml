@@ -502,6 +502,7 @@ basic:
     area: "fonts"
     allow_any: false
     client: true
+    themeable: true
   heading_font:
     default: "inter"
     choices: "BaseFontSetting.values"
@@ -511,6 +512,7 @@ basic:
     area: "fonts"
     allow_any: false
     client: true
+    themeable: true
   enable_sitemap:
     default: true
     area: "analytics"
