@@ -9,6 +9,7 @@
 @use "sass:color";
 @use "sass:math";
 @use "sass:meta";
+@use "sass:string";
 @use "math" as discourse-math;
 
 $small-width: 800px !default;
