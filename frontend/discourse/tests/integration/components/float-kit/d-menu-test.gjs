@@ -1,10 +1,11 @@
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import {
   click,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
@@ -585,6 +586,64 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu.-content").hasStyle({
       width: "200px",
     });
+  });
+
+  test("delayed-hover opens menu after delay", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "delayed-hover"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    triggerEvent(".fk-d-menu__trigger", "pointerenter");
+    assert.dom(".fk-d-menu").doesNotExist("menu not open before delay");
+
+    await settled();
+
+    assert.dom(".fk-d-menu").exists("menu opens after delay");
+  });
+
+  test("delayed-hover cancels when pointer leaves before delay", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "delayed-hover"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    triggerEvent(".fk-d-menu__trigger", "pointerenter");
+    await triggerEvent(".fk-d-menu__trigger", "pointerleave");
+
+    assert.dom(".fk-d-menu").doesNotExist("menu does not open after leave");
+  });
+
+  test("delayed-hover click during pending delay opens menu", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "delayed-hover" "click"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    triggerEvent(".fk-d-menu__trigger", "pointerenter");
+    await click(".fk-d-menu__trigger");
+
+    assert
+      .dom(".fk-d-menu")
+      .exists("menu opens via click during pending hover");
   });
 
   test("@matchTriggerMinWidth", async function (assert) {
