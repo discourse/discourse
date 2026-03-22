@@ -101,7 +101,7 @@ module DiscourseAi
         @shared_conversation = SharedAiConversation.find_by(target: @topic)
 
         @error = DiscourseAi::AiBot::EntryPoint.ai_share_error(@topic, guardian)
-        if @error == :not_allowed
+        if @error
           raise Discourse::InvalidAccess.new(
                   nil,
                   nil,
