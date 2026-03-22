@@ -327,10 +327,21 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
+  get #currentPermissionsArePrivate() {
+    const currentPermissions = this.permissions || [];
+    return (
+      currentPermissions.length > 0 &&
+      !currentPermissions.some((p) => p.group_id === AUTO_GROUPS.everyone.id)
+    );
+  }
+
   @action
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       this.args.form.set("visibility", null);
+      if (this.args.category.id) {
+        return;
+      }
       this.#setFormPermissions([this.#everyoneFullPermission]);
       return;
     }
@@ -348,6 +359,22 @@ export default class UpsertCategoryGeneral extends Component {
         if (!hasEveryone) {
           this.args.form.set("visibility", null);
 
+          // When editing an existing category, retain its permissions if they are more restrictive than the parent.
+          // If the sub has groups the parent doesn't allow we must adopt parent's permissions.
+          if (this.args.category.id && this.#currentPermissionsArePrivate) {
+            const currentPermissions = this.permissions || [];
+            const parentGroupIds = new Set(
+              parentCategory.permissions.map((p) => p.group_id)
+            );
+            const subIsSubset = currentPermissions.every((p) =>
+              parentGroupIds.has(p.group_id)
+            );
+
+            if (subIsSubset) {
+              return;
+            }
+          }
+
           const newPermissions = parentCategory.permissions.map((p) => ({
             group_name: p.group_name,
             group_id: p.group_id,
@@ -356,6 +383,9 @@ export default class UpsertCategoryGeneral extends Component {
 
           this.#setFormPermissions(newPermissions);
         } else {
+          if (this.args.category.id) {
+            return;
+          }
           this.#setFormPermissions([this.#everyoneFullPermission]);
         }
       }
