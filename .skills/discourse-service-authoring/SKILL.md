@@ -1,11 +1,15 @@
 ---
 name: discourse-service-authoring
-description: Use when creating, editing, or reviewing Discourse service objects that include Service::Base - covers contracts, models, policies, steps, transactions, controller integration, and service specs
+description: Use when creating, editing, or reviewing Discourse service objects that include Service::Base - covers contracts, models, policies, steps, transactions, controller integration, and service specs. Also use when refactoring existing services, controller actions, and related codepaths.
+user_invocable: true
 ---
 
-We want high quality code and very senior engineering work. Best oriented object practices are observed. Think principles like SOLID and battle-tested patterns. We also want to write idiomatic ruby. Good reference authors are Sandi Metz, Katrina Owen or Avdi Grimm. Your only source of truth to write services is the documentation at docs/developer-guides/docs/03-code-internals/19-service-objects.md, don't look at examples in the codebase.
+## Critical rules to enforce
 
-DONT USE ANY WRITING PLAN SKILL DURING THE SESSION
+- Do not use the Plan skill during the session
+- Quality is more important than speed
+- Apply critical thinking and methodology from authors like Sandi Metz, Katrina Owen and Avdi Grimm.
+- The source of truth for how to write services is the documentation at `docs/developer-guides/docs/03-code-internals/19-service-objects.md` — do not look at examples in the codebase, as they may contain anti-patterns or outdated practices. Always refer back to the documentation for guidance on structure, patterns, and testing.
 
 ## Autonomous Mode
 
@@ -35,6 +39,7 @@ Create ALL tasks upfront before starting any work. Mark each task as `in_progres
 Every phase is a discrete step. Complete one phase fully before starting the next. Each phase ends with a user-visible deliverable — findings, an audit table, or a confirmation. NEVER silently advance to the next phase.
 
 **Review phases (4, 5, 6) use a strict audit loop:**
+
 1. Evaluate every rule in the phase's checklist against the current code
 2. Present a numbered verdict table — one row per rule, each with PASS / FAIL / NA and a one-line evidence citation (file:line or brief rationale)
 3. If any FAIL: fix the violations, then go back to step 1 and re-evaluate the **full** checklist (not just the items you fixed)
@@ -66,12 +71,16 @@ Build a thorough understanding of the codepath being refactored. Read every file
 
 Surface gaps, architectural decisions, and issues for user approval before writing any code.
 
+- Envision the ideal solution and work to get there.
+- Apply critical thinking and methodology from authors like Sandi Metz, Katrina Owen and Avdi Grimm.
 - Identify logic that belongs in a model (callbacks, computed values, configuration-driven setup) rather than in the service. The service orchestrates; models own their own setup concerns.
 - Split computed values across the models that own each layer. Each model should own its own configuration; higher-level models compose from lower-level ones with fallbacks.
 - Extract magic numbers into named constants on the module.
 - Add `-> { with_deleted }` scope to `belongs_to` associations that may reference soft-deleted records.
 - Note any bugs or security issues found during research — these will be addressed during implementation.
 - Identify any plain-class serializers (not inheriting from ApplicationSerializer) and flag them for conversion to ActiveModel::Serializer.
+- Identify any helper methods that should be extracted into a dedicated object. That can be a model, a domain object, an action for the service or a serializer (non-exhaustive list).
+- Creating missing serializers is never out of scope.
 
 Present all findings to the user and get approval on scope before proceeding.
 
@@ -79,12 +88,20 @@ Present all findings to the user and get approval on scope before proceeding.
 
 Write the service, controller, update all callers, and remove dead code.
 
+- Quality is more important than speed
+- The source of truth for how to write services is the documentation at `docs/developer-guides/docs/03-code-internals/19-service-objects.md` — Always refer back to the documentation for guidance on structure and patterns.
+- Envision the ideal solution instead of mimicking the existing code structure
+- Apply critical thinking and methodology from authors like Sandi Metz, Katrina Owen and Avdi Grimm.
+- Follow SOLID principles and battle-tested patterns
+- Write idiomatic Ruby
+- Write idiomatic Rails — in doubt, refer to the Rails docs
 - Write model improvements first (associations, constants, extracted methods)
 - Write the service class
 - Write the controller integration
 - Update ALL callers to use the service directly — specs, import scripts, dev tools, event handlers, other plugins. Update test `before` blocks with any site settings the service's policy requires.
 - Remove dead code: if a helper method is no longer called by any production code after extraction, delete it.
 - When converting serializers to AMS, update ALL callers (controllers, services, publishers) and remove any wrapper methods that just delegated to the old serializer.
+- Remember in Ruby you don’t necessarily have to nest modules/classes: you can write `class TopLevel::Level1::MyService`.
 
 **Gate:** Present a summary of all files created, modified, and deleted. Wait for user acknowledgment before proceeding to Phase 4.
 
@@ -96,14 +113,16 @@ Review the service against these structural rules. List every violation found.
 - Steps are simple with one concern each
 - Step names describe domain behavior, not code (`revoke_previous_accepted_answer` not `destroy_old_record`). ALWAYS use Discourse core domain vocabulary. Ask "why is this happening?" not "what ActiveRecord method am I calling?"
 - Descriptive param names: `post_id` not `id`, `channel_id` not `target`
-- `context[:]` is a code smell. Verify a `model`, `options`, or step keyword argument cannot achieve the same result. Refactoring should almost always let you use a model instead.
+- `context[:]` is a code smell. Verify a `model`, `options`, or step keyword argument cannot achieve the same result. In doubt, don’t try to rationalize too much — extract the logic into a model step.
+  - Think of the `model` step as a step allowing us to cleanly store arbitrary data in the service context. It works for instantiating, creating, fetching or manipulating data.
 - `transaction` wraps ONLY DB writes that must succeed or fail together. Side effects (webhooks, events, MessageBus) live outside.
 - `lock` wraps ONLY steps vulnerable to concurrent modification. Side effects are idempotent and MUST live outside the lock.
 - No `return if`/`return unless` at the top of step methods — use `only_if` wrappers. Guard clauses in `only_if` predicate methods use bare `return` (not `return false`).
 - NEVER have an utility methods in a service, use model, step or a dedicated action instead
 - Instead of manipulating data from the contract directly in various steps, attempt to extract logic on the contract itself
 - NEVER rate limiting in the service — if necessary, it belongs in the controller via `before_action`
-- NEVER use an optional model steps just to store a value for condition checks
+- NEVER use an optional model steps just to store a value for using in an `only_if` step later. Inline the logic in the `only_if` step.
+  - This is ok for passing data to other standard steps.
 - `create` over `new` + separate `save!` in model steps
 - Each side effect is its own step with its own `only_if` wrapper — never bundle conditional side effects with internal if-statements
 - ALWAYS Group related side effects into one step ONLY when they are truly one conceptual action AND share the same condition
@@ -112,6 +131,7 @@ Review the service against these structural rules. List every violation found.
 - Custom step names for model steps that CREATE (not the default `fetch_` prefix)
 - When converting if/else to `only_if`, ask whether the else branch is truly conditional or default behavior that should always run
 - Inline small external helper methods rather than delegating to other modules
+- Determine is a step is doing too much: the service orchestrates. IF it’s doing too much, refactor at the right abstraction level (step, action, domain object, model, etc).
 - Idiomatic ActiveRecord: prefer association-based lookups (`target_post: record`) over foreign-key lookups
 - Guard clauses in fetch methods for privilege-based branching (privileged path is the early return)
 - No backward-compatible wrapper methods or `skip_policy` options
@@ -121,11 +141,13 @@ Review the service against these structural rules. List every violation found.
 - Extract nested serialization into separate serializer classes (e.g., topic data inside a card gets its own `CardTopicSerializer`)
 - Use serializers directly at call sites: `MySerializer.new(object, root: false).as_json` — never hide them behind controller helper methods
 - Pass pre-loaded data (e.g., batch-loaded assignments) through the serializer's options hash: `MySerializer.new(object, root: false, my_data:).as_json` accessed via `@options[:my_data]`
-- ALWAYS use service_params and service_params.deep_merge(foo: bar) to pass params to the service from the controller
+- ALWAYS use service_params to pass params to the service from the controller. Don’t try to rewrite the method. If you need to merge things into `params`, you can use `service_params.deep_merge(params: bar)`.
+- Do a final check against the best practices in the documentation at `docs/developer-guides/docs/03-code-internals/19-service-objects.md` — make sure every rule is followed and every pattern is applied correctly.
 
 When in doubt AskUserQuestion.
 
 **Audit loop:**
+
 1. Produce the full audit table covering every rule above
 2. Present the table to the user
 3. If any FAIL verdicts exist:
@@ -141,8 +163,10 @@ Trace every code path in the original implementation against the new service. Li
 - Confirm no code path is dropped or subtly altered
 - Verify side effects (DB writes, notifications, events, webhooks) fire under the same conditions and in the same order
 - Check transactional boundaries: what was atomic before must remain atomic
+- Apply critical thinking and methodology from authors like Sandi Metz, Katrina Owen and Avdi Grimm: could the logic be improved, how and should it be improved?
 
 **Audit loop:**
+
 1. Produce the full audit table covering every rule above
 2. Present the table to the user (including bugs from the prior implementation)
 3. If any FAIL verdicts exist:
@@ -161,6 +185,7 @@ Review for security concerns. List every issue found by criticality.
 - Data leakage: can non-privileged users infer existence of soft-deleted or private resources?
 
 **Audit loop:**
+
 1. Produce the full audit table covering every rule above
 2. Present the table to the user
 3. If any FAIL verdicts exist:
@@ -177,11 +202,14 @@ Review for security concerns. List every issue found by criticality.
 
 Two authoritative references govern how specs are written. Whenever you are unsure about an RSpec pattern, naming convention, matcher usage, or structural rule, **fetch the relevant section** before writing code:
 
-1. **RSpec Style Guide** — https://rspec.rubystyle.guide
+1. **RSpec Style Guide** — <https://rspec.rubystyle.guide>
    Fetch this page and search for the keyword you need guidance on (e.g. "subject", "context", "let", "shared examples", "named subject", "aggregate_failures", "one expectation"). Use it as the definitive authority on RSpec idioms and style.
 
 2. **Service documentation** — `docs/developer-guides/docs/03-code-internals/19-service-objects.md`, section **Testing**
    This is the definitive authority on testing Discourse services: structure, custom matchers, and conventions. Every spec must follow the patterns shown there.
+
+3. **RSpec documentation** — <https://rspec.info/documentation/>
+   To have a list of all available matchers and their usage, refer to the official RSpec documentation. This is especially important to avoid vague assertions and ensure you are using the most specific matcher for each expectation.
 
 ### Checklist
 
@@ -195,7 +223,7 @@ Two authoritative references govern how specs are written. Whenever you are unsu
 - The happy path context uses `run_successfully` and then tests side effects (DB changes, events, logs)
 - Override `let` values in nested contexts to trigger each failure branch — NEVER duplicate the subject call
 - Override `fab!` in nested contexts to change actors (e.g., `fab!(:acting_user, :admin)`) rather than overriding `let(:guardian)`
-- ALWAYS use specific RSpec matchers (`change`, `eq`, `include`, `be_empty`, predicate matchers like `be_published`) — never bare `be` or vague assertions
+- ALWAYS use specific RSpec matchers (`change`, `eq`, `include`, `be_empty`, predicate matchers like `be_published`, `have_attributes`, etc. — refer to the RSpec docs) — never bare `be` or vague assertions
 - Context descriptions use "when …" / "with …" / "without …" phrasing
 - Use `DiscourseEvent.track_events(:event_name) { result }` to test event triggers — NEVER manual `on`/`off`
 - Use `let(:messages) { MessageBus.track_publish(channel) { result } }` as a lazy `let`
@@ -204,8 +232,13 @@ Two authoritative references govern how specs are written. Whenever you are unsu
 - Write model specs for any model callbacks introduced during the refactoring
 - If an action is complex (many edge cases / branching), test it in isolation in its own spec file; the service spec only verifies it is called
 - Follow the step order when writing contexts and methods
+- Don’t use variables inside examples, extract them as `let`
+- Always simplify expectations: instead of having several expectations in one example, can they be merged into one expectation using `have_attributes`, `include` or other similar matchers?
+- Check the structure matches the service documentation examples
+- Final check against the RSpec style guide before considering the phase complete
 
 **Audit loop:**
+
 1. Produce the full audit table covering every rule above
 2. Present the table to the user
 3. If any FAIL verdicts exist:
