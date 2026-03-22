@@ -266,5 +266,6 @@ class Demon::Base
   end
 
   def after_fork
+    MiniRacerForkSafety.allow_initialization!
   end
 end
