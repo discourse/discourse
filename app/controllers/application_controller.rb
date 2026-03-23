@@ -102,9 +102,7 @@ class ApplicationController < ActionController::Base
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       if SiteSetting.cache_control_bfcache_compatibility
-        response.cache_control[:max_age] = 1
-        response.cache_control[:private] = true
-        response.cache_control[:extras] = ["must-revalidate"]
+        response.cache_control[:no_cache] = true
       else
         response.cache_control[:no_cache] = true
         response.cache_control[:extras] = ["no-store"]

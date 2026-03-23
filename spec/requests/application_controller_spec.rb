@@ -32,21 +32,21 @@ RSpec.describe ApplicationController do
         get "/latest"
 
         expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to eq("max-age=1, private, must-revalidate")
+        expect(response.headers["Cache-Control"]).to eq("no-cache")
       end
 
       it "sets bfcache-compatible cache control headers on 404" do
         get "/invalid-urlllllllllll"
 
         expect(response.status).to eq(404)
-        expect(response.headers["Cache-Control"]).to eq("max-age=1, private, must-revalidate")
+        expect(response.headers["Cache-Control"]).to eq("no-cache")
       end
 
       it "sets bfcache-compatible cache control headers on 403" do
         get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
 
         expect(response.status).to eq(403)
-        expect(response.headers["Cache-Control"]).to eq("max-age=1, private, must-revalidate")
+        expect(response.headers["Cache-Control"]).to eq("no-cache")
       end
     end
   end
