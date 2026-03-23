@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Bot - Header Toggle", type: :system do
+RSpec.describe "AI Bot - Header Toggle" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:ai_pm_homepage) { PageObjects::Components::AiPmHomepage.new }
   let(:header) { PageObjects::Pages::DiscourseAi::Header.new }

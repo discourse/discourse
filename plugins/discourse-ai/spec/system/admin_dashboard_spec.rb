@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin dashboard", type: :system do
+RSpec.describe "Admin dashboard" do
   fab!(:admin)
 
   before { enable_current_plugin }

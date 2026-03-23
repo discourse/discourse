@@ -162,6 +162,31 @@ describe DiscourseAi::Automation::LlmAgentTriage do
     expect(last_post.post_type).to eq(Post.types[:whisper]) # This should be a whisper
   end
 
+  it "does not post a credit limit error when silent mode is enabled" do
+    add_automation_field("silent_mode", true, type: "boolean")
+    post = Fabricate(:post, raw: "This is a test post that needs triage")
+
+    seeded_llm = Fabricate(:seeded_model)
+    allocation =
+      Fabricate(
+        :llm_credit_allocation,
+        llm_model: seeded_llm,
+        daily_credits: 1000,
+        daily_used: 1000,
+      )
+
+    exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+    allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+    expect {
+      automation.running_in_background!
+      automation.trigger!({ "post" => post })
+    }.not_to raise_error
+
+    expect(post.topic.reload.posts.count).to eq(1)
+    expect(post.topic.posts.where(user_id: bot_user.id)).to be_blank
+  end
+
   it "does not respond to posts made by bots" do
     bot = Fabricate(:bot)
     bot_post = Fabricate(:post, user: bot, raw: "This is a bot post")

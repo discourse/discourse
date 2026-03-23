@@ -1236,6 +1236,28 @@ RSpec.describe PostCreator do
       expect(topic.posts_count).to eq(3)
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
+
+    it "does not bump highest_post_number for small_action posts in PMs" do
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
+      Fabricate(:post, topic: topic)
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(1)
+
+      PostCreator.create!(
+        Discourse.system_user,
+        raw: "topic unlisted",
+        topic_id: topic.id,
+        post_type: Post.types[:small_action],
+        action_code: "visible.disabled",
+        skip_validations: true,
+      )
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(2)
+    end
   end
 
   describe "warnings" do

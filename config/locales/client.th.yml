@@ -1624,8 +1624,6 @@ th:
       bulk:
         select_all: "เลือกทั้งหมด"
         clear_all: "ล้างทั้งหมด"
-        unlist_topics: "กระทู้ที่ไม่ได้แสดง"
-        delete: "ลบกระทู้"
         delete_topics_count:
           other: "ลบกระทู้"
         dismiss: "ซ่อน"
@@ -1636,13 +1634,8 @@ th:
         dismiss_new: "ซ่อนใหม่"
         toggle: "สลับการเลือกกระทู้จำนวนมาก"
         actions: "การดำเนินการจำนวนมาก"
-        close_topics: "ปิดกระทู้"
-        archive_topics: "คลังกระทู้"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
-        selected:
-          other: "คุณได้เลือก <b>%{count}</b> กระทู้"
-        change_tags: "แทนที่แท็ก"
         choose_new_tags: "เลือกแท็กใหม่เพื่อกระทู้เหล่านี้:"
         changed_tags: "แท็กของกระทู้เหล่านี้ถูกเปลี่ยนแปลง"
         error_topic_count:
@@ -2566,7 +2559,6 @@ th:
       reports:
         group_traffic: "การจราจร"
         group_members: "สมาชิก"
-        group_security: "ความปลอดภัย"
         group_other: "อื่นๆ"
       config_sections:
         account:

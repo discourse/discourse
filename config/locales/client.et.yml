@@ -1672,8 +1672,6 @@ et:
       bulk:
         select_all: "Vali kõik"
         clear_all: "Puhasta kõik"
-        unlist_topics: "Eemalda teemad loetelust"
-        delete: "Kustuta teemad"
         delete_topics_count:
           one: "Kustuta teema"
           other: "Kustuta teemad"
@@ -1685,20 +1683,11 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline äramärkimine ümber"
         actions: "Masstoimingud"
-        close_topics: "Sulge teemad"
-        archive_topics: "Arhiveeri teemad"
         move_messages_to_inbox: "Liiguta sisendkausta"
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus kategooria:"
-        selected:
-          one: "Märkisid ära <b>%{count}</b> teema."
-          other: "Märkisid ära <b>%{count}</b> teemat."
-        change_tags: "Asenda sildid"
-        append_tags: "Lisa sildid"
         choose_new_tags: "Vali teemadele uued sildid:"
-        choose_append_tags: "Vali uued sildid, mida nendele teemadele lisada:"
         changed_tags: "Nende teemade silte on muudetud."
-        remove_tags: "Eemalda kõik sildid"
         confirm_remove_tags:
           one: "Sellelt teemalt eemaldatakse kõik sildid. Kas oled kindel?"
           other: "<b>%{count}</b> teemalt eemaldatakse kõik sildid. Kas oled kindel?"
@@ -1727,8 +1716,6 @@ et:
         name: "Arhiiv"
       move_messages_to_inbox:
         name: "Liiguta postkasti"
-      append_tags:
-        name: "Lisa sildid"
       replace_tags:
         name: "Asenda sildid"
       delete_topics:
@@ -2739,8 +2726,6 @@ et:
       reports:
         group_traffic: "Liiklus"
         group_members: "Liikmed"
-        group_moderation: "Modereerimine"
-        group_security: "Turve"
         group_other: "Muu"
       config_sections:
         account:

@@ -279,7 +279,7 @@ class Notification < ActiveRecord::Base
   end
 
   def url
-    topic.relative_url(post_number) if topic.present?
+    topic.presence&.relative_url(post_number)
   end
 
   def post

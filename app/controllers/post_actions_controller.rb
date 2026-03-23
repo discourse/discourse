@@ -14,7 +14,7 @@ class PostActionsController < ApplicationController
         current_user,
         @post,
         @post_action_type_id,
-        is_warning: params[:is_warning],
+        is_warning: ActiveModel::Type::Boolean.new.cast(params[:is_warning]),
         message: params[:message],
         take_action: params[:take_action] == "true",
         flag_topic: params[:flag_topic] == "true",

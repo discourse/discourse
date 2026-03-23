@@ -205,7 +205,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_edit_tags
-    scope.can_edit_tag?
+    scope.can_edit_tag_names?
   end
 
   def can_invite_to_forum

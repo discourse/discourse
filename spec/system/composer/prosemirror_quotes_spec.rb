@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Quotes", type: :system do
+describe "Composer - ProseMirror - Quotes" do
   include_context "with prosemirror editor"
 
   it "keeps the cursor outside quote when pasted" do

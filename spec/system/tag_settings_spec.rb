@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag Settings", type: :system do
+describe "Tag Settings" do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:tag_settings_page) { PageObjects::Pages::TagSettings.new }

@@ -131,6 +131,40 @@ module DiscoursePostEvent
         expect(body).not_to include("SUMMARY:Old Event")
       end
 
+      it "expands recurring events into multiple occurrences" do
+        Fabricate(
+          :event,
+          original_starts_at: 1.day.from_now,
+          original_ends_at: 1.day.from_now + 1.hour,
+          recurrence: "every_week",
+          name: "Weekly Standup",
+        )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+        occurrences = body.scan("SUMMARY:Weekly Standup").size
+        expect(occurrences).to be > 1
+        expect(occurrences).to be <= 52
+      end
+
+      it "gives recurring and non-recurring events unique UIDs" do
+        Fabricate(
+          :event,
+          original_starts_at: 1.day.from_now,
+          recurrence: "every_week",
+          name: "Recurring",
+        )
+        Fabricate(:event, original_starts_at: 2.days.from_now, name: "One-off")
+
+        get "/discourse-post-event/events.ics"
+
+        body = response.body
+        uids = body.scan(/^UID:(.+)$/).flatten
+        expect(uids.size).to eq(uids.uniq.size)
+      end
+
       it "skips events with nil starts_at in ics feed" do
         event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Valid Event")
 

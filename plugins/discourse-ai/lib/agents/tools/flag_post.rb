@@ -157,9 +157,10 @@ module DiscourseAi
             I18n.t(
               "discourse_automation.scriptables.llm_triage.flagged_post",
               base_path: feature_context[:base_path] || Discourse.base_path,
-              llm_response: feature_context[:llm_response].presence || reason,
+              llm_response:
+                ERB::Util.html_escape(feature_context[:llm_response].presence || reason),
               automation_id: feature_context[:automation_id].to_s,
-              automation_name: feature_context[:automation_name].to_s,
+              automation_name: ERB::Util.html_escape(feature_context[:automation_name].to_s),
             )
           else
             I18n.t("discourse_ai.ai_bot.flag_post.reason", reason: reason)

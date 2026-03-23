@@ -1012,6 +1012,13 @@ pl_PL:
           no_results: "Nie znaleziono wyników AI dla tego wyszukiwania"
         semantic_search_unavailable_tooltip: "Aby wyświetlić wyniki AI, wyniki wyszukiwania muszą być sortowane według trafności"
         ai_generated_result: "Wynik wyszukiwania znaleziony przy użyciu AI"
+        ai_results_notice:
+          no_results: "Brak dokładnych wyników, ale oto kilka powiązanych wyników."
+          few_results:
+            one: "Znaleziono %{count} wynik — pokazano powiązane wyniki."
+            few: "Znaleziono %{count} wyniki — pokazano powiązane wyniki."
+            many: "Znaleziono %{count} wyników — pokazano powiązane wyniki."
+            other: "Znaleziono %{count} wyników — pokazano powiązane wyniki."
         quick_search:
           suffix: "we wszystkich tematach i postach z AI"
       ai_artifact:

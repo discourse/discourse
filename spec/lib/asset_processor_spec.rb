@@ -223,7 +223,10 @@ RSpec.describe AssetProcessor do
           },
         },
       )
-    expect(result["main.js"]["code"]).to include("createTemplateFactory")
+    code = result["main.js"]["code"]
+    expect(code).to include("createTemplateFactory")
+    expect(code).to include("deprecated(")
+    expect(code).to include('id: "discourse.hbs-extension"')
   end
 
   it "handles colocation" do
@@ -261,6 +264,44 @@ RSpec.describe AssetProcessor do
     expect(result["main.js"]["code"]).to include(
       "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
+  end
+
+  it "handles colocation of connectors" do
+    js = <<~JS.chomp
+      export default {
+        setupComponent(args, component) {
+          console.log("hello world");
+        }
+      }
+    JS
+
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    result =
+      AssetProcessor.new.rollup(
+        {
+          "discourse/templates/connectors/foo.js" => js,
+          "discourse/templates/connectors/foo.hbs" => template,
+        },
+        {
+          themeId: 22,
+          entrypoints: {
+            main: {
+              modules: %w[
+                discourse/templates/connectors/foo.js
+                discourse/templates/connectors/foo.hbs
+              ],
+            },
+          },
+        },
+      )
+
+    expect(result["main.js"]["code"]).to include(
+      'compatModules["discourse/templates/connectors/foo"]',
+    ).once
+    expect(result["main.js"]["code"]).to include('compatModules["discourse/connectors/foo"]').once
   end
 
   it "handles relative imports from one module to another" do

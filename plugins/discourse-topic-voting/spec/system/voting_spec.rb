@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Topic voting", type: :system do
+RSpec.describe "Topic voting" do
   fab!(:user)
   fab!(:admin) { Fabricate(:admin, trust_level: TrustLevel[4]) }
   fab!(:category1, :category)

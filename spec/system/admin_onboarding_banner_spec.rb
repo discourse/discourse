@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Onboarding Banner", type: :system do
+describe "Admin Onboarding Banner" do
   fab!(:admin)
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }

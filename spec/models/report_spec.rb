@@ -851,6 +851,63 @@ RSpec.describe Report do
         expect(report_with_two_edits.data.count).to be(2)
       end
     end
+
+    context "with private message edits" do
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:editor, :user)
+      fab!(:pm_post, :private_message_post)
+
+      before { pm_post.revise(editor, { raw: "updated private message body" }) }
+
+      it "excludes PM edits for moderators" do
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data).to be_empty
+      end
+
+      it "excludes PM edits when current_user is nil" do
+        report = Report.find("post_edits")
+        expect(report.data).to be_empty
+      end
+
+      it "includes PM edits for admins" do
+        report = Report.find("post_edits", current_user: admin)
+        expect(report.data.count).to eq(1)
+      end
+    end
+
+    context "with secure category edits" do
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:editor, :user)
+      fab!(:group)
+      fab!(:secure_category) do
+        category = Fabricate(:category)
+        category.set_permissions(group => :full)
+        category.save!
+        category
+      end
+      fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
+      fab!(:secure_post) { Fabricate(:post, topic: secure_topic) }
+
+      before { secure_post.revise(editor, { raw: "updated secure post body" }) }
+
+      it "excludes secure category edits for moderators without access" do
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data).to be_empty
+      end
+
+      it "includes secure category edits for admins" do
+        report = Report.find("post_edits", current_user: admin)
+        expect(report.data.count).to eq(1)
+      end
+
+      it "includes secure category edits for moderators with group access" do
+        group.add(moderator)
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data.count).to eq(1)
+      end
+    end
   end
 
   describe "moderator activity" do

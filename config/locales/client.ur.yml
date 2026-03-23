@@ -3327,11 +3327,8 @@ ur:
         confirm: "تصدیق کریں"
         select_all: "تمام منتخب کریں"
         clear_all: "تمام کو حزف کریں"
-        unlist_topics: "بغیر فہرست موضوعات"
-        relist_topics: "موضوعات دوبارہ فہرست کریں"
         reset_bump_dates: "ٹکرانے کی تاریخوں کی دوبارہ ترتیب"
         defer: "بغیر پڑھے نشان زد"
-        delete: "موضوعات حذف کریں"
         delete_topics_count:
           one: "موضوع حذف کریں"
           other: "موضوعات حذف کریں"
@@ -3370,36 +3367,24 @@ ur:
           other: "نیا (%{count}) برخاست"
         toggle: "موضوعات کے حجمی انتخاب کو ٹوگل کریں"
         actions: "حجمی عوامل"
-        change_category: "زمرہ سیٹ"
-        close_topics: "موضوع بند کریں"
-        archive_topics: "موضوع محفوظ"
         move_messages_to_inbox: "اِنباکس میں منتقل کریں"
         archive_messages: "آرکائیو میں منتقل"
-        notification_level: "اطلاعات۔۔۔"
         change_notification_level: "نوٹیفیکیشن لیول تبدیل کریں"
         choose_new_category: "موضوعات کیلئے نئے زمرہ کا انتخاب کریں:"
-        selected:
-          one: "آپ نے <b>%{count}</b> موضوع منتخب کیا۔"
-          other: "آپ نے <b>%{count}</b> موضوعات منتخب کیے۔"
         selected_sole_category:
           one: "آپ نے زمرہ سے <b>%{count}</b> موضوع منتخب کیا ہے:"
           other: "آپ نے زمرہ سے <b>%{count}</b> موضوعات کا انتخاب کیا ہے:"
         selected_count:
           one: "%{count} کا انتخاب"
           other: "%{count} کا انتخاب"
-        change_tags: "ٹیگز بدلیں"
-        append_tags: "ٹیگز میں اضافہ کریں"
         choose_new_tags: "ان موضوعات کیلئے نئے ٹیگز کا انتخاب کریں:"
-        choose_append_tags: "ان موضوعات پر اضافہ کرنے کیلئے نئے ٹیگز کا انتخاب کریں:"
         changed_tags: "ان موضوعات کے ٹیگز تبدیل کر دیے گئے تھے۔"
-        remove_tags: "تمام ٹیگز ہٹا دیں"
         confirm_remove_tags:
           one: "اس موضوع سے تمام دھجیاں ہٹا دی جائیں گی۔ کیا آپ کو یقین ہے؟"
           other: "تمام دھجیوں کو %{count} موضوعات سے ہٹا دیا جائے گا۔ کیا آپ کو یقین ہے؟"
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
-        notify: "اس تبدیلی کے بارے میں صارفین کو مطلع کریں۔"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
         error_topic_count:
@@ -3428,7 +3413,6 @@ ur:
         name: "بر خاست کریں"
       close_topics:
         name: "بند کریں"
-        note: "نوٹ"
         optional: (اختیاری)
       archive_topics:
         name: "محفوظ شدہ"
@@ -3442,24 +3426,18 @@ ur:
         name: "دوبارہ لگانا"
       remove_tags:
         name: "دھجیاں ہٹائیں"
-      append_tags:
-        name: "ٹیگز میں اضافہ کریں"
       replace_tags:
         name: "ٹیگز بدلیں"
       delete_topics:
         name: "مٹائیں"
       update_category:
         name: "تازہ ترین زمرہ"
-        description: "منتخب کردہ موضوعات کے لیے نئے زمرے کا انتخاب"
       reset_bump_dates:
         name: "ٹکرانے کی تاریخیں دوبارہ ترتیب دیں"
-        description: "موضوع کی ٹکرانے کی تاریخ کو آخری تخلیق کردہ پوسٹ کی تاریخ پر دوبارہ ترتیب دیں، جو موضوع کی فہرست میں ترتیب کو متاثر کرتی ہے۔"
       defer:
         name: "غیر پڑھا ہوا نشان زد"
-        description: "موضوعات کو بغیر پڑھے کے بطور نشان زد"
       update_notifications:
         name: "اطلاعات کو اپ ڈیٹ"
-        description: "نوٹیفکیشن لیول کو دیکھنا، ٹریکنگ، نارمل، یا خاموش میں بدلنا"
     topic:
       filter_to:
         one: "موضوع میں %{count} پوسٹ"
@@ -4278,6 +4256,8 @@ ur:
       delete_confirm: "کیا آپ واقعی اِس زمرہ کو مٹانا چاہتے ہیں؟"
       delete_error: "اِس زمرہ کو مٹانے میں ایک خرابی کا سامنا کرنا پڑا۔"
       no_description: "براہ مہربانی اس زمرہ کی تفصیل شامل کریں۔"
+      description_expand: "مزید دکھائیں"
+      description_collapse: "کم دکھائیں"
       already_used: "یہ رنگ دوسرے زمرہ کیلیے استعمال ہو چکا ہے۔"
       security: "سیکورٹی"
       security_add_group: "ایک گروپ شامل کریں"
@@ -5364,8 +5344,6 @@ ur:
         back: "تمام رپورٹس پر واپس"
         group_traffic: "ٹریفک"
         group_members: "ممبران"
-        group_moderation: "ماڈریٹر کا کام"
-        group_security: "سیکورٹی"
         group_other: "دیگر"
       config_sections:
         account:

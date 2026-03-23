@@ -767,9 +767,7 @@ module BulkImport
       SiteSetting.max_image_size_kb = settings[:max_image_size_kb]
 
       if settings[:multisite]
-        # rubocop:disable Discourse/NoDirectMultisiteManipulation
         Rails.configuration.multisite = true
-        # rubocop:enable Discourse/NoDirectMultisiteManipulation
 
         RailsMultisite::ConnectionManagement.class_eval do
           def self.current_db_override=(value)

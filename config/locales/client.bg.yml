@@ -2362,8 +2362,6 @@ bg:
       bulk:
         select_all: "Селектирай всички"
         clear_all: "Изчисти всички"
-        unlist_topics: "Непоказани теми"
-        delete: "Изтрий темите"
         delete_topics_count:
           one: "Изтрий темата"
           other: "Изтрий темите"
@@ -2375,17 +2373,9 @@ bg:
         dismiss_new: "Премахни новите "
         toggle: "Включв./Изкл. избор на няколко теми"
         actions: "Групови действия "
-        close_topics: "Затвори темите"
-        archive_topics: "Архивирай темите"
         move_messages_to_inbox: "Премести във входящи"
         choose_new_category: "Избери нова категория за тези теми:"
-        selected:
-          one: "Вие сте избрали <b>%{count}</b> тема."
-          other: "Вие сте избрали <b>%{count}</b> теми."
-        change_tags: "Замени етикетите"
-        append_tags: "Добави етикетите"
         choose_new_tags: "Избери нови етикети за тези теми:"
-        choose_append_tags: "Избери нови етикети, които да се добавят към тези теми:"
         changed_tags: "Етикетите на тези теми бяха сменени."
         error_topic_count:
           one: "%{count} тема"
@@ -2409,8 +2399,6 @@ bg:
         name: "Архив"
       move_messages_to_inbox:
         name: "Премести във входящи"
-      append_tags:
-        name: "Добави етикетите"
       replace_tags:
         name: "Замени етикетите"
       delete_topics:
@@ -2942,6 +2930,8 @@ bg:
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
       no_description: "Моля, добавете описание за тази категория. "
+      description_expand: "Покажи повече"
+      description_collapse: "Покажи по-малко"
       already_used: "Този цвят вече е използван за друга категория. "
       security: "Сигурност"
       permissions:
@@ -3441,7 +3431,6 @@ bg:
       reports:
         group_traffic: "Трафик"
         group_members: "Членове"
-        group_security: "Сигурност"
         group_other: "Други"
       config_sections:
         account:

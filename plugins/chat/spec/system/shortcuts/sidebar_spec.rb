@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Shortcuts | sidebar", type: :system do
+RSpec.describe "Shortcuts | sidebar" do
   fab!(:current_user, :admin)
 
   let(:chat) { PageObjects::Pages::Chat.new }

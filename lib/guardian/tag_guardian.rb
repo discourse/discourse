@@ -11,8 +11,12 @@ module TagGuardian
     SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.create_tag_allowed_groups_map)
   end
 
-  def can_edit_tag?(_tag = nil)
+  def can_edit_tag_names?
     SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.edit_tags_allowed_groups_map)
+  end
+
+  def can_edit_tag?(tag)
+    can_edit_tag_names? && can_see_tag?(tag)
   end
 
   def can_tag_topics?

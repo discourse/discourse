@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Images", type: :system do
+describe "Composer - ProseMirror - Images" do
   include_context "with prosemirror editor"
 
   describe "image toolbar" do

@@ -95,21 +95,22 @@ export default class SortableColumn extends Component {
 
         {{#if @bulkSelectEnabled}}
           <span class="bulk-select-topics">
+            <div class="bulk-select-topics-actions">
+              <button
+                {{on "click" this.bulkSelectAll}}
+                class="btn btn-default bulk-select-all"
+              >{{i18n "topics.bulk.select_all"}}</button>
+              <button
+                {{on "click" this.bulkClearAll}}
+                class="btn btn-default bulk-clear-all"
+              >{{i18n "topics.bulk.clear_all"}}</button>
+            </div>
             {{#if @canDoBulkActions}}
               <TopicBulkSelectDropdown
                 @bulkSelectHelper={{@bulkSelectHelper}}
                 @afterBulkActionComplete={{this.afterBulkActionComplete}}
               />
             {{/if}}
-
-            <button
-              {{on "click" this.bulkSelectAll}}
-              class="btn btn-default bulk-select-all"
-            >{{i18n "topics.bulk.select_all"}}</button>
-            <button
-              {{on "click" this.bulkClearAll}}
-              class="btn btn-default bulk-clear-all"
-            >{{i18n "topics.bulk.clear_all"}}</button>
           </span>
         {{/if}}
       {{/if}}

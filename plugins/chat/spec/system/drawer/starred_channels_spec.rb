@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Drawer - starred channels", type: :system do
+RSpec.describe "Drawer - starred channels" do
   fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
   fab!(:channel_2) { Fabricate(:category_channel, name: "Channel B") }

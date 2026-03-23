@@ -104,10 +104,6 @@ sv:
           unassigned: "är otilldelade"
         assigned:
           label: "Tilldelat till"
-    topics:
-      bulk:
-        unassign: "Otilldela ämnen"
-        assign: "Tilldela ämnen"
     discourse_automation:
       scriptables:
         random_assign:

@@ -3409,11 +3409,8 @@ pt_BR:
         confirm: "Confirmar"
         select_all: "Selecionar tudo"
         clear_all: "Limpar tudo"
-        unlist_topics: "Remover tópicos da lista"
-        relist_topics: "Reinserir tópicos na lista"
         reset_bump_dates: "Redefinir datas de promoção"
         defer: "Marcar não lido"
-        delete: "Excluir tópicos"
         delete_topics_count:
           one: "Excluir tópico"
           other: "Excluir tópicos"
@@ -3452,36 +3449,27 @@ pt_BR:
           other: "Descartar novos(as) (%{count})"
         toggle: "alternar seleção de tópicos em massa"
         actions: "Ações em massa"
-        change_category: "Definir categoria…"
-        close_topics: "Fechar tópicos"
-        archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para caixa de entrada"
         archive_messages: "Mover para o arquivo"
-        notification_level: "Notificações…"
         change_notification_level: "Alterar nível de notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
-        selected:
-          one: "Você selecionou <b>%{count}</b> tópico."
-          other: "Você selecionou <b>%{count}</b> tópicos."
         selected_sole_category:
           one: "Você selecionou <b>%{count}</b> tópico da categoria:"
           other: "Você selecionou <b>%{count}</b> tópicos da categoria:"
         selected_count:
           one: "Selecionou %{count}"
           other: "Selecionou %{count}"
-        change_tags: "Substituir etiquetas"
         append_tags: "Adicionar etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
-        choose_append_tags: "Escolha novas etiquetas para adicionar a estes tópicos:"
+        choose_append_tags: "Adicionar etiquetas"
         changed_tags: "As etiquetas destes tópicos foram alteradas."
-        remove_tags: "Remover todas as etiquetas"
         confirm_remove_tags:
           one: "Todas as etiquetas serão removidas deste tópico. Deseja prosseguir?"
           other: "Todas as etiquetas serão removidas de <b>%{count}</b> tópicos. Deseja prosseguir?"
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
-        notify: "Notificar usuários sobre essa alteração."
+        notify: "Notificar usuários sobre essa alteração"
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
         completed_count:
@@ -3519,7 +3507,6 @@ pt_BR:
         name: "Descartar"
       close_topics:
         name: "Fechar"
-        note: "Observação"
         optional: (opcional)
       archive_topics:
         name: "Arquivo"
@@ -3533,24 +3520,18 @@ pt_BR:
         name: "Listar novamente"
       remove_tags:
         name: "Remover tags"
-      append_tags:
-        name: "Adicionar etiquetas"
       replace_tags:
         name: "Substituir etiquetas"
       delete_topics:
         name: "Excluir"
       update_category:
         name: "Atualizar Categoria"
-        description: "Escolha a nova categoria para os tópicos selecionados"
       reset_bump_dates:
         name: "Redefinir datas de promoção"
-        description: "Redefinir data de promoção do tópico para a data de criação da postagem mais recente, o que afeta a ordem da lista de tópicos"
       defer:
         name: "Marcar não lido"
-        description: "Marcar tópicos como não lidos"
       update_notifications:
         name: "Atualizar notificações"
-        description: "Alterar nível de notificação para Acompanhando, Monitorando, Normal, Silenciado"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -4405,6 +4386,8 @@ pt_BR:
       list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
+      description_expand: "Exibir mais"
+      description_collapse: "Exibir menos"
       already_used: "Esta cor já foi usada para outra categoria"
       color_palette: "Paleta de cores"
       security: "Segurança"
@@ -5576,8 +5559,6 @@ pt_BR:
         group_traffic: "Tráfego"
         group_members: "Membros"
         group_content: "Conteúdo e saúde"
-        group_moderation: "Moderação"
-        group_security: "Segurança"
         group_other: "Outras"
         legacy_warning: "Este é um relatório legado. Ele será desativado em breve. Se precisar de ajuda para encontrar o substituto, entre em contato com o suporte."
       config_sections:

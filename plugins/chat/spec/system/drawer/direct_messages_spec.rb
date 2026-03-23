@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Drawer - direct messages", type: :system do
+RSpec.describe "Drawer - direct messages" do
   fab!(:current_user, :user)
 
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }

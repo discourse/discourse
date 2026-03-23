@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Details button", type: :system do
+describe "Details button" do
   fab!(:admin)
 
   let(:composer) { PageObjects::Components::Composer.new }

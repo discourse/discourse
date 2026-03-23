@@ -2897,11 +2897,8 @@ sq:
         confirm: "Konfirmo"
         select_all: "Zgjidh të gjitha"
         clear_all: "Pastro kriteret"
-        unlist_topics: "Hiq temat nga lista"
-        relist_topics: "Relistoni temat"
         reset_bump_dates: "Rivendos datat e përplasjes"
         defer: "Shëno si të palexuar"
-        delete: "Fshi temat"
         delete_topics_count:
           one: "Fshi temën"
           other: "Fshi temat"
@@ -2934,29 +2931,18 @@ sq:
           other: "Hiq të Ri (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Veprime në masë"
-        change_category: "Cakto kategorinë…"
-        close_topics: "Mbyll temat"
-        archive_topics: "Arkivo temat"
         move_messages_to_inbox: "Transfero në inbox"
         archive_messages: "Kaloni te Arkivi"
-        notification_level: "Njoftimet…"
         change_notification_level: "Ndrysho nivelin e njoftimit"
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
-        selected:
-          one: "Keni zgjedhur <b>%{count}</b> temë."
-          other: "Keni zgjedhur <b>%{count}</b> tema."
         selected_sole_category:
           one: "Keni zgjedhur <b>%{count}</b> temë:"
           other: "Keni zgjedhur <b>%{count}</b> tema:"
         selected_count:
           one: "%{count} zgjedhur"
           other: "%{count} zgjedhur"
-        change_tags: "Zëvendësoni etiketat"
-        append_tags: "Shtoj Etiketa"
         choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
-        choose_append_tags: "Zgjidhni etiketat e reja për të shtuar për këto tema:"
         changed_tags: "Etiketat e temave u ndryshuan. "
-        remove_tags: "Hiqni të gjitha etiketat"
         confirm_remove_tags:
           one: "Të gjitha etiketat do të hiqen nga kjo temë. A jeni të sigurt?"
           other: "Të gjitha etiketat do të hiqen nga temat %{count} . A jeni të sigurt?"
@@ -2985,7 +2971,6 @@ sq:
         name: "Hiqe"
       close_topics:
         name: "Mbyll"
-        note: "Shënim"
         optional: (opsionale)
       archive_topics:
         name: "Arkivoni"
@@ -2999,24 +2984,18 @@ sq:
         name: "Relistoni"
       remove_tags:
         name: "Hiqni etiketat"
-      append_tags:
-        name: "Shtoni etiketat"
       replace_tags:
         name: "Zëvendësoni etiketat"
       delete_topics:
         name: "Fshij"
       update_category:
         name: "Përditëso kategorinë"
-        description: "Zgjidhni kategorinë e re për temat e zgjedhura"
       reset_bump_dates:
         name: "Rivendos datat e përplasjes"
-        description: "Rivendosni datën e ngritjes së temës në datën e fundit të postimit të krijuar, gjë që ndikon në renditjen në listën e temave"
       defer:
         name: "Shënoni të palexuar"
-        description: "Shënoni temat si të palexuara"
       update_notifications:
         name: "Përditëso Njoftimet"
-        description: "Ndrysho nivelin e njoftimit në Në Shikim, Në Ndjekje, Normal ose Në Heshtje"
     topic:
       filter_to:
         one: "%{count} postim në temë"
@@ -3509,6 +3488,8 @@ sq:
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
+      description_expand: "Shfaq më shumë"
+      description_collapse: "Shfaq më pak"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"
       security: "Siguria"
       permissions:
@@ -3966,7 +3947,6 @@ sq:
       reports:
         group_traffic: "Trafik"
         group_members: "Anëtarë"
-        group_security: "Siguria"
         group_other: "Të tjerë"
       config_sections:
         account:

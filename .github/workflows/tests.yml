@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'rollup' && ' (rollup)' || '' }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'legacy' && ' (legacy)' || '' }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -71,7 +71,7 @@ jobs:
         build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
-        plugin_compiler: ["legacy"]
+        plugin_compiler: ["rollup"]
         exclude:
           - build_type: backend
             target: themes
@@ -91,7 +91,7 @@ jobs:
             browser: Chrome
           - build_type: frontend
             target: plugins
-            plugin_compiler: "rollup"
+            plugin_compiler: "legacy"
           # - build_type: frontend
           #   target: core
           #   browser: Firefox Evergreen

@@ -1170,11 +1170,6 @@ body.has-sidebar-page {
     @include viewport.until(lg) {
       --d-main-content-gap: var(--space-4);
     }
-
-    @media screen and (width < 87rem) {
-      // ideal width just slightly larger than our xl viewport variable
-      padding-inline: 0;
-    }
   }
 }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Autocomplete", type: :system do
+describe "Composer - ProseMirror - Autocomplete" do
   include_context "with prosemirror editor"
 
   it "triggers an autocomplete on mention" do

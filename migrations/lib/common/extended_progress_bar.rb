@@ -73,7 +73,7 @@ module Migrations
 
     def setup_progressbar
       @progressbar =
-        ::ProgressBar.create(
+        ProgressBar.create(
           total: @max_progress,
           autofinish: false,
           projector: {

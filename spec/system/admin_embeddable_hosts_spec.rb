@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin EmbeddableHost Management", type: :system do
+RSpec.describe "Admin EmbeddableHost Management" do
   fab!(:admin)
   fab!(:author, :admin)
   fab!(:author_2, :admin)

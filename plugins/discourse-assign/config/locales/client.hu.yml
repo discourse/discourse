@@ -97,10 +97,6 @@ hu:
       advanced:
         assigned:
           label: "Kiosztva:"
-    topics:
-      bulk:
-        unassign: "Témák elvétele"
-        assign: "Témák kiosztása"
     discourse_automation:
       scriptables:
         random_assign:

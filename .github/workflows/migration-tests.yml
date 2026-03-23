@@ -112,12 +112,35 @@ jobs:
 
       - name: Validate IntermediateDB schema
         run: |
+          # Show structured differences between DSL config and database
+          migrations/bin/cli schema diff --db=intermediate_db || true
+
+          # Regenerate schema from DSL config
           migrations/bin/cli schema generate --db=intermediate_db
 
-          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/)" ]; then
+          # Check if generated output matches what's committed
+          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/)" ]; then
+            echo ""
+            echo "=========================================="
             echo "IntermediateDB schema is not up to date."
-            echo "---------------------------------------------"
-            git -c color.ui=always diff migrations/db/intermediate_db_schema/
+            echo "=========================================="
+            echo ""
+            echo "The generated schema files differ from what is committed."
+            echo "This usually means the schema DSL config or the database"
+            echo "structure changed without regenerating."
+            echo ""
+            echo "To fix:"
+            echo "  1. Run: migrations/bin/cli schema diff"
+            echo "     to see what changed between config and database"
+            echo "  2. Update config files in migrations/config/schema/intermediate_db/"
+            echo "     - New tables: migrations/bin/cli schema add <table>"
+            echo "     - Ignore tables: migrations/bin/cli schema ignore <table> --reason '...'"
+            echo "     - New columns: add to the table's include list or ignore with reason"
+            echo "  3. Run: migrations/bin/cli schema generate"
+            echo "  4. Commit the updated config and generated files"
+            echo ""
+            echo "Generated file diff:"
+            git -c color.ui=always diff -- migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/
             exit 1
           fi
 

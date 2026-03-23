@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic bulk select", type: :system do
+describe "Topic bulk select" do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:admin)
   fab!(:user)

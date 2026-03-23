@@ -36,7 +36,7 @@
     "@glint/ember-tsc": "^1.0.8",
     "@glint/template": "^1.7.3",
     "@highlightjs/cdn-assets": "11.11.1",
-    "@json-editor/json-editor": "2.16.0",
+    "@json-editor/json-editor": "2.15.2",
     "@jsquash/jpeg": "^1.6.0",
     "@jsquash/resize": "^2.1.0",
     "ace-builds": "^1.43.5",

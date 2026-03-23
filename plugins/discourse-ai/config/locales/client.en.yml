@@ -1023,6 +1023,11 @@ en:
           no_results: "No AI results found for this search"
         semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
         ai_generated_result: "Search result found using AI"
+        ai_results_notice:
+          no_results: "No exact matches, but here are some related results."
+          few_results:
+            one: "%{count} match found - showing related results."
+            other: "%{count} matches found - showing related results."
         quick_search:
           suffix: "in all topics and posts with AI"
 

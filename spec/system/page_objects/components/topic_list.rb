@@ -131,7 +131,7 @@ module PageObjects
       private
 
       def topic_list_item_closed(topic)
-        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg[class*='d-icon-topic.closed']"
+        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg[class*='d-icon-lock']"
       end
 
       def topic_list_item_unread_badge(topic)

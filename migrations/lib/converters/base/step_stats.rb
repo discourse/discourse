@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-module Migrations::Converters::Base
-  StepStats = Struct.new(:progress, :warning_count, :error_count)
+module Migrations
+  module Converters
+    module Base
+      StepStats = Struct.new(:progress, :warning_count, :error_count)
+    end
+  end
 end

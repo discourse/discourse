@@ -12,6 +12,8 @@ tr_TR:
           descriptions:
             ai:
               search: "YZ aramasına izin verir"
+              stream_completion: "AI ajanı tamamlamalarının akışına izin verir"
+              update_agents: "AI ajanlarının güncellenmesine olanak tanır"
               manage_artifacts: "AI artefaktlarını yönetmeye izin verir (liste, görüntüleme, oluşturma, güncelleme, silme)"
       site_settings:
         categories:
@@ -34,6 +36,9 @@ tr_TR:
             create_ai_llm_model: "LLM modeli oluştur"
             update_ai_llm_model: "LLM modelini güncelle"
             delete_ai_llm_model: "LLM modelini sil"
+            create_ai_agent: "AI ajanı oluştur"
+            update_ai_agent: "AI ajanı güncelle"
+            delete_ai_agent: "AI ajanı sil"
             create_ai_tool: "YZ aracı oluştur"
             update_ai_tool: "YZ aracını güncelle"
             delete_ai_tool: "YZ aracını sil"
@@ -109,6 +114,9 @@ tr_TR:
             top_p:
               label: "Üst P"
               description: "LLM için kullanılacak en iyi P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın)"
+            agent_id:
+              label: "Ajan"
+              description: "Rapor oluşturmak için kullanılacak yapay zeka ajanı"
         ai_tool_action:
           fields:
             tool:
@@ -119,12 +127,20 @@ tr_TR:
               description: "llm.generate() işlevini kullanan araçlar için dil modeli (isteğe bağlı)"
         llm_agent_triage:
           fields:
+            agent:
+              label: "Ajan"
+              description: "Triyaj için kullanılacak AI ajanı (varsayılan LLM ve kullanıcı ayarları bulunmalıdır)"
             whisper:
               label: "Fısıltı olarak yanıtla"
+              description: "Temsilcinin cevabı fısıltı şeklinde mi olmalı?"
             silent_mode:
               label: "Sessiz Mod"
+              description: "Sessiz modda, temsilci içeriği alacak ancak foruma hiçbir şey göndermeyecektir - araçları kullanarak önceliklendirme yaparken kullanışlıdır"
         llm_triage:
           fields:
+            triage_agent:
+              label: "Ajan"
+              description: "Triyaj için kullanılan ajan; eylemi tetiklemek üzere kullanabileceğiniz tek bir kelimeyle yanıt verdiğinden emin olun"
             max_post_tokens:
               label: "Maksimum Gönderi Token'ı Sayısı"
               description: "LLM sınıflandırması kullanılarak taranacak maksimum token sayısı"
@@ -170,6 +186,9 @@ tr_TR:
             whisper:
               label: "Fısıltı olarak yanıtla"
               description: "YZ'nin tepkisinin bir fısıltı olması gerekip gerekmediği"
+            reply_agent:
+              label: "Yanıtlayıcı Ajan"
+              description: "Yanıtlar için kullanılacak AI ajanı (varsayılan LLM'ye sahip olması gerekir), hazır yanıtlara göre öncelikli olacaktır"
             max_output_tokens:
               label: "Maks. çıktı token'ları"
               description: "Belirtildiğinde, modelin üretebileceği maksimum token sayısına bir üst limit belirler. LLM'in maksimum çıktı token'ı limitine uyar"
@@ -178,6 +197,9 @@ tr_TR:
             manual: "Belirli etiket listesini kullanın (aşağıda yapılandırılmıştır)"
             discover: "AI'nın herhangi bir site etiketini keşfetmesine ve kullanmasına izin verin"
           fields:
+            tagger_agent:
+              label: "Yapay Zeka Ajanı"
+              description: "Konuları analiz etmek ve etiketlemek için kullanılacak yapay zeka ajanı"
             tag_mode:
               label: "Etiket Seçim Modu"
               description: "AI'nın etiketleri nasıl seçeceğini seçin"
@@ -206,13 +228,19 @@ tr_TR:
       title: "YZ"
       default_llm:
         title: "Varsayılan LLM modeli"
+        description: "Tüm AI özellikleri için kullanılacak varsayılan LLM modeli. Bu, özellik yapılandırmasında veya ajanda herhangi bir LLM belirtilmediğinde kullanılır. Varsayılan bir LLM belirtilmezse, en son oluşturulan LLM kullanılır."
       llm_selector:
         none: "Hiçbiri"
         saved: "Varsayılan LLM modeli başarıyla güncellendi"
       features:
         short_title: "Özellikler"
+        description: "Bunlar, sitenizdeki ziyaretçilerin kullanabileceği yapay zeka özellikleridir. Bu özellikler, belirli ajanlar ve büyü LLM'ler kullanacak şekilde yapılandırılabilir ve gruplara göre erişim kontrolü uygulanabilir."
+        back: "AI özelliklerine geri dön"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
         disabled: "(devre Dışı)"
+        agent:
+          one: "Ajan:"
+          other: "Ajanlar:"
         groups: "Gruplar:"
         llm:
           one: "LLM:"
@@ -239,6 +267,7 @@ tr_TR:
           unconfigured: "Yapılandırılmamış"
         filters:
           all: "Tümü"
+          text: "Arama özellikleri, ajanlar, büyük dil modelleri veya gruplar..."
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"
@@ -282,7 +311,10 @@ tr_TR:
             settings: "Temel Ayarlar"
             topic_criteria: "Konu Kriterleri"
             post_criteria: "Gönderi Kriterleri"
+            agents: "Ajanlar"
         ai_helper:
+          edit: "AI yardımcısı ayarlarını düzenle"
+          name: "AI Asistanı"
           description: "Kullanıcıların konu oluşturma, gönderi yazma ve içerik okuma gibi topluluk etkileşiminde bulunmasına yardımcı olur"
           proofread: Yazım hataları düzeltilmiş metin
           title_suggestions: "Başlık öner"
@@ -300,6 +332,7 @@ tr_TR:
             access_permissions: "Erişim ve İzinler"
             enabled_features: "Etkinleştirilmiş Özellikler"
             automation: "Otomasyon"
+            agents: "Ajanlar"
         translation:
           name: "Çeviri"
           description: "İçeriği desteklenen dillere çevirir"
@@ -314,6 +347,7 @@ tr_TR:
           schedule_topic_error: "Çevirilerin planlanması başarısız oldu. Lütfen tekrar deneyin."
           setting_groups:
             settings: "Temel Ayarlar"
+            agents: "Ajanlar"
             backfill_and_limits: "Dolgu ve Sınırlar"
         spam:
           name: "İstenmeyen içerik"
@@ -371,6 +405,7 @@ tr_TR:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
         select_llm: "LLM seç"
+        select_agent: "Ajanı seç"
         custom_instructions: "Özel talimatlar"
         custom_instructions_help: "YZ'nin istenmeyen içerikleri tespit etmesine yardımcı olmak için sitenize özel talimatlar, ör. \"İngilizce olmayan gönderileri tarama konusunda daha agresif ol\"."
         last_seven_days: "Son 7 gün"
@@ -463,16 +498,20 @@ tr_TR:
           replies:
             one: "Yalnızca ilk yanıta uygula"
             other: "İlk %{count} yanıta uygula"
+        back: "Ajanlara geri dön"
         name: "Ad"
         edit: "Düzenle"
         export: "Dışa Aktar"
         import: "İçe Aktar"
+        import_error_conflict: "%{name} dosyası içe aktarılırken bir çakışma tespit edildi; mevcut ajanı güncellemek ister misiniz?"
         overwrite: "Üzerine yaz"
         description: "Açıklama"
         no_llm_selected: "Dil modeli seçilmedi"
+        use_parent_llm: "Ajanın dil modelini kullan"
         max_context_posts: "Maksimum bağlam gönderisi sayısı"
         max_context_posts_help: "Bir kullanıcıya yanıt verirken YZ için bağlam olarak kullanılacak maksimum gönderi sayısı. (varsayılan için boş)"
         execution_mode: "Yürütme Modu"
+        execution_mode_help: "Ajanın araç çalıştırma ve konuşma bağlamını nasıl yönettiğini belirler. Varsayılan ayar, sabit sıra/araç sınırları kullanır. Agentic, daha uzun ve daha kapsamlı araç kullanım oturumları için otomatik bağlam sıkıştırma özelliğine sahip bir jeton bütçesi kullanır."
         execution_mode_options:
           default: "Varsayılan (Sabit Limitler)"
           agentic: "Agentic (Token Bütçesi)"
@@ -490,39 +529,62 @@ tr_TR:
         show_thinking: Düşünceyi göster
         show_thinking_help: Son kullanıcılara dil modelinin içsel düşünce yapısını ve araç çağrılarını gösterecektir.
         mentionable: Bahsetmelere izin ver
+        mentionable_help: Bu özellik etkinleştirildiğinde, izin verilen gruplardaki kullanıcılar gönderilerinde bu kullanıcıdan bahsedebilir; yapay zeka, bu temsilci olarak yanıt verecektir.
         user: Kullanıcı
         create_user: Kullanıcı oluştur
+        create_user_help: İsterseniz bu ajana bir kullanıcı atayabilirsiniz. Bunu yaparsanız, yapay zeka taleplere yanıt vermek için bu kullanıcıyı kullanacaktır.
         default_llm: Varsayılan dil modeli
+        default_llm_help: Bu ajan için kullanılacak varsayılan dil modeli. Ajanı herkese açık paylaşımlarda belirtmek istiyorsanız bu bilgi zorunludur.
         question_consolidator_llm: Soru Konsolidatörü için Dil Modeli
         question_consolidator_llm_help: Soru birleştirici için kullanılacak dil modeli, maliyetten tasarruf etmek için daha az güçlü bir model seçebilirsiniz.
         system_prompt: Sistem istemi
         forced_tool_strategy: Zorlanmış araç stratejisi
         allow_chat_direct_messages: "Doğrudan sohbet mesajlarına izin ver"
+        allow_chat_direct_messages_help: "Bu seçenek etkinleştirildiğinde, izin verilen gruplardaki kullanıcılar bu ajana doğrudan mesaj gönderebilir."
         allow_chat_channel_mentions: "Sohbet kanalından bahsetmeye izin ver"
+        allow_chat_channel_mentions_help: "Bu özellik etkinleştirildiğinde, izin verilen gruplardaki kullanıcılar sohbet kanallarında bu ajanı etiketleyebilir."
         allow_personal_messages: "Kişisel mesajlara izin ver"
+        allow_personal_messages_help: "Bu seçenek etkinleştirildiğinde, izin verilen gruplardaki kullanıcılar bu ajana özel mesaj gönderebilir."
         allow_topic_mentions: "Konu bahsetmelerine izin ver"
+        allow_topic_mentions_help: "Bu özellik etkinleştirildiğinde, izin verilen gruplardaki kullanıcılar başlıklarda bu ajanı etiketleyebilir."
+        require_approval: "Moderasyon araçları için onay gerektir"
+        require_approval_help: "Bu özellik etkinleştirildiğinde, moderasyon işlemleri (kapatma, silme, düzenleme vb.) yürütülmeden önce moderatör onayı için inceleme kuyruğuna gönderilecektir."
         force_default_llm: "Her zaman varsayılan dil modelini kullan"
         save: "Kaydet"
+        saved: "Ajan kaydedildi"
         enabled: "Etkin mi?"
         tools: "Etkinleştirilmiş araçlar"
         tokens: "jetonlar"
         context_cost: "Bağlam Maliyeti"
+        token_usage: "Jeton Kullanımı"
+        tool_count: "Alet Sayısı"
+        tool_count_value:
+          one: "%{count} araç"
+          other: "%{count} araç"
         tool_tokens_total: "~%{tokens} Jetonlar"
         tool_severity_medium: "Orta kapasite"
         tool_severity_high: "Yüksek kapasite"
         tool_severity_too_many: "Çok fazla araç"
         tool_tokens_warning: "Fazla araçlar, değerli konuşma belleğini kaplayarak AI performansını düşürür. Gerekli olmayan araçları kaldırmayı düşünün."
+        tool_count_warning: "Her istek sırasında her bir aracın tanımı modele gönderilir. Çok sayıda araç olması, token kullanımını artırır ve modeli karıştırabilir; bu da daha kötü araç seçimine yol açabilir. Yalnızca bu ajanın gerçekten ihtiyaç duyduğu araçları tutun."
         forced_tools: "Zorlanmış araçlar"
         allowed_groups: "İzin verilen gruplar"
+        confirm_delete: "Bu ajanı silmek istediğinizden emin misiniz?"
+        new: "Yeni ajan"
+        no_agents: "Henüz hiçbir ajan oluşturmadınız"
+        title: "Ajanlar"
+        short_title: "Ajanlar"
         delete: "Sil"
         temperature: "Sıcaklık"
         temperature_help: "LLM için kullanılacak sıcaklık. Yaratıcılığı artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 2,0 arasında bir değer)"
         top_p: "Üst P"
         top_p_help: "LLM için kullanılacak en yüksek P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 1,0 arasında bir değer)"
         priority: "Öncelik"
+        priority_help: "Öncelikli ajanlar, ajan listesinin en üstünde kullanıcılara gösterilir. Birden fazla ajanın önceliği varsa, bunlar alfabetik sıraya göre sıralanır."
         tool_options: "Araç seçenekleri"
         rag_conversation_chunks: "Konuşma parçalarını ara"
         rag_conversation_chunks_help: "RAG modeli aramaları için kullanılacak parça sayısı. YZ'nin kullanabileceği bağlam miktarını artırmak için artırın."
+        agent_description: "Ajanlar, Discourse forumunuzdaki yapay zeka motorunun davranışını özelleştirmenizi sağlayan güçlü bir özelliktir. Yapay zekanın yanıtlarını ve etkileşimlerini yönlendiren bir “sistem mesajı” işlevi görürler ve böylece daha kişiselleştirilmiş ve ilgi çekici bir kullanıcı deneyimi oluşturulmasına yardımcı olurlar."
         response_format:
           title: "JSON yanıt biçimi"
           no_format: "JSON biçimi belirtilmedi"
@@ -542,8 +604,11 @@ tr_TR:
           enabled: "YZ Botu?"
         ai_bot:
           title: "YZ botu seçenekleri"
+          save_first: "Ajanı kaydettiğinizde daha fazla AI bot seçeneği kullanıma açılacaktır."
         filters:
+          text: "Bir ajan bulun"
           reset: "Sıfırla"
+          no_results: "Filtrelerinize uyan hiçbir ajan bulunamadı."
           all_features: "Herhangi bir özellik"
         features_list:
           one: "Özellik:"
@@ -572,6 +637,7 @@ tr_TR:
           uploading: "Yükleniyor..."
           remove: "Yüklemeyi kaldır"
       tools:
+        back: "Araçlara geri dön"
         short_title: "Araçlar"
         export: "Dışa Aktar"
         import: "İçe Aktar"
@@ -582,6 +648,7 @@ tr_TR:
         name_help: "Ad, Discourse kullanıcı arayüzünde görünür ve aracı çeşitli ayarlarda bulmak için kullanacağınız kısa tanımlayıcıdır, farklı olmalıdır (gerekli)"
         new: "Yeni araç"
         tool_name: "Araç Adı"
+        tool_name_help: "\"Araç Adı\" büyük dil modeline sunulur. Bu değer genel olarak tek değildir, ancak her bir ajan için farklıdır. (ajan, kaydetme sırasında doğrulama yapar)"
         description: "Açıklama"
         description_help: "Dil modeli için aracın amacının net bir açıklaması"
         subheader_description: "Araçlar, kullanıcı tanımlı JavaScript işlevleri ile YZ botlarının yeteneklerini genişletir."
@@ -629,6 +696,7 @@ tr_TR:
         no_secrets: "Henüz kimlik bilgisi yok"
         new_title: "Yeni kimlik bilgisi"
         edit_title: "Kimlik bilgilerini düzenle"
+        back: "Kimlik bilgilerine geri dön"
         save: "Kaydet"
         edit: "Düzenle"
         delete: "Sil"
@@ -662,6 +730,7 @@ tr_TR:
         save: "Kaydet"
         edit: "Düzenle"
         saved: "LLM modeli kaydedildi"
+        back: "LLM'lere geri dön"
         confirm_delete: Bu modeli silmek istediğinizden emin misiniz?
         delete: Sil
         quotas:
@@ -693,6 +762,7 @@ tr_TR:
           ai_bot: "YZ botu"
           ai_helper: "Yardımcı (%{agent})"
           ai_helper_image_caption: "Görüntü yazısı"
+          ai_agent: "Ajan (%{agent})"
           ai_summarization: "Özetle"
           ai_embeddings_semantic_search: "YZ araması"
           ai_spam: "İstenmeyen içerik"
@@ -851,12 +921,15 @@ tr_TR:
         model_used: "Kullanılan model:"
         accuracy: "Doğruluk:"
         ai_tool_action:
+          agent: "Ajan"
           tool: "Araç"
           parameters: "Parametreler"
+          post: "Tetikleyici Gönderi"
       embeddings:
         short_title: "Gömmeler"
         description: "Gömmeler, anlam ve ilişkileri yakalayan verilerin sayısal temsilleridir ve İlgili Konular ve YZ Araması gibi Discourse YZ özelliklerinin içeriği anlamasını ve bağlamasını sağlar."
         new: "Yeni gömme"
+        back: "Yerleştirmeye geri dön"
         save: "Kaydet"
         saved: "Gömme yapılandırması kaydedildi"
         delete: "Sil"
@@ -913,6 +986,11 @@ tr_TR:
           no_results: "Bu arama için AI sonucu bulunamadı"
         semantic_search_unavailable_tooltip: "YZ sonuçlarını göstermek için arama sonuçları İlgi Seviyesine göre sıralanmalıdır"
         ai_generated_result: "YZ kullanılarak bulunan arama sonucu"
+        ai_results_notice:
+          no_results: "Tam olarak eşleşen sonuç bulunamadı, ancak işte bazı ilgili sonuçlar."
+          few_results:
+            one: "%{count} eşleşme bulundu - ilgili sonuçlar gösteriliyor."
+            other: "%{count} eşleşme bulundu - ilgili sonuçlar gösteriliyor."
         quick_search:
           suffix: "YZ ile tüm konu ve gönderilerde"
       ai_artifact:
@@ -921,6 +999,7 @@ tr_TR:
         click_to_run_label: "Artifact'i çalıştır"
       ai_bot:
         title: "YZ botu"
+        agent: "Ajan"
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
@@ -1065,6 +1144,11 @@ tr_TR:
       user_preferences:
         empty: "Şu anda ilgili bir ayar bulunmuyor"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Araç onaylandı"
+        rejected_tool_action:
+          title: "Araç reddedildi"
       types:
         reviewable_ai_post:
           title: "YZ Bayraklı gönderi"

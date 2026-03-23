@@ -3406,11 +3406,8 @@ sk:
         confirm: "Potvrďte"
         select_all: "Vyber všetko"
         clear_all: "Zruš všetko"
-        unlist_topics: "Dôverné témy"
-        relist_topics: "Obnoviť zoznam tém"
         reset_bump_dates: "Obnoviť dátumy bump"
         defer: "Označiť ako neprečítané"
-        delete: "Zmazať témy"
         delete_topics_count:
           one: "Zmazať tému"
           few: "Zmazať témy"
@@ -3455,19 +3452,10 @@ sk:
           other: "Zadmietnuť nové (%{count})"
         toggle: "prepnuť hromadne vybrané témy"
         actions: "Hromadné akcie"
-        change_category: "Nastavenie kategórie…"
-        close_topics: "Uzavrieť tému"
-        archive_topics: "Archivuj témy"
         move_messages_to_inbox: "Presuň do prijatej pošty"
         archive_messages: "Presunúť do archívu"
-        notification_level: "Upozornenia…"
         change_notification_level: "Zmena úrovne oznámení"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
-        selected:
-          one: "Označíli ste <b>%{count}</b> tému."
-          few: "Označíli ste <b>%{count}</b> tém.y"
-          many: "Označíli ste <b>%{count}</b> tém."
-          other: "Označíli ste <b>%{count}</b> tém."
         selected_sole_category:
           one: "Vybrali ste <b>%{count}</b> tému z kategórie:"
           few: "Vybrali ste <b>%{count}</b> tém z kategórie:"
@@ -3478,12 +3466,8 @@ sk:
           few: "%{count} vybrané"
           many: "%{count} vybrané"
           other: "%{count} vybrané"
-        change_tags: "Nahradiť značky"
-        append_tags: "Pridať značky"
         choose_new_tags: "Vyberte si nové značky pre tieto témy:"
-        choose_append_tags: "Vyberte nové značky, ktoré chcete pridať pre tieto témy:"
         changed_tags: "Značky týchto tém boli zmenené."
-        remove_tags: "Odstrániť všetky značky"
         confirm_remove_tags:
           one: "Všetky značky budú z tejto témy odstránené. Ste si istí?"
           few: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
@@ -3523,7 +3507,6 @@ sk:
         name: "Zahodiť"
       close_topics:
         name: "Zavrieť"
-        note: "Poznámka"
         optional: (nepovinné)
       archive_topics:
         name: "Archivovať"
@@ -3537,24 +3520,18 @@ sk:
         name: "Opätovné zaradenie do zoznamu"
       remove_tags:
         name: "Odstrániť značky"
-      append_tags:
-        name: "Pridať značky"
       replace_tags:
         name: "Nahradiť značky"
       delete_topics:
         name: "Odstrániť"
       update_category:
         name: "Aktualizovať kategóriu"
-        description: "Výber novej kategórie pre vybrané témy"
       reset_bump_dates:
         name: "Obnovenie dátumov zvýraznenia"
-        description: "Obnovenie dátumu nárazu témy na dátum posledného vytvoreného príspevku, čo ovplyvňuje poradie v zozname tém"
       defer:
         name: "Označiť ako neprečítané"
-        description: "Označiť témy ako neprečítané"
       update_notifications:
         name: "Aktualizovať upozornenia"
-        description: "Zmena úrovne upozornenia na Sledovanie, Sledovanie, Normálne alebo Stlmené"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"
@@ -4434,6 +4411,8 @@ sk:
       list: "Zoznam kategórií"
       no_description: "Prosím, pridajte popis k tejto kategórii."
       change_in_category_topic: "Upraviť popis"
+      description_expand: "Zobraziť viac"
+      description_collapse: "Zobraziť menej"
       already_used: "Táto farba je už použitá inou kategóriou"
       color_palette: "Paleta farieb"
       security: "Bezpečnosť"
@@ -5603,8 +5582,6 @@ sk:
         back: "Späť na všetky správy"
         group_traffic: "Vyťaženie"
         group_members: "Členovia"
-        group_moderation: "Moderovanie"
-        group_security: "Bezpečnosť"
         group_other: "Ostatné"
       config_sections:
         account:

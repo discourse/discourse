@@ -635,6 +635,8 @@ module DiscourseAi
 
         reply_post
       rescue LlmCreditAllocation::CreditLimitExceeded => e
+        return if silent_mode
+
         reset_time = e.allocation&.formatted_reset_time || ""
         locale_key = post.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
         error_message =
