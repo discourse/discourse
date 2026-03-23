@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import Post from "discourse/models/post";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -205,6 +206,62 @@ module("Unit | Model | post-stream", function (hooks) {
     assert.containsInstance(postStream.posts, Post);
 
     assert.strictEqual(postStream.extra_property, 12);
+  });
+
+  test("updateFromJson - post-stream-update-from-json behavior transformer", function (assert) {
+    const postStream = buildStream.call(this, 1231);
+    let transformerCalled = false;
+    let receivedContext = null;
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "post-stream-update-from-json",
+        ({ next, context }) => {
+          transformerCalled = true;
+          receivedContext = context;
+          next();
+        }
+      );
+    });
+
+    postStream.updateFromJson({
+      posts: [{ id: 1 }],
+      stream: [1],
+    });
+
+    assert.true(transformerCalled, "the transformer is called");
+    assert.strictEqual(
+      receivedContext.postStream,
+      postStream,
+      "the transformer receives the postStream as context"
+    );
+    assert.strictEqual(postStream.posts.length, 1, "posts are loaded normally");
+  });
+
+  test("updateFromJson - behavior transformer can modify stream after default behavior", function (assert) {
+    const postStream = buildStream.call(this, 1231);
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "post-stream-update-from-json",
+        ({ next, context }) => {
+          next();
+          // Truncate stream to first element after default behavior runs
+          context.postStream.stream.length = 1;
+        }
+      );
+    });
+
+    postStream.updateFromJson({
+      posts: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      stream: [1, 2, 3],
+    });
+
+    assert.deepEqual(
+      [...postStream.stream],
+      [1],
+      "the transformer can modify the stream after next()"
+    );
   });
 
   test("removePosts", function (assert) {

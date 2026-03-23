@@ -15,6 +15,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "full-page-search-load-more",
   "post-menu-toggle-like-action",
   "post-stream-error-loading",
+  "post-stream-update-from-json",
   "topic-controller:finished-editing",
   "topic-list-item-click",
 ]);
