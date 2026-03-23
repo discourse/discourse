@@ -256,7 +256,7 @@ RSpec.describe DiscourseBoosts::BoostsController do
     end
   end
 
-  describe "#index" do
+  describe "#boosts_given" do
     fab!(:boost) { Fabricate(:boost, post: target_post, user: current_user) }
 
     before { SiteSetting.hide_new_user_profiles = false }
@@ -265,14 +265,14 @@ RSpec.describe DiscourseBoosts::BoostsController do
       before { SiteSetting.discourse_boosts_enabled = false }
 
       it "returns a 404" do
-        get "/discourse-boosts/users/#{post_author.username}/boosts.json"
+        get "/discourse-boosts/users/#{current_user.username}/boosts-given.json"
         expect(response.status).to eq(404)
       end
     end
 
     context "when not logged in" do
-      it "returns boosts" do
-        get "/discourse-boosts/users/#{post_author.username}/boosts.json"
+      it "returns boosts given by the user" do
+        get "/discourse-boosts/users/#{current_user.username}/boosts-given.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["boosts"].length).to eq(1)
@@ -282,8 +282,8 @@ RSpec.describe DiscourseBoosts::BoostsController do
     context "when logged in" do
       before { sign_in(current_user) }
 
-      it "returns boosts matching the expected schema" do
-        get "/discourse-boosts/users/#{post_author.username}/boosts.json"
+      it "returns boosts given by the user matching the expected schema" do
+        get "/discourse-boosts/users/#{current_user.username}/boosts-given.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body).to match_response_schema("boost_list")
@@ -291,11 +291,11 @@ RSpec.describe DiscourseBoosts::BoostsController do
       end
 
       context "with before_boost_id pagination" do
-        fab!(:other_user, :user)
-        fab!(:newer_boost) { Fabricate(:boost, post: target_post, user: other_user) }
+        fab!(:another_post, :post) { Fabricate(:post, topic: topic, user: post_author) }
+        fab!(:newer_boost) { Fabricate(:boost, post: another_post, user: current_user) }
 
         it "returns only boosts before the given id" do
-          get "/discourse-boosts/users/#{post_author.username}/boosts.json",
+          get "/discourse-boosts/users/#{current_user.username}/boosts-given.json",
               params: {
                 before_boost_id: newer_boost.id,
               }
@@ -307,9 +307,76 @@ RSpec.describe DiscourseBoosts::BoostsController do
 
       context "when user doesn't exist" do
         it "returns a 404" do
-          get "/discourse-boosts/users/nonexistent_user/boosts.json"
+          get "/discourse-boosts/users/nonexistent_user/boosts-given.json"
           expect(response.status).to eq(404)
         end
+      end
+    end
+  end
+
+  describe "#boosts_received" do
+    fab!(:boost) { Fabricate(:boost, post: target_post, user: current_user) }
+
+    context "when plugin is disabled" do
+      before do
+        SiteSetting.discourse_boosts_enabled = false
+        sign_in(post_author)
+      end
+
+      it "returns a 404" do
+        get "/discourse-boosts/users/#{post_author.username}/boosts-received.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when logged in as the target user" do
+      before { sign_in(post_author) }
+
+      it "returns boosts received on the user's posts" do
+        get "/discourse-boosts/users/#{post_author.username}/boosts-received.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["boosts"].length).to eq(1)
+      end
+
+      it "returns boosts matching the expected schema" do
+        get "/discourse-boosts/users/#{post_author.username}/boosts-received.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to match_response_schema("boost_list")
+      end
+
+      context "with before_boost_id pagination" do
+        fab!(:other_user, :user)
+        fab!(:newer_boost) { Fabricate(:boost, post: target_post, user: other_user) }
+
+        it "returns only boosts before the given id" do
+          get "/discourse-boosts/users/#{post_author.username}/boosts-received.json",
+              params: {
+                before_boost_id: newer_boost.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["boosts"].map { |b| b["id"] }).to eq([boost.id])
+        end
+      end
+    end
+
+    context "when logged in as another user" do
+      fab!(:other_user, :user)
+
+      before { sign_in(other_user) }
+
+      it "returns a 403" do
+        get "/discourse-boosts/users/#{post_author.username}/boosts-received.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when not logged in" do
+      it "returns a 403" do
+        get "/discourse-boosts/users/#{post_author.username}/boosts-received.json"
+        expect(response.status).to eq(403)
       end
     end
   end

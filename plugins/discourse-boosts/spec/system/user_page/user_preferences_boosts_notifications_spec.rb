@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences | Boosts notifications", type: :system do
+describe "User preferences | Boosts notifications" do
   fab!(:user)
   let(:preferences_page) { PageObjects::Pages::UserPreferencesBoostsNotifications.new }
 

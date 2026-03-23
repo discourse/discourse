@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { set } from "@ember/object";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
@@ -27,7 +28,11 @@ export default class BoostsNotifications extends Component {
   }
 
   onChange = (value) => {
-    this.args.outletArgs.model.user_option.boost_notifications_level = value;
+    set(
+      this.args.outletArgs.model.user_option,
+      "boost_notifications_level",
+      value
+    );
   };
 
   <template>
