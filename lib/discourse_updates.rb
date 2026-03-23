@@ -154,7 +154,7 @@ module DiscourseUpdates
 
           valid_version && valid_plugin_name
         rescue StandardError
-          []
+          false
         end
       end
 
@@ -225,7 +225,8 @@ module DiscourseUpdates
     end
 
     def has_unseen_features?(user_id)
-      entries = new_features
+      new_features_with_permanent_uc = merge_new_features_with_upcoming_changes(new_features)
+      entries = new_features_with_permanent_uc
       return false if entries.nil?
 
       last_seen = new_features_last_seen(user_id)

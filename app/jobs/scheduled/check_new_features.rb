@@ -7,8 +7,25 @@ module Jobs
     def execute(args)
       admin_ids = User.human_users.where(admin: true).pluck(:id)
 
+      # Before we download the latest list from Meta:
+      #
+      # - Some admins have no "last time I looked at new features" stored yet.
+      # - If we already have at least one new-feature item saved for this site,
+      #   set that stored time for them to the newest thing we know about,
+      #   including permanent upcoming changes (those might be newer than the
+      #   saved Meta list).
+      # - If we have no saved Meta items yet, do not set that time here. Only an
+      #   upcoming change might exist; setting the time from that alone would
+      #   make us think they are already up to date and we would skip sending the
+      #   new-features notification.
+      new_features_from_feed = DiscourseUpdates.new_features
       new_features_with_permanent_uc = find_new_features
-      prev_most_recent = new_features_with_permanent_uc&.first&.symbolize_keys
+      prev_most_recent =
+        if new_features_from_feed.present?
+          new_features_with_permanent_uc&.first&.symbolize_keys || nil
+        else
+          nil
+        end
       if prev_most_recent
         admin_ids.each do |admin_id|
           if DiscourseUpdates.get_last_viewed_feature_date(admin_id).blank?
@@ -26,6 +43,12 @@ module Jobs
       @new_features_json ||= DiscourseUpdates.new_features_response_json
       DiscourseUpdates.update_new_features(@new_features_json)
 
+      # After the download is saved:
+      #
+      # - If an admin has no stored "last looked" time, or it is older than the
+      #   newest item (Meta list plus permanent upcoming changes), send the
+      #   new-features notification and update their stored time to that newest
+      #   item.
       new_features_with_permanent_uc = find_new_features
       new_most_recent = new_features_with_permanent_uc&.first&.symbolize_keys
       if new_most_recent

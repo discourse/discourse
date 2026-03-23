@@ -204,6 +204,28 @@ RSpec.describe DiscourseUpdates do
       expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
     end
 
+    it "filters out entries that raise while validating feed metadata" do
+      malformed_features = [
+        { "emoji" => "🤾", "title" => "Bells", "created_at" => 2.days.ago },
+        {
+          "emoji" => "🙈",
+          "title" => "Broken plugin row",
+          "created_at" => 1.day.ago,
+          "discourse_version" => "blah",
+        },
+      ]
+
+      Discourse.redis.set("new_features", MultiJson.dump(malformed_features))
+      Discourse
+        .expects(:has_needed_version?)
+        .with(Discourse::VERSION::STRING, "blah")
+        .once
+        .raises(StandardError)
+
+      result = DiscourseUpdates.new_features
+      expect(result.map { |item| item["title"] }).to eq(["Bells"])
+    end
+
     it "correctly shows features by Discourse version" do
       features_with_versions = [
         { "emoji" => "🤾", "title" => "Bells", "created_at" => 2.days.ago },
