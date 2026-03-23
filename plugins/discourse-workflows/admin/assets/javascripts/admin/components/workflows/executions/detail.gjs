@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class ExecutionDetail extends Component {
@@ -49,6 +51,79 @@ export default class ExecutionDetail extends Component {
 
   isExpression(value) {
     return typeof value === "string" && value.startsWith("=");
+  }
+
+  @action
+  exportAsText() {
+    const execution = this.args.execution;
+    const lines = [];
+
+    lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
+    lines.push(`Execution ID: ${execution.id}`);
+    lines.push(`Status: ${execution.status}`);
+    lines.push(`Started: ${execution.started_at ?? "—"}`);
+    lines.push(`Finished: ${execution.finished_at ?? "—"}`);
+    lines.push(
+      `Total time: ${this.formatDuration(execution.started_at, execution.finished_at)}`
+    );
+
+    if (execution.error) {
+      lines.push(`\nError: ${execution.error}`);
+    }
+
+    lines.push("\n" + "=".repeat(60));
+
+    execution.steps?.forEach((step, index) => {
+      lines.push(`\nStep ${index + 1}: ${step.node_name}`);
+      lines.push(`  Type: ${step.node_type}`);
+      lines.push(`  Status: ${step.status}`);
+      lines.push(
+        `  Duration: ${this.formatDuration(step.started_at, step.finished_at)}`
+      );
+
+      if (step.metadata?.conditions) {
+        lines.push("  Conditions:");
+        step.metadata.conditions.forEach((c) => {
+          const result = c.passed ? "PASS" : "FAIL";
+          const expr = c.leftExpression ? `${c.leftExpression} ` : "";
+          lines.push(
+            `    [${result}] ${expr}${this.formatValue(c.left)} ${c.operator} ${c.right != null ? this.formatValue(c.right) : ""}`
+          );
+        });
+      }
+
+      if (step.metadata?.logs?.length) {
+        lines.push("  Console:");
+        step.metadata.logs.forEach((log) => lines.push(`    ${log}`));
+      }
+
+      if (step.input && Object.keys(step.input).length > 0) {
+        lines.push(
+          `  Input: ${JSON.stringify(step.input, null, 2).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.output && Object.keys(step.output).length > 0) {
+        lines.push(
+          `  Output: ${JSON.stringify(step.output, null, 2).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.error) {
+        lines.push(`  Error: ${step.error}`);
+      }
+
+      lines.push("-".repeat(60));
+    });
+
+    const text = lines.join("\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `execution-${execution.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   <template>
@@ -166,9 +241,17 @@ export default class ExecutionDetail extends Component {
           </div>
         {{/each}}
 
-        <div class="workflows-execution-detail__total">
-          {{i18n "discourse_workflows.executions.total_time"}}
-          {{this.formatDuration @execution.started_at @execution.finished_at}}
+        <div class="workflows-execution-detail__footer">
+          <div class="workflows-execution-detail__total">
+            {{i18n "discourse_workflows.executions.total_time"}}
+            {{this.formatDuration @execution.started_at @execution.finished_at}}
+          </div>
+          <DButton
+            @action={{this.exportAsText}}
+            @icon="download"
+            @label="discourse_workflows.executions.export"
+            class="btn-default btn-small"
+          />
         </div>
       </div>
     </div>

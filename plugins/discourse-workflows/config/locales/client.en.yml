@@ -323,6 +323,7 @@ en:
         output: "Output"
         logs: "Console"
         total_time: "Total time:"
+        export: "Export"
         error: "Error"
         statuses:
           pending: "Pending"
