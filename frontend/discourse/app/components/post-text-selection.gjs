@@ -367,10 +367,24 @@ export default class PostTextSelection extends Component {
 
     const range = selectedRange();
     const startNode = range.startContainer;
+
+    const isFirstCookedChild = (node) => {
+      if (node === cooked) {
+        return true;
+      }
+
+      if (node.parentNode.firstChild !== node) {
+        return false;
+      }
+
+      return isFirstCookedChild(node.parentNode);
+    };
+
     const canBeFull =
       range.startOffset === 0 &&
-      (startNode === cooked || startNode.parentNode === cooked);
-    let opts = { full: false };
+      cooked.contains(startNode) &&
+      isFirstCookedChild(startNode);
+    const opts = { full: false };
 
     for (
       let element = _selectedElement;

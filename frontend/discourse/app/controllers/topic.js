@@ -536,10 +536,10 @@ export default class TopicController extends Controller {
 
   @action
   async selectText() {
-    const { postId, opts } = this.quoteState;
+    const { postId } = this.quoteState;
     const postStream = this.get("model.postStream");
     const composer = this.composer;
-    const buffer = await this.quoteState.markdown();
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
 
     if (this.isDestroying || this.isDestroyed) {
       return;
@@ -551,7 +551,7 @@ export default class TopicController extends Controller {
 
     // If we can't create a post, delegate to reply as new topic
     if (!viewOpen && !this.get("model.details.can_create_post")) {
-      this.send("replyAsNewTopic", post);
+      await this.replyAsNewTopic(post);
       return;
     }
 
@@ -800,8 +800,7 @@ export default class TopicController extends Controller {
     }
 
     const quotedPost = postStream.findLoadedPost(quoteState.postId);
-    const quoteOpts = quoteState.opts;
-    const buffer = await quoteState.markdown();
+    const { markdown: buffer, opts: quoteOpts } = await quoteState.markdown();
     const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
 
     quoteState.clear();
@@ -1411,8 +1410,7 @@ export default class TopicController extends Controller {
   async replyAsNewTopic(post) {
     const composerController = this.composer;
     const { quoteState } = this;
-    const opts = quoteState.opts;
-    const buffer = await quoteState.markdown();
+    const { markdown: buffer, opts } = await quoteState.markdown();
     const quotedText = buildQuote(post, buffer, opts);
 
     quoteState.clear();
@@ -1808,9 +1806,9 @@ export default class TopicController extends Controller {
 
   @action
   async buildQuoteMarkdown() {
-    const { postId, opts } = this.quoteState;
+    const { postId } = this.quoteState;
     const postStream = this.get("model.postStream");
-    const buffer = await this.quoteState.markdown();
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
     const loadedPost = postStream.findLoadedPost(postId);
     const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
 
