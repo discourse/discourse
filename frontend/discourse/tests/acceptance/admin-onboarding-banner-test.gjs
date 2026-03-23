@@ -135,69 +135,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isChecked();
   });
 
-  test("registered posting-option can disable its button when step is complete", async function (assert) {
-    withPluginApi((api) => {
-      api.registerValueTransformer(
-        "admin-onboarding-start-posting-options",
-        ({ value }) => {
-          value.push(
-            class CompletingOption extends StartPostingOption {
-              @service appEvents;
-
-              name = "completing-option";
-              title = "admin_onboarding_banner.start_posting.extra_option";
-              body =
-                "admin_onboarding_banner.start_posting.extra_option_description";
-              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
-
-              @action
-              onSelect() {
-                this.appEvents.trigger("admin-onboarding:posting-complete");
-                this.args.closeModal();
-              }
-            }
-          );
-
-          value.push(
-            class DisableableOption extends StartPostingOption {
-              name = "disableable-option";
-              title = "admin_onboarding_banner.start_posting.extra_option";
-              body =
-                "admin_onboarding_banner.start_posting.extra_option_description";
-              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
-
-              get disabled() {
-                return this.args.isComplete;
-              }
-
-              @action
-              onSelect() {}
-            }
-          );
-
-          return value;
-        }
-      );
-    });
-
-    await visit("/");
-
-    await withStep("start_posting", assert).clickAction();
-
-    assert.dom(".option").exists({ count: 3 });
-    assert
-      .dom(".disableable-option .btn")
-      .isNotDisabled("button is enabled before step completion");
-
-    await click(".completing-option .btn");
-
-    await withStep("start_posting", assert).clickAction();
-
-    assert
-      .dom(".disableable-option .btn")
-      .isDisabled("button is disabled after step completion");
-  });
-
   test("registered posting-option can hide its button when step is complete", async function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer(

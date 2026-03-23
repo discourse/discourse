@@ -34,7 +34,6 @@ export default class StartPostingOption extends Component {
       </p>
       {{#unless this.hideAction}}
         <DButton
-          @disabled={{this.disabled}}
           @label={{this.actionLabel}}
           @action={{this.onSelect}}
           class="btn-default"
