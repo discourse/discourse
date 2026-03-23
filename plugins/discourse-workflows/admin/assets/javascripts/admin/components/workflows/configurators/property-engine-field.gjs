@@ -1,0 +1,359 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
+import FKControlInput from "discourse/form-kit/components/fk/control/input";
+import FKControlSelect from "discourse/form-kit/components/fk/control/select";
+import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
+import icon from "discourse/helpers/d-icon";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import { eq } from "discourse/truth-helpers";
+import {
+  fieldControl,
+  fieldInputType,
+  fieldRows,
+  fieldShowDescription,
+  fieldShowLabel,
+  fieldSupportsExpression,
+  findNodeType,
+  normalizeOptions,
+  propertyDescription,
+  propertyLabel,
+  propertyOptionLabel,
+  propertyPlaceholder,
+} from "../../../lib/workflows/property-engine";
+import ExpressionInput from "./expression-input";
+import PropertyEngineComboBox from "./property-engine-combo-box";
+import PropertyEngineConditionBuilder from "./property-engine-condition-builder";
+import PropertyEngineDataTableFields from "./property-engine-data-table-fields";
+import PropertyEngineUrlPreview from "./property-engine-url-preview";
+
+const BUILT_IN_FIELD_CONTROLS = {
+  combo_box: PropertyEngineComboBox,
+  condition_builder: PropertyEngineConditionBuilder,
+  data_table_fields: PropertyEngineDataTableFields,
+  url_preview: PropertyEngineUrlPreview,
+};
+
+function isExpression(value) {
+  return typeof value === "string" && value.startsWith("=");
+}
+
+export default class PropertyEngineField extends Component {
+  @tracked _expressionMode = null;
+
+  get control() {
+    return fieldControl(this.args.schema);
+  }
+
+  get controlComponent() {
+    return applyValueTransformer(
+      "workflow-property-engine-controls",
+      BUILT_IN_FIELD_CONTROLS
+    )[this.control];
+  }
+
+  get description() {
+    return propertyDescription(this.nodeDefinition, this.args.fieldName);
+  }
+
+  get inputType() {
+    return fieldInputType(this.args.schema);
+  }
+
+  get label() {
+    return propertyLabel(this.nodeDefinition, this.args.fieldName);
+  }
+
+  get metadata() {
+    return this.args.metadata || this.nodeDefinition?.metadata || {};
+  }
+
+  get nodeDefinition() {
+    return (
+      this.args.nodeDefinition ||
+      findNodeType(this.args.nodeTypes, this.nodeType)
+    );
+  }
+
+  get nodeType() {
+    return this.args.nodeType || this.args.node?.type;
+  }
+
+  get options() {
+    return normalizeOptions(this.args.schema.options).map((option) => ({
+      ...option,
+      label: propertyOptionLabel(
+        this.nodeDefinition,
+        this.args.fieldName,
+        option
+      ),
+    }));
+  }
+
+  get placeholder() {
+    return propertyPlaceholder(this.nodeDefinition, this.args.fieldName);
+  }
+
+  get rows() {
+    return fieldRows(this.args.schema);
+  }
+
+  get showDescription() {
+    return fieldShowDescription(this.args.schema);
+  }
+
+  get showLabel() {
+    return fieldShowLabel(this.args.schema);
+  }
+
+  get supportsExpression() {
+    return fieldSupportsExpression(this.args.schema);
+  }
+
+  get apiPath() {
+    return this.args.formApiPath || this.args.fieldName;
+  }
+
+  get expressionMode() {
+    if (this._expressionMode !== null) {
+      return this._expressionMode;
+    }
+    if (!this.supportsExpression) {
+      return false;
+    }
+    return isExpression(this.args.formApi?.get(this.apiPath));
+  }
+
+  get validation() {
+    return this.args.schema?.required ? "required" : undefined;
+  }
+
+  get codeHeight() {
+    return this.args.schema?.ui?.height;
+  }
+
+  get codeLang() {
+    return this.args.schema?.ui?.lang || "text";
+  }
+
+  get fieldDescription() {
+    if (this.showDescription && this.description) {
+      return this.description;
+    }
+    return undefined;
+  }
+
+  get fieldTitle() {
+    return this.label || this.args.fieldName || "-";
+  }
+
+  @action
+  selectMode(mode, closeFn) {
+    if (mode === "fixed" && this.expressionMode) {
+      const currentVal = this.args.formApi?.get(this.apiPath) || "";
+      if (isExpression(currentVal)) {
+        this.args.formApi?.set(this.apiPath, currentVal.slice(1));
+      }
+      this._expressionMode = false;
+    } else if (mode === "expression" && !this.expressionMode) {
+      const currentVal = this.args.formApi?.get(this.apiPath) || "";
+      if (!isExpression(currentVal)) {
+        this.args.formApi?.set(this.apiPath, `=${currentVal}`);
+      }
+      this._expressionMode = true;
+    }
+    closeFn?.();
+  }
+
+  @action
+  handleSet(value, { set, name }) {
+    set(name, value);
+  }
+
+  @action
+  handlePatch(patch) {
+    const api = this.args.formApi;
+    if (api) {
+      for (const [key, value] of Object.entries(patch || {})) {
+        api.set(key, value);
+      }
+    }
+  }
+
+  @action
+  handleInlineChange(fieldSet, valueOrEvent) {
+    const value =
+      valueOrEvent?.target && "value" in valueOrEvent.target
+        ? valueOrEvent.target.value
+        : valueOrEvent;
+    fieldSet(value);
+  }
+
+  @action
+  handleInlineToggle(fieldSet, currentValue) {
+    fieldSet(!currentValue);
+  }
+
+  <template>
+    {{#if @inline}}
+      {{#if (eq this.control "select")}}
+        <select required={{@schema.required}} {{on "change" @onInlineChange}}>
+          {{#each this.options as |choice|}}
+            <option
+              value={{choice.value}}
+              selected={{eq choice.value @inlineValue}}
+            >{{choice.label}}</option>
+          {{/each}}
+        </select>
+      {{else if (eq this.control "boolean")}}
+        <label class="workflows-property-engine__inline-toggle">
+          <input
+            type="checkbox"
+            checked={{@inlineValue}}
+            {{on "change" @onInlineChange}}
+          />
+          {{this.label}}
+        </label>
+      {{else}}
+        <input
+          type={{this.inputType}}
+          required={{@schema.required}}
+          value={{@inlineValue}}
+          placeholder={{this.placeholder}}
+          {{on "input" @onInlineChange}}
+        />
+      {{/if}}
+    {{else if (eq this.control "boolean")}}
+      <@form.Field
+        @name={{@fieldName}}
+        @title={{this.label}}
+        @type="toggle"
+        @format="full"
+        @validation={{this.validation}}
+        as |field|
+      >
+        <field.Control />
+      </@form.Field>
+    {{else if (eq this.control "code")}}
+      <@form.Field
+        @name={{@fieldName}}
+        @title={{this.fieldTitle}}
+        @showTitle={{this.showLabel}}
+        @type="code"
+        @format="full"
+        @validation={{this.validation}}
+        as |field|
+      >
+        <field.Control @height={{this.codeHeight}} @lang={{this.codeLang}} />
+      </@form.Field>
+    {{else if this.controlComponent}}
+      <@form.Field
+        @name={{@fieldName}}
+        @title={{this.fieldTitle}}
+        @showTitle={{this.showLabel}}
+        @description={{this.fieldDescription}}
+        @type="custom"
+        @format="full"
+        @validation={{this.validation}}
+        @onSet={{this.handleSet}}
+        as |field|
+      >
+        <field.Control>
+          <this.controlComponent
+            @configuration={{@configuration}}
+            @connections={{@connections}}
+            @fieldName={{@fieldName}}
+            @metadata={{this.metadata}}
+            @node={{@node}}
+            @nodeDefinition={{this.nodeDefinition}}
+            @nodes={{@nodes}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{@nodeTypes}}
+            @onPatch={{this.handlePatch}}
+            @schema={{@schema}}
+            @value={{field.value}}
+          />
+        </field.Control>
+      </@form.Field>
+    {{else}}
+      <@form.Field
+        @name={{@fieldName}}
+        @title={{this.fieldTitle}}
+        @showTitle={{this.showLabel}}
+        @description={{this.fieldDescription}}
+        @type="custom"
+        @format="full"
+        @validation={{this.validation}}
+        @onSet={{this.handleSet}}
+        as |field|
+      >
+        <field.Control>
+          <div class="workflows-property-engine__control-wrapper">
+            {{#if this.expressionMode}}
+              <ExpressionInput
+                @field={{field}}
+                @placeholder={{this.placeholder}}
+              />
+            {{else if (eq this.control "select")}}
+              <FKControlSelect @field={{field}} @includeNone={{false}} as |c|>
+                {{#each this.options as |choice|}}
+                  <c.Option @value={{choice.value}}>{{choice.label}}</c.Option>
+                {{/each}}
+              </FKControlSelect>
+            {{else if (eq this.control "textarea")}}
+              <FKControlTextarea
+                @field={{field}}
+                placeholder={{this.placeholder}}
+              />
+            {{else}}
+              <FKControlInput
+                @field={{field}}
+                @type={{this.inputType}}
+                placeholder={{this.placeholder}}
+              />
+            {{/if}}
+
+            {{#if this.supportsExpression}}
+              <DMenu
+                class="workflows-property-engine__mode-trigger
+                  {{if this.expressionMode '--active'}}"
+                @triggerClass="btn-transparent btn-small"
+                @inline={{true}}
+                @modalForwardRecipient={{true}}
+              >
+                <:trigger>
+                  {{icon "shuffle"}}
+                </:trigger>
+                <:content as |args|>
+                  <DropdownMenu as |dropdown|>
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.selectMode "fixed" args.close}}
+                        @translatedLabel="Fixed"
+                        @icon={{unless this.expressionMode "check"}}
+                      />
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.selectMode "expression" args.close}}
+                        @translatedLabel="Expression"
+                        @icon={{if this.expressionMode "check"}}
+                      />
+                    </dropdown.item>
+                  </DropdownMenu>
+                </:content>
+              </DMenu>
+            {{/if}}
+          </div>
+        </field.Control>
+      </@form.Field>
+    {{/if}}
+  </template>
+}

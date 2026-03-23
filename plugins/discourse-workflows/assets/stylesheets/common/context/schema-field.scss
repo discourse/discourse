@@ -1,0 +1,63 @@
+.workflows-schema-field-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.workflows-schema-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35em 0.5em;
+  font-size: var(--font-down-1);
+
+  &[draggable="true"] {
+    cursor: grab;
+
+    &:hover {
+      background-color: var(--primary-low);
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  & + & {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__key {
+    font-family: var(--d-font-family--monospace);
+    color: var(--primary-high);
+  }
+
+  &__type {
+    font-size: var(--font-down-2);
+    padding: 0.1em 0.5em;
+    border-radius: 0.75em;
+    font-weight: 700;
+
+    &[data-type="string"] {
+      color: var(--success);
+      background: color-mix(in srgb, var(--success) 12%, transparent);
+    }
+
+    &[data-type="integer"] {
+      color: var(--tertiary);
+      background: color-mix(in srgb, var(--tertiary) 12%, transparent);
+    }
+
+    &[data-type="array"] {
+      color: #e0964c;
+      background: rgb(224, 150, 76, 0.15);
+    }
+
+    &[data-type="boolean"] {
+      color: var(--love);
+      background: color-mix(in srgb, var(--love) 12%, transparent);
+    }
+
+    &[data-type="object"] {
+      color: var(--highlight);
+      background: color-mix(in srgb, var(--highlight) 15%, transparent);
+    }
+  }
+}

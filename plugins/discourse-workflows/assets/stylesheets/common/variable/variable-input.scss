@@ -1,0 +1,39 @@
+.workflows-variable-input {
+  padding: 0.5em;
+  min-height: 80px;
+  width: 100%;
+  border: 1px solid var(--primary-low-mid);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  font-size: var(--font-0);
+  font-family: inherit;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  cursor: text;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: var(--tertiary);
+    box-shadow: 0 0 0 1px var(--tertiary);
+  }
+
+  &.--drag-over {
+    border-color: var(--tertiary);
+    background: color-mix(in srgb, var(--tertiary) 5%, var(--secondary));
+  }
+
+  .workflows-configurator-if__row & {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    min-height: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}

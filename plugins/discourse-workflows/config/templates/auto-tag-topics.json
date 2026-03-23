@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "name": "Auto-tag new topics",
+  "description": "Automatically adds tags to new topics based on their category.",
+  "nodes": [
+    {
+      "type": "trigger:topic_created",
+      "type_version": "1.0",
+      "name": "Topic created",
+      "configuration": {},
+      "position": {
+        "x": 12,
+        "y": 12
+      }
+    },
+    {
+      "type": "condition:if",
+      "type_version": "1.0",
+      "name": "Check category",
+      "configuration": {
+        "combinator": "and",
+        "conditions": [
+          {
+            "id": "a1404264-d341-43a9-84b8-d7d6c67e477d",
+            "operator": {
+              "type": "string",
+              "operation": "equals",
+              "singleValue": false
+            },
+            "leftValue": "={{ $json.category_id }} ",
+            "rightValue": ""
+          }
+        ]
+      },
+      "position": {
+        "x": 274,
+        "y": 53
+      }
+    },
+    {
+      "type": "action:append_tags",
+      "type_version": "1.0",
+      "name": "Append tags",
+      "configuration": {
+        "topic_id": "={{ $json.topic_id }} "
+      },
+      "position": {
+        "x": 544,
+        "y": 94
+      }
+    }
+  ],
+  "connections": [
+    {
+      "source_index": 0,
+      "target_index": 1,
+      "source_output": "main"
+    },
+    {
+      "source_index": 1,
+      "target_index": 2,
+      "source_output": "true"
+    }
+  ]
+}

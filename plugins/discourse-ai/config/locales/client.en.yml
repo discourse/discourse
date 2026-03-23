@@ -46,6 +46,11 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "AI Agent"
+      node_descriptions:
+        "action:ai_agent": "Run an AI agent to process data or generate content"
     discourse_automation:
       scriptables:
         llm_report:
@@ -225,6 +230,11 @@ en:
 
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          input: "Input"
+          select_agent: "Select an agent..."
 
       default_llm:
         title: "Default LLM model"

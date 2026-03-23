@@ -1,0 +1,20 @@
+.workflows-settings {
+  padding: var(--space-4) 0;
+
+  &__section {
+    border: 1px solid var(--danger-low);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-4);
+  }
+
+  &__section-title {
+    color: var(--danger);
+    font-size: var(--font-up-1);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  &__section-description {
+    color: var(--primary-medium);
+    margin: 0 0 var(--space-3) 0;
+  }
+}

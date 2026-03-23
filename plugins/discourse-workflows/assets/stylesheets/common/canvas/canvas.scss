@@ -1,0 +1,511 @@
+.workflows-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  outline: none;
+  background-color: var(--primary-very-low);
+  background-image: radial-gradient(
+    circle,
+    var(--primary-300) 0.3px,
+    transparent 1px
+  );
+  background-size: 16px 16px;
+
+  &__spinner-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    background: inherit;
+  }
+
+  &__empty-state {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  &__empty-state-trigger {
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary);
+    font: inherit;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:focus-visible .workflows-canvas__empty-state-tile {
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 2px var(--tertiary-low);
+    }
+  }
+
+  &__empty-state-tile {
+    width: min(88px, calc(100vw - 7rem));
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: 10px;
+    background: rgb(from var(--secondary) r g b / 0.86);
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+
+    .d-icon {
+      width: 1.3rem;
+      height: 1.3rem;
+      color: var(--primary-medium);
+    }
+  }
+
+  &__empty-state-label {
+    font-size: var(--font-down-2);
+    font-weight: 400;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  &__rete-container {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    * {
+      transition: none !important;
+    }
+  }
+
+  &__status {
+    position: absolute;
+    top: var(--space-1);
+    left: var(--space-1);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-1) var(--space-3);
+    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
+  }
+
+  &__status-indicator {
+    font-size: var(--font-down-1);
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: var(--space-1);
+      vertical-align: middle;
+    }
+
+    &.--draft::before {
+      background: var(--primary-medium);
+    }
+
+    &.--published::before {
+      background: var(--success);
+    }
+  }
+
+  &__controls {
+    position: absolute;
+    bottom: var(--space-1);
+    left: var(--space-1);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-1);
+    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
+  }
+
+  &__zoom-label {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    min-width: 3em;
+    text-align: center;
+  }
+
+  &__toolbar-top-right {
+    position: absolute;
+    top: var(--space-1);
+    right: var(--space-1);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
+
+  &__add-node-btn {
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
+  }
+
+  &__menu-btn {
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
+  }
+
+  &__context-menu {
+    position: absolute;
+    z-index: 10;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    box-shadow: var(--shadow-dropdown);
+    padding: var(--space-1) 0;
+    min-width: 180px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  &__context-menu-item {
+    width: 100%;
+    justify-content: flex-start;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 0;
+    gap: var(--space-2);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--node-icon-color, var(--primary-medium));
+    }
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+  }
+}
+
+@media screen and (width <= 767px) {
+  .workflows-canvas {
+    &__empty-state-trigger {
+      gap: 0.3rem;
+    }
+
+    &__empty-state-tile {
+      width: min(80px, calc(100vw - 3rem));
+      border-radius: 8px;
+
+      .d-icon {
+        width: 1.15rem;
+        height: 1.15rem;
+      }
+    }
+
+    &__empty-state-label {
+      font-size: var(--font-down-3);
+    }
+  }
+}
+
+.workflow-rete-node {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-low-mid);
+    background: var(--secondary);
+    white-space: nowrap;
+    width: fit-content;
+    transition: border-color 0.15s;
+    min-height: 28px;
+    justify-content: center;
+    position: relative;
+  }
+
+  &:hover &__body {
+    border-color: var(--primary-medium);
+  }
+
+  &.--selected &__body {
+    border-color: var(--tertiary);
+  }
+
+  &.--trigger &__body {
+    border-radius: calc(var(--d-border-radius-large) * 2) var(--d-border-radius)
+      var(--d-border-radius) calc(var(--d-border-radius-large) * 2);
+  }
+
+  &.--branching &__body {
+    min-height: 50px;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+
+    .d-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  &__label {
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1.2;
+  }
+
+  &__description {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    line-height: 1.2;
+    white-space: pre;
+  }
+
+  &__delete-btn {
+    position: absolute;
+    top: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 22px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      z-index: -1;
+    }
+    border-radius: 4px;
+    border: none;
+    background: var(--primary-very-high);
+    color: var(--secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+    opacity: 0;
+    pointer-events: none;
+
+    .d-icon {
+      font-size: var(--font-down-3);
+    }
+
+    &:hover {
+      background: var(--primary-high);
+    }
+  }
+
+  &__run-btn {
+    left: calc(50% - 13px);
+    background: var(--success);
+
+    &:hover {
+      background: var(--success-hover);
+    }
+
+    // When run button exists, shift delete button to the right
+    ~ .workflow-rete-node__delete-btn:not(.workflow-rete-node__run-btn) {
+      left: calc(50% + 13px);
+    }
+  }
+
+  .workflows-canvas__rete-container:not(.--dragging) &:hover &__delete-btn {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  // Socket (port) styles
+  &__socket {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--secondary);
+    border: 2px solid var(--primary-low-mid);
+    cursor: crosshair;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+    position: relative;
+    z-index: 1;
+
+    &:hover {
+      transform: scale(1.3);
+    }
+
+    &.--input {
+      margin-right: -6px;
+    }
+
+    &.--output {
+      margin-left: -6px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+
+      &.--loop {
+        cursor: default;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__outputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-self: stretch;
+    gap: var(--space-1);
+    padding: var(--space-1) 0;
+  }
+
+  &__port-pill {
+    font-size: 9px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    pointer-events: none;
+    line-height: 1;
+    white-space: nowrap;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-medium);
+    padding: 1px 3px;
+  }
+}
+
+// Connection path styles
+.workflow-connection-visible {
+  transition:
+    stroke 0.15s,
+    stroke-width 0.15s;
+  pointer-events: none;
+}
+
+.workflow-connection-arrow {
+  transition: fill 0.15s;
+}
+
+.workflow-connection-hit {
+  pointer-events: stroke;
+  cursor: pointer;
+
+  &:hover ~ .workflow-connection-visible:not(.--selected) {
+    stroke: var(--primary-medium);
+    stroke-width: 2.5;
+  }
+}
+
+// Connection hover toolbar (add node + delete)
+.workflow-connection-toolbar-fo {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  &.--visible {
+    pointer-events: all;
+    opacity: 1;
+  }
+}
+
+.workflow-connection-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: fit-content;
+  margin: 0 auto;
+
+  &__btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    border: none;
+    background: var(--primary-very-high);
+    color: var(--secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+
+    .d-icon {
+      font-size: var(--font-down-3);
+    }
+
+    &:hover {
+      background: var(--primary-high);
+    }
+  }
+}
+
+// Loop-back path (self-loop on Loop Over Items node)
+.workflow-loop-back {
+  &__path {
+    pointer-events: none;
+  }
+
+  &__button-fo {
+    pointer-events: all;
+  }
+
+  &__add-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-low-mid);
+    background: var(--secondary);
+    color: var(--primary-medium);
+    font-size: var(--font-up-1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+
+    &:hover {
+      border-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+  }
+}
