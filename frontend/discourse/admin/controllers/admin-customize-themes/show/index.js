@@ -94,9 +94,10 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     if (!this.model?.only_theme_color_schemes) {
       return this.colorSchemes;
     }
-    return this.colorSchemes?.filter(
+    const themeSchemes = this.colorSchemes?.filter(
       (scheme) => scheme.theme_id === this.model.id
     );
+    return themeSchemes?.length > 0 ? themeSchemes : this.colorSchemes;
   }
 
   @computed("colorSchemeId", "model.color_scheme_id")

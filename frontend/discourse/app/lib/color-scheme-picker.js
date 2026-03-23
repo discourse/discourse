@@ -12,7 +12,9 @@ export function listColorSchemes(site, options = {}) {
   }
 
   const currentTheme = options.currentTheme;
-  const limitToTheme = currentTheme?.only_theme_color_schemes;
+  const limitToTheme =
+    currentTheme?.only_theme_color_schemes &&
+    schemes.some((s) => s.theme_id === currentTheme.id);
 
   let results = [];
 
