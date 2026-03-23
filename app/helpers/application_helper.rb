@@ -714,9 +714,7 @@ module ApplicationHelper
   end
 
   def crawler_topic_main_entity_schema(topic)
-    default = {}
-    attrs =
-      DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, default, topic)
+    attrs = DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, {}, topic)
     attrs.present? ? tag.attributes(**attrs) : nil
   end
 
