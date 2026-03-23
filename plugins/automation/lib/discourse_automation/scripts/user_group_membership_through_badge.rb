@@ -21,11 +21,8 @@ DiscourseAutomation::Scriptable.add(
   script do |context, fields|
     badge_id = fields.dig("badge", "value")
     group_id = fields.dig("group", "value")
-    update_user_title_and_flair = fields.dig("update_user_title_and_flair", "value")
     remove_members_without_badge = fields.dig("remove_members_without_badge", "value")
     current_user = context["user"]
-    bulk_modify_start_count =
-      DiscourseAutomation::USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT
 
     badge = Badge.find_by(id: badge_id)
     unless badge
@@ -57,24 +54,7 @@ DiscourseAutomation::Scriptable.add(
 
     user_ids_to_add = DB.query_single(user_ids_to_add_query, query_options)
 
-    if user_ids_to_add.count < bulk_modify_start_count
-      User
-        .where(id: user_ids_to_add)
-        .each do |user|
-          group.add(user)
-          GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
-        end
-    else
-      group.bulk_add(user_ids_to_add)
-    end
-
-    if update_user_title_and_flair && user_ids_to_add.present?
-      DB.exec(<<~SQL, ids: user_ids_to_add, title: group.title, flair_group_id: group.id)
-        UPDATE users
-        SET title = :title, flair_group_id = :flair_group_id
-        WHERE id IN (:ids)
-      SQL
-    end
+    GroupManager.new(Discourse.system_user, group).bulk_add(user_ids_to_add)
 
     next unless remove_members_without_badge
 
@@ -94,23 +74,6 @@ DiscourseAutomation::Scriptable.add(
 
     user_ids_to_remove = DB.query_single(user_ids_to_remove_query, query_options)
 
-    if user_ids_to_remove.count < bulk_modify_start_count
-      User
-        .where(id: user_ids_to_remove)
-        .each do |user|
-          group.remove(user)
-          GroupActionLogger.new(Discourse.system_user, group).log_remove_user_from_group(user)
-        end
-    else
-      group.bulk_remove(user_ids_to_remove)
-    end
-
-    if update_user_title_and_flair && user_ids_to_remove.present?
-      DB.exec(<<~SQL, ids: user_ids_to_remove, title: group.title, flair_group_id: group.id)
-        UPDATE users
-        SET title = NULL, flair_group_id = NULL
-        WHERE id IN (:ids) AND (flair_group_id = :flair_group_id OR title = :title)
-      SQL
-    end
+    GroupManager.new(Discourse.system_user, group).bulk_remove(user_ids_to_remove)
   end
 end

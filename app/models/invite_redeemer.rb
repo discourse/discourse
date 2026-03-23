@@ -278,9 +278,7 @@ class InviteRedeemer
     new_group_ids.each do |id|
       group = Group.find_by(id: id)
       if guardian.can_edit_group?(group)
-        invited_user.group_users.create!(group_id: group.id)
-        GroupActionLogger.new(invite.invited_by, group).log_add_user_to_group(invited_user)
-        DiscourseEvent.trigger(:user_added_to_group, invited_user, group, automatic: false)
+        GroupManager.new(invite.invited_by, group).add(invited_user)
       end
     end
   end

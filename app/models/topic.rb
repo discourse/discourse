@@ -2239,11 +2239,7 @@ class Topic < ActiveRecord::Base
           self.category.groups.where(id: group_ids).where(automatic: false) -
             target_user.groups.where(automatic: false)
         ).each do |group|
-          if guardian.can_edit_group?(group)
-            group.add(target_user)
-
-            GroupActionLogger.new(invited_by, group).log_add_user_to_group(target_user)
-          end
+          GroupManager.new(invited_by, group).add(target_user) if guardian.can_edit_group?(group)
         end
       end
 

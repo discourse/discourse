@@ -142,11 +142,7 @@ module Jobs
         if user = Invite.find_user_by_email(email)
           if groups.present?
             Group.transaction do
-              groups.each do |group|
-                group.add(user)
-
-                GroupActionLogger.new(@current_user, group).log_add_user_to_group(user)
-              end
+              groups.each { |group| GroupManager.new(@current_user, group).add(user) }
             end
           end
 
