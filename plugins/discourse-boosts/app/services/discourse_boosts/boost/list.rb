@@ -9,12 +9,14 @@ module DiscourseBoosts
     params do
       attribute :username, :string
       attribute :before_boost_id, :integer
+      attribute :direction, :string
 
       validates :username, presence: true
+      validates :direction, presence: true, inclusion: { in: %w[given received] }
     end
 
     model :target_user
-    policy :can_see_profile
+    policy :can_see_boosts
 
     model :boosts, optional: true
 
@@ -30,16 +32,27 @@ module DiscourseBoosts
       scope.first
     end
 
-    def can_see_profile(guardian:, target_user:)
-      guardian.can_see_profile?(target_user)
+    def can_see_boosts(params:, guardian:, target_user:)
+      if params.direction == "received"
+        guardian.can_see_notifications?(target_user)
+      else
+        guardian.can_see_profile?(target_user)
+      end
     end
 
     def fetch_boosts(params:, guardian:, target_user:)
+      direction =
+        if params.direction == "received"
+          { posts: { user: target_user } }
+        else
+          { user: target_user }
+        end
+
       boosts =
         DiscourseBoosts::Boost
           .joins(:post)
           .joins("INNER JOIN topics ON topics.id = posts.topic_id")
-          .where(posts: { user_id: target_user.id })
+          .where(direction)
           .where("posts.deleted_at IS NULL")
           .where("topics.deleted_at IS NULL")
           .merge(Post.secured(guardian))

@@ -8,6 +8,11 @@ module PageObjects
         self
       end
 
+      def visit_received(user)
+        page.visit("/u/#{user.username}/notifications/boosts")
+        self
+      end
+
       def has_boost_count?(count)
         has_css?(".user-stream-item", count: count)
       end

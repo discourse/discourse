@@ -22,7 +22,7 @@ export default class UserActivityBoostsController extends Controller {
       const beforeBoostId = lastBoost?.boost_id;
 
       const result = await ajax(
-        `/discourse-boosts/users/${this.username}/boosts.json`,
+        `/discourse-boosts/users/${this.username}/${this.boostsUrl}.json`,
         { data: { before_boost_id: beforeBoostId } }
       );
 

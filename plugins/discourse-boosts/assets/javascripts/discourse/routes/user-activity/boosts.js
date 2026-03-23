@@ -24,7 +24,7 @@ function flattenBoost(boost) {
     username: boost.post.username,
     name: boost.post.name,
     avatar_template: boost.post.avatar_template,
-    excerpt: boost.post.excerpt,
+    excerpt: emojiUnescape(escapeExpression(boost.post.excerpt)),
     topic_id: boost.post.topic_id,
     url: boost.post.url,
     title,
@@ -39,7 +39,7 @@ export default class UserActivityBoosts extends DiscourseRoute {
   async model() {
     const username = this.modelFor("user").username;
     const result = await ajax(
-      `/discourse-boosts/users/${username}/boosts.json`
+      `/discourse-boosts/users/${username}/boosts-given.json`
     );
     const boosts = result.boosts || [];
     return new TrackedArray(boosts.map(flattenBoost));
@@ -51,6 +51,7 @@ export default class UserActivityBoosts extends DiscourseRoute {
       model,
       canLoadMore: !loadedAll,
       username: this.modelFor("user").username,
+      boostsUrl: "boosts-given",
     });
   }
 }

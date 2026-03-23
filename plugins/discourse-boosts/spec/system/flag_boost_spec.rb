@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Flagging a boost", type: :system do
+describe "Flagging a boost" do
   fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:boost_author) { Fabricate(:user, refresh_auto_groups: true) }
@@ -14,10 +14,7 @@ describe "Flagging a boost", type: :system do
   let(:flag_modal) { PageObjects::Modals::Flag.new }
   let(:review_page) { PageObjects::Pages::Review.new }
 
-  before do
-    SiteSetting.discourse_boosts_enabled = true
-    Flag.find(3).update!(applies_to: %w[Post Chat::Message DiscourseBoosts::Boost])
-  end
+  before { SiteSetting.discourse_boosts_enabled = true }
 
   it "allows flagging a boost and having a moderator agree and delete it" do
     sign_in(flagger)
