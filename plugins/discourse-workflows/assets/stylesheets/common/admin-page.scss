@@ -70,6 +70,42 @@
   }
 }
 
-.workflows-page .horizontal-overflow-nav:has(.workflows-show-nav) {
+.workflows-show-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 1em;
+
+  .horizontal-overflow-nav {
+    margin-bottom: 0;
+  }
+}
+
+.workflows-status-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+
+  &__indicator {
+    font-size: var(--font-down-1);
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: var(--space-1);
+      vertical-align: middle;
+    }
+
+    &.--draft::before {
+      background: var(--primary-medium);
+    }
+
+    &.--published::before {
+      background: var(--success);
+    }
+  }
 }

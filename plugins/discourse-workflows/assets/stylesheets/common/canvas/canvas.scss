@@ -96,42 +96,6 @@
     }
   }
 
-  &__status {
-    position: absolute;
-    top: var(--space-1);
-    left: var(--space-1);
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    padding: var(--space-1) var(--space-3);
-    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
-  }
-
-  &__status-indicator {
-    font-size: var(--font-down-1);
-
-    &::before {
-      content: "";
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: var(--space-1);
-      vertical-align: middle;
-    }
-
-    &.--draft::before {
-      background: var(--primary-medium);
-    }
-
-    &.--published::before {
-      background: var(--success);
-    }
-  }
-
   &__controls {
     position: absolute;
     bottom: var(--space-1);

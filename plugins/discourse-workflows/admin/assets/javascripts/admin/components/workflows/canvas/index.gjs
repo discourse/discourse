@@ -16,7 +16,6 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import Controls from "./controls";
 import { createReteEditor } from "./rete-editor";
-import StatusToggle from "./status-toggle";
 import WorkflowNode from "./workflow-node";
 
 const PAUSED_SHORTCUTS = ["-", "="];
@@ -495,6 +494,7 @@ export default class WorkflowCanvas extends Component {
 
   <template>
     {{! template-lint-disable no-invalid-interactive }}
+
     <div
       class="workflows-canvas"
       tabindex="0"
@@ -549,10 +549,6 @@ export default class WorkflowCanvas extends Component {
         @onFitToView={{this.fitToView}}
         @onAutoLayout={{this.autoLayout}}
       />
-
-      {{#if @onToggleEnabled}}
-        <StatusToggle @enabled={{@enabled}} @onToggle={{@onToggleEnabled}} />
-      {{/if}}
 
       <input
         type="file"

@@ -30,34 +30,37 @@
   }
 
   &__type {
+    font-family: var(--d-font-family--monospace);
     font-size: var(--font-down-2);
     padding: 0.1em 0.5em;
     border-radius: 0.75em;
     font-weight: 700;
+    border: 1px solid;
 
+    // accent colors
     &[data-type="string"] {
-      color: light-dark( #5B7F24, #28311B);
-      background: light-dark(#BDE97C,#82B536 );
+      color: light-dark(#5b7f24, #28311b);
+      background: light-dark(#bde97c, #82b536);
     }
 
     &[data-type="integer"] {
-      color: light-dark(#227D9B, #1E3137);
-      background: light-dark(#B1E4F7,#42B2D7)
+      color: light-dark(#227d9b, #1e3137);
+      background: light-dark(#b1e4f7, #42b2d7);
     }
 
     &[data-type="array"] {
-      color: light-dark(#BD5B00, #3A2C1F);
-      background: light-dark(#FBD779,#F68909 );
+      color: light-dark(#bd5b00, #3a2c1f);
+      background: light-dark(#fbd779, #f68909);
     }
 
     &[data-type="boolean"] {
-      color: light-dark(#AE4787, #3D2232);
-      background: light-dark(#FCB6E1,#DA62AC );
+      color: light-dark(#ae4787, #3d2232);
+      background: light-dark(#fcb6e1, #da62ac);
     }
 
     &[data-type="object"] {
-      color: light-dark(#946F00,#332E1B);
-      background: light-dark(#EFDD4E,#CF9F02);
+      color: light-dark(#946f00, #332e1b);
+      background: light-dark(#efdd4e, #cf9f02);
     }
   }
 }

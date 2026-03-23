@@ -33,7 +33,6 @@ export default class WorkflowsEditor extends Component {
     name:
       this.args.workflow.name ||
       i18n("discourse_workflows.default_workflow_name"),
-    enabled: this.args.workflow.enabled || false,
     nodes: this.#initNodes(),
     connections: this.#mapServerConnections(),
   };
@@ -144,16 +143,6 @@ export default class WorkflowsEditor extends Component {
   async redo() {
     await this.undoManager.redo();
     this.#refreshUndoState();
-  }
-
-  @action
-  handleToggleEnabled(value, opts) {
-    if (opts?.set) {
-      opts.set(opts.name, value);
-    } else {
-      this.formApi.set("enabled", value);
-    }
-    this.handleSubmit();
   }
 
   #isLoopSelfConnection(connection, clientId) {
@@ -692,13 +681,11 @@ export default class WorkflowsEditor extends Component {
     this._saving = true;
     try {
       const name = this.formApi.get("name");
-      const enabled = this.formApi.get("enabled");
       const nodes = this.formApi.get("nodes");
       const connections = this.formApi.get("connections");
 
       this.args.workflow.setProperties({
         name,
-        enabled,
         nodes: nodes.map((n) => ({
           client_id: n.clientId,
           type: n.type,
@@ -755,8 +742,6 @@ export default class WorkflowsEditor extends Component {
           @connections={{transientData.connections}}
           @workflowId={{@workflow.id}}
           @workflowName={{@workflow.name}}
-          @enabled={{transientData.enabled}}
-          @onToggleEnabled={{this.handleToggleEnabled}}
           @onUpdateNodePosition={{this.updateNodePosition}}
           @onEditNode={{this.editNode}}
           @onRemoveNode={{this.removeNode}}
