@@ -526,7 +526,7 @@ export default class BlockOutlet extends Component {
    * The component to render for outlet boundary debug info.
    * Returns the OutletInfo component when debug mode is enabled, null otherwise.
    *
-   * @returns {typeof Component|null}
+   * @returns {typeof Component<{outletName: string, blockCount: number, outletArgs: object, error: Error}>|null}
    */
   get OutletInfoComponent() {
     return debugHooks.outletInfoComponent;
