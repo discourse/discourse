@@ -11,12 +11,18 @@ export function listColorSchemes(site, options = {}) {
     return null;
   }
 
+  const currentTheme = options.currentTheme;
+  const limitToTheme = currentTheme?.only_theme_color_schemes;
+
   let results = [];
 
   if (!options.darkOnly) {
     schemes = schemes.sort((a, b) => Number(a.is_dark) - Number(b.is_dark));
   }
   schemes.forEach((s) => {
+    if (limitToTheme && s.theme_id !== currentTheme.id) {
+      return;
+    }
     if ((options.darkOnly && s.is_dark) || !options.darkOnly) {
       results.push({
         name: s.name,
@@ -31,13 +37,15 @@ export function listColorSchemes(site, options = {}) {
   const defaultLightColorScheme = site.get("default_light_color_scheme");
   const defaultDarkColorScheme = site.get("default_dark_color_scheme");
 
-  results.unshift({
-    id: -1,
-    name: `${i18n("user.color_schemes.default_description")}`,
-    colors: options.darkOnly
-      ? defaultDarkColorScheme?.colors || []
-      : defaultLightColorScheme?.colors || [],
-  });
+  if (!limitToTheme) {
+    results.unshift({
+      id: -1,
+      name: `${i18n("user.color_schemes.default_description")}`,
+      colors: options.darkOnly
+        ? defaultDarkColorScheme?.colors || []
+        : defaultLightColorScheme?.colors || [],
+    });
+  }
 
   return results.length === 0 ? null : results;
 }

@@ -154,9 +154,19 @@ export default class InterfaceController extends Controller {
     }
   }
 
-  @computed
+  @computed("currentThemeId")
+  get currentThemeForColorSchemes() {
+    const theme = this.userSelectableThemes?.find(
+      (t) => t.id === this.currentThemeId
+    );
+    return theme;
+  }
+
+  @computed("currentThemeId")
   get userSelectableColorSchemes() {
-    return listColorSchemes(this.site);
+    return listColorSchemes(this.site, {
+      currentTheme: this.currentThemeForColorSchemes,
+    });
   }
 
   @computed("userSelectableThemes", "userSelectableColorSchemes", "themeId")
@@ -301,10 +311,11 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  @computed
+  @computed("currentThemeId")
   get userSelectableDarkColorSchemes() {
     return listColorSchemes(this.site, {
       darkOnly: true,
+      currentTheme: this.currentThemeForColorSchemes,
     });
   }
 

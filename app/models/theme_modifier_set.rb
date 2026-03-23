@@ -29,6 +29,10 @@ class ThemeModifierSet < ActiveRecord::Base
   after_save do
     SvgSprite.expire_cache if saved_change_to_svg_icons?
     CSP::Extension.clear_theme_extensions_cache! if saved_change_to_csp_extensions?
+    if saved_change_to_only_theme_color_schemes?
+      ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
+      ApplicationSerializer.expire_cache_fragment!("user_themes")
+    end
   end
 
   # Given the ids of multiple active themes / theme components, this function
@@ -151,6 +155,7 @@ end
 #  theme_setting_modifiers       :jsonb
 #  serialize_topic_op_likes_data :boolean
 #  serialize_topic_is_hot        :boolean
+#  only_theme_color_schemes :boolean
 #
 # Indexes
 #

@@ -7491,6 +7491,7 @@ en:
           dark_color_scheme: "Dark Color Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme."
+          only_theme_color_schemes: "This theme limits which color palettes can be used."
           dark_color_scheme_select: "Select colors to be used by theme in dark mode."
           edit_colors: "Edit colors"
           custom_sections: "Custom sections:"

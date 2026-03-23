@@ -128,13 +128,14 @@ export default <template>
         <div class="setting-value">
           <div class="color-palette-input-group">
             <ColorPalettePicker
-              @content={{@controller.colorSchemes}}
+              @content={{@controller.filteredColorSchemes}}
               @value={{@controller.colorSchemeId}}
               @icon="paintbrush"
               @options={{hash
                 filterable=true
-                translatedNone=(i18n
-                  "admin.customize.theme.default_light_scheme"
+                translatedNone=(unless
+                  @controller.model.only_theme_color_schemes
+                  (i18n "admin.customize.theme.default_light_scheme")
                 )
               }}
             />
@@ -180,13 +181,14 @@ export default <template>
         <div class="setting-value">
           <div class="color-palette-input-group">
             <ColorPalettePicker
-              @content={{@controller.colorSchemes}}
+              @content={{@controller.filteredColorSchemes}}
               @value={{@controller.darkColorSchemeId}}
               @icon="paintbrush"
               @options={{hash
                 filterable=true
-                translatedNone=(i18n
-                  "admin.customize.theme.default_light_scheme"
+                translatedNone=(unless
+                  @controller.model.only_theme_color_schemes
+                  (i18n "admin.customize.theme.default_light_scheme")
                 )
               }}
             />

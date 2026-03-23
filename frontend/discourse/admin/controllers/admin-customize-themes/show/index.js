@@ -89,6 +89,16 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     return descriptions;
   }
 
+  @computed("colorSchemes.[]", "model.only_theme_color_schemes", "model.id")
+  get filteredColorSchemes() {
+    if (!this.model?.only_theme_color_schemes) {
+      return this.colorSchemes;
+    }
+    return this.colorSchemes?.filter(
+      (scheme) => scheme.theme_id === this.model.id
+    );
+  }
+
   @computed("colorSchemeId", "model.color_scheme_id")
   get lightColorSchemeChanged() {
     const colorSchemeId =
