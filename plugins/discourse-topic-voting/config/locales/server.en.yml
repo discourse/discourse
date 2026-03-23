@@ -1,5 +1,12 @@
 en:
+  category_types:
+    ideas:
+      name: "Ideas"
+      title: "ideas"
+      description: "Where members can submit ideas and vote on the ones they want most."
+
   site_settings:
+    enable_ideas_category_type_setup: "Enables the Ideas category type option during category creation setup. Note that 'enable simplified category creation' must be enabled for this to take effect."
     topic_voting_enabled: 'Allow users to vote on topics?'
     topic_voting_enable_vote_limits: 'Limit the number of votes per user based on trust level'
     topic_voting_tl0_vote_limit: 'How many active votes are TL0 users allowed?'
