@@ -3,7 +3,7 @@
 module DiscourseBoosts
   class BoostsController < ::ApplicationController
     requires_plugin DiscourseBoosts::PLUGIN_NAME
-    before_action :ensure_logged_in, except: [:index]
+    before_action :ensure_logged_in, except: %i[boosts_given boosts_received]
 
     def create
       RateLimiter.new(current_user, "create_boost", 5, 1.minute).performed!
@@ -78,8 +78,18 @@ module DiscourseBoosts
       end
     end
 
-    def index
-      Boost::List.call(service_params) do
+    def boosts_given
+      list_boosts(direction: "given")
+    end
+
+    def boosts_received
+      list_boosts(direction: "received")
+    end
+
+    private
+
+    def list_boosts(direction:)
+      Boost::List.call(service_params.deep_merge(params: { direction: })) do
         on_success do |boosts:|
           render json: boosts, each_serializer: BoostListSerializer, scope: guardian, root: "boosts"
         end
@@ -88,7 +98,9 @@ module DiscourseBoosts
                  status: :bad_request
         end
         on_model_not_found(:target_user) { raise Discourse::NotFound }
-        on_failed_policy(:can_see_profile) { raise Discourse::NotFound }
+        on_failed_policy(:can_see_boosts) do
+          direction == "received" ? raise(Discourse::InvalidAccess) : raise(Discourse::NotFound)
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
