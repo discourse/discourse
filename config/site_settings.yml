@@ -2810,6 +2810,7 @@ security:
     area: "group_permissions"
   cache_control_bfcache_compatibility:
     default: false
+    client: true
     hidden: true
 
 onebox:
