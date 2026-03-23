@@ -12,7 +12,7 @@ This post gives a general overview of how things work, but the best way to under
 
 ## Adding Notification Support :bell:
 
-1. In the [`Provider` folder](https://github.com/discourse/discourse-chat-integration/tree/master/lib/discourse_chat/provider), create a new folder with the name of your chatroom system: e.g. `hipchat`
+1. In the [`Provider` folder](https://github.com/discourse/discourse/tree/main/plugins/discourse-chat-integration/lib/discourse_chat_integration/provider), create a new folder with the name of your chatroom system: e.g. `hipchat`
 2. Create a new ruby file, following the format `hipchat_provider.rb`
 3. Within that, define a new module inside `DiscourseChat::Provider`. The name of the module **must** end in `Provider` for it to be loaded correctly. Your module must define three constants:
    - `PROVIDER_NAME`: A string used to reference your provider internally. It shouldn't contain any whitespace. It will likely be the same as the folder name
@@ -24,12 +24,12 @@ This post gives a general overview of how things work, but the best way to under
      - `hidden`: (optional) set this to true to hide this parameter from the list of channels. It will always be shown in the "Edit Channel" modal.
 
 [quote]
-:information_source: If your channel parameters are not 'human-readable', you may want to add a "Name" parameter, for the user to enter a more useful channel identifier for their reference. See [the hipchat provider](https://github.com/discourse/discourse-chat-integration/blob/master/lib/discourse_chat/provider/hipchat/hipchat_provider.rb#L7) for an example of this.
+:information_source: If your channel parameters are not 'human-readable', you may want to add a "Name" parameter, for the user to enter a more useful channel identifier for their reference. See [the hipchat provider](https://github.com/discourse/discourse-chat-integration/blob/28b41954670dc6b1ce52a3b65fdc0ee410f258d1/lib/discourse_chat/provider/hipchat/hipchat_provider.rb#L7) for an example of this.
 [/quote]
 
-4. Your module must also define the function `self.trigger_notification(post, channel)`. Inside this function you should write code to actually send the notification to your chat system. This will vary based on the provider, but will generally consist of sending a `RESTful` request to their API. Try looking at the implementations of [existing providers](https://github.com/discourse/discourse-chat-integration/tree/master/lib/discourse_chat/provider) to help you.
+4. Your module must also define the function `self.trigger_notification(post, channel)`. Inside this function you should write code to actually send the notification to your chat system. This will vary based on the provider, but will generally consist of sending a `RESTful` request to their API. Try looking at the implementations of [existing providers](https://github.com/discourse/discourse/tree/main/plugins/discourse-chat-integration/lib/discourse_chat_integration/provider) to help you.
 5. Make sure to handle errors returned by your provider's API. You should raise a `DiscourseChat::ProviderError`, and optionally specify a (client side) translation key which gives information about the error. This will be displayed in the admin user interface against the current channel. You can specify additional objects in the `info` hash, which will be included in the site's logs.
-6. To make sure Discourse loads your ruby file, you should add a `require_relative` line to the bottom of [provider.rb](https://github.com/discourse/discourse-chat-integration/blob/master/lib/discourse_chat/provider.rb).
+6. To make sure Discourse loads your ruby file, you should add a `require_relative` line to the bottom of [provider.rb](https://github.com/discourse/discourse/blob/main/plugins/discourse-chat-integration/lib/discourse_chat_integration/provider.rb).
 
 You should end up with something that looks like this:
 
@@ -241,4 +241,4 @@ link = "#{Discourse.base_url}/chat-transcript/#{secret}"
 
 The best way to go about implementing transcript support for a new provider is to look at the Slack implementation:
 
-https://github.com/discourse/discourse-chat-integration/blob/master/lib/discourse_chat/provider/slack/slack_transcript.rb
+https://github.com/discourse/discourse/blob/main/plugins/discourse-chat-integration/lib/discourse_chat_integration/provider/slack/slack_transcript.rb
