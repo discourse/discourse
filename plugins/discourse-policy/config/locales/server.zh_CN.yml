@@ -16,6 +16,8 @@ zh_CN:
       group_not_found: "找不到策略的群组"
       no_policy: "帖子没有策略"
       staff_only: "策略可能只适用于管理人员帖子"
+      policy_group_inaccessible: "目前无法接受此政策。请联系网站管理员。"
+      no_policy_permission: "您无权修改此帖子中的政策。"
     error:
       no_permission: "未授权"
   reports:
