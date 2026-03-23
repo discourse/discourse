@@ -352,6 +352,7 @@ RSpec.describe DiscourseUpdates do
           },
         )
 
+        UpcomingChanges.stubs(:image_exists?).returns(true)
         UpcomingChanges.stubs(:image_data).returns(
           {
             url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
@@ -399,6 +400,7 @@ RSpec.describe DiscourseUpdates do
     end
 
     before do
+      UpcomingChanges.stubs(:image_exists?).returns(true)
       UpcomingChanges.stubs(:image_data).returns(
         {
           url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",

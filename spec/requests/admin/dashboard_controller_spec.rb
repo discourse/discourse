@@ -292,6 +292,7 @@ RSpec.describe Admin::DashboardController do
               },
             },
           )
+          UpcomingChanges.stubs(:image_exists?).returns(true)
           UpcomingChanges.stubs(:image_data).returns(
             {
               url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",

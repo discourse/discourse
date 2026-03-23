@@ -84,6 +84,7 @@ RSpec.describe Jobs::CheckNewFeatures do
 
   context "when a permanent upcoming change is merged into an empty new-features feed" do
     before do
+      UpcomingChanges.stubs(:image_exists?).returns(true)
       UpcomingChanges.stubs(:image_data).returns(
         {
           url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
@@ -158,6 +159,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     end
 
     before do
+      UpcomingChanges.stubs(:image_exists?).returns(true)
       UpcomingChanges.stubs(:image_data).returns(
         {
           url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",

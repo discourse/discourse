@@ -230,7 +230,7 @@ module DiscourseUpdates
           created_at: became_permanent_at,
           updated_at: became_permanent_at,
           released_at: became_permanent_at,
-          screenshot_url: UpcomingChanges.image_data(permanent_uc[:setting])[:url],
+          screenshot_url: permanent_uc.dig(:upcoming_change, :image, :url),
           upcoming_change_setting_name: permanent_uc[:setting],
         }
       end
