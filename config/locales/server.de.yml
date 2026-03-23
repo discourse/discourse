@@ -280,7 +280,7 @@ de:
       greater_than: muss größer als %{count} sein
       greater_than_or_equal_to: muss größer oder gleich %{count} sein
       has_already_been_used: "wird bereits verwendet"
-      in: muss in %{count} sein
+      in: muss innerhalb von %{count} sein
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
       is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
@@ -1144,6 +1144,8 @@ de:
       weekly: "wöchentlich"
       every_month: "jeden Monat"
       every_six_months: "alle sechs Monate"
+  calendar_subscriptions:
+    application_name: "Kalender-Abonnements"
   user_api_key:
     title: 'Autorisiere „%{application_name}“'
     authorize: "Genehmigen"
@@ -1236,6 +1238,7 @@ de:
         desktop: "Desktop"
         mobile: "Mobil"
       yaxis: "Anzahl der Besuche"
+      description: "Anzahl der Besuche von angemeldeten Benutzern nach Gerätetyp."
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
@@ -1299,6 +1302,7 @@ de:
       description: "Seitenaufrufe für angemeldete Benutzer, anonyme Benutzer, bekannte Crawler und anderen Traffic."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
+      title: "TAB / MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
     daily_engaged_users:
@@ -1799,6 +1803,7 @@ de:
     moderators_manage_categories: "Moderatoren erlauben, Kategorien zu erstellen und zu verwalten"
     moderators_manage_groups: "Moderatoren erlauben, Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
+    change_post_ownership_allowed_groups: "Erlaube Benutzern in diesen Gruppen, den Eigentümer von Beiträgen zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
@@ -2234,7 +2239,7 @@ de:
     allow_likes_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website mit „Gefällt mir“ versehen. Für diese Einstellung muss die Einstellung `allow anonymous mode` aktiviert sein."
     anonymous_posting_allowed_groups: "Gruppen, die den anonymen Modus nutzen dürfen. Für diese Einstellung muss die Einstellung „allow anonymous mode“ aktiviert sein."
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
-    hide_user_profiles_from_public: "Deaktiviert Benutzerkarten und Benutzerprofile für anonyme Benutzer. Zusammengefasste Statistiken im Benutzerverzeichnis sind weiterhin zugänglich."
+    hide_user_profiles_from_public: "Deaktiviere Benutzerkarten und Benutzerprofile für anonyme Benutzer. Zusammengefasste Statistiken im Benutzerverzeichnis sind weiterhin zugänglich."
     hide_new_user_profiles: "Verstecke Benutzerprofile der Vertrauensstufe 1 oder niedriger vor der Öffentlichkeit und bei Benutzern der Vertrauensstufe 1, bis sie zum ersten Mal posten. Diese Funktion ist auf Websites mit must_approve_users und invite_only bedingungslos deaktiviert."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
     hide_user_activity_tab: "Blende die Registerkarte „Aktivität“ in Benutzerprofilen (außer für Administratoren und den Benutzer selbst) aus."
@@ -3043,9 +3048,9 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
+      - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
@@ -3057,9 +3062,9 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
+      - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 

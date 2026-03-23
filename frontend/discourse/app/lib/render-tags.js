@@ -77,7 +77,7 @@ export default function (topic, params) {
       classNames.push(params.className);
     }
 
-    buffer = `<div class='${classNames.join(" ")}' role='list' aria-label=${i18n("tagging.tags")}>`;
+    buffer = `<ul class='${classNames.join(" ")}' aria-label=${i18n("tagging.tags")}>`;
 
     let currentIndex = 0;
 
@@ -91,6 +91,7 @@ export default function (topic, params) {
           tagParams.extraClass = params.tagClasses[tagStr];
         }
 
+        buffer += "<li>";
         buffer += renderTag(tag, {
           description: topic?.tags_descriptions?.[tagStr],
           isPrivateMessage,
@@ -106,11 +107,13 @@ export default function (topic, params) {
           buffer += separatorSpan(currentIndex);
           currentIndex++;
         }
+        buffer += "</li>";
       }
     }
 
     // add custom results with separator
     for (let i = 0; i < callbackResults.length; i++) {
+      buffer += "<li>";
       buffer += callbackResults[i];
 
       // don't add separator to the last item
@@ -118,9 +121,10 @@ export default function (topic, params) {
         buffer += separatorSpan(currentIndex);
         currentIndex++;
       }
+      buffer += "</li>";
     }
 
-    buffer += "</div>";
+    buffer += "</ul>";
   }
 
   return buffer;

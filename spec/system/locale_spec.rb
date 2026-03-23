@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Locale choice", type: :system do
+RSpec.describe "Locale choice" do
   it "loads english locale successfully" do
     visit "/"
     expect(page).to have_css("html[lang='en']")

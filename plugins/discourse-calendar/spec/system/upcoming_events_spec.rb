@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Upcoming Events", type: :system do
+describe "Upcoming Events" do
   fab!(:admin)
   fab!(:user)
   fab!(:category)

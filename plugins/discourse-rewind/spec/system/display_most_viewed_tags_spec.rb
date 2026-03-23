@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Display most viewed tags in rewind", type: :system do
+describe "Display most viewed tags in rewind" do
   fab!(:current_user) { Fabricate(:user, created_at: DateTime.parse("2020-01-01")) }
   fab!(:tag_1, :tag)
   fab!(:tag_2, :tag)

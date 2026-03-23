@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Embed mode", type: :system do
+describe "Embed mode" do
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 

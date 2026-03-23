@@ -3676,11 +3676,11 @@ en:
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
-        unlist_topics: "Unlist Topics"
-        relist_topics: "Relist Topics"
+        unlist_topics: "Unlist topics"
+        relist_topics: "Relist topics"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
-        delete: "Delete Topics"
+        delete: "Delete topics"
         delete_topics_count:
           one: "Delete Topic"
           other: "Delete Topics"
@@ -3719,36 +3719,57 @@ en:
           other: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Set Category…"
-        close_topics: "Close Topics"
-        archive_topics: "Archive Topics"
+        change_category: "Update category"
+        close_topics: "Close topics"
+        archive_topics: "Archive topics"
         move_messages_to_inbox: "Move to Inbox"
         archive_messages: "Move to Archive"
-        notification_level: "Notifications…"
+        notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected:
-          one: "You have selected <b>%{count}</b> topic."
-          other: "You have selected <b>%{count}</b> topics."
         selected_sole_category:
           one: "You have selected <b>%{count}</b> topic from category:"
           other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
-        change_tags: "Replace Tags"
-        append_tags: "Append Tags"
+        change_tags: "Replace tags"
+        append_tags: "Add tags"
         choose_new_tags: "Choose new tags for these topics:"
-        choose_append_tags: "Choose new tags to append for these topics:"
+        choose_append_tags: "Add tags"
         changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove All Tags"
+        remove_tags: "Remove tags"
         confirm_remove_tags:
           one: "All tags will be removed from this topic. Are you sure?"
           other: "All tags will be removed from %{count} topics. Are you sure?"
+        confirm_update_topics:
+          one: "Update %{count} topic"
+          other: "Update %{count} topics"
+        confirm_close_topics:
+          one: "Close %{count} topic"
+          other: "Close %{count} topics"
+        confirm_archive_topics:
+          one: "Archive %{count} topic"
+          other: "Archive %{count} topics"
+        confirm_unlist_topics:
+          one: "Unlist %{count} topic"
+          other: "Unlist %{count} topics"
+        confirm_relist_topics:
+          one: "Relist %{count} topic"
+          other: "Relist %{count} topics"
+        confirm_archive_messages:
+          one: "Archive %{count} message"
+          other: "Archive %{count} messages"
+        confirm_move_to_inbox:
+          one: "Move %{count} message to inbox"
+          other: "Move %{count} messages to inbox"
+        confirm_delete_topics:
+          one: "Delete %{count} topic"
+          other: "Delete %{count} topics"
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
-        notify: "Notify users of this change."
+        notify: "Notify users of this change"
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
         completed_count:
@@ -3788,38 +3809,44 @@ en:
         name: "Dismiss"
       close_topics:
         name: "Close"
-        note: "Note"
+        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Learn more</a>"
+        note: "Add a note to these topics"
         optional: (optional)
       archive_topics:
         name: "Archive"
+        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Learn more</a>"
       archive_messages:
         name: "Move to Archive"
       move_messages_to_inbox:
         name: "Move to Inbox"
       unlist_topics:
         name: "Unlist"
+        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
       remove_tags:
         name: "Remove Tags"
+        description: "Remove all tags from the selected topics."
       append_tags:
-        name: "Append Tags"
+        name: "Add Tags"
+        description: "Add the following tags to the selected topics:"
       replace_tags:
         name: "Replace Tags"
+        description: "Replace all existing tags on the selected topics with the following:"
       delete_topics:
         name: "Delete"
+        description: "Permanently delete the selected topics. This action cannot be undone."
       update_category:
         name: "Update Category"
-        description: "Choose the new category for the selected topics"
+        description: "Move all selected topics to the following category:"
       reset_bump_dates:
         name: "Reset Bump Dates"
-        description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
+        description: "Do you want to update the bump dates to the last created post date? This may impact their ordering in the topic list."
       defer:
         name: "Mark Unread"
-        description: "Mark topics as unread"
       update_notifications:
         name: "Update Notifications"
-        description: "Change notification level to Watching, Tracking, Normal, or Muted"
+        description: "Update your personal notification level for the selected topics to:"
 
     topic:
       filter_to:
@@ -4756,6 +4783,9 @@ en:
       list: "List categories"
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
+      description_updated: "Description updated"
+      description_expand: "Show more"
+      description_collapse: "Show less"
       already_used: "This color has been used by another category"
       color_palette: "Color palette"
       security: "Security"
@@ -5995,8 +6025,7 @@ en:
         group_traffic: "Traffic"
         group_members: "Members"
         group_content: "Content & Health"
-        group_moderation: "Moderation"
-        group_security: "Security"
+        group_moderation_and_security: "Moderation & Security"
         group_other: "Other"
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 

@@ -465,7 +465,6 @@ tr_TR:
         predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."
         predefined_topics_description: "Sohbet başlatıcılar koleksiyonundan seçim yapın ve tartışmaları başlatın"
         use_predefined: "Şablonlara göz atın"
-        start_with_this: "Bununla başlayın"
         back: "Geri"
         icebreakers:
           fun_facts:
@@ -1812,6 +1811,23 @@ tr_TR:
         apps: "Uygulamalar"
         navigation_menu: "Navigasyon menüsü"
         upcoming_changes: "Yaklaşan değişiklikler"
+        calendar_subscriptions: "Takvim"
+      calendar_subscriptions:
+        description: "Favori takvim uygulamanızla (Google Takvim, Apple Takvim, Outlook vb.) senkronize etmek için abonelik URL'leri oluşturun. Bu URL'ler, hesabınızdaki takvim etkinliklerine (hatırlatıcılar, takvim etkinlikleri vb.) yönlendiren özel bağlantılardır. Oluşturulan abonelik URL'lerini istediğiniz zaman iptal edebilir veya yenileyebilirsiniz. "
+        generate: "Abonelik URL'leri Oluştur"
+        regenerate: "URL'leri Yeniden Oluştur"
+        regenerate_confirm: "Bu işlem, mevcut takvim abonelik URL'lerinizi geçersiz kılacaktır. Eski URL'leri kullanan tüm takvim uygulamaları güncellemeleri almayı durduracaktır. Devam etmek istiyor musunuz?"
+        revoke: "Aboneliği İptal Et"
+        revoke_confirm: "Bu işlem, takvim abonelik URL'lerinizi iptal edecektir. Bu URL'leri kullanan tüm takvim uygulamaları güncellemeleri almayı durduracaktır. Devam etmek istiyor musunuz?"
+        urls_warning: "Abonelik URL'leri hazır! Takvim uygulamanıza eklemek için aşağıdaki düğmelere tıklayın. Not: Bu URL'ler yalnızca bir kez görüntülenir."
+        bookmarks: "Yer imi hatırlatıcıları"
+        bookmarks_description: "Hatırlatma tarihli yer imleriniz"
+        copy: "URL'yi kopyala"
+        copied: "Kopyalandı!"
+        add_to_google: "Google Takvim"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple Takvimi"
+        active_subscription: "Etkin bir takvim aboneliğiniz var."
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
@@ -2991,6 +3007,7 @@ tr_TR:
       collapse: "Besteci panelini küçült"
       open: "Besteci panelini aç"
       abandon: "Besteciyi kapat ve taslağı sil"
+      edit_reason: "Düzenleme nedeninizi girin"
       enter_fullscreen: "Tam ekran besteci moduna gir"
       exit_fullscreen: "Tam ekran besteci modundan çık"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
@@ -3412,7 +3429,7 @@ tr_TR:
         confirm: "Onayla"
         select_all: "Tümünü Seç"
         clear_all: "Tümünü Temizle"
-        unlist_topics: "Konuları listeden kaldır"
+        unlist_topics: "Konuları gizle"
         relist_topics: "Konuları yeniden listele"
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
@@ -3455,36 +3472,57 @@ tr_TR:
           other: "Yenileri (%{count}) kapat"
         toggle: "konuların toplu seçimini aç/kapat"
         actions: "Toplu Eylemler"
-        change_category: "Kategori belirle…"
-        close_topics: "Konuları Kapat"
-        archive_topics: "Konuları Arşivle"
+        change_category: "Kategoriyi güncelle"
+        close_topics: "Konuları kapat"
+        archive_topics: "Konuları arşivle"
         move_messages_to_inbox: "Gelen kutusuna taşı"
         archive_messages: "Arşive taşı"
-        notification_level: "Bildirimler…"
+        notification_level: "Bildirimleri güncelle"
         change_notification_level: "Bildirim Seviyesini Değiştir"
         choose_new_category: "Konular için yeni kategoriyi seç:"
-        selected:
-          one: "<b>%{count}</b> konu seçtiniz."
-          other: "<b>%{count}</b> konu seçtiniz."
         selected_sole_category:
           one: "Kategoriden <b>%{count}</b> konu seçtiniz:"
           other: "Kategoriden <b>%{count}</b> konu seçtiniz:"
         selected_count:
           one: "%{count} tane seçildi"
           other: "%{count} tane seçildi"
-        change_tags: "Etiketleri Değiştir"
-        append_tags: "Etiketleri Sonuna Ekle"
+        change_tags: "Etiketleri değiştir"
+        append_tags: "Etiket ekle"
         choose_new_tags: "Bu konular için yeni etiketler seçin:"
-        choose_append_tags: "Bu konular için sona eklenecek yeni etiketleri seçin:"
+        choose_append_tags: "Etiket ekle"
         changed_tags: "Bu konuların etiketleri değiştirildi."
-        remove_tags: "Tüm Etiketleri Kaldır"
+        remove_tags: "Etiketleri kaldır"
         confirm_remove_tags:
           one: "Bu konudan tüm etiketler kaldırılacak. Emin misiniz?"
           other: "%{count} konudan tüm etiketler kaldırılacak. Emin misiniz?"
+        confirm_update_topics:
+          one: "%{count} konuyu güncelle"
+          other: "%{count} konuyu güncelle"
+        confirm_close_topics:
+          one: "%{count} konuyu kapat"
+          other: "%{count} konuyu kapat"
+        confirm_archive_topics:
+          one: "%{count} konuyu arşivle"
+          other: "%{count} konuyu arşivle"
+        confirm_unlist_topics:
+          one: "%{count} konuyu listeden kaldır"
+          other: "%{count} konuyu listeden kaldır"
+        confirm_relist_topics:
+          one: "%{count} konuyu yeniden listele"
+          other: "%{count} konuyu yeniden listele"
+        confirm_archive_messages:
+          one: "%{count} mesajı arşivle"
+          other: "%{count} mesajı arşivle"
+        confirm_move_to_inbox:
+          one: "%{count} mesajı gelen kutusuna taşı"
+          other: "%{count} mesajı gelen kutusuna taşı"
+        confirm_delete_topics:
+          one: "%{count} konuyu sil"
+          other: "%{count} konuyu sil"
         progress:
           one: "İlerleme: <strong>%{count}</strong> konu"
           other: "İlerleme: <strong>%{count}</strong> konu"
-        notify: "Kullanıcılara bu değişikliği bildir."
+        notify: "Kullanıcılara bu değişikliği bildir"
         performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
         completed: "Toplu işlemler başarıyla tamamlandı!"
         completed_count:
@@ -3522,38 +3560,44 @@ tr_TR:
         name: "Kapat"
       close_topics:
         name: "Kapat"
-        note: "Not"
+        description: "Kapatılan konular yeni yanıtların eklenmesini engeller. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Daha fazla bilgi edinin</a>"
+        note: "Bu konulara bir not ekleyin"
         optional: (isteğe bağlı)
       archive_topics:
         name: "Arşiv"
+        description: "Arşivlenen konular, arama sonuçlarında ve en son konular listesinde görünmez. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Daha fazla bilgi edinin</a>"
       archive_messages:
         name: "Arşive taşı"
       move_messages_to_inbox:
         name: "Gelen Kutusuna taşı"
       unlist_topics:
         name: "Listeden kaldır"
+        description: "Listelenmemiş konular konu listesinde görünmez, ancak doğrudan bağlantı yoluyla erişilebilir. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Daha fazla bilgi edinin</a>"
       relist_topics:
         name: "Yeniden listele"
       remove_tags:
         name: "Etiketleri kaldır"
+        description: "Seçili konulardaki tüm etiketleri kaldır."
       append_tags:
-        name: "Etiketleri sona ekle"
+        name: "Etiket ekle"
+        description: "Seçilen konulara aşağıdaki etiketleri ekleyin:"
       replace_tags:
         name: "Etiketleri Değiştir"
+        description: "Seçilen konulardaki mevcut tüm etiketleri aşağıdakilerle değiştirin:"
       delete_topics:
         name: "Sil"
+        description: "Seçilen konuları kalıcı olarak sil. Bu işlem geri alınamaz."
       update_category:
         name: "Kategoriyi Güncelle"
-        description: "Seçilen konular için yeni kategoriyi seçin"
+        description: "Seçili tüm konuları aşağıdaki kategoriye taşı:"
       reset_bump_dates:
         name: "Üste Sıçratma Tarihlerini sıfırla"
-        description: "Konunun öne çıkma tarihini son oluşturulan gönderi tarihine sıfırlayın; bu, konu listesindeki sıralamayı etkiler"
+        description: "Gönderilerin öne çıkarılma tarihlerini en son oluşturulma tarihine göre güncellemek ister misiniz? Bu, konu listesindeki sıralamalarını etkileyebilir."
       defer:
         name: "Okunmamış olarak işaretle"
-        description: "Konuları okunmamış olarak işaretle"
       update_notifications:
         name: "Bildirimleri güncelle"
-        description: "Bildirim seviyesini İzleniyor, Takip Ediliyor, Normal veya Ses Kapatıldı olarak değiştirin"
+        description: "Seçilen konular için kişisel bildirim düzeyinizi şu şekilde güncelleyin:"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -3729,6 +3773,9 @@ tr_TR:
       auto_close_immediate:
         one: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
         other: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
+      auto_delete_immediate:
+        one: "Konudaki son mesajın üzerinden %{count} saat geçti, bu nedenle konu hemen silinecek."
+        other: "Konudaki son mesajın üzerinden %{count} saat geçti, bu nedenle konu hemen silinecek."
       timeline:
         back: "Geri"
         back_description: "Son okunmamış gönderinize geri dönün"
@@ -4332,6 +4379,8 @@ tr_TR:
       advanced: "Gelişmiş"
       show_advanced: "Gelişmiş ayarlar"
       topic_template: "Şablon"
+      topic_title_placeholder: "Kategori konusu başlığı yer tutucusu"
+      topic_title_placeholder_placeholder: "[isteğe bağlı] bu kategori için özel konu başlığı yer tutucusu"
       tags: "Etiketler"
       localizations: "Yerelleştirmeler"
       localization:
@@ -4419,6 +4468,9 @@ tr_TR:
       list: "Kategorileri listele"
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
+      description_updated: "Açıklama güncellendi"
+      description_expand: "Daha fazla göster"
+      description_collapse: "Daha az göster"
       already_used: "Bu renk başka bir kategori tarafından kullanılmış."
       color_palette: "Renk paleti"
       security: "Güvenlik"
@@ -5591,8 +5643,7 @@ tr_TR:
         group_traffic: "Trafik"
         group_members: "Üyeler"
         group_content: "İçerik ve Sağlık"
-        group_moderation: "Moderasyon"
-        group_security: "Güvenlik"
+        group_moderation_and_security: "Moderasyon ve Güvenlik"
         group_other: "Diğer"
         legacy_warning: "Bu eski bir rapordur. Yakında kullanımdan kaldırılacaktır. Yenisini bulmak için yardıma ihtiyacınız varsa destek ekibiyle iletişime geçin."
       config_sections:

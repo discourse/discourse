@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .btn-edit-table {
   -webkit-touch-callout: none;
   user-select: none;
@@ -17,13 +19,16 @@
   }
 
   .discourse-touch & {
-    display: flex;
-    flex-direction: column-reverse;
-    padding-bottom: 0.5em;
+    @include viewport.until(xl) {
+      display: flex;
+      flex-direction: column-reverse;
+      padding-bottom: 0.5em;
 
-    .open-popup-link {
-      left: 0;
-      margin: 0;
+      .open-popup-link {
+        opacity: 100%;
+        left: 0;
+        margin: var(--space-2) 0 0;
+      }
     }
   }
 }

@@ -41,7 +41,6 @@ cs:
       llm_selector:
         none: "Žádný"
       features:
-        back: "Zpět"
         disabled: "(vypnuto)"
         groups: "Skupiny:"
         no_agent: "Nenastaveno"
@@ -113,7 +112,6 @@ cs:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
       ai_agent:
-        back: "Zpět"
         name: "Jméno"
         edit: "Upravit"
         export: "Export"
@@ -135,7 +133,6 @@ cs:
           button: "Přidat soubory"
           uploading: "Nahrává se..."
       tools:
-        back: "Zpět"
         export: "Export"
         import: "Import"
         name: "Název"
@@ -154,7 +151,6 @@ cs:
         short_title: "Pověření"
         name: "Název"
         secret: "Hodnota"
-        back: "Zpět"
         save: "Uložit"
         edit: "Upravit"
         delete: "Smazat"
@@ -164,7 +160,6 @@ cs:
         display_name: "Název"
         save: "Uložit"
         edit: "Upravit"
-        back: "Zpět"
         delete: Smazat
         quotas:
           group: "Skupina"
@@ -260,7 +255,6 @@ cs:
         ai_tool_action:
           tool: "Nástroj"
       embeddings:
-        back: "Zpět"
         save: "Uložit"
         delete: "Smazat"
         edit: "Upravit"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | Drawer", type: :system do
+RSpec.describe "List channels | Drawer" do
   fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }

@@ -15,12 +15,21 @@ tr_TR:
       reactions_title: "Tepkiler"
       state_panel:
         more_users: "ve %{count} tane daha..."
+        show_users: "Daha fazla kullanıcı göster"
+        hide_users: "Daha az kullanıcı göster"
+        reaction_group:
+          one: "%{reaction}: %{count} kullanıcı"
+          other: "%{reaction}: %{count} kullanıcı"
       reaction:
         forbidden: "Bu tepki çok uzun zaman önce oluşturuldu. Artık değiştirilemez veya kaldırılamaz."
       picker:
         react_with: "Bu gönderiye şununla tepki verin: %{reaction}"
         cant_remove_reaction: "Artık tepkinizi kaldıramazsınız"
         remove_reaction: "Bu %{reaction} tepkisini kaldır"
+      counter:
+        aria_label:
+          one: "%{count} yorum"
+          other: "%{count} yorum"
       main_reaction:
         add: "Bu gönderiyi beğen"
         remove: "Bu beğeniyi kaldır"

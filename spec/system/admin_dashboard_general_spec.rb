@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Dashboard General Tab", type: :system do
+describe "Admin Dashboard General Tab" do
   fab!(:admin)
   fab!(:user)
   fab!(:user_visit) { Fabricate(:user_visit, user: admin) }

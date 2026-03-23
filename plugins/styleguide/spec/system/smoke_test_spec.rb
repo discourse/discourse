@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Styleguide Smoke Test", type: :system do
+RSpec.describe "Styleguide Smoke Test" do
   fab!(:admin)
 
   # keep this hash updated when adding, removing or renaming components

@@ -529,7 +529,6 @@ uk:
         predefined_topics_subtitle: "Дайте новим учасникам тему для обговорення, виберіть шаблон для редагування та створіть свій власний."
         predefined_topics_description: "Виберіть з колекції тем для початку розмови, щоб розпочати обговорення"
         use_predefined: "Переглянути шаблони"
-        start_with_this: "Почніть з цього"
         back: "Назад"
         icebreakers:
           fun_facts:
@@ -2020,6 +2019,23 @@ uk:
         apps: "Застосунки"
         navigation_menu: "Меню навігації"
         upcoming_changes: "Майбутні зміни"
+        calendar_subscriptions: "Календар"
+      calendar_subscriptions:
+        description: "Створіть URL-адреси підписки для синхронізації з улюбленим додатком календаря (Календар Google, Календар Apple, Outlook тощо). Ці URL-адреси є приватними посиланнями на події календаря для вашого облікового запису (нагадування про закладки, події календаря тощо). Ви завжди можете скасувати або поновити створені URL-адреси підписки. "
+        generate: "Згенерувати URL-адреси підписки"
+        regenerate: "Згенерувати URL-адреси повторно"
+        regenerate_confirm: "Це зробить недійсними ваші існуючі URL-адреси підписки на календар. Будь-які програми календаря, що використовують старі URL-адреси, перестануть отримувати оновлення. Продовжити?"
+        revoke: "Скасувати підписку"
+        revoke_confirm: "Це скасує URL-адреси вашої підписки на календар. Будь-які програми календаря, які їх використовують, перестануть отримувати оновлення. Продовжити?"
+        urls_warning: "URL-адреси підписки готові! Натисніть кнопки нижче, щоб прив’язати їх до вашого календаря. Примітка: ці URL-адреси відображаються лише один раз."
+        bookmarks: "Нагадування про закладки"
+        bookmarks_description: "Ваші закладки з датами нагадування"
+        copy: "Копіювати URL-адресу"
+        copied: "Скопійовано!"
+        add_to_google: "Календар Google"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Календар Apple"
+        active_subscription: "У вас активна підписка на календар."
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
@@ -3289,6 +3305,7 @@ uk:
       collapse: "Згорнути панель редактора"
       open: "Відкрити панель редактора"
       abandon: "Закрити панель редактора та видалити чернетку"
+      edit_reason: "Додайте причину редагування"
       enter_fullscreen: "Панель редактора на весь екран"
       exit_fullscreen: "Вийти з повноекранного режиму редактора"
       exit_fullscreen_prompt: "Натисніть <kbd>ESC</kbd>, щоб вийти з повноекранного режиму"
@@ -3756,8 +3773,8 @@ uk:
         confirm: "Підтвердити"
         select_all: "Обрати все"
         clear_all: "Очистити все"
-        unlist_topics: "Виключити з усіх списків тем"
-        relist_topics: "Повторний Список тем"
+        unlist_topics: "Скасувати список тем"
+        relist_topics: "Перебудувати список тем"
         reset_bump_dates: "Скинути дату підняття"
         defer: "Позначити як непрочитане"
         delete: "Видалити теми"
@@ -3815,19 +3832,14 @@ uk:
           other: "Відхилити (%{count}) нових…"
         toggle: "перемикання масового вибору тем"
         actions: "Масові дії"
-        change_category: "Обрати категорію"
+        change_category: "Оновити категорію"
         close_topics: "Закрити теми"
         archive_topics: "Архівувати теми"
         move_messages_to_inbox: "Перемістити у Вхідні"
         archive_messages: "Перемістити до архіву"
-        notification_level: "Сповіщення…"
+        notification_level: "Сповіщення про оновлення"
         change_notification_level: "Змінити рівень сповіщень"
         choose_new_category: "Виберіть новий розділ для цих тем:"
-        selected:
-          one: "Ви вибрали <b>%{count}</b> тему."
-          few: "Ви вибрали <b>%{count}</b> теми."
-          many: "Ви вибрали <b>%{count}</b> тем."
-          other: "Ви вибрали <b>%{count}</b> тем."
         selected_sole_category:
           one: "Ви вибрали <b>%{count}</b> тему з категорії:"
           few: "Ви вибрали <b>%{count}</b> теми з категорії:"
@@ -3838,23 +3850,63 @@ uk:
           few: "%{count} вибрано"
           many: "%{count} вибрано"
           other: "%{count} вибрано"
-        change_tags: "Замінити теґи"
+        change_tags: "Замінити теги"
         append_tags: "Додати теґи"
         choose_new_tags: "Виберіть нові теґи для цих тем:"
-        choose_append_tags: "Виберіть нові теґи, щоб додати що цих тем:"
+        choose_append_tags: "Додати теґи"
         changed_tags: "Теґи цих тем було змінено."
-        remove_tags: "Видалити всі теґи"
+        remove_tags: "Видалити теги"
         confirm_remove_tags:
           one: "Усі теґи будуть видалені з цієї теми. Ви впевнені"
           few: "Усі теґи будуть видалені з <b>%{count}</b> тем. Ви впевнені?"
           many: "Усі теґи будуть видалені з <b>%{count}</b> тем. Ви впевнені?"
           other: "Усі теґи буде видалено з <b>%{count}</b> тем. Ви впевнені?"
+        confirm_update_topics:
+          one: "Оновити %{count} тему"
+          few: "Оновити %{count} теми"
+          many: "Оновити %{count} тем"
+          other: "Оновити %{count} тем"
+        confirm_close_topics:
+          one: "Закрити %{count} тему"
+          few: "Закрити %{count} теми"
+          many: "Закрити %{count} тем"
+          other: "Закрити %{count} тем"
+        confirm_archive_topics:
+          one: "Архівувати %{count} тему"
+          few: "Архівувати %{count} теми"
+          many: "Архівувати %{count} тем"
+          other: "Архівувати %{count} тем"
+        confirm_unlist_topics:
+          one: "Видалити %{count} тему"
+          few: "Видалити %{count} теми"
+          many: "Видалити %{count} тем"
+          other: "Видалити %{count} тем"
+        confirm_relist_topics:
+          one: "Перерахувати %{count} тему"
+          few: "Перерахувати %{count} теми"
+          many: "Перерахувати %{count} тем"
+          other: "Перерахувати %{count} тем"
+        confirm_archive_messages:
+          one: "Архівувати %{count} повідомлення"
+          few: "Архівувати %{count} повідомлення"
+          many: "Архівувати %{count} повідомлень"
+          other: "Архівувати %{count} повідомлень"
+        confirm_move_to_inbox:
+          one: "Перемістити %{count} повідомленнядо папки \"Вхідні\""
+          few: "Перемістити %{count} повідомлення до папки \"Вхідні\""
+          many: "Перемістити %{count} повідомлень до папки \"Вхідні\""
+          other: "Перемістити %{count} повідомлень до папки \"Вхідні\""
+        confirm_delete_topics:
+          one: "Видалити %{count} тему"
+          few: "Видалити %{count} теми"
+          many: "Видалити %{count} тем"
+          other: "Видалити %{count} тем"
         progress:
           one: "Обробка: <strong>%{count}</strong> тема"
           few: "Обробка: <strong>%{count}</strong> теми"
           many: "Обробка: <strong>%{count}</strong> тем"
           other: "Обробка: <strong>%{count}</strong> тем"
-        notify: "Повідомте користувачів про цю зміну."
+        notify: "Повідомте користувачів про цю зміну"
         performing: "Виконання масових операцій, зачекайте…"
         completed: "Масові операції успішно завершено!"
         completed_count:
@@ -3900,38 +3952,44 @@ uk:
         name: "Відкласти"
       close_topics:
         name: "Закрити"
-        note: "Примітка"
+        description: "Закриті теми запобігають появі нових відповідей. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Дізнатися більше</a>"
+        note: "Додати примітку до цих тем"
         optional: (опціонально)
       archive_topics:
         name: "Архів"
+        description: "Архівні теми приховані від пошуку та списку останніх тем. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Дізнатися більше</a>"
       archive_messages:
         name: "Перемістити до архіву"
       move_messages_to_inbox:
         name: "Перемістити у Вхідні"
       unlist_topics:
         name: "Вилучити зі списку"
+        description: "Непублічні теми приховані у списку тем, але до них все ще можна отримати доступ за прямим посиланням. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Дізнатися більше</a>"
       relist_topics:
         name: "Вставити повторно"
       remove_tags:
         name: "Видалити теги"
+        description: "Видалити всі теги з вибраних тем."
       append_tags:
-        name: "Додати теґи"
+        name: "Додати теги"
+        description: "Додати наступні теги до вибраних тем:"
       replace_tags:
         name: "Замінити теґи"
+        description: "Замінити всі існуючі теги на вибрані теми наступним:"
       delete_topics:
         name: "Видалити"
+        description: "Видалити вибрані теми назавжди. Цю дію не можна скасувати."
       update_category:
         name: "Оновити категорію"
-        description: "Виберіть нову категорію для обраних тем"
+        description: "Перемістити всі вибрані теми до наступної категорії:"
       reset_bump_dates:
         name: "Скинути дату підняття"
-        description: "Скинути дату підняття теми до дати останнього створеного повідомлення, що впливає на порядок у списку тем"
+        description: "Ви хочете оновити дати оновлень до дати останнього створеного допису? Це може вплинути на їх порядок у списку тем."
       defer:
         name: "Позначити як непрочитане"
-        description: "Позначити теми як непрочитані"
       update_notifications:
         name: "Сповіщення про оновлення"
-        description: "Змініть рівень сповіщень на «Перегляд», «Стеження», «Звичайний» або «Вимкнено»."
+        description: "Оновіть свій особистий рівень сповіщень для вибраних тем до:"
     topic:
       filter_to:
         one: "%{count} допис в темі"
@@ -4129,6 +4187,11 @@ uk:
         few: "Останній допис в цій темі зроблений %{count} години назад, а тому дана тема буде закрита негайно."
         many: "Останній допис в цій темі зроблений %{count} годин тому, а тому дана тема буде закрита негайно."
         other: "Останній допис в цій темі зроблений %{count} годин тому, а тому дана тема буде закрита негайно."
+      auto_delete_immediate:
+        one: "Останній допис у темі %{count} годину тому, тему буде негайно видалено."
+        few: "Останній допис у темі був %{count} години тому, тему буде негайно видалено."
+        many: "Останній допис у темі був %{count} годин тому, тему буде негайно видалено."
+        other: "Останній допис у темі був %{count} годин тому, тему буде негайно видалено."
       timeline:
         back: "Назад"
         back_description: "Повернутися до вашого останнього непрочитаного допису"
@@ -4804,6 +4867,8 @@ uk:
       advanced: "Розширений"
       show_advanced: "Розширені налаштування"
       topic_template: "Шаблон"
+      topic_title_placeholder: "Заповнювач назви теми категорії"
+      topic_title_placeholder_placeholder: "[необов'язково] тимчасова назва теми для цієї категорії"
       tags: "Теґи"
       localizations: "Локалізації"
       localization:
@@ -4891,6 +4956,9 @@ uk:
       list: "Список категорій"
       no_description: "Будь ласка, додайте опис для цього розділу."
       change_in_category_topic: "Редагувати опис"
+      description_updated: "Опис оновлено"
+      description_expand: "Показати більше"
+      description_collapse: "Показати менше"
       already_used: "Цей колір вже використовується іншим розділом"
       color_palette: "Кольорова палітра"
       security: "Безпека"
@@ -6153,8 +6221,7 @@ uk:
         group_traffic: "Трафік"
         group_members: "Учасники"
         group_content: "Контент і здоров'я"
-        group_moderation: "Модерація"
-        group_security: "Безпека"
+        group_moderation_and_security: "Модерація та безпека"
         group_other: "Інше"
         legacy_warning: "Це застарілий звіт. Незабаром його буде вилучено. Якщо вам потрібна допомога в пошуку заміни, зверніться до служби підтримки."
       config_sections:

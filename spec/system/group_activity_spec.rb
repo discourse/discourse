@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Group activity", type: :system do
+describe "Group activity" do
   fab!(:user)
   fab!(:group)
 

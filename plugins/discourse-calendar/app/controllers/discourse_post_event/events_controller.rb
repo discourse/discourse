@@ -23,6 +23,27 @@ module DiscoursePostEvent
 
       respond_to do |format|
         format.ics do
+          after_time = filtered_events_params[:after]&.to_datetime || Time.current
+          before_time = filtered_events_params[:before]&.to_datetime || 1.year.from_now
+
+          @ics_events =
+            @events.flat_map do |event|
+              if event.recurring?
+                expanded =
+                  DiscoursePostEvent::Action::ExpandOccurrences.call(
+                    event: event,
+                    after: after_time,
+                    before: before_time,
+                    limit: 52,
+                  )
+                expanded[:occurrences].map { |occ| { event: event, **occ } }
+              else
+                [{ event: event, starts_at: event.starts_at, ends_at: event.ends_at }]
+              end
+            end
+
+          @ics_events = @ics_events.sort_by { |e| e[:starts_at] || Time.current }.first(500)
+
           filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}.ics"
           response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
         end
@@ -172,6 +193,7 @@ module DiscoursePostEvent
         :category_id,
         :include_subcategories,
         :include_interested,
+        :include_ongoing,
         :limit,
         :attending_user,
         :before,
@@ -182,6 +204,7 @@ module DiscoursePostEvent
 
     def format_time(event, time)
       return nil unless time
+      return time.utc.strftime("%Y-%m-%d") if event.all_day
 
       if event.show_local_time
         time.in_time_zone(event.timezone).strftime("%Y-%m-%dT%H:%M:%S")

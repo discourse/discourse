@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Dates separators", type: :system do
+RSpec.describe "Dates separators" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
 

@@ -41,6 +41,8 @@ export default function (helpers) {
             raw: "existing body\n\nhttp://somegoodurl.com",
             tags: ["hello", "world"],
           },
+          fancy_title: "<p>existing body</p>",
+          cooked: "<p>existing body</p>\n\n<p>http://somegoodurl.com</p>",
           version: 1,
           can_edit: true,
           editable_fields: [
@@ -277,6 +279,9 @@ export default function (helpers) {
     Object.entries(JSON.parse(request.requestBody).reviewable).forEach((t) => {
       set(result, t[0], t[1]);
     });
+    if (result.payload?.raw) {
+      result.cooked = `<p>${result.payload.raw}</p>`;
+    }
     return response(200, result);
   });
 }

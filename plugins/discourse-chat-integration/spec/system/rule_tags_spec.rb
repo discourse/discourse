@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat Integration Rule Tags", type: :system do
+RSpec.describe "Chat Integration Rule Tags" do
   fab!(:admin)
   fab!(:tag1) { Fabricate(:tag, name: "support") }
   fab!(:tag2) { Fabricate(:tag, name: "bug") }

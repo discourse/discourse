@@ -10,7 +10,7 @@ fr:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permet la recherche alimentée par l'IA"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ fr:
         none: "Jamais"
       features:
         short_title: "Fonctionnalités"
-        back: "Retour"
         disabled: "(désactivée)"
         groups: "Groupes :"
         llm:
@@ -212,7 +211,6 @@ fr:
           match_concepts: "Correspondance de concepts"
           deduplicate_concepts: "Déduplication des concepts"
         ai_helper:
-          name: "Assistant"
           description: "Permet aux utilisateurs d'interagir avec la communauté, par exemple en créant des sujets, en rédigeant des articles et en lisant du contenu"
           proofread: Relire le texte
           title_suggestions: "Suggérer des titres"
@@ -348,7 +346,6 @@ fr:
           replies:
             one: "Appliquer à la première réponse uniquement"
             other: "Appliquer aux %{count} premières réponses"
-        back: "Retour"
         name: "Nom"
         edit: "Modifier"
         export: "Exporter"
@@ -441,7 +438,6 @@ fr:
           uploading: "Envoi en cours…"
           remove: "Supprimer le téléversement"
       tools:
-        back: "Retour"
         short_title: "Outils"
         export: "Exporter"
         import: "Importer"
@@ -483,7 +479,6 @@ fr:
         short_title: "Identifiants"
         name: "Nom"
         secret: "Valeur"
-        back: "Retour"
         save: "Enregistrer"
         edit: "Modifier"
         delete: "Supprimer"
@@ -509,7 +504,6 @@ fr:
         save: "Enregistrer"
         edit: "Modifier"
         saved: "Modèle LLM enregistré"
-        back: "Retour"
         confirm_delete: Voulez-vous vraiment supprimer ce modèle ?
         delete: Supprimer
         quotas:
@@ -667,7 +661,6 @@ fr:
         short_title: "Intégrations"
         description: "Les intégrations sont des représentations numériques de données qui capturent le sens et les relations, et permettent aux fonctionnalités de Discourse AI telles que les sujets connexes et la recherche IA de comprendre et de connecter le contenu."
         new: "Nouvelle intégration"
-        back: "Retour"
         save: "Enregistrer"
         saved: "Configuration d'intégration enregistrée"
         delete: "Supprimer"
@@ -727,6 +720,7 @@ fr:
         collapse_view_label: "Quitter le mode plein écran (bouton Échap ou Retour)"
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
+        title: "Robot IA"
         llm: "Modèle"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"

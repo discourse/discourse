@@ -478,7 +478,7 @@ acceptance("User menu", function (needs) {
         "drafts link has the right label with count of the user's drafts"
       );
     assert
-      .dom("#quick-access-profile ul li.drafts a .d-icon-user_menu\\.drafts")
+      .dom("#quick-access-profile ul li.drafts a .d-icon-pencil")
       .exists("drafts link has the right icon");
 
     assert

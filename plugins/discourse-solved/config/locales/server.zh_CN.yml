@@ -41,6 +41,7 @@ zh_CN:
     solved_add_schema_markup: "将 QAPage 架构标记添加到 HTML。"
     enable_solved_tags: "允许用户选择解决方案的标签。"
     prioritize_solved_topics_in_search: "在搜索结果中优先显示已解决的话题。"
+    enable_support_category_type_setup: "在创建分类时启用“支持型分类”选项。注意：必须先启用 'enable simplified category creation' 功能，此设置才会生效。"
     show_who_marked_solved: "显示谁将该话题标记为已解决。它会在该话题的第一个帖子以及工具提示中的回答帖子中显示。"
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

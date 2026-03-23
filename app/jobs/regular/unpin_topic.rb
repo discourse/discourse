@@ -8,7 +8,7 @@ module Jobs
       return if topic_id.blank?
 
       topic = Topic.find_by(id: topic_id)
-      topic.update_pinned(false) if topic.present?
+      topic.presence&.update_pinned(false)
     end
   end
 end

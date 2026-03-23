@@ -8,7 +8,6 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import PluginConnector from "discourse/components/plugin-connector";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { helperContext } from "discourse/lib/helpers";
@@ -51,7 +50,7 @@ const ARGS_DEPRECATION_MSG =
 
 **/
 
-export default class PluginOutletComponent extends Component {
+export default class PluginOutlet extends Component {
   @service clientErrorHandler;
 
   context = {

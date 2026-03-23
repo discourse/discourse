@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Migrations::TopologicalSorter do
+RSpec.describe Migrations::TopologicalSorter do
   def test_class(name:, priority: nil, dependencies: nil)
     Class.new do
       define_singleton_method(:name) { name }

@@ -1633,6 +1633,10 @@ ja:
         apps: "アプリ連携"
         navigation_menu: "ナビゲーションメニュー"
         upcoming_changes: "次回の変更"
+        calendar_subscriptions: "カレンダー"
+      calendar_subscriptions:
+        copied: "コピーしました！"
+        add_to_google: "Google カレンダー"
       change_password:
         success: "(メール送信済み)"
         in_progress: "(メール送信中)"
@@ -3150,11 +3154,8 @@ ja:
         confirm: "確認"
         select_all: "すべて選択"
         clear_all: "すべてクリア"
-        unlist_topics: "トピックを非表示"
-        relist_topics: "トピックを表示"
         reset_bump_dates: "バンプ日をリセットする"
         defer: "未読にする"
-        delete: "トピックを削除"
         delete_topics_count:
           other: "トピックを削除"
         delete_posts_count:
@@ -3185,31 +3186,22 @@ ja:
           other: "新規を閉じる (%{count})"
         toggle: "トピックの一括選択を切り替える"
         actions: "一括操作"
-        change_category: "カテゴリを設定…"
-        close_topics: "トピックをクローズ"
-        archive_topics: "トピックをアーカイブ"
         move_messages_to_inbox: "受信トレイに移動"
         archive_messages: "アーカイブに移動"
-        notification_level: "通知…"
         change_notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択:"
-        selected:
-          other: "<b>%{count}</b> 件のトピックを選択しました。"
         selected_sole_category:
           other: "カテゴリから <b>%{count} 件</b>のトピックを選択しました:"
         selected_count:
           other: "%{count} 個選択済み"
-        change_tags: "タグを置換"
         append_tags: "タグを追加"
         choose_new_tags: "これらのトピックに新しいタグを選択:"
-        choose_append_tags: "これらのトピックに追加する新しいタグを選択:"
+        choose_append_tags: "タグを追加"
         changed_tags: "トピックのタグが変更されました。"
-        remove_tags: "すべてのタグを削除"
         confirm_remove_tags:
           other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
         progress:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
-        notify: "この変更をユーザーに通知します。"
         performing: "一括操作を実行中です。お待ちください…"
         completed: "一括操作が完了しました！"
         error_topic_count:
@@ -3237,7 +3229,6 @@ ja:
         name: "閉じる"
       close_topics:
         name: "閉じる"
-        note: "注意"
         optional: (オプション)
       archive_topics:
         name: "アーカイブ"
@@ -3251,24 +3242,18 @@ ja:
         name: "再掲載"
       remove_tags:
         name: "タグを削除"
-      append_tags:
-        name: "タグを追加"
       replace_tags:
         name: "タグを置換"
       delete_topics:
         name: "削除"
       update_category:
         name: "カテゴリを更新"
-        description: "選択したトピックの新しいカテゴリを選択します"
       reset_bump_dates:
         name: "バンプ日をリセット"
-        description: "トピックのバンプ日を投稿の最終作成日にリセットします。これにより、トピックリストの順序が変わります。"
       defer:
         name: "未読にする"
-        description: "トピックを未読としてマーク"
       update_notifications:
         name: "通知を更新"
-        description: "通知レベルをウォッチ中、追跡中、通常、またはミュートに変更します"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -4074,6 +4059,8 @@ ja:
       list: "カテゴリをリスト表示"
       no_description: "このカテゴリの説明を追加してください。"
       change_in_category_topic: "説明を編集する"
+      description_expand: "もっと表示"
+      description_collapse: "表示を減らす"
       already_used: "この色は他のカテゴリで使用されています。"
       color_palette: "色パレット"
       security: "セキュリティ"
@@ -5167,8 +5154,6 @@ ja:
         back: "すべてのレポートに戻る"
         group_traffic: "トラフィック"
         group_members: "メンバー"
-        group_moderation: "モデレーション"
-        group_security: "セキュリティ"
         group_other: "その他"
       config_sections:
         account:

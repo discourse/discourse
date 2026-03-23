@@ -50,7 +50,7 @@ export default class SidebarSectionLinkPrefix extends Component {
         }}
       >
         {{#if (eq @prefixType "image")}}
-          <img src={{this.prefixValue}} class="prefix-image" />
+          <img src={{this.prefixValue}} class="prefix-image" alt="" />
         {{else if (eq @prefixType "text")}}
           <span class="prefix-text">
             {{this.prefixValue}}

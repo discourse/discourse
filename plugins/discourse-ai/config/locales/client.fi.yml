@@ -10,7 +10,7 @@ fi:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Sallii tekoälyhaun"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ fi:
         none: "Ei valittu"
       features:
         short_title: "Ominaisuudet"
-        back: "Takaisin"
         disabled: "(pois käytöstä)"
         groups: "Ryhmät:"
         llm:
@@ -212,7 +211,6 @@ fi:
           match_concepts: "Käsitteiden sovittaminen"
           deduplicate_concepts: "Käsitteiden deduplikaatio"
         ai_helper:
-          name: "Apuri"
           description: "Auttaa käyttäjiä vuorovaikutuksessa yhteisön kanssa, kuten ketjujen luomisessa, viestien kirjoittamisessa ja sisällön lukemisessa"
           proofread: Oikolue teksti
           title_suggestions: "Ehdota otsikoita"
@@ -348,7 +346,6 @@ fi:
           replies:
             one: "Käytä vain ensimmäiseen vastaukseen"
             other: "Käytä vain %{count} ensimmäiseen vastaukseen"
-        back: "Takaisin"
         name: "Nimi"
         edit: "Muokkaa"
         export: "Vie"
@@ -441,7 +438,6 @@ fi:
           uploading: "Ladataan..."
           remove: "Poista lataus"
       tools:
-        back: "Takaisin"
         short_title: "Työkalut"
         export: "Vie"
         import: "Tuo"
@@ -483,7 +479,6 @@ fi:
         short_title: "Tunnistetiedot"
         name: "Nimi"
         secret: "Arvo"
-        back: "Takaisin"
         save: "Tallenna"
         edit: "Muokkaa"
         delete: "Poista"
@@ -509,7 +504,6 @@ fi:
         save: "Tallenna"
         edit: "Muokkaa"
         saved: "LLM-malli tallennettu"
-        back: "Takaisin"
         confirm_delete: Oletko varma, että haluat poistaa tämän mallin?
         delete: Poista
         quotas:
@@ -667,7 +661,6 @@ fi:
         short_title: "Upotukset"
         description: "Upotukset ovat datan numeerisia esityksiä, jotka tallentavat merkityksen ja suhteet. Niiden avulla Discoursen tekoälyominaisuudet, kuten aiheeseen liittyvät ketjut ja tekoälyhaku, voivat ymmärtää ja yhdistää sisältöä."
         new: "Uusi upotus"
-        back: "Takaisin"
         save: "Tallenna"
         saved: "Upotusmääritykset tallennettu"
         delete: "Poista"
@@ -727,6 +720,7 @@ fi:
         collapse_view_label: "Poistu koko näytön tilasta (Esc- tai Takaisin-painike)"
         click_to_run_label: "Suorita artefakti"
       ai_bot:
+        title: "Tekoälybotti"
         llm: "Malli"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"

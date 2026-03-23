@@ -1112,6 +1112,8 @@ gl:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Apps"
+      calendar_subscriptions:
+        copied: "Copiado!"
       change_password:
         success: "(correo enviado)"
         in_progress: "(enviando o correo)"
@@ -2105,9 +2107,6 @@ gl:
         confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Borrar todo"
-        unlist_topics: "Retirar temas da listaxe"
-        relist_topics: "Refacer a listaxe de temas"
-        delete: "Eliminar temas"
         delete_topics_count:
           one: "Eliminar tema"
           other: "Eliminar temas"
@@ -2119,20 +2118,11 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
-        close_topics: "Pechar temas"
-        archive_topics: "Arquivar temas"
         move_messages_to_inbox: "Mover á caixa de entrada"
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
-        selected:
-          one: "Seleccionou <b>%{count}</b> tema."
-          other: "Seleccionou <b>%{count}</b> temas."
-        change_tags: "Substituír etiquetas"
-        append_tags: "Anexar etiquetas"
         choose_new_tags: "Seleccione novas etiquetas para estes temas:"
-        choose_append_tags: "Seleccione novas etiquetas para anexar a estes temas:"
         changed_tags: "As etiquetas deses temas cambiaron."
-        remove_tags: "Retirar etiquetas"
         confirm_remove_tags:
           one: "Retiraranse todas as etiquetas deste tema. Está seguro?"
           other: "Retiraranse todas as etiquetas destes <b>%{count}</b> temas. Está seguro?"
@@ -2163,8 +2153,6 @@ gl:
         name: "Mover á caixa de entrada"
       remove_tags:
         name: "Retirar etiquetas"
-      append_tags:
-        name: "Anexar etiquetas"
       replace_tags:
         name: "Substituír etiquetas"
       delete_topics:
@@ -3419,8 +3407,6 @@ gl:
         sidebar_title: "Informes"
         group_traffic: "Tráfico"
         group_members: "Membros"
-        group_moderation: "Moderación"
-        group_security: "Seguranza"
         group_other: "Outro"
       config_sections:
         account:

@@ -198,6 +198,8 @@
         align-items: center;
         justify-content: center;
         gap: var(--space-1);
+        padding: var(--space-2);
+        white-space: normal;
 
         &:hover,
         &:focus-visible {

@@ -593,7 +593,6 @@ ar:
         predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
         predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
         use_predefined: "تصفح القوالب"
-        start_with_this: "ابدأ بهذا"
         back: "رجوع"
         icebreakers:
           fun_facts:
@@ -2214,6 +2213,10 @@ ar:
         apps: "التطبيقات"
         navigation_menu: "قائمة التنقل"
         upcoming_changes: "التغييرات القادمة"
+        calendar_subscriptions: "التقويم"
+      calendar_subscriptions:
+        copied: "تم النسخ!"
+        add_to_google: "تقويم Google"
       change_password:
         success: "(تم إرسال رسالة البريد الإلكتروني)"
         in_progress: "(جارٍ إرسال رسالة البريد الإلكتروني)"
@@ -4070,11 +4073,8 @@ ar:
         confirm: "تأكيد"
         select_all: "تحديد الكل"
         clear_all: "مسح الكل"
-        unlist_topics: "إلغاء إدراج الموضوعات"
-        relist_topics: "إعادة إدراج الموضوعات"
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
         defer: "وضع علامة كغير مقروءة"
-        delete: "حذف الموضوعات"
         delete_topics_count:
           zero: "حذف الموضوعات"
           one: "حذف الموضوع"
@@ -4145,21 +4145,10 @@ ar:
           other: "تجاهل الجديدة (%{count})"
         toggle: "تفعيل التحديد الجماعي للموضوعات"
         actions: "الإجراءات الجماعية"
-        change_category: "ضبط الفئة…"
-        close_topics: "إغلاق الموضوعات"
-        archive_topics: "أرشفة الموضوعات"
         move_messages_to_inbox: "النقل إلى صندوق الوارد"
         archive_messages: "النقل إلى الأرشيف"
-        notification_level: "الإشعارات…"
         change_notification_level: "تغيير مستوى الإشعارات"
         choose_new_category: "اختر الفئة الجديدة للموضوعات:"
-        selected:
-          zero: "لقد حدَّدت <b>%{count}</b> موضوع."
-          one: "لقد حدَّدت موضوعًا واحدًا (<b>%{count}</b>)."
-          two: "لقد حدَّدت موضوعين (<b>%{count}</b>)."
-          few: "لقد حدَّدت <b>%{count}</b> موضوعات."
-          many: "لقد حدَّدت <b>%{count}</b> موضوعًا."
-          other: "لقد حدَّدت <b>%{count}</b> موضوع."
         selected_sole_category:
           zero: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
           one: "لقد حدَّدت موضوعًا واحدًا (<b>%{count}</b>) من الفئة:"
@@ -4174,12 +4163,10 @@ ar:
           few: "المحدَّدة: %{count}"
           many: "المحدَّدة: %{count}"
           other: "المحدَّدة: %{count}"
-        change_tags: "استبدال الوسوم"
-        append_tags: "إضافة الوسوم"
+        append_tags: "إضافة وسوم"
         choose_new_tags: "اختيار الوسوم الجديدة لهذه الموضوعات:"
-        choose_append_tags: "اختيار الوسوم الجديدة لإضافتها إلى هذه الموضوعات:"
+        choose_append_tags: "إضافة وسوم"
         changed_tags: "تم تغيير وسومات هذه الموضوعات."
-        remove_tags: "إزالة كل الوسوم"
         confirm_remove_tags:
           zero: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوع. هل أنت متأكد؟"
           one: "ستتم إزالة كل الوسوم من هذا الموضوع. هل أنت متأكد؟"
@@ -4194,7 +4181,7 @@ ar:
           few: "التقدُّم: <strong>%{count}</strong> موضوعات"
           many: "التقدُّم: <strong>%{count}</strong> موضوعًا"
           other: "التقدُّم: <strong>%{count}</strong> موضوع"
-        notify: "إخطار المستخدمين بهذا التغيير."
+        notify: "إخطار المستخدمين بهذا التغيير"
         performing: "جارٍ تنفيذ عمليات جماعية، يُرجى الانتظار..."
         completed: "تم تنفيذ العمليات المجمعة بنجاح!"
         completed_count:
@@ -4248,7 +4235,6 @@ ar:
         name: "تجاهل"
       close_topics:
         name: "إغلاق"
-        note: "ملاحظة"
         optional: (اختياري)
       archive_topics:
         name: "الأرشيف"
@@ -4262,24 +4248,18 @@ ar:
         name: "إعادة الإدراج"
       remove_tags:
         name: "إزالة الوسوم"
-      append_tags:
-        name: "إضافة الوسوم"
       replace_tags:
         name: "استبدال الوسوم"
       delete_topics:
         name: "حذف"
       update_category:
         name: "تحديث الفئة"
-        description: "اختر الفئة الجديدة للموضوعات المحدَّدة"
       reset_bump_dates:
         name: "إعادة تعيين تواريخ الرفع"
-        description: "إعادة تعيين تاريخ رفع الموضوع إلى تاريخ آخر منشور تم إنشاؤه، مما يؤثر على الترتيب في قائمة الموضوعات"
       defer:
         name: "وضع علامة غير مقروءة"
-        description: "وضع علامة على الموضوعات كغير مقروءة"
       update_notifications:
         name: "تحديث الإشعارات"
-        description: "تغيير مستوى الإشعارات إلى \"مراقبة\" أو \"تتبع\" أو \"عادي\" أو \"كتم\""
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -5318,6 +5298,8 @@ ar:
       list: "إدراج الفئات"
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
+      description_expand: "عرض المزيد"
+      description_collapse: "عرض أقل"
       already_used: "هذا اللون مستخدم بالفعل في فئة أخرى"
       color_palette: "لوحة الألوان"
       security: "الأمان"
@@ -6668,8 +6650,6 @@ ar:
         group_traffic: "الزيارات"
         group_members: "الأعضاء"
         group_content: "المحتوى والصحة"
-        group_moderation: "الإشراف"
-        group_security: "الأمان"
         group_other: "أخرى"
         legacy_warning: "هذا تقرير قديم، وسيتم إيقافه قريبًا. يرجى الاتصال بالدعم الفني إذا كنت بحاجة إلى مساعدة في إيجاد بديل."
       config_sections:

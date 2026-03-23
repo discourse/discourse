@@ -489,9 +489,10 @@ class Guardian
     return false if anonymous?
     return true if is_admin?
     return can_see_emails? if entity == "screened_email"
+    return can_see_ip? if entity == "screened_ip"
 
     if is_moderator? && (entity != "user_archive" || entity_id.nil?)
-      return %w[staff_action screened_ip screened_url report user_archive].include?(entity)
+      return %w[staff_action screened_url report user_archive].include?(entity)
     end
 
     # Regular users can only export their archives

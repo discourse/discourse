@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Assign | User Menu", type: :system do
+RSpec.describe "Assign | User Menu" do
   fab!(:admin)
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }

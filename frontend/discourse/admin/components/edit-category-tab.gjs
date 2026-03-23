@@ -49,6 +49,10 @@ export default class EditCategoryTab extends Component {
   @action
   select(event) {
     event?.preventDefault();
+    if (this.selectedTab === this.tab) {
+      return;
+    }
+
     this.set("selectedTab", this.tab);
     if (this.newCategory) {
       DiscourseURL.routeTo(getURL(`/new-category/${this.tab}`));

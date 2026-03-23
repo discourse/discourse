@@ -73,6 +73,7 @@ module ::DiscoursePostEvent
   # Topic where op has a post event custom field
   TOPIC_POST_EVENT_STARTS_AT = "TopicEventStartsAt"
   TOPIC_POST_EVENT_ENDS_AT = "TopicEventEndsAt"
+  TOPIC_POST_EVENT_ALL_DAY = "TopicEventAllDay"
 end
 
 require_relative "lib/discourse_calendar/engine"
@@ -338,6 +339,35 @@ after_initialize do
         SiteSetting.display_post_event_date_on_topic_title && object.event_ends_at
     end,
   ) { object.event_ends_at }
+
+  add_preloaded_topic_list_custom_field DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY
+
+  add_to_serializer(
+    :topic_view,
+    :event_all_day,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title && object.topic.event_all_day
+    end,
+  ) { object.topic.event_all_day }
+
+  add_to_class(:topic, :event_all_day) do
+    return @event_all_day if defined?(@event_all_day)
+    @event_all_day =
+      begin
+        value = custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY].to_s
+        ActiveModel::Type::Boolean.new.cast(value)
+      end
+  end
+
+  add_to_serializer(
+    :topic_list_item,
+    :event_all_day,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title && object.event_all_day
+    end,
+  ) { object.event_all_day }
 
   add_to_serializer(
     :topic_view,

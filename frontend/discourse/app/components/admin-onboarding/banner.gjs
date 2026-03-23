@@ -92,6 +92,7 @@ const STEPS = [
       this.modal.show(StartPostingOptions, {
         model: {
           options,
+          isStepComplete: this.completed,
         },
       });
     }

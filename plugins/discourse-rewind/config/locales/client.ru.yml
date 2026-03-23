@@ -37,11 +37,14 @@ ru:
           title: Календарь активности
           cell_title:
             visited_no_posts: "Вы посетили и наблюдали за %{date}, но не оставили никаких сообщений."
+            no_activity: "Вас не было рядом в %{date}."
+            no_activity_others: "%{username} не было рядом в %{date}."
         top_words:
           title: Использование слов
         reading_time:
           title: Время на прочтение
           book_comparison: "Вы потратили <code>%{readingTime}</code> времени на чтение нашего сайта! Это время потребовалось бы, чтобы прочитать <i>%{bookTitle}</i>"
+          book_comparison_others: "%{username} потратили <code>%{readingTime}</code> на чтение нашего сайта! Вот сколько времени потребуется, чтобы прочитать <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Наиболее часто используемые реакции в темах
           total_number: "Общее количество реакций: %{count}"
@@ -49,6 +52,7 @@ ru:
           title: Наиболее часто используемые реакции в темах
         fbff:
           title: Ваш FBFF (Лучший друг на форуме навсегда)
+          title_others: "%{username}'s FBFF (Forum Best Friend Forever)"
         best_topics:
           view_topic: Просмотреть тему
         best_posts:

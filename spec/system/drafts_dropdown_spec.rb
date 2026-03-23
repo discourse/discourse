@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Drafts dropdown", type: :system do
+describe "Drafts dropdown" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:category)
   let(:composer) { PageObjects::Components::Composer.new }

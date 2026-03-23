@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Shortcuts | mark all read", type: :system do
+RSpec.describe "Shortcuts | mark all read" do
   fab!(:user_1, :admin)
   fab!(:channel_1, :chat_channel)
   fab!(:channel_2, :chat_channel)

@@ -460,6 +460,9 @@ en:
         timezone:
           label: Timezone
           remove_timezone: No timezone (UTC)
+        all_day:
+          label: "All day event"
+          description: "An all-day event will not have specific times, just a date. The event will run from the start of the day to the end of the day."
         reminders:
           label: "Reminders"
           types:

@@ -37,7 +37,6 @@ nb_NO:
       llm_selector:
         none: "Ingen"
       features:
-        back: "Forrige"
         disabled: "(deaktivert)"
         groups: "Grupper:"
         no_agent: "Ikke angitt"
@@ -86,7 +85,6 @@ nb_NO:
         periods:
           last_day: "Siste 24 timer"
       ai_agent:
-        back: "Forrige"
         name: "Navn"
         edit: "Rediger"
         export: "Eksporter"
@@ -105,7 +103,6 @@ nb_NO:
           title: "Opplastinger"
           uploading: "Laster opp…"
       tools:
-        back: "Forrige"
         export: "Eksporter"
         import: "Importer"
         name: "Navn"
@@ -122,7 +119,6 @@ nb_NO:
         short_title: "Legitimasjon"
         name: "Navn"
         secret: "Verdi"
-        back: "Forrige"
         save: "Lagre"
         edit: "Rediger"
         delete: "Slett"
@@ -132,7 +128,6 @@ nb_NO:
         provider: "Tilbyder"
         save: "Lagre"
         edit: "Rediger"
-        back: "Forrige"
         delete: Slett
         quotas:
           group: "Gruppe"
@@ -170,7 +165,6 @@ nb_NO:
         image_caption:
           save_caption: "Lagre"
       embeddings:
-        back: "Forrige"
         save: "Lagre"
         delete: "Slett"
         edit: "Rediger"

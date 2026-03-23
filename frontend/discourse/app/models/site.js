@@ -302,6 +302,7 @@ export default class Site extends RestModel {
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
+      existingCategory.setupCategoryTypes();
       return existingCategory;
     } else {
       newCategory = this.store.createRecord("category", newCategory);
@@ -319,7 +320,7 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
-          id: "discourse.globals.site",
+          id: "discourse.global.site",
         });
         warned = true;
       }

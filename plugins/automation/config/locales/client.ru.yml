@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Запустите автоматизацию через API"
   js:
     admin:
       logs:
@@ -289,6 +296,7 @@ ru:
           fields:
             email_template:
               label: Шаблон электронного письма
+              description: Поддерживает заполнители автоматизации
             recipients:
               label: Получатели
               description: Пользователи или адреса электронной почты для уведомления
@@ -441,6 +449,11 @@ ru:
               label: "Название настраиваемого поля пользователя"
         set_topic_timer:
           title: Установить таймер темы
+          fields:
+            type:
+              label: Тип таймера
+            duration:
+              label: Длительность таймера
       unnamed_automation: "Автоматизация без названия"
       models:
         script:

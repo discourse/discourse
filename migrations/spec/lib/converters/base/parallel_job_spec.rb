@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Migrations::Converters::Base::ParallelJob do
+RSpec.describe Migrations::Converters::Base::ParallelJob do
   subject(:job) { described_class.new(step) }
 
-  let(:step) { instance_double(::Migrations::Converters::Base::ProgressStep) }
+  let(:step) { instance_double(Migrations::Converters::Base::ProgressStep) }
   let(:item) { { key: "value" } }
-  let(:tracker) { instance_double(::Migrations::Converters::Base::StepTracker) }
-  let(:stats) { ::Migrations::Converters::Base::StepStats.new }
-  let(:intermediate_db) { class_double(::Migrations::Database::IntermediateDB).as_stubbed_const }
+  let(:tracker) { instance_double(Migrations::Converters::Base::StepTracker) }
+  let(:stats) { Migrations::Converters::Base::StepStats.new }
+  let(:intermediate_db) { class_double(Migrations::Database::IntermediateDB).as_stubbed_const }
 
   before do
     allow(step).to receive(:tracker).and_return(tracker)
@@ -21,29 +21,27 @@ RSpec.describe ::Migrations::Converters::Base::ParallelJob do
   end
 
   after do
-    ::Migrations::Database::IntermediateDB.setup(nil)
-    ::Migrations::ForkManager.clear!
+    Migrations::Database::IntermediateDB.setup(nil)
+    Migrations::ForkManager.clear!
   end
 
   describe "#initialize" do
     it "sets up `OfflineConnection` as `IntermediateDB` connection" do
       described_class.new(step)
 
-      ::Migrations::ForkManager.fork do
+      Migrations::ForkManager.fork do
         expect(intermediate_db).to have_received(:setup).with(
-          an_instance_of(::Migrations::Database::OfflineConnection),
+          an_instance_of(Migrations::Database::OfflineConnection),
         )
       end
     end
   end
 
   describe "#run" do
-    let(:offline_connection) { instance_double(::Migrations::Database::OfflineConnection) }
+    let(:offline_connection) { instance_double(Migrations::Database::OfflineConnection) }
 
     before do
-      allow(::Migrations::Database::OfflineConnection).to receive(:new).and_return(
-        offline_connection,
-      )
+      allow(Migrations::Database::OfflineConnection).to receive(:new).and_return(offline_connection)
       allow(offline_connection).to receive(:clear!)
 
       allow(step).to receive(:process_item)

@@ -10,6 +10,8 @@ ru:
       sort_options:
         votes: "Голоса"
     topic_voting:
+      notification_label:
+        vote_released: "Голосование вернулось"
       title: "Голосование по теме"
       reached_limit: "У вас закончились голоса. Удалите часть голосов."
       list_votes: "Показать ваши голоса"

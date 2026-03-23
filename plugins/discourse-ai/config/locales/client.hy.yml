@@ -37,7 +37,6 @@ hy:
       llm_selector:
         none: "Ոչ մի"
       features:
-        back: "Ետ"
         disabled: "(անջատված)"
         groups: "Խմբեր:"
         no_groups: "Ոչ մի"
@@ -82,7 +81,6 @@ hy:
         total_requests: "Ընդհանուր հարցումներ"
         total: "Ամբողջ"
       ai_agent:
-        back: "Ետ"
         name: "Անուն"
         edit: "Խմբագրել"
         export: "Արտահանել"
@@ -103,7 +101,6 @@ hy:
           title: "Վերբեռնումներ"
           uploading: "Վերբեռնում..."
       tools:
-        back: "Ետ"
         export: "Արտահանել"
         import: "Ներմուծել"
         name: "Անուն"
@@ -119,7 +116,6 @@ hy:
         short_title: "Հավատարմագրեր"
         name: "Անուն"
         secret: "Արժեք"
-        back: "Ետ"
         save: "Պահպանել"
         edit: "Խմբագրել"
         delete: "Ջնջել"
@@ -129,7 +125,6 @@ hy:
         provider: "Մատակարար"
         save: "Պահպանել"
         edit: "Խմբագրել"
-        back: "Ետ"
         delete: Ջնջել
         quotas:
           group: "Խմբավորել"
@@ -164,7 +159,6 @@ hy:
         image_caption:
           save_caption: "Պահպանել"
       embeddings:
-        back: "Ետ"
         save: "Պահպանել"
         delete: "Ջնջել"
         edit: "Խմբագրել"

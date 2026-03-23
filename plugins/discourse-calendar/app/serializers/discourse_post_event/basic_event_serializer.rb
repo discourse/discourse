@@ -14,7 +14,8 @@ module DiscoursePostEvent
                :timezone,
                :post,
                :duration,
-               :occurrences
+               :occurrences,
+               :all_day
 
     def category_id
       object.post.topic.category_id
@@ -62,6 +63,8 @@ module DiscoursePostEvent
     end
 
     def starts_at
+      return object.starts_at&.utc&.strftime("%Y-%m-%d") if object.all_day
+
       if object.recurring? && object.recurrence_until.present? &&
            object.recurrence_until < Time.current
         return nil
@@ -77,6 +80,8 @@ module DiscoursePostEvent
     end
 
     def ends_at
+      return object.ends_at&.utc&.strftime("%Y-%m-%d") if object.all_day
+
       if object.recurring? && object.recurrence_until.present? &&
            object.recurrence_until < Time.current
         return nil

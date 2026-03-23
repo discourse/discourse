@@ -90,7 +90,7 @@ tr_TR:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Veri Gezgini sorgularını çalıştırın. Sorgu kimliklerini belirterek API anahtarını bir sorgu kümesiyle sınırlandırın."
     discourse_automation:
       scriptables:

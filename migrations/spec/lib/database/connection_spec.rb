@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Migrations::Database::Connection do
+RSpec.describe Migrations::Database::Connection do
   def create_connection(**params)
     Dir.mktmpdir do |storage_path|
       db_path = File.join(storage_path, "test.db")
@@ -49,7 +49,7 @@ RSpec.describe ::Migrations::Database::Connection do
     end
 
     it "closes cached prepared statements" do
-      cache_class = ::Migrations::Database::PreparedStatementCache
+      cache_class = Migrations::Database::PreparedStatementCache
       cache_double = instance_spy(cache_class)
       allow(cache_class).to receive(:new).and_return(cache_double)
 
@@ -125,7 +125,7 @@ RSpec.describe ::Migrations::Database::Connection do
     end
   end
 
-  context "when `::Migrations::ForkManager.fork` is used" do
+  context "when `Migrations::ForkManager.fork` is used" do
     it "temporarily closes the connection while a process fork is created" do
       create_connection do |connection|
         expect(connection.closed?).to be false
@@ -136,7 +136,7 @@ RSpec.describe ::Migrations::Database::Connection do
 
         db_before_fork = connection.db
 
-        ::Migrations::ForkManager.fork do
+        Migrations::ForkManager.fork do
           expect(connection.closed?).to be true
           expect(connection.db).to be_nil
         end
@@ -153,23 +153,23 @@ RSpec.describe ::Migrations::Database::Connection do
       create_connection do |connection|
         expect(connection.closed?).to be false
 
-        ::Migrations::ForkManager.fork { expect(connection.closed?).to be true }
+        Migrations::ForkManager.fork { expect(connection.closed?).to be true }
 
         expect(connection.closed?).to be false
 
-        ::Migrations::ForkManager.fork { expect(connection.closed?).to be true }
+        Migrations::ForkManager.fork { expect(connection.closed?).to be true }
 
         expect(connection.closed?).to be false
       end
     end
 
     it "cleans up fork hooks when connection gets closed" do
-      expect(::Migrations::ForkManager.size).to eq(0)
+      expect(Migrations::ForkManager.size).to eq(0)
 
       create_connection do |connection|
-        expect(::Migrations::ForkManager.size).to eq(2)
+        expect(Migrations::ForkManager.size).to eq(2)
         connection.close
-        expect(::Migrations::ForkManager.size).to eq(0)
+        expect(Migrations::ForkManager.size).to eq(0)
       end
     end
   end

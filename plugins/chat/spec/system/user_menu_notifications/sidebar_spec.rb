@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User menu notifications | sidebar", type: :system do
+RSpec.describe "User menu notifications | sidebar" do
   fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }

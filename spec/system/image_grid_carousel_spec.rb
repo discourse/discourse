@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Image Carousel", type: :system do
+describe "Image Carousel" do
   fab!(:current_user, :admin)
   fab!(:upload1) do
     UploadCreator.new(file_from_fixtures("logo.png", "images"), "logo.png").create_for(

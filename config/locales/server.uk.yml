@@ -1298,6 +1298,8 @@ uk:
       weekly: "щотижня"
       every_month: "щомісяця"
       every_six_months: "кожні півроку"
+  calendar_subscriptions:
+    application_name: "Підписки на календар"
   user_api_key:
     title: 'Авторизувати "%{application_name}"'
     authorize: "Авторизувати"
@@ -3234,35 +3236,9 @@ uk:
   new_version_mailer:
     title: "Нова версія Mailer"
     subject_template: "[%{email_prefix}] Нова версія Discourse, доступно оновлення"
-    text_body_template: |
-      Ура, доступна нова версія [Discourse](https://www.discourse.org)!
-
-      Ваша версія: %{installed_version}
-      Нова версія: **%{new_version}**
-
-      - Оновіть за допомогою нашого легкого **[оновлення в оглядачі в один клік](%{base_url}/admin/upgrade)**
-
-      - Подивіться, що нового в [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [журнал змін GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Відвідайте [meta.discourse.org](https:// meta.discourse.org) для новин, обговорень і підтримки для Discourse
   new_version_mailer_with_notes:
     title: "Нова версія Mailer з примітками"
     subject_template: "[%{email_prefix}] доступне оновлення"
-    text_body_template: |
-      Ура, доступна нова версія [Discourse](https://www.discourse.org)!
-
-      Ваша версія: %{installed_version}
-      Нова версія: **%{new_version}**
-
-      - Оновіть за допомогою нашого легкого **[оновлення в оглядачі в один клік](%{base_url}/admin/upgrade)**
-
-      - Подивіться, що нового в [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [журнал змін GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Відвідайте [meta.discourse.org](https:// meta.discourse.org) для новин, обговорень і підтримки для Discourse
-
-      ### Примітки до випуску
-
-      %{notes}
   flag_reasons:
     off_topic: "Ваш допис було відмічено спам-прапорцем **Цей допис не по темі**: учасники спільноти вважають, що допис не дуже добре підходить до цієї дискусії (відповідно до її назви та першого повідомлення)."
     inappropriate: "Ваш допис було позначено як **невідповідний**: спільнота вважає його образливим, таким, що розпалює ненависть, або таким, що порушує [наші правила спільноти] (%{base_path}/guidelines)."

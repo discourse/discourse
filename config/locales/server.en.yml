@@ -2898,6 +2898,8 @@ en:
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
       activity_after: "Show topics with last activity after a date (YYYY-MM-DD or days ago)"
+      bookmarked_before: "Show topics bookmarked before a date (YYYY-MM-DD or days ago)"
+      bookmarked_after: "Show topics bookmarked after a date (YYYY-MM-DD or days ago)"
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
@@ -3358,7 +3360,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3373,7 +3375,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 

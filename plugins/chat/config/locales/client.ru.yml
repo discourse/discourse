@@ -52,6 +52,9 @@ ru:
         description: "Описание"
         actions: "Действия"
         settings: "настроек"
+        no_channels: "В этой категории нет чат-каналов."
+        no_channels_body: "В каждой категории можно создать несколько каналов, доступных одним и тем же участникам в зависимости от настроек безопасности категории. <a href='%{chatBrowseUrl}'>Создать канал чата</a>."
+        include_subcategories: "Включить каналы подкатегорий"
       text_copied: Текст скопирован в буфер обмена
       link_copied: Ссылка скопирована в буфер обмена
       back_to_forum: "Форум"
@@ -67,9 +70,20 @@ ru:
       cancel_reply: "Отменить ответ"
       chat_channels: "Каналы"
       starred: "Отмечено звездочкой"
+      starred_channels: "Помеченные каналы"
+      starred_channels_empty: "Вы еще не добавили каналы в избранное. Добавьте каналы в избранное, чтобы они отображались здесь и имели быстрый доступ."
+      pinned_messages:
+        title: "Закрепленные сообщения"
+        close: "Закрыть закрепленные сообщения"
+        pinned_by_you: "Закреплено тобой"
+        pinned_by_user: "Закреплено пользователем %{username}"
+      no_pinned_messages: "В этом канале нет закрепленных сообщений."
+      pin_message: "Закрепить сообщение"
+      unpin_message: "Открепить сообщение"
       pinned: "Закреплена"
       browse_all_channels: "Просмотреть все каналы"
       see_in: "Смотреть в:"
+      open_channel_menu: "Открыть меню канала"
       move_to_channel:
         title: "Переместить сообщения в канал"
         instructions:
@@ -90,11 +104,14 @@ ru:
         add: "Добавить"
         close_channel: "Закрыть канал"
         open_channel: "Открыть канал"
+        open_channel_disabled_archived: "Архивированные каналы нельзя открыть повторно."
+        open_channel_disabled_read_only: "Каналы, доступные только для чтения, нельзя будет открыть повторно."
         archive_channel: "Архивировать канал"
         delete_channel: "Удалить канал"
         join_channel: "Подписаться на канал"
         leave_channel: "Покинуть канал"
         leave_groupchat_info: "Покинув этот групповой чат, вы потеряете к нему доступ и не будете получать связанные с ним уведомления. Чтобы снова присоединиться, вам потребуется повторное приглашение от участника группового чата."
+        notification_settings: "Настройки уведомлений"
         notification_settings_context: "Уведомления"
         join: "Подписаться"
         leave: "Отписаться"
@@ -277,6 +294,7 @@ ru:
       chat_notifications_title: "Уведомления чата"
       only_chat_push_notifications:
         title: "Отправлять только push-уведомления в чате"
+      personalization_title: "Персонализация"
       ignore_channel_wide_mention:
         title: "Игнорировать на канале массовые упоминания"
       show_thread_title_prompts:
@@ -369,6 +387,7 @@ ru:
         message_result_label: "Сообщение в чате от %{username}: %{preview} %{threadInfo}"
         in_thread: "в ветке %{title}"
         sr_instructions: "Нажмите Enter или Space, чтобы открыть сообщение. Используйте Tab для навигации между результатами."
+        results_list_label: "Результаты поиска сообщений в чате"
       members_view:
         filter_placeholder: Найти участников
         add_member: Добавить участника
@@ -556,6 +575,7 @@ ru:
         follow: "Подписаться"
         followed: "Подписан"
         mute: "Отключить канал"
+        unmute: "Отключить звук канала"
         threading_enabled: "Включено"
         threading_disabled: "Отключено"
         muted_on: "Включено"
@@ -671,7 +691,9 @@ ru:
           many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
           other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
       retention_reminders:
+        chat_settings: "Настройки чата"
         indefinitely_short: "неограниченное время"
+        indefinitely_long: "%{chatSettingsLink} настроены на бессрочное сохранение сообщений канала."
         short:
           one: "%{count} день"
           few: "%{count} дня"
@@ -814,6 +836,7 @@ ru:
           composer_bold: "%{shortcut} Жирный (только в редакторе)"
           composer_italic: "%{shortcut} Курсив (только в редакторе)"
           composer_code: "%{shortcut} Код (только в редакторе)"
+          drawer_toggle: "%{shortcut} Включить/выключить панель чата"
           drawer_close: "%{shortcut} Закрыть панель чата"
           mark_all_channels_read: "%{shortcut} Пометить все каналы прочитанными"
     topic_statuses:

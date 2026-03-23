@@ -117,3 +117,5 @@ pl_PL:
         char_counter:
           title: "Licznik znaków"
           placeholder: "Tutaj wpisz swój tekst..."
+        segmented_control:
+          title: "Sterowanie segmentowe (grupa przełączników przycisków)"

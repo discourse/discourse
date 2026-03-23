@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Bookmarking posts and topics", type: :system do
+describe "Bookmarking posts and topics" do
   fab!(:topic)
   fab!(:topic_2, :topic)
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }

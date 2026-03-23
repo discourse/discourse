@@ -2910,35 +2910,9 @@ nl:
   new_version_mailer:
     title: "Nieuwe versie mailer"
     subject_template: "[%{email_prefix}] Nieuwe Discourse-versie, update beschikbaar"
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Update via onze eenvoudige **[browserupdate in één klik](%{base_url}/admin/update)**
-
-      - Lees wat er nieuw is in de [releaseopmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/main)
-
-      - Ga naar [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
   new_version_mailer_with_notes:
     title: "Nieuwe versie Mailer met aantekeningen"
     subject_template: "[%{email_prefix}] update beschikbaar"
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Update via onze eenvoudige **[browserupdate in één klik](%{base_url}/admin/update)**
-
-      - Lees wat er nieuw is in de [release-opmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/main)
-
-      - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
-
-      ### Release-opmerkingen
-
-      %{notes}
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Je bericht is gemarkeerd als **ongepast**: de community vindt het bericht beledigend, grof, hatelijk gedrag of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."

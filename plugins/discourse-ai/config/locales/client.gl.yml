@@ -39,7 +39,6 @@ gl:
       llm_selector:
         none: "Ningunha"
       features:
-        back: "Volver"
         disabled: "(desactivado)"
         groups: "Grupos:"
         no_groups: "Ningunha"
@@ -85,7 +84,6 @@ gl:
         periods:
           custom: "Personalizar..."
       ai_agent:
-        back: "Volver"
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
@@ -107,7 +105,6 @@ gl:
           title: "Cargas"
           uploading: "Cargando..."
       tools:
-        back: "Volver"
         export: "Exportar"
         import: "Importar"
         name: "Nome"
@@ -123,7 +120,6 @@ gl:
         short_title: "Acreditacións"
         name: "Nome"
         secret: "Valor"
-        back: "Volver"
         save: "Gardar"
         edit: "Editar"
         delete: "Eliminar"
@@ -133,7 +129,6 @@ gl:
         provider: "Fornecedor"
         save: "Gardar"
         edit: "Editar"
-        back: "Volver"
         delete: Eliminar
         quotas:
           group: "Grupo"
@@ -168,7 +163,6 @@ gl:
         image_caption:
           save_caption: "Gardar"
       embeddings:
-        back: "Volver"
         save: "Gardar"
         delete: "Eliminar"
         edit: "Editar"
