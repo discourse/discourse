@@ -113,7 +113,7 @@ module DiscourseUpdates
         version_keys = []
         versions[0, 5].each do |v|
           key = "#{missing_versions_key_prefix}:#{v["version"]}"
-          Discourse.redis.mapped_hmset key, v
+          Discourse.redis.mapped_hmset key, v.slice("version", "notes")
           version_keys << key
         end
         Discourse.redis.rpush missing_versions_list_key, version_keys
