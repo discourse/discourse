@@ -670,6 +670,32 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#add_score" do
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:post)
+
+    it "does not overwrite force_review=true when set by trusted sources" do
+      reviewable =
+        ReviewableFlaggedPost.needs_review!(
+          target: post,
+          topic: post.topic,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+
+      # Spam detection system flags with force_review: true
+      reviewable.add_score(Discourse.system_user, PostActionType.types[:spam], force_review: true)
+      expect(reviewable.reload.force_review).to eq(true)
+
+      # Regular user adds another score without force_review
+      reviewable.add_score(user1, PostActionType.types[:inappropriate])
+
+      # force_review should remain true (set by spam detection)
+      expect(reviewable.reload.force_review).to eq(true)
+    end
+  end
+
   describe "priorities" do
     it "returns 0 for unknown priorities" do
       expect(Reviewable.min_score_for_priority(:wat)).to eq(0.0)
