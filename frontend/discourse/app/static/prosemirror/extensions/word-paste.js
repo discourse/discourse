@@ -40,7 +40,7 @@ function detectListType(element) {
       return { isOrdered: true, startNumber: 1 };
     }
     // Roman numerals (i., ii., I., II.)
-    if (/^[ivxIVX]+[.)]/.test(markerText)) {
+    if (/^[ivxlcdmIVXLCDM]+[.)]/.test(markerText)) {
       return { isOrdered: true, startNumber: 1 };
     }
   }
@@ -59,7 +59,7 @@ function detectListType(element) {
     if (/^[a-zA-Z][.)]/.test(markerText)) {
       return { isOrdered: true, startNumber: 1 };
     }
-    if (/^[ivxIVX]+[.)]/.test(markerText)) {
+    if (/^[ivxlcdmIVXLCDM]+[.)]/.test(markerText)) {
       return { isOrdered: true, startNumber: 1 };
     }
   }

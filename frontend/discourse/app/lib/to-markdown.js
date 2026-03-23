@@ -58,12 +58,15 @@ export default async function toMarkdown(html) {
     const serializer = new Serializer(extensions, pluginParams);
 
     const processedHtml = transformWordListsHtml(html);
-    const element = new DOMParser().parseFromString(processedHtml, "text/html");
+    const parsedDoc = new DOMParser().parseFromString(
+      processedHtml,
+      "text/html"
+    );
 
     for (const ext of extensions) {
       if (typeof ext.transformParsedHTML === "function") {
         try {
-          ext.transformParsedHTML(element);
+          ext.transformParsedHTML(parsedDoc);
         } catch (e) {
           // eslint-disable-next-line no-console
           console.warn(
@@ -74,10 +77,12 @@ export default async function toMarkdown(html) {
       }
     }
 
-    const doc = domParser.parse(element);
+    const doc = domParser.parse(parsedDoc);
 
     return serializer.convert(doc).trim();
-  } catch {
-    return "";
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("toMarkdown failed:", e);
+    throw e;
   }
 }

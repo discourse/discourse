@@ -21,12 +21,11 @@ export default class CookText extends Component {
 
   @action
   loadCookedText() {
-    waitForPromise(this._loadCookedText());
-  }
-
-  async _loadCookedText() {
-    const cooked = await cook(this.args.rawText);
-    this.cooked = cooked;
+    waitForPromise(
+      cook(this.args.rawText).then((cooked) => {
+        this.cooked = cooked;
+      })
+    );
   }
 
   @action

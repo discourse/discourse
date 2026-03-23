@@ -24,7 +24,7 @@ const extension = {
         {
           tag: "a[href]:not(.lightbox)",
           getAttrs(dom) {
-            if (dom.textContent === dom.getAttribute("href")) {
+            if (dom.textContent.trim() === dom.getAttribute("href")) {
               return false;
             }
 
