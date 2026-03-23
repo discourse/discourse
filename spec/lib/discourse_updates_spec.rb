@@ -429,7 +429,8 @@ RSpec.describe DiscourseUpdates do
       end
     end
 
-    context "when the feed already includes a feature for a permanent UC" do
+    context "when the feed already includes a feature for an upcoming change" do
+      let(:upcoming_change_setting_name) { "enable_upload_debug_mode" }
       let(:feed_feature) do
         {
           title: "Official feed title",
@@ -439,23 +440,45 @@ RSpec.describe DiscourseUpdates do
           created_at: 1.week.ago.to_s,
           updated_at: 1.week.ago.to_s,
           released_at: 1.week.ago.to_s,
-          upcoming_change_setting_name: "enable_upload_debug_mode",
+          upcoming_change_setting_name: upcoming_change_setting_name,
         }
       end
 
-      before { mock_merge_uc_metadata(:permanent) }
+      context "when the upcoming change is permanent" do
+        before { mock_merge_uc_metadata(:permanent) }
 
-      it "keeps the feed row and does not inject a duplicate from the UC" do
-        new_features = [feed_feature.deep_dup]
-        result = described_class.merge_new_features_with_upcoming_changes(new_features)
+        it "keeps the feed row and does not inject a duplicate from the UC" do
+          new_features = [feed_feature.deep_dup]
+          result = described_class.merge_new_features_with_upcoming_changes(new_features)
 
-        expect(result.length).to eq(1)
-        row = feature_for_uc_setting(result)
-        expect(row[:title]).to eq("Official feed title")
-        expect(row[:description]).to eq("Marketing copy from the new features feed")
-        expect(row[:link]).to eq("https://meta.discourse.org/t/feed-release-note")
-        expect(row[:screenshot_url]).to eq("https://meta.discourse.org/feed-screenshot.png")
-        expect(row[:upcoming_change_setting_name]).to eq("enable_upload_debug_mode")
+          expect(result.length).to eq(1)
+          row = feature_for_uc_setting(result)
+          expect(row[:title]).to eq("Official feed title")
+          expect(row[:description]).to eq("Marketing copy from the new features feed")
+          expect(row[:link]).to eq("https://meta.discourse.org/t/feed-release-note")
+          expect(row[:screenshot_url]).to eq("https://meta.discourse.org/feed-screenshot.png")
+          expect(row[:upcoming_change_setting_name]).to eq("enable_upload_debug_mode")
+        end
+      end
+
+      context "when the upcoming change is not permanent" do
+        before { mock_merge_uc_metadata(:beta) }
+
+        it "excludes the item from the new features feed" do
+          new_features = [feed_feature.deep_dup]
+          result = described_class.merge_new_features_with_upcoming_changes(new_features)
+          expect(result.length).to eq(0)
+        end
+      end
+
+      context "when this site does not have any permanent upcoming changes" do
+        before { mock_merge_uc_metadata(:beta) }
+
+        it "excludes the feed item with the upcoming_change_setting_name" do
+          new_features = [feed_feature.deep_dup]
+          result = described_class.merge_new_features_with_upcoming_changes(new_features)
+          expect(result.length).to eq(0)
+        end
       end
     end
 

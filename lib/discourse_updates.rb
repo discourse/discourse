@@ -180,6 +180,20 @@ module DiscourseUpdates
             filter_statuses: [:permanent],
           },
         )&.upcoming_changes
+
+      # Any new features that have an upcoming_change_setting_name that is not
+      # in the permanent upcoming changes list are excluded, since sites can
+      # have different versions of Discourse deployed and may not have the
+      # upcoming change or the same status.
+      permanent_upcoming_change_names = permanent_upcoming_changes.map { |uc| uc[:setting].to_s }
+      new_features.reject! do |feature|
+        if feature[:upcoming_change_setting_name].present?
+          !permanent_upcoming_change_names.include?(feature[:upcoming_change_setting_name])
+        else
+          false
+        end
+      end
+
       return new_features if permanent_upcoming_changes.blank?
 
       # Any permanent upcoming changes that have not been overridden/attached
