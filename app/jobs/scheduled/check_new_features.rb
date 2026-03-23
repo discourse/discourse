@@ -7,26 +7,31 @@ module Jobs
     def execute(args)
       admin_ids = User.human_users.where(admin: true).pluck(:id)
 
-      prev_most_recent = DiscourseUpdates.new_features&.first
+      new_features_with_permanent_uc = find_new_features
+      prev_most_recent = new_features_with_permanent_uc&.first&.symbolize_keys
       if prev_most_recent
         admin_ids.each do |admin_id|
           if DiscourseUpdates.get_last_viewed_feature_date(admin_id).blank?
-            DiscourseUpdates.bump_last_viewed_feature_date(admin_id, prev_most_recent["created_at"])
+            DiscourseUpdates.bump_last_viewed_feature_date(admin_id, prev_most_recent[:created_at])
           end
         end
       end
 
-      # this memoization may seem pointless, but it actually avoids us hitting
+      # This memoization may seem pointless, but it actually avoids us hitting
       # Meta repeatedly and getting rate-limited when this job is ran on a
       # multisite cluster.
-      # in multisite, the `execute` method (of the same instance) is called for
+      #
+      # In multisite, the `execute` method (of the same instance) is called for
       # every site in the cluster.
       @new_features_json ||= DiscourseUpdates.new_features_response_json
       DiscourseUpdates.update_new_features(@new_features_json)
 
-      new_most_recent = DiscourseUpdates.new_features&.first
+      new_features_with_permanent_uc = find_new_features
+      new_most_recent = new_features_with_permanent_uc&.first&.symbolize_keys
       if new_most_recent
-        most_recent_feature_date = Time.zone.parse(new_most_recent["created_at"])
+        most_recent_created_at = new_most_recent[:created_at]
+        most_recent_feature_date = Time.zone.parse(most_recent_created_at)
+
         admin_ids.each do |admin_id|
           admin_last_viewed_feature_date = DiscourseUpdates.get_last_viewed_feature_date(admin_id)
           if admin_last_viewed_feature_date.blank? ||
@@ -37,10 +42,17 @@ module Jobs
               data: {
               },
             )
-            DiscourseUpdates.bump_last_viewed_feature_date(admin_id, new_most_recent["created_at"])
+            DiscourseUpdates.bump_last_viewed_feature_date(admin_id, most_recent_created_at)
           end
         end
       end
+    end
+
+    def find_new_features
+      new_features = DiscourseUpdates.new_features
+      DiscourseUpdates.merge_new_features_with_upcoming_changes(
+        new_features&.map { |item| item.symbolize_keys } || [],
+      )
     end
   end
 end
