@@ -35,10 +35,7 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
   end
 
   def answerCount
-    count = 0
-    count += 1 if accepted_answer.present?
-    count += suggested_answers.size if suggested_answers.present?
-    count
+    (accepted_answer.present? ? 1 : 0) + suggested_answers.to_a.size
   end
 
   def datePublished
