@@ -328,20 +328,30 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  @computed("userSelectableColorSchemes")
+  @computed("userSelectableColorSchemes", "currentThemeId")
   get showLightColorSchemeSelector() {
-    return (
-      this.userSelectableColorSchemes &&
-      this.userSelectableColorSchemes.length > 1
-    );
+    const schemes = this.userSelectableColorSchemes;
+    if (!schemes || schemes.length <= 1) {
+      return false;
+    }
+    const theme = this.currentThemeForColorSchemes;
+    if (theme?.only_theme_color_schemes) {
+      return schemes.filter((s) => !s.is_dark).length > 1;
+    }
+    return true;
   }
 
-  @computed("userSelectableDarkColorSchemes")
+  @computed("userSelectableDarkColorSchemes", "currentThemeId")
   get showDarkColorSchemeSelector() {
-    return (
-      this.userSelectableDarkColorSchemes &&
-      this.userSelectableDarkColorSchemes.length > 1
-    );
+    const schemes = this.userSelectableDarkColorSchemes;
+    if (!schemes || schemes.length <= 1) {
+      return false;
+    }
+    const theme = this.currentThemeForColorSchemes;
+    if (theme?.only_theme_color_schemes) {
+      return schemes.filter((s) => s.is_dark).length > 1;
+    }
+    return true;
   }
 
   get interfaceColorModes() {

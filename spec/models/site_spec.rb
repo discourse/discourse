@@ -19,6 +19,7 @@ RSpec.describe Site do
             "default" => id == SiteSetting.default_theme_id,
             "color_scheme_id" => color_scheme_id,
             "dark_color_scheme_id" => dark_color_scheme_id,
+            "only_theme_color_schemes" => false,
           }
         end
 
