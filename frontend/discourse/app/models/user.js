@@ -894,7 +894,16 @@ export default class User extends RestModel.extend(Evented) {
         json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
+      const timezone = json.user.timezone;
+      delete json.user.timezone;
+
       user.setProperties(json.user);
+
+      if (timezone) {
+        user.user_option ||= {};
+        user.user_option.timezone = timezone;
+      }
+
       return user;
     });
   }
