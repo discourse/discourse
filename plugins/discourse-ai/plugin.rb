@@ -86,6 +86,13 @@ after_initialize do
   require_relative "discourse_automation/llm_agent_triage"
   require_relative "discourse_automation/llm_tagger"
 
+  if defined?(DiscourseWorkflows)
+    require_relative "discourse_workflows/actions/ai_agent"
+    register_modifier(:discourse_workflows_node_types) do |types|
+      types + [DiscourseWorkflows::Actions::AiAgent]
+    end
+  end
+
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 
   register_seedfu_fixtures(Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "agents"))

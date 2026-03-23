@@ -45,6 +45,7 @@
     "chartjs-plugin-datalabels": "2.2.0",
     "decorator-transforms": "^2.3.1",
     "diff": "^8.0.3",
+    "elkjs": "^0.11.1",
     "ember-curry-component": "^0.3.1",
     "ember-resolver": "^13.2.0",
     "ember-route-template": "^1.0.3",
@@ -58,8 +59,8 @@
     "morphlex": "^1.0.5",
     "orderedmap": "^2.1.1",
     "photoswipe": "5.4.4",
-    "pikaday": "^1.8.2",
     "picomatch": "^4.0.3",
+    "pikaday": "^1.8.2",
     "pretty-text": "workspace:1.0.0",
     "prosemirror-codemark": "^0.4.2",
     "prosemirror-commands": "^1.7.1",
@@ -75,7 +76,13 @@
     "prosemirror-state": "^1.4.4",
     "prosemirror-transform": "^1.11.0",
     "prosemirror-view": "^1.41.6",
-    "rrule": "^2.8.1"
+    "rete": "^2.0.6",
+    "rete-area-plugin": "^2.1.5",
+    "rete-auto-arrange-plugin": "^2.0.2",
+    "rete-connection-plugin": "^2.0.5",
+    "rete-history-plugin": "^2.1.1",
+    "rrule": "^2.8.1",
+    "web-worker": "^1.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",

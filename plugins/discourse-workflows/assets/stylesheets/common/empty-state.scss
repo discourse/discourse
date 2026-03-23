@@ -1,0 +1,23 @@
+.workflows-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-8) var(--space-4);
+  border: 2px dashed var(--primary-low);
+  border-radius: var(--d-border-radius);
+  text-align: center;
+
+  h2 {
+    margin: 0 0 var(--space-2);
+  }
+
+  p {
+    color: var(--primary-medium);
+    margin: 0 0 var(--space-4);
+  }
+
+  &__icon {
+    font-size: var(--font-up-6);
+    margin-bottom: var(--space-3);
+  }
+}

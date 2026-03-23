@@ -1,0 +1,246 @@
+.workflows-data-tables-manager {
+  &__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--space-3);
+  }
+
+  &__table {
+    width: 100%;
+
+    td {
+      padding: var(--space-2) var(--space-1);
+    }
+  }
+
+  &__actions {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  &__name-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--tertiary);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.workflows-data-table-viewer {
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  &__title,
+  &__title-input {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    font: inherit;
+    font-size: var(--font-up-3);
+    font-weight: 700;
+    color: inherit;
+    line-height: inherit;
+    box-sizing: content-box;
+  }
+
+  &__title {
+    cursor: text;
+    text-align: left;
+  }
+
+  &__title-input {
+    // stylelint-disable declaration-no-important
+    font: inherit !important;
+    font-size: var(--font-up-3) !important;
+    font-weight: 700 !important;
+    line-height: inherit !important;
+    outline: none !important;
+    border: none !important;
+    padding: 0 var(--space-1) !important;
+    margin: 0 !important;
+    box-sizing: content-box !important;
+    background: var(--primary-very-low) !important;
+    border-radius: var(--d-border-radius) !important;
+    flex: 0 1 auto !important;
+    // stylelint-enable declaration-no-important
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__scroll {
+    overflow-x: auto;
+  }
+
+  &__table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: max-content;
+
+    th,
+    td {
+      padding: 0;
+      border: 1px solid var(--primary-low);
+      text-align: left;
+      min-width: 150px;
+    }
+
+    th {
+      padding: var(--space-2) var(--space-3);
+      background: var(--primary-very-low);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    th.--id,
+    td.--id {
+      min-width: 60px;
+      width: 60px;
+    }
+
+    th.--add-column,
+    td.--add-column {
+      min-width: 0;
+      width: 1px;
+    }
+
+    th.--actions,
+    td.--actions {
+      min-width: 50px;
+      width: 50px;
+    }
+  }
+
+  &__col-type {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    margin-right: var(--space-1);
+    text-transform: uppercase;
+  }
+
+  &__col-name,
+  &__col-name-input {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    font-weight: 700;
+    color: inherit;
+    line-height: inherit;
+    box-sizing: content-box;
+  }
+
+  &__col-name {
+    cursor: text;
+  }
+
+  &__col-name-input {
+    // stylelint-disable declaration-no-important
+    outline: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: inherit !important;
+    box-sizing: content-box !important;
+    width: calc(var(--col-name-length) * 1ch) !important;
+    // stylelint-enable declaration-no-important
+  }
+
+  &__cell {
+    &.--id,
+    &.--system,
+    &.--actions {
+      padding: var(--space-2) var(--space-3);
+    }
+
+    &.--id,
+    &.--system {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      white-space: nowrap;
+    }
+
+    &.--boolean {
+      padding: var(--space-2) var(--space-3);
+    }
+
+    &.--actions {
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+
+  &__cell-value {
+    display: block;
+    width: 100%;
+    min-height: 1.5em;
+    background: none;
+    border: none;
+    // stylelint-disable-next-line declaration-no-important
+    outline: none !important;
+    padding: var(--space-2) var(--space-3);
+
+    &.--null {
+      color: var(--primary-low-mid);
+      font-style: italic;
+    }
+    margin: 0;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+  }
+
+  &__cell-input {
+    box-sizing: border-box;
+    width: 100%;
+    // stylelint-disable-next-line declaration-no-important
+    margin: 0 !important;
+    padding: var(--space-2) var(--space-3);
+    // stylelint-disable-next-line declaration-no-important
+    border: none !important;
+    border-radius: 0;
+    // stylelint-disable-next-line declaration-no-important
+    outline: none !important;
+    font: inherit;
+  }
+
+  &__checkbox {
+    cursor: pointer;
+    margin: 0;
+  }
+
+  &__empty {
+    text-align: center;
+    color: var(--primary-medium);
+    padding: var(--space-4);
+  }
+
+  &__add-row td {
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__th {
+    &.--id {
+      width: 60px;
+    }
+
+    &.--actions {
+      width: 50px;
+    }
+  }
+}

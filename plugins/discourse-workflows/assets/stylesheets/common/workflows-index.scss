@@ -1,0 +1,107 @@
+.workflows-index {
+  &__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--space-3);
+  }
+
+  &__tabs {
+    display: flex;
+    border-bottom: 2px solid var(--primary-low);
+    margin-bottom: var(--space-4);
+  }
+
+  &__tab {
+    padding: var(--space-2) var(--space-4);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: var(--font-0);
+    color: var(--primary-medium);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &.active {
+      color: var(--tertiary);
+      border-bottom-color: var(--tertiary);
+    }
+  }
+
+  &__table {
+    width: 100%;
+
+    td {
+      padding: var(--space-2) var(--space-1);
+    }
+  }
+
+  &__name-content {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__name-link {
+    min-width: 0;
+  }
+
+  &__last-editor-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__warning {
+    display: inline-flex;
+    align-items: center;
+    color: var(--danger);
+    line-height: 1;
+  }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--space-8) var(--space-4);
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__actions {
+    text-align: right;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: var(--font-down-1);
+    padding: 0.25em 0.6em;
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-low);
+    color: var(--primary-high);
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 0.55em;
+      height: 0.55em;
+      border-radius: 50%;
+    }
+
+    &.--enabled::before {
+      background: var(--success);
+    }
+
+    &.--disabled::before {
+      background: var(--primary-medium);
+    }
+  }
+}

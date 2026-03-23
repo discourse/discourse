@@ -792,30 +792,30 @@ module DiscourseAi
               return { error: "Permission denied" } unless guardian.can_create?(Topic, category)
 
               begin
-                post_creator =
-                  PostCreator.new(
-                    user,
+                DiscourseTools::CreateTopic.call(
+                  params: {
                     title: title,
                     raw: raw,
-                    category: category.id,
+                    category_id: category.id,
+                  },
+                  options: {
                     tags: tags,
                     skip_validations: true,
-                    guardian: guardian,
-                  )
-
-                post = post_creator.create
-
-                if post_creator.errors.present?
-                  return { error: post_creator.errors.full_messages.join(", ") }
+                  },
+                  guardian: guardian,
+                ) do
+                  on_success do |post:|
+                    {
+                      success: true,
+                      topic_id: post.topic_id,
+                      post_id: post.id,
+                      topic_slug: post.topic.slug,
+                      topic_url: post.topic.url,
+                    }
+                  end
+                  on_failed_step(:create_post) { |step| { error: step.error } }
+                  on_failure { { error: "Failed to create topic" } }
                 end
-
-                {
-                  success: true,
-                  topic_id: post.topic_id,
-                  post_id: post.id,
-                  topic_slug: post.topic.slug,
-                  topic_url: post.topic.url,
-                }
               rescue => e
                 { error: "Failed to create topic: #{e.message}" }
               end

@@ -1,0 +1,13 @@
+en:
+  discourse_workflows:
+    errors:
+      approval_timed_out: "Approval timed out"
+      invalid_cron_expression: "Cron expression must be a valid 5-field cron expression."
+      not_enabled: "The discourse-workflows plugin is not enabled."
+      create_post:
+        topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+    data_table:
+      not_found: "Data table not found"
+      filters_required: "At least one filter condition is required"
+  site_settings:
+    discourse_workflows_enabled: "Enable the discourse-workflows plugin."
