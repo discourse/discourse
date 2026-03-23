@@ -497,7 +497,7 @@ export default class Category extends RestModel {
   }
 
   setupCategoryTypes() {
-    this.categoryTypes = new TrackedObject(this.category_types);
+    this.categoryTypes = trackedObject(this.category_types);
   }
 
   setupGroupsAndPermissions() {
