@@ -334,6 +334,42 @@ RSpec.describe DiscourseUpdates do
       result = DiscourseUpdates.new_features(force_refresh: true)
       expect(result.length).to eq(3)
     end
+
+    context "when the only unseen item is an injected permanent upcoming change" do
+      before do
+        Discourse.redis.del("new_features_last_seen_user_#{admin.id}")
+        Discourse.redis.set("new_features", MultiJson.dump([]))
+
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :permanent,
+              impact_type: "other",
+              impact_role: "developers",
+              learn_more_url: "https://meta.discourse.org/t/-/1234",
+            },
+          },
+        )
+
+        UpcomingChanges.stubs(:image_data).returns(
+          {
+            url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+            width: 244,
+            height: 66,
+          },
+        )
+      end
+
+      after { clear_mocked_upcoming_change_metadata }
+
+      it "marks the injected item as seen" do
+        freeze_time
+        expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
+        DiscourseUpdates.mark_new_features_as_seen(admin.id)
+        expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
+      end
+    end
   end
 
   describe ".merge_new_features_with_upcoming_changes" do

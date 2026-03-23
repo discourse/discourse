@@ -225,14 +225,18 @@ module DiscourseUpdates
     end
 
     def has_unseen_features?(user_id)
-      new_features_with_permanent_uc = merge_new_features_with_upcoming_changes(new_features)
-      entries = new_features_with_permanent_uc
+      entries =
+        merge_new_features_with_upcoming_changes(
+          new_features&.map { |item| item.symbolize_keys } || [],
+        )
       return false if entries.nil?
 
       last_seen = new_features_last_seen(user_id)
 
       if last_seen.present?
-        entries.select! { |item| Time.zone.parse(item["created_at"]) > last_seen }
+        entries.select! do |item|
+          Time.zone.parse(item[:created_at] || item["created_at"]) > last_seen
+        end
       end
 
       entries.size > 0
@@ -246,14 +250,16 @@ module DiscourseUpdates
 
     def mark_new_features_as_seen(user_id)
       entries =
-        begin
-          JSON.parse(Discourse.redis.get(new_features_key))
-        rescue StandardError
-          nil
-        end
-      return nil if entries.nil?
-      last_seen = entries.max_by { |x| x["created_at"] }
-      Discourse.redis.set(new_features_last_seen_key(user_id), last_seen["created_at"])
+        merge_new_features_with_upcoming_changes(
+          new_features&.map { |item| item.symbolize_keys } || [],
+        )
+      return nil if entries.blank?
+
+      last_seen = entries.max_by { |item| item[:created_at] || item["created_at"] }
+      Discourse.redis.set(
+        new_features_last_seen_key(user_id),
+        last_seen[:created_at] || last_seen["created_at"],
+      )
     end
 
     def get_last_viewed_feature_date(user_id)
