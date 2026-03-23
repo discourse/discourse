@@ -90,6 +90,8 @@ export default class BulkSelectHelper {
 
       this.modal.close();
       this.router.refresh();
+      this.bulkSelectEnabled = false;
+      this.clear();
     });
   }
 }
