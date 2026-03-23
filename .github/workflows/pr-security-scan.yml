@@ -67,5 +67,5 @@ jobs:
           curl --fail-with-body -X POST "$VM_SCAN_URL/scan-pr" \
             -H "Content-Type: application/json" \
             -H "X-Scan-Signature: $SIG" \
-            --data @body.json
+            --data-binary @body.json
 # test
