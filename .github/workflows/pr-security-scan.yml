@@ -6,8 +6,8 @@
 # patch-triage (login required).
 #
 # Required repository secrets:
-#   GITHUB_SCAN_SECRET  — HMAC secret shared with the VM (from /secure/patch-triage.env)
-#   VM_SCAN_URL         — Base URL of the VM webhook server (e.g. https://patch.discourse.org:PORT)
+#   SCAN_SECRET  — HMAC secret shared with the VM (from /secure/patch-triage.env)
+#   VM_SCAN_URL  — Base URL of the VM webhook server (e.g. http://<VM_IP>)
 #
 # To use: copy this file to .github/workflows/pr-security-scan.yml in discourse/discourse.
 
@@ -38,7 +38,7 @@ jobs:
 
       - name: Send to security scan
         env:
-          GITHUB_SCAN_SECRET: ${{ secrets.GITHUB_SCAN_SECRET }}
+          GITHUB_SCAN_SECRET: ${{ secrets.SCAN_SECRET }}
           VM_SCAN_URL: ${{ secrets.VM_SCAN_URL }}
         run: |
           # Build JSON payload
