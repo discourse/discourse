@@ -4,6 +4,11 @@ en:
       sort_options:
         votes: "Votes"
     topic_voting:
+      category_type_ideas:
+        title: "Ideas"
+        not_ideas_type: "Heads up! You've disabled voting in this category. To turn that back on, you'll find the relevant settings in the Settings tab."
+        remove_ideas_type: "Remove Ideas type"
+        confirm_remove_ideas_type: "Are you sure you want to remove voting from this category? Existing votes will be preserved but members won't be able to cast new votes."
       notification_label:
         vote_released: "Vote returned"
       title: "Topic voting"
