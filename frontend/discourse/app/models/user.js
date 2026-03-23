@@ -895,9 +895,12 @@ export default class User extends RestModel.extend(Evented) {
       }
 
       const timezone = json.user.timezone;
+      delete json.user.timezone;
+
       user.setProperties(json.user);
 
       if (timezone) {
+        user.user_option ||= {};
         user.user_option.timezone = timezone;
       }
 
