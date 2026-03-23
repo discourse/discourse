@@ -36,28 +36,28 @@
     font-weight: 700;
 
     &[data-type="string"] {
-      color: var(--success);
-      background: color-mix(in srgb, var(--success) 12%, transparent);
+      color: light-dark( #5B7F24, #28311B);
+      background: light-dark(#BDE97C,#82B536 );
     }
 
     &[data-type="integer"] {
-      color: var(--tertiary);
-      background: color-mix(in srgb, var(--tertiary) 12%, transparent);
+      color: light-dark(#227D9B, #1E3137);
+      background: light-dark(#B1E4F7,#42B2D7)
     }
 
     &[data-type="array"] {
-      color: #e0964c;
-      background: rgb(224, 150, 76, 0.15);
+      color: light-dark(#BD5B00, #3A2C1F);
+      background: light-dark(#FBD779,#F68909 );
     }
 
     &[data-type="boolean"] {
-      color: var(--love);
-      background: color-mix(in srgb, var(--love) 12%, transparent);
+      color: light-dark(#AE4787, #3D2232);
+      background: light-dark(#FCB6E1,#DA62AC );
     }
 
     &[data-type="object"] {
-      color: var(--highlight);
-      background: color-mix(in srgb, var(--highlight) 15%, transparent);
+      color: light-dark(#946F00,#332E1B);
+      background: light-dark(#EFDD4E,#CF9F02);
     }
   }
 }
