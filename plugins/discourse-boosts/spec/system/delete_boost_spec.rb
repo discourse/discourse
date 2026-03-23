@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Deleting a boost", type: :system do
+describe "Deleting a boost" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }

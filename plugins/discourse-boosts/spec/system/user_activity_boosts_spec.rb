@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User activity boosts page", type: :system do
+describe "User activity boosts page" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post_author) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:category)
@@ -13,17 +13,26 @@ describe "User activity boosts page", type: :system do
   before do
     SiteSetting.discourse_boosts_enabled = true
     SiteSetting.hide_new_user_profiles = false
+  end
+
+  it "displays boosts given by the user" do
     sign_in(current_user)
+    user_activity_boosts_page.visit(current_user)
+
+    expect(user_activity_boosts_page).to have_boost_count(1)
+    expect(user_activity_boosts_page).to have_boost_for_post(post)
   end
 
   it "displays boosts received on the user's posts" do
-    user_activity_boosts_page.visit(post_author)
+    sign_in(post_author)
+    user_activity_boosts_page.visit_received(post_author)
 
     expect(user_activity_boosts_page).to have_boost_count(1)
     expect(user_activity_boosts_page).to have_boost_for_post(post)
   end
 
   it "shows empty state when user has no boosts" do
+    sign_in(current_user)
     other_user = Fabricate(:user, refresh_auto_groups: true)
 
     user_activity_boosts_page.visit(other_user)
@@ -36,7 +45,8 @@ describe "User activity boosts page", type: :system do
     fab!(:boosts) { boosters.map { |u| Fabricate(:boost, post: post, user: u) } }
 
     it "loads more boosts when scrolling" do
-      user_activity_boosts_page.visit(post_author)
+      sign_in(post_author)
+      user_activity_boosts_page.visit_received(post_author)
 
       expect(user_activity_boosts_page).to have_boost_count(20)
 
