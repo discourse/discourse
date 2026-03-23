@@ -381,7 +381,7 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
   { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },
   { handler: "notify-admin", matchId: "discourse.widgets-end-of-life" },
-  { handler: "notify-admin", matchId: "template-action" }, // will be removed in Ember 6.0
+  { handler: "notify-admin", matchId: "template-action" }, // removed in Ember 6.0, but we have a polyfill
 
   // used in system specs
   {
