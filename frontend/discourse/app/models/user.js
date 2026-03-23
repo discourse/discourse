@@ -1579,7 +1579,7 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the User class instead of using Discourse.User", {
           since: "2.4.0",
-          id: "discourse.globals.user",
+          id: "discourse.global.user",
         });
         warned = true;
       }
