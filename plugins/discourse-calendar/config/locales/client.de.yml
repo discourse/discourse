@@ -15,6 +15,9 @@ de:
       web_hooks:
         calendar_event:
           group_name: "Kalenderereignis"
+          calendar_event_created: "Kalenderereignis wurde erstellt"
+          calendar_event_updated: "Kalenderereignis wurde aktualisiert"
+          calendar_event_destroyed: "Kalenderereignis wurde zerstört"
   js:
     notifications:
       titles:
@@ -31,6 +34,11 @@ de:
               label: Themen-ID
     discourse_calendar:
       invite_user_notification: "%{username} lädt dich ein zu: %{description}"
+      preferences:
+        all_events: "Discourse Kalender – Alle Ereignisse"
+        all_events_description: "Alle Forum-Ereignisse"
+        my_events: "Discourse Kalender – Meine Ereignisse"
+        my_events_description: "Ereignisse, die du besuchst oder an denen du interessiert bist"
       on_holiday: "Im Urlaub"
       disable_holiday: "Deaktivieren"
       enable_holiday: "Aktivieren"
@@ -457,6 +465,8 @@ de:
         timezone:
           label: Zeitzone
           remove_timezone: Keine Zeitzone (UTC)
+        all_day:
+          label: "Ganztägiges Ereignis"
         reminders:
           label: "Erinnerungen"
           types:

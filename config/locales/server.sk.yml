@@ -3104,35 +3104,9 @@ sk:
   new_version_mailer:
     title: "Nová verzia Mailer"
     subject_template: "[%{email_prefix}] Nová verzia Discourse, k dispozícii je aktualizácia"
-    text_body_template: |
-      Hurá, nová verzia [Discourse](https://www.discourse.org) je k dispozícii!
-
-      Vaša verzia: %{installed_version}
-      Nová verzia: **%{new_version}**
-
-      - Aktualizujte pomocou nášho jednoduchého **[jednoklikového aktualizátora v prehliadači](%{base_url}/admin/update)**
-
-      - Zistite, čo je nové v [poznámkach k vydaniu](https://meta.discourse.org/tag/release-notes) alebo si pozrite [surový GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Navštívte [meta.discourse.org](https://meta.discourse.org) pre novinky, diskusiu a podporu pre Discourse
   new_version_mailer_with_notes:
     title: "Nová verzia Mailer s poznámkami"
     subject_template: "[%{email_prefix}] k dispozícii je aktualizácia"
-    text_body_template: |
-      Hurá, nová verzia [Discourse](https://www.discourse.org) je k dispozícii!
-
-      Vaša verzia: %{installed_version}
-      Nová verzia: **%{new_version}**
-
-      - Aktualizujte pomocou nášho jednoduchého **[jednoklikového aktualizátora v prehliadači](%{base_url}/admin/update)**
-
-      - Zistite, čo je nové v [poznámkach k vydaniu](https://meta.discourse.org/tag/release-notes) alebo si pozrite [surový GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Navštívte [meta.discourse.org](https://meta.discourse.org) pre novinky, diskusiu a podporu pre Discourse
-
-      ### Poznámky k vydaniu
-
-      %{notes}
   flag_reasons:
     off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
     inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita ho považuje za urážlivý, hanlivý, nenávistný alebo za porušenie [našich pravidiel komunity](%{base_path}/pravidlá)."

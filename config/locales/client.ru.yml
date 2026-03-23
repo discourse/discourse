@@ -3682,6 +3682,7 @@ ru:
         clear_all: "Отменить выбор"
         reset_bump_dates: "Сбросить даты поднятия"
         defer: "Отметить как непрочитанное"
+        delete: "Удалить темы"
         delete_topics_count:
           one: "Удалить тему"
           few: "Удалить темы"
@@ -3726,8 +3727,12 @@ ru:
           other: "Отложить новые (%{count})"
         toggle: "выбор нескольких тем"
         actions: "Массовые действия"
+        change_category: "Обновить категорию"
+        close_topics: "Закрыть темы"
+        archive_topics: "Архив тем"
         move_messages_to_inbox: "Переместить во входящие"
         archive_messages: "Переместить в архив"
+        notification_level: "Уведомления об обновлении"
         change_notification_level: "Изменить уровень уведомлений"
         choose_new_category: "Выберите новую категорию для этих тем:"
         selected_sole_category:
@@ -3740,10 +3745,12 @@ ru:
           few: "Выбрано %{count}"
           many: "Выбрано %{count}"
           other: "Выбрано %{count}"
+        change_tags: "Заменить теги"
         append_tags: "Добавить теги"
         choose_new_tags: "Выберите новые теги для этих тем:"
         choose_append_tags: "Добавить теги"
         changed_tags: "Теги этих тем изменены."
+        remove_tags: "Удалить теги"
         confirm_remove_tags:
           one: "Все теги будут удалены из этой темы. Продолжить?"
           few: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
@@ -3784,31 +3791,44 @@ ru:
         name: "Закрыть"
       close_topics:
         name: "Завершить"
+        description: "Закрытые темы не позволяют оставлять новые комментарии. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Узнать больше</a>"
+        note: "Добавьте примечание к этим темам."
         optional: (необязательно)
       archive_topics:
         name: "Архивировать"
+        description: "Архивированные темы скрыты из поиска и списка последних тем. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Узнать больше</a>"
       archive_messages:
         name: "Переместить в архив"
       move_messages_to_inbox:
         name: "Переместить во входящие"
       unlist_topics:
         name: "Скрыть"
+        description: "Темы, не указанные в списке, скрыты, но к ним по-прежнему можно получить доступ по прямой ссылке. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Узнать больше</a>"
       relist_topics:
         name: "Показать повторно"
       remove_tags:
         name: "Удалить теги"
+        description: "Удалите все теги из выбранных тем."
+      append_tags:
+        name: "Добавить теги"
+        description: "Добавьте следующие теги к выбранным темам:"
       replace_tags:
         name: "Заменить теги"
+        description: "Замените все существующие теги для выбранных тем следующими:"
       delete_topics:
         name: "Удалить"
+        description: "Удалить выбранные темы безвозвратно. Это действие необратимо."
       update_category:
         name: "Обновить категорию"
+        description: "Переместить все выбранные темы в следующую категорию:"
       reset_bump_dates:
         name: "Сбросить даты поднятия"
+        description: "Вы хотите обновить даты обновления до даты последнего созданного сообщения? Это может повлиять на их порядок в списке тем."
       defer:
         name: "Отметить как непрочитанное"
       update_notifications:
         name: "Обновить уведомления"
+        description: "Измените свой персональный уровень уведомлений для выбранных тем следующим образом:"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4735,6 +4755,7 @@ ru:
       list: "Вывод списка категорий"
       no_description: "Добавьте описание для этой категории."
       change_in_category_topic: "Изменить описание"
+      description_updated: "Описание обновлено"
       description_expand: "Развернуть"
       description_collapse: "Свернуть"
       already_used: "Цвет уже используется другой категорией"
@@ -5940,6 +5961,7 @@ ru:
         back: "Назад ко всем отчетам"
         group_traffic: "Трафик"
         group_members: "Участники"
+        group_moderation_and_security: "Модерация и безопасность"
         group_other: "Разное"
       config_sections:
         account:

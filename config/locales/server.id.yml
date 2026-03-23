@@ -1288,34 +1288,6 @@ id:
       blank: "tidak boleh kosong."
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
-  new_version_mailer:
-    text_body_template: |
-      Hore, versi baru dari [Discourse] (https://www.discourse.org) telah tersedia!
-
-      Versi Anda: %{installed_version}
-      Versi baru: **%{new_version}**
-
-      - Perbarui menggunakan **[pembaruan browser sekali klik] kami yang mudah (%{base_url}/admin/update) **
-
-      - Lihat apa yang baru di [catatan rilis](https://meta.discourse.org/tag/release-notes) atau lihat [catatan perubahan GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
-  new_version_mailer_with_notes:
-    text_body_template: |
-      Hore, versi baru [Discourse] (https://www.discourse.org) tersedia!
-
-      Versi Anda: %{installed_version}
-      Versi baru: **%{new_version}**
-
-      - Perbarui menggunakan ** [pembaruan browser satu-klik] kami yang mudah (%{base_url}/admin/update) **
-
-      - Lihat apa yang baru di [catatan rilis] (https://meta.discourse.org/tag/release-notes) atau lihat [perubahan GitHub mentah](https://github.com/discourse/discourse/commits/main)
-
-      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
-
-      ### Catatan rilis
-
-      %{notes}
   system_messages:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"

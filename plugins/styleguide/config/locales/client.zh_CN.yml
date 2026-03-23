@@ -117,3 +117,5 @@ zh_CN:
         char_counter:
           title: "字符计数器"
           placeholder: "在此处输入您的文本…"
+        segmented_control:
+          title: "分段控制（按钮切换组）"

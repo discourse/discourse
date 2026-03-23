@@ -2893,35 +2893,9 @@ ug:
   new_version_mailer:
     title: "يېڭى نەشرىدىكى خەت"
     subject_template: "[%{email_prefix}] يېڭى Discourse نەشرى، يېڭىلانما بار"
-    text_body_template: |
-      ھۇررا، يېڭى نەشرىدىكى [Discourse](https://www.discourse.org) ئېلان قىلىندى!
-
-      نەشرىڭىز: %{installed_version}
-      يېڭى نەشرى: **%{new_version}**
-
-      - يېڭىلاشتا بىزنىڭ **[بىر چېكىپلا توركۆرگۈدە يېڭىلاش](%{base_url}/admin/update) نى ئىشلىتىڭ**
-
-      - [تارقىتىش ئۇقتۇرۇشى](https://meta.discourse.org/tag/release-notes) دىكى يېڭىلىق ياكى [ئەسلى GitHub ئۆزگىرىش خاتىرىسى] (https://github.com/discourse/discourse/commits/main) نى كۆرۈشتە
-
-      - Discourse ھەققىدىكى خەۋەر، سۆھبەت ۋە قوللاش ئۇچۇرىنى كۆرۈشتە [meta.discourse.org](https://meta.discourse.org) نى زىيارەت قىلىڭ
   new_version_mailer_with_notes:
     title: "نەشر ئىزاھاتى بار يېڭى نەشرىدىكى خەت"
     subject_template: "[%{email_prefix}] يېڭىلانما بار"
-    text_body_template: |
-      ھۇررا، يېڭى نەشرىدىكى [Discourse](https://www.discourse.org) ئېلان قىلىندى!
-
-      نەشرىڭىز: %{installed_version}
-      يېڭى نەشرى: **%{new_version}**
-
-      - يېڭىلاشتا بىزنىڭ **[بىر چېكىپلا توركۆرگۈدە يېڭىلاش](%{base_url}/admin/update) نى ئىشلىتىڭ**
-
-      - [تارقىتىش ئۇقتۇرۇشى](https://meta.discourse.org/tag/release-notes) دىكى يېڭىلىق ياكى [ئەسلى GitHub ئۆزگىرىش خاتىرىسى] (https://github.com/discourse/discourse/commits/main) نى كۆرۈشتە
-
-      - Discourse ھەققىدىكى خەۋەر، سۆھبەت ۋە قوللاش ئۇچۇرىنى كۆرۈشتە [meta.discourse.org](https://meta.discourse.org) نى زىيارەت قىلىڭ
-
-      ###تارقىتىش ئىزاھاتى
-
-      %{notes}
   flag_reasons:
     off_topic: "يازمىڭىز **تېمىدىن چەتنىگەن** دەپ پاش قىلىنغان: تېمىنىڭ ماۋزۇسى ۋە تۇنجى يازمىغا ئاساسەن جامائەت بۇ تېمىغا ماس كەلمەيدۇ دەپ قارايدۇ."
     inappropriate: "يازمىڭىز **مۇۋاپىق بولمىغان** دەپ پاش قىلىنغان: جامائەت ئۇنى كىشىنى بىزار قىلىدىغان، ھاقارەتلەيدىغان، ئۆچمەنلىككە تەۋە قىلمىش ياكى [جامائەت مىزانىمىز](%{base_path}/guidelines) غا خىلاپ دەپ قارايدۇ."

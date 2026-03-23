@@ -1813,11 +1813,21 @@ de:
         upcoming_changes: "Bevorstehende Änderungen"
         calendar_subscriptions: "Kalender"
       calendar_subscriptions:
+        description: "Generiere Abonnement-URLs für die Synchronisierung mit deiner bevorzugten Kalender-App (Google Calendar, Apple Calendar, Outlook, etc.). Bei diesen URLs handelt es sich um private Links zu Kalenderereignissen für dein Konto (Lesezeichen-Erinnerungen, Kalenderereignisse, etc.). Du kannst die generierten Abonnement-URLs jederzeit widerrufen oder erneuern. "
+        generate: "Abonnement-URLs generieren"
+        regenerate: "URLs neu generieren"
+        regenerate_confirm: "Dadurch werden deine bestehenden Kalender-Abonnement-URLs ungültig. Alle Kalender-Apps, die die alten URLs verwenden, werden keine Updates mehr erhalten. Fortfahren?"
+        revoke: "Abonnement widerrufen"
+        revoke_confirm: "Dadurch werden deine Kalender-Abonnement-URLs widerrufen. Alle Kalender-Apps, die diese URLs verwenden, erhalten keine Updates mehr. Fortfahren?"
+        urls_warning: "Die Abonnement-URLs sind fertig! Klicke auf die Schaltflächen unten, um sie mit deiner Kalender-App zu verknüpfen. Hinweis: Diese URLs werden nur einmal angezeigt."
+        bookmarks: "Lesezeichen-Erinnerungen"
+        bookmarks_description: "Deine Lesezeichen mit Erinnerungsterminen"
         copy: "URL kopieren"
         copied: "Kopiert!"
         add_to_google: "Google Kalender"
         add_to_outlook: "Microsoft Outlook"
         add_to_apple: "Apple-Kalender"
+        active_subscription: "Du hast ein aktives Kalender-Abonnement."
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -2997,6 +3007,7 @@ de:
       collapse: "Editor minimieren"
       open: "Editor öffnen"
       abandon: "Editor schließen und Entwurf verwerfen"
+      edit_reason: "Füge den Bearbeitungsgrund hinzu"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
@@ -3562,8 +3573,10 @@ de:
         name: "Schlagwörter ersetzen"
       delete_topics:
         name: "Löschen"
+        description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
       update_category:
         name: "Kategorie aktualisieren"
+        description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
       reset_bump_dates:
         name: "„Nach oben verschieben“-Daten zurücksetzen"
       defer:
