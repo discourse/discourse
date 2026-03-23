@@ -135,7 +135,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isChecked();
   });
 
-  test("registered posting-option can disable its button when step is complete", async function (assert) {
+  test("registered posting-option can hide its button when step is complete", async function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer(
         "admin-onboarding-start-posting-options",
@@ -159,14 +159,14 @@ acceptance("Admin - Onboarding Banner", function (needs) {
           );
 
           value.push(
-            class DisableableOption extends StartPostingOption {
-              name = "disableable-option";
+            class HideableOption extends StartPostingOption {
+              name = "hideable-option";
               title = "admin_onboarding_banner.start_posting.extra_option";
               body =
                 "admin_onboarding_banner.start_posting.extra_option_description";
               actionLabel = "admin_onboarding_banner.start_posting.use_extra";
 
-              get disabled() {
+              get hideAction() {
                 return this.args.isComplete;
               }
 
@@ -186,16 +186,16 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     assert.dom(".option").exists({ count: 3 });
     assert
-      .dom(".disableable-option .btn")
-      .isNotDisabled("button is enabled before step completion");
+      .dom(".hideable-option .btn")
+      .exists("button is visible before step completion");
 
     await click(".completing-option .btn");
 
     await withStep("start_posting", assert).clickAction();
 
     assert
-      .dom(".disableable-option .btn")
-      .isDisabled("button is disabled after step completion");
+      .dom(".hideable-option .btn")
+      .doesNotExist("button is hidden after step completion");
   });
 
   test("it can complete `invite_collaborators` step", async function (assert) {
