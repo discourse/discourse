@@ -4,7 +4,6 @@ import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
-import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 
 /**
@@ -845,15 +844,9 @@ export default class PostStreamViewportTracker {
     window.addEventListener("scroll", this.onScroll, opts);
 
     // restore scroll position on browsers with aggressive BFCaches (like Safari)
-    // when bfcache compatibility is enabled, skip the re-route since the page
-    // state is fully restored from bfcache and re-routing would cause unnecessary
-    // network requests
     window.onpageshow = function (event) {
       if (event.persisted) {
-        const siteSettings = PreloadStore.get("siteSettings");
-        if (!siteSettings?.cache_control_bfcache_compatibility) {
-          DiscourseURL.routeTo(this.location.pathname);
-        }
+        DiscourseURL.routeTo(this.location.pathname);
       }
     };
   }
