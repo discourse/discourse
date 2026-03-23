@@ -713,11 +713,24 @@ module ApplicationHelper
     tag.attributes(**attrs)
   end
 
+  def crawler_topic_main_entity_schema(topic)
+    default = {}
+    attrs =
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, default, topic)
+    attrs.present? ? tag.attributes(**attrs) : nil
+  end
+
   def crawler_post_schema(post, topic)
-    return "" if post.is_first_post?
-    default = { itemprop: "comment", itemscope: true, itemtype: "http://schema.org/Comment" }
+    default =
+      (
+        if post.is_first_post?
+          {}
+        else
+          { itemprop: "comment", itemscope: true, itemtype: "http://schema.org/Comment" }
+        end
+      )
     attrs = DiscoursePluginRegistry.apply_modifier(:topic_crawler_post_schema, default, post, topic)
-    tag.attributes(**attrs)
+    attrs.present? ? tag.attributes(**attrs) : ""
   end
 
   # If there is plugin HTML return that, otherwise yield to the template

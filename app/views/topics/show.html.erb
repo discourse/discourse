@@ -34,22 +34,29 @@
   <%= server_plugin_outlet "topic_header" %>
 
   <%- if include_crawler_content? %>
+    <% main_entity_schema = crawler_topic_main_entity_schema(@topic_view.topic) %>
     <div <%= crawler_topic_container_schema(@topic_view.topic) %>>
-      <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <meta itemprop='<%= main_entity_schema ? "name" : "headline" %>' content='<%= @topic_view.title %>'>
       <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
       <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
-      <% if @topic_view.topic.category.present? %>
-        <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
-      <% end %>
       <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
-      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
-        <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
-        <% if application_logo_url.present? %>
-          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
-            <meta itemprop='url' content='<%= application_logo_url %>'>
-          </div>
+      <% unless main_entity_schema %>
+        <% if @topic_view.topic.category.present? %>
+          <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
         <% end %>
-      </div>
+        <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+          <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
+          <% if application_logo_url.present? %>
+            <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+              <meta itemprop='url' content='<%= application_logo_url %>'>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if main_entity_schema %>
+        <div <%= main_entity_schema %>>
+      <% end %>
 
       <% if @topic_view.crawler_posts&.first && !@topic_view.crawler_posts.first.is_first_post? %>
         <% if @topic_view.topic.user.present? %>
@@ -78,7 +85,7 @@
                 <% end %>
               </span>
 
-              <% if post.is_first_post? %>
+              <% if post.is_first_post? && !main_entity_schema %>
                 <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
               <% end %>
 
@@ -121,6 +128,10 @@
             <%= build_plugin_html "server:topic-show-crawler-post-end", post: post %>
           </div>
         <% end %>
+      <% end %>
+
+      <% if main_entity_schema %>
+        </div>
       <% end %>
     </div>
 

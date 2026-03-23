@@ -79,11 +79,18 @@ after_initialize do
 
   register_modifier(:topic_crawler_container_schema) do |schema, topic|
     next schema unless Guardian.new.allow_accepted_answers?(topic)
-    { itemscope: true, itemtype: "https://schema.org/Question" }
+    { itemscope: true, itemtype: "https://schema.org/QAPage" }
+  end
+
+  register_modifier(:topic_crawler_main_entity_schema) do |schema, topic|
+    next schema unless Guardian.new.allow_accepted_answers?(topic)
+    { itemprop: "mainEntity", itemscope: true, itemtype: "https://schema.org/Question" }
   end
 
   register_modifier(:topic_crawler_post_schema) do |schema, post, topic|
     next schema unless Guardian.new.allow_accepted_answers?(topic)
+    next {} if post.is_first_post?
+    next { itemscope: true } if post.post_type == Post.types[:small_action]
     if topic.solved&.answer_post_id == post.id
       { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
     else

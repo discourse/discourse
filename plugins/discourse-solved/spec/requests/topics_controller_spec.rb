@@ -132,7 +132,7 @@ RSpec.describe TopicsController do
       doc = parsed_crawler_body
 
       expect(doc.css('[itemtype*="DiscussionForumPosting"]').size).to eq(1)
-      expect(doc.css('[itemtype*="QAPage"]').size).to eq(0)
+      expect(doc.css('[itemtype*="Question"]').size).to eq(0)
     end
   end
 
