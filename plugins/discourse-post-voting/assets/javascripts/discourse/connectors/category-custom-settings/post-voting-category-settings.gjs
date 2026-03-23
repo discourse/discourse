@@ -9,14 +9,18 @@ export default class PostVotingCategorySettings extends Component {
 
   @action
   onChangeCreateAsPostVotingDefault(event) {
-    this.args.outletArgs.category.custom_fields.create_as_post_voting_default =
-      event.target.checked;
+    this.args.outletArgs.category.set(
+      "custom_fields.create_as_post_voting_default",
+      event.target.checked
+    );
   }
 
   @action
   onChangeOnlyPostVotingInThisCategory(event) {
-    this.args.outletArgs.category.custom_fields.only_post_voting_in_this_category =
-      event.target.checked;
+    this.args.outletArgs.category.set(
+      "custom_fields.only_post_voting_in_this_category",
+      event.target.checked
+    );
   }
 
   <template>
