@@ -179,4 +179,10 @@
     padding: var(--space-2);
     border-radius: 0.25em;
   }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
