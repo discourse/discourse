@@ -17,7 +17,6 @@ import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { notEq } from "discourse/truth-helpers";
 
 @tagName("")
 export default class CategoriesBoxes extends Component {
@@ -82,15 +81,7 @@ export default class CategoriesBoxes extends Component {
 
               <div class="category-details">
                 <div class="category-box-heading">
-                  <a
-                    class="parent-box-link"
-                    href={{this.categoryUrl c}}
-                    target={{if (notEq (this.categoryUrl c) c.url) "_blank"}}
-                    rel={{if
-                      (notEq (this.categoryUrl c) c.url)
-                      "noopener noreferrer"
-                    }}
-                  >
+                  <a class="parent-box-link" href={{this.categoryUrl c}}>
                     <h3>
                       <CategoryTitleBefore @category={{c}} />
                       {{this.categoryName c}}
@@ -149,18 +140,7 @@ export default class CategoriesBoxes extends Component {
                   {{else if c.subcategories}}
                     <div class="subcategories">
                       {{#each c.subcategories as |sc|}}
-                        <a
-                          class="subcategory"
-                          href={{this.categoryUrl sc}}
-                          target={{if
-                            (notEq (this.categoryUrl sc) sc.url)
-                            "_blank"
-                          }}
-                          rel={{if
-                            (notEq (this.categoryUrl sc) sc.url)
-                            "noopener noreferrer"
-                          }}
-                        >
+                        <a class="subcategory" href={{this.categoryUrl sc}}>
                           {{#if sc.uploaded_logo.url}}
                             <span class="subcategory-image-placeholder">
                               <CategoryLogo @category={{sc}} />
