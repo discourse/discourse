@@ -1,0 +1,70 @@
+# PR Security Scan
+#
+# Runs on every non-draft pull request. Fetches the PR diff and sends it to
+# the patch-triage VM for security analysis. Results are posted back as a
+# GitHub Check Run — staff can click "Details" to see the full scan in
+# patch-triage (login required).
+#
+# Required repository secrets:
+#   GITHUB_SCAN_SECRET  — HMAC secret shared with the VM (from /secure/patch-triage.env)
+#   VM_SCAN_URL         — Base URL of the VM webhook server (e.g. https://patch.discourse.org:PORT)
+#
+# To use: copy this file to .github/workflows/pr-security-scan.yml in discourse/discourse.
+
+name: PR Security Scan
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+permissions:
+  checks: write
+  pull-requests: read
+
+jobs:
+  security-scan:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch PR diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr diff ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} > pr.diff
+
+          echo "Diff size: $(wc -c < pr.diff) bytes"
+
+      - name: Send to security scan
+        env:
+          GITHUB_SCAN_SECRET: ${{ secrets.GITHUB_SCAN_SECRET }}
+          VM_SCAN_URL: ${{ secrets.VM_SCAN_URL }}
+        run: |
+          # Build JSON payload
+          jq -cn \
+            --arg pr_number "${{ github.event.pull_request.number }}" \
+            --arg title "${{ github.event.pull_request.title }}" \
+            --rawfile diff pr.diff \
+            --arg author "${{ github.event.pull_request.user.login }}" \
+            --arg repo "${{ github.repository }}" \
+            --arg sha "${{ github.event.pull_request.head.sha }}" \
+            --arg installation_token "${{ github.token }}" \
+            '{
+              pr_number: $pr_number,
+              title: $title,
+              diff: $diff,
+              author: $author,
+              repo: $repo,
+              sha: $sha,
+              installation_token: $installation_token
+            }' > body.json
+
+          # Compute HMAC-SHA256 signature
+          SIG="sha256=$(openssl dgst -sha256 -hmac "$GITHUB_SCAN_SECRET" body.json | awk '{print $2}')"
+
+          # POST to VM — returns 200 immediately, scan runs asynchronously
+          curl --fail-with-body -X POST "$VM_SCAN_URL/scan-pr" \
+            -H "Content-Type: application/json" \
+            -H "X-Scan-Signature: $SIG" \
+            --data @body.json
