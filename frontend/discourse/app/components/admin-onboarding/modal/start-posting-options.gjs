@@ -10,7 +10,10 @@ const StartPostingOptions = <template>
     <:body>
       <div class="modal-options">
         {{#each @model.options as |Option|}}
-          <Option @closeModal={{@closeModal}} />
+          <Option
+            @closeModal={{@closeModal}}
+            @isComplete={{@model.isStepComplete}}
+          />
         {{/each}}
       </div>
     </:body>
