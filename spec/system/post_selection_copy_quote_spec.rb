@@ -7,7 +7,7 @@ describe "Post selection | Copy quote", type: :system do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic, raw: "Hello world it's time for quoting!") }
+  fab!(:post) { Fabricate(:post, topic: topic, raw: "Hello world this is time for quoting") }
   fab!(:current_user, :admin)
 
   def select_list_items(post_selector, start_li_index, end_li_index)
@@ -79,6 +79,32 @@ describe "Post selection | Copy quote", type: :system do
       topic_page.click_reply_button
 
       expect(composer).to have_value("")
+    end
+
+    it "inserts a partial quote when selecting part of post content" do
+      topic_page.visit_topic(topic)
+
+      select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
+
+      find(".quote-button .insert-quote").click
+      expect(composer).to have_value(
+        %([quote="#{post.user.username}, post:1, topic:#{topic.id}"]\nHello worl\n[/quote]\n\n),
+      )
+    end
+
+    it "quotes formatted content as markdown with full:true" do
+      formatted_post = Fabricate(:post, topic: topic, raw: "This is **bold** and *italic* text")
+      topic_page.visit_topic(topic)
+
+      select_all_content(
+        "#{topic_page.post_by_number_selector(formatted_post.post_number)} .cooked",
+      )
+
+      find(".quote-button .insert-quote").click
+      composer_value = find(".d-editor-input", visible: :all).value
+      expect(composer_value).to include("full:true")
+      expect(composer_value).to include("**bold**")
+      expect(composer_value).to include("*italic*")
     end
 
     it "preserves list formatting when quoting various list types" do

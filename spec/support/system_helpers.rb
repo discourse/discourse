@@ -151,6 +151,19 @@ module SystemHelpers
     end
   end
 
+  def select_all_content(selector)
+    js = <<-JS
+      const el = document.querySelector(arguments[0]);
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    JS
+
+    page.execute_script(js, selector)
+  end
+
   def select_text_range(selector, start = 0, offset = 5)
     js = <<-JS
       const node = document.querySelector(arguments[0]).childNodes[0];
