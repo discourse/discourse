@@ -272,8 +272,8 @@ importers:
         specifier: 11.11.1
         version: 11.11.1
       '@json-editor/json-editor':
-        specifier: 2.15.2
-        version: 2.15.2
+        specifier: 2.16.0
+        version: 2.16.0
       '@jsquash/jpeg':
         specifier: ^1.6.0
         version: 1.6.0
@@ -2610,8 +2610,8 @@ packages:
     resolution: {integrity: sha512-yYxMVH7Dqw6nO0d5NIV8OQWnitU8k6vXH8NtgqAfIa/IUqRMxRv/NUJJ08VEKbAakwxlgBl5PJdrU0dMPStsnw==}
     engines: {node: '>=v12.0.0'}
 
-  '@json-editor/json-editor@2.15.2':
-    resolution: {integrity: sha512-vUQ7Oy+7VfNIzu6irtPz5qfHbMNTlQWUbHJ7eunxFza+SBwUXfq2Uh5QYD2d6hLDhF22sYh8DPpLWFixQrt1+Q==}
+  '@json-editor/json-editor@2.16.0':
+    resolution: {integrity: sha512-qzCDDImLAkqCpOp3G156ikEHTJKQviVyxie+3QXE1MTxRuT+BZ3yTYsXfUpvgRyaLBcYDJIind59Hj3oz+5TqA==}
     engines: {node: '>= 0.8.0'}
 
   '@jsonjoy.com/base64@1.1.2':
@@ -4561,6 +4561,9 @@ packages:
 
   core-js@3.48.0:
     resolution: {integrity: sha512-zpEHTy1fjTMZCKLHUZoVeylt9XrzaIN2rbPXEt0k+q7JE5CkCZdo6bNq55bn24a69CH7ErAVLKijxJja4fw+UQ==}
+
+  core-js@3.49.0:
+    resolution: {integrity: sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==}
 
   core-object@3.1.5:
     resolution: {integrity: sha512-sA2/4+/PZ/KV6CKgjrVrrUVBKCkdDO02CUlQ0YKTQoYUwPYNOtOAcWlbYhd5v/1JqYaA6oZ4sDlOU4ppVw6Wbg==}
@@ -11576,9 +11579,9 @@ snapshots:
     dependencies:
       lodash: 4.17.23
 
-  '@json-editor/json-editor@2.15.2':
+  '@json-editor/json-editor@2.16.0':
     dependencies:
-      core-js: 3.48.0
+      core-js: 3.49.0
 
   '@jsonjoy.com/base64@1.1.2(tslib@2.8.1)':
     dependencies:
@@ -13797,6 +13800,8 @@ snapshots:
   core-js@2.6.12: {}
 
   core-js@3.48.0: {}
+
+  core-js@3.49.0: {}
 
   core-object@3.1.5:
     dependencies:
