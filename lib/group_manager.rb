@@ -6,26 +6,37 @@ class GroupManager
     @group = group
   end
 
-  def add(user, notify: false, automatic: false, subject: nil, log: true)
+  def add(
+    user,
+    notify: false,
+    automatic: false,
+    subject: nil,
+    log: true,
+    force_title_and_flair: false
+  )
     return false if user.nil?
 
     added_user_ids = @group.bulk_add([user.id], automatic:)
     return false if added_user_ids.empty?
 
+    force_title_and_flair!(added_user_ids) if force_title_and_flair
     logger.bulk_log_add_user_to_group([user], subject) if log
     @group.notify_added_to_group(user) if notify
 
     true
   end
 
-  def bulk_add(user_ids, automatic: false, subject: nil, log: true)
+  def bulk_add(user_ids, automatic: false, subject: nil, log: true, force_title_and_flair: false)
     return [] if user_ids.blank?
 
     added_user_ids = @group.bulk_add(user_ids, automatic:)
 
-    if added_user_ids.present? && log
-      added_users = User.where(id: added_user_ids).to_a
-      logger.bulk_log_add_user_to_group(added_users, subject)
+    if added_user_ids.present?
+      force_title_and_flair!(added_user_ids) if force_title_and_flair
+      if log
+        added_users = User.where(id: added_user_ids).to_a
+        logger.bulk_log_add_user_to_group(added_users, subject)
+      end
     end
 
     added_user_ids
@@ -59,5 +70,13 @@ class GroupManager
 
   def logger
     @logger ||= GroupActionLogger.new(@acting_user, @group)
+  end
+
+  def force_title_and_flair!(user_ids)
+    DB.exec(<<~SQL, ids: user_ids, title: @group.title, flair_group_id: @group.id)
+      UPDATE users
+      SET title = :title, flair_group_id = :flair_group_id
+      WHERE id IN (:ids)
+    SQL
   end
 end

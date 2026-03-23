@@ -21,6 +21,7 @@ DiscourseAutomation::Scriptable.add(
   script do |context, fields|
     badge_id = fields.dig("badge", "value")
     group_id = fields.dig("group", "value")
+    update_user_title_and_flair = fields.dig("update_user_title_and_flair", "value")
     remove_members_without_badge = fields.dig("remove_members_without_badge", "value")
     current_user = context["user"]
 
@@ -54,7 +55,10 @@ DiscourseAutomation::Scriptable.add(
 
     user_ids_to_add = DB.query_single(user_ids_to_add_query, query_options)
 
-    GroupManager.new(Discourse.system_user, group).bulk_add(user_ids_to_add)
+    GroupManager.new(Discourse.system_user, group).bulk_add(
+      user_ids_to_add,
+      force_title_and_flair: update_user_title_and_flair,
+    )
 
     next unless remove_members_without_badge
 
