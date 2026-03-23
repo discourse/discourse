@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 
 /**
  * Helper class for managing bulk selection of posts
@@ -18,7 +18,7 @@ export default class PostBulkSelectHelper {
   @tracked lastClickedPost = null;
   @tracked bulkSelectEnabled = false;
   @tracked posts = null;
-  selected = new TrackedArray();
+  selected = trackedArray();
 
   constructor(context, posts = null) {
     setOwner(this, getOwner(context));

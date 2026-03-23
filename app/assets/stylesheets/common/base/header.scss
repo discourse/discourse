@@ -189,7 +189,7 @@
     .discourse-no-touch &:focus-visible {
       background-color: var(--d-header-icon-background--hover);
 
-      .d-icon {
+      > .d-icon {
         color: var(--d-header-icon-color--hover);
       }
     }
