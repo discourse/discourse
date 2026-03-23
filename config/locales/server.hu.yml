@@ -3035,35 +3035,9 @@ hu:
   new_version_mailer:
     title: "Új levelező verzió"
     subject_template: "[%{email_prefix}] Új Discourse verzió, frissítés elérhető"
-    text_body_template: |
-      Hurrá, elérhető a [Discourse](https://www.discourse.org) új verziója!
-
-      A te verziód: %{installed_version}
-      Új verzió: **%{new_version}**
-
-      - Frissíts egyszerűen **[egykattintásos böngészőfrissítés](%{base_url}/admin/update)**
-
-      - Nézd meg az újdonságokat a [kiadási jegyzetekben](https://meta.discourse.org/tag/release-notes) vagy tekintsd meg a [nyers GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Látogass el a [meta.discourse.org](https://meta.discourse.org) oldalra a Discourse híreiért, megvitatásáért és támogatásáért.
   new_version_mailer_with_notes:
     title: "Új verzió levelező megjegyzésekkel"
     subject_template: "[%{email_prefix}] frissítés elérhető"
-    text_body_template: |
-      Hurrá, elérhető a [Discourse](https://www.discourse.org) új verziója!
-
-      A te verziód: %{installed_version}
-      Új verzió: **%{new_version}**
-
-      - Frissíts egyszerűen **[egykattintásos böngészőfrissítés](%{base_url}/admin/update)**
-
-      - Nézd meg az újdonságokat a [kiadási jegyzetekben](https://meta.discourse.org/tag/release-notes) vagy tekintsd meg a [nyers GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Látogass el a [meta.discourse.org](https://meta.discourse.org) oldalra a Discourse híreiért, megvitatásáért és támogatásáért.
-
-      ### Kiadási jegyzet
-
-      %{notes}
   flag_reasons:
     off_topic: "Bejegyzését **nem témába vágóként** jelentették: a közösség úgy érzi, hogy a cím és az első bejegyzés alapján nem felel meg a témának."
     inappropriate: "Bejegyzését **nem megfelelő**ként jelölték meg: a közösség sértőnek, sértőnek, gyűlöletkeltőnek vagy [közösségi irányelveinknek] (%{base_path}/guidelines) megsértésének érzi."

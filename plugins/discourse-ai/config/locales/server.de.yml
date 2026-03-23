@@ -642,7 +642,17 @@ de:
         success: "Abzeichen erfolgreich verliehen."
       assign:
         errors:
+          plugin_not_installed: "Das Discourse Zuordnen Plug-in ist nicht installiert."
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst dieses Thema nicht zuordnen."
+          no_reason: "Um ein Thema zuzuordnen oder die Zuordnung aufzuheben, ist eine Begründung erforderlich."
+          assignee_not_found: "Benutzer oder Gruppe nicht gefunden."
+          assign_failed: "Thema konnte nicht zugeordnet werden."
+        success: "Zuordnung des Themas erfolgreich aktualisiert."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "Das Discourse Gelöst Plug-in ist nicht installiert."
+          no_reason: "Um ein Thema als gelöst oder ungelöst zu markieren, ist eine Begründung erforderlich."
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"

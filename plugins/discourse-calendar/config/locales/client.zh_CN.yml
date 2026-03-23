@@ -34,6 +34,11 @@ zh_CN:
               label: 话题 ID
     discourse_calendar:
       invite_user_notification: "%{username} 邀请您加入：%{description}"
+      preferences:
+        all_events: "Discourse 日历 - 所有事件"
+        all_events_description: "所有论坛事件"
+        my_events: "Discourse 日历 - 我的事件"
+        my_events_description: "你将要参加或感兴趣的事件"
       on_holiday: "休假"
       disable_holiday: "禁用"
       enable_holiday: "启用"
@@ -455,6 +460,9 @@ zh_CN:
         timezone:
           label: 时区
           remove_timezone: 无时区 (UTC)
+        all_day:
+          label: "全天事件"
+          description: "全天事件没有具体时间，只有日期。事件将从当天开始持续到当天结束。"
         reminders:
           label: "提醒"
           types:

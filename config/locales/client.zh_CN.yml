@@ -1709,8 +1709,21 @@ zh_CN:
         upcoming_changes: "即将推出的更改"
         calendar_subscriptions: "日历"
       calendar_subscriptions:
+        description: "生成订阅 URL，以便与您常用的日历应用（例如 Google 日历、Apple 日历、Outlook 等）同步。这些 URL\n 是您帐户中日历事件（例如书签提醒、日历事件等）的私有 URL。您可以随时撤销或续订生成的订阅 URL。 "
+        generate: "生成订阅 URL"
+        regenerate: "重新生成 URL"
+        regenerate_confirm: "这将使您现有的日历订阅 URL 失效。任何使用旧 URL 的日历应用都将无法收到更新。是否继续？"
+        revoke: "撤销订阅"
+        revoke_confirm: "这将撤销您现有的日历订阅 URL。任何使用这些 URL 的日历应用都将停止接收更新。是否继续？"
+        urls_warning: "订阅 URL 已准备就绪！点击下方按钮即可将其 URL 到您的日历应用。注意：这些 URL 仅显示一次。"
+        bookmarks: "书签提醒"
+        bookmarks_description: "您的书签及提醒日期"
+        copy: "复制 URL"
         copied: "已复制！"
         add_to_google: "Google 日历"
+        add_to_outlook: "微软 Outlook"
+        add_to_apple: "Apple 日历"
+        active_subscription: "您有一个活跃的日历订阅。"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -3357,18 +3370,24 @@ zh_CN:
         description: "从所选话题中移除所有标签。"
       append_tags:
         name: "添加标签"
+        description: "为选定的话题添加以下标签："
       replace_tags:
         name: "替换标签"
+        description: "将所选话题的所有现有标签替换为以下内容："
       delete_topics:
         name: "删除"
+        description: "永久删除所选话题。此操作无法撤销。"
       update_category:
         name: "更新类别"
+        description: "将所有选定的话题移至以下类别："
       reset_bump_dates:
         name: "重置顶帖日期"
+        description: "您是否想更新顶帖日期为帖子最后创建的日期？这可能会影响它们在话题列表列表中的排序。"
       defer:
         name: "标记为未读"
       update_notifications:
         name: "更新通知"
+        description: "将所选话题的个人通知级别更新为："
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -4102,6 +4121,8 @@ zh_CN:
       advanced: "高级"
       show_advanced: "高级设置"
       topic_template: "模板"
+      topic_title_placeholder: "类别话题标题占位符"
+      topic_title_placeholder_placeholder: "[可选] 此分类的自定义话题标题占位符"
       tags: "标签"
       localizations: "本地化"
       localization:
