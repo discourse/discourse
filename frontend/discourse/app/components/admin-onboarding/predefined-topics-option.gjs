@@ -9,7 +9,6 @@ export default class PredefinedTopicsOption extends StartPostingOption {
   name = "predefined-option";
   title = "admin_onboarding_banner.start_posting.predefined_topics";
   body = "admin_onboarding_banner.start_posting.predefined_topics_description";
-  actionLabel = "admin_onboarding_banner.start_posting.use_predefined";
 
   @action
   onSelect() {
