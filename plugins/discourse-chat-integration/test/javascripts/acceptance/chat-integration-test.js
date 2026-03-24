@@ -100,11 +100,11 @@ acceptance("Chat Integration", function (needs) {
     await visit("/admin/plugins/discourse-chat-integration/providers/dummy");
 
     assert
-      .dom("#admin-plugin-chat .d-admin-table")
+      .dom("#admin-plugin-chat .d-table")
       .exists("it shows the table of rules");
 
     assert
-      .dom("#admin-plugin-chat .d-admin-table .d-admin-row__detail.rule-filter")
+      .dom("#admin-plugin-chat .d-table .d-table__cell.--detail.rule-filter")
       .hasText(/All posts and replies/, "rule displayed");
   });
 

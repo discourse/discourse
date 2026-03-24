@@ -46,16 +46,13 @@ export default class RuleRow extends Component {
   }
 
   <template>
-    <tr class="d-admin-row__content">
-      <td class="d-admin-row__detail rule-filter">
-        <div class="d-admin-row__mobile-label">
-          {{i18n "chat_integration.rule_table.filter"}}
-        </div>
+    <tr class="d-table__row">
+      <td class="d-table__cell --overview rule-filter">
         {{@rule.filterName}}
       </td>
 
-      <td class="d-admin-row__detail rule-category">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail rule-category">
+        <div class="d-table__mobile-label">
           {{i18n "chat_integration.rule_table.category"}}
         </div>
         {{#if this.isCategory}}
@@ -82,8 +79,8 @@ export default class RuleRow extends Component {
       </td>
 
       {{#if this.siteSettings.tagging_enabled}}
-        <td class="d-admin-row__detail rule-tags">
-          <div class="d-admin-row__mobile-label">
+        <td class="d-table__cell --detail rule-tags">
+          <div class="d-table__mobile-label">
             {{i18n "chat_integration.rule_table.tags"}}
           </div>
           {{#if this.displayTags}}
@@ -94,7 +91,7 @@ export default class RuleRow extends Component {
         </td>
       {{/if}}
 
-      <td class="d-admin-row__controls">
+      <td class="d-table__cell --controls">
         <DButton
           @icon="pencil"
           @title="chat_integration.rule_table.edit_rule"

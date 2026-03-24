@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 #admin-plugin-chat {
   .admin-nav-submenu {
     display: flex;
@@ -16,6 +18,10 @@
     display: flex;
     justify-content: flex-end;
     margin-bottom: 1rem;
+  }
+
+  .chat-integration-channel-list {
+    margin-top: var(--space-6);
   }
 
   .chat-integration-error-banner {
@@ -85,50 +91,11 @@
   }
 
   .admin-config-area-card__footer {
-    padding: 0.75rem 1rem;
-    border-top: 1px solid var(--primary-low);
+    @include viewport.from(md) {
+      padding-top: var(--space-3);
+    }
     display: flex;
     justify-content: flex-end;
-  }
-}
-
-.d-admin-row__mobile-label {
-  display: none;
-}
-
-@media screen and (width <= 767px) {
-  .admin-config-area-card.channel-details {
-    .channel-rules-table {
-      thead {
-        display: none;
-      }
-
-      tbody tr {
-        display: flex;
-        flex-direction: column;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid var(--primary-low);
-
-        td {
-          padding: 0.25rem 0;
-          text-align: left !important;
-        }
-      }
-
-      .d-admin-row__mobile-label {
-        display: block;
-        font-weight: 600;
-        color: var(--primary-medium);
-        font-size: var(--font-down-1);
-        margin-bottom: 0.25rem;
-      }
-
-      .d-admin-row__controls {
-        display: flex;
-        gap: 0.5rem;
-        padding-top: 0.5rem;
-      }
-    }
   }
 }
 
@@ -171,10 +138,13 @@
   border: 1px solid var(--primary-low);
   border-radius: var(--d-border-radius);
   padding: 1rem;
-  width: 100%;
 
   .form-kit__container {
     margin-bottom: 0;
+  }
+
+  .form-kit__container {
+    width: 100%;
   }
 
   .form-kit {
@@ -187,6 +157,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    min-width: 50%;
 
     .form-kit__field {
       margin-bottom: 0;
@@ -196,40 +167,5 @@
   &__actions {
     display: flex;
     gap: 0.5rem;
-  }
-
-  &__fields:has(.form-kit__field:only-child) + &__actions {
-    flex-direction: row;
-  }
-
-  .form-kit:has(.inline-channel-form__fields .form-kit__field:only-child) {
-    flex-direction: row;
-    align-items: flex-end;
-    gap: 0.5rem;
-
-    .inline-channel-form__fields {
-      flex: 1;
-      margin-bottom: 0;
-    }
-  }
-}
-
-.chat-integration-add-first-channel {
-  label {
-    display: block;
-    font-size: var(--font-up-1);
-    margin-bottom: 0.75rem;
-  }
-
-  &__input-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  &__input {
-    width: 250px;
-    margin: 0 !important;
-    padding: 0.65em 0.5em;
   }
 }

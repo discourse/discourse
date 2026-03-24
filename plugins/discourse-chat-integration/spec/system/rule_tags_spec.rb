@@ -35,7 +35,7 @@ RSpec.describe "Chat Integration Rule Tags" do
 
     visit("/admin/plugins/discourse-chat-integration/providers/discord")
 
-    within(".d-admin-table.channel-rules-table .d-admin-row__content") do
+    within(".d-table.channel-rules-table .d-table__row") do
       expect(page).to have_content("support")
       find(".edit").click
     end

@@ -16,6 +16,8 @@ en:
       empty_state:
         title: "Connect your chat platform"
         body: "Send notifications from Discourse to your team's chat. Choose a provider to get started."
+      channels_title: "Channels"
+      no_channels: "No channels have been configured yet."
       channel_actions: "Channel actions"
       add_first_channel: "Add your first %{provider} channel"
       channels_with_errors: "Some channels for this provider failed last time messages were sent. Click the error icon(s) to learn more."

@@ -1,5 +1,5 @@
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChannelDetails from "../../../../components/channel-details";
@@ -23,28 +23,32 @@ const providerTitle = (provider) =>
     </div>
   {{/if}}
 
-  <div class="admin-config-area">
-    {{#if @controller.model.channels.content.length}}
-      <div class="admin-config-area__header">
-        {{#if @controller.showNewChannelForm}}
-          <InlineChannelForm
-            @channel={{@controller.newChannel}}
-            @provider={{@controller.model.provider}}
-            @onSave={{@controller.onChannelSaved}}
-            @onCancel={{@controller.cancelNewChannel}}
-          />
-        {{else}}
-          <DButton
+  <div class="admin-detail">
+    <DPageSubheader @titleLabel={{i18n "chat_integration.channels_title"}}>
+      <:actions as |actions|>
+        {{#unless @controller.showNewChannelForm}}
+          <actions.Primary
             @label="chat_integration.add_channel"
             @title="chat_integration.add_channel"
             @action={{@controller.createChannel}}
             @icon="plus"
             id="create-channel"
-            class="btn-primary"
           />
-        {{/if}}
-      </div>
-      <div class="admin-config-area__primary-content">
+        {{/unless}}
+      </:actions>
+    </DPageSubheader>
+
+    {{#if @controller.showNewChannelForm}}
+      <InlineChannelForm
+        @channel={{@controller.newChannel}}
+        @provider={{@controller.model.provider}}
+        @onSave={{@controller.onChannelSaved}}
+        @onCancel={{@controller.cancelNewChannel}}
+      />
+    {{/if}}
+
+    {{#if @controller.model.channels.content.length}}
+      <div class="chat-integration-channel-list">
         {{#each @controller.model.channels.content as |channel|}}
           <ChannelDetails
             @channel={{channel}}
@@ -58,12 +62,11 @@ const providerTitle = (provider) =>
         {{/each}}
       </div>
     {{else}}
-      <InlineChannelForm
-        @channel={{@controller.newChannel}}
-        @provider={{@controller.model.provider}}
-        @onSave={{@controller.onChannelSaved}}
-        @isFirstChannel={{true}}
-      />
+      {{#unless @controller.showNewChannelForm}}
+        <div class="admin-plugin-config-area__empty-list">
+          {{i18n "chat_integration.no_channels"}}
+        </div>
+      {{/unless}}
     {{/if}}
   </div>
 </template>

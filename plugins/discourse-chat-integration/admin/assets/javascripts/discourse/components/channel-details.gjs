@@ -113,15 +113,15 @@ export default class ChannelDetails extends Component {
       </div>
 
       <div class="admin-config-area-card__content channel-body">
-        <table class="d-admin-table channel-rules-table">
-          <thead>
+        <table class="d-table channel-rules-table">
+          <thead class="d-table__header">
             <tr>
               <th>{{i18n "chat_integration.rule_table.filter"}}</th>
               <th>{{i18n "chat_integration.rule_table.category"}}</th>
               {{#if this.siteSettings.tagging_enabled}}
                 <th>{{i18n "chat_integration.rule_table.tags"}}</th>
               {{/if}}
-              <th class="d-admin-row__controls-column"></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
