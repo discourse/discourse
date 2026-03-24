@@ -2,8 +2,10 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
+import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import DiscourseRoute from "discourse/routes/discourse";
 
@@ -116,6 +118,20 @@ export default class TopicFromParams extends DiscourseRoute {
         draftSequence: topic.draft_sequence,
         ignoreIfChanged: true,
         topic,
+      });
+    } else if (
+      EmbedMode.enabled &&
+      this.currentUser &&
+      topic.posts_count === 1 &&
+      topic.get("details.can_create_post")
+    ) {
+      schedule("afterRender", () => {
+        this.composer.open({
+          action: Composer.REPLY,
+          draftKey: topic.draft_key,
+          draftSequence: topic.draft_sequence,
+          topic,
+        });
       });
     }
   }
