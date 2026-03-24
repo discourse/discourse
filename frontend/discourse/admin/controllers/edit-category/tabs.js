@@ -187,7 +187,7 @@ export default class EditCategoryTabsController extends Controller {
     const types = Object.values(this.model.categoryTypes ?? {});
     if (types.length > 0) {
       return i18n("category.create_with_type", {
-        typeName: types[0].name.toLowerCase(),
+        typeName: types[0].title,
       });
     }
 
