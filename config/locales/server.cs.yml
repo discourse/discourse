@@ -2789,35 +2789,9 @@ cs:
   new_version_mailer:
     title: "Nová verze"
     subject_template: "[%{email_prefix}] Nová verze Discourse, k dispozici jsou aktualizace"
-    text_body_template: |
-      Hurá, k dispozici je nová verze [Discourse](https://www.discourse.org)!
-
-      Vaše verze: %{installed_version}
-      Nová verze: **%{new_version}**
-
-      - Aktualizuzjte pomocí našeho snadného **[upgrade jedním kliknutím v prohlížeči](%{base_url}/admin/upgrade)**
-
-      - Podívejte se, co je nového v [poznámkách k vydání](https://meta.discourse.org/tag/release-notes) nebo si prohlédněte [protokol změn na GitHubu](https://github.com/discourse/discourse/commits/main)
-
-      - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
   new_version_mailer_with_notes:
     title: "Nová verze s poznámkami"
     subject_template: "[%{email_prefix}] k dispozici je aktualizace"
-    text_body_template: |
-      Hurá, k dispozici je nová verze [Discourse](https://www.discourse.org)!
-
-      Vaše verze: %{installed_version}
-      Nová verze: **%{new_version}**
-
-      - Aktualizuzjte pomocí našeho snadného **[upgrade jedním kliknutím v prohlížeči](%{base_url}/admin/upgrade)**
-
-      - Podívejte se, co je nového v [poznámkách k vydání](https://meta.discourse.org/tag/release-notes) nebo si prohlédněte [protokol změn na GitHubu](https://github.com/discourse/discourse/commits/main)
-
-      - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
-
-      ### Poznámky k vydání
-
-      %{notes}
   flag_reasons:
     off_topic: "Váš příspěvek byl označen jako **mimo téma**: komunita se domnívá, že se nehodí k tématu, jak je aktuálně definováno v názvu a prvním příspěvku."
     inappropriate: "Váš příspěvek byl označen jako **nevhodný**: komunita se domnívá, že je útočný, urážlivý, že se jedná o nenávistné chování nebo o porušení [našich komunitních zásad](%{base_path}/guidelines)."

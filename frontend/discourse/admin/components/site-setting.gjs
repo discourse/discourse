@@ -56,6 +56,7 @@ const CUSTOM_TYPES = [
   "locale_list",
   "locale_enum",
   "topic",
+  "icon",
 ];
 
 export default class SiteSettingComponent extends Component {

@@ -5,11 +5,11 @@
   "license": "GPL-2.0-only",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.29.0",
-    "@discourse/lint-configs": "^2.43.0",
+    "@discourse/lint-configs": "^2.44.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.1.0",
-    "@glint/ember-tsc": "^1.1.1",
-    "@glint/tsserver-plugin": "^2.1.0",
+    "@glint/ember-tsc": "^1.2.3",
+    "@glint/tsserver-plugin": "^2.2.4",
     "@rdil/parallel-prettier": "^3.0.0",
     "@swc/core": "^1.15.13",
     "chrome-launcher": "^1.2.1",
@@ -26,7 +26,7 @@
     "lint-to-the-future-eslint": "^3.3.0",
     "playwright": "1.58.2",
     "prettier": "3.8.1",
-    "puppeteer-core": "^24.39.0",
+    "puppeteer-core": "^24.39.1",
     "stylelint": "17.4.0",
     "terser": "^5.46.0",
     "typescript": "^5.9.3"

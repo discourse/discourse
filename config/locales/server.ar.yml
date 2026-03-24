@@ -3434,35 +3434,9 @@ ar:
   new_version_mailer:
     title: "رسالة الإصدار الجديد"
     subject_template: "[%{email_prefix}] إصدار جديد من Discourse، يتوفَّر تحديث"
-    text_body_template: |
-      مرحى، أصبح هناك إصدار جديد من‎ [Discourse](https://www.discourse.org) ‎متاحًا!
-
-      إصدارك ‎:%{installed_version}‎
-      إصدار جديد: **%{new_version}**‎
-
-      ‎- ‎ التحديث باستخدام **[تحديث المتصفح بنقرة واحدة]‎(%{base_url}/admin/update)**‎
-
-      ‎ - ‎راجع الجديد في [ملاحظات الإصدار]‎(https://meta.discourse.org/tag/release-notes) ‎أو راجع‎ [‎سجل التغييرات الأولي على GitHub](https://github.com/discourse/discourse/commits/main)‎
-
-      ‎- ‎ انتقل إلى ‎ [meta.discourse.org](https://meta.discourse.org) ‎ للحصول على الأخبار والمناقشة والدعم لمنصة ‎Discourse
   new_version_mailer_with_notes:
     title: "رسالة الإصدار الجديد مع الملاحظات"
     subject_template: "يتوفَّر تحديث [%{email_prefix}]"
-    text_body_template: |
-      مرحى، أصبح هناك إصدار جديد من ‎[Discourse](https://www.discourse.org) ‎متاحًا متوفر!
-
-      إصدارك‎: %{installed_version}‎
-      الإصدار الجديد‎: **%{new_version}**‎
-
-      ‎- التحديث باستخدام **[تحديث المتصفح بنقرة واحدة]‎(%{base_url}/admin/update)**‎
-
-      ‎- راجع الجديد في [ملاحظات الإصدار]‎(https://meta.discourse.org/tag/release-notes) ‎أو اعرض‎ [‎سجل التغييرات الأولي على GitHub](https://github.com/discourse/discourse/commits/main)‎
-
-      - انتقل إلى [meta.discourse.org](https://meta.discourse.org) للحصول على الأخبار والمناقشة والدعم لمنصة Discourse
-
-      ‎### ملاحظات الإصدار
-
-      %{notes}
   flag_reasons:
     off_topic: "تم الإبلاغ عن منشورك على أنه **خارج الموضوع**: يشعر المجتمع بأنه غير مناسب للموضوع، كما هو محدَّد حاليًا في العنوان وأول منشور."
     inappropriate: "تم الإبلاغ عن منشورك على أنه **غير لائق**: يشعر المجتمع بأنه هجومي أو مسيء أو يتضمَّن سلوكًا ينمُّ عن كراهية أو ينتهك [إرشادات مجتمعنا](%{base_path}/guidelines)."

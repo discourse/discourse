@@ -308,7 +308,6 @@ export class DiscourseDeprecationWorkflow {
  * - "notify-admin": Display admin notification for this deprecation (incompatible with "silence")
  */
 const workflows = [
-  { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
   { handler: "silence", matchId: "discourse.select-kit" },
   {
     handler: "silence",
@@ -349,18 +348,41 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.breadcrumbs.secondCategory" },
   {
     handler: "notify-admin",
+    matchId: "discourse.category-hashtags.categoryHashtagTriggerRule",
+  },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.click-track.is-valid-link-jquery",
+  },
+  {
+    handler: "notify-admin",
     matchId: "discourse.component-template-resolving",
   },
+  { handler: "notify-admin", matchId: "discourse.create-store-helper" },
   { handler: "notify-admin", matchId: "discourse.decorate-plugin-outlet" },
   { handler: "notify-admin", matchId: "discourse.ember-computed-decorators" },
-  { handler: "notify-admin", matchId: "discourse.globals.site" },
-  { handler: "notify-admin", matchId: "discourse.globals.user" },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.formatter.update-relative-age-node-list",
+  },
+  { handler: "notify-admin", matchId: "discourse.global.site-settings" },
+  { handler: "notify-admin", matchId: "discourse.global.site" },
+  { handler: "notify-admin", matchId: "discourse.global.user" },
   { handler: "notify-admin", matchId: "discourse.header-widget-overrides" },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.icon-renderer-translatedtitle",
+  },
   { handler: "notify-admin", matchId: "discourse.jquery-cookie" },
   { handler: "notify-admin", matchId: "discourse.markdown-it.whitelist" },
+  { handler: "notify-admin", matchId: "discourse.models-store" },
   {
     handler: "notify-admin",
     matchId: "discourse.nav-item.built-list-site-settings",
+  },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.offset-calculator.minimumOffset",
   },
   {
     handler: "notify-admin",
@@ -374,13 +396,18 @@ const workflows = [
     handler: "notify-admin",
     matchId: "discourse.post-stream.trigger-new-post",
   },
+  { handler: "notify-admin", matchId: "discourse.pretty-text.registerOption" },
   { handler: "notify-admin", matchId: "discourse.qunit.acceptance-function" },
   { handler: "notify-admin", matchId: "discourse.qunit.global-exists" },
   { handler: "notify-admin", matchId: "discourse.resolver-resolutions" },
+  { handler: "notify-admin", matchId: "discourse.safari-hacks-disabled" },
   { handler: "notify-admin", matchId: "discourse.script-tag-discourse-plugin" },
   { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
+  { handler: "notify-admin", matchId: "discourse.user.resolved-timezone" },
+  { handler: "notify-admin", matchId: "discourse.user.userOptions" },
   { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },
   { handler: "notify-admin", matchId: "discourse.widgets-end-of-life" },
+  { handler: "notify-admin", matchId: "template-action" }, // removed in Ember 6.0, but we have a polyfill
 
   // used in system specs
   {
