@@ -372,9 +372,7 @@ module DiscourseAi
             value = strip_quotes(value).to_i
           end
 
-          if param[:enum] && value && !param[:enum].include?(value)
-            value = nil
-          end
+          value = nil if param[:enum] && value && !param[:enum].include?(value)
 
           arguments[name.to_sym] = value if value
         end

@@ -155,16 +155,14 @@ describe "AI Tool List Editor Dropdown" do
 
     expect(page).to have_no_css(".ai-secret-create-modal")
 
-    secret_selector =
-      PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
     expect(secret_selector).to have_selected_name("My API Key")
 
     form.submit
 
     expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-tools/mcp-servers/\d+})
 
-    secret_selector =
-      PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
     expect(secret_selector).to have_selected_name("My API Key")
   end
 

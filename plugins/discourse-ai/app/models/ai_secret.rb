@@ -17,7 +17,8 @@ class AiSecret < ActiveRecord::Base
 
   def in_use?
     llm_models.exists? || embedding_definitions.exists? || used_by_provider_params? ||
-      ai_tool_secret_bindings.exists? || ai_mcp_servers.exists? || oauth_client_secret_mcp_servers.exists?
+      ai_tool_secret_bindings.exists? || ai_mcp_servers.exists? ||
+      oauth_client_secret_mcp_servers.exists?
   end
 
   def used_by

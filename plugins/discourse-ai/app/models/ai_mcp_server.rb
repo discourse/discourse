@@ -359,3 +359,50 @@ class AiMcpServer < ActiveRecord::Base
     oauth_token_store.clear!
   end
 end
+
+# == Schema Information
+#
+# Table name: ai_mcp_servers
+#
+#  id                               :bigint           not null, primary key
+#  auth_header                      :string(100)      default("Authorization"), not null
+#  auth_scheme                      :string(100)      default("Bearer"), not null
+#  auth_type                        :string(50)       default("header_secret"), not null
+#  description                      :string(1000)     not null
+#  enabled                          :boolean          default(TRUE), not null
+#  last_checked_at                  :datetime
+#  last_health_error                :string(1000)
+#  last_health_status               :string(50)
+#  last_tools_synced_at             :datetime
+#  name                             :string(100)      not null
+#  oauth_access_token_expires_at    :datetime
+#  oauth_authorization_endpoint     :string(1000)
+#  oauth_client_registration        :string(50)       default("client_metadata_document")
+#  oauth_granted_scopes             :string(2000)
+#  oauth_issuer                     :string(1000)
+#  oauth_last_authorized_at         :datetime
+#  oauth_last_error                 :string(1000)
+#  oauth_last_refreshed_at          :datetime
+#  oauth_resource_metadata_url      :string(1000)
+#  oauth_revocation_endpoint        :string(1000)
+#  oauth_scopes                     :string(2000)
+#  oauth_status                     :string(50)       default("disconnected"), not null
+#  oauth_token_endpoint             :string(1000)
+#  oauth_token_type                 :string(100)
+#  protocol_version                 :string(100)
+#  server_capabilities              :jsonb            not null
+#  timeout_seconds                  :integer          default(30), not null
+#  url                              :string(1000)     not null
+#  created_at                       :datetime         not null
+#  updated_at                       :datetime         not null
+#  ai_secret_id                     :bigint
+#  created_by_id                    :integer
+#  oauth_client_id                  :string(1000)
+#  oauth_client_secret_ai_secret_id :bigint
+#
+# Indexes
+#
+#  index_ai_mcp_servers_on_ai_secret_id                      (ai_secret_id)
+#  index_ai_mcp_servers_on_name                              (name) UNIQUE
+#  index_ai_mcp_servers_on_oauth_client_secret_ai_secret_id  (oauth_client_secret_ai_secret_id)
+#

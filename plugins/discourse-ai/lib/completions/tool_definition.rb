@@ -124,11 +124,9 @@ module DiscourseAi
         end
 
         if hash[:json_schema]
-          return new(
-                   name: hash[:name],
-                   description: hash[:description],
-                   json_schema: hash[:json_schema],
-                 )
+          return(
+            new(name: hash[:name], description: hash[:description], json_schema: hash[:json_schema])
+          )
         end
 
         params = hash[:parameters] || []
@@ -174,9 +172,7 @@ module DiscourseAi
       end
 
       def to_h
-        if @json_schema
-          return { name: @name, description: @description, json_schema: @json_schema }
-        end
+        return { name: @name, description: @description, json_schema: @json_schema } if @json_schema
         { name: @name, description: @description, parameters: @parameters.map(&:to_h) }
       end
 

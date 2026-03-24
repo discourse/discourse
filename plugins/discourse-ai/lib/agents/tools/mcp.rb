@@ -116,9 +116,7 @@ module DiscourseAi
                 merged["required"] = Array(merged["required"]) | Array(resolved["required"])
               end
 
-              resolved.each do |k, v|
-                merged[k] = v if !merged.key?(k)
-              end
+              resolved.each { |k, v| merged[k] = v if !merged.key?(k) }
             end
 
             merged
@@ -128,8 +126,7 @@ module DiscourseAi
             variants = node["anyOf"] || node["oneOf"]
             return node if !variants.is_a?(Array)
 
-            non_null =
-              variants.find { |v| v.is_a?(Hash) && v["type"] != "null" } || variants.first
+            non_null = variants.find { |v| v.is_a?(Hash) && v["type"] != "null" } || variants.first
             non_null.is_a?(Hash) ? node.except("anyOf", "oneOf").merge(non_null) : node
           end
         end

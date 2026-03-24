@@ -16,9 +16,7 @@ RSpec.describe AiMcpServer do
     server = Fabricate.build(:ai_mcp_server, url: "http://example.com")
 
     expect(server).not_to be_valid
-    expect(server.errors[:url]).to include(
-      I18n.t("discourse_ai.mcp_servers.invalid_url_not_https"),
-    )
+    expect(server.errors[:url]).to include(I18n.t("discourse_ai.mcp_servers.invalid_url_not_https"))
   end
 
   it "rejects localhost urls" do
