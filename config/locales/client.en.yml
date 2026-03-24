@@ -1927,7 +1927,7 @@ en:
         calendar_subscriptions: "Calendar"
 
       calendar_subscriptions:
-        description: "Generate subscription URLs to sync with your favourite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs. "
+        description: "Generate subscription URLs to sync with your favorite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs."
         generate: "Generate Subscription URLs"
         regenerate: "Regenerate URLs"
         regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"
