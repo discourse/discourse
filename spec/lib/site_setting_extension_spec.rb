@@ -1865,4 +1865,99 @@ RSpec.describe SiteSettingExtension do
       end
     end
   end
+
+  describe "upcoming_change_default_override" do
+    before do
+      settings.setting(
+        :enable_reactions_by_default,
+        false,
+        upcoming_change: {
+          status: :experimental,
+          impact: "site_setting_default,all_members",
+        },
+      )
+      settings.setting(
+        :reactions_enabled,
+        false,
+        upcoming_change_default_override: {
+          setting: "enable_reactions_by_default",
+          default: true,
+        },
+      )
+      settings.refresh!
+    end
+
+    context "when the linked upcoming change is active" do
+      before do
+        allow(UpcomingChanges).to receive(:resolved_value).with(
+          :enable_reactions_by_default,
+        ).and_return(true)
+      end
+
+      context "when the admin has not manually set the target setting" do
+        it "returns the override default" do
+          expect(settings.reactions_enabled).to eq(true)
+        end
+      end
+
+      context "when the admin has manually set the target setting" do
+        before do
+          settings.reactions_enabled = false
+          settings.refresh!
+          allow(UpcomingChanges).to receive(:resolved_value).with(
+            :enable_reactions_by_default,
+          ).and_return(true)
+        end
+
+        it "returns the admin's value" do
+          expect(settings.reactions_enabled).to eq(false)
+        end
+      end
+    end
+
+    context "when the linked upcoming change is not active" do
+      before do
+        allow(UpcomingChanges).to receive(:resolved_value).with(
+          :enable_reactions_by_default,
+        ).and_return(false)
+      end
+
+      it "returns the YAML default" do
+        expect(settings.reactions_enabled).to eq(false)
+      end
+    end
+
+    describe "all_settings effective default" do
+      context "when the linked upcoming change is active" do
+        before do
+          allow(UpcomingChanges).to receive(:resolved_value).with(
+            :enable_reactions_by_default,
+          ).and_return(true)
+        end
+
+        it "shows the override default in all_settings" do
+          setting = settings.all_settings.find { |s| s[:setting] == :reactions_enabled }
+          expect(setting[:default]).to eq("true")
+        end
+
+        it "does not show the setting as overridden when value matches effective default" do
+          setting = settings.all_settings.find { |s| s[:setting] == :reactions_enabled }
+          expect(setting[:value]).to eq(setting[:default])
+        end
+      end
+
+      context "when the linked upcoming change is not active" do
+        before do
+          allow(UpcomingChanges).to receive(:resolved_value).with(
+            :enable_reactions_by_default,
+          ).and_return(false)
+        end
+
+        it "shows the original YAML default in all_settings" do
+          setting = settings.all_settings.find { |s| s[:setting] == :reactions_enabled }
+          expect(setting[:default]).to eq("false")
+        end
+      end
+    end
+  end
 end

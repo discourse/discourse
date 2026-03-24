@@ -122,6 +122,21 @@ module UpcomingChanges
     end
   end
 
+  # Returns the effective default for a target setting that has an
+  # upcoming_change_default_override, or nil if the override is not active.
+  # When the linked upcoming change is enabled (via resolved_value), the
+  # target setting's default shifts to the override value.
+  #
+  # @param target_setting_name [Symbol] The name of the target setting
+  # @return [Object, nil] The override default value, or nil if not active
+  def self.effective_default_for(target_setting_name)
+    override = SiteSetting.upcoming_change_default_overrides[target_setting_name.to_sym]
+    return nil unless override || SiteSetting.upcoming_change_metadata.key?(override[:setting])
+
+    # If upcoming change is enabled, then use the new default override
+    resolved_value(override[:setting]) ? override[:default] : nil
+  end
+
   def self.has_groups?(change_setting_name)
     group_ids_for(change_setting_name).present?
   end

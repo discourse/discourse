@@ -6103,6 +6103,7 @@ en:
           impact_type_all: "All impact types"
           impact_type_feature: "Feature"
           impact_type_other: "Other"
+          impact_type_site_setting_default: "Setting default"
           status_all: "All statuses"
           status_conceptual: "Conceptual"
           status_experimental: "Experimental"

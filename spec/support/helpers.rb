@@ -360,6 +360,21 @@ module Helpers
     )
   end
 
+  def mock_upcoming_change_default_overrides(overrides)
+    @original_upcoming_change_default_overrides = SiteSetting.upcoming_change_default_overrides.dup
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
+      @original_upcoming_change_default_overrides.merge(overrides),
+    )
+  end
+
+  def clear_mocked_upcoming_change_default_overrides
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
+      @original_upcoming_change_default_overrides,
+    )
+  end
+
   private
 
   def directory_from_caller

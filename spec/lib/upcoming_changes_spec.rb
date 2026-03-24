@@ -451,6 +451,48 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".effective_default_for" do
+    before do
+      mock_upcoming_change_default_overrides(
+        { enable_upload_debug_mode: { setting: :enable_upload_debug_mode, default: true } },
+      )
+    end
+
+    after { clear_mocked_upcoming_change_default_overrides }
+
+    context "when the linked upcoming change is active" do
+      before { SiteSetting.enable_upload_debug_mode = true }
+
+      it "returns the override default value" do
+        expect(described_class.effective_default_for(:enable_upload_debug_mode)).to eq(true)
+      end
+    end
+
+    context "when the linked upcoming change is not active" do
+      it "returns nil" do
+        expect(described_class.effective_default_for(:enable_upload_debug_mode)).to be_nil
+      end
+    end
+
+    context "when the setting has no default override" do
+      it "returns nil" do
+        expect(described_class.effective_default_for(:nonexistent_setting)).to be_nil
+      end
+    end
+
+    context "when the linked upcoming change metadata does not exist" do
+      before do
+        mock_upcoming_change_default_overrides(
+          { enable_upload_debug_mode: { setting: :nonexistent_upcoming_change, default: true } },
+        )
+      end
+
+      it "returns nil" do
+        expect(described_class.effective_default_for(:enable_upload_debug_mode)).to be_nil
+      end
+    end
+  end
+
   describe "conceptual status filtering" do
     it "excludes conceptual changes from all_settings with only_upcoming_changes" do
       settings =
