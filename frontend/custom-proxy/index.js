@@ -201,6 +201,8 @@ const VITE_PATTERNS = [
 ];
 const RAILS_ROOTS = [
   "/assets/plugins/",
+  "/assets/js/",
+  "/assets/map/",
   "/theme-javascripts/",
   "/extra-locales/",
   "/svg-sprite/",
