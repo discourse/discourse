@@ -2,23 +2,24 @@
   margin: 1em 0;
 
   &__table {
-    width: 100%;
     border-collapse: collapse;
     margin-bottom: 1em;
+
+    .form-kit__collection {
+      display: contents;
+    }
+  }
+
+  > .form-kit__container {
+    align-items: stretch;
+  }
+
+  .form-kit__container-content {
+    width: 100%;
   }
 
   &__table-head {
     background-color: var(--primary-very-low);
-  }
-
-  .duration-selector {
-    .select-kit {
-      width: 150px;
-    }
-  }
-
-  .duration-selector__custom {
-    margin-top: 8px;
   }
 
   &__header {
@@ -38,7 +39,13 @@
 
   &__cell {
     vertical-align: middle;
-    align-items: center;
+    padding: 0.5em;
+    white-space: nowrap;
+    width: 1%;
+
+    .form-kit__container {
+      align-items: stretch;
+    }
 
     &--actions {
       text-align: center;
@@ -46,13 +53,8 @@
   }
 
   &__input[type="number"] {
-    width: 200px;
     padding: 0.5em;
     margin-bottom: 0;
-  }
-
-  &__group-select {
-    width: 200px;
   }
 
   &__delete-btn {
