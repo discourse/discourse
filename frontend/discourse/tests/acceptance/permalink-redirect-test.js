@@ -19,7 +19,9 @@ acceptance("External Permalink Redirect via XHR", function (needs) {
     await visit("/t/a-deleted-topic/99");
 
     assert.true(
-      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com")
+      DiscourseURL.redirectAbsolute.calledWith("https://www.example.com", {
+        replace: true,
+      })
     );
   });
 });

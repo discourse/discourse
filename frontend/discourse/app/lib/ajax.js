@@ -57,7 +57,7 @@ export function handleLogoff(xhr) {
 
 function handleRedirect(xhr) {
   if (xhr && xhr.getResponseHeader("Discourse-Xhr-Redirect")) {
-    DiscourseURL.redirectAbsolute(xhr.responseText);
+    DiscourseURL.redirectAbsolute(xhr.responseText, { replace: true });
     return true;
   }
   return false;
