@@ -111,7 +111,7 @@ export default {
       load(id) {
         if (id.endsWith(".css")) {
           return {
-            code: "", //"export default {};",
+            code: "",
             moduleType: "js",
           };
         }
@@ -121,23 +121,9 @@ export default {
     {
       name: "bundle-manifest",
       generateBundle(_outputOptions, bundle) {
-        // Options
-        const name = "manifest.json";
         const manifest = {};
 
         for (const [fileName, chunk] of Object.entries(bundle)) {
-          // if (chunk.type === "asset") {
-          //   manifest[fileName] = {
-          //     type: chunk.type,
-          //     data: data
-          //       ? Buffer.from(chunk.source).toString("base64")
-          //       : undefined,
-          //     sha256: createHash("sha256")
-          //       .update(chunk.source)
-          //       .digest("base64"),
-          //   };
-          // }
-
           if (chunk.type === "chunk") {
             manifest[`${chunk.name}.js`] = {
               file: fileName,
@@ -145,21 +131,13 @@ export default {
               isEntry: chunk.isEntry,
               isDynamicEntry: chunk.isDynamicEntry,
               imports: chunk.imports,
-              // type: chunk.type,
-              // data: data
-              //   ? Buffer.from(chunk.code).toString("base64")
-              //   : undefined,
-              // mime: "application/javascript",
-              // sha256: createHash("sha256").update(chunk.code).digest("base64"),
-              // dynamicImports: chunk.dynamicImports,
-              // isImplicitEntry: chunk.isImplicitEntry,
             };
           }
         }
 
         this.emitFile({
           type: "asset",
-          fileName: name,
+          fileName: "manifest.json",
           source: JSON.stringify(manifest, null, 2),
         });
       },
