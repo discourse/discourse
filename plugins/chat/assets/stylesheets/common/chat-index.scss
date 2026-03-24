@@ -62,6 +62,10 @@
       }
     }
   }
+
+  &.starred-channels {
+    padding-top: var(--space-2);
+  }
 }
 
 .chat-channel-divider {
