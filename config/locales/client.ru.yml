@@ -8045,7 +8045,9 @@ ru:
             third: "Вариант 3"
         edit_category:
           toggle_freeform: "Шаблон формы отключен"
+          toggle_form_template: "Шаблон формы включен"
           select_template: "Выберите шаблоны форм"
+          select_template_help: "Добавить/редактировать шаблоны форм"
         errors:
           multiple_tags_not_allowed: 'Вы не можете выбрать больше тегов из «%{tag_name}». Чтобы избежать проблем, используйте шаблон формы.'
       impersonate:
