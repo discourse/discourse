@@ -875,7 +875,6 @@ class Group < ActiveRecord::Base
     added_user_ids = nil
 
     Group.transaction do
-      now = Time.zone.now
       sql = <<~SQL
         INSERT INTO group_users
           (group_id, user_id, notification_level, created_at, updated_at)
@@ -883,8 +882,8 @@ class Group < ActiveRecord::Base
           :group_id,
           u.id,
           :notification_level,
-          :now,
-          :now
+          CURRENT_TIMESTAMP,
+          CURRENT_TIMESTAMP
         FROM users AS u
         WHERE u.id IN (:user_ids)
         AND NOT EXISTS (
@@ -902,7 +901,6 @@ class Group < ActiveRecord::Base
           user_ids: user_ids,
           notification_level:
             self.default_notification_level || NotificationLevels.types[:watching],
-          now: now,
         )
 
       if added_user_ids.present?
