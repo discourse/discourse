@@ -173,19 +173,12 @@ module DiscourseUpdates
     end
 
     def merge_new_features_with_upcoming_changes(new_features)
-      permanent_upcoming_changes =
-        UpcomingChanges::List.call(
-          guardian: Discourse.system_user.guardian,
-          options: {
-            filter_statuses: [:permanent],
-          },
-        )&.upcoming_changes
-
       # Any new features that have an upcoming_change_setting_name that is not
       # in the permanent upcoming changes list are excluded, since sites can
       # have different versions of Discourse deployed and may not have the
       # upcoming change or the same status.
-      permanent_upcoming_change_names = permanent_upcoming_changes.map { |uc| uc[:setting].to_s }
+      permanent_upcoming_change_names =
+        UpcomingChanges.permanent_upcoming_changes.map { |uc| uc[:setting].to_s }
       new_features.reject! do |feature|
         if feature[:upcoming_change_setting_name].present?
           !permanent_upcoming_change_names.include?(feature[:upcoming_change_setting_name])
@@ -194,34 +187,24 @@ module DiscourseUpdates
         end
       end
 
-      return new_features if permanent_upcoming_changes.blank?
+      return new_features if permanent_upcoming_change_names.blank?
 
       # Any permanent upcoming changes that have not been overridden/attached
       # in the new features feed have to be injected into the array.
       upcoming_changes_to_inject =
-        permanent_upcoming_changes.reject do |permanent_uc|
+        UpcomingChanges.permanent_upcoming_changes.reject do |permanent_uc|
           new_features.any? do |feature|
             feature[:upcoming_change_setting_name] == permanent_uc[:setting].to_s
           end
         end
 
-      # We track whenever an upcoming change moves from one status to another,
-      # the most logical datetime to use for created/released at in the UI is
-      # the datetime that the upcoming change became permanent on this site.
-      permanent_status_change_by_upcoming_change_setting =
-        UpcomingChanges.status_changed_timeline(
-          upcoming_changes_to_inject.map { |uc| uc[:setting].to_s },
-          [:permanent],
-        )
-
       upcoming_changes_to_inject.each do |permanent_uc|
+        # We track whenever an upcoming change moves from one status to another,
+        # the most logical datetime to use for created/released at in the UI is
+        # the datetime that the upcoming change became permanent on this site.
         became_permanent_at =
-          (
-            permanent_status_change_by_upcoming_change_setting.dig(
-              permanent_uc[:setting].to_sym,
-              :permanent,
-            ) || Time.zone.now
-          ).to_s
+          UpcomingChanges.current_statuses.dig(permanent_uc[:setting].to_s, :changed_at) ||
+            Time.zone.now
 
         new_features << {
           title: permanent_uc[:humanized_name],

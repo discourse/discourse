@@ -97,35 +97,6 @@ module UpcomingChanges
     ).order(created_at: :desc)
   end
 
-  # For each setting, the latest `created_at` per target status when a `status_changed`
-  # event's `new_value` matched that status (JSON in `event_data`).
-  #
-  # Returns `{ setting_name_sym => { status_sym => Time } }` — only statuses that
-  # occurred at least once are present under each setting.
-  def self.status_changed_timeline(setting_names, target_statuses)
-    setting_names = Array.wrap(setting_names).map(&:to_s).uniq
-    target_status_strings = Array.wrap(target_statuses).map(&:to_s).uniq
-
-    return {} if setting_names.empty? || target_status_strings.empty?
-
-    rows =
-      UpcomingChangeEvent
-        .where(event_type: :status_changed, upcoming_change_name: setting_names)
-        .where("event_data->>'new_value' IN (?)", target_status_strings)
-        .pluck(:upcoming_change_name, Arel.sql("(event_data->>'new_value')"), :created_at)
-
-    rows.each_with_object({}) do |(setting_name, new_value_str, created_at), acc|
-      next if new_value_str.blank?
-      next if target_status_strings.exclude?(new_value_str)
-
-      setting_sym = setting_name.to_sym
-      status_sym = new_value_str.to_sym
-      inner = (acc[setting_sym] ||= {})
-      prev = inner[status_sym]
-      inner[status_sym] = created_at if prev.nil? || created_at > prev
-    end
-  end
-
   # We dynamically determine if an upcoming change is enabled
   # or disabled based on the current status of the change as well
   # as whether the admin has manually toggled the change.
@@ -299,5 +270,63 @@ module UpcomingChanges
       end
 
     { enabled_for:, setting_groups: }
+  end
+
+  def self.current_statuses_cache_key
+    "upcoming_changes_current_statuses::#{Discourse.git_version}"
+  end
+
+  # This also only changes once per deploy, so we can cache to the git version
+  # to save time in other places in the codebase when we have to figure out
+  # when an upcoming change moved to its current status.
+  #
+  # This cache is automatically cleared when UpcomingChanges::Action::TrackStatusChanges
+  # is called, since that adds new UpcomingChangeEvent records.
+  def self.current_statuses
+    Discourse
+      .cache
+      .fetch(current_statuses_cache_key) do
+        results = DB.query(<<-SQL, status_changed: UpcomingChangeEvent.event_types[:status_changed])
+      WITH latest_status_changes AS (
+        SELECT upcoming_change_name, MAX(created_at) as created_at
+        FROM upcoming_change_events
+        WHERE event_type = :status_changed
+        GROUP BY upcoming_change_name
+        ORDER BY MAX(created_at) DESC
+      )
+      SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value
+      FROM latest_status_changes
+      INNER JOIN upcoming_change_events ON upcoming_change_events.upcoming_change_name = latest_status_changes.upcoming_change_name AND upcoming_change_events.created_at = latest_status_changes.created_at
+      ORDER BY latest_status_changes.created_at DESC
+    SQL
+
+        # loop through the results and build a hash with upcoming change name as the key and a status and date as key values in sub-object
+        results.each_with_object({}) do |result, statuses|
+          statuses[result.upcoming_change_name] = {
+            status: result.new_value,
+            changed_at: result.created_at,
+          }
+        end
+      end
+  end
+
+  def self.permanent_upcoming_changes_cache_key
+    "upcoming_changes_permanent::#{Discourse.git_version}"
+  end
+
+  # These don't change except on deploy, so we can cache to the git version
+  # to save time in other places in the codebase when we have to figure out
+  # whether a change is permanent or not.
+  def self.permanent_upcoming_changes
+    Discourse
+      .cache
+      .fetch(permanent_upcoming_changes_cache_key) do
+        UpcomingChanges::List.call(
+          guardian: Discourse.system_user.guardian,
+          options: {
+            filter_statuses: [:permanent],
+          },
+        )&.upcoming_changes
+      end
   end
 end
