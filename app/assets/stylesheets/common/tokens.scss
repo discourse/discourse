@@ -8,16 +8,50 @@
     var(--neutral-700),
     var(--dark-neutral-700)
   );
-  --token-text-accent: var(--lime-800);
-  --token-text-accent-bolder: var(--lime-900);
-  --token-text-inverse: var(--neutral-100);
-  --token-border-input: var(--primary-300);
-  --token-border-default: var(--primary-200);
-  --token-border-accent: var(--lime-600);
-  --token-background-accent-subtlest: var(--lime-100);
-  --token-background-accent-subtler: var(--lime-200);
-  --token-background-accent-subtle: var(--lime-400);
-  --token-background-accent-bolder: var(--lime-700);
+  --token-text-accent: light-dark(var(--blue-oklch-800), var(--blue-oklch-300));
+  --token-text-accent-bolder: light-dark(
+    var(--blue-oklch-900),
+    var(--blue-oklch-200)
+  );
+  --token-text-inverse: light-dark(var(--neutral-0), var(--dark-neutral-100));
+  --token-border-input: light-dark(var(--neutral-500), var(--dark-neutral-600));
+  --token-border-default: light-dark(
+    var(--neutral-300A),
+    var(--dark-neutral-300A)
+  );
+  --token-border-accent: light-dark(
+    var(--blue-oklch-200),
+    var(--blue-oklch-900)
+  );
+  --token-background-accent-subtlest: light-dark(
+    var(--blue-oklch-100),
+    var(--blue-oklch-1000)
+  );
+  --token-background-accent-subtler: light-dark(
+    var(--blue-oklch-200),
+    var(--blue-oklch-900)
+  );
+  --token-background-accent-subtle: light-dark(
+    var(--blue-oklch-400),
+    var(--blue-oklch-700)
+  );
+  --token-background-accent-bolder: light-dark(
+    var(--blue-oklch-700),
+    var(--blue-oklch-400)
+  );
+
+  // Surface
+  // Use as the primary background for the UI.
+  // ---
+  --token-surface: light-dark(var(--neutral-0), var(--dark-neutral-100));
+  --token-surface-hovered: light-dark(
+    var(--neutral-200),
+    var(--dark-neutral-200)
+  );
+  --token-surface-pressed: light-dark(
+    var(--neutral-300),
+    var(--dark-neutral-250)
+  );
   --token-border-width: 1px;
   --token-radius-xsmall: 2px;
   --token-radius-small: 4px;
