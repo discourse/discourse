@@ -5,8 +5,8 @@ import {
   replacements,
   tonableEmojis,
   translations,
-} from "pretty-text/emoji/data";
-import { IMAGE_VERSION } from "pretty-text/emoji/version";
+} from "./emoji/data";
+import { IMAGE_VERSION } from "./emoji/version";
 
 const extendedEmojiMap = new Map();
 
