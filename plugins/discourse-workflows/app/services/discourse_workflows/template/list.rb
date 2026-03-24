@@ -6,7 +6,7 @@ module DiscourseWorkflows
 
     model :templates, :load_templates, optional: true
 
-    def private
+    private
 
     def load_templates
       Dir
