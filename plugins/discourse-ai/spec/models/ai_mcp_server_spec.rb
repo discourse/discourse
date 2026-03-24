@@ -121,9 +121,37 @@ RSpec.describe AiMcpServer do
     DiscourseAi::Agents::Tools::Mcp
       .expects(:class_instance)
       .once
-      .returns(stub(signature: { description: "Search issues", parameters: [] }))
+      .returns(
+        stub(
+          signature: {
+            description: "Search issues",
+            json_schema: {
+              type: "object",
+              properties: {
+                query: {
+                  type: "string",
+                  description: "Search query",
+                },
+              },
+              required: ["query"],
+            },
+          },
+        ),
+      )
 
-    expect(server.tools_for_serialization.map { |tool| tool[:name] }).to eq(["search_issues"])
+    expect(server.tools_for_serialization).to contain_exactly(
+      a_hash_including(
+        name: "search_issues",
+        parameters: [
+          a_hash_including(
+            name: "query",
+            type: "string",
+            description: "Search query",
+            required: true,
+          ),
+        ],
+      ),
+    )
     expect(server.tool_count).to eq(1)
     expect(server.token_count).to be > 0
   end

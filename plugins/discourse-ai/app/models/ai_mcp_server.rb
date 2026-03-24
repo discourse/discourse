@@ -91,6 +91,7 @@ class AiMcpServer < ActiveRecord::Base
 
         signature =
           DiscourseAi::Agents::Tools::Mcp.class_instance(id, tool_name, definition).signature
+        json_schema = signature[:json_schema]
 
         {
           name: tool_name,
@@ -98,7 +99,15 @@ class AiMcpServer < ActiveRecord::Base
             definition["title"].presence || definition.dig("annotations", "title").presence ||
               tool_name.humanize,
           description: definition["description"].presence || signature[:description],
-          parameters: signature[:json_schema] || signature[:parameters],
+          parameters:
+            (
+              if json_schema.present?
+                self.class.parameters_for_serialization(json_schema)
+              else
+                signature[:parameters]
+              end
+            ),
+          json_schema: json_schema,
           token_count: DiscourseAi::Tokenizer::OpenAiCl100kTokenizer.size(signature.to_json),
         }
       end
@@ -275,6 +284,26 @@ class AiMcpServer < ActiveRecord::Base
     end
   rescue IPAddr::InvalidAddressError
     FinalDestination::SSRFDetector.lookup_and_filter_ips(normalized)
+  end
+
+  def self.parameters_for_serialization(schema)
+    properties = schema&.dig(:properties) || schema&.dig("properties")
+    required_names = Array(schema&.dig(:required) || schema&.dig("required")).map(&:to_s)
+    return [] if !properties.is_a?(Hash)
+
+    properties.map do |name, definition|
+      definition = definition.is_a?(Hash) ? definition : {}
+      items = definition[:items] || definition["items"]
+
+      {
+        name: name.to_s,
+        type: definition[:type] || definition["type"] || "object",
+        description: definition[:description] || definition["description"],
+        required: required_names.include?(name.to_s),
+        enum: definition[:enum] || definition["enum"],
+        item_type: items.is_a?(Hash) ? (items[:type] || items["type"]) : nil,
+      }.compact
+    end
   end
 
   private
