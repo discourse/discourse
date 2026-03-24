@@ -1,7 +1,9 @@
+import { waitForPromise } from "@ember/test-waiters";
+
 /*
 Plugins & themes are unable to async-import npm modules directly.
 This wrapper provides them with a way to use morphlex, while keeping the `import()` in core's codebase.
 */
 export default async function loadMorphlex() {
-  return await import("morphlex");
+  return await waitForPromise(import("morphlex"));
 }
