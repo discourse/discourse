@@ -27,6 +27,36 @@ describe TopicQuery do
     )
   end
 
+  it "orders topics by trending score" do
+    user1 = Fabricate(:user)
+    user2 = Fabricate(:user)
+
+    old_topic = Fabricate(:topic, category: category1)
+    DiscourseTopicVoting::Vote.create!(
+      topic_id: old_topic.id,
+      user_id: user1.id,
+      created_at: 60.days.ago,
+    )
+    DiscourseTopicVoting::Vote.create!(
+      topic_id: old_topic.id,
+      user_id: user2.id,
+      created_at: 60.days.ago,
+    )
+    DiscourseTopicVoting::TopicVoteCount.create!(topic_id: old_topic.id, votes_count: 2)
+
+    recent_topic = Fabricate(:topic, category: category1)
+    DiscourseTopicVoting::Vote.create!(
+      topic_id: recent_topic.id,
+      user_id: user1.id,
+      created_at: 1.hour.ago,
+    )
+    DiscourseTopicVoting::TopicVoteCount.create!(topic_id: recent_topic.id, votes_count: 1)
+
+    result = TopicQuery.new(user0, { order: "votes-trending" }).list_latest.topics
+
+    expect(result.map(&:id).index(recent_topic.id)).to be < result.map(&:id).index(old_topic.id)
+  end
+
   it "orders topic by bumped_at if votes are equal" do
     topic2 = Fabricate(:topic, category: category1, bumped_at: 2.hours.ago)
     DiscourseTopicVoting::TopicVoteCount.create!(topic_id: topic2.id, votes_count: 2)

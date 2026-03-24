@@ -17,5 +17,15 @@ module DiscourseTopicVoting
         ).order("COALESCE(dvtvc.votes_count,'0')::integer DESC, topics.bumped_at DESC")
       end
     end
+
+    def list_votes_trending
+      create_list(:votes_trending, unordered: true) do |topics|
+        topics.joins(
+          "LEFT JOIN topic_voting_topic_vote_count dvtvc ON dvtvc.topic_id = topics.id",
+        ).order(
+          "#{DiscourseTopicVoting::TRENDING_SCORE_SQL} DESC, COALESCE(dvtvc.votes_count, 0) DESC, topics.bumped_at DESC",
+        )
+      end
+    end
   end
 end

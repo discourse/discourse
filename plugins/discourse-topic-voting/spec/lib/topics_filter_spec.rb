@@ -33,6 +33,18 @@ RSpec.describe TopicsFilter do
         name: "order:votes-asc",
         description: I18n.t("topic_voting.filter.description.order_topic_votes_asc"),
       )
+
+      trending_option = options.find { |option| option[:name] == "order:votes-trending" }
+      expect(trending_option).to include(
+        name: "order:votes-trending",
+        description: I18n.t("topic_voting.filter.description.order_topic_votes_trending"),
+      )
+
+      trending_asc_option = options.find { |option| option[:name] == "order:votes-trending-asc" }
+      expect(trending_asc_option).to include(
+        name: "order:votes-trending-asc",
+        description: I18n.t("topic_voting.filter.description.order_topic_votes_trending_asc"),
+      )
     end
   end
 
@@ -100,6 +112,31 @@ RSpec.describe TopicsFilter do
 
       expect(ids.last(2)).to eq([topic_med.id, topic_high.id])
       expect(ids.first(3)).to match_array([topic_low.id, topic_nil.id, topic_without_count.id])
+    end
+
+    it "sorts by trending vote score" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+
+      DiscourseTopicVoting::Vote.create!(
+        topic_id: topic_med.id,
+        user_id: user1.id,
+        created_at: 1.hour.ago,
+      )
+      DiscourseTopicVoting::Vote.create!(
+        topic_id: topic_high.id,
+        user_id: user1.id,
+        created_at: 90.days.ago,
+      )
+      DiscourseTopicVoting::Vote.create!(
+        topic_id: topic_high.id,
+        user_id: user2.id,
+        created_at: 90.days.ago,
+      )
+
+      ids = filter.filter_from_query_string("order:votes-trending").pluck(:id)
+
+      expect(ids.first).to eq(topic_med.id)
     end
   end
 end

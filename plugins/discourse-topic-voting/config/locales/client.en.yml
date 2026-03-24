@@ -34,6 +34,9 @@ en:
       votes:
         title: "Votes"
         help: "topics with the most votes"
+      votes_trending:
+        title: "Trending"
+        help: "topics gaining votes recently"
       my_votes:
         title: "My Votes"
         help: "topics you voted on"
