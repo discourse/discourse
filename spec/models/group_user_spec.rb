@@ -395,14 +395,22 @@ RSpec.describe GroupUser do
         category_id: category1.id,
         notification_level: CategoryUser.notification_levels[:watching],
       )
+      CategoryUser.create!(
+        user_id: user2.id,
+        category_id: category1.id,
+        notification_level: CategoryUser.notification_levels[:watching],
+      )
 
       group.tracking_category_ids = [category1.id]
       group.save!
 
-      GroupUser.bulk_set_category_notifications(group, [user1.id])
+      GroupUser.bulk_set_category_notifications(group, [user1.id, user2.id])
 
       expect(
         CategoryUser.where(user_id: user1.id, category_id: category1.id).first.notification_level,
+      ).to eq(CategoryUser.notification_levels[:watching])
+      expect(
+        CategoryUser.where(user_id: user2.id, category_id: category1.id).first.notification_level,
       ).to eq(CategoryUser.notification_levels[:watching])
     end
   end
