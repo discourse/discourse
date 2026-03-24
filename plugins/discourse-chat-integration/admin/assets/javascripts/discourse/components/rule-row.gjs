@@ -6,7 +6,7 @@ import DButton from "discourse/components/d-button";
 import categoryLink from "discourse/helpers/category-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import getTagName from "../../admin/lib/get-tag-name";
+import getTagName from "../lib/get-tag-name";
 
 export default class RuleRow extends Component {
   @service siteSettings;

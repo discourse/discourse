@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class InlineChannelForm extends Component {
@@ -25,6 +26,10 @@ export default class InlineChannelForm extends Component {
 
   get isNew() {
     return this.args.channel?.isNew ?? true;
+  }
+
+  get hasSingleParam() {
+    return this.channelParameters.length === 1;
   }
 
   get firstParam() {
@@ -84,7 +89,7 @@ export default class InlineChannelForm extends Component {
   }
 
   <template>
-    {{#if @isFirstChannel}}
+    {{#if (and @isFirstChannel this.hasSingleParam)}}
       <form
         class="chat-integration-add-first-channel"
         {{on "submit" this.onSimpleSubmit}}
@@ -115,6 +120,7 @@ export default class InlineChannelForm extends Component {
           <div class="inline-channel-form__fields">
             {{#each this.channelParameters as |param|}}
               <form.Field
+                @type="input"
                 @name={{param.key}}
                 @title={{i18n
                   (concat
@@ -137,7 +143,7 @@ export default class InlineChannelForm extends Component {
                 @validation="required"
                 as |field|
               >
-                <field.Input />
+                <field.Control />
               </form.Field>
             {{/each}}
           </div>

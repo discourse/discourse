@@ -10,6 +10,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
+import getTagName from "../../lib/get-tag-name";
 import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {
@@ -58,9 +59,7 @@ export default class EditRule extends Component {
       filter: this.filter,
       category_id: this.type === "normal" ? this.category_id : null,
       group_id: this.type !== "normal" ? this.group_id : null,
-      // TODO (martin) This is a hack to get the tags working. We need to update
-      // the server-side to accept an array of tag IDs or the tag objects.
-      tags: this.tags.map((tag) => tag.name),
+      tags: this.tags.map((tag) => getTagName(tag)),
     });
 
     try {
@@ -81,11 +80,12 @@ export default class EditRule extends Component {
       <:body>
         <Form as |form|>
           <form.Field
+            @type="custom"
             @name="provider"
             @title={{i18n "chat_integration.edit_rule_modal.provider"}}
             as |field|
           >
-            <field.Custom>
+            <field.Control>
               <span class="provider-name">
                 {{i18n
                   (concat
@@ -95,23 +95,25 @@ export default class EditRule extends Component {
                   )
                 }}
               </span>
-            </field.Custom>
+            </field.Control>
           </form.Field>
 
           <form.Field
+            @type="custom"
             @name="channel"
             @title={{i18n "chat_integration.edit_rule_modal.channel"}}
             as |field|
           >
-            <field.Custom>
+            <field.Control>
               <ChannelData
                 @provider={{@model.provider}}
                 @channel={{@model.channel}}
               />
-            </field.Custom>
+            </field.Control>
           </form.Field>
 
           <form.Field
+            @type="custom"
             @name="type"
             @title={{i18n "chat_integration.edit_rule_modal.type"}}
             @description={{i18n
@@ -119,16 +121,17 @@ export default class EditRule extends Component {
             }}
             as |field|
           >
-            <field.Custom>
+            <field.Control>
               <ComboBox
                 @content={{@model.rule.available_types}}
                 @value={{this.type}}
                 @onChange={{this.onTypeChange}}
               />
-            </field.Custom>
+            </field.Control>
           </form.Field>
 
           <form.Field
+            @type="custom"
             @name="filter"
             @title={{i18n "chat_integration.edit_rule_modal.filter"}}
             @description={{i18n
@@ -136,17 +139,18 @@ export default class EditRule extends Component {
             }}
             as |field|
           >
-            <field.Custom>
+            <field.Control>
               <ComboBox
                 @content={{@model.rule.available_filters}}
                 @value={{this.filter}}
                 @onChange={{this.onFilterChange}}
               />
-            </field.Custom>
+            </field.Control>
           </form.Field>
 
           {{#if this.isNormalType}}
             <form.Field
+              @type="custom"
               @name="category_id"
               @title={{i18n "chat_integration.edit_rule_modal.category"}}
               @description={{i18n
@@ -154,16 +158,17 @@ export default class EditRule extends Component {
               }}
               as |field|
             >
-              <field.Custom>
+              <field.Control>
                 <CategoryChooser
                   @value={{this.category_id}}
                   @onChange={{this.onCategoryChange}}
                   @options={{hash none="chat_integration.all_categories"}}
                 />
-              </field.Custom>
+              </field.Control>
             </form.Field>
           {{else}}
             <form.Field
+              @type="custom"
               @name="group_id"
               @title={{i18n "chat_integration.edit_rule_modal.group"}}
               @description={{i18n
@@ -171,7 +176,7 @@ export default class EditRule extends Component {
               }}
               as |field|
             >
-              <field.Custom>
+              <field.Control>
                 <ComboBox
                   @content={{@model.groups}}
                   @valueProperty="id"
@@ -179,12 +184,13 @@ export default class EditRule extends Component {
                   @onChange={{this.onGroupChange}}
                   @options={{hash none="chat_integration.choose_group"}}
                 />
-              </field.Custom>
+              </field.Control>
             </form.Field>
           {{/if}}
 
           {{#if this.siteSettings.tagging_enabled}}
             <form.Field
+              @type="custom"
               @name="tags"
               @title={{i18n "chat_integration.edit_rule_modal.tags"}}
               @description={{i18n
@@ -192,14 +198,14 @@ export default class EditRule extends Component {
               }}
               as |field|
             >
-              <field.Custom>
+              <field.Control>
                 <TagChooser
                   @tags={{this.tags}}
                   @everyTag="true"
                   @onChange={{this.onTagsChange}}
                   @options={{hash placeholderKey="chat_integration.all_tags"}}
                 />
-              </field.Custom>
+              </field.Control>
             </form.Field>
           {{/if}}
 

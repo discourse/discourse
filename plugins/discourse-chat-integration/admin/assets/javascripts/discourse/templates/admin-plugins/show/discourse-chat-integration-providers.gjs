@@ -41,7 +41,6 @@ export default class DiscourseChatIntegrationProviders extends Component {
       "rocketchat",
       "guilded",
       "groupme",
-      "flowdock",
       "webex",
     ].map((name) => ({
       name,
@@ -64,7 +63,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
 
   @action
   configureProvider(provider) {
-    this.router.transitionTo("adminSiteSettings", {
+    this.router.transitionTo("adminPlugins.show.settings", {
       queryParams: { filter: provider.settingsFilter },
     });
   }

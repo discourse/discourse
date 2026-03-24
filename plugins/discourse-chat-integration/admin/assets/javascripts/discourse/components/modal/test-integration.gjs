@@ -54,17 +54,18 @@ export default class TestIntegration extends Component {
       <:body>
         <Form as |form|>
           <form.Field
+            @type="custom"
             @name="topicId"
             @title={{i18n "chat_integration.test_modal.topic"}}
             @format="full"
             as |field|
           >
-            <field.Custom>
+            <field.Control>
               <ChooseTopic
                 @topicChangedCallback={{this.newTopicSelected}}
                 @selectedTopicId={{this.topicId}}
               />
-            </field.Custom>
+            </field.Control>
           </form.Field>
 
           <form.Actions>

@@ -14,15 +14,7 @@ export default class DiscourseChatIntegrationProvidersShow extends Controller {
   @tracked newChannel = null;
 
   get anyErrors() {
-    let anyErrors = false;
-
-    this.model.channels.content.forEach((channel) => {
-      if (channel.error_key) {
-        anyErrors = true;
-      }
-    });
-
-    return anyErrors;
+    return this.model.channels.content.some((channel) => channel.error_key);
   }
 
   initNewChannel() {

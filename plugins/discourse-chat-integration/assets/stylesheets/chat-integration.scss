@@ -177,15 +177,18 @@
     margin-bottom: 0;
   }
 
+  .form-kit {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   &__fields {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 1rem;
-    margin-bottom: 1rem;
 
     .form-kit__field {
-      flex: 1;
-      min-width: 200px;
       margin-bottom: 0;
     }
   }
@@ -193,6 +196,21 @@
   &__actions {
     display: flex;
     gap: 0.5rem;
+  }
+
+  &__fields:has(.form-kit__field:only-child) + &__actions {
+    flex-direction: row;
+  }
+
+  .form-kit:has(.inline-channel-form__fields .form-kit__field:only-child) {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0.5rem;
+
+    .inline-channel-form__fields {
+      flex: 1;
+      margin-bottom: 0;
+    }
   }
 }
 
