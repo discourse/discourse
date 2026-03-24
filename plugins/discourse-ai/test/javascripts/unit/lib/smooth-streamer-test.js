@@ -43,8 +43,7 @@ module("Discourse AI | Unit | Lib | smooth-streamer", function (hooks) {
       "Realtime text should be updated immediately"
     );
 
-    // eslint-disable-next-line qunit/no-loose-assertions
-    assert.ok(
+    assert.true(
       streamer.streamedText.length > 0,
       "Streamed text should start appearing"
     );
