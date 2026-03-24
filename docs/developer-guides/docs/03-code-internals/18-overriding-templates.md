@@ -20,7 +20,7 @@ If you've exhausted all other options, you may need to resort to template overri
 
 ## Overriding Component Templates
 
-To override an Ember Component template (i.e. anything under [`components/*`](https://github.com/discourse/discourse/tree/main/app/assets/javascripts/discourse/app/components) in Discourse core), you should create an identically-named `.hbs` in your theme/plugin. For example, to override the template for the `badge-button` component in Discourse core, you would create a template file in your theme/plugin at this location:
+To override an Ember Component template (i.e. anything under [`components/*`](https://github.com/discourse/discourse/tree/main/frontend/discourse/app/components) in Discourse core), you should create an identically-named `.hbs` in your theme/plugin. For example, to override the template for the `badge-button` component in Discourse core, you would create a template file in your theme/plugin at this location:
 
 :art: `{theme}/javascripts/discourse/templates/components/badge-button.hbs`
 
@@ -30,7 +30,7 @@ The override must always be nested inside the `/templates` directory, even if th
 
 ## Overriding Route Templates
 
-Overriding route templates (i.e. all the non-component templates under [`templates/*`](https://github.com/discourse/discourse/tree/main/app/assets/javascripts/discourse/app/templates)) works in the same way as components. Create an identically named template in your theme/plugin. For example, to override `discovery.hbs` in core, you would create a file like
+Overriding route templates (i.e. all the non-component templates under [`templates/*`](https://github.com/discourse/discourse/tree/main/frontend/discourse/app/templates)) works in the same way as components. Create an identically named template in your theme/plugin. For example, to override `discovery.hbs` in core, you would create a file like
 
 :art: `{theme}/javascripts/discourse/templates/discovery.hbs`
 
