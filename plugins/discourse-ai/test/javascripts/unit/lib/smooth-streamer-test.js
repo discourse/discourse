@@ -42,7 +42,6 @@ module("Discourse AI | Unit | Lib | smooth-streamer", function (hooks) {
       "Hello",
       "Realtime text should be updated immediately"
     );
-
     assert.true(
       streamer.streamedText.length > 0,
       "Streamed text should start appearing"

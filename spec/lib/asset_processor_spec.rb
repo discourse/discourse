@@ -497,7 +497,7 @@ RSpec.describe AssetProcessor do
     expect do
       AssetProcessor.new.rollup(
         { "discourse/components/my-component.gjs" => mod_1 },
-        { pluginName: "myplugin" },
+        { pluginName: "my-plugin" },
       )
     end.to raise_error(AssetProcessor::TranspileError)
   end

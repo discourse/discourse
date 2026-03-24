@@ -57,8 +57,7 @@ function mbAjax(messageBus, opts) {
 
   const oldComplete = opts.complete;
   opts.complete = function (xhr, stat) {
-    handleLogoff(xhr);
-    oldComplete?.(xhr, stat);
+    handleLogoff(xhr) || oldComplete?.(xhr, stat);
   };
 
   return $.ajax(opts);

@@ -1,9 +1,11 @@
-import ThemeSettings from "discourse/admin/models/theme-settings";
 import SiteSetting from "discourse/admin/models/site-setting";
+import ThemeSettings from "discourse/admin/models/theme-settings";
+
 export const SCHEMA_MODES = {
   THEME: "theme",
   SITE_SETTING: "SITE_SETTING",
 };
+
 export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
   let schema, data;
 
@@ -237,7 +239,7 @@ export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
 
   if (mode === SCHEMA_MODES.SITE_SETTING) {
     return SiteSetting.create({
-      schema: schema,
+      schema,
       value: data,
       setting: "objects_setting"
     })

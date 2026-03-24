@@ -43,7 +43,6 @@ module("Discourse AI | Unit | Model | ai-agent", function () {
       rag_chunk_overlap_tokens: 10,
       rag_conversation_chunks: 10,
       rag_llm_model_id: 1,
-      question_consolidator_llm_id: 2,
       show_thinking: true,
       forced_tool_count: -1,
       allow_personal_messages: true,

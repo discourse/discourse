@@ -3,6 +3,7 @@ import { run } from "@ember/runloop";
 import $ from "jquery";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 import userPresent from "discourse/lib/user-presence";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -49,13 +50,17 @@ export function setLogoffCallback(cb) {
 export function handleLogoff(xhr) {
   if (xhr && xhr.getResponseHeader("Discourse-Logged-Out") && _logoffCallback) {
     _logoffCallback();
+    return true;
   }
+  return false;
 }
 
 function handleRedirect(xhr) {
   if (xhr && xhr.getResponseHeader("Discourse-Xhr-Redirect")) {
-    window.location = xhr.responseText;
+    DiscourseURL.redirectAbsolute(xhr.responseText, { replace: true });
+    return true;
   }
+  return false;
 }
 
 let activeCsrfRequest;
@@ -144,8 +149,9 @@ export function ajax() {
     }
 
     args.success = (data, textStatus, xhr) => {
-      handleRedirect(xhr);
-      handleLogoff(xhr);
+      if (handleRedirect(xhr) || handleLogoff(xhr)) {
+        return resolve();
+      }
 
       run(() => {
         Site.currentProp(
@@ -171,7 +177,9 @@ export function ajax() {
         return;
       }
 
-      handleLogoff(xhr);
+      if (handleRedirect(xhr) || handleLogoff(xhr)) {
+        return resolve();
+      }
 
       // note: for bad CSRF we don't loop an extra request right away.
       //  this allows us to eliminate the possibility of having a loop.
@@ -181,7 +189,11 @@ export function ajax() {
 
       // If it's a parser error, don't reject
       if (xhr.status === 200) {
-        return args.success(xhr);
+        return args.success(
+          xhr.responseJSON ?? xhr.responseText,
+          textStatus,
+          xhr
+        );
       }
 
       // Fill in some extra info

@@ -108,7 +108,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
               title = "admin_onboarding_banner.start_posting.extra_option";
               body =
                 "admin_onboarding_banner.start_posting.extra_option_description";
-              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
 
               @action
               onSelect() {
@@ -129,13 +128,13 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await step.clickAction();
 
-    assert.dom(".option").exists({ count: 2 });
-    await click(".extra-option .btn");
+    assert.dom(".start-posting-options-modal__card").exists({ count: 2 });
+    await click(".start-posting-options-modal__card.extra-option");
 
     step.isChecked();
   });
 
-  test("registered posting-option can hide its button when step is complete", async function (assert) {
+  test("registered posting-option can be disabled when step is complete", async function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer(
         "admin-onboarding-start-posting-options",
@@ -148,7 +147,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
               title = "admin_onboarding_banner.start_posting.extra_option";
               body =
                 "admin_onboarding_banner.start_posting.extra_option_description";
-              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
 
               @action
               onSelect() {
@@ -164,9 +162,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
               title = "admin_onboarding_banner.start_posting.extra_option";
               body =
                 "admin_onboarding_banner.start_posting.extra_option_description";
-              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
 
-              get hideAction() {
+              get disableAction() {
                 return this.args.isComplete;
               }
 
@@ -184,18 +181,18 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await withStep("start_posting", assert).clickAction();
 
-    assert.dom(".option").exists({ count: 3 });
+    assert.dom(".start-posting-options-modal__card").exists({ count: 3 });
     assert
-      .dom(".hideable-option .btn")
-      .exists("button is visible before step completion");
+      .dom(".start-posting-options-modal__card.hideable-option")
+      .isNotDisabled("card is enabled before step completion");
 
-    await click(".completing-option .btn");
+    await click(".start-posting-options-modal__card.completing-option");
 
     await withStep("start_posting", assert).clickAction();
 
     assert
-      .dom(".hideable-option .btn")
-      .doesNotExist("button is hidden after step completion");
+      .dom(".start-posting-options-modal__card.hideable-option")
+      .isDisabled("card is disabled after step completion");
   });
 
   test("it can complete `invite_collaborators` step", async function (assert) {
