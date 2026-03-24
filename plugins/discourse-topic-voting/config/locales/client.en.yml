@@ -18,6 +18,7 @@ en:
       voting_closed_title: "Closed"
       voting_limit: "Limit"
       see_votes: "You have %{count}/%{max} votes left"
+      see_all_votes: "See your votes"
       locked: "Locked"
       locked_description: "Increase your trust level to vote"
       votes:
