@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
@@ -18,7 +18,7 @@ const TIP_SEEN_KEY = "tip_seen";
 
 const BoostTip = <template>
   <div class="discourse-boosts__tip">
-    {{htmlSafe (i18n "discourse_boosts.action_title")}}
+    {{trustHTML (i18n "discourse_boosts.action_title")}}
     <span class="discourse-boosts__tip-username">
       @{{@data.username}}
     </span>

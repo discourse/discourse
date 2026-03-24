@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import FlagModal from "discourse/components/modal/flag";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
@@ -117,9 +117,9 @@ export default class BoostBubble extends Component {
           type="button"
           class="discourse-boosts__cooked btn-transparent"
           {{on "click" this.toggle}}
-        >{{htmlSafe this.boost.cooked}}</button>
+        >{{trustHTML this.boost.cooked}}</button>
       {{else}}
-        <span class="discourse-boosts__cooked">{{htmlSafe
+        <span class="discourse-boosts__cooked">{{trustHTML
             this.boost.cooked
           }}</span>
       {{/if}}
