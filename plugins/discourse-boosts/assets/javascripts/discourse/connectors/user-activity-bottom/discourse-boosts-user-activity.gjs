@@ -10,7 +10,7 @@ export default class DiscourseBoostsUserActivity extends Component {
   <template>
     {{#if this.siteSettings.discourse_boosts_enabled}}
       <li class="user-activity-bottom-outlet discourse-boosts-user-activity">
-        <LinkTo @route="userActivity.boosts">
+        <LinkTo @route="userActivity.boostsGiven">
           {{icon "rocket"}}
           <span>{{i18n "discourse_boosts.boosts_title"}}</span>
         </LinkTo>

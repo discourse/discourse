@@ -1,6 +1,6 @@
 export default {
   resource: "user.userActivity",
   map() {
-    this.route("boosts");
+    this.route("boostsGiven", { path: "boosts-given" });
   },
 };

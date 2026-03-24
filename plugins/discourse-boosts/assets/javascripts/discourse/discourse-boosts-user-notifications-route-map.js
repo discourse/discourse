@@ -1,6 +1,6 @@
 export default {
   resource: "user.userNotifications",
   map() {
-    this.route("boostsReceived", { path: "boosts" });
+    this.route("boostsReceived", { path: "boosts-received" });
   },
 };
