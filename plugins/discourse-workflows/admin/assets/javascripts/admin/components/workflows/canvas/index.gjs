@@ -16,12 +16,14 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import Controls from "./controls";
 import { createReteEditor } from "./rete-editor";
+import StickyNotesLayer from "./sticky-notes-layer";
 import WorkflowNode from "./workflow-node";
 
 const PAUSED_SHORTCUTS = ["-", "="];
 
 export default class WorkflowCanvas extends Component {
   @service keyboardShortcuts;
+  @service menu;
   @service router;
   @service toasts;
 
@@ -29,6 +31,7 @@ export default class WorkflowCanvas extends Component {
   @tracked contextMenu = null;
   @tracked zoom = 1;
   @tracked reteApi = null;
+  @tracked areaTransform = { x: 0, y: 0, k: 1 };
 
   #ZOOM_STEP = 0.05;
   #ZOOM_MIN = 0.25;
@@ -50,10 +53,16 @@ export default class WorkflowCanvas extends Component {
     } else if (isMeta && ((key === "z" && event.shiftKey) || key === "y")) {
       event.preventDefault();
       this.args.onRedo?.();
+    } else if (isMeta && key === "c") {
+      this.#copyStickyNote();
+    } else if (isMeta && key === "v") {
+      this.#pasteStickyNote();
     }
   };
 
   @tracked _selectedNodeIds = new Set();
+  @tracked _selectedStickyNoteId = null;
+  _copiedStickyNote = null;
   _isFirstSync = true;
 
   willDestroy() {
@@ -85,10 +94,13 @@ export default class WorkflowCanvas extends Component {
         },
         onNodePicked: (clientId) => {
           this._selectedNodeIds = new Set([clientId]);
+          this._selectedStickyNoteId = null;
         },
         onCanvasPointerDown: () => {
           this._selectedNodeIds = new Set();
+          this._selectedStickyNoteId = null;
           this.closeContextMenu();
+          this.menu.close("workflows-canvas-menu");
           this.args.onCloseNodePanel?.();
         },
         onNodeDragEnd: () => {
@@ -161,11 +173,31 @@ export default class WorkflowCanvas extends Component {
       },
     });
 
+    this.reteApi.area.addPipe((context) => {
+      if (
+        context.type === "translated" ||
+        context.type === "zoomed" ||
+        context.type === "nodetranslated"
+      ) {
+        this.#syncAreaTransform();
+      }
+      return context;
+    });
+
     this.args.onAreaReady?.(this.reteApi.area);
 
     this.isLoading = false;
     await this.syncToRete();
+    this.#syncAreaTransform();
     element.focus();
+  }
+
+  #syncAreaTransform() {
+    if (!this.reteApi) {
+      return;
+    }
+    const { x, y, k } = this.reteApi.area.area.transform;
+    this.areaTransform = { x, y, k };
   }
 
   @action
@@ -219,11 +251,18 @@ export default class WorkflowCanvas extends Component {
       return;
     }
 
-    // Canvas right-click → open node panel
+    // Canvas right-click → show canvas context menu
     const rect = this.containerElement.getBoundingClientRect();
-    this.args.onOpenNodePanel?.(
-      this.#containerToSvg(event.clientX - rect.left, event.clientY - rect.top)
+    const svgPos = this.#containerToSvg(
+      event.clientX - rect.left,
+      event.clientY - rect.top
     );
+    this.contextMenu = {
+      isCanvas: true,
+      svgPos,
+      screenX: event.clientX,
+      screenY: event.clientY,
+    };
   }
 
   #containerToSvg(localX, localY) {
@@ -266,6 +305,73 @@ export default class WorkflowCanvas extends Component {
     this.#deleteSelectedNodes();
   }
 
+  @action
+  contextMenuAddNode() {
+    const svgPos = this.contextMenu?.svgPos;
+    this.closeContextMenu();
+    if (svgPos) {
+      this.args.onOpenNodePanel?.(svgPos);
+    }
+  }
+
+  @action
+  contextMenuAddStickyNote() {
+    const svgPos = this.contextMenu?.svgPos;
+    this.closeContextMenu();
+    if (svgPos) {
+      this.args.onAddStickyNote?.(svgPos);
+    }
+  }
+
+  @action
+  selectStickyNote(clientId) {
+    this._selectedStickyNoteId = clientId;
+    this._selectedNodeIds = new Set();
+  }
+
+  #copyStickyNote() {
+    if (!this._selectedStickyNoteId) {
+      return;
+    }
+    const note = (this.args.stickyNotes || []).find(
+      (n) => n.clientId === this._selectedStickyNoteId
+    );
+    if (note) {
+      this._copiedStickyNote = structuredClone(note);
+    }
+  }
+
+  #pasteStickyNote() {
+    if (!this._copiedStickyNote) {
+      return;
+    }
+    const offset = 20;
+    const newClientId = this.args.onPasteStickyNote?.({
+      position: {
+        x: this._copiedStickyNote.position.x + offset,
+        y: this._copiedStickyNote.position.y + offset,
+      },
+      size: { ...this._copiedStickyNote.size },
+      color: this._copiedStickyNote.color,
+      text: this._copiedStickyNote.text,
+    });
+    if (newClientId) {
+      this._selectedStickyNoteId = newClientId;
+      this._selectedNodeIds = new Set();
+    }
+  }
+
+  @action
+  addStickyNoteAtCenter(closeFn) {
+    closeFn?.();
+    if (!this.reteApi || !this.containerElement) {
+      return;
+    }
+    this.closeContextMenu();
+    const center = this.#viewportCenter();
+    this.args.onAddStickyNote?.({ svgX: center.svgX, svgY: center.svgY });
+  }
+
   #deleteSelectedNodes() {
     if (this._selectedNodeIds.size > 1) {
       this.args.onRemoveNodes?.([...this._selectedNodeIds]);
@@ -283,6 +389,7 @@ export default class WorkflowCanvas extends Component {
     if (event.key === "Escape") {
       this.closeContextMenu();
       this._selectedNodeIds = new Set();
+      this._selectedStickyNoteId = null;
       return;
     }
 
@@ -290,7 +397,12 @@ export default class WorkflowCanvas extends Component {
       event.target.tagName === "INPUT" || event.target.tagName === "TEXTAREA";
 
     if (!isInInput && (event.key === "Delete" || event.key === "Backspace")) {
-      this.#deleteSelectedNodes();
+      if (this._selectedStickyNoteId) {
+        this.args.onStickyNoteDelete?.(this._selectedStickyNoteId);
+        this._selectedStickyNoteId = null;
+      } else {
+        this.#deleteSelectedNodes();
+      }
       return;
     }
 
@@ -526,6 +638,20 @@ export default class WorkflowCanvas extends Component {
         </div>
       {{/if}}
 
+      <StickyNotesLayer
+        @stickyNotes={{@stickyNotes}}
+        @selectedStickyNoteId={{this._selectedStickyNoteId}}
+        @areaTransform={{this.areaTransform}}
+        @onSelect={{this.selectStickyNote}}
+        @onDragStart={{@onStickyNoteDragStart}}
+        @onMove={{@onStickyNoteMove}}
+        @onResize={{@onStickyNoteResize}}
+        @onUpdateText={{@onStickyNoteUpdateText}}
+        @onChangeColor={{@onStickyNoteChangeColor}}
+        @onDelete={{@onStickyNoteDelete}}
+        @onDragEnd={{@onNodeDragEnd}}
+      />
+
       <div class="workflows-canvas__rete-container"></div>
 
       {{#each this.nodeEntries as |entry|}}
@@ -575,6 +701,16 @@ export default class WorkflowCanvas extends Component {
               <DropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
+                    @action={{fn this.addStickyNoteAtCenter args.close}}
+                    @icon="note-sticky"
+                    @translatedLabel={{i18n
+                      "discourse_workflows.sticky_note.add"
+                    }}
+                    class="btn-transparent"
+                  />
+                </dropdown.item>
+                <dropdown.item>
+                  <DButton
                     @action={{fn this.exportNodes args.close}}
                     @icon="download"
                     @translatedLabel={{i18n
@@ -605,18 +741,33 @@ export default class WorkflowCanvas extends Component {
           class="workflows-canvas__context-menu"
           style={{this.contextMenuStyle}}
         >
-          <DButton
-            @action={{this.contextMenuEditNode}}
-            @icon="pencil"
-            @translatedLabel={{i18n "discourse_workflows.edit"}}
-            class="btn-transparent workflows-canvas__context-menu-item"
-          />
-          <DButton
-            @action={{this.contextMenuDeleteNode}}
-            @icon="trash-can"
-            @translatedLabel={{i18n "discourse_workflows.delete"}}
-            class="btn-transparent btn-danger workflows-canvas__context-menu-item"
-          />
+          {{#if this.contextMenu.isCanvas}}
+            <DButton
+              @action={{this.contextMenuAddNode}}
+              @icon="plus"
+              @translatedLabel={{i18n "discourse_workflows.canvas.add_step"}}
+              class="btn-transparent workflows-canvas__context-menu-item"
+            />
+            <DButton
+              @action={{this.contextMenuAddStickyNote}}
+              @icon="note-sticky"
+              @translatedLabel={{i18n "discourse_workflows.sticky_note.add"}}
+              class="btn-transparent workflows-canvas__context-menu-item"
+            />
+          {{else}}
+            <DButton
+              @action={{this.contextMenuEditNode}}
+              @icon="pencil"
+              @translatedLabel={{i18n "discourse_workflows.edit"}}
+              class="btn-transparent workflows-canvas__context-menu-item"
+            />
+            <DButton
+              @action={{this.contextMenuDeleteNode}}
+              @icon="trash-can"
+              @translatedLabel={{i18n "discourse_workflows.delete"}}
+              class="btn-transparent btn-danger workflows-canvas__context-menu-item"
+            />
+          {{/if}}
         </div>
       {{/if}}
     </div>

@@ -1,4 +1,5 @@
 import { applyValueTransformer } from "discourse/lib/transformer";
+import WorkflowNode from "../../../models/workflow-node";
 
 const NODE_DEFAULTS = {
   "trigger:webhook": () => ({
@@ -36,17 +37,11 @@ export function createNode(
   );
   const defaultsFn = allDefaults[identifier];
 
-  const node = {
-    clientId: crypto.randomUUID(),
+  return WorkflowNode.create({
     type: identifier,
     type_version: typeVersion || "1.0",
     name: generateNodeName(identifier, existingNodes),
     configuration: defaultsFn ? defaultsFn() : {},
-  };
-
-  if (position) {
-    node.position = position;
-  }
-
-  return node;
+    position,
+  });
 }

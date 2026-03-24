@@ -5,6 +5,7 @@ module DiscourseWorkflows
     attributes :id,
                :name,
                :enabled,
+               :sticky_notes,
                :created_at,
                :updated_at,
                :last_execution_status,

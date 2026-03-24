@@ -11,6 +11,7 @@ import {
   nodeDescription,
   nodeLabel,
 } from "../../../lib/workflows/node-utils";
+import CanvasHoverToolbar from "./hover-toolbar";
 
 function portLabel(type, key) {
   if (type === "condition:filter") {
@@ -107,6 +108,26 @@ export default class WorkflowNode extends Component {
       {{/if}}
 
       <div class="workflow-rete-node__body">
+        <CanvasHoverToolbar @hoverSelector=".workflow-rete-node">
+          {{#if this.isManualTrigger}}
+            <button
+              type="button"
+              class="workflow-canvas-toolbar__btn --success"
+              {{on "pointerdown" this.stopPropagation}}
+              {{on "click" this.handleManualTrigger}}
+            >
+              {{icon "play"}}
+            </button>
+          {{/if}}
+          <button
+            type="button"
+            class="workflow-canvas-toolbar__btn"
+            {{on "pointerdown" this.stopPropagation}}
+            {{on "click" this.handleDelete}}
+          >
+            {{icon "trash-can"}}
+          </button>
+        </CanvasHoverToolbar>
         <div class="workflow-rete-node__title-row">
           {{#if this.iconInfo.icon}}
             <span class="workflow-rete-node__icon" style={{this.iconStyle}}>
@@ -121,26 +142,6 @@ export default class WorkflowNode extends Component {
             class="workflow-rete-node__description"
           >{{this.description}}</span>
         {{/if}}
-
-        {{#if this.isManualTrigger}}
-          <button
-            type="button"
-            class="workflow-rete-node__delete-btn workflow-rete-node__run-btn"
-            {{on "pointerdown" this.stopPropagation}}
-            {{on "click" this.handleManualTrigger}}
-          >
-            {{icon "play"}}
-          </button>
-        {{/if}}
-
-        <button
-          type="button"
-          class="workflow-rete-node__delete-btn"
-          {{on "pointerdown" this.stopPropagation}}
-          {{on "click" this.handleDelete}}
-        >
-          {{icon "trash-can"}}
-        </button>
       </div>
 
       <div class="workflow-rete-node__outputs">

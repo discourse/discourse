@@ -398,6 +398,11 @@ en:
         import_nodes: "Import"
         import_error: "Failed to import: invalid file format."
         import_version_error: "Failed to import: unsupported format version."
+      sticky_note:
+        add: "Add sticky note"
+        delete: "Delete"
+        change_color: "Change color"
+        placeholder: "Double-click to edit..."
       manual_trigger:
         triggered: "Triggered"
         view_execution: "View execution"

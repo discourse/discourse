@@ -74,7 +74,7 @@ module PageObjects
       end
 
       def has_connection_count?(count)
-        page.has_css?(".workflow-connection-svg", count: count)
+        page.has_css?(".workflow-connection", count: count)
       end
 
       def has_condition_port_labels?

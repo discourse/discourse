@@ -1,0 +1,62 @@
+.workflow-canvas-toolbar {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+
+  &.--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &.--inline {
+    position: static;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .workflows-canvas__rete-container.--dragging & {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    border: none;
+    background: var(--primary-very-high);
+    color: var(--secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+
+    .d-icon {
+      font-size: var(--font-down-3);
+    }
+
+    &:hover {
+      background: var(--primary-high);
+    }
+
+    &.--success {
+      background: var(--success);
+
+      &:hover {
+        background: var(--success-hover);
+      }
+    }
+  }
+}

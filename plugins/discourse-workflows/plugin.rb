@@ -33,6 +33,8 @@ register_svg_icon "shuffle"
 register_svg_icon "trash-can"
 register_svg_icon "broom"
 register_svg_icon "arrow-pointer"
+register_svg_icon "note-sticky"
+register_svg_icon "palette"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 

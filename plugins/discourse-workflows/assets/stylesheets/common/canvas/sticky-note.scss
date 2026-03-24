@@ -1,0 +1,147 @@
+.workflow-sticky-notes-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+
+  &__transform {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.workflow-sticky-note {
+  position: absolute;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  border: 1px solid rgb(0 0 0 / 0.08);
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &.--selected {
+    outline: 2px solid var(--tertiary);
+    outline-offset: -1px;
+  }
+
+  &__color-picker {
+    position: absolute;
+    top: -58px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    box-shadow: var(--shadow-dropdown);
+    z-index: 10;
+  }
+
+  &__color-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.15s;
+
+    &:hover {
+      border-color: var(--primary-medium);
+    }
+
+    &.--active {
+      border-color: var(--primary);
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 8px 10px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  &__textarea {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    resize: none;
+    font-size: var(--font-down-1);
+    font-family: inherit;
+    line-height: 1.4;
+    color: #000;
+    outline: none;
+    padding: 0;
+    cursor: text;
+  }
+
+  &__text {
+    font-size: var(--font-down-1);
+    line-height: 1.4;
+    color: #000;
+    word-break: break-word;
+    overflow: hidden;
+    height: 100%;
+
+    p {
+      margin: 0 0 0.4em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    a {
+      color: #1a0dab;
+    }
+
+    code {
+      background: rgb(0 0 0 / 0.06);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: var(--font-down-2);
+    }
+  }
+
+  &__placeholder {
+    color: rgb(0 0 0 / 0.4);
+    font-style: italic;
+  }
+
+  &__resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    cursor: nwse-resize;
+    pointer-events: auto;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid rgb(0 0 0 / 0.2);
+      border-bottom: 2px solid rgb(0 0 0 / 0.2);
+    }
+  }
+}

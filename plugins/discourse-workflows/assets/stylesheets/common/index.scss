@@ -1,7 +1,9 @@
 @import "workflows-index";
 @import "editor/editor";
 @import "canvas/canvas";
+@import "canvas/hover-toolbar";
 @import "canvas/node-panel";
+@import "canvas/sticky-note";
 @import "node/add-node-button";
 @import "node/node-card";
 @import "node/node-stack";

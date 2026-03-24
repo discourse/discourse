@@ -9,6 +9,9 @@ import {
   loadNodeTypes,
   nodeTypeLabel,
 } from "../../../lib/workflows/node-types";
+import StickyNote from "../../../models/sticky-note";
+import WorkflowConnection from "../../../models/workflow-connection";
+import WorkflowNode from "../../../models/workflow-node";
 import WorkflowCanvas from "../canvas";
 import NodePanel from "../canvas/node-panel";
 import NodeConfigurator from "../node/configurator";
@@ -35,6 +38,7 @@ export default class WorkflowsEditor extends Component {
       i18n("discourse_workflows.default_workflow_name"),
     nodes: this.#initNodes(),
     connections: this.#mapServerConnections(),
+    stickyNotes: this.#initStickyNotes(),
   };
   _isUndoRedo = false;
 
@@ -44,19 +48,18 @@ export default class WorkflowsEditor extends Component {
   }
 
   #mapServerConnections() {
-    return (this.args.workflow.connections || []).map((conn) => ({
-      sourceClientId: conn.source_node_id?.toString(),
-      targetClientId: conn.target_node_id?.toString(),
-      sourceOutput: conn.source_output || "main",
-    }));
+    return (this.args.workflow.connections || []).map(
+      WorkflowConnection.create
+    );
   }
 
   #initNodes() {
-    const rawNodes = (this.args.workflow.nodes || []).map((node) => ({
-      ...node,
-      clientId: node.id?.toString() || crypto.randomUUID(),
-      position: this.#parsePosition(node.position),
-    }));
+    const rawNodes = (this.args.workflow.nodes || []).map((node) =>
+      WorkflowNode.create({
+        ...node,
+        position: this.#parsePosition(node.position),
+      })
+    );
 
     const connections = this.#mapServerConnections();
 
@@ -65,6 +68,10 @@ export default class WorkflowsEditor extends Component {
       return autoLayout(rawNodes, connections);
     }
     return rawNodes;
+  }
+
+  #initStickyNotes() {
+    return (this.args.workflow.sticky_notes || []).map(StickyNote.create);
   }
 
   #parsePosition(pos) {
@@ -94,15 +101,11 @@ export default class WorkflowsEditor extends Component {
 
     const nodes = serverNodes.map((serverNode, index) => {
       const formNode = formNodes[index];
-      return {
-        clientId: serverNode.id?.toString(),
-        type: serverNode.type,
-        type_version: serverNode.type_version,
-        name: serverNode.name,
-        configuration: serverNode.configuration || {},
+      return WorkflowNode.create({
+        ...serverNode,
         position:
           formNode?.position || this.#parsePosition(serverNode.position),
-      };
+      });
     });
 
     this.formApi.set("nodes", nodes);
@@ -113,6 +116,7 @@ export default class WorkflowsEditor extends Component {
     return {
       nodes: structuredClone(this.formApi.get("nodes")),
       connections: structuredClone(this.formApi.get("connections")),
+      stickyNotes: structuredClone(this.formApi.get("stickyNotes")),
     };
   }
 
@@ -121,10 +125,13 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  applySnapshot({ nodes, connections }) {
+  applySnapshot({ nodes, connections, stickyNotes }) {
     this._isUndoRedo = true;
     this.formApi.set("nodes", nodes);
     this.formApi.set("connections", connections);
+    if (stickyNotes) {
+      this.formApi.set("stickyNotes", stickyNotes);
+    }
     this.handleSubmit();
   }
 
@@ -609,6 +616,92 @@ export default class WorkflowsEditor extends Component {
     this.handleSubmit();
   }
 
+  // Sticky notes
+
+  @action
+  addStickyNote(position) {
+    this.#captureUndo();
+    const stickyNotes = [...this.formApi.get("stickyNotes")];
+    stickyNotes.push(
+      StickyNote.create({
+        position: {
+          x: position.svgX ?? position.x ?? 0,
+          y: position.svgY ?? position.y ?? 0,
+        },
+      })
+    );
+    this.formApi.set("stickyNotes", stickyNotes);
+    this.handleSubmit();
+  }
+
+  @action
+  stickyNoteMove(clientId, newPosition) {
+    const stickyNotes = this.formApi.get("stickyNotes");
+    this.formApi.set(
+      "stickyNotes",
+      stickyNotes.map((n) =>
+        n.clientId === clientId ? { ...n, position: newPosition } : n
+      )
+    );
+  }
+
+  @action
+  stickyNoteResize(clientId, newSize) {
+    const stickyNotes = this.formApi.get("stickyNotes");
+    this.formApi.set(
+      "stickyNotes",
+      stickyNotes.map((n) =>
+        n.clientId === clientId ? { ...n, size: newSize } : n
+      )
+    );
+  }
+
+  @action
+  stickyNoteUpdateText(clientId, text) {
+    const stickyNotes = this.formApi.get("stickyNotes");
+    this.formApi.set(
+      "stickyNotes",
+      stickyNotes.map((n) => (n.clientId === clientId ? { ...n, text } : n))
+    );
+  }
+
+  @action
+  stickyNoteDragStart() {
+    this.#captureUndo();
+  }
+
+  @action
+  stickyNoteChangeColor(clientId, color) {
+    this.#captureUndo();
+    const stickyNotes = this.formApi.get("stickyNotes");
+    this.formApi.set(
+      "stickyNotes",
+      stickyNotes.map((n) => (n.clientId === clientId ? { ...n, color } : n))
+    );
+  }
+
+  @action
+  pasteStickyNote({ position, size, color, text }) {
+    this.#captureUndo();
+    const stickyNotes = [...this.formApi.get("stickyNotes")];
+    const note = StickyNote.create({ position, size, color, text });
+    stickyNotes.push(note);
+    this.formApi.set("stickyNotes", stickyNotes);
+    this.handleSubmit();
+    return note.clientId;
+  }
+
+  @action
+  stickyNoteDelete(clientId) {
+    this.#captureUndo();
+    const stickyNotes = this.formApi.get("stickyNotes");
+    this.formApi.set(
+      "stickyNotes",
+      stickyNotes.filter((n) => n.clientId !== clientId)
+    );
+    this.handleSubmit();
+  }
+
   @action
   async openNodePanel(context) {
     if (!this.nodePanelNodeTypes) {
@@ -683,22 +776,13 @@ export default class WorkflowsEditor extends Component {
       const name = this.formApi.get("name");
       const nodes = this.formApi.get("nodes");
       const connections = this.formApi.get("connections");
+      const stickyNotes = this.formApi.get("stickyNotes");
 
       this.args.workflow.setProperties({
         name,
-        nodes: nodes.map((n) => ({
-          client_id: n.clientId,
-          type: n.type,
-          type_version: n.type_version,
-          name: n.name,
-          configuration: n.configuration,
-          position: n.position || null,
-        })),
-        connections: connections.map((c) => ({
-          source_client_id: c.sourceClientId,
-          target_client_id: c.targetClientId,
-          source_output: c.sourceOutput,
-        })),
+        nodes,
+        connections,
+        sticky_notes: stickyNotes || [],
       });
 
       await this.args.workflow.save();
@@ -740,6 +824,7 @@ export default class WorkflowsEditor extends Component {
         <WorkflowCanvas
           @nodes={{transientData.nodes}}
           @connections={{transientData.connections}}
+          @stickyNotes={{transientData.stickyNotes}}
           @workflowId={{@workflow.id}}
           @workflowName={{@workflow.name}}
           @onUpdateNodePosition={{this.updateNodePosition}}
@@ -761,6 +846,14 @@ export default class WorkflowsEditor extends Component {
           @onOpenNodePanel={{this.openNodePanel}}
           @onCloseNodePanel={{this.closeNodePanel}}
           @onImportNodes={{this.importNodes}}
+          @onAddStickyNote={{this.addStickyNote}}
+          @onStickyNoteDragStart={{this.stickyNoteDragStart}}
+          @onStickyNoteMove={{this.stickyNoteMove}}
+          @onStickyNoteResize={{this.stickyNoteResize}}
+          @onStickyNoteUpdateText={{this.stickyNoteUpdateText}}
+          @onStickyNoteChangeColor={{this.stickyNoteChangeColor}}
+          @onStickyNoteDelete={{this.stickyNoteDelete}}
+          @onPasteStickyNote={{this.pasteStickyNote}}
         />
 
         {{#if this.nodePanelContext}}

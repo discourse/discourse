@@ -1,5 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import RestModel from "discourse/models/rest";
+import StickyNote from "./sticky-note";
+import WorkflowConnection from "./workflow-connection";
+import WorkflowNode from "./workflow-node";
 
 export default class DiscourseWorkflowsWorkflow extends RestModel {
   @tracked name;
@@ -7,23 +10,15 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
   @tracked last_execution_status;
   @tracked nodes = [];
   @tracked connections = [];
+  @tracked sticky_notes = [];
 
   updateProperties() {
     return {
       name: this.name,
       enabled: this.enabled,
-      nodes: this.nodes.map((node) => ({
-        client_id: node.client_id,
-        type: node.type,
-        name: node.name,
-        configuration: node.configuration || {},
-        position: node.position || null,
-      })),
-      connections: this.connections.map((conn) => ({
-        source_client_id: conn.source_client_id,
-        target_client_id: conn.target_client_id,
-        source_output: conn.source_output,
-      })),
+      nodes: this.nodes.map(WorkflowNode.serialize),
+      connections: this.connections.map(WorkflowConnection.serialize),
+      sticky_notes: (this.sticky_notes || []).map(StickyNote.serialize),
     };
   }
 

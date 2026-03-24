@@ -211,10 +211,10 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
     }
 
     ensureConnectionEntry(element, payload, isPseudo) {
-      let svg = element.querySelector("svg.workflow-connection-svg");
+      let svg = element.querySelector("svg.workflow-connection");
 
       if (!svg) {
-        svg = createOverlaySvg("workflow-connection-svg");
+        svg = createOverlaySvg("workflow-connection");
 
         const hitPath = svgEl("path", {
           fill: "none",
@@ -223,10 +223,10 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
         });
         hitPath.style.pointerEvents = "stroke";
         hitPath.style.cursor = "pointer";
-        hitPath.classList.add("workflow-connection-hit");
+        hitPath.classList.add("workflow-connection__hit");
 
         const visiblePath = svgEl("path", { fill: "none" });
-        visiblePath.classList.add("workflow-connection-visible");
+        visiblePath.classList.add("workflow-connection__visible");
 
         if (isPseudo) {
           visiblePath.setAttribute("stroke", "var(--tertiary)");
@@ -242,7 +242,7 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
           points: "-4 -6, 8 0, -4 6",
           fill: isPseudo ? "var(--tertiary)" : "var(--primary-low-mid)",
         });
-        arrowEl.classList.add("workflow-connection-arrow");
+        arrowEl.classList.add("workflow-connection__arrow");
 
         svg.append(hitPath, visiblePath, arrowEl);
 
@@ -268,10 +268,10 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
       return this.#registerEntry(element, payload, {
         isLoopBack: false,
         svg,
-        visiblePath: svg.querySelector(".workflow-connection-visible"),
-        hitPath: svg.querySelector(".workflow-connection-hit"),
-        arrowEl: svg.querySelector(".workflow-connection-arrow"),
-        toolbarFo: svg.querySelector(".workflow-connection-toolbar-fo"),
+        visiblePath: svg.querySelector(".workflow-connection__visible"),
+        hitPath: svg.querySelector(".workflow-connection__hit"),
+        arrowEl: svg.querySelector(".workflow-connection__arrow"),
+        toolbarFo: svg.querySelector(".workflow-connection__toolbar-fo"),
       });
     }
 
@@ -280,14 +280,14 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
         width: "48",
         height: "22",
       });
-      toolbarFo.classList.add("workflow-connection-toolbar-fo");
+      toolbarFo.classList.add("workflow-connection__toolbar-fo");
 
       const toolbar = document.createElement("div");
-      toolbar.className = "workflow-connection-toolbar";
+      toolbar.className = "workflow-canvas-toolbar --inline";
 
       const addBtn = document.createElement("button");
       addBtn.type = "button";
-      addBtn.className = "workflow-connection-toolbar__btn --add";
+      addBtn.className = "workflow-canvas-toolbar__btn";
       addBtn.title = i18n("discourse_workflows.canvas.add_step");
       addBtn.innerHTML = this.iconHTML("plus");
       addBtn.addEventListener("click", (e) => {
@@ -300,7 +300,7 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
 
       const deleteBtn = document.createElement("button");
       deleteBtn.type = "button";
-      deleteBtn.className = "workflow-connection-toolbar__btn --delete";
+      deleteBtn.className = "workflow-canvas-toolbar__btn";
       deleteBtn.title = i18n("discourse_workflows.canvas.remove_connection");
       deleteBtn.innerHTML = this.iconHTML("trash-can");
       deleteBtn.addEventListener("click", (e) => {
@@ -410,10 +410,10 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
     }
 
     ensureLoopBackEntry(element, payload) {
-      let svg = element.querySelector("svg.workflow-loop-back-svg");
+      let svg = element.querySelector("svg.workflow-loop-back");
 
       if (!svg) {
-        svg = createOverlaySvg("workflow-loop-back-svg");
+        svg = createOverlaySvg("workflow-loop-back");
 
         const visiblePath = svgEl("path", {
           fill: "none",

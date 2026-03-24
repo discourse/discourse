@@ -25,7 +25,7 @@
       color: var(--primary);
     }
 
-    &.active {
+    &.--active {
       color: var(--tertiary);
       border-bottom-color: var(--tertiary);
     }
@@ -101,7 +101,7 @@
     }
 
     &.--disabled::before {
-      background: var(--primary-medium);
+      background: var(--highlight);
     }
   }
 }

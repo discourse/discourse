@@ -8,9 +8,11 @@ module DiscourseWorkflows
       attribute :name, :string
       attribute :nodes, default: -> { [] }
       attribute :connections, default: -> { [] }
+      attribute :sticky_notes, default: -> { [] }
 
       before_validation { self.nodes = Array.wrap(nodes).select { it.is_a?(Hash) } }
       before_validation { self.connections = Array.wrap(connections).select { it.is_a?(Hash) } }
+      before_validation { self.sticky_notes = Array.wrap(sticky_notes).select { it.is_a?(Hash) } }
 
       validates :name, presence: true
     end
@@ -29,6 +31,7 @@ module DiscourseWorkflows
         name: params.name,
         created_by: guardian.user,
         enabled: false,
+        sticky_notes: params.sticky_notes,
       )
     end
 

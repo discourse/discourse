@@ -1,34 +1,4 @@
-input.workflows-parameter-field {
+.workflows-parameter-field {
   width: 100%;
   box-sizing: border-box;
-}
-
-.workflows-property-engine__control-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.workflows-property-engine__mode-trigger {
-  position: absolute;
-  top: 4px;
-  right: 0;
-
-  .workflows-property-engine__control-wrapper:has(.d-select) > & {
-    right: 30px;
-  }
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 0.15s;
-
-  &.--active {
-    opacity: 1;
-
-    .d-icon {
-      color: var(--tertiary);
-    }
-  }
-
-  .form-kit__container:hover & {
-    opacity: 1;
-  }
 }

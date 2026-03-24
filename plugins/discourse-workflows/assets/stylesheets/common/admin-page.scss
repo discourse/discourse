@@ -101,7 +101,7 @@
     }
 
     &.--draft::before {
-      background: var(--primary-medium);
+      background: var(--highlight);
     }
 
     &.--published::before {
