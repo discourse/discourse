@@ -4,6 +4,7 @@ discourse_reactions:
     client: true
   discourse_reactions_like_icon:
     client: true
+    type: icon
     default: "heart"
   discourse_reactions_reaction_for_like:
     client: true

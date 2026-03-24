@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import DButton from "discourse/components/d-button";
+import { isExistingIconId } from "discourse/lib/icon-library";
 import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
@@ -65,6 +66,7 @@ export default class ReactionsReactionButton extends Component {
     if (icon === "heart") {
       return "d-liked";
     }
+
     return icon;
   }
 
@@ -75,7 +77,12 @@ export default class ReactionsReactionButton extends Component {
       return "d-unliked";
     }
 
-    return `far-${icon}`;
+    // Not all icons have a far- version, so we need to check if it exists.
+    if (isExistingIconId(`far-${icon}`)) {
+      return `far-${icon}`;
+    }
+
+    return icon;
   }
 
   get title() {
