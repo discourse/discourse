@@ -24,6 +24,10 @@
   margin-bottom: 20px;
 }
 
+.tags-index .tags-list h3 {
+  @extend %heading-anchor;
+}
+
 .tags-list .tag-box {
   width: 300px;
   margin-bottom: 1em;
