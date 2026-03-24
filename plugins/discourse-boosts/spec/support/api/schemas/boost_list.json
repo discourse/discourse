@@ -25,7 +25,7 @@
           },
           "post": {
             "type": "object",
-            "required": ["id", "url", "excerpt", "username", "name", "avatar_template", "user_id", "topic_id", "topic_title"],
+            "required": ["id", "url", "excerpt", "username", "name", "avatar_template", "user_id", "user_title", "primary_group_name", "topic_id", "topic_title", "category_id", "post_type"],
             "properties": {
               "id": { "type": "number" },
               "url": { "type": "string" },
@@ -34,8 +34,12 @@
               "name": { "type": ["string", "null"] },
               "avatar_template": { "type": "string" },
               "user_id": { "type": "number" },
+              "user_title": { "type": ["string", "null"] },
+              "primary_group_name": { "type": ["string", "null"] },
               "topic_id": { "type": "number" },
-              "topic_title": { "type": "string" }
+              "topic_title": { "type": "string" },
+              "category_id": { "type": "number" },
+              "post_type": { "type": "number" }
             }
           }
         }
