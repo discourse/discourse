@@ -501,7 +501,7 @@ en:
       start_posting:
         title: "Start Posting"
         description: "Give people something to talk about together"
-        action: "Icebreaker ideas"
+        action: "See ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
