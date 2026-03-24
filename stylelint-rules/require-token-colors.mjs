@@ -4,11 +4,11 @@ const ruleName = "discourse/require-token-colors";
 
 const messages = stylelint.utils.ruleMessages(ruleName, {
   rejectedLegacyVar: (varName) =>
-    `Unexpected legacy color variable "${varName}". Use a design token (--dt-*) or sidebar component variable (--d-sidebar-*) instead.`,
+    `Unexpected legacy color variable "${varName}". Use a design token (--token-*) or sidebar component variable (--d-sidebar-*) instead.`,
   rejectedNonTokenVar: (varName) =>
-    `Unexpected color variable "${varName}". Use a design token (--dt-*) or sidebar component variable (--d-sidebar-*) instead.`,
+    `Unexpected color variable "${varName}". Use a design token (--token-*) or sidebar component variable (--d-sidebar-*) instead.`,
   rejectedHardCodedColor: (value) =>
-    `Unexpected hard-coded color "${value}". Use a design token (--dt-*) or sidebar component variable (--d-sidebar-*) instead.`,
+    `Unexpected hard-coded color "${value}". Use a design token (--token-*) or sidebar component variable (--d-sidebar-*) instead.`,
 });
 
 // Legacy Discourse color variable families (from color_definitions.scss)
