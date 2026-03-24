@@ -159,7 +159,7 @@
     "qunit": "^2.25.0",
     "qunit-dom": "^3.5.0",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sinon": "^21.0.2",
+    "sinon": "^21.0.3",
     "source-map": "^0.7.6",
     "terser": "^5.46.0",
     "testem": "^3.16.0",
