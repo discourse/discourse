@@ -218,7 +218,15 @@ module DiscourseUpdates
         }
       end
 
-      new_features.sort_by { |item| Time.zone.parse(item[:created_at]).to_i }.reverse
+      new_features
+        .sort_by do |item|
+          if item[:created_at].is_a?(String)
+            Time.zone.parse(item[:created_at]).to_i
+          else
+            item[:created_at].to_i
+          end
+        end
+        .reverse
     end
 
     def has_unseen_features?(user_id)

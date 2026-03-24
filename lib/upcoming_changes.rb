@@ -272,6 +272,11 @@ module UpcomingChanges
     { enabled_for:, setting_groups: }
   end
 
+  def self.clear_caches!
+    Discourse.cache.delete(current_statuses_cache_key)
+    Discourse.cache.delete(permanent_upcoming_changes_cache_key)
+  end
+
   def self.current_statuses_cache_key
     "upcoming_changes_current_statuses::#{Discourse.git_version}"
   end
@@ -287,20 +292,19 @@ module UpcomingChanges
       .cache
       .fetch(current_statuses_cache_key) do
         results = DB.query(<<-SQL, status_changed: UpcomingChangeEvent.event_types[:status_changed])
-      WITH latest_status_changes AS (
-        SELECT upcoming_change_name, MAX(created_at) as created_at
-        FROM upcoming_change_events
-        WHERE event_type = :status_changed
-        GROUP BY upcoming_change_name
-        ORDER BY MAX(created_at) DESC
-      )
-      SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value
-      FROM latest_status_changes
-      INNER JOIN upcoming_change_events ON upcoming_change_events.upcoming_change_name = latest_status_changes.upcoming_change_name AND upcoming_change_events.created_at = latest_status_changes.created_at
-      ORDER BY latest_status_changes.created_at DESC
-    SQL
+          WITH latest_status_changes AS (
+            SELECT upcoming_change_name, MAX(created_at) as created_at
+            FROM upcoming_change_events
+            WHERE event_type = :status_changed
+            GROUP BY upcoming_change_name
+            ORDER BY MAX(created_at) DESC
+          )
+          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value
+          FROM latest_status_changes
+          INNER JOIN upcoming_change_events ON upcoming_change_events.upcoming_change_name = latest_status_changes.upcoming_change_name AND upcoming_change_events.created_at = latest_status_changes.created_at
+          ORDER BY latest_status_changes.created_at DESC
+        SQL
 
-        # loop through the results and build a hash with upcoming change name as the key and a status and date as key values in sub-object
         results.each_with_object({}) do |result, statuses|
           statuses[result.upcoming_change_name] = {
             status: result.new_value,

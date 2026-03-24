@@ -388,12 +388,10 @@ RSpec.describe UpcomingChanges do
   describe ".current_statuses" do
     include ActiveSupport::Testing::TimeHelpers
 
-    let(:cache_key) { described_class.current_statuses_cache_key }
-
-    before { Discourse.cache.delete(cache_key) }
+    before { described_class.clear_caches! }
 
     after do
-      Discourse.cache.delete(cache_key)
+      described_class.clear_caches!
       UpcomingChangeEvent.where(upcoming_change_name: "timeline_status_setting").delete_all
     end
 
@@ -447,7 +445,7 @@ RSpec.describe UpcomingChanges do
       2.times { described_class.current_statuses }
       expect(DB).to have_received(:query).once
 
-      Discourse.cache.delete(cache_key)
+      described_class.clear_caches!
 
       described_class.current_statuses
       expect(DB).to have_received(:query).twice
@@ -455,10 +453,8 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".permanent_upcoming_changes" do
-    let(:cache_key) { described_class.permanent_upcoming_changes_cache_key }
-
     before do
-      Discourse.cache.delete(cache_key)
+      described_class.clear_caches!
       mock_upcoming_change_metadata(
         {
           enable_upload_debug_mode: {
@@ -471,7 +467,7 @@ RSpec.describe UpcomingChanges do
       )
     end
 
-    after { Discourse.cache.delete(cache_key) }
+    after { described_class.clear_caches! }
 
     it "returns only changes whose metadata status is permanent" do
       list = described_class.permanent_upcoming_changes
@@ -486,7 +482,7 @@ RSpec.describe UpcomingChanges do
       2.times { described_class.permanent_upcoming_changes }
       expect(UpcomingChanges::List).to have_received(:call).once
 
-      Discourse.cache.delete(cache_key)
+      described_class.clear_caches!
 
       described_class.permanent_upcoming_changes
       expect(UpcomingChanges::List).to have_received(:call).twice
