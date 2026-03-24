@@ -3777,7 +3777,7 @@ uncategorized:
     hidden: true
     area: "interface"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/395100"
 
