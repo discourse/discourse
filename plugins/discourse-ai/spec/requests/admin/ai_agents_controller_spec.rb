@@ -74,7 +74,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           allow_chat_channel_mentions: true,
           allow_chat_direct_messages: true,
           default_llm_id: llm_model.id,
-          question_consolidator_llm_id: llm_model.id,
           forced_tool_count: 2,
         )
       agent2.create_user!
@@ -91,7 +90,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(serializer_agent2["allow_chat_direct_messages"]).to eq(true)
 
       expect(serializer_agent2["default_llm_id"]).to eq(llm_model.id)
-      expect(serializer_agent2["question_consolidator_llm_id"]).to eq(llm_model.id)
+      expect(serializer_agent2).not_to have_key("question_consolidator_llm_id")
       expect(serializer_agent2["user_id"]).to eq(agent2.user_id)
       expect(serializer_agent2["user"]["id"]).to eq(agent2.user_id)
       expect(serializer_agent2["forced_tool_count"]).to eq(2)
@@ -215,7 +214,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           allow_chat_channel_mentions: true,
           allow_chat_direct_messages: true,
           default_llm_id: llm_model.id,
-          question_consolidator_llm_id: llm_model.id,
           forced_tool_count: 2,
           execution_mode: "agentic",
           max_turn_tokens: 5000,
@@ -248,7 +246,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           expect(agent_json["allow_personal_messages"]).to eq(true)
           expect(agent_json["allow_chat_channel_mentions"]).to eq(true)
           expect(agent_json["allow_chat_direct_messages"]).to eq(true)
-          expect(agent_json["question_consolidator_llm_id"]).to eq(llm_model.id)
+          expect(agent_json).not_to have_key("question_consolidator_llm_id")
           expect(agent_json["response_format"].map { |rf| rf["key"] }).to contain_exactly("summary")
           expect(agent_json["examples"]).to eq(valid_attributes[:examples])
 
@@ -416,7 +414,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
               rag_chunk_overlap_tokens: "12",
               rag_conversation_chunks: "13",
               rag_llm_model_id: llm_model.id,
-              question_consolidator_llm_id: llm_model.id,
             },
           }
 
@@ -427,7 +424,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.rag_chunk_overlap_tokens).to eq(12)
       expect(agent.rag_conversation_chunks).to eq(13)
       expect(agent.rag_llm_model_id).to eq(llm_model.id)
-      expect(agent.question_consolidator_llm_id).to eq(llm_model.id)
     end
 
     it "supports updating agentic params" do

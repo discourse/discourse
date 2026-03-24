@@ -882,28 +882,6 @@ export default class AgentEditor extends Component {
               >
                 <field.Control step="any" lang="en" />
               </form.Field>
-
-              <form.Field
-                @name="question_consolidator_llm_id"
-                @title={{i18n
-                  "discourse_ai.ai_agent.question_consolidator_llm"
-                }}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.question_consolidator_llm_help"
-                }}
-                @format="large"
-                @type="custom"
-                as |field|
-              >
-                <field.Control>
-                  <AiLlmSelector
-                    @value={{field.value}}
-                    @llms={{@agents.resultSetMeta.llms}}
-                    @onChange={{field.set}}
-                    class="ai-agent-editor__llms"
-                  />
-                </field.Control>
-              </form.Field>
             </RagOptionsFk>
           </form.Section>
         {{/if}}

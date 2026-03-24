@@ -427,7 +427,6 @@ module DiscourseAi
             :rag_chunk_overlap_tokens,
             :rag_conversation_chunks,
             :rag_llm_model_id,
-            :question_consolidator_llm_id,
             :allow_chat_channel_mentions,
             :allow_chat_direct_messages,
             :allow_topic_mentions,
@@ -538,8 +537,6 @@ module DiscourseAi
           rag_conversation_chunks: {
           },
           rag_llm_model_id: {
-          },
-          question_consolidator_llm_id: {
           },
           allow_chat_channel_mentions: {
           },
