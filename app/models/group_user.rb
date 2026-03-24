@@ -254,6 +254,16 @@ class GroupUser < ActiveRecord::Base
     TagUser.auto_track(user_ids: user_ids)
   end
 
+  def increase_group_user_count
+    Group.increment_counter(:user_count, self.group_id)
+  end
+
+  def decrease_group_user_count
+    Group.decrement_counter(:user_count, self.group_id)
+  end
+
+  private
+
   def self.semantically_higher_notification_level_sql(new_col, existing_col)
     <<~SQL.squish
       CASE
@@ -263,14 +273,6 @@ class GroupUser < ActiveRecord::Base
         ELSE #{existing_col}
       END
     SQL
-  end
-
-  def increase_group_user_count
-    Group.increment_counter(:user_count, self.group_id)
-  end
-
-  def decrease_group_user_count
-    Group.decrement_counter(:user_count, self.group_id)
   end
 end
 
