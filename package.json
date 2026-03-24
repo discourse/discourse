@@ -28,7 +28,7 @@
     "prettier": "3.8.1",
     "puppeteer-core": "^24.39.1",
     "stylelint": "17.4.0",
-    "terser": "^5.46.0",
+    "terser": "^5.46.1",
     "typescript": "^5.9.3"
   },
   "scripts": {
