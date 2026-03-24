@@ -903,53 +903,51 @@ class Group < ActiveRecord::Base
             self.default_notification_level || NotificationLevels.types[:watching],
         )
 
-      if added_user_ids.present?
-        if self.primary_group?
-          User
-            .where(id: added_user_ids)
-            .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
-            .update_all(flair_group_id: self.id)
+      return if added_user_ids.blank?
 
-          DB.exec(<<~SQL, user_ids: added_user_ids, new_title: self.title)
-              UPDATE users u
-              SET title = :new_title
-              WHERE u.id IN (:user_ids)
-                AND u.primary_group_id IS NOT NULL
-                AND EXISTS (
-                  SELECT 1 FROM groups g
-                  WHERE g.id = u.primary_group_id
-                    AND g.title = u.title
-                )
-            SQL
+      if self.primary_group?
+        User
+          .where(id: added_user_ids)
+          .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
+          .update_all(flair_group_id: self.id)
 
-          User.where(id: added_user_ids).update_all(primary_group_id: self.id)
-        end
+        DB.exec(<<~SQL, user_ids: added_user_ids, new_title: self.title)
+            UPDATE users u
+            SET title = :new_title
+            WHERE u.id IN (:user_ids)
+              AND u.primary_group_id IS NOT NULL
+              AND EXISTS (
+                SELECT 1 FROM groups g
+                WHERE g.id = u.primary_group_id
+                  AND g.title = u.title
+              )
+          SQL
 
-        if self.title.present?
-          User.where(id: added_user_ids).where(title: [nil, ""]).update_all(title: self.title)
-        end
-
-        recalculate_user_count
-      end
-    end
-
-    if added_user_ids.present?
-      if self.grant_trust_level.present? && !self.grant_trust_level.zero?
-        Jobs.enqueue(
-          :bulk_grant_trust_level,
-          user_ids: added_user_ids,
-          trust_level: self.grant_trust_level,
-        )
+        User.where(id: added_user_ids).update_all(primary_group_id: self.id)
       end
 
-      GroupUser.bulk_set_category_notifications(self, added_user_ids)
-      GroupUser.bulk_set_tag_notifications(self, added_user_ids)
+      if self.title.present?
+        User.where(id: added_user_ids).where(title: [nil, ""]).update_all(title: self.title)
+      end
 
-      added_users = User.where(id: added_user_ids).to_a
-
-      added_users.each { |user| trigger_user_added_event(user, automatic) }
-      bulk_publish_category_updates(added_users)
+      recalculate_user_count
     end
+
+    if self.grant_trust_level.present? && !self.grant_trust_level.zero?
+      Jobs.enqueue(
+        :bulk_grant_trust_level,
+        user_ids: added_user_ids,
+        trust_level: self.grant_trust_level,
+      )
+    end
+
+    GroupUser.bulk_set_category_notifications(self, added_user_ids)
+    GroupUser.bulk_set_tag_notifications(self, added_user_ids)
+
+    added_users = User.where(id: added_user_ids).to_a
+
+    added_users.each { |user| trigger_user_added_event(user, automatic) }
+    bulk_publish_category_updates(added_users)
 
     added_user_ids
   end
