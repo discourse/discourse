@@ -830,20 +830,6 @@ class Group < ActiveRecord::Base
     GroupManager.new(self).remove([user.id]).present?
   end
 
-  def enqueue_user_removed_from_group_webhook_events(group_user)
-    return if !WebHook.active_web_hooks(:group_user)
-
-    payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer)
-
-    WebHook.enqueue_hooks(
-      :group_user,
-      :user_removed_from_group,
-      id: group_user.id,
-      payload: payload,
-      group_ids: [self.id],
-    )
-  end
-
   def trigger_user_added_event(user, automatic)
     DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
   end
@@ -903,7 +889,7 @@ class Group < ActiveRecord::Base
             self.default_notification_level || NotificationLevels.types[:watching],
         )
 
-      return if added_user_ids.blank?
+      return [] if added_user_ids.blank?
 
       if self.primary_group?
         User
@@ -944,10 +930,10 @@ class Group < ActiveRecord::Base
     GroupUser.bulk_set_category_notifications(self, added_user_ids)
     GroupUser.bulk_set_tag_notifications(self, added_user_ids)
 
-    added_users = User.where(id: added_user_ids).to_a
+    added_users = User.where(id: added_user_ids)
+    added_users.find_each { |user| trigger_user_added_event(user, automatic) }
 
-    added_users.each { |user| trigger_user_added_event(user, automatic) }
-    bulk_publish_category_updates(added_users)
+    bulk_publish_category_updates(added_user_ids)
 
     added_user_ids
   end
@@ -955,10 +941,22 @@ class Group < ActiveRecord::Base
   def bulk_remove(user_ids)
     return [] if user_ids.blank?
 
-    group_users_to_remove = group_users.includes(:user).where(user_id: user_ids).to_a
+    group_users_to_remove = group_users.where(user_id: user_ids)
     return [] if group_users_to_remove.empty?
 
-    removed_user_ids = group_users_to_remove.map(&:user_id)
+    removed_user_ids = group_users_to_remove.pluck(:user_id)
+
+    # Capture webhook payloads before group_user deletion
+    webhook_payloads = nil
+    if WebHook.active_web_hooks(:group_user)
+      webhook_payloads =
+        group_users_to_remove.map do |gu|
+          {
+            id: gu.id,
+            payload: WebHook.generate_payload(:group_user, gu, WebHookGroupUserSerializer),
+          }
+        end
+    end
 
     Group.transaction do
       group_users.where(user_id: removed_user_ids).delete_all
@@ -998,11 +996,18 @@ class Group < ActiveRecord::Base
       Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
     end
 
-    bulk_publish_category_updates(group_users_to_remove.map(&:user))
+    bulk_publish_category_updates(removed_user_ids)
 
-    group_users_to_remove.find_each do |group_user|
-      trigger_user_removed_event(group_user.user)
-      enqueue_user_removed_from_group_webhook_events(group_user)
+    User.where(id: removed_user_ids).find_each { |user| trigger_user_removed_event(user) }
+
+    webhook_payloads&.each do |wp|
+      WebHook.enqueue_hooks(
+        :group_user,
+        :user_removed_from_group,
+        id: wp[:id],
+        payload: wp[:payload],
+        group_ids: [self.id],
+      )
     end
 
     removed_user_ids
@@ -1145,14 +1150,15 @@ class Group < ActiveRecord::Base
     "#{Discourse.base_url}/g/#{UrlHelper.encode_component(self.name)}"
   end
 
-  def bulk_publish_category_updates(users)
-    return if users.blank?
+  def bulk_publish_category_updates(user_ids)
+    return if user_ids.blank?
     return unless categories.exists?
 
-    if users.size == 1
-      publish_category_updates(users.first)
+    if user_ids.size == 1
+      user = User.find(user_ids.first)
+      publish_category_updates(user)
     else
-      Discourse.request_refresh!(user_ids: users.map(&:id))
+      Discourse.request_refresh!(user_ids:)
     end
   end
 
