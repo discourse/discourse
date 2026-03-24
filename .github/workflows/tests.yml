@@ -298,7 +298,7 @@ jobs:
 
       - name: Ember Build
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        run: bin/rake assets:precompile:build_plugins && script/assemble_ember_build.rb
+        run: script/assemble_ember_build.rb
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'

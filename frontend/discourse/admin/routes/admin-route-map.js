@@ -1,3 +1,4 @@
+/* eslint-disable ember/route-path-style */
 export default function () {
   this.route("admin", function () {
     this.route("dashboard", { path: "/" }, function () {

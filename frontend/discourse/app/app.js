@@ -19,7 +19,6 @@ registerDiscourseImplicitInjections();
 import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
-import "discourse/lib/theme-settings-store";
 import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
 import { importSync } from "@embroider/macros";
 // import require from "require";
@@ -158,11 +157,7 @@ export async function loadThemes() {
 export async function loadAdmin() {
   defineModules(
     "discourse/admin",
-    (
-      await import(
-        /* webpackChunkName: "admin" */ "discourse/admin/compat-modules"
-      )
-    ).default
+    (await import("discourse/admin/compat-modules")).default
   );
 }
 
