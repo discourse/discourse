@@ -4,12 +4,12 @@ module PageObjects
   module Pages
     class UserActivityBoosts < PageObjects::Pages::Base
       def visit(user)
-        page.visit("/u/#{user.username}/activity/boosts")
+        page.visit("/u/#{user.username}/activity/boosts-given")
         self
       end
 
       def visit_received(user)
-        page.visit("/u/#{user.username}/notifications/boosts")
+        page.visit("/u/#{user.username}/notifications/boosts-received")
         self
       end
 
